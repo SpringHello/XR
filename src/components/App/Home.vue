@@ -5,6 +5,24 @@
       <my-carousel :interval=5000 class="carousel" @on-change="change">
 
         <my-carousel-item class="carousel-item">
+          <div class="eightscene" @click="push('/ruicloud/sceneList')">
+            <div class="wrap">
+              <div class="left">
+                <img src="../../assets/img/home/eightscene-text.png" alt="">
+                <Button @click.stop="$router.push('sceneList')">立即使用</Button>
+              </div>
+              <div class="right">
+                <p>现在注册</p>
+                <p>即可体验 <span>免费套餐</span></p>
+                <p>多款云主机</p>
+                <p @click.stop="$router.push('fractive')">免费领取</p>
+                <Button type="primary" long @click.stop="$router.push('register')">注册新账号</Button>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+
+        <my-carousel-item class="carousel-item">
           <div class="east-banner" @click="push('/ruicloud/EastSouthNode')">
             <div class="wrap">
               <div class="text">
@@ -100,7 +118,7 @@
       </div>
     </div>
      <!-- 八大场景区 -->
-    <div class="eigth-scene" :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat'}">
+    <div class="eigth-scene" :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat',backgroundPosition:'center'}">
       <div class="wrap">
         <div class="box">
           <div class="hint">
@@ -114,7 +132,7 @@
             </div>
             <div class="content" v-for="(item,index) in selectedEightscene" :key="index">
                 <h3>{{item.title}}</h3>
-                <div class="scene"> 
+                <div class="scene">
                   <p class="title">应用场景</p>
                   <div>
                     <p>{{item.scene}}</p>
@@ -228,6 +246,7 @@
       </div>
     </div>
     <!-- 满足严苛要求的卓越品质 -->
+
     <!-- <div class="feature-container" id="fade" ref="fade">
       <div class="container">
         <div class="feature-desc">
@@ -253,7 +272,7 @@
           </div>
         </transition>
       </div>
-    </div> -->
+    </div>-->
     <!-- 图形化控制台 -->
     <!-- <div class="console-container" ref="consoleFade">
       <div class="container">
@@ -881,7 +900,7 @@
             online: true
           },
           {
-            text: '重庆', 
+            text: '重庆',
             top: '344px',
             left: '330px',
             online: true
@@ -1150,7 +1169,7 @@
           }
           .left-menu{
             width: 200px;
-            border-right: solid 1px #E6E6E6; 
+            border-right: solid 1px #E6E6E6;
             padding: 20px 0;ul {
               li {
                 width:200px;
@@ -1166,7 +1185,7 @@
                   background:linear-gradient(270deg,rgba(170,202,255,1) 0%,rgba(138,189,253,0) 100%);
                   font-weight:600;
                   color: #377DFF;
-                  border-right: #387DFF 6px solid; 
+                  border-right: #387DFF 6px solid;
                 }
               }
             }
@@ -1174,7 +1193,7 @@
           .content {
             padding: 40px 100px 40px 80px;
             > h3 {
-              padding-bottom: 20px; 
+              padding-bottom: 20px;
               font-size:24px;
               font-family:PingFangSC-Medium;
               font-weight:500;
@@ -1252,7 +1271,7 @@
       height: 916px;
       background: url('../../assets/img/home/datacenter-line.png') no-repeat 240px 20px,url('../../assets/img/home/datacenter-bg.png') no-repeat top center;
       .header-g{
-        padding-top: 60px; 
+        padding-top: 60px;
         margin-bottom: 10px;
         .title {
           color: #fff;
@@ -1277,7 +1296,7 @@
         .online {
           background: #FF624B;
           color: white;
-          
+
         }
         .mark {
           position: absolute;
@@ -1293,7 +1312,7 @@
               display: inline-block;
               width: 12px;
               height: 12px;
-              border-radius: 50%; 
+              border-radius: 50%;
               background: #FFD100;
               margin-right: 5px;
             }
@@ -1332,7 +1351,7 @@
     .require {
       text-align: center;
       margin-bottom: 80px;
-      .main { 
+      .main {
         > div {
           width: 300px;
           p {
@@ -1503,7 +1522,7 @@
                   font-size: 14px;
                   color: rgba(102, 102, 102, 1);
                   cursor: pointer;
-                  border-bottom: dashed 1px #CFCFCF; 
+                  border-bottom: dashed 1px #CFCFCF;
                   &:hover {
                     color: #377DFF;
                   }
@@ -1567,7 +1586,6 @@
       border-radius: 4px;
       height: 120px;
       width: 100%;
-      margin-bottom: 10px;
       .container {
         padding: 10px 0 ;
         width: 1200px;
@@ -2436,6 +2454,70 @@
         &:hover {
           color: #ff624b;
           border: 1px solid #ff624b;
+        }
+      }
+    }
+  }
+  .eightscene{
+    height: 400px;
+    overflow: hidden;
+    background: url("../../assets/img/home/eightscene-banner.png") no-repeat;
+    .wrap {
+      display: flex;
+      justify-content: space-between;
+      width: 1200px;
+      .left {
+        padding-top: 86px;
+        button {
+          width:164px;
+          height:44px;
+          display: block;
+          background: none;
+          outline: none;
+          cursor: pointer;
+          padding: 8px 50px;
+          margin-top: 30px;
+          border-radius: 4px;
+          border: 1px solid #fff;
+          font-size: 16px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: #fff;
+          &:hover {
+            color: #387DFF;
+            border: 1px solid #387DFF;
+          }
+        }
+      }
+      .right {
+        margin-top: 64px;
+        padding: 40px;
+        width:300px;
+        height:266px;
+        background:rgba(255,255,255,1);
+        box-shadow:0px 2px 41px -15px rgba(47,124,253,0.47);
+        border-radius:4px;
+        p {
+          font-size: 18px;
+          padding-bottom: 10px;
+          span {
+            text-decoration: underline;
+          }
+          &:nth-of-type(3) {
+            font-size: 24px;
+            padding: 10px 0 20px 0;
+          }
+          &:last-of-type {
+            color: #4A97EE;
+            padding-bottom: 20px; 
+            cursor: pointer;
+          }
+        }
+        button {
+          width:220px;
+          height:38px;
+          background:rgba(56,125,255,1);
+          border-radius:4px;
+          font-size:14px;
         }
       }
     }

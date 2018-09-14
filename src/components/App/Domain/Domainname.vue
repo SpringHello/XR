@@ -1,5 +1,5 @@
 <template>
-  <div style="background: #FFF;">
+  <div style="background: #FFF; font-family:PingFangSC-Regular;" id="domain">
     <div class="top">
       <p>域名注册全新上线</p>
       <span>帮助建立您的网上业务，从这里开始…</span>
@@ -15,10 +15,10 @@
           <Option value="zdy">.自定义添加</Option>
         </Select>
         </Input>
-        <button>搜索</button>
+        <button @click="textSearch">搜索</button>
       </div>
     </div>
-    <div class="content">
+    <div class="content" v-show="show==1">
       <div class="content-steps">
         <p><span><<<<<<<<<<</span>域名申请流程<span>>>>>>>>>>></span></p>
         <ul>
@@ -31,7 +31,7 @@
       <div class="content-price">
         <p><span><<<<<<<<<<</span>域名价格<span>>>>>>>>>>></span></p>
         <div class="table">
-          <Table border :columns="columns" :data="data" stripe :row-class-name="rowClassName"></Table>
+          <Table border :columns="columns" :data="data" stripe></Table>
         </div>
       </div>
       <div class="content-advantage">
@@ -63,6 +63,89 @@
         </ul>
       </div>
     </div>
+    <div v-show="show==2" class="searchResult">
+      <div class="result-left">
+        <div class="left-top">
+          <p>域名查询结果</p>
+          <button>筛选
+            <Icon type="ios-arrow-down"/>
+          </button>
+        </div>
+        <li>
+          <p>such.net
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥1541<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+        <li>
+          <p>such.net
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥154<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+        <li>
+          <p>such.net
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥1541<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+        <li>
+          <p>such.net
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥1541<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+        <li>
+          <p>.com
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥15<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+        <li>
+          <p>.cn
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥141<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+      </div>
+      <div class="result-right">
+        <div class="all">
+          <p>域名清单 <span>全部移除</span></p>
+          <ul class="all-data">
+            <li>
+              <h2>such.net</h2>
+              <button>移除</button>
+            </li>
+          </ul>
+        </div>
+        <div class="statistical">
+          <p>
+            <span>已加入域名 3 个</span>
+            <span>优惠金额：¥372.00</span>
+          </p>
+          <h1>应付金额：¥4772.00</h1>
+          <button>立即购买</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -70,6 +153,7 @@
   export default{
     data(){
       return {
+        show: 1,
         searchText: '',
         select: 'com',
         domainList: [
@@ -175,6 +259,15 @@
           },
         ],
       }
+    },
+    methods: {
+      textSearch(){
+        if (this.searchText && this.select) {
+          this.show = 2
+        } else {
+          this.show = 1
+        }
+      },
     }
   }
 </script>
@@ -186,19 +279,19 @@
     padding: 87px 0 81px 0;
     text-align: center;
     background: url('../../../assets/img/domain/banner.png') no-repeat;
-    > p {
+    p {
       font-size: 48px;
       color: rgba(255, 255, 255, 1);
-      line-height: 67px;
+
     }
-    > span {
+    span {
       display: block;
       padding: 23px 0 29px 0;
       font-size: 24px;
       color: rgba(255, 255, 255, 1);
-      line-height: 33px;
+
     }
-    > .search {
+    .search {
       width: 900px;
       height: 70px;
       border-radius: 4px;
@@ -214,7 +307,6 @@
         background: yellow;
         font-size: 20px;
         color: rgba(0, 0, 0, 1);
-        line-height: 28px;
         padding: 4px 90px;
         outline: none;
         border: none;
@@ -225,178 +317,346 @@
 
   .content {
     text-align: center;
-    .content-steps {
-      > p {
-        font-size: 36px;
-        color: rgba(55, 125, 255, 1);
-        line-height: 50px;
-        padding: 101px 0 51px 0;
-        span {
-          display: inline-block;
-          font-size: 24px;
-          line-height: 33px;
-          &:first-of-type {
-            padding-right: 30px;
-          }
-          &:last-of-type {
-            padding-left: 30px;
-          }
+  }
+
+  .content-steps {
+    p {
+      font-size: 36px;
+      color: rgba(55, 125, 255, 1);
+      padding: 101px 0 51px 0;
+      span {
+        display: inline-block;
+        font-size: 24px;
+        &:first-of-type {
+          padding-right: 30px;
+        }
+        &:last-of-type {
+          padding-left: 30px;
         }
       }
-      > ul {
-        width: 1200px;
-        margin: 0 auto;
-        justify-content: space-between;
-        display: flex;
-        li {
-          width: 50%;
+    }
+    ul {
+      width: 1200px;
+      margin: 0 auto;
+      justify-content: space-between;
+      display: flex;
+      li {
+        width: 50%;
+        &:after {
+          display: block;
+          content: '';
+          width: 150px;
+          height: 1px;
+          border: 1px dashed rgba(78, 140, 238, 1);
+          position: relative;
+          bottom: 135px;
+          left: 165px;
+        }
+        &:last-of-type {
           &:after {
-            display: block;
-            content: '';
-            width: 150px;
-            height: 1px;
-            border: 1px dashed rgba(78, 140, 238, 1);
-            position: relative;
-            bottom: 90px;
-            left: 165px;
+            display: none;
           }
-          &:last-of-type {
-            &:after {
-              display: none;
-            }
-          }
-          list-style: none;
-          > img {
-            width: 48px;
-            height: 47px;
-          }
-          > p {
-            padding-top: 30px;
-            font-size: 18px;
-            color: rgba(145, 145, 145, 1);
-            line-height: 25px;
-          }
+        }
+        list-style: none;
+        img {
+          width: 48px;
+          height: 47px;
+        }
+        p {
+          padding-top: 30px;
+          font-size: 18px;
+          color: rgba(145, 145, 145, 1);
         }
       }
     }
-    .content-price {
-      > p {
-        font-size: 36px;
-        color: rgba(55, 125, 255, 1);
-        line-height: 50px;
-        padding: 101px 0 40px 0;
-        span {
-          display: inline-block;
-          font-size: 24px;
-          line-height: 33px;
-          &:first-of-type {
-            padding-right: 30px;
-          }
-          &:last-of-type {
-            padding-left: 30px;
-          }
+  }
+
+  .content-price {
+    p {
+      font-size: 36px;
+      color: rgba(55, 125, 255, 1);
+      padding: 101px 0 40px 0;
+      span {
+        display: inline-block;
+        font-size: 24px;
+        &:first-of-type {
+          padding-right: 30px;
         }
-      }
-      > .table {
-        width: 1100px;
-        margin: 0 auto;
+        &:last-of-type {
+          padding-left: 30px;
+        }
       }
     }
-    .content-advantage {
-      background: linear-gradient(360deg, rgba(247, 250, 255, 1) 0%, rgba(252, 253, 255, 1) 100%);
-      margin-top: 101px;
-      > p {
-        font-size: 36px;
-        color: rgba(55, 125, 255, 1);
-        line-height: 50px;
-        padding: 40px 0 51px 0;
-        span {
-          display: inline-block;
-          font-size: 24px;
-          line-height: 33px;
-          &:first-of-type {
-            padding-right: 30px;
-          }
-          &:last-of-type {
-            padding-left: 30px;
-          }
+    .table {
+      width: 1100px;
+      margin: 0 auto;
+      border: 1px solid #53A0FD;
+    }
+  }
+
+  .content-advantage {
+    background: linear-gradient(360deg, rgba(247, 250, 255, 1) 0%, rgba(252, 253, 255, 1) 100%);
+    margin-top: 101px;
+    p {
+      font-size: 36px;
+      color: rgba(55, 125, 255, 1);
+
+      padding: 40px 0 51px 0;
+      span {
+        display: inline-block;
+        font-size: 24px;
+
+        &:first-of-type {
+          padding-right: 30px;
+        }
+        &:last-of-type {
+          padding-left: 30px;
         }
       }
-      > ul {
-        width: 1200px;
-        margin: 0 auto;
+    }
+    ul {
+      width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      li {
+        list-style: none;
+        width: 45%;
+        text-align: center;
+        img {
+          height: 99px;
+          width: 99px;
+        }
+        p {
+          padding: 47px 0 30px 0;
+          font-size: 24px;
+          color: rgba(51, 51, 51, 1);
+
+        }
+        span {
+          display: block;
+          width: 224px;
+          margin: 0 auto;
+          font-size: 14px;
+          color: rgba(102, 102, 102, 1);
+          line-height: 20px;
+
+        }
+      }
+    }
+  }
+
+  .selective {
+    background: rgba(237, 242, 250, 1);
+    margin-top: 70px;
+    padding-bottom: 80px;
+    p {
+      font-size: 36px;
+      color: rgba(55, 125, 255, 1);
+
+      padding: 72px 0 36px 0;
+      span {
+        display: inline-block;
+        font-size: 24px;
+
+        &:first-of-type {
+          padding-right: 30px;
+        }
+        &:last-of-type {
+          padding-left: 30px;
+        }
+      }
+    }
+    ul {
+      width: 905px;
+      margin: 0 auto;
+      text-align: left;
+      li {
+        padding-bottom: 20px;
+        list-style: none;
         display: flex;
-        justify-content: space-between;
-        li {
-          list-style: none;
-          width: 45%;
-          text-align: center;
-          > img {
-            height: 99px;
-            width: 99px;
-          }
-          > p {
-            padding: 47px 0 30px 0;
-            font-size: 24px;
-            color: rgba(51, 51, 51, 1);
-            line-height: 33px;
-          }
-          > span {
-            display: block;
-            width: 224px;
-            margin: 0 auto;
-            font-size: 14px;
-            color: rgba(102, 102, 102, 1);
-            line-height: 20px;
-          }
+        p {
+          font-size: 16px;
+          color: rgba(102, 102, 102, 1);
+          line-height: 24px;
+          padding: 0;
+        }
+        span {
+          font-size: 16px;
+          color: rgba(102, 102, 102, 1);
+          display: block;
         }
       }
     }
-    .selective {
-      background: rgba(237, 242, 250, 1);
-      margin-top: 70px;
-      padding-bottom: 80px;
-      > p {
-        font-size: 36px;
-        color: rgba(55, 125, 255, 1);
-        line-height: 50px;
-        padding: 72px 0 36px 0;
-        span {
-          display: inline-block;
-          font-size: 24px;
-          line-height: 33px;
-          &:first-of-type {
-            padding-right: 30px;
-          }
-          &:last-of-type {
-            padding-left: 30px;
-          }
+  }
+
+  .searchResult {
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 50px 0 100px 0;
+  }
+
+  .result-left {
+    width: 800px;
+    border: 1px solid rgba(233, 233, 233, 1);
+    border-bottom: none;
+    .left-top {
+      background: rgba(247, 247, 247, 1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: 50px;
+      p {
+        font-size: 20px;
+        color: rgba(51, 51, 51, 1);
+
+      }
+      button {
+        font-size: 20px;
+        color: rgba(51, 51, 51, 1);
+        outline: none;
+        border: none;
+        cursor: pointer;
+        padding: 15px 99px;
+        background: rgba(247, 247, 247, 1);
+        border-left: 1px solid rgba(233, 233, 233, 1);
+
+      }
+    }
+    li {
+      list-style: none;
+      display: flex;
+      padding: 12px 29px 12px 50px;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(233, 233, 233, 1);
+      P {
+        font-size: 16px;
+        color: rgba(51, 51, 51, 1);
+
+        button {
+          outline: none;
+          border: none;
+          cursor: pointer;
+          font-size: 12px;
+          color: rgba(255, 255, 255, 1);
+
+          background: rgba(102, 195, 0, 1);
+          padding: 2px 7px;
+          margin-left: 20px;
         }
       }
-      > ul {
-        width: 905px;
-        margin: 0 auto;
-        text-align: left;
+      div {
+        span {
+          font-size: 20px;
+          color: rgba(248, 94, 29, 1);
+
+          span {
+            font-size: 14px;
+            color: rgba(248, 94, 29, 1);
+
+          }
+        }
+        button {
+          font-size: 16px;
+          color: rgba(255, 255, 255, 1);
+          background: rgba(78, 157, 255, 1);
+          padding: 7px 27px;
+
+          outline: none;
+          border: none;
+          cursor: pointer;
+          margin-left: 20px;
+
+        }
+      }
+    }
+  }
+
+  .result-right {
+    width: 380px;
+    padding-bottom: 40px;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
+    .all {
+      margin: 23px 28px 40px 30px;
+      p {
+        font-size: 20px;
+        color: rgba(51, 51, 51, 1);
+
+        padding: 0 14px 19px 14px;
+        border-bottom: 2px solid rgba(204, 204, 204, 1);
+        span {
+          float: right;
+          font-size: 16px;
+          color: rgba(42, 153, 242, 1);
+
+          cursor: pointer;
+        }
+      }
+
+      .all-data {
+        padding: 30px 0 9px 0;
+        border-bottom: 2px solid rgba(204, 204, 204, 1);
         li {
-          padding-bottom: 20px;
           list-style: none;
           display: flex;
-          > p {
+          justify-content: space-between;
+          align-items: center;
+          padding-bottom: 22px;
+          h2 {
             font-size: 16px;
-            color: rgba(102, 102, 102, 1);
-            line-height: 24px;
-            padding: 0;
+            color: rgba(51, 51, 51, 1);
+
+            font-weight: normal;
+
           }
-          > span {
+          button {
             font-size: 16px;
-            color: rgba(102, 102, 102, 1);
-            line-height: 24px;
-            display: block;
+            color: rgba(42, 153, 242, 1);
+
+            border: 1px solid rgba(42, 153, 242, 1);
+            padding: 7px 43px;
+            background: #FFF;
+            cursor: pointer;
+            outline: none;
           }
         }
       }
     }
+    .statistical {
+      text-align: center;
+      p {
+        span {
+          font-size: 14px;
+          color: rgba(102, 102, 102, 1);
 
+          display: inline-block;
+          &:first-of-type {
+            margin-right: 28px;
+          }
+        }
+      }
+      h1 {
+        font-weight: normal;
+        font-size: 16px;
+        color: rgba(51, 51, 51, 1);
+
+        margin: 9px 0 30px 0;
+      }
+      button {
+        background: rgba(55, 125, 255, 1);
+        border-radius: 10px;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 1);
+        padding: 13px 114px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+      }
+    }
   }
 
 </style>

@@ -60,7 +60,8 @@
                     {{desc}}</p>
                 </div>
                 <button
-                  style="background:rgba(255,231,119,1);outline: none;border: none;font-size:14px;color:rgba(69,132,248,1);padding: 11px 41px;margin-top: 20px">
+                  style="cursor:pointer;background:rgba(255,231,119,1);outline: none;border: none;font-size:14px;color:rgba(69,132,248,1);padding: 11px 41px;margin-top: 20px"
+                  @click="toBuy">
                   立即购买
                 </button>
               </div>
@@ -115,7 +116,7 @@
           img: require('../../../assets/img/product/u-banner.png'),
           title: 'GPU加速云服务器',
           desc: 'GPU 云服务器（GPU Cloud Computing）是基于 GPU 应用的计算服务，具有实时高速的并行计算和浮点计算能力，适应用于 3D 图形应用程序、视频解码、深度学习、科学计算等应用场景。我们提供和标准云服务器一致的管理方式，有效解放您的计算压力，提升产品的计算处理效率与竞争力。',
-          linkRouter: $store.state.userInfo ? 'Pgpu' : 'login'
+          linkRouter: $store.state.userInfo ? 'buy/bgpu' : 'login'
         },
         features: [
           {
@@ -241,7 +242,11 @@
         ]
       }
     },
-    methods: {}
+    methods: {
+      toBuy(){
+        this.$router.push($store.state.userInfo ? 'buy/bgpu' : 'login')
+      },
+    }
   }
 </script>
 <style lang="less" rel="stylesheet/less" scoped>
