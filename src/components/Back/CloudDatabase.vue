@@ -25,7 +25,7 @@
         </div>
         <div class="databases">
           <Table :columns="databaseColumns" :data="dataBaseData"></Table>
-          <p>点击查看<span>如何连接数据库？</span></p>
+          <p>点击查看<span @click="$router.push('/ruicloud/documentInfo/RjCUjfFD7/RjDqVv0ZP')">如何连接数据库？</span></p>
         </div>
       </div>
     </div>
@@ -539,7 +539,7 @@
                   })
                 ]), h('DropdownMenu', {
                   slot: 'list'
-                }, [h('DropdownItem', {
+                }, [/*h('DropdownItem', {
                  nativeOn: {
                  click: () => {
                 //  this.backupsForm.name = ''
@@ -549,7 +549,7 @@
                   this.showModal.backups = true
                  }
                  }
-                 }, '数据库备份'),
+                 }, '数据库备份'),*/
                  h('DropdownItem', {
                   nativeOn: {
                     click: () => {
@@ -563,11 +563,17 @@
                   h('DropdownItem', {
                     nativeOn: {
                       click: () => {
-                        localStorage.setItem('serviceoffername', params.row.serviceoffername)
-                        localStorage.setItem('virtualMachineid', params.row.computerid)
-                        sessionStorage.setItem('databaseName', params.row.computername)
-                        sessionStorage.setItem('endtime', params.row.endtime)
-                        this.$router.push('dataBaseUpgrade')
+                        this.$message.confirm({
+                          title: '提示',
+                          content: '数据库升级会重启，是否确认升级数据库？',
+                          onOk: () => {
+                            localStorage.setItem('serviceoffername', params.row.serviceoffername)
+                            localStorage.setItem('virtualMachineid', params.row.computerid)
+                            sessionStorage.setItem('databaseName', params.row.computername)
+                            sessionStorage.setItem('endtime', params.row.endtime)
+                            this.$router.push('dataBaseUpgrade')
+                          }
+                        })
                       }
                     }
                   }, '数据库升级'),
@@ -825,7 +831,7 @@
       })
     },
     created() {
-      
+
     },
     methods: {
       // 绑定公网ip

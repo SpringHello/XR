@@ -43,14 +43,14 @@
           </div>
           <div class="input-box" v-show="Q=='phone'">
             <img src="./img/LR-phone.png">
-            <input v-model="registerForm.phoneLogin" type="text" placeHolder="请输入手机号">
+            <input v-model="registerForm.phoneLogin" type="text" placeHolder="请输入手机号" @blur="checkUserName">
             <div class="swap">
               <p @click="Q='email'">邮箱注册</p>
             </div>
           </div>
           <div class="input-box" v-show="Q=='email'">
             <img src="./img/LR-phone.png">
-            <input v-model="registerForm.emailLogin" type="text" placeHolder="请输入邮箱">
+            <input v-model="registerForm.emailLogin" type="text" placeHolder="请输入邮箱" @blur="checkUserName">
             <div class="swap">
               <p @click="Q='phone'">手机注册</p>
             </div>
@@ -59,7 +59,6 @@
             <img src="./img/LR-vailcode.png">
             <input v-model="registerForm.vailCode" type="vailCode" placeHolder="请输入验证码">
             <div class="kap-img-right">
-              <p></p>
               <img class="kap-img" :src="imgSrc"
                    @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
             </div>
@@ -456,13 +455,37 @@
           }
         })
       },
+      // 校验手机/邮箱是否注册
+      checkUserName(){
+        if (this.Q == 'phone' && !regExp.phoneVail(this.registerForm.phoneLogin)) {
+          this.registerWarning = '请输入正确手机号'
+          return
+        }
+        if (this.Q == 'email' && !regExp.emailVail(this.registerForm.emailLogin)) {
+          this.registerWarning = '请输入正确邮箱'
+          return
+        }
+        axios.get('user/isRegister.do', {
+          params: {
+            username: this.Q == 'phone' ? this.registerForm.phoneLogin : this.registerForm.emailLogin
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (this.registerWarning == '该 邮箱/手机号 已注册') {
+              this.registerWarning = ''
+            }
+          } else {
+            this.registerWarning = '该 邮箱/手机号 已注册'
+          }
+        })
+      },
       // 注册
       register(){
         if (this.Q == 'phone' && !regExp.phoneVail(this.registerForm.phoneLogin)) {
           this.registerWarning = '请输入正确手机号'
           return
         }
-        if (this.Q == 'email' && !regExp.emailVail(this.registerForm.emailLogin)) {
+        if (this.Q == 'email' && !/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(this.registerForm.emailLogin)) {
           this.registerWarning = '请输入正确邮箱'
           return
         }
@@ -624,7 +647,6 @@
             display: flex;
             align-items: center;
             box-sizing: border-box;
-            padding-right: 10px;
             img {
               margin: 0px 20px;
             }
@@ -635,35 +657,19 @@
               outline: none;
             }
             .kap-img-right {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              p {
-                width: 1px;
-                height: 28px;
-                border: 1px solid rgba(200, 200, 200, 1);
-                margin-right: 20px;
-              }
+              width: 100px;
+              display: inline-block;
               .kap-img {
-                margin: 0px;
-                width: 80px;
+                vertical-align: middle;
               }
             }
           }
           .swap {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            &:before {
-              content: '';
-              display: block;
-              width: 1px;
-              height: 28px;
-              border: 1px solid rgba(200, 200, 200, 1);
-              margin-right: 20px;
-            }
             width: 100px;
+            display: inline-block;
             p {
+              padding: 7px 8px;
+              border-left: 1px solid rgba(200, 200, 200, 1);
               text-align: center;
               cursor: pointer;
               color: #4A97EE
