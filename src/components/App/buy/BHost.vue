@@ -1117,6 +1117,8 @@
         handler(){
           this.queryQuick()
           this.queryCustomVM()
+          this.queryIPPrice()
+          this.queryDiskPrice()
         },
         deep: true
       },
