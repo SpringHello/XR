@@ -183,6 +183,10 @@
           {
             prod: '云运维',
             prodUrl: ['userCenter#remainder', '']
+          },
+          {
+            prod: '云数据库',
+            prodUrl: ['cloudDatabase', '']
           }
         ],
         isDisable: false,
@@ -208,6 +212,7 @@
           '#houtaiicon-yunwangluo1',
           '#houtaiicon-yuncunchu1',
           '#houtaiicon-yunanquan1',
+          '#houtaiicon-yunyunwei1',
           '#houtaiicon-yunyunwei1'
         ]
       }
@@ -285,11 +290,13 @@
               if (content.itemName == '弹性云主机ECS') {
                 content.cartUrl = 'buy#Pecs'
               } else if (content.itemName == '弹性IP') {
-                content.cartUrl = 'buy#Peip'
+                content.cartUrl = 'buy/bip#Peip'
               } else if (content.itemName == '云硬盘') {
-                content.cartUrl = 'buy#Pdisk'
+                content.cartUrl = 'buy/bdata#Pdisk'
               } else if (content.itemName == 'NAT网关') {
                 content.cartUrl = 'vpc#NAT'
+              } else if (content.itemName == '数据库') {
+                content.cartUrl = 'buy/bdata#NAT'
               }
             })
           })
