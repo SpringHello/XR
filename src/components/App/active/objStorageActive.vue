@@ -427,22 +427,21 @@ export default {
           rgba(255, 227, 208, 1),
           rgba(255, 255, 255, 1)
         );
-        height: 400px;
         position: relative;
         .wrap {
-          position: relative;
-          width: 1920px;
           margin: 0 auto;
-          &:after {
-            content: url("./../../../assets/img/home/banner-objStorage.png");
-            position: absolute;
-            top: 0;
-            right: 0;
-          }
           > div {
+            height: 400px;
+            position: relative;
             width: 1200px;
             margin: 0 auto;
             padding-top: 70px;
+            &:after {
+              content: url("./../../../assets/img/home/banner-objStorage.png");
+              position: absolute;
+              top: 0;
+              left: 300px;
+            }
             button {
               background: none;
               outline: none;
