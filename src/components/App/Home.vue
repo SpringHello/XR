@@ -2523,7 +2523,7 @@
           }
           &:last-of-type {
             color: #4A97EE;
-            padding-bottom: 20px; 
+            padding-bottom: 20px;
             cursor: pointer;
           }
         }

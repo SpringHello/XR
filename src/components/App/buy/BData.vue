@@ -334,8 +334,9 @@
         </div>
         <!--费用、以及加入预算清单-->
         <div style="margin-top: 20px">
-          <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+          <!--<p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
              @click="$router.push('document')">查看计价详情</p>
+          <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">-->
           <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
             费用：<span
             style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
@@ -830,5 +831,325 @@
     }
   }
 </script>
+<style rel="stylesheet/less" lang="less" scoped>
+  #buy {
+    background-color: #F7F7F7;
+    #wrapper {
+      width: 1200px;
+      margin: 0px auto;
+      padding: 50px 0px;
+      #header {
+        a {
+          margin-left: 20px;
+          font-size: 14px;
+        }
+      }
+      #body {
+        display: flex;
+        justify-content: space-between;
+        > div {
+          width: 800px;
+          background-color: #ffffff;
+        }
+
+        .config-title {
+          font-size: 24px;
+          line-height: 60px;
+          width: 50%;
+          text-align: center;
+          cursor: pointer;
+          color: #666666;
+          background: #E9E9E9;
+        }
+        .typeSelect {
+          background-color: #FFFFFF;
+          color: #2A99F2;
+          border-top: 3px solid #377DFF;
+        }
+        .zoneItem {
+          //width: 101px;
+          background-color: white;
+          border: 1px solid #d9d9d9;
+          font-size: 14px;
+          text-align: center;
+          color: #666666;
+          cursor: pointer;
+          margin-right: 10px;
+          padding: 6px 15px;
+          display: inline-block;
+        }
+        .timeType {
+          width: 55px;
+          margin: 0px;
+          border: 1px solid #d9d9d9;
+          border-right: none;
+          font-size: 14px;
+          text-align: center;
+          cursor: pointer;
+          padding: 6px 0px;
+          display: inline-block;
+          position: relative;
+          .discount-icon {
+            display: inline-block;
+            position: absolute;
+            background-color: rgb(255, 125, 45);
+            color: #ffffff;
+            right: 2px;
+            top: 1px;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+          }
+          &:last-of-type {
+            border-right: 1px solid #d9d9d9 !important;
+          }
+        }
+        .zoneSelect {
+          border-color: #377dff;
+          background-color: #377dff;
+          color: #ffffff;
+        }
+        .item-wrapper {
+          margin-top: 20px;
+          .item-title {
+            font-size: 16px;
+            color: #333333;
+            width: 90px;
+            margin-top: 9px;
+          }
+          .item-desc {
+            margin-top: 10px;
+            margin-left: 90px;
+            font-size: 14px;
+            color: #999999;
+            line-height: 25px;
+          }
+          .mirror {
+            display: flex;
+            width: 480px;
+            margin-top: 20px;
+            padding: 10px;
+            cursor: pointer;
+            border: 1px solid #d9d9d9;
+            .appName {
+              font-size: 14px;
+              color: #666666;
+            }
+            .desc {
+              font-size: 14px;
+              color: rgb(153, 153, 153);
+              margin-top: 10px;
+            }
+          }
+          .mirrorSelect {
+            background-color: #377dff;
+            .appName {
+              color: #ffffff;
+            }
+            .desc {
+              color: #ffffff
+            }
+          }
+        }
+        .btn {
+          border-color: #377DFF;
+          font-size: 16px;
+          color: #377DFF;
+          border-radius: 10px;
+          background: #FFFFFF;
+          &:first-of-type {
+            margin-right: 10px;
+          }
+          &:hover {
+            background-color: #377DFF;
+            color: #FFFFFF;
+          }
+        }
+
+        #list {
+          width: 380px;
+          background-color: #f7f7f7;
+          .item {
+            font-size: 14px;
+            color: #666666;
+            line-height: 25px;
+            .title {
+              width: 70px;
+              margin-right: 20px;
+              text-align: right;
+              display: inline-block;
+            }
+          }
+        }
+      }
+    }
+    /*购买按钮*/
+    .buyButton {
+      cursor: pointer;
+      outline: none;
+      padding: 10px 38px;
+      border: 1px solid #377dff;
+      border-radius: 10px;
+      background-color: #ffffff;
+      font-size: 16px;
+      color: #377DFF;
+      &:hover {
+        background-image: linear-gradient(-42deg, #377DFF 0%, #4481EB 100%);
+        color: #FFF;
+      }
+    }
+  }
+
+  .body {
+    height: 55%;
+    form {
+      margin-top: 15px;
+    }
+    input {
+      border: none;
+      border-bottom: 1px solid #ccc;
+      outline: none;
+      background: rgba(0, 0, 0, 0);
+      height: 50px;
+      font-size: 14px;
+      width: 80%;
+      margin: 0px auto;
+      display: block;
+      margin-bottom: 20px;
+      &:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px white inset;
+      }
+      &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #B6B6B6;
+      }
+      &::-moz-placeholder { /* Firefox 19+ */
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #B6B6B6;
+      }
+      &:-ms-input-placeholder { /* IE 10+ */
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #B6B6B6;
+      }
+      &:-moz-placeholder { /* Firefox 18- */
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #B6B6B6;
+      }
+    }
+    span {
+      display: block;
+      width: 80%;
+      margin: 0px auto;
+      font-family: PingFangSC-Regular;
+      font-family: PingFangSC-Regular;
+      font-size: 14px;
+      color: #B6B6B6;
+      font-size: 14px;
+      line-height: 14px;
+      height: 14px;
+      transition: all .5s;
+      &.warning {
+        color: #F24747;
+      }
+    }
+    img {
+      width: 80px;
+      height: 30px;
+      position: absolute;
+      display: block;
+      bottom: 12px;
+      right: 43px;
+      cursor: pointer;
+      //background: #4990E2;
+      //border: 1px solid white;
+      border-radius: 3px;
+      font-family: PingFangSC-Regular;
+      font-size: 11px;
+      color: #FFFFFF;
+      letter-spacing: 0.71px;
+      outline: none;
+    }
+  }
+
+  .foot {
+    padding-top: 10px;
+    height: 32%;
+    button {
+      width: 80%;
+      margin: 0px auto;
+      display: block;
+      height: 45px;
+      background-color: #4990E2;
+      border: none;
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #FFFFFF;
+      letter-spacing: 0.83px;
+      cursor: pointer;
+      margin-bottom: 15px;
+      &.disabled {
+        cursor: not-allowed;
+      }
+    }
+    .checkBox {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      display: inline-block;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+    .agree {
+      background-color: #2d8cf0;
+      border-color: #2d8cf0;
+      position: relative;
+      &::after {
+        content: "";
+        display: table;
+        width: 4px;
+        height: 8px;
+        position: absolute;
+        top: 0px;
+        left: 3px;
+        border: 2px solid #fff;
+        border-top: 0;
+        border-left: 0;
+        transform: rotate(45deg) scale(1);
+      }
+    }
+    div {
+      width: 80%;
+      height: 35px;
+      margin: 0px auto;
+    }
+    span {
+      vertical-align: middle;
+      font-family: PingFangSC-Regular;
+      font-size: 14px;
+      letter-spacing: 0.83px;
+    }
+  }
+
+  .hidden {
+    font-size: 0px;
+  }
+
+  .numberAdd {
+    border: 1px solid #D9D9D9;
+    padding: 4px 10px;
+    margin-right: -5px;
+  }
+
+  .numberMinus {
+    border: 1px solid #D9D9D9;
+    padding: 4px 8px;
+    margin-left: -5px;
+  }
+</style>
 
 

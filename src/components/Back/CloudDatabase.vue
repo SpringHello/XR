@@ -260,7 +260,7 @@
             ellipsis: true,
             render: (h, params) => {
               return h('div', {
-                style: {
+                /*style: {
                   color: '#2A99F2',
                   cursor: 'pointer'
                 },
@@ -269,7 +269,7 @@
                     sessionStorage.setItem('databaseInfo', JSON.stringify(params.row))
                     this.$router.push('CloudDataManage')
                   }
-                }
+                }*/
               }, params.row.computername)
             }
           },
@@ -373,7 +373,7 @@
             title: '公网地址',
             width: '180px',
             render: (h, params) => {
-              if (params.row.publicip){
+              if (params.row.publicip) {
                 return h('div', {}, [h('span', {}, params.row.publicip), h('span', {
                   style: {
                     color: '#2A99F2',
@@ -382,33 +382,33 @@
                   on: {
                     click: () => {
                       this.$message.confirm({
-                        title: '提示',
-                        content: `您正在为${params.row.computername}解绑公网IP，解绑之后您将不能通过公网访问该数据库，确认解绑？`,
-                        onOk: () => {
-                          this.dataBaseData.forEach(item => {
-                            if (item.computerid == params.row.computerid) {
-                              item.status = 8
-                            }
-                          })
-                          this.$http.get('network/disableStaticNatByAfter.do', {
-                            params: {
-                              ipId: params.row.publicip,
-                              VMId: params.row.computerid
-                            }
-                          }).then(response => {
-                            if (response.status == 200 && response.data.status == 1
-                            ) {
-                              this.$Message.success(response.data.message)
-                              this.listDatabase()
-                            }
-                            else if (response.status == 200 && response.data.status == 2) {
-                              this.$message.info({
-                                content: response.data.message
-                              })
-                            }
-                          })
+                          title: '提示',
+                          content: `您正在为${params.row.computername}解绑公网IP，解绑之后您将不能通过公网访问该数据库，确认解绑？`,
+                          onOk: () => {
+                            this.dataBaseData.forEach(item => {
+                              if (item.computerid == params.row.computerid) {
+                                item.status = 8
+                              }
+                            })
+                            this.$http.get('network/disableStaticNatByAfter.do', {
+                              params: {
+                                ipId: params.row.publicip,
+                                VMId: params.row.computerid
+                              }
+                            }).then(response => {
+                              if (response.status == 200 && response.data.status == 1
+                              ) {
+                                this.$Message.success(response.data.message)
+                                this.listDatabase()
+                              }
+                              else if (response.status == 200 && response.data.status == 2) {
+                                this.$message.info({
+                                  content: response.data.message
+                                })
+                              }
+                            })
+                          }
                         }
-                      }
                       )
                     }
                   }
@@ -432,7 +432,7 @@
                       }).then(response => {
                         if (response.status == 200 && response.data.status == 1) {
                           this.publicIPList = response.data.result
-                          if (this.publicIPList == ''){
+                          if (this.publicIPList == '') {
                             this.showModal.publicIPHint = true
                           } else {
                             this.showModal.bindIP = true
@@ -532,7 +532,7 @@
                       marginRight: '5px'
                     }
                   }, '更多操作'),
-                   h('Icon', {
+                  h('Icon', {
                     props: {
                       type: 'ios-arrow-down'
                     }
@@ -542,24 +542,24 @@
                 }, [/*h('DropdownItem', {
                  nativeOn: {
                  click: () => {
-                //  this.backupsForm.name = ''
-                //  this.backupsForm.memory = 1
-                  this.currentDBId = params.row.computerid
-                  this.currentHostname = params.row.computername
-                  this.showModal.backups = true
+                 //  this.backupsForm.name = ''
+                 //  this.backupsForm.memory = 1
+                 this.currentDBId = params.row.computerid
+                 this.currentHostname = params.row.computername
+                 this.showModal.backups = true
                  }
                  }
                  }, '数据库备份'),*/
-                 h('DropdownItem', {
-                  nativeOn: {
-                    click: () => {
-                      this.dilatationForm.databaseSize = params.row.disksize
-                      this.dilatationForm.minDatabaseSize = params.row.disksize
-                      this.current = params.row
-                      this.showModal.dilatation = true
+                  h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        this.dilatationForm.databaseSize = params.row.disksize
+                        this.dilatationForm.minDatabaseSize = params.row.disksize
+                        this.current = params.row
+                        this.showModal.dilatation = true
+                      }
                     }
-                  }
-                }, '数据库扩容'),
+                  }, '数据库扩容'),
                   h('DropdownItem', {
                     nativeOn: {
                       click: () => {
@@ -662,52 +662,52 @@
                     }
                   }, '关闭数据库')])
                 ]),
-                h('div', [h('span', {
-                  style: {
-                    color: '#2A99F2',
-                    marginRight: '5px',
-                  }
-                }, '日志记录'),
-                  h('i-Switch', {
-                    props: {
-                      value: true,
-                      size: 'small'
-                    },
+                  h('div', [h('span', {
                     style: {
-                      verticalAlign: 'text-top'
-                    },
-                    on: {
-                      input: (event) => {
-                        // 日志开启时调用
-                        if (event) {
-                          this.$http('database/openDatabaseLog.do', {
-                            params: {
-                              DBId: params.row.computerid
-                            }
-                          }).then(response => {
-                            if (response.status == 200 && response.data.status == 1){
-                              this.$Message.success(response.data.message)
-                            } else {
-                              this.$Message.error(response.data.message)
-                            }
-                          })
-                        } else { // 关闭日志时调用
-                          this.$http('database/closeDataBaseLog.do', {
-                            params: {
-                              DBId: params.row.computerid
-                            }
-                          }).then(response => {
-                            if (response.status == 200 && response.data.status == 1){
-                              this.$Message.success(response.data.message)
-                            } else {
-                              this.$Message.error(response.data.message)
-                            }
-                          })
+                      color: '#2A99F2',
+                      marginRight: '5px',
+                    }
+                  }, '日志记录'),
+                    h('i-Switch', {
+                      props: {
+                        value: true,
+                        size: 'small'
+                      },
+                      style: {
+                        verticalAlign: 'text-top'
+                      },
+                      on: {
+                        input: (event) => {
+                          // 日志开启时调用
+                          if (event) {
+                            this.$http('database/openDatabaseLog.do', {
+                              params: {
+                                DBId: params.row.computerid
+                              }
+                            }).then(response => {
+                              if (response.status == 200 && response.data.status == 1) {
+                                this.$Message.success(response.data.message)
+                              } else {
+                                this.$Message.error(response.data.message)
+                              }
+                            })
+                          } else { // 关闭日志时调用
+                            this.$http('database/closeDataBaseLog.do', {
+                              params: {
+                                DBId: params.row.computerid
+                              }
+                            }).then(response => {
+                              if (response.status == 200 && response.data.status == 1) {
+                                this.$Message.success(response.data.message)
+                              } else {
+                                this.$Message.error(response.data.message)
+                              }
+                            })
+                          }
                         }
                       }
-                    }
-                  })
-                ])])
+                    })
+                  ])])
               } else {
                 var isShow1 = params.row.caseType == 3 ? 'inline-block' : 'none'
                 return h('div', {}, [h('span', {
@@ -957,10 +957,10 @@
           if (valid) {
             this.showModal.portModify = false
             this.dataBaseData.forEach(item => {
-                if (item.computerid == this.currentComputerId) {
-                  item.status = 9
-                }
-              })
+              if (item.computerid == this.currentComputerId) {
+                item.status = 9
+              }
+            })
             this.$http.get('database/updateDBPort.do', {
               params: {
                 DBId: this.current.computerid, //(数据库的UUID),
@@ -982,25 +982,25 @@
       // 云数据库备份
       backupSubmit() {
         this.showModal.backups = false
-            this.$http.get('database/DBBackup.do', {
-              params: {
-                DBId: this.currentDBId,
-                allDataBases: '0',
-                dbName: this.currentHostname
-              }
-              // 测试数据
-              // params: {
-              //   DBId: '5efe9972-8032-4433-a230-6b75a405af87',
-              //   dbName: 'mysql',
-              //   allDataBases: '0'
-              // }
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success(response.data.message)
-              } else {
-                this.$Message.error(response.data.message)
-              }
-            })
+        this.$http.get('database/DBBackup.do', {
+          params: {
+            DBId: this.currentDBId,
+            allDataBases: '0',
+            dbName: this.currentHostname
+          }
+          // 测试数据
+          // params: {
+          //   DBId: '5efe9972-8032-4433-a230-6b75a405af87',
+          //   dbName: 'mysql',
+          //   allDataBases: '0'
+          // }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+          } else {
+            this.$Message.error(response.data.message)
+          }
+        })
       },
       // 云数据库镜像
       // mirrorSubmit(name) {
@@ -1140,6 +1140,12 @@
           this.queryDatabaseCost()
         }
       },
+      '$store.state.zone': {
+        handler: function () {
+          this.listDatabase()
+        },
+        deep: true
+      }
     }
   }
 </script>

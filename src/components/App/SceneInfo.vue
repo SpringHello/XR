@@ -5,7 +5,8 @@
       <div class="center">
         <div class="head">
           <img src="../../assets/img/sceneInfo/free-hint.png"/>
-          <span>免费使用一年</span>
+          <span v-if="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'">免费试用</span>
+          <span v-else>免费使用一年</span>
           <div class="title">
             <h3>{{ item.currentScene }}</h3>
           </div>
@@ -63,7 +64,7 @@
                 <div class="cf-footer">
                   <p><span>押金：</span>{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" @click="getHost(currentIndex,index1)">免费使用</Button>
+                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" @click="getHost(currentIndex,index1)">免费试用</Button>
                 </div>
               </div>
             </div>
@@ -1820,12 +1821,22 @@
           },
           {
             title: '押金金额',
+            width: 130,
             render: (h, params) => {
-              return h('span', {
+              let arr = []
+              let param1 = h('li', {
+                style: {
+                  textDecoration: 'line-through'
+                }
+              }, '原价：¥' + params.row.originalPrice)
+              let param2 = h('li', {
                 style: {
                   color: '#D0021B'
                 }
               }, '¥' + params.row.cashPledge)
+              arr.push(param1)
+              arr.push(param2)
+              return h('ul', {}, arr)
             }
           },
         ],
@@ -1984,6 +1995,7 @@
                 this.orderData.push({
                   productType: '云服务器',
                   configs: this.currentSceneGroup[this.index1].configGroup[this.index2].configs,
+                  originalPrice: this.currentSceneGroup[this.index1].configGroup[this.index2].originalPrice,
                   time: this.time,
                   cashPledge: Number(this.cashPledge)
                 })
