@@ -118,7 +118,7 @@
       </div>
     </div>
      <!-- 八大场景区 -->
-    <div class="eigth-scene" :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat'}">
+    <div class="eigth-scene" :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat',backgroundPosition:'center'}">
       <div class="wrap">
         <div class="box">
           <div class="hint">
