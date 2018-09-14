@@ -172,7 +172,7 @@
       }
       &.img_2 {
         left: 0;
-        bottom: -350px;
+        bottom: 0;
       }
     }
     .content-list {
@@ -182,7 +182,7 @@
       flex-wrap: wrap;
       .scene {
         margin-top: 20px;
-        width: 285px;
+        width: 288px;
         background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(213, 213, 213, 1);
         cursor: pointer;
@@ -219,7 +219,7 @@
           }
         }
         .scene-top {
-          width: 285px;
+          width: 286px;
           height: 225px;
           font-size: 24px;
           font-family: MicrosoftYaHei;
