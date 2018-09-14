@@ -267,8 +267,8 @@ var router = new Router({
             {path: 'bhost', name: 'bhost', component: BHost},
             {path: 'bdisk', name: 'bdisk', component: BDisk},
             {path: 'bip', name: 'bip', component: BIP},
-            {path: 'bdata', name: 'bdata', component: BData},
-            {path: 'bgpu', name: 'bgpu', component: BGpu}
+            {path: 'bdata', name: 'bdata', component: BData}
+            /*{path: 'bgpu', name: 'bgpu', component: BGpu}*/
           ]
         },
 

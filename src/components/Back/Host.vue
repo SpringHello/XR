@@ -630,7 +630,7 @@
         <Button type="primary" @click="publicIPHint_ok">创建公网IP</Button>
       </p>
     </Modal>
-    
+
   </div>
 </template>
 
@@ -784,7 +784,7 @@
       }, 5 * 1000)
     },
     methods: {
-      
+
       publicIPHint_ok() {
         this.$router.push('buy')
         sessionStorage.setItem('pane', 'Peip')
@@ -1631,16 +1631,16 @@
       },
       // 连接主机动作
       link(item) {
-        sessionStorage.setItem('link-companyid', item.companyid)
-        sessionStorage.setItem('link-vmid', item.computerid)
-        sessionStorage.setItem('link-zoneid', item.zoneid)
-        sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
-        this.$router.push('link')
+        localStorage.setItem('link-companyid', item.companyid)
+        localStorage.setItem('link-vmid', item.computerid)
+        localStorage.setItem('link-zoneid', item.zoneid)
+        localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
+        window.open('/ruicloud/link')
+        //this.$router.push('link')
         /*this.$http.get('information/connectVm.do', {
          params: {
          VMId: item.computerid
-         }
-         }).then(response => {
+         }}).then(response => {
          if (response.data.connectCode == '') {
          /!*var form = document.createElement('form');
          form.action = 'https://www.baidu.com';

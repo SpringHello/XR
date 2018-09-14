@@ -5,7 +5,8 @@
       <div class="center">
         <div class="head">
           <img src="../../assets/img/sceneInfo/free-hint.png"/>
-          <span>免费使用一年</span>
+          <span v-if="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'">免费试用</span>
+          <span v-else>免费使用一年</span>
           <div class="title">
             <h3>{{ item.currentScene }}</h3>
           </div>
@@ -63,7 +64,7 @@
                 <div class="cf-footer">
                   <p><span>押金：</span>{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" @click="getHost(currentIndex,index1)">免费使用</Button>
+                  <Button type="primary" :disabled="true" @click="getHost(currentIndex,index1)">敬请期待</Button>
                 </div>
               </div>
             </div>
@@ -1874,7 +1875,7 @@
             {required: true, message: '请输入验证码'}
           ]
         },
-        imgSrc: 'user/getKaptchaImage.do',
+        imgSrc: `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         //定时器
         pageTimer: null,
         serialNum: ''
