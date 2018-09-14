@@ -494,6 +494,7 @@
 
       //下载统计图
       dowloda(name){
+        this.selectArrears();
         var img = new Image();
         img = this.$refs[name].getConnectedDataURL({
           pixelRatio: 2,
@@ -536,6 +537,7 @@
 
       //下载流量切换统计图
       chartClick(val){
+        this.selectArrears();
         this.chartIndex = val;
         this.rwPolar.series[0].type = this.chartList[val].type;
         this.rwPolar.xAxis.boundaryGap = this.chartList[val].boundaryGap;
@@ -543,6 +545,7 @@
 
       //请求次数切换统计图
       chartTwoClick(val){
+        this.selectArrears();
         this.chartTwoIndex = val;
         this.rwNumber.series[0].type = this.chartTwotList[val].type;
         this.rwNumber.xAxis.boundaryGap = this.chartTwotList[val].boundaryGap;
@@ -664,6 +667,7 @@
       },
       //创建空间
       bucketClick() {
+        this.selectArrears();
         this.$refs.bucketInline.validate(valid => {
           if (valid) {
             this.createLoading = true;
