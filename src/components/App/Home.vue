@@ -2012,7 +2012,7 @@
       }
     }
     > .partner-container {
-      background-color: #f9f9f9;
+      background-color: #fff;
       > div {
         width: 1200px;
         margin: 0px auto;
