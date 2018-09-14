@@ -678,7 +678,7 @@
       },
       buyData() {
         if (this.userInfo == null) {
-          this.$parent.showModal.login = true
+          this.$LR({type:'login'})
           return
         }
         if (this.system.systemName == undefined) {

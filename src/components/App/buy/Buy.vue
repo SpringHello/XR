@@ -338,7 +338,7 @@
           return
         }
         if (this.userInfo == null) {
-          this.showModal.login = true
+          this.$LR({type: 'login'})
           return
         }
         var PromiseList = []
