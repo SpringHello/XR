@@ -128,7 +128,7 @@
               </ul>
             </div>
             <div class="content" v-for="(item,index) in selectedEightscene" :key="index">
-                <!-- <div :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat',backgroundPosition:'center',width:'100px',height:'100px'}" :class="{fadein:index==}"></div> -->
+                <!-- <div :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat',backgroundPosition:'center',width:'100px',height:'100px'}" :class="{fadein:index==eightsceneIndex,modalfade:true}"></div> -->
                 <div class="hint">
                   <span>{{item.hint}}</span>
                 </div>
@@ -471,6 +471,16 @@
         partnerFade: true,
         authorityFade: true,
         eightsceneIndex: 0,
+        eigthimgs: [
+          {bgUrl: require('../../assets/img/home/eightscene-bg-1.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-2.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-3.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-4.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-5.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-6.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-7.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-8.png')}
+        ],
         eigthSceneMenu: [
           {name: '云电脑', link: 'host'},
           {name: '自助建站', link: 'web'},
@@ -492,7 +502,7 @@
               require('../../assets/img/sceneList/sl-icon4.png')
             ],
             configure: ['1核1G1M带宽'],
-            link: 'host',
+            link: '/ruicloud/sceneInfo/host',
             bgUrl: require('../../assets/img/home/eightscene-bg-1.png'),
             hint: '免费使用一年'
           },
@@ -506,7 +516,7 @@
               require('../../assets/img/sceneList/sl-icon8.png')
             ],
             configure: ['1核1G1M带宽'],
-            link: 'web',
+            link: '/ruicloud/sceneInfo/web',
             bgUrl: require('../../assets/img/home/eightscene-bg-2.png'),
             hint: '免费使用一年'
           },
@@ -518,7 +528,7 @@
               require('../../assets/img/sceneList/sl-icon10.png')
             ],
             configure: ['1核1G1M带宽'],
-            link: 'disk',
+            link: '/ruicloud/sceneInfo/disk',
             bgUrl: require('../../assets/img/home/eightscene-bg-3.png'),
             hint: '免费使用一年'
           },
@@ -532,7 +542,7 @@
               require('../../assets/img/sceneList/sl-icon14.png')
             ],
             configure: ['1核1G1M带宽'],
-            link: 'software',
+            link: '/ruicloud/sceneInfo/software',
             bgUrl: require('../../assets/img/home/eightscene-bg-4.png'),
             hint: '免费使用一年'
           },
@@ -544,7 +554,7 @@
               require('../../assets/img/sceneList/sl-icon16.png')
             ],
             configure: ['1核1G1M带宽'],
-            link: 'game',
+            link: '/ruicloud/sceneInfo/game',
             bgUrl: require('../../assets/img/home/eightscene-bg-5.png'),
             hint: '免费使用一年'
           },
@@ -558,7 +568,7 @@
               require('../../assets/img/sceneList/sl-icon20.png')
             ],
             configure: ['1核1G1M带宽'],
-            link: 'design',
+            link: '/ruicloud/sceneInfo/design',
             bgUrl: require('../../assets/img/home/eightscene-bg-6.png'),
             hint: '免费适用'
           },
@@ -572,7 +582,7 @@
               require('../../assets/img/sceneList/sl-icon24.png'),
             ],
             configure: ['1核1G1M带宽'],
-            link: 'AI',
+            link: '/ruicloud/sceneInfo/AI',
             bgUrl: require('../../assets/img/home/eightscene-bg-7.png'),
             hint: '免费适用'
           },
@@ -583,7 +593,7 @@
               require('../../assets/img/sceneList/sl-icon25.png')
             ],
             configure: ['1核1G1M带宽'],
-            link: 'supercomputing',
+            link: '/ruicloud/sceneInfo/supercomputing',
             bgUrl: require('../../assets/img/home/eightscene-bg-8.png'),
             hint: '免费适用'
           },
@@ -1121,6 +1131,13 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   #home {
+    // .modalfade {
+    //       opacity: 0;
+    //     }
+    //     .fadein {
+    //       opacity: 1;
+    //       transition: opacity 2s;
+    //     }
     font-family:PingFangSC-Regular;
     .wrap {
       width: 1200px;
@@ -1178,7 +1195,6 @@
                 text-align: center;
                 &:hover,&.selected {
                   background:linear-gradient(270deg,rgba(170,202,255,1) 0%,rgba(138,189,253,0) 100%);
-                  font-weight:600;
                   color: #377DFF;
                   border-right: #387DFF 6px solid;
                 }
@@ -1420,6 +1436,7 @@
         justify-content: space-between;
         // box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
         box-shadow:0px 2px 35px -17px rgba(69,69,69,0.86);
+        background: #fff;
         .main-left {
           padding: 40px 60px 40px 80px;
           position: relative;
@@ -1505,7 +1522,8 @@
           width: 386px;
           padding-bottom: 20px;
           overflow: hidden;
-          box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.41);
+          // box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.41);
+          box-shadow:0px 13px 14px -6px rgba(216,216,216,0.5);
           dt {
             height: 58px;
             display: flex;
