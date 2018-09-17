@@ -118,17 +118,21 @@
       </div>
     </div>
      <!-- 八大场景区 -->
-    <div class="eigth-scene" :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat',backgroundPosition:'center'}">
+    <div class="eigth-scene">
+      <div class="bg-wrap">
+          <div class="bg" ref="bgcheck">
+              <img  v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl"/>
+          </div>
+      </div>
       <div class="wrap">
         <div class="box">
           <div class="container">
             <div class="left-menu">
               <ul>
-                <li v-for="(item,index) in eigthSceneMenu" :key="index" @click="eightsceneIndex = index" :class="{selected:eightsceneIndex == index}">{{item.name}}</li>
+                <li v-for="(item,index) in eigthSceneMenu" :key="index" @click="menuselected(index)" :class="{selected:eightsceneIndex == index}">{{item.name}}</li>
               </ul>
             </div>
             <div class="content" v-for="(item,index) in selectedEightscene" :key="index">
-                <!-- <div :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat',backgroundPosition:'center',width:'100px',height:'100px'}" :class="{fadein:index==eightsceneIndex,modalfade:true}"></div> -->
                 <div class="hint">
                   <span>{{item.hint}}</span>
                 </div>
@@ -556,7 +560,7 @@
             configure: ['1核1G1M带宽'],
             link: '/ruicloud/sceneInfo/game',
             bgUrl: require('../../assets/img/home/eightscene-bg-5.png'),
-            hint: '免费使用一年'
+            hint: '免费使用'
           },
           {
             title: '图形设计',
@@ -570,7 +574,7 @@
             configure: ['1核1G1M带宽'],
             link: '/ruicloud/sceneInfo/design',
             bgUrl: require('../../assets/img/home/eightscene-bg-6.png'),
-            hint: '免费适用'
+            hint: '免费使用'
           },
           {
             title: '人工智能',
@@ -584,7 +588,7 @@
             configure: ['1核1G1M带宽'],
             link: '/ruicloud/sceneInfo/AI',
             bgUrl: require('../../assets/img/home/eightscene-bg-7.png'),
-            hint: '免费适用'
+            hint: '免费使用'
           },
           {
             title: '超级运算',
@@ -595,7 +599,7 @@
             configure: ['1核1G1M带宽'],
             link: '/ruicloud/sceneInfo/supercomputing',
             bgUrl: require('../../assets/img/home/eightscene-bg-8.png'),
-            hint: '免费适用'
+            hint: '免费使用'
           },
         ],
         bannerText: require('../../assets/img/home/active3Text.png'),
@@ -998,6 +1002,10 @@
       this.getlinkList()
     },
     methods: {
+      menuselected(index) {
+        this.eightsceneIndex = index
+        this.$refs.bgcheck.style.marginTop = -666 * index + 'px'
+      },
       datacenterEnter(selectedIndex) {
         this.authorityContainer.forEach((item, index) => {
           if (selectedIndex == index) {
@@ -1131,13 +1139,6 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   #home {
-    // .modalfade {
-    //       opacity: 0;
-    //     }
-    //     .fadein {
-    //       opacity: 1;
-    //       transition: opacity 2s;
-    //     }
     font-family:PingFangSC-Regular;
     .wrap {
       width: 1200px;
@@ -1163,10 +1164,34 @@
       justify-content: space-between;
     }
     .eigth-scene {
-      // background: url(../../assets/img/home/eightscene-host/bg.png) no-repeat;
-      // opacity: 0.5;
-      // transition: opacity 2s;
+      position: relative;
+      margin:0 auto;
+      width: 1920px;
+      .bg-wrap {
+        position: relative;
+        margin:0 auto;
+        overflow: hidden;
+        height: 666px;
+        .bg{
+          transition: all .5s;
+          margin: auto 0;
+          height: 5328px;
+          position:absolute;
+          top: 0;
+          left: 0;
+          z-index: 1;
+          >img {
+            margin: 0;
+            padding: 0;
+            display: block;
+          }
+        }
+      }
       .wrap {
+        position: absolute;
+        top:0;
+        left: 350px;
+        z-index: 2;
         height:666px;
         display: flex;
         align-items: center;
@@ -1187,7 +1212,7 @@
                 width:200px;
                 height:68px;
                 line-height: 68px;
-                font-size:22px;
+                font-size:20px;
                 font-family:PingFangSC-Semibold;
                 font-weight:400;
                 color: #333333;
