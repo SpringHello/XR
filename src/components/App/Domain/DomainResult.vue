@@ -18,39 +18,41 @@
     </div>
     <div id="searchResult">
       <div id="result-left">
-        <div class="left-top">
-          <p>域名查询结果</p>
-          <button @click="show=!show">筛选
-            <Icon type="arrow-down-b"></Icon>
+        <div>
+          <div class="left-top">
+            <p>域名查询结果</p>
+            <button @click="show=!show">筛选
+              <Icon type="arrow-down-b"></Icon>
+            </button>
+          </div>
+          <div class="show" v-show="show">
+            <Checkbox-group v-model="singles">
+              <Checkbox label="com">com</Checkbox>
+              <Checkbox label="cn">cn</Checkbox>
+            </Checkbox-group>
+          </div>
+          <li>
+            <p>such.net
+              <button>未注册</button>
+            </p>
+            <div>
+              <span>¥1541<span>/年</span></span>
+              <button>加入清单</button>
+            </div>
+          </li>
+          <li>
+            <p>cn.net
+              <button>未注册</button>
+            </p>
+            <div>
+              <span>¥154<span>/年</span></span>
+              <button>加入清单</button>
+            </div>
+          </li>
+          <button class="showAll">显示全部
+            <Icon type="ios-arrow-down"></Icon>
           </button>
         </div>
-        <div class="show" v-show="show">
-          <Checkbox-group v-model="singles">
-            <Checkbox label="com">com</Checkbox>
-            <Checkbox label="cn">cn</Checkbox>
-          </Checkbox-group>
-        </div>
-        <li>
-          <p>such.net
-            <button>未注册</button>
-          </p>
-          <div>
-            <span>¥1541<span>/年</span></span>
-            <button>加入清单</button>
-          </div>
-        </li>
-        <li>
-          <p>cn.net
-            <button>未注册</button>
-          </p>
-          <div>
-            <span>¥154<span>/年</span></span>
-            <button>加入清单</button>
-          </div>
-        </li>
-        <button class="showAll">显示全部
-          <Icon type="ios-arrow-down"></Icon>
-        </button>
       </div>
       <div id="result-right">
         <div>

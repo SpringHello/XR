@@ -684,10 +684,14 @@
 }
 
 #domain {
-  .ivu-input-group-append {
-    .ivu-select-visible {
-      .ivu-select-selection {
-        border: none !important;
+  .ivu-input-group-large {
+    .ivu-input {
+      border: none;
+    }
+    .ivu-input-group-append {
+      .ivu-select:focus .ivu-select-selection {
+        border: none;
+        box-shadow: 0;
       }
     }
   }
