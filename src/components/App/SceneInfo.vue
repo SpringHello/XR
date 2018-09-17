@@ -1993,7 +1993,7 @@
         this.showModal.rechargeHint = true
       },
       nextStep() {
-        if (!(this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
+        if (!(this.scene == '游戏服务'||this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
           // 判断新老用户
           axios.get('activity/jdugeTeam.do', {
             params: {sign: 'freeReceive'}
