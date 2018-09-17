@@ -21,12 +21,14 @@
         <div class="left-top">
           <p>域名查询结果</p>
           <button @click="show=!show">筛选
-            <Icon type="ios-arrow-down"/>
+            <Icon type="arrow-down-b"></Icon>
           </button>
         </div>
         <div class="show" v-show="show">
-          <Checkbox :checked.sync="single">single0</Checkbox>
-          <Checkbox :checked.sync="single">single1</Checkbox>
+          <Checkbox-group v-model="singles">
+            <Checkbox label="com">com</Checkbox>
+            <Checkbox label="cn">cn</Checkbox>
+          </Checkbox-group>
         </div>
         <li>
           <p>such.net
@@ -38,7 +40,7 @@
           </div>
         </li>
         <li>
-          <p>such.net
+          <p>cn.net
             <button>未注册</button>
           </p>
           <div>
@@ -46,6 +48,9 @@
             <button>加入清单</button>
           </div>
         </li>
+        <button class="showAll">显示全部
+          <Icon type="ios-arrow-down"></Icon>
+        </button>
       </div>
       <div id="result-right">
         <div>
@@ -88,7 +93,7 @@
         searchText: sessionStorage.getItem('name'),
         select: 'com',
         show: false,
-        single: false
+        singles: ['com', 'cn'],
       }
     },
     methods: {
@@ -172,11 +177,15 @@
       li {
         list-style: none;
         display: flex;
-        padding: 12px 29px 12px 50px;
+        padding: 10.5px 29px 10.5px 50px;
         justify-content: space-between;
         align-items: center;
         border: 1px solid rgba(233, 233, 233, 1);
         border-top: none;
+        &:hover {
+          background: rgba(240, 247, 252, 1);
+          /*border: 1px solid rgba(170, 210, 242, 1);*/
+        }
         P {
           font-size: 16px;
           color: rgba(51, 51, 51, 1);
@@ -217,6 +226,20 @@
 
           }
         }
+
+      }
+
+      .showAll {
+        display: block;
+        margin: 0 auto;
+        font-size: 16px;
+        color: rgba(153, 153, 153, 1);
+        background: rgba(255, 255, 255, 1);
+        border-radius: 0px 0px 5px 5px;
+        border: 1px solid rgba(230, 230, 230, 1);
+        padding: 9px 23px;
+        outline: none;
+        cursor: pointer;
       }
     }
     #result-right {
@@ -227,11 +250,10 @@
         box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
         padding-bottom: 40px;
         .all {
-          padding: 23px 28px 40px 30px;
+          padding: 23px 30px 40px 30px;
           p {
             font-size: 20px;
             color: rgba(51, 51, 51, 1);
-
             padding: 0 14px 19px 14px;
             border-bottom: 2px solid rgba(204, 204, 204, 1);
             span {
@@ -254,14 +276,11 @@
               h2 {
                 font-size: 16px;
                 color: rgba(51, 51, 51, 1);
-
                 font-weight: normal;
-
               }
               button {
                 font-size: 16px;
                 color: rgba(42, 153, 242, 1);
-
                 border: 1px solid rgba(42, 153, 242, 1);
                 padding: 7px 43px;
                 background: #FFF;
