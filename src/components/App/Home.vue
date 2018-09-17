@@ -505,9 +505,8 @@
               require('../../assets/img/sceneList/sl-icon3.png'),
               require('../../assets/img/sceneList/sl-icon4.png')
             ],
-            configure: ['1核1G1M带宽'],
+            configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(12个月)'],
             link: '/ruicloud/sceneInfo/host',
-            bgUrl: require('../../assets/img/home/eightscene-bg-1.png'),
             hint: '免费使用一年'
           },
           {
@@ -519,9 +518,8 @@
               require('../../assets/img/sceneList/sl-icon7.png'),
               require('../../assets/img/sceneList/sl-icon8.png')
             ],
-            configure: ['1核1G1M带宽'],
+            configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(12个月)'],
             link: '/ruicloud/sceneInfo/web',
-            bgUrl: require('../../assets/img/home/eightscene-bg-2.png'),
             hint: '免费使用一年'
           },
           {
@@ -533,9 +531,8 @@
               require('../../assets/img/sceneList/sl-icon28.png'),
               require('../../assets/img/sceneList/sl-icon29.png')
             ],
-            configure: ['1核1G1M带宽'],
+            configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(12个月)'],
             link: '/ruicloud/sceneInfo/disk',
-            bgUrl: require('../../assets/img/home/eightscene-bg-3.png'),
             hint: '免费使用一年'
           },
           {
@@ -547,9 +544,8 @@
               require('../../assets/img/sceneList/sl-icon13.png'),
               require('../../assets/img/sceneList/sl-icon14.png')
             ],
-            configure: ['1核1G1M带宽'],
+            configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(12个月)'],
             link: '/ruicloud/sceneInfo/software',
-            bgUrl: require('../../assets/img/home/eightscene-bg-4.png'),
             hint: '免费使用一年'
           },
           {
@@ -559,9 +555,8 @@
               require('../../assets/img/sceneList/sl-icon15.png'),
               require('../../assets/img/sceneList/sl-icon16.png')
             ],
-            configure: ['1核1G1M带宽'],
+            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
             link: '/ruicloud/sceneInfo/game',
-            bgUrl: require('../../assets/img/home/eightscene-bg-5.png'),
             hint: '免费使用'
           },
           {
@@ -573,9 +568,8 @@
               require('../../assets/img/sceneList/sl-icon19.png'),
               require('../../assets/img/sceneList/sl-icon20.png')
             ],
-            configure: ['1核1G1M带宽'],
+            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
             link: '/ruicloud/sceneInfo/design',
-            bgUrl: require('../../assets/img/home/eightscene-bg-6.png'),
             hint: '免费使用'
           },
           {
@@ -587,9 +581,8 @@
               require('../../assets/img/sceneList/sl-icon23.png'),
               require('../../assets/img/sceneList/sl-icon24.png'),
             ],
-            configure: ['1核1G1M带宽'],
+            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
             link: '/ruicloud/sceneInfo/AI',
-            bgUrl: require('../../assets/img/home/eightscene-bg-7.png'),
             hint: '免费使用'
           },
           {
@@ -598,9 +591,8 @@
             software: [
               require('../../assets/img/sceneList/sl-icon25.png')
             ],
-            configure: ['1核1G1M带宽'],
+            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
             link: '/ruicloud/sceneInfo/supercomputing',
-            bgUrl: require('../../assets/img/home/eightscene-bg-8.png'),
             hint: '免费使用'
           },
         ],
@@ -865,14 +857,14 @@
           }
         ],
         partners: [
-          require('../../assets/img/home/partner-dell.png'),
           require('../../assets/img/home/partner-huawei.png'),
-          require('../../assets/img/home/partner-brocade.png'),
-          require('../../assets/img/home/partner-vmware.png'),
-          require('../../assets/img/home/partner-sugon.png'),
           require('../../assets/img/home/partner-hitachi.png'),
-          require('../../assets/img/home/partner-unicom.png'),
-          require('../../assets/img/home/partner-telecom.png')
+          require('../../assets/img/home/partner-vmware.png'),
+          require('../../assets/img/home/partner-telecom.png'),
+          require('../../assets/img/home/partner-dell.png'),
+          require('../../assets/img/home/partner-brocade.png'),
+          require('../../assets/img/home/partner-sugon.png'),
+          require('../../assets/img/home/partner-unicom.png')
         ],
         /* 权威认证 */
         authorityContainer: [
@@ -1166,17 +1158,18 @@
       display: flex;
       justify-content: space-between;
     }
-    .eigth-scene {
+    .eigth-scene {  
       position: relative;
       margin:0 auto;
-      width: 1920px;
+      width: 1902px;
+      overflow: hidden;
       .bg-wrap {
         position: relative;
         margin:0 auto;
         overflow: hidden;
         height: 666px;
         .bg{
-          transition: all .5s;
+          transition: all .3s ease;  
           margin: auto 0;
           height: 5328px;
           position:absolute;
@@ -1299,6 +1292,12 @@
                 border-radius:4px;
                 border:1px solid rgba(204,204,204,1);
                 color:rgba(136,136,136,1);
+                cursor: pointer;
+                &:hover {
+                  color: #fff;
+                  border: 1px solid rgba(56,125,255,1);
+                  background: rgba(56,125,255,1);
+                }
               }
             }
           }
@@ -2080,8 +2079,8 @@
         flex-wrap: wrap;
         > div {
           margin-bottom: 20px;
-          width:285px;
-          height:130px;
+          width:288px;
+          height:132px;
           border-radius:4px;
           border:1px solid rgba(207,207,207,1);
           background: #fff;
@@ -2104,7 +2103,6 @@
         margin: 0px auto;
         text-align: center;
         position: relative;
-
         > div {
           position: absolute;
           top: 0px;
