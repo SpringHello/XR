@@ -171,7 +171,7 @@
       },
       // 发送验证码
       sendCode(){
-        if (codePlaceholder != '获取验证码') {
+        if (this.codePlaceholder != '获取验证码') {
           return
         }
         if (this.formInline.code == '') {

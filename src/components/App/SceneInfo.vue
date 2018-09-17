@@ -29,11 +29,11 @@
         <div class="body">
           <h2>典型配置推荐</h2>
           <div class="configGroup">
-            <div v-for="(cfg,index1) in item.configGroup" class="config" :class="{gpu: scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'}">
+            <div v-for="(cfg,index1) in item.configGroup" class="config" :class="{gpu: scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'}">
               <div class="cf-title">{{cfg.title}}</div>
               <div class="cf-body">
                 <div class="cf-content">
-                  <ul v-if="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'">
+                  <ul v-if="scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'">
                     <li v-for="(item1,index) in cfg.configs" :class="{special: index == 6|| index == 9}">
                       <span :class="{s1: index == 0||index == 6|| index == 9}">{{ item1.text}}</span>
                       <span :class="{s2: index == 1|| index == 2 || index == 3|| index == 4}">{{ item1.value}}</span></li>
@@ -1082,19 +1082,27 @@
             disc: '新睿云游戏应用能够帮助您实现任意设备的游戏体验: 在任意 PC、Mac、平板电脑、智能手机以及电视上的高画质、低延迟的多设备游戏体验；点击即玩的便捷: 任何时候都可以在云端访问一系列游戏和保存游戏。 在任何地点、任意设备上均可开始新游戏或继续之前的游戏进度；减少麻烦: 没有新硬件、没有复杂的设置、没有游戏光盘、没有数字下载、没有游戏安装、没有游戏补丁。',
             configGroup: [
               {
-                title: '一个月',
+                title: '初创型业务网站',
                 configs: [
                   {
                     text: '服务器资源',
                     value: '',
                   },
                   {
-                    text: '服务器ECS',
-                    value: '2核 4G',
+                    text: 'GPU服务器',
+                    value: '2288H v5',
+                  },
+                  {
+                    text: '主机',
+                    value: '4核32G',
+                  },
+                  {
+                    text: '型号',
+                    value: '1* NVIDIA P40',
                   },
                   {
                     text: '系统盘',
-                    value: '40G SSD',
+                    value: 'SSD存储',
                   },
                   {
                     text: '弹性负载均衡',
@@ -1106,7 +1114,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '1M',
+                    value: '按需开通',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1121,25 +1129,33 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '69.00',
-                originalPrice: '166.72',
+                currentPrice: '--',
+                originalPrice: '--',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '三个月',
+                title: '增长型业务网站',
                 configs: [
                   {
                     text: '服务器资源',
                     value: '',
                   },
                   {
-                    text: '服务器ECS',
-                    value: '2核 4G',
+                    text: 'GPU服务器',
+                    value: 'G5500',
+                  },
+                  {
+                    text: '主机',
+                    value: '8核64G',
+                  },
+                  {
+                    text: '型号',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
-                    value: '40G SSD',
+                    value: 'SSD存储',
                   },
                   {
                     text: '弹性负载均衡',
@@ -1151,7 +1167,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '1M',
+                    value: '按需开通',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1166,25 +1182,33 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '169.00',
-                originalPrice: '500.16',
+                currentPrice: '--',
+                originalPrice: '--',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '六个月',
+                title: '稳定型业务网站',
                 configs: [
                   {
                     text: '服务器资源',
                     value: '',
                   },
                   {
-                    text: '服务器ECS',
-                    value: '2核 4G',
+                    text: 'GPU服务器',
+                    value: 'G5500',
+                  },
+                  {
+                    text: '主机',
+                    value: '16核128G',
+                  },
+                  {
+                    text: '型号',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
-                    value: '40G SSD',
+                    value: 'SSD存储',
                   },
                   {
                     text: '弹性负载均衡',
@@ -1195,7 +1219,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '1M',
+                    value: '按需开通',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1210,52 +1234,8 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '269.00',
-                originalPrice: '1000.32',
-                zoneId: '',
-                system: 'linux'
-              },
-              {
-                title: '十二个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '569.00',
-                originalPrice: '2000.64',
+                currentPrice: '--',
+                originalPrice: '--',
                 zoneId: '',
                 system: 'linux'
               }
@@ -2013,7 +1993,7 @@
         this.showModal.rechargeHint = true
       },
       nextStep() {
-        if (!(this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
+        if (!(this.scene == '游戏服务'||this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
           // 判断新老用户
           axios.get('activity/jdugeTeam.do', {
             params: {sign: 'freeReceive'}
