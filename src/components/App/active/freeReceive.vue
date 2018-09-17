@@ -362,21 +362,21 @@
             onSrc: require('../../../assets/img/active/freeToReceive/fr-icon7.png'),
             text: '1.注册/登录'
           }, {
-            src: require('../../../assets/img/active/freeToReceive/fr-icon3.png'),
-            onSrc: require('../../../assets/img/active/freeToReceive/fr-icon8.png'),
-            text: '2.实名认证'
+            src: require('../../../assets/img/active/freeToReceive/fr-icon5.png'),
+            onSrc: require('../../../assets/img/active/freeToReceive/fr-icon10.png'),
+            text: '2.免费领取'
           }, {
             src: require('../../../assets/img/active/freeToReceive/fr-icon4.png'),
             onSrc: require('../../../assets/img/active/freeToReceive/fr-icon9.png'),
             text: '3.充值押金'
           }, {
-            src: require('../../../assets/img/active/freeToReceive/fr-icon5.png'),
-            onSrc: require('../../../assets/img/active/freeToReceive/fr-icon10.png'),
-            text: '4.免费领取'
+            src: require('../../../assets/img/active/freeToReceive/fr-icon3.png'),
+            onSrc: require('../../../assets/img/active/freeToReceive/fr-icon8.png'),
+            text: '4.实名认证'
           }, {
             src: require('../../../assets/img/active/freeToReceive/fr-icon6.png'),
             onSrc: require('../../../assets/img/active/freeToReceive/fr-icon11.png'),
-            text: '5.领取成功'
+            text: '5.领取完成'
           }],
         onStep: 0,
         configGroup: [
@@ -658,15 +658,15 @@
         if (!this.$store.state.userInfo) {
           this.onStep = 0
         } else {
-          if (!this.$store.state.authInfo) {
-            this.onStep = 1
-          } else {
-            if (this.$store.state.authInfo.flag) {
-              this.flag = true
+          if (this.$store.state.authInfo && this.$store.state.authInfo.flag) {
+            this.flag = true
+            if (this.$store.state.authInfo.checkstatus == 0) {
               this.onStep = 5
             } else {
-              this.onStep = 2
+              this.onStep = 3
             }
+          } else {
+            this.onStep = 1
           }
         }
       },
