@@ -1364,36 +1364,6 @@
           callback()
         }
       }
-      const validaRegisteredBusinessLicenseNumber = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('营业执照号码不能为空'));
-        }
-        if (!(/^[0-9]*$/.test(value))) {
-          callback(new Error('请输入正确的营业执照号码'));
-        } else {
-          callback()
-        }
-      }
-      const validaRegisteredLegalPersonID = (rule, value, callback) => {
-        if (this.notAuth.companyAuthForm.legalPersonIDFront == '') {
-          return callback(new Error('请上传公司法人身份证正面111'));
-        } else if (this.notAuth.companyAuthForm.legalPersonIDBack == '') {
-          return callback(new Error('请上传公司法人身份证反面111'));
-        } else {
-          callback()
-        }
-      }
-      const validaRegisteredAgentID = (rule, value, callback) => {
-        if (this.notAuth.companyAuthForm.agentIDFront == '') {
-          return callback(new Error('请上传经办人身份证正面'));
-        } else if (this.notAuth.companyAuthForm.agentIDBack == '') {
-          return callback(new Error('请上传经办人身份证反面'));
-        } else if (this.notAuth.companyAuthForm.agentIDInHand == '') {
-          return callback(new Error('请上传经办人手持身份证照'));
-        } else {
-          callback()
-        }
-      }
       return {
         keyWeight: '',
         keycodePlaceholder: '获取验证码',
@@ -1574,16 +1544,9 @@
             ],
             businessLicenseNumber: [
               {required: true, message: '请输入公司营业执照号码'},
-              {validator: validaRegisteredBusinessLicenseNumber}
             ],
             combine: [
               {required: true, message: '请上传公司营业执照', trigger: 'submit'}
-            ],
-            legalPersonID: [
-              {validator: validaRegisteredLegalPersonID, trigger: 'submit'}
-            ],
-            agentID: [
-              {validator: validaRegisteredAgentID}
             ],
             contactPerson: [
               {required: true, message: '请输入联系人姓名'},
