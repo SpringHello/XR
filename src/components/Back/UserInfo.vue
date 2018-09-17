@@ -32,7 +32,7 @@
                     <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span @click="showModal.bindingEmail = true">修改</span></li>
                     <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span @click="showModal.bindingMobilePhone = true">去绑定</span></li>
                     <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span @click="showModal.bindingMobilePhone = true">修改</span></li>
-                    <li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>
+                    <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li v-if="!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
                       @click="currentTab ='certification' ">马上认证</span></li>
                     <li v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"><span>身份证号</span><span>{{authInfo.personalnumber}}</span></li>
@@ -43,7 +43,7 @@
               </div>
               <h2>其他信息</h2>
               <div class="pi-otherInfo">
-                <div class="pi-otherInfo-form" v-if="false">
+                <div class="pi-otherInfo-form" v-if="!otherInfoShow">
                   <Form ref="occupationalInfo" :model="occupationalInfoForm" :rules="occupationalInfoRule" :label-width="100">
                     <FormItem label="应用行业" prop="trade">
                       <Select v-model="occupationalInfoForm.trade" style="width: 317px;">
@@ -80,13 +80,16 @@
                     </div>
                   </Form>
                 </div>
-                <div v-if="true" style="padding-left: 80px">
+                <div v-if="otherInfoShow" style="padding-left: 80px">
                   <ol>
-                    <li><span>所属行业</span><span>金融</span></li>
-                    <li><span>职位</span><span>CEO</span></li>
-                    <li><span>单位名称</span><span>阿里巴巴</span></li>
-                    <li><span>地区</span><span>重庆</span></li>
+                    <li><span>所属行业</span><span>{{ userInfo.applicationindustry }}</span></li>
+                    <li><span>职位</span><span>{{ userInfo.position }}</span></li>
+                    <li><span>单位名称</span><span>{{ userInfo.corporatename }}</span></li>
+                    <li><span>地区</span><span>{{ userInfo.corporateaddressprovince +'-'+ userInfo.corporateaddresscity }}</span></li>
                   </ol>
+                  <div style="padding-left: 60px">
+                    <Button type="primary" @click="saveJobInfo">修改</Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -760,6 +763,7 @@
       </div>
     </Modal>
 
+    <!-- 修改其他信息弹窗-->
     <!-- 设置新密码 -->
     <Modal v-model="showModal.setNewPassword" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -2138,7 +2142,25 @@
       saveJobInfo() {
         this.$refs['occupationalInfo'].validate(valid => {
           if (valid) {
-            alert('保存')
+            let url = 'user/addUserElseMessage.do'
+            let params = {
+              applicationIndustry: this.occupationalInfoForm.trade,
+              position: this.occupationalInfoForm.position,
+              corporateName: this.occupationalInfoForm.companyName,
+              corporateAddressProvince: this.occupationalInfoForm.province,
+              corporateAddressCity: this.occupationalInfoForm.city,
+              type: '1'
+            }
+            this.$http.post(url, params).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+                this.$Message.success(res.data.message)
+                this.init()
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         })
       },
@@ -3000,6 +3022,9 @@
             return true
           }
         }
+      },
+      otherInfoShow() {
+        return this.userInfo.applicationindustry && this.userInfo.position && this.userInfo.corporatename && this.userInfo.corporateaddressprovince && this.userInfo.corporateaddresscity
       }
     },
     watch: {}
