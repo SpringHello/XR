@@ -88,7 +88,7 @@
                     <li><span>地区</span><span>{{ userInfo.corporateaddressprovince +'-'+ userInfo.corporateaddresscity }}</span></li>
                   </ol>
                   <div style="padding-left: 60px">
-                    <Button type="primary" @click="saveJobInfo">修改</Button>
+                    <Button type="primary" @click="modifyJobInfo">修改</Button>
                   </div>
                 </div>
               </div>
@@ -764,6 +764,50 @@
     </Modal>
 
     <!-- 修改其他信息弹窗-->
+    <Modal v-model="showModal.modifyOtherInfo" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">修改其他信息</span>
+      </p>
+      <div>
+        <Form ref="occupationalInfo" :model="occupationalInfoForm" :rules="occupationalInfoRule" :label-width="100">
+          <FormItem label="应用行业" prop="trade">
+            <Select v-model="occupationalInfoForm.trade" style="width: 317px;">
+              <Option v-for="item in occupationalInfoForm.tradeOptions" :key="item.label"
+                      :value="item.label">
+                {{item.label}}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="职位" prop="position">
+            <Select v-model="occupationalInfoForm.position" style="width: 317px;">
+              <Option v-for="item in occupationalInfoForm.positionOptions" :key="item.label"
+                      :value="item.label">
+                {{item.label}}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="单位名称" prop="companyName">
+            <Input v-model="occupationalInfoForm.companyName" placeholder="请输入单位名称" style="width: 317px;"></Input>
+          </FormItem>
+          <FormItem label="地域" prop="city">
+            <Select v-model="occupationalInfoForm.province" style="width:154px;margin-right: 10px" placeholder="请选择省"
+                    @on-change="changeProvince">
+              <Option v-for="item in occupationalInfoForm.provinceList" :value="item.name" :key="item.name">{{item.name}}
+              </Option>
+            </Select>
+            <Select v-model="occupationalInfoForm.city" style="width:154px;margin-right: 10px" placeholder="请选择市">
+              <Option v-for="item in occupationalInfoForm.cityList" :value="item.name" :key="item.name">{{ item.name}}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.modifyOtherInfo = false">取消</Button>
+        <Button type="primary" @click="saveJobInfo">保存</Button>
+      </div>
+    </Modal>
+
     <!-- 设置新密码 -->
     <Modal v-model="showModal.setNewPassword" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -1205,7 +1249,8 @@
           bindingMobilePhone: false,
           bindingEmail: false,
           modifyPassword: false,
-          setHeadPhoto: false
+          setHeadPhoto: false,
+          modifyOtherInfo: false
         },
         headPhotoType: 'system',
         systemPhotoGroup: [],
@@ -2154,6 +2199,7 @@
             this.$http.post(url, params).then(res => {
               if (res.status == 200 && res.data.status == 1) {
                 this.$Message.success(res.data.message)
+                this.showModal.modifyOtherInfo = false
                 this.init()
               } else {
                 this.$message.info({
@@ -2163,6 +2209,14 @@
             })
           }
         })
+      },
+      modifyJobInfo(){
+        this.occupationalInfoForm.trade = this.userInfo.applicationindustry
+        this.occupationalInfoForm.position = this.userInfo.position
+        this.occupationalInfoForm.companyName = this.userInfo.corporatename
+        this.occupationalInfoForm.province = this.userInfo.corporateaddressprovince
+        this.occupationalInfoForm.city = this.userInfo.corporateaddresscity
+        this.showModal.modifyOtherInfo = true
       },
 
       // 重新提交申请

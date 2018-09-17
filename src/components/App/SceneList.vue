@@ -8,7 +8,7 @@
           <div class="scene-top" :style="{'background-image': 'url(' + item.bannerSrc + ')'}">
             {{ item.text}}
           </div>
-          <div class="scene-footer" :class="{other: index == 2||index == 4}">
+          <div class="scene-footer" :class="{other: index == 4}">
             <img v-for="img in item.icons" :src="img.src"/>
           </div>
         </div>
@@ -68,6 +68,12 @@
               },
               {
                 src: require('../../assets/img/sceneList/sl-icon10.png')
+              },
+              {
+                src: require('../../assets/img/sceneList/sl-icon28.png')
+              },
+              {
+                src: require('../../assets/img/sceneList/sl-icon29.png')
               }
             ],
             link: 'disk',
@@ -83,7 +89,7 @@
                 src: require('../../assets/img/sceneList/sl-icon12.png')
               },
               {
-                src: require('../../assets/img/sceneList/sl-icon3.png')
+                src: require('../../assets/img/sceneList/sl-icon13.png')
               },
               {
                 src: require('../../assets/img/sceneList/sl-icon14.png')
