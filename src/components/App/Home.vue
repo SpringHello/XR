@@ -529,7 +529,9 @@
             scene: '独立服务模式数据安全存储、多终端同步、文件在线预览，个人网盘让您的数据存储于传输有更简单可靠的选择。新睿云个人网盘服务具有使用方便、管理简单、稳定可靠等特点。具备多协议支持能力（包括FTP、FTPS、SFTP等文件传输协议）；远程文件查找能力；多标签界面管理能力；断点续传；站点管理与传输队列管理等能力。',
             software: [
               require('../../assets/img/sceneList/sl-icon9.png'),
-              require('../../assets/img/sceneList/sl-icon10.png')
+              require('../../assets/img/sceneList/sl-icon10.png'),
+              require('../../assets/img/sceneList/sl-icon28.png'),
+              require('../../assets/img/sceneList/sl-icon29.png')
             ],
             configure: ['1核1G1M带宽'],
             link: '/ruicloud/sceneInfo/disk',
@@ -969,6 +971,7 @@
     },
     mounted() {
       // console.log(this.$refs.require.offsetTop)
+      this.menuselected(0)
       echarts.registerMap('china', china)
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
