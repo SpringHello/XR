@@ -5,7 +5,7 @@
       <div class="center">
         <div class="head">
           <img src="../../assets/img/sceneInfo/free-hint.png"/>
-          <span v-if="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'">免费试用</span>
+          <span v-if="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'|| scene == '游戏服务'" style="top: 45px;right: 15px;">免费试用</span>
           <span v-else>免费使用一年</span>
           <div class="title">
             <h3>{{ item.currentScene }}</h3>
@@ -39,7 +39,7 @@
                       <span :class="{s2: index == 1|| index == 2 || index == 3|| index == 4}">{{ item1.value}}</span></li>
                     <li class="special"><span class="s1">选择系统</span></li>
                     <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
-                      <Option v-for="item3 in systemGroup" :value="item3.value" :key="item3.value">{{ item3.label }}</Option>
+                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
                     </Select>
                     <li style="margin-top: 10px"><span class="s1">选择区域</span></li>
                     <Select v-model="cfg.zoneId" style="width:170px;">
@@ -52,7 +52,7 @@
                       <span :class="{s2: index == 1|| index == 2 || index == 5}">{{ item1.value}}</span></li>
                     <li class="special"><span class="s1">选择系统</span></li>
                     <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
-                      <Option v-for="item3 in systemGroup" :value="item3.value" :key="item3.value">{{ item3.label }}</Option>
+                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
                     </Select>
                     <li style="margin-top: 10px"><span class="s1">选择区域</span></li>
                     <Select v-model="cfg.zoneId" style="width:170px;"
@@ -1762,6 +1762,7 @@
         index1: '',
         index2: '',
         vmConfig: '',
+        userType: '',
         scene: '云电脑',
         sceneGroup: [
           {name: '云电脑', link: 'host'},
@@ -1775,15 +1776,7 @@
         ],
         otherSceneShow: false,
         areaGroup: [],
-        systemGroup: [
-          {
-            label: 'Centos',
-            value: 'linux'
-          },
-          {
-            label: 'Windows',
-            value: 'windows'
-          },],
+        systemGroup: [],
         cashPledge: '--',
         time: '',
         config: {
@@ -1896,29 +1889,38 @@
         switch (val) {
           case 'host':
             this.scene = '云电脑'
+            this.userType = '1'
             break
           case 'web':
             this.scene = '自助建站'
+            this.userType = '2'
             break
           case 'disk':
             this.scene = '存储&网盘'
+            this.userType = '3'
             break
           case 'software':
             this.scene = '软件研发'
+            this.userType = '4'
             break
           case 'game':
             this.scene = '游戏服务'
+            this.userType = '5'
             break
           case 'design':
             this.scene = '图形设计'
+            this.userType = '6'
             break
           case 'AI':
             this.scene = '人工智能'
+            this.userType = '7'
             break
           case 'supercomputing':
             this.scene = '超级运算'
+            this.userType = '8'
             break
         }
+        this.getMirror(this.userType,this.$store.state.zone.zoneid)
       },
       getOriginalPrice(currentIndex, index) {
         let vmConfigId = ''
@@ -1952,6 +1954,7 @@
             this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
           }
         })
+        //this.getMirror(this.userType,this.currentSceneGroup[currentIndex].configGroup[index].zoneId)
       },
       getRegion() {
         let url = 'activity/getTemActInfo.do'
@@ -1960,15 +1963,41 @@
         }).then(res => {
           if (res.data.status == 1) {
             this.areaGroup = res.data.result.optionalArea
-            this.currentSceneGroup.forEach(config => {
-              config.configGroup.forEach(host => {
-                host.zoneId = this.areaGroup[0].value
+            if (res.data.result.optionalArea.length != 0) {
+              this.currentSceneGroup.forEach(config => {
+                config.configGroup.forEach(host => {
+                  host.zoneId = this.areaGroup[0].value
+                })
               })
-            })
+            }
+          }
+        })
+      },
+      getMirror(userType, zoneId) {
+        let url = 'information/listTemplateFunction.do'
+        axios.get(url, {
+          params: {
+            useType: userType,
+            zoneId: zoneId
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.systemGroup = res.data.result
+            if (res.data.result.length != 0) {
+              this.currentSceneGroup.forEach(config => {
+                config.configGroup.forEach(host => {
+                  host.system = this.systemGroup[0].systemtemplateid
+                })
+              })
+            }
           }
         })
       },
       getHost(index1, index2) {
+        if (this.systemGroup.length == 0) {
+          this.$Message.info('请选择需要领取的镜像系统')
+          return
+        }
         if (this.areaGroup.length == 0) {
           this.$Message.info('请选择需要领取的区域')
           return
@@ -2299,14 +2328,14 @@
           top: 0;
           right: 0;
         }
-        >span{
+        > span {
           position: absolute;
           top: 40px;
           right: 0;
-          font-size:18px;
-          font-family:MicrosoftYaHei;
-          font-weight:600;
-          color:rgba(255,255,255,1);
+          font-size: 18px;
+          font-family: MicrosoftYaHei;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 1);
           transform: rotate(45deg);
         }
         .title {

@@ -32,6 +32,7 @@ import md5 from 'md5'
 // 引入复制粘贴组件
 import VueClipboards from 'vue-clipboards'
 import LR from './myView/login'
+
 Vue.prototype.$message = message
 Vue.prototype.$LR = LR
 Vue.config.productionTip = false
