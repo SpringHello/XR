@@ -15,17 +15,17 @@ const Art = () => import('@/components/App/Article')
 //const Price = () => import('@/components/App/Price')
 
 //const Buy = () =>import('@/components/App/Buy1')
-const Buy = () => import('@/components/App/buy/Buy')
-const BHost = () => import('@/components/App/buy/BHost')
-const BIP = () => import('@/components/App/buy/BIP')
-const BDisk = () => import('@/components/App/buy/BDisk')
-const BData = () => import('@/components/App/buy/BData')
-const BGpu = () => import('@/components/App/buy/BGpu')
 const BObj = () => import('@/components/App/buy/BObj')
-const Ecs = () => import('@/components/App/product/ECS')
-const Document = () => import('@/components/App/Document')
-const Document1 = () => import('@/components/App/Document1')
-const Record = () => import('@/components/App/Record')
+
+const Buy = () =>import('@/components/App/buy/Buy')
+const BHost = () =>import('@/components/App/buy/BHost')
+const BIP = () =>import('@/components/App/buy/BIP')
+const BDisk = () =>import('@/components/App/buy/BDisk')
+const BData = () =>import('@/components/App/buy/BData')
+const Ecs = () =>import('@/components/App/product/ECS')
+const Document = () =>import('@/components/App/Document')
+const Document1 = () =>import('@/components/App/Document1')
+const Record = () =>import('@/components/App/Record')
 
 //const hostPrice = () => import('@/components/App/Price/Host')
 //const diskPrice = () => import('@/components/App/Price/Disk')
@@ -122,6 +122,12 @@ const Firewall = () =>import('@/components/Back/Firewall')
 const Disk = () =>import('@/components/Back/Disk')
 const DiskBackup = () =>import('@/components/Back/DiskBackup')
 const DiskParticulars = () =>import('@/components/Back/DiskParticulars')
+
+//弹性伸缩
+const Elastic = () => import('@/components/Back/Elastic')
+const ElasticDetails = () => import ('@/components/Back/ElasticDetails')
+const newAddElastic = () => import('@/components/Back/newAddElastic')
+const TelescopicDetails = () => import('@/components/Back/TelescopicDetails')
 
 //const ObjectStorage = () => import('@/components/Back/ObjectStorage')
 const CloudMonitor = () =>import('@/components/Back/CloudMonitor')
@@ -387,8 +393,12 @@ var router = new Router({
         {path: 'dTemplate', name: 'dTemplate', component: dTemplate},
         {path: 'dTransfer', name: 'dTransfer', component: dTransfer},
         {path: 'dResolve', name: 'dResolve', component: dResolve},
-        {path: 'dEmail', name: 'dEmail', component: dEmail}
+        {path: 'dEmail', name: 'dEmail', component: dEmail},
         // 域名系统 =====================
+        {path: 'Elastic', name: 'Elastic', component:Elastic},
+        {path: 'ElasticDetails', name: 'ElasticDetails', component:ElasticDetails},
+        {path: 'newAddElastic', name: 'newAddElastic', component:newAddElastic},
+        {path: 'TelescopicDetails',name: 'TelescopicDetails',component:TelescopicDetails}
       ]
     },
     {

@@ -69,7 +69,7 @@
           <div class="box-wrap">
             <router-link v-for="(item,index) in activeData" :key="index" :class="{'box':true, graybox:!item.isStart}"
                          :to="item.url" :style="{background:'url('+item.imgPath+')',backgroundRepeat:'no-repeat'}">
-              <div class="box-head">
+              <div class="box-head" :style="{color:item.color}">
                 <p>
                   {{item.name}}
                 </p>
@@ -154,9 +154,10 @@
             secSpan: '安全稳定高效的云端存储服务 免费试用50G',
             des: ' 即将上线',
             activeObj: '对象存储 新老用户',
-            url: '',
-            isStart: false,
-            weight: '1'
+            url: 'objStorageActive',
+            isStart: true,
+            weight: '1',
+            color: 'black'
           },
           {
             imgPath: require('../../assets/img/activecenter/bg-objStorage-4.png'),
