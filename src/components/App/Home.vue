@@ -318,7 +318,8 @@
             <p>{{item.title}}</p>
             <div class="img-wrap"  @mouseenter="requireEnter(index)" @mouseleave="requireLeave(index)">
               <span>
-                <img :src="item.img" alt="" v-if="!item.isShow">
+                <img :src="item.img" alt="" v-if="item.isShow == 'static'">
+                <img :src="item.imgonce" alt="" v-else-if="item.isShow == 'once'">
                 <img :src="item.imgHover" alt="" v-else>
               </span>
             </div>
@@ -474,6 +475,7 @@
         consoleFade: true,
         partnerFade: true,
         authorityFade: true,
+        requireflag: false,
         eightsceneIndex: 0,
         eigthimgs: [
           {bgUrl: require('../../assets/img/home/eightscene-bg-1.png')},
@@ -894,18 +896,21 @@
             title: '更强大',
             img: require('../../assets/img/home/require-svg-1.png'),
             imgHover: require('../../assets/img/home/require-svg-1-2.gif'),
+            imgonce: require('../../assets/img/home/require-svg-1.gif'),
             desc: '新增加GPU云服务器，单精度计算能力相较于CPU服务器提升300%。从容应对深度学习与HPC超算，释放计算价值。'
           },
           {
             title: '更稳定',
             img: require('../../assets/img/home/require-svg-2.png'),
             imgHover: require('../../assets/img/home/require-svg-2-2.gif'),
+            imgonce: require('../../assets/img/home/require-svg-2.gif'),
             desc: '五星级IDC机房标准，7X24多渠道服务于支持，百倍故障时长赔付。全方位为您的产品与资源保驾护航。'
           },
           {
             title: '更便宜',
             img: require('../../assets/img/home/require-svg-3.png'),
             imgHover: require('../../assets/img/home/require-svg-3-2.gif'),
+            imgonce: require('../../assets/img/home/require-svg-3.gif'),
             desc: '对比自建服务器集群，使用云服务能够显著降低企业运营成本，并提升部署与响应速度，全面提升企业IT资源效率。使企业专注于创造力。'
           }
         ],
@@ -962,31 +967,47 @@
       }
     },
     mounted() {
-      // console.log(this.$refs.require.offsetTop)
+      console.log(this.$refs.require.offsetTop)
+      // 八大场景切换背景初始化
       this.menuselected(0)
-      echarts.registerMap('china', china)
-      this.myChart = echarts.init(document.getElementById('echarts'))
-      this.myChart.setOption(polar)
+      // echarts.registerMap('china', china)
+      // this.myChart = echarts.init(document.getElementById('echarts'))
+      // this.myChart.setOption(polar)
       // 待优化
+      // this.scrollFn = throttle(200, () => {
+      //   if ((document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.cloudContentFade) {
+      //     this.cloudContentFade = true
+      //   }
+      //   if ((document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.fade) {
+      //     this.fade = true
+      //   }
+      //   if ((document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.consoleFade) {
+      //     this.consoleFade = true
+      //   }
+      //   if ((document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.partnerFade) {
+      //     this.partnerFade = true
+      //   }
+      //   if ((document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.authorityFade) {
+      //     this.authorityFade = true
+      //   }
+      //   // 如果都显示了  移除监听事件
+      //   if (this.cloudContentFade == true && this.fade == true && this.consoleFade == true && this.partnerFade == true && this.authorityFade == true) {
+      //     window.removeEventListener('scroll', this.scrollFn)
+      //   }
+      // })
       this.scrollFn = throttle(200, () => {
-        if ((document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.cloudContentFade) {
-          this.cloudContentFade = true
+        let height = document.body.clientHeight - this.$refs.require.offsetTop + window.scrollY || window.pageYOffset
+        if (height > 400) {
+          this.requireData.forEach((item, index) => {
+              this.$set(item, 'isShow', 'once')
+          })
+          this.requireflag = true
         }
-        if ((document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.fade) {
-          this.fade = true
-        }
-        if ((document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.consoleFade) {
-          this.consoleFade = true
-        }
-        if ((document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.partnerFade) {
-          this.partnerFade = true
-        }
-        if ((document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.authorityFade) {
-          this.authorityFade = true
-        }
-        // 如果都显示了  移除监听事件
-        if (this.cloudContentFade == true && this.fade == true && this.consoleFade == true && this.partnerFade == true && this.authorityFade == true) {
+        if ((height > 1200 || height < 300) && this.requireflag == true) {
           window.removeEventListener('scroll', this.scrollFn)
+          this.requireData.forEach((item, index) => {
+              this.$set(item, 'isShow', 'static')
+          })
         }
       })
       this.scrollFn()
@@ -1018,14 +1039,14 @@
       requireEnter(selectedIndex) {
         this.requireData.forEach((item, index) => {
           if (selectedIndex == index) {
-            this.$set(item, 'isShow', true);
+            this.$set(item, 'isShow', 'infinite');
           }
         })
       },
       requireLeave(selectedIndex) {
         this.requireData.forEach((item, index) => {
           if (selectedIndex == index) {
-            this.$set(item, 'isShow', false);
+            this.$set(item, 'isShow', 'static');
           }
         })
       },
