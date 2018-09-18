@@ -511,6 +511,8 @@
         a.download = 'echarts';
         a.click();
         document.body.removeChild(a);
+        //释放内存
+        URL.revokeObjectURL(url);
       },
 
       //转换字节单位

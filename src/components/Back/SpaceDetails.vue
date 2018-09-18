@@ -208,17 +208,17 @@
               <!--</div>-->
             <!--</div>-->
           </TabPane>
-          <!--<TabPane label="图片处理">-->
-            <!--<div class="img_font">-->
-              <!--<p>图片处理域名规则<span style="color: #2A99F2;font-size: 12px;">查看规则详情</span></p>-->
-              <!--<span>域名/sample.jpg?x-oss-process=style/stylename</span><span style="margin-left: 40px;">自定义域名规则：域名/sample.jpg?x-oss-process=style/stylename</span>-->
-            <!--</div>-->
-            <!--<div style="margin-bottom: 10px;">-->
-              <!--<Button type="primary" @click="$router.push({path:'ObjectPicture'})">新建图片样式</Button>-->
-              <!--<Button type="primary">原图保护设置</Button>-->
-            <!--</div>-->
-            <!--<Table :cloumns="imgList" :data="imgData"></Table>-->
-          <!--</TabPane>-->
+          <TabPane label="图片处理">
+            <div class="img_font">
+              <p>图片处理域名规则<span style="color: #2A99F2;font-size: 12px;">查看规则详情</span></p>
+              <span>域名/sample.jpg?x-oss-process=style/stylename</span><span style="margin-left: 40px;">自定义域名规则：域名/sample.jpg?x-oss-process=style/stylename</span>
+            </div>
+            <div style="margin-bottom: 10px;">
+              <Button type="primary" @click="$router.push({path:'ObjectPicture'})">新建图片样式</Button>
+              <Button type="primary">原图保护设置</Button>
+            </div>
+            <Table :cloumns="imgList" :data="imgData"></Table>
+          </TabPane>
         </Tabs>
       </div>
     </div>
@@ -1506,8 +1506,7 @@
             key:'cssname'
           },
           {
-            title:'最后修改时间',
-            key:''
+            title:'最后修改时间'
           },
           {
             title:'操作',
@@ -1520,8 +1519,6 @@
           }
         ],
         imgData:[],
-
-
       }
     },
     components:{
@@ -2047,7 +2044,7 @@
           bucketName:sessionStorage.getItem('bucketName')
         }).then(res => {
           if (res.data.status == '1') {
-            this.size = res.data.data.allsize / 1048576>1 ? (res.data.data.allsize /1048576).toFixed(2) +'GB': res.data.data.allsize > 1000 || res.data.data.allsize / 1024 > 1 ? (res.data.data.allsize / 1024).toFixed(2) + 'MB' : res.data.data.allsize.toFixed(2) + 'KB';
+            this.size = res.data.data.mouthsize / 1048576>1 ? (res.data.data.mouthsize /1048576).toFixed(2) +'GB': res.data.data.mouthsize > 1000 || res.data.data.mouthsize / 1024 > 1 ? (res.data.data.mouthsize / 1024).toFixed(2) + 'MB' : res.data.data.mouthsize.toFixed(2) + 'KB';
           } else {
             this.size = "0KB";
             this.$Message.info('出错了');
@@ -2302,6 +2299,7 @@
         a.download = 'echarts';
         a.click();
         document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       },
       //概览统计情况
       getOverview(){

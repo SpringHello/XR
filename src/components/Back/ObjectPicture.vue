@@ -54,8 +54,9 @@
                 </div>
                 <div class="water_right">
                   <Input v-model="imgHeight" ></Input>
+                  <p style="margin-top: 15px;color: #999999;font-size: 12px;">图片宽高取值范围为8-5120px</p>
                 </div>
-                <span>
+                <span style="vertical-align:top;display: inline-block;margin-top: 6px;">
                   px
                </span>
               </div>
@@ -143,7 +144,7 @@
                   <span>文字大小</span>
                 </div>
                 <div class="water_right">
-                  <InputNumber  :min="0"   :formatter="value => `${value}px`" :parser="value => value.replace('px', '')" v-model="waterFont.size"></InputNumber>
+                  <InputNumber  :min="0"  :max="1000"  :formatter="value => `${value}px`" :parser="value => value.replace('px', '')" v-model="waterFont.size"></InputNumber>
                 </div>
               </div>
               <div style="margin-bottom: 20px;">
@@ -191,6 +192,7 @@
                 </div>
               </div>
             </div>
+
             <!--图片旋转-->
             <div>
               <div style="margin-bottom: 20px;">
@@ -224,7 +226,8 @@
             </div>
 
             <div class="origin_img">
-              <img src="../../assets/img/objectPicture/Rectangle.png">
+              <img v-if="imgSrc != ''" :src="imgSrc">
+              <img v-else src="../../assets/img/objectPicture/Rectangle.png">
             </div>
           </div>
         </div>
@@ -253,267 +256,283 @@
       }
   }
 
-  export  default{
-    data(){
-      return{
-        formValidate:{
-          styleName:''
+  export  default {
+    data() {
+      return {
+        //刷新的图片
+        imgSrc:'',
+
+        formValidate: {
+          styleName: ''
         },
-        ruleValidate:{
-          styleName:[
-            {required:true,validator:styleValidor,trigger:'blur'}
+        ruleValidate: {
+          styleName: [
+            {required: true, validator: styleValidor, trigger: 'blur'}
           ]
         },
 
         //缩放类型
-        zoomType:'0',
-        zoomTypeList:[
+        zoomType: '0',
+        zoomTypeList: [
           {
-            value:'0',
-            label:'不使用缩放'
+            value: '0',
+            label: '不使用缩放'
           },
           {
-            value:'1',
-            label:'等比例缩放'
+            value: '1',
+            label: '等比例缩放,指定宽高'
           },
           {
-            value:'2',
-            label:'指定宽高，长度优先'
+            value: '2',
+            label: '居中剪裁,指定宽高'
           },
           {
-            value:'3',
-            label:'指定宽高，宽度优先'
+            value: '3',
+            label: '长边优先,指定宽高'
           },
           {
-            value:'4',
-            label:'指定宽度，强制缩放'
+            value: '4',
+            label: '短边优先,指定宽高'
+          },
+          {
+            value: '5',
+            label: '强制缩放'
           }
         ],
 
         //水印类型
-        watermark:[
+        watermark: [
           {
-            value:'0',
-            label:'不使用水印'
+            value: '0',
+            label: '不使用水印'
           },
           {
-            value:'1',
-            label:'图片水印'
+            value: '1',
+            label: '图片水印'
           },
           {
-            value:'2',
-            label:'文字水印'
+            value: '2',
+            label: '文字水印'
           }
         ],
-        watermarkIndex:'0',
+        watermarkIndex: '0',
 
         //水印位置
-        waterPosition:[
+        waterPosition: [
           {
-            value:'1',
-            label:'左上'
+            value: '1',
+            label: '左上'
           },
           {
-            value:'2',
-            label:'左中'
+            value: '2',
+            label: '左中'
           },
           {
-            value:'3',
-            label:'左下'
+            value: '3',
+            label: '左下'
           },
           {
-            value:'4',
-            label:'中上'
+            value: '4',
+            label: '中上'
           },
           {
-            value:'5',
-            label:'中'
+            value: '5',
+            label: '中'
           },
           {
-            value:'6',
-            label:'中下'
+            value: '6',
+            label: '中下'
           },
           {
-            value:'7',
-            label:'右上'
+            value: '7',
+            label: '右上'
           },
           {
-            value:'8',
-            label:'右中'
+            value: '8',
+            label: '右中'
           },
           {
-            value:'9',
-            label:'右下'
+            value: '9',
+            label: '右下'
           }
         ],
-        positionIndex:'0',
-        vertical:'0',
-        level:'0',
+        positionIndex: '0',
+        vertical: '0',
+        level: '0',
 
         //输出格式
-        formatValue:'0',
-        formatList:[
+        formatValue: '0',
+        formatList: [
           {
-            value:'0',
-            label:'原图格式'
+            value: '0',
+            label: '原图格式'
           },
           {
-            value:'1',
-            label:'JPG'
+            value: '1',
+            label: 'JPG'
           },
           {
-            value:'2',
-            label:'PNG'
+            value: '2',
+            label: 'PNG'
           },
           {
-            value:'3',
-            label:'GIF'
+            value: '3',
+            label: 'GIF'
           },
           {
-            value:'4',
-            label:'WebG'
+            value: '4',
+            label: 'WebG'
           }
         ],
 
         //图片高宽
-        imgWidth:'250',
-        imgHeight:'250',
+        imgWidth: '250',
+        imgHeight: '250',
         //输出质量
-        outQuality:50,
+        outQuality: 50,
 
         //水印图片
-        waterImg:{
-         imgUrl:'',
-         transparency:50,
-         imgSize:20
+        waterImg: {
+          imgUrl: '',
+          transparency: 50,
+          imgSize: 20
         },
 
         //文字水印
-        waterFont:{
-          font:'今天我让你高攀不起',
-          typeface:'Dialog',
-          size:10,
-          color:'#0A7F90',
-          typefaceList:[
+        waterFont: {
+          font: '今天我让你高攀不起',
+          typeface: 'Dialog',
+          size: 10,
+          color: '#0A7F90',
+          typefaceList: [
             {
-              value:'Dialog',
-              label:'Dialog'
+              value: 'Dialog',
+              label: 'Dialog'
             },
             {
-              value:'DialogInput',
-              label:'DialogInput'
+              value: 'DialogInput',
+              label: 'DialogInput'
             },
             {
-              value:'SansSerif',
-              label:'SansSerif'
+              value: 'SansSerif',
+              label: 'SansSerif'
             },
             {
-              value:'Serif Monospaced',
-              label:'Serif Monospaced'
+              value: 'Serif Monospaced',
+              label: 'Serif Monospaced'
             }
           ]
         },
 
         //图片旋转
-        rotateValue:'0',
-        rotateType:[
+        rotateValue: '0',
+        rotateType: [
           {
-            value:'0',
-            label:'不开启'
+            value: '0',
+            label: '不开启'
           },
           {
-            value:'1',
-            label:'自定义角度旋转'
+            value: '1',
+            label: '自定义角度旋转'
           },
           {
-            value:'2',
-            label:'根据exif自动旋转'
+            value: '2',
+            label: '根据exif自动旋转'
           },
         ],
-        angle:''
+        angle: ''
       }
     },
-    methods:{
-      imgGet(){
-        console.log(this.waterPosition[this.positionIndex].value);
-        this.$refs.formValidate.validate(valid =>{
-          if(valid){
+    methods: {
+      imgGet() {
+        this.$refs.formValidate.validate(valid => {
+          if (valid) {
             axios({
-              url:'picture/picturePreview.do',
-              method:'post',
-              headers:{},
+              url: 'picture/picturePreview.do',
+              method: 'post',
+              headers: {},
               transformRequest: [function (data) {
                 return Qs.stringify(data);
               }],
-              data:{
-                cssname:this.formValidate.styleName,
-                resizertype:this.zoomType,
-                width:this.zoomType == '0' ? '' : this.imgWidth,
-                height:this.zoomType == '0' ? '' : this.imgHeight,
-                resizerpercent:this.watermarkIndex == '1'? this.waterImg.imgSize.toString() :'',
-                outformattype:this.formatValue,
-                outquality:this.outQuality.toString(),
-                waterprinttype:this.watermarkIndex,
-                waterurl:this.watermarkIndex == '1'? this.waterImg.imgUrl : '',
-                wateroffsettype:this.waterPosition[this.positionIndex].value,
-                horizontaloff:this.level,
-                verticaloff:this.vertical,
-                rotatetype:this.rotatetype,
-                rotationangle:this.angle,
-                fontsize:this.watermarkIndex == '2' ? this.waterFont.size.toString() : '',
-                text:this.watermarkIndex == '2' ?this.waterFont.font : '',
-                // color:this.watermarkIndex == '2' ?this.waterFont.color : '',
-                color:'10000',
-                thickness:'0',
-                watermarktransparency:this.waterImg.transparency.toString(),
-                font:this.watermarkIndex == '2' ?this.waterFont.typeface :'',
-                bucketname:sessionStorage.getItem("bucketName"),
-                companyid:sessionStorage.getItem('companyId'),
-                zoneid:this.$store.state.zone.zoneid
+              data: {
+                cssname: this.formValidate.styleName,
+                resizertype: this.zoomType,
+                width: this.zoomType == '0' ? '' : this.imgWidth,
+                height: this.zoomType == '0' ? '' : this.imgHeight,
+                resizerpercent: this.watermarkIndex == '1' ? this.waterImg.imgSize.toString() : '',
+                outformattype: this.formatValue,
+                outquality: this.outQuality.toString(),
+                waterprinttype: this.watermarkIndex,
+                waterurl: this.watermarkIndex == '1' ? this.waterImg.imgUrl : '',
+                wateroffsettype: this.waterPosition[this.positionIndex].value,
+                horizontaloff: this.level,
+                verticaloff: this.vertical,
+                rotatetype: this.rotatetype,
+                rotationangle: this.angle,
+                fontsize: this.watermarkIndex == '2' ? this.waterFont.size.toString() : '',
+                text: this.watermarkIndex == '2' ? this.waterFont.font : '',
+                color:this.watermarkIndex == '2' ?this.waterFont.color : '',
+                // color: '10000',
+                thickness: '0',
+                watermarktransparency: this.waterImg.transparency.toString(),
+                font: this.watermarkIndex == '2' ? this.waterFont.typeface : '',
+                bucketname: sessionStorage.getItem("bucketName"),
+                companyid: sessionStorage.getItem('companyId'),
+                zoneid: this.$store.state.zone.zoneid
               }
+            }).then(res => {
+              // function utf8_to_b64( str ) {
+              //   return btoa(encodeURIComponent( str ));
+              // }
+             console.log(res);
+              this.imgSrc = res.data;
             })
           }
         })
       },
-      createStyle(){
-        axios({
-          url:'picture/creatStyle.do',
-          method:'post',
-          transformRequest: [function (data) {
-            return Qs.stringify(data);
-          }],
-          data:{
-            cssname:this.formValidate.styleName,
-            resizertype:this.zoomType,
-            width:this.zoomType == '0' ? '' : this.imgWidth,
-            height:this.zoomType == '0' ? '' : this.imgHeight,
-            resizerpercent:this.watermarkIndex == '1'? this.waterImg.imgSize.toString() :'',
-            outformattype:this.formatValue,
-            outquality:this.outQuality.toString(),
-            waterprinttype:this.watermarkIndex,
-            waterurl:this.watermarkIndex == '1'? this.waterImg.imgUrl : '',
-            wateroffsettype:this.waterPosition[this.positionIndex].value,
-            horizontaloff:this.level,
-            verticaloff:this.vertical,
-            rotatetype:this.rotatetype,
-            rotationangle:this.angle,
-            fontsize:this.watermarkIndex == '2' ? this.waterFont.size.toString() : '',
-            text:this.watermarkIndex == '2' ?this.waterFont.font : '',
-            // color:this.watermarkIndex == '2' ?this.waterFont.color : '',
-            color:'1000',
-            thickness:'0',
-            watermarktransparency:this.waterImg.transparency.toString(),
-            font:this.watermarkIndex == '2' ?this.waterFont.typeface :'',
-            bucketname:sessionStorage.getItem("bucketName"),
-            companyid:sessionStorage.getItem('companyId'),
-            zoneid:this.$store.state.zone.zoneid
-          }
-        }).then(res =>{
-          if(res.status == 200 && res.data.status == '1'){
-            this.$Message.success('新建样式成功');
-            this.$router.push({path:'SpaceDetails'});
-          }else {
-            this.$Message.info('新建样式出小差了');
+      createStyle() {
+        this.$refs.formValidate.validate(valid => {
+          if (valid) {
+            axios({
+              url: 'picture/creatStyle.do',
+              method: 'post',
+              transformRequest: [function (data) {
+                return Qs.stringify(data);
+              }],
+              data: {
+                cssname: this.formValidate.styleName,
+                resizertype: this.zoomType,
+                width: this.zoomType == '0' ? '' : this.imgWidth,
+                height: this.zoomType == '0' ? '' : this.imgHeight,
+                resizerpercent: this.watermarkIndex == '1' ? this.waterImg.imgSize.toString() : '',
+                outformattype: this.formatValue,
+                outquality: this.outQuality.toString(),
+                waterprinttype: this.watermarkIndex,
+                waterurl: this.watermarkIndex == '1' ? this.waterImg.imgUrl : '',
+                wateroffsettype: this.waterPosition[this.positionIndex].value,
+                horizontaloff: this.level,
+                verticaloff: this.vertical,
+                rotatetype: this.rotatetype,
+                rotationangle: this.angle,
+                fontsize: this.watermarkIndex == '2' ? this.waterFont.size.toString() : '',
+                text: this.watermarkIndex == '2' ? this.waterFont.font : '',
+                color:this.watermarkIndex == '2' ?this.waterFont.color : '',
+                // color: '1000',
+                thickness: '0',
+                watermarktransparency: this.waterImg.transparency.toString(),
+                font: this.watermarkIndex == '2' ? this.waterFont.typeface : '',
+                bucketname: sessionStorage.getItem("bucketName"),
+                companyid: sessionStorage.getItem('companyId'),
+                zoneid: this.$store.state.zone.zoneid
+              }
+            }).then(res => {
+              if (res.status == 200 && res.data.status == '1') {
+                this.$Message.success('新建样式成功');
+                this.$router.push({path: 'SpaceDetails'});
+              } else {
+                this.$Message.info('新建样式出小差了');
+              }
+            })
           }
         })
       }
