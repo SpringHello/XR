@@ -118,19 +118,24 @@
       </div>
     </div>
      <!-- 八大场景区 -->
-    <div class="eigth-scene" :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat'}">
+    <div class="eigth-scene">
+      <div class="bg-wrap">
+          <div class="bg" ref="bgcheck">
+              <img  v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl"/>
+          </div>
+      </div>
       <div class="wrap">
         <div class="box">
-          <div class="hint">
-            <span>免费使用一年</span>
-          </div>
           <div class="container">
             <div class="left-menu">
               <ul>
-                <li v-for="(item,index) in eigthSceneMenu" :key="index" @click="eightsceneIndex = index" :class="{selected:eightsceneIndex == index}">{{item.name}}</li>
+                <li v-for="(item,index) in eigthSceneMenu" :key="index" @click="menuselected(index)" :class="{selected:eightsceneIndex == index}">{{item.name}}</li>
               </ul>
             </div>
             <div class="content" v-for="(item,index) in selectedEightscene" :key="index">
+                <div class="hint">
+                  <span>{{item.hint}}</span>
+                </div>
                 <h3>{{item.title}}</h3>
                 <div class="scene">
                   <p class="title">应用场景</p>
@@ -179,11 +184,11 @@
       </div>
     </div>
     <!-- 云产品展示区域 -->
-    <div class="cloud-content" ref="cloudContentFade">
+    <div class="cloud-content">
       <div class="container">
         <transition name="cloudContentFade">
           <div v-show="cloudContentFade">
-            <p v-for="(item,index) in cloudContainer" :key="index" v-if="item.select">{{item.desc}}</p>
+            <!-- <p v-for="(item,index) in cloudContainer" :key="index" v-if="item.select">{{item.desc}}</p> -->
             <div class="content-carousel">
               <div v-for="(item,index) in cloudContainer" :key="index">
                 <transition name="fade">
@@ -302,7 +307,7 @@
         </div>
       </div>
     </div> -->
-    <div class="require">
+    <div class="require" ref="require">
       <div class="wrap">
         <div class="header-g">
           <p class="title">满足严苛品质要求</p>
@@ -313,8 +318,8 @@
             <p>{{item.title}}</p>
             <div class="img-wrap"  @mouseenter="requireEnter(index)" @mouseleave="requireLeave(index)">
               <span>
-                <img :src="item.img" alt="1" v-if="!item.isShow">
-                <img :src="item.imgHover" alt="2" v-else>
+                <img :src="item.img" alt="" v-if="!item.isShow">
+                <img :src="item.imgHover" alt="" v-else>
               </span>
             </div>
             <span>{{item.desc}}</span>
@@ -376,8 +381,8 @@
         </div>
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
-            <dt>{{item.typename}}
-              <span>{{item.EnglishName.toUpperCase()}}</span>
+            <dt :style="{background:'url('+item.bgPictureUrl+')',backgroundRepeat:'no-repeat'}">
+              <span>{{item.typename}}</span>
               <router-link :to="`article/${item.id}`">More></router-link>
             </dt>
             <dd>
@@ -470,6 +475,16 @@
         partnerFade: true,
         authorityFade: true,
         eightsceneIndex: 0,
+        eigthimgs: [
+          {bgUrl: require('../../assets/img/home/eightscene-bg-1.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-2.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-3.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-4.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-5.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-6.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-7.png')},
+          {bgUrl: require('../../assets/img/home/eightscene-bg-8.png')}
+        ],
         eigthSceneMenu: [
           {name: '云电脑', link: 'host'},
           {name: '自助建站', link: 'web'},
@@ -490,9 +505,9 @@
               require('../../assets/img/sceneList/sl-icon3.png'),
               require('../../assets/img/sceneList/sl-icon4.png')
             ],
-            configure: ['1核1G1M带宽'],
-            link: 'host',
-            bgUrl: require('../../assets/img/home/eightscene-bg-1.png')
+            configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(12个月)'],
+            link: '/ruicloud/sceneInfo/host',
+            hint: '免费使用一年'
           },
           {
             title: '自助建站',
@@ -503,20 +518,22 @@
               require('../../assets/img/sceneList/sl-icon7.png'),
               require('../../assets/img/sceneList/sl-icon8.png')
             ],
-            configure: ['1核1G1M带宽'],
-            link: 'web',
-            bgUrl: require('../../assets/img/home/eightscene-bg-2.png')
+            configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(12个月)'],
+            link: '/ruicloud/sceneInfo/web',
+            hint: '免费使用一年'
           },
           {
             title: '存储&网盘',
             scene: '独立服务模式数据安全存储、多终端同步、文件在线预览，个人网盘让您的数据存储于传输有更简单可靠的选择。新睿云个人网盘服务具有使用方便、管理简单、稳定可靠等特点。具备多协议支持能力（包括FTP、FTPS、SFTP等文件传输协议）；远程文件查找能力；多标签界面管理能力；断点续传；站点管理与传输队列管理等能力。',
             software: [
               require('../../assets/img/sceneList/sl-icon9.png'),
-              require('../../assets/img/sceneList/sl-icon10.png')
+              require('../../assets/img/sceneList/sl-icon10.png'),
+              require('../../assets/img/sceneList/sl-icon28.png'),
+              require('../../assets/img/sceneList/sl-icon29.png')
             ],
-            configure: ['1核1G1M带宽'],
-            link: 'disk',
-            bgUrl: require('../../assets/img/home/eightscene-bg-3.png')
+            configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(12个月)'],
+            link: '/ruicloud/sceneInfo/disk',
+            hint: '免费使用一年'
           },
           {
             title: '软件研发',
@@ -527,9 +544,9 @@
               require('../../assets/img/sceneList/sl-icon13.png'),
               require('../../assets/img/sceneList/sl-icon14.png')
             ],
-            configure: ['1核1G1M带宽'],
-            link: 'software',
-            bgUrl: require('../../assets/img/home/eightscene-bg-4.png')
+            configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(12个月)'],
+            link: '/ruicloud/sceneInfo/software',
+            hint: '免费使用一年'
           },
           {
             title: '游戏服务',
@@ -538,9 +555,9 @@
               require('../../assets/img/sceneList/sl-icon15.png'),
               require('../../assets/img/sceneList/sl-icon16.png')
             ],
-            configure: ['1核1G1M带宽'],
-            link: 'game',
-            bgUrl: require('../../assets/img/home/eightscene-bg-5.png')
+            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
+            link: '/ruicloud/sceneInfo/game',
+            hint: '免费使用'
           },
           {
             title: '图形设计',
@@ -551,9 +568,9 @@
               require('../../assets/img/sceneList/sl-icon19.png'),
               require('../../assets/img/sceneList/sl-icon20.png')
             ],
-            configure: ['1核1G1M带宽'],
-            link: 'design',
-            bgUrl: require('../../assets/img/home/eightscene-bg-6.png')
+            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
+            link: '/ruicloud/sceneInfo/design',
+            hint: '免费使用'
           },
           {
             title: '人工智能',
@@ -562,11 +579,11 @@
               require('../../assets/img/sceneList/sl-icon21.png'),
               require('../../assets/img/sceneList/sl-icon22.png'),
               require('../../assets/img/sceneList/sl-icon23.png'),
-              require('../../assets/img/sceneList/sl-icon24.png')
+              require('../../assets/img/sceneList/sl-icon24.png'),
             ],
-            configure: ['1核1G1M带宽'],
-            link: 'AI',
-            bgUrl: require('../../assets/img/home/eightscene-bg-7.png')
+            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
+            link: '/ruicloud/sceneInfo/AI',
+            hint: '免费使用'
           },
           {
             title: '超级运算',
@@ -574,9 +591,9 @@
             software: [
               require('../../assets/img/sceneList/sl-icon25.png')
             ],
-            configure: ['1核1G1M带宽'],
-            link: 'supercomputing',
-            bgUrl: require('../../assets/img/home/eightscene-bg-8.png')
+            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
+            link: '/ruicloud/sceneInfo/supercomputing',
+            hint: '免费使用'
           },
         ],
         bannerText: require('../../assets/img/home/active3Text.png'),
@@ -840,14 +857,14 @@
           }
         ],
         partners: [
-          require('../../assets/img/home/partner-dell.png'),
           require('../../assets/img/home/partner-huawei.png'),
-          require('../../assets/img/home/partner-brocade.png'),
-          require('../../assets/img/home/partner-vmware.png'),
-          require('../../assets/img/home/partner-sugon.png'),
           require('../../assets/img/home/partner-hitachi.png'),
-          require('../../assets/img/home/partner-unicom.png'),
-          require('../../assets/img/home/partner-telecom.png')
+          require('../../assets/img/home/partner-vmware.png'),
+          require('../../assets/img/home/partner-telecom.png'),
+          require('../../assets/img/home/partner-dell.png'),
+          require('../../assets/img/home/partner-brocade.png'),
+          require('../../assets/img/home/partner-sugon.png'),
+          require('../../assets/img/home/partner-unicom.png')
         ],
         /* 权威认证 */
         authorityContainer: [
@@ -895,56 +912,58 @@
         datacenterData: [
           {
             text: '北京',
-            top: '286px',
+            top: '206px',
             left: '380px',
             online: true
           },
           {
             text: '重庆',
-            top: '344px',
-            left: '330px',
+            top: '264px',
+            left: '380px',
             online: true
           },
           {
             text: '武汉',
-            top: '318px',
-            left: '362px',
+            top: '238px',
+            left: '352px',
             online: true
           },
            {
             text: '沈阳',
-            top: '280px',
-            left: '438px',
+            top: '194px',
+            left: '428px',
             online: true
           },
           {
             text: '浙江',
-            top: '320px',
+            top: '240px',
             left: '436px',
             online: true
           },
           {
             text: '广州',
-            top: '370px',
+            top: '290px',
             left: '360px',
             online: true
           },
           {
             text: '洛杉矶',
-            top: '236px',
-            left: '860px',
+            top: '158px',
+            left: '770px',
             online: false
           },
           {
             text: '香港',
-            top: '368px',
-            left: '420px',
+            top: '288px',
+            left: '430px',
             online: false
           }
         ]
       }
     },
     mounted() {
+      // console.log(this.$refs.require.offsetTop)
+      this.menuselected(0)
       echarts.registerMap('china', china)
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
@@ -978,6 +997,10 @@
       this.getlinkList()
     },
     methods: {
+      menuselected(index) {
+        this.eightsceneIndex = index
+        this.$refs.bgcheck.style.marginTop = -666 * index + 'px'
+      },
       datacenterEnter(selectedIndex) {
         this.authorityContainer.forEach((item, index) => {
           if (selectedIndex == index) {
@@ -1135,9 +1158,36 @@
       display: flex;
       justify-content: space-between;
     }
-    .eigth-scene {
-      // background: url(../../assets/img/home/eightscene-host/bg.png) no-repeat;
+    .eigth-scene {  
+      position: relative;
+      margin:0 auto;
+      width: 1902px;
+      overflow: hidden;
+      .bg-wrap {
+        position: relative;
+        margin:0 auto;
+        overflow: hidden;
+        height: 666px;
+        .bg{
+          transition: all .3s ease;  
+          margin: auto 0;
+          height: 5328px;
+          position:absolute;
+          top: 0;
+          left: 0;
+          z-index: 1;
+          >img {
+            margin: 0;
+            padding: 0;
+            display: block;
+          }
+        }
+      }
       .wrap {
+        position: absolute;
+        top:0;
+        left: 350px;
+        z-index: 2;
         height:666px;
         display: flex;
         align-items: center;
@@ -1150,23 +1200,6 @@
           .container{
             display: flex;
           }
-          .hint {
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 126px;
-            width: 126px;
-            background: url("../../assets/img/home/free-hint.png") no-repeat center;
-            span {
-              display: block;
-              font-size:18px;
-              font-family:PingFangSC-Semibold;
-              font-weight:600;
-              color:rgba(255,255,255,1);
-              transform: rotate(45deg);
-              transform-origin: 10% 300%;
-            }
-          }
           .left-menu{
             width: 200px;
             border-right: solid 1px #E6E6E6;
@@ -1175,7 +1208,7 @@
                 width:200px;
                 height:68px;
                 line-height: 68px;
-                font-size:22px;
+                font-size:20px;
                 font-family:PingFangSC-Semibold;
                 font-weight:400;
                 color: #333333;
@@ -1183,7 +1216,6 @@
                 text-align: center;
                 &:hover,&.selected {
                   background:linear-gradient(270deg,rgba(170,202,255,1) 0%,rgba(138,189,253,0) 100%);
-                  font-weight:600;
                   color: #377DFF;
                   border-right: #387DFF 6px solid;
                 }
@@ -1191,7 +1223,29 @@
             }
           }
           .content {
+            position: relative;
             padding: 40px 100px 40px 80px;
+            .hint {
+              position: absolute;
+              top: 0;
+              right: 0;
+              height: 126px;
+              width: 126px;
+              background: url("../../assets/img/home/free-hint.png") no-repeat center;
+              span {
+                display: block;
+                height: 126px;
+                line-height: 90px;
+                width: 126px;
+                text-align: center;
+                font-size:18px;
+                font-family:PingFangSC-Semibold;
+                font-weight:600;
+                color:rgba(255,255,255,1);
+                transform: rotate(45deg);
+                // transform-origin: 10% 300%;
+              }
+            }
             > h3 {
               padding-bottom: 20px;
               font-size:24px;
@@ -1209,11 +1263,11 @@
               color:rgba(74,74,74,1);
             }
             .scene {
-              max-height: 132px;
-              overflow: hidden;
               margin-bottom: 24px;
               div {
                 p {
+                  max-height: 112px;
+                  overflow: hidden;
                   margin-bottom: 20px;
                   font-size:14px;
                   font-family:PingFangSC-Regular;
@@ -1238,6 +1292,12 @@
                 border-radius:4px;
                 border:1px solid rgba(204,204,204,1);
                 color:rgba(136,136,136,1);
+                cursor: pointer;
+                &:hover {
+                  color: #fff;
+                  border: 1px solid rgba(56,125,255,1);
+                  background: rgba(56,125,255,1);
+                }
               }
             }
           }
@@ -1245,7 +1305,7 @@
       }
     }
     .register {
-      height:188px;
+      height:180px;
       background: url("../../assets/img/home/bg-ripple.png") no-repeat center;
       text-align: center;
       color: #fff;
@@ -1264,25 +1324,31 @@
         line-height: 46px;
         border-radius:4px;
         border:1px solid rgba(255,255,255,1);
+        cursor: pointer;
+        &:hover {
+          background: #fff;
+          color: #377DFF;
+        }
       }
     }
     .datacenter {
       margin-bottom: 100px;
-      height: 916px;
-      background: url('../../assets/img/home/datacenter-line.png') no-repeat 240px 20px,url('../../assets/img/home/datacenter-bg.png') no-repeat top center;
+      height: 688px;
+      background: url('../../assets/img/home/datacenter-bg.png') no-repeat top center;
       .header-g{
-        padding-top: 60px;
+        padding-top: 50px;
         margin-bottom: 10px;
         .title {
           color: #fff;
+          padding-bottom: 20px;
         }
         .desc {
           color: #fff;
         }
       }
       .main {
-        height: 702px;
-        background: url('../../assets/img/home/datacenter-map.png') no-repeat top center;
+        height: 496px;
+        // background: url('../../assets/img/home/datacenter-map.png') no-repeat top center;
         position: relative;
         > span {
           position: absolute;
@@ -1396,7 +1462,8 @@
         display: flex;
         justify-content: space-between;
         // box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
-        box-shadow:0px 2px 35px -17px rgba(0,0,0,0.19);
+        box-shadow:0px 2px 35px -17px rgba(69,69,69,0.86);
+        background: #fff;
         .main-left {
           padding: 40px 60px 40px 80px;
           position: relative;
@@ -1482,23 +1549,14 @@
           width: 386px;
           padding-bottom: 20px;
           overflow: hidden;
-          box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.41);
+          // box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.41);
+          box-shadow:0px 13px 14px -6px rgba(216,216,216,0.5);
           dt {
             height: 58px;
-            padding: 20px;
-            background: #7E7F80;
-            background: url('../../assets/img/home/news-linklist-bg.png') no-repeat;
-            position: relative;
-            span {
-              position: absolute;
-              top:24px;
-              left: 20px;
-              font-size:20px;
-              font-family:Arial-Black;
-              font-weight:900;
-              color:#000;
-              opacity: .1;
-            }
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
             font-size: 18px;
             color: #fff;
             a {
@@ -1513,12 +1571,12 @@
           dd {
             ul {
               li {
+                padding: 0 20px;
                 a {
                   display:flex;
                   justify-content: space-between;
                   height: 60px;
                   align-items: center;
-                  padding: 0 20px;
                   font-size: 14px;
                   color: rgba(102, 102, 102, 1);
                   cursor: pointer;
@@ -1535,9 +1593,12 @@
                   }
                    i {
                       display: inline-block;
+                      width: 40px;
+                      height: 20px;
+                      line-height: 20px;
+                      text-align: center;
                       background: #FF624B;
                       border-radius:10px 10px 10px 0px;
-                      padding: 2px 8px;
                       font-style: normal;
                       font-size: 12px;
                       color: #fff;
@@ -1548,7 +1609,6 @@
             }
           }
         }
-
       }
     }
     .icon {
@@ -1684,7 +1744,7 @@
     }
     > .cloud-content {
       width: 100%;
-      height: 540px;
+      height: 440px;
       background-color: #f9f9f9;
       .container {
         position: relative;
@@ -1701,7 +1761,7 @@
             padding: 76px 0px 80px;
           }
           .content-carousel {
-            margin-bottom: 70px;
+            margin-top: 40px; 
             overflow-x: hidden;
             .fade-enter-active, .fade-leave-active {
               transition: opacity .2s
@@ -1999,7 +2059,7 @@
       }
     }
     > .partner-container {
-      background-color: #f9f9f9;
+      background-color: #fff;
       > div {
         width: 1200px;
         margin: 0px auto;
@@ -2019,8 +2079,8 @@
         flex-wrap: wrap;
         > div {
           margin-bottom: 20px;
-          width:285px;
-          height:130px;
+          width:288px;
+          height:132px;
           border-radius:4px;
           border:1px solid rgba(207,207,207,1);
           background: #fff;
@@ -2043,7 +2103,6 @@
         margin: 0px auto;
         text-align: center;
         position: relative;
-
         > div {
           position: absolute;
           top: 0px;
@@ -2483,8 +2542,9 @@
           font-family: "Microsoft YaHei", "微软雅黑";
           color: #fff;
           &:hover {
-            color: #387DFF;
-            border: 1px solid #387DFF;
+            color: #fff;
+            border: 1px solid rgba(56,125,255,1);
+            background: rgba(56,125,255,1);
           }
         }
       }
@@ -2508,7 +2568,7 @@
           }
           &:last-of-type {
             color: #4A97EE;
-            padding-bottom: 20px; 
+            padding-bottom: 20px;
             cursor: pointer;
           }
         }

@@ -193,7 +193,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -253,7 +253,7 @@
           productList: [{label: '云主机', value: 'bhost'}, {label: '云硬盘', value: 'bdisk'}, {
             label: '公网IP',
             value: 'bip'
-          }, {label: '数据库', value: 'bdata'}, {label: 'GPU服务器', value: 'bgpu'}]
+          }, {label: '数据库', value: 'bdata'}, {label: '对象存储', value: 'bobj'}, {label: 'GPU服务器', value: 'bgpu'}]
         },
         // 当前可以创建的剩余资源数
         remainCount: {},
@@ -280,7 +280,7 @@
             warning: false
           }
         },
-        imgSrc: 'user/getKaptchaImage.do',
+        imgSrc: '/ruicloud/user/getKaptchaImage.do',
         showModal: {
           login: false
         },
@@ -292,8 +292,7 @@
           if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246) {
             this.$refs.buyDiv.style.position = 'fixed'
             this.$refs.buyDiv.style.bottom = 0
-          }
-          else {
+          } else {
             this.$refs.buyDiv.style.position = 'unset'
           }
         }
@@ -323,7 +322,7 @@
             if (response.data.status == 1) {
               this.$router.go(0)
             } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.imgSrc = `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.vailForm.loginname.message = response.data.message
               this.vailForm.loginname.warning = true
             }
@@ -339,7 +338,7 @@
           return
         }
         if (this.userInfo == null) {
-          this.showModal.login = true
+          this.$LR({type: 'login'})
           return
         }
         var PromiseList = []
@@ -373,7 +372,6 @@
               params.networkId = prod.network
               params.vpcId = prod.vpc
               var diskType = '', diskSize = ''
-
               for (let disk of prod.dataDiskList) {
                 diskType += `${disk.type},`
                 diskSize += `${disk.size},`
@@ -575,6 +573,7 @@
           bip: 'Peip',
           bdata: 'PdataBase',
           bgpu: 'Pgpu',
+          bobj: 'PobjStorage',
         }
         return map[this.product.currentProduct]
       }
@@ -593,7 +592,7 @@
   }
 </script>
 
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   #buy {
     background-color: #F7F7F7;
     #wrapper {

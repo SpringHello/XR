@@ -18,7 +18,7 @@
               <h2>基本信息</h2>
               <div class="pi-base">
                 <div class="pi-base-portrait">
-                  <img src="../../assets/img/usercenter/uc-headphoto1.png" @click="showModal.setHeadPhoto = true">
+                  <img :src="userInfo.headportrait" @click="showModal.setHeadPhoto = true">
                   <p @click="showModal.setHeadPhoto = true">更换头像</p>
                 </div>
                 <div class="pi-base-info">
@@ -32,7 +32,7 @@
                     <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span @click="showModal.bindingEmail = true">修改</span></li>
                     <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span @click="showModal.bindingMobilePhone = true">去绑定</span></li>
                     <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span @click="showModal.bindingMobilePhone = true">修改</span></li>
-                    <li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>
+                    <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li v-if="!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
                       @click="currentTab ='certification' ">马上认证</span></li>
                     <li v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"><span>身份证号</span><span>{{authInfo.personalnumber}}</span></li>
@@ -43,7 +43,7 @@
               </div>
               <h2>其他信息</h2>
               <div class="pi-otherInfo">
-                <div class="pi-otherInfo-form" v-if="false">
+                <div class="pi-otherInfo-form" v-if="!otherInfoShow">
                   <Form ref="occupationalInfo" :model="occupationalInfoForm" :rules="occupationalInfoRule" :label-width="100">
                     <FormItem label="应用行业" prop="trade">
                       <Select v-model="occupationalInfoForm.trade" style="width: 317px;">
@@ -80,13 +80,16 @@
                     </div>
                   </Form>
                 </div>
-                <div v-if="true" style="padding-left: 80px">
+                <div v-if="otherInfoShow" style="padding-left: 80px">
                   <ol>
-                    <li><span>所属行业</span><span>金融</span></li>
-                    <li><span>职位</span><span>CEO</span></li>
-                    <li><span>单位名称</span><span>阿里巴巴</span></li>
-                    <li><span>地区</span><span>重庆</span></li>
+                    <li><span>所属行业</span><span>{{ userInfo.applicationindustry }}</span></li>
+                    <li><span>职位</span><span>{{ userInfo.position }}</span></li>
+                    <li><span>单位名称</span><span>{{ userInfo.corporatename }}</span></li>
+                    <li><span>地区</span><span>{{ userInfo.corporateaddressprovince +'-'+ userInfo.corporateaddresscity }}</span></li>
                   </ol>
+                  <div style="padding-left: 60px">
+                    <Button type="primary" @click="modifyJobInfo">修改</Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -725,16 +728,18 @@
                        style="padding: 172px 0px;margin-bottom: 32px;height: 374px;color: #999;">
                     <img src="../../assets/img/usercenter/uc-add.png"/>
                   </div>
-                  <img style="height: 74px" v-else :src="uploadHeadPhoto">
+                  <div style="height: 374px;display: flex;justify-content: center;align-items: center" v-else>
+                    <img :src="uploadHeadPhoto">
+                  </div>
                   <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;padding-top: 20px;background: #FFF;text-align: left">
                     上传文件</p>
                 </Upload>
                 <p style="margin-top: 20px">请上传jpg、jpeg、png格式图片，大小控制在2M以内</p>
               </div>
               <div v-show="headPhotoType == 'system'" style="display: flex;flex-wrap: wrap;justify-content: space-between">
-                <div class="system-img" :class="{selected: selectedSystemPhoto == item.src}" v-for="item in systemPhotoGroup"
-                     @click="selectedSystemPhoto = item.src">
-                  <img :src="item.src"/>
+                <div class="system-img" :class="{selected: selectedSystemPhoto == item.photourl}" v-for="item in systemPhotoGroup"
+                     @click="selectedSystemPhoto = item.photourl">
+                  <img :src="item.photourl"/>
                 </div>
               </div>
             </div>
@@ -754,7 +759,52 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.setHeadPhoto = false">取消</Button>
-        <Button type="primary">确定</Button>
+        <Button type="primary" @click="userUpdateSystemHead">确定</Button>
+      </div>
+    </Modal>
+
+    <!-- 修改其他信息弹窗-->
+    <Modal v-model="showModal.modifyOtherInfo" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">修改其他信息</span>
+      </p>
+      <div>
+        <Form ref="occupationalInfo" :model="occupationalInfoForm" :rules="occupationalInfoRule" :label-width="100">
+          <FormItem label="应用行业" prop="trade">
+            <Select v-model="occupationalInfoForm.trade" style="width: 317px;">
+              <Option v-for="item in occupationalInfoForm.tradeOptions" :key="item.label"
+                      :value="item.label">
+                {{item.label}}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="职位" prop="position">
+            <Select v-model="occupationalInfoForm.position" style="width: 317px;">
+              <Option v-for="item in occupationalInfoForm.positionOptions" :key="item.label"
+                      :value="item.label">
+                {{item.label}}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="单位名称" prop="companyName">
+            <Input v-model="occupationalInfoForm.companyName" placeholder="请输入单位名称" style="width: 317px;"></Input>
+          </FormItem>
+          <FormItem label="地域" prop="city">
+            <Select v-model="occupationalInfoForm.province" style="width:154px;margin-right: 10px" placeholder="请选择省"
+                    @on-change="changeProvince">
+              <Option v-for="item in occupationalInfoForm.provinceList" :value="item.name" :key="item.name">{{item.name}}
+              </Option>
+            </Select>
+            <Select v-model="occupationalInfoForm.city" style="width:154px;margin-right: 10px" placeholder="请选择市">
+              <Option v-for="item in occupationalInfoForm.cityList" :value="item.name" :key="item.name">{{ item.name}}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.modifyOtherInfo = false">取消</Button>
+        <Button type="primary" @click="saveJobInfo">保存</Button>
       </div>
     </Modal>
 
@@ -1199,53 +1249,12 @@
           bindingMobilePhone: false,
           bindingEmail: false,
           modifyPassword: false,
-          setHeadPhoto: false
+          setHeadPhoto: false,
+          modifyOtherInfo: false
         },
         headPhotoType: 'system',
-        systemPhotoGroup: [
-          {
-            src: require('../../assets/img/usercenter/uc-headphoto1.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto2.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto3.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto4.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto5.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto6.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto7.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto8.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto9.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto10.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto11.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto12.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto13.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto14.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto15.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto16.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto17.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto18.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto19.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto20.png')
-          }
-        ],
-        selectedSystemPhoto: require('../../assets/img/usercenter/uc-headphoto1.png'),
+        systemPhotoGroup: [],
+        selectedSystemPhoto: '',
         uploadHeadPhoto: '',
         // 职业信息表单
         occupationalInfoForm: {
@@ -2044,6 +2053,7 @@
             }*/
       this.listNotice()
       this.getContacts()
+      this.getSystemHead()
     },
     methods: {
       init() {
@@ -2101,7 +2111,34 @@
             break
         }
       },
-
+      // 获取系统头像列表
+      getSystemHead() {
+        let url = 'user/getSystemHead.do'
+        this.$http.get(url).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.systemPhotoGroup = res.data.result
+            this.selectedSystemPhoto = res.data.result[0].photourl
+          }
+        })
+      },
+      // 更新头像
+      userUpdateSystemHead() {
+        let params = {
+          photoUrl: this.selectedSystemPhoto
+        }
+        let url = 'user/userUpdateSystemHead.do'
+        this.$http.post(url, params).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.showModal.setHeadPhoto = false
+            this.$Message.success(res.data.message)
+            this.init()
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
       // 绑定手机
       bindMobilePhone() {
         var url = 'user/updatePhone.do'
@@ -2150,9 +2187,36 @@
       saveJobInfo() {
         this.$refs['occupationalInfo'].validate(valid => {
           if (valid) {
-            alert('保存')
+            let url = 'user/addUserElseMessage.do'
+            let params = {
+              applicationIndustry: this.occupationalInfoForm.trade,
+              position: this.occupationalInfoForm.position,
+              corporateName: this.occupationalInfoForm.companyName,
+              corporateAddressProvince: this.occupationalInfoForm.province,
+              corporateAddressCity: this.occupationalInfoForm.city,
+              type: '1'
+            }
+            this.$http.post(url, params).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+                this.$Message.success(res.data.message)
+                this.showModal.modifyOtherInfo = false
+                this.init()
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         })
+      },
+      modifyJobInfo(){
+        this.occupationalInfoForm.trade = this.userInfo.applicationindustry
+        this.occupationalInfoForm.position = this.userInfo.position
+        this.occupationalInfoForm.companyName = this.userInfo.corporatename
+        this.occupationalInfoForm.province = this.userInfo.corporateaddressprovince
+        this.occupationalInfoForm.city = this.userInfo.corporateaddresscity
+        this.showModal.modifyOtherInfo = true
       },
 
       // 重新提交申请
@@ -3012,6 +3076,9 @@
             return true
           }
         }
+      },
+      otherInfoShow() {
+        return this.userInfo.applicationindustry && this.userInfo.position && this.userInfo.corporatename && this.userInfo.corporateaddressprovince && this.userInfo.corporateaddresscity
       }
     },
     watch: {}
@@ -3193,6 +3260,7 @@
       .left {
         margin-right: 20px;
         width: 374px;
+        overflow: scroll;
         .system-img {
           margin-top: 5px;
           cursor: pointer;

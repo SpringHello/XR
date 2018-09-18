@@ -5,7 +5,8 @@
       <div class="center">
         <div class="head">
           <img src="../../assets/img/sceneInfo/free-hint.png"/>
-          <span>免费使用一年</span>
+          <span v-if="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'|| scene == '游戏服务'" style="top: 45px;right: 15px;">免费试用</span>
+          <span v-else>免费使用一年</span>
           <div class="title">
             <h3>{{ item.currentScene }}</h3>
           </div>
@@ -28,17 +29,17 @@
         <div class="body">
           <h2>典型配置推荐</h2>
           <div class="configGroup">
-            <div v-for="(cfg,index1) in item.configGroup" class="config" :class="{gpu: scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'}">
+            <div v-for="(cfg,index1) in item.configGroup" class="config" :class="{gpu: scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'}">
               <div class="cf-title">{{cfg.title}}</div>
               <div class="cf-body">
                 <div class="cf-content">
-                  <ul v-if="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'">
+                  <ul v-if="scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'">
                     <li v-for="(item1,index) in cfg.configs" :class="{special: index == 6|| index == 9}">
                       <span :class="{s1: index == 0||index == 6|| index == 9}">{{ item1.text}}</span>
                       <span :class="{s2: index == 1|| index == 2 || index == 3|| index == 4}">{{ item1.value}}</span></li>
                     <li class="special"><span class="s1">选择系统</span></li>
                     <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
-                      <Option v-for="item3 in systemGroup" :value="item3.value" :key="item3.value">{{ item3.label }}</Option>
+                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
                     </Select>
                     <li style="margin-top: 10px"><span class="s1">选择区域</span></li>
                     <Select v-model="cfg.zoneId" style="width:170px;">
@@ -51,7 +52,7 @@
                       <span :class="{s2: index == 1|| index == 2 || index == 5}">{{ item1.value}}</span></li>
                     <li class="special"><span class="s1">选择系统</span></li>
                     <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
-                      <Option v-for="item3 in systemGroup" :value="item3.value" :key="item3.value">{{ item3.label }}</Option>
+                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
                     </Select>
                     <li style="margin-top: 10px"><span class="s1">选择区域</span></li>
                     <Select v-model="cfg.zoneId" style="width:170px;"
@@ -63,7 +64,7 @@
                 <div class="cf-footer">
                   <p><span>押金：</span>{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" @click="getHost(currentIndex,index1)">免费使用</Button>
+                  <Button type="primary" :disabled="scene == '游戏服务'||scene == '图形设计' || scene == '人工智能' || scene == '超级运算'" @click="getHost(currentIndex,index1)">敬请期待</Button>
                 </div>
               </div>
             </div>
@@ -1081,19 +1082,27 @@
             disc: '新睿云游戏应用能够帮助您实现任意设备的游戏体验: 在任意 PC、Mac、平板电脑、智能手机以及电视上的高画质、低延迟的多设备游戏体验；点击即玩的便捷: 任何时候都可以在云端访问一系列游戏和保存游戏。 在任何地点、任意设备上均可开始新游戏或继续之前的游戏进度；减少麻烦: 没有新硬件、没有复杂的设置、没有游戏光盘、没有数字下载、没有游戏安装、没有游戏补丁。',
             configGroup: [
               {
-                title: '一个月',
+                title: '初创型业务网站',
                 configs: [
                   {
                     text: '服务器资源',
                     value: '',
                   },
                   {
-                    text: '服务器ECS',
-                    value: '2核 4G',
+                    text: 'GPU服务器',
+                    value: '2288H v5',
+                  },
+                  {
+                    text: '主机',
+                    value: '4核32G',
+                  },
+                  {
+                    text: '型号',
+                    value: '1* NVIDIA P40',
                   },
                   {
                     text: '系统盘',
-                    value: '40G SSD',
+                    value: 'SSD存储',
                   },
                   {
                     text: '弹性负载均衡',
@@ -1105,7 +1114,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '1M',
+                    value: '按需开通',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1120,25 +1129,33 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '69.00',
-                originalPrice: '166.72',
+                currentPrice: '--',
+                originalPrice: '--',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '三个月',
+                title: '增长型业务网站',
                 configs: [
                   {
                     text: '服务器资源',
                     value: '',
                   },
                   {
-                    text: '服务器ECS',
-                    value: '2核 4G',
+                    text: 'GPU服务器',
+                    value: 'G5500',
+                  },
+                  {
+                    text: '主机',
+                    value: '8核64G',
+                  },
+                  {
+                    text: '型号',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
-                    value: '40G SSD',
+                    value: 'SSD存储',
                   },
                   {
                     text: '弹性负载均衡',
@@ -1150,7 +1167,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '1M',
+                    value: '按需开通',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1165,25 +1182,33 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '169.00',
-                originalPrice: '500.16',
+                currentPrice: '--',
+                originalPrice: '--',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '六个月',
+                title: '稳定型业务网站',
                 configs: [
                   {
                     text: '服务器资源',
                     value: '',
                   },
                   {
-                    text: '服务器ECS',
-                    value: '2核 4G',
+                    text: 'GPU服务器',
+                    value: 'G5500',
+                  },
+                  {
+                    text: '主机',
+                    value: '16核128G',
+                  },
+                  {
+                    text: '型号',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
-                    value: '40G SSD',
+                    value: 'SSD存储',
                   },
                   {
                     text: '弹性负载均衡',
@@ -1194,7 +1219,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '1M',
+                    value: '按需开通',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1209,52 +1234,8 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '269.00',
-                originalPrice: '1000.32',
-                zoneId: '',
-                system: 'linux'
-              },
-              {
-                title: '十二个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '569.00',
-                originalPrice: '2000.64',
+                currentPrice: '--',
+                originalPrice: '--',
                 zoneId: '',
                 system: 'linux'
               }
@@ -1761,6 +1742,7 @@
         index1: '',
         index2: '',
         vmConfig: '',
+        userType: '',
         scene: '云电脑',
         sceneGroup: [
           {name: '云电脑', link: 'host'},
@@ -1774,15 +1756,7 @@
         ],
         otherSceneShow: false,
         areaGroup: [],
-        systemGroup: [
-          {
-            label: 'Centos',
-            value: 'linux'
-          },
-          {
-            label: 'Windows',
-            value: 'windows'
-          },],
+        systemGroup: [],
         cashPledge: '--',
         time: '',
         config: {
@@ -1820,12 +1794,22 @@
           },
           {
             title: '押金金额',
+            width: 130,
             render: (h, params) => {
-              return h('span', {
+              let arr = []
+              let param1 = h('li', {
+                style: {
+                  textDecoration: 'line-through'
+                }
+              }, '原价：¥' + params.row.originalPrice)
+              let param2 = h('li', {
                 style: {
                   color: '#D0021B'
                 }
               }, '¥' + params.row.cashPledge)
+              arr.push(param1)
+              arr.push(param2)
+              return h('ul', {}, arr)
             }
           },
         ],
@@ -1864,7 +1848,7 @@
             {required: true, message: '请输入验证码'}
           ]
         },
-        imgSrc: 'user/getKaptchaImage.do',
+        imgSrc: `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         //定时器
         pageTimer: null,
         serialNum: ''
@@ -1885,29 +1869,38 @@
         switch (val) {
           case 'host':
             this.scene = '云电脑'
+            this.userType = '1'
             break
           case 'web':
             this.scene = '自助建站'
+            this.userType = '2'
             break
           case 'disk':
             this.scene = '存储&网盘'
+            this.userType = '3'
             break
           case 'software':
             this.scene = '软件研发'
+            this.userType = '4'
             break
           case 'game':
             this.scene = '游戏服务'
+            this.userType = '5'
             break
           case 'design':
             this.scene = '图形设计'
+            this.userType = '6'
             break
           case 'AI':
             this.scene = '人工智能'
+            this.userType = '7'
             break
           case 'supercomputing':
             this.scene = '超级运算'
+            this.userType = '8'
             break
         }
+        this.getMirror(this.userType,this.$store.state.zone.zoneid)
       },
       getOriginalPrice(currentIndex, index) {
         let vmConfigId = ''
@@ -1941,6 +1934,7 @@
             this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
           }
         })
+        //this.getMirror(this.userType,this.currentSceneGroup[currentIndex].configGroup[index].zoneId)
       },
       getRegion() {
         let url = 'activity/getTemActInfo.do'
@@ -1949,15 +1943,41 @@
         }).then(res => {
           if (res.data.status == 1) {
             this.areaGroup = res.data.result.optionalArea
-            this.currentSceneGroup.forEach(config => {
-              config.configGroup.forEach(host => {
-                host.zoneId = this.areaGroup[0].value
+            if (res.data.result.optionalArea.length != 0) {
+              this.currentSceneGroup.forEach(config => {
+                config.configGroup.forEach(host => {
+                  host.zoneId = this.areaGroup[0].value
+                })
               })
-            })
+            }
+          }
+        })
+      },
+      getMirror(userType, zoneId) {
+        let url = 'information/listTemplateFunction.do'
+        axios.get(url, {
+          params: {
+            useType: userType,
+            zoneId: zoneId
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.systemGroup = res.data.result
+            if (res.data.result.length != 0) {
+              this.currentSceneGroup.forEach(config => {
+                config.configGroup.forEach(host => {
+                  host.system = this.systemGroup[0].systemtemplateid
+                })
+              })
+            }
           }
         })
       },
       getHost(index1, index2) {
+        if (this.systemGroup.length == 0) {
+          this.$Message.info('请选择需要领取的镜像系统')
+          return
+        }
         if (this.areaGroup.length == 0) {
           this.$Message.info('请选择需要领取的区域')
           return
@@ -1973,7 +1993,7 @@
         this.showModal.rechargeHint = true
       },
       nextStep() {
-        if (!(this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
+        if (!(this.scene == '游戏服务'||this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
           // 判断新老用户
           axios.get('activity/jdugeTeam.do', {
             params: {sign: 'freeReceive'}
@@ -1984,6 +2004,7 @@
                 this.orderData.push({
                   productType: '云服务器',
                   configs: this.currentSceneGroup[this.index1].configGroup[this.index2].configs,
+                  originalPrice: this.currentSceneGroup[this.index1].configGroup[this.index2].originalPrice,
                   time: this.time,
                   cashPledge: Number(this.cashPledge)
                 })
@@ -2287,14 +2308,14 @@
           top: 0;
           right: 0;
         }
-        >span{
+        > span {
           position: absolute;
           top: 40px;
           right: 0;
-          font-size:18px;
-          font-family:MicrosoftYaHei;
-          font-weight:600;
-          color:rgba(255,255,255,1);
+          font-size: 18px;
+          font-family: MicrosoftYaHei;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 1);
           transform: rotate(45deg);
         }
         .title {

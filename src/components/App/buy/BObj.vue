@@ -39,54 +39,49 @@
 
       <!--主机网络与带宽-->
       <div style="margin-top:20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
-        <h2>网络与带宽</h2>
+        <h2>资源规格选择</h2>
         <!--虚拟私有云-->
         <div class="item-wrapper">
           <div style="display: flex">
             <div>
-              <p class="item-title" style="margin-top: 7px;">虚拟私有云</p>
+              <p class="item-title" style="margin-top: 3px;">资源包类型</p>
             </div>
             <div>
-              <Select v-model="vpc" style="width:200px">
-                <Option v-for="item in vpcList" :key="item.vpcid" :value="item.vpcid">
-                  {{item.vpcname}}
-                </Option>
-              </Select>
+              <CheckboxGroup v-model="group">
+                <Checkbox label="存储包"></Checkbox>
+                <Checkbox label="下行流量包"></Checkbox>
+              </CheckboxGroup>
             </div>
           </div>
         </div>
-        <!--IP，请选择公网IP带宽-->
-        <div class="item-wrapper">
+
+        <!--存储包-->
+        <div class="item-wrapper" v-if="group.indexOf('存储包')>-1">
           <div style="display: flex">
             <div>
-              <p class="item-title">带宽</p>
+              <p class="item-title" style="margin-top: 7px;">存储包</p>
             </div>
-            <div style="width:500px;display: flex;align-items:center">
-              <i-slider
-                v-model="bandWidth"
-                unit="MB"
-                :min=1
-                :max=100
-                :step=1
-                :points="[20,50]"
-                style="margin-right:30px;vertical-align: middle;">
-              </i-slider>
-              <InputNumber :max="100" :min="1" v-model="bandWidth" size="large"
-                           style="position: relative;bottom: 5px"></InputNumber>
+            <div>
+              <div v-for="item in saveList" :key="item.value" class="zoneItem"
+                   :class="{zoneSelect:save==item.value}"
+                   @click="save=item.value">{{item.label}}
+              </div>
             </div>
           </div>
         </div>
-        <!--是否自动续费-->
-        <div class="item-wrapper">
+
+        <!--下行流量包-->
+        <div class="item-wrapper" v-if="group.indexOf('下行流量包')>-1">
           <div style="display: flex">
             <div>
-              <p class="item-title" style="margin-top: 4px">自动续费</p>
+              <p class="item-title" style="margin-top: 7px;">下行流量包</p>
             </div>
-            <i-switch v-model="autoRenewal">
-              <span slot="open">开</span>
-              <span slot="close">关</span>
-            </i-switch>
-            <p style="padding:6px;font-size: 14px;color: #999999;">开启后，资源到期会自动续费，请确保账户内有足够的余额。</p>
+            <div>
+              <div v-for="item in saveList" :key="item.value" class="zoneItem"
+                   :class="{zoneSelect:downLoad==item.value}"
+                   @click="downLoad=item.value">{{item.label}}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -152,37 +147,29 @@
           currentTimeType: 'annual',
           currentTimeValue: {label: '1月', value: '1', type: 'month'}
         },
+        group: ['存储包', '下行流量包'],
 
-        // 虚拟私有云列表
-        vpcList: [],
-        vpc: '',
-        // 带宽大小
-        bandWidth: 1,
-        // 自动续费
-        autoRenewal: true,
+        save: 50,
+        downLoad: 50,
+        saveList: [
+          {label: '50GB', value: 50},
+          {label: '100GB', value: 100},
+          {label: '500GB', value: 500},
+          {label: '1TB', value: 1000},
+          {label: '2TB', value: 2000},
+          {label: '5TB', value: 5000}
+        ],
         // 花费
         cost: 0,
         coupon: 0
       }
     },
     created(){
-      this.queryVpc()
-      this.queryIPPrice()
+      this.queryObjPrice()
     },
     methods: {
-      // 查询虚拟私有云vpc列表
-      queryVpc() {
-        axios.get('network/listVpcBuyComputer.do', {
-          params: {
-            zoneId: this.zone.zoneid
-          }
-        }).then(response => {
-          this.vpcList = response.data.result
-          this.vpc = this.vpcList[0].vpcid
-        })
-      },
-      // 公网IP加入购物车
-      addIPCart() {
+      // 对象存储加入购物车
+      addObjCart() {
         if (this.$parent.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
@@ -204,7 +191,7 @@
       },
       buyIP() {
         if (this.userInfo == null) {
-          this.$LR({type:'login'})
+          this.$LR({type: 'login'})
           return
         }
         var params = {
@@ -228,7 +215,7 @@
           }
         )
       },
-      queryIPPrice: debounce(500, function () {
+      queryObjPrice: debounce(500, function () {
         var params = {
           brand: this.bandWidth,
           timeType: this.timeForm.currentTimeValue.type,
@@ -259,13 +246,13 @@
     watch: {
       'zone': {
         handler(){
-          this.queryVpc()
+          this.queryObjPrice()
         },
         deep: true
       },
       'timeForm': {
         handler(){
-          this.queryIPPrice()
+          this.queryObjPrice()
         },
         deep: true
       },
@@ -283,6 +270,7 @@
   #app {
     height: 100%;
   }
+
   #buy {
     background-color: #F7F7F7;
     #wrapper {

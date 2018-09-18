@@ -362,21 +362,21 @@
             onSrc: require('../../../assets/img/active/freeToReceive/fr-icon7.png'),
             text: '1.注册/登录'
           }, {
-            src: require('../../../assets/img/active/freeToReceive/fr-icon3.png'),
-            onSrc: require('../../../assets/img/active/freeToReceive/fr-icon8.png'),
-            text: '2.实名认证'
+            src: require('../../../assets/img/active/freeToReceive/fr-icon5.png'),
+            onSrc: require('../../../assets/img/active/freeToReceive/fr-icon10.png'),
+            text: '2.免费领取'
           }, {
             src: require('../../../assets/img/active/freeToReceive/fr-icon4.png'),
             onSrc: require('../../../assets/img/active/freeToReceive/fr-icon9.png'),
             text: '3.充值押金'
           }, {
-            src: require('../../../assets/img/active/freeToReceive/fr-icon5.png'),
-            onSrc: require('../../../assets/img/active/freeToReceive/fr-icon10.png'),
-            text: '4.免费领取'
+            src: require('../../../assets/img/active/freeToReceive/fr-icon3.png'),
+            onSrc: require('../../../assets/img/active/freeToReceive/fr-icon8.png'),
+            text: '4.实名认证'
           }, {
             src: require('../../../assets/img/active/freeToReceive/fr-icon6.png'),
             onSrc: require('../../../assets/img/active/freeToReceive/fr-icon11.png'),
-            text: '5.领取成功'
+            text: '5.领取完成'
           }],
         onStep: 0,
         configGroup: [
@@ -527,12 +527,22 @@
           },
           {
             title: '押金金额',
+            width: 130,
             render: (h, params) => {
-              return h('span', {
+              let arr = []
+              let param1 = h('li', {
+                style: {
+                  textDecoration: 'line-through'
+                }
+              }, '原价：¥' + params.row.originalPrice)
+              let param2 = h('li', {
                 style: {
                   color: '#D0021B'
                 }
               }, '¥' + params.row.cashPledge)
+              arr.push(param1)
+              arr.push(param2)
+              return h('ul', {}, arr)
             }
           },
         ],
@@ -648,15 +658,15 @@
         if (!this.$store.state.userInfo) {
           this.onStep = 0
         } else {
-          if (!this.$store.state.authInfo) {
-            this.onStep = 1
-          } else {
-            if (this.$store.state.authInfo.flag) {
-              this.flag = true
+          if (this.$store.state.authInfo && this.$store.state.authInfo.flag) {
+            this.flag = true
+            if (this.$store.state.authInfo.checkstatus == 0) {
               this.onStep = 5
             } else {
-              this.onStep = 2
+              this.onStep = 3
             }
+          } else {
+            this.onStep = 1
           }
         }
       },
@@ -701,6 +711,7 @@
               this.orderData.push({
                 productType: '云服务器',
                 configs: this.configGroup[this.index1].hostGroup[this.index2],
+                originalPrice: this.configGroup[this.index1].hostGroup[this.index2].originalCost,
                 time: this.time,
                 title: this.configGroup[this.index1].headline,
                 cashPledge: Number(this.cashPledge)

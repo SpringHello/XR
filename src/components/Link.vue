@@ -8,8 +8,8 @@
       </div>
       <div class="tright">
         <p>提示：如果出现持续黑屏，说明系统处于休眠状态，按任意键可以激活。</p>
-        <Button @click="confirm=true" style="margin-right: 10px;">重新连接</Button>
-        <Button @click="showContact">修改远程连接密码</Button>
+        <Button @click="confirm=true" style="margin-right: 10px;background-color: #0f88eb;color:#fff">重新连接</Button>
+        <Button @click="showContact" style="background-color: #0f88eb;color:#fff">修改远程连接密码</Button>
       </div>
     </div>
     <iframe :src="linkURL" style="width:100%;height:100%" name="ifr"></iframe>
@@ -37,6 +37,9 @@
             <Input v-model="loginForm.password" placeholder="请输入远程连接密码" type="password"></Input>
           </FormItem>
         </Form>
+        <p style="color:rgba(102,102,102,1)">若您忘记密码，请点击<span style="color:#2A99F2;cursor:pointer"
+                                                             @click="confirm=false;contentPassword=true">重置远程连接密码</span>
+        </p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button @click="confirm=false">取消</Button>
@@ -55,7 +58,8 @@
           <FormItem label="验证码" prop="code">
             <Input type="text" autocomplete="off" v-model="formInline.code"
                    placeholder="请输入验证码" style="width: 120px;"></Input>
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" style="vertical-align: middle;height:32px;"
+                 @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </FormItem>
           <FormItem prop="PhoneCode" label="手机验证码">
             <Input v-model="formInline.PhoneCode" placeholder="请输入手机验证码"
@@ -96,7 +100,7 @@
         contentPassword: false,
         // 修改连接密码表单
         formInline: {
-          userPhone: sessionStorage.getItem('link-phone'),
+          userPhone: localStorage.getItem('link-phone'),
           code: "",
           PhoneCode: ""
         },
@@ -136,29 +140,30 @@
     methods: {
       link(){
         this.$refs.loginForm.validate((valid) => {
-          if (valid) {
-            // 表单验证通过，调用创建备份策略方法
-            axios.get('information/judgeConnectCode.do', {
-              params: {
-                VMId: sessionStorage.getItem('link-vmid'),
-                code: this.loginForm.password,
-                zoneId: sessionStorage.getItem('link-zoneid')
-              }
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.confirm = false
-                this.linkURL = response.data.url
-                this.baseURL = this.linkURL.split('#')[0]
-                window.frames[0].focus()
-              } else {
-                this.loginForm.password = ''
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
-            })
+            if (valid) {
+              // 表单验证通过，调用创建备份策略方法
+              axios.get('information/judgeConnectCode.do', {
+                params: {
+                  VMId: localStorage.getItem('link-vmid'),
+                  code: this.loginForm.password,
+                  zoneId: localStorage.getItem('link-zoneid')
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.confirm = false
+                  this.linkURL = response.data.url
+                  this.baseURL = this.linkURL.split('#')[0]
+                  window.frames[0].focus()
+                } else {
+                  this.loginForm.password = ''
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+              })
+            }
           }
-        })
+        )
       },
       // 显示修改弹窗
       showContact(){
@@ -166,6 +171,9 @@
       },
       // 发送验证码
       sendCode(){
+        if (this.codePlaceholder != '获取验证码') {
+          return
+        }
         if (this.formInline.code == '') {
           this.$Message.info('请输入正确的验证码')
           return
@@ -204,28 +212,32 @@
       // 确认发送
       sendOk(){
         this.$refs['formInline'].validate((valid) => {
-          if (valid) {
-            this.contentPassword = false
-            axios.get('information/resetConnectCode.do', {
-              params: {
-                zoneId: sessionStorage.getItem('link-zoneid'),
-                VMId: sessionStorage.getItem('link-vmid'),
-                companyid: sessionStorage.getItem('link-companyid'),
-                phoneCode: this.formInline.PhoneCode
-              }
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+            if (valid) {
+              this.contentPassword = false
+              axios.get('information/resetConnectCode.do', {
+                params: {
+                  zoneId: localStorage.getItem('link-zoneid'),
+                  VMId: localStorage.getItem('link-vmid'),
+                  companyid: localStorage.getItem('link-companyid'),
+                  phoneCode: this.formInline.PhoneCode
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$message.info({
                     content: '您的新密码: ' + response.data.connectCode,
-                    duration: 5
-                  }
-                )
-              } else {
-                this.$Message.error(response.data.message)
-              }
-            })
+                    duration: 5,
+                    onOk: () => {
+                      this.confirm = true
+                    }
+                  })
+                }
+                else {
+                  this.$Message.error(response.data.message)
+                }
+              })
+            }
           }
-        })
+        )
       },
       change(index){
         if (index === '') {
@@ -246,9 +258,10 @@
         //this.$refs.ifr.contentWindow.CombinationKeyEvent(1)
       },
       connect() {
-        this.$http.get('information/connectVm.do', {
+        axios.get('information/connectVm.do', {
           params: {
-            VMId: sessionStorage.getItem('link-vmid')
+            VMId: localStorage.getItem('link-vmid'),
+            zoneId: localStorage.getItem('link-zoneid'),
           }
         }).then(response => {
           if (response.data.connectCode == '') {
