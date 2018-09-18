@@ -120,6 +120,12 @@ const Disk = () => import('@/components/Back/Disk')
 const DiskBackup = () => import('@/components/Back/DiskBackup')
 const DiskParticulars = () => import('@/components/Back/DiskParticulars')
 
+//弹性伸缩
+const Elastic = () => import('@/components/Back/Elastic')
+const ElasticDetails = () => import ('@/components/Back/ElasticDetails')
+const newAddElastic = () => import('@/components/Back/newAddElastic')
+const TelescopicDetails = () => import('@/components/Back/TelescopicDetails')
+
 //const ObjectStorage = () => import('@/components/Back/ObjectStorage')
 const CloudMonitor = () => import('@/components/Back/CloudMonitor')
 const Vpc = () => import('@/components/Back/Vpc')
@@ -368,7 +374,11 @@ var router = new Router({
         {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade},
         {path: 'GpuList', name: 'GpuList', component: GpuList},
         {path: 'gpuManage', name: 'gpuManage', component: gpuManage},
-        {path: 'gpuUpLevel', name: 'gpuUpLevel', component: gpuUpLevel}
+        {path: 'gpuUpLevel', name: 'gpuUpLevel', component: gpuUpLevel},
+        {path: 'Elastic', name: 'Elastic', component:Elastic},
+        {path: 'ElasticDetails', name: 'ElasticDetails', component:ElasticDetails},
+        {path: 'newAddElastic', name: 'newAddElastic', component:newAddElastic},
+        {path: 'TelescopicDetails',name: 'TelescopicDetails',component:TelescopicDetails}
       ]
     },
     {
