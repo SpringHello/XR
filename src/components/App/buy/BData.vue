@@ -770,6 +770,7 @@
               this.vmConfig.kernel = zone.kernelList[0].value
             }
           })
+          this.queryVpc()
           this.listDbTemplates()
         },
         deep: true
