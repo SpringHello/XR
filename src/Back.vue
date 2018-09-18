@@ -234,7 +234,7 @@
             subItem: [{subName: '云主机', type: 'host'}/*,{subName: 'GUP云服务器', type: 'GpuList'}*/, {subName: '云主机快照', type: 'snapshot'}, {
               subName: '镜像',
               type: 'mirror'
-            },/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            },/*{subName: '弹性伸缩',type:'Elastic'},/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
@@ -276,6 +276,17 @@
             subItem: [
               {subName: '防火墙', type: 'firewall'}
               /*{subName: '云监控', type: 'CloudMonitor'}*/
+            ]
+          },
+          {
+            mainName: '域名服务',
+            type: 'domain',
+            subItem: [
+              {subName: '域名管理', type: 'dManage'},
+              {subName: '信息模版', type: 'dTemplate'},
+              {subName: '域名转入', type: 'dTransfer'},
+              {subName: '域名解析', type: 'dResolve'},
+              {subName: '邮箱验证', type: 'dEmail'}
             ]
           },
           {

@@ -16,6 +16,7 @@ const Art = () => import('@/components/App/Article')
 
 //const Buy = () =>import('@/components/App/Buy1')
 const BObj = () => import('@/components/App/buy/BObj')
+
 const Buy = () =>import('@/components/App/buy/Buy')
 const BHost = () =>import('@/components/App/buy/BHost')
 const BIP = () =>import('@/components/App/buy/BIP')
@@ -59,6 +60,7 @@ const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 //域名页面路由
 const Domainname = () =>import('@/components/App/Domain/Domainname')
 const DomainResult = () =>import('@/components/App/Domain/DomainResult')
+const DomainTemplate = () =>import('@/components/App/Domain/DomainTemplate')
 
 
 // 备案系统页面路由
@@ -122,6 +124,12 @@ const Disk = () =>import('@/components/Back/Disk')
 const DiskBackup = () =>import('@/components/Back/DiskBackup')
 const DiskParticulars = () =>import('@/components/Back/DiskParticulars')
 
+//弹性伸缩
+const Elastic = () => import('@/components/Back/Elastic')
+const ElasticDetails = () => import ('@/components/Back/ElasticDetails')
+const newAddElastic = () => import('@/components/Back/newAddElastic')
+const TelescopicDetails = () => import('@/components/Back/TelescopicDetails')
+
 //const ObjectStorage = () => import('@/components/Back/ObjectStorage')
 const CloudMonitor = () =>import('@/components/Back/CloudMonitor')
 const Vpc = () =>import('@/components/Back/Vpc')
@@ -146,6 +154,14 @@ const Wxpay = () =>import('@/components/Back/Wxpay')
 const WorkOrder = () =>import('@/components/Back/WorkOrder')
 const gpuManage = () =>import('@/components/Back/gpuManage')
 const gpuUpLevel = () =>import('@/components/Back/gpuUpLevel')
+
+// 域名系统 ==============================
+const dManage = () =>import('@/components/Back/dManage')
+const dTemplate = () =>import('@/components/Back/dTemplate')
+const dTransfer = () =>import('@/components/Back/dTransfer')
+const dResolve = () =>import('@/components/Back/dResolve')
+const dEmail = () =>import('@/components/Back/dEmail')
+// 域名系统 ==============================
 
 const Link = () =>import('@/components/Link')
 const BRecords = () =>import('@/components/Back/Records')
@@ -270,7 +286,7 @@ var router = new Router({
             {path: 'bdisk', name: 'bdisk', component: BDisk},
             {path: 'bip', name: 'bip', component: BIP},
             {path: 'bdata', name: 'bdata', component: BData},
-            {path: 'bobj', name: 'bdata', component: BObj}
+            {path: 'bobj', name: 'bobj', component: BObj}
             /*{path: 'bgpu', name: 'bgpu', component: BGpu}*/
           ]
         },
@@ -294,6 +310,7 @@ var router = new Router({
 
         {path: 'Domainname', name: 'Domainname', component: Domainname},
         {path: 'DomainResult', name: 'DomainResult', component: DomainResult},
+        {path: 'DomainTemplate', name: 'DomainTemplate', component: DomainTemplate},
 
 
         {path: 'Pecs', component: Pecs},
@@ -372,7 +389,18 @@ var router = new Router({
         {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade},
         {path: 'GpuList', name: 'GpuList', component: GpuList},
         {path: 'gpuManage', name: 'gpuManage', component: gpuManage},
-        {path: 'gpuUpLevel', name: 'gpuUpLevel', component: gpuUpLevel}
+        {path: 'gpuUpLevel', name: 'gpuUpLevel', component: gpuUpLevel},
+        // 域名系统 =====================
+        {path: 'dManage', name: 'dManage', component: dManage},
+        {path: 'dTemplate', name: 'dTemplate', component: dTemplate},
+        {path: 'dTransfer', name: 'dTransfer', component: dTransfer},
+        {path: 'dResolve', name: 'dResolve', component: dResolve},
+        {path: 'dEmail', name: 'dEmail', component: dEmail},
+        // 域名系统 =====================
+        {path: 'Elastic', name: 'Elastic', component:Elastic},
+        {path: 'ElasticDetails', name: 'ElasticDetails', component:ElasticDetails},
+        {path: 'newAddElastic', name: 'newAddElastic', component:newAddElastic},
+        {path: 'TelescopicDetails',name: 'TelescopicDetails',component:TelescopicDetails}
       ]
     },
     {

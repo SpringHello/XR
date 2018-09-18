@@ -183,6 +183,7 @@
           return this.$Message.info('请输入您要查找的域名')
         } else {
           sessionStorage.setItem('name', this.searchText)
+          sessionStorage.setItem('end', this.select)
           this.$router.push('DomainResult')
         }
       },
