@@ -6,7 +6,7 @@
         <div id="header">
           <span id="title">{{details.stretchname}}</span>
           <div style="float: right">
-            <button class="button"  @click="$router.push({path:'elastic'})" style="margin-top: 10px;">返回</button>
+            <button class="button"  @click="$router.push({path:'Elastic'})" style="margin-top: 10px;">返回</button>
             <button class="button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
           </div>
         </div>
