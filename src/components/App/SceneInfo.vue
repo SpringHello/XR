@@ -1934,7 +1934,7 @@
             this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
           }
         })
-        //this.getMirror(this.userType,this.currentSceneGroup[currentIndex].configGroup[index].zoneId)
+        this.getMirror(this.userType,this.currentSceneGroup[currentIndex].configGroup[index].zoneId)
       },
       getRegion() {
         let url = 'activity/getTemActInfo.do'
