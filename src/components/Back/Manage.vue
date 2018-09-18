@@ -423,7 +423,7 @@
   var hostDiskHistogramstr = JSON.stringify(hostDiskHistogram)
   export default {
     data() {
-      var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
+      var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
       const validateoldPassword = (rule, value, callback) => {
         if (!value) {
           callback(new Error('密码不能为空'));
