@@ -195,14 +195,13 @@
           return
         }
         var params = {
-          zoneId: this.zone.zoneid,
-          timeType: this.timeForm.currentTimeType == 'annual' ? this.timeForm.currentTimeValue.type : 'current',
-          timeValue: this.timeForm.currentTimeValue.value,
-          count: this.count,
-          isAutorenew: this.autoRenewal ? '1' : '0',
-          brandWith: this.bandWidth,
-          vpcId: this.vpc,
-          count: 1
+          flowPackage: '',
+          capacity: '',
+          realPrice: '',
+          price: '',
+          timeValue: '',
+          timeType: '',
+          zoneId: ''
         }
         axios.get('network/createPublicIp.do', {params}).then(response => {
             if (response.status == 200 && response.data.status == 1) {

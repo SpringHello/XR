@@ -279,6 +279,17 @@
             ]
           },
           {
+            mainName: '域名服务',
+            type: 'domain',
+            subItem: [
+              {subName: '域名管理', type: 'dManage'},
+              {subName: '信息模版', type: 'dTemplate'},
+              {subName: '域名转入', type: 'dTransfer'},
+              {subName: '域名解析', type: 'dResolve'},
+              {subName: '邮箱验证', type: 'dEmail'}
+            ]
+          },
+          {
             mainName: '回收站',
             type: 'recycle',
             subItem: [

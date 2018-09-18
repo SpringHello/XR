@@ -26,16 +26,6 @@ const Ecs = () => import('@/components/App/product/ECS')
 const Document = () => import('@/components/App/Document')
 const Document1 = () => import('@/components/App/Document1')
 const Record = () => import('@/components/App/Record')
-const Buy = () =>import('@/components/App/buy/Buy')
-const BHost = () =>import('@/components/App/buy/BHost')
-const BIP = () =>import('@/components/App/buy/BIP')
-const BDisk = () =>import('@/components/App/buy/BDisk')
-const BData = () =>import('@/components/App/buy/BData')
-const BGpu = () =>import('@/components/App/buy/BGpu')
-const Ecs = () =>import('@/components/App/product/ECS')
-const Document = () =>import('@/components/App/Document')
-const Document1 = () =>import('@/components/App/Document1')
-const Record = () =>import('@/components/App/Record')
 
 //const hostPrice = () => import('@/components/App/Price/Host')
 //const diskPrice = () => import('@/components/App/Price/Disk')
@@ -157,6 +147,14 @@ const Wxpay = () =>import('@/components/Back/Wxpay')
 const WorkOrder = () =>import('@/components/Back/WorkOrder')
 const gpuManage = () =>import('@/components/Back/gpuManage')
 const gpuUpLevel = () =>import('@/components/Back/gpuUpLevel')
+
+// 域名系统 ==============================
+const dManage = () =>import('@/components/Back/dManage')
+const dTemplate = () =>import('@/components/Back/dTemplate')
+const dTransfer = () =>import('@/components/Back/dTransfer')
+const dResolve = () =>import('@/components/Back/dResolve')
+const dEmail = () =>import('@/components/Back/dEmail')
+// 域名系统 ==============================
 
 const Link = () =>import('@/components/Link')
 const BRecords = () =>import('@/components/Back/Records')
@@ -281,7 +279,7 @@ var router = new Router({
             {path: 'bdisk', name: 'bdisk', component: BDisk},
             {path: 'bip', name: 'bip', component: BIP},
             {path: 'bdata', name: 'bdata', component: BData},
-            {path: 'bobj', name: 'bdata', component: BObj}
+            {path: 'bobj', name: 'bobj', component: BObj}
             /*{path: 'bgpu', name: 'bgpu', component: BGpu}*/
           ]
         },
@@ -383,7 +381,14 @@ var router = new Router({
         {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade},
         {path: 'GpuList', name: 'GpuList', component: GpuList},
         {path: 'gpuManage', name: 'gpuManage', component: gpuManage},
-        {path: 'gpuUpLevel', name: 'gpuUpLevel', component: gpuUpLevel}
+        {path: 'gpuUpLevel', name: 'gpuUpLevel', component: gpuUpLevel},
+        // 域名系统 =====================
+        {path: 'dManage', name: 'dManage', component: dManage},
+        {path: 'dTemplate', name: 'dTemplate', component: dTemplate},
+        {path: 'dTransfer', name: 'dTransfer', component: dTransfer},
+        {path: 'dResolve', name: 'dResolve', component: dResolve},
+        {path: 'dEmail', name: 'dEmail', component: dEmail}
+        // 域名系统 =====================
       ]
     },
     {
