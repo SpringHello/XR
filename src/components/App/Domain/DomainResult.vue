@@ -31,25 +31,18 @@
               <Checkbox label="cn">cn</Checkbox>
             </Checkbox-group>
           </div>
-          <li>
-            <p>such.net
-              <button>未注册</button>
+          <li v-for="(item,index) in results" :key="index" v-show="index<=num">
+            <p>{{item.name}}
+              <button v-show="item.isRes==0">未注册</button>
+              <button v-show="item.isRes==1" class="isRes">已注册</button>
             </p>
             <div>
-              <span>¥1541<span>/年</span></span>
-              <button>加入清单</button>
+              <span v-show="item.isRes==0">¥{{item.price}}<span>/年</span></span>
+              <button v-show="item.isRes==0">加入清单</button>
+              <a v-show="item.isRes==1">查看域名信息 ></a>
             </div>
           </li>
-          <li>
-            <p>cn.net
-              <button>未注册</button>
-            </p>
-            <div>
-              <span>¥154<span>/年</span></span>
-              <button>加入清单</button>
-            </div>
-          </li>
-          <button class="showAll">显示全部
+          <button class="showAll" @click="exhibition" v-show="isShowAll">显示全部
             <Icon type="ios-arrow-down"></Icon>
           </button>
         </div>
@@ -63,14 +56,6 @@
                 <h2>such.net</h2>
                 <button>移除</button>
               </li>
-              <li>
-                <h2>such.net</h2>
-                <button>移除</button>
-              </li>
-              <li>
-                <h2>such.net</h2>
-                <button>移除</button>
-              </li>
             </ul>
           </div>
           <div class="statistical">
@@ -79,7 +64,7 @@
               <span>优惠金额：¥00.00</span>
             </p>
             <h1>应付金额：¥00.00</h1>
-            <button>立即购买</button>
+            <button @click="$router.push('DomainTemplate')">立即购买</button>
           </div>
         </div>
       </div>
@@ -93,9 +78,20 @@
       window.scrollTo(0, 0);
       return {
         searchText: sessionStorage.getItem('name'),
-        select: 'com',
+        select: sessionStorage.getItem('end'),
         show: false,
         singles: ['com', 'cn'],
+        num: 3,
+        isShowAll: true,
+        results: [
+          {name: '.com', isRes: 1, price: '123.45',},
+          {name: '.cn', isRes: 1, price: '123.36',},
+          {name: '.com.cn', isRes: 0, price: '123.45',},
+          {name: '.top', isRes: 0, price: '45.45',},
+          {name: '.online', isRes: 0, price: '785.00',},
+          {name: '.end', isRes: 0, price: '1245.02',},
+          {name: '.shop', isRes: 0, price: '4582.08',},
+        ],
       }
     },
     methods: {
@@ -105,6 +101,11 @@
         } else {
           console.log(this.searchText)
         }
+      },
+      //显示全部
+      exhibition(){
+        this.num = this.results.length
+        this.isShowAll = false
       },
 
     }
@@ -191,15 +192,21 @@
         P {
           font-size: 16px;
           color: rgba(51, 51, 51, 1);
-
           button {
             outline: none;
             border: none;
-            cursor: pointer;
             font-size: 12px;
             color: rgba(255, 255, 255, 1);
-
             background: rgba(102, 195, 0, 1);
+            padding: 2px 7px;
+            margin-left: 20px;
+          }
+          .isRes {
+            background: rgba(151, 151, 151, 1);
+            color: rgba(255, 255, 255, 1);
+            outline: none;
+            border: none;
+            font-size: 12px;
             padding: 2px 7px;
             margin-left: 20px;
           }
@@ -220,12 +227,15 @@
             color: rgba(255, 255, 255, 1);
             background: rgba(78, 157, 255, 1);
             padding: 7px 27px;
-
             outline: none;
             border: none;
             cursor: pointer;
             margin-left: 20px;
 
+          }
+          a {
+            font-size: 16px;
+            color: rgba(42, 153, 242, 1);
           }
         }
 
