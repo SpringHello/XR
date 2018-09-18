@@ -236,7 +236,7 @@
                   on:{
                     click:() =>{
                       sessionStorage.setItem('elastic_id',params.row.id);
-                      this.$router.push({path:'elasticDetails'});
+                      this.$router.push({path:'ElasticDetails'});
                     }
                   }
                   },params.row.startupconfigname)
