@@ -1179,8 +1179,7 @@
                         if (res.status == 200 && res.data.status == 1) {
                           this.showModal.unfreeze = true
                         } else {
-                          this.showModal.unfreeze = true
-                          //this.showModal.notUnfreeze = true
+                          this.showModal.notUnfreeze = true
                         }
                       })
                     }

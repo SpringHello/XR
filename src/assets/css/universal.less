@@ -684,10 +684,14 @@
 }
 
 #domain {
-  .ivu-input-group-append {
-    .ivu-select-visible {
-      .ivu-select-selection {
-        border: none !important;
+  .ivu-input-group-large {
+    .ivu-input {
+      border: none;
+    }
+    .ivu-input-group-append {
+      .ivu-select:focus .ivu-select-selection {
+        border: none;
+        box-shadow: 0;
       }
     }
   }
@@ -707,5 +711,18 @@
     margin-right: 20px;
     font-size: 16px;
     color: #333;
+  }
+}
+
+#template {
+  .ivu-form-item {
+    width: 800px;
+    margin: 0 auto;
+    padding-bottom: 20px;
+    .ivu-form-item-label {
+      font-size: 14px;
+      color: rgba(102, 102, 102, 1);
+      padding-right: 20px;
+    }
   }
 }

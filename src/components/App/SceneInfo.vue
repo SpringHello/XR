@@ -64,7 +64,7 @@
                 <div class="cf-footer">
                   <p><span>押金：</span>{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <Button type="primary" :disabled="scene == '游戏服务'||scene == '图形设计' || scene == '人工智能' || scene == '超级运算'" @click="getHost(currentIndex,index1)">敬请期待</Button>
+                  <Button type="primary" :disabled="scene == '游戏服务'||scene == '图形设计' || scene == '人工智能' || scene == '超级运算'" @click="getHost(currentIndex,index1)">免费使用</Button>
                 </div>
               </div>
             </div>
@@ -1934,7 +1934,7 @@
             this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
           }
         })
-        //this.getMirror(this.userType,this.currentSceneGroup[currentIndex].configGroup[index].zoneId)
+        this.getMirror(this.userType,this.currentSceneGroup[currentIndex].configGroup[index].zoneId)
       },
       getRegion() {
         let url = 'activity/getTemActInfo.do'
