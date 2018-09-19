@@ -125,7 +125,7 @@
       </p>
       <div class="logistics">
         <p>物流公司：<span>顺丰速递</span></p>
-        <p>物流单号：<span style="color: #377dff">827397239823</span></p>
+        <p>物流单号：<span style="color: #377dff">xxx</span></p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary"
