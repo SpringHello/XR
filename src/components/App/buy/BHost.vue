@@ -528,7 +528,7 @@
             style="font-size: 24px;color: #EE6723;">{{fastCost.toFixed(2)}}元</span><span
             v-show="timeForm.currentTimeType == 'current'">/小时</span></p>
           <p v-if="createType=='fast'&&fastCoupon!=0"
-             style="text-align: right;font-size: 14px;color: #666666;">优惠费用：<span
+             style="text-align: right;font-size: 14px;color: #666666;">已省：<span
             style="font-size: 14px;color: #EE6723;">{{fastCoupon.toFixed(2)}}元</span></p>
           <p v-if="createType=='custom'"
              style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
@@ -538,7 +538,7 @@
           </p>
           <p v-if="createType=='custom'&&totalCoupon!=0"
              style="text-align: right;font-size: 14px;color: #666666;">
-            优惠费用：<span
+            已省：<span
             style="font-size: 14px;color: #EE6723;">{{totalCoupon.toFixed(2)}}元</span></p>
           <div style="text-align: right;margin-top: 20px;">
             <Button size="large" class="btn" @click="addCart">
@@ -1087,7 +1087,9 @@
         return 5 - this.dataDiskList.length
       },
       zoneList(){
-        return this.$store.state.zoneList
+        return this.$store.state.zoneList.filter(zone => {
+          return zone.gpuserver == 0
+        })
       },
       userInfo(){
         return this.$store.state.userInfo

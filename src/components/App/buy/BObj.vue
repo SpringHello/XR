@@ -63,8 +63,8 @@
             </div>
             <div>
               <div v-for="item in saveList" :key="item.value" class="zoneItem"
-                   :class="{zoneSelect:save==item.value}"
-                   @click="save=item.value">{{item.label}}
+                   :class="{zoneSelect:save==item.label}"
+                   @click="save=item.label">{{item.label}}
               </div>
             </div>
           </div>
@@ -78,8 +78,8 @@
             </div>
             <div>
               <div v-for="item in saveList" :key="item.value" class="zoneItem"
-                   :class="{zoneSelect:downLoad==item.value}"
-                   @click="downLoad=item.value">{{item.label}}
+                   :class="{zoneSelect:downLoad==item.label}"
+                   @click="downLoad=item.label">{{item.label}}
               </div>
             </div>
           </div>
@@ -87,18 +87,18 @@
       </div>
 
       <!--费用、以及加入预算清单-->
-      <div style="margin-top: 20px">
-        <!--<p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-           @click="$router.push('computed/3-1')">查看计价详情</p>-->
+      <!--<div style="margin-top: 20px">
+        &lt;!&ndash;<p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+           @click="$router.push('computed/3-1')">查看计价详情</p>&ndash;&gt;ii
         <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
           style="font-size: 24px;color: #EE6723;">{{cost.toFixed(2)}}元</span><span
           v-show="timeForm.currentTimeType == 'current'">/小时</span></p>
-        <p style="text-align: right;font-size: 14px;color: #666666;" v-if="coupon!=0">优惠费用：<span
+        <p style="text-align: right;font-size: 14px;color: #666666;" v-if="coupon!=0">已省：<span
           style="font-size: 14px;color: #EE6723;">{{coupon.toFixed(2)}}元</span>
         </p>
         <div style="text-align: right;margin-top: 20px;">
           <Button size="large"
-                  class="btn" @click="addIPCart">
+                  class="btn" @click="addObjCart">
             加入预算清单
           </Button>
           <Button @click="buyIP" type="primary"
@@ -106,7 +106,7 @@
             立即购买
           </Button>
         </div>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
@@ -126,7 +126,7 @@
       return {
         zone,
         // 计费方式
-        timeType: [{label: '包年包月', value: 'annual'}, {label: '实时计费', value: 'current'}],
+        timeType: [{label: '包年包月', value: 'annual'}],
         timeValue: [
           {label: '1月', value: '1', type: 'month'},
           {label: '2月', value: '2', type: 'month'},
@@ -149,8 +149,8 @@
         },
         group: ['存储包', '下行流量包'],
 
-        save: 50,
-        downLoad: 50,
+        save: '50GB',
+        downLoad: '50GB',
         saveList: [
           {label: '50GB', value: 50},
           {label: '100GB', value: 100},
@@ -216,27 +216,21 @@
       },
       queryObjPrice: debounce(500, function () {
         var params = {
-          brand: this.bandWidth,
+          flowPackage: this.save,
+          capacity: this.downLoad,
           timeType: this.timeForm.currentTimeValue.type,
-          timeValue: this.timeForm.currentTimeValue.value,
-          zoneId: this.zone.zoneid
+          timeValue: this.timeForm.currentTimeValue.value
         }
-        if (this.timeForm.currentTimeType === 'current') {
-          params.timeType = 'current'
-        }
-        axios.post('device/queryIpPrice.do', params).then(response => {
-          this.cost = response.data.cost
-          if (response.data.coupon) {
-            this.coupon = response.data.coupon
-          } else {
-            this.coupon = 0
-          }
+        axios.post('ruiradosPrice/countPirce.do', params).then(response => {
+
         })
       }),
     },
     computed: {
       zoneList(){
-        return this.$store.state.zoneList
+        return this.$store.state.zoneList.filter(zone => {
+          return zone.gpuserver == 0
+        })
       },
       userInfo(){
         return this.$store.state.userInfo

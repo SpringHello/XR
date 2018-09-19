@@ -231,10 +231,13 @@
           {
             mainName: '云服务器',
             type: 'server',
-            subItem: [{subName: '云主机', type: 'host'}/*,{subName: 'GUP云服务器', type: 'GpuList'}*/, {subName: '云主机快照', type: 'snapshot'}, {
+            subItem: [{subName: '云主机', type: 'host'}, {subName: 'GUP云服务器', type: 'GpuList'}, {
+              subName: '云主机快照',
+              type: 'snapshot'
+            }, {
               subName: '镜像',
               type: 'mirror'
-            },/*{subName: '弹性伸缩',type:'Elastic'},/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            }, /*{subName: '弹性伸缩',type:'Elastic'},/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
@@ -508,7 +511,22 @@
       },
       userInfo: state => state.userInfo,
       zone: state => state.zone,
-      zoneList: state => state.zoneList
+      zoneList(){
+        var map = {
+          '/ruicloud/GpuList': [1],
+          '/ruicloud/host': [0],
+        }
+        var type = map[this.$route.path] || [0, 1]
+        var zoneList = this.$store.state.zoneList.filter(zone => {
+          return type.indexOf(zone.gpuserver) > -1
+        })
+        if (!(zoneList.some(zone => {
+            return zone.zoneid == this.zone.zoneid
+          }))) {
+          this.$store.state.zone = zoneList[0]
+        }
+        return zoneList
+      }
     }),
     watch: {
       '$route'(to, from){

@@ -98,7 +98,7 @@
         <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
           style="font-size: 24px;color: #EE6723;">{{cost.toFixed(2)}}元</span><span
           v-show="timeForm.currentTimeType == 'current'">/小时</span></p>
-        <p style="text-align: right;font-size: 14px;color: #666666;" v-if="coupon!=0">优惠费用：<span
+        <p style="text-align: right;font-size: 14px;color: #666666;" v-if="coupon!=0">已省：<span
           style="font-size: 14px;color: #EE6723;">{{coupon.toFixed(2)}}元</span>
         </p>
         <div style="text-align: right;margin-top: 20px;">
