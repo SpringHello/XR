@@ -217,7 +217,7 @@
               <Button type="primary" @click="$router.push({path:'ObjectPicture'})">新建图片样式</Button>
               <Button type="primary">原图保护设置</Button>
             </div>
-            <Table :cloumns="imgList" :data="imgData"></Table>
+            <Table :columns="imgList" :data="imgData"></Table>
           </TabPane>
         </Tabs>
       </div>
@@ -1506,7 +1506,7 @@
             key:'cssname'
           },
           {
-            title:'最后修改时间'
+            title:'最后修改时间',
           },
           {
             title:'操作',
