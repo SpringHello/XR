@@ -166,8 +166,9 @@
             des: '即将上线',
             activeObj: '云数据库 新老用户',
             url: '',
-            isStart: false,
-            weight: '1'
+            isStart: true,
+            weight: '1',
+            color: 'black'
           },
           {
             imgPath: require('../../assets/img/activecenter/bg-objstorage-onsale.png'),
