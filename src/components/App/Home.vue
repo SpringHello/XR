@@ -3266,6 +3266,7 @@
             product.select = false
           }
         })
+        this.$refs[item.title][0].style.left = `0px`
         this.selectedBar = true
       },
       /* 产品详情滚动浏览
