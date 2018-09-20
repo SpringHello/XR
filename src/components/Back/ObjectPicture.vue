@@ -36,30 +36,32 @@
               </div>
             </div>
             <!--指定宽高显示-->
-            <div v-if="zoomType != 0 && zoomType != 1">
-              <div style="margin-bottom: 20px;">
-                <div class="water_font">
-                  <span>图片高度</span>
-                </div>
-                <div class="water_right">
-                  <Input v-model="imgWidth" ></Input>
-                </div>
-                <span>
-                  px
-                </span>
-              </div>
-              <div style="margin-bottom: 20px;">
-                <div class="water_font">
-                  <span>图片宽度</span>
-                </div>
-                <div class="water_right">
-                  <Input v-model="imgHeight" ></Input>
-                  <p style="margin-top: 15px;color: #999999;font-size: 12px;">图片宽高取值范围为8-5120px</p>
-                </div>
-                <span style="vertical-align:top;display: inline-block;margin-top: 6px;">
-                  px
-               </span>
-              </div>
+            <div v-if="zoomType != 0 && zoomType != 1" >
+              <Form ref="widthValidate" :model="widthValidate" :rules="widthRuleValidate" :label-width="80" >
+                <FormItem label="图片高度" prop="imgWidth" style="width: 72.2%;">
+                  <Row>
+                    <Col span="23">
+                      <Input v-model="widthValidate.imgWidth"></Input>
+                    </Col>
+                    <Col span="1">
+                       <span>px</span>
+                    </Col>
+                  </Row>
+                </FormItem>
+                <FormItem label="图片宽度" prop="imgHeight" style="width: 72.2%;">
+                  <Row>
+                    <Col span="23">
+                      <Input v-model="widthValidate.imgHeight"></Input>
+                    </Col>
+                    <Col span="1">
+                      <span>px</span>
+                    </Col>
+                    <Col span="23">
+                      <p style="margin-top:15px;color: #999999;font-size: 12px;">图片宽高取值范围为8-5120px</p>
+                    </Col>
+                  </Row>
+                </FormItem>
+              </Form>
             </div>
 
             <!--等比例缩放显示-->
@@ -157,7 +159,8 @@
                   <span>文字大小</span>
                 </div>
                 <div class="water_right">
-                  <InputNumber  :min="0"  :max="1000"  :formatter="value => `${value}px`" :parser="value => value.replace('px', '')" v-model="waterFont.size"></InputNumber>
+                  <InputNumber  :min="1"  :max="1000"   :formatter="value => `${value}px`"
+                                :parser="value => value.replace('px', '')" v-model="waterFont.size"></InputNumber>px
                 </div>
               </div>
               <div style="margin-bottom: 20px;">
@@ -268,6 +271,16 @@
       }else {
         callback();
       }
+  }
+  const imgWidhtValidor = (rule,value,callback) => {
+    // let reg = /^[0-9]{8,5012}$/;
+    if(value == ''){
+      return callback(new Error('请输入图片高宽'));
+    }else if(Number(value) < 8 || Number(value) > 5012){
+      return callback(new Error('请输入正确范围内的高宽'));
+    }else {
+      callback();
+    }
   }
 
   export  default {
@@ -401,8 +414,19 @@
         ],
 
         //图片高宽
-        imgWidth: '250',
-        imgHeight: '250',
+        widthValidate:{
+          imgWidth: '250',
+          imgHeight: '250',
+        },
+        widthRuleValidate:{
+          imgWidth:[
+            {required:true,validator:imgWidhtValidor,trigger:'blur'}
+          ],
+          imgHeight:[
+            {required:true,validator:imgWidhtValidor,trigger:'blur'}
+          ]
+        },
+
         //缩放比例
         resizerpercent:50,
         //输出质量
@@ -418,17 +442,17 @@
         //文字水印
         waterFont: {
           font: '今天我让你高攀不起',
-          typeface: 'Dialog',
+          typeface: 'SourceHanSansSC-Bold.otf',
           size: 10,
           color: 'rgba(10, 127, 144, 1)',
           typefaceList: [
             {
               value: 'SourceHanSansSC-Bold.otf',
-              label: 'Dialog'
+              label: '思源黑体'
             },
             {
               value: 'DialogInput',
-              label: 'DialogInput'
+              label: '思源宋体'
             },
             {
               value: 'SansSerif',
@@ -469,8 +493,7 @@
               url: 'picture/picturePreview.do',
               method: 'post',
               responseType:'arraybuffer',
-              headers:{ 'Content-Type':"application/x-www-form-urlencoded; charset=UTF-8"}
-             ,
+              headers:{ 'Content-Type':"application/x-www-form-urlencoded; charset=UTF-8"},
               transformRequest: [(data) => {
                 return Qs.stringify(data);
               }],
@@ -528,9 +551,11 @@
       createStyle() {
         this.$refs.formValidate.validate(valid => {
           if (valid) {
+            let dd = this.waterFont.color.substring(this.waterFont.color.indexOf('(')+1,this.waterFont.color.indexOf(')'));
             axios({
               url: 'picture/creatStyle.do',
               method: 'post',
+              headers:{ 'Content-Type':"application/x-www-form-urlencoded; charset=UTF-8"},
               transformRequest: [(data) => {
                 return Qs.stringify(data);
               }],
@@ -551,7 +576,7 @@
                 rotationangle: this.angle,
                 fontsize: this.watermarkIndex == '2' ? this.waterFont.size.toString() : '',
                 text: this.watermarkIndex == '2' ? this.waterFont.font : '',
-                color:this.watermarkIndex == '2' ?this.waterFont.color : '',
+                color:this.watermarkIndex == '2' ? dd.substring(0,dd.length-3) : '',
                 thickness: '0',
                 watermarktransparency: this.waterImg.transparency.toString(),
                 font: this.watermarkIndex == '2' ? this.waterFont.typeface : '',
@@ -569,7 +594,7 @@
             })
           }
         })
-      }
+      },
     }
   }
 </script>

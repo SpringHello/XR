@@ -286,7 +286,7 @@
           name="uploadFile"
           :data="fileUpdata"
           type="drag"
-          action="object/uploadObject.do"
+          action="http://192.168.3.234:8086/ruirados/object/uploadObject.do"
           class="upload_model"
           v-show="uploadList.length == 0"
         >
@@ -1503,17 +1503,59 @@
         imgList:[
           {
             title:'样式名称',
-            key:'cssname'
+            key:'cssname',
+            render:(h,params)=>{
+             const hide = params.row.hide == 1 ?'inline-block':'none';
+              return h('div',[
+                h('Spin',{
+                  prop:{
+                    size:'small'
+                  },
+                  style:{
+                    display:hide
+                  }
+                }),
+                h('span',{},params.row.cssname)
+              ])
+            }
           },
           {
             title:'最后修改时间',
           },
           {
             title:'操作',
-            render:(h,parmas)=>{
+            width:100,
+            render:(h,params)=>{
               return h('div',[
-                h('span',{style:{cursor:'pointer',color:'#2A99F2'}},'修改'),
-                h('span',{style:{cursor:'pointer',color:'#2A99F2'}},'删除')
+                h('span',{style:{cursor:'pointer',color:'#2A99F2',marginRight:'10px'}},'修改'),
+                h('span',{style:{cursor:'pointer',color:'#2A99F2'},on:{click:()=>{
+                  this.$Modal.confirm({
+                    title:'删除',
+                    content:'是否删除该样式',
+                    onOk:()=>{
+                      let obj = {cssname:'删除中',hide:1};
+                      this.imgData.splice(params.row._index,1,obj);
+                      axios({
+                        method:'post',
+                        url:'picture/deleteStyle.do',
+                        transformRequest:[(data) => {return Qs.stringify(data)}],
+                        data:{
+                           id:params.row.id,
+                          cssname:params.row.cssname,
+                          bucketname:sessionStorage.getItem('bucketName'),
+                          zoneid:this.$store.state.zone.zoneid
+                        }
+                      }).then(res=>{
+                        if(res.status == 200 && res.data.status == '1'){
+                          this.$Message.success('删除样式成功');
+                          this.getImgList();
+                        }else{
+                          this.$Message.info(res.data.message);
+                        }
+                      })
+                    }
+                  })
+                    }}},'删除')
               ])
             }
           }
@@ -2370,6 +2412,18 @@
             this.imgData = res.data.data.ossPictureList;
           }else {
             this.$Message.info('获取图片样式出小差了');
+          }
+        })
+      },
+
+      //删除图片样式
+      deketeImgStyle(){
+        axios({
+          method:'post',
+          url:'picture/deleteStyle.do',
+          transformRequest:[(data) => {return Qs.stringify(data)}],
+          data:{
+
           }
         })
       }
