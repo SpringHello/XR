@@ -33,8 +33,8 @@
             </div>
           </div>
         </my-carousel-item>
-        <!--<my-carousel-item class="carousel-item">
-          <div @click="push('fractive')"
+        <my-carousel-item class="carousel-item">
+          <div @click="push('DBActive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="db-active">
               <div class="db-active-content">
@@ -50,7 +50,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>-->
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('/ruicloud/fractive')"
                style="cursor: pointer;background: #F56B23;">
@@ -3307,7 +3307,7 @@
       display: flex;
       justify-content: space-between;
     }
-    .eigth-scene {  
+    .eigth-scene {
       position: relative;
       margin:0 auto;
       width: 1902px;
@@ -3318,7 +3318,7 @@
         overflow: hidden;
         height: 666px;
         .bg{
-          transition: all .3s ease;  
+          transition: all .3s ease;
           margin: auto 0;
           height: 5328px;
           position:absolute;
@@ -3788,6 +3788,63 @@
           }
         }
       }
+      .db-active {
+        height: 400px;
+        background: url("../../assets/img/active/dbActive/dba-banner7.png") center no-repeat, linear-gradient(90deg, #FFF, #AFCAFF);
+        .db-active-content {
+          width: 1200px;
+          height: 400px;
+          margin: 0 auto;
+          display: flex;
+          .db-active-text {
+            width: 50%;
+            padding: 74px 0 0 20px;
+            > p {
+              font-size: 24px;
+              font-family: "Microsoft YaHei", "微软雅黑";
+              color: rgba(51, 51, 51, 1);
+              line-height: 33px;
+            }
+            p:nth-child(2) {
+              margin-top: 20px;
+              font-size: 48px;
+              color: rgba(51, 51, 51, 1);
+              line-height: 67px;
+            }
+            p:nth-child(3) {
+              margin-top: 15px;
+              font-size: 28px;
+              color: rgba(51, 51, 51, 1);
+              line-height: 40px;
+              span {
+                color: rgba(255, 70, 43, 1);
+                margin-right: 20px;
+              }
+            }
+            button {
+              background: none;
+              outline: none;
+              cursor: pointer;
+              padding: 11px 50px;
+              margin-top: 30px;
+              border-radius: 4px;
+              border: 1px solid rgba(51, 51, 51, 1);
+              font-size: 16px;
+              font-family: "Microsoft YaHei", "微软雅黑";
+              color: rgba(51, 51, 51, 1);
+              &:hover {
+                background: rgba(255, 70, 43, 1);
+                color: #FFF;
+                border: none;
+              }
+            }
+          }
+          .db-active-img {
+            padding-top: 22px;
+            width: 50%;
+          }
+        }
+      }
     }
     > .box-container {
       background: rgba(255, 255, 255, 1);
@@ -3910,7 +3967,7 @@
             padding: 76px 0px 80px;
           }
           .content-carousel {
-            margin-top: 40px; 
+            margin-top: 40px;
             overflow-x: hidden;
             .fade-enter-active, .fade-leave-active {
               transition: opacity .2s
