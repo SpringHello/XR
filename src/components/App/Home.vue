@@ -2599,7 +2599,7 @@
                 useText: '敬请期待',
                 detailLink: '',
                 useLink: '',
-                ME: true
+                ME: false
               }
             ],
             desc: '24小时不间断监控，可视化数据看板，异常自动报警，使您随时掌握业务情况。',
