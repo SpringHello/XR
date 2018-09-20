@@ -1983,7 +1983,7 @@
           return
         }
         if (!this.$store.state.userInfo) {
-          this.$LR({type: 'login'})
+          this.$LR({type: 'register'})
           return
         }
         this.index1 = index1
