@@ -165,7 +165,7 @@
             secSpan: '秒级创建 一键恢复 安全可靠',
             des: '即将上线',
             activeObj: '云数据库 新老用户',
-            url: '',
+            url: 'DBActive',
             isStart: true,
             weight: '1',
             color: 'black'
