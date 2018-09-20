@@ -29,7 +29,7 @@
       </div>
 
       <!--绑定IP-->
-      <Modal title="绑定IP" width="550" :mask-closable="false" v-model="showModal.ipShow">
+      <Modal title="绑定IP"  :mask-closable="false" v-model="showModal.ipShow">
         <Form ref="ipValidate" :model="ipValidate" :rules="ipRuleValidate" label-position="top">
           <FormItem label="选择IP" prop="ip">
             <Select v-model="ipValidate.ip" placeholder="请选择IP" style="width: 200px">
@@ -87,14 +87,18 @@
 
       <!--制作镜像-->
       <Modal title="制作镜像" width="550" :mask-closable="false" v-model="showModal.mirror">
+        <hr size="1" color="#999999">
+        <br>
         <Form ref="mirrorValidate" :model="mirrorValidate" :rules="mirrorRuleValidate" label-position="top" inline>
           <FormItem label="镜像名称" prop="name">
             <Input v-model="mirrorValidate.name" placeholder="小于20位数字或字母" style="width: 200px;"></Input>
           </FormItem>
-          <FormItem label="描述" prop="descript">
-            <Input type="textarea" :rows="4" placeholder="小于20个字(选填)" v-model="mirrorValidate.descript" style="width: 200px;"></Input>
+          <FormItem label="描述" prop="descript" style="margin-left: 15px;">
+            <Input type="textarea" :rows="2" placeholder="小于20个字(选填)" v-model="mirrorValidate.descript" style="width: 200px;"></Input>
           </FormItem>
         </Form>
+        <br>
+        <hr size="1" color="#999999">
         <br>
         <div slot="footer">
           <Button type="ghost" @click="showModal.mirror = false">取消</Button>
@@ -535,6 +539,7 @@
                             if(params.row.status == 2 || params.row.status ==3){
                               this.$Message.info('请等待主机完成当前操作');
                             }else {
+
                               this.showModal.mirror  = true;
                               this.mirrorValidate.rootdiskid = params.row.rootdiskid;
                             }
@@ -572,6 +577,10 @@
                             if(params.row.status == 2 || params.row.status ==3){
                               this.$Message.info('请等待主机完成当前操作');
                             }else {
+                              // if(params.row.caseType == 3){
+                              //   this.$Message.info('请选择包年包月主机续费');
+                              //   return
+                              // }
                               this.VMId = params.row.id;
                               this.showModal.renew = true;
                             }
@@ -609,20 +618,20 @@
             }
           ],
           hostData:[],
+          zoneId:''
         }
       },
       beforeRouteEnter(to, from, next){
         next(vm =>{
-          axios.get('information/zone.do',{
-            params:{
-              gpuServer:'1'
-            }
-          }).then(res => {
-            sessionStorage.setItem('zonid',res.data.result[0].zoneid);
-            vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
-            vm.$store.state.zone.zonename = res.data.result[0].zonename;
-          })
-        })
+                  axios.get('information/zone.do',{
+                    params:{
+                      gpuServer:'1'
+                    }
+                  }).then(res => {
+                    vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
+                    vm.$store.state.zone.zonename = res.data.result[0].zonename;
+                  })
+                })
       },
       beforeRouteLeave(to, from , next){
         axios.get('information/zone.do',{
@@ -830,9 +839,15 @@
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
-             this.originCost = res.data.result;
-             this.cost = res.data.cuspon;
-           }
+               this.cost = res.data.result.toFixed(2)
+               this.originCost = res.data.result
+               if (res.data.cuspon) {
+                 this.originCost = Number((this.originCost + res.data.cuspon).toFixed(2))
+               }
+               if (res.data.continueDiscount) {
+                 this.originCost = (this.originCost + res.data.continueDiscount).toFixed(2)
+               }
+             }
          })
         },
 
@@ -868,9 +883,9 @@
         },
       },
       created(){
-        // this.intervalInstance = setInterval(() => {
-        //   this.getGpuServerList()
-        // }, 5 * 1000)
+        this.intervalInstance = setInterval(() => {
+          this.getGpuServerList()
+        }, 5 * 1000)
       },
       mounted(){
         setTimeout(()=>{

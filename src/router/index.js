@@ -22,6 +22,7 @@ const BHost = () =>import('@/components/App/buy/BHost')
 const BIP = () =>import('@/components/App/buy/BIP')
 const BDisk = () =>import('@/components/App/buy/BDisk')
 const BData = () =>import('@/components/App/buy/BData')
+const BGpu = () =>import('@/components/App/buy/BGpu')
 const Ecs = () =>import('@/components/App/product/ECS')
 const Document = () =>import('@/components/App/Document')
 const Document1 = () =>import('@/components/App/Document1')
@@ -285,8 +286,8 @@ var router = new Router({
             {path: 'bdisk', name: 'bdisk', component: BDisk},
             {path: 'bip', name: 'bip', component: BIP},
             {path: 'bdata', name: 'bdata', component: BData},
-            {path: 'bobj', name: 'bobj', component: BObj}
-            /*{path: 'bgpu', name: 'bgpu', component: BGpu}*/
+            {path: 'bobj', name: 'bobj', component: BObj},
+            {path: 'bgpu', name: 'bgpu', component: BGpu}
           ]
         },
 

@@ -47,7 +47,6 @@
                 <Button type="primary" style="width: 100%;margin-top: 10%;">立即购买</Button>
               </div>
             </div>
-
           </div>
 
 
@@ -243,7 +242,6 @@ import axios from  'axios'
           if(res.status == 200 && res.data.status == 1){
             this.cpuList = res.data.data;
             this.memoryList = res.data.data[0].list;
-            console.log(this.memoryList.length === 0 + ".....................");
           }
         });
       },
