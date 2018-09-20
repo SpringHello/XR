@@ -214,8 +214,9 @@
                           <!--<i class="iconfont" :class="content.img" :style="[styleObject,content.ME?white:'']"></i>-->
                           <p>{{content.desc}}</p>
                         </div>
-                        <div class="foot" v-if="content.type!='comeSoon'">
-                          <router-link :to="content.detailLink" target="_blank" style="border-right: 1px solid #cccccc" :class="{notallow: !content.detailLink}">
+                        <!-- <div class="foot" v-if="content.type!='comeSoon'"> -->
+                        <div class="foot" v-if="content.detailLink">
+                          <router-link :to="content.detailLink" target="_blank" style="border-right: 1px solid #cccccc">
                             {{content.detailText}}
                           </router-link>
                           <router-link :to="content.useLink" target="_blank" v-if="content.useText=='立即购买'">
@@ -2407,7 +2408,7 @@
                 img: '#icon-luojinshu',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Phost',
+                detailLink: '',
                 useLink: '',
                 ME: false
               },
@@ -2417,7 +2418,7 @@
                 img: '#icon-danxingshensuo4',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pecss',
+                detailLink: '',
                 useLink: '',
                 ME: false
               },
@@ -2427,7 +2428,7 @@
                 img: '#houtaiicon-GPUzhuji',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pgpu',
+                detailLink: '',
                 useLink: '',
                 ME: false
               }
@@ -3265,6 +3266,7 @@
             product.select = false
           }
         })
+        this.selectedBar = true
       },
       /* 产品详情滚动浏览
        direction指明方向left or right
