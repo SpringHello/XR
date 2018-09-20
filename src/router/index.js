@@ -61,6 +61,7 @@ const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 //域名页面路由
 const Domainname = () =>import('@/components/App/Domain/Domainname')
 const DomainResult = () =>import('@/components/App/Domain/DomainResult')
+const DomainTemplate = () =>import('@/components/App/Domain/DomainTemplate')
 
 
 // 备案系统页面路由
@@ -310,6 +311,7 @@ var router = new Router({
 
         {path: 'Domainname', name: 'Domainname', component: Domainname},
         {path: 'DomainResult', name: 'DomainResult', component: DomainResult},
+        {path: 'DomainTemplate', name: 'DomainTemplate', component: DomainTemplate},
 
 
         {path: 'Pecs', component: Pecs},

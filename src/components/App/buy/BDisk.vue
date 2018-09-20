@@ -123,7 +123,7 @@
           费用：<span style="font-size: 24px;color: #EE6723;">{{dataDiskCost.toFixed(2)}}元</span><span
           v-show="timeForm.currentTimeType == 'current'">/小时</span>
         </p>
-        <p style="text-align: right;font-size: 14px;color: #666666;" v-if="coupon!=0">优惠费用：<span
+        <p style="text-align: right;font-size: 14px;color: #666666;" v-if="coupon!=0">已省：<span
           style="font-size: 14px;color: #EE6723;">{{coupon.toFixed(2)}}元</span></p>
         <div style="text-align: right;margin-top: 20px;">
           <Button size="large"
@@ -200,6 +200,9 @@
       pushDisk() {
         this.dataDiskList.push({type: 'ssd', size: 20, label: 'SSD存储'})
       },
+      removeDisk(index) {
+        this.dataDiskList.splice(index, 1)
+      },
       addDiskCart() {
         if (this.$parent.cart.length > 4) {
           this.$message.info({
@@ -232,7 +235,7 @@
           return
         }
         if (this.userInfo == null) {
-          this.$LR({type:'login'})
+          this.$LR({type: 'login'})
           return
         }
         var diskSize = ''
@@ -292,7 +295,9 @@
     },
     computed: {
       zoneList(){
-        return this.$store.state.zoneList
+        return this.$store.state.zoneList.filter(zone => {
+          return zone.gpuserver == 0
+        })
       },
       userInfo(){
         return this.$store.state.userInfo

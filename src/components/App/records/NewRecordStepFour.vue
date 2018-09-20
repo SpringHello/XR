@@ -25,7 +25,7 @@
             <p style="border-bottom: 1px solid #999999;width: 765px;padding-bottom: 20px;">当天拍照完成，当天提交管局，速度较快。</p>
           </div>
           <div class="footer" style="padding-top: 0">
-            <button @click="applyCurtain" v-show="!nextStep">提交初审</button>
+            <button @click="applyCurtain(2)" v-show="!nextStep">提交初审</button>
           </div>
         </div>
         <div v-if="photograph === 2 && nextStep === false">
@@ -65,7 +65,7 @@
           <div class="footer" style="padding-top: 0">
             <button @click="nextStep = false" style="margin-right: 10px">上一步</button>
             <button @click="showModal.logistics = true" v-if="curtainStatus">查看物流</button>
-            <button v-else @click="applyCurtain">提交初审并申请幕布</button>
+            <button v-else @click="applyCurtain(1)">提交初审并申请幕布</button>
           </div>
         </div>
       </div>
@@ -125,7 +125,7 @@
       </p>
       <div class="logistics">
         <p>物流公司：<span>顺丰速递</span></p>
-        <p>物流单号：<span style="color: #377dff">827397239823</span></p>
+        <p>物流单号：<span style="color: #377dff">xxx</span></p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary"
@@ -189,7 +189,6 @@
   import oStep from "./ostep.vue";
   import records from './../Records'
   import $ from 'jquery'
-  import throttle from 'throttle-debounce/throttle'
 
   export default {
     components: {
@@ -442,10 +441,12 @@
         window.open(href, '_blank')
       },
       // 提交幕布申请
-      applyCurtain: throttle(2000, function () {
-        this.siteParams.backgroundAddress = this.receiveForm.address
-        this.siteParams.backgroundName = this.receiveForm.person
-        this.siteParams.backgroundPhone = this.receiveForm.phone
+      applyCurtain(val) {
+        if(val == 1){
+          this.siteParams.backgroundAddress = this.receiveForm.address
+          this.siteParams.backgroundName = this.receiveForm.person
+          this.siteParams.backgroundPhone = this.receiveForm.phone
+        }
         let params = {
           mainCompanyArea: this.mainParams.mainCompanyArea,
           mainCompanyCertificatesType: this.mainParams.mainCompanyCertificatesType,
@@ -498,7 +499,7 @@
             }
           })
         }
-      }),
+      },
       // 提交幕布
       sumbitApproval() {
         if (this.upload.photo === '') {

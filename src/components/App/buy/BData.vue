@@ -343,7 +343,7 @@
             v-show="timeForm.currentTimeType == 'current'">/小时</span>
           </p>
           <p v-if="totalDataCoupon!=0" style="text-align: right;font-size: 14px;color: #666666;">
-            优惠费用：<span
+            已省：<span
             style="font-size: 14px;color: #EE6723;">{{totalDataCoupon.toFixed(2)}}元</span></p>
           <div style="text-align: right;margin-top: 20px;">
             <Button size="large"
@@ -678,7 +678,7 @@
       },
       buyData() {
         if (this.userInfo == null) {
-          this.$LR({type:'login'})
+          this.$LR({type: 'login'})
           return
         }
         if (this.system.systemName == undefined) {
@@ -730,7 +730,9 @@
     },
     computed: {
       zoneList(){
-        return this.$store.state.zoneList
+        return this.$store.state.zoneList.filter(zone => {
+          return zone.gpuserver == 0
+        })
       },
       userInfo(){
         return this.$store.state.userInfo
@@ -754,6 +756,7 @@
         }
       },
       info(){
+        console.log(this.$parent)
         return this.$parent.info.filter(i => {
           if (i.zoneId == this.zone.zoneid) {
             this.RAMList = i.kernelList[0].RAMList

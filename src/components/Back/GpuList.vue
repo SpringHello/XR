@@ -621,7 +621,7 @@
           zoneId:''
         }
       },
-      beforeRouteEnter(to, from, next){
+      /*beforeRouteEnter(to, from, next){
         next(vm =>{
                   axios.get('information/zone.do',{
                     params:{
@@ -641,7 +641,7 @@
         })
         clearInterval(this.intervalInstance);
         next();
-      },
+      },*/
       methods:{
         // 获取GPU主机
        getGpuServerList(){

@@ -2316,7 +2316,9 @@
               companyLegalIdcardBackUrl: this.notAuth.companyAuthForm.legalPersonIDBack,
               operatorIdcardUrl: this.notAuth.companyAuthForm.agentIDFront,
               operatorIdcardBackUrl: this.notAuth.companyAuthForm.agentIDBack,
-              operatorIdcardBackByHandUrl: this.notAuth.companyAuthForm.agentIDInHand
+              operatorIdcardBackByHandUrl: this.notAuth.companyAuthForm.agentIDInHand,
+              agentIDCard:this.notAuth.companyAuthForm.agentManID,
+              legalPersonIDCard:this.notAuth.companyAuthForm.linkManNameID
             }
             axios.post('user/enterpriseAttest.do', params).then(response => {
               if (response.status == 200 && response.data.status == 1) {

@@ -408,7 +408,7 @@
             v-show="timeForm.currentTimeType == 'current'">/小时</span>
           </p>
           <p v-if="totalDataCoupon!=0" style="text-align: right;font-size: 14px;color: #666666;">
-            优惠费用：<span
+            已省：<span
             style="font-size: 14px;color: #EE6723;">{{totalDataCoupon.toFixed(2)}}元</span></p>
           <div style="text-align: right;margin-top: 20px;">
             <Button size="large"
@@ -431,22 +431,22 @@
   import regExp from '@/util/regExp'
   var debounce = require('throttle-debounce/debounce')
   export default{
-    beforeRouteEnter(to, from, next){
-      axios.get('information/zone.do', {
-        params: {
-          gpuServer: '1'
-        }
-      }).then(response => {
-        next(vm => {
-          vm.zoneList = response.data.result
-          vm.zone = response.data.result[0]
-        })
-      })
-    },
+    /*beforeRouteEnter(to, from, next){
+     axios.get('information/zone.do', {
+     params: {
+     gpuServer: '1'
+     }
+     }).then(response => {
+     next(vm => {
+     vm.zoneList = response.data.result
+     vm.zone = response.data.result[0]
+     })
+     })
+     },*/
     data(){
       return {
         zone: null,
-        zoneList: [],
+        /*zoneList: [],*/
         // 计费方式
         timeType: [{label: '包年包月', value: 'annual'}, {label: '实时计费', value: 'current'}],
         timeValue: [
@@ -562,8 +562,8 @@
 
         // 云硬盘（数据盘）
         dataDiskType: [
-          {label: 'SATA存储', value: 'sata'},
-          {label: 'SAS存储', value: 'sas'},
+          /*{label: 'SATA存储', value: 'sata'},
+           {label: 'SAS存储', value: 'sas'},*/
           {label: 'SSD存储', value: 'ssd'}
         ],
         // 添加购买的数据盘
@@ -972,6 +972,13 @@
       },
     },
     computed: {
+      zoneList(){
+        var zoneList = this.$store.state.zoneList.filter(zone => {
+          return zone.gpuserver == 1
+        })
+        this.zone = zoneList[0]
+        return zoneList
+      },
       userInfo(){
         return this.$store.state.userInfo
       },
@@ -1041,6 +1048,7 @@
   #app {
     height: 100%;
   }
+
   #buy {
     background-color: #F7F7F7;
     #wrapper {
