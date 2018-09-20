@@ -192,7 +192,7 @@
             <div class="content-carousel">
               <div v-for="(item,index) in cloudContainer" :key="index">
                 <transition name="fade">
-                  <div style="height:365px;position: relative;text-align: center" v-show="item.select"
+                  <div style="height:400px;position: relative;text-align: center" v-show="item.select"
                        @mouseenter="item.ME=true"
                        @mouseleave="item.ME=false">
                     <!-- 如果item.prodItem个数大于5个，则需要轮播条 -->
@@ -215,7 +215,7 @@
                           <p>{{content.desc}}</p>
                         </div>
                         <div class="foot" v-if="content.type!='comeSoon'">
-                          <router-link :to="content.detailLink" target="_blank" style="border-right: 1px solid #cccccc">
+                          <router-link :to="content.detailLink" target="_blank" style="border-right: 1px solid #cccccc" :class="{notallow: !content.detailLink}">
                             {{content.detailText}}
                           </router-link>
                           <router-link :to="content.useLink" target="_blank" v-if="content.useText=='立即购买'">
@@ -242,6 +242,12 @@
                         <i class="arrow-right-icon"></i>
                       </div>
                     </transition>
+                    <div class="bottom-flow" v-if="item.prodItem.length>5">
+                      <div class="wrap">
+                         <span @click="scroll('left',item.title)" :class="{blue: selectedBar}"></span>
+                        <span @click="scroll('right',item.title)" :class="{blue: !selectedBar}"></span>
+                      </div>
+                    </div>
                   </div>
                 </transition>
               </div>
@@ -318,9 +324,9 @@
             <p>{{item.title}}</p>
             <div class="img-wrap"  @mouseenter="requireEnter(index)" @mouseleave="requireLeave(index)">
               <span>
-                <img :src="item.img" alt="" v-if="item.isShow == 'static'">
+                <img :src="item.imgHover" alt="" v-if="item.isShow == 'infinite'">
                 <img :src="item.imgonce" alt="" v-else-if="item.isShow == 'once'">
-                <img :src="item.imgHover" alt="" v-else>
+                <img :src="item.img" alt="" v-else>
               </span>
             </div>
             <span>{{item.desc}}</span>
@@ -691,6 +697,7 @@
         }
       }
       return {
+        selectedBar: true,
         showModal: {
           rechargeHint: false,
           inConformityModal: false,
@@ -2361,8 +2368,8 @@
         cloudContainer: [
           {
             title: '云计算',
-            img: '#icon-yunjisuan1',
-            clickImg: '#icon-yunjisuan',
+            img: '#icon-yunjisuan-hui',
+            clickImg: '#icon-yunjisuan-lan',
             prodItem: [
               {
                 title: '弹性云服务器（ECS）',
@@ -2413,6 +2420,16 @@
                 detailLink: 'Pecss',
                 useLink: '',
                 ME: false
+              },
+              {
+                title: 'GPU服务器',
+                desc: 'Tesla P100、Tesla P40 GPU',
+                img: '#houtaiicon-GPUzhuji',
+                detailText: '查看详情',
+                useText: '敬请期待',
+                detailLink: 'Pgpu',
+                useLink: '',
+                ME: false
               }
             ],
             desc: '新睿云为您提供高性能，高可用，高性价比的计算资源，包括弹性云服务器、镜像与ECS快照等产品。',
@@ -2421,8 +2438,8 @@
           },
           {
             title: '云网络',
-            img: '#icon-yunwangluo1',
-            clickImg: '#icon-yunwangluo',
+            img: '#icon-yunwangluo-hui',
+            clickImg: '#icon-yunwangluo-lan',
             prodItem: [
               {
                 title: '虚拟私有云VPC',
@@ -2473,6 +2490,16 @@
                 detailLink: 'Pvirvpn',
                 useLink: '',
                 ME: false
+              },
+              {
+                title: 'CDN',
+                desc: '节点丰富、安全易用',
+                img: '#houtaiicon-danxingwangqia',
+                detailText: '查看详情',
+                useText: '敬请期待',
+                detailLink: '',
+                useLink: '',
+                ME: false
               }
             ],
             desc: '新睿云为您快速搭建属于自己的私有云环境(VPC)，并提供100%的网络间隔离，确保安全，包括：私有网络、路由器、公网IP和负载均衡器',
@@ -2481,8 +2508,8 @@
           },
           {
             title: '云存储',
-            img: '#icon-yuncunchu1',
-            clickImg: '#icon-yuncunchu',
+            img: '#icon-yuncunchu-hui',
+            clickImg: '#icon-yuncunchu-lan',
             prodItem: [
               {
                 title: '云硬盘',
@@ -2503,6 +2530,16 @@
                 detailLink: 'Pbackupdisk',
                 useLink: '',
                 ME: false
+              },
+              {
+                title: '对象存储',
+                desc: '安全稳定，海量便捷',
+                img: '#houtaiicon-duixiangchunchu',
+                detailText: '查看详情',
+                useText: '敬请期待',
+                detailLink: 'PobjStorage',
+                useLink: '',
+                ME: false
               }
             ],
             desc: '稳定可靠、低延迟、可扩展的持久性块存储设备能力，包括云硬盘、备份等产品。',
@@ -2511,8 +2548,8 @@
           },
           {
             title: '云安全',
-            img: '#icon-yunanquan1',
-            clickImg: '#icon-yunanquan',
+            img: '#icon-yunanquan-hui',
+            clickImg: '#icon-yunanquan-lan',
             prodItem: [
               {
                 title: '防火墙',
@@ -2541,8 +2578,8 @@
           },
           {
             title: '云运维',
-            img: '#icon-yunyunwei1',
-            clickImg: '#icon-yunyunwei',
+            img: '#icon-yunyunwei-hui',
+            clickImg: '#icon-yunyunwei-lan',
             prodItem: [
               {
                 title: '云监控',
@@ -2551,6 +2588,36 @@
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pmonitor',
+                useLink: '',
+                ME: true
+              },
+              {
+                title: '访问控制',
+                desc: '权限管理、精准控制',
+                img: '#houtaiicon-jiankong1',
+                detailText: '查看详情',
+                useText: '敬请期待',
+                detailLink: '',
+                useLink: '',
+                ME: true
+              }
+            ],
+            desc: '24小时不间断监控，可视化数据看板，异常自动报警，使您随时掌握业务情况。',
+            select: false,
+            ME: false
+          },
+          {
+            title: '云数据库',
+            img: '#icon-yunshujuku-hui',
+            clickImg: '#icon-yunshujuku-lan',
+            prodItem: [
+              {
+                title: '云监控',
+                desc: '自定义监控项、多告警推送方式',
+                img: '#icon-yunjiankong2',
+                detailText: '查看详情',
+                useText: '敬请期待',
+                detailLink: 'PdataBase',
                 useLink: '',
                 ME: true
               }
@@ -2742,7 +2809,7 @@
       // })
       this.scrollFn = throttle(200, () => {
         let height = document.body.clientHeight - this.$refs.require.offsetTop + window.scrollY || window.pageYOffset
-        if (height > 400) {
+        if (height > 300) {
           this.requireData.forEach((item, index) => {
               this.$set(item, 'isShow', 'once')
           })
@@ -2845,7 +2912,7 @@
       },
       getHost(index1, index2) {
         if (!this.$store.state.userInfo) {
-          this.$LR({type: 'login'})
+          this.$LR({type: 'register'})
           return
         }
         this.index1 = index1
@@ -3206,18 +3273,20 @@
       scroll(direction, title) {
         var clientWidth = this.$refs[title][0].clientWidth
         var offsetLeft = this.$refs[title][0].offsetLeft
-        if (direction === 'right') {
+        if (direction === 'left') {
           // 向右滑动  offsetLeft加243px  当offsetLeft大于0 offsetLeft重置0
           offsetLeft += 245
           if (offsetLeft > 0) {
             offsetLeft = 0
           }
+          this.selectedBar = true
         } else {
           // 向左滑动  offsetLeft减243px  当offsetLeft加上clientWidth还小于1200 offsetLeft重置1200-clientWidth
           offsetLeft -= 245
           if (offsetLeft + clientWidth < 1195) {
             offsetLeft = 1195 - clientWidth
           }
+          this.selectedBar = false
         }
         this.$refs[title][0].style.left = `${offsetLeft}px`
       },
@@ -3263,6 +3332,9 @@
       }
     },
     computed: {
+      productBarNum() {
+        
+      },
       selectedEightscene() {
         return new Array(this.eigthSceneContent[this.eightsceneIndex])
       },
@@ -3942,6 +4014,7 @@
             bottom: 0px;
             left: 0px;
             height: 1px;
+            width: 200px;
             background-color: #377dff;
             transition: all .2s;
           }
@@ -3975,6 +4048,25 @@
             .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */
             {
               display: none;
+            }
+            .bottom-flow {
+              margin-top: 20px; 
+              .wrap {
+                width: 170px;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                span {
+                  display: inline-block;
+                  width:80px;
+                  height:4px;
+                  background:rgba(153,153,153,1);
+                  border-radius:3px;
+                  &.blue {
+                    background: #377dff;
+                  }
+                }
+              }
             }
             .arrow {
               width: 36px;
@@ -4026,7 +4118,7 @@
               transform: translate(16px, -50%);
             }
             .flexCarousel {
-              position: absolute;
+              position: relative;
               display: flex;
               align-items: center;
               height: 360px;
@@ -4108,6 +4200,9 @@
                   vertical-align: middle;
                   line-height: 45px;
                   cursor: pointer;
+                }
+                .notallow {
+                  cursor: not-allowed;
                 }
               }
             }
