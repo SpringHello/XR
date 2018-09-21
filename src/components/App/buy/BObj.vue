@@ -84,12 +84,14 @@
             </div>
           </div>
         </div>
+        <p style="margin-top: 20px;font-size:14px;color:rgba(102,102,102,1);">
+          提示：购买的资源包在有效期内，计费是先计算存储包与流量包额度，超出部分以按量方式进行结算</p>
       </div>
 
       <!--费用、以及加入预算清单-->
-      <!--<div style="margin-top: 20px">
-        &lt;!&ndash;<p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-           @click="$router.push('computed/3-1')">查看计价详情</p>&ndash;&gt;ii
+      <div style="margin-top: 20px">
+        <!--<p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+           @click="$router.push('computed/3-1')">查看计价详情</p>-->
         <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
           style="font-size: 24px;color: #EE6723;">{{cost.toFixed(2)}}元</span><span
           v-show="timeForm.currentTimeType == 'current'">/小时</span></p>
@@ -97,16 +99,16 @@
           style="font-size: 14px;color: #EE6723;">{{coupon.toFixed(2)}}元</span>
         </p>
         <div style="text-align: right;margin-top: 20px;">
-          <Button size="large"
+          <!--<Button size="large"
                   class="btn" @click="addObjCart">
             加入预算清单
-          </Button>
-          <Button @click="buyIP" type="primary"
+          </Button>-->
+          <Button @click="buyObj" type="primary"
                   style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377dff;">
             立即购买
           </Button>
         </div>
-      </div>-->
+      </div>
     </div>
   </div>
 </template>
@@ -116,15 +118,18 @@
   import regExp from '@/util/regExp'
   var debounce = require('throttle-debounce/debounce')
   export default{
-    data(){
-      var zone = null
-      this.$store.state.zoneList.forEach(item => {
-        if (item.isdefault === 1) {
-          zone = item
-        }
+    beforeRouteEnter(to, from, next){
+      axios.get('ruiradosPrice/zoneList.do').then(response => {
+        next(vm => {
+          vm.zoneList = response.data.data.zoneList
+          vm.zone = vm.zoneList[0]
+        })
       })
+    },
+    data(){
       return {
-        zone,
+        zoneList: [],
+        zone: {},
         // 计费方式
         timeType: [{label: '包年包月', value: 'annual'}],
         timeValue: [
@@ -169,50 +174,46 @@
     },
     methods: {
       // 对象存储加入购物车
-      addObjCart() {
+      /*addObjCart() {
         if (this.$parent.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
           })
         }
         let prod = {
-          typeName: '公网IP',
-          type: 'Peip',
+          typeName: '对象存储规格',
+          type: 'Pobj',
           zone: this.zone,
           timeForm: this.timeForm,
-          bandWidth: this.bandWidth,
-          autoRenewal: this.autoRenewal,
-          vpc: this.vpc,
+          save: this.save,
+          downLoad: this.downLoad,
           cost: this.cost,
           count: 1
         }
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
         window.scrollTo(0, 170)
-      },
-      buyIP() {
+      },*/
+      buyObj() {
         if (this.userInfo == null) {
           this.$LR({type: 'login'})
           return
         }
         var params = {
-          flowPackage: '',
-          capacity: '',
-          realPrice: '',
-          price: '',
-          timeValue: '',
-          timeType: '',
-          zoneId: ''
+          flowPackage: this.save,
+          capacity: this.downLoad,
+          timeType: this.timeForm.currentTimeValue.type,
+          timeValue: this.timeForm.currentTimeValue.value,
+          zoneId: this.zone.zoneid
         }
-        axios.get('network/createPublicIp.do', {params}).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.$router.push('/ruicloud/order')
-            } else {
-              this.$message.info({
-                content: response.data.message
-              })
-            }
+        axios.post('ruiradosPrice/createOrder.do', params).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('/ruicloud/order')
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
           }
-        )
+        })
       },
       queryObjPrice: debounce(500, function () {
         var params = {
@@ -222,16 +223,14 @@
           timeValue: this.timeForm.currentTimeValue.value
         }
         axios.post('ruiradosPrice/countPirce.do', params).then(response => {
-
+          if (response.status == 200) {
+            this.cost = response.data.data.price
+            this.coupon = response.data.data.priceSpread
+          }
         })
       }),
     },
     computed: {
-      zoneList(){
-        return this.$store.state.zoneList.filter(zone => {
-          return zone.gpuserver == 0
-        })
-      },
       userInfo(){
         return this.$store.state.userInfo
       },
@@ -242,6 +241,12 @@
           this.queryObjPrice()
         },
         deep: true
+      },
+      save(){
+        this.queryObjPrice()
+      },
+      downLoad(){
+        this.queryObjPrice()
       },
       'timeForm': {
         handler(){

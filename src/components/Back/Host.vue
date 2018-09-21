@@ -838,94 +838,94 @@
       //加入负载均衡
       joinBalance() {
         if (this.checkSelect()) {
-            axios.get('information/isloadbananceRoleAndServiceSchemeMatching.do', {
-              params: {
-                zoneId: $store.state.zone.zoneid,
-                VMIds: this.currentHost[0].computerid,
-              }
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1){
-                // 成功的情况
-                axios.get('information/listVMByComputerId.do', {
-                  params: {
-                    VMId: this.currentHost[0].computerid,
-                    zoneId: this.currentHost[0].zoneid
-                  }
-                }).then((response) => {
+          axios.get('information/isloadbananceRoleAndServiceSchemeMatching.do', {
+            params: {
+              zoneId: $store.state.zone.zoneid,
+              VMIds: this.currentHost[0].computerid,
+            }
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              // 成功的情况
+              axios.get('information/listVMByComputerId.do', {
+                params: {
+                  VMId: this.currentHost[0].computerid,
+                  zoneId: this.currentHost[0].zoneid
+                }
+              }).then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
-                    if (response.data.result.loadbalance != '') {
-                      this.$message.confirm({
-                        title: '提示',
-                        content: `该主机已加入负载均衡：${response.data.result.loadbalance[0]}，若您需要修改主机所属负载均衡请先将主机移出该负载均衡在进行操作`,
-                        okText: '移出主机',
-                        onOk: () => {
-                          axios.get('loadbalance/listBalanceRoleAndVMByVMId.do', {
-                            params: {
-                              computerId: this.currentHost[0].computerid,
-                              zoneId: this.currentHost[0].zoneid
-                              }
-                            }).then(response => {
-                              if (response.status == 200 && response.data.status == 1){
-                                sessionStorage.setItem('balanceInfo', JSON.stringify(response.data.result.loadBalance[0]))
-                                this.$router.push('BalanceParticulars')
-                              }
-                            })
-                        }
-                      })
-                    } else {
-                      axios.get('loadbalance/listLoadBalanceRoleVM.do', {
-                        params: {
-                          zoneId: $store.state.zone.zoneid,
-                          VMId: this.currentHost[0].computerid
-                        }
-                      }).then(response => {
-                        if (response.status == 200 && response.data.status == 1) {
-                          var publicLoadbalance = response.data.result.publicLoadbalance
-                          publicLoadbalance.forEach(item => {
-                            item.type = '#public'
-                          })
-                          this.listLoadBalanceRole = publicLoadbalance.concat(response.data.result.internalLoadbalance)
-                          this.showModal.balance = true
-                        }
-                      })
-                    }
+                  if (response.data.result.loadbalance != '') {
+                    this.$message.confirm({
+                      title: '提示',
+                      content: `该主机已加入负载均衡：${response.data.result.loadbalance[0]}，若您需要修改主机所属负载均衡请先将主机移出该负载均衡在进行操作`,
+                      okText: '移出主机',
+                      onOk: () => {
+                        axios.get('loadbalance/listBalanceRoleAndVMByVMId.do', {
+                          params: {
+                            computerId: this.currentHost[0].computerid,
+                            zoneId: this.currentHost[0].zoneid
+                          }
+                        }).then(response => {
+                          if (response.status == 200 && response.data.status == 1) {
+                            sessionStorage.setItem('balanceInfo', JSON.stringify(response.data.result.loadBalance[0]))
+                            this.$router.push('BalanceParticulars')
+                          }
+                        })
+                      }
+                    })
+                  } else {
+                    axios.get('loadbalance/listLoadBalanceRoleVM.do', {
+                      params: {
+                        zoneId: $store.state.zone.zoneid,
+                        VMId: this.currentHost[0].computerid
+                      }
+                    }).then(response => {
+                      if (response.status == 200 && response.data.status == 1) {
+                        var publicLoadbalance = response.data.result.publicLoadbalance
+                        publicLoadbalance.forEach(item => {
+                          item.type = '#public'
+                        })
+                        this.listLoadBalanceRole = publicLoadbalance.concat(response.data.result.internalLoadbalance)
+                        this.showModal.balance = true
+                      }
+                    })
                   }
-                })
-              } else if (response.status == 200 && response.data.status == 3){
-                // 需要创建公网负载均衡
-                this.$message.confirm({
-                  title: '提示',
-                  content: '您还未创建一个负载均衡，请先创建公网负载均衡。',
-                  okText: '创建负载均衡',
-                  onOk: () => {
-                    this.$router.push('balance')
-                  }
-                })
-              } else if (response.status == 200 && response.data.status == 4){
-                // 需要创建内网负载均衡
-                this.$message.confirm({
-                  title: '提示',
-                  content: '您还未创建一个负载均衡，请先创建内网负载均衡。',
-                  okText: '创建负载均衡',
-                  onOk: () => {
-                    this.$router.push('balance')
-                  }
-                })
-              } else if (response.status == 200 && response.data.status == 5){
-               // 网络不匹配
-                this.$message.confirm({
-                  title: '提示',
-                  okText: '调整子网',
-                  content: '您选择的主机的子网的网络服务方案为普通网络，不支持负载均衡。若您需要将该主机加入负载均衡可将该主机移入子网服务方案为：公网/私网负载均衡网络的子网之后在进行加入负载均衡操作',
-                  onOk: () => {
-                      sessionStorage.setItem('vpcId', this.currentHost[0].vpcid)
-                      this.$router.push('vpcManage')
-                  }
-                })
-              } else {
-                this.$Message.info(response.data.message)
-              }
-            })
+                }
+              })
+            } else if (response.status == 200 && response.data.status == 3) {
+              // 需要创建公网负载均衡
+              this.$message.confirm({
+                title: '提示',
+                content: '您还未创建一个负载均衡，请先创建公网负载均衡。',
+                okText: '创建负载均衡',
+                onOk: () => {
+                  this.$router.push('balance')
+                }
+              })
+            } else if (response.status == 200 && response.data.status == 4) {
+              // 需要创建内网负载均衡
+              this.$message.confirm({
+                title: '提示',
+                content: '您还未创建一个负载均衡，请先创建内网负载均衡。',
+                okText: '创建负载均衡',
+                onOk: () => {
+                  this.$router.push('balance')
+                }
+              })
+            } else if (response.status == 200 && response.data.status == 5) {
+              // 网络不匹配
+              this.$message.confirm({
+                title: '提示',
+                okText: '调整子网',
+                content: '您选择的主机的子网的网络服务方案为普通网络，不支持负载均衡。若您需要将该主机加入负载均衡可将该主机移入子网服务方案为：公网/私网负载均衡网络的子网之后在进行加入负载均衡操作',
+                onOk: () => {
+                  sessionStorage.setItem('vpcId', this.currentHost[0].vpcid)
+                  this.$router.push('vpcManage')
+                }
+              })
+            } else {
+              this.$Message.info(response.data.message)
+            }
+          })
         }
       },
       // 确定加入负载均衡
@@ -1191,7 +1191,7 @@
               this.loading = false
               if (response.status == 200 && response.data.status == 1) {
                 this.publicIPList = response.data.result
-                if (this.publicIPList == ''){
+                if (this.publicIPList == '') {
                   this.showModal.publicIPHint = true
                 } else {
                   this.showModal.bindIP = true
@@ -1572,7 +1572,8 @@
       },
       del() {
         if (this.checkSelect()) {
-          if (this.currentHost[0].caseType != 3) {
+          // 实时主机或者活动主机可以删除
+          if (this.currentHost[0].caseType != 3 || this.currentHost[0].isfreevm == 1) {
             this.$Message.warning('只能删除实时计费主机')
             return
           }
@@ -1595,7 +1596,6 @@
               })
             }
           })
-
         }
       },
       upgrade() {
@@ -1609,8 +1609,7 @@
             params: {
               VMId: this.currentHost[0].computerid
             }
-          })
-            .then(response => {
+          }).then(response => {
               this.loading = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)

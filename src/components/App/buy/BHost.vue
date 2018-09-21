@@ -561,17 +561,17 @@
   var debounce = require('throttle-debounce/debounce')
   export default{
     data(){
-      var zone = null
-      this.$store.state.zoneList.forEach(item => {
-        if (item.isdefault === 1) {
-          zone = item
-        }
+      var zoneList = this.$store.state.zoneList.filter(zone => {
+        return zone.gpuserver == 0
       })
+      var zone = zoneList[0]
       return {
+        zoneList,
+        zone,
         // 配置类型
         createType: 'fast',
         createTypeList: [{label: '快速配置', value: 'fast'}, {label: '自定义配置', value: 'custom'}],
-        zone,
+        /*zone: {},*/
         // 计费方式
         timeType: [{label: '包年包月', value: 'annual'}, {label: '实时计费', value: 'current'}],
         timeValue: [
@@ -882,7 +882,7 @@
           }
         }
         if (this.userInfo == null) {
-          this.$LR({type:'login'})
+          this.$LR({type: 'login'})
           return
         }
         var params = {
@@ -1085,11 +1085,6 @@
       // 剩余添加磁盘数量
       remainDisk() {
         return 5 - this.dataDiskList.length
-      },
-      zoneList(){
-        return this.$store.state.zoneList.filter(zone => {
-          return zone.gpuserver == 0
-        })
       },
       userInfo(){
         return this.$store.state.userInfo
