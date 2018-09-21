@@ -58,7 +58,7 @@
                        ref="vailCode"
                        @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
                 <img :src="imgSrc"
-                     @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                     @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
               </div>
             </form>
           </div>
@@ -135,7 +135,7 @@
           }
         },
         /* 验证码地址(加上时间戳，防止缓存) */
-        imgSrc: `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
         activeBanner: 1,
       }
     },
@@ -232,7 +232,7 @@
                 this.$router.push({path: 'overview'})
               }
             } else {
-              this.imgSrc = `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.vailForm.loginname.message = response.data.message
               this.vailForm.loginname.warning = true
             }

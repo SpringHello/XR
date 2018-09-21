@@ -325,7 +325,6 @@
       })
     },
     created(){
-      console.log('进入主览页面>>>>>>>>>>>')
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })

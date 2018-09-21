@@ -47,7 +47,6 @@
                 <Button type="primary" style="width: 100%;margin-top: 10%;">立即购买</Button>
               </div>
             </div>
-
           </div>
 
 
@@ -187,26 +186,6 @@ import axios from  'axios'
         gpuDetail:{}
       }
     },
-    beforeRouteEnter(to, from, next){
-      next(vm =>{
-        axios.get('information/zone.do',{
-          params:{
-            gpuServer:'1'
-          }
-        }).then(res => {
-          vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
-          vm.$store.state.zone.zonename = res.data.result[0].zonename;
-        })
-      })
-    },
-    beforeRouteLeave(to,from,next){
-      axios.get('information/zone.do',{
-      }).then(res => {
-        this.$store.state.zone.zoneid = res.data.result[0].zoneid;
-        this.$store.state.zone.zonename = res.data.result[0].zonename;
-      })
-      next();
-    },
     methods:{
       //获取GPU服务器详情
       getGpuHostDetail(){
@@ -243,7 +222,6 @@ import axios from  'axios'
           if(res.status == 200 && res.data.status == 1){
             this.cpuList = res.data.data;
             this.memoryList = res.data.data[0].list;
-            console.log(this.memoryList.length === 0 + ".....................");
           }
         });
       },

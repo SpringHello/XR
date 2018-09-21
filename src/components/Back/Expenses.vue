@@ -362,7 +362,7 @@
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
           <strong>申请解冻</strong>
-          <p class="lh24"><span style="color: #2A99F2">解冻条件</span>未达成，暂无法解冻，详情可咨询客服
+          <p class="lh24">解冻条件:{{thawingCondition}}未达成，暂无法解冻，详情可咨询客服
           </p>
         </div>
       </div>
@@ -727,6 +727,7 @@
         currentPage: 1,
         order_currentPage: 1,
         pageSize: 10,
+        thawingCondition: '',
         balance: '--',
         freezeDeposit: '--',
         theCumulative: '--',
@@ -1179,6 +1180,7 @@
                         if (res.status == 200 && res.data.status == 1) {
                           this.showModal.unfreeze = true
                         } else {
+                          this.thawingCondition = params.row.thawCondition
                           this.showModal.notUnfreeze = true
                         }
                       })
