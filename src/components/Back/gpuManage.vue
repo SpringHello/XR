@@ -598,14 +598,14 @@
     //     })
     //   })
     // },
-    beforeRouteLeave(to, from, next){
-      axios.get('information/zone.do',{
-      }).then(res => {
-       $store.state.zone.zoneid = res.data.result[0].zoneid;
-        $store.state.zone.zonename = res.data.result[0].zonename;
-      })
-      next();
-    },
+    // beforeRouteLeave(to, from, next){
+    //   axios.get('information/zone.do',{
+    //   }).then(res => {
+    //    $store.state.zone.zoneid = res.data.result[0].zoneid;
+    //     $store.state.zone.zonename = res.data.result[0].zonename;
+    //   })
+    //   next();
+    // },
     methods:{
 
       //获取GPU服务器详情
@@ -613,7 +613,7 @@
         axios.get('gpuserver/listGpuServerById.do',{
           params:{
             GpuId:sessionStorage.getItem('uuId'),
-            zoneId:sessionStorage.getItem('zonid'),
+            zoneId:this.$store.state.zone.zoneid,
             changeCost:'1'
           }
         }).then(res => {
@@ -629,7 +629,7 @@
       selectSnapshotList(){
         axios.get('Snapshot/listVMSnapshot.do',{
           params:{
-            zoneId:sessionStorage.getItem('zonid'),
+            zoneId:this.$store.state.zone.zoneid,
             resourceId:sessionStorage.getItem('uuId')
           }
         }).then(res => {
@@ -946,7 +946,6 @@
           this.cpu.series[0].type = this.chartList[val].type;
           this.cpu.xAxis.boundaryGap = this.chartList[val].boundaryGap;
         }else if(name == 'memory'){
-          console.log('2222222222222');
           this.momeryMapIndex = val;
           this.momery.series[0].type = this.momeryMapList[val].type;
           this.momery.xAxis.boundaryGap = this.momeryMapList[val].boundaryGap;
@@ -980,7 +979,7 @@
        setMonitoringOk() {
         this.$http.get('information/upalarmConfig.do', {
           params: {
-            instancename: this.$route.query.instancename,
+            instancename: this.gpuDetail.instancename,
             cpuUse: this.setCPU,
             memoryUse: this.setRAM,
             diskUse: this.setDisk,
@@ -1012,12 +1011,6 @@
         this.$router.push('link');
       },
     },
-    computed:{
-      '$store.state.zone'(){
-        console.log(this.$store.state.zone.zoneid + '计算属性');
-        return $store.commit('setZone');
-    }
-  },
     created(){
       axios.get('information/zone.do',{
         params:{

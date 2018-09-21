@@ -621,27 +621,10 @@
           zoneId:''
         }
       },
-      /*beforeRouteEnter(to, from, next){
-        next(vm =>{
-                  axios.get('information/zone.do',{
-                    params:{
-                      gpuServer:'1'
-                    }
-                  }).then(res => {
-                    vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
-                    vm.$store.state.zone.zonename = res.data.result[0].zonename;
-                  })
-                })
-      },
       beforeRouteLeave(to, from , next){
-        axios.get('information/zone.do',{
-        }).then(res => {
-          this.$store.state.zone.zoneid = res.data.result[0].zoneid;
-          this.$store.state.zone.zonename = res.data.result[0].zonename;
-        })
         clearInterval(this.intervalInstance);
         next();
-      },*/
+      },
       methods:{
         // 获取GPU主机
        getGpuServerList(){
@@ -883,15 +866,12 @@
         },
       },
       created(){
-        this.intervalInstance = setInterval(() => {
-          this.getGpuServerList()
-        }, 5 * 1000)
+        // this.intervalInstance = setInterval(() => {
+        //   this.getGpuServerList()
+        // }, 5 * 1000)
       },
       mounted(){
-        setTimeout(()=>{
           this.getGpuServerList();
-        },100)
-
       }
     }
 </script>

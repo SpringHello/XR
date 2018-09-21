@@ -186,26 +186,6 @@ import axios from  'axios'
         gpuDetail:{}
       }
     },
-    beforeRouteEnter(to, from, next){
-      next(vm =>{
-        axios.get('information/zone.do',{
-          params:{
-            gpuServer:'1'
-          }
-        }).then(res => {
-          vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
-          vm.$store.state.zone.zonename = res.data.result[0].zonename;
-        })
-      })
-    },
-    beforeRouteLeave(to,from,next){
-      axios.get('information/zone.do',{
-      }).then(res => {
-        this.$store.state.zone.zoneid = res.data.result[0].zoneid;
-        this.$store.state.zone.zonename = res.data.result[0].zonename;
-      })
-      next();
-    },
     methods:{
       //获取GPU服务器详情
       getGpuHostDetail(){
