@@ -211,11 +211,11 @@
           <TabPane label="图片处理">
             <div class="img_font">
               <p>图片处理域名规则<span style="color: #2A99F2;font-size: 12px;">查看规则详情</span></p>
-              <span>域名/sample.jpg?x-oss-process=style/stylename</span><span style="margin-left: 40px;">自定义域名规则：域名/sample.jpg?x-oss-process=style/stylename</span>
+              <span>域名/sample.jpg?x-oss-process=style/stylename</span><span style="margin-left: 74px;">自定义域名规则：域名/sample.jpg?x-oss-process=style/stylename</span>
             </div>
             <div style="margin-bottom: 10px;">
               <Button type="primary" @click="$router.push({path:'ObjectPicture'})">新建图片样式</Button>
-              <Button type="primary">原图保护设置</Button>
+              <!--<Button type="primary">原图保护设置</Button>-->
             </div>
             <Table :columns="imgList" :data="imgData"></Table>
           </TabPane>
@@ -286,7 +286,7 @@
           name="uploadFile"
           :data="fileUpdata"
           type="drag"
-          action="http://192.168.3.234:8086/ruirados/object/uploadObject.do"
+          action="object/uploadObject.do"
           class="upload_model"
           v-show="uploadList.length == 0"
         >
@@ -1527,7 +1527,14 @@
             width:100,
             render:(h,params)=>{
               return h('div',[
-                h('span',{style:{cursor:'pointer',color:'#2A99F2',marginRight:'10px'}},'修改'),
+                h('span',{style:{cursor:'pointer',color:'#2A99F2',marginRight:'10px'},
+                  on:{
+                    click:()=>{
+                      sessionStorage.setItem('style_id',params.row.id);
+                      this.$router.push({path:'objectPicture'})
+                    }
+                  }
+                },'修改'),
                 h('span',{style:{cursor:'pointer',color:'#2A99F2'},on:{click:()=>{
                   this.$Modal.confirm({
                     title:'删除',
@@ -2414,18 +2421,6 @@
             this.$Message.info('获取图片样式出小差了');
           }
         })
-      },
-
-      //删除图片样式
-      deketeImgStyle(){
-        axios({
-          method:'post',
-          url:'picture/deleteStyle.do',
-          transformRequest:[(data) => {return Qs.stringify(data)}],
-          data:{
-
-          }
-        })
       }
     },
     created(){
@@ -2981,6 +2976,7 @@
     border-right-color: rgba(70, 76, 91, 0.9);
   }
   .img_font{
+    font-family: 'MicrosoftYaHei';
     width: 100%;
     height: 68px;
     padding: 15px 10px;

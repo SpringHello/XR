@@ -160,7 +160,7 @@
                 </div>
                 <div class="water_right">
                   <InputNumber  :min="1"  :max="1000"   :formatter="value => `${value}px`"
-                                :parser="value => value.replace('px', '')" v-model="waterFont.size"></InputNumber>px
+                                :parser="value => value.replace('px', '')" v-model="waterFont.size"></InputNumber> px
                 </div>
               </div>
               <div style="margin-bottom: 20px;">
@@ -253,7 +253,7 @@
         <hr color="#D8D8D8" size="1">
         <br>
         <Button>取消</Button>
-        <Button type="primary" @click="createStyle">保存设置</Button>
+        <Button type="primary" @click="state">保存设置</Button>
       </div>
     </div>
   </div>
@@ -451,15 +451,15 @@
               label: '思源黑体'
             },
             {
-              value: 'DialogInput',
+              value: 'SourceHanSansSC-ExtraLight.otf',
               label: '思源宋体'
             },
             {
-              value: 'SansSerif',
+              value: 'SourceHanSansSC-Heavy.otf',
               label: 'SansSerif'
             },
             {
-              value: 'Serif Monospaced',
+              value: 'SourceHanSansSC-Light.otf',
               label: 'Serif Monospaced'
             }
           ]
@@ -484,7 +484,13 @@
         angle: ''
       }
     },
+    beforeRouteLeave(to,from,next){
+      sessionStorage.removeItem('style_id');
+      next();
+    },
     methods: {
+
+      //预览图
       imgGet() {
         this.$refs.formValidate.validate(valid => {
           if (valid) {
@@ -515,7 +521,7 @@
                 fontsize: this.watermarkIndex == '2' ? this.waterFont.size.toString() : '',
                 text: this.watermarkIndex == '2' ? this.waterFont.font : '',
                 color:this.watermarkIndex == '2' ?  dd.substring(0,dd.length-3) : '',
-                thickness: '0',
+                thickness: '1',
                 watermarktransparency: this.waterImg.transparency.toString(),
                 font: this.watermarkIndex == '2' ? this.waterFont.typeface : '',
                 bucketname: sessionStorage.getItem("bucketName"),
@@ -548,6 +554,8 @@
           }
         })
       },
+
+      //新建样式
       createStyle() {
         this.$refs.formValidate.validate(valid => {
           if (valid) {
@@ -577,7 +585,7 @@
                 fontsize: this.watermarkIndex == '2' ? this.waterFont.size.toString() : '',
                 text: this.watermarkIndex == '2' ? this.waterFont.font : '',
                 color:this.watermarkIndex == '2' ? dd.substring(0,dd.length-3) : '',
-                thickness: '0',
+                thickness: '1',
                 watermarktransparency: this.waterImg.transparency.toString(),
                 font: this.watermarkIndex == '2' ? this.waterFont.typeface : '',
                 bucketname: sessionStorage.getItem("bucketName"),
@@ -589,12 +597,121 @@
                 this.$Message.success('新建样式成功');
                 this.$router.push({path: 'SpaceDetails'});
               } else {
-                this.$Message.info('新建样式出小差了');
+                this.$Modal.confirm({
+                  title:'提示',
+                  content:`<p>图片样式创建失败，请<span style="color: #2A99F2;">联系客服</span>,或者重试</p>`
+                });
               }
             })
           }
         })
       },
+
+      //修改样式
+      updateStyle(){
+        this.$refs.formValidate.validate(valid => {
+          if (valid) {
+            let dd = this.waterFont.color.substring(this.waterFont.color.indexOf('(')+1,this.waterFont.color.indexOf(')'));
+            axios({
+              url: 'picture/editStyle.do',
+              method: 'post',
+              headers:{ 'Content-Type':"application/x-www-form-urlencoded; charset=UTF-8"},
+              transformRequest: [(data) => {
+                return Qs.stringify(data);
+              }],
+              data: {
+                cssname: this.formValidate.styleName,
+                resizertype: this.zoomType,
+                width: this.zoomType == '0' ? '' : this.imgWidth,
+                height: this.zoomType == '0' ? '' : this.imgHeight,
+                resizerpercent: this.watermarkIndex == '1' ? this.waterImg.imgSize.toString() : '',
+                outformattype: this.formatValue,
+                outquality: this.outQuality.toString(),
+                waterprinttype: this.watermarkIndex,
+                waterurl: this.watermarkIndex == '1' ? this.waterImg.imgUrl : '',
+                wateroffsettype: this.waterPosition[this.positionIndex].value,
+                horizontaloff: this.level,
+                verticaloff: this.vertical,
+                rotatetype: this.rotateValue,
+                rotationangle: this.angle,
+                fontsize: this.watermarkIndex == '2' ? this.waterFont.size.toString() : '',
+                text: this.watermarkIndex == '2' ? this.waterFont.font : '',
+                color:this.watermarkIndex == '2' ? dd.substring(0,dd.length-3) : '',
+                thickness: '1',
+                watermarktransparency: this.waterImg.transparency.toString(),
+                font: this.watermarkIndex == '2' ? this.waterFont.typeface : '',
+                bucketname: sessionStorage.getItem("bucketName"),
+                companyid: sessionStorage.getItem('companyId'),
+                zoneid: this.$store.state.zone.zoneid
+              }
+            }).then(res => {
+              if (res.status == 200 && res.data.status == '1') {
+                this.$Message.success('修改样式成功');
+                this.$router.push({path: 'SpaceDetails'});
+              } else {
+                this.$Message.info('修改样式出小差了');
+              }
+            })
+          }
+        })
+      },
+
+      //获取样式详情
+      getStyleDetails(){
+        axios({
+          url:'picture/listStyle.do',
+          method:'post',
+          transformRequest: [function (data) {
+            return Qs.stringify(data);
+          }],
+          data:{
+            companyid:sessionStorage.getItem('companyId'),
+            bucketname:sessionStorage.getItem("bucketName"),
+            zoneid:this.$store.state.zone.zoneid,
+            id:sessionStorage.getItem('style_id')
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == '1'){
+              this.formValidate.styleName =  res.data.data.ossPictureList[0].cssname;
+              this.zoomType = res.data.data.ossPictureList[0].resizertype;
+              this.imgWidth =res.data.data.ossPictureList[0].width != undefined ?res.data.data.ossPictureList[0].width :'';
+              this.imgHeight = this.imgHeight = res.data.data.ossPictureList[0].height != undefined ?res.data.data.ossPictureList[0].height :'' ;
+              this.waterImg.imgSize = res.data.data.ossPictureList[0].resizerpercent;
+              this.formatValue = res.data.data.ossPictureList[0].outformattype;
+              this.outQuality = res.data.data.ossPictureList[0].outquality;
+              this.watermarkIndex = res.data.data.ossPictureList[0].waterprinttype;
+              this.waterImg.imgUrl = res.data.data.ossPictureList[0].waterurl;
+              this.waterPosition[this.positionIndex].value = res.data.data.ossPictureList[0].wateroffsettype;
+              this.level = res.data.data.ossPictureList[0].horizontaloff;
+              this.vertical = res.data.data.ossPictureList[0].verticaloff;
+              this.rotateValue = res.data.data.ossPictureList[0].rotatetype;
+              this.angle = res.data.data.ossPictureList[0].rotationangle;
+              this.waterFont.size = res.data.data.ossPictureList[0].fontsize;
+              this.waterFont.font = res.data.data.ossPictureList[0].text;
+              // color:this.watermarkIndex == '2' ? dd.substring(0,dd.length-3) : '',
+              this.waterImg.transparency = res.data.data.ossPictureList[0].watermarktransparency;
+              this.waterFont.typeface = res.data.data.ossPictureList[0].font;
+              this.imgGet();
+          }else {
+            this.$Message.info('获取图片样式出小差了');
+          }
+        })
+      },
+
+
+      //修改还是新建样式
+      state(){
+        if(sessionStorage.getItem('style_id')){
+          this.updateStyle();
+        }else{
+          this.createStyle();
+        }
+      }
+    },
+    created(){
+      if(sessionStorage.getItem('style_id') != null){
+        this.getStyleDetails();
+      }
     }
   }
 </script>
