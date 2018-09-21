@@ -243,7 +243,7 @@
     </Modal>
 
     <!--上传文件-->
-    <Modal
+     <Modal
       v-model="modal1"
       title="上传文件"
       :scrollable='true'
@@ -1521,6 +1521,7 @@
           },
           {
             title:'最后修改时间',
+            key:'endtime'
           },
           {
             title:'操作',

@@ -339,7 +339,9 @@
                     },
                     on:{
                       click:()=>{
-                        // eventBus.$emit('bucketName', parasm.row.name);
+                        if(this.selectArrears()){
+                          return;
+                        }
                         sessionStorage.setItem("bucketName", parasm.row.name);
                         sessionStorage.setItem('bucketId', parasm.row.id);
                         sessionStorage.setItem('accessr',parasm.row.accessrights);
@@ -494,7 +496,9 @@
 
       //下载统计图
       dowloda(name){
-        // this.selectArrears();
+        if(this.selectArrears()){
+          return;
+        }
         var img = new Image();
         img = this.$refs[name].getConnectedDataURL({
           pixelRatio: 2,
@@ -539,7 +543,9 @@
 
       //下载流量切换统计图
       chartClick(val){
-        // this.selectArrears();
+        if(this.selectArrears()){
+          return;
+        }
         this.chartIndex = val;
         this.rwPolar.series[0].type = this.chartList[val].type;
         this.rwPolar.xAxis.boundaryGap = this.chartList[val].boundaryGap;
@@ -547,7 +553,9 @@
 
       //请求次数切换统计图
       chartTwoClick(val){
-        // this.selectArrears();
+        if(this.selectArrears()){
+          return;
+        }
         this.chartTwoIndex = val;
         this.rwNumber.series[0].type = this.chartTwotList[val].type;
         this.rwNumber.xAxis.boundaryGap = this.chartTwotList[val].boundaryGap;
@@ -669,7 +677,9 @@
       },
       //创建空间
       bucketClick() {
-        // this.selectArrears();
+        if(this.selectArrears()){
+          return;
+        }
         this.$refs.bucketInline.validate(valid => {
           if (valid) {
             this.createLoading = true;
@@ -727,6 +737,9 @@
           if(res.status == 200 && res.data.status =='31'){
             this.totalPrice = res.data.data.totalPrice;
             this.arrears = true;
+            return true;
+          }else {
+            return false;
           }
         })
       }
@@ -737,7 +750,7 @@
       this.getTime();
       this.showUserAcessAll();
       this.getBuckets();
-      // this.selectArrears();
+      this.selectArrears();
     }
   };
 </script>
