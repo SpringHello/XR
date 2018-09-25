@@ -185,7 +185,7 @@
             <div style="padding-left: 36px;"v-if="watermarkIndex != '0'">
               <p style="margin-bottom: 10px;">水印位置</p>
               <ul style="width:200px;display: inline-block;">
-                <li  v-for="(item,index) in waterPosition" @click="positionIndex = index" :class="positionIndex == index ?'water_listB':'water_list'">{{item.label}}</li>
+                <li  v-for="(item,index) in waterPosition" @click="positionIndex = index" :class="positionIndex == index ?'water_listB':'water_listA'">{{item.label}}</li>
               </ul>
               <div style="display: inline-block;vertical-align: top;">
                 <div style="margin-bottom: 10px;">
@@ -352,32 +352,35 @@
             label: '左上'
           },
           {
+            value: '2',
+            label: '中上'
+
+          },
+          {
+            value: '3',
+            label: '右上'
+
+          },
+          {
             value: '4',
             label: '左中'
+          },
+          {
+
+            value: '5',
+            label: '居中'
+          },
+          {
+            value: '6',
+            label: '右中'
           },
           {
             value: '7',
             label: '左下'
           },
           {
-            value: '2',
-            label: '中上'
-          },
-          {
-            value: '5',
-            label: '中--.'
-          },
-          {
-            value: '5',
+            value: '8',
             label: '中下'
-          },
-          {
-            value: '3',
-            label: '右上'
-          },
-          {
-            value: '6',
-            label: '右中'
           },
           {
             value: '9',
@@ -495,6 +498,7 @@
         this.$refs.formValidate.validate(valid => {
           if (valid) {
             let dd = this.waterFont.color.substring(this.waterFont.color.indexOf('(')+1,this.waterFont.color.indexOf(')'));
+            console.log(dd);
             axios({
               url: 'picture/picturePreview.do',
               method: 'post',
@@ -684,11 +688,11 @@
               this.waterPosition[this.positionIndex].value = res.data.data.ossPictureList[0].wateroffsettype;
               this.level = res.data.data.ossPictureList[0].horizontaloff;
               this.vertical = res.data.data.ossPictureList[0].verticaloff;
-              this.rotateValue = res.data.data.ossPictureList[0].rotatetype;
+              this.rotateValue = res.data.data.ossPictureList[0].rotatetype.toString();
               this.angle = res.data.data.ossPictureList[0].rotationangle;
               this.waterFont.size = res.data.data.ossPictureList[0].fontsize;
               this.waterFont.font = res.data.data.ossPictureList[0].text;
-              // color:this.watermarkIndex == '2' ? dd.substring(0,dd.length-3) : '',
+              this.waterFont.color ='rgba('+res.data.data.ossPictureList[0].color+' ,1)';
               this.waterImg.transparency = res.data.data.ossPictureList[0].watermarktransparency;
               this.waterFont.typeface = res.data.data.ossPictureList[0].font;
               this.imgGet();
@@ -769,11 +773,23 @@
       display: inline-block;
       padding: 5px 15px;
       border: 1px solid #2A99F2;
-      margin-right: 10px;
       cursor: pointer;
       background: #2A99F2;
       color: #FFFFFF;
     }
+
+    .water_listA{
+      display: inline-block;
+      padding: 5px 15px;
+      color: #2A99F2;
+      border: 1px solid #2A99F2;
+      cursor: pointer;
+    }
+    .water_listA:hover{
+      background: #2A99F2;
+      color: #FFFFFF;
+    }
+
     .water_list{
       display: inline-block;
       padding: 5px 15px;

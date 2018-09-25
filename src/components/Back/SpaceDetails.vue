@@ -210,7 +210,7 @@
           </TabPane>
           <TabPane label="图片处理">
             <div class="img_font">
-              <p>图片处理域名规则<span style="color: #2A99F2;font-size: 12px;">查看规则详情</span></p>
+              <p style="margin-bottom: 10px;">图片处理域名规则<span style="color: #2A99F2;font-size: 12px;margin-left: 5px;cursor: pointer;">查看规则详情</span></p>
               <span>域名/sample.jpg?x-oss-process=style/stylename</span><span style="margin-left: 74px;">自定义域名规则：域名/sample.jpg?x-oss-process=style/stylename</span>
             </div>
             <div style="margin-bottom: 10px;">
