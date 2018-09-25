@@ -151,6 +151,7 @@
 
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import merge from 'merge'
   const snoapshotName = (rule,value,callback)=>{
     let reg = /^[0-9]{2,4094}$/
     if(value == ''){
@@ -638,13 +639,13 @@
             }
           }).then(res => {
             if(res.status === 200 && res.data.status === 1){
+              var list = [];
               if(Object.keys(res.data.result).length != 0){
-                for(let key in res.data.result){
-                  let list = [];
-                  if(key !='open'){
-                    list = res.data.result[key].list.concat(res.data.result[key].list);
-                  }else {
-                    list = res.data.result[key].list;
+                for(let index of ['open','close','arrears', 'error', 'wait']){
+                  if(res.data.result[index].list != 'undefined' || res.data.result[index].list != undefined) {
+                    for (let i = 0; i < res.data.result[index].list.length; i++) {
+                      list.push(res.data.result[index].list[i]);
+                    }
                   }
                   this.hostData = list;
                 }
