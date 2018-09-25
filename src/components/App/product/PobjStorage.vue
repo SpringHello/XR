@@ -186,13 +186,13 @@
             {
               title: '数据 加速 分发',
               icon: 'icon-shujujiasufenfa',
-              img: require('../../../assets/img/product/pobjStorage-stage-1-icon-background.png'),
+              img: require('../../../assets/img/product/pobjStorage-stage-2-icon-background.png'),
               desc: ['基于新睿云构建的云上私有网络环境，用户通过弹性IP访问云上私有网络环境，配置部署业务。']
             },
             {
               title: '跨区 域复 制容 灾',
               icon: 'icon-kuaquyufuzhirongzai',
-              img: require('../../../assets/img/product/pobjStorage-stage-2-icon-background.png'),
+              img: require('../../../assets/img/product/pobjStorage-stage-1-icon-background.png'),
               desc: ['基大型网站常有上百个业务子模块，通过设置不同的转发规则/转发组，分析HTTP头部信息，有效分离业务模块，实现基于内容的路由转发。此外，用户通过自定义转发路径代替二级域名，有效减少 DNS 轮询次数，收敛 IP，提升用户访问速度，保证服务的高效运行。']
             },
             {
