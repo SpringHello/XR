@@ -697,7 +697,8 @@
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value,
           zoneId: this.zone.zoneid,
-          gpu: this.gpuSelection.gpu
+          gpu: this.gpuSelection.gpu,
+          gpuSize: this.gpuSelection.gpusize,
         }
         if (this.timeForm.currentTimeType !== 'annual') {
           params.timeType = this.timeForm.currentTimeType
