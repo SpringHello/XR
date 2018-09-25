@@ -18,10 +18,10 @@
           <p>专业的云数据库服务，支持Mysql、SQL Server、PostgreSQL、MangoDB引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。</p>
         </div>
         <div class="operator-bar">
-          <Button type="primary" @click="createDatabase">
-            <!-- <router-link to="/ruicloud/buy" style="color:#fff">创建云数据库</router-link> -->
+          <!--<Button type="primary" @click="createDatabase">
+            &lt;!&ndash; <router-link to="/ruicloud/buy" style="color:#fff">创建云数据库</router-link> &ndash;&gt;
             创建云数据库
-          </Button>
+          </Button>-->
         </div>
         <div class="databases">
           <Table :columns="databaseColumns" :data="dataBaseData"></Table>
@@ -894,7 +894,7 @@
       },
       createDatabase() {
         this.$router.push('/ruicloud/buy/bdata')
-        sessionStorage.setItem('pane', 'Pdatabase')
+        //sessionStorage.setItem('pane', 'Pdatabase')
       },
       listDatabase() {
         this.$http.get('database/listDB.do').then(res => {

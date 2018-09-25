@@ -146,13 +146,12 @@
   var debounce = require('throttle-debounce/debounce')
   export default{
     data(){
-      var zone = null
-      this.$store.state.zoneList.forEach(item => {
-        if (item.isdefault === 1) {
-          zone = item
-        }
+      var zoneList = this.$store.state.zoneList.filter(zone => {
+        return zone.gpuserver == 0
       })
+      var zone = zoneList[0]
       return {
+        zoneList,
         zone,
         // 计费方式
         timeType: [{label: '包年包月', value: 'annual'}, {label: '实时计费', value: 'current'}],
@@ -294,11 +293,6 @@
       }),
     },
     computed: {
-      zoneList(){
-        return this.$store.state.zoneList.filter(zone => {
-          return zone.gpuserver == 0
-        })
-      },
       userInfo(){
         return this.$store.state.userInfo
       },

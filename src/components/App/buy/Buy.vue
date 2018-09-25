@@ -17,7 +17,7 @@
               价格预算清单</p>
             <div v-for="(prod,index) in cart" ref="detailed" style="padding-top: 20px">
               <div style="display: flex;justify-content: space-between;">
-                <h2 style="width:70px;text-align: right;font-size: 18px;color: #333333;line-height: 32px;">
+                <h2 style="width:110px;text-align: center;font-size: 18px;color: #333333;line-height: 32px;">
                   {{prod.typeName}}</h2>
                 <p
                   style="cursor: pointer;font-family: Microsoft YaHei;font-size: 14px;color: #2A99F2; line-height: 25px;"
@@ -30,7 +30,7 @@
                     class="hidden">#</span>{{prod.zone.zonename}}
                   </p>
                   <p class="item">
-                    <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
+                    <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:prod.timeForm.currentTimeType=='current'?'实时计费':'七天计费'}}
                   </p>
                   <p class="item" v-if="prod.timeForm.currentTimeType=='annual'">
                     <span class="hidden">$</span><span class="title">购买时长</span><span
@@ -98,7 +98,7 @@
                     <span class="title">带宽</span><span class="hidden">#</span>{{prod.bandWidth}}M
                   </p>
                 </div>
-
+                <!--云数据库清单字段-->
                 <div v-if="prod.type=='Pdata'">
                   <p class="item">
                     <span class="hidden">$</span><span class="title">镜像</span><span
@@ -113,7 +113,7 @@
                     <span class="title">硬盘</span><span class="hidden">#</span>{{disk.size}}G{{disk.label}}
                   </p>
                 </div>
-
+                <!--gpu清单字段-->
                 <div v-if="prod.type=='Pgpu'">
                   <p class="item">
                     <span class="hidden">$</span><span class="title">镜像</span><span
@@ -132,6 +132,17 @@
                     <span class="title">硬盘</span><span class="hidden">#</span>{{disk.size}}G{{disk.label}}
                   </p>
                 </div>
+                <!--对象存储清单字段-->
+                <div v-if="prod.type=='Pobj'">
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">存储包</span><span
+                    class="hidden">#</span>{{prod.save}}
+                  </p>
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">下行流量包</span><span
+                    class="hidden">#</span>{{prod.downLoad}}
+                  </p>
+                </div>
                 <!--底部价格公共区域-->
                 <div style="border-bottom:1px solid #ccc;padding-bottom: 20px">
                   <p class="item" style="margin-top: 10px">
@@ -139,15 +150,20 @@
                     <span class="title" style="vertical-align: middle">价格</span>
                     <span class="hidden">#</span>
                     <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{(prod.cost * prod.count).toFixed(2)}}元</span>
-                  <ul style="float: right;font-size: 14px;user-select: none">
+                  </p>
+                  <p class="item" style="margin-top: 10px">
+                    <span class="title" style="vertical-align: middle">购买数量</span>
+                  <ul style="display: inline-block;font-size: 14px;user-select: none">
                     <span class="numberAdd" v-if="prod.count == 1">-</span>
                     <span class="numberAdd" style="cursor: pointer"
                           @click="prod.count -= 1" v-else>-</span>
                     <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
                     <span class="numberMinus" v-if="prod.count == 5">+</span>
                     <span class="numberMinus" style="cursor: pointer"
-                          @click="prod.count += 1" v-else>+</span></ul>
+                          @click="prod.count += 1" v-else>+</span>
+                  </ul>
                   </p>
+
                 </div>
               </div>
             </div>
@@ -165,7 +181,7 @@
               立即购买
             </button>
             <button class="buyButton" style="display:block;width:300px;" @click="exportXLSX">导出预算清单</button>
-            <p style="font-size: 12px;color: #333333;margin:20px 0px 10px;">如有需要请联系客服，或者致电：010-82527988</p>
+            <p style="font-size: 12px;color: #333333;margin:20px 0px 10px;">如有需要请联系客服，或者致电：400-0505-565</p>
             <p style="font-size: 12px;color: #999999;line-height: 21px;">关闭该页面后系统不会保存清单内容，如您需要请及时导出清单。</p>
           </div>
         </div>
@@ -253,7 +269,7 @@
           productList: [{label: '云主机', value: 'bhost'}, {label: '云硬盘', value: 'bdisk'}, {
             label: '公网IP',
             value: 'bip'
-          }, {label: '数据库', value: 'bdata'}, {label: '对象存储', value: 'bobj'}, {label: 'GPU服务器', value: 'bgpu'}]
+          }, /*{label: '数据库', value: 'bdata'},*/ {label: '对象存储', value: 'bobj'}, {label: 'GPU服务器', value: 'bgpu'}]
         },
         // 当前可以创建的剩余资源数
         remainCount: {},

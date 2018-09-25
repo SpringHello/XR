@@ -122,13 +122,12 @@
   var debounce = require('throttle-debounce/debounce')
   export default{
     data(){
-      var zone = null
-      this.$store.state.zoneList.forEach(item => {
-        if (item.isdefault === 1) {
-          zone = item
-        }
+      var zoneList = this.$store.state.zoneList.filter(zone => {
+        return zone.gpuserver == 0 || zone.gpuserver == 1
       })
+      var zone = zoneList[0]
       return {
+        zoneList,
         zone,
         // 计费方式
         timeType: [{label: '包年包月', value: 'annual'}, {label: '实时计费', value: 'current'}],
@@ -204,7 +203,7 @@
       },
       buyIP() {
         if (this.userInfo == null) {
-          this.$LR({type:'login'})
+          this.$LR({type: 'login'})
           return
         }
         var params = {
@@ -249,9 +248,20 @@
       }),
     },
     computed: {
-      zoneList(){
-        return this.$store.state.zoneList
+      /*zoneList(){
+        var zoneList = this.$store.state.zoneList.filter(zone => {
+          return zone.gpuserver == 0 || zone.gpuserver == 1
+        })
+        if (!(zoneList.some(zone => {
+            return zone.zoneid == this.zone.zoneid
+          }))) {
+          this.$store.state.zone = zoneList[0]
+        }
+        return zoneList
       },
+      zone(){
+        return this.$store.state.zone
+      },*/
       userInfo(){
         return this.$store.state.userInfo
       },
@@ -283,6 +293,7 @@
   #app {
     height: 100%;
   }
+
   #buy {
     background-color: #F7F7F7;
     #wrapper {

@@ -105,7 +105,7 @@
       return {
         logo: {
           img: require('../../../assets/img/product/ECS-logo.png'),
-          title: 'ESC 快照',
+          title: 'ECS 快照',
           desc: 'ECS快照能对云服务器某个时刻的数据进行备份和回滚，且ECS快照为全量快照，提升了安全性的同时，降低了ECS快照的管理难度。',
           linkRouter: $store.state.userInfo ? '/ruicloud/snapshot' : 'login'
         },

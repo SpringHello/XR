@@ -444,11 +444,19 @@
      })
      },*/
     data(){
+      var zoneList = this.$store.state.zoneList.filter(zone => {
+        return zone.gpuserver == 1
+      })
+      var zone = zoneList[0]
       return {
-        zone: null,
-        /*zoneList: [],*/
+        zone,
+        zoneList,
         // 计费方式
-        timeType: [{label: '包年包月', value: 'annual'}, {label: '实时计费', value: 'current'}],
+        timeType: [
+          {label: '包年包月', value: 'annual'},
+          {label: '七天计费', value: 'week'},
+          {label: '实时计费', value: 'current'}
+        ],
         timeValue: [
           {label: '1月', value: '1', type: 'month'},
           {label: '2月', value: '2', type: 'month'},
@@ -504,7 +512,9 @@
           },
           {
             title: 'GPU/FPGA',
-            key: 'gputype'
+            render: (h, params) => {
+              return h('span', `${params.row.gpusize}*${params.row.gputype}`)
+            }
           }
         ],
         gpuSelection: null,
@@ -587,13 +597,14 @@
       }
     },
     created(){
-      setTimeout(() => {
-        this.setTemplate()
-        this.queryVpc()
-        this.queryDiskPrice()
-        //this.queryCustomVM()
-        this.queryIPPrice()
-      }, 0)
+
+      this.setGpuServer()
+      this.setTemplate()
+      this.queryVpc()
+      this.queryDiskPrice()
+      //this.queryCustomVM()
+      this.queryIPPrice()
+
     },
     methods: {
       // 设置系统模版
@@ -686,10 +697,12 @@
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value,
           zoneId: this.zone.zoneid,
-          gpu: this.gpuSelection.gpu
+          gpu: this.gpuSelection.gpu,
+          gpuSize: this.gpuSelection.gpusize,
         }
-        if (this.timeForm.currentTimeType === 'current') {
-          params.timeType = 'current'
+        if (this.timeForm.currentTimeType !== 'annual') {
+          params.timeType = this.timeForm.currentTimeType
+          params.timeValue = '1'
         }
         axios.post('device/QueryBillingPrice.do', params).then(response => {
           this.vmCost = response.data.cost
@@ -805,8 +818,9 @@
           timeValue: this.timeForm.currentTimeValue.value,
           zoneId: this.zone.zoneid
         }
-        if (this.timeForm.currentTimeType === 'current') {
-          params.timeType = 'current'
+        if (this.timeForm.currentTimeType !== 'annual') {
+          params.timeType = this.timeForm.currentTimeType
+          params.timeValue = '1'
         }
         axios.post('device/QueryBillingPrice.do', params).then(response => {
           this.dataDiskCost = response.data.cost
@@ -849,8 +863,9 @@
           timeValue: this.timeForm.currentTimeValue.value,
           zoneId: this.zone.zoneid
         }
-        if (this.timeForm.currentTimeType === 'current') {
-          params.timeType = 'current'
+        if (this.timeForm.currentTimeType !== 'annual') {
+          params.timeType = this.timeForm.currentTimeType
+          params.timeValue = '1'
         }
         axios.post('device/queryIpPrice.do', params).then(response => {
           this.ipCost = response.data.cost
@@ -972,13 +987,6 @@
       },
     },
     computed: {
-      zoneList(){
-        var zoneList = this.$store.state.zoneList.filter(zone => {
-          return zone.gpuserver == 1
-        })
-        this.zone = zoneList[0]
-        return zoneList
-      },
       userInfo(){
         return this.$store.state.userInfo
       },
@@ -1006,6 +1014,7 @@
         handler(){
           this.setTemplate()
           this.setGpuServer()
+          this.queryVpc()
         },
         deep: true
       },
