@@ -96,6 +96,9 @@
           <TabPane label="用量监控" name="name3" >
             <tabTwo></tabTwo>
           </TabPane>
+          <!--<TabPane label="资源包管理">-->
+            <!---->
+          <!--</TabPane>-->
           <TabPane label="操作日志" name="name4" style="min-height: 300px;">
             <tabThree></tabThree>
           </TabPane>
@@ -941,7 +944,7 @@
     }
   }
   .echarts {
-    width: 100%;
+    width: 98%;
     height: 240px;
   }
   .table{
