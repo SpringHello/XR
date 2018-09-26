@@ -641,13 +641,12 @@
             if(res.status === 200 && res.data.status === 1){
               var list = [];
               if(Object.keys(res.data.result).length != 0){
-                for(let index of ['open','close','arrears', 'error', 'wait']){
-                  if(res.data.result[index].list != 'undefined' || res.data.result[index].list != undefined) {
+                for(let index in res.data.result){
                     for (let i = 0; i < res.data.result[index].list.length; i++) {
                       list.push(res.data.result[index].list[i]);
                     }
-                  }
                   this.hostData = list;
+
                 }
               }else{
                 this.hostData = [];
