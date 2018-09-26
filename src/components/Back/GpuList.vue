@@ -432,7 +432,7 @@
               title:'状态',
               width:'70',
               render:(h,params) => {
-                return h('span',{},params.row.status == '-1' ? '异常' :params.row.computerstate == '1' ? '开机' :params.row.computerstate == '0' ? '关机' :'')
+                return h('span',{},params.row.status == '-1' ? '异常' :params.row.status == '0' ?'欠费' : params.row.computerstate == '0' ? '关机' :params.row.computerstate == '1' ? '开机' :'')
               }
             },
             {
@@ -642,6 +642,7 @@
               var list = [];
               if(Object.keys(res.data.result).length != 0){
                 for(let index in res.data.result){
+                  console.log(index);
                     for (let i = 0; i < res.data.result[index].list.length; i++) {
                       list.push(res.data.result[index].list[i]);
                     }
