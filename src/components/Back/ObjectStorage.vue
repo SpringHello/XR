@@ -152,6 +152,7 @@
         </a>
       </div>
     </Modal>
+
   </div>
 </template>
 
