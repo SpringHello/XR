@@ -23,6 +23,7 @@
             </RadioGroup>
             <!--<span style="display: block;color:#2d8cf0;cursor:pointer;margin-bottom: 20px;"> + 获取优惠券</span>-->
             <!--<router-link :to="{ path: 'dynamic', query: { id: '14' }}">全民普惠，3折减单，最高减免7000元！</router-link>-->
+            <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券</span>
           </div>
           <p style="text-align: right;font-size:14px;color:rgba(102,102,102,1);line-height:19px;margin-bottom: 20px;">
             原价：<span :class="{cross:couponInfo.originCost!=couponInfo.totalCost}">{{couponInfo.originCost}}元</span><span
@@ -40,6 +41,30 @@
         </div>
       </div>
     </div>
+
+    <!-- 优惠券兑换modal -->
+    <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">兑换优惠券</span>
+      </p>
+      <div>
+        <div style="background-color: #E6F3FC;padding:10px;margin-bottom: 20px">
+          <p style="line-height: 20px;">1、每张折扣券只能兑换一次，只能使用一次，但是可以领取不同价位区间的不同折扣券。</p>
+          <p style="line-height: 20px;">2、每次下单只能使用一张折扣券，折扣券可以和其他优惠券叠加使用。</p>
+          <p style="line-height: 20px;">3、若在产品试用期间发生退费，只可退还实际支付部分。</p>
+          <p style="line-height: 20px;">4、活动最终解释权归新睿云所有</p>
+        </div>
+        <div>
+          <p style="font-size:14px;color:rgba(51,51,51,1);line-height:14px;margin-bottom: 10px">优惠券兑换码</p>
+          <Input v-model="exchangeCardCode" placeholder="请输入兑换码" style="width: 250px"/>
+          <p v-if="exchangeCardCodeError" style="margin-top: 6px;color:#FF001F">代金券不存在，详情<a
+            href="tencent://message/?uin=1014172393&Site=www.cloudsoar.com&Menu=yes" target="_blank">咨询客服</a>或重新输入</p>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="exchange">兑换</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -156,7 +181,12 @@
           // 最后总计支付
           totalCost: 0
         },
-        canUseTicket: true
+        canUseTicket: true,
+        showModal: {
+          exchangeCard: false
+        },
+        exchangeCardCode: '',
+        exchangeCardCodeError: false
       }
     },
     beforeRouteEnter(to, from, next){
@@ -277,7 +307,7 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            sessionStorage.setItem('overtime',this.orderData[0].overTime)
+            sessionStorage.setItem('overtime', this.orderData[0].overTime)
             this.$router.push({
               name: 'result',
               params: response.data.result
@@ -288,6 +318,24 @@
             })
           }
 
+        })
+      },
+      // 兑换优惠券
+      exchange(){
+        this.$http.get('user/receiveTicketForUser.do', {
+          params: {
+            ticketNumber: this.exchangeCardCode
+          }
+        }).then(response => {
+          if (response.data.status == 1) {
+            /*this.showModal.exchangeCard = false
+            this.$Message.info(response.data.message)*/
+            location.refresh()
+            //this.searchCard()
+          } else {
+            // 兑换码错误
+            this.exchangeCardCodeError = true
+          }
         })
       }
     },

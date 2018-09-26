@@ -69,8 +69,8 @@
               <span>按交易时间</span>
               <Row style="display: inline-block;margin-left: 10px">
                 <Col span="12">
-                  <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
-                               placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
+                <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
+                             placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
                 </Col>
               </Row>
               <span style="margin-left: 20px">按交易类型</span>
@@ -108,8 +108,8 @@
               <span style="line-height: 30px;">～</span>
               <Row>
                 <Col span="12">
-                  <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
-                               placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
+                <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
+                             placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
               <Button type="primary" style="margin-left: 197px" @click="orderPay" :disabled="payDisabled">支付</Button>
@@ -141,7 +141,8 @@
               <Select v-model="cardState" style="width:231px;margin-left: 10px">
                 <Option v-for="item in cardStateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
-              <Button type="primary" style="float: right" @click="searchCard">查询</Button>
+              <Button type="primary" @click="searchCard">查询</Button>
+              <Button type="primary" style="float: right" @click="showModal.exchangeCard=true">兑换优惠券</Button>
             </div>
             <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" style="margin-top:10px">
             </Table>
@@ -370,6 +371,28 @@
         <Button @click="showModal.notUnfreeze = false">取消</Button>
         <Button type="primary" @click="showModal.notUnfreeze = false">确定</Button>
       </p>
+    </Modal>
+    <!-- 优惠券兑换modal -->
+    <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">兑换优惠券</span>
+      </p>
+      <div>
+        <div style="background-color: #E6F3FC;padding:10px;margin-bottom: 20px">
+          <p style="line-height: 20px;">1、每张折扣券只能兑换一次，只能使用一次，但是可以领取不同价位区间的不同折扣券。</p>
+          <p style="line-height: 20px;">2、每次下单只能使用一张折扣券，折扣券可以和其他优惠券叠加使用。</p>
+          <p style="line-height: 20px;">3、若在产品试用期间发生退费，只可退还实际支付部分。</p>
+          <p style="line-height: 20px;">4、活动最终解释权归新睿云所有</p>
+        </div>
+        <div>
+          <p style="font-size:14px;color:rgba(51,51,51,1);line-height:14px;margin-bottom: 10px">优惠券兑换码</p>
+          <Input v-model="exchangeCardCode" placeholder="请输入兑换码" style="width: 250px"/>
+          <p v-if="exchangeCardCodeError" style="margin-top: 6px;color:#FF001F">代金券不存在，详情<a href="tencent://message/?uin=1014172393&Site=www.cloudsoar.com&Menu=yes" target="_blank">咨询客服</a>或重新输入</p>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="exchange">兑换</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -1098,8 +1121,14 @@
           clipCoupons: false,
           freezeParticulars: false,
           unfreeze: false,
-          notUnfreeze: false
+          notUnfreeze: false,
+          // 兑换码模态框
+          exchangeCard: false
         },
+        // 输入兑换码
+        exchangeCardCode: '',
+        // 默认不显示兑换码错误
+        exchangeCardCodeError: false,
         /* cardVolumeColumn:[
          {
          type: 'selection',
@@ -1826,6 +1855,22 @@
           }
         })
       },
+      exchange(){
+        this.$http.get('user/receiveTicketForUser.do', {
+          params: {
+            ticketNumber: this.exchangeCardCode
+          }
+        }).then(response => {
+          if (response.data.status == 1) {
+            this.showModal.exchangeCard = false
+            this.$Message.info(response.data.message)
+            this.searchCard()
+          } else {
+            // 兑换码错误
+            this.exchangeCardCodeError = true
+          }
+        })
+      }
     },
     computed: {
       payDisabled() {

@@ -18,7 +18,7 @@
           <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
         </div>
         <div class="operator-bar">
-          <router-link to="/ruicloud/buy" style="color:#fff">
+          <router-link to="/ruicloud/buy/bgpu" style="color:#fff">
             <Button type="primary">
               创建GPU服务器
             </Button>

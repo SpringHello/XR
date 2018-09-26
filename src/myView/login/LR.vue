@@ -2,6 +2,7 @@
   <div class="mask">
     <form onsubmit="return false" v-if="T!='protocol'">
       <a class="ivu-modal-close" @click="close"><i class="ivu-icon ivu-icon-ios-close-empty"></i></a>
+      <!--登录弹出框-->
       <div class="wrapper" v-show="T=='login'">
         <h1>登录</h1>
         <i></i>
@@ -32,7 +33,7 @@
           <!--<span @click="T='reset'" style="float:right">忘记密码</span>-->
         </div>
       </div>
-
+      <!--注册弹出框-->
       <div class="register-wrapper" v-show="T=='register'">
         <h1>注册</h1>
         <i></i>
@@ -85,6 +86,16 @@
         <div class="prompt-box">
           <span @click="T='login'">立即登录</span>
         </div>
+      </div>
+      <!--注册成功弹出框-->
+      <div class="register-wrapper" v-show="T=='success'">
+        <img style="margin: 0px auto;display: block;" src="./img/LR-success.png">
+        <h1 style="margin: 20px 0px;">注册成功</h1>
+        <p style="width:340px;line-height: 28px;text-align: center;margin-bottom:80px;font-size: 14px;">恭喜您注册成功，现在完成<a
+          href="/ruicloud/home">实名认证</a>即可获得156元专属优惠券，还可参加<a href="/ruicloud/ActiveCenter">多款主机免费领</a>活动</p>
+        <button style="font-size:18px;font-weight:400;color:rgba(255,255,255,1);line-height:18px;margin-bottom: 24px;">
+          确认登陆
+        </button>
       </div>
       <img src="./img/LR-bottom.png">
     </form>
@@ -354,6 +365,7 @@
 <script type="text/ecmascript-6">
   import regExp from '../../util/regExp'
   import axios from '../../util/axiosInterceptor'
+  import $store from '@/vuex'
   export default{
     props: {
       type: {
@@ -400,7 +412,12 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              window.location.reload()
+              this.close()
+              axios.get('user/GetUserInfo.do').then(response => {
+                if (response.data.status == 1 && response.status == 200) {
+                  $store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+                }
+              })
             } else {
               this.warning = response.data.message
             }
@@ -513,7 +530,14 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            window.location.reload()
+            this.T = 'success'
+            // 获取所有后台需要的基本信息
+            // 获取用户信息
+            axios.get('user/GetUserInfo.do').then(response => {
+              if (response.data.status == 1 && response.status == 200) {
+                $store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+              }
+            })
           } else {
             this.registerWarning = response.data.message
           }

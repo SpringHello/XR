@@ -14,7 +14,7 @@
             <p></p>
           </div>
           <div style="margin:16px 0 16px 0;">
-            <Button type="primary" @click="$router.push({path:'buy'})">创建</Button>
+            <Button type="primary" @click="$router.push({path:'/ruicloud/buy/bgpu'})">创建</Button>
             <div style="display: inline-block;float: right;">
               <Select v-model="gpuTimeValue" style="width:200px" placeholder="计费类型" @on-change="getGpuServerList">
                 <Option v-for="item in gpuTimeList" :value="item.value" :key="item.value">{{ item.label }}</Option>

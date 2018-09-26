@@ -786,8 +786,7 @@
     methods: {
 
       publicIPHint_ok() {
-        this.$router.push('buy')
-        sessionStorage.setItem('pane', 'Peip')
+        this.$router.push('/ruicloud/buy/bip')
       },
       bindRenewal() {
         if (this.cost != '--') {
@@ -1573,7 +1572,7 @@
       del() {
         if (this.checkSelect()) {
           // 实时主机或者活动主机可以删除
-          if (this.currentHost[0].caseType != 3 || this.currentHost[0].isfreevm == 1) {
+          if (this.currentHost[0].caseType != 3 && this.currentHost[0].isfreevm != 1) {
             this.$Message.warning('只能删除实时计费主机')
             return
           }

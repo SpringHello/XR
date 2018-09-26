@@ -655,11 +655,11 @@
                     name: 'NAT'
                   }
                 }, 'NAT网关'),
-                h('DropdownItem', {
-                  attrs: {
-                    name: 'database'
-                  }
-                }, '云数据库')])])
+                  h('DropdownItem', {
+                    attrs: {
+                      name: 'database'
+                    }
+                  }, '云数据库')])])
               } else if (object.row.usetype != 2) {
                 return h('span', {
                   style: {
@@ -1390,6 +1390,8 @@
         })
       },
       change(page) {
+        // 翻页后select重置null
+        this.select = null
         this.page = page
         // 获取ip数据
         axios.get('network/listPublicIp.do', {
@@ -1595,7 +1597,6 @@
     computed: {
       auth() {
         return this.$store.state.authInfo != null
-
       }
     }
   }

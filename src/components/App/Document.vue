@@ -29,7 +29,7 @@
             <p>{{item.key.name}}</p>
             <ul>
               <li v-for="(subTitle,subIndex) in item.value">
-                <router-link :to="subTitle.url" target="_blank" class="quest-item">
+                <router-link :to="`/ruicloud/documentInfo/${subTitle.parentid}/${subTitle.id}`" target="_blank" class="quest-item">
                   {{subTitle.name}}
                 </router-link>
               </li>
@@ -115,9 +115,9 @@
         width: 208px;
         height: 380px;
         border: 1px solid #d8d8d8;
-        margin-bottom:20px;
+        margin-bottom: 20px;
         &:hover {
-          box-shadow:0px 0px 24px 0px rgba(0,0,0,0.2);
+          box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.2);
         }
         > .header {
           height: 60px;
@@ -177,19 +177,21 @@
         margin-top: 20px;
         color: #FFF;
         background-color: #FFFFFF;
-        height: 273px;
+        //height: 273px;
         display: flex;
         justify-content: space-between;
         box-sizing: border-box;
         padding: 20px 0 0 20px;
+        flex-wrap: wrap;
         > div {
           width: 18.5%;
+          margin-bottom: 20px;
           p {
             font-size: 14px;
             color: #377DFF;
           }
           ul {
-            height: 180px;
+            //height: 180px;
             margin-top: 20px;
             border-right: 1px solid #D8D8D8;
             li {

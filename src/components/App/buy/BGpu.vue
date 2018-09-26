@@ -886,7 +886,7 @@
         }
         if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
           this.$message.info({
-            content: '请选择一个数据库镜像'
+            content: '请选择一个GPU镜像'
           })
           return
         }

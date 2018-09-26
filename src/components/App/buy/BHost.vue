@@ -32,7 +32,7 @@
             </div>
           </div>
           <div class="item-wrapper" v-if="timeForm.currentTimeType=='annual'">
-            <div v-for="item in timeValue" :key="item.value" class="timeType"
+            <div v-for="(item,index) in timeValue" :key="index" class="timeType"
                  :class="{zoneSelect:timeForm.currentTimeValue.label==item.label}"
                  @click="timeForm.currentTimeValue=item"
                  style="margin:0px;width:55px">

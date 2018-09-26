@@ -40,7 +40,7 @@
                 <div class="top">开始使用新睿云对象存储</div>
                 <div class="content" v-if="!getFulx">
                   <p style="font-family:PingFangSC-Regular;">北京一区</p>
-                  <h3><i style="color:#FF0000;font-style: normal;">{{fulxSize}}</i>G存储包风格</h3>
+                  <h3><i style="color:#FF0000;font-style: normal;">{{fulxSize}}</i>G存储包规格</h3>
                   <button @click="freeReceive()" v-if="isReceive">免费领取</button>
                   <button style="background:rgba(255,156,149,1);" v-else>领取成功</button>
                   <span>新老用户均可领取，每人只可领取一次</span>
