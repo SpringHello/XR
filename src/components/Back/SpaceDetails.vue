@@ -12,7 +12,14 @@
             <Button @click="$router.history.go(0)" type="primary">刷新</Button>
           </div>
         </div>
-        <p style="margin:20px 0;color:#333333;font-size:16px;">{{kjName}}</p>
+
+        <div style="margin:20px 0;color:#333333;font-size:16px;">
+          <span style="margin-right: 20px;">{{kjName}}</span>
+          <a href="https://zschj.xrcloud.net/ruicloud/buy/bobj" target="_parent">
+            <Button type="primary">购买流量包</Button>
+          </a>
+        </div>
+
         <div style="height: 100px;border-bottom:1px solid #D8D8D8;">
           <div style="display: flex;margin-bottom: 24px;font-size:14px;">
             <div style="width:37%">
@@ -2506,6 +2513,7 @@
             vertical-align: top;
             color: #333333;
             font-size: 18px;
+            margin-right: 20px;
             font-family:MicrosoftYaHei
           }
         }

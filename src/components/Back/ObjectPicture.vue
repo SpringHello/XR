@@ -101,7 +101,7 @@
               </div>
               <div class="water_right">
                 <ul>
-                  <li  @click="watermarkIndex = index" v-for="(item,index) in watermark" :class="watermarkIndex == index ? 'water_listB' :'water_list'">{{item.label}}</li>
+                  <li  @click="watermarkIndex = index" v-for="(item,index) in watermark" :class="watermarkIndex == index ? 'water_list_hover' :'water_list'">{{item.label}}</li>
                 </ul>
               </div>
             </div>
@@ -799,6 +799,15 @@
       cursor: pointer;
     }
     .water_list:hover{
+      background: #2A99F2;
+      color: #FFFFFF;
+    }
+    .water_list_hover{
+      display: inline-block;
+      padding: 5px 15px;
+      border: 1px solid #2A99F2;
+      cursor: pointer;
+      margin-right: 10px;
       background: #2A99F2;
       color: #FFFFFF;
     }
