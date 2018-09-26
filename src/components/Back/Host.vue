@@ -1572,10 +1572,10 @@
       del() {
         if (this.checkSelect()) {
           // 实时主机或者活动主机可以删除
-          if (this.currentHost[0].caseType != 3 && this.currentHost[0].isfreevm != 1) {
-            this.$Message.warning('只能删除实时计费主机')
-            return
-          }
+          // if (this.currentHost[0].caseType != 3 || this.currentHost[0].isfreevm == 1) {
+          //   this.$Message.warning('只能删除实时计费主机')
+          //   return
+          // }
           this.$message.confirm({
             content: `${this.currentHost[0].computername}主机删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
             onOk: () => {

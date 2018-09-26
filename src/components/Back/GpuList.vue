@@ -151,6 +151,7 @@
 
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import merge from 'merge'
   const snoapshotName = (rule,value,callback)=>{
     let reg = /^[0-9]{2,4094}$/
     if(value == ''){
@@ -431,7 +432,7 @@
               title:'状态',
               width:'70',
               render:(h,params) => {
-                return h('span',{},params.row.status == '-1' ? '异常' :params.row.computerstate == '1' ? '开机' :params.row.computerstate == '0' ? '关机' :'')
+                return h('span',{},params.row.status == '-1' ? '异常' :params.row.status == '0' ?'欠费' : params.row.computerstate == '0' ? '关机' :params.row.computerstate == '1' ? '开机' :'')
               }
             },
             {
@@ -638,15 +639,15 @@
             }
           }).then(res => {
             if(res.status === 200 && res.data.status === 1){
+              var list = [];
               if(Object.keys(res.data.result).length != 0){
-                for(let key in res.data.result){
-                  let list = [];
-                  if(key !='open'){
-                    list = res.data.result[key].list.concat(res.data.result[key].list);
-                  }else {
-                    list = res.data.result[key].list;
-                  }
+                for(let index in res.data.result){
+                  console.log(index);
+                    for (let i = 0; i < res.data.result[index].list.length; i++) {
+                      list.push(res.data.result[index].list[i]);
+                    }
                   this.hostData = list;
+
                 }
               }else{
                 this.hostData = [];
@@ -866,9 +867,9 @@
         },
       },
       created(){
-        // this.intervalInstance = setInterval(() => {
-        //   this.getGpuServerList()
-        // }, 5 * 1000)
+        this.intervalInstance = setInterval(() => {
+          this.getGpuServerList()
+        }, 5 * 1000)
       },
       mounted(){
           this.getGpuServerList();
