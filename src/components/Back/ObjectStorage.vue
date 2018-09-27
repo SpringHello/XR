@@ -93,7 +93,7 @@
               </div>
             </div>
           </TabPane>
-          <TabPane label="用量监控" name="name3" >
+          <TabPane label="用量监控" name="name3">
             <tabTwo></tabTwo>
           </TabPane>
           <TabPane :label="flowPacke">
@@ -453,10 +453,10 @@
             title:'资源包类型',
           },
           {
-            title:'规格'
+            title:'区域'
           },
           {
-            title:'购买时间'
+            title:'规格'
           },
           {
             title:'生效时间'
@@ -654,7 +654,7 @@
               content: '<p style="line-height: 15px;margin-bottom: 5px;">尊敬的用户您好，您尚未开通云存储服务，对象存储服务根据使用量后付费，收费项目包括：存储空间、源站流量等，详细信息请见<a href="https://www.xrcloud.net/ruicloud/documentInfo/P0bwsNh8q/P1Auu5Vz2" target="_parent">购买须知</a></p ><p>开通云存储服务还需要创建Access Key</p>',
               okText:'确定并开通Access Key',
               onOk: () => {
-                window.open('https://wwww.xrcloud.net/ruicloud/userCenter', '_self');
+                window.open('https://www.xrcloud.net/ruicloud/userCenter', '_self');
               }
             })
           }
