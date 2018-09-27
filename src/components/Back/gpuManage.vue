@@ -9,7 +9,7 @@
         <div class="head">
           <div>
             <div style="display: inline-block;">
-              <span style="font-size: 18px;color: #FFFFFF;">{{gpuDetail.instancename}}</span>
+              <span style="font-size: 18px;color: #FFFFFF;">{{gpuName}}</span>
             </div>
             <div class="button_right">
               <router-link to="GpuList">
@@ -20,22 +20,41 @@
           </div>
           <div style="display: flex;margin-top: 20px;">
             <div class="host_box">
-                <p>{{gpuDetail.peizhi}} | {{gpuDetail.zonename}}</p>
-                <p>镜像系统：{{gpuDetail.templatename}}</p>
-                <p>到期时间/有效期：{{gpuDetail.endtime}}</p>
-                <p>内网地址：{{gpuDetail.privateip}}</p>
+              <i v-if="gpuDetail.cpuNum">{{gpuDetail.cpuNum}}CPU , </i>
+              <i v-if="gpuDetail.memory">{{gpuDetail.memory}}G内存 , </i>
+              <i v-if="gpuDetail.bandwith">{{gpuDetail.bandwith}}M宽带 </i>
+              <i v-if="gpuDetail.zoneName"> | {{gpuDetail.zoneName}}</i>
+                <p>镜像系统：{{gpuDetail.template}}</p>
+                <p>到期时间/有效期：{{gpuDetail.endTime}}</p>
+                <p>内网地址：{{gpuDetail.privateIp}}</p>
               <p>登录密码：  <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword">{{codePlaceholder}}</span></p>
             </div>
             <div class="host_box">
-              <p>所属VPC：<span>{{gpuDetail.vpcname}}</span></p>
-              <p>绑定公网：<span>{{gpuDetail.privateip}}</span></p>
-              <p>所属负载均衡：<span>基础</span></p>
-              <p>挂载磁盘：<span style="color: #2A99F2;">.....</span></p>
+              <p>所属VPC：<span>{{gpuDetail.vpc}}</span></p>
+              <p>绑定公网：<span>{{gpuDetail.publicIp}}</span></p>
+              <div>所属负载均衡：
+                <Tooltip placement="top-start" v-if="gpuDetail.loadbalance.length>0">
+                  <span class="bluetext one-row-text" style="width:100px;">{{gpuDetail.loadbalance.join('|')}}</span>
+                  <div slot="content" v-for="(item,index) in gpuDetail.loadbalance" :key="index">
+                    <p>{{item}}</p>
+                  </div>
+                </Tooltip>
+                <span class="bluetext" style="width:0px;" v-else>{{gpuDetail.loadbalance.join('|')}}</span>
+              </div>
+              <div>挂载磁盘：
+                <Tooltip placement="top-start" v-if="gpuDetail.disk.length>0">
+                  <span class="bluetext one-row-text"  style="width:120px;">{{gpuDetail.disk.join('|')}}</span>
+                  <div slot="content" v-for="(item,index) in gpuDetail.disk" :key="index">
+                    <p>{{item}}</p>
+                  </div>
+                </Tooltip>
+                <span class="bluetext" style="width:0px;" v-else>{{gpuDetail.disk.join('|')}}</span>
+              </div>
             </div>
             <div class="host_box">
-              <p>计费类型：{{gpuDetail.caseType == 1 ?'包年计费':gpuDetail.caseType == 2 ? '包月计费' : gpuDetail.caseType == 3 ? '实时计费' :''}}</p>
-              <p>创建于：{{gpuDetail.createtime}}</p>
-              <p>自动续费：<span>{{gpuDetail.isautorenew == 1 ? '开' : '关'}}</span></p>
+              <p>计费类型：{{gpuDetail.case_type == 1 ?'包年计费':gpuDetail.case_type == 2 ? '包月计费' : gpuDetail.case_type == 3 ? '实时计费' :''}}</p>
+              <p>创建于：{{gpuDetail.createTime}}</p>
+              <p>自动续费：<span>{{gpuDetail.isAutoRenw == 1 ? '开' : '关'}}</span></p>
             </div>
           </div>
         </div>
@@ -314,25 +333,27 @@
 
         //快照id
           ids:'',
+        //gpuName
+        gpuName:sessionStorage.getItem('gpu_name'),
 
         //cpu统计图
         dayList:[
           {
             value:'今天',
-            data:[20,30,40,50,60],
+            data:[0,0,0,0,0],
             day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
             label:0
           },
           {
             value:'最近7天',
-            data:[20,30,40,50,60,22,100],
-            day:['02/18','02/18','02/18','02/18','02/18','02/18','02/18'],
+            data:[0,0,0,0,0,0,0],
+            day:['---','---','---','---','---','---','---'],
             label:1
           },
           {
             value:'最近30天',
-            data:[20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,100,33,28,90,55],
-            day:['04/01','04/02','04/03','04/04','04/05','04/06','04/07','04/08','04/09','04/10','04/11','04/12','04/13','04/14','04/15','04/16','04/17','04/18','04/19','04/20','04/21','04/22','04/23','04/24','04/25','04/26','04/27','04/28','04/29','04/30'],
+            data:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            day:['---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---'],
             label:2
           }
         ],
@@ -356,20 +377,20 @@
         momeryList:[
           {
             value:'今天',
-            data:[20,30,40,50,60],
+            data:[0,0,0,0,0],
             day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
             label:0
           },
           {
             value:'最近7天',
-            data:[20,30,40,50,60,22,100],
-            day:['02/18','02/18','02/18','02/18','02/18','02/18','02/18'],
+            data:[0,0,0,0,0,0,0],
+            day:['---','---','---','---','---','---','---'],
             label:1
           },
           {
             value:'最近30天',
-            data:[20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,100,33,28,90,55],
-            day:['04/01','04/02','04/03','04/04','04/05','04/06','04/07','04/08','04/09','04/10','04/11','04/12','04/13','04/14','04/15','04/16','04/17','04/18','04/19','04/20','04/21','04/22','04/23','04/24','04/25','04/26','04/27','04/28','04/29','04/30'],
+            data:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            day:['---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---'],
             label:2
           }
         ],
@@ -618,9 +639,7 @@
           }
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
-            this.gpuDetail = res.data.result[0];
-             this.gpuDetail.peizhi = res.data.result[0].serviceoffername.split('+').toString();
-             this.gpuDetail.peizhi.substring(this.gpuDetail.peizhi.indexOf('[')-1,this.gpuDetail.peizhi.indexOf[']']+1)
+            this.gpuDetail = res.data.result;
           }
         })
       },
@@ -1190,5 +1209,11 @@
   .nosend {
     color: #666666;
     cursor: not-allowed;
+  }
+  .one-row-text {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>

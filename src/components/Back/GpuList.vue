@@ -421,6 +421,7 @@
                             this.$router.push({path: 'gpuManage'});
                             sessionStorage.setItem('uuId', params.row.computerid);
                             sessionStorage.setItem('gpuId',params.row.id);
+                            sessionStorage.setItem('gpu_name',params.row.computername)
                           }
                         }
                       }
