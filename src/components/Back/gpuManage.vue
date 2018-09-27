@@ -23,7 +23,7 @@
                 <p>{{gpuDetail.peizhi}} | {{gpuDetail.zonename}}</p>
                 <p>镜像系统：{{gpuDetail.templatename}}</p>
                 <p>到期时间/有效期：{{gpuDetail.endtime}}</p>
-                <p>内网地址：145.168.35.23</p>
+                <p>内网地址：{{gpuDetail.privateip}}</p>
               <p>登录密码：  <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword">{{codePlaceholder}}</span></p>
             </div>
             <div class="host_box">

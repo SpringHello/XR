@@ -72,7 +72,7 @@
                 style="margin-right:30px;vertical-align: middle;">
               </i-slider>
               <InputNumber :max="100" :min="1" v-model="bandWidth" size="large"
-                           style="position: relative;bottom: 5px"></InputNumber>
+                           style="position: relative;bottom: 5px" :precision="0"></InputNumber>
             </div>
           </div>
         </div>
