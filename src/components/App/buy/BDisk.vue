@@ -84,7 +84,7 @@
                 </i-slider>
                 <InputNumber :max="500" :min="20" v-model="disk.size" size="large" :step=10
                              @on-blur="change_DiskSize(index,disk.size)"
-                             @on-focus="change_DiskSize(index,disk.size)"></InputNumber>
+                             @on-focus="change_DiskSize(index,disk.size)" :precision="0"></InputNumber>
               </div>
             </div>
           </div>

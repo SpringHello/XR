@@ -4,7 +4,7 @@
              <span>云储存/云硬盘</span>
              <div class="space_block">
                   <div class="space_top">
-                     <div style="width:50%"> 
+                     <div style="width:50%">
                          <span class="title">空间详情</span>
                      </div>
                     <div style="width:50%;text-align:right;">
@@ -14,7 +14,7 @@
                  </div>
                    <p style="margin:20px 0;">空间名称</p>
                 <div class="space_top">
-                     <div style="width:30%"> 
+                     <div style="width:30%">
                          <span class="title_one">访问权限：私有读写</span>
                      </div>
                      <div style="width:50%;">
@@ -22,7 +22,7 @@
                     </div>
                  </div>
                  <div style="display:flex;">
-                    <div style="width:30%"> 
+                    <div style="width:30%">
                         内网访问域名：<span style="color:#2A99F2">asd32.oss-internat.cn-north-1,xinrui.com</span>
                      </div>
                      <div style="width:50%;">
@@ -100,7 +100,7 @@
                               <p style="color:#999999;font-size:14px;">提示：静态网站托管的默认index页配置在具有公有读取权限的Bucket下生效，自定义错误页和访问重定向在全部权限的Bucket下生效。</p>
                             </div>
                         </TabPane>
-                    </Tabs>    
+                    </Tabs>
              </div>
         </div>
         <Modal
@@ -131,7 +131,7 @@
         :data="fileUpdata"
         type="drag"
         action="http://192.168.3.187:8083/ruirados/object/uploadObject.do"
-        class="upload_model" 
+        class="upload_model"
        >
         <div class="upload_text">
            <Icon type="ios-upload-outline"></Icon><span>选择文件</span>
@@ -396,7 +396,7 @@ export default {
       //判断是否是文件夹——1为文件夹——0为文件
       isfile:1,
       //用户授权
-      users:'0',    
+      users:'0',
       //影响资源
       sources:'0',
       //密码接收渠道
@@ -449,7 +449,7 @@ export default {
     //上传文件过程的方法
     handleUpload(file,event){
       // let time = new Date().getTime();
-      
+
         console.log(event);
          console.log(file);
     },
@@ -549,7 +549,7 @@ export default {
               console.log(res.data.data.list);
           }
       })
-    }  
+    }
     //获取空间详情
     // bucketDetails() {
     //
