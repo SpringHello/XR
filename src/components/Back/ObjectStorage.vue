@@ -96,9 +96,10 @@
           <TabPane label="用量监控" name="name3" >
             <tabTwo></tabTwo>
           </TabPane>
-          <!--<TabPane label="资源包管理">-->
-            <!---->
-          <!--</TabPane>-->
+          <TabPane :label="flowPacke">
+            <Button type="primary" style="margin: 10px 0;">购买流量包</Button>
+            <Table  :columns="flowPacketList" :data="flowPacketData"></Table>
+          </TabPane>
           <TabPane label="操作日志" name="name4" style="min-height: 300px;">
             <tabThree></tabThree>
           </TabPane>
@@ -202,6 +203,18 @@
             }, '空间管理')
           ])
         },
+
+        //资源包点击触发请求
+        flowPacke: h=>{
+          return h('span',{
+            on:{
+              click:()=>{
+                this.selectFlowPacket();
+              }
+            }
+          },'资源包管理')
+        },
+
         //下载流量统计图
         rwPolar: JSON.parse(disk),
         //请求次数统计图
@@ -431,9 +444,28 @@
         ],
         buckLoading:false,
         createLoading:false,
-
         //欠费总价
         totalPrice:'',
+
+        //流量包
+        flowPacketList:[
+          {
+            title:'资源包类型',
+          },
+          {
+            title:'规格'
+          },
+          {
+            title:'购买时间'
+          },
+          {
+            title:'生效时间'
+          },
+          {
+            title:'到期时间'
+          }
+        ],
+        flowPacketData:[]
       }
     },
     components: {
@@ -747,7 +779,17 @@
             return false;
           }
         })
+      },
+
+      //获取流量包
+      selectFlowPacket(){
+        axios.post('monitor/getServiceCondition.do',{}).then(res => {
+          if(res.status == 200 && res.data.status == '1'){
+            this.flowPacketData = res.data.data;
+          }
+        })
       }
+
     },
     mounted(){
       this.getAllsize();
