@@ -40,8 +40,8 @@
               <div class="db-active-content">
                 <div class="db-active-text">
                   <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
-                  <p>热门云数据库产品一网打尽</p>
-                  <p><span>1元试用60天</span>每天不限量</p>
+                  <p>热门云数据库产品免费试用60天</p>
+                  <p><span>0元试用 押金闪退</span>每天不限量</p>
                   <button>立即试用</button>
                 </div>
                 <div class="db-active-img">
@@ -3336,7 +3336,7 @@
     },
     computed: {
       productBarNum() {
-        
+
       },
       selectedEightscene() {
         return new Array(this.eigthSceneContent[this.eightsceneIndex])
@@ -3885,7 +3885,7 @@
             }
             p:nth-child(2) {
               margin-top: 20px;
-              font-size: 48px;
+              font-size: 38px;
               color: rgba(51, 51, 51, 1);
               line-height: 67px;
             }
@@ -4056,7 +4056,7 @@
               display: none;
             }
             .bottom-flow {
-              margin-top: 20px; 
+              margin-top: 20px;
               .wrap {
                 width: 170px;
                 margin: 0 auto;
