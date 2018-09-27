@@ -121,7 +121,7 @@
         features: [
           {
             img: 'icon-NVIDATeslaGPU',
-            title: 'NVIDA Tesla P100 GPU',
+            title: 'NVIDIA Tesla P100 GPU',
             desc: '单卡单精度能力9.3TFLOPS，双精度能力4.7TFLOPS。搭载16GB HBM2显存，带宽732GB/S，显存带宽较上代GPU提升2倍，位宽提升8倍。'
           },
           {
@@ -177,7 +177,7 @@
               icon: 'icon-shipinbianjiema',
               img: require('../../../assets/img/product/jm-banner.png'),
               desc: [
-                {subTitle: '人工智能', subDesc: ['高清视频转码、安防视频监控、大型视频会议等。']},
+                {subTitle: '视频编解码', subDesc: ['高清视频转码、安防视频监控、大型视频会议等。']},
                 {
                   subTitle: '优势',
                   subDesc: ['NVidia Tesla P40 具备独立的视频编解码硬件单元，全格式支持，单物理 GPU 理论可支持20~40路（参考值，取决于不同参数）H264 高清视频实时编解码。']
@@ -195,7 +195,7 @@
           },
           {
             img: 'icon-jiandanyiyong1',
-            title: '减单易用',
+            title: '简单易用',
             desc: '一键式获取各类超算应用和深度学习框架、计算集群，让您真正聚焦于核心业务。'
           },
           {

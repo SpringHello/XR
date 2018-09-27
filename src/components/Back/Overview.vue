@@ -166,7 +166,7 @@
         sourceUrl: [
           {
             prod: '云计算',
-            prodUrl: ['host', 'mirror#own', 'snapshot', '', '']
+            prodUrl: ['host', 'mirror#own', 'snapshot', '', '','GpuList']
           },
           {
             prod: '云网络',
