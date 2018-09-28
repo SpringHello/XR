@@ -456,8 +456,8 @@
               title:'创建时间/到期时间',
               render:(h,params)=>{
                 return h('div',[
-                  h('p',{},params.row.createtime+'/'),
-                  h('p',{},params.row.endtime)])
+                  h('p',{style:{marginBottom:'5px'}},params.row.createtime+'/'),
+                  h('p',{},params.row.caseType == 3 ? '无' : params.row.endtime)])
               }
             },
             {
