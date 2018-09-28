@@ -444,7 +444,7 @@
 
         //文字水印
         waterFont: {
-          font: '今天我让你高攀不起',
+          font: 'Hello Word',
           typeface: 'SourceHanSansSC-Bold.otf',
           size: 10,
           color: 'rgba(10, 127, 144, 1)',

@@ -315,7 +315,7 @@
         starTime:'',
         //统计时间结束
         endTime:'',
-        //新建空间----------------分割线-----------------
+
         //创建空间
         bucketInline: {
           //空间名字
@@ -783,7 +783,7 @@
 
       //获取流量包
       selectFlowPacket(){
-        axios.post('monitor/getServiceCondition.do',{}).then(res => {
+        this.$http.post('monitor/getServiceCondition.do',{}).then(res => {
           if(res.status == 200 && res.data.status == '1'){
             this.flowPacketData = res.data.data;
           }
