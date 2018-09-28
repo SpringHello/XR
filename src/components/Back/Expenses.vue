@@ -18,6 +18,8 @@
             <div class="money">
               <div class="item">
                 <span>余额</span>
+                <button @click="torecharge">充值</button>
+                <button @click="showModal.withdraw = true" style="margin-right: 10px;">提现</button>
                 <div>
                   <ul style="width: 50%">
                     <li>可用余额</li>
@@ -31,9 +33,6 @@
                     </span>
                     </li>
                     <li style="cursor: pointer" @click="freezeDetails">¥{{ freezeDeposit }}</li>
-                  </ul>
-                  <ul style="width: 20%;position: relative">
-                    <button @click="torecharge">充值</button>
                   </ul>
                 </div>
               </div>
@@ -344,20 +343,59 @@
       </div>
     </Modal>
     <!-- 解冻提示框 -->
-    <Modal v-model="showModal.unfreeze" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>申请解冻</strong>
-          <p class="lh24">解冻条件以达到，可以解冻。
-          </p>
-        </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.unfreeze = false">取消</Button>
-        <Button type="primary" @click="unfreeze_ok">确定解冻</Button>
+    <Modal v-model="showModal.unfreeze" :scrollable="true" :closable="false" :width="550">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">申请解冻</span>
       </p>
+      <div class="universal-modal-content-flex">
+        <p style="font-size:14px;color:rgba(102,102,102,1);">解冻条件已达到，可以解冻</p>
+        <RadioGroup v-model="unfreezeTo">
+          <Radio label="yue" style="margin:20px 0px">
+            <span>解冻到余额</span>
+          </Radio>
+          <Radio label="account" style="display: block;margin-bottom:20px">
+            <span>解冻到充值账户（需3-5个工作日）</span>
+          </Radio>
+        </RadioGroup>
+        <Form :model="withdrawForm" ref="newDisk" v-if="unfreezeTo=='account'">
+          <Form-item label="可提现金额" prop="diskName" style="width:100%;">
+            <InputNumber :max="balance" :min="10" v-model="withdrawForm.money"
+                         style="width:45%"></InputNumber>
+          </Form-item>
+          <Form-item label="收款人姓名" prop="diskType">
+            <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
+          </Form-item>
+          <Form-item label="收款人账户类型">
+            <Select v-model="withdrawForm.accountType" placeholder="请选择">
+              <Option v-for="item in withdrawForm.accountList" :key="item.type" :value="item.type">{{ item.name }}
+              </Option>
+            </Select>
+          </Form-item>
+          <Form-item label="开户行信息" v-if="withdrawForm.accountType=='bank'">
+            <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
+          </Form-item>
+          <Form-item label="收款人账户" prop="timeType">
+            <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
+          </Form-item>
+          <p>为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+          <Form-item label="图片验证码">
+            <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
+            <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
+                 @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+          </Form-item>
+          <Form-item label="短信/邮箱验证码" prop="timeType">
+            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:58%;"></Input>
+            <Button type="primary" @click="getCode">{{codePlaceholder}}</Button>
+          </Form-item>
+        </Form>
+        <div style="clear: both"></div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.unfreeze = false">取消</Button>
+        <Button type="primary" @click="unfreeze_ok">确认</Button>
+      </div>
     </Modal>
+
     <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
@@ -387,11 +425,57 @@
         <div>
           <p style="font-size:14px;color:rgba(51,51,51,1);line-height:14px;margin-bottom: 10px">优惠券兑换码</p>
           <Input v-model="exchangeCardCode" placeholder="请输入兑换码" style="width: 250px"/>
-          <p v-if="exchangeCardCodeError" style="margin-top: 6px;color:#FF001F">代金券不存在，详情<a href="tencent://message/?uin=1014172393&Site=www.cloudsoar.com&Menu=yes" target="_blank">咨询客服</a>或重新输入</p>
+          <p v-if="exchangeCardCodeError" style="margin-top: 6px;color:#FF001F">代金券不存在，详情<a
+            href="tencent://message/?uin=1014172393&Site=www.cloudsoar.com&Menu=yes" target="_blank">咨询客服</a>或重新输入</p>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="exchange">兑换</Button>
+      </div>
+    </Modal>
+
+    <!-- 提现模态框 -->
+    <Modal v-model="showModal.withdraw" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">提现</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="withdrawForm" ref="newDisk">
+          <Form-item label="可提现金额" prop="diskName" style="width:100%;">
+            <InputNumber :max="balance" :min="10" v-model="withdrawForm.money"
+                         style="width:45%"></InputNumber>
+          </Form-item>
+          <Form-item label="收款人姓名" prop="diskType">
+            <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
+          </Form-item>
+          <Form-item label="收款人账户类型">
+            <Select v-model="withdrawForm.accountType" placeholder="请选择">
+              <Option v-for="item in withdrawForm.accountList" :key="item.type" :value="item.type">{{ item.name }}
+              </Option>
+            </Select>
+          </Form-item>
+          <Form-item label="开户行信息" v-if="withdrawForm.accountType=='bank'">
+            <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
+          </Form-item>
+          <Form-item label="收款人账户" prop="timeType">
+            <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
+          </Form-item>
+          <p>为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+          <Form-item label="图片验证码">
+            <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
+            <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
+                 @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+          </Form-item>
+          <Form-item label="短信/邮箱验证码" prop="timeType">
+            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:58%;"></Input>
+            <Button type="primary" @click="getCode">{{codePlaceholder}}</Button>
+          </Form-item>
+        </Form>
+        <div style="clear: both"></div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.withdraw = false">取消</Button>
+        <Button type="primary" @click="withdraw">确认</Button>
       </div>
     </Modal>
   </div>
@@ -1123,8 +1207,44 @@
           unfreeze: false,
           notUnfreeze: false,
           // 兑换码模态框
-          exchangeCard: false
+          exchangeCard: false,
+          // 提现模态框
+          withdraw: false
         },
+        // 提现
+        withdrawForm: {
+          accountList: [{name: '支付宝', type: '支付宝'}, {name: '微信支付', type: '微信'}, {name: '银行卡', type: '银行卡'}],
+          // 账户类型
+          accountType: '',
+          // 金额
+          money: 0,
+          // 开户行
+          bankName: '',
+          // 帐号
+          account: '',
+          // 图形验证码
+          code: '',
+          // 手机验证码
+          phoneCode: '',
+
+          id: "1",
+          operType: "2",
+          payeeName: '',
+          payeeAccountType: "支付宝",
+          payeeAccount: "",
+          // 开户行
+          bankAccInfor: '',
+          // 短信验证码
+          smsCode: '',
+          // 短信验证码
+          phone: ''
+        },
+        /* 验证码地址(加上时间戳，防止缓存) */
+        imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        /*发送验证码button innerText*/
+        codePlaceholder: '发送验证码',
+        /*解冻到余额/账户  默认解冻到余额*/
+        unfreezeTo: 'yue',
         // 输入兑换码
         exchangeCardCode: '',
         // 默认不显示兑换码错误
@@ -1293,6 +1413,7 @@
             this.balance = response.data.data.remainder
             this.voucher = response.data.data.voucher
             this.freezeDeposit = response.data.data.frozenMoney
+            this.withdrawForm.money = this.balance
           }
         })
       },
@@ -1837,8 +1958,22 @@
         //let url = 'user/getRremainderThawing.do'
         //  直接解冻
         let url = 'user/getRremainderThaw.do'
+
         let params = {
-          id: this.unfreezeId
+          id: this.unfreezeId,
+          operType: '1'
+        }
+        // 解冻到账户
+        if (this.unfreezeTo == 'account') {
+          params.operType = '2'
+          params.payeeName = this.withdrawForm.payeeName
+          params.payeeAccountType = this.withdrawForm.accountType
+          params.payeeAccount = this.withdrawForm.account
+          params.smsCode = this.withdrawForm.phoneCode
+          params.username = this.withdrawConfirm.number
+          if (this.withdrawForm.accountType == '银行卡') {
+            params.bankAccInfor = this.withdrawConfirm.bankName
+          }
         }
         this.$http.post(url, params).then(res => {
           if (res.status == 200 && res.data.status == 1) {
@@ -1870,6 +2005,73 @@
             this.exchangeCardCodeError = true
           }
         })
+      },
+      // 提现操作
+      withdraw(){
+        var params = {
+          balance: this.withdrawForm.money,
+          payeeName: this.withdrawForm.payeeName,
+          payeeAccountType: this.withdrawForm.accountType,
+          payeeAccount: this.withdrawForm.account,
+          smsCode: this.withdrawForm.phoneCode,
+          username: this.withdrawConfirm.number
+        }
+        if (this.withdrawForm.accountType == '银行卡') {
+          params.bankAccInfor = this.withdrawConfirm.bankName
+        }
+        this.$http.post('user/userBalanceWithdrawals.do', params).then(response => {
+          if (response.data.status == 1) {
+            this.showModal.withdraw = false
+            this.$Message.success(response.data.message)
+            this.getBalance()
+          }else{
+            this.$Message.info(response.data.message)
+          }
+        })
+      },
+      // 提现前发送验证码
+      getCode(){
+        if (this.codePlaceholder != '发送验证码') {
+          return
+        }
+        if (this.withdrawForm.code.trim() == '') {
+          this.$Message.info({
+            content: '请输入图片验证码',
+            duration: 5
+          })
+          return
+        }
+        this.codePlaceholder = '验证码发送中'
+        this.$http.get('user/code.do', {
+          params: {
+            aim: this.withdrawConfirm.number,
+            type: '0',
+            isemail: this.withdrawConfirm.type == 'phone' ? '0' : '1',
+            vailCode: this.withdrawForm.code,
+          }
+        }).then(response => {
+          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          // 发送倒计时
+          if (response.status == 200 && response.data.status == 1) {
+            let countdown = 60
+            this.codePlaceholder = '60s'
+            var inter = setInterval(() => {
+              countdown--
+              this.codePlaceholder = countdown + 's'
+              if (countdown == 0) {
+                clearInterval(inter)
+                this.codePlaceholder = '发送验证码'
+              }
+            }, 1000)
+            this.$Message.success({
+              content: '验证码发送成功',
+              duration: 5
+            })
+          } else {
+            this.codePlaceholder = '发送验证码'
+            this.$Message.error(response.data.message)
+          }
+        })
       }
     },
     computed: {
@@ -1883,16 +2085,29 @@
         function checkPaymentStatus(orderNumber) {
           return orderNumber.paymentstatus == 1 || orderNumber.overTimeStatus == 1
         }
-      }
-      ,
+      },
       deleteDisabled() {
         if (this.orderNumber.length === 0) {
           return true
         } else {
           return false
         }
+      },
+      // 返回一个对象，包含提现时的发送验证码方式（手机、邮箱），号码
+      withdrawConfirm(){
+        var type = '', number = ''
+        if (this.$store.state.userInfo.phone) {
+          type = 'phone'
+          number = this.$store.state.userInfo.phone
+        } else {
+          type = 'email'
+          number = this.$store.state.userInfo.loginname
+        }
+        return {
+          type,
+          number
+        }
       }
-      ,
     },
     watch: {
       dateRange() {
@@ -1941,6 +2156,17 @@
               color: rgba(102, 102, 102, 1);
               line-height: 24px;
             }
+            > button {
+              font-size: 12px;
+              font-family: MicrosoftYaHei;
+              color: rgba(255, 255, 255, 1);
+              background: #2B99F2;
+              cursor: pointer;
+              padding: 5px 14px;
+              outline: none;
+              border: none;
+              float: right;
+            }
             > div {
               display: flex;
               margin-top: 20px;
@@ -1953,19 +2179,6 @@
                 li:nth-child(2) {
                   margin-top: 10px;
                   font-size: 24px;
-                }
-                > button {
-                  font-size: 12px;
-                  font-family: MicrosoftYaHei;
-                  color: rgba(255, 255, 255, 1);
-                  padding: 5px 14px;
-                  background: #2B99F2;
-                  cursor: pointer;
-                  outline: none;
-                  border: none;
-                  position: absolute;
-                  right: 0;
-                  bottom: 5px;
                 }
               }
             }

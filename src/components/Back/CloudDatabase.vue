@@ -485,7 +485,7 @@
                     color: '#2A99F2',
                     marginRight: '5px',
                     cursor: 'pointer',
-                    display: isShow
+                    display: 'inline-block'
                   },
                   on: {
                     click: () => {
@@ -660,7 +660,9 @@
                         }
                       }
                     }
-                  }, '关闭数据库')])
+                  }, '关闭数据库')
+
+                ])
                 ]),
                   h('div', [h('span', {
                     style: {
