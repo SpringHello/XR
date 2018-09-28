@@ -451,18 +451,23 @@
         flowPacketList:[
           {
             title:'资源包类型',
+            key:'name'
           },
           {
-            title:'区域'
+            title:'区域',
+            key:''
           },
           {
-            title:'规格'
+            title:'规格',
+            key:''
           },
           {
-            title:'生效时间'
+            title:'生效时间',
+            key:''
           },
           {
-            title:'到期时间'
+            title:'到期时间',
+            key:''
           }
         ],
         flowPacketData:[]
