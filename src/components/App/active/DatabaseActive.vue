@@ -33,10 +33,10 @@
             </ul>
             <div class="product-price">
               <div class="price">
-                <span>押金¥{{ item.config.currentPrice }}</span>
-                <span>原价¥{{ item.config.originalPrice }}</span>
+                <p>押金：<span>¥{{  item.config.currentPrice }}</span></p>
+                <p>原价：<span>¥{{ item.config.originalPrice}}</span></p>
               </div>
-              <button @click="getDatabase(index)">免费试用</button>
+              <button @click="getDatabase(index)">免费领取</button>
             </div>
           </div>
         </div>
@@ -995,25 +995,24 @@
             display: flex;
             .price {
               padding: 5px 38px 0;
-              > span {
-                display: block;
+              p {
                 font-size: 14px;
                 font-family: "Microsoft YaHei", "微软雅黑";
-                color: rgba(0, 0, 0, 1);
-                text-decoration: line-through;
-                line-height: 22px;
+                color: rgba(230, 0, 27, 1);
+                span {
+                  font-size: 20px;
+                }
               }
-              span:nth-child(1) {
-                font-size: 18px;
-                text-decoration: none;
-                color: #e6001b;
+              p:nth-child(2) {
+                color: rgba(153, 153, 153, 1);
+                text-decoration: line-through;
               }
             }
             button {
               border: none;
               outline: none;
               cursor: pointer;
-              padding: 12px 20px 11px;
+              padding: 12px 26px 11px;
               font-size: 18px;
               font-family: "Microsoft YaHei", "微软雅黑";
               color: rgba(255, 255, 255, 1);
