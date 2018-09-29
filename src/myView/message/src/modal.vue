@@ -15,7 +15,7 @@
             </p>
           </div>
           <div class="modal-body">
-            <slot></slot>
+           <p v-html="content"></p>
           </div>
           <div class="modal-foot">
             <Button @click="cancel" v-if="type==='confirm'">{{cancelText}}</Button>

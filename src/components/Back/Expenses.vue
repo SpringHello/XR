@@ -358,10 +358,6 @@
           </Radio>
         </RadioGroup>
         <Form :model="withdrawForm" ref="newDisk" v-if="unfreezeTo=='account'">
-          <Form-item label="可提现金额" prop="diskName" style="width:100%;">
-            <InputNumber :max="balance" :min="10" v-model="withdrawForm.money"
-                         style="width:45%"></InputNumber>
-          </Form-item>
           <Form-item label="收款人姓名" prop="diskType">
             <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
           </Form-item>

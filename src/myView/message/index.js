@@ -57,7 +57,7 @@ function getInstance(options) {
       okText: '确定'
     },
     render: (h) => {
-      var contentArray = options.content.split(/\<a\>(.+?)\<\/a\>/)
+      /*var contentArray = options.content.split(/\<a\>(.+?)\<\/a\>/)
       var result = []
       for (let i = 0; i < contentArray.length; i++) {
         if (i % 2 == 0) {
@@ -72,10 +72,10 @@ function getInstance(options) {
             }
           }, contentArray[i]))
         }
-      }
+      }*/
       return h(modal, {
         props: options
-      }, [h('p', result)])
+      })
     }
   })
   modalInstance.$mount()
