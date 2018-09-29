@@ -161,9 +161,9 @@
           },
           {
             imgPath: require('../../assets/img/activecenter/bg-objStorage-4.png'),
-            name: '云数据库正式发布 1元试用60天',
+            name: '热门云数据库产品免费试用60天',
             secSpan: '秒级创建 一键恢复 安全可靠',
-            des: '即将上线',
+            des: '2018.09.29开始',
             activeObj: '云数据库 新老用户',
             url: 'DBActive',
             isStart: true,

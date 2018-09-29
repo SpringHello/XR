@@ -177,8 +177,8 @@ export default {
             axios.post('user/getFluxs.do', { token: this.token }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.fulxSize = response.data.data.fulxList[0].size
-                // 1未领取流量包，2领取成功
-                this.isReceive = response.data.data.fulxList[0].status == '2' ? false : true
+                // 1领取成功
+                this.isReceive = response.data.data.fulxList[0].status == '1' ? false : true
                 this.fulxId = response.data.data.fulxList[0].id
               }
             })
