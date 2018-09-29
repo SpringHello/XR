@@ -559,7 +559,6 @@
     },
     created() {
       this.getRegion()
-      this.getBalance()
     },
     methods: {
       init() {
@@ -654,17 +653,26 @@
         })
       },
       nextStep() {
-        this.orderData = []
-        this.orderData.push({
-          productType: '云服务器',
-          configs: this.products[this.index].config,
-          originalPrice: this.products[this.index].config.originalPrice,
-          time: this.time,
-          title: this.products[this.index].title,
-          cashPledge: Number(this.cashPledge)
+        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            this.balance = Number(response.data.data.remainder)
+            this.orderData = []
+            this.orderData.push({
+              productType: '云服务器',
+              configs: this.products[this.index].config,
+              originalPrice: this.products[this.index].config.originalPrice,
+              time: this.time,
+              title: this.products[this.index].title,
+              cashPledge: Number(this.cashPledge)
+            })
+            this.showModal.rechargeHint = false
+            this.showModal.orderConfirmationModal = true
+          } else {
+            this.$message.info({
+              content: '平台开小差了，请稍候再试'
+            })
+          }
         })
-        this.showModal.rechargeHint = false
-        this.showModal.orderConfirmationModal = true
       },
       getDatabase_ok() {
         if (this.payWay == 'balancePay') {
@@ -826,14 +834,6 @@
                 })
               }
             })
-          }
-        })
-      },
-      // 获取余额
-      getBalance() {
-        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
-          if (response.status == 200 && response.data.status == '1') {
-            this.balance = Number(response.data.data.remainder)
           }
         })
       },
