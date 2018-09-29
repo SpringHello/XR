@@ -464,9 +464,9 @@
     },
 
     beforeRouteEnter(to, from, next){
-      if (to.query.id) {
+      if (to.query.from) {
         // 流量来源记录
-        localStorage.setItem('comefrom', to.query.id)
+        localStorage.setItem('comefrom', to.query.from)
       }
       // 获取所有后台需要的基本信息
       // 获取用户信息

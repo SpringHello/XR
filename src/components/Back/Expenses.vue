@@ -371,20 +371,21 @@
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="开户行信息" v-if="withdrawForm.accountType=='bank'">
+          <Form-item label="开户行信息" v-if="withdrawForm.accountType=='银行卡'">
             <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
           </Form-item>
           <Form-item label="收款人账户" prop="timeType">
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
-          <p>为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+          <p style="line-height: 20px;font-size: 14px;">
+            为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
           <Form-item label="图片验证码">
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
                  @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </Form-item>
           <Form-item label="短信/邮箱验证码" prop="timeType">
-            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:58%;"></Input>
+            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
             <Button type="primary" @click="getCode">{{codePlaceholder}}</Button>
           </Form-item>
         </Form>
@@ -454,20 +455,21 @@
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="开户行信息" v-if="withdrawForm.accountType=='bank'">
+          <Form-item label="开户行信息" v-if="withdrawForm.accountType=='银行卡'">
             <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
           </Form-item>
           <Form-item label="收款人账户" prop="timeType">
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
-          <p>为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+          <p style="line-height: 20px;font-size: 14px;">
+            为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
           <Form-item label="图片验证码">
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
                  @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </Form-item>
           <Form-item label="短信/邮箱验证码" prop="timeType">
-            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:58%;"></Input>
+            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
             <Button type="primary" @click="getCode">{{codePlaceholder}}</Button>
           </Form-item>
         </Form>
@@ -835,7 +837,7 @@
         order_currentPage: 1,
         pageSize: 10,
         thawingCondition: '',
-        balance: '--',
+        balance: 0,
         freezeDeposit: '--',
         theCumulative: '--',
         voucher: '--',
@@ -1306,7 +1308,7 @@
           }, {
             title: '押金状态',
             render: (h, params) => {
-              const text = params.row.type == 1 ? '已解冻' : params.row.type == 2 ? '解冻中' : '冻结中'
+              const text = params.row.type == 1 ? '已解冻' : params.row.type == 2 ? '解冻中' : params.row.type == 3 ? '退款中' : params.row.type == 4 ? '已退款' : '冻结中'
               return h('span', {}, text)
             }
           }, {
@@ -1410,7 +1412,7 @@
       getBalance() {
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
           if (response.status == 200 && response.data.status == '1') {
-            this.balance = response.data.data.remainder
+            this.balance = Number(response.data.data.remainder)
             this.voucher = response.data.data.voucher
             this.freezeDeposit = response.data.data.frozenMoney
             this.withdrawForm.money = this.balance
@@ -2024,7 +2026,7 @@
             this.showModal.withdraw = false
             this.$Message.success(response.data.message)
             this.getBalance()
-          }else{
+          } else {
             this.$Message.info(response.data.message)
           }
         })

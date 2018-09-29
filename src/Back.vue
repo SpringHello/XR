@@ -281,7 +281,7 @@
               /*{subName: '云监控', type: 'CloudMonitor'}*/
             ]
           },
-          {
+          /*{
             mainName: '域名服务',
             type: 'domain',
             subItem: [
@@ -291,7 +291,7 @@
               {subName: '域名解析', type: 'dResolve'},
               {subName: '邮箱验证', type: 'dEmail'}
             ]
-          },
+          },*/
           {
             mainName: '回收站',
             type: 'recycle',
