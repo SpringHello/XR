@@ -502,12 +502,16 @@
         this.agree = !this.agree;
       },
       submit(){
+        var params = {
+          username: this.form.loginname,
+          password: this.form.password,
+          code: this.form.vailCode
+        }
+        if (localStorage.getItem('comefrom')) {
+          params.qdCode = localStorage.getItem('comefrom')
+        }
         axios.get('user/register.do', {
-          params: {
-            username: this.form.loginname,
-            password: this.form.password,
-            code: this.form.vailCode
-          }
+          params
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
@@ -668,32 +672,32 @@
             margin-right: 20px;
           }
         }
-        button{
+        button {
           outline: none;
           cursor: pointer;
           border: none;
           margin-top: 32px;
-          background:rgba(255,70,43,1);
-          border-radius:20px;
-          font-size:18px;
+          background: rgba(255, 70, 43, 1);
+          border-radius: 20px;
+          font-size: 18px;
           font-family: "Microsoft YaHei", "微软雅黑";
-          color:rgba(255,255,255,1);
+          color: rgba(255, 255, 255, 1);
           padding: 7px 29px;
         }
       }
-      .fr-active{
+      .fr-active {
         height: 100%;
         background: #FFF url("../../assets/img/login/fr-banner.png") no-repeat;
       }
-      .gb-active{
+      .gb-active {
         height: 100%;
         background: #FFF url("../../assets/img/login/gb-banner.png") no-repeat;
       }
     }
-    .ivu-carousel-item:nth-last-child(1) .demo-carousel{
+    .ivu-carousel-item:nth-last-child(1) .demo-carousel {
       background: url(../../assets/img/login/login-banner.png) no-repeat center;
     }
-    .ivu-carousel-item:nth-last-child(2) .demo-carousel{
+    .ivu-carousel-item:nth-last-child(2) .demo-carousel {
       background: url(../../assets/img/login/login-banner-objactivity.png) no-repeat center;
     }
     .login-form {

@@ -25,7 +25,7 @@
               <i v-if="gpuDetail.bandwith">{{gpuDetail.bandwith}}M宽带 </i>
               <i v-if="gpuDetail.zoneName"> | {{gpuDetail.zoneName}}</i>
                 <p>镜像系统：{{gpuDetail.template}}</p>
-                <p>到期时间/有效期：{{gpuDetail.endTime}}</p>
+                <p>到期时间/有效期：{{gpuDetail.case_type == 3 ? '无' : gpuDetail.endTime}}</p>
                 <p>内网地址：{{gpuDetail.privateIp}}</p>
               <p>登录密码：  <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword">{{codePlaceholder}}</span></p>
             </div>
