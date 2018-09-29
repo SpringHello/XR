@@ -592,7 +592,6 @@
     created() {
       this.judgeUserFlow()
       this.getRegion()
-      this.getBalance()
     },
     methods: {
       init() {
@@ -694,11 +693,20 @@
           this.$LR({type: 'register'})
           return
         }
-        this.index1 = index1
-        this.index2 = index2
-        this.cashPledge = this.configGroup[index1].hostGroup[index2].cashPledge
-        this.time = this.configGroup[index1].hostGroup[index2].time
-        this.showModal.rechargeHint = true
+        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            this.balance = Number(response.data.data.remainder)
+            this.index1 = index1
+            this.index2 = index2
+            this.cashPledge = this.configGroup[index1].hostGroup[index2].cashPledge
+            this.time = this.configGroup[index1].hostGroup[index2].time
+            this.showModal.rechargeHint = true
+          } else {
+            this.$message.info({
+              content: '平台开小差了，请稍候再试'
+            })
+          }
+        })
       },
       nextStep() {
         // 判断新老用户
@@ -907,14 +915,6 @@
                 })
               }
             })
-          }
-        })
-      },
-      // 获取余额
-      getBalance() {
-        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
-          if (response.status == 200 && response.data.status == '1') {
-            this.balance = Number(response.data.data.remainder)
           }
         })
       },

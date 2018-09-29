@@ -1855,7 +1855,6 @@
       }
     },
     created() {
-      this.getBalance()
     },
     methods: {
       init() {
@@ -1986,11 +1985,20 @@
           this.$LR({type: 'register'})
           return
         }
-        this.index1 = index1
-        this.index2 = index2
-        this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
-        this.time = this.currentSceneGroup[index1].configGroup[index2].title
-        this.showModal.rechargeHint = true
+        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            this.balance = Number(response.data.data.remainder)
+            this.index1 = index1
+            this.index2 = index2
+            this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
+            this.time = this.currentSceneGroup[index1].configGroup[index2].title
+            this.showModal.rechargeHint = true
+          } else{
+            this.$message.info({
+              content: '平台开小差了，请稍候再试'
+            })
+          }
+        })
       },
       nextStep() {
         if (!(this.scene == '游戏服务'||this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
@@ -2247,14 +2255,6 @@
                 })
               }
             })
-          }
-        })
-      },
-      // 获取余额
-      getBalance() {
-        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
-          if (response.status == 200 && response.data.status == '1') {
-            this.balance = Number(response.data.data.remainder)
           }
         })
       },
