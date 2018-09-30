@@ -860,11 +860,11 @@
 
         //连接主机
         link(item) {
-          sessionStorage.setItem('link-companyid', item.companyid)
-          sessionStorage.setItem('link-vmid', item.computerid)
-          sessionStorage.setItem('link-zoneid', item.zoneid)
-          sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
-          this.$router.push('link')
+          localStorage.setItem('link-companyid', item.companyid)
+          localStorage.setItem('link-vmid', item.computerid)
+          localStorage.setItem('link-zoneid', item.zoneid)
+          localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
+          window.open('/ruicloud/link')
         },
       },
       created(){
