@@ -74,7 +74,7 @@
             <div class="obj-storage">
               <div class="wrap">
                 <div>
-                  <p>对象存储OSS重磅上线</p>
+                  <p style="font-weight: 300">对象存储OSS重磅上线</p>
                   <p>安全稳定、海量、便捷、低延迟、低成本的云端存储服务</p>
                   <p>免费领取<span>50G</span>存储包</p>
                   <Button>立即领取</Button>
@@ -2913,6 +2913,9 @@
       getHost(index1, index2) {
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'register'})
+          return
+        }
+        if(index1 == 4 || index1 == 5 || index1 == 6 || index1 == 7){
           return
         }
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
