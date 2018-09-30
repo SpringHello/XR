@@ -245,7 +245,7 @@
               <img v-if="imgSrc != ''" :src="imgSrc">
               <img v-else src="../../assets/img/objectPicture/Rectangle.png">
             </div>
-            <p style="margin-top: 10px">预览图片尺寸受限，点击<a target="_blank" :href="originUrl">查看预览图</a></p>
+            <p style="margin-top: 10px" v-if="picresulve">预览图片尺寸受限，点击<a target="_blank" :href="originUrl">查看预览图</a></p>
           </div>
         </div>
 
@@ -289,6 +289,8 @@
         //刷新的图片
         imgSrc:'',
         originUrl:'',
+        //图片宽高是否大于250
+        picresulve:false,
 
         formValidate: {
           styleName: ''
@@ -498,11 +500,9 @@
         this.$refs.formValidate.validate(valid => {
           if (valid) {
             let dd = this.waterFont.color.substring(this.waterFont.color.indexOf('(')+1,this.waterFont.color.indexOf(')'));
-            console.log(dd);
             axios({
               url: 'picture/picturePreview.do',
               method: 'post',
-              responseType:'arraybuffer',
               headers:{ 'Content-Type':"application/x-www-form-urlencoded; charset=UTF-8"},
               transformRequest: [(data) => {
                 return Qs.stringify(data);
@@ -533,13 +533,18 @@
                 zoneid: this.$store.state.zone.zoneid
               }
             }).then(res => {
-              if(res.data == undefined || res.data == ''){
-                return this.$Message.info('获取图片失败');
+              if(res.status == 200 || res.data.status == '1'){
+                this.imgSrc = 'data:image/png;base64,' +res.data.data.pictures;
+                this.originUrl = checkImg('data:image/png;base64,' +res.data.data.pictures);
+                this.picresulve = res.data.data.picresulve;
+              }else{
+                  this.$Message.info(res.data.msg);
               }
-              function utf8_to_b64( str ) {
-                return 'data:image/png;base64,' + btoa(
-                  new Uint8Array(str).reduce((data,byte) => data + String.fromCharCode(byte),''))
-              }
+
+              // function utf8_to_b64( str ) {
+              //   return 'data:image/png;base64,' + btoa(
+              //     new Uint8Array(str).reduce((data,byte) => data + String.fromCharCode(byte),''))
+              // }
               function checkImg(code){
                 var parts = code.split(';base64,');
                 var contentType = parts[0].split(':')[1];
@@ -551,9 +556,7 @@
                 }
                 return new Blob([uInt8Array], {type: contentType});
               }
-              let blob = checkImg(utf8_to_b64(res.data));
-              this.originUrl = URL.createObjectURL(blob);
-              this.imgSrc = utf8_to_b64(res.data);
+              // let blob = checkImg(utf8_to_b64(res.data));
             })
           }
         })

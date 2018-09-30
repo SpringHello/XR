@@ -235,11 +235,16 @@
           {
             mainName: '云服务器',
             type: 'server',
-            subItem: [{subName: '云主机', type: 'host',href:'https://www.xrcloud.net/ruicloud/host'}, {subName: '云主机快照', type: 'snapshot',href:'https://www.xrcloud.net/ruicloud/snapshot'}, {
+            subItem: [{subName: '云主机', type: 'host',href:'https://www.xrcloud.net/ruicloud/host'},{subName:'GPU云服务器',type:'gpu',href:'https://www.xrcloud.net/ruicloud/GpuList'}, {subName: '云主机快照', type: 'snapshot',href:'https://www.xrcloud.net/ruicloud/snapshot'}, {
               subName: '镜像',
               type: 'mirror',
               href:'https://www.xrcloud.net/ruicloud/mirror'
             }]
+          },
+          {
+            mainName: '云数据库',
+            type: 'database',
+            subItem: [{subName: '云数据库', type: 'cloudDatabase',href:'https://www.xrcloud.net/ruicloud/cloudDatabase'}]
           },
           {
             mainName: '云存储',

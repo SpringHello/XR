@@ -97,7 +97,9 @@
             <tabTwo></tabTwo>
           </TabPane>
           <TabPane :label="flowPacke">
-            <Button type="primary" style="margin: 10px 0;">购买流量包</Button>
+            <a href="https://zschj.xrcloud.net/ruicloud/buy/bobj" target="_parent">
+             <Button type="primary" style="margin: 10px 0;">购买流量包</Button>
+            </a>
             <Table  :columns="flowPacketList" :data="flowPacketData"></Table>
           </TabPane>
           <TabPane label="操作日志" name="name4" style="min-height: 300px;">
@@ -455,19 +457,23 @@
           },
           {
             title:'区域',
-            key:''
+            key:'zoneid'
           },
           {
             title:'规格',
-            key:''
+            render:(h,params) => {
+              return h('div',[
+                h('span',{},params.row.size / 1024 == 1 ? params.row.size / 1024+'TB' : params.row.size+'GB'+'/'+params.row.expiredays+(params.row.timeType==1?'个月':'年'))
+              ])
+            }
           },
           {
             title:'生效时间',
-            key:''
+            key:'createtime'
           },
           {
             title:'到期时间',
-            key:''
+            key:'expiretime'
           }
         ],
         flowPacketData:[]
@@ -659,7 +665,7 @@
               content: '<p style="line-height: 15px;margin-bottom: 5px;">尊敬的用户您好，您尚未开通云存储服务，对象存储服务根据使用量后付费，收费项目包括：存储空间、源站流量等，详细信息请见<a href="https://www.xrcloud.net/ruicloud/documentInfo/P0bwsNh8q/P1Auu5Vz2" target="_parent">购买须知</a></p ><p>开通云存储服务还需要创建Access Key</p>',
               okText:'确定并开通Access Key',
               onOk: () => {
-                window.open('https://www.xrcloud.net/ruicloud/userCenter', '_self');
+                window.open('https://zschj.xrcloud.net/ruicloud/userCenter', '_self');
               }
             })
           }
@@ -788,11 +794,14 @@
 
       //获取流量包
       selectFlowPacket(){
-        this.$http.post('monitor/getServiceCondition.do',{}).then(res => {
+        this.$http.post('monitor/getServiceConditionByZoneId.do',{}).then(res => {
           if(res.status == 200 && res.data.status == '1'){
-            this.flowPacketData = res.data.data;
+            this.flowPacketData = res.data.data.userFluxList;
+          }else{
+            this.$Message.info('获取资源包列表出小差了');
           }
         })
+
       }
 
     },
