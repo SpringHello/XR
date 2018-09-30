@@ -2915,6 +2915,9 @@
           this.$LR({type: 'register'})
           return
         }
+        if(index1 == 4 || index1 == 5 || index1 == 6 || index1 == 7){
+          return
+        }
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
           if (response.status == 200 && response.data.status == '1') {
             this.balance = Number(response.data.data.remainder)
