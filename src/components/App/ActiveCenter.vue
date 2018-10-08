@@ -10,7 +10,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!--<my-carousel-item class="carousel-item">
           <div  @click="push('/ruicloud/objStorageActive')"
             style="cursor: pointer;">
             <div class="obj-storage">
@@ -19,12 +19,12 @@
                   <p>对象存储OSS重磅上线</p>
                   <p>安全稳定、海量、便捷、低延迟、低成本的云端存储服务</p>
                   <p>免费领取<span>50G</span>存储包</p>
-                  <!--<Button>立即领取</Button>-->
+                  &lt;!&ndash;<Button>立即领取</Button>&ndash;&gt;
                 </div>
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item>-->
         <my-carousel-item class="carousel-item">
           <div @click="push('groupBooking')"
                style="cursor: pointer;background: #FA846E;">
@@ -154,7 +154,8 @@
             secSpan: '安全稳定高效的云端存储服务 免费试用50G',
             des: ' 即将上线',
             activeObj: '对象存储 新老用户',
-            url: 'objStorageActive',
+            //url: 'objStorageActive',
+            url: '',
             isStart: true,
             weight: '1',
             color: 'black'
@@ -163,9 +164,11 @@
             imgPath: require('../../assets/img/activecenter/bg-objStorage-4.png'),
             name: '热门云数据库产品免费试用60天',
             secSpan: '秒级创建 一键恢复 安全可靠',
-            des: '2018.09.29开始',
+            //des: '2018.09.29开始',
+            des: '即将上线',
             activeObj: '云数据库 新老用户',
-            url: 'DBActive',
+            //url: 'DBActive',
+            url: '',
             isStart: true,
             weight: '1',
             color: 'black'
@@ -256,21 +259,21 @@
                 margin: 0 auto;
                 padding-top: 70px;
                 button {
-                    background: none;
-                    outline: none;
-                    cursor: pointer;
-                    padding: 11px 50px;
-                    margin-top: 30px;
-                    border-radius: 4px;
-                    border: 1px solid rgba(51, 51, 51, 1);
-                    font-size: 16px;
-                    font-family: "Microsoft YaHei", "微软雅黑";
-                    color: rgba(51, 51, 51, 1);
-                    &:hover {
-                      color: rgba(255, 70, 43, 1);
-                      border: 1px solid rgba(255, 70, 43, 1);
-                    }
+                  background: none;
+                  outline: none;
+                  cursor: pointer;
+                  padding: 11px 50px;
+                  margin-top: 30px;
+                  border-radius: 4px;
+                  border: 1px solid rgba(51, 51, 51, 1);
+                  font-size: 16px;
+                  font-family: "Microsoft YaHei", "微软雅黑";
+                  color: rgba(51, 51, 51, 1);
+                  &:hover {
+                    color: rgba(255, 70, 43, 1);
+                    border: 1px solid rgba(255, 70, 43, 1);
                   }
+                }
                 p {
                   font-size: 18px;
                   font-family: "Microsoft YaHei", "微软雅黑";

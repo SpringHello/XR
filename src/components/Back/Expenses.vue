@@ -357,7 +357,7 @@
             <span>解冻到充值账户（需3-5个工作日）</span>
           </Radio>
         </RadioGroup>
-        <Form :model="withdrawForm" :rules="withdrawValidate" ref="unfreeze">
+        <Form v-if="unfreezeTo=='account'" :model="withdrawForm" :rules="withdrawValidate" ref="unfreeze">
           <Form-item label="收款人姓名" prop="payeeName">
             <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
           </Form-item>
@@ -1979,16 +1979,16 @@
         this.searchCard()
       },
       unfreeze_ok() {
-        this.$refs.unfreeze.validate((valid) => {
-          if (valid) {
-            let url = 'user/getRremainderThaw.do'
+        if (this.unfreezeTo == 'account') {
+          this.$refs.unfreeze.validate((valid) => {
+            if (valid) {
+              let url = 'user/getRremainderThaw.do'
 
-            let params = {
-              id: this.unfreezeId,
-              operType: '1'
-            }
-            // 解冻到账户
-            if (this.unfreezeTo == 'account') {
+              let params = {
+                id: this.unfreezeId,
+                operType: '1'
+              }
+              // 解冻到账户
               params.operType = '2'
               params.payeeName = this.withdrawForm.payeeName
               params.payeeAccountType = this.withdrawForm.accountType
@@ -1996,25 +1996,45 @@
               params.smsCode = this.withdrawForm.phoneCode
               params.username = this.withdrawConfirm.number
               if (this.withdrawForm.accountType == '银行卡') {
-                params.bankAccInfor = this.withdrawConfirm.bankName
+                params.bankAccInfor = this.withdrawForm.bankName
               }
+              this.$http.post(url, params).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.$Message.success('解冻成功')
+                  this.showModal.unfreeze = false
+                  this.freezeDetails()
+                  this.getBalance()
+                  this.showMoneyByMonth()
+                  this.search()
+                } else {
+                  this.$message.info({
+                    content: res.data.message
+                  })
+                }
+              })
             }
-            this.$http.post(url, params).then(res => {
-              if (res.status == 200 && res.data.status == 1) {
-                this.$Message.success('解冻成功')
-                this.showModal.unfreeze = false
-                this.freezeDetails()
-                this.getBalance()
-                this.showMoneyByMonth()
-                this.search()
-              } else {
-                this.$message.info({
-                  content: res.data.message
-                })
-              }
-            })
+          })
+        } else {
+          let url = 'user/getRremainderThaw.do'
+          let params = {
+            id: this.unfreezeId,
+            operType: '1'
           }
-        })
+          this.$http.post(url, params).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.$Message.success('解冻成功')
+              this.showModal.unfreeze = false
+              this.freezeDetails()
+              this.getBalance()
+              this.showMoneyByMonth()
+              this.search()
+            } else {
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
+        }
         // 把状态变成解冻中
         //let url = 'user/getRremainderThawing.do'
         //  直接解冻
