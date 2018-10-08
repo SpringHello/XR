@@ -21,18 +21,24 @@
             </div>
           </div>
         </my-carousel-item>
-
         <my-carousel-item class="carousel-item">
-          <div class="east-banner" @click="push('/ruicloud/EastSouthNode')">
-            <div class="wrap">
-              <div class="text">
-                <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
-                <p>万兆光纤极速体验，助力区域企业云上发展</p>
-                <Button>了解详情</Button>
+          <div @click="push('/ruicloud/fractive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="free-receive">
+              <div class="free-receive-content">
+                <div class="free-receive-text">
+                  <p>新手特惠</p>
+                  <p>爆款云主机免费使用一年</p>
+                  <button>立即领取</button>
+                </div>
+                <div class="free-receive-img">
+                  <img src="../../assets/img/active/freeToReceive/fr-banner7.png"/>
+                </div>
               </div>
             </div>
           </div>
         </my-carousel-item>
+        
         <my-carousel-item class="carousel-item">
           <div @click="push('DBActive')"
                style="cursor: pointer;background: #F56B23;">
@@ -51,23 +57,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/fractive')"
-               style="cursor: pointer;background: #F56B23;">
-            <div class="free-receive">
-              <div class="free-receive-content">
-                <div class="free-receive-text">
-                  <p>新手特惠</p>
-                  <p>爆款云主机免费使用一年</p>
-                  <button>立即领取</button>
-                </div>
-                <div class="free-receive-img">
-                  <img src="../../assets/img/active/freeToReceive/fr-banner7.png"/>
-                </div>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
+        
         <my-carousel-item class="carousel-item">
           <div @click="push('/ruicloud/objStorageActive')"
                style="cursor: pointer;">
@@ -102,7 +92,17 @@
             </div>
           </div>
         </my-carousel-item>
-
+        <my-carousel-item class="carousel-item">
+          <div class="east-banner" @click="push('/ruicloud/EastSouthNode')">
+            <div class="wrap">
+              <div class="text">
+                <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
+                <p>万兆光纤极速体验，助力区域企业云上发展</p>
+                <Button>了解详情</Button>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
       </my-carousel>
     </div>
       <!-- 功能介绍区域 -->
