@@ -146,7 +146,7 @@ import axios from  'axios'
             }
           }).then(res => {
             if(res.status == 200 && res.data.status ==1){
-              // this.upMoney = res.data.money
+              this.upMoney = res.data.money
             }
           })
         }

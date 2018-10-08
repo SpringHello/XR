@@ -452,7 +452,7 @@
             },
             {
               title:'IP地址',
-              key:'privateip'
+              key:'publicip'
             },
             {
               title:'创建时间/到期时间',
