@@ -80,7 +80,8 @@
                   <p>活动时间：{{item.des}}</p>
                   <p>活动对象：{{item.activeObj}}</p>
                 </div>
-                <button>立即参与 →</button>
+                <button v-if="item.isStart">立即参与 →</button>
+                <button v-else>敬请期待</button>
               </div>
             </router-link>
           </div>
@@ -156,7 +157,7 @@
             activeObj: '对象存储 新老用户',
             //url: 'objStorageActive',
             url: '',
-            isStart: true,
+            isStart: false,
             weight: '1',
             color: 'black'
           },
@@ -169,7 +170,7 @@
             activeObj: '云数据库 新老用户',
             //url: 'DBActive',
             url: '',
-            isStart: true,
+            isStart: false,
             weight: '1',
             color: 'black'
           },

@@ -852,7 +852,7 @@
         prod.password = this.password
         if (this.createType == 'fast') {
           prod.currentSystem = this.currentSystem
-          prod.cost = this.fastCoupon || this.fastCost
+          prod.cost = this.fastCost
         } else {
           prod.IPConfig = this.IPConfig
           prod.vmConfig = this.vmConfig

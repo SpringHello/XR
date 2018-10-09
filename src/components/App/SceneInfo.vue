@@ -64,7 +64,8 @@
                 <div class="cf-footer">
                   <p><span>押金：</span>{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <Button type="primary" :disabled="scene == '游戏服务'||scene == '图形设计' || scene == '人工智能' || scene == '超级运算'" @click="getHost(currentIndex,index1)">免费使用</Button>
+                  <Button type="primary" v-if="scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" :disabled="true">敬请期待</Button>
+                  <Button type="primary" v-else @click="getHost(currentIndex,index1)">免费使用</Button>
                 </div>
               </div>
             </div>
