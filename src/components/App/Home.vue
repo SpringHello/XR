@@ -21,36 +21,6 @@
             </div>
           </div>
         </my-carousel-item>
-
-        <my-carousel-item class="carousel-item">
-          <div class="east-banner" @click="push('/ruicloud/EastSouthNode')">
-            <div class="wrap">
-              <div class="text">
-                <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
-                <p>万兆光纤极速体验，助力区域企业云上发展</p>
-                <Button>了解详情</Button>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <!--<my-carousel-item class="carousel-item">
-          <div @click="push('DBActive')"
-               style="cursor: pointer;background: #F56B23;">
-            <div class="db-active">
-              <div class="db-active-content">
-                <div class="db-active-text">
-                  <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
-                  <p>热门云数据库产品免费试用60天</p>
-                  <p><span>0元试用 押金闪退</span>每天不限量</p>
-                  <button>立即试用</button>
-                </div>
-                <div class="db-active-img">
-                  <img src="../../assets/img/active/dbActive/dba-banner8.png"/>
-                </div>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>-->
         <my-carousel-item class="carousel-item">
           <div @click="push('/ruicloud/fractive')"
                style="cursor: pointer;background: #F56B23;">
@@ -68,7 +38,27 @@
             </div>
           </div>
         </my-carousel-item>
+
         <!--<my-carousel-item class="carousel-item">
+          <div @click="push('DBActive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="db-active">
+              <div class="db-active-content">
+                <div class="db-active-text">
+                  <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
+                  <p>热门云数据库产品免费试用60天</p>
+                  <p><span>0元试用 押金闪退</span>每天不限量</p>
+                  <button>立即试用</button>
+                </div>
+                <div class="db-active-img">
+                  <img src="../../assets/img/active/dbActive/dba-banner8.png"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+
+        <my-carousel-item class="carousel-item">
           <div @click="push('/ruicloud/objStorageActive')"
                style="cursor: pointer;">
             <div class="obj-storage">
@@ -102,10 +92,20 @@
             </div>
           </div>
         </my-carousel-item>
-
+        <my-carousel-item class="carousel-item">
+          <div class="east-banner" @click="push('/ruicloud/EastSouthNode')">
+            <div class="wrap">
+              <div class="text">
+                <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
+                <p>万兆光纤极速体验，助力区域企业云上发展</p>
+                <Button>了解详情</Button>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
       </my-carousel>
     </div>
-      <!-- 功能介绍区域 -->
+    <!-- 功能介绍区域 -->
     <div class="box-container">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
@@ -117,12 +117,12 @@
         </div>
       </div>
     </div>
-     <!-- 八大场景区 -->
+    <!-- 八大场景区 -->
     <div class="eigth-scene">
       <div class="bg-wrap">
-          <div class="bg" ref="bgcheck">
-              <img  v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl"/>
-          </div>
+        <div class="bg" ref="bgcheck">
+          <img  v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl"/>
+        </div>
       </div>
       <div class="wrap">
         <div class="box">
@@ -133,26 +133,26 @@
               </ul>
             </div>
             <div class="content" v-for="(item,index) in selectedEightscene" :key="index">
-                <div class="hint">
-                  <span>{{item.hint}}</span>
+              <div class="hint">
+                <span>{{item.hint}}</span>
+              </div>
+              <h3>{{item.title}}</h3>
+              <div class="scene">
+                <p class="title">应用场景</p>
+                <div>
+                  <p>{{item.scene}}</p>
+                  <Button type="primary" style="background:#377DFF;height:38px;width:124px;text-align:center;font-size:14px;" @click="$router.push(item.link)">了解更多</Button>
                 </div>
-                <h3>{{item.title}}</h3>
-                <div class="scene">
-                  <p class="title">应用场景</p>
-                  <div>
-                    <p>{{item.scene}}</p>
-                    <Button type="primary" style="background:#377DFF;height:38px;width:124px;text-align:center;font-size:14px;" @click="$router.push(item.link)">了解更多</Button>
-                  </div>
+              </div>
+              <div class="software">
+                <p class="title">支持软件</p>
+                <img v-for="(item1,index) in item.software" :key="index" :src="item1" style="margin-right:28px;"/>
+              </div>
+              <div class="configure">
+                <p class="title">推荐配置</p>
+                <div>
+                  <span v-for="(item2,index1) in item.configure" :key="index1" @click="getHost(eightsceneIndex,index1)">{{item2}}</span>
                 </div>
-                <div class="software">
-                  <p class="title">支持软件</p>
-                  <img v-for="(item1,index) in item.software" :key="index" :src="item1" style="margin-right:28px;"/>
-                </div>
-                <div class="configure">
-                  <p class="title">推荐配置</p>
-                  <div>
-                    <span v-for="(item2,index1) in item.configure" :key="index1" @click="getHost(eightsceneIndex,index1)">{{item2}}</span>
-                  </div>
               </div>
             </div>
           </div>
@@ -245,7 +245,7 @@
                     </transition>
                     <div class="bottom-flow" v-if="item.prodItem.length>5">
                       <div class="wrap">
-                         <span @click="scroll('left',item.title)" :class="{blue: selectedBar}"></span>
+                        <span @click="scroll('left',item.title)" :class="{blue: selectedBar}"></span>
                         <span @click="scroll('right',item.title)" :class="{blue: !selectedBar}"></span>
                       </div>
                     </div>
@@ -708,7 +708,7 @@
           weChatRechargeModal: false,
           orderConfirmationModal: false
         },
-         // 标记当前场景信息
+        // 标记当前场景信息
         index1: '',
         index2: '',
         vmConfig: '',
@@ -2747,7 +2747,7 @@
             left: '352px',
             online: true
           },
-           {
+          {
             text: '沈阳',
             top: '194px',
             left: '428px',
@@ -2812,14 +2812,14 @@
         let height = document.body.clientHeight - this.$refs.require.offsetTop + window.scrollY || window.pageYOffset
         if (height > 300) {
           this.requireData.forEach((item, index) => {
-              this.$set(item, 'isShow', 'once')
+            this.$set(item, 'isShow', 'once')
           })
           this.requireflag = true
         }
         if ((height > 1200 || height < 300) && this.requireflag == true) {
           window.removeEventListener('scroll', this.scrollFn)
           this.requireData.forEach((item, index) => {
-              this.$set(item, 'isShow', 'static')
+            this.$set(item, 'isShow', 'static')
           })
         }
       })
@@ -3388,7 +3388,7 @@
     .eigth-scene {
       position: relative;
       margin:0 auto;
-      width: 1902px;
+      width: 100%;
       overflow: hidden;
       .bg-wrap {
         position: relative;
@@ -3431,23 +3431,23 @@
             width: 200px;
             border-right: solid 1px #E6E6E6;
             padding: 20px 0;ul {
-              li {
-                width:200px;
-                height:68px;
-                line-height: 68px;
-                font-size:20px;
-                font-family:PingFangSC-Semibold;
-                font-weight:400;
-                color: #333333;
-                cursor: pointer;
-                text-align: center;
-                &:hover,&.selected {
-                  background:linear-gradient(270deg,rgba(170,202,255,1) 0%,rgba(138,189,253,0) 100%);
-                  color: #377DFF;
-                  border-right: #387DFF 6px solid;
-                }
+            li {
+              width:200px;
+              height:68px;
+              line-height: 68px;
+              font-size:20px;
+              font-family:PingFangSC-Semibold;
+              font-weight:400;
+              color: #333333;
+              cursor: pointer;
+              text-align: center;
+              &:hover,&.selected {
+                background:linear-gradient(270deg,rgba(170,202,255,1) 0%,rgba(138,189,253,0) 100%);
+                color: #377DFF;
+                border-right: #387DFF 6px solid;
               }
             }
+          }
           }
           .content {
             position: relative;
@@ -3612,10 +3612,10 @@
               background: #FFD100;
               margin-right: 5px;
             }
-           &:nth-of-type(2) {
-             i {
-               background: #FF624B;
-             }
+            &:nth-of-type(2) {
+              i {
+                background: #FF624B;
+              }
             }
           }
         }
@@ -3821,19 +3821,19 @@
                     text-overflow: ellipsis;
                     white-space: nowrap;
                   }
-                   i {
-                      display: inline-block;
-                      width: 40px;
-                      height: 20px;
-                      line-height: 20px;
-                      text-align: center;
-                      background: #FF624B;
-                      border-radius:10px 10px 10px 0px;
-                      font-style: normal;
-                      font-size: 12px;
-                      color: #fff;
-                      vertical-align: text-bottom;
-                    }
+                  i {
+                    display: inline-block;
+                    width: 40px;
+                    height: 20px;
+                    line-height: 20px;
+                    text-align: center;
+                    background: #FF624B;
+                    border-radius:10px 10px 10px 0px;
+                    font-style: normal;
+                    font-size: 12px;
+                    color: #fff;
+                    vertical-align: text-bottom;
+                  }
                 }
               }
             }

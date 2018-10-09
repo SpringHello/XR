@@ -35,7 +35,7 @@
             <Select v-model="ipValidate.ip" placeholder="请选择IP" style="width: 200px">
               <Option v-for="item in ipValidate.ipList" :value="item.value" :key="item.value">{{item.label}}</Option>
             </Select>
-            <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('buy')">购买弹性IP</span>
+            <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('buy/bip')">购买弹性IP</span>
           </FormItem>
         </Form>
         <br>
@@ -44,6 +44,8 @@
           <Button type="primary" @click="bindIp">确定</Button>
         </div>
       </Modal>
+
+
 
       <!--制作快照-->
       <Modal v-model="showModal.snapshot" width="550" :scrollable="true" class="create-snas-modal">
@@ -142,7 +144,7 @@
         </div>
         <p slot="footer" class="modal-footer-s">
           <Button @click="showModal.publicIPHint = false">取消</Button>
-          <Button type="primary" @click="$router.push('buy')">创建公网IP</Button>
+          <Button type="primary" @click="$router.push('buy/bip')">创建公网IP</Button>
         </p>
       </Modal>
 
@@ -176,8 +178,9 @@
     export default{
       data(){
         return{
-          //GPUID
+          //GPU的数据库ID
           VMId:'',
+          //GPU的computerid
           uuId:'',
           //主机名称
           companyname:'',
@@ -347,7 +350,7 @@
               width:'109',
               render:(h,params)=> {
                 //创建中
-                if (params.row.status == 2) {
+                if (params.row.status == 2 && params.row.computerstate == undefined) {
                   return h('div', [
                     h('Spin', {
                       style: {
@@ -375,7 +378,6 @@
                       },
                     }, '删除中')])
                 } else if (params.row.status == 2 && params.row.computerstate == 0) {
-                  //删除中
                   return h('div', [
                     h('Spin', {
                       style: {
@@ -433,7 +435,7 @@
               title:'状态',
               width:'70',
               render:(h,params) => {
-                return h('span',{},params.row.status == '-1' ? '异常' :params.row.status == '0' ?'欠费' : params.row.computerstate == '0' ? '关机' :params.row.computerstate == '1' ? '开机' :'')
+                return h('span',{},params.row.status == '-1' ? '异常' :params.row.status == '0' ? '欠费' : params.row.computerstate == '0' && params.row.status=='1' ? '关机' :params.row.computerstate == '1' && params.row.status=='1'  ? '开机' :'')
               }
             },
             {
@@ -450,7 +452,7 @@
             },
             {
               title:'IP地址',
-              key:'privateip'
+              key:'publicip'
             },
             {
               title:'创建时间/到期时间',
@@ -529,6 +531,25 @@
                             if(params.row.status == 2 || params.row.status ==3){
                               this.$Message.info('请等待主机完成当前操作');
                             }else {
+                              this.$Modal.confirm({
+                                title:'解绑IP',
+                                content:'是否解绑该GPU的IP?',
+                                onOk:()=>{
+                                  this.unbind(params.row.publicip,params.row.computerid);
+                                }
+                              })
+                              this.uuId = params.row.computerid;
+                            }
+                          }
+                        }
+                      }, '解绑IP'),
+                      h('DropdownItem', {
+                        nativeOn: {
+                          click: () => {
+                            this.companyname = params.row.companyname;
+                            if(params.row.status == 2 || params.row.status ==3){
+                              this.$Message.info('请等待主机完成当前操作');
+                            }else {
                               this.showModal.snapshot = true;
                               this.uuId = params.row.computerid;
                             }
@@ -541,7 +562,6 @@
                             if(params.row.status == 2 || params.row.status ==3){
                               this.$Message.info('请等待主机完成当前操作');
                             }else {
-
                               this.showModal.mirror  = true;
                               this.mirrorValidate.rootdiskid = params.row.rootdiskid;
                             }
@@ -554,7 +574,10 @@
                             if(params.row.status == 2 || params.row.status ==3){
                               this.$Message.info('请等待主机完成当前操作');
                             }else {
-                              this.$router.push({path: 'gpuUpLevel'})
+                              this.$router.push({path: 'gpuUpLevel'});
+                              sessionStorage.setItem('uuId', params.row.computerid);
+                              sessionStorage.setItem('comptername',params.row.companyname)
+                              sessionStorage.setItem('serviceofferid',params.row.serviceofferid);
                             }
                           }
                         }
@@ -620,7 +643,8 @@
             }
           ],
           hostData:[],
-          zoneId:''
+          zoneId:'',
+          intervalInstance: null,
         }
       },
       beforeRouteLeave(to, from , next){
@@ -648,7 +672,6 @@
                       list.push(res.data.result[index].list[i]);
                     }
                   this.hostData = list;
-
                 }
               }else{
                 this.hostData = [];
@@ -676,6 +699,29 @@
              }
            }
          })
+        },
+
+        //解绑IP
+        unbind(publicip,computerid) {
+            this.$Message.info({
+              content: `<span style="color:#2A99F2"></span>GPU云服务器,正在解绑公网IP`
+            })
+            this.$http.get('network/disableStaticNat.do', {
+              params: {
+                ipId:publicip,
+                VMId:computerid
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1
+              ) {
+                this.$Message.success(response.data.message)
+              }
+              else if (response.status == 200 && response.data.status == 2) {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
         },
 
         //主机开机

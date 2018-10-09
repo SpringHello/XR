@@ -9,46 +9,39 @@
           </div>
           <hr color="#E9E9E9" style="margin-bottom: 10px">
           <div class="gpu_left">
-            <!--cpu-->
             <div style="width: 50%">
               <div>
-                <p style="color: #333333;font-size: 16px;margin-bottom: 10px;">CPU</p>
+                <p style="color: #333333;font-size: 16px;margin-bottom: 10px;">可升级GPU类型</p>
                 <ul>
-                  <li v-for="(item,index) in cpuList" class="nav_item" :class="cpuIndex == index  ?'nav_item_click':''"  @click="cpuClick(index,'cpu')">{{item.CPU}}核</li>
-                </ul>
-              </div>
-              <!--内存-->
-              <div>
-                <p style="color: #333333;font-size: 16px;margin: 10px 0;">内存</p>
-                <div>{{memoryList.length}}</div>
-                <ul>
-                  <li v-if="memoryList.length != 0" v-for="(item,index) in memoryList" class="nav_item" :class="memoryIndex == index  ?'nav_item_click':''"  @click="cpuClick(index,'memory')">{{item.memory}}G</li>
-                  <li v-else class="nav_item nav_item_click">暂无</li>
+                  <li v-if="cpuList != '1'" v-for="(item,index) in cpuList" class="nav_item" :class="cpuIndex == index  ?'nav_item_click':''"  @click="cpuClick(index)">
+                    <p style="margin-bottom: 5px;">CPU:{{item.cpunum}}核</p>
+                    <p>内存:{{item.memory}}G</p>
+                  </li>
+                  <li v-else class="nav_item"> 暂无可升级配置</li>
                 </ul>
               </div>
             </div>
-            <div class="gpu_right">
+            <div class="gpu_right"  v-if="cpuList != '1'" >
                <div>
                  <p>升级前配置</p>
-                 <p>主机名称：{{gpuDetail.computername}}</p>
-                 <p>主机配置：{{gpuDetail.peizhi[0]}}{{memoryValue}}</p>
-                 <p>GPU类型：{{gpuDetail.peizhi[2]}}</p>
-                 <p>剩余时长：{{gpuDetail.endtime}} </p>
+                 <p>主机名称：{{name}}</p>
+                 <p>主机配置：{{gpuDetail.cpuNum}}核{{gpuDetail.memory}}G</p>
+                 <p>GPU类型：{{cpuList[cpuIndex].gputype}}</p>
+                 <p>剩余时长：{{gpuDetail.endTime}} </p>
                  <p style="color:#2A99F2;text-align: center;position: relative;bottom: 0px">全民普惠，3折减单，最高减免7000元！</p>
                </div>
               <div>
                 <p>升级后配置</p>
-                <p>主机名称：{{gpuDetail.computername}}</p>
-                <p>主机配置：{{cpuValue}}核16G</p>
-                <p>GPU类型：{{gpuDetail.peizhi[2]}}</p>
-                <p>剩余时长：{{gpuDetail.endtime}}</p>
+                <p>主机名称：{{name}}</p>
+                <p>主机配置：{{cpuList[cpuIndex].cpunum}}核{{cpuList[cpuIndex].memory}}G</p>
+                <p>GPU类型：{{cpuList[cpuIndex].gputype}}</p>
+                <p>剩余时长：{{gpuDetail.endTime}}</p>
                 <p>应付差价:<span style="float: right;color: #2A99F2;font-size: 24px;">{{upMoney}}元</span></p>
                 <p style="color:#2A99F2">购买和计费说明</p>
-                <Button type="primary" style="width: 100%;margin-top: 10%;">立即购买</Button>
+                <Button type="primary" style="width: 100%;margin-top: 10%;" @click="upGpuConfigSubmit">立即购买</Button>
               </div>
             </div>
           </div>
-
 
         </div>
       </div>
@@ -62,120 +55,11 @@ import axios from  'axios'
     data(){
       return{
       //  CPU
-        cpuList:[
-          {
-            CPU:'1',
-            List:[
-              {
-                value:'1'
-              },
-              {
-                value:'2'
-              },
-              {
-                value:'4'
-              },
-              {
-                value:'8'
-              }
-            ],
-          },
-          {
-            CPU:'2',
-            List:[
-              {
-                value:'2'
-              },
-              {
-                value:'4'
-              },
-              {
-                value:'8'
-              },
-              {
-                value:'16'
-              }
-            ],
-          },
-          {
-            CPU:'4',
-            List:[
-              {
-                value:'4'
-              },
-              {
-                value:'8'
-              },
-              {
-                value:'16'
-              },
-              {
-                value:'32'
-              }
-            ],
-          },
-          {
-            CPU:'8',
-            List:[
-              {
-                value:'8'
-              },
-              {
-                value:'16'
-              },
-              {
-                value:'32'
-              },
-              {
-                value:'64'
-              }
-            ],
-          },
-          {
-            CPU:'16',
-            List:[
-              {
-                value:'16'
-              },
-              {
-                value:'32'
-              },
-              {
-                value:'64'
-              },
-              {
-                value:'128'
-              }
-            ],
-          },
-          {
-            CPU:'32',
-            List:[
-              {
-                value:'64'
-              },
-              {
-                value:'128'
-              }
-            ]
-          },
-          {
-            CPU:'64',
-            List:[
-              {
-                value:'128'
-              },
-              {
-                value:'256'
-              }
-            ]
-          }
-        ],
+        cpuList:[],
         cpuIndex:0,
         cpuValue:'1',
 
       //  内存
-        memoryList:[],
         memoryIndex:0,
         memoryValue:'',
 
@@ -183,7 +67,8 @@ import axios from  'axios'
         upMoney:'--',
 
         //gpu详情
-        gpuDetail:{}
+        gpuDetail:{},
+        name:sessionStorage.getItem('comptername')
       }
     },
     methods:{
@@ -197,49 +82,74 @@ import axios from  'axios'
           }
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
-            this.gpuDetail = res.data.result[0];
-            this.gpuDetail.peizhi = res.data.result[0].serviceoffername.split('+');
-           this.memoryValue =  this.gpuDetail.peizhi[1].substr(0,this.gpuDetail.peizhi[1].indexOf('G')+1);
+            this.gpuDetail = res.data.result;
           }
         })
       },
 
-      cpuClick(val,name){
-        if(name == 'cpu'){
+      cpuClick(val){
           this.cpuIndex = val;
-          this.cpuValue = this.cpuList[val].CPU;
-          this.memoryList = this.cpuList[val].list;
-          this.memoryIndex = 0;
+          this.cpuValue = this.cpuList[val].cpunum;
+          this.memoryValue = this.cpuList[val].memory;
           this.upGpuConfig();
-        }else if(name == 'memory'){
-         this.memoryIndex = val;
-          this.upGpuConfig();
-        }
       },
       //获取cpu和内存
       getZonesConfig(){
-        this.$http.get("information/getZonesConfig.do",{}).then(res =>{
-          if(res.status == 200 && res.data.status == 1){
-            this.cpuList = res.data.data;
-            this.memoryList = res.data.data[0].list;
+        // this.getGpuHostDetail();
+        let zonesList = this.$http.get('gpuserver/listGpuServerOfferByUp.do',{params:{serviceofferId:sessionStorage.getItem('serviceofferid')}});
+        let gpuDetail = axios.get('gpuserver/listGpuServerById.do',{params:{GpuId:sessionStorage.getItem('uuId'),
+            zoneId:this.$store.state.zone.zoneid,
+            changeCost:'1'}});
+
+        Promise.all([zonesList,gpuDetail]).then(res =>{
+          this.gpuDetail = res[1].data.result;
+          if(res[0].data.result != undefined){
+            for(let i = 0; i < res[0].data.result.length; i++) {
+              if (res[0].data.result[i].cpunum != this.gpuDetail.cpunum && res[0].data.result[i].memory != this.gpuDetail.memory) {
+                this.cpuList.push(res[0].data.result[i]);
+              } else {
+                this.cpuList = '1';
+              }
+            }
+          }else {
+            this.cpuList = '1';
           }
-        });
+        })
+        // this.$http.get("gpuserver/listGpuServerOfferByUp.do",{
+        //   params:{
+        //     serviceofferId:sessionStorage.getItem('serviceofferid')
+        //   }
+        // }).then(res =>{
+        //   if(res.status == 200 && res.data.status == 1){
+        //     for(let i = 0; i < res.data.result.length; i++){
+        //       if(res.data.result[i].cpunum != this.gpuDetail.cpunum && res.data.result[i].memory != this.gpuDetail.memory){
+        //         this.cpuList.push(res.data.result[i]);
+        //       }else {
+        //         this.cpuList = '1';
+        //       }
+        //     }
+        //   }else{
+        //     this.cpuList = '1';
+        //   }
+        // });
       },
 
       //升级扣费
       upGpuConfig(){
-       axios.get('gpuserver/UpGPUConfigCost.do',{
-          params:{
-            zoneId:this.$store.state.zone.zoneid,
-            cpunum:this.cpuList[this.cpuIndex].CPU,
-            memory:this.memoryList[this.memoryIndex].memory,
-            GPUId:sessionStorage.getItem('gouId')
-          }
-        }).then(res => {
-          if(res.status == 200 && res.data.status ==1){
-            // this.upMoney = res.data.
-          }
-        })
+        if(this.cpuList.length != 0){
+          axios.get('gpuserver/UpGPUConfigCost.do',{
+            params:{
+              zoneId:this.$store.state.zone.zoneid,
+              cpunum:this.cpuList[this.cpuIndex].cpunum,
+              memory:this.cpuList[this.cpuIndex].memory,
+              GPUId:sessionStorage.getItem('gpuId')
+            }
+          }).then(res => {
+            if(res.status == 200 && res.data.status ==1){
+              this.upMoney = res.data.money
+            }
+          })
+        }
       },
 
       //升级提交订单
@@ -247,21 +157,27 @@ import axios from  'axios'
         axios.get('gpuserver/UpGPUConfig.do',{
           params:{
             zoneId:this.$store.state.zone.zoneid,
-            cpunum:this.cpuList[this.cpuIndex].CPU,
-            memory:this.memoryList[this.memoryIndex].memory,
-            GPUId:sessionStorage.getItem('gouId')
+            cpunum:this.cpuList[this.cpuIndex].cpunum,
+            memory:this.cpuList[this.cpuIndex].memory,
+            GPUId:sessionStorage.getItem('gpuId')
           }
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
+            this.$Message.success('订单提交成功');
+          }else{
             this.$Message.success(res.data.message);
           }
         })
       }
     },
     created(){
-      this.getZonesConfig();
-      // this.upGpuConfig();
-      this.getGpuHostDetail();
+        this.getZonesConfig();
+    },
+    mounted(){
+      setTimeout(()=>{
+        this.upGpuConfig();
+      },200)
+
     }
   }
 </script>
