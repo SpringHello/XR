@@ -119,10 +119,12 @@
     </div>
      <!-- 八大场景区 -->
     <div class="eigth-scene">
-      <div class="bg-wrap">
+      <div class="bg">
+        <div class="bg-wrap">
           <div class="bg" ref="bgcheck">
               <img  v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl"/>
           </div>
+        </div>
       </div>
       <div class="wrap">
         <div class="box">
@@ -3387,9 +3389,14 @@
     }
     .eigth-scene {
       position: relative;
-      margin:0 auto;
-      width: 1902px;
+      
+      
+      width: 100%;
       overflow: hidden;
+      >.bg{
+        width: 1902px;
+        margin:0 auto;
+      }
       .bg-wrap {
         position: relative;
         margin:0 auto;
@@ -3411,9 +3418,8 @@
         }
       }
       .wrap {
-        position: absolute;
-        top:0;
-        left: 350px;
+        position: relative;
+        margin-top: -666px;
         z-index: 2;
         height:666px;
         display: flex;
