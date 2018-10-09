@@ -1979,22 +1979,20 @@
         this.searchCard()
       },
       unfreeze_ok() {
+        // 解冻到账户
         if (this.unfreezeTo == 'account') {
           this.$refs.unfreeze.validate((valid) => {
             if (valid) {
-              let url = 'user/getRremainderThaw.do'
-
+              let url = 'user/userBalanceWithdrawals.do'
               let params = {
                 id: this.unfreezeId,
-                operType: '1'
+                payeeName: this.withdrawForm.payeeName,
+                payeeAccountType: this.withdrawForm.accountType,
+                payeeAccount: this.withdrawForm.account,
+                smsCode: this.withdrawForm.phoneCode,
+                username: this.withdrawConfirm.number
               }
-              // 解冻到账户
-              params.operType = '2'
-              params.payeeName = this.withdrawForm.payeeName
-              params.payeeAccountType = this.withdrawForm.accountType
-              params.payeeAccount = this.withdrawForm.account
-              params.smsCode = this.withdrawForm.phoneCode
-              params.username = this.withdrawConfirm.number
+
               if (this.withdrawForm.accountType == '银行卡') {
                 params.bankAccInfor = this.withdrawForm.bankName
               }
@@ -2014,11 +2012,11 @@
               })
             }
           })
+          //解冻到余额
         } else {
           let url = 'user/getRremainderThaw.do'
           let params = {
             id: this.unfreezeId,
-            operType: '1'
           }
           this.$http.post(url, params).then(res => {
             if (res.status == 200 && res.data.status == 1) {
