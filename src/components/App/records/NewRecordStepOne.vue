@@ -148,7 +148,7 @@
                 </div>
               </transition>
             </FormItem>
-            <FormItem label="办公室电话" v-else>
+            <FormItem label="办公室电话" v-if="isPersonage">
               <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()" v-model="mainUnitInformation.officePhone" placeholder="请输入办公室电话"
                                      style="width: 468px;margin-left: 10px"></Input>
               <transition name="fade">
@@ -675,7 +675,16 @@
         this.isToolHide = 0;
       }
     },
-    computed: {}
+    computed: {},
+    watch:{
+      'mainUnitInformation.unitProperties' (value){
+        if(value == '个人'){
+          this.isPersonage = true
+        } else{
+          this.isPersonage = false
+        }
+      }
+    }
   };
 </script>
 
