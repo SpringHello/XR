@@ -703,9 +703,11 @@
 
         //解绑IP
         unbind(publicip,computerid) {
-            this.$Message.info({
-              content: `<span style="color:#2A99F2"></span>GPU云服务器,正在解绑公网IP`
-            })
+         if(publicip != ''){
+           this.$Message.info({
+             content: `<span style="color:#2A99F2"></span>GPU云服务器,正在解绑公网IP`
+           })
+         }
             this.$http.get('network/disableStaticNat.do', {
               params: {
                 ipId:publicip,
