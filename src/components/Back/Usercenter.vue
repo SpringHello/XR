@@ -28,10 +28,10 @@
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
-                    <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span @click="showModal.bindingEmail = true">去绑定</span></li>
-                    <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span @click="showModal.bindingEmail = true">修改</span></li>
-                    <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span @click="showModal.bindingMobilePhone = true">去绑定</span></li>
-                    <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span @click="showModal.bindingMobilePhone = true">修改</span></li>
+                    <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0">去绑定</span></li>
+                    <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0">修改</span></li>
+                    <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0">去绑定</span></li>
+                    <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0">修改</span></li>
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li v-if="!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
                       @click="currentTab ='certification' ">马上认证</span></li>
@@ -836,7 +836,7 @@
               </FormItem>
               <Form-item label="验证码" prop="verificationCode" style="width: 100%">
                 <Input v-model="setNewPasswordForm.verificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
-                <Button type="primary" :disabled="setNewPasswordForm.codeText !='获取验证码' || setNewPasswordDisabled " @click="getSetNewPasswordCode">{{ setNewPasswordForm.codeText}}
+                <Button type="primary" :disabled="setNewPasswordForm.newCodeText !='获取验证码' || setNewPasswordDisabled " @click="getSetNewPasswordCode">{{ setNewPasswordForm.newCodeText}}
                 </Button>
               </Form-item>
             </div>
@@ -940,7 +940,7 @@
               </FormItem>
               <Form-item label="验证码" prop="newVerificationCode" style="width: 100%">
                 <Input v-model="bindingMobilePhoneForm.newVerificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
-                <Button type="primary" :disabled="bindingMobilePhoneForm.codeText !='获取验证码' " @click="getBindingNewMobilePhoneCode">{{ bindingMobilePhoneForm.codeText}}
+                <Button type="primary" :disabled="bindingMobilePhoneForm.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode">{{ bindingMobilePhoneForm.newCodeText}}
                 </Button>
               </Form-item>
             </div>
@@ -992,7 +992,7 @@
               </FormItem>
               <Form-item label="验证码" prop="verificationCode" style="width: 100%">
                 <Input v-model="bindingEmailForm.verificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
-                <Button type="primary" :disabled="bindingEmailForm.codeText !='获取验证码' || getBindingEmailDisabled" @click="getBindingEmailCode">{{ bindingMobilePhoneForm.codeText}}
+                <Button type="primary" :disabled="bindingEmailForm.codeText !='获取验证码' || getBindingEmailDisabled" @click="getBindingEmailCode">{{ bindingEmailForm.codeText}}
                 </Button>
               </Form-item>
             </div>
@@ -1008,7 +1008,7 @@
               </FormItem>
               <Form-item label="验证码" prop="newVerificationCode" style="width: 100%">
                 <Input v-model="bindingEmailForm.newVerificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
-                <Button type="primary" :disabled="bindingEmailForm.codeText !='获取验证码' " @click="getBindingNewEmailCode">{{ bindingEmailForm.codeText}}
+                <Button type="primary" :disabled="bindingEmailForm.newCodeText !='获取验证码' " @click="getBindingNewEmailCode">{{ bindingEmailForm.newCodeText}}
                 </Button>
               </Form-item>
             </div>
@@ -1480,6 +1480,7 @@
           verificationCode: '',
           pictureCode: '',
           codeText: '获取验证码',
+          newCodeText: '获取验证码',
           newPassword: '',
           confirmPassword: '',
           verificationMode: 'phone'
@@ -1507,6 +1508,7 @@
           verificationCode: '',
           pictureCode: '',
           codeText: '获取验证码',
+          newCodeText: '获取验证码',
           newPhone: '',
           newVerificationCode: '',
           verificationMode: 'phone'
@@ -1533,6 +1535,7 @@
           verificationCode: '',
           pictureCode: '',
           codeText: '获取验证码',
+          newCodeText: '获取验证码',
           newEmail: '',
           newVerificationCode: '',
           verificationMode: 'phone'
@@ -2044,13 +2047,13 @@
       }
     },
     created() {
-      /*      if (this.authType == 'person' || this.authType == 'company') {
-              this.showModal.selectAuthType = false
-            } else {
-              if (this.$store.state.authInfo == null) {
-                this.showModal.selectAuthType = true
-              }
-            }*/
+      if (this.authType == 'person' || this.authType == 'company') {
+        this.showModal.selectAuthType = false
+      } else {
+        if (this.$store.state.authInfo == null) {
+          this.showModal.selectAuthType = true
+        }
+      }
       this.listNotice()
       this.getContacts()
       this.getSystemHead()
@@ -2512,13 +2515,13 @@
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
                 var countdown = 60
-                this.setNewPasswordForm.codeText = `${countdown}S`
+                this.setNewPasswordForm.newCodeText = `${countdown}S`
                 var Interval = setInterval(() => {
                   countdown--
-                  this.setNewPasswordForm.codeText = `${countdown}S`
+                  this.setNewPasswordForm.newCodeText = `${countdown}S`
                   if (countdown == 0) {
                     clearInterval(Interval)
-                    this.setNewPasswordForm.codeText = '获取验证码'
+                    this.setNewPasswordForm.newCodeText = '获取验证码'
                   }
                 }, 1000)
               } else {
@@ -2533,13 +2536,21 @@
       getBindingMobilePhoneCode() {
         this.$refs.bindingMobilePhone.validateField('pictureCode', (text) => {
           if (text == '') {
-            axios.get('user/code.do', {
-              params: {
+            let params = {}
+            if (this.bindingMobilePhoneForm.verificationMode == 'phone') {
+              params = {
                 aim: this.userInfo.phone,
                 isemail: 0,
                 vailCode: this.bindingMobilePhoneForm.pictureCode
               }
-            }).then(response => {
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                vailCode: this.bindingMobilePhoneForm.pictureCode
+              }
+            }
+            axios.get('user/code.do', {params}).then(response => {
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
                 var countdown = 60
@@ -2566,7 +2577,7 @@
           if (text == '') {
             axios.get('user/code.do', {
               params: {
-                aim: this.userInfo.phone,
+                aim: this.bindingMobilePhoneForm.newPhone,
                 isemail: 0,
                 vailCode: this.bindingMobilePhoneForm.pictureCode
               }
@@ -2574,13 +2585,13 @@
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
                 var countdown = 60
-                this.bindingMobilePhoneForm.codeText = `${countdown}S`
+                this.bindingMobilePhoneForm.newCodeText = `${countdown}S`
                 var Interval = setInterval(() => {
                   countdown--
-                  this.bindingMobilePhoneForm.codeText = `${countdown}S`
+                  this.bindingMobilePhoneForm.newCodeText = `${countdown}S`
                   if (countdown == 0) {
                     clearInterval(Interval)
-                    this.bindingMobilePhoneForm.codeText = '获取验证码'
+                    this.bindingMobilePhoneForm.newCodeText = '获取验证码'
                   }
                 }, 1000)
               } else {
@@ -2595,13 +2606,21 @@
       getBindingEmailCode() {
         this.$refs.bindingEmail.validateField('pictureCode', (text) => {
           if (text == '') {
-            axios.get('user/code.do', {
-              params: {
+            let params = {}
+            if (this.bindingEmailForm.verificationMode == 'phone') {
+              params = {
                 aim: this.userInfo.phone,
                 isemail: 0,
                 vailCode: this.bindingEmailForm.pictureCode
               }
-            }).then(response => {
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                vailCode: this.bindingEmailForm.pictureCode
+              }
+            }
+            axios.get('user/code.do', {params}).then(response => {
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
                 var countdown = 60
@@ -2628,21 +2647,21 @@
           if (text == '') {
             axios.get('user/code.do', {
               params: {
-                aim: this.userInfo.phone,
-                isemail: 0,
+                aim: this.bindingEmailForm.newEmail,
+                isemail: 1,
                 vailCode: this.bindingEmailForm.pictureCode
               }
             }).then(response => {
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
                 var countdown = 60
-                this.bindingEmailForm.codeText = `${countdown}S`
+                this.bindingEmailForm.newCodeText = `${countdown}S`
                 var Interval = setInterval(() => {
                   countdown--
-                  this.bindingEmailForm.codeText = `${countdown}S`
+                  this.bindingEmailForm.newCodeText = `${countdown}S`
                   if (countdown == 0) {
                     clearInterval(Interval)
-                    this.bindingEmailForm.codeText = '获取验证码'
+                    this.bindingEmailForm.newCodeText = '获取验证码'
                   }
                 }, 1000)
               } else {
