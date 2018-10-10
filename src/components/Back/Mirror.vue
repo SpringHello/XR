@@ -36,6 +36,7 @@
         </Tabs>
       </div>
     </div>
+
     <Modal
       :scrollable="true"
       v-model="showModal.createMirror"
@@ -44,7 +45,7 @@
         <span class="universal-modal-title">制作镜像</span>
       </div>
       <div class="universal-modal-content-flex">
-        <Form :model="formItem" ref="formItem" :rules="ruleMirror" style="align-items:flex-end"> 
+        <Form :model="formItem" ref="formItem" :rules="ruleMirror" style="align-items:flex-end">
           <FormItem label="主机" prop="vmInfo">
             <Select v-model="formItem.vmInfo">
               <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
@@ -273,9 +274,9 @@
             render: (h, params) => {
               const text = params.row.status === 2 ? '创建中' : '删除中'
               if (params.row.status == 1) {
-                return '正常'
+                return  h('span',{},'正常')
               } else if (params.row.status == -1) {
-                return '正常'
+                return h('span',{},'异常')
               } else if (params.row.status == 2 || params.row.status == 3) {
                 return h('div', {}, [h('Spin', {
                   style: {
@@ -305,7 +306,7 @@
             key: 'action',
             width: 150,
             render: (h, params) => {
-              if (params.row.status == 2 || params.row.status == 3) {
+              if (params.row.status == 2 || params.row.status == 3 || params.row.status == -1) {
                 return h('div',[h('span', {
                   style: {
                     marginRight: '10px',
