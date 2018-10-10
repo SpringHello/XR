@@ -148,7 +148,6 @@
             isStart: true,
             weight: '1'
           },
-
           {
             imgPath: require('../../assets/img/activecenter/bg-objStorage-3.png'),
             name: '对象存储 重磅上线',
