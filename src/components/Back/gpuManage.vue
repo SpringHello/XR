@@ -89,7 +89,7 @@
               <div>
                 <div class="title-Png">
                   <span>内存使用率</span>
-                  <span style="float: right">{{CPUTime}}</span>
+                  <span style="float: right">{{momeryTime}}</span>
                 </div>
                 <div style="width: 100%" class="center_chart">
                   <div class="chart" >
@@ -408,6 +408,7 @@
         ],
         momeryMapIndex:0,
         momeryIndex:0,
+        momeryTime:'',
 
         //快照详情
         snapsDetails:{},
@@ -422,7 +423,27 @@
           },
           {
             title:'快照名称',
-            key:'snapshotname'
+            key:'snapshotname',
+            render:(h,params) =>{
+              if (params.row.status == 2) {
+                return h('div', [
+                  h('Spin', {
+                    style: {
+                      display: 'inline-block'
+                    }
+                  }),
+                  h('span',{
+                    style: {
+                      color:'#2A99F2'
+                    }
+                  },'创建中')
+                ])
+              } else{
+                return h('span',{
+
+                },params.row.snapshotname)
+              }
+            }
           },
           {
             title:'快照策略',
@@ -444,13 +465,13 @@
             title:'操作',
             width:100,
             render:(h,params) =>{
-              if (params.row.status == 2 || params.row.status == 3) {
+              if (params.row.status == -1 ) {
                 return h('span', {
                   style: {
                     cursor: 'not-allowed'
                   },
-                }, '回滚')
-              } else {
+                }, '异常')
+              } else if(params.row.status == 3){
               return h('span',{
                 style:{
                   color:'#2A99F2',
@@ -483,16 +504,22 @@
         //操作日志
         journalList:[
           {
-            title:'操作对象'
+            title:'操作对象',
+            key:'operatetarget'
           },
           {
-            title:'操作时间'
+            title:'操作时间',
+            key:'operatortime'
           },
           {
-            title:'操作结果'
+            title:'操作结果',
+            render:(h,params) =>{
+              return h('span', params.row.operatestatus == 1 ? '成功' : '失败')
+            }
           },
           {
-            title:'行为描述'
+            title:'行为描述',
+            key:'operatedes'
           }
         ],
         journalData:[],
@@ -607,26 +634,6 @@
         issmsalarm: false,
       }
     },
-    // beforeRouteEnter(to, from, next){
-    //   next(vm =>{
-    //     axios.get('information/zone.do',{
-    //       params:{
-    //         gpuServer:'1'
-    //       }
-    //     }).then(res => {
-    //       vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
-    //       vm.$store.state.zone.zonename = res.data.result[0].zonename;
-    //     })
-    //   })
-    // },
-    // beforeRouteLeave(to, from, next){
-    //   axios.get('information/zone.do',{
-    //   }).then(res => {
-    //    $store.state.zone.zoneid = res.data.result[0].zoneid;
-    //     $store.state.zone.zonename = res.data.result[0].zonename;
-    //   })
-    //   next();
-    // },
     methods:{
 
       //获取GPU服务器详情
@@ -658,9 +665,12 @@
         })
       },
       selectKuai(val){
-        val.forEach(item =>{
-          this.ids = item.id
-        })
+        for(let i=0;i<val.length;i++){
+          let idList = new Array();
+          idList.push(val[i].id);
+          this.ids = idList.join(',');
+          console.log(this.ids);
+        }
       },
 
       //删除快照
@@ -693,13 +703,15 @@
 
       //回滚快照
       goBackSnapshot(){
+        console.log(this.snapsDetails);
+        return;
           this.showWindow.rollback = false
           this.loadingMessage = '正在回滚主机'
           this.loading = true
           axios.get('Snapshot/revertToVMSnapshot.do', {
             params: {
-              snapshotId: this.snapsDetails.id,
-              zoneId: this.$store.state.zone.zoneid
+              snapshotId: this.snapsDetails.snapshotid,
+              zoneId: this.$store.state.zone.zoneid,
             }
           })
             .then(response => {
@@ -833,6 +845,12 @@
             target: 'gpu',
             queryTime: this.logTime,
           }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.journalData = res.data.tableData;
+          }else{
+            this.$Message.info(res.data.message);
+          }
         })
       },
       dataTimeChange(time){
@@ -897,7 +915,6 @@
           if(res.status == 200 && res.data.status == 1){
             this.cpu.series[0].data = response.data.result.cpuUse;
             this.cpu.xAxis.data = response.data.result.xaxis;
-
           }
         })
       },
@@ -921,13 +938,13 @@
           this.momeryIndex = val;
           switch (this.momeryList[val].value) {
             case '今天':
-              this.CPUTime = this.getCurrentDate()
+              this.momeryTime = this.getCurrentDate()
               break
             case '最近7天':
-              this.CPUTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              this.momeryTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
               break
             case '最近30天':
-              this.CPUTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
+              this.momeryTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
               break
           }
         }
@@ -1045,6 +1062,7 @@
       this.getUtilization();
       this.logTime = this.getCurrentDate() + ',' + this.getTomorrow();
       this.CPUTime = this.getCurrentDate();
+      this.momeryTime = this.getCurrentDate();
       this.selectOperationLog();
       this.$http.get('alarm/getVmAlarmByHour.do', {
         params: {

@@ -39,7 +39,7 @@
           </div>
         </my-carousel-item>
 
-        <!--<my-carousel-item class="carousel-item">
+        <my-carousel-item class="carousel-item">
           <div @click="push('DBActive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="db-active">
@@ -72,7 +72,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>-->
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('/ruicloud/groupBooking')"
                style="cursor: pointer;background: #FA846E;">
@@ -3434,26 +3434,26 @@
             display: flex;
           }
           .left-menu{
-            width: 200px;
             border-right: solid 1px #E6E6E6;
-            padding: 20px 0;ul {
-            li {
-              width:200px;
-              height:68px;
-              line-height: 68px;
-              font-size:20px;
-              font-family:PingFangSC-Semibold;
-              font-weight:400;
-              color: #333333;
-              cursor: pointer;
-              text-align: center;
-              &:hover,&.selected {
-                background:linear-gradient(270deg,rgba(170,202,255,1) 0%,rgba(138,189,253,0) 100%);
-                color: #377DFF;
-                border-right: #387DFF 6px solid;
+            padding: 20px 0;
+            ul {
+              li {
+                width:200px;
+                height:68px;
+                line-height: 68px;
+                font-size:20px;
+                font-family:PingFangSC-Semibold;
+                font-weight:400;
+                color: #333333;
+                cursor: pointer;
+                text-align: center;
+                &:hover,&.selected {
+                  background:linear-gradient(270deg,rgba(170,202,255,1) 0%,rgba(138,189,253,0) 100%);
+                  color: #377DFF;
+                  border-right: #387DFF 6px solid;
+                }
               }
             }
-          }
           }
           .content {
             position: relative;
