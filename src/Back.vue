@@ -231,7 +231,7 @@
           {
             mainName: '云服务器',
             type: 'server',
-            subItem: [{subName: '云主机', type: 'host'}, /*{subName: 'GPU云服务器', type: 'GpuList'},*/ {
+            subItem: [{subName: '云主机', type: 'host'}, {subName: 'GPU云服务器', type: 'GpuList'}, {
               subName: '云主机快照',
               type: 'snapshot'
             }, {
