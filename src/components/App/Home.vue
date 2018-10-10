@@ -3750,10 +3750,11 @@
           }
           dd:nth-of-type(1) {
             margin-top: 20px;
+            max-height: 50px;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 7;
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
           }
         }
