@@ -33,7 +33,7 @@
         <Form ref="ipValidate" :model="ipValidate" :rules="ipRuleValidate" label-position="top">
           <FormItem label="选择IP" prop="ip">
             <Select v-model="ipValidate.ip" placeholder="请选择IP" style="width: 200px">
-              <Option v-for="item in ipValidate.ipList" :value="item.value" :key="item.value">{{item.label}}</Option>
+              <Option v-for="item in ipValidate.ipList" :value="item.publicipid" :key="item.publicipid">{{item.publicip}}</Option>
             </Select>
             <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('buy/bip')">购买弹性IP</span>
           </FormItem>
@@ -41,7 +41,7 @@
         <br>
         <div slot="footer" class="modal-footer-border">
           <Button type="ghost" @click="showModal.ipShow=false">取消</Button>
-          <Button type="primary" @click="bindIp">确定</Button>
+          <Button type="primary" @click="bindipSubmit">确定</Button>
         </div>
       </Modal>
 
@@ -237,7 +237,7 @@
           //弹性ip
           ipValidate:{
             ip:'',
-            ipList:[{value:'199.199.0.120',label:'199.199.0.120'}]
+            ipList:[]
           },
           ipRuleValidate:{
             ip:[
@@ -514,12 +514,17 @@
                     }, [h('DropdownItem', {
                       nativeOn: {
                         click: () => {
-                          if(params.row.status == 2 || params.row.status ==3){
-                            this.$Message.info('请等待主机完成当前操作');
+                          if(params.row.publicip != ''){
+                            this.$Message.info('该主机已绑定IP');
                           }else {
-                            this.showModal.ipShow = true;
-                            this.vpcId = params.row.vpcid;
-                            this.bindIp();
+                            if(params.row.status == 2 || params.row.status ==3){
+                              this.$Message.info('请等待主机完成当前操作');
+                            }else {
+                              this.uuId = params.row.computerid;
+
+                              this.vpcId = params.row.vpcid;
+                              this.bindIp();
+                            }
                           }
                         }
                       }
@@ -546,12 +551,16 @@
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                            this.companyname = params.row.companyname;
-                            if(params.row.status == 2 || params.row.status ==3){
-                              this.$Message.info('请等待主机完成当前操作');
-                            }else {
-                              this.showModal.snapshot = true;
-                              this.uuId = params.row.computerid;
+                            if(params.row.computerstate == '1' && params.row.status=='1'){
+                              this.companyname = params.row.companyname;
+                              if(params.row.status == 2 || params.row.status ==3){
+                                this.$Message.info('请等待主机完成当前操作');
+                              }else {
+                                this.showModal.snapshot = true;
+                                this.uuId = params.row.computerid;
+                              }
+                            }else{
+                              this.$Message.info('制作快照前请先开启主机');
                             }
                           }
                         }
@@ -559,11 +568,16 @@
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                            if(params.row.status == 2 || params.row.status ==3){
-                              this.$Message.info('请等待主机完成当前操作');
-                            }else {
-                              this.showModal.mirror  = true;
-                              this.mirrorValidate.rootdiskid = params.row.rootdiskid;
+                            if(params.row.computerstate == '0' && params.row.status=='1'){
+                              this.uuId = params.row.computerid;
+                              if(params.row.status == 2 || params.row.status ==3){
+                                this.$Message.info('请等待主机完成当前操作');
+                              }else {
+                                this.showModal.mirror  = true;
+                                this.mirrorValidate.rootdiskid = params.row.rootdiskid;
+                              }
+                            }else{
+                             this.$Message.info('制作镜像前请先关闭主机');
                             }
                           }
                         }
@@ -571,13 +585,17 @@
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                            if(params.row.status == 2 || params.row.status ==3){
-                              this.$Message.info('请等待主机完成当前操作');
-                            }else {
-                              this.$router.push({path: 'gpuUpLevel'});
-                              sessionStorage.setItem('uuId', params.row.computerid);
-                              sessionStorage.setItem('comptername',params.row.companyname)
-                              sessionStorage.setItem('serviceofferid',params.row.serviceofferid);
+                            if (params.row.computerstate == '0' && params.row.status == '1') {
+                              if (params.row.status == 2 || params.row.status == 3) {
+                                this.$Message.info('请等待主机完成当前操作');
+                              } else {
+                                this.$router.push({path: 'gpuUpLevel'});
+                                sessionStorage.setItem('uuId', params.row.computerid);
+                                sessionStorage.setItem('comptername', params.row.companyname)
+                                sessionStorage.setItem('serviceofferid', params.row.serviceofferid);
+                              }
+                            }else{
+                              this.$Message.info('升级主机前请先关闭主机');
                             }
                           }
                         }
@@ -681,7 +699,7 @@
        },
 
 
-        //绑定IP
+        //获取绑定IP
         bindIp(){
          axios.get('network/listPublicIp.do',{
            params: {
@@ -691,14 +709,43 @@
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
-             if(res.data.result.length == 0){
-                this.showModal.publicIPHint = true;
-             }else {
-               this.showModal.publicIPHint = false;
-               this.ipValidate.ipList = res.data.result;
+             this.ipValidate.ipList = res.data.result;
+             if (this.publicIPList == '') {
+               this.showModal.publicIPHint = true;
+             } else {
+               this.showModal.ipShow = true;
              }
+           }else{
+             this.$Message.info('获取Ip出小差了');
            }
          })
+        },
+
+        //绑定IP
+        bindipSubmit() {
+          this.$refs.ipValidate.validate((valid) => {
+              if (valid) {
+                this.showModal.publicIPHint = false
+                this.$Message.info({
+                  content: `<span style="color:#2A99F2">${this.companyname}</span>GPU云服务器,正在绑定公网IP`
+                })
+                this.$http.get('network/enableStaticNat.do', {
+                  params: {
+                    ipId: this.ipValidate.ip,
+                    VMId:this.uuId
+                  }
+                }).then(response => {
+                  if (response.status == 200 && response.data.status == 1) {
+                    this.$Message.success(response.data.message)
+                  } else {
+                    this.$message.info({
+                      content: response.data.message
+                    })
+                  }
+                })
+              }
+            }
+          )
         },
 
         //解绑IP
@@ -815,40 +862,49 @@
 
         //创建镜像
         createMrrior(){
-        axios.get('Snapshot/createTemplate.do',{
-           params:{
-             templateName:this.mirrorValidate.name,
-             descript:this.mirrorValidate.descript,
-             rootdiskId:this.mirrorValidate.rootdiskid,
-             zoneId:this.$store.state.zone.zoneid
-           }
-         }).then(res => {
-           if(res.status == 200 && res.data.status == 1){
-             this.$Message.success('镜像创建成功');
-             this.showModal.mirror = false;
-           }else {
-             this.$Message.info('镜像创建出小差了');
-           }
-        })
+          this.$refs.mirrorValidate.validate((valid) => {
+            if (valid) {
+              axios.get('Snapshot/createTemplate.do', {
+                params: {
+                  templateName: this.mirrorValidate.name,
+                  descript: this.mirrorValidate.descript,
+                  rootDiskId: this.mirrorValidate.rootdiskid,
+                  zoneId: this.$store.state.zone.zoneid,
+
+                }
+              }).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.$Message.success('镜像创建成功');
+                  this.showModal.mirror = false;
+                } else {
+                  this.$Message.info('镜像创建出小差了');
+                }
+              })
+            }
+          })
         },
 
         //创建快照
         createVMSnapshot(){
-         axios.get('Snapshot/createVMSnapshot.do',{
-           params:{
-             VMId:this.uuId,
-             snapshotName:this.snapshotValidate.name,
-             memoryStatus:this.snapshotValidate.memory,
-             zoneId:this.$store.state.zone.zoneid
-           }
-         }).then(res => {
-           if(res.status == 200 && res.data.status == 1){
-             this.$Message.success('快照创建成功');
-             this.showModal.snapshot = false;
-           }else {
-             this.$Message.info('创建快照出小差了');
-           }
-         })
+          this.$refs.snapshotValidate.validate((valid) => {
+            if (valid) {
+              axios.get('Snapshot/createVMSnapshot.do', {
+                params: {
+                  VMId: this.uuId,
+                  snapshotName: this.snapshotValidate.name,
+                  memoryStatus: this.snapshotValidate.memory,
+                  zoneId: this.$store.state.zone.zoneid
+                }
+              }).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.$Message.success('快照创建成功');
+                  this.showModal.snapshot = false;
+                } else {
+                  this.$Message.info('创建快照出小差了');
+                }
+              })
+            }
+          })
         },
 
         //续费类型切换
