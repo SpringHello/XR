@@ -10,7 +10,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <!--<my-carousel-item class="carousel-item">
+        <my-carousel-item class="carousel-item">
           <div  @click="push('/ruicloud/objStorageActive')"
             style="cursor: pointer;">
             <div class="obj-storage">
@@ -24,7 +24,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>-->
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('groupBooking')"
                style="cursor: pointer;background: #FA846E;">
@@ -41,7 +41,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <!--<my-carousel-item class="carousel-item">
+        <my-carousel-item class="carousel-item">
           <div @click="push('active_1')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
@@ -56,7 +56,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>-->
+        </my-carousel-item>
       </my-carousel>
     </div>
     <div class="center-active box-g">
@@ -155,9 +155,9 @@
             secSpan: '安全稳定高效的云端存储服务 免费试用50G',
             des: ' 即将上线',
             activeObj: '对象存储 新老用户',
-            //url: 'objStorageActive',
-            url: '',
-            isStart: false,
+            url: 'objStorageActive',
+            // url: '',
+            isStart: true,
             weight: '1',
             color: 'black'
           },
@@ -165,12 +165,12 @@
             imgPath: require('../../assets/img/activecenter/bg-objStorage-4.png'),
             name: '热门云数据库产品免费试用60天',
             secSpan: '秒级创建 一键恢复 安全可靠',
-            //des: '2018.09.29开始',
-            des: '即将上线',
+            des: '2018.09.29开始',
+            // des: '即将上线',
             activeObj: '云数据库 新老用户',
-            //url: 'DBActive',
-            url: '',
-            isStart: false,
+            url: 'DBActive',
+            // url: '',
+            isStart: true,
             weight: '1',
             color: 'black'
           },
