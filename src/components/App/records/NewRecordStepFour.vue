@@ -553,7 +553,7 @@
       getCurrentDate() {
         return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
       },
-      sendAddress: throttle(5000, function () {
+      sendAddress() {
         let url = 'recode/sendAddress.do'
         axios.get(url).then(res => {
           if (res.data.status == 1) {
@@ -562,7 +562,7 @@
             this.$Message.info('地址发送失败')
           }
         })
-      }),
+      },
       toMap() {
         window.open('map')
       }
