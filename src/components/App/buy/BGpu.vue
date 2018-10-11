@@ -642,8 +642,13 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-              this.customMirror = {}
+              // let cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
+              // for(let i = 0; i<cusList.length;i++){
+              //   if(cusList[i].status != -1){
+                  this.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
+                  this.customMirror = {}
+                // }
+              // }
             }
           })
         }
