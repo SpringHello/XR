@@ -449,14 +449,25 @@
         })
       },
       ownMirrorCreathost(item) {
-        this.$router.push({
-          path: 'buy',
-          query: {
-            zoneid: item.zoneid,
-            mirrorType: 'custom',
-            mirror: item
-          }
-        })
+        if(this.$store.state.zone.zonename.indexOf("GPU") != -1) {
+          this.$router.push({
+            path: 'buy/bgpu',
+            query: {
+              zoneid: item.zoneid,
+              mirrorType: 'custom',
+              mirror: item
+            }
+          })
+        }else{
+          this.$router.push({
+            path: 'buy',
+            query: {
+              zoneid: item.zoneid,
+              mirrorType: 'custom',
+              mirror: item
+            }
+          })
+        }
       },
       mirrorModify() {
         this.showModal.modify = false

@@ -81,7 +81,7 @@
                   </div>
 
                   <!--公共镜像 列表-->
-                  <div v-if="currentType=='public'">
+                  <div v-if=" currentType=='public'">
                     <Dropdown v-for="(item,index) in publicList" style="margin-right:10px;margin-top:20px;"
                               @on-click="setOS" :key="item.ostypeid">
                       <div
@@ -98,7 +98,7 @@
                     </Dropdown>
                   </div>
                   <!--自定义镜像 列表-->
-                  <div v-if="currentType=='custom'">
+                  <div v-if=" currentType=='custom'">
                     <div v-for="item in customList" :key="item.value" class="zoneItem"
                          :class="{zoneSelect:customMirror.id==item.id}"
                          @click="setOwnTemplate(item)" style="margin-top: 20px;">{{item.templatename}}
@@ -604,7 +604,9 @@
       }
     },
     created(){
-
+      if(this.$route.query.mirrorType){
+        this.currentType = this.$route.query.mirrorType
+      }
       this.setGpuServer()
       this.setTemplate()
       this.queryVpc()
