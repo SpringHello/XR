@@ -447,7 +447,14 @@
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 1
       })
-      var zone = zoneList[0]
+      var zone = this.$store.state.zone
+      // 如果默认区域在该资源下不存在
+      if(!zoneList.some(i=>{
+          i.zoneid == zone.zoneid
+        })){
+        // 默认选中zoneList中第一个区域
+        zone = zoneList[0]
+      }
       return {
         zone,
         zoneList,
