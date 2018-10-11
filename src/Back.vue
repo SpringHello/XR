@@ -237,7 +237,7 @@
             }, {
               subName: '镜像',
               type: 'mirror'
-            }, /*{subName: '弹性伸缩',type:'Elastic'},/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            }, {subName: '弹性伸缩',type:'Elastic'},/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
@@ -248,7 +248,7 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              //{subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              // {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
