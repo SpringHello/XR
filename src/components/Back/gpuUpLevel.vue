@@ -95,7 +95,6 @@ import axios from  'axios'
       },
       //获取cpu和内存
       getZonesConfig(){
-
         // this.getGpuHostDetail();
         let zonesList = this.$http.get('gpuserver/listGpuServerOfferByUp.do',{params:{serviceofferId:sessionStorage.getItem('serviceofferid')}});
         let gpuDetail = axios.get('gpuserver/listGpuServerById.do',{params:{GpuId:sessionStorage.getItem('uuId'),
@@ -105,31 +104,17 @@ import axios from  'axios'
           this.gpuDetail = res[1].data.result;
           if(res[0].data.result.length != 0){
             for(let i = 0; i < res[0].data.result.length; i++) {
-              if (res[0].data.result[i].cpunum != this.gpuDetail.cpunum && res[0].data.result[i].memory != this.gpuDetail.memory) {
-                this.cpuList.push(res[0].data.result[i]);
+              if (res[0].data.result[i].cpunum != this.gpuDetail.cpunum && res[0].data.result[i].memory != this.gpuDetail.memory ) {
+                if(res[0].data.result[i].memory > this.gpuDetail.memory){
+                  this.cpuList.push(res[0].data.result[i]);
+                }
               }
             }
           }else {
             this.cpuList = '1';
           }
         })
-        // this.$http.get("gpuserver/listGpuServerOfferByUp.do",{
-        //   params:{
-        //     serviceofferId:sessionStorage.getItem('serviceofferid')
-        //   }
-        // }).then(res =>{
-        //   if(res.status == 200 && res.data.status == 1){
-        //     for(let i = 0; i < res.data.result.length; i++){
-        //       if(res.data.result[i].cpunum != this.gpuDetail.cpunum && res.data.result[i].memory != this.gpuDetail.memory){
-        //         this.cpuList.push(res.data.result[i]);
-        //       }else {
-        //         this.cpuList = '1';
-        //       }
-        //     }
-        //   }else{
-        //     this.cpuList = '1';
-        //   }
-        // });
+
       },
 
       //升级扣费
@@ -162,9 +147,8 @@ import axios from  'axios'
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.$Message.success('订单提交成功');
-            this.$router.push({path:'gpuList'})
+            this.$router.replace('order')
           }else{
-            console.log(res);
             this.$Message.success(res.data.message);
           }
         })
