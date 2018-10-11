@@ -66,7 +66,7 @@
                 <div>
                   <div v-for="item in mirrorType" class="zoneItem"
                        :class="{zoneSelect:currentType==item.value}"
-                       @click="currentType=item.value">{{item.label}}
+                       @click="selectMirror">{{item.label}}
                   </div>
                   <!--镜像+应用 列表-->
                   <div v-if="currentType=='app'">
@@ -604,6 +604,7 @@
       }
     },
     created(){
+      console.log(this.$route.query.mirror)
       if(this.$route.query.mirrorType){
         this.currentType = this.$route.query.mirrorType
       }
@@ -647,8 +648,14 @@
               // let cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
               // for(let i = 0; i<cusList.length;i++){
               //   if(cusList[i].status != -1){
-                  this.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-                  this.customMirror = {}
+              if(this.$route.query.mirror){
+                this.customList.push(this.$route.query.mirror);
+                this.customMirror = {}
+              }else {
+                this.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
+                this.customMirror = {}
+              }
+
                 // }
               // }
             }
@@ -999,6 +1006,15 @@
           }
         })
       },
+
+      //选择镜像类型
+      selectMirror(){
+        if(this.$route.query.mirrorType == 'custom'){
+          this.currentType ='custom'
+        }else if(this.$route.query.mirrorType == 'public'){
+          this.currentType = 'public'
+        }
+      }
     },
     computed: {
       userInfo(){
