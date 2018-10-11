@@ -39,17 +39,17 @@
                 </a>
                 <DropdownMenu slot="list">
                   <DropdownItem name="userCenter">
-                    <router-link to="userCenter">用户中心</router-link>
+                    <router-link to="/ruicloud/userCenter">用户中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="expenses">
-                    <router-link to="expenses">费用中心</router-link>
+                    <router-link to="/ruicloud/expenses">费用中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="msgCenter" style="position:relative">
-                    <router-link to="msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
+                    <router-link to="/ruicloud/msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
                     </router-link>
                   </DropdownItem>
                   <DropdownItem name="operationLog">
-                    <router-link to="operationLog">操作日志</router-link>
+                    <router-link to="/ruicloud/operationLog">操作日志</router-link>
                   </DropdownItem>
                   <DropdownItem divided name="exit">
                     <!-- <router-link to="">退出</router-link> -->
