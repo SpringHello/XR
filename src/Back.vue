@@ -277,8 +277,8 @@
             mainName: '云安全',
             type: 'security',
             subItem: [
-              {subName: '防火墙', type: 'firewall'}
-              /*{subName: '云监控', type: 'CloudMonitor'}*/
+              {subName: '防火墙', type: 'firewall'},
+              {subName: '云监控', type: 'CloudMonitor'}
             ]
           },
           /*{
