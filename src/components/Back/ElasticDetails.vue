@@ -5,7 +5,7 @@
       <div id="content">
         <div class="ela_head">
           <div class="head_right">
-            <div class="back" @click="$router.push({path:'Elastic'})">
+            <div class="back" @click="$router.push({path:'elastic'})">
               <div class="back_icon"></div>
               <span>返回</span>
             </div>
@@ -31,10 +31,10 @@
             <p>{{elastic.templatename}}</p>
             <p>{{elastic.disktype}}</p>
             <p>{{elastic.disksize}}GB</p>
-            <p>{{elastic.bandwidth == '' || elastic.bandwidth == undefined ? '无': '有'}}</p>
-            <p>{{elastic.bandwidth == '' || elastic.bandwidth == undefined ? '无' : elastic.bandwidth}}</p>
+            <p>有</p>
+            <p>10MB</p>
             <p>{{elastic.computername == '' ? '---':elastic.computername}}</p>
-            <p>{{elastic.systemusername == '' || elastic.systemusername == undefined ? '---':elastic.systemusername}}</p>
+            <p>{{elastic.systemusername == '' ? '---':elastic.systemusername}}</p>
             <p>{{elastic.loginway == 1 ? '密码设置' : '系统密码'}}</p>
             <p>***********</p>
             <p>{{elastic.billingtype}}元/小时</p>
@@ -153,7 +153,6 @@
         }).then(res => {
             if(res.status == 200 && res.data.status == 1){
               this.elastic = res.data.list[0];
-              console.log(this.elastic.bandwidth);
             }
         })
       },
