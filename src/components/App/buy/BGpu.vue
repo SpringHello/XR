@@ -401,7 +401,7 @@
         <!--费用、以及加入预算清单-->
         <div style="margin-top: 20px">
           <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-             @click="$router.push('document')">查看计价详情</p>
+             @click="$router.push({path:'/ruicloud/document'})">查看计价详情</p>
           <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
             费用：<span
             style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
