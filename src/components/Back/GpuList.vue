@@ -725,7 +725,8 @@
         bindipSubmit() {
           this.$refs.ipValidate.validate((valid) => {
               if (valid) {
-                this.showModal.publicIPHint = false
+                this.showModal.publicIPHint = false;
+                this.showModal.ipShow = false;
                 this.$Message.info({
                   content: `<span style="color:#2A99F2">${this.companyname}</span>GPU云服务器,正在绑定公网IP`
                 })

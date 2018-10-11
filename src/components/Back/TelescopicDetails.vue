@@ -6,7 +6,7 @@
         <div id="header">
           <span id="title">{{details.stretchname}}</span>
           <div style="float: right">
-            <button class="button"  @click="$router.push({path:'Elastic'})" style="margin-top: 10px;">返回</button>
+            <button class="button"  @click="$router.push({path:'elastic'})" style="margin-top: 10px;">返回</button>
             <button class="button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
           </div>
         </div>
@@ -429,7 +429,7 @@
             </div>
             <div class="list_box" v-for="(item,index) in intoCloudHost">
               <div>
-                <p :title="item.computername">{{item.computername}}</p>
+                <p :title="item.computername">{{item.instancename}}</p>
               </div>
               <div  @click="hostRightRmove(index)">
                 <Icon type="plus"></Icon>
@@ -1905,7 +1905,7 @@
         }
         this.$http.get('elasticScaling/listActivity.do',{
           params:{
-            telescopicGroupId:sessionStorage.getItem('vpc_id').toString(),
+            telescopicGroupId:sessionStorage.getItem('vpc_id'),
             dataTime:date,
             status:this.telescopicActivity.status
           }
@@ -1918,10 +1918,16 @@
 
       //获取用户的云主机
       selectCloudHost(){
-        this.$http.get('information/getAllAreaVM.do',{
+        this.$http.get('elasticScaling/listVMByTelescopicId.do',{
+          params:{
+            telescopicId:sessionStorage.getItem('vpc_id')//伸缩组ID
+          }
         }).then(res =>{
-          if(res.status == 200 && res.data.status == 1)
-          this.intoCloudHost = res.data.result;
+          if(res.status == 200 && res.data.status == 1){
+            console.log(res);
+            this.intoCloudHost = res.data.list;
+          }
+
         })
       },
 
@@ -2042,7 +2048,6 @@
     },
     mounted(){
       this.selectCloudHost();
-
     }
   }
 </script>
