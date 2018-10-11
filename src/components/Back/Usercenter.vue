@@ -46,37 +46,44 @@
               <div class="pi-otherInfo">
                 <div class="pi-otherInfo-form">
                   <Form ref="occupationalInfo" :model="occupationalInfoForm" :rules="occupationalInfoRule" :label-width="100">
-                    <FormItem label="应用行业" prop="trade">
-                      <Select v-model="occupationalInfoForm.trade" style="width: 317px;" :disabled="otherInfoShow" class="uc-select">
+                    <FormItem label="应用行业">
+                      <span class="f-span" v-show="otherInfoShow">{{occupationalInfoForm.trade }}</span>
+                      <Select v-model="occupationalInfoForm.trade" style="width: 317px;margin-left: 35px;" v-show="!otherInfoShow">
                         <Option v-for="item in occupationalInfoForm.tradeOptions" :key="item.label"
                                 :value="item.label">
                           {{item.label}}
                         </Option>
                       </Select>
                     </FormItem>
-                    <FormItem label="职位" prop="position">
-                      <Select v-model="occupationalInfoForm.position" style="width: 317px;" :disabled="otherInfoShow">
+                    <FormItem label="职位">
+                      <span class="f-span" v-show="otherInfoShow">{{occupationalInfoForm.position }}</span>
+                      <Select v-model="occupationalInfoForm.position" style="width: 317px;margin-left: 35px;" v-show="!otherInfoShow">
                         <Option v-for="item in occupationalInfoForm.positionOptions" :key="item.label"
                                 :value="item.label">
                           {{item.label}}
                         </Option>
                       </Select>
                     </FormItem>
-                    <FormItem label="单位名称" prop="companyName">
-                      <Input v-model="occupationalInfoForm.companyName" placeholder="请输入单位名称" style="width: 317px;" :readonly="otherInfoShow"></Input>
+                    <FormItem label="单位名称">
+                      <span class="f-span" v-show="otherInfoShow">{{occupationalInfoForm.companyName }}</span>
+                      <Input v-model="occupationalInfoForm.companyName" placeholder="请输入单位名称" style="width: 317px;margin-left: 35px;" v-show="!otherInfoShow"></Input>
                     </FormItem>
-                    <FormItem label="地域" prop="city">
-                      <Select v-model="occupationalInfoForm.province" style="width:154px;margin-right: 10px" placeholder="请选择省"
-                              @on-change="changeProvince" :disabled="otherInfoShow">
+                    <FormItem label="地域">
+                      <Select v-model="occupationalInfoForm.province" style="width:154px;margin-right: 10px;margin-left: 35px;" placeholder="请选择省"
+                              @on-change="changeProvince" v-show="!otherInfoShow">
                         <Option v-for="item in occupationalInfoForm.provinceList" :value="item.name" :key="item.name">{{item.name}}
                         </Option>
                       </Select>
-                      <Select v-model="occupationalInfoForm.city" style="width:154px;margin-right: 10px" placeholder="请选择市" :disabled="otherInfoShow">
+                      <Select v-model="occupationalInfoForm.city" style="width:154px;margin-right: 10px" placeholder="请选择市" v-show="!otherInfoShow">
                         <Option v-for="item in occupationalInfoForm.cityList" :value="item.name" :key="item.name">{{ item.name}}
                         </Option>
                       </Select>
+                      <div style="display: flex">
+                        <span class="f-span" style="width: 154px;margin-right: 10px;" v-show="otherInfoShow">{{occupationalInfoForm.province }}</span>
+                        <span class="f-span" style="width: 154px;margin-left: 0" v-show="otherInfoShow">{{occupationalInfoForm.city }}</span>
+                      </div>
                     </FormItem>
-                    <div style="padding-left: 100px">
+                    <div style="padding-left: 135px">
                       <Button type="primary" @click="saveJobInfo" v-if="!otherInfoShow">保存</Button>
                       <Button type="primary" @click="otherInfoShow=false" v-else>修改</Button>
                     </div>
@@ -2017,15 +2024,15 @@
         })
       },
       setOccupationalInfo() {
-        if (this.userInfo.applicationindustry) {
-          this.occupationalInfoForm.trade = this.userInfo.applicationindustry
-          this.occupationalInfoForm.position = this.userInfo.position
-          this.occupationalInfoForm.companyName = this.userInfo.corporatename
-          this.occupationalInfoForm.province = this.userInfo.corporateaddressprovince
+        if (this.userInfo.applicationindustry || this.userInfo.position || this.userInfo.corporatename || this.userInfo.corporateaddressprovince) {
+          this.occupationalInfoForm.trade = this.userInfo.applicationindustry ? this.userInfo.applicationindustry : ''
+          this.occupationalInfoForm.position = this.userInfo.position ? this.userInfo.position : ''
+          this.occupationalInfoForm.companyName = this.userInfo.corporatename ? this.userInfo.corporatename : ''
+          this.occupationalInfoForm.province = this.userInfo.corporateaddressprovince ? this.userInfo.corporateaddressprovince : ''
           area.forEach(item => {
             if (item.name == this.occupationalInfoForm.province) {
               this.occupationalInfoForm.cityList = item.city
-              this.occupationalInfoForm.city = this.userInfo.corporateaddresscity
+              this.occupationalInfoForm.city = this.userInfo.corporateaddresscity ? this.userInfo.corporateaddresscity : ''
             }
           })
           this.otherInfoShow = true
@@ -2153,28 +2160,24 @@
         })
       },
       saveJobInfo() {
-        this.$refs['occupationalInfo'].validate(valid => {
-          if (valid) {
-            let url = 'user/addUserElseMessage.do'
-            let params = {
-              applicationIndustry: this.occupationalInfoForm.trade,
-              position: this.occupationalInfoForm.position,
-              corporateName: this.occupationalInfoForm.companyName,
-              corporateAddressProvince: this.occupationalInfoForm.province,
-              corporateAddressCity: this.occupationalInfoForm.city,
-              type: '1'
-            }
-            this.$http.post(url, params).then(res => {
-              if (res.status == 200 && res.data.status == 1) {
-                this.$Message.success(res.data.message)
-                this.showModal.modifyOtherInfo = false
-                this.init()
-                this.otherInfoShow = true
-              } else {
-                this.$message.info({
-                  content: res.data.message
-                })
-              }
+        let url = 'user/addUserElseMessage.do'
+        let params = {
+          applicationIndustry: this.occupationalInfoForm.trade,
+          position: this.occupationalInfoForm.position,
+          corporateName: this.occupationalInfoForm.companyName,
+          corporateAddressProvince: this.occupationalInfoForm.province,
+          corporateAddressCity: this.occupationalInfoForm.city,
+          type: '1'
+        }
+        this.$http.post(url, params).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.showModal.modifyOtherInfo = false
+            this.init()
+            this.otherInfoShow = true
+          } else {
+            this.$message.info({
+              content: res.data.message
             })
           }
         })
@@ -3485,5 +3488,18 @@
     p:nth-child(2) {
       margin-bottom: 20px;
     }
+  }
+
+  .f-span {
+    margin-left: 35px;
+    background: #f3f3f3;
+    color: black;
+    border: 1px solid #dddee1;
+    display: block;
+    width: 317px;
+    border-radius: 4px;
+    line-height: 32px;
+    padding-left: 8px;
+    height: 32px;
   }
 </style>
