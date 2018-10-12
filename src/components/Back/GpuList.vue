@@ -873,7 +873,7 @@
                 }
               }).then(res => {
                 if (res.status == 200 && res.data.status == 1) {
-                  this.$Message.success('镜像创建成功');
+                  this.$Message.success(res.data.message);
                   this.showModal.mirror = false;
                 } else {
                   this.$Message.info('镜像创建出小差了');
