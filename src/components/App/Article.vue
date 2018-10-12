@@ -43,7 +43,7 @@
             <div v-for="h in hot" class="info">
               <router-link :to="`${h.code}.html`" target="_blank">
                 <div class="hotInfo-title">
-                  <p :title="item.title"><span class="htitle">{{h.title}}</span><span class="time">{{h.createDate}}</span></p>
+                  <p :title="h.title"><span class="htitle">{{h.title}}</span><span class="time">{{h.createDate}}</span></p>
                 </div>
                 <p class="hotInfo-content" v-html="h.abstracts"></p>
               </router-link>

@@ -3,7 +3,7 @@
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/home" class="logo">
+        <router-link to="/ruicloud" class="logo">
           <div></div>
         </router-link>
         <div class="operate">
@@ -302,7 +302,7 @@
           },
           {
             title: '首页',
-            path: '/ruicloud/home'
+            path: '/ruicloud'
           },
           {
             title: '产品',

@@ -2,7 +2,7 @@
   <div id="app">
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/home" class="logo">
+        <router-link to="/ruicloud" class="logo">
           <div></div>
         </router-link>
         <div class="home">

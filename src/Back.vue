@@ -2,7 +2,7 @@
   <div id="back">
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/home" class="logo">
+        <router-link to="/ruicloud" class="logo">
           <div></div>
         </router-link>
         <div class="operate">
@@ -237,7 +237,7 @@
             }, {
               subName: '镜像',
               type: 'mirror'
-            }, /*{subName: '弹性伸缩',type:'Elastic'},/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            }, {subName: '弹性伸缩',type:'Elastic'},/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
@@ -277,8 +277,8 @@
             mainName: '云安全',
             type: 'security',
             subItem: [
-              {subName: '防火墙', type: 'firewall'}
-              /*{subName: '云监控', type: 'CloudMonitor'}*/
+              {subName: '防火墙', type: 'firewall'},
+              {subName: '云监控', type: 'CloudMonitor'}
             ]
           },
           /*{
