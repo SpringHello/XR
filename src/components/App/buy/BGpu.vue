@@ -599,14 +599,15 @@
         // 开放端口
         port: '',
         // 数据库名称
-        dbName: ''
+        dbName: '',
 
+        //具体镜像
+        mirrorQuery:this.$route.query.mirror
       }
     },
     created(){
-      console.log(this.$route.query.mirror)
       if(this.$route.query.mirrorType){
-        this.currentType = this.$route.query.mirrorType
+        this.currentType = this.$route.query.mirrorType;
       }
       this.setGpuServer()
       this.setTemplate()
@@ -629,9 +630,14 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.publicList = []
-            for (let system in response.data.result) {
-              this.publicList.push({system, systemList: response.data.result[system], selectSystem: ''})
+            if(this.mirrorQuery){
+              this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''})
+            }else{
+              for (let system in response.data.result) {
+                this.publicList.push({system, systemList: response.data.result[system], selectSystem: ''})
+              }
             }
+
             this.system = {}
           }
         })
@@ -648,9 +654,9 @@
               // let cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
               // for(let i = 0; i<cusList.length;i++){
               //   if(cusList[i].status != -1){
-              if(this.$route.query.mirror){
-                this.customList.push(this.$route.query.mirror);
-                this.customMirror = {}
+              if(this.mirrorQuery){
+                this.customList.push(this.mirrorQuery);
+                this.customMirror = this.mirrorQuery;
               }else {
                 this.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
                 this.customMirror = {}
@@ -676,11 +682,17 @@
       // 选中表中的一项
       selectGpu(currentRow) {
         this.gpuSelection = currentRow
-        console.log(this.gpuSelection)
       },
       // 重新选择系统镜像
       setOS(name) {
-        var arg = name.split('#')
+        var arg = [];
+        if(this.mirrorQuery){
+          arg.push(this.mirrorQuery.templatename);
+          arg.push(this.mirrorQuery.systemtemplateid);
+        }else{
+          arg = name.split('#');
+        }
+        console.log(this.publicList);
         for (var item of this.publicList) {
           item.selectSystem = ''
         }
@@ -695,11 +707,25 @@
         } else {
           this.systemUsername = 'root'
         }
-        this.publicList[arg[2]].selectSystem = arg[0]
+
+        for(let i = 0;i<this.publicList.length;i++){
+          let count =0;
+          count ++;
+          if(this.publicList[i].systemList[i].ostypeid == this.mirrorQuery.ostypeid){
+            this.publicList[count].selectSystem = arg[0];
+            break;
+          }
+        }
+
+        // this.publicList[arg[2]].selectSystem = arg[0]
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
-        this.customMirror = item
+      if(this.$route.mirror){
+        this.customMirror = this.mirrorQuery;
+      }else{
+        this.customMirror = item;
+      }
         var str = item.ostypename.substr(0, 1)
         if (str === 'W' || str === 'w') {
           this.systemUsername = 'administrator'

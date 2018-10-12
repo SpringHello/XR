@@ -519,12 +519,12 @@
         var item = this.select;
         if(this.$store.state.zone.zonename.indexOf("GPU") != -1){
           this.$router.push({
-            path: 'buy/bgpu'
-            // query: {
-            //   zoneid: item.zoneid,
-            //   mirrorType: 'public',
-            //   mirror: item
-            // }
+            path: 'buy/bgpu',
+            query: {
+              zoneid: item.zoneid,
+              mirrorType: 'public',
+              mirror: item
+            }
           })
         }else {
           this.$router.push({
