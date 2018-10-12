@@ -66,7 +66,7 @@
                 <div>
                   <div v-for="item in mirrorType" class="zoneItem"
                        :class="{zoneSelect:currentType==item.value}"
-                       @click="selectMirror">{{item.label}}
+                       @click="selectMirror(item)">{{item.label}}
                   </div>
                   <!--镜像+应用 列表-->
                   <div v-if="currentType=='app'">
@@ -629,15 +629,19 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.publicList = []
+            this.publicList = [];
             if(this.mirrorQuery){
-              this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''})
+              console.log(this.mirrorQuery);
+              if(this.mirrorQuery.templatename.substr(0,1) == w){
+                let system = 'windows'
+              }
+              this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
+
             }else{
               for (let system in response.data.result) {
                 this.publicList.push({system, systemList: response.data.result[system], selectSystem: ''})
               }
             }
-
             this.system = {}
           }
         })
@@ -651,19 +655,17 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              // let cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
-              // for(let i = 0; i<cusList.length;i++){
-              //   if(cusList[i].status != -1){
-              if(this.mirrorQuery){
-                this.customList.push(this.mirrorQuery);
-                this.customMirror = this.mirrorQuery;
-              }else {
-                this.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-                this.customMirror = {}
+              let cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
+              for(let i = 0; i<cusList.length;i++){
+                if(cusList[i].status != -1){
+                  this.customList.push(cusList[i]);
+                  this.customMirror = {};
+                // if(this.mirrorQuery){
+                //     this.customList.push(this.mirrorQuery);
+                //     this.customMirror = this.mirrorQuery;
+                //   }
+                }
               }
-
-                // }
-              // }
             }
           })
         }
@@ -686,13 +688,13 @@
       // 重新选择系统镜像
       setOS(name) {
         var arg = [];
-        if(this.mirrorQuery){
-          arg.push(this.mirrorQuery.templatename);
-          arg.push(this.mirrorQuery.systemtemplateid);
-        }else{
+        // if(this.mirrorQuery){
+        //   arg.push(this.mirrorQuery.templatename);
+        //   arg.push(this.mirrorQuery.systemtemplateid);
+        // }else{
           arg = name.split('#');
-        }
-        console.log(this.publicList);
+        // }
+
         for (var item of this.publicList) {
           item.selectSystem = ''
         }
@@ -707,17 +709,18 @@
         } else {
           this.systemUsername = 'root'
         }
-
-        for(let i = 0;i<this.publicList.length;i++){
-          let count =0;
-          count ++;
-          if(this.publicList[i].systemList[i].ostypeid == this.mirrorQuery.ostypeid){
-            this.publicList[count].selectSystem = arg[0];
-            break;
-          }
-        }
-
-        // this.publicList[arg[2]].selectSystem = arg[0]
+      // if(this.mirrorQuery){
+      //   for(let i = 0;i<this.publicList.length;i++){
+      //     let count =0;
+      //     count ++;
+      //     if(this.publicList[i].systemList[i].ostypeid == this.mirrorQuery.ostypeid){
+      //       this.publicList[count].selectSystem = arg[0];
+      //       break;
+      //     }
+      //   }
+      // }else{
+        this.publicList[arg[2]].selectSystem = arg[0]
+      // }
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
@@ -1034,11 +1037,13 @@
       },
 
       //选择镜像类型
-      selectMirror(){
+      selectMirror(item){
         if(this.$route.query.mirrorType == 'custom'){
           this.currentType ='custom'
         }else if(this.$route.query.mirrorType == 'public'){
           this.currentType = 'public'
+        }else{
+          this.currentType=item.value;
         }
       }
     },

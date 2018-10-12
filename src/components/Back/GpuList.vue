@@ -871,7 +871,6 @@
                   descript: this.mirrorValidate.descript,
                   rootDiskId: this.mirrorValidate.rootdiskid,
                   zoneId: this.$store.state.zone.zoneid,
-
                 }
               }).then(res => {
                 if (res.status == 200 && res.data.status == 1) {
