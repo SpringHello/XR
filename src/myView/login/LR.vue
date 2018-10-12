@@ -93,8 +93,9 @@
         <h1 style="margin: 20px 0px;">注册成功</h1>
         <p style="width:340px;line-height: 28px;text-align: center;margin-bottom:80px;font-size: 14px;">恭喜您注册成功，现在完成<a
           href="/ruicloud/home">实名认证</a>即可获得156元专属优惠券，还可参加<a href="/ruicloud/ActiveCenter">多款主机免费领</a>活动</p>
-        <button style="font-size:18px;font-weight:400;color:rgba(255,255,255,1);line-height:18px;margin-bottom: 24px;">
-          确认登陆
+        <button style="font-size:18px;font-weight:400;color:rgba(255,255,255,1);line-height:18px;margin-bottom: 24px;"
+                @click="close">
+          确认登录
         </button>
       </div>
       <img src="./img/LR-bottom.png">
@@ -474,11 +475,11 @@
       },
       // 校验手机/邮箱是否注册
       checkUserName(){
-        if (this.Q == 'phone' && !regExp.phoneVail(this.registerForm.phoneLogin)) {
+        if (this.Q == 'phone' && registerForm.phoneLogin.trim() != '' && !regExp.phoneVail(this.registerForm.phoneLogin)) {
           this.registerWarning = '请输入正确手机号'
           return
         }
-        if (this.Q == 'email' && !regExp.emailVail(this.registerForm.emailLogin)) {
+        if (this.Q == 'email' && registerForm.emailLogin.trim() != '' && !regExp.emailVail(this.registerForm.emailLogin)) {
           this.registerWarning = '请输入正确邮箱'
           return
         }

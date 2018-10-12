@@ -10,7 +10,7 @@
                   <p>对象存储OSS重磅上线</p>
                   <p>安全稳定、海量、便捷、低延迟、低成本的云端存储服务</p>
                   <p>免费领取<span>50G</span>存储包</p>
-                  <Button>立即领取</Button>
+                  <!-- <Button>立即领取</Button> -->
                 </div>
               </div>
             </div>
@@ -43,11 +43,11 @@
                   <h3><i style="color:#FF0000;font-style: normal;">{{fulxSize}}</i>G存储包规格</h3>
                   <button @click="freeReceive()" v-if="isReceive">免费领取</button>
                   <button style="background:rgba(255,156,149,1);" v-else>领取成功</button>
-                  <span>新老用户均可领取，每人只可领取一次</span>
+                  <span style="font-size:14px">新老用户均可领取，每人只可领取一次</span>
                 </div>
                 <div class="content" v-else>
                   <p style="font-size:24px">{{fulxMessage}}</p>
-                  <i style="    padding-top: 40px;font-style: normal;display: block;font-size: 16px;color: rgba(255,57,42,1);line-height: 24px;">
+                  <i style="    padding-top: 40px;font-style: normal;display: block;font-size: 14px;color: rgba(255,57,42,1);line-height: 1.5;">
                       注意：使用对象存储需要您先创建AccessKey，领取完成之后请前往个人中心-AccessKey管理-创建AccessKey完成密钥创建。</i>
                   <button @click="createdKey" v-if="!isAccessKey">立即创建</button>
                   <button v-else>领取成功</button>
@@ -177,8 +177,8 @@ export default {
             axios.post('user/getFluxs.do', { token: this.token }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.fulxSize = response.data.data.fulxList[0].size
-                // 1领取成功
-                this.isReceive = response.data.data.fulxList[0].status == '1' ? false : true
+                // 2领取成功 1未领取成功
+                this.isReceive = response.data.data.fulxList[0].status == '2' ? false : true
                 this.fulxId = response.data.data.fulxList[0].id
               }
             })
@@ -393,9 +393,9 @@ export default {
     text-align: center;
     margin-bottom: 60px;
     .sec-headline {
-      font-size: 48px;
-      height: 68px;
-      line-height: 68px;
+      font-size: 32px;
+      height: 48px;
+      line-height: 48px;
       display: inline-flex;
       span {
         padding: 0 30px;
@@ -450,7 +450,7 @@ export default {
               margin-top: 30px;
               border-radius: 4px;
               border: 1px solid rgba(51, 51, 51, 1);
-              font-size: 16px;
+              font-size: 14px;
               font-family: "Microsoft YaHei", "微软雅黑";
               color: rgba(51, 51, 51, 1);
             }
@@ -466,7 +466,6 @@ export default {
             p:nth-child(1) {
               margin-bottom: 40px;
               font-size: 48px;
-              font-weight: 600;
             }
             p:nth-child(3) {
               font-weight: 700;
@@ -495,14 +494,14 @@ export default {
         article {
           width: 540px;
           h3 {
-            margin-bottom: 40px;
-            font-size: 48px;
+            margin-bottom: 20px;
+            font-size: 32px;
             color: rgba(51, 51, 51, 1);
             line-height: 68px;
           }
           p {
-            font-size: 16px;
-            line-height: 22px;
+            font-size: 14px;
+            line-height: 1.5;
           }
         }
         img {
@@ -580,8 +579,8 @@ export default {
             }
           }
           p {
-            font-size: 16px;
-            line-height: 22px;
+            font-size: 14px;
+            line-height: 1.5;
           }
         }
       }
@@ -617,8 +616,8 @@ export default {
               width: 820px;
               height: 80px;
               margin: 0 auto;
-              font-size: 16px;
-              line-height: 24px;
+              font-size: 14px;
+              line-height: 1.5;
               position: relative;
               &::before {
                 content: url("./../../../assets/img/active/objstorage-active/objactive-section4-deco.png");

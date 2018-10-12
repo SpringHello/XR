@@ -1,413 +1,100 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>个人中心 / 用户中心</span>
+      <span class="title">个人中心 /
+         <span>用户中心</span>
+      </span>
       <div id="content">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#houtaiicon-yonghuzhongxin"></use>
-        </svg>
-        <span class="title"
-              style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">用户中心</span>
-        <Tabs type="card" :animated="false" v-model="currentTab">
+        <div id="header">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#houtaiicon-yonghuzhongxin"></use>
+          </svg>
+          <span id="title">用户中心</span>
+        </div>
+        <Tabs type="card" :animated="false" v-model="currentTab" @on-click="tabSwitching">
           <!--未认证-->
-          <TabPane label="个人信息" v-if="authInfo==null">
-            <p class="info-title">个人基本信息</p>
-            <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="  padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-  <span
-    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color:#2A99F2;">添加认证信息</span>
+          <Tab-pane label="个人信息" name="personalInfo">
+            <div class="personalInfo">
+              <h2>基本信息</h2>
+              <div class="pi-base">
+                <div class="pi-base-portrait">
+                  <img :src="userInfo.headportrait" @click="showModal.setHeadPhoto = true">
+                  <p @click="showModal.setHeadPhoto = true">更换头像</p>
                 </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right: 20px;">未认证用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
+                <div class="pi-base-info">
+                  <ul>
+                    <li><span>用户名称</span><span style="display: inline">{{ userInfo.realname}}</span>
+                      <span v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"
+                            style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
+                      <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
+                            style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
+                    <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0">去绑定</span></li>
+                    <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0">修改</span></li>
+                    <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0">去绑定</span></li>
+                    <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0">修改</span></li>
+                    <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
+                    <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
+                    <li v-if="!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
+                      @click="currentTab ='certification' ">马上认证</span></li>
+                    <li v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"><span>身份证号</span><span>{{authInfo.personalnumber}}</span></li>
+                    <li v-if="!(authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0)"><span>认证信息</span><span style="color: #FF9339">未企业认证</span><span
+                      @click="currentTab ='companyInfo'">马上认证</span></li>
+                  </ul>
                 </div>
               </div>
-            </div>
-            <p class="info-title info-border">个人认证信息</p>
-            <!--认证方式选择页面-->
-            <div v-if="notAuth.currentStep == notAuth.allStep.selectAuthType"
-                 v-for="(authType,index) in notAuth.authTypes" :key="index" class="authType">
-              <div class="authType-wrapper">
-                <p>{{authType.title}}</p>
-                <Button type="primary" style="float:right" @click="notAuth.currentStep = authType.go">立即验证</Button>
-              </div>
-              <div class="authType-flow">认证流程：
-                <div v-for="(step,i) in authType.step" style="display: inline-block">
-                  <span class="stepNum">{{i+1}}</span>{{step}}
-                  <span class="line" v-if="i!=authType.step.length-1"></span>
-                </div>
-                <span style="float: right;line-height: 1.5;">{{ authType.disc}}</span>
-              </div>
-            </div>
-            <!--身份证照片认证-->
-            <div v-if="notAuth.currentStep == notAuth.allStep.IDAuth">
-  <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“通过身份证照片”方式，点击<span
-    style="color:#2A99F2;cursor: pointer"
-    @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
-              <Form :model="notAuth.cardAuthForm" :label-width="100" ref="cardAuth"
-                    :rules="notAuth.cardAuthFormValidate"
-                    style="margin-top:20px;">
-                <FormItem label="真实姓名" prop="name">
-                  <Input v-model="notAuth.cardAuthForm.name" placeholder="请输入姓名" style="width:380px;"></Input>
-                </FormItem>
-                <FormItem label="身份证号" prop="IDCard">
-                  <Input v-model="notAuth.cardAuthForm.IDCard" placeholder="请输入身份证号" style="width:380px;"></Input>
-                </FormItem>
-                <FormItem label="联系方式" prop="tel">
-                  <Input v-model="notAuth.cardAuthForm.tel" style="width:380px;"></Input>
-                </FormItem>
-                <FormItem label="图形验证码" prop="imgCode">
-                  <Input v-model="notAuth.cardAuthForm.imgCode" style="width:280px;margin-right: 10px"></Input>
-                  <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" width="80"
-                       height="30" style="vertical-align:middle;cursor:pointer">
-                </FormItem>
-                <FormItem label="验证码" prop="verificationCode">
-                  <Input v-model="notAuth.cardAuthForm.verificationCode"
-                         style="width:280px;margin-right: 10px;"></Input>
-                  <Button type="primary" @click.prevent="sendCodePersonal"
-                          :disabled="notAuth.cardAuthForm.sendCodeText !='获取验证码'">{{notAuth.cardAuthForm.sendCodeText}}
-                  </Button>
-                </FormItem>
-                <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">请上传实名认证图片
-                  上传文件支持jpg/png/gif/pdf，单个文件最大不超过4MB。</p>
-                <div class="IDCard">
-                  <FormItem label="身份证人像面" style="margin-left:0px;">
-                    <div style="display: flex;padding:20px;background-color: #f7f7f7">
-                      <div style="width:130px;">
-                        <Upload
-                          multiple
-                          type="drag"
-                          :show-upload-list="false"
-                          :with-credentials="true"
-                          action="file/upFile.do"
-                          :on-success="IDCardFront">
-                          <div v-if="notAuth.cardAuthForm.IDCardFront==''"
-                               style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                            <img style="height: 28px;width: 28px;margin: 0 auto;"
-                                 src="../../assets/img/usercenter/uc-add.png"/>
-                          </div>
-                          <img v-else :src="notAuth.cardAuthForm.IDCardFront">
-                          <p
-                            style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
-                            上传文件</p>
-                        </Upload>
+              <h2>其他信息</h2>
+              <div class="pi-otherInfo">
+                <div class="pi-otherInfo-form">
+                  <Form ref="occupationalInfo" :model="occupationalInfoForm" :rules="occupationalInfoRule" :label-width="100">
+                    <FormItem label="应用行业">
+                      <span class="f-span" v-show="otherInfoShow">{{occupationalInfoForm.trade }}</span>
+                      <Select v-model="occupationalInfoForm.trade" style="width: 317px;margin-left: 35px;" v-show="!otherInfoShow">
+                        <Option v-for="item in occupationalInfoForm.tradeOptions" :key="item.label"
+                                :value="item.label">
+                          {{item.label}}
+                        </Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="职位">
+                      <span class="f-span" v-show="otherInfoShow">{{occupationalInfoForm.position }}</span>
+                      <Select v-model="occupationalInfoForm.position" style="width: 317px;margin-left: 35px;" v-show="!otherInfoShow">
+                        <Option v-for="item in occupationalInfoForm.positionOptions" :key="item.label"
+                                :value="item.label">
+                          {{item.label}}
+                        </Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="单位名称">
+                      <span class="f-span" v-show="otherInfoShow">{{occupationalInfoForm.companyName }}</span>
+                      <Input v-model="occupationalInfoForm.companyName" placeholder="请输入单位名称" style="width: 317px;margin-left: 35px;" v-show="!otherInfoShow"></Input>
+                    </FormItem>
+                    <FormItem label="地域">
+                      <Select v-model="occupationalInfoForm.province" style="width:154px;margin-right: 10px;margin-left: 35px;" placeholder="请选择省"
+                              @on-change="changeProvince" v-show="!otherInfoShow">
+                        <Option v-for="item in occupationalInfoForm.provinceList" :value="item.name" :key="item.name">{{item.name}}
+                        </Option>
+                      </Select>
+                      <Select v-model="occupationalInfoForm.city" style="width:154px;margin-right: 10px" placeholder="请选择市" v-show="!otherInfoShow">
+                        <Option v-for="item in occupationalInfoForm.cityList" :value="item.name" :key="item.name">{{ item.name}}
+                        </Option>
+                      </Select>
+                      <div style="display: flex">
+                        <span class="f-span" style="width: 154px;margin-right: 10px;" v-show="otherInfoShow">{{occupationalInfoForm.province }}</span>
+                        <span class="f-span" style="width: 154px;margin-left: 0" v-show="otherInfoShow">{{occupationalInfoForm.city }}</span>
                       </div>
-                      <div style="width:130px;margin-left:20px;">
-                        <img src="../../assets/img/usercenter/card-font.png"
-                             style="width:130px;height:74px;margin-bottom: 20px;">
-                        <p style="line-height: 32px;text-align: center">示例图</p>
-                      </div>
+                    </FormItem>
+                    <div style="padding-left: 135px">
+                      <Button type="primary" @click="saveJobInfo" v-if="!otherInfoShow">保存</Button>
+                      <Button type="primary" @click="otherInfoShow=false" v-else>修改</Button>
                     </div>
-                  </FormItem>
-                  <FormItem label="身份证国徽面">
-                    <div style="display: flex;padding:20px;background-color: #f7f7f7">
-                      <div style="width:130px;">
-                        <Upload
-                          multiple
-                          type="drag"
-                          :show-upload-list="false"
-                          :with-credentials="true"
-                          action="file/upFile.do"
-                          :on-success="IDCardBack">
-                          <div v-if="notAuth.cardAuthForm.IDCardBack==''"
-                               style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                            <img style="height: 28px;width: 28px;margin: 0 auto;"
-                                 src="../../assets/img/usercenter/uc-add.png"/>
-                          </div>
-                          <img v-else :src="notAuth.cardAuthForm.IDCardBack">
-                          <p
-                            style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
-                            上传文件</p>
-                        </Upload>
-
-                      </div>
-                      <div style="width:130px;margin-left:20px;">
-                        <img src="../../assets/img/usercenter/card-back.png"
-                             style="width:130px;height:74px;margin-bottom: 20px;">
-                        <p style="line-height: 32px;text-align: center">示例图</p>
-                      </div>
-                    </div>
-                  </FormItem>
-                  <FormItem label="手持身份证人像面照片">
-                    <div style="display: flex;padding:20px;background-color: #f7f7f7">
-                      <div style="width:130px;">
-                        <Upload
-                          multiple
-                          type="drag"
-                          :show-upload-list="false"
-                          :with-credentials="true"
-                          action="file/upFile.do"
-                          :on-success="IDCardPerson">
-                          <div v-if="notAuth.cardAuthForm.IDCardPerson==''"
-                               style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                            <img style="height: 28px;width: 28px;margin: 0 auto;"
-                                 src="../../assets/img/usercenter/uc-add.png"/>
-                          </div>
-                          <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
-                          <p
-                            style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
-                            上传文件</p>
-                        </Upload>
-                      </div>
-                      <div style="width:130px;margin-left:20px;">
-                        <img src="../../assets/img/usercenter/card-person.png"
-                             style="width:130px;height:74px;margin-bottom: 20px;">
-                        <p style="line-height: 32px;text-align: center">示例图</p>
-                      </div>
-                    </div>
-                  </FormItem>
-                </div>
-                <div>
-                  <Button type="primary" @click="personalAttest" style="font-size: 12px;">确认提交</Button>
-                </div>
-              </Form>
-            </div>
-            <!--快速认证页面-->
-            <div v-if="notAuth.currentStep == notAuth.allStep.quicklyAuth">
-  <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“快速认证”方式，点击<span
-    style="color:#2A99F2;cursor: pointer"
-    @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
-              <Form :model="notAuth.quicklyAuthForm" :label-width="100" ref="quicklyAuth"
-                    :rules="notAuth.quicklyAuthFormValidate"
-                    style="width:450px;margin-top:20px;">
-                <FormItem label="真实姓名" prop="name">
-                  <Input v-model="notAuth.quicklyAuthForm.name" placeholder="请输入姓名"></Input>
-                </FormItem>
-                <FormItem label="身份证号" prop="IDCard">
-                  <Input v-model="notAuth.quicklyAuthForm.IDCard" placeholder="请输入身份证号"></Input>
-                </FormItem>
-                <Form :model="notAuth.quicklyAuthForm" :rules="notAuth.quicklyAuthFormValidate" ref="sendCode"
-                      :label-width="100">
-                  <FormItem label="验证码" prop="pictureCode">
-                    <div style="display: flex">
-                      <Input v-model="notAuth.quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
-                             style="width:280px;margin-right: 20px"></Input>
-                      <img :src="imgSrc" style="height:33px;"
-                           @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-                    </div>
-                  </FormItem>
-                  <FormItem label="手机号码" prop="phone">
-                    <div style="display: flex;justify-content: space-between">
-                      <Input v-model="notAuth.quicklyAuthForm.phone" placeholder="请输入以该身份证开户的手机号码"
-                             style="width:280px"></Input>
-                      <Button type="primary" @click="sendCode" style="width:92px"
-                              :disabled="notAuth.quicklyAuthForm.sendCodeText!='获取验证码'">
-                        {{notAuth.quicklyAuthForm.sendCodeText}}
-                      </Button>
-                    </div>
-                  </FormItem>
-                </Form>
-                <FormItem label="验证码" prop="validateCode">
-                  <Input v-model="notAuth.quicklyAuthForm.validateCode" placeholder="请输入验证码"></Input>
-                </FormItem>
-                <FormItem>
-                  <div style="float:right">
-                    <Button style="margin-right:10px" @click="reset">重置表单</Button>
-                    <Button type="primary" @click="quicklyAuth">确认提交</Button>
-                  </div>
-                </FormItem>
-              </Form>
-            </div>
-          </TabPane>
-          <!--个人认证中-->
-          <TabPane label="个人信息" v-else-if="authInfo.authtype==0&&authInfo.checkstatus==2" class="personal">
-            <p class="info-title">个人基本信息</p>
-            <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-  <span
-    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
-                </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
+                  </Form>
                 </div>
               </div>
             </div>
-            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">个人认证信息</p>
-            <Steps :current="1">
-              <Step title="提交信息" :content="`真实姓名:${userInfo.realname}`"></Step>
-              <Step title="正在处理" content="信息审核中，我们将尽快为您处理"></Step>
-              <Step title="审核通过" content="即将完成"></Step>
-            </Steps>
-          </TabPane>
-          <!--个人认证失败-->
-          <TabPane label="个人信息" v-else-if="authInfo.authtype==0&&authInfo.checkstatus==1" class="personal">
-            <p class="info-title">个人基本信息</p>
-            <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-                  <div
-                    style="margin-left:20px;margin-right:10px;display: inline-block;background-color: #F24747;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
-                    认证失败
-                  </div>
-                  <span @click="reAuthenticate('0')" style="color: #2A99F2;cursor: pointer;">重新认证</span>
-                </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
-                </div>
-              </div>
-            </div>
-            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">个人认证信息</p>
-            <Steps :current="2" status="error">
-              <Step title="提交信息" :content="`真实姓名:${userInfo.realname}`"></Step>
-              <Step title="正在处理" content="信息审核中，我们将尽快为您处理"></Step>
-              <Step title="审核未通过" :content="authInfo.checkdesc"></Step>
-            </Steps>
-          </TabPane>
-          <!--个人认证完成-->
-          <TabPane label="个人信息" v-else-if="authInfo.authtype==0&&authInfo.checkstatus==0" class="personal">
-            <p class="info-title">用户基本信息</p>
-            <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.realname}}</span>
-                  <div
-                    style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
-                    个人认证
-                  </div>
-                </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
-                </div>
-              </div>
-            </div>
-            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">个人认证信息</p>
-            <div class="userInfo">
-              <p>真实姓名<span>{{userInfo.realname}}</span>升级
-                <span style="margin:0px;color: #2A99F2;cursor:pointer" @click="currentTab='companyInfo'">企业认证</span>
-              </p>
-              <p>手机号码<span>{{authInfo.phone}}</span></p>
-              <p>身份证号<span>{{authInfo.personalnumber}}</span></p>
-            </div>
-          </TabPane>
-          <!--企业认证中-->
-          <TabPane label="个人信息" v-else-if="authInfo.authtype!=0&&authInfo.checkstatus==2" class="personal">
-            <p class="info-title">个人基本信息</p>
-            <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-  <span
-    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
-                </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
-                </div>
-              </div>
-            </div>
-            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">企业认证信息</p>
-            <Steps :current="1">
-              <Step title="提交信息" :content="`公司名称:${authInfo.name}`"></Step>
-              <Step title="正在处理" content="信息审核中，我们将尽快为您处理"></Step>
-              <Step title="审核通过" content="即将完成"></Step>
-            </Steps>
-          </TabPane>
-          <!--企业认证失败-->
-          <TabPane label="个人信息" v-else-if="authInfo.authtype!=0&&authInfo.checkstatus==1" class="personal">
-            <p class="info-title">个人基本信息</p>
-            <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-                  <div
-                    style="margin-left:20px;margin-right:10px;display: inline-block;background-color: #F24747;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
-                    认证失败
-                  </div>
-                  <span @click="reAuthenticate('1')" style="color: #2A99F2;cursor: pointer;">重新认证</span>
-                </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
-                </div>
-              </div>
-            </div>
-            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">企业认证信息</p>
-            <Steps :current="2" status="error">
-              <Step title="提交信息" :content="`公司名称:${authInfo.name}`"></Step>
-              <Step title="正在处理" content="信息审核中，我们将尽快为您处理"></Step>
-              <Step title="审核未通过" :content="authInfo.checkdesc"></Step>
-            </Steps>
-          </TabPane>
-          <!--企业认证完成-->
-          <TabPane label="个人信息" v-else-if="authInfo.authtype!=0&&authInfo.checkstatus==0" class="personal">
-            <p class="info-title">用户基本信息</p>
-            <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{authInfo.name}}</span>
-                  <div
-                    style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
-                    企业认证
-                  </div>
-                </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
-                </div>
-              </div>
-            </div>
-            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">企业认证信息</p>
-            <div class="userInfo">
-              <p>公司名称<span>{{authInfo.name}}</span></p>
-              <p>联系方式<span>{{authInfo.phone}}</span></p>
-            </div>
-          </TabPane>
-
+          </Tab-pane>
           <Tab-pane label="提醒设置" name="remainder">
             <p class="info-title">联系人管理</p>
-            <Button type="primary" @click="addLinkman">添加联系人</Button>
+            <Button type="primary" @click="showModal.addLinkman = true">添加联系人</Button>
             <Table :columns="linkManColumns" :data="linkManData" style="margin: 20px 0px"></Table>
             <p class="info-title info-border">通知信息配置</p>
             <div>
@@ -418,19 +105,15 @@
               <div style="margin-top: 20px;display: flex">
                 <div style="width: 200px">
                   <div
-                    style="display: flex;padding-left: 20px;align-items: center;height: 39px;background:#F8F8F9 ">
-  <span
-    style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
+                    style="display: flex;padding-left: 20px;align-items: center;height: 40px;background:#F8F8F9 ">
+                    <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
                   </div>
-                  <div class="infTop"
-                       style="height: 241px;border-top:1px solid #E9E9E9; ">
-  <span
-    class="inf">账号信息</span>
+                  <div class="infTop" style="height: 241px;border-top:1px solid #E9E9E9; ">
+                    <span class="inf">账号信息</span>
                   </div>
                   <div
                     class="infTop">
-  <span
-    class="inf">告警信息</span>
+                    <span class="inf">告警信息</span>
                   </div>
                   <div
                     class="infTop">
@@ -447,216 +130,58 @@
               </div>
             </div>
           </Tab-pane>
-          <Tab-pane label="安全设置" name="safe">
-            <p class="info-title">用户基本信息</p>
-            <!--未认证-->
-            <div class="user-info" v-if="userInfo.personalauth==1&&userInfo.companyauth==1">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-  <span
-    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
+          <Tab-pane label="实名认证" name="certification" v-if="!(authInfo&&authInfo.authtype!=0)">
+            <div v-if="!authInfo">
+              <h2 style="margin-bottom: 20px">{{ certificationType }}</h2>
+              <!--认证方式选择页面-->
+              <div v-if="notAuth.currentStep == notAuth.allStep.selectAuthType"
+                   v-for="(authType,index) in notAuth.authTypes" :key="index" class="authType">
+                <div class="authType-wrapper">
+                  <p>{{authType.title}}</p>
+                  <Button type="primary" style="float:right" @click="notAuth.currentStep = authType.go">立即验证</Button>
                 </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right: 20px;">未认证用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
-                </div>
-              </div>
-            </div>
-            <!--个人认证中-->
-            <div class="user-info" v-else-if="userInfo.personalauth==2&&userInfo.companyauth==1">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-  <span
-    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
-                </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
-                </div>
-              </div>
-            </div>
-            <!--个人认证完成-->
-            <div class="user-info" v-else-if="userInfo.personalauth==0&&userInfo.companyauth==1">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.realname}}</span>
-                  <div
-                    style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
-                    个人认证
+                <div class="authType-flow">认证流程：
+                  <div v-for="(step,i) in authType.step" style="display: inline-block">
+                    <span class="stepNum">{{i+1}}</span>{{step}}
+                    <span class="line" v-if="i!=authType.step.length-1"></span>
                   </div>
-                </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
+                  <span style="float: right;line-height: 1.5;">{{ authType.disc}}</span>
                 </div>
               </div>
-            </div>
-            <!--企业认证完成-->
-            <div class="user-info" v-else-if="userInfo.companyauth==0">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.name}}</span>
-                  <div
-                    style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
-                    企业认证
-                  </div>
-                </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right: 20px;">企业用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
-                </div>
-              </div>
-            </div>
-            <!--企业认证中-->
-            <div class="user-info" v-else-if="userInfo.companyauth==2">
-              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-  <span
-    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
-                </div>
-                <div>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-yonghu"></use>
-                  </svg>
-                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#houtaiicon-shouji"></use>
-                  </svg>
-                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
-                </div>
-              </div>
-            </div>
-            <div>
-              <p class="info-title info-border">安全设置</p>
-              <div class="safe">
-                <div v-if="userInfo.phone">
-                  <p><span>手机绑定</span>&nbsp;&nbsp;&nbsp;您已经绑定了{{userInfo.phone}}。（您的手机号可以直接用于登陆）</p><span
-                  @click="showModal.modifyPhone=true;type='phone'" style="cursor:pointer">「修改」</span>
-                </div>
-                <div v-else>
-                  <p class="info"><span>手机绑定</span>&nbsp;&nbsp;&nbsp;您尚未绑定手机号。（绑定后，您的手机号可以直接用于登陆）</p><span
-                  @click="showModal.modifyPhone=true;type='phone'" style="cursor:pointer">「绑定」</span>
-                </div>
-                <div v-if="userInfo.loginname">
-                  <p><span>邮箱绑定</span>&nbsp;&nbsp;&nbsp;您已经绑定了{{userInfo.loginname}}。（您的邮箱可以直接用于登陆）</p><span
-                  @click="showModal.modifyPhone=true;type='email'" style="cursor:pointer">「修改」</span>
-                </div>
-                <div v-else>
-                  <p class="info"><span>邮箱绑定</span>&nbsp;&nbsp;&nbsp;您尚未绑定邮箱。（绑定后，您的邮箱可以直接用于登陆）</p><span
-                  @click="showModal.modifyPhone=true;type='email'" style="cursor:pointer">「绑定」</span>
-                </div>
-                <p class="info"><span>登录密码</span>&nbsp;&nbsp;&nbsp;安全性高的密码可以使账号更安全。建议您定期更换密码，设置一个包含字母，符号或数字中至少两项且长度超过8位的密码。
-                </p><span @click="showModal.modifyPassword=true" style="cursor:pointer">「修改」</span>
-              </div>
-            </div>
-          </Tab-pane>
-
-          <!--用于企业认证的pane-->
-          <TabPane label="企业信息" name="companyInfo" v-if="showCompanyPane">
-            <p class="info-title">企业基本信息</p>
-            <Form :model="notAuth.companyAuthForm" :label-width="100" ref="companyAuth"
-                  :rules="notAuth.companyAuthFormValidate"
-                  style="margin-top:20px;">
-              <div>
-                <FormItem label="公司名称" prop="name">
-                  <Input v-model="notAuth.companyAuthForm.name" placeholder="请输入公司名称" style="width: 300px;"></Input>
-                </FormItem>
-                <FormItem label="所属行业" prop="industry">
-                  <Select v-model="notAuth.companyAuthForm.industry" style="width: 300px;">
-                    <Option v-for="(item,index) in notAuth.companyAuthForm.industryOptions" :key="item.key"
-                            :value="item.key">
-                      {{item.label}}
-                    </Option>
-                  </Select>
-                </FormItem>
-                <FormItem label="企业联系方式" prop="contact">
-                  <Input v-model="notAuth.companyAuthForm.contact" placeholder="请输入联系方式" style="width: 300px;"></Input>
-                </FormItem>
-                <FormItem label="营业执照号码" prop="businessLicenseNumber">
-                  <Input v-model="notAuth.companyAuthForm.businessLicenseNumber" :maxlength="20" placeholder="请输入营业执照号码"
-                         style="width: 300px;"></Input>
-                </FormItem>
-                <FormItem label="上传营业执照">
-                  <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;">
-                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px">
-                      <div style="width:130px;">
-                        <Upload
-                          multiple
-                          type="drag"
-                          :show-upload-list="false"
-                          :with-credentials="true"
-                          action="file/upFile.do"
-                          :format="['jpg','jpeg','png','gif']"
-                          :max-size="4096"
-                          :on-format-error="handleFormatError"
-                          :on-exceeded-size="handleMaxSize"
-                          :on-success="combine">
-                          <div v-if="notAuth.companyAuthForm.combine==''"
-                               style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;color: #999;background-color: #FFF">
-                            <img src="../../assets/img/usercenter/uc-add.png"/>
-                          </div>
-                          <img style="height: 74px" v-else :src="notAuth.companyAuthForm.combine">
-                          <p
-                            style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
-                            上传文件</p>
-                        </Upload>
-                      </div>
-                      <div style="width:130px;margin-left:20px;">
-                        <img src="../../assets/img/usercenter/combine.jpg"
-                             style="width:130px;height:74px;margin-bottom: 10px;cursor: zoom-in"
-                             @click="showPicture('combine')">
-                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">三证合一执照</p>
-                      </div>
-                    </div>
-                  </div>
-                </FormItem>
-                <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">
-                  提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
-                <p class="info-title" style="margin-top: 70px">企业法人信息<span
-                  style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
-                </p>
-                <FormItem label="企业法人姓名" prop="linkManName">
-                  <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入法人姓名"
-                         style="width: 300px;"></Input>
-                </FormItem>
-                <FormItem label="身份证号码" prop="linkManNameID">
-                  <Input v-model="notAuth.companyAuthForm.linkManNameID" placeholder="请输入法人身份证号码"
-                         style="width: 300px;"></Input>
-                </FormItem>
-                <FormItem label="上传法人证件">
-                  <div style="display: flex">
-                    <div
-                      style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px">
-                      <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px;">
+              <!--身份证照片认证-->
+              <div v-if="notAuth.currentStep == notAuth.allStep.IDAuth">
+  <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“通过身份证照片”方式，点击<span
+    style="color:#2A99F2;cursor: pointer"
+    @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
+                <Form :model="notAuth.cardAuthForm" :label-width="100" ref="cardAuth"
+                      :rules="notAuth.cardAuthFormValidate"
+                      style="margin-top:20px;">
+                  <FormItem label="真实姓名" prop="name">
+                    <Input v-model="notAuth.cardAuthForm.name" placeholder="请输入姓名" style="width:380px;"></Input>
+                  </FormItem>
+                  <FormItem label="身份证号" prop="IDCard">
+                    <Input v-model="notAuth.cardAuthForm.IDCard" placeholder="请输入身份证号" style="width:380px;"></Input>
+                  </FormItem>
+                  <FormItem label="联系方式" prop="tel">
+                    <Input v-model="notAuth.cardAuthForm.tel" style="width:380px;"></Input>
+                  </FormItem>
+                  <FormItem label="图形验证码" prop="imgCode">
+                    <Input v-model="notAuth.cardAuthForm.imgCode" style="width:280px;margin-right: 10px"></Input>
+                    <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" width="80"
+                         height="30" style="vertical-align:middle;cursor:pointer">
+                  </FormItem>
+                  <FormItem label="验证码" prop="verificationCode">
+                    <Input v-model="notAuth.cardAuthForm.verificationCode"
+                           style="width:280px;margin-right: 10px;"></Input>
+                    <Button type="primary" @click.prevent="sendCodePersonal"
+                            :disabled="notAuth.cardAuthForm.sendCodeText !='获取验证码'">{{notAuth.cardAuthForm.sendCodeText}}
+                    </Button>
+                  </FormItem>
+                  <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">请上传实名认证图片
+                    上传文件支持jpg/png/gif/pdf，单个文件最大不超过4MB。</p>
+                  <div class="IDCard">
+                    <FormItem label="身份证人像面" style="margin-left:0px;">
+                      <div style="display: flex;padding:20px;background-color: #f7f7f7">
                         <div style="width:130px;">
                           <Upload
                             multiple
@@ -664,16 +189,13 @@
                             :show-upload-list="false"
                             :with-credentials="true"
                             action="file/upFile.do"
-                            :format="['jpg','jpeg','png','gif']"
-                            :max-size="4096"
-                            :on-format-error="handleFormatError"
-                            :on-exceeded-size="handleMaxSize"
-                            :on-success="legalPersonIDFront">
-                            <div v-if="notAuth.companyAuthForm.legalPersonIDFront==''"
+                            :on-success="IDCardFront">
+                            <div v-if="notAuth.cardAuthForm.IDCardFront==''"
                                  style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                              <img src="../../assets/img/usercenter/uc-add.png"/>
+                              <img style="height: 28px;width: 28px;margin: 0 auto;"
+                                   src="../../assets/img/usercenter/uc-add.png"/>
                             </div>
-                            <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDFront">
+                            <img v-else :src="notAuth.cardAuthForm.IDCardFront">
                             <p
                               style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
                               上传文件</p>
@@ -681,11 +203,175 @@
                         </div>
                         <div style="width:130px;margin-left:20px;">
                           <img src="../../assets/img/usercenter/card-font.png"
-                               style="width:130px;height:74px;margin-bottom: 10px;">
-                          <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人像面</p>
+                               style="width:130px;height:74px;margin-bottom: 20px;">
+                          <p style="line-height: 32px;text-align: center">示例图</p>
                         </div>
                       </div>
+                    </FormItem>
+                    <FormItem label="身份证国徽面">
+                      <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                        <div style="width:130px;">
+                          <Upload
+                            multiple
+                            type="drag"
+                            :show-upload-list="false"
+                            :with-credentials="true"
+                            action="file/upFile.do"
+                            :on-success="IDCardBack">
+                            <div v-if="notAuth.cardAuthForm.IDCardBack==''"
+                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                              <img style="height: 28px;width: 28px;margin: 0 auto;"
+                                   src="../../assets/img/usercenter/uc-add.png"/>
+                            </div>
+                            <img v-else :src="notAuth.cardAuthForm.IDCardBack">
+                            <p
+                              style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
+                              上传文件</p>
+                          </Upload>
+
+                        </div>
+                        <div style="width:130px;margin-left:20px;">
+                          <img src="../../assets/img/usercenter/card-back.png"
+                               style="width:130px;height:74px;margin-bottom: 20px;">
+                          <p style="line-height: 32px;text-align: center">示例图</p>
+                        </div>
+                      </div>
+                    </FormItem>
+                    <FormItem label="手持身份证人像面照片">
+                      <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                        <div style="width:130px;">
+                          <Upload
+                            multiple
+                            type="drag"
+                            :show-upload-list="false"
+                            :with-credentials="true"
+                            action="file/upFile.do"
+                            :on-success="IDCardPerson">
+                            <div v-if="notAuth.cardAuthForm.IDCardPerson==''"
+                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                              <img style="height: 28px;width: 28px;margin: 0 auto;"
+                                   src="../../assets/img/usercenter/uc-add.png"/>
+                            </div>
+                            <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
+                            <p
+                              style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
+                              上传文件</p>
+                          </Upload>
+                        </div>
+                        <div style="width:130px;margin-left:20px;">
+                          <img src="../../assets/img/usercenter/card-person.png"
+                               style="width:130px;height:74px;margin-bottom: 20px;">
+                          <p style="line-height: 32px;text-align: center">示例图</p>
+                        </div>
+                      </div>
+                    </FormItem>
+                  </div>
+                  <div>
+                    <Button type="primary" @click="personalAttest" style="font-size: 12px;">确认提交</Button>
+                  </div>
+                </Form>
+              </div>
+              <!--快速认证页面-->
+              <div v-if="notAuth.currentStep == notAuth.allStep.quicklyAuth">
+  <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“快速认证”方式，点击<span
+    style="color:#2A99F2;cursor: pointer"
+    @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
+                <Form :model="notAuth.quicklyAuthForm" :label-width="100" ref="quicklyAuth"
+                      :rules="notAuth.quicklyAuthFormValidate"
+                      style="width:450px;margin-top:20px;">
+                  <FormItem label="真实姓名" prop="name">
+                    <Input v-model="notAuth.quicklyAuthForm.name" placeholder="请输入姓名"></Input>
+                  </FormItem>
+                  <FormItem label="身份证号" prop="IDCard">
+                    <Input v-model="notAuth.quicklyAuthForm.IDCard" placeholder="请输入身份证号"></Input>
+                  </FormItem>
+                  <Form :model="notAuth.quicklyAuthForm" :rules="notAuth.quicklyAuthFormValidate" ref="sendCode"
+                        :label-width="100">
+                    <FormItem label="验证码" prop="pictureCode">
+                      <div style="display: flex">
+                        <Input v-model="notAuth.quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
+                               style="width:250px;margin-right: 10px"></Input>
+                        <img :src="imgSrc" style="height:33px;"
+                             @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                      </div>
+                    </FormItem>
+                    <FormItem label="手机号码" prop="phone">
+                      <div style="display: flex;justify-content: space-between">
+                        <Input v-model="notAuth.quicklyAuthForm.phone" placeholder="请输入以该身份证开户的手机号码"
+                               style="width:260px;margin-right: 10px"></Input>
+                        <Button type="primary" @click="sendCode" style="width:92px"
+                                :disabled="notAuth.quicklyAuthForm.sendCodeText!='获取验证码'">
+                          {{notAuth.quicklyAuthForm.sendCodeText}}
+                        </Button>
+                      </div>
+                    </FormItem>
+                  </Form>
+                  <FormItem label="验证码" prop="validateCode">
+                    <Input v-model="notAuth.quicklyAuthForm.validateCode" placeholder="请输入验证码"></Input>
+                  </FormItem>
+                  <FormItem>
+                    <div style="float:right">
+                      <Button style="margin-right:10px" @click="reset">重置表单</Button>
+                      <Button type="primary" @click="quicklyAuth">确认提交</Button>
                     </div>
+                  </FormItem>
+                </Form>
+              </div>
+            </div>
+            <div v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0" class="personalAuthInfo">
+              <ol>
+                <li>真实姓名<span>{{ authInfo.name}}</span><span>个人认证</span></li>
+                <li>手机号码<span>{{ authInfo.phone}}</span></li>
+                <li>身份证号<span>{{ authInfo.personalnumber}}</span></li>
+              </ol>
+            </div>
+            <div v-if="(authInfo&&authInfo.authtype==0&&authInfo.checkstatus==2)||(authInfo&&authInfo.authtype==0&&authInfo.checkstatus==1)" style="padding: 20px 0 0 170px;">
+              <Steps :current="personalCertificationStep">
+                <Step title="提交完成" content="信息已提交"></Step>
+                <Step title="正在处理" content="信息审核中，我们将在24小时内为您处理"></Step>
+                <Step title="审核通过" content="即将完成" v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==2"></Step>
+                <Step title="审核失败" content="完成" v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==1"></Step>
+              </Steps>
+            </div>
+            <div class="certificationResults" v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==2">
+              <img src="../../assets/img/usercenter/uc-img1.png"/>
+              <p>信息正在审核处理中</p>
+              <p>- -请耐心等待- -</p>
+            </div>
+            <div class="certificationResults" v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==1">
+              <img src="../../assets/img/usercenter/uc-img2.png"/>
+              <p style="color: #FF001F">审核未通过</p>
+              <p>提交审核资料发现问题，请重新提交</p>
+              <Button type="primary" style="margin-top: 20px" @click="resubmit">重新提交</Button>
+            </div>
+          </Tab-pane>
+          <!--用于企业认证的pane-->
+          <Tab-pane label="企业认证" name="companyInfo">
+            <div v-if="!authInfo||authInfo&&authInfo.authtype==0">
+              <h2>企业认证</h2>
+              <Form :model="notAuth.companyAuthForm" :label-width="100" ref="companyAuth"
+                    :rules="notAuth.companyAuthFormValidate"
+                    style="margin-top:20px;">
+                <div>
+                  <FormItem label="公司名称" prop="name">
+                    <Input v-model="notAuth.companyAuthForm.name" placeholder="请输入公司名称" style="width: 300px;"></Input>
+                  </FormItem>
+                  <FormItem label="所属行业" prop="industry">
+                    <Select v-model="notAuth.companyAuthForm.industry" style="width: 300px;">
+                      <Option v-for="(item,index) in notAuth.companyAuthForm.industryOptions" :key="item.key"
+                              :value="item.key">
+                        {{item.label}}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                  <FormItem label="企业联系方式" prop="contact">
+                    <Input v-model="notAuth.companyAuthForm.contact" placeholder="请输入联系方式" style="width: 300px;"></Input>
+                  </FormItem>
+                  <FormItem label="营业执照号码" prop="businessLicenseNumber">
+                    <Input v-model="notAuth.companyAuthForm.businessLicenseNumber" :maxlength="20" placeholder="请输入营业执照号码"
+                           style="width: 300px;"></Input>
+                  </FormItem>
+                  <FormItem label="上传营业执照">
                     <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;">
                       <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px">
                         <div style="width:130px;">
@@ -699,280 +385,280 @@
                             :max-size="4096"
                             :on-format-error="handleFormatError"
                             :on-exceeded-size="handleMaxSize"
-                            :on-success="legalPersonIDBack">
-                            <div v-if="notAuth.companyAuthForm.legalPersonIDBack==''"
-                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            :on-success="combine">
+                            <div v-if="notAuth.companyAuthForm.combine==''"
+                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;color: #999;background-color: #FFF">
                               <img src="../../assets/img/usercenter/uc-add.png"/>
                             </div>
-                            <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDBack">
+                            <img style="height: 74px" v-else :src="notAuth.companyAuthForm.combine">
                             <p
                               style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
                               上传文件</p>
                           </Upload>
                         </div>
                         <div style="width:130px;margin-left:20px;">
-                          <img src="../../assets/img/usercenter/card-back.png"
-                               style="width:130px;height:74px;margin-bottom: 10px;">
-                          <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证国徽面</p>
+                          <img src="../../assets/img/usercenter/combine.jpg"
+                               style="width:130px;height:74px;margin-bottom: 10px;cursor: zoom-in"
+                               @click="showPicture('combine')">
+                          <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">三证合一执照</p>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </FormItem>
-                <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">
-                  提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
-                <p class="info-title" style="margin-top: 70px">经办人信息<span
-                  style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
-                </p>
-                <FormItem label="经办人姓名" prop="agentName">
-                  <Input v-model="notAuth.companyAuthForm.agentName" placeholder="请输入经办人姓名"
-                         style="width: 300px;"></Input>
-                </FormItem>
-                <FormItem label="图形验证码" prop="imgCode">
-                  <Input v-model="notAuth.companyAuthForm.imgCode" placeholder="请输入图形验证码" style="width: 300px"></Input>
-                  <img style="position: absolute;right: 63%;bottom:0;cursor: pointer"
-                       :src="notAuth.companyAuthForm.imgSrc"
-                       @click="notAuth.companyAuthForm.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-                </FormItem>
-                <FormItem label="联系方式" prop="linkManPhone">
-                  <Input v-model="notAuth.companyAuthForm.linkManPhone" placeholder="请输入经办人联系方式"
-                         style="width: 300px"></Input>
-                  <button class="sendCompanyCode"
-                          :class="{codeDisabled:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}"
-                          @click.prevent="sendCompanyCode"
-                          :disabled="notAuth.companyAuthForm.codePlaceholder!='发送验证码'">{{
-                    notAuth.companyAuthForm.codePlaceholder }}
-                  </button>
-                </FormItem>
-                <FormItem label="验证码" prop="verificationCode">
-                  <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码"
-                         style="width: 300px"></Input>
-                </FormItem>
-                <FormItem label="身份证号码" prop="agentManID">
-                  <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码"
-                         style="width: 300px;"></Input>
-                </FormItem>
-                <FormItem label="上传经办人证件">
-                  <div style="display: flex;flex-wrap: wrap;">
-                    <div
-                      style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px">
-                      <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px;">
-                        <div style="width:130px;">
-                          <Upload
-                            multiple
-                            type="drag"
-                            :show-upload-list="false"
-                            :with-credentials="true"
-                            action="file/upFile.do"
-                            :format="['jpg','jpeg','png','gif']"
-                            :max-size="4096"
-                            :on-format-error="handleFormatError"
-                            :on-exceeded-size="handleMaxSize"
-                            :on-success="agentIDFront">
-                            <div v-if="notAuth.companyAuthForm.agentIDFront==''"
-                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                              <img src="../../assets/img/usercenter/uc-add.png"/>
-                            </div>
-                            <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDFront">
-                            <p
-                              style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
-                              上传文件</p>
-                          </Upload>
+                  </FormItem>
+                  <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">
+                    提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                  <p class="info-title" style="margin-top: 70px">企业法人信息<span
+                    style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
+                  </p>
+                  <FormItem label="企业法人姓名" prop="linkManName">
+                    <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入法人姓名"
+                           style="width: 300px;"></Input>
+                  </FormItem>
+                  <FormItem label="身份证号码" prop="linkManNameID">
+                    <Input v-model="notAuth.companyAuthForm.linkManNameID" placeholder="请输入法人身份证号码"
+                           style="width: 300px;"></Input>
+                  </FormItem>
+                  <FormItem label="上传法人证件">
+                    <div style="display: flex">
+                      <div
+                        style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px">
+                        <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px;">
+                          <div style="width:130px;">
+                            <Upload
+                              multiple
+                              type="drag"
+                              :show-upload-list="false"
+                              :with-credentials="true"
+                              action="file/upFile.do"
+                              :format="['jpg','jpeg','png','gif']"
+                              :max-size="4096"
+                              :on-format-error="handleFormatError"
+                              :on-exceeded-size="handleMaxSize"
+                              :on-success="legalPersonIDFront">
+                              <div v-if="notAuth.companyAuthForm.legalPersonIDFront==''"
+                                   style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                                <img src="../../assets/img/usercenter/uc-add.png"/>
+                              </div>
+                              <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDFront">
+                              <p
+                                style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
+                                上传文件</p>
+                            </Upload>
+                          </div>
+                          <div style="width:130px;margin-left:20px;">
+                            <img src="../../assets/img/usercenter/card-font.png"
+                                 style="width:130px;height:74px;margin-bottom: 10px;">
+                            <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人像面</p>
+                          </div>
                         </div>
-                        <div style="width:130px;margin-left:20px;">
-                          <img src="../../assets/img/usercenter/card-font.png"
-                               style="width:130px;height:74px;margin-bottom: 10px;">
-                          <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人像面</p>
+                      </div>
+                      <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;">
+                        <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px">
+                          <div style="width:130px;">
+                            <Upload
+                              multiple
+                              type="drag"
+                              :show-upload-list="false"
+                              :with-credentials="true"
+                              action="file/upFile.do"
+                              :format="['jpg','jpeg','png','gif']"
+                              :max-size="4096"
+                              :on-format-error="handleFormatError"
+                              :on-exceeded-size="handleMaxSize"
+                              :on-success="legalPersonIDBack">
+                              <div v-if="notAuth.companyAuthForm.legalPersonIDBack==''"
+                                   style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                                <img src="../../assets/img/usercenter/uc-add.png"/>
+                              </div>
+                              <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDBack">
+                              <p
+                                style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
+                                上传文件</p>
+                            </Upload>
+                          </div>
+                          <div style="width:130px;margin-left:20px;">
+                            <img src="../../assets/img/usercenter/card-back.png"
+                                 style="width:130px;height:74px;margin-bottom: 10px;">
+                            <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证国徽面</p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div
-                      style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px;">
-                      <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px">
-                        <div style="width:130px;">
-                          <Upload
-                            multiple
-                            type="drag"
-                            :show-upload-list="false"
-                            :with-credentials="true"
-                            action="file/upFile.do"
-                            :format="['jpg','jpeg','png','gif']"
-                            :max-size="4096"
-                            :on-format-error="handleFormatError"
-                            :on-exceeded-size="handleMaxSize"
-                            :on-success="agentIDBack">
-                            <div v-if="notAuth.companyAuthForm.agentIDBack==''"
-                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                              <img src="../../assets/img/usercenter/uc-add.png"/>
-                            </div>
-                            <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDBack">
-                            <p
-                              style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
-                              上传文件</p>
-                          </Upload>
+                  </FormItem>
+                  <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">
+                    提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                  <p class="info-title" style="margin-top: 70px">经办人信息<span
+                    style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
+                  </p>
+                  <FormItem label="经办人姓名" prop="agentName">
+                    <Input v-model="notAuth.companyAuthForm.agentName" placeholder="请输入经办人姓名"
+                           style="width: 300px;"></Input>
+                  </FormItem>
+                  <FormItem label="图形验证码" prop="imgCode">
+                    <Input v-model="notAuth.companyAuthForm.imgCode" placeholder="请输入图形验证码" style="width: 300px"></Input>
+                    <img style="position: absolute;right: 63%;bottom:0;cursor: pointer"
+                         :src="notAuth.companyAuthForm.imgSrc"
+                         @click="notAuth.companyAuthForm.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                  </FormItem>
+                  <FormItem label="联系方式" prop="linkManPhone">
+                    <Input v-model="notAuth.companyAuthForm.linkManPhone" placeholder="请输入经办人联系方式"
+                           style="width: 300px"></Input>
+                    <button class="sendCompanyCode"
+                            :class="{codeDisabled:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}"
+                            @click.prevent="sendCompanyCode"
+                            :disabled="notAuth.companyAuthForm.codePlaceholder!='发送验证码'">{{
+                      notAuth.companyAuthForm.codePlaceholder }}
+                    </button>
+                  </FormItem>
+                  <FormItem label="验证码" prop="verificationCode">
+                    <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码"
+                           style="width: 300px"></Input>
+                  </FormItem>
+                  <FormItem label="身份证号码" prop="agentManID">
+                    <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码"
+                           style="width: 300px;"></Input>
+                  </FormItem>
+                  <FormItem label="上传经办人证件">
+                    <div style="display: flex;flex-wrap: wrap;">
+                      <div
+                        style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px">
+                        <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px;">
+                          <div style="width:130px;">
+                            <Upload
+                              multiple
+                              type="drag"
+                              :show-upload-list="false"
+                              :with-credentials="true"
+                              action="file/upFile.do"
+                              :format="['jpg','jpeg','png','gif']"
+                              :max-size="4096"
+                              :on-format-error="handleFormatError"
+                              :on-exceeded-size="handleMaxSize"
+                              :on-success="agentIDFront">
+                              <div v-if="notAuth.companyAuthForm.agentIDFront==''"
+                                   style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                                <img src="../../assets/img/usercenter/uc-add.png"/>
+                              </div>
+                              <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDFront">
+                              <p
+                                style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
+                                上传文件</p>
+                            </Upload>
+                          </div>
+                          <div style="width:130px;margin-left:20px;">
+                            <img src="../../assets/img/usercenter/card-font.png"
+                                 style="width:130px;height:74px;margin-bottom: 10px;">
+                            <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人像面</p>
+                          </div>
                         </div>
-                        <div style="width:130px;margin-left:20px;">
-                          <img src="../../assets/img/usercenter/card-back.png"
-                               style="width:130px;height:74px;margin-bottom: 10px;">
-                          <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证国徽面</p>
+                      </div>
+                      <div
+                        style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px;">
+                        <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px">
+                          <div style="width:130px;">
+                            <Upload
+                              multiple
+                              type="drag"
+                              :show-upload-list="false"
+                              :with-credentials="true"
+                              action="file/upFile.do"
+                              :format="['jpg','jpeg','png','gif']"
+                              :max-size="4096"
+                              :on-format-error="handleFormatError"
+                              :on-exceeded-size="handleMaxSize"
+                              :on-success="agentIDBack">
+                              <div v-if="notAuth.companyAuthForm.agentIDBack==''"
+                                   style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                                <img src="../../assets/img/usercenter/uc-add.png"/>
+                              </div>
+                              <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDBack">
+                              <p
+                                style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
+                                上传文件</p>
+                            </Upload>
+                          </div>
+                          <div style="width:130px;margin-left:20px;">
+                            <img src="../../assets/img/usercenter/card-back.png"
+                                 style="width:130px;height:74px;margin-bottom: 10px;">
+                            <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证国徽面</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-top: 20px">
+                        <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px;">
+                          <div style="width:130px;">
+                            <Upload
+                              multiple
+                              type="drag"
+                              :show-upload-list="false"
+                              :with-credentials="true"
+                              action="file/upFile.do"
+                              :format="['jpg','jpeg','png','gif']"
+                              :max-size="4096"
+                              :on-format-error="handleFormatError"
+                              :on-exceeded-size="handleMaxSize"
+                              :on-success="agentIDInHand">
+                              <div v-if="notAuth.companyAuthForm.agentIDInHand==''"
+                                   style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                                <img src="../../assets/img/usercenter/uc-add.png"/>
+                              </div>
+                              <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDInHand">
+                              <p
+                                style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
+                                上传文件</p>
+                            </Upload>
+                          </div>
+                          <div style="width:130px;margin-left:20px;">
+                            <img src="../../assets/img/usercenter/card-person.png"
+                                 style="width:130px;height:74px;margin-bottom: 10px;">
+                            <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">手持身份证人像面照片</p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div
-                      style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-top: 20px">
-                      <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px;">
-                        <div style="width:130px;">
-                          <Upload
-                            multiple
-                            type="drag"
-                            :show-upload-list="false"
-                            :with-credentials="true"
-                            action="file/upFile.do"
-                            :format="['jpg','jpeg','png','gif']"
-                            :max-size="4096"
-                            :on-format-error="handleFormatError"
-                            :on-exceeded-size="handleMaxSize"
-                            :on-success="agentIDInHand">
-                            <div v-if="notAuth.companyAuthForm.agentIDInHand==''"
-                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                              <img src="../../assets/img/usercenter/uc-add.png"/>
-                            </div>
-                            <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDInHand">
-                            <p
-                              style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
-                              上传文件</p>
-                          </Upload>
-                        </div>
-                        <div style="width:130px;margin-left:20px;">
-                          <img src="../../assets/img/usercenter/card-person.png"
-                               style="width:130px;height:74px;margin-bottom: 10px;">
-                          <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">手持身份证人像面照片</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </FormItem>
-                <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">
-                  提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
-                <!--<FormItem label="证件类型" prop="certificateType">
-                  <Select v-model="notAuth.companyAuthForm.certificateType">
-                    <Option v-for="(item,index) in notAuth.companyAuthForm.certificateTypeOptions" :key="item.key"
-                            :value="item.key">
-                      {{item.label}}
-                    </Option>
-                  </Select>
-                </FormItem>-->
-              </div>
-              <!--三证合一图片上传-->
-              <!--<div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==1" style="display: block">
-                <FormItem label="三证合一">
-                  <div style="display: flex;padding:20px;background-color: #f7f7f7">
-                    <div style="width:130px;">
-                      <Upload
-                        multiple
-                        type="drag"
-                        :show-upload-list="false"
-                        :with-credentials="true"
-                        action="file/upFile.do"
-                        :on-success="combine">
-                        <div v-if="notAuth.companyAuthForm.combine==''"
-                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                          暂无图片
-                        </div>
-                        <img v-else :src="notAuth.companyAuthForm.combine">
-                        <Button type="primary">上传</Button>
-                      </Upload>
-                    </div>
-                    <div style="width:130px;margin-left:20px;">
-                      <img src="../../assets/img/usercenter/combine.jpg"
-                           style="width:130px;height:74px;margin-bottom: 20px;" @click="showPicture">
-                      <p style="line-height: 32px;text-align: center">示例图</p>
-                    </div>
-                  </div>
-                </FormItem>
-                <p style="margin: -15px 0px 20px;">提示：照片支持jpg、png、gif格式，图片最大不要超过200KB</p>
-              </div>-->
-              <!--非三证合一图片上传-->
-              <!-- <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==2">
-                 <FormItem label="营业执照">
-                   <div style="display: flex;padding:20px;background-color: #f7f7f7">
-                     <div style="width:130px;">
-                       <Upload
-                         multiple
-                         type="drag"
-                         :show-upload-list="false"
-                         :with-credentials="true"
-                         action="file/upFile.do"
-                         :on-success="license">
-                         <div v-if="notAuth.companyAuthForm.license==''"
-                              style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                           暂无图片
-                         </div>
-                         <img v-else :src="notAuth.companyAuthForm.license">
-                         <Button type="primary">上传</Button>
-                       </Upload>
-                     </div>
-                     <div style="width:130px;margin-left:20px;">
-                       <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
-                       <p style="line-height: 32px;text-align: center">示例图</p>
-                     </div>
-                   </div>
-                 </FormItem>
-                 <FormItem label="税务登记证">
-                   <div style="display: flex;padding:20px;background-color: #f7f7f7">
-                     <div style="width:130px;">
-                       <Upload
-                         multiple
-                         type="drag"
-                         :show-upload-list="false"
-                         :with-credentials="true"
-                         action="file/upFile.do"
-                         :on-success="tax">
-                         <div v-if="notAuth.companyAuthForm.tax==''"
-                              style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                           暂无图片
-                         </div>
-                         <img v-else :src="notAuth.companyAuthForm.tax">
-                         <Button type="primary">上传</Button>
-                       </Upload>
-                     </div>
-                     <div style="width:130px;margin-left:20px;">
-                       <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
-                       <p style="line-height: 32px;text-align: center">示例图</p>
-                     </div>
-                   </div>
-                 </FormItem>
-                 <FormItem label="组织机构代码证">
-                   <div style="display: flex;padding:20px;background-color: #f7f7f7">
-                     <div style="width:130px;">
-                       <Upload
-                         multiple
-                         type="drag"
-                         :show-upload-list="false"
-                         :with-credentials="true"
-                         action="file/upFile.do"
-                         :on-success="organization">
-                         <div v-if="notAuth.companyAuthForm.organization==''"
-                              style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                           暂无图片
-                         </div>
-                         <img v-else :src="notAuth.companyAuthForm.organization">
-                         <Button type="primary">上传</Button>
-                       </Upload>
-                     </div>
-                     <div style="width:130px;margin-left:20px;">
-                       <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
-                       <p style="line-height: 32px;text-align: center">示例图</p>
-                     </div>
-                   </div>
-                 </FormItem>
-               </div>-->
-              <div style="margin-left: 100px;">
-                <Button type="primary" @click="enterpriseAttest" style="font-size: 12px;color: #FFFFFF;">确认提交</Button>
-              </div>
-            </Form>
-          </TabPane>
-
+                  </FormItem>
+                  <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">
+                    提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                </div>
+                <div style="margin-left: 100px;">
+                  <Button type="primary" @click="enterpriseAttest" style="font-size: 12px;color: #FFFFFF;">确认提交</Button>
+                </div>
+              </Form>
+            </div>
+            <div v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0" class="companyAuthInfo">
+              <ol>
+                <li><span>公司名称</span><span>{{authInfo.name}}</span><span>企业认证</span></li>
+                <li><span>所属行业</span><span>{{authInfo.belongindustry}}</span></li>
+                <li><span>企业联系电话</span><span>{{authInfo.companylinkmanphone}}</span></li>
+                <li><span>营业执照号</span><span>{{authInfo.businesslicense}}</span></li>
+                <li><span>企业法人姓名</span><span>{{authInfo.legalpersonname}}</span></li>
+                <li><span>企业法人身份证号</span><span>{{authInfo.legalpersonidcard}}</span></li>
+                <li><span>经办人姓名</span><span>{{authInfo.agentname}}</span></li>
+                <li><span>经办人联系电话</span><span>{{authInfo.agentphone}}</span></li>
+                <li><span>经办人身份证号</span><span>{{authInfo.agentidcard}}</span></li>
+              </ol>
+            </div>
+            <div v-if="(authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==2) || (authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==1)" style="padding: 20px 0 0 170px;">
+              <Steps :current="companyCertificationStep">
+                <Step title="提交完成" content="信息已提交"></Step>
+                <Step title="正在处理" content="信息审核中，我们将在24小时内为您处理"></Step>
+                <Step title="审核通过" content="即将完成" v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==2"></Step>
+                <Step title="审核失败" content="完成" v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==1"></Step>
+              </Steps>
+            </div>
+            <div class="certificationResults" v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==2">
+              <img src="../../assets/img/usercenter/uc-img1.png"/>
+              <p>信息正在审核处理中</p>
+              <p>- -请耐心等待- -</p>
+            </div>
+            <div class="certificationResults" v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==1">
+              <img src="../../assets/img/usercenter/uc-img2.png"/>
+              <p style="color: #FF001F">审核未通过</p>
+              <p>提交审核资料发现问题，请重新提交</p>
+              <Button type="primary" style="margin-top: 20px" @click="resubmit">重新提交</Button>
+            </div>
+          </Tab-pane>
           <!--access key pane-->
           <Tab-pane label="Access Key" name="key">
             <Button type="primary" @click="keymodal" style="margin-bottom:10px">创建Access Key</Button>
@@ -983,10 +669,6 @@
     </div>
     <!--选择两种认证方式-->
     <Modal v-model="showModal.selectAuthType" width="550" :scrollable="true" style="top:172px">
-      <!--<div slot="header"
-    style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-      选择认证方式
-      </div>-->
       <div style="display: flex;margin-top: 20px;">
         <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
           <h2>个人用户</h2>
@@ -1012,9 +694,299 @@
       </div>
       <div slot="footer" style="margin-bottom: 20px;">
         <p class="modal-text-hint-bottom">
-          提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：400-0505-565</p>
+          提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
       </div>
     </Modal>
+
+    <!-- 更换头像 -->
+    <Modal v-model="showModal.setHeadPhoto" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">头像设置</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="setHeadPhoto">
+          <div class="title">
+            <span :class="{select: headPhotoType == 'custom'}" @click="headPhotoType = 'custom'">自定义头像</span><span :class="{select: headPhotoType == 'system'}"
+                                                                                                                   @click="headPhotoType = 'system'">系统头像</span>
+          </div>
+          <div class="content">
+            <div class="left">
+              <div v-show="headPhotoType == 'custom'">
+                <Upload
+                  type="drag"
+                  :show-upload-list="false"
+                  :with-credentials="true"
+                  action="file/upFile.do"
+                  :format="['jpg','jpeg','png']"
+                  :max-size="2056"
+                  :on-format-error="handleFormatError"
+                  :on-exceeded-size="handleMaxSize"
+                  :on-success="uploadHeadPhotoSuccess">
+                  <div v-if="uploadHeadPhoto==''"
+                       style="padding: 172px 0px;margin-bottom: 32px;height: 374px;color: #999;">
+                    <img src="../../assets/img/usercenter/uc-add.png"/>
+                  </div>
+                  <div style="height: 374px;display: flex;justify-content: center;align-items: center" v-else>
+                    <img :src="uploadHeadPhoto">
+                  </div>
+                  <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;padding-top: 20px;background: #FFF;text-align: left">
+                    上传文件</p>
+                </Upload>
+                <p style="margin-top: 20px">请上传jpg、jpeg、png格式图片，大小控制在2M以内</p>
+              </div>
+              <div v-show="headPhotoType == 'system'" style="display: flex;flex-wrap: wrap;">
+                <div class="system-img" :class="{selected: selectedSystemPhoto == item.photourl}" v-for="item in systemPhotoGroup"
+                     @click="selectedSystemPhoto = item.photourl">
+                  <img :src="item.photourl"/>
+                </div>
+              </div>
+            </div>
+            <div class="right">
+              <div v-if="headPhotoType == 'system'">
+                <img :src="selectedSystemPhoto"/>
+                <p>头像预览</p>
+              </div>
+              <div v-if="headPhotoType == 'custom'">
+                <img :src="uploadHeadPhoto" v-if="uploadHeadPhoto!= ''"/>
+                <img v-else/>
+                <p>头像预览</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.setHeadPhoto = false">取消</Button>
+        <Button type="primary" @click="userUpdateSystemHead">确定</Button>
+      </div>
+    </Modal>
+
+
+    <!-- 设置新密码 -->
+    <Modal v-model="showModal.setNewPassword" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">设置密码</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div>
+          <Steps :current="setNewPasswordForm.step" size="small">
+            <Step title="验证身份"></Step>
+            <Step title="设置新密码"></Step>
+            <Step title="完成"></Step>
+          </Steps>
+          <Form :model="setNewPasswordForm" :rules="setNewPasswordRuleValidate" ref="setNewPassword">
+            <div v-show="setNewPasswordForm.step == 0">
+              <Form-item label="手机号" style="width: 100%;margin-top: 10px" v-if="setNewPasswordForm.verificationMode == 'phone'">
+                <span>{{ userInfo.phone}}</span>
+              </Form-item>
+              <Form-item label="邮箱" style="width: 100%;margin-top: 10px" v-if="setNewPasswordForm.verificationMode == 'email'">
+                <span>{{ userInfo.loginname}}</span>
+              </Form-item>
+              <FormItem label="图形验证码" style="width: 100%;" prop="pictureCode">
+                <Input v-model="setNewPasswordForm.pictureCode" placeholder="请输入随机验证码"
+                       style="width:240px;margin-right:20px"></Input>
+                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+                     style="height:32px;vertical-align: middle">
+              </FormItem>
+              <Form-item label="验证码" prop="verificationCode" style="width: 100%">
+                <Input v-model="setNewPasswordForm.verificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
+                <Button type="primary" :disabled="setNewPasswordForm.newCodeText !='获取验证码' || setNewPasswordDisabled " @click="getSetNewPasswordCode">{{
+                  setNewPasswordForm.newCodeText}}
+                </Button>
+              </Form-item>
+            </div>
+            <div v-show="setNewPasswordForm.step == 1">
+              <FormItem label="输入新的密码" prop="newPassword" style="width: 100%">
+                <Input v-model="setNewPasswordForm.newPassword" placeholder="请输入新密码" style="width:240px"></Input>
+              </FormItem>
+              <FormItem label="确认新密码" prop="confirmPassword" style="width: 100%">
+                <Input v-model="setNewPasswordForm.confirmPassword" placeholder="确认新密码" style="width:240px"></Input>
+              </FormItem>
+            </div>
+          </Form>
+          <div class="setNewPasswordText" v-if="setNewPasswordForm.verificationMode == 'phone'&&setNewPasswordForm.step ==0">
+            <p>没有收到验证码？</p>
+            <p>1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
+            <p> 2、如果手机已丢失或停机，请<span @click="setNewPasswordForm.verificationMode = 'email'">更换验证方式</span></p>
+          </div>
+          <div class="setNewPasswordText" v-if="setNewPasswordForm.verificationMode == 'email'&&setNewPasswordForm.step ==0">
+            <p>没有收到验证码？</p>
+            <p>1、检查您的邮箱垃圾箱。</p>
+            <p>2、如果邮箱仍收不到验证码，请<span @click="setNewPasswordForm.verificationMode = 'phone'">更换验证方式</span></p>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.setNewPassword = false">取消</Button>
+        <Button type="primary" v-if="setNewPasswordForm.step == 0" @click="setNewPasswordStepTwo">下一步</Button>
+        <Button type="primary" v-if="setNewPasswordForm.step == 1">完成</Button>
+      </div>
+    </Modal>
+    <!--修改密码-->
+    <Modal width="550" v-model="showModal.modifyPassword" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
+        重置账户密码
+      </div>
+      <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
+        <Form :model="resetPasswordForm" label-position="top" :rules="resetPasswordruleValidate" style="width: 300px;"
+              ref="resetPassword">
+          <FormItem label="当前密码" prop="oldPassword">
+            <Input v-model="resetPasswordForm.oldPassword"></Input>
+          </FormItem>
+          <FormItem label="新的密码" prop="newPassword">
+            <Input v-model="resetPasswordForm.newPassword"></Input>
+          </FormItem>
+          <FormItem label="确认密码" prop="confirmPassword">
+            <Input v-model="resetPasswordForm.confirmPassword"></Input>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.modifyPassword=false">取消</Button>
+        <Button type="primary" @click="_checkResetPasswordForm">
+          完成
+        </Button>
+      </div>
+    </Modal>
+
+    <!-- 绑定手机 -->
+    <Modal v-model="showModal.bindingMobilePhone" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">绑定手机号</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div>
+          <Steps :current="bindingMobilePhoneForm.step" size="small">
+            <Step title="验证身份"></Step>
+            <Step title="绑定新手机"></Step>
+            <Step title="完成"></Step>
+          </Steps>
+          <Form :model="bindingMobilePhoneForm" :rules="bindingMobilePhoneRuleValidate" ref="bindingMobilePhone">
+            <div v-show="bindingMobilePhoneForm.step == 0">
+              <Form-item label="手机号" style="width: 100%;margin-top: 10px" v-if="bindingMobilePhoneForm.verificationMode == 'phone'">
+                <span>{{ userInfo.phone}}</span>
+              </Form-item>
+              <Form-item label="邮箱" style="width: 100%;margin-top: 10px" v-if="bindingMobilePhoneForm.verificationMode == 'email'">
+                <span>{{ userInfo.loginname}}</span>
+              </Form-item>
+              <FormItem label="图形验证码" style="width: 100%;" prop="pictureCode">
+                <Input v-model="bindingMobilePhoneForm.pictureCode" placeholder="请输入随机验证码"
+                       style="width:240px;margin-right:20px"></Input>
+                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+                     style="height:32px;vertical-align: middle">
+              </FormItem>
+              <Form-item label="验证码" prop="verificationCode" style="width: 100%">
+                <Input v-model="bindingMobilePhoneForm.verificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
+                <Button type="primary" :disabled="bindingMobilePhoneForm.codeText !='获取验证码'||getBindingMobilePhoneDisabled " @click="getBindingMobilePhoneCode">{{
+                  bindingMobilePhoneForm.codeText}}
+                </Button>
+              </Form-item>
+            </div>
+            <div v-show="bindingMobilePhoneForm.step == 1">
+              <FormItem label="输入新的手机号码" prop="newPhone" style="width: 100%">
+                <Input v-model="bindingMobilePhoneForm.newPhone" placeholder="请输入新手机号码" style="width:240px"></Input>
+              </FormItem>
+              <FormItem label="图形验证码" style="width: 100%;" prop="pictureCode">
+                <Input v-model="bindingMobilePhoneForm.pictureCode" placeholder="请输入随机验证码"
+                       style="width:240px;margin-right:20px"></Input>
+                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+                     style="height:32px;vertical-align: middle">
+              </FormItem>
+              <Form-item label="验证码" prop="newVerificationCode" style="width: 100%">
+                <Input v-model="bindingMobilePhoneForm.newVerificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
+                <Button type="primary" :disabled="bindingMobilePhoneForm.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode">{{ bindingMobilePhoneForm.newCodeText}}
+                </Button>
+              </Form-item>
+            </div>
+          </Form>
+          <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'phone'&&bindingMobilePhoneForm.step ==0">
+            <p>没有收到验证码？</p>
+            <p>1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
+            <p> 2、如果手机已丢失或停机，请<span @click="bindingMobilePhoneForm.verificationMode = 'email'">更换验证方式</span></p>
+          </div>
+          <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'email'&&bindingMobilePhoneForm.step ==0">
+            <p>没有收到验证码？</p>
+            <p>1、检查您的邮箱垃圾箱。</p>
+            <p>2、如果邮箱仍收不到验证码，请<span @click="bindingMobilePhoneForm.verificationMode = 'phone'">更换验证方式</span></p>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.bindingMobilePhone = false">取消</Button>
+        <Button type="primary" v-if="bindingMobilePhoneForm.step == 0" @click="bindingMobilePhoneStepTwo">下一步</Button>
+        <Button type="primary" v-if="bindingMobilePhoneForm.step == 1" @click="bindMobilePhone">完成</Button>
+      </div>
+    </Modal>
+
+    <!-- 绑定邮箱 -->
+    <Modal v-model="showModal.bindingEmail" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">绑定邮箱</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div>
+          <Steps :current="bindingEmailForm.step" size="small">
+            <Step title="验证身份"></Step>
+            <Step title="绑定新邮箱"></Step>
+            <Step title="完成"></Step>
+          </Steps>
+          <Form :model="bindingEmailForm" :rules="bindingEmailRuleValidate" ref="bindingEmail">
+            <div v-show="bindingEmailForm.step == 0">
+              <Form-item label="手机号" style="width: 100%;margin-top: 10px" v-if="bindingEmailForm.verificationMode == 'phone'">
+                <span>{{ userInfo.phone}}</span>
+              </Form-item>
+              <Form-item label="邮箱" style="width: 100%;margin-top: 10px" v-if="bindingEmailForm.verificationMode == 'email'">
+                <span>{{ userInfo.loginname}}</span>
+              </Form-item>
+              <FormItem label="图形验证码" style="width: 100%;" prop="pictureCode">
+                <Input v-model="bindingEmailForm.pictureCode" placeholder="请输入随机验证码"
+                       style="width:240px;margin-right:20px"></Input>
+                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+                     style="height:32px;vertical-align: middle">
+              </FormItem>
+              <Form-item label="验证码" prop="verificationCode" style="width: 100%">
+                <Input v-model="bindingEmailForm.verificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
+                <Button type="primary" :disabled="bindingEmailForm.codeText !='获取验证码' || getBindingEmailDisabled" @click="getBindingEmailCode">{{ bindingEmailForm.codeText}}
+                </Button>
+              </Form-item>
+            </div>
+            <div v-show="bindingEmailForm.step == 1">
+              <FormItem label="输入新的邮箱" prop="newEmail" style="width: 100%">
+                <Input v-model="bindingEmailForm.newEmail" placeholder="请输入新邮箱" style="width:240px"></Input>
+              </FormItem>
+              <FormItem label="图形验证码" style="width: 100%;" prop="pictureCode">
+                <Input v-model="bindingEmailForm.pictureCode" placeholder="请输入随机验证码"
+                       style="width:240px;margin-right:20px"></Input>
+                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+                     style="height:32px;vertical-align: middle">
+              </FormItem>
+              <Form-item label="验证码" prop="newVerificationCode" style="width: 100%">
+                <Input v-model="bindingEmailForm.newVerificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
+                <Button type="primary" :disabled="bindingEmailForm.newCodeText !='获取验证码' " @click="getBindingNewEmailCode">{{ bindingEmailForm.newCodeText}}
+                </Button>
+              </Form-item>
+            </div>
+          </Form>
+          <div class="setNewPasswordText" v-if="bindingEmailForm.verificationMode == 'phone'&&bindingEmailForm.step ==0">
+            <p>没有收到验证码？</p>
+            <p>1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
+            <p> 2、如果手机已丢失或停机，请<span @click="bindingEmailForm.verificationMode = 'email'">更换验证方式</span></p>
+          </div>
+          <div class="setNewPasswordText" v-if="bindingEmailForm.verificationMode == 'email'&&bindingEmailForm.step ==0">
+            <p>没有收到验证码？</p>
+            <p>1、检查您的邮箱垃圾箱。</p>
+            <p>2、如果邮箱仍收不到验证码，请<span @click="bindingEmailForm.verificationMode = 'phone'">更换验证方式</span></p>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.bindingEmail = false">取消</Button>
+        <Button type="primary" v-if="bindingEmailForm.step == 0" @click="bindingEmailStepTwo">下一步</Button>
+        <Button type="primary" v-if="bindingEmailForm.step == 1" @click="bindEmail">完成</Button>
+      </div>
+    </Modal>
+
     <!--添加联系人-->
     <Modal width="550" v-model="showModal.addLinkman" :scrollable="true">
       <div slot="header"
@@ -1067,202 +1039,7 @@
         <Button type="primary" @click="updateLinkmanOk('updateLinkmanForm')">确定修改</Button>
       </div>
     </Modal>
-    <!--选择验证方式-->
-    <Modal v-model="showModal.modifyPhone" width="550" :scrollable="true" :styles="{top:'172px'}">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        选择验证方式
-      </div>
-      <div style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        <div>
-          <p style="font-size: 14px;color: rgba(17,17,17,0.65);padding-bottom: 25px;line-height: 19px;">
-            您正在为帐号{{userInfo.realname}}修改绑定，请选择一种身份验证方式：</p>
-        </div>
-        <div class='modal-wrapper'>
-          <span>通过手机验证</span>
-          <Button type="primary" :disabled="!userInfo.phone" @click="authByPhone">立即验证
-          </Button>
-        </div>
-        <div class="modal-wrapper">
-          <span>通过邮箱验证</span>
-          <Button type="primary" :disabled="!userInfo.loginname" @click="authByEmail">立即验证
-          </Button>
-        </div>
-      </div>
-      <div slot="footer">
-        <Button type="ghost" @click="showModal.modifyPhone=false">取消</Button>
-      </div>
-    </Modal>
 
-    <Modal width="550" v-model="showModal.authByPhone" :scrollable="true">
-      <div slot="header"
-           style="color:#333333;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;line-height: 16px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        验证手机号
-      </div>
-      <div>
-        <div style="margin: 15px 0;">
-  <span
-    style="display: block;margin: 10px 0px;font-size: 16px;color: #333333;width:80px;font-size: 14px;line-height: 14px;">手机号</span><span>{{userInfo.phone}}</span>
-        </div>
-        <div style="margin: 15px 0 20px 0;">
-  <span
-    style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display:block;margin: 10px 0px;">随机验证码</span>
-          <Input type="text" autocomplete="off" v-model="code" placeholder="请输入随机验证码"
-                 style="width: 240px;margin-right: 20px;height: 28px;"></Input>
-          <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
-               style="height:32px;vertical-align: middle;cursor: pointer">
-        </div>
-        <div style="margin: 20px 0 10px 0;">
-  <span
-    style="font-size: 14px;line-height: 14px;color:#333333;vertical-align:sub;width:80px;display: block;margin: 10px 0px;">验证码</span>
-          <Input v-model="newPhoneForm.oldPhoneCode" placeholder="请输入手机验证码"
-                 style="width: 240px;margin-right:20px;height: 28px;"></Input>
-          <Button type="primary" :class="{codeDisabled:newPhoneForm.phoneVerCodeText!='获取验证码'}"
-                  :disabled="newPhoneForm.phoneVerCodeText!='获取验证码'"
-                  style="height:31px;width:92px" @click="getVerCode('phone')">{{newPhoneForm.phoneVerCodeText}}
-          </Button>
-        </div>
-      </div>
-      <div style="padding: 20px 20px 50px 20px;border-bottom: 1px solid #D8D8D8;background-color: #F7F7F7;">
-        <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
-        <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
-        <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer"
-                                                                     @click="changWay1">更换验证方式</span>。</p>
-      </div>
-      <div slot="footer">
-        <Button type="ghost" @click="showModal.authByPhone=false">取消</Button>
-        <Button type="primary" @click="next('phone')">下一步</Button>
-      </div>
-    </Modal>
-
-    <Modal width="550" v-model="showModal.authByEmail" :scrollable="true">
-      <div slot="header"
-           style="color:#333333;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;line-height: 16px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        邮箱验证
-      </div>
-      <div>
-        <div style="margin: 15px 0;"><span
-          style="display: block;margin: 10px 0px;font-size: 14px;color: #333333;line-height: 14px;width:80px;">邮箱</span><span>{{userInfo.loginname}}</span>
-        </div>
-        <div style="margin: 15px 0 20px 0;">
-  <span
-    style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display:block;margin: 10px 0px;">随机验证码</span>
-          <Input type="text" autocomplete="off" v-model="code" placeholder="请输入随机验证码"
-                 style="width: 240px;margin-right: 20px;height: 28px;"></Input>
-          <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
-               style="height:32px;vertical-align: middle;cursor: pointer">
-        </div>
-        <div style="margin: 15px 0 20px 0;">
-  <span
-    style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display: block;margin: 10px 0px;">验证码</span><Input
-          v-model="newPhoneForm.oldPhoneCode" placeholder="请输入"
-          style="width: 240px;margin-right:20px;height: 28px;"></Input>
-          <Button type="primary" :class="{codeDisabled:emailVerCodeText!='获取验证码'}" :disabled="emailVerCodeText!='获取验证码'"
-                  style="height:31px;width:92px" @click="getVerCode('email')">{{emailVerCodeText}}
-          </Button>
-        </div>
-      </div>
-      <div style="padding: 20px 20px 50px 20px;border-bottom: 1px solid #D8D8D8;background-color: #F7F7F7;">
-        <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
-        <p style="line-height: 1.5;color: #999;">1、检查您的邮箱垃圾箱。</p>
-        <p style="line-height: 1.5;color: #999;">2、如果邮箱仍收不到验证码，请<span style="color: rgb(42, 153, 242);cursor: pointer"
-                                                                      @click="changWay2">更换验证方式</span>。</p>
-      </div>
-      <div slot="footer">
-        <Button type="ghost" @click="showModal.authByEmail=false">取消</Button>
-        <Button type="primary" @click="next('email')">下一步</Button>
-      </div>
-    </Modal>
-
-    <Modal width="550" v-model="showModal.authNewPhone" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        重置手机号
-      </div>
-      <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        <p style="margin-top:0px;">绑定新手机</p>
-        <Input v-model="newPhoneForm.newPhone" placeholder="新手机号" style="width:300px"></Input>
-        <p>随机验证码</p>
-        <Input v-model="newPhoneForm.code" placeholder="请输入随机验证码"
-               style="width:300px;margin-right:10px"></Input>
-        <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
-             style="height:32px;vertical-align: middle">
-        <p>短信验证码</p>
-        <Input v-model="newPhoneForm.verCode" placeholder="请输入短信验证码"
-               style="width:300px;margin-right:10px"></Input>
-        <Button type="primary" @click="getNewPhoneVerCode('phone')" :class="{codeDisabled:phoneVerCode!='获取验证码'}"
-                :disabled="phoneVerCode!='获取验证码'" style="height:31px;width:92px">{{phoneVerCode}}
-        </Button>
-      </div>
-      <div slot="footer">
-        <Button type="ghost" @click="showModal.authNewPhone=false">取消</Button>
-        <Button type="primary" @click="confirmPhone">完成</Button>
-      </div>
-    </Modal>
-
-    <Modal width="550" v-model="showModal.authNewEmail" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        重置邮箱
-      </div>
-      <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        <p style="margin-top:0px;">绑定新邮箱</p>
-        <Input v-model="newPhoneForm.newPhone" placeholder="新邮箱地址" style="width:300px"></Input>
-        <p>图片验证码</p>
-        <Input type="text" autocomplete="off" v-model="newPhoneForm.code" placeholder="请输入图片验证码"
-               style="width: 300px;margin-right: 20px;height: 28px;"></Input>
-        <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
-             style="height:32px;vertical-align: middle;cursor: pointer">
-        <p>邮箱验证码</p>
-        <Input v-model="newPhoneForm.verCode" placeholder="验证码"
-               style="width:300px;margin-right:10px"></Input>
-        <Button type="primary" @click="getNewPhoneVerCode('email')" :class="{codeDisabled:emailVerCode!='获取验证码'}"
-                :disabled="emailVerCode!='获取验证码'" style="height:31px;width:92px">{{emailVerCode}}
-        </Button>
-      </div>
-      <div slot="footer">
-        <Button type="ghost" @click="showModal.authNewEmail=false">取消</Button>
-        <Button type="primary" @click="confirmEmail">完成</Button>
-      </div>
-    </Modal>
-
-    <!--修改密码-->
-    <Modal width="550" v-model="showModal.modifyPassword" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        重置账户密码
-      </div>
-      <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        <Form :model="resetPasswordForm" label-position="top" :rules="resetPasswordruleValidate" style="width: 300px;"
-              ref="resetPassword">
-          <FormItem label="当前密码" prop="oldPassword">
-            <Input v-model="resetPasswordForm.oldPassword"></Input>
-          </FormItem>
-          <FormItem label="新的密码" prop="newPassword">
-            <Input v-model="resetPasswordForm.newPassword"></Input>
-          </FormItem>
-          <FormItem label="确认密码" prop="confirmPassword">
-            <Input v-model="resetPasswordForm.confirmPassword"></Input>
-          </FormItem>
-        </Form>
-      </div>
-      <div slot="footer">
-        <Button type="ghost" @click="showModal.modifyPassword=false">取消</Button>
-        <Button type="primary" @click="_checkResetPasswordForm">
-          完成
-        </Button>
-      </div>
-    </Modal>
-
-    <!--显示图片-->
-    <Modal width="550" v-model="showModal.showPicture" :scrollable="true">
-      <div class="newPhone">
-        <img src="../../assets/img/usercenter/combine.jpg"
-             style="width:330px;height:450px;margin:0px auto;display:block">
-      </div>
-      <div slot="footer">
-      </div>
-    </Modal>
     <!--密钥手机验证-->
     <Modal width="550" v-model="showModal.keyPhoneVal" :scrollable="true">
       <div slot="header"
@@ -1292,14 +1069,26 @@
         </Button>
       </div>
     </Modal>
+
+    <!--显示图片-->
+    <Modal width="550" v-model="showModal.showPicture" :scrollable="true">
+      <div class="newPhone">
+        <img src="../../assets/img/usercenter/combine.jpg"
+             style="width:330px;height:450px;margin:0px auto;display:block">
+      </div>
+      <div slot="footer">
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapState} from 'vuex'
-  import axios from '@/util/axiosInterceptor'
-  import $store from '@/vuex'
+  import area from '../../options/area'
+  import trades from '../../options/tradeGroup'
+  import positions from '../../options/positionGroup'
+  import axios from '../../util/axiosInterceptor'
   import reg from '../../util/regExp'
+  import $store from '../../vuex'
 
   export default {
     data() {
@@ -1313,9 +1102,21 @@
         currentTab = authType
       }
       sessionStorage.removeItem('pane')
+
+      // 校验地区
+      const validateArea = (rule, value, callback) => {
+        if (
+          this.occupationalInfoForm.province == '' ||
+          this.occupationalInfoForm.city == ''
+        ) {
+          return callback(new Error('请选择所属区域'))
+        } else {
+          callback();
+        }
+      };
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('联系电话不能为空'));
+          return callback(new Error('电话号码不能为空'));
         }
         if (!(/^1(3|4|5|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
           callback(new Error('请输入正确的电话号码'));
@@ -1344,6 +1145,20 @@
           callback()
         }
       }
+      const validaNewPassWord = (rule, value, callback) => {
+        if (!reg.registerPasswordVail(value)) {
+          callback(new Error('密码必须包含数字和字母大小写'));
+        } else {
+          callback()
+        }
+      }
+      const validaNewPassWordTwo = (rule, value, callback) => {
+        if (this.setNewPasswordForm.newPassword != value) {
+          callback(new Error('两次输入的密码不一致'));
+        } else {
+          callback()
+        }
+      }
       const validaRegisteredEmail = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('联系邮箱不能为空'));
@@ -1364,34 +1179,65 @@
           callback()
         }
       }
+      const validaRegisteredBusinessLicenseNumber = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('营业执照号码不能为空'));
+        }
+        if (!(/^[0-9]*$/.test(value))) {
+          callback(new Error('请输入正确的营业执照号码'));
+        } else {
+          callback()
+        }
+      }
+
       return {
-        keyWeight: '',
-        keycodePlaceholder: '获取验证码',
-        token: '',
-        keyForm: {
-          phone: '',
-          imgCode: '',
-          code: ''
-        },
-        phoneVerCode: '获取验证码',
-        emailVerCode: '获取验证码',
-        authType,
         // 当前选中的tab页
         currentTab,
-        emailVerCodeText: '获取验证码',
+        authType,
         showModal: {
           selectAuthType: false,
           addLinkman: false,
-          modifyPhone: false,
-          authByPhone: false,
-          authByEmail: false,
-          modifyPassword: false,
-          showPicture: false,
           updateLinkman: false,
           keyPhoneVal: false,
-          authNewEmail: false
+          showPicture: false,
+          setNewPassword: false,
+          bindingMobilePhone: false,
+          bindingEmail: false,
+          modifyPassword: false,
+          setHeadPhoto: false,
+          modifyOtherInfo: false
         },
-        imgSrc: 'user/getKaptchaImage.do',
+        headPhotoType: 'system',
+        systemPhotoGroup: [],
+        selectedSystemPhoto: '',
+        uploadHeadPhoto: '',
+        // 职业信息表单
+        occupationalInfoForm: {
+          trade: '',
+          tradeOptions: trades,
+          position: '',
+          positionOptions: positions,
+          companyName: '',
+          provinceList: area,
+          province: '',
+          city: '',
+          cityList: [],
+        },
+        occupationalInfoRule: {
+          trade: [
+            {required: true, message: "请选择行业", trigger: "change"}
+          ],
+          position: [
+            {required: true, message: "请选择职位", trigger: "change"}
+          ],
+          companyName: [
+            {required: true, message: "请输入单位名称", trigger: "blue"}
+          ],
+          city: [
+            {required: true, validator: validateArea, trigger: "change"}
+          ]
+        },
+
         // 此对象存储所有未认证时页面的状态
         notAuth: {
           currentStep: 1,
@@ -1536,7 +1382,6 @@
             ],
             industry: [
               {required: true, message: '请输入选择所属行业'},
-              /*{validator: validaRegisteredID}*/
             ],
             contact: [
               {required: true, message: '请输入公司联系方式'},
@@ -1544,6 +1389,7 @@
             ],
             businessLicenseNumber: [
               {required: true, message: '请输入公司营业执照号码'},
+              {validator: validaRegisteredBusinessLicenseNumber}
             ],
             combine: [
               {required: true, message: '请上传公司营业执照', trigger: 'submit'}
@@ -1583,6 +1429,108 @@
             ]
           },
         },
+        // 设置新密码表单
+        setNewPasswordForm: {
+          step: 0,
+          verificationCode: '',
+          pictureCode: '',
+          codeText: '获取验证码',
+          newCodeText: '获取验证码',
+          newPassword: '',
+          confirmPassword: '',
+          verificationMode: 'phone'
+        },
+        setNewPasswordRuleValidate: {
+          verificationCode: [
+            {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+          ],
+          pictureCode: [
+            {required: true, message: '请输入图形验证码', trigger: 'blur'},
+          ],
+          newPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: validaNewPassWord, trigger: 'blur'}
+          ],
+          confirmPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: validaNewPassWordTwo, trigger: 'blur'}
+          ],
+        },
+
+        // 绑定手机表单
+        bindingMobilePhoneForm: {
+          step: 0,
+          verificationCode: '',
+          pictureCode: '',
+          codeText: '获取验证码',
+          newCodeText: '获取验证码',
+          newPhone: '',
+          newVerificationCode: '',
+          verificationMode: 'phone'
+        },
+        bindingMobilePhoneRuleValidate: {
+          verificationCode: [
+            {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+          ],
+          pictureCode: [
+            {required: true, message: '请输入图形验证码', trigger: 'blur'},
+          ],
+          newPhone: [
+            {required: true, message: '请输入新手机号码', trigger: 'blur'},
+            {validator: validaRegisteredPhone, trigger: 'blur'}
+          ],
+          newVerificationCode: [
+            {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+          ],
+        },
+
+        // 绑定邮箱表单
+        bindingEmailForm: {
+          step: 0,
+          verificationCode: '',
+          pictureCode: '',
+          codeText: '获取验证码',
+          newCodeText: '获取验证码',
+          newEmail: '',
+          newVerificationCode: '',
+          verificationMode: 'phone'
+        },
+        bindingEmailRuleValidate: {
+          verificationCode: [
+            {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+          ],
+          pictureCode: [
+            {required: true, message: '请输入图形验证码', trigger: 'blur'},
+          ],
+          newEmail: [
+            {required: true, message: '请输入新邮箱', trigger: 'blur'},
+            {type: "email", message: "请输入正确的邮箱地址", trigger: "blur"}
+          ],
+          newVerificationCode: [
+            {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+          ],
+        },
+
+        // 重值密码表单
+        resetPasswordForm: {
+          oldPassword: '',
+          newPassword: '',
+          confirmPassword: ''
+        },
+        resetPasswordruleValidate: {
+          oldPassword: [
+            {required: true, message: '请输入旧密码', trigger: 'blur'},
+          ],
+          newPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: validaRegisteredPassWord, trigger: 'blur'}
+          ],
+          confirmPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: validaRegisteredPassWordTwo, trigger: 'blur'}
+          ],
+        },
+
         // 联系人表格
         linkManColumns: [
           {
@@ -1816,8 +1764,7 @@
           phone: '',
           email: '',
           name: '',
-        }
-        ,
+        },
         addLinkmanFormValidate: {
           phone: [
             {required: true, validator: validaRegisteredPhone, trigger: 'blur'}
@@ -1828,8 +1775,7 @@
           name: [
             {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
-        }
-        ,
+        },
         // 修改联系人表单
         updateLinkmanForm: {
           phone: '',
@@ -1912,35 +1858,14 @@
           }
         ],
         setData: [],
-        // 修改手机号时表单
-        code: '',
-        newPhoneForm: {
-          oldPhoneCode: '',
-          // 随机验证码
-          code: '',
-          newPhone: '',
-          verCode: '',
-          phoneVerCodeText: '获取验证码',
-        }
-        ,
-        // 重值密码表单
-        resetPasswordForm: {
-          oldPassword: '',
-          newPassword: '',
-          confirmPassword: ''
-        },
-        resetPasswordruleValidate: {
-          oldPassword: [
-            {required: true, message: '请输入旧密码', trigger: 'blur'},
-          ],
-          newPassword: [
-            {required: true, message: '请输入新密码', trigger: 'blur'},
-            {validator: validaRegisteredPassWord, trigger: 'blur'}
-          ],
-          confirmPassword: [
-            {required: true, message: '请输入新密码', trigger: 'blur'},
-            {validator: validaRegisteredPassWordTwo, trigger: 'blur'}
-          ],
+
+        keyWeight: '',
+        keycodePlaceholder: '获取验证码',
+        token: '',
+        keyForm: {
+          phone: '',
+          imgCode: '',
+          code: ''
         },
         keyColumns: [
           {
@@ -2072,7 +1997,9 @@
             }
           }
         ],
-        keyData: []
+        keyData: [],
+        imgSrc: 'user/getKaptchaImage.do',
+        otherInfoShow: false
       }
     },
     created() {
@@ -2083,57 +2010,186 @@
           this.showModal.selectAuthType = true
         }
       }
-      this.listKey()
-      if ($store.state.authInfo.companyid) {
-        axios.post('user/getPhone.do', {
-          companyId: $store.state.authInfo.companyid
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.keyForm.phone = response.data.data.phone
-          } else {
-            this.$Message.error(response.data.msg)
-          }
-        })
-        axios.post('user/getRuiRadosApiacess.do', {
-          zoneId: $store.state.zone.zoneid,
-          companyId: $store.state.authInfo.companyid
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            var radosApIaccessKey = response.data.data.data
-            axios.get('user/getRadosToken.do', {
-              params: {
-                companyId: $store.state.authInfo.companyid,
-                secret: radosApIaccessKey
-              }
-            }).then(response => {
-              if (response.status == 200) {
-                this.token = response.data.token
-              }
-            })
-          }
-        })
-      }
       this.listNotice()
       this.getContacts()
-      /*if (!$store.state.accessKey) {
-       // console.log('access key')
-       // setTimeout(() => {
-       //   console.log($store.state.accessKey)
-       // }, 0);
-       // console.log($store.state)
-       // console.log($store.state.accessKey)
-       if(!$store.state.accessKey){
-       this.$Modal.confirm({
-       title: '提示',
-       content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;cursor:pointer">Access Key管理</span>去创建Access Key。</p>',
-       });
-       }*/
+      this.getSystemHead()
+      this.setOccupationalInfo()
     },
     methods: {
       init() {
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             $store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+          }
+        })
+      },
+      setOccupationalInfo() {
+        if (this.userInfo.applicationindustry || this.userInfo.position || this.userInfo.corporatename || this.userInfo.corporateaddressprovince) {
+          this.occupationalInfoForm.trade = this.userInfo.applicationindustry ? this.userInfo.applicationindustry : ''
+          this.occupationalInfoForm.position = this.userInfo.position ? this.userInfo.position : ''
+          this.occupationalInfoForm.companyName = this.userInfo.corporatename ? this.userInfo.corporatename : ''
+          this.occupationalInfoForm.province = this.userInfo.corporateaddressprovince ? this.userInfo.corporateaddressprovince : ''
+          area.forEach(item => {
+            if (item.name == this.occupationalInfoForm.province) {
+              this.occupationalInfoForm.cityList = item.city
+              this.occupationalInfoForm.city = this.userInfo.corporateaddresscity ? this.userInfo.corporateaddresscity : ''
+            }
+          })
+          this.otherInfoShow = true
+        }
+      },
+      tabSwitching(name) {
+        switch (name) {
+          case 'personalInfo':
+            break
+          case 'remainder':
+            this.listNotice()
+            this.getContacts()
+            break
+          case 'certification':
+
+            break
+          case 'companyInfo':
+
+            break
+          case 'key':
+            this.listKey()
+            if ($store.state.authInfo && $store.state.authInfo.companyid) {
+              axios.post('user/getPhone.do', {
+                companyId: $store.state.authInfo.companyid
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.keyForm.phone = response.data.data.phone
+                } else {
+                  this.$Message.error(response.data.msg)
+                }
+              })
+              axios.post('user/getRuiRadosApiacess.do', {
+                zoneId: $store.state.zone.zoneid,
+                companyId: $store.state.authInfo.companyid
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  var radosApIaccessKey = response.data.data.data
+                  axios.get('user/getRadosToken.do', {
+                    params: {
+                      companyId: $store.state.authInfo.companyid,
+                      secret: radosApIaccessKey
+                    }
+                  }).then(response => {
+                    if (response.status == 200) {
+                      this.token = response.data.token
+                    }
+                  })
+                }
+              })
+            }
+            break
+        }
+      },
+      // 获取系统头像列表
+      getSystemHead() {
+        let url = 'user/getSystemHead.do'
+        this.$http.get(url).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.systemPhotoGroup = res.data.result
+            this.selectedSystemPhoto = res.data.result[0].photourl
+          }
+        })
+      },
+      // 更新头像
+      userUpdateSystemHead() {
+        let params = {
+          photoUrl: this.selectedSystemPhoto
+        }
+        let url = 'user/userUpdateSystemHead.do'
+        this.$http.post(url, params).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.showModal.setHeadPhoto = false
+            this.$Message.success(res.data.message)
+            this.init()
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      // 绑定手机
+      bindMobilePhone() {
+        var url = 'user/updatePhone.do'
+        this.$http.get(url, {
+          params: {
+            code: this.bindingMobilePhoneForm.newVerificationCode,
+            phone: this.bindingMobilePhoneForm.newPhone
+          }
+        }).then((response) => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message);
+            this.init()
+          }
+          this.showModal.bindingMobilePhone = false
+        })
+      },
+      // 绑定邮箱
+      bindEmail() {
+        var url = 'user/updateUserInfo.do'
+        this.$http.get(url, {
+          params: {
+            code: this.bindingEmailForm.newVerificationCode,
+            email: this.bindingEmailForm.newPhone
+          }
+        }).then((response) => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message);
+            this.init()
+          } else {
+            this.$message.info({
+              content: response.data.message
+            });
+          }
+          this.showModal.bindingEmail = false
+        })
+      },
+      // 切换省
+      changeProvince(val) {
+        this.occupationalInfoForm.city = ''
+        area.forEach(item => {
+          if (item.name == val) {
+            this.occupationalInfoForm.cityList = item.city
+          }
+        })
+      },
+      saveJobInfo() {
+        let url = 'user/addUserElseMessage.do'
+        let params = {
+          applicationIndustry: this.occupationalInfoForm.trade,
+          position: this.occupationalInfoForm.position,
+          corporateName: this.occupationalInfoForm.companyName,
+          corporateAddressProvince: this.occupationalInfoForm.province,
+          corporateAddressCity: this.occupationalInfoForm.city,
+          type: '1'
+        }
+        this.$http.post(url, params).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.showModal.modifyOtherInfo = false
+            this.init()
+            this.otherInfoShow = true
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      modifyJobInfo() {
+      },
+
+      // 重新提交申请
+      resubmit() {
+        axios.get('user/GetUserInfo.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            $store.commit('setAuthInfo', {authInfo: null, userInfo: response.data.result})
           }
         })
       },
@@ -2306,6 +2362,7 @@
               linkmanName: this.notAuth.companyAuthForm.contactPerson,
               trade: this.notAuth.companyAuthForm.industry,
               phone: this.notAuth.companyAuthForm.contact,
+              companyCardURL: this.notAuth.companyAuthForm.combine,
               idCard: this.notAuth.companyAuthForm.agentManID,
               contectPhone: this.notAuth.companyAuthForm.linkManPhone,
               phoneCode: this.notAuth.companyAuthForm.verificationCode,
@@ -2316,9 +2373,7 @@
               companyLegalIdcardBackUrl: this.notAuth.companyAuthForm.legalPersonIDBack,
               operatorIdcardUrl: this.notAuth.companyAuthForm.agentIDFront,
               operatorIdcardBackUrl: this.notAuth.companyAuthForm.agentIDBack,
-              operatorIdcardBackByHandUrl: this.notAuth.companyAuthForm.agentIDInHand,
-              agentIDCard:this.notAuth.companyAuthForm.agentManID,
-              legalPersonIDCard:this.notAuth.companyAuthForm.linkManNameID
+              operatorIdcardBackByHandUrl: this.notAuth.companyAuthForm.agentIDInHand
             }
             axios.post('user/enterpriseAttest.do', params).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -2380,6 +2435,232 @@
           })
         }
       },
+      // 设置新密码
+      setNewPasswordStepTwo() {
+        this.$refs.setNewPassword.validateField('verificationCode', (text) => {
+          if (text == '') {
+            this.setNewPasswordForm.step = 1
+          }
+        })
+      },
+      bindingMobilePhoneStepTwo() {
+        this.$refs.bindingMobilePhone.validateField('verificationCode', (text) => {
+          if (text == '') {
+            this.bindingMobilePhoneForm.step = 1
+          }
+        })
+      },
+      bindingEmailStepTwo() {
+        this.$refs.bindingEmail.validateField('verificationCode', (text) => {
+          if (text == '') {
+            this.bindingEmailForm.step = 1
+          }
+        })
+      },
+      getSetNewPasswordCode() {
+        this.$refs.setNewPassword.validateField('pictureCode', (text) => {
+          if (text == '') {
+            let params = {}
+            if (this.setNewPasswordForm.verificationMode == 'phone') {
+              params = {
+                aim: this.userInfo.phone,
+                isemail: 0,
+                vailCode: this.setNewPasswordForm.pictureCode
+              }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                vailCode: this.setNewPasswordForm.pictureCode
+              }
+            }
+            axios.get('user/code.do', {params}).then(response => {
+              // 发送成功，进入倒计时
+              if (response.status == 200 && response.data.status == 1) {
+                var countdown = 60
+                this.setNewPasswordForm.newCodeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.setNewPasswordForm.newCodeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.setNewPasswordForm.newCodeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      getBindingMobilePhoneCode() {
+        this.$refs.bindingMobilePhone.validateField('pictureCode', (text) => {
+          if (text == '') {
+            let params = {}
+            if (this.bindingMobilePhoneForm.verificationMode == 'phone') {
+              params = {
+                aim: this.userInfo.phone,
+                isemail: 0,
+                vailCode: this.bindingMobilePhoneForm.pictureCode
+              }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                vailCode: this.bindingMobilePhoneForm.pictureCode
+              }
+            }
+            axios.get('user/code.do', {params}).then(response => {
+              // 发送成功，进入倒计时
+              if (response.status == 200 && response.data.status == 1) {
+                var countdown = 60
+                this.bindingMobilePhoneForm.codeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.bindingMobilePhoneForm.codeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.bindingMobilePhoneForm.codeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      getBindingNewMobilePhoneCode() {
+        this.$refs.bindingMobilePhone.validateField('newPhone', (text) => {
+          if (text == '') {
+            axios.get('user/code.do', {
+              params: {
+                aim: this.bindingMobilePhoneForm.newPhone,
+                isemail: 0,
+                vailCode: this.bindingMobilePhoneForm.pictureCode
+              }
+            }).then(response => {
+              // 发送成功，进入倒计时
+              if (response.status == 200 && response.data.status == 1) {
+                var countdown = 60
+                this.bindingMobilePhoneForm.newCodeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.bindingMobilePhoneForm.newCodeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.bindingMobilePhoneForm.newCodeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      getBindingEmailCode() {
+        this.$refs.bindingEmail.validateField('pictureCode', (text) => {
+          if (text == '') {
+            let params = {}
+            if (this.bindingEmailForm.verificationMode == 'phone') {
+              params = {
+                aim: this.userInfo.phone,
+                isemail: 0,
+                vailCode: this.bindingEmailForm.pictureCode
+              }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                vailCode: this.bindingEmailForm.pictureCode
+              }
+            }
+            axios.get('user/code.do', {params}).then(response => {
+              // 发送成功，进入倒计时
+              if (response.status == 200 && response.data.status == 1) {
+                var countdown = 60
+                this.bindingEmailForm.codeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.bindingEmailForm.codeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.bindingEmailForm.codeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      getBindingNewEmailCode() {
+        this.$refs.bindingEmail.validateField('newEmail', (text) => {
+          if (text == '') {
+            axios.get('user/code.do', {
+              params: {
+                aim: this.bindingEmailForm.newEmail,
+                isemail: 1,
+                vailCode: this.bindingEmailForm.pictureCode
+              }
+            }).then(response => {
+              // 发送成功，进入倒计时
+              if (response.status == 200 && response.data.status == 1) {
+                var countdown = 60
+                this.bindingEmailForm.newCodeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.bindingEmailForm.newCodeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.bindingEmailForm.newCodeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      // 验证重置密码表单
+      _checkResetPasswordForm() {
+        this.$refs.resetPassword.validate((valid) => {
+          if (valid) {
+            this.resetPassword_ok()
+          }
+        })
+      },
+      // 重置密码
+      resetPassword_ok() {
+        this.$http.get('user/updatePassword.do', {
+          params: {
+            password: this.resetPasswordForm.newPassword,
+            oldpassword: this.resetPasswordForm.oldPassword
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.showModal.modifyPassword = false
+            this.$Message.success(response.data.message)
+          } else {
+            this.$message.info({content: response.data.message})
+          }
+        })
+      },
+
       // 列出通知信息
       listNotice() {
         var url = `user/listNotice.do`
@@ -2522,115 +2803,8 @@
           }
         })
       },
-      // 更换验证方式
-      changWay1() {
-        this.showModal.authByPhone = false
-        this.showModal.modifyPhone = true
-      },
-      changWay2() {
-        this.showModal.authByEmail = false
-        this.showModal.modifyPhone = true
-      },
-      // 通过手机验证
-      authByPhone() {
-        this.showModal.modifyPhone = false;
-        this.newPhoneForm.oldPhoneCode = ''
-        this.showModal.authByPhone = true;
-      },
-      // 通过邮箱验证
-      authByEmail() {
-        this.showModal.modifyPhone = false;
-        this.newPhoneForm.oldPhoneCode = ''
-        this.showModal.authByEmail = true;
-      },
-      // 获取验证码下一步
-      next(type) {
-        var aim = type == 'phone' ? this.userInfo.phone : this.userInfo.loginname
-        var isemail = type == 'phone' ? 0 : 1
-        var url = 'user/judgeCode.do'
-        this.$http.get(url, {
-          params: {
-            aim: aim,
-            code: this.newPhoneForm.oldPhoneCode,
-            isemail: isemail
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.showModal.authByPhone = false
-            this.showModal.authByEmail = false
-            if (this.type == 'phone') {
-              this.showModal.authNewPhone = true
-            } else {
-              this.newPhoneForm.newPhone = ''
-              this.newPhoneForm.code = ''
-              this.newPhoneForm.verCode = ''
-              this.showModal.authNewEmail = true
-            }
-          } else {
-            this.$Message.error(response.data.message)
-          }
-        })
-      },
-      // 验证重置密码表单
-      _checkResetPasswordForm() {
-        this.$refs.resetPassword.validate((valid) => {
-          if (valid) {
-            // 表单验证通过，调用挂载磁盘方法
-            this.resetPassword_ok()
-          }
-        })
-      },
-      // 重置密码
-      resetPassword_ok() {
-        this.$http.get('user/updatePassword.do', {
-          params: {
-            password: this.resetPasswordForm.newPassword,
-            oldpassword: this.resetPasswordForm.oldPassword
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.showModal.modifyPassword = false
-            this.$Message.success(response.data.message)
-          } else {
-            this.$message.info({content: response.data.message})
-          }
-        })
-      },
-      // 获取验证码
-      getVerCode(type) {
-        var isemail = type == 'email' ? 1 : 0
-        // aim 为空 由java重新设置aim
-        var aim = type == 'email' ? this.userInfo.loginname : ''
-        var url = 'user/code.do'
-        this.$http.get(url, {
-          params: {
-            vailCode: this.code,
-            type: 0,
-            isemail: isemail,
-            aim: aim
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-            this.$Message.success(response.data.message)
-            var timeOut = 60
-            this.newPhoneForm[`${type}VerCodeText`] = '60s'
-            var interval = setInterval(function () {
-              timeOut--
-              if (timeOut == 0) {
-                this.newPhoneForm[`${type}VerCodeText`] = '获取验证码'
-                clearInterval(interval)
-                return
-              }
-              this.newPhoneForm[`${type}VerCodeText`] = timeOut + 's'
-            }.bind(this), 1000)
-          } else {
-            this.$Message.error(response.data.message)
-          }
-        })
-      },
       /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
-       暂时没有找到更好的方法解决图片标记问题 */
+     暂时没有找到更好的方法解决图片标记问题 */
       IDCardFront(response) {
         if (response.status == 1) {
           this.notAuth.cardAuthForm.IDCardFront = response.result
@@ -2649,6 +2823,11 @@
       combine(response) {
         if (response.status == 1) {
           this.notAuth.companyAuthForm.combine = response.result
+        }
+      },
+      uploadHeadPhotoSuccess(response) {
+        if (response.status == 1) {
+          this.uploadHeadPhoto = response.result
         }
       },
       legalPersonIDFront(response) {
@@ -2704,139 +2883,11 @@
           content: '上传的文件过大'
         })
       },
-      // 更新手机号
-      confirmPhone() {
-        var url = 'user/updatePhone.do'
-        this.$http.get(url, {
-          params: {
-            code: this.newPhoneForm.verCode,
-            phone: this.newPhoneForm.newPhone
-          }
-        }).then((response) => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message);
-            this.init()
-          }
-          this.showModal.authNewPhone = false
-        })
-      },
-      // 更新email
-      confirmEmail() {
-        this.showModal.authNewEmail = false
-        var url = 'user/updateUserInfo.do'
-        this.$http.get(url, {
-          params: {
-            code: this.newPhoneForm.verCode,
-            email: this.newPhoneForm.newPhone
-          }
-        }).then((response) => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message);
-            this.init()
-          } else {
-            this.$message.info({
-              content: response.data.message
-            });
-          }
-          this.showModal.authNewPhone = false
-        })
-      },
-      // 获取新手机验证码
-      getNewPhoneVerCode(type) {
-        if (type == 'phone' && this.userInfo.phone == this.newPhoneForm.newPhone) {
-          this.$Message.info('新手机号不能与旧手机号相同')
-          return
-        }
-        if (type == 'email' && this.userInfo.loginname == this.newPhoneForm.newPhone) {
-          this.$Message.info('新邮箱不能与旧邮箱相同')
-          return
-        }
-        if (type == 'phone' && this.newPhoneForm.code.length != 4) {
-          this.$Message.error('请输入正确的随机验证码')
-          return
-        }
-        //发送获取验证码ajax
-        var url = 'user/code.do'
-        let params = {
-          type: 1
-        }
-        if (type == 'phone') {
-          params.isemail = 0
-          params.aim = this.newPhoneForm.newPhone
-          params.vailCode = this.newPhoneForm.code
-        } else {
-          params.isemail = 1
-          params.aim = this.newPhoneForm.newPhone
-          params.vailCode = this.newPhoneForm.code
-        }
-        this.$http.get(url, {
-          params
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            //60秒倒计时
-            var timeOut = 60;
-            this[`${type}VerCode`] = '60s'
-            var interval = setInterval(function () {
-              timeOut--
-              if (timeOut == 0) {
-                this[`${type}VerCode`] = '获取验证码'
-                clearInterval(interval)
-                return
-              }
-              this[`${type}VerCode`] = timeOut + 's'
-            }.bind(this), 1000)
-            this.$Message.success(response.data.message)
-          } else {
-            this.$Message.error(response.data.message)
-          }
-        })
-      },
       //显示三证合一原图
       showPicture() {
         this.showModal.showPicture = true
       },
-      sendPhone(value) {
-        var url = 'user/reSendMessage.do'
-        this.$http.get(url, {
-          params: {
-            phone: value
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message)
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      },
-      sendEmail(value) {
-        var url = 'user/reSendMessage.do'
-        this.$http.get(url, {
-          parms: {
-            email: value
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message)
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      },
-      // 重新认证
-      reAuthenticate(type) {
-        axios.get('user/rAttest.do', {
-          params: {
-            authType: type
-          }
-        }).then(response => {
-          this.init()
-        })
-      },
+
       listKey() {
         axios.get('user/showUserAcessAll.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -2936,146 +2987,430 @@
         })
       }
     },
-    computed: mapState({
-      // 传字符串参数 'count' 等同于 `
-      userInfo: 'userInfo',
-      authInfo: 'authInfo',
+    computed: {
+      userInfo() {
+        return $store.state.userInfo
+      },
+      authInfo() {
+        return $store.state.authInfo ? $store.state.authInfo : null
+      },
       // 剩余联系人个数
       remainLinkMan() {
-
         return 5 - this.linkManData.length
       },
-      showCompanyPane() {
-        return this.authInfo == null || this.authInfo.authtype == 0
+      certificationType() {
+        return this.notAuth.currentStep == this.notAuth.allStep.selectAuthType ? '个人认证类型选择' : this.notAuth.currentStep == this.notAuth.allStep.IDAuth ? '通过身份证照片认证' : '快速认证'
+      },
+      personalCertificationStep() {
+        if (this.authInfo.authtype == 0 && this.authInfo.checkstatus == 2) {
+          return 1
+        } else if (this.authInfo.authtype == 0 && this.authInfo.checkstatus == 1) {
+          return 2
+        }
+      },
+      companyCertificationStep() {
+        if (this.authInfo.authtype != 0 && this.authInfo.checkstatus == 2) {
+          return 1
+        } else if (this.authInfo.authtype != 0 && this.authInfo.checkstatus == 1) {
+          return 2
+        }
+      },
+      setNewPasswordDisabled() {
+        if (this.setNewPasswordForm.verificationMode == 'phone') {
+          if (this.userInfo.phone) {
+            return false
+          } else {
+            return true
+          }
+        } else {
+          if (this.userInfo.loginname) {
+            return false
+          } else {
+            return true
+          }
+        }
+      },
+      getBindingMobilePhoneDisabled() {
+        if (this.bindingMobilePhoneForm.verificationMode == 'phone') {
+          if (this.userInfo.phone) {
+            return false
+          } else {
+            return true
+          }
+        } else {
+          if (this.userInfo.loginname) {
+            return false
+          } else {
+            return true
+          }
+        }
+      },
+      getBindingEmailDisabled() {
+        if (this.bindingEmailForm.verificationMode == 'phone') {
+          if (this.userInfo.phone) {
+            return false
+          } else {
+            return true
+          }
+        } else {
+          if (this.userInfo.loginname) {
+            return false
+          } else {
+            return true
+          }
+        }
       }
-    })
+    },
+    watch: {}
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  #background {
-    background-color: #f5f5f5;
-    width: 100%;
-    /*
-     less 处理css计算属性calc有bug
-     申明变量diff，可正常使用
-     */
-    @diff: 101px;
-    min-height: calc(~"100% - @{diff}");
-    #wrapper {
-      #content {
-        > .title {
-          font-size: 24px;
-          color: rgba(17, 17, 17, 0.75);
-          margin-bottom: 20px;
-        }
-        .info-title {
-          font-size: 18px;
-          color: rgba(17, 17, 17, 0.75);
-          letter-spacing: 1.31px;
-          margin: 20px 0px 20px;
-          position: relative;
-        }
-        .info-border {
-          padding-bottom: 20px;
-          border-bottom: 1px solid rgb(233, 233, 233);
-        }
-        .user-info {
-          display: flex;
-          margin-bottom: 50px;
-        }
-        .authType {
-          border: 1px solid #D9D9D9;
-          border-radius: 4px;
-          margin-bottom: 20px;
-          .authType-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            > p {
-              display: inline-flex;
-              font-size: 14px;
-              color: #666666;
-            }
-          }
-          .authType-flow {
-            background-color: #f5f5f5;
-            font-size: 14px;
-            color: #666666;
-            padding: 10px 20px;
-            .stepNum {
-              display: inline-block;
-              width: 18px;
-              height: 18px;
-              border-radius: 50%;
-              text-align: center;
-              color: #ffffff;
-              line-height: 18px;
-              background-color: #2A99F2;
-              margin-right: 5px;
-            }
-            .line {
-              display: inline-block;
-              width: 50px;
-              height: 1px;
-              background-color: #2A99F2;
-              vertical-align: middle;
-              margin: 0px 5px;
-            }
-          }
-        }
-        // 个人认证的css
-        .personal {
-          .userInfo {
-            > p {
-              font-size: 14px;
-              color: rgba(17, 17, 17, 0.65);
-              letter-spacing: 0.83px;
-              margin-bottom: 20px;
-              > span {
-                margin: 0px 30px;
-              }
-            }
-          }
-        }
+  h2 {
+    font-size: 22px;
+    font-family: MicrosoftYaHei;
+    color: rgba(51, 51, 51, 1);
+    line-height: 29px;
+    letter-spacing: 1px;
+    font-weight: normal;
+  }
 
-        .IDCard {
-          width: 362px;
-          label {
-            float: unset;
-          }
-          img {
-            width: 110px;
-            height: 74px;
-            display: block;
-            margin-bottom: 20px;
-          }
-        }
-        // 企业认证发送验证码的button
-        .sendCompanyCode {
-          width: 80px;
-          height: 30px;
-          position: absolute;
-          text-align: center;
-          line-height: 27px;
-          display: block;
-          bottom: 1px;
-          left: 320px;
+  .personalInfo {
+    .pi-base {
+      display: flex;
+      padding-top: 20px;
+      margin-bottom: 40px;
+      .pi-base-portrait {
+        width: 140px;
+        > img {
           cursor: pointer;
-          background: #2A99F2;
-          border-radius: 4px;
-          border: 1px solid rgba(15, 179, 250, 0.00);
-          font-family: PingFangSC-Regular;
-          font-size: 11px;
-          color: #FFFFFF;
-          letter-spacing: 0.71px;
-          outline: none;
-          &.codeDisabled {
-            cursor: not-allowed;
+          height: 78px;
+          width: 78px;
+          border-radius: 39px;
+        }
+        > p {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(42, 153, 242, 1);
+          line-height: 14px;
+          margin-top: 10px;
+          cursor: pointer;
+          padding-left: 9px;
+        }
+      }
+      .pi-base-info {
+        > ul {
+          li {
+            margin-top: 20px;
+            > span {
+              font-size: 14px;
+              font-family: MicrosoftYaHei;
+              color: rgba(102, 102, 102, 1);
+              line-height: 14px;
+              display: inline-block;
+            }
+            span:nth-child(1) {
+              width: 60px;
+            }
+            span:nth-child(2) {
+              margin-left: 40px;
+              width: 280px;
+              color: rgba(51, 51, 51, 1);
+            }
+            span:nth-child(3) {
+              cursor: pointer;
+              color: rgba(42, 153, 242, 1);
+            }
+          }
+          li:nth-child(1) {
+            margin-top: 10px;
           }
         }
       }
+    }
+    .pi-otherInfo {
+      margin-top: 14px;
+      border-top: 1px solid #E9E9E9;
+      height: 536px;
+      ol {
+        margin-top: 28px;
+        li {
+          margin-bottom: 20px;
+          span {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(102, 102, 102, 1);
+            line-height: 14px;
+            display: inline-block;
+          }
+          span:nth-child(1) {
+            width: 115px;
+            text-align: right;
+          }
+          span:nth-child(2) {
+            color: rgba(51, 51, 51, 1);
+            margin-left: 20px;
+          }
+        }
+      }
+      .pi-otherInfo-form {
+        padding-left: 105px;
+        margin-top: 20px;
+      }
+    }
+  }
+
+  .companyAuthInfo {
+    ol {
+      margin-top: 28px;
+      li {
+        margin-bottom: 20px;
+        span {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(102, 102, 102, 1);
+          line-height: 14px;
+          display: inline-block;
+        }
+        span:nth-child(1) {
+          width: 115px;
+          text-align: right;
+        }
+        span:nth-child(2) {
+          color: rgba(51, 51, 51, 1);
+          margin-left: 20px;
+        }
+        span:nth-child(3) {
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: rgba(255, 255, 255, 1);
+          padding: 8px;
+          background: #14B278;
+          border-radius: 4px;
+          margin-left: 20px;
+        }
+      }
+    }
+  }
+
+  .personalAuthInfo {
+    ol {
+      margin-top: 28px;
+      li {
+        font-size: 14px;
+        font-family: MicrosoftYaHei;
+        color: rgba(102, 102, 102, 1);
+        line-height: 14px;
+        margin-bottom: 20px;
+        span {
+          color: rgba(51, 51, 51, 1);
+          margin-left: 20px;
+        }
+        span:nth-child(2) {
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: rgba(255, 255, 255, 1);
+          padding: 8px;
+          background: rgba(42, 153, 242, 1);
+          border-radius: 4px;
+        }
+      }
+    }
+  }
+
+  .setHeadPhoto {
+    .title {
+      margin-bottom: 30px;
+      span {
+        font-size: 14px;
+        font-family: MicrosoftYaHei;
+        color: rgba(51, 51, 51, 1);
+        line-height: 14px;
+        margin-right: 20px;
+        cursor: pointer;
+        padding-bottom: 10px;
+        &.select {
+          color: #2A99F2;
+          border-bottom: 2px solid #2A99F2;
+        }
+      }
+    }
+    .content {
+      display: flex;
+      .left {
+        margin-right: 20px;
+        width: 374px;
+        overflow: scroll;
+        .system-img {
+          margin-top: 5px;
+          cursor: pointer;
+          display: inline-block;
+          width: 84px;
+          height: 84px;
+          position: relative;
+          > img {
+            height: 84px;
+            width: 84px;
+          }
+          &.selected {
+            border: 1px solid #F5222D;
+            &:before {
+              background-image: url("../../assets/img/usercenter/uc-icon1.png");
+              content: '';
+              display: inline-block;
+              width: 22px;
+              height: 19px;
+              position: absolute;
+              right: 0;
+              bottom: 0;
+            }
+          }
+        }
+      }
+      .right {
+        width: 114px;
+        padding-top: 5px;
+        > div {
+          text-align: center;
+          > img {
+            display: inline-block;
+            width: 82px;
+            height: 82px;
+            border-radius: 41px;
+          }
+          p {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(153, 153, 153, 1);
+            line-height: 14px;
+            margin-top: 9px;
+          }
+        }
+      }
+    }
+  }
+
+  .certificationResults {
+    text-align: center;
+    margin-top: 60px;
+    > p {
+      margin-top: 40px;
+      font-size: 18px;
+      font-family: MicrosoftYaHei;
+      color: rgba(51, 51, 51, 1);
+      line-height: 18px;
+    }
+    p:nth-child(3) {
+      margin-top: 20px;
+    }
+  }
+
+  .setNewPasswordText {
+    padding: 20px;
+    background: rgba(247, 247, 247, 1);
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(0, 0, 0, 0.43);
+      line-height: 19px;
+      > span {
+        cursor: pointer;
+        color: #2A99F2;
+      }
+    }
+  }
+
+  .authType {
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    .authType-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      > p {
+        display: inline-flex;
+        font-size: 14px;
+        color: #666666;
+      }
+    }
+    .authType-flow {
+      background-color: #f5f5f5;
+      font-size: 14px;
+      color: #666666;
+      padding: 10px 20px;
+      .stepNum {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        text-align: center;
+        color: #ffffff;
+        line-height: 18px;
+        background-color: #2A99F2;
+        margin-right: 5px;
+      }
+      .line {
+        display: inline-block;
+        width: 50px;
+        height: 1px;
+        background-color: #2A99F2;
+        vertical-align: middle;
+        margin: 0px 5px;
+      }
+    }
+  }
+
+  // 个人认证的css
+  .personal {
+    .userInfo {
+      > p {
+        font-size: 14px;
+        color: rgba(17, 17, 17, 0.65);
+        letter-spacing: 0.83px;
+        margin-bottom: 20px;
+        > span {
+          margin: 0px 30px;
+        }
+      }
+    }
+  }
+
+  .IDCard {
+    width: 362px;
+    label {
+      float: unset;
+    }
+    img {
+      width: 110px;
+      height: 74px;
+      display: block;
+      margin-bottom: 20px;
+    }
+  }
+
+  // 企业认证发送验证码的button
+  .sendCompanyCode {
+    width: 80px;
+    height: 30px;
+    position: absolute;
+    text-align: center;
+    line-height: 27px;
+    display: block;
+    bottom: 1px;
+    left: 320px;
+    cursor: pointer;
+    background: #2A99F2;
+    border-radius: 4px;
+    border: 1px solid rgba(15, 179, 250, 0.00);
+    font-family: PingFangSC-Regular;
+    font-size: 11px;
+    color: #FFFFFF;
+    letter-spacing: 0.71px;
+    outline: none;
+    &.codeDisabled {
+      cursor: not-allowed;
     }
   }
 
@@ -3117,6 +3452,19 @@
     }
   }
 
+  .info-title {
+    font-size: 18px;
+    color: rgba(17, 17, 17, 0.75);
+    letter-spacing: 1.31px;
+    margin: 20px 0px 20px;
+    position: relative;
+  }
+
+  .info-border {
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgb(233, 233, 233);
+  }
+
   .infTop {
     display: flex;
     justify-content: center;
@@ -3131,89 +3479,6 @@
     }
   }
 
-  .imgbox {
-    font-size: 14px;
-    color: rgba(17, 17, 17, 0.65);
-    letter-spacing: 0.83px;
-    overflow: hidden;
-    img {
-      vertical-align: top;
-    }
-    ul {
-      display: inline-block;
-      li {
-        margin: 7px 0px;
-        margin-left: 23px;
-        line-height: 32px;
-        font-family: Microsoft Yahei, 微软雅黑;
-        font-size: 14px;
-        color: rgba(17, 17, 17, 0.65);
-        letter-spacing: 0.83px;
-      }
-    }
-  }
-
-  .safe {
-    padding-top: 9px;
-    p {
-      font-family: Microsoft Yahei, 微软雅黑;
-      font-size: 14px;
-      color: rgba(17, 17, 17, 0.65);
-      letter-spacing: 0.83px;
-      width: 84%;
-      display: inline-block;
-      padding: 11px 0px;
-      &::before {
-        content: "";
-        display: inline-block;
-        width: 14px;
-        height: 14px;
-        background: url('../../assets/img/usercenter/info-icon.png');
-        margin-right: 15px;
-        vertical-align: bottom;
-      }
-      &.info::before {
-        background-position: right;
-      }
-      span {
-        font-size: 16px;
-        color: rgba(17, 17, 17, 0.65);
-      }
-    }
-    span {
-      color: #2A99F2
-    }
-  }
-
-  .modal-wrapper {
-    background: #FFFFFF;
-    margin-bottom: 20px;
-    border: 1px solid #D9D9D9;
-    border-radius: 4px;
-    height: 60px;
-    width: 510px;
-    padding: 0px 20px 0px 10px;
-    span {
-      font-size: 14px;
-      color: #999999;
-      line-height: 60px;
-
-    }
-    button {
-      float: right;
-      margin-top: 20px;
-    }
-  }
-
-  .newPhone {
-    p {
-      font-size: 16px;
-      color: rgba(17, 17, 17, 0.65);
-      line-height: 23.42px;
-      margin: 12px 0px;
-    }
-  }
-
   .keyPhoneVal {
     p {
       color: rgba(102, 102, 102, 1);
@@ -3223,5 +3488,18 @@
     p:nth-child(2) {
       margin-bottom: 20px;
     }
+  }
+
+  .f-span {
+    margin-left: 35px;
+    background: #f3f3f3;
+    color: black;
+    border: 1px solid #dddee1;
+    display: block;
+    width: 317px;
+    border-radius: 4px;
+    line-height: 32px;
+    padding-left: 8px;
+    height: 32px;
   }
 </style>

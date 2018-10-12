@@ -178,6 +178,7 @@ const CloudDataManage = () =>import('@/components/Back/CloudDataManage')
 const dataBaseUpgrade = () =>import('@/components/Back/dataBaseUpgrade')
 // 帮助文档路由
 const documentInfo = () =>import('@/components/App/DocumentInfo')
+const hotQuestion = () =>import('@/components/App/HotQuestion')
 // 404
 const notFindPage = () =>import('@/components/404')
 
@@ -334,7 +335,7 @@ var router = new Router({
         {path: 'PobjectStorage', component: PobjectStorage},
         {path: 'Pgpu', component: Pgpu},
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
-
+        {path: 'hotQuestion/:parentId/:id', component: hotQuestion},
       ]
     },
     {

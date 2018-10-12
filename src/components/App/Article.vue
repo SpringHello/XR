@@ -16,7 +16,7 @@
                      :src="item.coverUrl"/>
               </div>
               <div class="item-right">
-                <p class="item-title">{{ item.title}}</p><span>{{ item.createtime}} </span>
+                <p class="item-title" :title="item.title">{{ item.title}}</p><span>{{ item.createDate}} </span>
                 <p class="item-content" v-html="item.abstracts"></p>
                 <div class="item-label">
                   <span v-for="label in item.labels">{{ label.name}}</span>
@@ -43,7 +43,7 @@
             <div v-for="h in hot" class="info">
               <router-link :to="`${h.code}.html`" target="_blank">
                 <div class="hotInfo-title">
-                  <p><span class="htitle">{{h.title}}</span><span class="time">{{h.createtime}}</span></p>
+                  <p :title="item.title"><span class="htitle">{{h.title}}</span><span class="time">{{h.createDate}}</span></p>
                 </div>
                 <p class="hotInfo-content" v-html="h.abstracts"></p>
               </router-link>
@@ -194,7 +194,7 @@
               font-size: 18px;
               font-family: MicrosoftYaHei;
               color: rgba(51, 51, 51, 1);
-              width: 400px;
+              width: 450px;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;

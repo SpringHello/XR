@@ -29,7 +29,7 @@
             <p>{{item.key.name}}</p>
             <ul>
               <li v-for="(subTitle,subIndex) in item.value">
-                <router-link :to="`/ruicloud/documentInfo/${subTitle.parentid}/${subTitle.id}`" target="_blank" class="quest-item">
+                <router-link :to="`/ruicloud/hotQuestion/${subTitle.parentid}/${subTitle.id}`" target="_blank" class="quest-item">
                   {{subTitle.name}}
                 </router-link>
               </li>

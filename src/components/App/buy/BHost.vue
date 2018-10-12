@@ -564,7 +564,14 @@
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 0
       })
-      var zone = zoneList[0]
+      var zone = this.$store.state.zone
+      // 如果默认区域在该资源下不存在
+      if(!zoneList.some(i=>{
+          i.zoneid == zone.zoneid
+        })){
+        // 默认选中zoneList中第一个区域
+        zone = zoneList[0]
+      }
       return {
         zoneList,
         zone,
@@ -852,7 +859,7 @@
         prod.password = this.password
         if (this.createType == 'fast') {
           prod.currentSystem = this.currentSystem
-          prod.cost = this.fastCoupon || this.fastCost
+          prod.cost = this.fastCost
         } else {
           prod.IPConfig = this.IPConfig
           prod.vmConfig = this.vmConfig

@@ -5,7 +5,7 @@
       <div id="content">
         <div class="ela_head">
           <div class="head_right">
-            <div class="back" @click="$router.push({path:'Elastic'})">
+            <div class="back" @click="$router.push({path:'elastic'})">
               <div class="back_icon"></div>
               <span>返回</span>
             </div>

@@ -66,7 +66,7 @@
                 <div>
                   <div v-for="item in mirrorType" class="zoneItem"
                        :class="{zoneSelect:currentType==item.value}"
-                       @click="currentType=item.value">{{item.label}}
+                       @click="selectMirror(item)">{{item.label}}
                   </div>
                   <!--镜像+应用 列表-->
                   <div v-if="currentType=='app'">
@@ -81,7 +81,7 @@
                   </div>
 
                   <!--公共镜像 列表-->
-                  <div v-if="currentType=='public'">
+                  <div v-if=" currentType=='public'">
                     <Dropdown v-for="(item,index) in publicList" style="margin-right:10px;margin-top:20px;"
                               @on-click="setOS" :key="item.ostypeid">
                       <div
@@ -98,7 +98,7 @@
                     </Dropdown>
                   </div>
                   <!--自定义镜像 列表-->
-                  <div v-if="currentType=='custom'">
+                  <div v-if=" currentType=='custom'">
                     <div v-for="item in customList" :key="item.value" class="zoneItem"
                          :class="{zoneSelect:customMirror.id==item.id}"
                          @click="setOwnTemplate(item)" style="margin-top: 20px;">{{item.templatename}}
@@ -401,7 +401,7 @@
         <!--费用、以及加入预算清单-->
         <div style="margin-top: 20px">
           <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-             @click="$router.push('document')">查看计价详情</p>
+             @click="$router.push({path:'/ruicloud/document'})">查看计价详情</p>
           <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
             费用：<span
             style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
@@ -447,7 +447,14 @@
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 1
       })
-      var zone = zoneList[0]
+      var zone = this.$store.state.zone
+      // 如果默认区域在该资源下不存在
+      if(!zoneList.some(i=>{
+          i.zoneid == zone.zoneid
+        })){
+        // 默认选中zoneList中第一个区域
+        zone = zoneList[0]
+      }
       return {
         zone,
         zoneList,
@@ -592,12 +599,16 @@
         // 开放端口
         port: '',
         // 数据库名称
-        dbName: ''
+        dbName: '',
 
+        //具体镜像
+        mirrorQuery:this.$route.query.mirror
       }
     },
     created(){
-
+      if(this.$route.query.mirrorType){
+        this.currentType = this.$route.query.mirrorType;
+      }
       this.setGpuServer()
       this.setTemplate()
       this.queryVpc()
@@ -618,9 +629,18 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.publicList = []
-            for (let system in response.data.result) {
-              this.publicList.push({system, systemList: response.data.result[system], selectSystem: ''})
+            this.publicList = [];
+            if(this.mirrorQuery){
+              console.log(this.mirrorQuery);
+              if(this.mirrorQuery.templatename.substr(0,1) == w){
+                let system = 'windows'
+              }
+              this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
+
+            }else{
+              for (let system in response.data.result) {
+                this.publicList.push({system, systemList: response.data.result[system], selectSystem: ''})
+              }
             }
             this.system = {}
           }
@@ -635,8 +655,17 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-              this.customMirror = {}
+              let cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
+              for(let i = 0; i<cusList.length;i++){
+                if(cusList[i].status != -1){
+                  this.customList.push(cusList[i]);
+                  this.customMirror = {};
+                // if(this.mirrorQuery){
+                //     this.customList.push(this.mirrorQuery);
+                //     this.customMirror = this.mirrorQuery;
+                //   }
+                }
+              }
             }
           })
         }
@@ -655,11 +684,17 @@
       // 选中表中的一项
       selectGpu(currentRow) {
         this.gpuSelection = currentRow
-        console.log(this.gpuSelection)
       },
       // 重新选择系统镜像
       setOS(name) {
-        var arg = name.split('#')
+        var arg = [];
+        // if(this.mirrorQuery){
+        //   arg.push(this.mirrorQuery.templatename);
+        //   arg.push(this.mirrorQuery.systemtemplateid);
+        // }else{
+          arg = name.split('#');
+        // }
+
         for (var item of this.publicList) {
           item.selectSystem = ''
         }
@@ -674,11 +709,26 @@
         } else {
           this.systemUsername = 'root'
         }
+      // if(this.mirrorQuery){
+      //   for(let i = 0;i<this.publicList.length;i++){
+      //     let count =0;
+      //     count ++;
+      //     if(this.publicList[i].systemList[i].ostypeid == this.mirrorQuery.ostypeid){
+      //       this.publicList[count].selectSystem = arg[0];
+      //       break;
+      //     }
+      //   }
+      // }else{
         this.publicList[arg[2]].selectSystem = arg[0]
+      // }
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
-        this.customMirror = item
+      if(this.$route.mirror){
+        this.customMirror = this.mirrorQuery;
+      }else{
+        this.customMirror = item;
+      }
         var str = item.ostypename.substr(0, 1)
         if (str === 'W' || str === 'w') {
           this.systemUsername = 'administrator'
@@ -985,6 +1035,17 @@
           }
         })
       },
+
+      //选择镜像类型
+      selectMirror(item){
+        if(this.$route.query.mirrorType == 'custom'){
+          this.currentType ='custom'
+        }else if(this.$route.query.mirrorType == 'public'){
+          this.currentType = 'public'
+        }else{
+          this.currentType=item.value;
+        }
+      }
     },
     computed: {
       userInfo(){

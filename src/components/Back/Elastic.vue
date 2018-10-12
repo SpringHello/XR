@@ -54,9 +54,12 @@
           </Tooltip>
           <Input v-model="newAddTelescopicList.minNumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
         </FormItem>
-        <FormItem label="所属网络">
-          <Select v-model="newAddTelescopicList.belongNetwork" style="width:240px" placeholder="请选择网络" @on-change="changeNetWork">
-            <Option v-for="item in newAddTelescopicList.belongNetworkList" :value="item.vpcid" :key="item.vpcid">{{ item.vpcname }}</Option>
+        <FormItem label="负载均衡" class="formitem3">
+          <Tooltip content="伸缩组会自动将新加入的主机添加到负载均衡中" placement="right">
+            <Icon type="ios-help-outline"></Icon>
+          </Tooltip>
+          <Select v-model="newAddTelescopicList.balancing" style="width:240px" placeholder="选择负载均衡" @on-change="balancings(newAddTelescopicList.balancing)">
+            <Option v-for="item in newAddTelescopicList.balancingList" :value="item.loadbalanceroleid" :key="item.loadbalanceroleid">{{ item.name }}</Option>
           </Select>
         </FormItem>
         <FormItem label="最大伸缩数" class="formitem1" prop="maxNumber">
@@ -65,9 +68,9 @@
           </Tooltip>
           <Input v-model="newAddTelescopicList.maxNumber" style="width: 240px" placeholder="请输入1-30之间的数字"></Input>
         </FormItem>
-        <FormItem label="所属子网">
-          <Select v-model="newAddTelescopicList.belongSubnet"  style="width:240px" placeholder="请选择网络">
-            <Option v-for="item in newAddTelescopicList.belongSubnetList"   :value="item.ipsegmentid" :key="item.ipsegmentid">{{ item.netoffername }}</Option>
+        <FormItem label="所属网络">
+          <Select v-model="newAddTelescopicList.belongNetwork" style="width:240px" placeholder="请选择网络" @on-change="changeNetWork">
+            <Option v-for="item in newAddTelescopicList.belongNetworkList" :value="item.vpcid" :key="item.vpcid">{{ item.vpcname }}</Option>
           </Select>
         </FormItem>
         <FormItem label="初始化实例数" class="formitem2" prop="exampleNumber">
@@ -76,20 +79,17 @@
           </Tooltip>
           <Input v-model="newAddTelescopicList.exampleNumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
         </FormItem>
+        <FormItem label="所属子网">
+          <Select v-model="newAddTelescopicList.belongSubnet"  style="width:240px" placeholder="请选择网络">
+            <Option v-for="item in newAddTelescopicList.belongSubnetList"   :value="item.ipsegmentid" :key="item.ipsegmentid">{{ item.netoffername }}</Option>
+          </Select>
+        </FormItem>
         <FormItem label="移除策略" class="formitem3">
           <Tooltip content="当伸缩组要减少实例且有多重选择时，将根据移出策略来选择移出的主机" placement="right">
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Select v-model="newAddTelescopicList.removePolicy" style="width:240px">
             <Option v-for="item in newAddTelescopicList.removePolicyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="负载均衡" class="formitem3">
-          <Tooltip content="伸缩组会自动将新加入的主机添加到负载均衡中" placement="right">
-            <Icon type="ios-help-outline"></Icon>
-          </Tooltip>
-          <Select v-model="newAddTelescopicList.balancing" style="width:240px" placeholder="选择负载均衡">
-            <Option v-for="item in newAddTelescopicList.balancingList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
         <FormItem label="防火墙" class="formitem3">
@@ -134,6 +134,14 @@
           </Tooltip>
           <Input v-model="updateTelescopicList.minNumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
         </FormItem>
+        <FormItem label="负载均衡" class="formitem3">
+          <Tooltip content="伸缩组会自动将新加入的主机添加到负载均衡中" placement="right">
+            <Icon type="ios-help-outline"></Icon>
+          </Tooltip>
+          <Select v-model="updateTelescopicList.balancing" style="width:240px" placeholder="选择负载均衡">
+            <Option v-for="item in updateTelescopicList.balancingList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
         <FormItem label="所属网络">
           <Select v-model="updateTelescopicList.belongNetwork" style="width:240px" placeholder="请选择网络">
             <Option v-for="item in updateTelescopicList.belongNetworkList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -162,14 +170,6 @@
           </Tooltip>
           <Select v-model="updateTelescopicList.removePolicy" style="width:240px" placeholder="移除最旧云主机">
             <Option v-for="item in updateTelescopicList.removePolicyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="负载均衡" class="formitem3">
-          <Tooltip content="伸缩组会自动将新加入的主机添加到负载均衡中" placement="right">
-            <Icon type="ios-help-outline"></Icon>
-          </Tooltip>
-          <Select v-model="updateTelescopicList.balancing" style="width:240px" placeholder="选择负载均衡">
-            <Option v-for="item in updateTelescopicList.balancingList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
         <FormItem label="防火墙" class="formitem3">
@@ -236,7 +236,7 @@
                   on:{
                     click:() =>{
                       sessionStorage.setItem('elastic_id',params.row.id);
-                      this.$router.push({path:'ElasticDetails'});
+                      this.$router.push({path:'elasticDetails'});
                     }
                   }
                   },params.row.startupconfigname)
@@ -259,7 +259,7 @@
           {
             title:'系统盘/数据盘',
             render:(h,params) =>{
-              return h('span',{},params.row.disktype+'/'+params.row.systemdisktype)
+              return h('span',{},params.row.systemdisktype+'/'+params.row.disktype)
             }
           },
           {
@@ -572,7 +572,6 @@
         })
         },
 
-      //获取负载均衡
 
       //创建伸缩组
       createExpansionGroups(){
@@ -615,29 +614,48 @@
         })
         },
 
+      balancings(id){
+        this.$http.get('network/getnetworkAndVpcByloadbalance.do',{
+          params:{
+            loadbalanceId:id,
+            type:'1'
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.newAddTelescopicList.belongNetworkList = res.data.list;
+            this.newAddTelescopicList.belongSubnetList = res.data.list;
+          }
+        })
+      },
+
       //获取负载均衡
       getAllSelect(){
           let balancing = this.$http.get('loadbalance/listLoadBalanceRole.do');
          Promise.all([balancing]).then(res =>{
-              this.newAddTelescopicList.balancingList = res[0].data.result.internalLoadbalance;
+           if(res.status == 200 && res.data.status == 1){
+             if(res[0].data.result.publicLoadbalance.length != 0 || res[0].data.result.internalLoadbalance.length != 0 ){
+               this.newAddTelescopicList.balancingList = res[0].data.result.publicLoadbalance.concat(res[0].data.result.internalLoadbalance);
+             }else {
+               this.$Modal.confirm({
+                 title:'提示',
+                 content:'<p>您还没有创建负载均衡，请先<span style="color: #2A99F2;cursor: pointer;" @click=`$router.push({path:"balance"})`>创建负载均衡</span></p>',
+                 onOk:()=>{
+                   this.$router.push({path:'balance'});
+                 }
+               })
+             }
+           }
           })
         },
 
-      //获取所属网络
-      getSelect(){
-        this.$http.get('network/listVpc.do',{
-        }).then(res =>{
-          this.newAddTelescopicList.belongNetworkList = res.data.result;
-        })
-      },
 
       //获取所属子网，防火墙
       changeNetWork(id){
         let f = this.$http.get('network/listAclList.do',{params:{vpcId:id}});
-        let l = this.$http.get('network/listNetworkBuyComputer.do',{params:{vpcId:id}});
-        Promise.all([f,l]).then(res =>{
+        // let l = this.$http.get('network/getnetworkAndVpcByloadbalance.do',{params:{vpcId:id,type:'1'}});
+        Promise.all([f]).then(res =>{
           this.newAddTelescopicList.firewallList = res[0].data.result;
-          this.newAddTelescopicList.belongSubnetList = res[1].data.result;
+          // this.newAddTelescopicList.belongSubnetList = res[1].data.list;
         })
       },
 
@@ -677,7 +695,8 @@
       this.selectAllElastic();
       this.selectAllTelescopic();
       this.getAllSelect();
-      this.getSelect();
+      // this.getSelect();
+      // this.test();
     }
   }
 </script>
@@ -725,7 +744,7 @@
     .ivu-tooltip{
       position:absolute;
       top: -36px;
-      left: 92px;
+      left: 101px;
     }
   }
   .formitem3{

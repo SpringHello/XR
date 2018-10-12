@@ -21,18 +21,24 @@
             </div>
           </div>
         </my-carousel-item>
-
         <my-carousel-item class="carousel-item">
-          <div class="east-banner" @click="push('/ruicloud/EastSouthNode')">
-            <div class="wrap">
-              <div class="text">
-                <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
-                <p>万兆光纤极速体验，助力区域企业云上发展</p>
-                <Button>了解详情</Button>
+          <div @click="push('/ruicloud/fractive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="free-receive">
+              <div class="free-receive-content">
+                <div class="free-receive-text">
+                  <p>新手特惠</p>
+                  <p>爆款云主机免费使用一年</p>
+                  <button>立即领取</button>
+                </div>
+                <div class="free-receive-img">
+                  <img src="../../assets/img/active/freeToReceive/fr-banner7.png"/>
+                </div>
               </div>
             </div>
           </div>
         </my-carousel-item>
+
         <my-carousel-item class="carousel-item">
           <div @click="push('DBActive')"
                style="cursor: pointer;background: #F56B23;">
@@ -51,30 +57,14 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/fractive')"
-               style="cursor: pointer;background: #F56B23;">
-            <div class="free-receive">
-              <div class="free-receive-content">
-                <div class="free-receive-text">
-                  <p>新手特惠</p>
-                  <p>爆款云主机免费使用一年</p>
-                  <button>立即领取</button>
-                </div>
-                <div class="free-receive-img">
-                  <img src="../../assets/img/active/freeToReceive/fr-banner7.png"/>
-                </div>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
+
         <my-carousel-item class="carousel-item">
           <div @click="push('/ruicloud/objStorageActive')"
                style="cursor: pointer;">
             <div class="obj-storage">
               <div class="wrap">
                 <div>
-                  <p>对象存储OSS重磅上线</p>
+                  <p style="font-weight: 300">对象存储OSS重磅上线</p>
                   <p>安全稳定、海量、便捷、低延迟、低成本的云端存储服务</p>
                   <p>免费领取<span>50G</span>存储包</p>
                   <Button>立即领取</Button>
@@ -102,10 +92,20 @@
             </div>
           </div>
         </my-carousel-item>
-
+        <my-carousel-item class="carousel-item">
+          <div class="east-banner" @click="push('/ruicloud/EastSouthNode')">
+            <div class="wrap">
+              <div class="text">
+                <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
+                <p>万兆光纤极速体验，助力区域企业云上发展</p>
+                <Button>了解详情</Button>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
       </my-carousel>
     </div>
-      <!-- 功能介绍区域 -->
+    <!-- 功能介绍区域 -->
     <div class="box-container">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
@@ -117,12 +117,14 @@
         </div>
       </div>
     </div>
-     <!-- 八大场景区 -->
+    <!-- 八大场景区 -->
     <div class="eigth-scene">
-      <div class="bg-wrap">
+      <div class="bg">
+        <div class="bg-wrap">
           <div class="bg" ref="bgcheck">
               <img  v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl"/>
           </div>
+        </div>
       </div>
       <div class="wrap">
         <div class="box">
@@ -133,26 +135,26 @@
               </ul>
             </div>
             <div class="content" v-for="(item,index) in selectedEightscene" :key="index">
-                <div class="hint">
-                  <span>{{item.hint}}</span>
+              <div class="hint">
+                <span>{{item.hint}}</span>
+              </div>
+              <h3>{{item.title}}</h3>
+              <div class="scene">
+                <p class="title">应用场景</p>
+                <div>
+                  <p>{{item.scene}}</p>
+                  <Button type="primary" style="background:#377DFF;height:38px;width:124px;text-align:center;font-size:14px;" @click="$router.push(item.link)">了解更多</Button>
                 </div>
-                <h3>{{item.title}}</h3>
-                <div class="scene">
-                  <p class="title">应用场景</p>
-                  <div>
-                    <p>{{item.scene}}</p>
-                    <Button type="primary" style="background:#377DFF;height:38px;width:124px;text-align:center;font-size:14px;" @click="$router.push(item.link)">了解更多</Button>
-                  </div>
+              </div>
+              <div class="software">
+                <p class="title">支持软件</p>
+                <img v-for="(item1,index) in item.software" :key="index" :src="item1" style="margin-right:28px;"/>
+              </div>
+              <div class="configure">
+                <p class="title">推荐配置</p>
+                <div>
+                  <span v-for="(item2,index1) in item.configure" :key="index1" @click="getHost(eightsceneIndex,index1)">{{item2}}</span>
                 </div>
-                <div class="software">
-                  <p class="title">支持软件</p>
-                  <img v-for="(item1,index) in item.software" :key="index" :src="item1" style="margin-right:28px;"/>
-                </div>
-                <div class="configure">
-                  <p class="title">推荐配置</p>
-                  <div>
-                    <span v-for="(item2,index1) in item.configure" :key="index1" @click="getHost(eightsceneIndex,index1)">{{item2}}</span>
-                  </div>
               </div>
             </div>
           </div>
@@ -245,7 +247,7 @@
                     </transition>
                     <div class="bottom-flow" v-if="item.prodItem.length>5">
                       <div class="wrap">
-                         <span @click="scroll('left',item.title)" :class="{blue: selectedBar}"></span>
+                        <span @click="scroll('left',item.title)" :class="{blue: selectedBar}"></span>
                         <span @click="scroll('right',item.title)" :class="{blue: !selectedBar}"></span>
                       </div>
                     </div>
@@ -708,7 +710,7 @@
           weChatRechargeModal: false,
           orderConfirmationModal: false
         },
-         // 标记当前场景信息
+        // 标记当前场景信息
         index1: '',
         index2: '',
         vmConfig: '',
@@ -2747,7 +2749,7 @@
             left: '352px',
             online: true
           },
-           {
+          {
             text: '沈阳',
             top: '194px',
             left: '428px',
@@ -2812,14 +2814,14 @@
         let height = document.body.clientHeight - this.$refs.require.offsetTop + window.scrollY || window.pageYOffset
         if (height > 300) {
           this.requireData.forEach((item, index) => {
-              this.$set(item, 'isShow', 'once')
+            this.$set(item, 'isShow', 'once')
           })
           this.requireflag = true
         }
         if ((height > 1200 || height < 300) && this.requireflag == true) {
           window.removeEventListener('scroll', this.scrollFn)
           this.requireData.forEach((item, index) => {
-              this.$set(item, 'isShow', 'static')
+            this.$set(item, 'isShow', 'static')
           })
         }
       })
@@ -2829,7 +2831,6 @@
     created() {
       this.getnews()
       this.getlinkList()
-      this.getBalance()
       this.getMirror(this.eightsceneIndex)
     },
     methods: {
@@ -2916,11 +2917,23 @@
           this.$LR({type: 'register'})
           return
         }
-        this.index1 = index1
-        this.index2 = index2
-        this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
-        this.time = this.currentSceneGroup[index1].configGroup[index2].title
-        this.showModal.rechargeHint = true
+        if(index1 == 4 || index1 == 5 || index1 == 6 || index1 == 7){
+          return
+        }
+        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            this.balance = Number(response.data.data.remainder)
+            this.index1 = index1
+            this.index2 = index2
+            this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
+            this.time = this.currentSceneGroup[index1].configGroup[index2].title
+            this.showModal.rechargeHint = true
+          } else{
+            this.$message.info({
+              content: '平台开小差了，请稍候再试'
+            })
+          }
+        })
       },
       nextStep() {
         if (!(this.scene == '游戏服务'||this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
@@ -3180,14 +3193,6 @@
           }
         })
       },
-      // 获取余额
-      getBalance() {
-        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
-          if (response.status == 200 && response.data.status == '1') {
-            this.balance = Number(response.data.data.remainder)
-          }
-        })
-      },
       isPay() {
         axios.get('user/payStatus.do', {
           params: {
@@ -3384,9 +3389,14 @@
     }
     .eigth-scene {
       position: relative;
-      margin:0 auto;
-      width: 1902px;
+      
+      
+      width: 100%;
       overflow: hidden;
+      >.bg{
+        width: 1902px;
+        margin:0 auto;
+      }
       .bg-wrap {
         position: relative;
         margin:0 auto;
@@ -3408,9 +3418,8 @@
         }
       }
       .wrap {
-        position: absolute;
-        top:0;
-        left: 350px;
+        position: relative;
+        margin-top: -666px;
         z-index: 2;
         height:666px;
         display: flex;
@@ -3425,9 +3434,9 @@
             display: flex;
           }
           .left-menu{
-            width: 200px;
             border-right: solid 1px #E6E6E6;
-            padding: 20px 0;ul {
+            padding: 20px 0;
+            ul {
               li {
                 width:200px;
                 height:68px;
@@ -3609,10 +3618,10 @@
               background: #FFD100;
               margin-right: 5px;
             }
-           &:nth-of-type(2) {
-             i {
-               background: #FF624B;
-             }
+            &:nth-of-type(2) {
+              i {
+                background: #FF624B;
+              }
             }
           }
         }
@@ -3741,10 +3750,11 @@
           }
           dd:nth-of-type(1) {
             margin-top: 20px;
+            max-height: 50px;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 7;
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
           }
         }
@@ -3818,19 +3828,19 @@
                     text-overflow: ellipsis;
                     white-space: nowrap;
                   }
-                   i {
-                      display: inline-block;
-                      width: 40px;
-                      height: 20px;
-                      line-height: 20px;
-                      text-align: center;
-                      background: #FF624B;
-                      border-radius:10px 10px 10px 0px;
-                      font-style: normal;
-                      font-size: 12px;
-                      color: #fff;
-                      vertical-align: text-bottom;
-                    }
+                  i {
+                    display: inline-block;
+                    width: 40px;
+                    height: 20px;
+                    line-height: 20px;
+                    text-align: center;
+                    background: #FF624B;
+                    border-radius:10px 10px 10px 0px;
+                    font-style: normal;
+                    font-size: 12px;
+                    color: #fff;
+                    vertical-align: text-bottom;
+                  }
                 }
               }
             }

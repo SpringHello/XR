@@ -357,34 +357,31 @@
             <span>解冻到充值账户（需3-5个工作日）</span>
           </Radio>
         </RadioGroup>
-        <Form :model="withdrawForm" ref="newDisk" v-if="unfreezeTo=='account'">
-          <Form-item label="可提现金额" prop="diskName" style="width:100%;">
-            <InputNumber :max="balance" :min="10" v-model="withdrawForm.money"
-                         style="width:45%"></InputNumber>
-          </Form-item>
-          <Form-item label="收款人姓名" prop="diskType">
+        <Form v-if="unfreezeTo=='account'" :model="withdrawForm" :rules="withdrawValidate" ref="unfreeze">
+          <Form-item label="收款人姓名" prop="payeeName">
             <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
           </Form-item>
-          <Form-item label="收款人账户类型">
+          <Form-item label="收款人账户类型" prop="accountType">
             <Select v-model="withdrawForm.accountType" placeholder="请选择">
               <Option v-for="item in withdrawForm.accountList" :key="item.type" :value="item.type">{{ item.name }}
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="开户行信息" v-if="withdrawForm.accountType=='bank'">
+          <Form-item label="开户行信息" prop="bankName" v-if="withdrawForm.accountType=='银行卡'">
             <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
           </Form-item>
-          <Form-item label="收款人账户" prop="timeType">
+          <Form-item label="收款人账户" prop="account">
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
-          <p>为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+          <p style="line-height: 20px;font-size: 14px;">
+            为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
           <Form-item label="图片验证码">
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
                  @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </Form-item>
-          <Form-item label="短信/邮箱验证码" prop="timeType">
-            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:58%;"></Input>
+          <Form-item label="短信/邮箱验证码" prop="phoneCode">
+            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
             <Button type="primary" @click="getCode">{{codePlaceholder}}</Button>
           </Form-item>
         </Form>
@@ -440,34 +437,35 @@
         <span class="universal-modal-title">提现</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="withdrawForm" ref="newDisk">
-          <Form-item label="可提现金额" prop="diskName" style="width:100%;">
+        <Form :model="withdrawForm" :rules="withdrawValidate" ref="withdraw">
+          <Form-item label="可提现金额" style="width:100%;">
             <InputNumber :max="balance" :min="10" v-model="withdrawForm.money"
                          style="width:45%"></InputNumber>
           </Form-item>
-          <Form-item label="收款人姓名" prop="diskType">
+          <Form-item label="收款人姓名" prop="payeeName">
             <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
           </Form-item>
-          <Form-item label="收款人账户类型">
+          <Form-item label="收款人账户类型" prop="accountType">
             <Select v-model="withdrawForm.accountType" placeholder="请选择">
               <Option v-for="item in withdrawForm.accountList" :key="item.type" :value="item.type">{{ item.name }}
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="开户行信息" v-if="withdrawForm.accountType=='bank'">
+          <Form-item label="开户行信息" v-if="withdrawForm.accountType=='银行卡'" prop="bankName">
             <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
           </Form-item>
-          <Form-item label="收款人账户" prop="timeType">
+          <Form-item label="收款人账户" prop="account">
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
-          <p>为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+          <p style="line-height: 20px;font-size: 14px;">
+            为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
           <Form-item label="图片验证码">
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
                  @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </Form-item>
-          <Form-item label="短信/邮箱验证码" prop="timeType">
-            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:58%;"></Input>
+          <Form-item label="短信/邮箱验证码" prop="phoneCode">
+            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
             <Button type="primary" @click="getCode">{{codePlaceholder}}</Button>
           </Form-item>
         </Form>
@@ -835,7 +833,7 @@
         order_currentPage: 1,
         pageSize: 10,
         thawingCondition: '',
-        balance: '--',
+        balance: 0,
         freezeDeposit: '--',
         theCumulative: '--',
         voucher: '--',
@@ -1239,6 +1237,33 @@
           // 短信验证码
           phone: ''
         },
+        // 新增磁盘表单的验证规则
+        withdrawValidate: {
+          // 收款人账户
+          account: [
+            {required: true, message: '请填写收款账户', trigger: 'blur'}
+          ],
+          // 账户类型
+          accountType: [
+            {required: true, message: '请选择账户类型', trigger: 'change'}
+          ],
+          // 开户行
+          bankName: [
+            {required: true, message: '请填写开户行', trigger: 'blur'}
+          ],
+          // 验证码
+          phoneCode: [
+            {required: true, message: '请输入验证码', trigger: 'blur'}
+          ],
+          // 收款人姓名
+          payeeName: [
+            {required: true, message: '请填写收款人姓名', trigger: 'blur'}
+          ],
+          // 开户行
+          bankAccInfor: [
+            {required: true, message: '请选择购买方式', trigger: 'blur'}
+          ]
+        },
         /* 验证码地址(加上时间戳，防止缓存) */
         imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
         /*发送验证码button innerText*/
@@ -1306,7 +1331,7 @@
           }, {
             title: '押金状态',
             render: (h, params) => {
-              const text = params.row.type == 1 ? '已解冻' : params.row.type == 2 ? '解冻中' : '冻结中'
+              const text = params.row.type == 1 ? '已解冻' : params.row.type == 2 ? '解冻中' : params.row.type == 3 ? '退款中' : params.row.type == 4 ? '已退款' : '冻结中'
               return h('span', {}, text)
             }
           }, {
@@ -1410,7 +1435,7 @@
       getBalance() {
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
           if (response.status == 200 && response.data.status == '1') {
-            this.balance = response.data.data.remainder
+            this.balance = Number(response.data.data.remainder)
             this.voucher = response.data.data.voucher
             this.freezeDeposit = response.data.data.frozenMoney
             this.withdrawForm.money = this.balance
@@ -1954,41 +1979,63 @@
         this.searchCard()
       },
       unfreeze_ok() {
+        // 解冻到账户
+        if (this.unfreezeTo == 'account') {
+          this.$refs.unfreeze.validate((valid) => {
+            if (valid) {
+              let url = 'user/userBalanceWithdrawals.do'
+              let params = {
+                id: this.unfreezeId,
+                payeeName: this.withdrawForm.payeeName,
+                payeeAccountType: this.withdrawForm.accountType,
+                payeeAccount: this.withdrawForm.account,
+                smsCode: this.withdrawForm.phoneCode,
+                username: this.withdrawConfirm.number
+              }
+
+              if (this.withdrawForm.accountType == '银行卡') {
+                params.bankAccInfor = this.withdrawForm.bankName
+              }
+              this.$http.post(url, params).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.$Message.success('解冻成功')
+                  this.showModal.unfreeze = false
+                  this.freezeDetails()
+                  this.getBalance()
+                  this.showMoneyByMonth()
+                  this.search()
+                } else {
+                  this.$message.info({
+                    content: res.data.message
+                  })
+                }
+              })
+            }
+          })
+          //解冻到余额
+        } else {
+          let url = 'user/getRremainderThaw.do'
+          let params = {
+            id: this.unfreezeId,
+          }
+          this.$http.post(url, params).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.$Message.success('解冻成功')
+              this.showModal.unfreeze = false
+              this.freezeDetails()
+              this.getBalance()
+              this.showMoneyByMonth()
+              this.search()
+            } else {
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
+        }
         // 把状态变成解冻中
         //let url = 'user/getRremainderThawing.do'
         //  直接解冻
-        let url = 'user/getRremainderThaw.do'
-
-        let params = {
-          id: this.unfreezeId,
-          operType: '1'
-        }
-        // 解冻到账户
-        if (this.unfreezeTo == 'account') {
-          params.operType = '2'
-          params.payeeName = this.withdrawForm.payeeName
-          params.payeeAccountType = this.withdrawForm.accountType
-          params.payeeAccount = this.withdrawForm.account
-          params.smsCode = this.withdrawForm.phoneCode
-          params.username = this.withdrawConfirm.number
-          if (this.withdrawForm.accountType == '银行卡') {
-            params.bankAccInfor = this.withdrawConfirm.bankName
-          }
-        }
-        this.$http.post(url, params).then(res => {
-          if (res.status == 200 && res.data.status == 1) {
-            this.$Message.success('解冻成功')
-            this.showModal.unfreeze = false
-            this.freezeDetails()
-            this.getBalance()
-            this.showMoneyByMonth()
-            this.search()
-          } else {
-            this.$message.info({
-              content: res.data.message
-            })
-          }
-        })
       },
       exchange(){
         this.$http.get('user/receiveTicketForUser.do', {
@@ -2008,24 +2055,29 @@
       },
       // 提现操作
       withdraw(){
-        var params = {
-          balance: this.withdrawForm.money,
-          payeeName: this.withdrawForm.payeeName,
-          payeeAccountType: this.withdrawForm.accountType,
-          payeeAccount: this.withdrawForm.account,
-          smsCode: this.withdrawForm.phoneCode,
-          username: this.withdrawConfirm.number
-        }
-        if (this.withdrawForm.accountType == '银行卡') {
-          params.bankAccInfor = this.withdrawConfirm.bankName
-        }
-        this.$http.post('user/userBalanceWithdrawals.do', params).then(response => {
-          if (response.data.status == 1) {
-            this.showModal.withdraw = false
-            this.$Message.success(response.data.message)
-            this.getBalance()
-          }else{
-            this.$Message.info(response.data.message)
+        this.$refs.withdraw.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用创建磁盘方法
+            var params = {
+              balance: this.withdrawForm.money,
+              payeeName: this.withdrawForm.payeeName,
+              payeeAccountType: this.withdrawForm.accountType,
+              payeeAccount: this.withdrawForm.account,
+              smsCode: this.withdrawForm.phoneCode,
+              username: this.withdrawConfirm.number
+            }
+            if (this.withdrawForm.accountType == '银行卡') {
+              params.bankAccInfor = this.withdrawConfirm.bankName
+            }
+            this.$http.post('user/userBalanceWithdrawals.do', params).then(response => {
+              if (response.data.status == 1) {
+                this.showModal.withdraw = false
+                this.$Message.success(response.data.message)
+                this.getBalance()
+              } else {
+                this.$Message.info(response.data.message)
+              }
+            })
           }
         })
       },

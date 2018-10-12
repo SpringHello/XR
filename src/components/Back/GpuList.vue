@@ -33,56 +33,58 @@
         <Form ref="ipValidate" :model="ipValidate" :rules="ipRuleValidate" label-position="top">
           <FormItem label="选择IP" prop="ip">
             <Select v-model="ipValidate.ip" placeholder="请选择IP" style="width: 200px">
-              <Option v-for="item in ipValidate.ipList" :value="item.value" :key="item.value">{{item.label}}</Option>
+              <Option v-for="item in ipValidate.ipList" :value="item.publicipid" :key="item.publicipid">{{item.publicip}}</Option>
             </Select>
-            <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('buy')">购买弹性IP</span>
+            <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('buy/bip')">购买弹性IP</span>
           </FormItem>
         </Form>
         <br>
         <div slot="footer" class="modal-footer-border">
           <Button type="ghost" @click="showModal.ipShow=false">取消</Button>
-          <Button type="primary" @click="bindIp">确定</Button>
+          <Button type="primary" @click="bindipSubmit">确定</Button>
         </div>
       </Modal>
 
+
+
       <!--制作快照-->
-      <Modal v-model="showModal.snapshot" width="550" :scrollable="true" class="create-snas-modal">
-        <p slot="header" class="modal-header-border">
-          <span class="universal-modal-title">制作快照</span>
-        </p>
-        <div class="universal-modal-content-flex">
-          <p class="mb20">您正为<span class="bluetext">{{companyname}}</span>制作快照</p>
-          <Form ref="snapshotValidate" :model="snapshotValidate" :rules="snapshotRuleValidate">
-            <FormItem label="快照名称" prop="name">
-              <Input v-model="snapshotValidate.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
-            </FormItem>
-            <div style="padding-top: 11px;margin-right: 100px;">
-              <div style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息
-                <Poptip trigger="hover" width="400">
-                  <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
-                  <div slot="content">
-                    <div>
-                      您可以选择在制作快照的时候保存您主机的当前运行状态。当您选择“保存”之时，
-                      当前主机的内存将被记录，在您对快照执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
-                      此次快照将不记录主机内存信息，您在通过该快照回滚的时候只能在关机状态下执行。
-                    </div>
-                  </div>
-                </Poptip>
-              </div>
-              <RadioGroup v-model="snapshotValidate.memory">
-                <Radio label="1">保存</Radio>
-                <Radio label="0">不保存</Radio>
-              </RadioGroup>
-            </div>
-          </Form>
-          <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
-          </p>
-        </div>
-        <div slot="footer" class="modal-footer-border">
-          <Button type="ghost" @click="showModal.snapshot = false">取消</Button>
-          <Button type="primary" @click="createVMSnapshot">确定</Button>
-        </div>
-      </Modal>
+      <!--<Modal v-model="showModal.snapshot" width="550" :scrollable="true" class="create-snas-modal">-->
+        <!--<p slot="header" class="modal-header-border">-->
+          <!--<span class="universal-modal-title">制作快照</span>-->
+        <!--</p>-->
+        <!--<div class="universal-modal-content-flex">-->
+          <!--<p class="mb20">您正为<span class="bluetext">{{companyname}}</span>制作快照</p>-->
+          <!--<Form ref="snapshotValidate" :model="snapshotValidate" :rules="snapshotRuleValidate">-->
+            <!--<FormItem label="快照名称" prop="name">-->
+              <!--<Input v-model="snapshotValidate.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>-->
+            <!--</FormItem>-->
+            <!--<div style="padding-top: 11px;margin-right: 100px;">-->
+              <!--<div style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息-->
+                <!--<Poptip trigger="hover" width="400">-->
+                  <!--<Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>-->
+                  <!--<div slot="content">-->
+                    <!--<div>-->
+                      <!--您可以选择在制作快照的时候保存您主机的当前运行状态。当您选择“保存”之时，-->
+                      <!--当前主机的内存将被记录，在您对快照执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时-->
+                      <!--此次快照将不记录主机内存信息，您在通过该快照回滚的时候只能在关机状态下执行。-->
+                    <!--</div>-->
+                  <!--</div>-->
+                <!--</Poptip>-->
+              <!--</div>-->
+              <!--<RadioGroup v-model="snapshotValidate.memory">-->
+                <!--<Radio label="1">保存</Radio>-->
+                <!--<Radio label="0">不保存</Radio>-->
+              <!--</RadioGroup>-->
+            <!--</div>-->
+          <!--</Form>-->
+          <!--<p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点-->
+          <!--</p>-->
+        <!--</div>-->
+        <!--<div slot="footer" class="modal-footer-border">-->
+          <!--<Button type="ghost" @click="showModal.snapshot = false">取消</Button>-->
+          <!--<Button type="primary" @click="createVMSnapshot">确定</Button>-->
+        <!--</div>-->
+      <!--</Modal>-->
 
 
       <!--制作镜像-->
@@ -142,7 +144,7 @@
         </div>
         <p slot="footer" class="modal-footer-s">
           <Button @click="showModal.publicIPHint = false">取消</Button>
-          <Button type="primary" @click="$router.push('buy')">创建公网IP</Button>
+          <Button type="primary" @click="$router.push('buy/bip')">创建公网IP</Button>
         </p>
       </Modal>
 
@@ -176,8 +178,9 @@
     export default{
       data(){
         return{
-          //GPUID
+          //GPU的数据库ID
           VMId:'',
+          //GPU的computerid
           uuId:'',
           //主机名称
           companyname:'',
@@ -226,7 +229,7 @@
           //是否显示弹出框
           showModal:{
             ipShow:false,
-            snapshot:false,
+            // snapshot:false,
             mirror:false,
             renew:false,
             publicIPHint:false
@@ -234,7 +237,7 @@
           //弹性ip
           ipValidate:{
             ip:'',
-            ipList:[{value:'199.199.0.120',label:'199.199.0.120'}]
+            ipList:[]
           },
           ipRuleValidate:{
             ip:[
@@ -347,7 +350,7 @@
               width:'109',
               render:(h,params)=> {
                 //创建中
-                if (params.row.status == 2) {
+                if (params.row.status == 2 && params.row.computerstate == undefined) {
                   return h('div', [
                     h('Spin', {
                       style: {
@@ -375,7 +378,6 @@
                       },
                     }, '删除中')])
                 } else if (params.row.status == 2 && params.row.computerstate == 0) {
-                  //删除中
                   return h('div', [
                     h('Spin', {
                       style: {
@@ -433,7 +435,7 @@
               title:'状态',
               width:'70',
               render:(h,params) => {
-                return h('span',{},params.row.status == '-1' ? '异常' :params.row.status == '0' ?'欠费' : params.row.computerstate == '0' ? '关机' :params.row.computerstate == '1' ? '开机' :'')
+                return h('span',{},params.row.status == '-1' ? '异常' :params.row.status == '0' ? '欠费' : params.row.computerstate == '0' && params.row.status=='1' ? '关机' :params.row.computerstate == '1' && params.row.status=='1'  ? '开机' :'')
               }
             },
             {
@@ -450,7 +452,7 @@
             },
             {
               title:'IP地址',
-              key:'privateip'
+              key:'publicip'
             },
             {
               title:'创建时间/到期时间',
@@ -512,12 +514,16 @@
                     }, [h('DropdownItem', {
                       nativeOn: {
                         click: () => {
-                          if(params.row.status == 2 || params.row.status ==3){
-                            this.$Message.info('请等待主机完成当前操作');
+                          if(params.row.publicip != '' && params.row.publicip != undefined){
+                            this.$Message.info('该主机已绑定IP');
                           }else {
-                            this.showModal.ipShow = true;
-                            this.vpcId = params.row.vpcid;
-                            this.bindIp();
+                            if(params.row.status == 2 || params.row.status ==3){
+                              this.$Message.info('请等待主机完成当前操作');
+                            }else {
+                              this.uuId = params.row.computerid;
+                              this.vpcId = params.row.vpcid;
+                              this.bindIp();
+                            }
                           }
                         }
                       }
@@ -529,21 +535,48 @@
                             if(params.row.status == 2 || params.row.status ==3){
                               this.$Message.info('请等待主机完成当前操作');
                             }else {
-                              this.showModal.snapshot = true;
+                              this.$Modal.confirm({
+                                title:'解绑IP',
+                                content:'是否解绑该GPU的IP?',
+                                onOk:()=>{
+                                  this.unbind(params.row.publicip,params.row.computerid);
+                                }
+                              })
                               this.uuId = params.row.computerid;
                             }
                           }
                         }
-                      }, '制作快照'),
+                      }, '解绑IP'),
+                      // h('DropdownItem', {
+                      //   nativeOn: {
+                      //     click: () => {
+                      //       if(params.row.computerstate == '1' && params.row.status=='1'){
+                      //         this.companyname = params.row.companyname;
+                      //         if(params.row.status == 2 || params.row.status ==3){
+                      //           this.$Message.info('请等待主机完成当前操作');
+                      //         }else {
+                      //           this.showModal.snapshot = true;
+                      //           this.uuId = params.row.computerid;
+                      //         }
+                      //       }else{
+                      //         this.$Message.info('制作快照前请先开启主机');
+                      //       }
+                      //     }
+                      //   }
+                      // }, '制作快照'),
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                            if(params.row.status == 2 || params.row.status ==3){
-                              this.$Message.info('请等待主机完成当前操作');
-                            }else {
-
-                              this.showModal.mirror  = true;
-                              this.mirrorValidate.rootdiskid = params.row.rootdiskid;
+                            if(params.row.computerstate == '0' && params.row.status=='1'){
+                              this.uuId = params.row.computerid;
+                              if(params.row.status == 2 || params.row.status ==3){
+                                this.$Message.info('请等待主机完成当前操作');
+                              }else {
+                                this.showModal.mirror  = true;
+                                this.mirrorValidate.rootdiskid = params.row.rootdiskid;
+                              }
+                            }else{
+                             this.$Message.info('制作镜像前请先关闭主机');
                             }
                           }
                         }
@@ -551,10 +584,17 @@
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                            if(params.row.status == 2 || params.row.status ==3){
-                              this.$Message.info('请等待主机完成当前操作');
-                            }else {
-                              this.$router.push({path: 'gpuUpLevel'})
+                            if (params.row.computerstate == '0' && params.row.status == '1') {
+                              if (params.row.status == 2 || params.row.status == 3) {
+                                this.$Message.info('请等待主机完成当前操作');
+                              } else {
+                                this.$router.push({path: 'gpuUpLevel'});
+                                sessionStorage.setItem('uuId', params.row.computerid);
+                                sessionStorage.setItem('comptername', params.row.companyname)
+                                sessionStorage.setItem('serviceofferid', params.row.serviceofferid);
+                              }
+                            }else{
+                              this.$Message.info('升级主机前请先关闭主机');
                             }
                           }
                         }
@@ -620,7 +660,8 @@
             }
           ],
           hostData:[],
-          zoneId:''
+          zoneId:'',
+          intervalInstance: null,
         }
       },
       beforeRouteLeave(to, from , next){
@@ -648,7 +689,6 @@
                       list.push(res.data.result[index].list[i]);
                     }
                   this.hostData = list;
-
                 }
               }else{
                 this.hostData = [];
@@ -658,7 +698,7 @@
        },
 
 
-        //绑定IP
+        //获取绑定IP
         bindIp(){
          axios.get('network/listPublicIp.do',{
            params: {
@@ -668,14 +708,69 @@
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
-             if(res.data.result.length == 0){
-                this.showModal.publicIPHint = true;
-             }else {
-               this.showModal.publicIPHint = false;
-               this.ipValidate.ipList = res.data.result;
+             this.ipValidate.ipList = res.data.result;
+             if (this.publicIPList == '') {
+               this.showModal.publicIPHint = true;
+             } else {
+               this.showModal.ipShow = true;
              }
+           }else{
+             this.$Message.info('获取Ip出小差了');
            }
          })
+        },
+
+        //绑定IP
+        bindipSubmit() {
+          this.$refs.ipValidate.validate((valid) => {
+              if (valid) {
+                this.showModal.publicIPHint = false;
+                this.showModal.ipShow = false;
+                this.$Message.info({
+                  content: `<span style="color:#2A99F2">${this.companyname}</span>GPU云服务器,正在绑定公网IP`
+                })
+                this.$http.get('network/enableStaticNat.do', {
+                  params: {
+                    ipId: this.ipValidate.ip,
+                    VMId:this.uuId
+                  }
+                }).then(response => {
+                  if (response.status == 200 && response.data.status == 1) {
+                    this.$Message.success(response.data.message)
+                  } else {
+                    this.$message.info({
+                      content: response.data.message
+                    })
+                  }
+                })
+              }
+            }
+          )
+        },
+
+        //解绑IP
+        unbind(publicip,computerid) {
+         if(publicip != ''){
+           this.$Message.info({
+             content: `<span style="color:#2A99F2"></span>GPU云服务器,正在解绑公网IP`
+           })
+         }
+            this.$http.get('network/disableStaticNat.do', {
+              params: {
+                ipId:publicip,
+                VMId:computerid
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1
+              ) {
+                this.$Message.success(response.data.message)
+              }
+              else if (response.status == 200 && response.data.status == 2) {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
         },
 
         //主机开机
@@ -767,41 +862,49 @@
 
         //创建镜像
         createMrrior(){
-        axios.get('Snapshot/createTemplate.do',{
-           params:{
-             templateName:this.mirrorValidate.name,
-             descript:this.mirrorValidate.descript,
-             rootdiskId:this.mirrorValidate.rootdiskid,
-             zoneId:this.$store.state.zone.zoneid
-           }
-         }).then(res => {
-           if(res.status == 200 && res.data.status == 1){
-             this.$Message.success('镜像创建成功');
-             this.showModal.mirror = false;
-           }else {
-             this.$Message.info('镜像创建出小差了');
-           }
-        })
+          this.$refs.mirrorValidate.validate((valid) => {
+            if (valid) {
+              axios.get('Snapshot/createTemplate.do', {
+                params: {
+                  templateName: this.mirrorValidate.name,
+                  descript: this.mirrorValidate.descript,
+                  rootDiskId: this.mirrorValidate.rootdiskid,
+                  zoneId: this.$store.state.zone.zoneid,
+                }
+              }).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.$Message.success(res.data.message);
+                  this.showModal.mirror = false;
+                } else {
+                  this.$Message.info('镜像创建出小差了');
+                }
+              })
+            }
+          })
         },
 
         //创建快照
-        createVMSnapshot(){
-         axios.get('Snapshot/createVMSnapshot.do',{
-           params:{
-             VMId:this.uuId,
-             snapshotName:this.snapshotValidate.name,
-             memoryStatus:this.snapshotValidate.memory,
-             zoneId:this.$store.state.zone.zoneid
-           }
-         }).then(res => {
-           if(res.status == 200 && res.data.status == 1){
-             this.$Message.success('快照创建成功');
-             this.showModal.snapshot = false;
-           }else {
-             this.$Message.info('创建快照出小差了');
-           }
-         })
-        },
+        // createVMSnapshot(){
+        //   this.$refs.snapshotValidate.validate((valid) => {
+        //     if (valid) {
+        //       axios.get('Snapshot/createVMSnapshot.do', {
+        //         params: {
+        //           VMId: this.uuId,
+        //           snapshotName: this.snapshotValidate.name,
+        //           memoryStatus: this.snapshotValidate.memory,
+        //           zoneId: this.$store.state.zone.zoneid
+        //         }
+        //       }).then(res => {
+        //         if (res.status == 200 && res.data.status == 1) {
+        //           this.$Message.success('快照创建成功');
+        //           this.showModal.snapshot = false;
+        //         } else {
+        //           this.$Message.info('创建快照出小差了');
+        //         }
+        //       })
+        //     }
+        //   })
+        // },
 
         //续费类型切换
         renewChange(index){
@@ -860,11 +963,11 @@
 
         //连接主机
         link(item) {
-          sessionStorage.setItem('link-companyid', item.companyid)
-          sessionStorage.setItem('link-vmid', item.computerid)
-          sessionStorage.setItem('link-zoneid', item.zoneid)
-          sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
-          this.$router.push('link')
+          localStorage.setItem('link-companyid', item.companyid)
+          localStorage.setItem('link-vmid', item.computerid)
+          localStorage.setItem('link-zoneid', item.zoneid)
+          localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
+          window.open('/ruicloud/link')
         },
       },
       created(){

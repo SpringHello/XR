@@ -64,7 +64,8 @@
                 <div class="cf-footer">
                   <p><span>押金：</span>{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <Button type="primary" :disabled="scene == '游戏服务'||scene == '图形设计' || scene == '人工智能' || scene == '超级运算'" @click="getHost(currentIndex,index1)">免费使用</Button>
+                  <Button type="primary" v-if="scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" :disabled="true">敬请期待</Button>
+                  <Button type="primary" v-else @click="getHost(currentIndex,index1)">免费使用</Button>
                 </div>
               </div>
             </div>
@@ -1855,7 +1856,6 @@
       }
     },
     created() {
-      this.getBalance()
     },
     methods: {
       init() {
@@ -1986,11 +1986,20 @@
           this.$LR({type: 'register'})
           return
         }
-        this.index1 = index1
-        this.index2 = index2
-        this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
-        this.time = this.currentSceneGroup[index1].configGroup[index2].title
-        this.showModal.rechargeHint = true
+        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            this.balance = Number(response.data.data.remainder)
+            this.index1 = index1
+            this.index2 = index2
+            this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
+            this.time = this.currentSceneGroup[index1].configGroup[index2].title
+            this.showModal.rechargeHint = true
+          } else{
+            this.$message.info({
+              content: '平台开小差了，请稍候再试'
+            })
+          }
+        })
       },
       nextStep() {
         if (!(this.scene == '游戏服务'||this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
@@ -2247,14 +2256,6 @@
                 })
               }
             })
-          }
-        })
-      },
-      // 获取余额
-      getBalance() {
-        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
-          if (response.status == 200 && response.data.status == '1') {
-            this.balance = Number(response.data.data.remainder)
           }
         })
       },
