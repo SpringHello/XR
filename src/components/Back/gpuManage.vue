@@ -112,12 +112,12 @@
 
             </TabPane>
             <!--快照管理-->
-            <TabPane label="快照管理">
-              <div class="tab_box">
-                <Button type="primary" style="margin-bottom: 10px;" @click="deleteSnapshot">删除快照</Button>
-                <Table ref="selection" @on-selection-change="selectKuai" :columns="snapshotList" :data="snapshotData"></Table>
-              </div>
-            </TabPane>
+            <!--<TabPane label="快照管理">-->
+              <!--<div class="tab_box">-->
+                <!--<Button type="primary" style="margin-bottom: 10px;" @click="deleteSnapshot">删除快照</Button>-->
+                <!--<Table ref="selection" @on-selection-change="selectKuai" :columns="snapshotList" :data="snapshotData"></Table>-->
+              <!--</div>-->
+            <!--</TabPane>-->
             <!--操作日志-->
             <TabPane label="操作日志">
               <div class="tab_box">
@@ -253,22 +253,22 @@
       </Modal>
 
       <!-- 回滚确认弹窗 -->
-      <Modal v-model="showWindow.rollback" :scrollable="true" :closable="false" :width="390">
-        <div class="modal-content-s">
-          <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-          <div>
-            <strong>主机回滚</strong>
-            <p class="lh24">是否确定回滚主机</p>
-            <p class="lh24">提示：您正使用<span class="bluetext">{{snapsDetails.snapshotname}}</span>回滚<span
-              class="bluetext">{{snapsDetails.name}}</span>至<span
-              class="bluetext">{{snapsDetails.addtime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
-          </div>
-        </div>
-        <p slot="footer" class="modal-footer-s">
-          <Button @click="showWindow.rollback = false">取消</Button>
-          <Button type="primary" @click="goBackSnapshot">确定</Button>
-        </p>
-      </Modal>
+      <!--<Modal v-model="showWindow.rollback" :scrollable="true" :closable="false" :width="390">-->
+        <!--<div class="modal-content-s">-->
+          <!--<Icon type="android-alert" class="yellow f24 mr10"></Icon>-->
+          <!--<div>-->
+            <!--<strong>主机回滚</strong>-->
+            <!--<p class="lh24">是否确定回滚主机</p>-->
+            <!--<p class="lh24">提示：您正使用<span class="bluetext">{{snapsDetails.snapshotname}}</span>回滚<span-->
+              <!--class="bluetext">{{snapsDetails.name}}</span>至<span-->
+              <!--class="bluetext">{{snapsDetails.addtime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<p slot="footer" class="modal-footer-s">-->
+          <!--<Button @click="showWindow.rollback = false">取消</Button>-->
+          <!--<Button type="primary" @click="goBackSnapshot">确定</Button>-->
+        <!--</p>-->
+      <!--</Modal>-->
     </div>
 </template>
 
@@ -416,79 +416,79 @@
         loadingMessage:'',
         loading:false,
         //快照
-        snapshotList:[
-          {
-            type: 'selection',
-            width:'70'
-          },
-          {
-            title:'快照名称',
-            key:'snapshotname',
-            render:(h,params) =>{
-              if (params.row.status == 2) {
-                return h('div', [
-                  h('Spin', {
-                    style: {
-                      display: 'inline-block'
-                    }
-                  }),
-                  h('span',{
-                    style: {
-                      color:'#2A99F2'
-                    }
-                  },'创建中')
-                ])
-              } else{
-                return h('span',{
-
-                },params.row.snapshotname)
-              }
-            }
-          },
-          {
-            title:'快照策略',
-            render:(h,params) =>{
-              return h('span',{},params.row.createway == 'hand' ? '手动' :'')
-            }
-          },
-          {
-            title:'快照间隔',
-            render:(h,params) =>{
-              return h('span',{},params.row.intervals == 'hand' ? '手动' :'')
-            }
-          },
-          {
-            title:'创建于',
-            key:'addtime'
-          },
-          {
-            title:'操作',
-            width:100,
-            render:(h,params) =>{
-              if (params.row.status == -1 ) {
-                return h('span', {
-                  style: {
-                    cursor: 'not-allowed'
-                  },
-                }, '异常')
-              } else if(params.row.status == 3){
-              return h('span',{
-                style:{
-                  color:'#2A99F2',
-                  cursor:'pointer'
-                },
-                on:{
-                  click: () => {
-                    this.showWindow.rollback = true;
-                    this.snapsDetails = params.row;
-                  }
-                }
-              },'回滚')
-            }
-           }
-          }
-        ],
-        snapshotData:[],
+        // snapshotList:[
+        //   {
+        //     type: 'selection',
+        //     width:'70'
+        //   },
+        //   {
+        //     title:'快照名称',
+        //     key:'snapshotname',
+        //     render:(h,params) =>{
+        //       if (params.row.status == 2) {
+        //         return h('div', [
+        //           h('Spin', {
+        //             style: {
+        //               display: 'inline-block'
+        //             }
+        //           }),
+        //           h('span',{
+        //             style: {
+        //               color:'#2A99F2'
+        //             }
+        //           },'创建中')
+        //         ])
+        //       } else{
+        //         return h('span',{
+        //
+        //         },params.row.snapshotname)
+        //       }
+        //     }
+        //   },
+        //   {
+        //     title:'快照策略',
+        //     render:(h,params) =>{
+        //       return h('span',{},params.row.createway == 'hand' ? '手动' :'')
+        //     }
+        //   },
+        //   {
+        //     title:'快照间隔',
+        //     render:(h,params) =>{
+        //       return h('span',{},params.row.intervals == 'hand' ? '手动' :'')
+        //     }
+        //   },
+        //   {
+        //     title:'创建于',
+        //     key:'addtime'
+        //   },
+        //   {
+        //     title:'操作',
+        //     width:100,
+        //     render:(h,params) =>{
+        //       if (params.row.status == -1 ) {
+        //         return h('span', {
+        //           style: {
+        //             cursor: 'not-allowed'
+        //           },
+        //         }, '异常')
+        //       } else if(params.row.status == 3){
+        //       return h('span',{
+        //         style:{
+        //           color:'#2A99F2',
+        //           cursor:'pointer'
+        //         },
+        //         on:{
+        //           click: () => {
+        //             this.showWindow.rollback = true;
+        //             this.snapsDetails = params.row;
+        //           }
+        //         }
+        //       },'回滚')
+        //     }
+        //    }
+        //   }
+        // ],
+        // snapshotData:[],
         dateList:[
           {
             value:'近一天'
@@ -652,78 +652,77 @@
       },
 
       //列出快照
-      selectSnapshotList(){
-        axios.get('Snapshot/listVMSnapshot.do',{
-          params:{
-            zoneId:this.$store.state.zone.zoneid,
-            resourceId:sessionStorage.getItem('uuId')
-          }
-        }).then(res => {
-          if(res.status == 200 && res.data.status == 1){
-            this.snapshotData = res.data.result;
-          }
-        })
-      },
-      selectKuai(val){
-        for(let i=0;i<val.length;i++){
-          let idList = new Array();
-          idList.push(val[i].id);
-          this.ids = idList.join(',');
-          console.log(this.ids);
-        }
-      },
+      // selectSnapshotList(){
+      //   axios.get('Snapshot/listVMSnapshot.do',{
+      //     params:{
+      //       zoneId:this.$store.state.zone.zoneid,
+      //       resourceId:sessionStorage.getItem('uuId')
+      //     }
+      //   }).then(res => {
+      //     if(res.status == 200 && res.data.status == 1){
+      //       this.snapshotData = res.data.result;
+      //     }
+      //   })
+      // },
+      // selectKuai(val){
+      //   for(let i=0;i<val.length;i++){
+      //     let idList = new Array();
+      //     idList.push(val[i].id);
+      //     this.ids = idList.join(',');
+      //     console.log(this.ids);
+      //   }
+      // },
 
       //删除快照
-      deleteSnapshot(){
-        if(this.ids == ''){
-          this.$Message.info('请先选择一个快照');
-          return;
-        }
-        this.$Modal.confirm({
-          title:'删除快照',
-          content:'是否删除快照',
-          onOk:()=>{
-              axios.get('Snapshot/deleteVMSnapshot.do',{
-                params:{
-                  zoneId:this.$store.state.zone.zoneid,
-                  ids:this.ids
-                }
-              }).then(res => {
-                if(res.status == 200 && res.data.status == 1){
-                 this.$Message.success('删除快照成功');
-                 this.selectSnapshotList();
-                }else {
-                  this.$Message.info('删除快照出小差了');
-                }
-              })
-          }
-        })
-
-      },
+      // deleteSnapshot(){
+      //   if(this.ids == ''){
+      //     this.$Message.info('请先选择一个快照');
+      //     return;
+      //   }
+      //   this.$Modal.confirm({
+      //     title:'删除快照',
+      //     content:'是否删除快照',
+      //     onOk:()=>{
+      //         axios.get('Snapshot/deleteVMSnapshot.do',{
+      //           params:{
+      //             zoneId:this.$store.state.zone.zoneid,
+      //             ids:this.ids
+      //           }
+      //         }).then(res => {
+      //           if(res.status == 200 && res.data.status == 1){
+      //            this.$Message.success('删除快照成功');
+      //            this.selectSnapshotList();
+      //           }else {
+      //             this.$Message.info('删除快照出小差了');
+      //           }
+      //         })
+      //     }
+      //   })
+      // },
 
       //回滚快照
-      goBackSnapshot(){
-        console.log(this.snapsDetails);
-        return;
-          this.showWindow.rollback = false
-          this.loadingMessage = '正在回滚主机'
-          this.loading = true
-          axios.get('Snapshot/revertToVMSnapshot.do', {
-            params: {
-              snapshotId: this.snapsDetails.snapshotid,
-              zoneId: this.$store.state.zone.zoneid,
-            }
-          })
-            .then(response => {
-              if (response.status == 200) {
-                this.loading = false
-                this.$Message.success({
-                  content: response.data.message,
-                  duration: 5
-                })
-              }
-            })
-      },
+      // goBackSnapshot(){
+      //   console.log(this.snapsDetails);
+      //   return;
+      //     this.showWindow.rollback = false
+      //     this.loadingMessage = '正在回滚主机'
+      //     this.loading = true
+      //     axios.get('Snapshot/revertToVMSnapshot.do', {
+      //       params: {
+      //         snapshotId: this.snapsDetails.snapshotid,
+      //         zoneId: this.$store.state.zone.zoneid,
+      //       }
+      //     })
+      //       .then(response => {
+      //         if (response.status == 200) {
+      //           this.loading = false
+      //           this.$Message.success({
+      //             content: response.data.message,
+      //             duration: 5
+      //           })
+      //         }
+      //       })
+      // },
 
       //重置密码
       resetConfirm(name) {
@@ -1053,12 +1052,11 @@
           gpuServer:'1'
         }
       }).then(res => {
-        console.log($store.state.zone.zoneid);
         $store.state.zone= res.data.result[0];
         // $store.commit('setZone');
       })
       this.getGpuHostDetail();
-      this.selectSnapshotList();
+      // this.selectSnapshotList();
       this.getUtilization();
       this.logTime = this.getCurrentDate() + ',' + this.getTomorrow();
       this.CPUTime = this.getCurrentDate();

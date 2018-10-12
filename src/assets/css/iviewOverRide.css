@@ -420,3 +420,6 @@ div.modal-header-border {
   left: 0px;
   right: unset;
 }
+.ivu-select-disabled .ivu-select-selection{
+  color: black;
+}

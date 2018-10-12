@@ -33,63 +33,61 @@
                     <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0">去绑定</span></li>
                     <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0">修改</span></li>
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
+                    <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
                     <li v-if="!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
                       @click="currentTab ='certification' ">马上认证</span></li>
                     <li v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"><span>身份证号</span><span>{{authInfo.personalnumber}}</span></li>
-                    <li v-if="!(authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0)"><span></span><span style="color: #FF9339">未企业认证</span><span
+                    <li v-if="!(authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0)"><span>认证信息</span><span style="color: #FF9339">未企业认证</span><span
                       @click="currentTab ='companyInfo'">马上认证</span></li>
                   </ul>
                 </div>
               </div>
               <h2>其他信息</h2>
               <div class="pi-otherInfo">
-                <div class="pi-otherInfo-form" v-if="!otherInfoShow">
+                <div class="pi-otherInfo-form">
                   <Form ref="occupationalInfo" :model="occupationalInfoForm" :rules="occupationalInfoRule" :label-width="100">
-                    <FormItem label="应用行业" prop="trade">
-                      <Select v-model="occupationalInfoForm.trade" style="width: 317px;">
+                    <FormItem label="应用行业">
+                      <span class="f-span" v-show="otherInfoShow">{{occupationalInfoForm.trade }}</span>
+                      <Select v-model="occupationalInfoForm.trade" style="width: 317px;margin-left: 35px;" v-show="!otherInfoShow">
                         <Option v-for="item in occupationalInfoForm.tradeOptions" :key="item.label"
                                 :value="item.label">
                           {{item.label}}
                         </Option>
                       </Select>
                     </FormItem>
-                    <FormItem label="职位" prop="position">
-                      <Select v-model="occupationalInfoForm.position" style="width: 317px;">
+                    <FormItem label="职位">
+                      <span class="f-span" v-show="otherInfoShow">{{occupationalInfoForm.position }}</span>
+                      <Select v-model="occupationalInfoForm.position" style="width: 317px;margin-left: 35px;" v-show="!otherInfoShow">
                         <Option v-for="item in occupationalInfoForm.positionOptions" :key="item.label"
                                 :value="item.label">
                           {{item.label}}
                         </Option>
                       </Select>
                     </FormItem>
-                    <FormItem label="单位名称" prop="companyName">
-                      <Input v-model="occupationalInfoForm.companyName" placeholder="请输入单位名称" style="width: 317px;"></Input>
+                    <FormItem label="单位名称">
+                      <span class="f-span" v-show="otherInfoShow">{{occupationalInfoForm.companyName }}</span>
+                      <Input v-model="occupationalInfoForm.companyName" placeholder="请输入单位名称" style="width: 317px;margin-left: 35px;" v-show="!otherInfoShow"></Input>
                     </FormItem>
-                    <FormItem label="地域" prop="city">
-                      <Select v-model="occupationalInfoForm.province" style="width:154px;margin-right: 10px" placeholder="请选择省"
-                              @on-change="changeProvince">
+                    <FormItem label="地域">
+                      <Select v-model="occupationalInfoForm.province" style="width:154px;margin-right: 10px;margin-left: 35px;" placeholder="请选择省"
+                              @on-change="changeProvince" v-show="!otherInfoShow">
                         <Option v-for="item in occupationalInfoForm.provinceList" :value="item.name" :key="item.name">{{item.name}}
                         </Option>
                       </Select>
-                      <Select v-model="occupationalInfoForm.city" style="width:154px;margin-right: 10px" placeholder="请选择市">
+                      <Select v-model="occupationalInfoForm.city" style="width:154px;margin-right: 10px" placeholder="请选择市" v-show="!otherInfoShow">
                         <Option v-for="item in occupationalInfoForm.cityList" :value="item.name" :key="item.name">{{ item.name}}
                         </Option>
                       </Select>
+                      <div style="display: flex">
+                        <span class="f-span" style="width: 154px;margin-right: 10px;" v-show="otherInfoShow">{{occupationalInfoForm.province }}</span>
+                        <span class="f-span" style="width: 154px;margin-left: 0" v-show="otherInfoShow">{{occupationalInfoForm.city }}</span>
+                      </div>
                     </FormItem>
-                    <div style="padding-left: 100px">
-                      <Button type="primary" @click="saveJobInfo">保存</Button>
+                    <div style="padding-left: 135px">
+                      <Button type="primary" @click="saveJobInfo" v-if="!otherInfoShow">保存</Button>
+                      <Button type="primary" @click="otherInfoShow=false" v-else>修改</Button>
                     </div>
                   </Form>
-                </div>
-                <div v-if="otherInfoShow" style="padding-left: 80px">
-                  <ol>
-                    <li><span>所属行业</span><span>{{ userInfo.applicationindustry }}</span></li>
-                    <li><span>职位</span><span>{{ userInfo.position }}</span></li>
-                    <li><span>单位名称</span><span>{{ userInfo.corporatename }}</span></li>
-                    <li><span>地区</span><span>{{ userInfo.corporateaddressprovince +'-'+ userInfo.corporateaddresscity }}</span></li>
-                  </ol>
-                  <div style="padding-left: 60px">
-                    <Button type="primary" @click="modifyJobInfo">修改</Button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -763,50 +761,6 @@
       </div>
     </Modal>
 
-    <!-- 修改其他信息弹窗-->
-    <Modal v-model="showModal.modifyOtherInfo" width="550" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">修改其他信息</span>
-      </p>
-      <div>
-        <Form ref="occupationalInfo" :model="occupationalInfoForm" :rules="occupationalInfoRule" :label-width="100">
-          <FormItem label="应用行业" prop="trade">
-            <Select v-model="occupationalInfoForm.trade" style="width: 317px;">
-              <Option v-for="item in occupationalInfoForm.tradeOptions" :key="item.label"
-                      :value="item.label">
-                {{item.label}}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="职位" prop="position">
-            <Select v-model="occupationalInfoForm.position" style="width: 317px;">
-              <Option v-for="item in occupationalInfoForm.positionOptions" :key="item.label"
-                      :value="item.label">
-                {{item.label}}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="单位名称" prop="companyName">
-            <Input v-model="occupationalInfoForm.companyName" placeholder="请输入单位名称" style="width: 317px;"></Input>
-          </FormItem>
-          <FormItem label="地域" prop="city">
-            <Select v-model="occupationalInfoForm.province" style="width:154px;margin-right: 10px" placeholder="请选择省"
-                    @on-change="changeProvince">
-              <Option v-for="item in occupationalInfoForm.provinceList" :value="item.name" :key="item.name">{{item.name}}
-              </Option>
-            </Select>
-            <Select v-model="occupationalInfoForm.city" style="width:154px;margin-right: 10px" placeholder="请选择市">
-              <Option v-for="item in occupationalInfoForm.cityList" :value="item.name" :key="item.name">{{ item.name}}
-              </Option>
-            </Select>
-          </FormItem>
-        </Form>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="showModal.modifyOtherInfo = false">取消</Button>
-        <Button type="primary" @click="saveJobInfo">保存</Button>
-      </div>
-    </Modal>
 
     <!-- 设置新密码 -->
     <Modal v-model="showModal.setNewPassword" width="550" :scrollable="true">
@@ -836,7 +790,8 @@
               </FormItem>
               <Form-item label="验证码" prop="verificationCode" style="width: 100%">
                 <Input v-model="setNewPasswordForm.verificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
-                <Button type="primary" :disabled="setNewPasswordForm.newCodeText !='获取验证码' || setNewPasswordDisabled " @click="getSetNewPasswordCode">{{ setNewPasswordForm.newCodeText}}
+                <Button type="primary" :disabled="setNewPasswordForm.newCodeText !='获取验证码' || setNewPasswordDisabled " @click="getSetNewPasswordCode">{{
+                  setNewPasswordForm.newCodeText}}
                 </Button>
               </Form-item>
             </div>
@@ -2044,6 +1999,7 @@
         ],
         keyData: [],
         imgSrc: 'user/getKaptchaImage.do',
+        otherInfoShow: false
       }
     },
     created() {
@@ -2057,6 +2013,7 @@
       this.listNotice()
       this.getContacts()
       this.getSystemHead()
+      this.setOccupationalInfo()
     },
     methods: {
       init() {
@@ -2065,6 +2022,21 @@
             $store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
           }
         })
+      },
+      setOccupationalInfo() {
+        if (this.userInfo.applicationindustry || this.userInfo.position || this.userInfo.corporatename || this.userInfo.corporateaddressprovince) {
+          this.occupationalInfoForm.trade = this.userInfo.applicationindustry ? this.userInfo.applicationindustry : ''
+          this.occupationalInfoForm.position = this.userInfo.position ? this.userInfo.position : ''
+          this.occupationalInfoForm.companyName = this.userInfo.corporatename ? this.userInfo.corporatename : ''
+          this.occupationalInfoForm.province = this.userInfo.corporateaddressprovince ? this.userInfo.corporateaddressprovince : ''
+          area.forEach(item => {
+            if (item.name == this.occupationalInfoForm.province) {
+              this.occupationalInfoForm.cityList = item.city
+              this.occupationalInfoForm.city = this.userInfo.corporateaddresscity ? this.userInfo.corporateaddresscity : ''
+            }
+          })
+          this.otherInfoShow = true
+        }
       },
       tabSwitching(name) {
         switch (name) {
@@ -2188,38 +2160,29 @@
         })
       },
       saveJobInfo() {
-        this.$refs['occupationalInfo'].validate(valid => {
-          if (valid) {
-            let url = 'user/addUserElseMessage.do'
-            let params = {
-              applicationIndustry: this.occupationalInfoForm.trade,
-              position: this.occupationalInfoForm.position,
-              corporateName: this.occupationalInfoForm.companyName,
-              corporateAddressProvince: this.occupationalInfoForm.province,
-              corporateAddressCity: this.occupationalInfoForm.city,
-              type: '1'
-            }
-            this.$http.post(url, params).then(res => {
-              if (res.status == 200 && res.data.status == 1) {
-                this.$Message.success(res.data.message)
-                this.showModal.modifyOtherInfo = false
-                this.init()
-              } else {
-                this.$message.info({
-                  content: res.data.message
-                })
-              }
+        let url = 'user/addUserElseMessage.do'
+        let params = {
+          applicationIndustry: this.occupationalInfoForm.trade,
+          position: this.occupationalInfoForm.position,
+          corporateName: this.occupationalInfoForm.companyName,
+          corporateAddressProvince: this.occupationalInfoForm.province,
+          corporateAddressCity: this.occupationalInfoForm.city,
+          type: '1'
+        }
+        this.$http.post(url, params).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.showModal.modifyOtherInfo = false
+            this.init()
+            this.otherInfoShow = true
+          } else {
+            this.$message.info({
+              content: res.data.message
             })
           }
         })
       },
       modifyJobInfo() {
-        this.occupationalInfoForm.trade = this.userInfo.applicationindustry
-        this.occupationalInfoForm.position = this.userInfo.position
-        this.occupationalInfoForm.companyName = this.userInfo.corporatename
-        this.occupationalInfoForm.province = this.userInfo.corporateaddressprovince
-        this.occupationalInfoForm.city = this.userInfo.corporateaddresscity
-        this.showModal.modifyOtherInfo = true
       },
 
       // 重新提交申请
@@ -3096,9 +3059,6 @@
             return true
           }
         }
-      },
-      otherInfoShow() {
-        return this.userInfo.applicationindustry && this.userInfo.position && this.userInfo.corporatename && this.userInfo.corporateaddressprovince && this.userInfo.corporateaddresscity
       }
     },
     watch: {}
@@ -3154,7 +3114,7 @@
             }
             span:nth-child(2) {
               margin-left: 40px;
-              width: 200px;
+              width: 280px;
               color: rgba(51, 51, 51, 1);
             }
             span:nth-child(3) {
@@ -3528,5 +3488,18 @@
     p:nth-child(2) {
       margin-bottom: 20px;
     }
+  }
+
+  .f-span {
+    margin-left: 35px;
+    background: #f3f3f3;
+    color: black;
+    border: 1px solid #dddee1;
+    display: block;
+    width: 317px;
+    border-radius: 4px;
+    line-height: 32px;
+    padding-left: 8px;
+    height: 32px;
   }
 </style>
