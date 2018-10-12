@@ -62,6 +62,7 @@ const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 const Domainname = () =>import('@/components/App/Domain/Domainname')
 const DomainResult = () =>import('@/components/App/Domain/DomainResult')
 const DomainTemplate = () =>import('@/components/App/Domain/DomainTemplate')
+const CheckReg = () =>import('@/components/App/Domain/CheckReg')
 
 
 // 备案系统页面路由
@@ -312,6 +313,7 @@ var router = new Router({
         {path: 'Domainname', name: 'Domainname', component: Domainname},
         {path: 'DomainResult', name: 'DomainResult', component: DomainResult},
         {path: 'DomainTemplate', name: 'DomainTemplate', component: DomainTemplate},
+        {path: 'CheckReg', name: 'CheckReg', component: CheckReg},
 
 
         {path: 'Pecs', component: Pecs},

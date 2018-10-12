@@ -2,18 +2,21 @@
   <div style="background: #FFF; font-family:PingFangSC-Regular;" id="domain">
     <div class="topTwo">
       <div class="search">
-        <Input v-model="searchText" style="width: 550px;" size="large" placeholder="请输入您要查找的域名">
-        <Select v-model="select" slot="append" style="width: 130px;">
-          <Option value="com">.com</Option>
-          <Option value="net">.net</Option>
-          <Option value="cn">.cn</Option>
-          <Option value="comcn">.com.cn</Option>
-          <Option value="top">.top</Option>
-          <Option value="red">.red</Option>
-          <Option value="zdy">.自定义添加</Option>
-        </Select>
-        </Input>
-        <button @click="domainSearch">搜索</button>
+        <div class="nav">
+          <div>
+            <Input v-model="searchText" style="width: 550px;" size="large" placeholder="请输入您要查找的域名">
+            <div slot="append" @click="choose=!choose" style="width: 80px;cursor:pointer">
+              <span style="display: inline-block">{{append}}</span>
+            </div>
+            </Input>
+            <div v-show="choose" class="change">
+              <span v-for="(item,index) in suffixChange.en" :key="index"
+                    style="width:70px;display:inline-block;height: 20px" @click="append=item">{{item}}</span>
+            </div>
+          </div>
+          <button @click="Search">搜索</button>
+
+        </div>
       </div>
     </div>
     <div id="searchResult">
@@ -26,20 +29,20 @@
             </button>
           </div>
           <div class="show" v-show="show">
-            <Checkbox-group v-model="singles">
-              <Checkbox label="com">com</Checkbox>
-              <Checkbox label="cn">cn</Checkbox>
-            </Checkbox-group>
+            <CheckboxGroup v-model="singles" style="display: flex;flex-wrap: wrap;justify-content: flex-start">
+              <Checkbox v-for="(item,index) in suffixChange.en" :key="index" :label="item" style="width:95px;">{{item}}
+              </Checkbox>
+            </CheckboxGroup>
           </div>
-          <li v-for="(item,index) in results" :key="index" v-show="index<=num">
+          <li v-for="(item,index) in Results" :key="index" v-show="index<=num">
             <p>{{item.name}}
-              <button v-show="item.isRes==0">未注册</button>
-              <button v-show="item.isRes==1" class="isRes">已注册</button>
+              <button v-show="item.isRes=='available'">未注册</button>
+              <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
             </p>
             <div>
-              <span v-show="item.isRes==0">¥{{item.price}}<span>/年</span></span>
-              <button v-show="item.isRes==0">加入清单</button>
-              <a v-show="item.isRes==1">查看域名信息 ></a>
+              <span v-show="item.isRes=='available'">¥{{item.price}}<span>/年</span></span>
+              <button v-show="item.isRes=='available'" @click="addList(item)">加入清单</button>
+              <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
           <button class="showAll" @click="exhibition" v-show="isShowAll">显示全部
@@ -50,20 +53,22 @@
       <div id="result-right">
         <div>
           <div class="all">
-            <p>域名清单 <span>全部移除</span></p>
+            <p>域名清单
+              <button @click="removeAll">全部移除</button>
+            </p>
             <ul class="all-data">
-              <li>
-                <h2>such.net</h2>
-                <button>移除</button>
+              <li v-for="(item,index) in buyLists">
+                <h2>{{item.name}}</h2>
+                <button @click="remove(index)">移除</button>
               </li>
             </ul>
           </div>
           <div class="statistical">
             <p>
-              <span>已加入域名 0 个</span>
+              <span>已加入域名 {{addNum}} 个</span>
               <span>优惠金额：¥00.00</span>
             </p>
-            <h1>应付金额：¥00.00</h1>
+            <h1>应付金额：¥{{payMoney}}</h1>
             <button @click="$router.push('DomainTemplate')">立即购买</button>
           </div>
         </div>
@@ -73,41 +78,105 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from '@/util/axiosInterceptor'
+  import $store from '@/vuex'
   export default{
+    beforeRouteEnter(to, from, next){
+      axios.post('domain/domainFound.do', {
+        token: sessionStorage.getItem('token'),
+        domainName: sessionStorage.getItem('name'),
+        tids: JSON.parse(sessionStorage.getItem("suffix")).join(','),
+      }).then(res => {
+        next(vm => {
+          vm.Results = res.data.data.results
+          vm.singles = vm.suffixChange.en
+        })
+      })
+    },
     data(){
       window.scrollTo(0, 0);
       return {
+        append: '.com',
         searchText: sessionStorage.getItem('name'),
-        select: sessionStorage.getItem('end'),
+        choose: false,
+        suffixChange: JSON.parse(sessionStorage.getItem('suffixChange')),
         show: false,
-        singles: ['com', 'cn'],
+        singles: [],
         num: 3,
         isShowAll: true,
-        results: [
-          {name: '.com', isRes: 1, price: '123.45',},
-          {name: '.cn', isRes: 1, price: '123.36',},
-          {name: '.com.cn', isRes: 0, price: '123.45',},
-          {name: '.top', isRes: 0, price: '45.45',},
-          {name: '.online', isRes: 0, price: '785.00',},
-          {name: '.end', isRes: 0, price: '1245.02',},
-          {name: '.shop', isRes: 0, price: '4582.08',},
-        ],
+        Results: [],
+//        域名清单
+        buyLists: [],
+        addNum: '0',
+        payMoney: 0,
+
       }
     },
     methods: {
-      domainSearch(){
+      //域名搜索结果
+      Search(){
+        this.Results = []
+        axios.post('domain/domainFound.do', {
+          token: sessionStorage.getItem('token'),
+          domainName: this.searchText,
+          tids: this.append,
+        }).then(res => {
+          this.Results = res.data.data.results
+        })
+      },
+      domainChange(){
         if (this.searchText == '') {
           return this.$Message.info('请输入您要查找的域名')
         } else {
-          console.log(this.searchText)
+//          this.Search()
         }
       },
       //显示全部
       exhibition(){
-        this.num = this.results.length
+        this.num = this.Results.length
         this.isShowAll = false
       },
-
+      //加入清单
+      addList(item){
+        for (var i = 0; i <= this.buyLists.length; i++) {
+          if (this.buyLists.indexOf(item) == -1) {
+            this.buyLists.push(item)
+          }
+        }
+      },
+      //移除
+      remove(index){
+        this.buyLists.splice(index, 1)
+      },
+      //全部移除
+      removeAll(){
+        this.buyLists = []
+//        this.buyLists.splice(0, this.buyLists.length)
+      },
+      //查看已注册信息
+      checked(name, status){
+        sessionStorage.setItem('doname', name)
+        sessionStorage.setItem('status', status)
+        this.$router.push('CheckReg')
+      }
+    },
+    watch: {
+      buyLists(){
+        this.payMoney = 0
+        this.addNum = this.buyLists.length
+        this.buyLists.forEach(money => {
+          this.payMoney += parseFloat(money.price)
+        })
+      },
+      append(){
+        axios.post('domain/domainFound.do', {
+          token: sessionStorage.getItem('token'),
+          domainName: this.searchText,
+          tids: this.append,
+        }).then(res => {
+          this.Results.unshift(res.data.data.results[0])
+        })
+      }
     }
   }
 </script>
@@ -115,24 +184,52 @@
 <style rel="stylesheet/less" lang="less" scoped>
 
   .topTwo {
-    background: rgba(78, 157, 255, 1);
-    padding: 30px 0;
     .search {
-      width: 800px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-
-      button {
-        height: 36px;
-        background: rgba(255, 231, 119, 1);
-        font-size: 20px;
-        color: rgba(0, 0, 0, 1);
-        padding: 4px 90px;
-        outline: none;
-        border: none;
-        cursor: pointer;
+      background: rgba(78, 157, 255, 1);
+      padding: 30px 0;
+      height: 96px;
+      .nav {
+        position: relative;
+        width: 800px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        > div {
+          .change {
+            margin-top: 1px;
+            width: 550px;
+            height: 300px;
+            position: absolute;
+            top: 36px;
+            text-align: left;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(230, 230, 230, 1);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            z-index: 1000;
+            padding: 18px 42px 17px 30px;
+            span {
+              cursor: pointer;
+              text-align: center;
+              &:hover {
+                background: #ccc;
+              }
+            }
+          }
+        }
+        button {
+          height: 36px;
+          background: rgba(255, 231, 119, 1);
+          font-size: 20px;
+          color: rgba(0, 0, 0, 1);
+          padding: 4px 90px;
+          outline: none;
+          border: none;
+          cursor: pointer;
+        }
       }
     }
   }
@@ -268,12 +365,14 @@
             color: rgba(51, 51, 51, 1);
             padding: 0 14px 19px 14px;
             border-bottom: 2px solid rgba(204, 204, 204, 1);
-            span {
+            button {
               float: right;
               font-size: 16px;
               color: rgba(42, 153, 242, 1);
-
               cursor: pointer;
+              background: #FFF;
+              border: none;
+              outline: none;
             }
           }
           .all-data {
