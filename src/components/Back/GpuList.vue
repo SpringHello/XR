@@ -514,14 +514,13 @@
                     }, [h('DropdownItem', {
                       nativeOn: {
                         click: () => {
-                          if(params.row.publicip != ''){
+                          if(params.row.publicip != '' && params.row.publicip != undefined){
                             this.$Message.info('该主机已绑定IP');
                           }else {
                             if(params.row.status == 2 || params.row.status ==3){
                               this.$Message.info('请等待主机完成当前操作');
                             }else {
                               this.uuId = params.row.computerid;
-
                               this.vpcId = params.row.vpcid;
                               this.bindIp();
                             }
