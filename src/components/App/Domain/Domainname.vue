@@ -5,17 +5,28 @@
       <span>帮助建立您的网上业务，从这里开始…</span>
       <div class="search">
         <Input v-model="searchText" style="width: 550px;" size="large" placeholder="请输入您要查找的域名">
-        <Select v-model="select" slot="append" style="width: 130px;">
-          <Option value="com">.com</Option>
-          <Option value="net">.net</Option>
-          <Option value="cn">.cn</Option>
-          <Option value="comcn">.com.cn</Option>
-          <Option value="top">.top</Option>
-          <Option value="red">.red</Option>
-          <Option value="zdy">.自定义添加</Option>
-        </Select>
+        <div slot="append" @click="choose=!choose"
+             style="margin: -14px -7px;width: 70px;height: 50px;vertical-align: middle;cursor:pointer">
+          <Icon type="arrow-down-b"
+                style="margin: 0px -7px;top: 50%;position: absolute;transform: translateY(-50%);"></Icon>
+        </div>
         </Input>
         <button @click="textSearch">搜索</button>
+        <div v-show="choose" class="change">
+          <div class="change-top">
+            <RadioGroup v-model="suffix" @on-change="changeSuffix">
+              <Radio label="english">英文域名</Radio>
+              <Radio label="chinese">中文域名</Radio>
+              <Radio label="administrative">行政域名</Radio>
+            </RadioGroup>
+          </div>
+          <div class="content">
+            <CheckboxGroup v-model="suffixList" style="display: flex;flex-wrap: wrap;justify-content: flex-start">
+              <Checkbox v-for="(item,index) in showSuffix" :key="index" :label="item" style="width:85px;">{{item}}
+              </Checkbox>
+            </CheckboxGroup>
+          </div>
+        </div>
       </div>
     </div>
     <div class="content">
@@ -67,12 +78,18 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from '@/util/axiosInterceptor'
+  import $store from '@/vuex'
   export default{
+    beforeRouteEnter(to, from, next){
+      next()
+    },
     data(){
       window.scrollTo(0, 0);
       return {
+        choose: false,
         searchText: '',
-        select: 'com',
+        select: ['com'],
         domainList: [
           {name: '域名查询', img: require('../../../assets/img/domain/s-1.png')},
           {name: '加入购物清单', img: require('../../../assets/img/domain/s-2.png')},
@@ -175,19 +192,63 @@
             img: require('../../../assets/img/domain/ad-3.png')
           },
         ],
+        tokenId: '',
+        suffix: 'english',
+        getSuffix: {},
+        showSuffix: [],
+        suffixList: []
       }
     },
     methods: {
+      changeSuffix(){
+        switch (this.suffix) {
+          case 'english':
+            this.showSuffix = this.getSuffix.en
+            break;
+          case 'chinese':
+            this.showSuffix = this.getSuffix.cn
+            break;
+          case 'administrative':
+            this.showSuffix = this.getSuffix.xz
+            break;
+        }
+      },
+
       textSearch(){
         if (this.searchText == '') {
           return this.$Message.info('请输入您要查找的域名')
         } else {
           sessionStorage.setItem('name', this.searchText)
-          sessionStorage.setItem('end', this.select)
+          sessionStorage.setItem('token', this.tokenId)
+          sessionStorage.setItem('suffix', JSON.stringify(this.suffixList))
+          sessionStorage.setItem('suffixChange', JSON.stringify(this.getSuffix))
           this.$router.push('DomainResult')
         }
       },
 
+    },
+    created(){
+      axios.post('user/getRuiRadosApiacess.do', {
+        zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+        companyId: '153250898029'
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          axios.get('user/getXrdomainToken.do', {
+            params: {
+              companyId: '153250898029',
+              secret: response.data.data.data
+            }
+          }).then(res => {
+            this.tokenId = res.data.token
+            axios.post('domain/getSuffix.do', {
+              token: this.tokenId
+            }).then(res => {
+              this.getSuffix = res.data.data
+              this.showSuffix = this.getSuffix.en
+            })
+          })
+        }
+      })
     }
   }
 </script>
@@ -211,6 +272,7 @@
 
     }
     .search {
+      position: relative;
       width: 800px;
       height: 70px;
       border-radius: 4px;
@@ -229,28 +291,25 @@
         border: none;
         cursor: pointer;
       }
-    }
-  }
-
-  .topTwo {
-    background: rgba(78, 157, 255, 1);
-    padding: 30px 0;
-    .search {
-      width: 800px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-
-      button {
-        height: 36px;
-        background: rgba(255, 231, 119, 1);
-        font-size: 20px;
-        color: rgba(0, 0, 0, 1);
-        padding: 4px 90px;
-        outline: none;
-        border: none;
-        cursor: pointer;
+      .change {
+        position: absolute;
+        top: 70px;
+        text-align: left;
+        margin: 0 auto;
+        width: 780px;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(230, 230, 230, 1);
+        .change-top {
+          margin: 30px 35px 20px 35px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid #D9D9D9;
+        }
+        .content {
+          padding: 0 38px 33px 38px;
+          border-top: 1px dashed #ccc;
+          text-align: left;
+        }
       }
     }
   }
