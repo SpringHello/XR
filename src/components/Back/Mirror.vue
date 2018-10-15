@@ -457,7 +457,7 @@
               mirrorType: 'custom',
               mirror: item
             }
-          })
+          });
         }else{
           this.$router.push({
             path: 'buy',

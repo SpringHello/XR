@@ -608,6 +608,7 @@
         }
       },
 
+      //获取金额
       getMoeny(){
        this.$http.post('device/QueryBillingPrice.do',{
           cpuNum:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
