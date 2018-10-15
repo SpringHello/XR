@@ -1804,10 +1804,15 @@
             title: '站内信',
             align: 'center',
             render: (h, params) => {
+              let isDisabled = false
+              if(params.row.tempCode == '0101'||params.row.tempCode == '0104'||params.row.tempCode == '0105'||params.row.tempCode == '0301'||params.row.tempCode == '0202'){
+                isDisabled = true
+              }
               return h('div', [
                 h('Checkbox', {
                     props: {
                       value: params.row.isLetter == 1,
+                      disabled: isDisabled
                     },
                     on: {
                       'on-change': () => {
@@ -1824,10 +1829,15 @@
             title: '邮件',
             align: 'center',
             render: (h, params) => {
+              let isDisabled = false
+              if(params.row.tempCode == '0101'||params.row.tempCode == '0104'||params.row.tempCode == '0105'||params.row.tempCode == '0301'){
+                isDisabled = true
+              }
               return h('div', [
                 h('Checkbox', {
                   props: {
                     value: params.row.isEmail == 1,
+                    disabled: isDisabled
                   },
                   on: {
                     'on-change': () => {
@@ -1842,10 +1852,15 @@
             title: '短信',
             align: 'center',
             render: (h, params) => {
+              let isDisabled = false
+              if(params.row.tempCode == '0101'||params.row.tempCode == '0104'||params.row.tempCode == '0105'||params.row.tempCode == '0301'){
+                isDisabled = true
+              }
               return h('div', [
                 h('Checkbox', {
                   props: {
                     value: params.row.isTel == 1,
+                    disabled: isDisabled
                   },
                   on: {
                     'on-change': () => {
