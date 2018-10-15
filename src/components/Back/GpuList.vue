@@ -619,10 +619,13 @@
                             if(params.row.status == 2 || params.row.status ==3){
                               this.$Message.info('请等待主机完成当前操作');
                             }else {
-                              // if(params.row.caseType == 3){
-                              //   this.$Message.info('请选择包年包月主机续费');
-                              //   return
+                              // if(params.row.computerstate == '0' && params.row.status=='1'){
+                              //   this.$Message.info('主机续费需要关闭主机')
                               // }
+                              if(params.row.caseType == 3){
+                                this.$Message.info('请选择包年包月主机续费');
+                                return
+                              }
                               this.VMId = params.row.id;
                               this.showModal.renew = true;
                             }
