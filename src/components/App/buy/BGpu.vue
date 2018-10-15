@@ -631,7 +631,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.publicList = [];
             if(this.mirrorQuery){
-              console.log(this.mirrorQuery);
+
               if(this.mirrorQuery.templatename.substr(0,1) == w){
                 let system = 'windows'
               }
