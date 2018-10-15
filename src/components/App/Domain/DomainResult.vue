@@ -69,7 +69,7 @@
               <span>优惠金额：¥00.00</span>
             </p>
             <h1>应付金额：¥{{payMoney}}</h1>
-            <button @click="$router.push('DomainTemplate')">立即购买</button>
+            <button @click="nowBuy">立即购买</button>
           </div>
         </div>
       </div>
@@ -158,6 +158,14 @@
         sessionStorage.setItem('doname', name)
         sessionStorage.setItem('status', status)
         this.$router.push('CheckReg')
+      },
+      //立即购买
+      nowBuy(){
+        if (this.buyLists.length != 0) {
+          this.$router.push('DomainTemplate')
+        } else {
+          return this.$Message.info('请添加商品到清单')
+        }
       }
     },
     watch: {

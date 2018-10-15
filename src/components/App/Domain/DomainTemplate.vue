@@ -7,7 +7,7 @@
       <Form :model="formValidate" :rules="ruleValidate" :label-width="184">
         <FormItem label="选择已有模板" prop="chooseTemplate">
           <Select v-model="formValidate.chooseTemplate" style="width: 500px;" @on-change="TemplateValue">
-            <Option value="temp1">temp1</Option>
+            <!--<Option value="temp1">temp1</Option>-->
             <Option value="notemp">请选择</Option>
           </Select>
         </FormItem>
