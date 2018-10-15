@@ -45,7 +45,7 @@ Vue.config.productionTip = false
 
 
 
-axios.defaults.baseURL = 'http://192.168.3.244/ruicloud/'
+axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 
 axios.defaults.withCredentials = true
 

@@ -124,13 +124,6 @@
           this.Results = res.data.data.results
         })
       },
-      domainChange(){
-        if (this.searchText == '') {
-          return this.$Message.info('请输入您要查找的域名')
-        } else {
-//          this.Search()
-        }
-      },
       //显示全部
       exhibition(){
         this.num = this.Results.length
@@ -161,10 +154,17 @@
       },
       //立即购买
       nowBuy(){
-        if (this.buyLists.length != 0) {
-          this.$router.push('DomainTemplate')
+        if (this.$store.state.userInfo == null) {
+          this.$LR({
+            type: 'login'
+          })
+          return
         } else {
-          return this.$Message.info('请添加商品到清单')
+          if (this.buyLists.length != 0) {
+            this.$router.push('DomainInfoTemplate')
+          } else {
+            return this.$Message.info('请添加商品到清单')
+          }
         }
       }
     },

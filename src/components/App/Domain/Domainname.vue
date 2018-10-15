@@ -230,12 +230,12 @@
     created(){
       axios.post('user/getRuiRadosApiacess.do', {
         zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
-        companyId: '153250898029'
+        companyId: this.$store.state.userInfo.companyid
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
           axios.get('user/getXrdomainToken.do', {
             params: {
-              companyId: '153250898029',
+              companyId: this.$store.state.userInfo.companyid,
               secret: response.data.data.data
             }
           }).then(res => {
