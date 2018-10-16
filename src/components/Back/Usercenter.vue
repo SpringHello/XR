@@ -2115,8 +2115,19 @@
       },
       // 更新头像
       userUpdateSystemHead() {
-        let params = {
-          photoUrl: this.selectedSystemPhoto
+        if (this.headPhotoType == 'custom' && !this.uploadHeadPhoto) {
+          this.$Message.info('请上传自定义头像')
+          return
+        }
+        let params = {}
+        if (this.headPhotoType == 'system') {
+          params = {
+            photoUrl: this.selectedSystemPhoto
+          }
+        } else {
+          params = {
+            photoUrl: this.uploadHeadPhoto
+          }
         }
         let url = 'user/userUpdateSystemHead.do'
         this.$http.post(url, params).then(res => {
@@ -2143,12 +2154,12 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message);
             this.init()
+            this.showModal.bindingMobilePhone = false
           } else {
             this.$message.info({
               content: response.data.message
             })
           }
-          this.showModal.bindingMobilePhone = false
         })
       },
       // 绑定邮箱
@@ -2163,12 +2174,12 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message);
             this.init()
+            this.showModal.bindingEmail = false
           } else {
             this.$message.info({
               content: response.data.message
             })
           }
-          this.showModal.bindingEmail = false
         })
       },
       // 切换省
