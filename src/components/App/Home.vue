@@ -3363,6 +3363,9 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   #home {
+    li {
+      list-style: none;
+    }
     font-family:PingFangSC-Regular;
     .wrap {
       width: 1200px;

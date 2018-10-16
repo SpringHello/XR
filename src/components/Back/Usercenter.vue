@@ -724,12 +724,12 @@
                   :on-success="uploadHeadPhotoSuccess">
                   <div v-if="uploadHeadPhoto==''"
                        style="padding: 172px 0px;margin-bottom: 32px;height: 374px;color: #999;">
-                    <img v-show="percent==0" src="../../assets/img/usercenter/uc-add.png"/>
-                    <Progress v-show="percent>0" :percent="percent"></Progress>
+                    <img src="../../assets/img/usercenter/uc-add.png"/>
                   </div>
                   <div style="height: 374px;display: flex;justify-content: center;align-items: center" v-else>
                     <img :src="uploadHeadPhoto" style="height: 374px;">
                   </div>
+                  <Progress v-show="percent>0" :percent="percent"></Progress>
                   <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;padding-top: 20px;background: #FFF;text-align: left">
                     上传文件</p>
                 </Upload>
@@ -2115,8 +2115,19 @@
       },
       // 更新头像
       userUpdateSystemHead() {
-        let params = {
-          photoUrl: this.selectedSystemPhoto
+        if (this.headPhotoType == 'custom' && !this.uploadHeadPhoto) {
+          this.$Message.info('请上传自定义头像')
+          return
+        }
+        let params = {}
+        if (this.headPhotoType == 'system') {
+          params = {
+            photoUrl: this.selectedSystemPhoto
+          }
+        } else {
+          params = {
+            photoUrl: this.uploadHeadPhoto
+          }
         }
         let url = 'user/userUpdateSystemHead.do'
         this.$http.post(url, params).then(res => {
@@ -2143,12 +2154,12 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message);
             this.init()
+            this.showModal.bindingMobilePhone = false
           } else {
             this.$message.info({
               content: response.data.message
             })
           }
-          this.showModal.bindingMobilePhone = false
         })
       },
       // 绑定邮箱
@@ -2163,12 +2174,12 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message);
             this.init()
+            this.showModal.bindingEmail = false
           } else {
             this.$message.info({
               content: response.data.message
             })
           }
-          this.showModal.bindingEmail = false
         })
       },
       // 切换省

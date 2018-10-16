@@ -310,9 +310,9 @@
     beforeRouteEnter(to, from, next) {
       // 获取所有后台需要的基本信息
       // 获取用户信息
-      var userInfo = axios.get('user/GetUserInfo.do', {params: {}})
+      var userInfo = axios.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}})
       // 获取zone信息
-      var zoneList = axios.get('information/zone.do', {params: {}})
+      var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime()}})
       Promise.all([userInfo, zoneList]).then(values => {
         $store.commit('setZoneList', values[1].data.result)
         if (values[0].status == 200 && values[0].data.status == 1) {
