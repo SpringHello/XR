@@ -1805,7 +1805,7 @@
             align: 'center',
             render: (h, params) => {
               let isDisabled = false
-              if(params.row.tempCode == '0101'||params.row.tempCode == '0104'||params.row.tempCode == '0105'||params.row.tempCode == '0301'||params.row.tempCode == '0202'){
+              if (params.row.tempCode == '0101' || params.row.tempCode == '0104' || params.row.tempCode == '0105' || params.row.tempCode == '0301' || params.row.tempCode == '0202') {
                 isDisabled = true
               }
               return h('div', [
@@ -1830,7 +1830,7 @@
             align: 'center',
             render: (h, params) => {
               let isDisabled = false
-              if(params.row.tempCode == '0101'||params.row.tempCode == '0104'||params.row.tempCode == '0105'||params.row.tempCode == '0301'){
+              if (params.row.tempCode == '0101' || params.row.tempCode == '0104' || params.row.tempCode == '0105' || params.row.tempCode == '0301') {
                 isDisabled = true
               }
               return h('div', [
@@ -1853,7 +1853,7 @@
             align: 'center',
             render: (h, params) => {
               let isDisabled = false
-              if(params.row.tempCode == '0101'||params.row.tempCode == '0104'||params.row.tempCode == '0105'||params.row.tempCode == '0301'){
+              if (params.row.tempCode == '0101' || params.row.tempCode == '0104' || params.row.tempCode == '0105' || params.row.tempCode == '0301') {
                 isDisabled = true
               }
               return h('div', [
@@ -2141,6 +2141,10 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message);
             this.init()
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
           }
           this.showModal.bindingMobilePhone = false
         })
@@ -2160,7 +2164,7 @@
           } else {
             this.$message.info({
               content: response.data.message
-            });
+            })
           }
           this.showModal.bindingEmail = false
         })
