@@ -206,9 +206,10 @@
   import axios from '@/util/axiosInterceptor'
   import debounce from 'throttle-debounce/debounce'
   import '@/assets/iconfont/backend/iconfont.js'
+
   export default {
     name: 'back',
-    data(){
+    data() {
       return {
         // pageInfo用于存储当前页面信息
         pageInfo: {
@@ -237,7 +238,7 @@
             }, {
               subName: '镜像',
               type: 'mirror'
-            }, {subName: '弹性伸缩',type:'Elastic'},/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            }, {subName: '弹性伸缩', type: 'Elastic'}, /*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
@@ -306,12 +307,12 @@
         yunweiInfo: []
       }
     },
-    beforeRouteEnter(to, from, next){
+    beforeRouteEnter(to, from, next) {
       // 获取所有后台需要的基本信息
       // 获取用户信息
-      var userInfo = axios.get('user/GetUserInfo.do')
+      var userInfo = axios.get('user/GetUserInfo.do', {params: {}})
       // 获取zone信息
-      var zoneList = axios.get('information/zone.do')
+      var zoneList = axios.get('information/zone.do', {params: {}})
       Promise.all([userInfo, zoneList]).then(values => {
         $store.commit('setZoneList', values[1].data.result)
         if (values[0].status == 200 && values[0].data.status == 1) {
@@ -324,7 +325,7 @@
         next()
       })
     },
-    created(){
+    created() {
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
@@ -339,7 +340,7 @@
       //   console.log(response)
       // })
     },
-    mounted(){
+    mounted() {
       // mounted时期根据路径修改选中的menu
       this.pageInfo.path = this.$router.history.current.name
       for (var item of this.main) {
@@ -355,13 +356,13 @@
       }
     },
     methods: {
-      QME(){
+      QME() {
         this.$refs.qq.style.width = '231px'
       },
-      QML(){
+      QML() {
         this.$refs.qq.style.width = '0px'
       },
-      notice(){
+      notice() {
         this.$http.get('user/getEventNum.do', {
           params: {
             isRead: '0'
@@ -388,7 +389,7 @@
       }),
 
       // 进入三级栏
-      handME(){
+      handME() {
         this.pageInfo.enter3Hover = true
       },
 
@@ -406,7 +407,7 @@
       }),
 
       // 进入三级路由，记录二级路由入口
-      push(pType, sType){
+      push(pType, sType) {
         this.pageInfo.static = true
         this.pageInfo.selectItem = pType
         this.pageInfo.sType = sType
@@ -429,14 +430,14 @@
           this.$router.push(sType)
         }
       },
-      go(path){
+      go(path) {
         if (path == 'exit') {
           this.exit()
           return
         }
         this.$router.push(path)
       },
-      pane(pane){
+      pane(pane) {
         var paneStatue = {
           vpc: 'VPC',
           vpn: 'remote'
@@ -450,7 +451,7 @@
         this.$store.commit('setPane', paneStatue)
       },
 
-      menuStyle(type){
+      menuStyle(type) {
         if (this.$refs[type]) {
           var clientWidth = this.$refs[`${type}-sub`][0].clientWidth || this.$refs[`${type}-sub`][0].getBoundingClientRect().width
           var cw = this.$refs[type][0].clientWidth
@@ -462,7 +463,7 @@
           }
         }
       },
-      toggleZone(zoneId){
+      toggleZone(zoneId) {
         // 切换默认区域
         axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
         })
@@ -472,7 +473,7 @@
           }
         }
       },
-      exit(){
+      exit() {
         axios.get('user/logout.do').then(response => {
           $store.commit('setAuthInfo', {authInfo: null, userInfo: null})
           this.$router.push('/ruicloud/login')
@@ -481,14 +482,14 @@
     },
     computed: mapState({
       // show代表是否显示three menu,static代表是否固定three menu
-      thrShow(){
+      thrShow() {
         return {
           show: this.pageInfo.hoverItem != '',
           static: this.pageInfo.static
         }
       },
       // 计算选中条样式
-      lineStyle(){
+      lineStyle() {
         if (this.$refs[this.pageInfo.hoverItem]) {
           var style = {
             left: `${this.$refs[this.pageInfo.hoverItem][0].offsetLeft}px`,
@@ -510,7 +511,7 @@
       },
       userInfo: state => state.userInfo,
       zone: state => state.zone,
-      zoneList(){
+      zoneList() {
         var map = {
           '/ruicloud/GpuList': [1],
           '/ruicloud/host': [0],
@@ -520,15 +521,15 @@
           return type.indexOf(zone.gpuserver) > -1
         })
         if (!(zoneList.some(zone => {
-            return zone.zoneid == this.zone.zoneid
-          }))) {
+          return zone.zoneid == this.zone.zoneid
+        }))) {
           this.$store.state.zone = zoneList[0]
         }
         return zoneList
       }
     }),
     watch: {
-      '$route'(to, from){
+      '$route'(to, from) {
         // 对路由变化作出响应...
         this.pageInfo.hoverItem = this.pageInfo.selectItem = this.sType = ''
         this.pageInfo.static = false
