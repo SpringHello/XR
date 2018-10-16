@@ -724,10 +724,11 @@
                   :on-success="uploadHeadPhotoSuccess">
                   <div v-if="uploadHeadPhoto==''"
                        style="padding: 172px 0px;margin-bottom: 32px;height: 374px;color: #999;">
-                    <img src="../../assets/img/usercenter/uc-add.png"/>
+                    <img v-show="percent==0" src="../../assets/img/usercenter/uc-add.png"/>
+                    <Progress v-show="percent>0" :percent="percent"></Progress>
                   </div>
                   <div style="height: 374px;display: flex;justify-content: center;align-items: center" v-else>
-                    <img :src="uploadHeadPhoto">
+                    <img :src="uploadHeadPhoto" style="height: 374px;">
                   </div>
                   <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;padding-top: 20px;background: #FFF;text-align: left">
                     上传文件</p>
@@ -1207,6 +1208,7 @@
           setHeadPhoto: false,
           modifyOtherInfo: false
         },
+        percent: 0,
         headPhotoType: 'system',
         systemPhotoGroup: [],
         selectedSystemPhoto: '',
@@ -2846,7 +2848,15 @@
       },
       uploadHeadPhotoSuccess(response) {
         if (response.status == 1) {
-          this.uploadHeadPhoto = response.result
+          let s = setInterval(() => {
+            this.percent++
+            if (this.percent > 100) {
+              this.uploadHeadPhoto = response.result
+              this.$Message.info('上传成功');
+              window.clearInterval(s)
+              this.percent = 0
+            }
+          }, 20)
         }
       },
       legalPersonIDFront(response) {
