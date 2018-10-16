@@ -20,7 +20,7 @@
               <Table :columns="settingList" :data="settingData"></Table>
             </div>
           </TabPane>
-          <TabPane label="伸缩组">
+          <TabPane :label="Groups">
             <div>
               <Button type="primary" @click="newAddTelescopic = true" style="margin-bottom: 15px;">新建</Button>
               <Table :columns="telescopicList" :data="telescopicData"></Table>
@@ -213,9 +213,21 @@
       callback();
     }
   }
+
   export default{
+
     data(){
       return{
+
+        Groups:h=>{
+          return h('div',{on:{
+            click:()=>{
+              this.selectAllTelescopic();
+              this.getAllSelect();
+              this.isNotCreateElastic();
+            }
+            }},'伸缩组')
+       },
         //启动配置table
         settingList:[
           {
@@ -551,10 +563,24 @@
           if(res.status == 200 && res.data.status == 1){
             this.settingData = res.data.list;
             this.newAddTelescopicList.configureList = res.data.list;
+            return res.data.list;
           }else {
             this.$Message.info('平台出小差了');
           }
         })
+      },
+
+      //是否创建了启动配置
+      isNotCreateElastic(){
+        if(!this.selectAllElastic()){
+          this.$Modal.info({
+            title:'提示',
+            content:'<p>您还没有创建启动配置，请先<a style="color: #2A99F2;" href="newAddElastic">创建启动配置</a></p>',
+            onOk:()=>{
+              this.$router.push({path:'newAddElastic'});
+            }
+          })
+        }
       },
 
       deleteElastic(id){
@@ -567,7 +593,7 @@
             this.$Message.success('删除成功');
             this.selectAllElastic();
           }else {
-            this.$Message.info('删除失败');
+            this.$Message.info(res.data.message);
           }
         })
         },
@@ -596,6 +622,7 @@
                 this.newAddTelescopic = false;
                 this.selectAllTelescopic();
               }else{
+                this.newAddTelescopic = false;
                 this.$Message.info(res.data.message);
                 this.selectAllTelescopic();
               }
@@ -630,22 +657,22 @@
 
       //获取负载均衡
       getAllSelect(){
-          let balancing = this.$http.get('loadbalance/listLoadBalanceRole.do');
-         Promise.all([balancing]).then(res =>{
-           if(res.status == 200 && res.data.status == 1){
-             if(res[0].data.result.publicLoadbalance.length != 0 || res[0].data.result.internalLoadbalance.length != 0 ){
-               this.newAddTelescopicList.balancingList = res[0].data.result.publicLoadbalance.concat(res[0].data.result.internalLoadbalance);
-             }else {
-               this.$Modal.confirm({
-                 title:'提示',
-                 content:'<p>您还没有创建负载均衡，请先<span style="color: #2A99F2;cursor: pointer;" @click=`$router.push({path:"balance"})`>创建负载均衡</span></p>',
-                 onOk:()=>{
-                   this.$router.push({path:'balance'});
-                 }
-               })
-             }
-           }
-          })
+         this.$http.get('loadbalance/listLoadBalanceRole.do',{
+          }).then(res =>{
+            if(res.status == 200 && res.data.status == 1){
+              if(res.data.result.publicLoadbalance.length != 0 || res.data.result.internalLoadbalance.length != 0 ){
+                this.newAddTelescopicList.balancingList = res.data.result.publicLoadbalance.concat(res.data.result.internalLoadbalance);
+              }else {
+                this.$Modal.info({
+                  title:'提示',
+                  content:'<p>您还没有创建负载均衡，请先<a style="color: #2A99F2;" href="balance">创建负载均衡</a></p>',
+                  onOk:()=>{
+                    this.$router.push({path:'balance'});
+                  }
+                })
+              }
+            }
+          });
         },
 
 
@@ -689,14 +716,27 @@
             this.$Message.info('平台出小差了');
           }
         })
-      }
+      },
+
+      refresh(){
+        this.selectAllElastic();
+        this.selectAllTelescopic();
+      },
     },
     created(){
       this.selectAllElastic();
       this.selectAllTelescopic();
-      this.getAllSelect();
+      // this.getAllSelect();
       // this.getSelect();
       // this.test();
+    },
+    watch: {
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
+      }
     }
   }
 </script>
