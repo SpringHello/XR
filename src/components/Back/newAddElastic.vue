@@ -129,9 +129,10 @@
               </ul>
               <p style="color: #666666;margin: 10px 0 20px 0;">为了使主机创建完成后直接可用，强烈建议您将业务应用部署在自定义镜像中</p>
               <div v-if="mirrorIndex == 0">
-                <Select v-model="mirrorName" style="width:200px">
+                <Select v-model="mirrorName" style="width:200px" v-if="mirrorList.length !=0">
                   <Option v-for="item in mirrorList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
+                <div v-else class="mirror">暂无镜像</div>
               </div>
               <div v-if="mirrorIndex == 1">
                 <Dropdown v-for="(item,index) in systemMirror.publicList"  :key="item.ostypeid" @on-click="setOs">
@@ -394,10 +395,6 @@
         mirrorIndex:0,
         mirrorName:'',
         mirrorList:[
-          {
-            value:'自定义镜像',
-            label:'自定义镜像'
-          }
         ],
 
         //系统镜像
