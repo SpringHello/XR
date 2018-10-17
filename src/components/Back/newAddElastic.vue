@@ -233,7 +233,7 @@
         <br>
         <hr color="#D8D8D8" size="1">
         <br>
-        <Button type="ghost" @click="upper" v-if="hostSpecification.nextIndex!=1">上一步</Button>
+        <Button type="ghost" @click="upper" v-if="hostSpecification.nextIndex!=1" style="margin-right: 10px;">上一步</Button>
         <Button type="primary" @click="next" v-if="hostSpecification.nextIndex < 4">下一步</Button>
         <Button type="primary" @click="okSetting" v-else>完成设置</Button>
       </div>

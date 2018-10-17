@@ -329,7 +329,8 @@
                   },
                   on: {
                     click: () => {
-                      this.ownMirrorCreathost(params.row)
+                      sessionStorage.setItem('templateId',params.row.templateid);
+                      this.ownMirrorCreathost(params.row);
                     }
                   }
                 }, '生成主机'),
@@ -517,6 +518,8 @@
           return
         }
         var item = this.select;
+
+        sessionStorage.setItem('templateId',item.templateid);
         if(this.$store.state.zone.zonename.indexOf("GPU") != -1){
           this.$router.push({
             path: 'buy/bgpu',
