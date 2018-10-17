@@ -2168,7 +2168,7 @@
         this.$http.get(url, {
           params: {
             code: this.bindingEmailForm.newVerificationCode,
-            email: this.bindingEmailForm.newPhone
+            email: this.bindingEmailForm.newEmail
           }
         }).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
