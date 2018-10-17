@@ -2471,21 +2471,90 @@
       setNewPasswordStepTwo() {
         this.$refs.setNewPassword.validateField('verificationCode', (text) => {
           if (text == '') {
-            this.setNewPasswordForm.step = 1
+            let params = {}
+            if (this.setNewPasswordForm.verificationMode == 'phone') {
+              params = {
+                aim: this.userInfo.phone,
+                isemail: 0,
+                vailCode: this.setNewPasswordForm.pictureCode
+              }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                vailCode: this.setNewPasswordForm.pictureCode
+              }
+            }
+            let url = 'user/judgeCode.do'
+            axios.get(url, {params}).then(res => {
+              if (res.data.status == 1 && res.status == 200) {
+                this.setNewPasswordForm.step = 1
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         })
       },
       bindingMobilePhoneStepTwo() {
         this.$refs.bindingMobilePhone.validateField('verificationCode', (text) => {
           if (text == '') {
-            this.bindingMobilePhoneForm.step = 1
+            let params = {}
+            if (this.bindingMobilePhoneForm.verificationMode == 'phone') {
+              params = {
+                aim: this.userInfo.phone,
+                isemail: 0,
+                vailCode: this.bindingMobilePhoneForm.pictureCode
+              }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                vailCode: this.bindingMobilePhoneForm.pictureCode
+              }
+            }
+            let url = 'user/judgeCode.do'
+            axios.get(url, {params}).then(res => {
+              if (res.data.status == 1 && res.status == 200) {
+                this.bindingMobilePhoneForm.step = 1
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         })
       },
       bindingEmailStepTwo() {
         this.$refs.bindingEmail.validateField('verificationCode', (text) => {
           if (text == '') {
-            this.bindingEmailForm.step = 1
+            let params = {}
+            if (this.bindingEmailForm.verificationMode == 'phone') {
+              params = {
+                aim: this.userInfo.phone,
+                isemail: 0,
+                vailCode: this.bindingEmailForm.pictureCode
+              }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                vailCode: this.bindingEmailForm.pictureCode
+              }
+            }
+            let url = 'user/judgeCode.do'
+            axios.get(url, {params}).then(res => {
+              if (res.data.status == 1 && res.status == 200) {
+                this.bindingEmailForm.step = 1
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         })
       },
