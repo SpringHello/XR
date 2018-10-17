@@ -879,7 +879,7 @@
                   this.$Message.success(res.data.message);
                   this.showModal.mirror = false;
                 } else {
-                  this.$Message.info('镜像创建出小差了');
+                  this.$Message.info(res.data.message);
                 }
               })
             }
