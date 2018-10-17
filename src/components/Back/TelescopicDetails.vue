@@ -1697,7 +1697,8 @@
             this.alarmStrategy.newAddStrategy = false;
             this.getScaleAlarmStrategy();
           }else{
-            this.$Message.info('新建告警策略失败');
+            this.$Message.info(res.data.message);
+            this.getScaleAlarmStrategy();
           }
         })
       },
@@ -1725,7 +1726,8 @@
             this.updateStrategy.newAddStrategy = false;
             this.getScaleAlarmStrategy();
           }else{
-            this.$Message.info('平台出小差了');
+            this.$Message.info(res.data.message);
+            this.getScaleAlarmStrategy();
           }
         })
       },
@@ -1742,6 +1744,7 @@
             this.getScaleAlarmStrategy();
           }else{
             this.$Message.info(res.data.message);
+            this.getScaleAlarmStrategy();
           }
         })
       },
@@ -1825,6 +1828,7 @@
             this.$Modal.confirm({
              content:'<p>定时任务创建失败，您可以<span style="color: #2A99F2">联系客服</span>，或重试</p>'
             })
+            this.selectTask();
           }
         })
       },
@@ -1872,7 +1876,13 @@
           monthStartCount:this.updateTimedTask.monthStartNumber.toString(),
           monthEndCount:this.updateTimedTask.monthEndNumber.toString(),
         }).then(res =>{
-
+            if(res.status == 200 && res.data.status ==1){
+              this.$Message.success('修改定时任务成功');
+              this.selectTask();
+            }else{
+              this.$Message.info(res.data.message);
+              this.selectTask();
+            }
         })
       },
 
@@ -1889,7 +1899,8 @@
             this.$Message.success('删除定时任务成功');
             this.selectTask();
           }else{
-            this.$Message.info('删除定时任务出小差啦');
+            this.$Message.info(res.data.message);
+            this.selectTask();
           }
         })
       },
@@ -2016,7 +2027,7 @@
             this.$Message.success('加入云主机成功');
             this.moveCloudHost = false;
           }else{
-            this.$Message.info('加入云主机出小差了');
+            this.$Message.info(res.data.message);
           }
         })
       },

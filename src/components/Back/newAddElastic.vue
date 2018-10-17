@@ -432,7 +432,7 @@
         dataIndex:0,
 
         //容量
-        diskSize:20,
+        diskSize:0,
         single:false,
 
         //带宽
