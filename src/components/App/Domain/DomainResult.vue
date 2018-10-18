@@ -34,7 +34,8 @@
               </Checkbox>
             </CheckboxGroup>
           </div>
-          <li v-for="(item,index) in Results" :key="index" v-show="index<=num">
+          <!--v-show="index<=num"-->
+          <li v-for="(item,index) in Results" :key="index">
             <p>{{item.name}}
               <button v-show="item.isRes=='available'">未注册</button>
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
@@ -45,9 +46,9 @@
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
-          <button class="showAll" @click="exhibition" v-show="isShowAll">显示全部
-            <Icon type="ios-arrow-down"></Icon>
-          </button>
+          <!--<button class="showAll" @click="exhibition" v-show="isShowAll">显示全部-->
+          <!--<Icon type="ios-arrow-down"></Icon>-->
+          <!--</button>-->
         </div>
       </div>
       <div id="result-right">
@@ -110,6 +111,8 @@
         addNum: '0',
         payMoney: 0,
 
+        domName: '',
+
       }
     },
     methods: {
@@ -161,6 +164,10 @@
           return
         } else {
           if (this.buyLists.length != 0) {
+            this.buyLists.forEach(e => {
+              this.domName += e.name + ','
+            })
+            sessionStorage.setItem('domName', this.domName)
             this.$router.push('DomainInfoTemplate')
           } else {
             return this.$Message.info('请添加商品到清单')
@@ -182,7 +189,15 @@
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
-          this.Results.unshift(res.data.data.results[0])
+          console.log(this.Results)
+          console.log(res)
+          if (this.Results.every(item => {
+              return item.name != res.data.data.results[0].name
+            })) {
+            this.Results.unshift(res.data.data.results[0])
+          } else {
+
+          }
         })
       }
     }
