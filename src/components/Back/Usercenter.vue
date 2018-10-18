@@ -819,7 +819,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.setNewPassword = false">取消</Button>
-        <Button type="primary" v-if="setNewPasswordForm.step == 0" @click="setNewPasswordStepTwo">下一步</Button>
+        <Button type="primary" v-if="setNewPasswordForm.step == 0" @click="setNewPasswordStepTwo" :disabled="setNewPasswordDisabled">下一步</Button>
         <Button type="primary" v-if="setNewPasswordForm.step == 1">完成</Button>
       </div>
     </Modal>
@@ -915,7 +915,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.bindingMobilePhone = false">取消</Button>
-        <Button type="primary" v-if="bindingMobilePhoneForm.step == 0" @click="bindingMobilePhoneStepTwo">下一步</Button>
+        <Button type="primary" v-if="bindingMobilePhoneForm.step == 0" @click="bindingMobilePhoneStepTwo" :disabled="getBindingMobilePhoneDisabled">下一步</Button>
         <Button type="primary" v-if="bindingMobilePhoneForm.step == 1" @click="bindMobilePhone">完成</Button>
       </div>
     </Modal>
@@ -983,7 +983,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.bindingEmail = false">取消</Button>
-        <Button type="primary" v-if="bindingEmailForm.step == 0" @click="bindingEmailStepTwo">下一步</Button>
+        <Button type="primary" v-if="bindingEmailForm.step == 0" @click="bindingEmailStepTwo" :disabled="getBindingEmailDisabled">下一步</Button>
         <Button type="primary" v-if="bindingEmailForm.step == 1" @click="bindEmail">完成</Button>
       </div>
     </Modal>
@@ -1183,9 +1183,6 @@
       const validaRegisteredBusinessLicenseNumber = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('营业执照号码不能为空'));
-        }
-        if (!(/^[0-9]*$/.test(value))) {
-          callback(new Error('请输入正确的营业执照号码'));
         } else {
           callback()
         }
