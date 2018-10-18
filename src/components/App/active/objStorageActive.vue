@@ -383,6 +383,7 @@ export default {
 
 <style rel="stylesheet/less" lang="less" scoped>
 .objstorage-active {
+  li {list-style: none}
   font-family: PingFangSC-Regular;
   color: #333;
   overflow: hidden;
