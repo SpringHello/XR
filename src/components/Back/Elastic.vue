@@ -563,7 +563,6 @@
           if(res.status == 200 && res.data.status == 1){
             this.settingData = res.data.list;
             this.newAddTelescopicList.configureList = res.data.list;
-            return res.data.list;
           }else {
             this.$Message.info('平台出小差了');
           }
@@ -572,7 +571,7 @@
 
       //是否创建了启动配置
       isNotCreateElastic(){
-        if(!this.selectAllElastic()){
+        if(this.newAddTelescopicList.configureList.length == 0 || this.newAddTelescopicList.configureList == undefined){
           this.$Modal.info({
             title:'提示',
             content:'<p>您还没有创建启动配置，请先<a style="color: #2A99F2;" href="newAddElastic">创建启动配置</a></p>',

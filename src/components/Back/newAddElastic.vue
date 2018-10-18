@@ -28,7 +28,7 @@
         <p style="margin: 20px 0;font-size: 14px;color: #999999;">提示：启动配置之时模板，创建启动配置不收费，按照启动配置增加的主机才按照实时价格计费。</p>
         <!--第一步-->
         <div style="width: 700px;" v-show="hostSpecification.nextIndex == 1">
-          <Form ref="config" :model="config" :rules="configValidate" :label-width="70">
+          <Form ref="config" :model="config" :rules="configValidate" :label-width="80">
             <FormItem label="配置名称" prop="configName">
               <Input v-model="config.configName" style="width: 317px"></Input>
               <p style="color: #666666;margin-top:10px;">请输入不超过16位字符名称，支持中文、字母与数字</p>
@@ -129,9 +129,10 @@
               </ul>
               <p style="color: #666666;margin: 10px 0 20px 0;">为了使主机创建完成后直接可用，强烈建议您将业务应用部署在自定义镜像中</p>
               <div v-if="mirrorIndex == 0">
-                <Select v-model="mirrorName" style="width:200px">
+                <Select v-model="mirrorName" style="width:200px" v-if="mirrorList.length !=0">
                   <Option v-for="item in mirrorList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
+                <div v-else class="mirror">暂无镜像</div>
               </div>
               <div v-if="mirrorIndex == 1">
                 <Dropdown v-for="(item,index) in systemMirror.publicList"  :key="item.ostypeid" @on-click="setOs">
@@ -232,7 +233,7 @@
         <br>
         <hr color="#D8D8D8" size="1">
         <br>
-        <Button type="ghost" @click="upper" v-if="hostSpecification.nextIndex!=1">上一步</Button>
+        <Button type="ghost" @click="upper" v-if="hostSpecification.nextIndex!=1" style="margin-right: 10px;">上一步</Button>
         <Button type="primary" @click="next" v-if="hostSpecification.nextIndex < 4">下一步</Button>
         <Button type="primary" @click="okSetting" v-else>完成设置</Button>
       </div>
@@ -394,10 +395,6 @@
         mirrorIndex:0,
         mirrorName:'',
         mirrorList:[
-          {
-            value:'自定义镜像',
-            label:'自定义镜像'
-          }
         ],
 
         //系统镜像
@@ -424,10 +421,6 @@
         //数据盘类型
         dataDiskType:[
           {
-            value:'SATA',
-            label:'sata'
-          },
-          {
             value:'SAS',
             label:'sas'
           },
@@ -440,7 +433,7 @@
 
         //容量
         diskSize:20,
-        single:true,
+        single:false,
 
         //带宽
         bandWidth:1,
@@ -494,6 +487,23 @@
 
       //下一步
       next(){
+        if(this.hostSpecification.nextIndex == 3){
+          if(this.mirrorIndex == 0){
+            if(this.mirrorName == ''){
+              this.$Modal.info({
+                title:'提示',
+                content:'请选择一个镜像'
+              })
+            }
+          }else{
+            if(this.systemMirror.publicList[this.systemIndex].selectSystem == ''){
+              this.$Modal.info({
+                title:'提示',
+                content:'请选择一个镜像'
+              })
+            }
+          }
+        }
         let params ={
           hostFormat:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU+'核'+this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory+'G',
           name:this.config.configName,
@@ -857,7 +867,6 @@
       display: inline-block;
       line-height: 32px;
       color: #333333;
-      font-size: 14px;
     }
   }
   .nav_item{

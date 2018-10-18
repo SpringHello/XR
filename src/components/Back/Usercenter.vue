@@ -28,10 +28,10 @@
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
-                    <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0">去绑定</span></li>
-                    <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0">修改</span></li>
-                    <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0">去绑定</span></li>
-                    <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0">修改</span></li>
+                    <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
+                    <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
+                    <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
+                    <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
                     <li v-if="!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
@@ -359,7 +359,7 @@
                   <FormItem label="所属行业" prop="industry">
                     <Select v-model="notAuth.companyAuthForm.industry" style="width: 300px;">
                       <Option v-for="(item,index) in notAuth.companyAuthForm.industryOptions" :key="item.key"
-                              :value="item.key">
+                              :value="item.label">
                         {{item.label}}
                       </Option>
                     </Select>
@@ -798,10 +798,10 @@
             </div>
             <div v-show="setNewPasswordForm.step == 1">
               <FormItem label="输入新的密码" prop="newPassword" style="width: 100%">
-                <Input v-model="setNewPasswordForm.newPassword" placeholder="请输入新密码" style="width:240px"></Input>
+                <Input type="password" v-model="setNewPasswordForm.newPassword" placeholder="请输入新密码" style="width:240px"></Input>
               </FormItem>
               <FormItem label="确认新密码" prop="confirmPassword" style="width: 100%">
-                <Input v-model="setNewPasswordForm.confirmPassword" placeholder="确认新密码" style="width:240px"></Input>
+                <Input type="password" v-model="setNewPasswordForm.confirmPassword" placeholder="确认新密码" style="width:240px"></Input>
               </FormItem>
             </div>
           </Form>
@@ -819,7 +819,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.setNewPassword = false">取消</Button>
-        <Button type="primary" v-if="setNewPasswordForm.step == 0" @click="setNewPasswordStepTwo">下一步</Button>
+        <Button type="primary" v-if="setNewPasswordForm.step == 0" @click="setNewPasswordStepTwo" :disabled="setNewPasswordDisabled">下一步</Button>
         <Button type="primary" v-if="setNewPasswordForm.step == 1">完成</Button>
       </div>
     </Modal>
@@ -833,13 +833,13 @@
         <Form :model="resetPasswordForm" label-position="top" :rules="resetPasswordruleValidate" style="width: 300px;"
               ref="resetPassword">
           <FormItem label="当前密码" prop="oldPassword">
-            <Input v-model="resetPasswordForm.oldPassword"></Input>
+            <Input type="password" v-model="resetPasswordForm.oldPassword"></Input>
           </FormItem>
           <FormItem label="新的密码" prop="newPassword">
-            <Input v-model="resetPasswordForm.newPassword"></Input>
+            <Input type="password" v-model="resetPasswordForm.newPassword"></Input>
           </FormItem>
           <FormItem label="确认密码" prop="confirmPassword">
-            <Input v-model="resetPasswordForm.confirmPassword"></Input>
+            <Input type="password" v-model="resetPasswordForm.confirmPassword"></Input>
           </FormItem>
         </Form>
       </div>
@@ -915,7 +915,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.bindingMobilePhone = false">取消</Button>
-        <Button type="primary" v-if="bindingMobilePhoneForm.step == 0" @click="bindingMobilePhoneStepTwo">下一步</Button>
+        <Button type="primary" v-if="bindingMobilePhoneForm.step == 0" @click="bindingMobilePhoneStepTwo" :disabled="getBindingMobilePhoneDisabled">下一步</Button>
         <Button type="primary" v-if="bindingMobilePhoneForm.step == 1" @click="bindMobilePhone">完成</Button>
       </div>
     </Modal>
@@ -983,7 +983,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.bindingEmail = false">取消</Button>
-        <Button type="primary" v-if="bindingEmailForm.step == 0" @click="bindingEmailStepTwo">下一步</Button>
+        <Button type="primary" v-if="bindingEmailForm.step == 0" @click="bindingEmailStepTwo" :disabled="getBindingEmailDisabled">下一步</Button>
         <Button type="primary" v-if="bindingEmailForm.step == 1" @click="bindEmail">完成</Button>
       </div>
     </Modal>
@@ -1183,9 +1183,6 @@
       const validaRegisteredBusinessLicenseNumber = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('营业执照号码不能为空'));
-        }
-        if (!(/^[0-9]*$/.test(value))) {
-          callback(new Error('请输入正确的营业执照号码'));
         } else {
           callback()
         }
@@ -2067,7 +2064,7 @@
 
             break
           case 'companyInfo':
-
+            this.notAuth.companyAuthForm.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
             break
           case 'key':
             this.listKey()
@@ -2168,7 +2165,7 @@
         this.$http.get(url, {
           params: {
             code: this.bindingEmailForm.newVerificationCode,
-            email: this.bindingEmailForm.newPhone
+            email: this.bindingEmailForm.newEmail
           }
         }).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
@@ -2214,9 +2211,6 @@
           }
         })
       },
-      modifyJobInfo() {
-      },
-
       // 重新提交申请
       resubmit() {
         axios.get('user/GetUserInfo.do').then(response => {
@@ -2391,21 +2385,27 @@
             var params = {
               authType: this.notAuth.companyAuthForm.certificateType,
               name: this.notAuth.companyAuthForm.name,
+              belongIndustry: this.notAuth.companyAuthForm.industry,
               linkmanName: this.notAuth.companyAuthForm.contactPerson,
               trade: this.notAuth.companyAuthForm.industry,
               phone: this.notAuth.companyAuthForm.contact,
+              companyLinkManPhone: this.notAuth.companyAuthForm.contact,
               companyCardURL: this.notAuth.companyAuthForm.combine,
               idCard: this.notAuth.companyAuthForm.agentManID,
               contectPhone: this.notAuth.companyAuthForm.linkManPhone,
               phoneCode: this.notAuth.companyAuthForm.verificationCode,
               businessLicenseNumber: this.notAuth.companyAuthForm.businessLicenseNumber,
-              companyLegalName: this.notAuth.companyAuthForm.linkManName,
+              legalPersonName: this.notAuth.companyAuthForm.linkManName,
               companyLegalIdcardNumber: this.notAuth.companyAuthForm.linkManNameID,
               companyLegalIdcardUrl: this.notAuth.companyAuthForm.legalPersonIDFront,
               companyLegalIdcardBackUrl: this.notAuth.companyAuthForm.legalPersonIDBack,
               operatorIdcardUrl: this.notAuth.companyAuthForm.agentIDFront,
               operatorIdcardBackUrl: this.notAuth.companyAuthForm.agentIDBack,
-              operatorIdcardBackByHandUrl: this.notAuth.companyAuthForm.agentIDInHand
+              operatorIdcardBackByHandUrl: this.notAuth.companyAuthForm.agentIDInHand,
+              legalPersonIDCard: this.notAuth.companyAuthForm.linkManNameID,
+              agentName: this.notAuth.companyAuthForm.agentName,
+              agentPhone: this.notAuth.companyAuthForm.linkManPhone,
+              agentIDCard: this.notAuth.companyAuthForm.agentManID,
             }
             axios.post('user/enterpriseAttest.do', params).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -2436,7 +2436,6 @@
           }
         })
         if (regPhone && regPhone) {
-          this.notAuth.companyAuthForm.codePlaceholder = '验证码发送中'
           axios.get('user/code.do', {
             params: {
               aim: this.notAuth.companyAuthForm.linkManPhone,
@@ -2444,19 +2443,18 @@
               vailCode: this.notAuth.companyAuthForm.imgCode,
             }
           }).then(response => {
-            this.notAuth.companyAuthForm.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-            // 发送倒计时
-            let countdown = 60
-            this.notAuth.companyAuthForm.codePlaceholder = '60s'
-            var inter = setInterval(() => {
-              countdown--
-              this.notAuth.companyAuthForm.codePlaceholder = countdown + 's'
-              if (countdown == 0) {
-                clearInterval(inter)
-                this.notAuth.companyAuthForm.codePlaceholder = '发送验证码'
-              }
-            }, 1000)
             if (response.status == 200 && response.data.status == 1) {
+              // 发送倒计时
+              let countdown = 60
+              this.notAuth.companyAuthForm.codePlaceholder = '60s'
+              var inter = setInterval(() => {
+                countdown--
+                this.notAuth.companyAuthForm.codePlaceholder = countdown + 's'
+                if (countdown == 0) {
+                  clearInterval(inter)
+                  this.notAuth.companyAuthForm.codePlaceholder = '发送验证码'
+                }
+              }, 1000)
               this.$Message.success({
                 content: '验证码发送成功',
                 duration: 5
@@ -2471,21 +2469,90 @@
       setNewPasswordStepTwo() {
         this.$refs.setNewPassword.validateField('verificationCode', (text) => {
           if (text == '') {
-            this.setNewPasswordForm.step = 1
+            let params = {}
+            if (this.setNewPasswordForm.verificationMode == 'phone') {
+              params = {
+                aim: this.userInfo.phone,
+                isemail: 0,
+                code: this.setNewPasswordForm.verificationCode
+              }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                code: this.setNewPasswordForm.verificationCode
+              }
+            }
+            let url = 'user/judgeCode.do'
+            axios.get(url, {params}).then(res => {
+              if (res.data.status == 1 && res.status == 200) {
+                this.setNewPasswordForm.step = 1
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         })
       },
       bindingMobilePhoneStepTwo() {
         this.$refs.bindingMobilePhone.validateField('verificationCode', (text) => {
           if (text == '') {
-            this.bindingMobilePhoneForm.step = 1
+            let params = {}
+            if (this.bindingMobilePhoneForm.verificationMode == 'phone') {
+              params = {
+                aim: this.userInfo.phone,
+                isemail: 0,
+                code: this.bindingMobilePhoneForm.verificationCode
+              }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                code: this.bindingMobilePhoneForm.verificationCode
+              }
+            }
+            let url = 'user/judgeCode.do'
+            axios.get(url, {params}).then(res => {
+              if (res.data.status == 1 && res.status == 200) {
+                this.bindingMobilePhoneForm.step = 1
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         })
       },
       bindingEmailStepTwo() {
         this.$refs.bindingEmail.validateField('verificationCode', (text) => {
           if (text == '') {
-            this.bindingEmailForm.step = 1
+            let params = {}
+            if (this.bindingEmailForm.verificationMode == 'phone') {
+              params = {
+                aim: this.userInfo.phone,
+                isemail: 0,
+                code: this.bindingEmailForm.verificationCode
+              }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                code: this.bindingEmailForm.verificationCode
+              }
+            }
+            let url = 'user/judgeCode.do'
+            axios.get(url, {params}).then(res => {
+              if (res.data.status == 1 && res.status == 200) {
+                this.bindingEmailForm.step = 1
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         })
       },
