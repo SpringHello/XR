@@ -2064,7 +2064,7 @@
 
             break
           case 'companyInfo':
-
+            this.notAuth.companyAuthForm.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
             break
           case 'key':
             this.listKey()
@@ -2444,7 +2444,6 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.notAuth.companyAuthForm.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               // 发送倒计时
               let countdown = 60
               this.notAuth.companyAuthForm.codePlaceholder = '60s'
