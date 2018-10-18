@@ -798,10 +798,10 @@
             </div>
             <div v-show="setNewPasswordForm.step == 1">
               <FormItem label="输入新的密码" prop="newPassword" style="width: 100%">
-                <Input v-model="setNewPasswordForm.newPassword" placeholder="请输入新密码" style="width:240px"></Input>
+                <Input type="password" v-model="setNewPasswordForm.newPassword" placeholder="请输入新密码" style="width:240px"></Input>
               </FormItem>
               <FormItem label="确认新密码" prop="confirmPassword" style="width: 100%">
-                <Input v-model="setNewPasswordForm.confirmPassword" placeholder="确认新密码" style="width:240px"></Input>
+                <Input type="password" v-model="setNewPasswordForm.confirmPassword" placeholder="确认新密码" style="width:240px"></Input>
               </FormItem>
             </div>
           </Form>
@@ -833,13 +833,13 @@
         <Form :model="resetPasswordForm" label-position="top" :rules="resetPasswordruleValidate" style="width: 300px;"
               ref="resetPassword">
           <FormItem label="当前密码" prop="oldPassword">
-            <Input v-model="resetPasswordForm.oldPassword"></Input>
+            <Input type="password" v-model="resetPasswordForm.oldPassword"></Input>
           </FormItem>
           <FormItem label="新的密码" prop="newPassword">
-            <Input v-model="resetPasswordForm.newPassword"></Input>
+            <Input type="password" v-model="resetPasswordForm.newPassword"></Input>
           </FormItem>
           <FormItem label="确认密码" prop="confirmPassword">
-            <Input v-model="resetPasswordForm.confirmPassword"></Input>
+            <Input type="password" v-model="resetPasswordForm.confirmPassword"></Input>
           </FormItem>
         </Form>
       </div>
@@ -2211,9 +2211,6 @@
           }
         })
       },
-      modifyJobInfo() {
-      },
-
       // 重新提交申请
       resubmit() {
         axios.get('user/GetUserInfo.do').then(response => {
@@ -2441,19 +2438,19 @@
               vailCode: this.notAuth.companyAuthForm.imgCode,
             }
           }).then(response => {
-            this.notAuth.companyAuthForm.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-            // 发送倒计时
-            let countdown = 60
-            this.notAuth.companyAuthForm.codePlaceholder = '60s'
-            var inter = setInterval(() => {
-              countdown--
-              this.notAuth.companyAuthForm.codePlaceholder = countdown + 's'
-              if (countdown == 0) {
-                clearInterval(inter)
-                this.notAuth.companyAuthForm.codePlaceholder = '发送验证码'
-              }
-            }, 1000)
             if (response.status == 200 && response.data.status == 1) {
+              this.notAuth.companyAuthForm.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+              // 发送倒计时
+              let countdown = 60
+              this.notAuth.companyAuthForm.codePlaceholder = '60s'
+              var inter = setInterval(() => {
+                countdown--
+                this.notAuth.companyAuthForm.codePlaceholder = countdown + 's'
+                if (countdown == 0) {
+                  clearInterval(inter)
+                  this.notAuth.companyAuthForm.codePlaceholder = '发送验证码'
+                }
+              }, 1000)
               this.$Message.success({
                 content: '验证码发送成功',
                 duration: 5
@@ -2473,13 +2470,13 @@
               params = {
                 aim: this.userInfo.phone,
                 isemail: 0,
-                vailCode: this.setNewPasswordForm.pictureCode
+                code: this.setNewPasswordForm.verificationCode
               }
             } else {
               params = {
                 aim: this.userInfo.loginname ? this.userInfo.loginname : '',
                 isemail: 1,
-                vailCode: this.setNewPasswordForm.pictureCode
+                code: this.setNewPasswordForm.verificationCode
               }
             }
             let url = 'user/judgeCode.do'
@@ -2503,13 +2500,13 @@
               params = {
                 aim: this.userInfo.phone,
                 isemail: 0,
-                vailCode: this.bindingMobilePhoneForm.pictureCode
+                code: this.bindingMobilePhoneForm.verificationCode
               }
             } else {
               params = {
                 aim: this.userInfo.loginname ? this.userInfo.loginname : '',
                 isemail: 1,
-                vailCode: this.bindingMobilePhoneForm.pictureCode
+                code: this.bindingMobilePhoneForm.verificationCode
               }
             }
             let url = 'user/judgeCode.do'
@@ -2533,13 +2530,13 @@
               params = {
                 aim: this.userInfo.phone,
                 isemail: 0,
-                vailCode: this.bindingEmailForm.pictureCode
+                code: this.bindingEmailForm.verificationCode
               }
             } else {
               params = {
                 aim: this.userInfo.loginname ? this.userInfo.loginname : '',
                 isemail: 1,
-                vailCode: this.bindingEmailForm.pictureCode
+                code: this.bindingEmailForm.verificationCode
               }
             }
             let url = 'user/judgeCode.do'
