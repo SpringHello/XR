@@ -302,7 +302,7 @@
           },
           {
             title: '首页',
-            path: '/ruicloud'
+            path: '/ruicloud/home'
           },
           {
             title: '产品',
@@ -636,6 +636,7 @@
                     line-height: 70px;
                     span {
                       padding: 0px 25px;
+                      line-height: 70px;
                     }
                     &:hover {
                       color: #2d8cf0;

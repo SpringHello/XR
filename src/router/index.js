@@ -193,11 +193,18 @@ var router = new Router({
       component: App,
       children: [
         {path: '', name: 'home', component: Home},
-        {path: 'home.html', name: 'home', component: Home},
+        /*{path: 'home.htm', name: 'home', component: Home},
+        {path: 'ecs.htm', name: 'ecs', component: Ecs},
+        {path: 'about.htm', name: 'about', component: Aboutus},
+        {path: 'ActiveCenter.htm', name: 'ActiveCenter', component: ActiveCenter},
+        {path: 'document.htm', name: 'document', component: Document},*/
+
+        {path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
         {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
         {path: 'document', name: 'document', component: Document},
+
         {path: 'article/:typeId', name: 'art', component: Art},
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
         {path: 'Record', name: 'Record', component: Record},
@@ -315,6 +322,24 @@ var router = new Router({
         {path: 'DomainTemplate', name: 'DomainTemplate', component: DomainTemplate},
 
 
+        /*{path: 'Pecs.htm', component: Pecs},
+        {path: 'Phost.htm', component: Phost},
+        {path: 'Pecss.htm', component: Pecss},
+        {path: 'Pvpc.htm', component: Pvpc},
+        {path: 'Peip.htm', component: Peip},
+        {path: 'Pbalance.htm', component: Pbalance},
+        {path: 'Pnat.htm', component: Pnat},
+        {path: 'Pvirvpn.htm', component: Pvirvpn},
+        {path: 'Pdisk.htm', component: Pdisk},
+        {path: 'Pbackupdisk.htm', component: Pbackupdisk},
+        {path: 'Pfirewall.htm', component: Pfirewall},
+        {path: 'Pddos.htm', component: Pddos},
+        {path: 'Pmonitor.htm', component: Pmonitor},
+        {path: 'PobjStorage.htm', component: PobjStorage},
+        {path: 'PdataBase.htm', component: PdataBase},
+        {path: 'PobjectStorage.htm', component: PobjectStorage},
+        {path: 'Pgpu.htm', component: Pgpu},*/
+
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
@@ -332,6 +357,7 @@ var router = new Router({
         {path: 'PdataBase', component: PdataBase},
         {path: 'PobjectStorage', component: PobjectStorage},
         {path: 'Pgpu', component: Pgpu},
+
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
         {path: 'hotQuestion/:parentId/:id', component: hotQuestion},
       ]
