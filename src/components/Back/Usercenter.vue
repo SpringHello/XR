@@ -28,10 +28,10 @@
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
-                    <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0">去绑定</span></li>
-                    <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0">修改</span></li>
-                    <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0">去绑定</span></li>
-                    <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0">修改</span></li>
+                    <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
+                    <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
+                    <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
+                    <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
                     <li v-if="!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
@@ -359,7 +359,7 @@
                   <FormItem label="所属行业" prop="industry">
                     <Select v-model="notAuth.companyAuthForm.industry" style="width: 300px;">
                       <Option v-for="(item,index) in notAuth.companyAuthForm.industryOptions" :key="item.key"
-                              :value="item.key">
+                              :value="item.label">
                         {{item.label}}
                       </Option>
                     </Select>
@@ -2385,21 +2385,27 @@
             var params = {
               authType: this.notAuth.companyAuthForm.certificateType,
               name: this.notAuth.companyAuthForm.name,
+              belongIndustry: this.notAuth.companyAuthForm.industry,
               linkmanName: this.notAuth.companyAuthForm.contactPerson,
               trade: this.notAuth.companyAuthForm.industry,
               phone: this.notAuth.companyAuthForm.contact,
+              companyLinkManPhone: this.notAuth.companyAuthForm.contact,
               companyCardURL: this.notAuth.companyAuthForm.combine,
               idCard: this.notAuth.companyAuthForm.agentManID,
               contectPhone: this.notAuth.companyAuthForm.linkManPhone,
               phoneCode: this.notAuth.companyAuthForm.verificationCode,
               businessLicenseNumber: this.notAuth.companyAuthForm.businessLicenseNumber,
-              companyLegalName: this.notAuth.companyAuthForm.linkManName,
+              legalPersonName: this.notAuth.companyAuthForm.linkManName,
               companyLegalIdcardNumber: this.notAuth.companyAuthForm.linkManNameID,
               companyLegalIdcardUrl: this.notAuth.companyAuthForm.legalPersonIDFront,
               companyLegalIdcardBackUrl: this.notAuth.companyAuthForm.legalPersonIDBack,
               operatorIdcardUrl: this.notAuth.companyAuthForm.agentIDFront,
               operatorIdcardBackUrl: this.notAuth.companyAuthForm.agentIDBack,
-              operatorIdcardBackByHandUrl: this.notAuth.companyAuthForm.agentIDInHand
+              operatorIdcardBackByHandUrl: this.notAuth.companyAuthForm.agentIDInHand,
+              legalPersonIDCard: this.notAuth.companyAuthForm.businessLicenseNumber,
+              agentName: this.notAuth.companyAuthForm.agentName,
+              agentPhone: this.notAuth.companyAuthForm.linkManPhone,
+              agentIDCard: this.notAuth.companyAuthForm.agentManID,
             }
             axios.post('user/enterpriseAttest.do', params).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -2430,7 +2436,6 @@
           }
         })
         if (regPhone && regPhone) {
-          this.notAuth.companyAuthForm.codePlaceholder = '验证码发送中'
           axios.get('user/code.do', {
             params: {
               aim: this.notAuth.companyAuthForm.linkManPhone,
