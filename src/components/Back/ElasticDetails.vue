@@ -45,7 +45,8 @@
         <br>
         <div>
           <p style="color: #333333;font-size: 16px;">关联伸缩组</p>
-          <p style="color: #2A99F2;font-size: 14px;margin: 10px 0;">{{elastic.telescopicgroupname}}</p>
+          <p style="color: #2A99F2;font-size: 14px;margin: 10px 0;cursor: pointer;" @click="elasticJump()" v-if="elastic.telescopicgroupname !=''">{{elastic.telescopicgroupname}}</p>
+          <p v-else>您还没有</p>
         </div>
       </div>
     </div>
@@ -146,9 +147,9 @@
     },
     methods:{
       getElastic(){
-        this.$http.get('elasticScaling/getElasticScalingRunConfigMessage.do',{
+        this.$http.get('elasticScaling/listTelescopicGroupByFeild.do',{
           params:{
-            id:sessionStorage.getItem('elastic_id')
+            feild:sessionStorage.getItem('elastic_id')
           }
         }).then(res => {
             if(res.status == 200 && res.data.status == 1){
@@ -169,6 +170,13 @@
             this.$Message.info(res.data.message);
           }
         })
+      },
+
+      elasticJump(){
+        console.log(this.elastic);
+        return;
+        sessionStorage.setItem('vpc_id',this.elastic.id);
+        this.$router.push({path:'telescopicDetails'})
       }
     },
   }

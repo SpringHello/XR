@@ -247,7 +247,7 @@
                   },
                   on:{
                     click:() =>{
-                      sessionStorage.setItem('elastic_id',params.row.id);
+                      sessionStorage.setItem('elastic_id',params.row.telescopicgroup);
                       this.$router.push({path:'elasticDetails'});
                     }
                   }

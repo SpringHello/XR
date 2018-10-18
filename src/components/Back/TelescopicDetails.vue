@@ -6,7 +6,7 @@
         <div id="header">
           <span id="title">{{details.stretchname}}</span>
           <div style="float: right">
-            <button class="button"  @click="$router.push({path:'elastic'})" style="margin: 10px 0 0 10px;">返回</button>
+            <button class="button"  @click="$router.push({path:'elastic'})" style="margin: 10px 10px 0 0;">返回</button>
             <button class="button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
           </div>
         </div>
@@ -26,7 +26,7 @@
             </div>
             <div>
               <span>当前实例数 :</span>
-              <span>0</span>
+              <span>{{details.currentintacecount}}</span>
             </div>
           </div>
           <div class="box_two">
@@ -40,7 +40,7 @@
             </div>
             <div>
               <span>子网名称 :</span>
-              <span></span>
+              <span>{{details.subnetname}}</span>
             </div>
           </div>
           <div class="box_one">
@@ -95,7 +95,7 @@
                   <Button type="primary" @click="selectActivity">查询</Button>
                 </div>
               </div>
-              <Table :columns="telescopicActivity.activityList" :data="telescopicActivity.activityData"></Table>
+              <Table :loading="activityLoading" :columns="telescopicActivity.activityList" :data="telescopicActivity.activityData"></Table>
             </div>
           </TabPane>
         </Tabs>
@@ -106,12 +106,12 @@
     <modal title="新建告警策略" width="550" :mask-closable="false" v-model="alarmStrategy.newAddStrategy">
       <hr color="#D8D8D8" size="1">
       <br>
-      <Form :model="alarmStrategy" ref="alarmStrategy" :rules="alarmStrategyValidtor">
+      <Form :model="alarmStrategy" ref="alarmStrategy" :rules="alarmStrategyValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="alarmStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
-      </Form>
+
       <div>
         <p style="margin-bottom: 12px">伸缩组内所有云主机<span style="color: #2A99F2;">查看详细统计规则</span></p>
         <div>
@@ -156,13 +156,13 @@
         </div>
       </div>
       <div>
-        <p style="margin-bottom: 12px">告警通知</p>
-        <div>
-          <Select v-model="alarmStrategy.contacts" style="width:240px" placeholder="选择联系人">
-            <Option v-for="item in alarmStrategy.contactsList"  :value="item.id" :key="item.id">{{ item.username }}</Option>
-          </Select>
-        </div>
+          <FormItem label="告警通知" prop="contacts">
+            <Select v-model="alarmStrategy.contacts" style="width:240px"  placeholder="选择联系人">
+              <Option v-for="item in alarmStrategy.contactsList" :value="item.id" :key="item.id">{{ item.username }}</Option>
+            </Select>
+          </FormItem>
       </div>
+      </Form>
       <br>
       <hr color="#D8D8D8" size="1">
       <div slot="footer">
@@ -175,12 +175,11 @@
     <modal title="修改告警策略" width="550" :mask-closable="false" v-model="updateStrategy.newAddStrategy">
       <hr color="#D8D8D8" size="1">
       <br>
-      <Form :model="updateStrategy" ref="updateStrategy" :rules="updateStrategyValidtor">
+      <Form :model="updateStrategy" ref="updateStrategy" :rules="updateStrategyValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="updateStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
-      </Form>
       <div>
         <p style="margin-bottom: 12px">伸缩组内所有云主机<span style="color: #2A99F2;">查看详细统计规则</span></p>
         <div>
@@ -225,13 +224,13 @@
         </div>
       </div>
       <div>
-        <p style="margin-bottom: 12px">告警通知</p>
-        <div>
-          <Select v-model="updateStrategy.contacts" style="width:240px"  placeholder="选择联系人">
-            <Option v-for="item in updateStrategy.contactsList" :value="item.id" :key="item.id">{{ item.username }}</Option>
-          </Select>
-        </div>
+          <FormItem label="告警通知" prop="contacts">
+            <Select v-model="updateStrategy.contacts" style="width:240px"  placeholder="选择联系人">
+              <Option v-for="item in updateStrategy.contactsList" :value="item.id" :key="item.id">{{ item.username }}</Option>
+            </Select>
+          </FormItem>
       </div>
+      </Form>
       <br>
       <hr color="#D8D8D8" size="1">
       <div slot="footer">
@@ -567,6 +566,9 @@
         alarmStrategyValidtor:{
           name:[
             {required:true,validator:nameValidator,trigger:'blur'}
+          ],
+          contacts:[
+            {required:true,message:'请选择告警通知人',trigger:'change'}
           ]
         },
         alarmStrategy:{
@@ -650,7 +652,9 @@
           ],
           //百分比数值
           percentage:'80',
-          percentageList: [],
+          percentageList: [
+            {value:'80',label:'80'}
+          ],
           //连续几次
           count:'3',
           countList:[
@@ -708,6 +712,9 @@
         updateStrategyValidtor:{
           name:[
             {required:true,validator:nameValidator,trigger:'blur'}
+          ],
+          contacts:[
+            {required:true,message:'请选择告警通知人',trigger:'change'}
           ]
         },
         updateStrategy:{
@@ -791,7 +798,8 @@
           ],
           //百分比数值
           percentage:'',
-          percentageList: [],
+          percentageList: [
+          ],
           //连续几次
           count:'',
           countList:[
@@ -850,25 +858,43 @@
         cloudHost:{
           hostList:[
             {
-              title:'云主机名称'
+              title:'云主机名称',
+              key:'computername'
             },
             {
-              title:'监控状态'
+              title:'监控状态',
+              key:'monitorstatus',
+              render:(h,parmas)=>{
+                return h('span',{},parmas.row.monitorstatus == '1' ?'正常':'异常')
+              }
             },
             {
-              title:'生命周期'
+              title:'生命周期',
+              key:'lifetime'
             },
             {
-              title:'移除保护'
+              title:'移除保护',
+              width:100,
+              render:(h,params)=>{
+                return h('span',{},params.row.removeprotect == '0' ?'无':'有')
+              }
             },
             {
-              title:'加入方式'
+              title:'加入方式',
+              width:100,
+              render:(h,params)=>{
+                return h('div',[
+                  h('span',{},params.row.joinway == 'manual'?'手动':'自动')
+                ])
+              }
             },
             {
-              title:'启动配置'
+              title:'启动配置',
+              key:'startconfiguration'
             },
             {
-              title:'加入时间'
+              title:'加入时间',
+              key:'jointime'
             },
             {
               title:'操作',
@@ -880,18 +906,56 @@
                     }
                   },
                   [
-                  h('span',{},'销毁'),
-                  h('span',{},'移出'),
-                  h('span',{},'移除保护'),
-                  h('Switch',[
+                  h('span',{
+                    style:{
+                      cursor:'pointer',
+                      marginRight:'10px'
+                    },
+                    on:{
+                      click:()=>{
+                        this.removeHost(params.row);
+                      }
+                    }
+                  },'移出'),
+                  h('span',{
+                    style:{
+                      cursor:'pointer',
+                      marginRight:'5px'
+                    },
+                    on:{
+                      click:()=>{
+                        this.removeProtect(params.row);
+                      }
+                    }
+                  },'移除保护'),
+                  h('i-switch',{
+                      props:{
+                        size:'small'
+                      },
+                    style:{
+                        fontSize:'10px'
+                    }
+                  },[
                     h('span',{
-                     prop:{
-                       slot:'open'
-                     }
+                       slot:'open',
+                      style:{
+                         height:'12px'
+                      },
+                      on:{
+                        click:()=>{
+                          this.removeProtect(params.row,0);
+                        }
+                      }
                     },'开'),
                     h('span',{
-                      prop:{
-                        slot:'close'
+                      style:{
+                        height:'12px'
+                      },
+                        slot:'close',
+                      on:{
+                        click:()=>{
+                          this.removeProtect(params.row,1);
+                        }
                       }
                     },'关')
                   ])
@@ -964,6 +1028,7 @@
           ],
           operationTime:[]
         },
+        activityLoading:false,
 
         //定时任务
         options3: {
@@ -1675,30 +1740,34 @@
 
       //新建告警策略
       createAlarmStrategy(){
-        let obj = {strategyname:'创建中',hide:1};
-        this.strategyData.push(obj);
-        this.$http.post('elasticScaling/createScaleAlarmStrategy.do',{
-          strategyName:this.alarmStrategy.name,
-          alarmType:'0',
-          alarmLinkmanId:this.alarmStrategy.contacts.toString(),
-          telescopicgroupId:sessionStorage.getItem('vpc_id').toString(),
-          alarmName:this.alarmStrategy.cpuValue,
-          countcircle:this.alarmStrategy.time,
-          valueType:this.alarmStrategy.symbol,
-          value:this.alarmStrategy.percentage.toString(),
-          continuecircle:this.alarmStrategy.count,
-          addCount:this.alarmStrategy.addcount.toString(),
-          total:this.alarmStrategy.value,
-          loolingTime:this.alarmStrategy.coolingNumber.toString(),
-          isAdd:this.alarmStrategy.isAdd
-        }).then(res =>{
-          if(res.status == 200 && res.data.status == 1){
-            this.$Message.success('新建告警策略成功');
-            this.alarmStrategy.newAddStrategy = false;
-            this.getScaleAlarmStrategy();
-          }else{
-            this.$Message.info(res.data.message);
-            this.getScaleAlarmStrategy();
+        this.$refs.alarmStrategy.validate((valid) => {
+          if(valid){
+            let obj = {strategyname:'创建中',hide:1};
+            this.strategyData.push(obj);
+            this.$http.post('elasticScaling/createScaleAlarmStrategy.do',{
+              strategyName:this.alarmStrategy.name,
+              alarmType:'0',
+              alarmLinkmanId:this.alarmStrategy.contacts.toString(),
+              telescopicgroupId:sessionStorage.getItem('vpc_id').toString(),
+              alarmName:this.alarmStrategy.cpuValue,
+              countcircle:this.alarmStrategy.time,
+              valueType:this.alarmStrategy.symbol,
+              value:this.alarmStrategy.percentage.toString(),
+              continuecircle:this.alarmStrategy.count,
+              addCount:this.alarmStrategy.addcount.toString(),
+              total:this.alarmStrategy.value,
+              loolingTime:this.alarmStrategy.coolingNumber.toString(),
+              isAdd:this.alarmStrategy.isAdd
+            }).then(res =>{
+              if(res.status == 200 && res.data.status == 1){
+                this.$Message.success('新建告警策略成功');
+                this.alarmStrategy.newAddStrategy = false;
+                this.getScaleAlarmStrategy();
+              }else{
+                this.$Message.info(res.data.message);
+                this.getScaleAlarmStrategy();
+              }
+            })
           }
         })
       },
@@ -1907,6 +1976,7 @@
 
       //获取伸缩活动
       selectActivity(){
+        this.activityLoading = true;
         let date = '';
         for (let i=0;i< this.telescopicActivity.operationTime.length;i++){
            date += this.telescopicActivity.operationTime[i].format('yyyy-MM-dd') +',';
@@ -1923,6 +1993,10 @@
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.telescopicActivity.activityData = res.data.list;
+            this.activityLoading = false;
+          }else{
+            this.$Message.info(res.data.message);
+            this.activityLoading = false;
           }
         })
       },
@@ -1935,10 +2009,8 @@
           }
         }).then(res =>{
           if(res.status == 200 && res.data.status == 1){
-            console.log(res);
             this.intoCloudHost = res.data.list;
           }
-
         })
       },
 
@@ -1948,7 +2020,7 @@
 
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
-            this.cloudHost.hostList = res.data.list;
+            this.cloudHost.hostData = res.data.list;
           }
         })
       },
@@ -2011,7 +2083,7 @@
         this.removeCloudHost.push(this.intoCloudHost.splice(index,1)[0]);
       },
       hostDelete(index){
-      this.intoCloudHost.push(this.removeCloudHost.splice(index,1)[0]);
+        this.intoCloudHost.push(this.removeCloudHost.splice(index,1)[0]);
       },
       hostAdd(){
         this.$http.get('elasticScaling/joinManualAndAutoAssociatedHost.do',{
@@ -2024,13 +2096,53 @@
           }
         }).then(res =>{
           if(res.status == 200 && res.data.status == 1){
-            this.$Message.success('加入云主机成功');
             this.moveCloudHost = false;
+            this.$Message.success('加入云主机成功');
+            this.selectHost();
           }else{
+            this.moveCloudHost = false;
             this.$Message.info(res.data.message);
+            this.selectHost();
           }
         })
       },
+
+      //移出主机
+      removeHost(item){
+        this.$http.get('elasticScaling/removemanualAndAutoAssociatedHost.do',{
+          params:{
+            id:item.id,
+            telescopicGroupId:item.telescopicgroupid
+          }
+        }).then(res =>{
+          if(res.status == 200 && res.data.status ==1){
+            this.$Message.success(res.data.message);
+            this.selectHost();
+          }else{
+            this.$Message.info(res.data.message);
+            this.selectHost();
+          }
+        })
+      },
+
+      //移除保护
+      removeProtect(item,val){
+        this.$http.get('elasticScaling/isRemoveProtection.do',{
+          params:{
+            id:item.id,
+            removeprotect:val.toString()
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.$Message.success(res.data.message);
+            this.selectHost();
+          }else{
+            this.$Message.info(res.data.message);
+            this.selectHost();
+          }
+        })
+      },
+
       //去除逗号函数
       deleteDouhao(array,keys){
         let val = '';
@@ -2045,6 +2157,7 @@
         }
         return val.substring(0,val.length - 1);
       },
+
 
     },
     created(){
