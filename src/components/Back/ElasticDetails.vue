@@ -77,6 +77,7 @@
       callback();
     }
   }
+
   export default {
     data(){
       return{
@@ -139,7 +140,9 @@
           name:[
             {required:true,validator:validConfigName,trigger:'blur'}
           ]
-        }
+        },
+
+
       }
     },
     created(){
@@ -147,9 +150,9 @@
     },
     methods:{
       getElastic(){
-        this.$http.get('elasticScaling/listTelescopicGroupByFeild.do',{
+        this.$http.get('elasticScaling/getElasticScalingRunConfigMessage.do',{
           params:{
-            feild:sessionStorage.getItem('elastic_id')
+            id:sessionStorage.getItem('elastic_id')
           }
         }).then(res => {
             if(res.status == 200 && res.data.status == 1){
