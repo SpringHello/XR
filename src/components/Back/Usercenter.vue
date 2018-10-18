@@ -2402,7 +2402,7 @@
               operatorIdcardUrl: this.notAuth.companyAuthForm.agentIDFront,
               operatorIdcardBackUrl: this.notAuth.companyAuthForm.agentIDBack,
               operatorIdcardBackByHandUrl: this.notAuth.companyAuthForm.agentIDInHand,
-              legalPersonIDCard: this.notAuth.companyAuthForm.businessLicenseNumber,
+              legalPersonIDCard: this.notAuth.companyAuthForm.linkManNameID,
               agentName: this.notAuth.companyAuthForm.agentName,
               agentPhone: this.notAuth.companyAuthForm.linkManPhone,
               agentIDCard: this.notAuth.companyAuthForm.agentManID,
