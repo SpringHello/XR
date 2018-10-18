@@ -34,6 +34,11 @@
                   <Table :columns="columns" :data="hostList" @on-selection-change="selectionChange"></Table>
                 </div>
               </Tab-pane>
+              <!--<Tab-pane label="GPU云服务器" name="GPU云服务器">-->
+                <!--<div class="all">-->
+                  <!--<Table :columns="columns" :data="gpuList" @on-selection-change="selectionChange"></Table>-->
+                <!--</div>-->
+              <!--</Tab-pane>-->
               <Tab-pane label="弹性IP" name="弹性IP">
                 <div class="all">
                   <Table :columns="columns" :data="ipList" @on-selection-change="selectionChange"></Table>
@@ -138,6 +143,7 @@
         natList: [],
         natSelection: [],
         keyWords: '',
+        // gpuList:[],
       }
     },
     created(){
@@ -177,7 +183,7 @@
                   break;
                 case 'nat':
                   nat.push(item)
-                  break
+                  break;
               }
             })
             this.allList = response.data.result

@@ -12,6 +12,7 @@ import LR from '@/LR'
 // import Price from '@/components/App/Price'
 const Home = () => import('@/components/App/Home')
 const Art = () => import('@/components/App/Article')
+const ArtTags = () => import('@/components/App/ArticleTags')
 //const Price = () => import('@/components/App/Price')
 
 //const Buy = () =>import('@/components/App/Buy1')
@@ -62,6 +63,7 @@ const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 const Domainname = () =>import('@/components/App/Domain/Domainname')
 const DomainResult = () =>import('@/components/App/Domain/DomainResult')
 const DomainTemplate = () =>import('@/components/App/Domain/DomainTemplate')
+const CheckReg = () =>import('@/components/App/Domain/CheckReg')
 
 
 // 备案系统页面路由
@@ -206,6 +208,7 @@ var router = new Router({
         {path: 'document', name: 'document', component: Document},
 
         {path: 'article/:typeId', name: 'art', component: Art},
+        {path: 'article/info/:typeId', name: 'artTags', component: ArtTags},
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
         {path: 'Record', name: 'Record', component: Record},
         //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
@@ -320,6 +323,7 @@ var router = new Router({
         {path: 'Domainname', name: 'Domainname', component: Domainname},
         {path: 'DomainResult', name: 'DomainResult', component: DomainResult},
         {path: 'DomainTemplate', name: 'DomainTemplate', component: DomainTemplate},
+        {path: 'CheckReg', name: 'CheckReg', component: CheckReg},
 
 
         /*{path: 'Pecs.htm', component: Pecs},

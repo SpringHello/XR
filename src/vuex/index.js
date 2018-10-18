@@ -5,6 +5,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import {Promise} from 'es6-promise-polyfill'
 import axios from '@/util/axiosInterceptor'
+
 if (!window.Promise) {
   window.Promise = Promise
 }
@@ -28,16 +29,16 @@ const store = new Vuex.Store({
       vpc: 'VPC',
       vpn: 'remote'
     },
-    accessKey:null
+    accessKey: null
   },
   getters: {},
 
   mutations: {
-    setAuthInfo (state, {authInfo, userInfo}) {
+    setAuthInfo(state, {authInfo, userInfo}) {
       state.authInfo = authInfo
       state.userInfo = userInfo
     },
-    setZoneList (state, zoneList) {
+    setZoneList(state, zoneList) {
       state.zoneList = zoneList
       // 设置当前默认区域
       for (var zone of zoneList) {
@@ -46,24 +47,24 @@ const store = new Vuex.Store({
         }
       }
     },
-    setMsg(state, Msg){
+    setMsg(state, Msg) {
       state.Msg = Msg
     },
-    setZone(state, zone){
+    setZone(state, zone) {
       state.zone = zone
     },
-    setPane(state, paneStatus = {vpc: 'VPC', vpn: 'remote'}){
+    setPane(state, paneStatus = {vpc: 'VPC', vpn: 'remote'}) {
       state.paneStatus = paneStatus
     },
-    setKey(state,key){
+    setKey(state, key) {
       state.accessKey = key;
     }
   },
   actions: {
     /* 获取用户信息 */
-    getAuthInfo({commit}){
+    getAuthInfo({commit}) {
       if (localStorage.getItem('authToken')) {
-        axios.get('user/GetUserInfo.do').then(response => {
+        axios.get('user/GetUserInfo.do', {params: {}}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             commit('setAuthInfo', {
               authInfo: response.data.authInfo,
@@ -76,7 +77,7 @@ const store = new Vuex.Store({
       }
     },
     /* 获取地区信息 */
-    getZoneList({commit}){
+    getZoneList({commit}) {
       // 如果sessionStorage还没有缓存
       if (!sessionStorage.getItem('zoneList')) {
         axios.get('information/zone.do').then(response => {

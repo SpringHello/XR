@@ -514,14 +514,13 @@
                     }, [h('DropdownItem', {
                       nativeOn: {
                         click: () => {
-                          if(params.row.publicip != ''){
+                          if(params.row.publicip != '' && params.row.publicip != undefined){
                             this.$Message.info('该主机已绑定IP');
                           }else {
                             if(params.row.status == 2 || params.row.status ==3){
                               this.$Message.info('请等待主机完成当前操作');
                             }else {
                               this.uuId = params.row.computerid;
-
                               this.vpcId = params.row.vpcid;
                               this.bindIp();
                             }
@@ -620,10 +619,13 @@
                             if(params.row.status == 2 || params.row.status ==3){
                               this.$Message.info('请等待主机完成当前操作');
                             }else {
-                              // if(params.row.caseType == 3){
-                              //   this.$Message.info('请选择包年包月主机续费');
-                              //   return
+                              // if(params.row.computerstate == '0' && params.row.status=='1'){
+                              //   this.$Message.info('主机续费需要关闭主机')
                               // }
+                              if(params.row.caseType == 3){
+                                this.$Message.info('请选择包年包月主机续费');
+                                return
+                              }
                               this.VMId = params.row.id;
                               this.showModal.renew = true;
                             }
@@ -871,14 +873,13 @@
                   descript: this.mirrorValidate.descript,
                   rootDiskId: this.mirrorValidate.rootdiskid,
                   zoneId: this.$store.state.zone.zoneid,
-
                 }
               }).then(res => {
                 if (res.status == 200 && res.data.status == 1) {
-                  this.$Message.success('镜像创建成功');
+                  this.$Message.success(res.data.message);
                   this.showModal.mirror = false;
                 } else {
-                  this.$Message.info('镜像创建出小差了');
+                  this.$Message.info(res.data.message);
                 }
               })
             }

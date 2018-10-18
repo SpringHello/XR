@@ -66,7 +66,7 @@
                 <div>
                   <div v-for="item in mirrorType" class="zoneItem"
                        :class="{zoneSelect:currentType==item.value}"
-                       @click="selectMirror">{{item.label}}
+                       @click="selectMirror(item)">{{item.label}}
                   </div>
                   <!--镜像+应用 列表-->
                   <div v-if="currentType=='app'">
@@ -599,22 +599,31 @@
         // 开放端口
         port: '',
         // 数据库名称
-        dbName: ''
+        dbName: '',
 
+        //具体镜像
+        mirrorQuery:this.$route.query.mirror
       }
     },
     created(){
-      console.log(this.$route.query.mirror)
-      if(this.$route.query.mirrorType){
-        this.currentType = this.$route.query.mirrorType
-      }
+
+
       this.setGpuServer()
       this.setTemplate()
       this.queryVpc()
       this.queryDiskPrice()
       //this.queryCustomVM()
       this.queryIPPrice()
+      setTimeout(()=>{
+        this.select();
+      },200)
+      if(this.$route.query.mirrorType){
+        this.currentType = this.$route.query.mirrorType;
 
+        setTimeout(()=>{
+          this.publicList[0].selectSystem = this.mirrorQuery.templatename
+        },200)
+      }
     },
     methods: {
       // 设置系统模版
@@ -628,9 +637,26 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.publicList = []
-            for (let system in response.data.result) {
-              this.publicList.push({system, systemList: response.data.result[system], selectSystem: ''})
+            this.publicList = [];
+            if(this.mirrorQuery){
+              var system ='';
+              if(this.mirrorQuery.templatename.substr(0,1) == 'w'){
+                system = 'windows';
+                this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
+              }else if(this.mirrorQuery.templatename.substr(0,1) == 'c') {
+                 system = 'centos';
+                this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
+              }else if(this.mirrorQuery.templatename.substr(0,1) == 'u'){
+                system = 'ubuntu';
+                this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
+              }else if(this.mirrorQuery.templatename.substr(0,1) == 'd'){
+                system = 'debian';
+                this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
+              }
+            }else{
+              for (let system in response.data.result) {
+                this.publicList.push({system, systemList: response.data.result[system], selectSystem: ''})
+              }
             }
             this.system = {}
           }
@@ -645,23 +671,37 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              // let cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
-              // for(let i = 0; i<cusList.length;i++){
-              //   if(cusList[i].status != -1){
-              if(this.$route.query.mirror){
-                this.customList.push(this.$route.query.mirror);
-                this.customMirror = {}
-              }else {
-                this.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-                this.customMirror = {}
+              var cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
+              if(this.mirrorQuery){
+                if(this.mirrorQuery){
+                    this.customList.push(this.mirrorQuery);
+                    this.customMirror = this.mirrorQuery;
+                  }
+              }else{
+                for(let i = 0; i<cusList.length;i++){
+                  if(cusList[i].status != -1){
+                    this.customList.push(cusList[i]);
+                    this.customMirror = {};
+                  }
+                }
               }
-
-                // }
-              // }
             }
           })
         }
       },
+
+      select(){
+        axios.get('Snapshot/getTemplateByTemplateId.do',{
+          params:{
+            templateId:sessionStorage.getItem('templateId')
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            // this.mirrorQuery = res.data.result[0];
+          }
+        })
+      },
+
       setGpuServer(){
         axios.get('gpuserver/listGpuServerOffer.do', {
           params: {
@@ -676,11 +716,17 @@
       // 选中表中的一项
       selectGpu(currentRow) {
         this.gpuSelection = currentRow
-        console.log(this.gpuSelection)
       },
       // 重新选择系统镜像
       setOS(name) {
-        var arg = name.split('#')
+        var arg = [];
+        if(this.mirrorQuery){
+          arg.push(this.mirrorQuery.templatename);
+          arg.push(this.mirrorQuery.systemtemplateid);
+        }else{
+          arg = name.split('#');
+        }
+
         for (var item of this.publicList) {
           item.selectSystem = ''
         }
@@ -695,11 +741,24 @@
         } else {
           this.systemUsername = 'root'
         }
+      if(this.mirrorQuery){
+        for(let i = 0;i<this.publicList.length;i++){
+          if(this.publicList[i].systemList[i].ostypeid == this.mirrorQuery.ostypeid){
+            this.publicList[i].selectSystem = arg[0];
+            break;
+          }
+        }
+      }else{
         this.publicList[arg[2]].selectSystem = arg[0]
+      }
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
-        this.customMirror = item
+      if(this.$route.mirror){
+        this.customMirror = this.mirrorQuery;
+      }else{
+        this.customMirror = item;
+      }
         var str = item.ostypename.substr(0, 1)
         if (str === 'W' || str === 'w') {
           this.systemUsername = 'administrator'
@@ -1008,11 +1067,13 @@
       },
 
       //选择镜像类型
-      selectMirror(){
+      selectMirror(item){
         if(this.$route.query.mirrorType == 'custom'){
           this.currentType ='custom'
         }else if(this.$route.query.mirrorType == 'public'){
           this.currentType = 'public'
+        }else{
+          this.currentType=item.value;
         }
       }
     },

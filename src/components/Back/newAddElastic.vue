@@ -28,7 +28,7 @@
         <p style="margin: 20px 0;font-size: 14px;color: #999999;">提示：启动配置之时模板，创建启动配置不收费，按照启动配置增加的主机才按照实时价格计费。</p>
         <!--第一步-->
         <div style="width: 700px;" v-show="hostSpecification.nextIndex == 1">
-          <Form ref="config" :model="config" :rules="configValidate" :label-width="70">
+          <Form ref="config" :model="config" :rules="configValidate" :label-width="80">
             <FormItem label="配置名称" prop="configName">
               <Input v-model="config.configName" style="width: 317px"></Input>
               <p style="color: #666666;margin-top:10px;">请输入不超过16位字符名称，支持中文、字母与数字</p>
@@ -129,9 +129,10 @@
               </ul>
               <p style="color: #666666;margin: 10px 0 20px 0;">为了使主机创建完成后直接可用，强烈建议您将业务应用部署在自定义镜像中</p>
               <div v-if="mirrorIndex == 0">
-                <Select v-model="mirrorName" style="width:200px">
+                <Select v-model="mirrorName" style="width:200px" v-if="mirrorList.length !=0">
                   <Option v-for="item in mirrorList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
+                <div v-else class="mirror">暂无镜像</div>
               </div>
               <div v-if="mirrorIndex == 1">
                 <Dropdown v-for="(item,index) in systemMirror.publicList"  :key="item.ostypeid" @on-click="setOs">
@@ -221,7 +222,7 @@
                   <Form ref="password" :model="password" :rules="passwordValidate">
                     <FormItem label="" prop="divPassWord">
                       <Input v-model="password.divPassWord" placeholder="请输入6-23位包含大小写与数字的密码"></Input>
-                      <p style="color:#999999;margin-top: 10px">登录密码可用特殊字符为：`~!#$%_()^&*,-<>?@.+=</p>
+                      <p style="color:#999999;margin-top: 10px">登录密码可用特殊字符为：',?</p>
                     </FormItem>
                   </Form>
                 </div>
@@ -232,7 +233,7 @@
         <br>
         <hr color="#D8D8D8" size="1">
         <br>
-        <Button type="ghost" @click="upper" v-if="hostSpecification.nextIndex!=1">上一步</Button>
+        <Button type="ghost" @click="upper" v-if="hostSpecification.nextIndex!=1" style="margin-right: 10px;">上一步</Button>
         <Button type="primary" @click="next" v-if="hostSpecification.nextIndex < 4">下一步</Button>
         <Button type="primary" @click="okSetting" v-else>完成设置</Button>
       </div>
@@ -249,6 +250,17 @@
     }else if(!reg.test(value)){
       return callback(new Error('配置名称不符合规范'));
     }else {
+      callback();
+    }
+  }
+
+  const validLoginPassword = (rule,value,callback)=>{
+    let reg = /^[0-9a-zA-z\u4E00-\u9FA5',?？]{6,23}$/;
+    if(value == ''){
+      return callback(new Error('请输入登录密码'));
+    }else if(!reg.test(value)){
+      return callback(new Error('登录密码格式不正确'));
+    }else{
       callback();
     }
   }
@@ -300,110 +312,38 @@
           //CPU
           cpuList:[
             {
-              CPU:'1',
+              CPU:'',
               List:[
-                {
-                  value:'1'
-                },
-                {
-                  value:'2'
-                },
-                {
-                  value:'4'
-                },
-                {
-                  value:'8'
-                }
               ],
             },
             {
-              CPU:'2',
+              CPU:'',
               List:[
-                {
-                  value:'2'
-                },
-                {
-                  value:'4'
-                },
-                {
-                  value:'8'
-                },
-                {
-                  value:'16'
-                }
               ],
             },
             {
-              CPU:'4',
+              CPU:'',
              List:[
-                {
-                  value:'4'
-                },
-                {
-                  value:'8'
-                },
-                {
-                  value:'16'
-                },
-                {
-                  value:'32'
-                }
               ],
             },
             {
-              CPU:'8',
+              CPU:'',
               List:[
-                {
-                  value:'8'
-                },
-                {
-                  value:'16'
-                },
-                {
-                  value:'32'
-                },
-                {
-                  value:'64'
-                }
               ],
             },
             {
-              CPU:'16',
+              CPU:'',
               List:[
-                {
-                  value:'16'
-                },
-                {
-                  value:'32'
-                },
-                {
-                  value:'64'
-                },
-                {
-                  value:'128'
-                }
+
               ],
             },
             {
-              CPU:'32',
-              List:[
-                {
-                  value:'64'
-                },
-                {
-                  value:'128'
-                }
-              ]
+              CPU:'',
+              List:[]
             },
             {
-              CPU:'64',
+              CPU:'',
               List:[
-                {
-                  value:'128'
-                },
-                {
-                  value:'256'
-                }
               ]
             }
           ],
@@ -455,10 +395,6 @@
         mirrorIndex:0,
         mirrorName:'',
         mirrorList:[
-          {
-            value:'自定义镜像',
-            label:'自定义镜像'
-          }
         ],
 
         //系统镜像
@@ -485,10 +421,6 @@
         //数据盘类型
         dataDiskType:[
           {
-            value:'SATA',
-            label:'sata'
-          },
-          {
             value:'SAS',
             label:'sas'
           },
@@ -501,7 +433,7 @@
 
         //容量
         diskSize:20,
-        single:true,
+        single:false,
 
         //带宽
         bandWidth:1,
@@ -515,7 +447,7 @@
         },
         passwordValidate:{
           divPassWord:[
-            {required:true,message:'请输入登录密码',trigger:'blur'}
+            {required:true,validator:validLoginPassword,trigger:'blur'}
           ]
         },
         //主机名称
@@ -523,11 +455,13 @@
       }
     },
     created(){
-      this.getMoeny();
       this.getTemplates();
       this.getCapacityPrice();
       this.getZonesConfig();
       this.getPrivateMirror();
+      setTimeout(()=>{
+        this.getMoeny();
+      },200)
     },
     methods:{
       //选择cpu，内存，系统盘
@@ -553,6 +487,23 @@
 
       //下一步
       next(){
+        if(this.hostSpecification.nextIndex == 3){
+          if(this.mirrorIndex == 0){
+            if(this.mirrorName == ''){
+              this.$Modal.info({
+                title:'提示',
+                content:'请选择一个镜像'
+              })
+            }
+          }else{
+            if(this.systemMirror.publicList[this.systemIndex].selectSystem == ''){
+              this.$Modal.info({
+                title:'提示',
+                content:'请选择一个镜像'
+              })
+            }
+          }
+        }
         let params ={
           hostFormat:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU+'核'+this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory+'G',
           name:this.config.configName,
@@ -608,6 +559,7 @@
         }
       },
 
+      //获取金额
       getMoeny(){
        this.$http.post('device/QueryBillingPrice.do',{
           cpuNum:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
@@ -713,11 +665,12 @@
               }).then(res => {
                 if(res.status == 200 && res.data.status ==1){
                   this.$Message.success('启动配置创建成功');
+                  this.$router.push({path:'elastic'});
                 }else{
-                  // this.$Modal.confirm({
-                  //   content:"启动创建配置失败,您可以联系客服，或重试"
-                  // })
-                  this.$Message.info(res.data.message);
+                  this.$Modal.confirm({
+                    content:"启动创建配置失败,您可以联系客服，或重试"
+                  })
+                  // this.$Message.info(res.data.message);
                 }
               })
             }
@@ -914,7 +867,6 @@
       display: inline-block;
       line-height: 32px;
       color: #333333;
-      font-size: 14px;
     }
   }
   .nav_item{

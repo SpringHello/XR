@@ -22,7 +22,7 @@
           </div>
           <div class="product-content">
             <ul class="product-config">
-              <li>GPU<span>{{ item.config.gpu}}核</span></li>
+              <li>CPU<span>{{ item.config.gpu}}核</span></li>
               <li>内存<span>{{ item.config.memory}}G</span></li>
               <li style="width: 20%">系统盘 <span>{{ item.config.systemDisk}}G</span></li>
               <li style="width: 20%">数据盘 <span>{{ item.config.wsx}}G</span></li>
