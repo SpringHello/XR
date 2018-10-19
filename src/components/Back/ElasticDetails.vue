@@ -45,7 +45,7 @@
         <br>
         <div>
           <p style="color: #333333;font-size: 16px;">关联伸缩组</p>
-          <p style="color: #2A99F2;font-size: 14px;margin: 10px 0;cursor: pointer;" @click="elasticJump()" v-if="elastic.telescopicgroupname !=''">{{elastic.telescopicgroupname}}</p>
+          <p style="color: #2A99F2;font-size: 14px;margin: 10px 0;cursor: pointer;" @click="elasticJump()" v-if="telescopicList.length > 0" v-for="item in telescopicList">{{item.stretchname}}</p>
           <p v-else>您还没有</p>
         </div>
       </div>
@@ -142,6 +142,7 @@
           ]
         },
 
+        telescopicList:[]
 
       }
     },
@@ -182,7 +183,7 @@
             feild:sessionStorage.getItem('telescopic_id')
           }
         }).then(res =>{
-            console.log(res.data);
+            this.telescopicList = res.data.list;
         });
       },
 
