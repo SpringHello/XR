@@ -6,7 +6,7 @@
         <div id="header">
           <span id="title">{{details.stretchname}}</span>
           <div style="float: right">
-            <button class="button"  @click="$router.push({path:'elastic'})" style="margin-top: 10px;">返回</button>
+            <button class="button"  @click="$router.push({path:'elastic'})" style="margin: 10px 10px 0 0;">返回</button>
             <button class="button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
           </div>
         </div>
@@ -26,7 +26,7 @@
             </div>
             <div>
               <span>当前实例数 :</span>
-              <span>0</span>
+              <span>{{details.currentintacecount}}</span>
             </div>
           </div>
           <div class="box_two">
@@ -40,7 +40,7 @@
             </div>
             <div>
               <span>子网名称 :</span>
-              <span></span>
+              <span>{{details.subnetname}}</span>
             </div>
           </div>
           <div class="box_one">
@@ -57,7 +57,7 @@
               <span>{{details.createtime}}</span>
             </div>
             <div>
-              <span style="color: #2A99F2;cursor: pointer;">修改伸缩组配置</span>
+              <span style="color: #2A99F2;cursor: pointer;" @click="updateTelescopic = true">修改伸缩组配置</span>
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@
                   <Button type="primary" @click="selectActivity">查询</Button>
                 </div>
               </div>
-              <Table :columns="telescopicActivity.activityList" :data="telescopicActivity.activityData"></Table>
+              <Table :loading="activityLoading" :columns="telescopicActivity.activityList" :data="telescopicActivity.activityData"></Table>
             </div>
           </TabPane>
         </Tabs>
@@ -106,12 +106,12 @@
     <modal title="新建告警策略" width="550" :mask-closable="false" v-model="alarmStrategy.newAddStrategy">
       <hr color="#D8D8D8" size="1">
       <br>
-      <Form :model="alarmStrategy" ref="alarmStrategy" :rules="alarmStrategyValidtor">
+      <Form :model="alarmStrategy" ref="alarmStrategy" :rules="alarmStrategyValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="alarmStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
-      </Form>
+
       <div>
         <p style="margin-bottom: 12px">伸缩组内所有云主机<span style="color: #2A99F2;">查看详细统计规则</span></p>
         <div>
@@ -156,13 +156,13 @@
         </div>
       </div>
       <div>
-        <p style="margin-bottom: 12px">告警通知</p>
-        <div>
-          <Select v-model="alarmStrategy.contacts" style="width:240px" placeholder="选择联系人">
-            <Option v-for="item in alarmStrategy.contactsList"  :value="item.id" :key="item.id">{{ item.username }}</Option>
-          </Select>
-        </div>
+          <FormItem label="告警通知" prop="contacts">
+            <Select v-model="alarmStrategy.contacts" style="width:240px"  placeholder="选择联系人">
+              <Option v-for="item in alarmStrategy.contactsList" :value="item.id" :key="item.id">{{ item.username }}</Option>
+            </Select>
+          </FormItem>
       </div>
+      </Form>
       <br>
       <hr color="#D8D8D8" size="1">
       <div slot="footer">
@@ -175,12 +175,11 @@
     <modal title="修改告警策略" width="550" :mask-closable="false" v-model="updateStrategy.newAddStrategy">
       <hr color="#D8D8D8" size="1">
       <br>
-      <Form :model="updateStrategy" ref="updateStrategy" :rules="updateStrategyValidtor">
+      <Form :model="updateStrategy" ref="updateStrategy" :rules="updateStrategyValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="updateStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
-      </Form>
       <div>
         <p style="margin-bottom: 12px">伸缩组内所有云主机<span style="color: #2A99F2;">查看详细统计规则</span></p>
         <div>
@@ -225,13 +224,13 @@
         </div>
       </div>
       <div>
-        <p style="margin-bottom: 12px">告警通知</p>
-        <div>
-          <Select v-model="updateStrategy.contacts" style="width:240px"  placeholder="选择联系人">
-            <Option v-for="item in updateStrategy.contactsList" :value="item.id" :key="item.id">{{ item.username }}</Option>
-          </Select>
-        </div>
+          <FormItem label="告警通知" prop="contacts">
+            <Select v-model="updateStrategy.contacts" style="width:240px"  placeholder="选择联系人">
+              <Option v-for="item in updateStrategy.contactsList" :value="item.id" :key="item.id">{{ item.username }}</Option>
+            </Select>
+          </FormItem>
       </div>
+      </Form>
       <br>
       <hr color="#D8D8D8" size="1">
       <div slot="footer">
@@ -462,6 +461,86 @@
       </div>
     </modal>
 
+
+    <!--修改伸缩组-->
+    <modal title="修改伸缩组" v-model="updateTelescopic" width="550" :mask-closable="false">
+      <hr color="#D8D8D8" size="1">
+      <br>
+      <Form ref="updateTelescopicList" :model="updateTelescopicList" :rules="updateRuleValidate" style="width: 519px"  label-position="top" inline>
+        <FormItem label="名称" prop="stretchname">
+          <Input v-model="updateTelescopicList.stretchname" style="width: 240px" placeholder="请输入名称"></Input>
+          <p style="color: #999999;margin-top: 11px;">名称不超过16个字符，可输入中文、字母与数字</p>
+        </FormItem>
+        <FormItem label="启动配置" prop="ownershipbootconfiguration" class="formitem3">
+          <Tooltip content="启动配置是自动创建云服务器的模版" placement="right">
+            <Icon type="ios-help-outline"></Icon>
+          </Tooltip>
+          <Select v-model="updateTelescopicList.ownershipbootconfiguration" style="width:240px" placeholder="请选择启动配置">
+            <Option v-for="item in updateTeleList.configureList" :value="item.id" :key="item.id">{{ item.startupconfigname}}</Option>
+          </Select>
+          <p style="color: #2A99F2;cursor: pointer;margin-top: 11px;" @click="$router.push({path:'newAddElastic'})">新建启动配置</p>
+        </FormItem>
+        <FormItem label="最小伸缩数" prop="minimumexpansionnumber" class="formitem1">
+          <Tooltip content="伸缩组中允许的实例最小数量。当伸缩组的云主机数量小于最小伸缩数时，弹性伸缩会增加实例，使得伸缩组当前实例数匹配最小伸缩数" placement="right">
+            <Icon type="ios-help-outline"></Icon>
+          </Tooltip>
+          <Input v-model="updateTelescopicList.minimumexpansionnumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
+        </FormItem>
+        <FormItem label="负载均衡" class="formitem6">
+          <Tooltip content="伸缩组会自动将新加入的主机添加到负载均衡中" placement="right">
+            <Icon type="ios-help-outline"></Icon>
+          </Tooltip>
+          <Select v-model="updateTelescopicList.externalnetworkloadbalancing" style="width:240px" placeholder="选择负载均衡" @on-change="balancings(updateTelescopicList.externalnetworkloadbalancing)">
+            <Option v-for="item in updateTeleList.balancingList" :value="item.loadbalanceroleid" :key="item.loadbalanceroleid">{{ item.name }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="最大伸缩数" class="formitem1" prop="maximumexpansionnumber">
+          <Tooltip content="伸缩组中允许的实例最大数量。当伸缩组的云主机数量大于最大伸缩数时，弹性伸缩会移出实例，使得伸缩组当前实例数匹配最大伸缩数" placement="right">
+            <Icon type="ios-help-outline"></Icon>
+          </Tooltip>
+          <Input v-model="updateTelescopicList.maximumexpansionnumber" style="width: 240px" placeholder="请输入1-30之间的数字"></Input>
+        </FormItem>
+        <FormItem label="所属网络">
+          <Select v-model="updateTelescopicList.belongvpcid" style="width:240px" placeholder="请选择网络" @on-change="changeNetWork">
+            <Option v-for="item in updateTeleList.belongNetworkList" :value="item.vpcid" :key="item.vpcid">{{ item.vpcname }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="初始化实例数" class="formitem2" prop="initialinstancenumber">
+          <Tooltip content="伸缩组刚创建时的云服务器数量，伸缩组会为您自动创建对应数量的主机。" placement="right">
+            <Icon type="ios-help-outline"></Icon>
+          </Tooltip>
+          <Input v-model="updateTelescopicList.initialinstancenumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
+        </FormItem>
+        <FormItem label="所属子网">
+          <Select v-model="updateTelescopicList.belongsubnet"  style="width:240px" placeholder="请选择网络">
+            <Option v-for="item in updateTeleList.belongSubnetList"   :value="item.ipsegmentid" :key="item.ipsegmentid">{{ item.netoffername }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="移除策略" class="formitem5">
+          <Tooltip content="当伸缩组要减少实例且有多重选择时，将根据移出策略来选择移出的主机" placement="right">
+            <Icon type="ios-help-outline"></Icon>
+          </Tooltip>
+          <Select v-model="updateTelescopicList.removestrategy" style="width:240px">
+            <Option v-for="item in updateTeleList.removePolicyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="防火墙" class="formitem4">
+          <Tooltip content="默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。" placement="right">
+            <Icon type="ios-help-outline"></Icon>
+          </Tooltip>
+          <Select v-model="updateTelescopicList.firewall" style="width:240px">
+            <Option v-for="item in updateTeleList.firewallList" :value="item.acllistid" :key="item.acllistid">{{ item.acllistname }}</Option>
+          </Select>
+        </FormItem>
+      </Form>
+      <p style="color: #999999;">提示：伸缩组创建成功之后，请在伸缩组详情页面继续配置告警策略与定时任务，不然伸缩组无法生效</p>
+      <br>
+      <hr color="#D8D8D8" size="1">
+      <div slot="footer">
+        <Button type="ghost" @click="updateTelescopic = false">取消</Button>
+        <Button type="primary">完成配置</Button>
+      </div>
+    </modal>
   </div>
 </template>
 
@@ -478,6 +557,16 @@
     }
   }
 
+  const minNumberValidator = (rule,value,callback) =>{
+    let reg = /^([0-9]{1,2}|30)$/;
+    if(value == ''){
+      return callback(new Error('请输入最小伸缩数'));
+    }else if(!reg.test(value)){
+      return callback(new Error('请输入0-30之间的数字'));
+    }else {
+      callback();
+    }
+  }
 
   import axios from 'axios'
   export default {
@@ -567,6 +656,9 @@
         alarmStrategyValidtor:{
           name:[
             {required:true,validator:nameValidator,trigger:'blur'}
+          ],
+          contacts:[
+            {required:true,message:'请选择告警通知人',trigger:'change'}
           ]
         },
         alarmStrategy:{
@@ -650,7 +742,9 @@
           ],
           //百分比数值
           percentage:'80',
-          percentageList: [],
+          percentageList: [
+            {value:'80',label:'80'}
+          ],
           //连续几次
           count:'3',
           countList:[
@@ -708,6 +802,9 @@
         updateStrategyValidtor:{
           name:[
             {required:true,validator:nameValidator,trigger:'blur'}
+          ],
+          contacts:[
+            {required:true,message:'请选择告警通知人',trigger:'change'}
           ]
         },
         updateStrategy:{
@@ -791,7 +888,8 @@
           ],
           //百分比数值
           percentage:'',
-          percentageList: [],
+          percentageList: [
+          ],
           //连续几次
           count:'',
           countList:[
@@ -850,25 +948,45 @@
         cloudHost:{
           hostList:[
             {
-              title:'云主机名称'
+              title:'云主机名称',
+              key:'computername'
             },
             {
-              title:'监控状态'
+              title:'监控状态',
+              key:'monitorstatus',
+              render:(h,parmas)=>{
+                return h('span',{},parmas.row.monitorstatus == '1' ?'正常':'异常')
+              }
             },
             {
-              title:'生命周期'
+              title:'生命周期',
+              render:(h,params)=>{
+                return h('span',{},params.row.lifetime == 1?'正常':params.row.lifetime == 2?'创建中':'加入负载均衡中')
+              }
             },
             {
-              title:'移除保护'
+              title:'移除保护',
+              width:100,
+              render:(h,params)=>{
+                return h('span',{},params.row.removeprotect == '0' ?'无':'有')
+              }
             },
             {
-              title:'加入方式'
+              title:'加入方式',
+              width:100,
+              render:(h,params)=>{
+                return h('div',[
+                  h('span',{},params.row.joinway == 'manual'?'手动':'自动')
+                ])
+              }
             },
             {
-              title:'启动配置'
+              title:'启动配置',
+              key:'startconfigurationname'
             },
             {
-              title:'加入时间'
+              title:'加入时间',
+              key:'jointime'
             },
             {
               title:'操作',
@@ -880,21 +998,35 @@
                     }
                   },
                   [
-                  h('span',{},'销毁'),
-                  h('span',{},'移出'),
-                  h('span',{},'移除保护'),
-                  h('Switch',[
-                    h('span',{
-                     prop:{
-                       slot:'open'
-                     }
-                    },'开'),
-                    h('span',{
-                      prop:{
-                        slot:'close'
+                  h('span',{
+                    style:{
+                      cursor:'pointer',
+                      marginRight:'10px'
+                    },
+                    on:{
+                      click:()=>{
+                        this.removeHost(params.row);
                       }
-                    },'关')
-                  ])
+                    }
+                  },'移出'),
+                  h('span',{
+                    style:{
+                      cursor:'pointer',
+                      marginRight:'5px'
+                    }
+                  },[
+                    h('span',{},'移除保护'),
+                    h('i-switch',{
+                      props:{
+                        size:'small'
+                      },
+                      on:{
+                        change:()=>{
+                          this.removeProtect(params.row,0);
+                        }
+                      }
+                    },)
+                  ]),
                 ])
               }
             }
@@ -964,6 +1096,7 @@
           ],
           operationTime:[]
         },
+        activityLoading:false,
 
         //定时任务
         options3: {
@@ -1634,7 +1767,55 @@
         },
         weekValue:'',
         //启动配置id
-        startUpId:''
+        startUpId:'',
+
+        //修改伸缩组
+        updateTelescopic:false,
+        updateTeleList:{
+          //启动配置
+          configureList:[],
+          //所属网络
+          belongNetworkList:[],
+          //所属子网
+          belongSubnetList:[],
+          //移除策略
+          removePolicyList:[
+            {
+              value:'移除旧主机',
+              label:'移除旧主机'
+            },
+            {
+              value:'移除新主机',
+              label:'移除新主机'
+            }
+          ],
+          //负载均衡
+          balancingList:[],
+          //防火墙
+          firewallList:[],
+        },
+        updateTelescopicList:{
+          //防火墙
+          firewall:'',
+
+        },
+        updateRuleValidate:{
+          stretchname:[
+            {required:true,validator:nameValidator,trigger:'blur'}
+          ],
+          ownershipbootconfiguration:[
+            {required:true,message:'请选择启动配置',trigger:'blur'}
+          ],
+          minimumexpansionnumber:[
+            {required:true,validator:minNumberValidator,trigger:'blur'}
+          ],
+          maximumexpansionnumber:[
+            {required:true,validator:minNumberValidator,trigger:'blur'}
+          ],
+          initialinstancenumber:[
+            {required:true,validator:minNumberValidator,trigger:'blur'}
+          ]
+        }
       }
     },
     methods:{
@@ -1646,6 +1827,8 @@
         }
         }).then(res =>{
           this.details = res.data.list[0];
+          console.log(res.data.list);
+          this.updateTelescopicList = res.data.list[0];
           this.startUpId = res.data.list[0].ownershipbootconfiguration;
         })
       },
@@ -1675,29 +1858,34 @@
 
       //新建告警策略
       createAlarmStrategy(){
-        let obj = {strategyname:'创建中',hide:1};
-        this.strategyData.push(obj);
-        this.$http.post('elasticScaling/createScaleAlarmStrategy.do',{
-          strategyName:this.alarmStrategy.name,
-          alarmType:'0',
-          alarmLinkmanId:this.alarmStrategy.contacts.toString(),
-          telescopicgroupId:sessionStorage.getItem('vpc_id').toString(),
-          alarmName:this.alarmStrategy.cpuValue,
-          countcircle:this.alarmStrategy.time,
-          valueType:this.alarmStrategy.symbol,
-          value:this.alarmStrategy.percentage.toString(),
-          continuecircle:this.alarmStrategy.count,
-          addCount:this.alarmStrategy.addcount.toString(),
-          total:this.alarmStrategy.value,
-          loolingTime:this.alarmStrategy.coolingNumber.toString(),
-          isAdd:this.alarmStrategy.isAdd
-        }).then(res =>{
-          if(res.status == 200 && res.data.status == 1){
-            this.$Message.success('新建告警策略成功');
-            this.alarmStrategy.newAddStrategy = false;
-            this.getScaleAlarmStrategy();
-          }else{
-            this.$Message.info('新建告警策略失败');
+        this.$refs.alarmStrategy.validate((valid) => {
+          if(valid){
+            let obj = {strategyname:'创建中',hide:1};
+            this.strategyData.push(obj);
+            this.$http.post('elasticScaling/createScaleAlarmStrategy.do',{
+              strategyName:this.alarmStrategy.name,
+              alarmType:'0',
+              alarmLinkmanId:this.alarmStrategy.contacts.toString(),
+              telescopicgroupId:sessionStorage.getItem('vpc_id').toString(),
+              alarmName:this.alarmStrategy.cpuValue,
+              countcircle:this.alarmStrategy.time,
+              valueType:this.alarmStrategy.symbol,
+              value:this.alarmStrategy.percentage.toString(),
+              continuecircle:this.alarmStrategy.count,
+              addCount:this.alarmStrategy.addcount.toString(),
+              total:this.alarmStrategy.value,
+              loolingTime:this.alarmStrategy.coolingNumber.toString(),
+              isAdd:this.alarmStrategy.isAdd
+            }).then(res =>{
+              if(res.status == 200 && res.data.status == 1){
+                this.$Message.success('新建告警策略成功');
+                this.alarmStrategy.newAddStrategy = false;
+                this.getScaleAlarmStrategy();
+              }else{
+                this.$Message.info(res.data.message);
+                this.getScaleAlarmStrategy();
+              }
+            })
           }
         })
       },
@@ -1725,7 +1913,8 @@
             this.updateStrategy.newAddStrategy = false;
             this.getScaleAlarmStrategy();
           }else{
-            this.$Message.info('平台出小差了');
+            this.$Message.info(res.data.message);
+            this.getScaleAlarmStrategy();
           }
         })
       },
@@ -1742,6 +1931,7 @@
             this.getScaleAlarmStrategy();
           }else{
             this.$Message.info(res.data.message);
+            this.getScaleAlarmStrategy();
           }
         })
       },
@@ -1825,6 +2015,7 @@
             this.$Modal.confirm({
              content:'<p>定时任务创建失败，您可以<span style="color: #2A99F2">联系客服</span>，或重试</p>'
             })
+            this.selectTask();
           }
         })
       },
@@ -1872,7 +2063,13 @@
           monthStartCount:this.updateTimedTask.monthStartNumber.toString(),
           monthEndCount:this.updateTimedTask.monthEndNumber.toString(),
         }).then(res =>{
-
+            if(res.status == 200 && res.data.status ==1){
+              this.$Message.success('修改定时任务成功');
+              this.selectTask();
+            }else{
+              this.$Message.info(res.data.message);
+              this.selectTask();
+            }
         })
       },
 
@@ -1889,13 +2086,15 @@
             this.$Message.success('删除定时任务成功');
             this.selectTask();
           }else{
-            this.$Message.info('删除定时任务出小差啦');
+            this.$Message.info(res.data.message);
+            this.selectTask();
           }
         })
       },
 
       //获取伸缩活动
       selectActivity(){
+        this.activityLoading = true;
         let date = '';
         for (let i=0;i< this.telescopicActivity.operationTime.length;i++){
            date += this.telescopicActivity.operationTime[i].format('yyyy-MM-dd') +',';
@@ -1912,6 +2111,10 @@
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.telescopicActivity.activityData = res.data.list;
+            this.activityLoading = false;
+          }else{
+            this.$Message.info(res.data.message);
+            this.activityLoading = false;
           }
         })
       },
@@ -1924,10 +2127,8 @@
           }
         }).then(res =>{
           if(res.status == 200 && res.data.status == 1){
-            console.log(res);
             this.intoCloudHost = res.data.list;
           }
-
         })
       },
 
@@ -1937,7 +2138,7 @@
 
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
-            this.cloudHost.hostList = res.data.list;
+            this.cloudHost.hostData = res.data.list;
           }
         })
       },
@@ -2000,7 +2201,7 @@
         this.removeCloudHost.push(this.intoCloudHost.splice(index,1)[0]);
       },
       hostDelete(index){
-      this.intoCloudHost.push(this.removeCloudHost.splice(index,1)[0]);
+        this.intoCloudHost.push(this.removeCloudHost.splice(index,1)[0]);
       },
       hostAdd(){
         this.$http.get('elasticScaling/joinManualAndAutoAssociatedHost.do',{
@@ -2013,13 +2214,53 @@
           }
         }).then(res =>{
           if(res.status == 200 && res.data.status == 1){
-            this.$Message.success('加入云主机成功');
             this.moveCloudHost = false;
+            this.$Message.success('加入云主机成功');
+            this.selectHost();
           }else{
-            this.$Message.info('加入云主机出小差了');
+            this.moveCloudHost = false;
+            this.$Message.info(res.data.message);
+            this.selectHost();
           }
         })
       },
+
+      //移出主机
+      removeHost(item){
+        this.$http.get('elasticScaling/removemanualAndAutoAssociatedHost.do',{
+          params:{
+            id:item.id,
+            telescopicGroupId:item.telescopicgroupid
+          }
+        }).then(res =>{
+          if(res.status == 200 && res.data.status ==1){
+            this.$Message.success(res.data.message);
+            this.selectHost();
+          }else{
+            this.$Message.info(res.data.message);
+            this.selectHost();
+          }
+        })
+      },
+
+      //移除保护
+      removeProtect(item,val){
+        this.$http.get('elasticScaling/isRemoveProtection.do',{
+          params:{
+            id:item.id,
+            removeprotect:val.toString()
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.$Message.success(res.data.message);
+            this.selectHost();
+          }else{
+            this.$Message.info(res.data.message);
+            this.selectHost();
+          }
+        })
+      },
+
       //去除逗号函数
       deleteDouhao(array,keys){
         let val = '';
@@ -2035,6 +2276,63 @@
         return val.substring(0,val.length - 1);
       },
 
+      //获取负载均衡
+      getAllSelect(){
+        this.$http.get('loadbalance/listLoadBalanceRole.do',{
+        }).then(res =>{
+          if(res.status == 200 && res.data.status == 1){
+            if(res.data.result.publicLoadbalance.length != 0 || res.data.result.internalLoadbalance.length != 0 ){
+              this.updateTeleList.balancingList = res.data.result.publicLoadbalance.concat(res.data.result.internalLoadbalance);
+              console.log(this.updateTeleList.balancingList);
+            }else {
+              this.$Modal.info({
+                title:'提示',
+                content:'<p>您还没有创建负载均衡，请先<a style="color: #2A99F2;" href="balance">创建负载均衡</a></p>',
+                onOk:()=>{
+                  this.$router.push({path:'balance'});
+                }
+              })
+            }
+          }
+        });
+      },
+
+
+      //获取，防火墙
+      changeNetWork(id){
+        let f = this.$http.get('network/listAclList.do',{params:{vpcId:id}});
+        // let l = this.$http.get('network/getnetworkAndVpcByloadbalance.do',{params:{vpcId:id,type:'1'}});
+        Promise.all([f]).then(res =>{
+          this.updateTeleList.firewallList = res[0].data.result;
+          // this.newAddTelescopicList.belongSubnetList = res[1].data.list;
+        })
+      },
+      balancings(id){
+        this.$http.get('network/getnetworkAndVpcByloadbalance.do',{
+          params:{
+            loadbalanceId:id,
+            type:'1'
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.updateTeleList.belongNetworkList = res.data.list;
+            this.updateTeleList.belongSubnetList = res.data.list;
+          }
+        })
+      },
+
+      //获取启动配置
+      selectAllElastic(){
+        this.$http.get('elasticScaling/listElasticScalingRunConfig.do',{
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.updateTeleList.configureList = res.data.list;
+          }else {
+            this.$Message.info(res.data.message);
+          }
+        })
+      },
+
     },
     created(){
       this.getDetails();
@@ -2045,6 +2343,9 @@
       this.getContacts();
       this.percentageF();
       this.selectHost();
+      this.getAllSelect();
+      this.selectAllElastic();
+      this.balancings();
     },
     mounted(){
       this.selectCloudHost();
@@ -2177,6 +2478,100 @@
       -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
       border-radius: 10px;
       background:rgba(216,216,216,0.5);
+    }
+  }
+
+  .text-box{
+    border:1px solid #2A99F2;
+    background-color: RGBA(42, 153, 242, 0.1);
+    height: 32px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+
+  .ivu-icon-ios-help-outline:before{
+    color: #2A99F2;
+  }
+  .ivu-tooltip-inner{
+    white-space: inherit;
+  }
+  .formitem1{
+    .ivu-icon-ios-help-outline:before{
+      position: absolute;
+      top: 12px;
+      left:-13px;
+    }
+    .ivu-tooltip{
+      position:absolute;
+      top: -35px;
+      left: 88px;
+    }
+  }
+  .formitem2{
+    .ivu-icon-ios-help-outline:before{
+      position: absolute;
+      top: -19px;
+      left: 10px;
+    }
+    .ivu-icon{
+      position: absolute;
+      top: 12px;
+      left: -24px;
+    }
+    .ivu-tooltip{
+      position:absolute;
+      top: -36px;
+      left: 101px;
+    }
+  }
+  .formitem3{
+    .ivu-icon-ios-help-outline:before{
+      position: absolute;
+      top: 12px;
+      left:-11px;
+    }
+    .ivu-tooltip{
+      position:absolute;
+      top: -35px;
+      left: 75px;
+    }
+  }
+  .formitem4{
+    .ivu-icon-ios-help-outline:before{
+      position: absolute;
+      top: 12px;
+      left:-33px;
+    }
+    .ivu-tooltip{
+      position:absolute;
+      top: -35px;
+      left: 75px;
+    }
+  }
+  .formitem5{
+    .ivu-icon-ios-help-outline:before{
+      position: absolute;
+      top: 12px;
+      left:-22px;
+    }
+    .ivu-tooltip{
+      position:absolute;
+      top: -35px;
+      left: 75px;
+    }
+  }
+  .formitem6{
+    .ivu-icon-ios-help-outline:before{
+      position: absolute;
+      top: 12px;
+      left:-20px;
+    }
+    .ivu-tooltip{
+      position:absolute;
+      top: -35px;
+      left: 75px;
     }
   }
 </style>

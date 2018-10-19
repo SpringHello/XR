@@ -28,7 +28,7 @@
         <p style="margin: 20px 0;font-size: 14px;color: #999999;">提示：启动配置之时模板，创建启动配置不收费，按照启动配置增加的主机才按照实时价格计费。</p>
         <!--第一步-->
         <div style="width: 700px;" v-show="hostSpecification.nextIndex == 1">
-          <Form ref="config" :model="config" :rules="configValidate" :label-width="70">
+          <Form ref="config" :model="config" :rules="configValidate" :label-width="80">
             <FormItem label="配置名称" prop="configName">
               <Input v-model="config.configName" style="width: 317px"></Input>
               <p style="color: #666666;margin-top:10px;">请输入不超过16位字符名称，支持中文、字母与数字</p>
@@ -88,10 +88,10 @@
                 <p>系统盘容量</p>
                 <p v-if="hostSpecification.nextIndex > 2">镜像</p>
                 <div v-if="hostSpecification.nextIndex > 3">
-                  <p>数据盘类型</p>
-                  <p>数据盘容量</p>
+                  <p v-if="dataIndex != -1">数据盘类型</p>
+                  <p v-if="dataIndex != -1">数据盘容量</p>
                   <p>公网IP</p>
-                  <p>带宽</p>
+                  <p v-if="single">带宽</p>
                 </div>
               </div>
               <p>资费</p>
@@ -102,14 +102,14 @@
                 <p>{{selectedList.timeType}}</p>
                 <p>{{selectedList.zoneName}}</p>
                 <p>{{selectedList.hostFormat}}</p>
-                <p>{{selectedList.diskType}}</p>
-                <p>{{selectedList.diskSize}}</p>
+                <p>{{selectedList.systemDiskType}}</p>
+                <p>{{selectedList.diskSize}}GB</p>
                 <p v-if="hostSpecification.nextIndex > 2">{{selectedList.mirrorName}}</p>
                 <div v-if="hostSpecification.nextIndex > 3">
-                  <p>{{selectedList.dataDiskType}}</p>
-                  <p>{{selectedList.dataDiskSize}}GB</p>
+                  <p v-if="dataIndex != -1">{{selectedList.dataDiskType}}</p>
+                  <p v-if="dataIndex != -1">{{selectedList.dataDiskSize}}GB</p>
                   <p>{{selectedList.publicIp}}</p>
-                  <p>{{selectedList.bandWidth}}MB</p>
+                  <p v-if="single">{{selectedList.bandWidth}}MB</p>
                 </div>
               </div>
               <p v-if="hostSpecification.nextIndex < 4">{{hostSpecification.money}}元/小时</p>
@@ -129,9 +129,10 @@
               </ul>
               <p style="color: #666666;margin: 10px 0 20px 0;">为了使主机创建完成后直接可用，强烈建议您将业务应用部署在自定义镜像中</p>
               <div v-if="mirrorIndex == 0">
-                <Select v-model="mirrorName" style="width:200px">
+                <Select v-model="mirrorName" style="width:200px" v-if="mirrorList.length !=0">
                   <Option v-for="item in mirrorList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
+                <div v-else >您还没有自定义镜像，点击<span @click="showModal.createMirror = true" style="color: #2A99F2;cursor: pointer;">新建镜像</span></div>
               </div>
               <div v-if="mirrorIndex == 1">
                 <Dropdown v-for="(item,index) in systemMirror.publicList"  :key="item.ostypeid" @on-click="setOs">
@@ -174,7 +175,7 @@
                              @on-blur="changeDiskSize(index,diskSize)"
                              @on-focus="changeDiskSize(index,diskSize)"></InputNumber>
               </div>
-              <Checkbox v-model="single">公网IP</Checkbox>
+              <Checkbox v-model="single" @on-change="getCapacityPrice">公网IP</Checkbox>
               <div style="width:500px;display: flex;align-items:center;margin-top: 28px;" v-if="single">
                 <i-slider
                   v-model="bandWidth"
@@ -221,7 +222,7 @@
                   <Form ref="password" :model="password" :rules="passwordValidate">
                     <FormItem label="" prop="divPassWord">
                       <Input v-model="password.divPassWord" placeholder="请输入6-23位包含大小写与数字的密码"></Input>
-                      <p style="color:#999999;margin-top: 10px">登录密码可用特殊字符为：`~!#$%_()^&*,-<>?@.+=</p>
+                      <p style="color:#999999;margin-top: 10px">登录密码可用特殊字符为：',?</p>
                     </FormItem>
                   </Form>
                 </div>
@@ -232,16 +233,56 @@
         <br>
         <hr color="#D8D8D8" size="1">
         <br>
-        <Button type="ghost" @click="upper" v-if="hostSpecification.nextIndex!=1">上一步</Button>
+        <Button type="ghost" @click="upper" v-if="hostSpecification.nextIndex!=1" style="margin-right: 10px;">上一步</Button>
         <Button type="primary" @click="next" v-if="hostSpecification.nextIndex < 4">下一步</Button>
         <Button type="primary" @click="okSetting" v-else>完成设置</Button>
       </div>
+
+      <!--新建镜像-->
+      <Modal
+        :scrollable="true"
+        v-model="showModal.createMirror"
+        @on-ok="ok">
+        <div slot="header" class="modal-header-border">
+          <span class="universal-modal-title">制作镜像</span>
+        </div>
+        <div class="universal-modal-content-flex">
+          <Form :model="formItem" ref="formItem" :rules="ruleMirror" style="align-items:flex-end">
+            <FormItem label="主机" prop="vmInfo">
+              <Select v-model="formItem.vmInfo">
+                <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
+                        :key="item.computerid">
+                  {{item.computername}}
+                </Option>
+              </Select>
+            </FormItem>
+            <FormItem>
+            <span style="color:#2A99F2;font-size:14px;padding-top:34px;">
+              <span style="font-weight:800;font-size:20px;">+</span>
+              <span style="cursor:pointer;" @click="$router.push('buy')">购买主机</span>
+            </span>
+            </FormItem>
+            <FormItem label="镜像名称" prop="mirrorName">
+              <Input v-model="formItem.mirrorName" type="textarea" placeholder="请输入" :autosize="{minRows: 2,maxRows: 5}"></Input>
+            </FormItem>
+            <FormItem label="备注">
+              <Input v-model="formItem.mirrorDescription" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+                     placeholder="请输入..."></Input>
+            </FormItem>
+          </Form>
+        </div>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="ghost" @click="showModal.createMirror = false">取消</Button>
+          <Button type="primary" @click="checkFormItem">确定</Button>
+        </div>
+      </Modal>
     </div>
   </div>
 </template>
 
 <script>
-
+  import regExp from '../../util/regExp'
+  const validaRegisteredName = regExp.validaRegisteredName
   const validConfigName = (rule,value,callback)=>{
     let reg =/^[0-9a-zA-z\u4E00-\u9FA5]{0,16}$/;
     if(value == ""){
@@ -252,9 +293,39 @@
       callback();
     }
   }
+
+  const validLoginPassword = (rule,value,callback)=>{
+    let reg = /^[0-9a-zA-z\u4E00-\u9FA5',?？]{6,23}$/;
+    if(value == ''){
+      return callback(new Error('请输入登录密码'));
+    }else if(!reg.test(value)){
+      return callback(new Error('登录密码格式不正确'));
+    }else{
+      callback();
+    }
+  }
   export default {
     data(){
       return{
+        //新建镜像
+        showModal:{
+          createMirror:false
+        },
+        hostName: [],
+        formItem: {
+          vmInfo: '',
+          mirrorName: '',
+          mirrorDescription: ''
+        },
+        ruleMirror: {
+          vmInfo: [
+            {required: true, message: '请选择一台主机', trigger: 'change'}
+          ],
+          mirrorName: [
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
+          ]
+        },
+
         //步骤条
         nextList:[
           {
@@ -300,110 +371,38 @@
           //CPU
           cpuList:[
             {
-              CPU:'1',
+              CPU:'',
               List:[
-                {
-                  value:'1'
-                },
-                {
-                  value:'2'
-                },
-                {
-                  value:'4'
-                },
-                {
-                  value:'8'
-                }
               ],
             },
             {
-              CPU:'2',
+              CPU:'',
               List:[
-                {
-                  value:'2'
-                },
-                {
-                  value:'4'
-                },
-                {
-                  value:'8'
-                },
-                {
-                  value:'16'
-                }
               ],
             },
             {
-              CPU:'4',
+              CPU:'',
              List:[
-                {
-                  value:'4'
-                },
-                {
-                  value:'8'
-                },
-                {
-                  value:'16'
-                },
-                {
-                  value:'32'
-                }
               ],
             },
             {
-              CPU:'8',
+              CPU:'',
               List:[
-                {
-                  value:'8'
-                },
-                {
-                  value:'16'
-                },
-                {
-                  value:'32'
-                },
-                {
-                  value:'64'
-                }
               ],
             },
             {
-              CPU:'16',
+              CPU:'',
               List:[
-                {
-                  value:'16'
-                },
-                {
-                  value:'32'
-                },
-                {
-                  value:'64'
-                },
-                {
-                  value:'128'
-                }
+
               ],
             },
             {
-              CPU:'32',
-              List:[
-                {
-                  value:'64'
-                },
-                {
-                  value:'128'
-                }
-              ]
+              CPU:'',
+              List:[]
             },
             {
-              CPU:'64',
+              CPU:'',
               List:[
-                {
-                  value:'128'
-                },
-                {
-                  value:'256'
-                }
               ]
             }
           ],
@@ -455,10 +454,6 @@
         mirrorIndex:0,
         mirrorName:'',
         mirrorList:[
-          {
-            value:'自定义镜像',
-            label:'自定义镜像'
-          }
         ],
 
         //系统镜像
@@ -485,10 +480,6 @@
         //数据盘类型
         dataDiskType:[
           {
-            value:'SATA',
-            label:'sata'
-          },
-          {
             value:'SAS',
             label:'sas'
           },
@@ -497,11 +488,11 @@
             label:'ssd'
           }
         ],
-        dataIndex:0,
+        dataIndex:-1,
 
         //容量
-        diskSize:20,
-        single:true,
+        diskSize:0,
+        single:false,
 
         //带宽
         bandWidth:1,
@@ -515,7 +506,7 @@
         },
         passwordValidate:{
           divPassWord:[
-            {required:true,message:'请输入登录密码',trigger:'blur'}
+            {required:true,validator:validLoginPassword,trigger:'blur'}
           ]
         },
         //主机名称
@@ -523,11 +514,14 @@
       }
     },
     created(){
-      this.getMoeny();
       this.getTemplates();
-      this.getCapacityPrice();
+      // this.getCapacityPrice();
       this.getZonesConfig();
       this.getPrivateMirror();
+      this.closeHostList();
+      setTimeout(()=>{
+        this.getMoeny();
+      },200)
     },
     methods:{
       //选择cpu，内存，系统盘
@@ -553,17 +547,33 @@
 
       //下一步
       next(){
+        if(this.hostSpecification.nextIndex == 3){
+          if(this.mirrorIndex == 0){
+            if(this.mirrorName == ''){
+              this.$Modal.info({
+                title:'提示',
+                content:'请选择一个镜像'
+              })
+            }
+          }else{
+            if(this.systemMirror.publicList[this.systemIndex].selectSystem == ''){
+              this.$Modal.info({
+                title:'提示',
+                content:'请选择一个镜像'
+              })
+            }
+          }
+        }
         let params ={
           hostFormat:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU+'核'+this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory+'G',
           name:this.config.configName,
           timeType:'实时计费',
           timeValue:'1',
-          diskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].value,
-          diskSize:'40',
+          diskSize:this.diskSize,
+          systemDiskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].value,
           zoneName:this.$store.state.zone.zonename,
           mirrorName:this.mirrorIndex == 0? this.mirrorName :this.systemMirror.publicList[this.systemIndex].selectSystem,
-          dataDiskType:this.dataDiskType[this.dataIndex].value,
-          dataDiskSize:this.diskSize,
+          dataDiskType:this.dataIndex == -1 ? '':this.dataDiskType[this.dataIndex].value,
           bandWidth:this.single == true ? this.bandWidth:'',
           publicIp:this.single == true ? '有' :'无',
           money:(this.hostSpecification.money+Number(this.price)).toFixed(2)
@@ -608,6 +618,7 @@
         }
       },
 
+      //获取金额
       getMoeny(){
        this.$http.post('device/QueryBillingPrice.do',{
           cpuNum:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
@@ -615,7 +626,7 @@
           timeType:'current',
           timeValue:'1',
           diskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
-          diskSize:'40'
+          diskSize:this.diskSize
         }).then(res => {
           if(res.data.cost){
             this.hostSpecification.money = res.data.cost;
@@ -689,10 +700,6 @@
 
       //完成设置
       okSetting(){
-         // let par = function(a){
-         //  let s = new Set();
-         //   s.add.apply(s,a);
-         // }
         if(this.passwordList == '1'){
           this.$refs.password.validate((vaild)=>{
             if(vaild){
@@ -701,23 +708,24 @@
                 systemTemplateId:this.systemMirror.system.systemId,
                 cpu:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
                 memory:this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory.toString(),
-                diskSize:this.selectedList.diskSize,
+                diskSize:this.diskSize,
                 bandwidth:this.selectedList.bandWidth.toString(),
                 computerName:this.computerName,
                 loginPassword:this.password.divPassWord,
                 billingtype:this.selectedList.money,
-                diskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
+                diskType:this.dataIndex == -1 ? '' : this.dataDiskType[this.dataIndex].label,
                 loginWay:this.passwordList,
-                systemDiskType:this.dataDiskType[this.dataIndex].label,
+                systemDiskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
                 systemUserName:this.systemUsername
               }).then(res => {
                 if(res.status == 200 && res.data.status ==1){
                   this.$Message.success('启动配置创建成功');
+                  this.$router.push({path:'elastic'});
                 }else{
-                  // this.$Modal.confirm({
-                  //   content:"启动创建配置失败,您可以联系客服，或重试"
-                  // })
-                  this.$Message.info(res.data.message);
+                  this.$Modal.confirm({
+                    content:res.data.message
+                  })
+                  // this.$Message.info(res.data.message);
                 }
               })
             }
@@ -733,9 +741,9 @@
             computerName:this.computerName,
             loginPassword:this.password.divPassWord,
             billingtype:this.selectedList.money,
-            diskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
+            diskType:this.dataIndex == -1 ? '' : this.dataDiskType[this.dataIndex].label,
             loginWay:this.passwordList,
-            systemDiskType:this.dataDiskType[this.dataIndex].label,
+            systemDiskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
             systemUserName:this.systemUsername
           }).then(res => {
             if(res.status == 200 && res.data.status ==1){
@@ -763,6 +771,47 @@
         })
       },
 
+      //新建镜像
+      checkFormItem(){
+        this.$refs.formItem.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用制作镜像的方法
+            this.ok()
+          }
+        })
+      },
+      ok() {
+        this.showModal.createMirror = false
+        this.$http.get('Snapshot/createTemplate.do',{
+          params: {
+            rootDiskId: this.formItem.vmInfo.split('#')[0],
+            templateName: this.formItem.mirrorName,
+            descript: this.formItem.mirrorDescription
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.getPrivateMirror();
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      // 查询已关闭主机
+      closeHostList() {
+        var vmcloselist = []
+        this.hostName = []
+        this.$http.get(`information/listVirtualMachines.do`)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              if (response.data.result.close) {
+                vmcloselist = response.data.result.close.list
+              }
+              this.hostName = vmcloselist
+            }
+          })
+      },
     },
     mounted(){
     },
@@ -914,7 +963,6 @@
       display: inline-block;
       line-height: 32px;
       color: #333333;
-      font-size: 14px;
     }
   }
   .nav_item{

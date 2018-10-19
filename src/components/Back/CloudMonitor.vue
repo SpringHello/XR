@@ -285,6 +285,9 @@
                                 </Option>
                               </Select>
                             </Col>
+                            <Col span="4">
+                              <Input v-model="item.value" placeholder="请输入端口号"/>
+                            </Col>
                             <Col span="1">
                               <Button type="text" @click="eventHandleRemove(index)">×</Button>
                             </Col>
@@ -692,17 +695,18 @@
         },
         eventformDynamic: [
           {
-            alarmname: 'XXX端口ping不可达',
+            alarmname: 'ping不可达',
             countcircle: 1,
             continuecircle: 1,
             alarmcount: 1,
-            alarmtype: 2
+            alarmtype: 2,
+            value: ''
           }
         ],
         eventTem: {
           target: [
             {
-              value: 'XXX端口ping不可达',
+              value: 'ping不可达',
             },
             {
               value: '应用中断',
@@ -1387,11 +1391,12 @@
         ]
         this.eventformDynamic = [
           {
-            alarmname: 'XXX端口ping不可达',
+            alarmname: 'ping不可达',
             countcircle: 1,
             continuecircle: 1,
             alarmcount: 1,
-            alarmtype: 2
+            alarmtype: 2,
+            value: '',
           }
         ]
       },
@@ -1497,11 +1502,12 @@
       eventHandleAdd() {
         this.eventformDynamic.push(
           {
-            alarmname: 'XXX端口ping不可达',
+            alarmname: 'ping不可达',
             countcircle: 1,
             continuecircle: 1,
             alarmcount: 1,
-            alarmtype: 2
+            alarmtype: 2,
+            value: ''
 
           }
         )
@@ -2668,6 +2674,7 @@
               targetAlarmMessage: JSON.stringify(this.targetformDynamic),
               eventAlarmMessage: JSON.stringify(this.eventformDynamic),
             }
+            // console.log(params.targetAlarmMessage)
             let params1 = {
               id: this.strategyId + '',
               name: this.newAlarmStrategyForm.strategyName + '',
