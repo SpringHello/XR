@@ -6,7 +6,7 @@
         <button class="btn" v-show="btns=='templated'" @click="btns='untemplate'">新建模板</button>
         <button class="btn" v-show="btns=='untemplate'" @click="clickTemp">选择已有模板
         </button>
-        <button class="back">返回</button>
+        <button class="back" @click="$router.go(-1)">返回</button>
       </div>
     </div>
 
@@ -542,14 +542,14 @@
           // fax: '+86.0234143813',
           email: this.infoTempFormValidate.mail,
           usertype: this.infoTempFormValidate.type
-        }).then(responce => {
-          if (responce.data.status == 1 && responce.status == 200) {
+        }).then(response => {
+          if (response.data.status == 1 && response.status == 200) {
             this.$Message.success('信息模板创建成功')
             this.index = 1
             this.userid = response.data.data.userid
           } else {
             this.$Modal.confirm({
-              content: responce.data.msg
+              content: response.data.msg
             })
           }
         })

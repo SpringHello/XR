@@ -48,7 +48,7 @@
   export default{
     beforeRouteEnter(to, from, next){
       axios.post('domain/getDomainName.do', {
-        domainName: sessionStorage.getItem('doname'),
+        domainName: sessionStorage.getItem('checkname'),
         token: sessionStorage.getItem('token'),
         status: sessionStorage.getItem('status'),
       }).then(response => {
@@ -62,7 +62,7 @@
       return {
         append: '.com',
         choose: false,
-        doname: sessionStorage.getItem('doname'),
+        doname: sessionStorage.getItem('checkname'),
         result: {},
         choosend: [],
       }

@@ -151,7 +151,7 @@
       },
       //查看已注册信息
       checked(name, status){
-        sessionStorage.setItem('doname', name)
+        sessionStorage.setItem('checkname', name)
         sessionStorage.setItem('status', status)
         this.$router.push('CheckReg')
       },
@@ -189,8 +189,6 @@
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
-          console.log(this.Results)
-          console.log(res)
           if (this.Results.every(item => {
               return item.name != res.data.data.results[0].name
             })) {

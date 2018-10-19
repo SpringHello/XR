@@ -89,7 +89,6 @@
       return {
         choose: false,
         searchText: '',
-        select: ['com'],
         domainList: [
           {name: '域名查询', img: require('../../../assets/img/domain/s-1.png')},
           {name: '加入购物清单', img: require('../../../assets/img/domain/s-2.png')},
@@ -217,13 +216,15 @@
       textSearch(){
         if (this.searchText == '') {
           return this.$Message.info('请输入您要查找的域名')
-        } else {
-          sessionStorage.setItem('name', this.searchText)
-          sessionStorage.setItem('token', this.tokenId)
-          sessionStorage.setItem('suffix', JSON.stringify(this.suffixList))
-          sessionStorage.setItem('suffixChange', JSON.stringify(this.getSuffix))
-          this.$router.push('DomainResult')
         }
+        if (this.suffixList.length == 0) {
+          return this.$Message.info('请选择域名后缀')
+        }
+        sessionStorage.setItem('name', this.searchText)
+        sessionStorage.setItem('token', this.tokenId)
+        sessionStorage.setItem('suffix', JSON.stringify(this.suffixList))
+        sessionStorage.setItem('suffixChange', JSON.stringify(this.getSuffix))
+        this.$router.push('DomainResult')
       },
 
     },
