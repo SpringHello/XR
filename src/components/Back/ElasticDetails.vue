@@ -19,7 +19,22 @@
         <div class="details">
           <p>配置详情</p>
           <div>
-            <p v-for="item in details">{{item.value}}</p>
+            <p>配置名称</p>
+            <p>计费方式</p>
+            <p>地域选择</p>
+            <p>主机规格</p>
+            <p>系统盘</p>
+            <p>系统盘容量</p>
+            <p>镜像</p>
+            <p v-if="elastic.disktype">数据盘类型</p>
+            <p v-if="elastic.disktype">数据盘容量</p>
+            <p>公网IP</p>
+            <p>带宽</p>
+            <p>主机名称</p>
+            <p>用户名</p>
+            <p>登录方式</p>
+            <p>登录密码</p>
+            <p>资费</p>
           </div>
           <div>
             <p>{{elastic.startupconfigname}} <span @click="updatesName = true" style="color: #2A99F2;margin-left:8px;cursor: pointer;">修改</span></p>
@@ -30,7 +45,7 @@
             <p>{{elastic.systemdisk}}G</p>
             <p>{{elastic.templatename}}</p>
             <p>{{elastic.disktype}}</p>
-            <p>{{elastic.disksize}}GB</p>
+            <p v-if="elastic.disktype">{{elastic.disksize}}GB</p>
             <p>有</p>
             <p>10MB</p>
             <p>{{elastic.computername == '' ? '---':elastic.computername}}</p>
@@ -45,8 +60,8 @@
         <br>
         <div>
           <p style="color: #333333;font-size: 16px;">关联伸缩组</p>
-          <p style="color: #2A99F2;font-size: 14px;margin: 10px 0;cursor: pointer;" @click="elasticJump()" v-if="telescopicList.length > 0" v-for="item in telescopicList">{{item.stretchname}}</p>
-          <p v-else>您还没有</p>
+          <p style="color: #2A99F2;font-size: 14px;margin: 10px 0;cursor: pointer;" @click="elasticJump(item)" v-if="telescopicList.length > 0" v-for="item in telescopicList">{{item.stretchname}}</p>
+          <p v-else>您还没有关联伸缩组</p>
         </div>
       </div>
     </div>
@@ -141,9 +156,7 @@
             {required:true,validator:validConfigName,trigger:'blur'}
           ]
         },
-
         telescopicList:[]
-
       }
     },
     created(){
@@ -187,8 +200,8 @@
         });
       },
 
-      elasticJump(){
-        sessionStorage.setItem('vpc_id',this.elastic.id);
+      elasticJump(item){
+        sessionStorage.setItem('vpc_id',item.id);
         this.$router.push({path:'telescopicDetails'})
       }
     },

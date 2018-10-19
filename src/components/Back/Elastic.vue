@@ -441,7 +441,7 @@
             this.settingData = res.data.list;
             this.newAddTelescopicList.configureList = res.data.list;
           }else {
-            this.$Message.info('平台出小差了');
+            this.$Message.info(res.data.message);
           }
         })
       },
@@ -589,7 +589,7 @@
           if(res.status == 200 && res.data.status ==1){
             this.selectAllTelescopic();
           }else{
-            this.$Message.info('平台出小差了');
+            this.$Message.info(res.data.message);
           }
         })
       },

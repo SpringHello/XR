@@ -175,7 +175,7 @@
                              @on-blur="changeDiskSize(index,diskSize)"
                              @on-focus="changeDiskSize(index,diskSize)"></InputNumber>
               </div>
-              <Checkbox v-model="single">公网IP</Checkbox>
+              <Checkbox v-model="single" @on-change="getCapacityPrice">公网IP</Checkbox>
               <div style="width:500px;display: flex;align-items:center;margin-top: 28px;" v-if="single">
                 <i-slider
                   v-model="bandWidth"
@@ -569,12 +569,11 @@
           name:this.config.configName,
           timeType:'实时计费',
           timeValue:'1',
-          diskSize:'40',
+          diskSize:this.diskSize,
           systemDiskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].value,
           zoneName:this.$store.state.zone.zonename,
           mirrorName:this.mirrorIndex == 0? this.mirrorName :this.systemMirror.publicList[this.systemIndex].selectSystem,
           dataDiskType:this.dataIndex == -1 ? '':this.dataDiskType[this.dataIndex].value,
-          dataDiskSize:this.diskSize,
           bandWidth:this.single == true ? this.bandWidth:'',
           publicIp:this.single == true ? '有' :'无',
           money:(this.hostSpecification.money+Number(this.price)).toFixed(2)
@@ -627,7 +626,7 @@
           timeType:'current',
           timeValue:'1',
           diskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
-          diskSize:'40'
+          diskSize:this.diskSize
         }).then(res => {
           if(res.data.cost){
             this.hostSpecification.money = res.data.cost;
@@ -709,7 +708,7 @@
                 systemTemplateId:this.systemMirror.system.systemId,
                 cpu:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
                 memory:this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory.toString(),
-                diskSize:this.selectedList.diskSize,
+                diskSize:this.diskSize,
                 bandwidth:this.selectedList.bandWidth.toString(),
                 computerName:this.computerName,
                 loginPassword:this.password.divPassWord,
@@ -724,7 +723,7 @@
                   this.$router.push({path:'elastic'});
                 }else{
                   this.$Modal.confirm({
-                    content:"启动创建配置失败,您可以联系客服，或重试"
+                    content:res.data.message
                   })
                   // this.$Message.info(res.data.message);
                 }
