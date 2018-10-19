@@ -147,6 +147,7 @@
     },
     created(){
       this.getElastic();
+      this.getTelescopic();
     },
     methods:{
       getElastic(){
@@ -175,9 +176,17 @@
         })
       },
 
+      getTelescopic(){
+        this.$http.get('elasticScaling/listTelescopicGroupByFeild.do',{
+          params:{
+            feild:sessionStorage.getItem('telescopic_id')
+          }
+        }).then(res =>{
+            console.log(res.data);
+        });
+      },
+
       elasticJump(){
-        console.log(this.elastic);
-        return;
         sessionStorage.setItem('vpc_id',this.elastic.id);
         this.$router.push({path:'telescopicDetails'})
       }
