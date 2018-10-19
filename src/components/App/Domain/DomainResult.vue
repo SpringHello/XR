@@ -168,6 +168,7 @@
               this.domName += e.name + ','
             })
             sessionStorage.setItem('domName', this.domName)
+            sessionStorage.setItem('domPrice', this.payMoney)
             this.$router.push('DomainInfoTemplate')
           } else {
             return this.$Message.info('请添加商品到清单')
@@ -197,6 +198,9 @@
 
           }
         })
+      },
+      singles(){
+
       }
     }
   }

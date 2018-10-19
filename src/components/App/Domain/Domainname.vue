@@ -217,9 +217,6 @@
         if (this.searchText == '') {
           return this.$Message.info('请输入您要查找的域名')
         }
-        if (this.suffixList.length == 0) {
-          return this.$Message.info('请选择域名后缀')
-        }
         sessionStorage.setItem('name', this.searchText)
         sessionStorage.setItem('token', this.tokenId)
         sessionStorage.setItem('suffix', JSON.stringify(this.suffixList))

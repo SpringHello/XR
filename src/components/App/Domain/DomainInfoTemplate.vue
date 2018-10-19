@@ -562,15 +562,17 @@
           domainName: domNames.substring(0, domNames.length - 1),
           years: '1',
           isName: '0',
-          signature: ''
+          signature: '',
+          price: sessionStorage.getItem('domPrice')
         }
         if (this.btns == 'untemplate') {
           params.userid = this.userid
         } else {
           params.userid = this.templateInfo.userid
         }
-        axios.post('domain/createDomainName.do', params).then(response => {
+        axios.post('domain/createOrder.do', params).then(response => {
           if (response.data.status == 1) {
+            sessionStorage.setItem('orderNum', response.data.orderNum)
             this.$router.push('/ruicloud/order')
           }
         })
