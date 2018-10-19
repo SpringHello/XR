@@ -994,7 +994,7 @@
             width: 30%;
             display: flex;
             .price {
-              padding: 5px 38px 0;
+              padding: 5px 35px 0;
               p {
                 font-size: 14px;
                 font-family: "Microsoft YaHei", "微软雅黑";
