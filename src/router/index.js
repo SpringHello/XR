@@ -12,6 +12,7 @@ import LR from '@/LR'
 // import Price from '@/components/App/Price'
 const Home = () => import('@/components/App/Home')
 const Art = () => import('@/components/App/Article')
+const ArtTags = () => import('@/components/App/ArticleTags')
 //const Price = () => import('@/components/App/Price')
 
 //const Buy = () =>import('@/components/App/Buy1')
@@ -200,6 +201,7 @@ var router = new Router({
         {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
         {path: 'document', name: 'document', component: Document},
         {path: 'article/:typeId', name: 'art', component: Art},
+        {path: 'article/info/:typeId', name: 'artTags', component: ArtTags},
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
         {path: 'Record', name: 'Record', component: Record},
         //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
