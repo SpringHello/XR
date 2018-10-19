@@ -674,13 +674,11 @@
           <h2>个人用户</h2>
           <p><i></i>可以使用睿云所有资源</p>
           <p><i></i>个人级别的资源建立额度</p>
-          <p><i></i>最长一个月的免费试用时间</p>
         </div>
         <div class="selectAuthType">
           <h2>企业用户</h2>
           <p><i></i>可以使用睿云所有资源</p>
           <p><i></i>企业级无限量的资源建立额度</p>
-          <p><i></i>最长一个月的免费试用时间</p>
           <p><i></i>专业免费的点对点咨询服务</p>
         </div>
       </div>
@@ -1804,7 +1802,7 @@
             align: 'center',
             render: (h, params) => {
               let isDisabled = false
-              if (params.row.tempCode == '0101' || params.row.tempCode == '0104' || params.row.tempCode == '0105' || params.row.tempCode == '0301' || params.row.tempCode == '0202') {
+              if (params.row.tempCode == '0101' || params.row.tempCode == '0301') {
                 isDisabled = true
               }
               return h('div', [
@@ -1828,15 +1826,10 @@
             title: '邮件',
             align: 'center',
             render: (h, params) => {
-              let isDisabled = false
-              if (params.row.tempCode == '0101' || params.row.tempCode == '0104' || params.row.tempCode == '0105' || params.row.tempCode == '0301') {
-                isDisabled = true
-              }
               return h('div', [
                 h('Checkbox', {
                   props: {
-                    value: params.row.isEmail == 1,
-                    disabled: isDisabled
+                    value: params.row.isEmail == 1
                   },
                   on: {
                     'on-change': () => {
@@ -1852,7 +1845,7 @@
             align: 'center',
             render: (h, params) => {
               let isDisabled = false
-              if (params.row.tempCode == '0101' || params.row.tempCode == '0104' || params.row.tempCode == '0105' || params.row.tempCode == '0301') {
+              if (params.row.tempCode == '0101' || params.row.tempCode == '0104' || params.row.tempCode == '0301') {
                 isDisabled = true
               }
               return h('div', [
