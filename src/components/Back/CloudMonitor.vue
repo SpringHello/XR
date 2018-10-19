@@ -285,9 +285,9 @@
                                 </Option>
                               </Select>
                             </Col>
-                            <!-- <Col span="4">
-                              <input type="number">
-                            </Col> -->
+                            <Col span="4">
+                              <Input v-model="item.value" placeholder="请输入端口号"/>
+                            </Col>
                             <Col span="1">
                               <Button type="text" @click="eventHandleRemove(index)">×</Button>
                             </Col>
@@ -699,7 +699,8 @@
             countcircle: 1,
             continuecircle: 1,
             alarmcount: 1,
-            alarmtype: 2
+            alarmtype: 2,
+            value: ''
           }
         ],
         eventTem: {
@@ -1394,7 +1395,8 @@
             countcircle: 1,
             continuecircle: 1,
             alarmcount: 1,
-            alarmtype: 2
+            alarmtype: 2,
+            value: '',
           }
         ]
       },
@@ -1504,7 +1506,8 @@
             countcircle: 1,
             continuecircle: 1,
             alarmcount: 1,
-            alarmtype: 2
+            alarmtype: 2,
+            value: ''
 
           }
         )
