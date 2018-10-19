@@ -2,8 +2,8 @@
   <div style="background: #FFF">
     <div class="center">
       <ul class="title">
-        <p :style="widthChange">{{ hotTags }}</p>
-        <li v-show="noSelect" v-for="type in articleType">
+        <p>新闻资讯</p>
+        <li v-for="type in articleType">
           <router-link :to="type.id.toString()">{{ type.typename }}</router-link>
         </li>
       </ul>
@@ -16,13 +16,13 @@
                      :src="item.coverUrl"/>
               </div>
               <div class="item-right">
-                <p class="item-title" :title="item.title">{{ item.title}}</p><span>{{ item.createDate }} </span>
+                <p class="item-title" :title="item.title">{{ item.title}}</p><span>{{ item.createDate}} </span>
                 <p class="item-content" v-html="item.abstracts"></p>
+                <div class="item-label">
+                  <span v-for="label in item.labels">{{ label.name}}</span>
+                </div>
               </div>
             </router-link>
-            <div class="item-label">
-              <router-link class="labelhref" v-for="label in item.keywordval" :key="item.keywordval.index" :to="{name:'artTags', params:{ typeId: label}}">{{ label }}</router-link>
-            </div>
           </div>
           <Page :total="pageInfo.total" :page-size="pageInfo.pageSize" :current="pageInfo.currentPage"
                 style="float:right;margin-top: 20px;"
@@ -32,10 +32,10 @@
           <div class="hot-tags">
             <h3>热门标签</h3>
             <div class="tags">
-              <router-link class="tagslink" v-for="(tag,index) in tags" :key="index" :to="{name:'artTags', params:{ typeId: tag.keywordsval}}"
-                      @click.native="update(tag.keywordsval)" :class="{active:keywordVal==tag.keywordsval}">{{
+              <Button type="ghost" v-for="(tag,index) in tags" :key="index" shape="circle"
+                      @click="update(tag.keywordsval)" :class="{active:keywordVal==tag.keywordsval}">{{
                 tag.keywordsval }}
-              </router-link>
+              </Button>
             </div>
           </div>
           <div class="hot-information">
@@ -63,10 +63,10 @@
       let keywordVal = sessionStorage.getItem('keywords') || ''
       let articleType = axios.get('article/getArticleType.do')
       let moreArticle = axios.post('article/getMoreArticle.do', {
-          articleTypeId: to.params.typeId,
-          keywordVal: keywordVal,
-          page: '1',
-          pageSize: '5'
+        articleTypeId: to.params.typeId,
+        keywordVal: keywordVal,
+        page: '1',
+        pageSize: '5'
       })
       let keywords = axios.get('article/getKeywords.do')
       let hot = axios.get('article/getHotInformation.do', {
@@ -81,7 +81,7 @@
       })
     },
     data(){
-      let keywordsId = sessionStorage.getItem('keywords') || ''
+      let keywords = sessionStorage.getItem('keywords') || ''
       sessionStorage.removeItem('keywords')
       return {
         articleType: [],
@@ -94,25 +94,16 @@
           total: 0
         },
         // 选中的标签
-        keywordVal: keywordsId,
-        hotTags: '新闻资讯',
-        flagClick: 0,
-        noSelect: true,
-        widthChange: {
-          width: '160px'
-        }
+        keywordVal: keywords
       }
     },
     beforeRouteUpdate (to, from, next) {
-      // 设置当前hotTags的内容
-      this.hotTags = '新闻资讯'
-      this.flagClick = 0
       this.pageInfo.currentPage = 1
       axios.post('article/getMoreArticle.do', {
-          articleTypeId: to.params.typeId,
-          keywordVal: this.keywordVal,
-          page: this.pageInfo.currentPage,
-          pageSize: this.pageInfo.pageSize
+        articleTypeId: to.params.typeId,
+        keywordVal: this.keywordVal,
+        page: this.pageInfo.currentPage,
+        pageSize: this.pageInfo.pageSize
       }).then(response => {
         this.articleList = response.data.result.data
         this.pageInfo.total = response.data.result.total
@@ -128,46 +119,20 @@
         this.hot = values[3].data.result
       },
       update(keywordVal){
-        // 设置当前hotTags的内容
-        this.hotTags = keywordVal
-        // 设置隐藏文章类型
-        this.noSelect = false
-        this.widthChange.width = '60%'
         this.keywordVal = this.keywordVal == keywordVal ? '' : keywordVal
-        if (this.flagClick) {
-          // 第二次点击标签进行跳转，打开新的页面
-          this.flagClick = 0
-          return true
-        } else {
-          this.flagClick = 1
-          return false
-        }
+        axios.post('article/getMoreArticle.do', {
+          articleTypeId: this.$route.params.typeId,
+          keywordVal: this.keywordVal,
+          page: this.pageInfo.currentPage,
+          pageSize: this.pageInfo.pageSize
+        }).then(response => {
+          this.articleList = response.data.result.data
+          this.pageInfo.total = response.data.result.total
+        })
       },
       pageUpdate(current){
         this.pageInfo.currentPage = current
-        if (this.noSelect) {
-          // 没有进行标签的选择,进行当前文章页的分页
-          axios.post('article/getMoreArticle.do', {
-            articleTypeId: this.$route.params.typeId,
-            keywordVal: '',
-            page: this.pageInfo.currentPage,
-            pageSize: this.pageInfo.pageSize
-          }).then(response => {
-            this.articleList = response.data.result.data
-            this.pageInfo.total = response.data.result.total
-          })
-        } else {
-          // 如果点击了标签，那么就进行当前标签的筛选分类
-          axios.post('article/getMoreArticle.do', {
-            articleTypeId: '',
-            keywordVal: this.hotTags,
-            page: this.pageInfo.currentPage,
-            pageSize: this.pageInfo.pageSize
-          }).then(response => {
-            this.articleList = response.data.result.data
-            this.pageInfo.total = response.data.result.total
-          })
-        }
+        this.update('')
       }
     }
   }
@@ -184,6 +149,7 @@
       p {
         font-family: MicrosoftYaHei;
         color: rgba(51, 51, 51, 1);
+        width: 160px;
         font-size: 28px;
         line-height: 28px;
         display: inline-block;
@@ -215,7 +181,6 @@
         padding-right: 20px;
         .item {
           margin-top: 20px;
-          border-bottom: 1px solid #D8D8D8;
           a {
             display: flex;
           }
@@ -224,7 +189,7 @@
           }
           .item-right {
             width: 80%;
-            /*border-bottom: 1px solid #D8D8D8;*/
+            border-bottom: 1px solid #D8D8D8;
             .item-title {
               font-size: 18px;
               font-family: MicrosoftYaHei;
@@ -249,28 +214,17 @@
               line-height: 22px;
               margin-top: 10px;
             }
-          }
-          .item-label {
-            margin-left: 20%;
-            width: 80%;
-            margin-top: 12px;
-            padding-bottom: 10px;
-            overflow: hidden;
-            .labelhref {
-              float: left;
-              font-size: 12px;
-              cursor: pointer;
-              font-family: MicrosoftYaHei;
-              color: rgba(102, 102, 102, 1);
-              padding: 6px 18px;
-              border-radius:4px;
-              border:1px solid rgba(153,153,153,1);
-              margin-right: 20px;
-              margin-bottom: 8px;
-              &:hover  {
-                color: #ffffff;
-                border: 1px solid #ffffff;
-                background: #387dff;
+            .item-label {
+              margin-top: 11px;
+              margin-bottom: 20px;
+              span {
+                font-size: 12px;
+                font-family: MicrosoftYaHei;
+                color: rgba(102, 102, 102, 1);
+                padding: 6px 18px;
+                border: 1px solid #d8d8d8;
+                border-radius: 18px;
+                margin-right: 20px;
               }
             }
           }
@@ -291,29 +245,9 @@
         }
         .hot-tags {
           .tags {
-            padding-top: 20px;
-            Button {
-              margin-bottom: 10px;
-              margin-right: 10px;
-            }
-            .tagslink {
-              display: inline-block;
-              padding: 6px 18px;
-              margin-bottom: 10px;
-              margin-right: 10px;
-              border-radius:4px;
-              cursor: pointer;
-              border:1px solid rgba(153,153,153,1);
-              font-size:14px;
-              color: #333333;
-              &:hover {
-                border:1px solid #57a3f3;
-                color: #57a3f3;
-              }
-            }
-            .active {
-              border:1px solid #57a3f3;
-              color: #57a3f3;
+            button {
+              margin-top: 20px;
+              margin-right: 20px;
             }
           }
         }
