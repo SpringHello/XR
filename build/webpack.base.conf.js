@@ -29,16 +29,16 @@ module.exports = {
   },
   module: {
     rules: [
-/*      ...(config.dev.useEslint ? [{
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          enforce: 'pre',
-          include: [resolve('src'), resolve('test')],
-          options: {
-            formatter: require('eslint-friendly-formatter'),
-            emitWarning: !config.dev.showEslintErrorsInOverlay
-          }
-        }] : []),*/
+      /*      ...(config.dev.useEslint ? [{
+       test: /\.(js|vue)$/,
+       loader: 'eslint-loader',
+       enforce: 'pre',
+       include: [resolve('src'), resolve('test')],
+       options: {
+       formatter: require('eslint-friendly-formatter'),
+       emitWarning: !config.dev.showEslintErrorsInOverlay
+       }
+       }] : []),*/
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -52,6 +52,10 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test')]
+      },
+      {
+        test: /iview.src.*?js$/,
+        loader: 'babel-loader'
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
