@@ -84,13 +84,12 @@
   export default{
     beforeRouteEnter(to, from, next){
       axios.post('domain/domainFound.do', {
-        token: sessionStorage.getItem('token'),
         domainName: sessionStorage.getItem('name'),
         tids: JSON.parse(sessionStorage.getItem("suffix")).join(','),
       }).then(res => {
         next(vm => {
-          vm.Results = res.data.data.results
           vm.singles = vm.suffixChange.en
+          vm.Results = res.data.data.results
         })
       })
     },
@@ -120,7 +119,6 @@
       Search(){
         this.Results = []
         axios.post('domain/domainFound.do', {
-          token: sessionStorage.getItem('token'),
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
@@ -149,11 +147,37 @@
         this.buyLists = []
 //        this.buyLists.splice(0, this.buyLists.length)
       },
+
+      //获取token
+      getToken(){
+        axios.post('user/getRuiRadosApiacess.do', {
+          zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+          companyId: this.$store.state.userInfo.companyid
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            axios.get('user/getXrdomainToken.do', {
+              params: {
+                companyId: this.$store.state.userInfo.companyid,
+                secret: response.data.data.data
+              }
+            }).then(res => {
+              sessionStorage.setItem('tokenId', res.data.token)
+            })
+          }
+        })
+      },
       //查看已注册信息
       checked(name, status){
-        sessionStorage.setItem('checkname', name)
-        sessionStorage.setItem('status', status)
-        this.$router.push('CheckReg')
+        if (this.$store.state.userInfo == null) {
+          this.$LR({
+            type: 'login'
+          })
+          return
+        } else {
+          sessionStorage.setItem('checkname', name)
+          sessionStorage.setItem('status', status)
+          this.$router.push('CheckReg')
+        }
       },
       //立即购买
       nowBuy(){
@@ -163,6 +187,7 @@
           })
           return
         } else {
+          this.getToken()
           if (this.buyLists.length != 0) {
             this.buyLists.forEach(e => {
               this.domName += e.name + ','
@@ -186,7 +211,6 @@
       },
       append(){
         axios.post('domain/domainFound.do', {
-          token: sessionStorage.getItem('token'),
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
@@ -200,7 +224,12 @@
         })
       },
       singles(){
-
+        axios.post('domain/domainFound.do', {
+          domainName: this.searchText,
+          tids: this.singles.join(','),
+        }).then(res => {
+          this.Results = res.data.data.results
+        })
       }
     }
   }
