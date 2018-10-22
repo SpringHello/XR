@@ -391,6 +391,26 @@
         </div>
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
+            <dt>
+              <span>{{item.typename}}</span>
+              <router-link :to="`article/${item.id}`" class="moreinfo"><Icon type="chevron-right"></Icon></router-link>
+            </dt>
+            <dd>
+              <ul>
+                <li v-for="(secitem,i) in item.artile" :key="i">
+                  <router-link :to="`article/${secitem.code}.html`" target="_blank">
+                    <div class="alink">
+                      <div class="title">{{secitem.title}}</div>
+                      <i v-if="secitem.isHot">HOT</i>
+                      <i v-if="secitem.isNew" style="background:#4B97EE">NEW</i>
+                    </div>
+                    <div class="blink">{{secitem.createtime.split(' ')[0]}}</div>
+                  </router-link>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+          <!--<dl v-for="(item,index) in linkList" :key="index">
             <dt :style="{background:'url('+item.bgPictureUrl+')',backgroundRepeat:'no-repeat'}">
               <span>{{item.typename}}</span>
               <router-link :to="`article/${item.id}`">More></router-link>
@@ -409,7 +429,7 @@
                 </li>
               </ul>
             </dd>
-          </dl>
+          </dl>-->
         </div>
       </div>
     </div>
@@ -3780,13 +3800,15 @@
         }
       }
       .link-list {
-        margin-top: 60px;
+        overflow: hidden;
+        margin-top: 30px;
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
+        height: 290px;
         dl {
           background: rgba(255, 255, 255, 1);
-          width: 386px;
+          width: 580px;
           padding-bottom: 20px;
           overflow: hidden;
           // box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.41);
@@ -3795,54 +3817,77 @@
             height: 58px;
             display: flex;
             align-items: center;
+            padding: 0;
             justify-content: space-between;
-            padding: 0 20px;
+            font-weight: 500;
             font-size: 18px;
-            color: #fff;
-            a {
+            color: #333333;
+            border-bottom:1px solid #cfcfcf;
+            .moreinfo {
               float: right;
               cursor: pointer;
-              color: #fff;
+              color: #333333;
               &:hover {
                 color: #377DFF;
+              }
+              i {
+                color: #333333;
+                font-size: 12px;
               }
             }
           }
           dd {
             ul {
               li {
-                padding: 0 20px;
+                padding: 0;
                 a {
-                  display:flex;
-                  justify-content: space-between;
-                  height: 60px;
+                  display:block;
+                  /*justify-content: space-between;*/
+                  padding: 10px 0;
+                  min-height: 60px;
                   align-items: center;
                   font-size: 14px;
                   color: rgba(102, 102, 102, 1);
                   cursor: pointer;
-                  border-bottom: dashed 1px #CFCFCF;
+                  border-bottom: solid 1px #CFCFCF;
+                  line-height: 32px;
                   &:hover {
-                    color: #377DFF;
+                    color: #387DFF;
                   }
-                  .title {
-                    display: inline-block;
-                    max-width: 204px;
+                  .alink {
                     overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
+                    width: 100%;
+                    .title {
+                      display: inline-block;
+                      float: left;
+                      max-width: 440px;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
+                    }
+                    i {
+                      display: inline-block;
+                      margin-left: 10px;
+                      width: 40px;
+                      height: 20px;
+                      line-height: 20px;
+                      text-align: center;
+                      background: #FF624B;
+                      border-radius:10px 10px 10px 0px;
+                      font-style: normal;
+                      font-size: 12px;
+                      color: #fff;
+                      vertical-align: text-bottom;
+                    }
                   }
-                  i {
-                    display: inline-block;
-                    width: 40px;
-                    height: 20px;
-                    line-height: 20px;
-                    text-align: center;
-                    background: #FF624B;
-                    border-radius:10px 10px 10px 0px;
-                    font-style: normal;
-                    font-size: 12px;
-                    color: #fff;
-                    vertical-align: text-bottom;
+                  .blink {
+                    margin-bottom: 5px;
+                    display: block;
+                    width: 100%;
+                    font-size:14px;
+                    font-weight:400;
+                    color:#999999;
+                    line-height:14px;
                   }
                 }
               }

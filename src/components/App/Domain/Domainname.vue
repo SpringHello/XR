@@ -89,7 +89,6 @@
       return {
         choose: false,
         searchText: '',
-        select: ['com'],
         domainList: [
           {name: '域名查询', img: require('../../../assets/img/domain/s-1.png')},
           {name: '加入购物清单', img: require('../../../assets/img/domain/s-2.png')},
@@ -217,25 +216,24 @@
       textSearch(){
         if (this.searchText == '') {
           return this.$Message.info('请输入您要查找的域名')
-        } else {
-          sessionStorage.setItem('name', this.searchText)
-          sessionStorage.setItem('token', this.tokenId)
-          sessionStorage.setItem('suffix', JSON.stringify(this.suffixList))
-          sessionStorage.setItem('suffixChange', JSON.stringify(this.getSuffix))
-          this.$router.push('DomainResult')
         }
+        sessionStorage.setItem('name', this.searchText)
+        sessionStorage.setItem('token', this.tokenId)
+        sessionStorage.setItem('suffix', JSON.stringify(this.suffixList))
+        sessionStorage.setItem('suffixChange', JSON.stringify(this.getSuffix))
+        this.$router.push('DomainResult')
       },
 
     },
     created(){
       axios.post('user/getRuiRadosApiacess.do', {
         zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
-        companyId: '153250898029'
+        companyId: this.$store.state.userInfo.companyid
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
           axios.get('user/getXrdomainToken.do', {
             params: {
-              companyId: '153250898029',
+              companyId: this.$store.state.userInfo.companyid,
               secret: response.data.data.data
             }
           }).then(res => {
