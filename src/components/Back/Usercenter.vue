@@ -2017,6 +2017,7 @@
           this.showModal.selectAuthType = true
         }
       }
+      this.getPhone()
       this.listNotice()
       this.getContacts()
       this.getSystemHead()
@@ -2062,15 +2063,6 @@
           case 'key':
             this.listKey()
             if ($store.state.authInfo && $store.state.authInfo.companyid) {
-              axios.post('user/getPhone.do', {
-                companyId: $store.state.authInfo.companyid
-              }).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.keyForm.phone = response.data.data.phone
-                } else {
-                  this.$Message.error(response.data.msg)
-                }
-              })
               axios.post('user/getRuiRadosApiacess.do', {
                 zoneId: $store.state.zone.zoneid,
                 companyId: $store.state.authInfo.companyid
@@ -2092,6 +2084,15 @@
             }
             break
         }
+      },
+      getPhone() {
+        axios.post('user/getPhone.do', {
+          companyId: $store.state.authInfo.companyid
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.keyForm.phone = response.data.data.phone
+          }
+        })
       },
       // 获取系统头像列表
       getSystemHead() {
