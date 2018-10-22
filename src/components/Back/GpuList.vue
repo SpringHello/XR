@@ -347,7 +347,7 @@
           hostList:[
             {
               title:'用户名称/唯一名称',
-              width:'109',
+              width:109,
               render:(h,params)=> {
                 //创建中
                 if (params.row.status == 2 && params.row.computerstate == undefined) {
@@ -433,7 +433,7 @@
             },
             {
               title:'状态',
-              width:'70',
+              width:70,
               render:(h,params) => {
                 return h('span',{},params.row.status == '-1' ? '异常' :params.row.status == '0' ? '欠费' : params.row.computerstate == '0' && params.row.status=='1' ? '关机' :params.row.computerstate == '1' && params.row.status=='1'  ? '开机' :'')
               }
@@ -464,14 +464,14 @@
             },
             {
               title:'计费类型',
-              width:'70',
+              width:70,
               render:(h,params) =>{
                 return h('span',{},params.row.caseType == 1 ?'包年':params.row.caseType == 2 ? '包月' : params.row.caseType == 3 ? '实时' :'')
               }
             },
             {
               title:'操作',
-              width:'100',
+              width:100,
               render:(h,params)=>{
                 if(params.row.status == -1){
                   return h('div',
