@@ -371,7 +371,7 @@
           // },
           {
             title: '公网地址',
-            width: '180px',
+            width: 180,
             render: (h, params) => {
               if (params.row.publicip) {
                 return h('div', {}, [h('span', {}, params.row.publicip), h('span', {
