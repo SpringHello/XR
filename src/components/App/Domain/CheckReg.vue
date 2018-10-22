@@ -49,7 +49,6 @@
     beforeRouteEnter(to, from, next){
       axios.post('domain/getDomainName.do', {
         domainName: sessionStorage.getItem('checkname'),
-        token: sessionStorage.getItem('token'),
         status: sessionStorage.getItem('status'),
       }).then(response => {
         next(vm => {

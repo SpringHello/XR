@@ -191,7 +191,6 @@
             img: require('../../../assets/img/domain/ad-3.png')
           },
         ],
-        tokenId: '',
         suffix: 'english',
         getSuffix: {},
         showSuffix: [],
@@ -218,7 +217,6 @@
           return this.$Message.info('请输入您要查找的域名')
         }
         sessionStorage.setItem('name', this.searchText)
-        sessionStorage.setItem('token', this.tokenId)
         sessionStorage.setItem('suffix', JSON.stringify(this.suffixList))
         sessionStorage.setItem('suffixChange', JSON.stringify(this.getSuffix))
         this.$router.push('DomainResult')
@@ -226,26 +224,9 @@
 
     },
     created(){
-      axios.post('user/getRuiRadosApiacess.do', {
-        zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
-        companyId: this.$store.state.userInfo.companyid
-      }).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          axios.get('user/getXrdomainToken.do', {
-            params: {
-              companyId: this.$store.state.userInfo.companyid,
-              secret: response.data.data.data
-            }
-          }).then(res => {
-            this.tokenId = res.data.token
-            axios.post('domain/getSuffix.do', {
-              token: this.tokenId
-            }).then(res => {
-              this.getSuffix = res.data.data
-              this.showSuffix = this.getSuffix.en
-            })
-          })
-        }
+      axios.post('domain/getSuffix.do', {}).then(res => {
+        this.getSuffix = res.data.data
+        this.showSuffix = this.getSuffix.en
       })
     }
   }
