@@ -1109,7 +1109,7 @@
         taskList:[
           {
             title:'名称',
-            width:'150',
+            width:150,
             render:(h,params)=>{
               const hide = params.row.hide == 1 ? 'inline-block' : 'none';
               return h('div',[
@@ -1128,7 +1128,7 @@
           },
           {
             title:'操作',
-            width:'150',
+            width:150,
             render:(h,params)=>{
               return h('div',[
                 h('span',{
@@ -2298,13 +2298,11 @@
       },
 
 
-      //获取，防火墙
+      //获取防火墙
       changeNetWork(id){
         let f = this.$http.get('network/listAclList.do',{params:{vpcId:id}});
-        // let l = this.$http.get('network/getnetworkAndVpcByloadbalance.do',{params:{vpcId:id,type:'1'}});
         Promise.all([f]).then(res =>{
           this.updateTeleList.firewallList = res[0].data.result;
-          // this.newAddTelescopicList.belongSubnetList = res[1].data.list;
         })
       },
       balancings(id){
