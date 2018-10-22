@@ -255,7 +255,6 @@
             vailCode: this.form.code
           }
         }).then(response => {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
           if (response.status == 200 && response.data.status == 1) {
             let countdown = 60
             this.codePlaceholder = '60s'

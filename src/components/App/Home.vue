@@ -3801,11 +3801,11 @@
       }
       .link-list {
         overflow: hidden;
-        margin-top: 60px;
+        margin-top: 30px;
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
-        height: 327px;
+        height: 290px;
         dl {
           background: rgba(255, 255, 255, 1);
           width: 580px;
@@ -3855,9 +3855,11 @@
                     color: #387DFF;
                   }
                   .alink {
+                    overflow: hidden;
                     width: 100%;
                     .title {
                       display: inline-block;
+                      float: left;
                       max-width: 440px;
                       overflow: hidden;
                       text-overflow: ellipsis;
@@ -3865,6 +3867,7 @@
                     }
                     i {
                       display: inline-block;
+                      margin-left: 10px;
                       width: 40px;
                       height: 20px;
                       line-height: 20px;
