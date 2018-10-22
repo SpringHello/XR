@@ -50,8 +50,15 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        // use: [
+        //   {
+            loader: 'babel-loader',
+          //   options: {
+          //     presets:['es2015']
+          //   }
+          // }
+        // ],
+        include: [resolve('src'), resolve('test'),resolve('/node_modules/pinyin')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

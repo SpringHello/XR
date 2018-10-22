@@ -34,8 +34,7 @@
               </Checkbox>
             </CheckboxGroup>
           </div>
-          <!--v-show="index<=num"-->
-          <li v-for="(item,index) in Results" :key="index">
+          <li v-for="(item,index) in Results" :key="index" v-show="index<=num">
             <p>{{item.name}}
               <button v-show="item.isRes=='available'">未注册</button>
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
@@ -46,9 +45,9 @@
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
-          <!--<button class="showAll" @click="exhibition" v-show="isShowAll">显示全部-->
-          <!--<Icon type="ios-arrow-down"></Icon>-->
-          <!--</button>-->
+          <button class="showAll" @click="exhibition" v-show="isShowAll">显示全部
+            <Icon type="ios-arrow-down"></Icon>
+          </button>
         </div>
       </div>
       <div id="result-right">
@@ -84,13 +83,11 @@
   export default{
     beforeRouteEnter(to, from, next){
       axios.post('domain/domainFound.do', {
-        token: sessionStorage.getItem('token'),
         domainName: sessionStorage.getItem('name'),
         tids: JSON.parse(sessionStorage.getItem("suffix")).join(','),
       }).then(res => {
         next(vm => {
           vm.Results = res.data.data.results
-          vm.singles = vm.suffixChange.en
         })
       })
     },
@@ -102,8 +99,8 @@
         choose: false,
         suffixChange: JSON.parse(sessionStorage.getItem('suffixChange')),
         show: false,
-        singles: [],
-        num: 3,
+        singles: JSON.parse(sessionStorage.getItem('suffixChange')).en,
+        num: 5,
         isShowAll: true,
         Results: [],
 //        域名清单
@@ -120,7 +117,6 @@
       Search(){
         this.Results = []
         axios.post('domain/domainFound.do', {
-          token: sessionStorage.getItem('token'),
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
@@ -147,13 +143,38 @@
       //全部移除
       removeAll(){
         this.buyLists = []
-//        this.buyLists.splice(0, this.buyLists.length)
+      },
+
+      //获取token
+      getToken(){
+        axios.post('user/getRuiRadosApiacess.do', {
+          zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+          companyId: this.$store.state.userInfo.companyid
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            axios.get('user/getXrdomainToken.do', {
+              params: {
+                companyId: this.$store.state.userInfo.companyid,
+                secret: response.data.data.data
+              }
+            }).then(res => {
+              sessionStorage.setItem('tokenId', res.data.token)
+            })
+          }
+        })
       },
       //查看已注册信息
       checked(name, status){
-        sessionStorage.setItem('checkname', name)
-        sessionStorage.setItem('status', status)
-        this.$router.push('CheckReg')
+        if (this.$store.state.userInfo == null) {
+          this.$LR({
+            type: 'login'
+          })
+          return
+        } else {
+          sessionStorage.setItem('checkname', name)
+          sessionStorage.setItem('status', status)
+          this.$router.push('CheckReg')
+        }
       },
       //立即购买
       nowBuy(){
@@ -164,6 +185,7 @@
           return
         } else {
           if (this.buyLists.length != 0) {
+            this.getToken()
             this.buyLists.forEach(e => {
               this.domName += e.name + ','
             })
@@ -186,7 +208,6 @@
       },
       append(){
         axios.post('domain/domainFound.do', {
-          token: sessionStorage.getItem('token'),
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
@@ -200,7 +221,12 @@
         })
       },
       singles(){
-
+        axios.post('domain/domainFound.do', {
+          domainName: this.searchText,
+          tids: this.singles.join(','),
+        }).then(res => {
+          this.Results = res.data.data.results
+        })
       }
     }
   }

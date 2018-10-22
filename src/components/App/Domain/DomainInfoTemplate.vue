@@ -11,7 +11,7 @@
     </div>
 
     <div v-show="btns=='templated'" class="templated">
-      <div class="form-center">
+      <div class="form-center" v-show="templateds!=[]">
         <Form :label-width="200">
           <FormItem>
             <p class="formhint">
@@ -250,6 +250,7 @@
   import area from "../../../options/state_province_city"
   import pinyin from 'pinyin'
   import axios from 'axios'
+  import $store from '@/vuex'
   export default {
     data () {
       // 匹配中文
@@ -331,6 +332,7 @@
         imgSrc: 'user/getKaptchaImage.do',
         index: '0',
         userid: '',
+
 
         //模板
         templateds: [],
@@ -423,14 +425,29 @@
         authRuleValidate: {}
       }
     },
-    created () {
-    },
+//    created () {
+//      axios.post('user/getRuiRadosApiacess.do', {
+//        zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+//        companyId: this.$store.state.userInfo.companyid
+//      }).then(response => {
+//        if (response.status == 200 && response.data.status == 1) {
+//          axios.get('user/getXrdomainToken.do', {
+//            params: {
+//              companyId: this.$store.state.userInfo.companyid,
+//              secret: response.data.data.data
+//            }
+//          }).then(res => {
+//            this.tokenId = res.data.token
+//          })
+//        }
+//      })
+//    },
     mounted () {
     },
     methods: {
       clickTemp(){
         axios.post('domain/selectTemplates.do', {
-          token: sessionStorage.getItem('token')
+          token: sessionStorage.getItem('tokenId'),
         }).then(res => {
           if (res.data.status == 1) {
             if (res.data.data.templates != []) {
@@ -524,7 +541,7 @@
       emailOk(){
         this.emailCode = false
         axios.post('domain/createTemple.do', {
-          token: sessionStorage.getItem('token'),
+          token: sessionStorage.getItem('tokenId'),
           companyEn: this.infoTempFormValidate.enRegistrantOrganization,
           countryEn: 'CA',
           stateEn: this.infoTempFormValidate.enProvince,
@@ -558,7 +575,7 @@
       payTemplate(){
         var domNames = sessionStorage.getItem('domName')
         let params = {
-          token: sessionStorage.getItem('token'),
+          token: sessionStorage.getItem('tokenId'),
           domainName: domNames.substring(0, domNames.length - 1),
           years: '1',
           isName: '0',
