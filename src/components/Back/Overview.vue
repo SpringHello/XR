@@ -174,7 +174,7 @@
           },
           {
             prod: '云存储',
-            prodUrl: ['disk', 'diskBackup', 'diskBackup', '']
+            prodUrl: ['disk', 'diskBackup', 'objectStorage', '']
           },
           {
             prod: '云安全',
@@ -329,7 +329,11 @@
       },
       // 跳转到相应的页面
       togo(url, pane){
-        this.$router.push(url)
+        if(url == 'objectStorage'){
+          window.open('https://testoss-console.xrcloud.net/ruirados/objectStorage');
+        }else{
+          this.$router.push(url)
+        }
         // console.log(url, pane)
         if (url == 'vpc') {
           this.$store.commit('setPane', {vpc: pane})
