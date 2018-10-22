@@ -232,25 +232,25 @@
           {
             mainName: '云服务器',
             type: 'server',
-            subItem: [{subName: '云主机', type: 'host'}, /*{subName: 'GPU云服务器', type: 'GpuList'},*/ {
+            subItem: [{subName: '云主机', type: 'host'}, {subName: 'GPU云服务器', type: 'GpuList'}, {
               subName: '云主机快照',
               type: 'snapshot'
             }, {
               subName: '镜像',
               type: 'mirror'
-            }, /*{subName: '弹性伸缩',type:'Elastic'},*//*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            }, {subName: '弹性伸缩',type:'Elastic'},/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
             type: 'database',
-            subItem: [{subName: '云数据库', type: 'cloudDatabase'}/*, {subName: '云数据库备份', type: 'cloudDatabaseBackup'}*/]
+            subItem: [{subName: '云数据库', type: 'cloudDatabase'}, {subName: '云数据库备份', type: 'cloudDatabaseBackup'}]
           },
           {
             mainName: '云存储',
             type: 'storage',
             subItem: [
               // {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              {subName: '对象存储', type: 'https:/testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
@@ -279,7 +279,7 @@
             type: 'security',
             subItem: [
               {subName: '防火墙', type: 'firewall'},
-              /* {subName: '云监控', type: 'CloudMonitor'}*/
+               {subName: '云监控', type: 'CloudMonitor'}
             ]
           },
           {

@@ -34,7 +34,8 @@
               </Checkbox>
             </CheckboxGroup>
           </div>
-          <li v-for="(item,index) in Results" :key="index" v-show="index<=num">
+          <!--v-show="index<=num"-->
+          <li v-for="(item,index) in Results" :key="index">
             <p>{{item.name}}
               <button v-show="item.isRes=='available'">未注册</button>
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
@@ -45,9 +46,9 @@
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
-          <button class="showAll" @click="exhibition" v-show="isShowAll">显示全部
-            <Icon type="ios-arrow-down"></Icon>
-          </button>
+          <!--<button class="showAll" @click="exhibition" v-show="isShowAll">显示全部-->
+          <!--<Icon type="ios-arrow-down"></Icon>-->
+          <!--</button>-->
         </div>
       </div>
       <div id="result-right">
@@ -69,7 +70,7 @@
               <span>优惠金额：¥00.00</span>
             </p>
             <h1>应付金额：¥{{payMoney}}</h1>
-            <button @click="$router.push('DomainTemplate')">立即购买</button>
+            <button @click="nowBuy">立即购买</button>
           </div>
         </div>
       </div>
@@ -110,6 +111,8 @@
         addNum: '0',
         payMoney: 0,
 
+        domName: '',
+
       }
     },
     methods: {
@@ -123,13 +126,6 @@
         }).then(res => {
           this.Results = res.data.data.results
         })
-      },
-      domainChange(){
-        if (this.searchText == '') {
-          return this.$Message.info('请输入您要查找的域名')
-        } else {
-//          this.Search()
-        }
       },
       //显示全部
       exhibition(){
@@ -155,9 +151,29 @@
       },
       //查看已注册信息
       checked(name, status){
-        sessionStorage.setItem('doname', name)
+        sessionStorage.setItem('checkname', name)
         sessionStorage.setItem('status', status)
         this.$router.push('CheckReg')
+      },
+      //立即购买
+      nowBuy(){
+        if (this.$store.state.userInfo == null) {
+          this.$LR({
+            type: 'login'
+          })
+          return
+        } else {
+          if (this.buyLists.length != 0) {
+            this.buyLists.forEach(e => {
+              this.domName += e.name + ','
+            })
+            sessionStorage.setItem('domName', this.domName)
+            sessionStorage.setItem('domPrice', this.payMoney)
+            this.$router.push('DomainInfoTemplate')
+          } else {
+            return this.$Message.info('请添加商品到清单')
+          }
+        }
       }
     },
     watch: {
@@ -174,8 +190,17 @@
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
-          this.Results.unshift(res.data.data.results[0])
+          if (this.Results.every(item => {
+              return item.name != res.data.data.results[0].name
+            })) {
+            this.Results.unshift(res.data.data.results[0])
+          } else {
+
+          }
         })
+      },
+      singles(){
+
       }
     }
   }
