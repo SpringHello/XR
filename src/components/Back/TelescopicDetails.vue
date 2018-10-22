@@ -150,7 +150,8 @@
           <span>云主机，冷却</span>
           <InputNumber  :min="30" :max="9999" v-model="alarmStrategy.coolingNumber"></InputNumber>
           <span>秒</span>
-          <Tooltip content="冷却时间是指在同一个伸缩组内，一个伸缩活动（添加或移出云主机）执行完成后的一段锁定时间。在这段时间内，该伸缩组不执行伸缩活动。" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space:normal;">冷却时间是指在同一个伸缩组内，一个伸缩活动（添加或移出云主机）执行完成后的一段锁定时间。在这段时间内，该伸缩组不执行伸缩活动。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
         </div>
@@ -218,7 +219,8 @@
           <span>云主机，冷却</span>
           <InputNumber  :min="1" v-model="updateStrategy.coolingNumber"></InputNumber>
           <span>秒</span>
-          <Tooltip content="冷却时间是指在同一个伸缩组内，一个伸缩活动（添加或移出云主机）执行完成后的一段锁定时间。在这段时间内，该伸缩组不执行伸缩活动。" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space:normal;">冷却时间是指在同一个伸缩组内，一个伸缩活动（添加或移出云主机）执行完成后的一段锁定时间。在这段时间内，该伸缩组不执行伸缩活动。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
         </div>
@@ -472,7 +474,8 @@
           <p style="color: #999999;margin-top: 11px;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
         <FormItem label="启动配置" prop="ownershipbootconfiguration" class="formitem3">
-          <Tooltip content="启动配置是自动创建云服务器的模版" placement="right">
+          <Tooltip placement="right" transfer>
+            <p slot="content" style="white-space:normal;">启动配置是自动创建云服务器的模版。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Select v-model="updateTelescopicList.ownershipbootconfiguration" style="width:240px" placeholder="请选择启动配置">
@@ -481,13 +484,15 @@
           <p style="color: #2A99F2;cursor: pointer;margin-top: 11px;" @click="$router.push({path:'newAddElastic'})">新建启动配置</p>
         </FormItem>
         <FormItem label="最小伸缩数" prop="minimumexpansionnumber" class="formitem1">
-          <Tooltip content="伸缩组中允许的实例最小数量。当伸缩组的云主机数量小于最小伸缩数时，弹性伸缩会增加实例，使得伸缩组当前实例数匹配最小伸缩数" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space:normal;">伸缩组中允许的实例最小数量。当伸缩组的云主机数量小于最小伸缩数时，弹性伸缩会增加实例，使得伸缩组当前实例数匹配最小伸缩数。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Input v-model="updateTelescopicList.minimumexpansionnumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
         </FormItem>
         <FormItem label="负载均衡" class="formitem6">
-          <Tooltip content="伸缩组会自动将新加入的主机添加到负载均衡中" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space:normal;">伸缩组会自动将新加入的主机添加到负载均衡中。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Select v-model="updateTelescopicList.externalnetworkloadbalancing" style="width:240px" placeholder="选择负载均衡" @on-change="balancings(updateTelescopicList.externalnetworkloadbalancing)">
@@ -495,7 +500,8 @@
           </Select>
         </FormItem>
         <FormItem label="最大伸缩数" class="formitem1" prop="maximumexpansionnumber">
-          <Tooltip content="伸缩组中允许的实例最大数量。当伸缩组的云主机数量大于最大伸缩数时，弹性伸缩会移出实例，使得伸缩组当前实例数匹配最大伸缩数" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space:normal;">伸缩组中允许的实例最大数量。当伸缩组的云主机数量大于最大伸缩数时，弹性伸缩会移出实例，使得伸缩组当前实例数匹配最大伸缩数。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Input v-model="updateTelescopicList.maximumexpansionnumber" style="width: 240px" placeholder="请输入1-30之间的数字"></Input>
@@ -506,29 +512,32 @@
           </Select>
         </FormItem>
         <FormItem label="初始化实例数" class="formitem2" prop="initialinstancenumber">
-          <Tooltip content="伸缩组刚创建时的云服务器数量，伸缩组会为您自动创建对应数量的主机。" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space:normal;">伸缩组刚创建时的云服务器数量，伸缩组会为您自动创建对应数量的主机。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Input v-model="updateTelescopicList.initialinstancenumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
         </FormItem>
         <FormItem label="所属子网">
           <Select v-model="updateTelescopicList.belongsubnet"  style="width:240px" placeholder="请选择网络">
-            <Option v-for="item in updateTeleList.belongSubnetList"   :value="item.ipsegmentid" :key="item.ipsegmentid">{{ item.netoffername }}</Option>
+            <Option v-for="item in updateTeleList.belongSubnetList"   :value="item.ipsegmentid" :key="item.ipsegmentid">{{ item.name }}</Option>
           </Select>
         </FormItem>
         <FormItem label="移除策略" class="formitem5">
-          <Tooltip content="当伸缩组要减少实例且有多重选择时，将根据移出策略来选择移出的主机" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space:normal;">当伸缩组要减少实例且有多重选择时，将根据移出策略来选择移出的主机</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Select v-model="updateTelescopicList.removestrategy" style="width:240px">
             <Option v-for="item in updateTeleList.removePolicyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="防火墙" class="formitem4">
-          <Tooltip content="默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。" placement="right">
+        <FormItem label="防火墙" class="formitem4" >
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space: normal;">默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
-          <Select v-model="updateTelescopicList.firewall" style="width:240px">
+          <Select v-model="updateTelescopicList.acclistid" style="width:240px">
             <Option v-for="item in updateTeleList.firewallList" :value="item.acllistid" :key="item.acllistid">{{ item.acllistname }}</Option>
           </Select>
         </FormItem>
@@ -538,7 +547,7 @@
       <hr color="#D8D8D8" size="1">
       <div slot="footer">
         <Button type="ghost" @click="updateTelescopic = false">取消</Button>
-        <Button type="primary">完成配置</Button>
+        <Button type="primary" @click="updateTelescopicFcuntion">完成修改</Button>
       </div>
     </modal>
   </div>
@@ -1109,7 +1118,7 @@
         taskList:[
           {
             title:'名称',
-            width:'150',
+            width:150,
             render:(h,params)=>{
               const hide = params.row.hide == 1 ? 'inline-block' : 'none';
               return h('div',[
@@ -1128,7 +1137,7 @@
           },
           {
             title:'操作',
-            width:'150',
+            width:150,
             render:(h,params)=>{
               return h('div',[
                 h('span',{
@@ -1147,7 +1156,6 @@
                       this.updateTimedTask.minNumber = params.row.readjustMixSize;
                       this.updateTimedTask.initialNumber = params.row.readjustDesiredCapacity;
                       this.updateTimedTask.repeat = params.row.recurrence;
-                      console.log(params.row);
                     }
                   }
                 },'修改'),
@@ -1795,8 +1803,6 @@
           firewallList:[],
         },
         updateTelescopicList:{
-          //防火墙
-          firewall:'',
 
         },
         updateRuleValidate:{
@@ -2297,14 +2303,37 @@
         });
       },
 
+      //修改伸缩组
+      updateTelescopicFcuntion(){
+        this.$http.post('elasticScaling/updateExpansionGroups.do',{
 
-      //获取，防火墙
+            telescopicGroupName:this.updateTelescopicList.stretchname,
+            telescopicMax:this.updateTelescopicList.maximumexpansionnumber,
+            telescopicMin:this.updateTelescopicList.minimumexpansionnumber,
+            configId:this.updateTelescopicList.ownershipbootconfiguration,
+            strategy:this.updateTelescopicList.removestrategy,
+            loadBalanceId:this.updateTelescopicList.externalnetworkloadbalancing,
+            instaceNum:this.updateTelescopicList.initialinstancenumber,
+            vpcId:this.updateTelescopicList.belongvpcid,
+            networkId:this.updateTelescopicList.belongsubnet,
+            acclistId:this.updateTelescopicList.acclistid,
+            id:this.updateTelescopicList.id
+
+        }).then(res =>{
+            if(res.status == 200 && res.data.status == 1){
+              this.$Message.success('修改成功');
+            }else{
+              this.$Message.info(res.data.message);
+            }
+        })
+      },
+
+
+      //获取防火墙
       changeNetWork(id){
         let f = this.$http.get('network/listAclList.do',{params:{vpcId:id}});
-        // let l = this.$http.get('network/getnetworkAndVpcByloadbalance.do',{params:{vpcId:id,type:'1'}});
         Promise.all([f]).then(res =>{
           this.updateTeleList.firewallList = res[0].data.result;
-          // this.newAddTelescopicList.belongSubnetList = res[1].data.list;
         })
       },
       balancings(id){
@@ -2353,7 +2382,7 @@
   }
 </script>
 
-<style lang="less" rel="stylesheet/less">
+<style lang="less" rel="stylesheet/less" scoped>
   .box_one{
     font-size: 14px;
     color: #5E5E5E;
@@ -2495,7 +2524,9 @@
     color: #2A99F2;
   }
   .ivu-tooltip-inner{
-    white-space: inherit;
+    p{
+      line-height: 15px;
+    }
   }
   .formitem1{
     .ivu-icon-ios-help-outline:before{

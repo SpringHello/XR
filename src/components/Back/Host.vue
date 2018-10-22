@@ -491,12 +491,24 @@
               </Option>
             </Select>
           </FormItem>
+          <div class="renewal-info">
+            <ul>
+              <li><span>主机名称：</span>{{renewalInfo.computername}}</li>
+              <li><span>操作系统：</span>{{renewalInfo.templatename}}</li>
+              <li><span>主机配置：</span>{{renewalInfo.serviceoffername}}</li>
+              <li><span>剩余时长：</span>{{renewalInfo.endtime}}</li>
+            </ul>
+          </div>
           <FormItem label="是否同时续费绑定IP与磁盘" v-if="isDisks||isIps">
             <CheckboxGroup @on-change="bindRenewal" v-model="bindRenewalVal">
               <Checkbox label="ip" v-if="isIps">续费绑定IP</Checkbox>
               <Checkbox label="disk" v-if="isDisks">续费磁盘</Checkbox>
             </CheckboxGroup>
           </FormItem>
+          <div class="renewal-upgrade">
+            <p>如果现在配置内容不支持使用，可进行<span v-if="status =='关机'" @click="renewalUpgrade">主机升级</span><span v-else style="color:#333;cursor:not-allowed">主机升级</span>
+            </p>
+          </div>
         </Form>
         <div style="font-size:16px;">
           资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{cost}}/</span></span>
@@ -663,6 +675,7 @@
         sessionStorage.removeItem('pane')
       }
       return {
+        renewalInfo: '',
         originCost: '--',
         cost: '--',
         listLoadBalanceRole: [],
@@ -1281,6 +1294,17 @@
           }
         })
       },
+      renewalUpgrade() {
+        localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
+        localStorage.setItem('disksize', this.currentHost[0].disksize)
+        localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
+        localStorage.setItem('zoneid', this.currentHost[0].zoneid)
+        sessionStorage.setItem('hostname', this.currentHost[0].computername)
+        sessionStorage.setItem('endtime', this.currentHost[0].endtime)
+        this.$router.push({
+          name: 'upgrade'
+        })
+      },
       hideEvent(name) {
         switch (name) {
           case 'delhost':
@@ -1306,6 +1330,12 @@
           case 'renewal':
             if (this.checkSelect()) {
               if (this.currentHost[0].caseType !== 3) {
+              this.renewalInfo = {
+                computername: this.currentHost[0].computername,
+                templatename: this.currentHost[0].templatename,
+                serviceoffername: this.currentHost[0].serviceoffername,
+                endtime: this.currentHost[0].endtime
+              }
                 this.renewType()
               } else {
                 this.$Message.info('请选择包年包月的云主机进行续费')
@@ -2008,6 +2038,29 @@
         display: inline-block;
         vertical-align: middle;
       }
+    }
+  }
+  .renewal-info {
+    padding: 20px 10px;
+    width: 100%;
+    background:rgba(245,245,245,1);
+    ul {
+      li {
+        font-size: 14px;
+        line-height: 1.5;
+        span {
+          color: #666;
+        }
+      }
+    }
+  }
+  .renewal-upgrade {
+    margin-bottom: 20px;
+    width: 100%;
+    font-size: 14px;
+    span {
+      color: #2A99F2;
+      cursor: pointer;
     }
   }
 </style>
