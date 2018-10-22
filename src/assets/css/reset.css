@@ -24,5 +24,6 @@ ul {
 
 ul li {
   font-size: 12px;
+  list-style: none;
 }
 
