@@ -473,12 +473,12 @@
           <Input v-model="updateTelescopicList.stretchname" style="width: 240px" placeholder="请输入名称"></Input>
           <p style="color: #999999;margin-top: 11px;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
-        <FormItem label="启动配置" prop="ownershipbootconfiguration" class="formitem3">
+        <FormItem label="启动配置" prop="ownershipbootconfiguration" class="formitem3" >
           <Tooltip placement="right" transfer>
             <p slot="content" style="white-space:normal;">启动配置是自动创建云服务器的模版。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
-          <Select v-model="updateTelescopicList.ownershipbootconfiguration" style="width:240px" placeholder="请选择启动配置">
+          <Select v-model="updateTelescopicList.ownershipbootconfiguration" style="width:240px" placeholder="请选择启动配置" disabled>
             <Option v-for="item in updateTeleList.configureList" :value="item.id" :key="item.id">{{ item.startupconfigname}}</Option>
           </Select>
           <p style="color: #2A99F2;cursor: pointer;margin-top: 11px;" @click="$router.push({path:'newAddElastic'})">新建启动配置</p>
@@ -490,12 +490,12 @@
           </Tooltip>
           <Input v-model="updateTelescopicList.minimumexpansionnumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
         </FormItem>
-        <FormItem label="负载均衡" class="formitem6">
+        <FormItem label="负载均衡" class="formitem6" >
           <Tooltip  placement="right" transfer>
             <p slot="content" style="white-space:normal;">伸缩组会自动将新加入的主机添加到负载均衡中。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
-          <Select v-model="updateTelescopicList.externalnetworkloadbalancing" style="width:240px" placeholder="选择负载均衡" @on-change="balancings(updateTelescopicList.externalnetworkloadbalancing)">
+          <Select v-model="updateTelescopicList.externalnetworkloadbalancing" disabled style="width:240px" placeholder="选择负载均衡" @on-change="balancings(updateTelescopicList.externalnetworkloadbalancing)">
             <Option v-for="item in updateTeleList.balancingList" :value="item.loadbalanceroleid" :key="item.loadbalanceroleid">{{ item.name }}</Option>
           </Select>
         </FormItem>
@@ -507,7 +507,7 @@
           <Input v-model="updateTelescopicList.maximumexpansionnumber" style="width: 240px" placeholder="请输入1-30之间的数字"></Input>
         </FormItem>
         <FormItem label="所属网络">
-          <Select v-model="updateTelescopicList.belongvpcid" style="width:240px" placeholder="请选择网络" @on-change="changeNetWork">
+          <Select v-model="updateTelescopicList.belongvpcid" style="width:240px" placeholder="请选择网络" @on-change="changeNetWork" disabled>
             <Option v-for="item in updateTeleList.belongNetworkList" :value="item.vpcid" :key="item.vpcid">{{ item.vpcname }}</Option>
           </Select>
         </FormItem>
@@ -519,7 +519,7 @@
           <Input v-model="updateTelescopicList.initialinstancenumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
         </FormItem>
         <FormItem label="所属子网">
-          <Select v-model="updateTelescopicList.belongsubnet"  style="width:240px" placeholder="请选择网络">
+          <Select v-model="updateTelescopicList.belongsubnet"  style="width:240px" placeholder="请选择网络" disabled>
             <Option v-for="item in updateTeleList.belongSubnetList"   :value="item.ipsegmentid" :key="item.ipsegmentid">{{ item.name }}</Option>
           </Select>
         </FormItem>
@@ -537,7 +537,7 @@
             <p slot="content" style="white-space: normal;">默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
-          <Select v-model="updateTelescopicList.acclistid" style="width:240px">
+          <Select v-model="updateTelescopicList.acclistid" style="width:240px" disabled>
             <Option v-for="item in updateTeleList.firewallList" :value="item.acllistid" :key="item.acllistid">{{ item.acllistname }}</Option>
           </Select>
         </FormItem>
@@ -1834,7 +1834,7 @@
         }).then(res =>{
           this.details = res.data.list[0];
           console.log(res.data.list);
-          this.updateTelescopicList = res.data.list[0];
+          this.updateTelescopicList = JSON.parse(JSON.stringify(res.data.list[0]));
           this.startUpId = res.data.list[0].ownershipbootconfiguration;
         })
       },
@@ -2306,24 +2306,20 @@
       //修改伸缩组
       updateTelescopicFcuntion(){
         this.$http.post('elasticScaling/updateExpansionGroups.do',{
-
             telescopicGroupName:this.updateTelescopicList.stretchname,
             telescopicMax:this.updateTelescopicList.maximumexpansionnumber,
             telescopicMin:this.updateTelescopicList.minimumexpansionnumber,
-            configId:this.updateTelescopicList.ownershipbootconfiguration,
             strategy:this.updateTelescopicList.removestrategy,
-            loadBalanceId:this.updateTelescopicList.externalnetworkloadbalancing,
             instaceNum:this.updateTelescopicList.initialinstancenumber,
-            vpcId:this.updateTelescopicList.belongvpcid,
-            networkId:this.updateTelescopicList.belongsubnet,
-            acclistId:this.updateTelescopicList.acclistid,
-            id:this.updateTelescopicList.id
-
+            id:this.updateTelescopicList.id,
+            configId:this.updateTelescopicList.ownershipbootconfiguration
         }).then(res =>{
             if(res.status == 200 && res.data.status == 1){
               this.$Message.success('修改成功');
+              this.updateTelescopic = false;
             }else{
               this.$Message.info(res.data.message);
+              this.updateTelescopic = false;
             }
         })
       },
