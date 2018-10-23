@@ -141,6 +141,14 @@
               </Option>
             </Select>
           </FormItem>
+          <div class="renewal-info">
+            <ul>
+              <li><span>主机名称：</span>{{renewalInfo.computername}}</li>
+              <li><span>操作系统：</span>{{renewalInfo.templatename}}</li>
+              <li><span>主机配置：</span>{{renewalInfo.serviceoffername}}</li>
+              <li><span>剩余时长：</span>{{renewalInfo.endtime}}</li>
+            </ul>
+          </div>
         </Form>
         <div style="font-size:16px;">
           资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{cost}}/</span></span>
@@ -252,6 +260,7 @@
         }
       }
       return {
+        renewalInfo: '',
         currentDBId: '',
         templateid: '',
         databaseColumns: [
@@ -371,7 +380,7 @@
           // },
           {
             title: '公网地址',
-            width: '180px',
+            width: 180,
             render: (h, params) => {
               if (params.row.publicip) {
                 return h('div', {}, [h('span', {}, params.row.publicip), h('span', {
@@ -590,6 +599,12 @@
                     nativeOn: {
                       click: () => {
                         this.current = params.row
+                        this.renewalInfo = {
+                          computername: params.row.computername,
+                          templatename: params.row.templatename,
+                          serviceoffername: params.row.serviceoffername,
+                          endtime: params.row.endtime
+                        }
                         if (params.row.caseType == 3) {
                           //this.$Message.info('请选择包年包月的云数据库进行续费')
                           this.showModal.renewal = true
@@ -1162,6 +1177,21 @@
       span {
         color: #2a99f2;
         cursor: pointer;
+      }
+    }
+  }
+  .renewal-info {
+    margin-bottom: 20px;
+    padding: 20px 10px;
+    width: 100%;
+    background:rgba(245,245,245,1);
+    ul {
+      li {
+        font-size: 14px;
+        line-height: 1.5;
+        span {
+          color: #666;
+        }
       }
     }
   }

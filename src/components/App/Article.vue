@@ -114,14 +114,13 @@
     },
     beforeRouteUpdate (to, from, next) {
       // 设置当前hotTags的内容
-      this.hotTags = '新闻资讯'
       this.flagClick = 0
       this.pageInfo.currentPage = 1
       axios.post('article/getMoreArticle.do', {
-          articleTypeId: to.params.typeId,
-          keywordVal: this.keywordVal,
-          page: this.pageInfo.currentPage,
-          pageSize: this.pageInfo.pageSize
+        articleTypeId: to.params.typeId,
+        keywordVal: '',
+        page: this.pageInfo.currentPage,
+        pageSize: this.pageInfo.pageSize
       }).then(response => {
         this.articleList = response.data.result.data
         this.pageInfo.total = response.data.result.total
@@ -141,7 +140,7 @@
         this.hotTags = keywordVal
         // 设置隐藏文章类型
         this.noSelect = false
-        this.widthChange.width = '60%'
+        this.widthChange.width = '80%'
         this.keywordVal = this.keywordVal == keywordVal ? '' : keywordVal
         if (this.flagClick) {
           // 第二次点击标签进行跳转，打开新的页面

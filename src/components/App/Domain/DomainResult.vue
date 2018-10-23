@@ -34,8 +34,7 @@
               </Checkbox>
             </CheckboxGroup>
           </div>
-          <!--v-show="index<=num"-->
-          <li v-for="(item,index) in Results" :key="index">
+          <li v-for="(item,index) in Results" :key="index" v-show="index<=num">
             <p>{{item.name}}
               <button v-show="item.isRes=='available'">未注册</button>
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
@@ -46,9 +45,9 @@
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
-          <!--<button class="showAll" @click="exhibition" v-show="isShowAll">显示全部-->
-          <!--<Icon type="ios-arrow-down"></Icon>-->
-          <!--</button>-->
+          <button class="showAll" @click="exhibition" v-show="isShowAll">显示全部
+            <Icon type="ios-arrow-down"></Icon>
+          </button>
         </div>
       </div>
       <div id="result-right">
@@ -88,7 +87,6 @@
         tids: JSON.parse(sessionStorage.getItem("suffix")).join(','),
       }).then(res => {
         next(vm => {
-          vm.singles = vm.suffixChange.en
           vm.Results = res.data.data.results
         })
       })
@@ -101,8 +99,8 @@
         choose: false,
         suffixChange: JSON.parse(sessionStorage.getItem('suffixChange')),
         show: false,
-        singles: [],
-        num: 3,
+        singles: JSON.parse(sessionStorage.getItem('suffixChange')).en,
+        num: 5,
         isShowAll: true,
         Results: [],
 //        域名清单
@@ -145,7 +143,6 @@
       //全部移除
       removeAll(){
         this.buyLists = []
-//        this.buyLists.splice(0, this.buyLists.length)
       },
 
       //获取token
@@ -187,8 +184,8 @@
           })
           return
         } else {
-          this.getToken()
           if (this.buyLists.length != 0) {
+            this.getToken()
             this.buyLists.forEach(e => {
               this.domName += e.name + ','
             })
