@@ -829,7 +829,7 @@
           eachFrozenMoney: this.cashPledge,
           describe: '领取主机',
           operationType: '领取主机',
-          thawCondition: '删除主机',
+          thawCondition: '删除主机、公网IP',
           vmConfig: this.vmConfig
         }
         axios.post(url, params).then(response => {
