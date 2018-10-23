@@ -116,7 +116,7 @@
       // 设置当前hotTags的内容
       this.flagClick = 0
       this.pageInfo.currentPage = 1
-      /* axios.post('article/getMoreArticle.do', {
+      axios.post('article/getMoreArticle.do', {
         articleTypeId: to.params.typeId,
         keywordVal: '',
         page: this.pageInfo.currentPage,
@@ -124,7 +124,7 @@
       }).then(response => {
         this.articleList = response.data.result.data
         this.pageInfo.total = response.data.result.total
-      }) */
+      })
       next()
     },
     methods: {
