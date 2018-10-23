@@ -1,7 +1,9 @@
 <template>
     <div id="background">
       <div id="wrapper">
-          <p style="margin: 20px 0 20px 0;">云服务器 / <span style="color:#666666">GPU云服务器</span></p>
+          <span class="title">云服务器 /
+            <span>GPU云服务器</span>
+          </span>
         <div id="content">
             <div id="header">
               <svg class="icon" aria-hidden="true">

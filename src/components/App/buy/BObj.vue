@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div id="bhost">
     <!--公网IP div-->
     <div id="Peip" style="padding: 30px 40px 40px 40px;">
