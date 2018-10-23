@@ -1,7 +1,9 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <p style="margin: 20px 0;">云服务器 / 弹性伸缩</p>
+       <span class="title">云服务器 /
+            <span>弹性伸缩</span>
+          </span>
       <div id="content">
         <div id="header">
           <svg class="icon" aria-hidden="true">
@@ -116,7 +118,6 @@
         <Button type="primary" @click="createExpansionGroups">完成配置</Button>
       </div>
     </modal>
-
 
   </div>
 </template>

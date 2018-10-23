@@ -21,8 +21,8 @@
                   <p class="item-content" v-html="AppendHtml(item.abstracts)"></p>
                 </div>
               </router-link>
-              <div class="item-label"><!-- {name:'artTags', params:{ typeId: label}} -->
-                <router-link class="labelhref" v-for="label in item.keywordval" @click.native="changeWord(label)" :key="item.keywordval.index" :to="label">{{ label }}</router-link>
+              <div class="item-label">
+                <router-link class="labelhref" v-for="label in item.keywordval" :key="item.keywordval.index" :to="{name:'artTags', params:{ typeId: label}}">{{ label }}</router-link>
               </div>
             </div>
             <Page :total="pageInfo.total" :page-size="pageInfo.pageSize" :current="pageInfo.currentPage"
@@ -36,8 +36,8 @@
           <div class="changeLabel">
             <div class="hot-tags">
               <h3><Icon type="ios-pricetag-outline" class="licon"></Icon>热门标签</h3>
-              <div class="tags"><!-- {name:'artTags', params:{ typeId: tag.keywordsval}} -->
-                <router-link class="tagslink" v-for="(tag,index) in tags" :key="index" :to="tag.keywordsval"
+              <div class="tags">
+                <router-link class="tagslink" v-for="(tag,index) in tags" :key="index" :to="{name:'artTags', params:{ typeId: tag.keywordsval}}"
                              @click.native="update(tag.keywordsval)" >{{
                   tag.keywordsval }}
                 </router-link>
@@ -69,21 +69,21 @@
   export default{
     name: 'art',
     beforeRouteEnter (to, from, next) {
-      // let keywordVal = sessionStorage.getItem('keywords') || ''
+      let keywordVal = sessionStorage.getItem('keywords') || ''
       let articleType = axios.get('article/getArticleType.do')
-      /*let moreArticle = axios.post('article/getMoreArticle.do', {
+      let moreArticle = axios.post('article/getMoreArticle.do', {
           articleTypeId: to.params.typeId,
           keywordVal: keywordVal,
           page: '1',
           pageSize: '5'
-      })*/
+      })
       let keywords = axios.get('article/getKeywords.do')
       let hot = axios.get('article/getHotInformation.do', {
         params: {
           size: 4
         }
       })
-      Promise.all([articleType, keywords, hot]).then(values => {
+      Promise.all([articleType, moreArticle, keywords, hot]).then(values => {
         next(vm => {
           vm.setData(values)
         })
@@ -114,111 +114,26 @@
     },
     beforeRouteUpdate (to, from, next) {
       // 设置当前hotTags的内容
-      // this.hotTags = '新闻资讯'
       this.flagClick = 0
       this.pageInfo.currentPage = 1
-      /*if (this.noSelect) {
-        // 如果没有点击当前页面标签，进行文章加载
-        axios.post('article/getMoreArticle.do', {
-          articleTypeId: to.params.typeId,
-          keywordVal: '',
-          page: this.pageInfo.currentPage,
-          pageSize: this.pageInfo.pageSize
-        }).then(response => {
-          this.articleList = response.data.result.data
-          this.pageInfo.total = response.data.result.total
-        })
-      } else {
-        // 进行已有文章筛选
-        axios.post('article/getMoreArticle.do', {
-          articleTypeId: '',
-          keywordVal: this.keywordVal,
-          page: this.pageInfo.currentPage,
-          pageSize: this.pageInfo.pageSize
-        }).then(response => {
-          this.articleList = response.data.result.data
-          this.pageInfo.total = response.data.result.total
-        })
-      }*/
-      next()
-    }, // 路由变化之后，重新进行请求
-    watch: {
-      "$route" (to, from) {
-        let searchWords = this.$router.history.current.params.typeId
-        if ((searchWords == '1') || (searchWords == '2') || (searchWords == '3') || (searchWords == '5')) {
-          this.hotTags = '新闻资讯'
-          // 设置隐藏文章类型
-          this.noSelect = true
-          this.widthChange.width = '160px'
-          axios.post('article/getMoreArticle.do', {
-            articleTypeId: '',
-            keywordVal: this.$router.history.current.params.typeId,
-            page: this.pageInfo.currentPage,
-            pageSize: this.pageInfo.pageSize
-          }).then(response => {
-            this.articleList = response.data.result.data
-            this.pageInfo.total = response.data.result.total
-          })
-        } else {
-          this.hotTags = searchWords
-          this.noSelect = false
-          this.widthChange.width = '80%'
-          axios.post('article/getMoreArticle.do', {
-            articleTypeId: '',
-            keywordVal: this.$router.history.current.params.typeId,
-            page: this.pageInfo.currentPage,
-            pageSize: this.pageInfo.pageSize
-          }).then(response => {
-            this.articleList = response.data.result.data
-            this.pageInfo.total = response.data.result.total
-          })
-        }
-      }
-    },
-    mounted() {
-      this.$nextTick(function () {
-        this.loadDate()
+      axios.post('article/getMoreArticle.do', {
+        articleTypeId: to.params.typeId,
+        keywordVal: '',
+        page: this.pageInfo.currentPage,
+        pageSize: this.pageInfo.pageSize
+      }).then(response => {
+        this.articleList = response.data.result.data
+        this.pageInfo.total = response.data.result.total
       })
+      next()
     },
     methods: {
       setData(values){
         this.articleType = values[0].data.result
-        // this.articleList = values[1].data.result.data
-        // this.pageInfo.total = values[1].data.result.total
-        this.tags = values[1].data.result
-        this.hot = values[2].data.result
-      },
-      loadDate(){
-        // 获取到当前的路由的参数
-        let searchWords = this.$router.history.current.params.typeId
-        if ((searchWords == '1') || (searchWords =='2') || (searchWords =='3') || (searchWords =='5')) {
-          this.hotTags = '新闻资讯'
-          // 设置隐藏文章类型
-          this.noSelect = true
-          this.widthChange.width = '160px'
-          axios.post('article/getMoreArticle.do', {
-            articleTypeId: searchWords,
-            keywordVal: '',
-            page: '1',
-            pageSize: '5'
-          }).then(response => {
-            this.articleList = response.data.result.data
-            this.pageInfo.total = response.data.result.total
-          })
-        } else {
-          this.hotTags = searchWords
-          this.noSelect = false
-          this.widthChange.width = '80%'
-          axios.post('article/getMoreArticle.do', {
-            articleTypeId: '',
-            keywordVal: searchWords,
-            page: '1',
-            pageSize: '5'
-          }).then(response => {
-            this.articleList = response.data.result.data
-            this.pageInfo.total = response.data.result.total
-          })
-        }
+        this.articleList = values[1].data.result.data
+        this.pageInfo.total = values[1].data.result.total
+        this.tags = values[2].data.result
+        this.hot = values[3].data.result
       },
       update(keywordVal){
         // 设置当前hotTags的内容
@@ -228,26 +143,13 @@
         this.widthChange.width = '80%'
         this.keywordVal = this.keywordVal == keywordVal ? '' : keywordVal
         if (this.flagClick) {
-          this.flagClick = 1
-          return false
-        } else {
           // 第二次点击标签进行跳转，打开新的页面
           this.flagClick = 0
-          const {href} = this.$router.resolve({
-            name: "art",
-            params: {
-              typeId: keywordVal
-            }
-          })
-          window.open(href, '_blank')
+          return true
+        } else {
+          this.flagClick = 1
+          return false
         }
-      },
-      changeWord(world) {
-        // 设置当前hotTags的内容
-        this.hotTags = world
-        // 设置隐藏文章类型
-        this.noSelect = false
-        this.widthChange.width = '80%'
       },
       pageUpdate(current){
         this.pageInfo.currentPage = current

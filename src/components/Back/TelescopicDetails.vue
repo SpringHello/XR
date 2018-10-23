@@ -1031,10 +1031,11 @@
                       },
                       on:{
                         change:()=>{
+                          console.log('ssssssss');
                           this.removeProtect(params.row,0);
                         }
                       }
-                    },)
+                    })
                   ]),
                 ])
               }
@@ -2317,6 +2318,7 @@
             if(res.status == 200 && res.data.status == 1){
               this.$Message.success('修改成功');
               this.updateTelescopic = false;
+              this.getDetails();
             }else{
               this.$Message.info(res.data.message);
               this.updateTelescopic = false;
