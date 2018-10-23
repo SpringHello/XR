@@ -80,7 +80,7 @@
 
               <!-- 删除主机 -->
 
-              <Dropdown-item name="delhost" v-if="status=='欠费'||status=='异常'" :disabled=true>删除主机</Dropdown-item>
+              <Dropdown-item name="delhost" v-if="status=='异常'" :disabled=true>删除主机</Dropdown-item>
               <Dropdown-item name="delhost" v-else>删除主机</Dropdown-item>
 
               <!-- 解绑主机 -->
