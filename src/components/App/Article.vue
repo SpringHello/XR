@@ -107,10 +107,12 @@
       }
     },
     beforeRouteUpdate (to, from, next) {
+      // 设置当前hotTags的内容
+      this.flagClick = 0
       this.pageInfo.currentPage = 1
       axios.post('article/getMoreArticle.do', {
         articleTypeId: to.params.typeId,
-        keywordVal: this.keywordVal,
+        keywordVal: '',
         page: this.pageInfo.currentPage,
         pageSize: this.pageInfo.pageSize
       }).then(response => {
@@ -128,6 +130,11 @@
         this.hot = values[3].data.result
       },
       update(keywordVal){
+        // 设置当前hotTags的内容
+        this.hotTags = keywordVal
+        // 设置隐藏文章类型
+        this.noSelect = false
+        this.widthChange.width = '80%'
         this.keywordVal = this.keywordVal == keywordVal ? '' : keywordVal
         axios.post('article/getMoreArticle.do', {
           articleTypeId: this.$route.params.typeId,

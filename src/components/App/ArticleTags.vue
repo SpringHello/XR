@@ -8,7 +8,7 @@
         <div class="body">
           <div class="body-left">
             <div class="item" v-for="item in articleList">
-              <router-link :to="`${item.code}.html`" target="_blank">
+              <router-link :to="'/ruicloud/article/'+`${item.code}.html`" target="_blank">
                 <div class="item-left">
                   <div class="item-img" :style="{backgroundImage: 'url('+item.coverUrl+')'}"></div>
                 </div>

@@ -1,7 +1,9 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <p style="margin: 20px 0;">云服务器 / 弹性伸缩</p>
+       <span class="title">云服务器 /
+            <span>弹性伸缩</span>
+          </span>
       <div id="content">
         <div id="header">
           <svg class="icon" aria-hidden="true">
@@ -39,8 +41,9 @@
           <Input v-model="newAddTelescopicList.addName" style="width: 240px" placeholder="请输入名称"></Input>
           <p style="color: #999999;margin-top: 11px;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
-        <FormItem label="启动配置" prop="configure" class="formitem3">
-          <Tooltip content="启动配置是自动创建云服务器的模版" placement="right">
+        <FormItem label="启动配置" prop="configure" class="formitem3" >
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space: normal;">启动配置是自动创建云服务器的模版。</p>
            <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Select v-model="newAddTelescopicList.configure" style="width:240px" placeholder="请选择启动配置">
@@ -49,13 +52,15 @@
           <p style="color: #2A99F2;cursor: pointer;margin-top: 11px;" @click="$router.push({path:'newAddElastic'})">新建启动配置</p>
         </FormItem>
         <FormItem label="最小伸缩数" prop="minNumber" class="formitem1">
-          <Tooltip content="伸缩组中允许的实例最小数量。当伸缩组的云主机数量小于最小伸缩数时，弹性伸缩会增加实例，使得伸缩组当前实例数匹配最小伸缩数" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space: normal;">伸缩组中允许的实例最小数量。当伸缩组的云主机数量小于最小伸缩数时，弹性伸缩会增加实例，使得伸缩组当前实例数匹配最小伸缩数。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Input v-model="newAddTelescopicList.minNumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
         </FormItem>
         <FormItem label="负载均衡" class="formitem6">
-          <Tooltip content="伸缩组会自动将新加入的主机添加到负载均衡中" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space: normal;">伸缩组会自动将新加入的主机添加到负载均衡中。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Select v-model="newAddTelescopicList.balancing" style="width:240px" placeholder="选择负载均衡" @on-change="balancings(newAddTelescopicList.balancing)">
@@ -63,7 +68,8 @@
           </Select>
         </FormItem>
         <FormItem label="最大伸缩数" class="formitem1" prop="maxNumber">
-          <Tooltip content="伸缩组中允许的实例最大数量。当伸缩组的云主机数量大于最大伸缩数时，弹性伸缩会移出实例，使得伸缩组当前实例数匹配最大伸缩数" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space: normal;">伸缩组中允许的实例最大数量。当伸缩组的云主机数量大于最大伸缩数时，弹性伸缩会移出实例，使得伸缩组当前实例数匹配最大伸缩数。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Input v-model="newAddTelescopicList.maxNumber" style="width: 240px" placeholder="请输入1-30之间的数字"></Input>
@@ -74,7 +80,8 @@
           </Select>
         </FormItem>
         <FormItem label="初始化实例数" class="formitem2" prop="exampleNumber">
-          <Tooltip content="伸缩组刚创建时的云服务器数量，伸缩组会为您自动创建对应数量的主机。" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space: normal;">伸缩组刚创建时的云服务器数量，伸缩组会为您自动创建对应数量的主机。</p>
            <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Input v-model="newAddTelescopicList.exampleNumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
@@ -85,7 +92,8 @@
           </Select>
         </FormItem>
         <FormItem label="移除策略" class="formitem5">
-          <Tooltip content="当伸缩组要减少实例且有多重选择时，将根据移出策略来选择移出的主机" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space: normal;">当伸缩组要减少实例且有多重选择时，将根据移出策略来选择移出的主机</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Select v-model="newAddTelescopicList.removePolicy" style="width:240px">
@@ -93,7 +101,8 @@
           </Select>
         </FormItem>
         <FormItem label="防火墙" class="formitem4">
-          <Tooltip content="默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。" placement="right">
+          <Tooltip  placement="right" transfer>
+            <p slot="content" style="white-space: normal;">默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Select v-model="newAddTelescopicList.firewall" style="width:240px">
@@ -109,7 +118,6 @@
         <Button type="primary" @click="createExpansionGroups">完成配置</Button>
       </div>
     </modal>
-
 
   </div>
 </template>
@@ -617,7 +625,7 @@
   }
 </script>
 
-<style lang="less" rel="stylesheet/less">
+<style lang="less" rel="stylesheet/less" scoped>
   .text-box{
     border:1px solid #2A99F2;
     background-color: RGBA(42, 153, 242, 0.1);
@@ -632,7 +640,9 @@
     color: #2A99F2;
   }
   .ivu-tooltip-inner{
-   white-space: inherit;
+    p{
+      line-height: 15px;
+    }
   }
   .formitem1{
     .ivu-icon-ios-help-outline:before{
