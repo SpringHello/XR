@@ -93,7 +93,7 @@
                 @on-ok="unbind"
                 @on-cancel="cancel"
                 style="display: block">
-                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>解绑公网IP</li>
+                <li class="del" v-if="status!='异常'" :disabled=true>解绑公网IP</li>
               </Poptip>
 
             </Dropdown-menu>
