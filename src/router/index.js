@@ -62,8 +62,12 @@ const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 //域名页面路由
 /*const Domainname = () =>import('@/components/App/Domain/Domainname')
 const DomainResult = () =>import('@/components/App/Domain/DomainResult')
+
+//const DomainTemplate = () =>import('@/components/App/Domain/DomainTemplate')
+
 const DomainInfoTemplate = () =>import('@/components/App/Domain/DomainInfoTemplate')
 const CheckReg = () =>import('@/components/App/Domain/CheckReg')*/
+
 
 
 // 备案系统页面路由
@@ -195,11 +199,18 @@ var router = new Router({
       component: App,
       children: [
         {path: '', name: 'home', component: Home},
+        {path: 'home.htm', name: 'home', component: Home},
+        {path: 'ecs.htm', name: 'ecs', component: Ecs},
+        {path: 'about.htm', name: 'about', component: Aboutus},
+        {path: 'ActiveCenter.htm', name: 'ActiveCenter', component: ActiveCenter},
+        {path: 'document.htm', name: 'document', component: Document},
+
         {path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
         {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
         {path: 'document', name: 'document', component: Document},
+
         {path: 'article/:typeId', name: 'art', component: Art},
         {path: 'article/info/:typeId', name: 'artTags', component: ArtTags},
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
@@ -315,9 +326,31 @@ var router = new Router({
 
 /*        {path: 'Domainname', name: 'Domainname', component: Domainname},
         {path: 'DomainResult', name: 'DomainResult', component: DomainResult},
+
+        //{path: 'DomainTemplate', name: 'DomainTemplate', component: DomainTemplate},
+
         {path: 'DomainInfoTemplate', name: 'DomainInfoTemplate', component: DomainInfoTemplate},
         {path: 'CheckReg', name: 'CheckReg', component: CheckReg},*/
 
+
+
+        {path: 'Pecs.htm', component: Pecs},
+        {path: 'Phost.htm', component: Phost},
+        {path: 'Pecss.htm', component: Pecss},
+        {path: 'Pvpc.htm', component: Pvpc},
+        {path: 'Peip.htm', component: Peip},
+        {path: 'Pbalance.htm', component: Pbalance},
+        {path: 'Pnat.htm', component: Pnat},
+        {path: 'Pvirvpn.htm', component: Pvirvpn},
+        {path: 'Pdisk.htm', component: Pdisk},
+        {path: 'Pbackupdisk.htm', component: Pbackupdisk},
+        {path: 'Pfirewall.htm', component: Pfirewall},
+        {path: 'Pddos.htm', component: Pddos},
+        {path: 'Pmonitor.htm', component: Pmonitor},
+        {path: 'PobjStorage.htm', component: PobjStorage},
+        {path: 'PdataBase.htm', component: PdataBase},
+        {path: 'PobjectStorage.htm', component: PobjectStorage},
+        {path: 'Pgpu.htm', component: Pgpu},
 
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
@@ -336,6 +369,7 @@ var router = new Router({
         {path: 'PdataBase', component: PdataBase},
         {path: 'PobjectStorage', component: PobjectStorage},
         {path: 'Pgpu', component: Pgpu},
+
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
         {path: 'hotQuestion/:parentId/:id', component: hotQuestion},
       ]

@@ -72,10 +72,10 @@
       let keywordVal = sessionStorage.getItem('keywords') || ''
       let articleType = axios.get('article/getArticleType.do')
       let moreArticle = axios.post('article/getMoreArticle.do', {
-          articleTypeId: to.params.typeId,
-          keywordVal: keywordVal,
-          page: '1',
-          pageSize: '5'
+        articleTypeId: to.params.typeId,
+        keywordVal: keywordVal,
+        page: '1',
+        pageSize: '5'
       })
       let keywords = axios.get('article/getKeywords.do')
       let hot = axios.get('article/getHotInformation.do', {

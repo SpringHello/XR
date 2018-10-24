@@ -19,7 +19,7 @@
               <div class="item">
                 <span>余额</span>
                 <button @click="torecharge">充值</button>
-                <button @click="showModal.withdraw = true" style="margin-right: 10px;">提现</button>
+                <!--<button @click="showModal.withdraw = true" style="margin-right: 10px;">提现</button>-->
                 <div>
                   <ul style="width: 50%">
                     <li>可用余额</li>

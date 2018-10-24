@@ -392,8 +392,10 @@
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
             <dt>
-              <span>{{item.typename}}</span>
-              <router-link :to="`article/${item.id}`" class="moreinfo"><Icon type="chevron-right"></Icon></router-link>
+              <router-link :to="`article/${item.id}`" class="moreinfo">
+                <Icon type="chevron-right"></Icon>
+                <span>{{item.typename}}</span>
+              </router-link>
             </dt>
             <dd>
               <ul>
@@ -3824,13 +3826,24 @@
             color: #333333;
             border-bottom:1px solid #cfcfcf;
             .moreinfo {
-              float: right;
-              cursor: pointer;
-              color: #333333;
+              display: block;
+              width: 100%;
               &:hover {
                 color: #377DFF;
+                span{
+                  color: #377DFF;
+                }
+                i{
+                  color: #377DFF;
+                }
+              }
+              span{
+                cursor: pointer;
+                color: #333333;
               }
               i {
+                float: right;
+                line-height: 27px;
                 color: #333333;
                 font-size: 12px;
               }

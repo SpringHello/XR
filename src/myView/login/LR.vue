@@ -17,8 +17,8 @@
           </div>
           <div class="input-box">
             <img src="./img/LR-password.png">
-            <input v-model="loginForm.password" type="password" placeHolder="密码">
-            <img src="./img/LR-eye.png" style="cursor:pointer">
+            <input v-model="loginForm.password" :type="loginPassword" placeHolder="密码">
+            <img src="./img/LR-eye.png" @click="toggle" style="cursor:pointer">
           </div>
           <div class="input-box">
             <img src="./img/LR-vailcode.png">
@@ -46,14 +46,14 @@
             <img src="./img/LR-phone.png">
             <input v-model="registerForm.phoneLogin" type="text" placeHolder="请输入手机号" @blur="checkUserName">
             <div class="swap">
-              <p @click="Q='email'">邮箱注册</p>
+              <p @click="Q='email'">使用邮箱注册</p>
             </div>
           </div>
           <div class="input-box" v-show="Q=='email'">
             <img src="./img/LR-phone.png">
             <input v-model="registerForm.emailLogin" type="text" placeHolder="请输入邮箱" @blur="checkUserName">
             <div class="swap">
-              <p @click="Q='phone'">手机注册</p>
+              <p @click="Q='phone'">使用手机注册</p>
             </div>
           </div>
           <div class="input-box">
@@ -92,7 +92,7 @@
         <img style="margin: 0px auto;display: block;" src="./img/LR-success.png">
         <h1 style="margin: 20px 0px;">注册成功</h1>
         <p style="width:340px;line-height: 28px;text-align: center;margin-bottom:80px;font-size: 14px;">恭喜您注册成功，现在完成<a
-          href="/ruicloud/home">实名认证</a>即可获得156元专属优惠券，还可参加<a href="/ruicloud/ActiveCenter">多款主机免费领</a>活动</p>
+          href="/ruicloud/userCenter">实名认证</a>即可获得156元专属优惠券，还可参加<a href="/ruicloud/ActiveCenter">多款主机免费领</a>活动</p>
         <button style="font-size:18px;font-weight:400;color:rgba(255,255,255,1);line-height:18px;margin-bottom: 24px;"
                 @click="close">
           确认登录
@@ -398,7 +398,8 @@
         imgSrc: `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         // 是否同意注册条款
         single: false,
-        getCode: '获取验证码'
+        getCode: '获取验证码',
+        loginPassword: 'password'
       }
     },
     methods: {
@@ -412,17 +413,19 @@
               vailCode: this.loginForm.vailCode
             }
           }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.close()
-              axios.get('user/GetUserInfo.do').then(response => {
-                if (response.data.status == 1 && response.status == 200) {
-                  $store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
-                }
-              })
-            } else {
-              this.warning = response.data.message
+              if (response.status == 200 && response.data.status == 1) {
+                this.close()
+                axios.get('user/GetUserInfo.do').then(response => {
+                    if (response.data.status == 1 && response.status == 200) {
+                      $store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+                    }
+                  }
+                )
+              } else {
+                this.warning = response.data.message
+              }
             }
-          })
+          )
         } else {
           return
         }
@@ -488,14 +491,15 @@
             username: this.Q == 'phone' ? this.registerForm.phoneLogin : this.registerForm.emailLogin
           }
         }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            if (this.registerWarning == '该 邮箱/手机号 已注册') {
-              this.registerWarning = ''
+            if (response.status == 200 && response.data.status == 1) {
+              if (this.registerWarning == '该 邮箱/手机号 已注册') {
+                this.registerWarning = ''
+              }
+            } else {
+              this.registerWarning = '该 邮箱/手机号 已注册'
             }
-          } else {
-            this.registerWarning = '该 邮箱/手机号 已注册'
           }
-        })
+        )
       },
       // 注册
       register(){
@@ -523,12 +527,16 @@
           this.registerWarning = '请阅读并同意《新睿云用户使用协议》'
           return
         }
+        var params = {
+          username: this.Q == 'phone' ? this.registerForm.phoneLogin : this.registerForm.emailLogin,
+          password: this.registerForm.password,
+          code: this.registerForm.phoneVailCode
+        }
+        if (localStorage.getItem('comefrom')) {
+          params.qdCode = localStorage.getItem('comefrom')
+        }
         axios.get('user/register.do', {
-          params: {
-            username: this.Q == 'phone' ? this.registerForm.phoneLogin : this.registerForm.emailLogin,
-            password: this.registerForm.password,
-            code: this.registerForm.phoneVailCode
-          }
+          params
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.T = 'success'
@@ -554,6 +562,10 @@
       },
       close(){
         window.document.body.removeChild(this.$el)
+      },
+      // 切换登录密码框type  password/text
+      toggle(){
+        this.loginPassword = this.loginPassword == 'text' ? 'password' : 'text'
       }
     },
     computed: {
@@ -690,7 +702,7 @@
             }
           }
           .swap {
-            width: 100px;
+            width: 110px;
             display: inline-block;
             p {
               padding: 7px 8px;
