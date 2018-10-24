@@ -90,7 +90,7 @@
       })
     },
     data(){
-      let keywords = sessionStorage.getItem('keywords') || ''
+      let keywordsId = sessionStorage.getItem('keywords') || ''
       sessionStorage.removeItem('keywords')
       return {
         articleType: [],
@@ -103,7 +103,13 @@
           total: 0
         },
         // 选中的标签
-        keywordVal: keywords
+        keywordVal: keywordsId,
+        hotTags: '新闻资讯',
+        flagClick: 0,
+        noSelect: true,
+        widthChange: {
+          width: '160px'
+        }
       }
     },
     beforeRouteUpdate (to, from, next) {
@@ -136,15 +142,14 @@
         this.noSelect = false
         this.widthChange.width = '80%'
         this.keywordVal = this.keywordVal == keywordVal ? '' : keywordVal
-        axios.post('article/getMoreArticle.do', {
-          articleTypeId: this.$route.params.typeId,
-          keywordVal: this.keywordVal,
-          page: this.pageInfo.currentPage,
-          pageSize: this.pageInfo.pageSize
-        }).then(response => {
-          this.articleList = response.data.result.data
-          this.pageInfo.total = response.data.result.total
-        })
+        if (this.flagClick) {
+          // 第二次点击标签进行跳转，打开新的页面
+          this.flagClick = 0
+          return true
+        } else {
+          this.flagClick = 1
+          return false
+        }
       },
       pageUpdate(current){
         this.pageInfo.currentPage = current
