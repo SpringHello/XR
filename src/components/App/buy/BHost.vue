@@ -63,13 +63,21 @@
                   </div>
                   <!--镜像+应用 列表-->
                   <div v-if="currentType=='app'">
-                    <div v-for="item in appList" class="mirror"
-                         :class="{mirrorSelect:item==currentApp}"
-                         @click="currentApp=item">
-                      <div>
-                        <p class="appName">{{item.templatename}}</p>
-                        <p class="desc">{{item.templatedescript}}</p>
-                      </div>
+                    <div v-if="currentType=='app'">
+                      <Dropdown v-for="(item,index) in appList" style="margin-right:10px;margin-top:20px;"
+                                @on-click="setAppOS" :key="item.systemtemplateid">
+                        <div
+                          style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
+                          {{item.selectSystem||item.system}}
+                        </div>
+                        <Dropdown-menu slot="list">
+                          <Dropdown-item v-for="system in item.systemList" :key="system.systemtemplateid"
+                                         :name="`${system.templatedescript}#${system.systemtemplateid}#${index}`"
+                                         style="white-space: pre-wrap;display:block;">
+                            <span>{{system.templatedescript}}</span>
+                          </Dropdown-item>
+                        </Dropdown-menu>
+                      </Dropdown>
                     </div>
                   </div>
 
@@ -174,14 +182,20 @@
                   </div>
                   <!--镜像+应用 列表-->
                   <div v-if="currentType=='app'">
-                    <div v-for="item in appList" class="mirror"
-                         :class="{mirrorSelect:item==currentApp}"
-                         @click="currentApp=item">
-                      <div>
-                        <p class="appName">{{item.templatename}}</p>
-                        <p class="desc">{{item.templatedescript}}</p>
+                    <Dropdown v-for="(item,index) in appList" style="margin-right:10px;margin-top:20px;"
+                              @on-click="setAppOS" :key="item.systemtemplateid">
+                      <div
+                        style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
+                        {{item.selectSystem||item.system}}
                       </div>
-                    </div>
+                      <Dropdown-menu slot="list">
+                        <Dropdown-item v-for="system in item.systemList" :key="system.systemtemplateid"
+                                       :name="`${system.templatedescript}#${system.systemtemplateid}#${index}`"
+                                       style="white-space: pre-wrap;display:block;">
+                          <span>{{system.templatedescript}}</span>
+                        </Dropdown-item>
+                      </Dropdown-menu>
+                    </Dropdown>
                   </div>
 
                   <!--公共镜像 列表-->
@@ -194,7 +208,7 @@
                       </div>
                       <Dropdown-menu slot="list">
                         <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
-                                       :name="`${system.ostypename}#${system.systemtemplateid}#${index}`"
+                                       :name="`${system.templatename}#${system.systemtemplateid}#${index}`"
                                        style="white-space: pre-wrap;display:block;">
                           <span>{{system.templatename}}</span>
                         </Dropdown-item>
@@ -333,7 +347,8 @@
                     :points="[20,50]"
                     style="margin-right:30px;vertical-align: middle;">
                   </i-slider>
-                  <InputNumber :max="100" :min="1" v-model="IPConfig.bandWidth" size="large" :precision="0"></InputNumber>
+                  <InputNumber :max="100" :min="1" v-model="IPConfig.bandWidth" size="large"
+                               :precision="0"></InputNumber>
                 </div>
               </div>
             </div>
@@ -558,18 +573,19 @@
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
   import regExp from '@/util/regExp'
+
   var debounce = require('throttle-debounce/debounce')
-  export default{
-    data(){
+  export default {
+    data() {
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 0
       })
       var zone = this.$store.state.zone
       console.log(zone)
       // 如果默认区域在该资源下不存在
-      if(!zoneList.some(i=>{
-         return i.zoneid == zone.zoneid
-        })){
+      if (!zoneList.some(i => {
+        return i.zoneid == zone.zoneid
+      })) {
         // 默认选中zoneList中第一个区域
         console.log('')
         zone = zoneList[0]
@@ -611,12 +627,16 @@
         currentType: 'public',
         // 共有镜像列表
         publicList: [],
+        // 镜像+应用
+        appList: [],
         // 自有镜像列表
         customList: [],
         // 选中的镜像
         customMirror: {},
-        // 选中的镜像
+        // 公共镜像选中的镜像
         system: {},
+        // 镜像+应用 选中的镜像
+        appSystem: {},
         // 默认购买公网IP
         publicIP: true,
         // 系统配置 需要购买公网ip时
@@ -707,29 +727,42 @@
         // 快速创建优惠价格
         fastCoupon: 0,
 
-        mirrorQuery:this.$route.query.mirror
+        mirrorQuery: this.$route.query.mirror
       }
     },
-    created(){
+    created() {
       this.setTemplate()
       this.queryQuick()
       this.queryCustomVM()
       this.queryVpc()
       this.queryIPPrice()
       this.queryDiskPrice()
-      if(this.$route.query.mirrorType){
+      if (this.$route.query.mirrorType) {
         this.currentType = this.$route.query.mirrorType;
         console.log(this.currentType);
-        setTimeout(()=>{
+        setTimeout(() => {
           this.publicList[0].selectSystem = this.mirrorQuery.templatename
-        },200)
+        }, 200)
       }
       // this.$store.dispatch('getZoneList')
     },
     methods: {
-
       // 设置系统模版
       setTemplate() {
+        // 镜像+应用
+        /*axios.get('information/listTemplateFunctionAll.do', {
+          params: {
+            zoneId: this.zone.zoneid,
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.appList = []
+            for (let system in response.data.result) {
+              this.appList.push({system, systemList: response.data.result[system], selectSystem: ''})
+            }
+            this.appSystem = {}
+          }
+        })*/
         // 系统镜像
         axios.get('information/listTemplates.do', {
           params: {
@@ -740,22 +773,22 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.publicList = [];
-            if(this.mirrorQuery){
-              var system ='';
-              if(this.mirrorQuery.templatename.substr(0,1) == 'w'){
+            if (this.mirrorQuery) {
+              var system = '';
+              if (this.mirrorQuery.templatename.substr(0, 1) == 'w') {
                 system = 'windows';
                 this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
-              }else if(this.mirrorQuery.templatename.substr(0,1) == 'c') {
+              } else if (this.mirrorQuery.templatename.substr(0, 1) == 'c') {
                 system = 'centos';
                 this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
-              }else if(this.mirrorQuery.templatename.substr(0,1) == 'u'){
+              } else if (this.mirrorQuery.templatename.substr(0, 1) == 'u') {
                 system = 'ubuntu';
                 this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
-              }else if(this.mirrorQuery.templatename.substr(0,1) == 'd'){
+              } else if (this.mirrorQuery.templatename.substr(0, 1) == 'd') {
                 system = 'debian';
                 this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
               }
-            }else{
+            } else {
               for (let system in response.data.result) {
                 this.publicList.push({system, systemList: response.data.result[system], selectSystem: ''})
               }
@@ -773,14 +806,14 @@
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               var cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
-              if(this.mirrorQuery){
-                if(this.mirrorQuery){
+              if (this.mirrorQuery) {
+                if (this.mirrorQuery) {
                   this.customList.push(this.mirrorQuery);
                   this.customMirror = this.mirrorQuery;
                 }
-              }else{
-                for(let i = 0; i<cusList.length;i++){
-                  if(cusList[i].status != -1){
+              } else {
+                for (let i = 0; i < cusList.length; i++) {
+                  if (cusList[i].status != -1) {
                     this.customList.push(cusList[i]);
                     this.customMirror = {};
                   }
@@ -793,10 +826,10 @@
       // 重新选择系统镜像
       setOS(name) {
         var arg = [];
-        if(this.mirrorQuery){
+        if (this.mirrorQuery) {
           arg.push(this.mirrorQuery.templatename);
           arg.push(this.mirrorQuery.systemtemplateid);
-        }else{
+        } else {
           arg = name.split('#');
         }
 
@@ -814,16 +847,35 @@
         } else {
           this.systemUsername = 'root'
         }
-        if(this.mirrorQuery){
-          for(let i = 0;i<this.publicList.length;i++){
-            if(this.publicList[i].systemList[i].ostypeid == this.mirrorQuery.ostypeid){
+        if (this.mirrorQuery) {
+          for (let i = 0; i < this.publicList.length; i++) {
+            if (this.publicList[i].systemList[i].ostypeid == this.mirrorQuery.ostypeid) {
               this.publicList[i].selectSystem = arg[0];
               break;
             }
           }
-        }else{
+        } else {
           this.publicList[arg[2]].selectSystem = arg[0]
         }
+      },
+      setAppOS(name) {
+        console.log(name)
+        var arg = name.split('#')
+        for (var item of this.appList) {
+          item.selectSystem = ''
+        }
+        this.appSystem = {
+          systemName: arg[0],
+          systemId: arg[1]
+        }
+        // 根据镜像名称第一个字符确定系统用户名是admin还是root
+        var str = this.appSystem.systemName.substr(0, 1)
+        if (str === 'W' || str === 'w') {
+          this.systemUsername = 'administrator'
+        } else {
+          this.systemUsername = 'root'
+        }
+        this.appList[arg[2]].selectSystem = arg[0]
       },
       // 重新计算快速配置主机价格
       queryQuick() {
@@ -858,7 +910,7 @@
         })
       },
       // 重新计算主机价格
-      calculate(){
+      calculate() {
         var params = {
           cpuNum: this.PecsInfo.vmConfig.kernel.toString(),
           diskSize: '40',
@@ -881,8 +933,9 @@
         })
       },
       // 加入预算清单
-      addCart(){
-        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
+      addCart() {
+        console.log(this.appSystem)
+        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
           this.$message.info({
             content: '请选择一个镜像系统'
           })
@@ -902,7 +955,7 @@
         prod.typeName = '云主机'
         prod.zone = this.zone
         prod.timeForm = this.timeForm
-        prod.system = this.system
+        prod.system = this.currentType == 'public' ? this.system : this.appSystem
         prod.customMirror = this.customMirror
         prod.currentType = this.currentType
         prod.publicIP = this.publicIP
@@ -913,6 +966,7 @@
         prod.currentLoginType = this.currentLoginType
         prod.computerName = this.computerName
         prod.password = this.password
+        console.log(prod.system)
         if (this.createType == 'fast') {
           prod.currentSystem = this.currentSystem
           prod.cost = this.fastCost
@@ -927,8 +981,8 @@
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
       },
       // 购买主机
-      buy(){
-        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
+      buy() {
+        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
           this.$message.info({
             content: '请选择一个镜像系统'
           })
@@ -981,7 +1035,7 @@
           params.diskSize = diskSize
         }
         if (this.currentType === 'app') {
-          params.templateId = this.currentApp.templateid
+          params.templateId = this.appSystem.systemId
         } else if (this.currentType === 'public') {
           params.templateId = this.system.systemId
         } else {
@@ -1002,9 +1056,9 @@
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
-        if(this.$route.mirror){
+        if (this.$route.mirror) {
           this.customMirror = this.mirrorQuery;
-        }else{
+        } else {
           this.customMirror = item;
         }
         var str = item.ostypename.substr(0, 1)
@@ -1148,13 +1202,13 @@
         })
       }),
       //选择镜像类型
-      selectMirror(item){
-        if(this.$route.query.mirrorType == 'custom'){
-          this.currentType ='custom'
-        }else if(this.$route.query.mirrorType == 'public'){
+      selectMirror(item) {
+        if (this.$route.query.mirrorType == 'custom') {
+          this.currentType = 'custom'
+        } else if (this.$route.query.mirrorType == 'public') {
           this.currentType = 'public'
-        }else{
-          this.currentType=item.value;
+        } else {
+          this.currentType = item.value;
         }
       }
     },
@@ -1163,7 +1217,7 @@
       remainDisk() {
         return 5 - this.dataDiskList.length
       },
-      userInfo(){
+      userInfo() {
         return this.$store.state.userInfo
       },
       // 自定义主机总价
@@ -1177,7 +1231,7 @@
       totalCoupon() {
         return this.vmConfig.coupon + this.IPConfig.coupon + this.coupon
       },
-      info(){
+      info() {
         return this.$parent.info.filter(i => {
           if (i.zoneId == this.zone.zoneid) {
             this.RAMList = i.kernelList[0].RAMList
@@ -1188,7 +1242,7 @@
     },
     watch: {
       'timeForm': {
-        handler(){
+        handler() {
           this.queryQuick()
           this.queryCustomVM()
           this.queryIPPrice()
@@ -1197,13 +1251,13 @@
         deep: true
       },
       'currentSystem': {
-        handler(){
+        handler() {
           this.queryQuick()
         },
         deep: true
       },
       'vmConfig.kernel': {
-        handler(){
+        handler() {
           this.$parent.info.forEach(zone => {
             if (zone.zoneId == this.zone.zoneid) {
               zone.kernelList.forEach(kernel => {
@@ -1218,7 +1272,7 @@
         deep: true
       },
       'vmConfig': {
-        handler(){
+        handler() {
           // 查询自定义配置价格
           this.queryCustomVM()
         },
@@ -1238,7 +1292,7 @@
         deep: true
       },
       'zone': {
-        handler(){
+        handler() {
           this.$parent.info.forEach(zone => {
             if (zone.zoneId == this.zone.zoneid) {
               this.vmConfig.kernel = zone.kernelList[0].value

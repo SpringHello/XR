@@ -2,7 +2,7 @@
   <div id="back">
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/home" class="logo">
+        <router-link to="/ruicloud" class="logo">
           <div></div>
         </router-link>
         <div class="operate">
@@ -238,12 +238,12 @@
             }, {
               subName: '镜像',
               type: 'mirror'
-            }, {subName: '弹性伸缩', type: 'Elastic'}, /*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            }, /*{subName: '弹性伸缩', type: 'Elastic'},*/ /*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
             type: 'database',
-            subItem: [{subName: '云数据库', type: 'cloudDatabase'}/*, {subName: '云数据库备份', type: 'cloudDatabaseBackup'}*/]
+            subItem: [{subName: '云数据库', type: 'cloudDatabase'}, {subName: '云数据库备份', type: 'cloudDatabaseBackup'}]
           },
           {
             mainName: '云存储',
@@ -279,20 +279,19 @@
             type: 'security',
             subItem: [
               {subName: '防火墙', type: 'firewall'},
-              {subName: '云监控', type: 'CloudMonitor'}
+              /*{subName: '云监控', type: 'CloudMonitor'}*/
             ]
           },
-          /*{
+          {
             mainName: '域名服务',
             type: 'domain',
             subItem: [
-              {subName: '域名管理', type: 'dManage'},
-              {subName: '信息模版', type: 'dTemplate'},
-              {subName: '域名转入', type: 'dTransfer'},
-              {subName: '域名解析', type: 'dResolve'},
-              {subName: '邮箱验证', type: 'dEmail'}
+              {subName: '域名管理', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainGroup'},
+              {subName: '信息模版', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainInfoTemplate'},
+              {subName: '域名转入', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainTransfer'},
+              {subName: '邮箱验证', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainGroup'}
             ]
-          },*/
+          },
           {
             mainName: '回收站',
             type: 'recycle',
@@ -521,8 +520,8 @@
           return type.indexOf(zone.gpuserver) > -1
         })
         if (!(zoneList.some(zone => {
-          return zone.zoneid == this.zone.zoneid
-        }))) {
+            return zone.zoneid == this.zone.zoneid
+          }))) {
           this.$store.state.zone = zoneList[0]
         }
         return zoneList

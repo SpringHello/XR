@@ -19,7 +19,7 @@
                   <p>对象存储OSS重磅上线</p>
                   <p>安全稳定、海量、便捷、低延迟、低成本的云端存储服务</p>
                   <p>免费领取<span>50G</span>存储包</p>
-                  &lt;!&ndash;<Button>立即领取</Button>&ndash;&gt;
+                  <Button>立即领取</Button>
                 </div>
               </div>
             </div>
