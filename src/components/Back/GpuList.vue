@@ -13,7 +13,7 @@
               <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
             </div>
           <div class="text-box">
-          <p>基于GPU应用的计算服务，具有实时告诉的并行计算和浮点计算能力，适用于3D图形应用、深度学习、科学计算等</p>
+          <p>基于GPU应用的计算服务，具有实时的并行计算和浮点计算能力，适用于3D图形应用、深度学习、科学计算等</p>
           </div>
           <div style="margin:16px 0 16px 0;">
             <Button type="primary" @click="$router.push({path:'/ruicloud/buy/bgpu'})">创建</Button>
@@ -689,7 +689,6 @@
               var list = [];
               if(Object.keys(res.data.result).length != 0){
                 for(let index in res.data.result){
-                  console.log(index);
                     for (let i = 0; i < res.data.result[index].list.length; i++) {
                       list.push(res.data.result[index].list[i]);
                     }
@@ -720,7 +719,7 @@
                this.showModal.ipShow = true;
              }
            }else{
-             this.$Message.info('获取Ip出小差了');
+             this.$Message.info(res.data.message);
            }
          })
         },

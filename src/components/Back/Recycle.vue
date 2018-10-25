@@ -137,6 +137,7 @@
         hostList: [],
         hostSelection: [],
         ipList: [],
+        gpuList:[],
         ipSelection: [],
         diskList: [],
         diskSelection: [],
@@ -191,6 +192,7 @@
             this.ipList = ip
             this.diskList = disk
             this.natList = nat
+            // this.gpuList = gpu
           }
         })
       },

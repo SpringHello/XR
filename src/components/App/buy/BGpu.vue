@@ -498,6 +498,7 @@
         publicList: [],
         // 自有镜像列表
         customList: [],
+        customMirror:{},
         serverOfferList: [],
         serverOfferColumns: [
           {
@@ -607,7 +608,6 @@
     },
     created(){
 
-
       this.setGpuServer()
       this.setTemplate()
       this.queryVpc()
@@ -633,7 +633,8 @@
           params: {
             zoneId: this.zone.zoneid,
             // 0代表系统镜像
-            user: '0'
+            user: '0',
+            gpu:'1'
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -645,12 +646,6 @@
                 this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
               }else if(this.mirrorQuery.templatename.substr(0,1) == 'c') {
                  system = 'centos';
-                this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
-              }else if(this.mirrorQuery.templatename.substr(0,1) == 'u'){
-                system = 'ubuntu';
-                this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
-              }else if(this.mirrorQuery.templatename.substr(0,1) == 'd'){
-                system = 'debian';
                 this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
               }
             }else{
@@ -667,6 +662,7 @@
             params: {
               // 1代表自定义镜像
               user: '1',
+              gpu:'1',
               zoneId: this.zone.zoneid
             }
           }).then(response => {
@@ -681,7 +677,7 @@
                 for(let i = 0; i<cusList.length;i++){
                   if(cusList[i].status != -1){
                     this.customList.push(cusList[i]);
-                    this.customMirror = {};
+                    // this.customMirror = {};
                   }
                 }
               }

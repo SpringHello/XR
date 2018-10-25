@@ -27,7 +27,7 @@
         <Button type="primary" size="large" @click="open">登录</Button>
       </div>
     </Modal>
-    <Modal v-model="confirm" width="550" scrollable>
+    <Modal v-model="confirm" width="550" scrollable @keydown.native.enter.prevent ="keyDownEvent">
       <p slot="header" class="modal-header-border">
         <span style="font-size: 16px;">输入远程连接密码</span>
       </p>
@@ -288,7 +288,8 @@
       open(){
         this.linkPassword = false;
         this.confirm = true;
-      }
+      },
+      keyDownEvent(){}
     }
   }
 </script>
