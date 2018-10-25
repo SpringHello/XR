@@ -370,7 +370,7 @@
           <Form-item label="开户行信息" prop="bankName" v-if="withdrawForm.accountType=='银行卡'">
             <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
           </Form-item>
-          <Form-item label="收款人账户" prop="account">
+          <Form-item label="收款人账户" prop="account" v-if="withdrawForm.accountType != '微信'">
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
           <p style="line-height: 20px;font-size: 14px;">
@@ -453,7 +453,7 @@
           <Form-item label="开户行信息" v-if="withdrawForm.accountType=='银行卡'" prop="bankName">
             <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
           </Form-item>
-          <Form-item label="收款人账户" prop="account">
+          <Form-item label="收款人账户" prop="account" v-if="withdrawForm.accountType != '微信'">
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
           <p style="line-height: 20px;font-size: 14px;">
