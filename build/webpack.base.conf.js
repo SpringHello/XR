@@ -3,7 +3,6 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
-
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -52,17 +51,13 @@ module.exports = {
         test: /\.js$/,
         // use: [
         //   {
-            loader: 'babel-loader',
-          //   options: {
-          //     presets:['es2015']
-          //   }
-          // }
+        loader: 'babel-loader',
+        //   options: {
+        //     presets:['es2015']
+        //   }
+        // }
         // ],
-        include: [resolve('src'), resolve('test'),resolve('/node_modules/pinyin')]
-      },
-      {
-        test: /iview.src.*?js$/,
-        loader: 'babel-loader'
+        include: [resolve('src'), resolve('test'), resolve('/node_modules/pinyin')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

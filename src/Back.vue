@@ -1,5 +1,10 @@
 <template>
   <div id="back">
+    <div class="hint" v-show="hintShow">
+      <p><img src="./assets/img/back/back-icon1.png"/>
+        <span style="position: relative;bottom: 5px">建议使用Chrome谷歌浏览器43+，以获得最佳体验。</span>
+        <img style="cursor: pointer;position: relative;bottom: 3px" @click="hintShow = false" src="./assets/img/back/back-icon2.png"/></p>
+    </div>
     <header>
       <div class="wrapper">
         <router-link to="/ruicloud" class="logo">
@@ -238,12 +243,12 @@
             }, {
               subName: '镜像',
               type: 'mirror'
-            }, /*{subName: '弹性伸缩', type: 'Elastic'},*/ /*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            }, /*{subName: '弹性伸缩', type: 'Elastic'}, *//*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
             type: 'database',
-            subItem: [{subName: '云数据库', type: 'cloudDatabase'}, {subName: '云数据库备份', type: 'cloudDatabaseBackup'}]
+            subItem: [{subName: '云数据库', type: 'cloudDatabase'}, /*{subName: '云数据库备份', type: 'cloudDatabaseBackup'}*/]
           },
           {
             mainName: '云存储',
@@ -279,19 +284,19 @@
             type: 'security',
             subItem: [
               {subName: '防火墙', type: 'firewall'},
-              /*{subName: '云监控', type: 'CloudMonitor'}*/
+              // {subName: '云监控', type: 'CloudMonitor'}
             ]
           },
-          {
+          /*{
             mainName: '域名服务',
             type: 'domain',
             subItem: [
-              {subName: '域名管理', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainGroup'},
-              {subName: '信息模版', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainInfoTemplate'},
-              {subName: '域名转入', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainTransfer'},
-              {subName: '邮箱验证', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainGroup'}
+              {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
+              {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+              {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
+              {subName: '邮箱验证', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'}
             ]
-          },
+          },*/
           {
             mainName: '回收站',
             type: 'recycle',
@@ -303,7 +308,8 @@
         kfURL: '',  // 客服url地址
         QQInfo: [],  // QQ客服在线情况
         xiaoshouInfo: [],
-        yunweiInfo: []
+        yunweiInfo: [],
+        hintShow: true
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -325,6 +331,9 @@
       })
     },
     created() {
+      if (navigator.userAgent.indexOf("Chrome") >= 0) {
+        this.hintShow = false
+      }
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
@@ -520,8 +529,8 @@
           return type.indexOf(zone.gpuserver) > -1
         })
         if (!(zoneList.some(zone => {
-            return zone.zoneid == this.zone.zoneid
-          }))) {
+          return zone.zoneid == this.zone.zoneid
+        }))) {
           this.$store.state.zone = zoneList[0]
         }
         return zoneList
@@ -779,6 +788,24 @@
       // vertical-align: -0.15em;
       fill: currentColor;
       overflow: hidden;
+    }
+  }
+
+  .hint {
+    height: 60px;
+    background: rgba(245, 245, 245, 1);
+    text-align: center;
+    > p {
+      padding-top: 15px;
+      height: 100%;
+      span {
+        font-size: 18px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 1);
+        line-height: 18px;
+        margin: 0 20px;
+      }
     }
   }
 

@@ -3,7 +3,7 @@
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud" class="logo">
+        <router-link to="/ruicloud/index.htm" class="logo">
           <div></div>
         </router-link>
         <div class="operate">
@@ -23,7 +23,7 @@
                           <h2>{{prod.prod}}</h2>
                           <div v-for="(i,index) in prod.prodItem" style="line-height: normal" :key="index">
                             <router-link :to="i.path" v-if="i.path==''">{{i.title}}</router-link>
-                            <router-link :to="i.path" target="_blank" v-else>{{i.title}}</router-link>
+                            <router-link :to="i.path" v-else>{{i.title}}</router-link>
                             <p>{{i.desc}}</p>
                           </div>
                         </div>
@@ -49,7 +49,7 @@
             <li @mouseenter="ME(4,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/entrance"><span>备案</span></router-link>
+                  <router-link to="/ruicloud/entrance.htm"><span>备案</span></router-link>
                 </div>
               </div>
             </li>
@@ -149,7 +149,7 @@
                 <ul>
                   <span>{{item.title}}</span>
                   <li v-for="(subItem,subIndex) in item.desc" :key="subIndex">
-                    <router-link v-if="subItem.url!=''" :to="subItem.url" target="_blank">{{subItem.subTitle}}
+                    <router-link v-if="subItem.url!=''" :to="subItem.url">{{subItem.subTitle}}
                     </router-link>
                     <router-link v-else :to="subItem.url">{{subItem.subTitle}}</router-link>
                   </li>
@@ -390,7 +390,7 @@
           },
           {
             title: '首页',
-            path: '/ruicloud/home.htm'
+            path: '/ruicloud/index.htm'
           },
           {
             title: '产品',
@@ -462,7 +462,7 @@
           },
           {
             title: '关于我们',
-            path: '/ruicloud/about'
+            path: '/ruicloud/about.htm'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)

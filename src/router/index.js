@@ -139,6 +139,7 @@ const TelescopicDetails = () => import('@/components/Back/TelescopicDetails')
 
 //const ObjectStorage = () => import('@/components/Back/ObjectStorage')
 const CloudMonitor = () =>import('@/components/Back/CloudMonitor')
+// const CloudMonitorCreateStrategy = () =>import('@/components/Back/CloudMonitorCreateStrategy')
 const Vpc = () =>import('@/components/Back/Vpc')
 const VpcManage = () =>import('@/components/Back/VpcManage')
 const Vpn = () =>import('@/components/Back/Vpn')
@@ -199,13 +200,15 @@ var router = new Router({
       component: App,
       children: [
         {path: '', name: 'home', component: Home},
-        {path: 'home.htm', name: 'home', component: Home},
+        {path: 'index.htm', name: 'home', component: Home},
         {path: 'ecs.htm', name: 'ecs', component: Ecs},
         {path: 'about.htm', name: 'about', component: Aboutus},
         {path: 'ActiveCenter.htm', name: 'ActiveCenter', component: ActiveCenter},
         {path: 'document.htm', name: 'document', component: Document},
+        {path: 'entrance.htm', name: 'entrance', component: Entrance},
 
-        {path: 'home', name: 'home', component: Home},
+        {path: 'index', name: 'home', component: Home},
+        //{path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
         {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
@@ -391,6 +394,7 @@ var router = new Router({
         {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
         {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
         {path: 'CloudMonitor', name: 'CloudMonitor', component: CloudMonitor},
+        // {path: 'cloudMonitorCreateStrategy', name: 'cloudMonitorCreateStrategy', component: CloudMonitorCreateStrategy},
         //{path:'objectStorage',name:'objectStorage',component:ObjectStorage},
         {path: 'snapshot', name: 'snapshot', component: Snapshot},
         {path: 'firewall', name: 'firewall', component: Firewall},

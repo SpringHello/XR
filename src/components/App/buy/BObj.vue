@@ -99,10 +99,10 @@
           style="font-size: 14px;color: #EE6723;">{{coupon.toFixed(2)}}元</span>
         </p>
         <div style="text-align: right;margin-top: 20px;">
-          <!--<Button size="large"
+          <Button size="large"
                   class="btn" @click="addObjCart">
             加入预算清单
-          </Button>-->
+          </Button>
           <Button @click="buyObj" type="primary"
                   style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377dff;">
             立即购买
@@ -174,7 +174,7 @@
     },
     methods: {
       // 对象存储加入购物车
-      /*addObjCart() {
+      addObjCart() {
         if (this.$parent.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
@@ -192,7 +192,7 @@
         }
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
         window.scrollTo(0, 170)
-      },*/
+      },
       buyObj() {
         if (this.userInfo == null) {
           this.$LR({type: 'login'})

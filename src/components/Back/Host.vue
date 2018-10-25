@@ -93,7 +93,7 @@
                 @on-ok="unbind"
                 @on-cancel="cancel"
                 style="display: block">
-                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>解绑公网IP</li>
+                <li class="del" v-if="status!='异常'" :disabled=true>解绑公网IP</li>
               </Poptip>
 
             </Dropdown-menu>
@@ -1018,6 +1018,13 @@
           this.RenewForm.cost = item.cpCase
         } else {
           this.currentHost[0] = item
+          this.renewalInfo = {
+            computername: this.currentHost[0].computername,
+            templatename: this.currentHost[0].templatename,
+            serviceoffername: this.currentHost[0].serviceoffername,
+            endtime: this.currentHost[0].endtime
+          }
+          this.renewType()
           this.showModal.renewal = true
         }
       },
@@ -1248,8 +1255,7 @@
               VMId: this.currentHost[0].computerid
             }
           }).then(response => {
-            if (response.status == 200 && response.data.status == 1
-            ) {
+            if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
               this.currentHost[0].publicip = ''
             }
@@ -2039,6 +2045,7 @@
     }
   }
   .renewal-info {
+    margin-bottom: 20px;
     padding: 20px 10px;
     width: 100%;
     background:rgba(245,245,245,1);

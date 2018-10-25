@@ -295,9 +295,9 @@
                 content.cartUrl = 'buy/bdata#Pdisk'
               } else if (content.itemName == 'NAT网关') {
                 content.cartUrl = 'vpc#NAT'
-              } else if (content.itemName == '数据库') {
+              } /*else if (content.itemName == '数据库') {
                 content.cartUrl = 'buy/bdata#NAT'
-              }
+              }*/
             })
           })
         }

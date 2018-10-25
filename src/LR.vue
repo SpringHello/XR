@@ -6,7 +6,7 @@
           <div></div>
         </router-link>
         <div class="home">
-          <router-link to="home">首页</router-link>
+          <router-link to="/ruicloud/index.htm">首页</router-link>
         </div>
       </div>
     </header>
