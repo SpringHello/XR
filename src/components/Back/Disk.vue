@@ -270,6 +270,14 @@
               </Option>
             </Select>
           </FormItem>
+          <div class="renewal-info">
+            <ul>
+              <li><span>磁盘名称：</span>{{renewalInfo.diskName}}</li>
+              <li><span>磁盘类型：</span>{{renewalInfo.diskType}}</li>
+              <li><span>磁盘大小：</span>{{renewalInfo.diskSize}}G</li>
+              <li><span>到期时间：</span>{{renewalInfo.endTime}}</li>
+            </ul>
+          </div>
           <FormItem label="是否同时续费绑定主机:" style="width: 100%;margin-bottom: 0" v-if="renewalHost">
             <CheckboxGroup v-model="renewalOther">
               <Checkbox label="续费关联云主机" v-if="renewalHost"></Checkbox>
@@ -716,6 +724,12 @@
             value: 8
           }, {label: '9月', value: 9}, {label: '10月', value: 10}]
         },
+        renewalInfo: {
+          diskName: '',
+          diskType: '',
+          diskSize: '',
+          endTime: ''
+        }
       }
     },
     created() {
@@ -1010,6 +1024,10 @@
         this.renewalType = ''
         this.renewalTime = ''
         this.renewalOther = []
+        this.renewalInfo.diskName = item.diskname
+        this.renewalInfo.diskType = item.diskoffer
+        this.renewalInfo.diskSize = item.disksize
+        this.renewalInfo.endTime = item.endtime
         let url = 'Disk/listDiskById.do'
         this.$http.get(url, {
           params: {
@@ -1479,4 +1497,18 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .renewal-info {
+    padding: 20px 10px;
+    width: 100%;
+    background: rgba(245, 245, 245, 1);
+    ul {
+      li {
+        font-size: 14px;
+        line-height: 1.5;
+        span {
+          color: #666;
+        }
+      }
+    }
+  }
 </style>
