@@ -1248,8 +1248,7 @@
               VMId: this.currentHost[0].computerid
             }
           }).then(response => {
-            if (response.status == 200 && response.data.status == 1
-            ) {
+            if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
               this.currentHost[0].publicip = ''
             }

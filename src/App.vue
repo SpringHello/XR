@@ -3,7 +3,7 @@
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud" class="logo">
+        <router-link to="/ruicloud/index.htm" class="logo">
           <div></div>
         </router-link>
         <div class="operate">
@@ -49,7 +49,7 @@
             <li @mouseenter="ME(4,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/entrance"><span>备案</span></router-link>
+                  <router-link to="/ruicloud/entrance.htm"><span>备案</span></router-link>
                 </div>
               </div>
             </li>
@@ -384,7 +384,7 @@
           },
           {
             title: '首页',
-            path: '/ruicloud/home.htm'
+            path: '/ruicloud/index.htm'
           },
           {
             title: '产品',
