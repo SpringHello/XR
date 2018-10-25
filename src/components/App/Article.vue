@@ -317,7 +317,7 @@
           .hot-tags {
             width: 100%;
             h3 {
-              padding-bottom: 15px;
+              padding-bottom: 8px;
               font-size: 18px;
               font-family: MicrosoftYaHei;
               color: #333333;
@@ -367,7 +367,7 @@
           .hot-information {
             width: 100%;
             h3 {
-              padding-bottom: 15px;
+              padding-bottom: 8px;
               font-size: 18px;
               font-family: MicrosoftYaHei;
               color: #333333;
