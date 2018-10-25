@@ -35,7 +35,7 @@
         <div class="body-right">
           <div class="changeLabel">
             <div class="hot-tags">
-              <h3><Icon type="ios-pricetag-outline" class="licon"></Icon>热门标签</h3>
+              <h3><div class="licon1"></div>热门标签</h3>
               <div class="tags">
                 <router-link class="tagslink" v-for="(tag,index) in tags" :key="index" :to="{name:'artTags', params:{ typeId: tag.keywordsval}}"
                              @click.native="update(tag.keywordsval)" >{{
@@ -46,7 +46,7 @@
           </div>
           <div class="changeHot">
             <div class="hot-information">
-              <h3><Icon type="ios-paper-outline" class="licon"></Icon>热门资讯</h3>
+              <h3><div class="licon2"></div>热门资讯</h3>
               <div v-for="h in hot" class="info">
                 <router-link :to="`${h.code}.html`" target="_blank">
                   <div class="hotInfo-title">
@@ -323,11 +323,14 @@
               color: #333333;
               font-weight: normal;
               border-bottom: 1px solid #D8D8D8;
-              .licon {
+              .licon1 {
+                float: left;
+                margin-top: 3px;
+                width: 20px;
+                height: 20px;
                 margin-right: 15px;
-                font-size: 18px;
-                font-weight: bold;
-                color: #333333;
+                background: url(../../assets/img/app/icon_tag.png) no-repeat center top;
+                background-size: cover;
               }
             }
             .tags {
@@ -370,10 +373,14 @@
               color: #333333;
               font-weight: normal;
               border-bottom: 1px solid #D8D8D8;
-              .licon {
+              .licon2 {
+                float: left;
+                margin-top: 3px;
+                width: 20px;
+                height: 20px;
                 margin-right: 15px;
-                font-size: 18px;
-                color: #333333;
+                background: url(../../assets/img/app/icon_news.png) no-repeat center top;
+                background-size: cover;
               }
             }
             .info {
