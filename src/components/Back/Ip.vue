@@ -187,7 +187,7 @@
       <div class="universal-modal-content-flex">
         <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForGpuForm.row.publicip}}</span>绑定NAT网关。
         </p>
-        <Form :model="bindForGpuForm" :rules="bindForNATRuleValidate" ref="bindForNATFormValidate">
+        <Form :model="bindForGpuForm" :rules="bindForNATRuleValidate" ref="bindForgpuFormValidate">
           <FormItem label="选择NAT网关" prop="NAT">
             <Select v-model="bindForGpuForm.gpu" placeholder="NAT网关名称">
               <Option v-for="(item,index) in bindForGpuForm.gpuOptions" :key="index" :value="`${item.id.toString()}`">
@@ -200,7 +200,7 @@
           提示：弹性IP绑定NAT网关之后您可以在虚拟私有云-VPC管理-NAT网关中查看你所绑定的IP，并分配IP用以执行SNAT或DNAT。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="bindNATSubmit">确认绑定</Button>
+        <Button type="primary" @click="bindGpuSubmit">确认绑定</Button>
       </div>
     </Modal>
     <!-- 变更资费 -->
@@ -772,6 +772,12 @@
             {required: true, message: '请选择云数据库', trigger: 'change'}
           ]
         },
+        //绑定IP到云数据库表单校验
+        bindForgpuFormValidate: {
+          gpu: [
+            {required: true, message: '请选择GPU云服务器', trigger: 'change'}
+          ]
+        },
         customTimeOptions,
         // 当前操作弹性IP的id
         operatingId: null,
@@ -1040,6 +1046,39 @@
               }
             }).then(response => {
               this.showModal.bindIPForNAT = false
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+                this.refresh()
+              } else {
+                this.$message.info({
+                  content: response.data.message,
+                  'onOk': () => {
+                    this.refresh()
+                  }
+                })
+              }
+            })
+          }
+        })
+        this.$refs.bindForNATFormValidate.resetFields();
+      },
+      //绑定弹性IP到GPU
+      bindGpuSubmit(){
+        this.$refs.bindForGpuFormValidate.validate(validate => {
+          if (validate) {
+            this.ipData.forEach(item => {
+              if (item.id === this.operatingId) {
+                // 3代表绑定中
+                item.status = 3
+              }
+            })
+            this.$http.get('network/enableStaticNat.do', {
+              params: {
+                ipId: this.bindForGpuForm.row.publicipid,
+                VMId: this.bindForGpuForm.gpu
+              }
+            }).then(response => {
+              this.showModal.bindIPForGpu = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
                 this.refresh()

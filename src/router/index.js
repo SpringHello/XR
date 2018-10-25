@@ -139,6 +139,7 @@ const TelescopicDetails = () => import('@/components/Back/TelescopicDetails')
 
 //const ObjectStorage = () => import('@/components/Back/ObjectStorage')
 const CloudMonitor = () =>import('@/components/Back/CloudMonitor')
+// const CloudMonitorCreateStrategy = () =>import('@/components/Back/CloudMonitorCreateStrategy')
 const Vpc = () =>import('@/components/Back/Vpc')
 const VpcManage = () =>import('@/components/Back/VpcManage')
 const Vpn = () =>import('@/components/Back/Vpn')
@@ -391,6 +392,7 @@ var router = new Router({
         {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
         {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
         {path: 'CloudMonitor', name: 'CloudMonitor', component: CloudMonitor},
+        // {path: 'cloudMonitorCreateStrategy', name: 'cloudMonitorCreateStrategy', component: CloudMonitorCreateStrategy},
         //{path:'objectStorage',name:'objectStorage',component:ObjectStorage},
         {path: 'snapshot', name: 'snapshot', component: Snapshot},
         {path: 'firewall', name: 'firewall', component: Firewall},

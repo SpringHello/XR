@@ -13,7 +13,7 @@
               <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
             </div>
           <div class="text-box">
-            <p></p>
+          <p>基于GPU应用的计算服务，具有实时告诉的并行计算和浮点计算能力，适用于3D图形应用、深度学习、科学计算等</p>
           </div>
           <div style="margin:16px 0 16px 0;">
             <Button type="primary" @click="$router.push({path:'/ruicloud/buy/bgpu'})">创建</Button>
@@ -990,9 +990,11 @@
 .text-box{
   border:1px solid #2A99F2;
   background-color: RGBA(42, 153, 242, 0.1);
-  height: 32px;
+  padding: 7px 10px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+  font-size: 14px;
+  color: #666666;
 }
 </style>
