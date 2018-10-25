@@ -243,7 +243,7 @@
             }, {
               subName: '镜像',
               type: 'mirror'
-            }, /*{subName: '弹性伸缩', type: 'Elastic'},*/ /*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            }, {subName: '弹性伸缩', type: 'Elastic'}, /*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
