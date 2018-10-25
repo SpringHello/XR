@@ -12,7 +12,7 @@
                    style="margin-right:30px;height: 77px;margin-top: 6px;">
               <img v-if="payResult=='fail'" src="../../assets/img/payresult/payFail.png"
                    style="margin-right:30px;height: 77px;margin-top: 6px;">
-              <div style="position:relative">
+              <div style="position:relative;width:100%">
                 <h1 style="margin-bottom:9px;font-size: 24px;color:#111111;font-weight: normal;">{{title}}</h1>
                 <p style="font-size: 14px;color: #292626;line-height: 22px;">{{message}}</p>
                 <div v-if="payResult=='success'" style="position:absolute;left:0px;bottom:-60px;">

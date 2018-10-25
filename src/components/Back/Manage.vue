@@ -182,7 +182,14 @@
                 <Form :model="reloadForm" :label-width="100" label-position="left" style="margin-top:20px;width:350px;">
                   <Form-item label="选择镜像">
                     <Select v-model="reloadForm.system">
-                      <OptionGroup label="ubuntu" v-show="osOptions.ubuntu.length>0">
+
+                      <OptionGroup :label="key" v-for="(val, key, index) in osOptions" :key="key">
+                        <Option v-for="(item,index) in val" :key="index" :value="item.systemtemplateid">
+                          {{item.templatedescript}}
+                        </Option>
+                      </OptionGroup>
+
+                      <!--<OptionGroup label="ubuntu" v-show="osOptions.ubuntu.length>0">
                         <Option v-for="(item,index) in osOptions.ubuntu" :key="index" :value="item.systemtemplateid">
                           {{item.templatename}}
                         </Option>
@@ -201,7 +208,7 @@
                         <Option v-for="(item,index) in osOptions.debian" :key="index" :value="item.systemtemplateid">
                           {{item.templatename}}
                         </Option>
-                      </OptionGroup>
+                      </OptionGroup>-->
                     </Select>
                   </Form-item>
                   <Form-item label="账号密码">
@@ -429,7 +436,7 @@
           callback(new Error('密码不能为空'));
         } /*else if (!regExp.test(value)) {
           callback(new Error('密码由6位以上的字母数字组成，必须包含大小写字母、数字'));
-        } */else {
+        } */ else {
           callback();
         }
       }
@@ -831,23 +838,42 @@
           VMId: this.$route.query.vmid,
           zoneId: this.$route.query.zoneid
         }
-      })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.computerInfo = response.data.result
-            axios.get('information/listTemplates.do', {
-              params: {
-                //osType: this.computerInfo.computerOsType,
-                zoneId: this.$route.query.zoneid
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.computerInfo = response.data.result
+          // 主机镜像
+          let tem = axios.get('information/listTemplates.do', {
+            params: {
+              //osType: this.computerInfo.computerOsType,
+              zoneId: this.$route.query.zoneid
+            }
+          })
+          // 镜像+应用 模版
+          let fun = axios.get('information/listTemplateFunctionAll.do', {
+            params: {
+              zoneId: this.$store.state.zone.zoneid
+            }
+          })
+          Promise.all([tem, fun]).then(response => {
+            //console.log(response)
+            let res1 = response[0]
+            let res2 = response[1]
+            if (res1.data.status == 1) {
+              for (let t in res1.data.result) {
+                this.osOptions[t] = res1.data.result[t]
               }
-            })
-              .then((response) => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.osOptions = response.data.result
-                }
-              })
-          }
-        })
+            }
+            console.log(res2)
+            if (res2.data.status == 1) {
+              for (let t in res2.data.result) {
+                console.log(t)
+                this.osOptions[t] = res2.data.result[t]
+              }
+            }
+            console.log(this.osOptions)
+          })
+        }
+      })
       this.$http.get('alarm/getVmAlarmByHour.do', {
         params: {
           vmname: this.$route.query.instancename,
@@ -906,33 +932,32 @@
               resourceType: 1,
               resourceId: this.snapsId
             }
-          })
-            .then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                var snapshotData = response.data.result
-                snapshotData.forEach(item => {
-                  if (this.snapsSelection) {
-                    if (this.snapsSelection.id == item.id) {
-                      item._checked = true
-                    }
-                    if (item.status == 2) {
-                      item._disabled = true
-                    }
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              var snapshotData = response.data.result
+              snapshotData.forEach(item => {
+                if (this.snapsSelection) {
+                  if (this.snapsSelection.id == item.id) {
+                    item._checked = true
                   }
-                })
-                this.snapshotData = snapshotData
-              }
-            })
+                  if (item.status == 2) {
+                    item._disabled = true
+                  }
+                }
+              })
+              this.snapshotData = snapshotData
+            }
+          })
         }, 1000 * 10)
       },
-      currentChange(currentPage){
+      currentChange(currentPage) {
         this.currentPage = currentPage;
         this.search();
       },
-      dataChange(time){
+      dataChange(time) {
         this.logTime = time;
       },
-      search(){
+      search() {
         // log/queryLog.do    操作日志   pageSize(1页显示多少条),currentPage（第几页）,target（主机则传 host）  , queryTime（查询时间  格式： 开始时间 , 结束时间  非必传）
         this.$http.get('log/queryLog.do', {
           params: {
