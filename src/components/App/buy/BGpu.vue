@@ -646,12 +646,6 @@
               }else if(this.mirrorQuery.templatename.substr(0,1) == 'c') {
                  system = 'centos';
                 this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
-              }else if(this.mirrorQuery.templatename.substr(0,1) == 'u'){
-                system = 'ubuntu';
-                this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
-              }else if(this.mirrorQuery.templatename.substr(0,1) == 'd'){
-                system = 'debian';
-                this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
               }
             }else{
               for (let system in response.data.result) {
