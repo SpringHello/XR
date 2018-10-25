@@ -7,7 +7,7 @@
     </div>
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud" class="logo">
+        <router-link to="/ruicloud/index.htm" class="logo">
           <div></div>
         </router-link>
         <div class="operate">
@@ -254,8 +254,8 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              // {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
+              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              //{subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
