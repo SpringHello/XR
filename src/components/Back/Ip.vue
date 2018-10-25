@@ -267,6 +267,13 @@
               </Option>
             </Select>
           </FormItem>
+          <div class="renewal-info">
+            <ul>
+              <li><span>IP地址：</span>{{renewalInfo.IPAddress}}</li>
+              <li><span>IP带宽：</span>{{renewalInfo.bandwidth}}M</li>
+              <li><span>到期时间：</span>{{renewalInfo.endTime}}</li>
+            </ul>
+          </div>
           <FormItem label="是否同时续费绑定主机与NAT网关:" style="width: 80%;margin-bottom: 0" v-if="renewalHost || renewalNAT">
             <CheckboxGroup v-model="renewalOther">
               <Checkbox label="续费关联云主机" v-if="renewalHost"></Checkbox>
@@ -741,7 +748,12 @@
         operatingId: null,
         page: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
+        renewalInfo: {
+          IPAddress: '',
+          bandwidth: '',
+          endTime: ''
+        }
       }
     },
     methods: {
@@ -1260,6 +1272,9 @@
         this.renewalHost = false
         this.renewalNAT = false
         this.currentIp = this.select.id
+        this.renewalInfo.IPAddress = this.select.publicip
+        this.renewalInfo.bandwidth = this.select.bandwith
+        this.renewalInfo.endTime = this.select.endtime
         let url = 'network/listPublicIpById.do'
         this.$http.get(url, {
           params: {
@@ -1633,6 +1648,21 @@
           }
         }
 
+      }
+    }
+  }
+
+  .renewal-info {
+    padding: 20px 10px;
+    width: 100%;
+    background: rgba(245, 245, 245, 1);
+    ul {
+      li {
+        font-size: 14px;
+        line-height: 1.5;
+        span {
+          color: #666;
+        }
       }
     }
   }
