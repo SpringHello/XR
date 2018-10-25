@@ -187,7 +187,7 @@
       <div class="universal-modal-content-flex">
         <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForGpuForm.row.publicip}}</span>绑定GPU云服务器。
         </p>
-        <Form :model="bindForGpuForm" :rules="bindForGpuFormValidate" ref="bindForGpuForm">
+        <Form :model="bindForGpuForm" :rules="bindForGpuFormValidate" ref="bindForGpuFormValidate">
           <FormItem label="选择GPU云服务器" prop="NAT">
             <Select v-model="bindForGpuForm.gpu" placeholder="GPU云服务器名称">
               <Option v-for="(item,index) in bindForGpuForm.gpuOptions" :key="item.computerid" :value="`${item.computerid.toString()}`">
@@ -805,17 +805,23 @@
           bandwidth: '',
           endTime: ''
         },
-        hide:''
+        hide:'',
+        intervalInstance:null
       }
     },
+    beforeRouteLeave(to, from , next){
+      clearInterval(this.intervalInstance);
+      next();
+    },
     created(){
-      console.log($store.state.zone.zonename.indexOf('GPU')+'ssssssssssssssssssssssssss')
       if($store.state.zone.zonename.indexOf('GPU')  > 1){
           this.hide = 'block';
         }else{
-        console.log('sssssss');
           this.hide = 'none';
         }
+      this.intervalInstance = setInterval(() => {
+        this.refresh()
+      }, 5 * 1000)
     },
     methods: {
       // 跳转到相应的购买页面
@@ -1114,7 +1120,7 @@
       },
       //绑定弹性IP到GPU
       bindGpuSubmit(){
-        this.$refs.bindGpuSubmit.validate(validate => {
+        this.$refs.bindForGpuFormValidate.validate(validate => {
           if (validate) {
             this.ipData.forEach(item => {
               if (item.id === this.operatingId) {
@@ -1186,6 +1192,7 @@
                   VMId: row.computerid,
                 }
                 break
+
             }
             // console.log('解绑')
             this.operatingId = row.id

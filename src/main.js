@@ -12,67 +12,43 @@ import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
 
-//import './util/BMap'
-// import ECharts from 'vue-echarts/components/ECharts.vue'
 
 import ECharts from 'vue-echarts/components/ECharts'
 // import ECharts modules manually to reduce bundle size
-import 'echarts'
-// import 'echarts/lib/chart/line'
-// import 'echarts/lib/chart/pie'
-// import 'echarts/lib/component/tooltip'
-// 引入轮播组件
-import carousel from './myView/carousel'
-import carouselItem from './myView/carouselItem'
-// 引入滑块组件
-import slider from './myView/slider'
-// 引入错误提示框组件
-import message from './myView/message'
+import 'echarts/lib/chart/bar'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/legend'
+import 'echarts/lib/component/title'
+
+
 import md5 from 'md5'
-// 引入复制粘贴组件
-import VueClipboards from 'vue-clipboards'
-import LR from './myView/login'
-
-Vue.prototype.$message = message
-Vue.prototype.$LR = LR
+//Vue.prototype.$message = message
 Vue.config.productionTip = false
-
 
 // axios.defaults.baseURL = '/ruicloud'
 
-// axios.defaults.baseURL = 'http://zhouyi.xrcloud.net/ruicloud'
-//axios.defaults.baseURL = 'http://zx.xrclouds.net/ruicloud'
+//axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
+//axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
 
 
 
-// axios.defaults.withCredentials = true
+
+//  axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
 
-// axios.defaults.baseURL = 'http://192.168.3.244/ruicloud/'
-
-
-axios.defaults.withCredentials = true
-
-
+  // axios.defaults.baseURL = 'http://192.168.3.234:8085/ruirados/'
 axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
-
-// axios.defaults.baseURL = 'http://zengxin.xrclouds.net/ruicloud/'
-
-
-// axios.defaults.baseURL = 'http://192.168.3.29/ruicloud/'
-
-
-// axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+// axios.defaults.baseURL = 'http://zhouyi.xrcloud.net:8083/ruirados/'
+//axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+axios.defaults.withCredentials = true
+// window.eventBus = new Vue();
 
 
-// axios.defaults.baseURL = 'http://192.168.3.187:8080/ruirados/'
-
-
-//axios挂载到Vue原型
+// axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
   params: {}
 })
-
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {
@@ -100,7 +76,6 @@ function appendMD5(params, type) {
   }
   var str = '', count = 0
   for (let i in params) {
-    console.log(i)
     str += i.substr(0, 1) + params[i]
     count++
   }
@@ -109,10 +84,8 @@ function appendMD5(params, type) {
     if (type != 'post') {
       str = encodeURI(str)
     }
-    //console.log(str)
     str = md5(str)
-    //console.log(str)
-    count = count % 10
+
     var mac = str.substr(0, count) + count + str.substr(count)
     return {
       ...params,
@@ -126,53 +99,18 @@ Vue.prototype.$http.interceptors.request.use(requestIntercept)
 
 // 使用iview库
 Vue.use(iview)
-
-// 使用轮播组件
-Vue.use(carousel)
-Vue.use(carouselItem)
-// 使用滑块组件
-Vue.use(slider)
 Vue.component('chart', ECharts)
-Vue.use(VueClipboards)
-
-
-// 日期原型对象拓展
-Date.prototype.format = function (fmt) {
-  var o = {
-    'y+': this.getFullYear(),
-    'M+': this.getMonth() + 1,                 // 月份
-    'd+': this.getDate(),                    // 日
-    'h+': this.getHours(),                   // 小时
-    'm+': this.getMinutes(),                 // 分
-    's+': this.getSeconds(),                 // 秒
-    'q+': Math.floor((this.getMonth() + 3) / 3), // 季度
-    'S+': this.getMilliseconds()             // 毫秒
-  }
-  for (var k in o) {
-    if (new RegExp('(' + k + ')').test(fmt)) {
-      if (k == 'y+') {
-        fmt = fmt.replace(RegExp.$1, ('' + o[k]).substr(4 - RegExp.$1.length))
-      } else if (k == 'S+') {
-        var lens = RegExp.$1.length
-        lens = lens == 1 ? 3 : lens
-        fmt = fmt.replace(RegExp.$1, ('00' + o[k]).substr(('' + o[k]).length - 1, lens))
-      } else {
-        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
-      }
-    }
-  }
-  return fmt
-}
 
 /* eslint-disable no-new */
 var vm = new Vue({
   router,
   store,
+  axios,
   render: h => h(Main)
 })
 
-vm.$Message.config({
-  top: 61,
-  duration: 5
-})
+/*vm.$Message.config({
+ top: 61,
+ duration: 5
+ })*/
 vm.$mount('#app')
