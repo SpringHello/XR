@@ -297,6 +297,10 @@
                 content.cartUrl = 'vpc#NAT'
               } else if (content.itemName == '数据库') {
                 content.cartUrl = 'buy/bdata#NAT'
+              }else if (content.itemName == 'GPU服务器'){
+                content.cartUrl = 'buy/bgpu'
+              }else if(content.itemName == '对象存储'){
+                content.cartUrl = 'buy/bobj'
               }
             })
           })
