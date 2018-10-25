@@ -2017,6 +2017,7 @@
           this.showModal.selectAuthType = true
         }
       }
+      this.tabSwitching(this.currentTab)
       this.getPhone()
       this.listNotice()
       this.getContacts()

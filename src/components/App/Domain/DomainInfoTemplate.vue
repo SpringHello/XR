@@ -248,7 +248,7 @@
 
 <script type="text/ecmascript-6">
   import area from "../../../options/state_province_city"
-  import pinyin from 'pinyin'
+  import pinyin from 'chinese-to-pinyin'
   import axios from 'axios'
   import $store from '@/vuex'
   export default {
@@ -490,9 +490,7 @@
         this.$refs[name].resetFields();
       },
       changePinyin (val) {
-        return pinyin(val, {
-          style: pinyin.STYLE_NORMAL,
-        }).join(' ')
+        return pinyin(val, {noTone: true,filterChinese: true})
       },
       legalPersonIDFront (response) {
         if (response.status == 1) {

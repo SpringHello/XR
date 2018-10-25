@@ -3,7 +3,7 @@
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/home" class="logo">
+        <router-link to="/ruicloud" class="logo">
           <div></div>
         </router-link>
         <div class="operate">
@@ -195,7 +195,7 @@
                 B1-20180455</a>
             </li>
             <li>
-              <router-link to="/ruicloud/about" style="color:#fff;float:right">关于我们</router-link>
+              <router-link to="/ruicloud/about.htm" style="color:#fff;float:right">关于我们</router-link>
             </li>
           </ul>
         </div>
@@ -295,7 +295,7 @@
     name: 'app',
     data () {
       return {
-        titleItem: [
+        /*titleItem: [
           {
             title: '活动中心',
             path: '/ruicloud/ActiveCenter'
@@ -376,6 +376,88 @@
             title: '关于我们',
             path: '/ruicloud/about'
           }
+        ], // banner item*/
+        titleItem: [
+          {
+            title: '活动中心',
+            path: '/ruicloud/ActiveCenter.htm'
+          },
+          {
+            title: '首页',
+            path: '/ruicloud/home.htm'
+          },
+          {
+            title: '产品',
+            path: '',
+            content: [
+              {
+                prod: '云计算',
+                prodItem: [
+                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ruicloud/Pecs.htm'},
+                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost.htm'},
+                  {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss.htm'},
+                  {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/ruicloud/Pgpu.htm'},
+                  {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
+                  {title: '弹性伸缩（敬请期待）', desc: '高可用、可视化、低成本', path: ''}
+                ]
+              },
+              {
+                prod: '云网络',
+                prodItem: [
+                  {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/ruicloud/Pvpc.htm'},
+                  {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/ruicloud/Peip.htm'},
+                  {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/ruicloud/Pbalance.htm'},
+                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/ruicloud/Pnat.htm'},
+                  {title: '虚拟专网VPN', desc: '跨VPC连接', path: '/ruicloud/Pvirvpn.htm'},
+                  {title: 'CDN（敬请期待）', desc: '节点丰富、安全易用', path: ''}
+                ]
+              },
+              {
+                prod: '云存储',
+                prodItem: [
+                  {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/ruicloud/Pdisk.htm'},
+                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/ruicloud/Pbackupdisk.htm'},
+                  {title: '对象存储', desc: '安全稳定，海量便捷', path: '/ruicloud/PobjStorage.htm'}
+                ]
+              },
+              {
+                prod: '云数据库',
+                prodItem: [
+                  {
+                    title: '云数据库',
+                    desc: 'MySQL、PostgreSQL、mongoDB、Redis',
+                    path: '/ruicloud/PdataBase.htm'
+                  },
+                ]
+              },
+              {
+                prod: '云安全',
+                prodItem: [
+                  {title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall.htm'},
+                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos.htm'}
+                ]
+              },
+              {
+                prod: '云运维',
+                prodItem: [
+                  {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor.htm'},
+                  {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: ''}
+                ]
+              }
+            ]
+          },
+          {
+            title: '文档',
+            path: '/ruicloud/document'
+          },
+          {
+            title: '资讯',
+            path: '/ruicloud/article/1'
+          },
+          {
+            title: '关于我们',
+            path: '/ruicloud/about'
+          }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
         lineStyle: {
@@ -393,9 +475,9 @@
           {
             title: '云计算',
             desc: [
-              {subTitle: '弹性云服务器（ECS）', url: '/ruicloud/Pecs'},
-              {subTitle: '镜像服务', url: '/ruicloud/Phost'},
-              {subTitle: 'ESC快照', url: '/ruicloud/Pecss'},
+              {subTitle: '弹性云服务器（ECS）', url: '/ruicloud/Pecs.htm'},
+              {subTitle: '镜像服务', url: '/ruicloud/Phost.htm'},
+              {subTitle: 'ESC快照', url: '/ruicloud/Pecss.htm'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
               {subTitle: '弹性伸缩（敬请期待）', url: ''},
               {subTitle: 'GPU服务器（敬请期待）', url: ''}
@@ -404,33 +486,33 @@
           {
             title: '云网络',
             desc: [
-              {subTitle: '虚拟私有云VPC', url: '/ruicloud/Pvpc'},
-              {subTitle: '弹性IP', url: '/ruicloud/Peip'},
-              {subTitle: '负载均衡', url: '/ruicloud/Pbalance'},
-              {subTitle: 'NAT网关', url: '/ruicloud/Pnat'},
-              {subTitle: '虚拟专网VPN', url: '/ruicloud/Pvirvpn'},
+              {subTitle: '虚拟私有云VPC', url: '/ruicloud/Pvpc.htm'},
+              {subTitle: '弹性IP', url: '/ruicloud/Peip.htm'},
+              {subTitle: '负载均衡', url: '/ruicloud/Pbalance.htm'},
+              {subTitle: 'NAT网关', url: '/ruicloud/Pnat.htm'},
+              {subTitle: '虚拟专网VPN', url: '/ruicloud/Pvirvpn.htm'},
               {subTitle: 'CDN（敬请期待）', url: ''}
             ]
           },
           {
             title: '云储存',
             desc: [
-              {subTitle: '云硬盘', url: '/ruicloud/Pdisk'},
-              {subTitle: '云硬盘备份', url: '/ruicloud/Pbackupdisk'},
-              {title: '对象存储', url: '/ruicloud/PobjStorage'}
+              {subTitle: '云硬盘', url: '/ruicloud/Pdisk.htm'},
+              {subTitle: '云硬盘备份', url: '/ruicloud/Pbackupdisk.htm'},
+              {title: '对象存储', url: '/ruicloud/PobjStorage.htm'}
             ]
           },
           {
             title: '云安全',
             desc: [
-              {subTitle: '防火墙', url: '/ruicloud/Pfirewall'},
-              {subTitle: 'DDOS高防IP', url: '/ruicloud/Pddos'}
+              {subTitle: '防火墙', url: '/ruicloud/Pfirewall.htm'},
+              {subTitle: 'DDOS高防IP', url: '/ruicloud/Pddos.htm'}
             ]
           },
           {
             title: '云维护',
             desc: [
-              {subTitle: '云监控', url: '/ruicloud/Pmonitor'},
+              {subTitle: '云监控', url: '/ruicloud/Pmonitor.htm'},
               {subTitle: '访问监控（敬请期待）', url: ''}
             ]
           }
@@ -636,6 +718,7 @@
                     line-height: 70px;
                     span {
                       padding: 0px 25px;
+                      line-height: 70px;
                     }
                     &:hover {
                       color: #2d8cf0;

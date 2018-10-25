@@ -19,7 +19,7 @@
               <div class="item">
                 <span>余额</span>
                 <button @click="torecharge">充值</button>
-                <button @click="showModal.withdraw = true" style="margin-right: 10px;">提现</button>
+                <!--<button @click="showModal.withdraw = true" style="margin-right: 10px;">提现</button>-->
                 <div>
                   <ul style="width: 50%">
                     <li>可用余额</li>
@@ -398,7 +398,7 @@
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
           <strong>申请解冻</strong>
-          <p class="lh24">解冻条件:{{thawingCondition}}未达成，暂无法解冻，详情可咨询客服
+          <p class="lh24">解冻条件:{{thawingCondition}}未达成，请确认上述内容都已彻底删除，包括回收站也已清除资源。详情可咨询客服。
           </p>
         </div>
       </div>

@@ -80,7 +80,7 @@
 
               <!-- 删除主机 -->
 
-              <Dropdown-item name="delhost" v-if="status=='欠费'||status=='异常'" :disabled=true>删除主机</Dropdown-item>
+              <Dropdown-item name="delhost" v-if="status=='异常'" :disabled=true>删除主机</Dropdown-item>
               <Dropdown-item name="delhost" v-else>删除主机</Dropdown-item>
 
               <!-- 解绑主机 -->
@@ -589,13 +589,11 @@
           <h2>个人用户</h2>
           <p><i></i>可以使用睿云所有资源</p>
           <p><i></i>个人级别的资源建立额度</p>
-          <p><i></i>最长一个月的免费试用时间</p>
         </div>
         <div class="selectAuthType">
           <h2>企业用户</h2>
           <p><i></i>可以使用睿云所有资源</p>
           <p><i></i>企业级无限量的资源建立额度</p>
-          <p><i></i>最长一个月的免费试用时间</p>
           <p><i></i>专业免费的点对点咨询服务</p>
         </div>
       </div>

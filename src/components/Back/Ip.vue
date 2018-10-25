@@ -179,6 +179,30 @@
         <Button type="primary" @click="bindNATSubmit">确认绑定</Button>
       </div>
     </Modal>
+    <!-- 为GPU云服务器绑定弹性IP -->
+    <Modal v-model="showModal.bindIPForGpu" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">绑定弹性IP</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForGpuForm.row.publicip}}</span>绑定NAT网关。
+        </p>
+        <Form :model="bindForGpuForm" :rules="bindForNATRuleValidate" ref="bindForNATFormValidate">
+          <FormItem label="选择NAT网关" prop="NAT">
+            <Select v-model="bindForGpuForm.gpu" placeholder="NAT网关名称">
+              <Option v-for="(item,index) in bindForGpuForm.gpuOptions" :key="index" :value="`${item.id.toString()}`">
+                {{item.natname}}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+        <p style="font-size: 12px;color: #999999">
+          提示：弹性IP绑定NAT网关之后您可以在虚拟私有云-VPC管理-NAT网关中查看你所绑定的IP，并分配IP用以执行SNAT或DNAT。</p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="bindNATSubmit">确认绑定</Button>
+      </div>
+    </Modal>
     <!-- 变更资费 -->
     <Modal v-model="showModal.charges" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -352,7 +376,8 @@
           bindIPForNAT: false,
           bindIPForDatabase: false,
           charges: false,
-          adjust: false
+          adjust: false,
+          bindIPForGpu:false
         },
         chargesForm: {
           timeType: '',
@@ -650,7 +675,13 @@
                   attrs: {
                     name: 'host'
                   }
-                }, '云主机'), h('DropdownItem', {
+                }, '云主机'),
+                  h('DropdownItem', {
+                    attrs: {
+                      name: 'gpu'
+                    }
+                  }, 'GPU云服务器'),
+                  h('DropdownItem', {
                   attrs: {
                     name: 'NAT'
                   }
@@ -704,6 +735,11 @@
         bindForHostForm: {
           host: '',
           hostOptions: [],
+          row: {}
+        },
+        bindForGpuForm:{
+          gpu: '',
+          gpuOptions: [],
           row: {}
         },
         // 绑定IP到云主机表单校验
