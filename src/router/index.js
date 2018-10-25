@@ -200,13 +200,15 @@ var router = new Router({
       component: App,
       children: [
         {path: '', name: 'home', component: Home},
-        {path: 'home.htm', name: 'home', component: Home},
+        {path: 'index.htm', name: 'home', component: Home},
         {path: 'ecs.htm', name: 'ecs', component: Ecs},
         {path: 'about.htm', name: 'about', component: Aboutus},
         {path: 'ActiveCenter.htm', name: 'ActiveCenter', component: ActiveCenter},
         {path: 'document.htm', name: 'document', component: Document},
+        {path: 'entrance.htm', name: 'entrance', component: Entrance},
 
-        {path: 'home', name: 'home', component: Home},
+        {path: 'index', name: 'home', component: Home},
+        //{path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
         {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},

@@ -287,7 +287,7 @@
               // {subName: '云监控', type: 'CloudMonitor'}
             ]
           },
-          {
+          /*{
             mainName: '域名服务',
             type: 'domain',
             subItem: [
@@ -296,7 +296,7 @@
               {subName: '域名转入', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainTransfer'},
               {subName: '邮箱验证', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainGroup'}
             ]
-          },
+          },*/
           {
             mainName: '回收站',
             type: 'recycle',
