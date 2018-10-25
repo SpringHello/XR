@@ -185,11 +185,11 @@
         <span class="universal-modal-title">绑定弹性IP</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForGpuForm.row.publicip}}</span>绑定NAT网关。
+        <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForGpuForm.row.publicip}}</span>绑定GPU云服务器。
         </p>
         <Form :model="bindForGpuForm" :rules="bindForNATRuleValidate" ref="bindForgpuFormValidate">
-          <FormItem label="选择NAT网关" prop="NAT">
-            <Select v-model="bindForGpuForm.gpu" placeholder="NAT网关名称">
+          <FormItem label="选择GPU云服务器" prop="NAT">
+            <Select v-model="bindForGpuForm.gpu" placeholder="GPU云服务器名称">
               <Option v-for="(item,index) in bindForGpuForm.gpuOptions" :key="index" :value="`${item.id.toString()}`">
                 {{item.natname}}
               </Option>
@@ -197,7 +197,7 @@
           </FormItem>
         </Form>
         <p style="font-size: 12px;color: #999999">
-          提示：弹性IP绑定NAT网关之后您可以在虚拟私有云-VPC管理-NAT网关中查看你所绑定的IP，并分配IP用以执行SNAT或DNAT。</p>
+          提示：弹性IP绑定GPU云服务器之后您可以在云服务器-GPU云服务器中查看你所绑定的IP。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="bindGpuSubmit">确认绑定</Button>
@@ -673,6 +673,9 @@
                 return h('div', {}, h('span', {}, '已冻结'))
               } else if (object.row.usetype == 0) {
                 return h('Dropdown', {
+                  props:{
+                    transfer:true
+                  },
                   on: {
                     'on-click': (type) => {
                       this.openBindIPModal(type, object.row, object.row.id)
@@ -955,7 +958,7 @@
         } else if (type == 'NAT') {
           this.bindForNATForm.row = row
           this.showModal.bindIPForNAT = true
-          // 获取所有能绑定弹性IP的云主机
+          // 获取所有能绑定弹性IP的NAT网关
           this.$http.get('network/listNatGateway.do', {
             params: {
               vpcId: row.vpcid
@@ -973,6 +976,16 @@
             }
           }).then(response => {
             this.bindForDatabaseForm.databaseOptions = response.data.result
+          })
+        }else if (type == 'gpu'){
+          this.bindForGpuForm.row = row
+          this.showModal.bindIPForGpu = true
+          this.$http.get('database/listDB.do', {
+            params: {
+              vpcId: row.vpcid
+            }
+          }).then(response => {
+            this.bindForGpuForm.gpuOptions = response.data.result
           })
         }
       },

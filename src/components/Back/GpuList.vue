@@ -720,7 +720,7 @@
                this.showModal.ipShow = true;
              }
            }else{
-             this.$Message.info('获取Ip出小差了');
+             this.$Message.info(res.data.message);
            }
          })
         },
