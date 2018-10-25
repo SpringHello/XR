@@ -260,7 +260,7 @@
           }
           // 采用账户余额支付
           this.payText = '支付中...'
-          this.axios.get('information/payOrder.do', {
+          axios.get('information/payOrder.do', {
             params: {
               order: this.orderInfo.order,
               ticket: this.orderInfo.ticket
