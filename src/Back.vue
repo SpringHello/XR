@@ -243,12 +243,12 @@
             }, {
               subName: '镜像',
               type: 'mirror'
-            }, {subName: '弹性伸缩', type: 'Elastic'}, /*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            }, /*{subName: '弹性伸缩', type: 'Elastic'}, *//*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
             type: 'database',
-            subItem: [{subName: '云数据库', type: 'cloudDatabase'}, {subName: '云数据库备份', type: 'cloudDatabaseBackup'}]
+            subItem: [{subName: '云数据库', type: 'cloudDatabase'}, /*{subName: '云数据库备份', type: 'cloudDatabaseBackup'}*/]
           },
           {
             mainName: '云存储',
