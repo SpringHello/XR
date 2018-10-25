@@ -295,9 +295,9 @@
                 content.cartUrl = 'buy/bdata#Pdisk'
               } else if (content.itemName == 'NAT网关') {
                 content.cartUrl = 'vpc#NAT'
-              } else if (content.itemName == '数据库') {
+              } /* if (content.itemName == '数据库') {
                 content.cartUrl = 'buy/bdata#NAT'
-              }else if (content.itemName == 'GPU服务器'){
+              }*/else if (content.itemName == 'GPU服务器'){
                 content.cartUrl = 'buy/bgpu'
               }else if(content.itemName == '对象存储'){
                 content.cartUrl = 'buy/bobj'

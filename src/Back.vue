@@ -243,12 +243,12 @@
             }, {
               subName: '镜像',
               type: 'mirror'
-            }, {subName: '弹性伸缩', type: 'Elastic'}, /*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            }, /*{subName: '弹性伸缩', type: 'Elastic'}, *//*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
             type: 'database',
-            subItem: [{subName: '云数据库', type: 'cloudDatabase'}, {subName: '云数据库备份', type: 'cloudDatabaseBackup'}]
+            subItem: [{subName: '云数据库', type: 'cloudDatabase'}, /*{subName: '云数据库备份', type: 'cloudDatabaseBackup'}*/]
           },
           {
             mainName: '云存储',
@@ -291,10 +291,10 @@
             mainName: '域名服务',
             type: 'domain',
             subItem: [
-              {subName: '域名管理', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainGroup'},
-              {subName: '信息模版', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainInfoTemplate'},
-              {subName: '域名转入', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainTransfer'},
-              {subName: '邮箱验证', type: 'http://test-domain.xrcloud.net:8080/xrdomain/domainGroup'}
+              {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
+              {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+              {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
+              {subName: '邮箱验证', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'}
             ]
           },*/
           {

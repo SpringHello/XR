@@ -151,7 +151,7 @@
                     <span class="hidden">#</span>
                     <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{(prod.cost * prod.count).toFixed(2)}}元</span>
                   </p>
-                  <p class="item" style="margin-top: 10px">
+                  <p class="item" style="margin-top: 10px" v-if="prod.type!='Pobj'">
                     <span class="title" style="vertical-align: middle">购买数量</span>
                   <ul style="display: inline-block;font-size: 14px;user-select: none">
                     <span class="numberAdd" v-if="prod.count == 1">-</span>
@@ -314,7 +314,7 @@
         }
       }
     },
-    created(){
+    created() {
       this.$http.get('information/getServiceoffers.do').then(
         response => {
           this.info = response.data.info
@@ -322,7 +322,7 @@
       )
       scrollTo(0, 0)
     },
-    mounted(){
+    mounted() {
       window.addEventListener('scroll', this.scrollFun)
     },
     methods: {
@@ -419,7 +419,7 @@
                 diskType += `${item.type},`
               })
             }
-            var params = {
+            let params = {
               zoneId: prod.zone.zoneid,
               diskSize: diskSize,
               diskName: prod.diskName,
@@ -431,7 +431,7 @@
             }
             PromiseList.push(axios.get('Disk/createVolume.do', {params}))
           } else if (prod.type == 'Peip') {
-            var params = {
+            let params = {
               zoneId: prod.zone.zoneid,
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
               timeValue: prod.timeForm.currentTimeValue.value,
@@ -449,7 +449,7 @@
                 diskType += `${item.type},`
               })
             }
-            var params = {
+            let params = {
               zoneId: prod.zone.zoneid,
               templateId: prod.system.systemId,
               bandWidth: prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0,
@@ -471,9 +471,7 @@
             }
             PromiseList.push(axios.get('database/createDB.do', {params}))
           } else if (prod.type == 'Pgpu') {
-
-
-            var diskSize = '', diskType = ''
+            let diskSize = '', diskType = ''
             prod.dataDiskList.forEach(item => {
               diskSize += `${item.size},`
               diskType += `${item.type},`
@@ -504,13 +502,23 @@
               params.password = prod.password
             }
             PromiseList.push(axios.get('gpuserver/createGpuServer.do', {params}))
+          } else if (prod.type == 'Pobj') {
+            let params = {
+              flowPackage: prod.save,
+              capacity: prod.downLoad,
+              timeType: prod.timeForm.currentTimeValue.type,
+              timeValue: prod.timeForm.currentTimeValue.value,
+              zoneId: prod.zone.zoneid,
+              countOrder
+            }
+            PromiseList.push(axios.post('ruiradosPrice/createOrder.do', params))
           }
         }
         sessionStorage.removeItem('cart')
         Promise.all(PromiseList).then(responseList => {
           if (responseList.every(item => {
-              return item.status == 200 && item.data.status == 1
-            })) {
+            return item.status == 200 && item.data.status == 1
+          })) {
             this.$router.push({
               path: '/ruicloud/order', query: {
                 countOrder
@@ -533,7 +541,7 @@
       store() {
         sessionStorage.setItem('cart', JSON.stringify(this.cart))
       },
-      change(value){
+      change(value) {
         this.$router.push(`/ruicloud/buy/${value}`)
       },
       // 导出清单
@@ -571,7 +579,7 @@
       disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       },
-      userInfo(){
+      userInfo() {
         return this.$store.state.userInfo
       },
       // 商品清单总价
@@ -582,7 +590,7 @@
         }
         return cost
       },
-      docPath(){
+      docPath() {
         let map = {
           bhost: 'Pecs',
           bdisk: 'Pdisk',
@@ -596,7 +604,7 @@
     },
     watch: {
       'cart': {
-        handler(){
+        handler() {
           this.store()
         },
         deep: true
