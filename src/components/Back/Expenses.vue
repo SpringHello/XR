@@ -422,8 +422,7 @@
         <div>
           <p style="font-size:14px;color:rgba(51,51,51,1);line-height:14px;margin-bottom: 10px">优惠券兑换码</p>
           <Input v-model="exchangeCardCode" placeholder="请输入兑换码" style="width: 250px"/>
-          <p v-if="exchangeCardCodeError" style="margin-top: 6px;color:#FF001F">代金券不存在，详情<a
-            href="tencent://message/?uin=1014172393&Site=www.cloudsoar.com&Menu=yes" target="_blank">咨询客服</a>或重新输入</p>
+          <p v-if="exchangeCardCodeError" style="margin-top: 6px;color:#FF001F">{{ exchangeCardMessage }}</p>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -1368,7 +1367,8 @@
           },
         ],
         freezeParticularsData: [],
-        unfreezeId: ''
+        unfreezeId: '',
+        exchangeCardMessage: ''
       }
     },
     created() {
@@ -2049,6 +2049,7 @@
             this.searchCard()
           } else {
             // 兑换码错误
+            this.exchangeCardMessage = response.data.message
             this.exchangeCardCodeError = true
           }
         })

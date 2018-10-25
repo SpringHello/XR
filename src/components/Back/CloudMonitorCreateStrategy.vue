@@ -1,8 +1,8 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span class="title">首页
-        <!-- / <span>云主机快照</span> -->
+      <span class="title">云监控 / 告警策略
+        <span> / 新建告警策略</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/ruicloud/userCenter">立即认证</router-link>
@@ -18,114 +18,8 @@
         <div class="universal-alert">
           <p> 云监控描述</p>
         </div>
-        <Tabs type="card" :animated="false" style="min-height: 400px" @on-click="labelSwitching" value="overview">
-          <TabPane label="监控概览" name="overview">
-            <div class="host-monitor">
-              <p>云服务器监控</p>
-              <ul>
-                <li v-for="(item,index) in monitorData" :key="index">
-                  <p>{{item.text}}</p>
-                  <p><span>{{item.num}}</span>台</p>
-                </li>
-              </ul>
-            </div>
-            <section>
-              <div class="disk">
-                <div class="header">
-                  我关注的指标
-                  <span v-if="firstMonitoringOverview.showChart">
-                    <i @click="editOverviewAttention(1)">编辑</i> | <i @click="deleteChart(1)">删除</i>
-                  </span>
-                </div>
-                <div class="switch" v-if="firstMonitoringOverview.showChart">
-                  <RadioGroup type="button" v-model="firstMonitoringOverview.dateType" @on-change="cutDataOverviewMonitoring(1)">
-                    <Radio label="today">今日</Radio>
-                    <Radio label="week">近一周</Radio>
-                    <Radio label="month">近30天</Radio>
-                  </RadioGroup>
-                  <div>
-                    <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup type="button" v-model="firstMonitoringOverview.mapType" @on-change="cutMapOverviewMonitoring(1)">
-                      <Radio label="line">折线</Radio>
-                      <Radio label="bar">柱状</Radio>
-                    </RadioGroup>
-                  </div>
-                </div>
-                <chart v-if="firstMonitoringOverview.showChart" :options="firstMonitoringOverview.showChart" style="width: 714px;height:172px;margin-top: 20px;"></chart>
-                <div v-else class="om-content" @click="addOverviewMonitoring(1)">
-                  <div class="cross"></div>
-                  <p>您还未添加关注的指标，点击“+”添加指标。</p>
-                </div>
-              </div>
-              <chart :options="messageData"
-                     style="border: solid 1px #D8D8D8;padding: 20px;padding-right:0;box-sizing: border-box;width: 366px;height:297px;"></chart>
-            </section>
-            <section>
-              <div class="disk" style="width: 1160px;height: 390px">
-                <div class="header">
-                  我关注的指标
-                  <span v-if="secondMonitoringOverview.showChart">
-                    <i @click="editOverviewAttention(2)">编辑</i> | <i @click="deleteChart(2)">删除</i>
-                  </span>
-                </div>
-                <div class="switch" v-if="secondMonitoringOverview.showChart">
-                  <RadioGroup type="button" v-model="secondMonitoringOverview.dateType" @on-change="cutDataOverviewMonitoring(2)">
-                    <Radio label="today">今日</Radio>
-                    <Radio label="week">近一周</Radio>
-                    <Radio label="month">近30天</Radio>
-                  </RadioGroup>
-                  <div>
-                    <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup type="button" v-model="secondMonitoringOverview.mapType" @on-change="cutMapOverviewMonitoring(2)">
-                      <Radio label="line">折线</Radio>
-                      <Radio label="bar">柱状</Radio>
-                    </RadioGroup>
-                  </div>
-                </div>
-                <chart v-if="secondMonitoringOverview.showChart" :options="secondMonitoringOverview.showChart" style="width:1110px;height:268px;margin-top: 20px;"></chart>
-                <div v-else class="om-content" @click="addOverviewMonitoring(2)" style="padding-top: 10%">
-                  <div class="cross"></div>
-                  <p>您还未添加关注的指标，点击“+”添加指标。</p>
-                </div>
-              </div>
-            </section>
-          </TabPane>
-          <TabPane label="自定义监控" name="customMonitoring">
-            <div class="cm-content">
-              <div class="cm-item" v-for="(item,index) in customMonitoringData">
-                <div class="cm-item-title">
-                  <p>我关注的指标<span @click="deleteAttention(item)">&nbsp删除</span><span
-                    @click="editAttention(item)">编辑 |</span></p>
-                </div>
-                <div class="cm-item-switch">
-                  <RadioGroup type="button" v-model="item.timeType" @on-change="cutDataCustomMonitoring(item,index)">
-                    <Radio label="today">今日</Radio>
-                    <Radio label="week">近一周</Radio>
-                    <Radio label="month">近30天</Radio>
-                  </RadioGroup>
-                  <div>
-                    <Button type="primary" style="margin-right: 5px">导出</Button>
-                    <RadioGroup type="button" v-model="item.mapType" @on-change="cutMapCustomMonitoring(item,index)">
-                      <Radio label="line">折线</Radio>
-                      <Radio label="bar">柱状</Radio>
-                    </RadioGroup>
-                  </div>
-                </div>
-                <chart :options="item.showChart" style="width:100%;height:70%;margin-top: 20px;"></chart>
-              </div>
-              <div class="cm-item">
-                <div class="cm-item-title">
-                  <p>我关注的指标</p>
-                </div>
-                <div class="cm-item-content" @click="addCustomMonitoring">
-                  <div class="cross"></div>
-                  <p>您还未添加关注的指标，点击“+”添加指标。</p>
-                </div>
-              </div>
-            </div>
-          </TabPane>
-          <TabPane label="告警策略" name="alarmStrategy">
-            <div class="as-content" v-if="!isNewAlarmStrategy">
+        <div class="con">
+          <div class="as-content" v-if="!isNewAlarmStrategy">
               <Button type="primary" style="margin-bottom: 10px" @click="btnflag = '完成';isNewAlarmStrategy = true">新建告警策略</Button>
               <Table :columns="alarmStrategyColumns" :data="alarmStrategyData"></Table>
             </div>
@@ -285,7 +179,7 @@
                                 </Option>
                               </Select>
                             </Col>
-                            <Col span="4" v-if="item.alarmname == '应用中断'">
+                            <Col span="4">
                               <Input v-model="item.value" placeholder="请输入端口号"/>
                             </Col>
                             <Col span="1">
@@ -344,156 +238,9 @@
                 </Form>
               </div>
             </div>
-          </TabPane>
-          <TabPane label="告警列表" name="alarmList">
-            <div class="al-content">
-              <div class="al-content-title">
-                <Button type="primary" @click="sign(1)">标为已处理</Button>
-                <Button type="primary" @click="sign(0)">标为未处理</Button>
-                <Button type="primary" @click="deleteMsg">删除</Button>
-                <div style="float: right">
-                  <span>接收时间</span>
-                  <DatePicker type="daterange" placement="bottom-end" placeholder="请选择日期"
-                              style="width: 230px;margin: 0 10px" @on-change="alarmListTimeChange"></DatePicker>
-                  <Input v-model="alarmList.msgName" placeholder="请输入消息名称"
-                         style="width: 230px;margin-right: 20px"></Input>
-                  <Button type="primary" @click="getAlarmList">查询</Button>
-                </div>
-              </div>
-              <Table :columns="alarmListColumns" :data="alarmListData" @on-selection-change="alarmListSelect"></Table>
-              <Page style="margin-top:20px;float: right;" :total="alarmList.total" @on-change="alarmListCurrentChange"
-                    :page-size="10"></Page>
-            </div>
-          </TabPane>
-        </Tabs>
+        </div>
       </div>
     </div>
-    <!-- 添加自定义指标弹窗 -->
-    <Modal v-model="showModal.addMonitorIndex" width="550" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title" v-if="isAddMonitorIndex">添加监控指标</span>
-        <span class="universal-modal-title" v-else>编辑监控指标</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <div class="modal-top">
-          <div class="left">
-            <p>产品类型</p>
-            <Select v-model="monitoringIndexForm.productType" placeholder="请选择" @on-change="changeProduct"
-                    style="width: 240px;" class="cm-select">
-              <Option v-for="item in monitoringIndexForm.productTypeGroup" :key="item.value" :value="item.value">
-                {{item.value}}
-              </Option>
-            </Select>
-          </div>
-          <div class="right">
-            <p>指标</p>
-            <Select v-model="monitoringIndexForm.productIndex" placeholder="请选择" @on-change="getIndexResource"
-                    style="width: 240px;" class="cm-select">
-              <Option v-for="item in monitoringIndexForm.productIndexGroup" :key="item.value" :value="item.value">
-                {{item.label}}
-              </Option>
-            </Select>
-          </div>
-        </div>
-        <div class="modal-main">
-          <div class="hostlist">
-            <p>该区域下所有{{ monitoringIndexForm.productType }}</p>
-            <ul>
-              <li v-for="(item,index) in monitoringIndexForm.allProduct">
-                <span>{{ item.instancename}}</span>
-                <i class="bluetext" style="cursor: pointer"
-                   v-if="monitoringIndexForm.selectedProduct.length<5&&item.name !=''" @click="addProduct(item,index)">+ 添加</i>
-              </li>
-            </ul>
-          </div>
-          <div class="changelist">
-            <p>已选择{{ monitoringIndexForm.productType}}</p>
-            <ul>
-              <li v-for="(item,index) in monitoringIndexForm.selectedProduct">
-                <span>{{ item.instancename}}</span>
-                <i class="bluetext" style="cursor: pointer" @click="deleteProduct(item,index)">
-                  <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
-                  删除</i>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button @click="showModal.addMonitorIndex = false">取消</Button>
-        <Button type="primary" @click="addCustomMonitoring_ok"
-                :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''"
-                v-if="isAddMonitorIndex">完成配置
-        </Button>
-        <Button v-else type="primary" @click="editCustomMonitoring_ok"
-                :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''">
-          确认修改
-        </Button>
-      </div>
-    </Modal>
-    <!-- 添加总览页面指标弹窗 -->
-    <Modal v-model="showModal.addOverviewMonitorIndex" width="550" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title" v-if="isAddOverviewMonitorIndex">添加监控指标</span>
-        <span class="universal-modal-title" v-else>编辑监控指标</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <div class="modal-top">
-          <div class="left">
-            <p>产品类型</p>
-            <Select v-model="overviewMonitorIndexForm.productType" placeholder="请选择" @on-change="changeOverviewProduct"
-                    style="width: 240px;" class="cm-select">
-              <Option v-for="item in overviewMonitorIndexForm.productTypeGroup" :key="item.value" :value="item.value">
-                {{item.value}}
-              </Option>
-            </Select>
-          </div>
-          <div class="right">
-            <p>指标</p>
-            <Select v-model="overviewMonitorIndexForm.productIndex" placeholder="请选择" @on-change="getOverviewIndexResource"
-                    style="width: 240px;" class="cm-select">
-              <Option v-for="item in overviewMonitorIndexForm.productIndexGroup" :key="item.value" :value="item.value">
-                {{item.label}}
-              </Option>
-            </Select>
-          </div>
-        </div>
-        <div class="modal-main">
-          <div class="hostlist">
-            <p>该区域下所有{{ overviewMonitorIndexForm.productType }}</p>
-            <ul>
-              <li v-for="(item,index) in overviewMonitorIndexForm.allProduct">
-                <span>{{ item.instancename}}</span>
-                <i class="bluetext" style="cursor: pointer"
-                   v-if="overviewMonitorIndexForm.selectedProduct.length<5&&item.name !=''" @click="addOverviewProduct(item,index)">+ 添加</i>
-              </li>
-            </ul>
-          </div>
-          <div class="changelist">
-            <p>已选择{{ overviewMonitorIndexForm.productType}}</p>
-            <ul>
-              <li v-for="(item,index) in overviewMonitorIndexForm.selectedProduct">
-                <span>{{ item.instancename}}</span>
-                <i class="bluetext" style="cursor: pointer" @click="deleteOverviewProduct(item,index)">
-                  <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
-                  删除</i>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button @click="showModal.addOverviewMonitorIndex = false">取消</Button>
-        <Button type="primary" @click="addOverviewMonitoring_ok"
-                :disabled="overviewMonitorIndexForm.selectedProduct.length == 0 ||overviewMonitorIndexForm.productIndex == ''"
-                v-if="isAddOverviewMonitorIndex">完成配置
-        </Button>
-        <Button v-else type="primary" @click="editOverviewMonitoring_ok"
-                :disabled="overviewMonitorIndexForm.selectedProduct.length == 0 ||overviewMonitorIndexForm.productIndex == ''">
-          确认修改
-        </Button>
-      </div>
-    </Modal>
   </div>
 </template>
 
@@ -653,7 +400,7 @@
           Percentage: [
             {
               label: '80',
-              value: ''
+              value: 80
             },
             {
               label: '60',
@@ -2639,17 +2386,6 @@
         })
       },
       newAlarmStrategy_ok() {
-        var host = this.eventformDynamic.some(item => {
-          if (item.alarmname == '应用中断') {
-            if (item.value == '') {
-              this.$Message.info('请输入端口号')
-            }
-          } 
-          return item.value == ''
-        })
-        if (host) {
-          return false
-        }
         var alarmlength = this.targetformDynamic.length + this.eventformDynamic.length < 1
         this.hostHint = this.strategyhost.selectedHost.length < 1 ? true : false
         this.contactsHint = this.contacts.selectedContacts.length < 1 ? true : false
@@ -2702,7 +2438,6 @@
               this.$http.post('alarmControl/createAlarmControl.do', params).then(res => {
                 if (res.status == 200 && res.data.status == 1) {
                   this.$Message.success(res.data.message)
-                  this.isNewAlarmStrategy = false
                 } else {
                   this.$Message.success('创建失败！');
                 }
@@ -2712,7 +2447,6 @@
               this.$http.post('alarmControl/updateAlarmControl.do', params1).then(res => {
                 if (res.status == 200 && res.data.status == 1) {
                   this.$Message.success(res.data.message)
-                  this.isNewAlarmStrategy = false
                 } else {
                   this.$Message.success('更新失败！');
                 }

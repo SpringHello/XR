@@ -1018,6 +1018,13 @@
           this.RenewForm.cost = item.cpCase
         } else {
           this.currentHost[0] = item
+          this.renewalInfo = {
+            computername: this.currentHost[0].computername,
+            templatename: this.currentHost[0].templatename,
+            serviceoffername: this.currentHost[0].serviceoffername,
+            endtime: this.currentHost[0].endtime
+          }
+          this.renewType()
           this.showModal.renewal = true
         }
       },
@@ -2038,6 +2045,7 @@
     }
   }
   .renewal-info {
+    margin-bottom: 20px;
     padding: 20px 10px;
     width: 100%;
     background:rgba(245,245,245,1);
