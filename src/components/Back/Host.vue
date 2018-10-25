@@ -93,7 +93,7 @@
                 @on-ok="unbind"
                 @on-cancel="cancel"
                 style="display: block">
-                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>解绑公网IP</li>
+                <li class="del" v-if="status!='异常'" :disabled=true>解绑公网IP</li>
               </Poptip>
 
             </Dropdown-menu>
@@ -1255,8 +1255,7 @@
               VMId: this.currentHost[0].computerid
             }
           }).then(response => {
-            if (response.status == 200 && response.data.status == 1
-            ) {
+            if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
               this.currentHost[0].publicip = ''
             }

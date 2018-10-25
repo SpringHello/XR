@@ -179,6 +179,30 @@
         <Button type="primary" @click="bindNATSubmit">确认绑定</Button>
       </div>
     </Modal>
+    <!-- 为GPU云服务器绑定弹性IP -->
+    <Modal v-model="showModal.bindIPForGpu" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">绑定弹性IP</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForGpuForm.row.publicip}}</span>绑定NAT网关。
+        </p>
+        <Form :model="bindForGpuForm" :rules="bindForNATRuleValidate" ref="bindForgpuFormValidate">
+          <FormItem label="选择NAT网关" prop="NAT">
+            <Select v-model="bindForGpuForm.gpu" placeholder="NAT网关名称">
+              <Option v-for="(item,index) in bindForGpuForm.gpuOptions" :key="index" :value="`${item.id.toString()}`">
+                {{item.natname}}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+        <p style="font-size: 12px;color: #999999">
+          提示：弹性IP绑定NAT网关之后您可以在虚拟私有云-VPC管理-NAT网关中查看你所绑定的IP，并分配IP用以执行SNAT或DNAT。</p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="bindGpuSubmit">确认绑定</Button>
+      </div>
+    </Modal>
     <!-- 变更资费 -->
     <Modal v-model="showModal.charges" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -267,6 +291,13 @@
               </Option>
             </Select>
           </FormItem>
+          <div class="renewal-info">
+            <ul>
+              <li><span>IP地址：</span>{{renewalInfo.IPAddress}}</li>
+              <li><span>IP带宽：</span>{{renewalInfo.bandwidth}}M</li>
+              <li><span>到期时间：</span>{{renewalInfo.endTime}}</li>
+            </ul>
+          </div>
           <FormItem label="是否同时续费绑定主机与NAT网关:" style="width: 80%;margin-bottom: 0" v-if="renewalHost || renewalNAT">
             <CheckboxGroup v-model="renewalOther">
               <Checkbox label="续费关联云主机" v-if="renewalHost"></Checkbox>
@@ -352,7 +383,8 @@
           bindIPForNAT: false,
           bindIPForDatabase: false,
           charges: false,
-          adjust: false
+          adjust: false,
+          bindIPForGpu:false
         },
         chargesForm: {
           timeType: '',
@@ -650,7 +682,13 @@
                   attrs: {
                     name: 'host'
                   }
-                }, '云主机'), h('DropdownItem', {
+                }, '云主机'),
+                  h('DropdownItem', {
+                    attrs: {
+                      name: 'gpu'
+                    }
+                  }, 'GPU云服务器'),
+                  h('DropdownItem', {
                   attrs: {
                     name: 'NAT'
                   }
@@ -706,6 +744,11 @@
           hostOptions: [],
           row: {}
         },
+        bindForGpuForm:{
+          gpu: '',
+          gpuOptions: [],
+          row: {}
+        },
         // 绑定IP到云主机表单校验
         bindForHostRuleValidate: {
           host: [
@@ -736,12 +779,23 @@
             {required: true, message: '请选择云数据库', trigger: 'change'}
           ]
         },
+        //绑定IP到云数据库表单校验
+        bindForgpuFormValidate: {
+          gpu: [
+            {required: true, message: '请选择GPU云服务器', trigger: 'change'}
+          ]
+        },
         customTimeOptions,
         // 当前操作弹性IP的id
         operatingId: null,
         page: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
+        renewalInfo: {
+          IPAddress: '',
+          bandwidth: '',
+          endTime: ''
+        }
       }
     },
     methods: {
@@ -1020,6 +1074,39 @@
         })
         this.$refs.bindForNATFormValidate.resetFields();
       },
+      //绑定弹性IP到GPU
+      bindGpuSubmit(){
+        this.$refs.bindForGpuFormValidate.validate(validate => {
+          if (validate) {
+            this.ipData.forEach(item => {
+              if (item.id === this.operatingId) {
+                // 3代表绑定中
+                item.status = 3
+              }
+            })
+            this.$http.get('network/enableStaticNat.do', {
+              params: {
+                ipId: this.bindForGpuForm.row.publicipid,
+                VMId: this.bindForGpuForm.gpu
+              }
+            }).then(response => {
+              this.showModal.bindIPForGpu = false
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+                this.refresh()
+              } else {
+                this.$message.info({
+                  content: response.data.message,
+                  'onOk': () => {
+                    this.refresh()
+                  }
+                })
+              }
+            })
+          }
+        })
+        this.$refs.bindForNATFormValidate.resetFields();
+      },
       // 解绑资源
       unbundle(row) {
         this.$Modal.confirm({
@@ -1260,6 +1347,9 @@
         this.renewalHost = false
         this.renewalNAT = false
         this.currentIp = this.select.id
+        this.renewalInfo.IPAddress = this.select.publicip
+        this.renewalInfo.bandwidth = this.select.bandwith
+        this.renewalInfo.endTime = this.select.endtime
         let url = 'network/listPublicIpById.do'
         this.$http.get(url, {
           params: {
@@ -1633,6 +1723,21 @@
           }
         }
 
+      }
+    }
+  }
+
+  .renewal-info {
+    padding: 20px 10px;
+    width: 100%;
+    background: rgba(245, 245, 245, 1);
+    ul {
+      li {
+        font-size: 14px;
+        line-height: 1.5;
+        span {
+          color: #666;
+        }
       }
     }
   }

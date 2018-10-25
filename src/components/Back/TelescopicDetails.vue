@@ -74,7 +74,7 @@
               <Table :columns="taskList" :data="taskData"></Table>
             </div>
           </TabPane>
-          <TabPane label="关联云主机">
+          <TabPane :label="hostDomain">
             <div>
               <Button style="margin-bottom: 10px" type="primary" @click="moveCloudHost = true">移入云主机</Button>
               <Table :columns="cloudHost.hostList" :data="cloudHost.hostData"></Table>
@@ -581,6 +581,17 @@
   export default {
     data(){
       return{
+        //关联云主机
+        hostDomain:h=>{
+          return h('div',{
+            on:{
+              click:()=>{
+                this.selectHost();
+              }
+            }
+          },'关联云主机')
+        },
+
         //告警策略
         strategyList:[
           {
@@ -1031,7 +1042,6 @@
                       },
                       on:{
                         change:()=>{
-                          console.log('ssssssss');
                           this.removeProtect(params.row,0);
                         }
                       }
@@ -1822,7 +1832,9 @@
           initialinstancenumber:[
             {required:true,validator:minNumberValidator,trigger:'blur'}
           ]
-        }
+        },
+
+        telescopicId:null
       }
     },
     methods:{
@@ -1834,9 +1846,9 @@
         }
         }).then(res =>{
           this.details = res.data.list[0];
-          console.log(res.data.list);
           this.updateTelescopicList = JSON.parse(JSON.stringify(res.data.list[0]));
           this.startUpId = res.data.list[0].ownershipbootconfiguration;
+          this.telescopicId = res.data.list[0].id;
         })
       },
 
@@ -2142,7 +2154,9 @@
       //获取伸缩组关联的主机
       selectHost(){
         this.$http.get('elasticScaling/listManualAndAutoAssociatedHost.do',{
-
+          params:{
+            telescopicGroupId:this.telescopicId
+          }
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.cloudHost.hostData = res.data.list;
@@ -2369,7 +2383,7 @@
       this.selectTask();
       this.getContacts();
       this.percentageF();
-      this.selectHost();
+      // this.selectHost();
       this.getAllSelect();
       this.selectAllElastic();
       this.balancings();

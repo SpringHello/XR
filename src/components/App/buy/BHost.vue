@@ -581,13 +581,11 @@
         return zone.gpuserver == 0
       })
       var zone = this.$store.state.zone
-      console.log(zone)
       // 如果默认区域在该资源下不存在
       if (!zoneList.some(i => {
         return i.zoneid == zone.zoneid
       })) {
         // 默认选中zoneList中第一个区域
-        console.log('')
         zone = zoneList[0]
       }
       return {
@@ -620,7 +618,7 @@
         },
         // 镜像
         mirrorType: [
-          /*{label: '镜像+应用', value: 'app'},*/
+          {label: '镜像+应用', value: 'app'},
           {label: '公共镜像', value: 'public'},
           {label: '自定义镜像', value: 'custom'}
         ],
@@ -750,7 +748,7 @@
       // 设置系统模版
       setTemplate() {
         // 镜像+应用
-        /*axios.get('information/listTemplateFunctionAll.do', {
+        axios.get('information/listTemplateFunctionAll.do', {
           params: {
             zoneId: this.zone.zoneid,
           }
@@ -762,7 +760,7 @@
             }
             this.appSystem = {}
           }
-        })*/
+        })
         // 系统镜像
         axios.get('information/listTemplates.do', {
           params: {

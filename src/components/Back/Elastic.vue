@@ -13,7 +13,7 @@
           <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="text-box">
-          <p></p>
+          <p>一种高效的的计算资源管理策略，您可以设定时间周期或者告警策略，让计算资源按照您预期方式进行增加或减少。既能在早高峰时段保证性能，也能在闲时降低成本。</p>
         </div>
         <Tabs type="card" :animated="false">
           <TabPane label="启动配置">
@@ -629,11 +629,12 @@
   .text-box{
     border:1px solid #2A99F2;
     background-color: RGBA(42, 153, 242, 0.1);
-    height: 32px;
+    padding: 7px 10px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
-    margin-bottom: 20px;
+    font-size: 14px;
+    color: #666666;
   }
 
   .ivu-icon-ios-help-outline:before{
