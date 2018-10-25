@@ -176,6 +176,12 @@
               <img src="./assets/img/app/QR-code.jpg" style="width:100px;height:100px;">
             </div>
           </div>
+          <div class="page-links">
+            <div class="links-tit">友情链接</div>
+            <div class="links-info">
+              <a v-for="(item,index) in links" :key="index" :href="item.linkurl" target="_blank">{{ item.linkname }}</a>
+            </div>
+          </div>
         </div>
         <div class="footer-bottom">
           <ul v-for="(item,index) in Preparation " :key="index">
@@ -529,6 +535,10 @@
           {title: '新闻动态', url: '/ruicloud/dynamic'},
           {title: '技术支持', url: '/ruicloud/dynamic'},
         ],
+        // 友情链接
+        links: [
+          { href: 'https://www.xrcloud.net/ruicloud/', text: '新睿云' }
+        ],
         Preparation: [
           {
             time: '©2014-2018',
@@ -584,6 +594,10 @@
          value: response.data.result[key]
          })
          }*/
+      })
+      // 设置友情链接
+      this.$http.get('article/friendshipLink.do').then(response => {
+        this.links = response.data.result
       })
       /*this.$http.get('user/getEventNum.do', {
        params: {
@@ -848,7 +862,7 @@
       }
       #foot-footer {
         .footer-top {
-          height: 300px;
+          height: 340px;
           background-color: #434343;
           padding-top: 46px;
           .description {
@@ -916,6 +930,32 @@
                 }
               }
             }
+          }
+          .page-links {
+            width: 1200px;
+            margin: 0px auto;
+            .links-tit {
+              float: left;
+              margin-right: 30px;
+              font-size:14px;
+              color: #FFF;
+              line-height:16px;
+            }
+            .links-info {
+              width: auto;
+              margin-left: 86px;
+              a {
+                margin-right: 20px;
+                display: inline-block;
+                font-size:12px;
+                color: #fff;
+                line-height:14px;
+                &:hover {
+                  color: #377dff
+                }
+              }
+            }
+
           }
         }
         .footer-bottom {
