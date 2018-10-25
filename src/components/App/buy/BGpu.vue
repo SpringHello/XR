@@ -633,7 +633,8 @@
           params: {
             zoneId: this.zone.zoneid,
             // 0代表系统镜像
-            user: '0'
+            user: '0',
+            gpu:'1'
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -661,6 +662,7 @@
             params: {
               // 1代表自定义镜像
               user: '1',
+              gpu:'1',
               zoneId: this.zone.zoneid
             }
           }).then(response => {
