@@ -34,7 +34,7 @@
             <div class="hot-tags">
               <h3><div class="licon1"></div>热门标签</h3>
               <div class="tags">
-                <router-link class="tagslink" v-for="(tag,index) in tags" :key="index" target="_blank"  :to="tag.keywordsval.toString()">{{
+                <router-link class="tagslink" v-for="(tag,index) in tags" :key="index" target="_blank"  :to="tag.keywordsval">{{
                   tag.keywordsval }}
                 </router-link>
               </div>
@@ -44,7 +44,7 @@
             <div class="hot-information">
               <h3><div class="licon2"></div>热门资讯</h3>
               <div v-for="h in hot" class="info">
-                <router-link :to="`${h.code}.html`" target="_blank">
+                <router-link :to="`/ruicloud/article/${h.code}.html`" target="_blank">
                   <div class="hotInfo-title">
                     <Poptip :content="h.title" slot="content" trigger="hover" class="htitle">{{h.title}}</Poptip>
                     <p class="time">{{h.author}}发布于: {{h.createDate}}</p>
