@@ -620,7 +620,7 @@
         },
         // 镜像
         mirrorType: [
-          /*{label: '镜像+应用', value: 'app'},*/
+          {label: '镜像+应用', value: 'app'},
           {label: '公共镜像', value: 'public'},
           {label: '自定义镜像', value: 'custom'}
         ],
@@ -750,7 +750,7 @@
       // 设置系统模版
       setTemplate() {
         // 镜像+应用
-        /*axios.get('information/listTemplateFunctionAll.do', {
+        axios.get('information/listTemplateFunctionAll.do', {
           params: {
             zoneId: this.zone.zoneid,
           }
@@ -762,7 +762,7 @@
             }
             this.appSystem = {}
           }
-        })*/
+        })
         // 系统镜像
         axios.get('information/listTemplates.do', {
           params: {
