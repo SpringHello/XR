@@ -498,6 +498,7 @@
         publicList: [],
         // 自有镜像列表
         customList: [],
+        customMirror:{},
         serverOfferList: [],
         serverOfferColumns: [
           {
@@ -607,7 +608,6 @@
     },
     created(){
 
-
       this.setGpuServer()
       this.setTemplate()
       this.queryVpc()
@@ -677,7 +677,7 @@
                 for(let i = 0; i<cusList.length;i++){
                   if(cusList[i].status != -1){
                     this.customList.push(cusList[i]);
-                    this.customMirror = {};
+                    // this.customMirror = {};
                   }
                 }
               }
