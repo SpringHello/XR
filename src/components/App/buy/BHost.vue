@@ -892,6 +892,9 @@
           timeValue: this.timeForm.currentTimeValue.value,
           zoneId: this.zone.zoneid
         }
+        if (!this.publicIP) {
+          ipParams.brand = 0
+        }
         if (this.timeForm.currentTimeType === 'current') {
           params.timeType = 'current'
           ipParams.timeType = 'current'
@@ -1300,6 +1303,9 @@
           this.queryVpc()
         },
         deep: true
+      },
+      publicIP() {
+        this.queryQuick()
       }
     }
   }

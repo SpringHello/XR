@@ -45,7 +45,8 @@
            </Form-item>
           <Form-item label="类型" prop="diskType">
             <Select v-model="diskForm.diskType" placeholder="请选择">
-              <Option v-for="item in diskTypeList" :key="item.value" :value="item.value">{{ item.label }}
+              <Option v-for="item in diskTypeList" :key="item.value" :value="item.value"
+                      v-if="$store.state.zone.gpuserver!='1'||item.value=='ssd'">{{ item.label }}
               </Option>
             </Select>
           </Form-item>
@@ -93,8 +94,10 @@
           <span class="universal-middle">资费：</span>
           <span class="universal-price"> ￥{{ expenses }}</span>
           <span v-if="diskForm.timeValue != ''" style="color: #2A99F2;font-size: 24px;"> /
-            <span style="font-size: 16px;color: #2A99F2;" v-if="diskForm.timeType == 'year'">{{diskForm.timeValue}}年</span>
-            <span style="font-size: 16px;color: #2A99F2;" v-if="diskForm.timeType == 'month'">{{diskForm.timeValue}}月</span>
+            <span style="font-size: 16px;color: #2A99F2;"
+                  v-if="diskForm.timeType == 'year'">{{diskForm.timeValue}}年</span>
+            <span style="font-size: 16px;color: #2A99F2;"
+                  v-if="diskForm.timeType == 'month'">{{diskForm.timeValue}}月</span>
           </span>
           <!--<span v-if="diskForm.timeType=='current'" style="color: #2A99F2;font-size: 24px;"> / <span style="font-size: 16px;color: #2A99F2;">小时</span></span>-->
           <p v-if="coupon>0">已优惠：<span style="font-size: 16px;color: #2A99F2;">（￥{{ coupon }}）</span></p>
@@ -254,7 +257,8 @@
               <Input v-model="createBackupsForm.backupsName" placeholder="请输入"></Input>
             </Form-item>
           </Form>
-          <p style="font-family: Microsoft YaHei;font-size: 12px;line-height:20px;color: #999999;">提示：云硬盘数据服务为每块磁盘提供<span
+          <p style="font-family: Microsoft YaHei;font-size: 12px;line-height:20px;color: #999999;">
+            提示：云硬盘数据服务为每块磁盘提供<span
             style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
         </div>
       </div>
