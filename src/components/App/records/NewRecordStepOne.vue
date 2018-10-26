@@ -505,8 +505,7 @@
             {required: true, message: "请选择证件类型", trigger: "change"}
           ],
           certificateNumber: [
-            {required: true, message: "请输入证件号码", trigger: "blur"},
-             { validator: validUnitProperties, trigger: "blur" }
+            {required: true, message: "请输入证件号码", trigger: "blur"}
           ],
           unitName: [
             {required: true, message: "请输入名称", trigger: "blur"},
