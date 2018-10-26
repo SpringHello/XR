@@ -429,8 +429,9 @@
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
   import regExp from '@/util/regExp'
+
   var debounce = require('throttle-debounce/debounce')
-  export default{
+  export default {
     /*beforeRouteEnter(to, from, next){
      axios.get('information/zone.do', {
      params: {
@@ -443,15 +444,15 @@
      })
      })
      },*/
-    data(){
+    data() {
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 1
       })
       var zone = this.$store.state.zone
       // 如果默认区域在该资源下不存在
-      if(!zoneList.some(i=>{
+      if (!zoneList.some(i => {
         return i.zoneid == zone.zoneid
-        })){
+      })) {
         // 默认选中zoneList中第一个区域
         zone = zoneList[0]
       }
@@ -498,7 +499,7 @@
         publicList: [],
         // 自有镜像列表
         customList: [],
-        customMirror:{},
+        customMirror: {},
         serverOfferList: [],
         serverOfferColumns: [
           {
@@ -603,10 +604,10 @@
         dbName: '',
 
         //具体镜像
-        mirrorQuery:this.$route.query.mirror
+        mirrorQuery: this.$route.query.mirror
       }
     },
-    created(){
+    created() {
 
       this.setGpuServer()
       this.setTemplate()
@@ -614,15 +615,15 @@
       this.queryDiskPrice()
       //this.queryCustomVM()
       this.queryIPPrice()
-      setTimeout(()=>{
+      setTimeout(() => {
         this.select();
-      },200)
-      if(this.$route.query.mirrorType){
+      }, 200)
+      if (this.$route.query.mirrorType) {
         this.currentType = this.$route.query.mirrorType;
 
-        setTimeout(()=>{
+        setTimeout(() => {
           this.publicList[0].selectSystem = this.mirrorQuery.templatename
-        },200)
+        }, 200)
       }
     },
     methods: {
@@ -634,21 +635,21 @@
             zoneId: this.zone.zoneid,
             // 0代表系统镜像
             user: '0',
-            gpu:'1'
+            gpu: '1'
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.publicList = [];
-            if(this.mirrorQuery){
-              var system ='';
-              if(this.mirrorQuery.templatename.substr(0,1) == 'w'){
+            if (this.mirrorQuery) {
+              var system = '';
+              if (this.mirrorQuery.templatename.substr(0, 1) == 'w') {
                 system = 'windows';
                 this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
-              }else if(this.mirrorQuery.templatename.substr(0,1) == 'c') {
-                 system = 'centos';
+              } else if (this.mirrorQuery.templatename.substr(0, 1) == 'c') {
+                system = 'centos';
                 this.publicList.push({system, systemList: [this.mirrorQuery], selectSystem: ''});
               }
-            }else{
+            } else {
               for (let system in response.data.result) {
                 this.publicList.push({system, systemList: response.data.result[system], selectSystem: ''})
               }
@@ -662,20 +663,20 @@
             params: {
               // 1代表自定义镜像
               user: '1',
-              gpu:'1',
+              gpu: '1',
               zoneId: this.zone.zoneid
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               var cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
-              if(this.mirrorQuery){
-                if(this.mirrorQuery){
-                    this.customList.push(this.mirrorQuery);
-                    this.customMirror = this.mirrorQuery;
-                  }
-              }else{
-                for(let i = 0; i<cusList.length;i++){
-                  if(cusList[i].status != -1){
+              if (this.mirrorQuery) {
+                if (this.mirrorQuery) {
+                  this.customList.push(this.mirrorQuery);
+                  this.customMirror = this.mirrorQuery;
+                }
+              } else {
+                for (let i = 0; i < cusList.length; i++) {
+                  if (cusList[i].status != -1) {
                     this.customList.push(cusList[i]);
                     // this.customMirror = {};
                   }
@@ -686,19 +687,19 @@
         }
       },
 
-      select(){
-        axios.get('Snapshot/getTemplateByTemplateId.do',{
-          params:{
-            templateId:sessionStorage.getItem('templateId')
+      select() {
+        axios.get('Snapshot/getTemplateByTemplateId.do', {
+          params: {
+            templateId: sessionStorage.getItem('templateId')
           }
         }).then(res => {
-          if(res.status == 200 && res.data.status == 1){
+          if (res.status == 200 && res.data.status == 1) {
             // this.mirrorQuery = res.data.result[0];
           }
         })
       },
 
-      setGpuServer(){
+      setGpuServer() {
         axios.get('gpuserver/listGpuServerOffer.do', {
           params: {
             zoneId: this.zone.zoneid
@@ -716,10 +717,10 @@
       // 重新选择系统镜像
       setOS(name) {
         var arg = [];
-        if(this.mirrorQuery){
+        if (this.mirrorQuery) {
           arg.push(this.mirrorQuery.templatename);
           arg.push(this.mirrorQuery.systemtemplateid);
-        }else{
+        } else {
           arg = name.split('#');
         }
 
@@ -737,24 +738,24 @@
         } else {
           this.systemUsername = 'root'
         }
-      if(this.mirrorQuery){
-        for(let i = 0;i<this.publicList.length;i++){
-          if(this.publicList[i].systemList[i].ostypeid == this.mirrorQuery.ostypeid){
-            this.publicList[i].selectSystem = arg[0];
-            break;
+        if (this.mirrorQuery) {
+          for (let i = 0; i < this.publicList.length; i++) {
+            if (this.publicList[i].systemList[i].ostypeid == this.mirrorQuery.ostypeid) {
+              this.publicList[i].selectSystem = arg[0];
+              break;
+            }
           }
+        } else {
+          this.publicList[arg[2]].selectSystem = arg[0]
         }
-      }else{
-        this.publicList[arg[2]].selectSystem = arg[0]
-      }
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
-      if(this.$route.mirror){
-        this.customMirror = this.mirrorQuery;
-      }else{
-        this.customMirror = item;
-      }
+        if (this.$route.mirror) {
+          this.customMirror = this.mirrorQuery;
+        } else {
+          this.customMirror = item;
+        }
         var str = item.ostypename.substr(0, 1)
         if (str === 'W' || str === 'w') {
           this.systemUsername = 'administrator'
@@ -943,6 +944,9 @@
           params.timeType = this.timeForm.currentTimeType
           params.timeValue = '1'
         }
+        if(!this.IPConfig.publicIP){
+          params.brand = 0
+        }
         axios.post('device/queryIpPrice.do', params).then(response => {
           this.ipCost = response.data.cost
           if (response.data.coupon) {
@@ -953,7 +957,7 @@
         })
       }),
       // 数据库加入购物车
-      addDataCart(){
+      addDataCart() {
         if (this.$parent.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
@@ -1063,32 +1067,32 @@
       },
 
       //选择镜像类型
-      selectMirror(item){
-        if(this.$route.query.mirrorType == 'custom'){
-          this.currentType ='custom'
-        }else if(this.$route.query.mirrorType == 'public'){
+      selectMirror(item) {
+        if (this.$route.query.mirrorType == 'custom') {
+          this.currentType = 'custom'
+        } else if (this.$route.query.mirrorType == 'public') {
           this.currentType = 'public'
-        }else{
-          this.currentType=item.value;
+        } else {
+          this.currentType = item.value;
         }
       }
     },
     computed: {
-      userInfo(){
+      userInfo() {
         return this.$store.state.userInfo
       },
       // 剩余添加磁盘数量
-      remainDisk(){
+      remainDisk() {
         return 5 - this.dataDiskList.length
       },
-      totalDataCost(){
+      totalDataCost() {
         if (this.IPConfig.publicIP) {
           return this.vmCost + this.ipCost + this.dataDiskCost
         } else {
           return this.vmCost + this.dataDiskCost
         }
       },
-      totalDataCoupon(){
+      totalDataCoupon() {
         if (this.IPConfig.publicIP) {
           return this.vmCoupon + this.ipCoupon + this.coupon
         } else {
@@ -1098,7 +1102,7 @@
     },
     watch: {
       'zone': {
-        handler(){
+        handler() {
           this.setTemplate()
           this.setGpuServer()
           this.queryVpc()
@@ -1106,7 +1110,7 @@
         deep: true
       },
       'timeForm': {
-        handler(){
+        handler() {
           // 查询自定义配置价格
           this.queryCustomVM()
           this.queryDiskPrice()
@@ -1115,14 +1119,14 @@
         deep: true
       },
       'gpuSelection': {
-        handler(){
+        handler() {
           //this.queryGpu()
           this.queryCustomVM()
         },
         deep: true
       },
       'dataDiskList': {
-        handler(){
+        handler() {
           this.queryDiskPrice()
         },
         deep: true
@@ -1131,10 +1135,13 @@
         this.changeNetwork()
       },
       'IPConfig': {
-        handler(){
+        handler() {
           this.queryIPPrice()
         },
         deep: true
+      },
+      'IPConfig.publicIP'() {
+        this.queryIPPrice()
       }
     }
   }

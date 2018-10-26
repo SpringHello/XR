@@ -1,4 +1,4 @@
-  <template>
+<template>
   <div id="bhost">
     <!--公网IP div-->
     <div id="Peip" style="padding: 30px 40px 40px 40px;">
@@ -100,10 +100,10 @@
         </p>
         <div style="text-align: right;margin-top: 20px;">
           <Button size="large"
-                  class="btn" @click="addObjCart">
+                  class="btn" @click="addObjCart" :disabled="cost == 0">
             加入预算清单
           </Button>
-          <Button @click="buyObj" type="primary"
+          <Button @click="buyObj" type="primary" :disabled="cost == 0"
                   style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377dff;">
             立即购买
           </Button>
@@ -116,9 +116,10 @@
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
   import regExp from '@/util/regExp'
+
   var debounce = require('throttle-debounce/debounce')
-  export default{
-    beforeRouteEnter(to, from, next){
+  export default {
+    beforeRouteEnter(to, from, next) {
       axios.get('ruiradosPrice/zoneList.do').then(response => {
         next(vm => {
           vm.zoneList = response.data.data.zoneList
@@ -126,7 +127,7 @@
         })
       })
     },
-    data(){
+    data() {
       return {
         zoneList: [],
         zone: {},
@@ -169,7 +170,7 @@
         coupon: 0
       }
     },
-    created(){
+    created() {
       this.queryObjPrice()
     },
     methods: {
@@ -205,6 +206,14 @@
           timeValue: this.timeForm.currentTimeValue.value,
           zoneId: this.zone.zoneid
         }
+        if (this.group.length == 1 && this.group[0] == '存储包' ) {
+          params.flowPackage = ''
+        } else if(this.group.length == 1 && this.group[0] == '下行流量包'){
+          params.capacity = ''
+        } else if(this.group.length == 0){
+          params.capacity = ''
+          params.flowPackage = ''
+        }
         axios.post('ruiradosPrice/createOrder.do', params).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('/ruicloud/order')
@@ -222,6 +231,14 @@
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value
         }
+        if (this.group.length == 1 && this.group[0] == '存储包' ) {
+          params.flowPackage = ''
+        } else if(this.group.length == 1 && this.group[0] == '下行流量包'){
+          params.capacity = ''
+        } else if(this.group.length == 0){
+          params.capacity = ''
+          params.flowPackage = ''
+        }
         axios.post('ruiradosPrice/countPirce.do', params).then(response => {
           if (response.status == 200) {
             this.cost = response.data.data.price
@@ -231,34 +248,37 @@
       }),
     },
     computed: {
-      userInfo(){
+      userInfo() {
         return this.$store.state.userInfo
       },
     },
     watch: {
       'zone': {
-        handler(){
+        handler() {
           this.queryObjPrice()
         },
         deep: true
       },
-      save(){
+      save() {
         this.queryObjPrice()
       },
-      downLoad(){
+      downLoad() {
         this.queryObjPrice()
       },
       'timeForm': {
-        handler(){
+        handler() {
           this.queryObjPrice()
         },
         deep: true
       },
       'bandWidth': {
-        handler(){
+        handler() {
           this.queryIPPrice()
         },
         deep: true
+      },
+      group() {
+        this.queryObjPrice()
       }
     }
   }

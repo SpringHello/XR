@@ -109,21 +109,13 @@
     <!-- 挂载硬盘模态框 -->
     <Modal v-model="showModal.mountDisk" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title" v-if="$store.state.zone.gpuserver !=1">挂载云主机</span>
-        <span class="universal-modal-title" v-else>挂载GPU云服务器</span>
+        <span class="universal-modal-title">挂载云主机</span>
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="diskMountForm" :rules="mountRuleValidate" ref="mountDisk">
-          <Form-item label="可挂载主机列表" prop="mountHost" v-if="$store.state.zone.gpuserver !=1">
+          <Form-item label="可挂载主机列表" prop="mountHost">
             <Select v-model="diskMountForm.mountHost" placeholder="请选择">
               <Option v-for="item in mountHostList" :key="item.computerid" :value="item.computerid">{{ item.computername
-                }}
-              </Option>
-            </Select>
-          </Form-item>
-          <Form-item label="可挂载GPU云服务器列表" prop="mountHost" v-else>
-            <Select v-model="diskMountForm.mountHost" placeholder="请选择">
-              <Option v-for="item in diskGpuList" :key="item.computerid" :value="item.computerid">{{ item.computername
                 }}
               </Option>
             </Select>
