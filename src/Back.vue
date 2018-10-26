@@ -243,7 +243,7 @@
             }, {
               subName: '镜像',
               type: 'mirror'
-            }, /*{subName: '弹性伸缩', type: 'Elastic'}, *//*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
+            }, {subName: '弹性伸缩', type: 'Elastic'}, /*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           {
             mainName: '云数据库',
@@ -284,10 +284,10 @@
             type: 'security',
             subItem: [
               {subName: '防火墙', type: 'firewall'},
-              // {subName: '云监控', type: 'CloudMonitor'}
+              {subName: '云监控', type: 'CloudMonitor'}
             ]
           },
-          /*{
+          {
             mainName: '域名服务',
             type: 'domain',
             subItem: [
@@ -296,7 +296,7 @@
               {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
               {subName: '邮箱验证', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'}
             ]
-          },*/
+          },
           {
             mainName: '回收站',
             type: 'recycle',

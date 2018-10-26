@@ -446,7 +446,7 @@
               {
                 prod: '云运维',
                 prodItem: [
-                  {title: '云监控（敬请期待）', desc: '自定义监控项、多告警推送方式', path: ''},
+                  {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor.htm'},
                   {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: ''}
                 ]
               }
@@ -518,7 +518,7 @@
           {
             title: '云维护',
             desc: [
-              {subTitle: '云监控（敬请期待）', url: ''},
+              {subTitle: '云监控', url: '/ruicloud/Pmonitor.htm'},
               {subTitle: '访问监控（敬请期待）', url: ''}
             ]
           }
