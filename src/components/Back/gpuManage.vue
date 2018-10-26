@@ -1066,7 +1066,6 @@
         params: {
           vmname: this.gpuDetail.instancename,
           type: 'core',
-          zoneId:this.$store.state.zone.zoneid
         }
       }).then(response => {
           if (response.status == 200 && response.data.status == 1) {

@@ -335,6 +335,7 @@
       togo(url, pane){
         if(url == 'objectStorage'){
           window.open('https://testoss-console.xrcloud.net/ruirados/objectStorage');
+          // window.open('https://oss-console.xrcloud.net/ruirados/objectStorage');
         }else{
           this.$router.push(url)
         }
