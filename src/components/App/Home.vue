@@ -2612,9 +2612,9 @@
                 img: '#icon-yunjiankong2',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pmonitor',
+                detailLink: '',
                 useLink: '',
-                ME: true
+                ME: false
               },
               {
                 title: '访问控制',
