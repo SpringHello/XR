@@ -67,7 +67,7 @@
           <Tabs type="card" :animated="false">
             <Tab-pane label="监控">
               <div class="body">
-                <Button type="primary" @click="setMonitoring">监控告警设置</Button>
+                <!--<Button type="primary" @click="setMonitoring">监控告警设置</Button>-->
                 <div class="flex">
                   <div class="item">
                     <label>CPU利用率 <span class="timeText">{{ CPUTime}}</span></label>

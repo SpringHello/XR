@@ -522,7 +522,7 @@ export default {
     },
     //添加自定义权限
     jurisdictionClick(){
-      this.$http.post('http://192.168.3.109:8083/ruirados/bucketAcl/createCustomAcl.do',{
+      this.$http.post('bucketAcl/createCustomAcl.do',{
         bucketName:name,
         bucketId:bucketId,
         objectNames:this.influenceValue,
@@ -541,7 +541,7 @@ export default {
     },
     //获取权限列表
     selectAclAll(){
-      this.$http.post('http://192.168.3.109:8083/ruirados/bucketAcl/selectAclAll.do',{
+      this.$http.post('bucketAcl/selectAclAll.do',{
           bucketName:name,
           bucketId:bucketId
       }).then(res =>{

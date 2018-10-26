@@ -63,7 +63,7 @@
             <TabPane style="background: #FFFFFF;" label="监控">
               <!--CPU利用率-->
               <div class="tab_box">
-                <Button type="primary" @click="setMonitoring">监控警告设置</Button>
+                <!--<Button type="primary" @click="setMonitoring">监控警告设置</Button>-->
                 <div class="title-Png">
                   <span>CPU利用率</span>
                   <span style="float: right">{{CPUTime}}</span>
@@ -632,6 +632,7 @@
         isletter: false,
         isemailalarm: false,
         issmsalarm: false,
+        countdown:60
       }
     },
     methods:{
@@ -774,7 +775,7 @@
             this.lookPasswordForm.isSmsAlarmSec = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
             this.lookPasswordForm.isEmailAlarmSec = this.lookPasswordForm.isemailalarmSec == false ? 0 : 1
             this.$http.post('log/sendVMPassword.do', {
-              VMId: sessionStorage.getItem('gpuId'),
+              VMId: sessionStorage.getItem('uuId'),
               password: this.lookPasswordForm.input,
               letter: this.lookPasswordForm.isLetterSec,
               meail: this.lookPasswordForm.isEmailAlarmSec,
@@ -786,6 +787,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
+                this.countdown=1;
               }
               this.lookPasswordForm.input = ''
             })
@@ -842,6 +844,7 @@
             pageSize: 10,
             currentPage: this.currentPage,
             target: 'gpu',
+            targetId:sessionStorage.getItem('gpuId'),
             queryTime: this.logTime,
           }
         }).then(res => {
@@ -907,7 +910,7 @@
       getUtilization(){
         axios.get('alarm/getVmAlarmByHour.do',{
           params:{
-            vmname:this.gpuDetail.instancename,
+            vmname:sessionStorage.getItem('instancename'),
             type: 'core'
           }
         }).then(res => {
@@ -958,7 +961,7 @@
        }
        axios.get(url,{
          params:{
-           vmname:this.gpuDetail.instancename,
+           vmname:sessionStorage.getItem('instancename'),
            type:'core',
            datetype:dateType,
            zoneId:this.$store.state.zone.zoneid
@@ -991,7 +994,7 @@
         this.showWindow.warningSetting = true;
         this.$http.get('information/alarmConfig.do', {
           params: {
-            instancename: this.gpuDetail.instancename
+            instancename: sessionStorage.getItem('instancename')
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1014,7 +1017,7 @@
        setMonitoringOk() {
         this.$http.get('information/upalarmConfig.do', {
           params: {
-            instancename: this.gpuDetail.instancename,
+            instancename: sessionStorage.getItem('instancename'),
             cpuUse: this.setCPU,
             memoryUse: this.setRAM,
             diskUse: this.setDisk,
@@ -1046,6 +1049,7 @@
         this.$router.push('link');
       },
     },
+
     created(){
       axios.get('information/zone.do',{
         params:{
@@ -1056,19 +1060,18 @@
         // $store.commit('setZone');
       })
       this.getGpuHostDetail();
-      // this.selectSnapshotList();
-      this.getUtilization();
-      this.logTime = this.getCurrentDate() + ',' + this.getTomorrow();
-      this.CPUTime = this.getCurrentDate();
-      this.momeryTime = this.getCurrentDate();
-      this.selectOperationLog();
-      this.$http.get('alarm/getVmAlarmByHour.do', {
-        params: {
-          vmname: this.gpuDetail.instancename,
-          type: 'core',
-          zoneId:this.$store.state.zone.zoneid
-        }
-      }).then(response => {
+
+        this.getUtilization();
+        this.logTime = this.getCurrentDate() + ',' + this.getTomorrow();
+        this.CPUTime = this.getCurrentDate();
+        this.momeryTime = this.getCurrentDate();
+        this.selectOperationLog();
+        this.$http.get('alarm/getVmAlarmByHour.do', {
+          params: {
+            vmname: sessionStorage.getItem('instancename'),
+            type: 'core',
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.cpu.series[0].data = response.data.result.cpuUse;
             this.momery.series[0].data = response.data.result.memoryUse;
@@ -1076,6 +1079,8 @@
             this.momery.xAxis.data = response.data.result.xaxis;
           }
         })
+      // this.selectSnapshotList();
+
     },
 
   }
