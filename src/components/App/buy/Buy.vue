@@ -269,7 +269,7 @@
           productList: [{label: '云主机', value: 'bhost'}, {label: '云硬盘', value: 'bdisk'}, {
             label: '公网IP',
             value: 'bip'
-          }/*, {label: '数据库', value: 'bdata'}*/, {label: '对象存储', value: 'bobj'}, {label: 'GPU服务器', value: 'bgpu'}]
+          }, {label: '数据库', value: 'bdata'}, {label: '对象存储', value: 'bobj'}, {label: 'GPU服务器', value: 'bgpu'}]
         },
         // 当前可以创建的剩余资源数
         remainCount: {},
