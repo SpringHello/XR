@@ -7,7 +7,7 @@
           <div></div>
         </router-link>
         <div class="operate">
-          <ul @mouseleave="ME(-1)">
+          <ul>
             <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
@@ -432,6 +432,21 @@
                   {
                     title: '云数据库',
                     desc: 'MySQL、PostgreSQL、mongoDB、Redis',
+                    path: '/ruicloud/PdataBase.htm'
+                  },
+                ]
+              },
+              {
+                prod: '域名与备案',
+                prodItem: [
+                  {
+                    title: '域名注册',
+                    desc: '自定义域名注册、查询',
+                    path: '/ruicloud/PdataBase.htm'
+                  },
+                  {
+                    title: '域名备案',
+                    desc: '高效贴心的域名备案服务',
                     path: '/ruicloud/PdataBase.htm'
                   },
                 ]
