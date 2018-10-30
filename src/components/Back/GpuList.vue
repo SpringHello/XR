@@ -1131,9 +1131,9 @@
         },
       },
       created(){
-        // this.intervalInstance = setInterval(() => {
-        //   this.getGpuServerList()
-        // }, 5 * 1000)
+        this.intervalInstance = setInterval(() => {
+          this.getGpuServerList()
+        }, 5 * 1000)
       },
       mounted(){
           this.getGpuServerList();
