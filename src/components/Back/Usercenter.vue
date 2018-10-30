@@ -23,7 +23,7 @@
                 </div>
                 <div class="pi-base-info">
                   <ul>
-                    <li><span>用户名称</span><span style="display: inline">{{ userInfo.realname}}</span>
+                    <li><span>用户名称</span><span style="display: inline">{{ authInfo.name? authInfo.name:userInfo.realname}}</span>
                       <span v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
@@ -1706,41 +1706,45 @@
             align: 'left',
             width: 180,
             render: (h, params) => {
-              return h('div', [
-                h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: ' #2A99F2',
-                    },
-                    on: {
-                      click: () => {
-                        this.updateContacts(params.row)
-                      }
-                    }
-                  },
-                  '修改'
-                ),
-                h('Poptip', {
-                    props: {
-                      title: '您确认删除该联系人吗？',
-                      width: 208,
-                      confirm: true
-                    },
-                    on: {
-                      'on-ok': () => {
-                        this.delContacts(params.row.id)
+              if(params.row.systemadd == 0) {
+                return h('div', [
+                  h('span', {
+                      style: {
+                        cursor: 'pointer',
+                        color: ' #2A99F2',
+                      },
+                      on: {
+                        click: () => {
+                          this.updateContacts(params.row)
+                        }
                       }
                     },
-                  },
-                  [h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: '#2A99F2',
-                      marginLeft: '20px',
-                    }
-                  }, '删除')]
-                )
-              ]);
+                    '修改'
+                  ),
+                  h('Poptip', {
+                      props: {
+                        title: '您确认删除该联系人吗？',
+                        width: 208,
+                        confirm: true
+                      },
+                      on: {
+                        'on-ok': () => {
+                          this.delContacts(params.row.id)
+                        }
+                      },
+                    },
+                    [h('span', {
+                      style: {
+                        cursor: 'pointer',
+                        color: '#2A99F2',
+                        marginLeft: '20px',
+                      }
+                    }, '删除')]
+                  )
+                ]);
+              } else{
+                return h('span',{}, '----')
+              }
             }
           }
         ],

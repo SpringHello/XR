@@ -671,7 +671,7 @@
                               // if(params.row.computerstate == '0' && params.row.status=='1'){
                               //   this.$Message.info('主机续费需要关闭主机')
                               // }
-                              if(params.row.caseType == 3){
+                              if(params.row.caseType != 3){
                                 this.$Message.info('请选择实时计费的云主机进行资费变更');
                                 return
                               }
@@ -910,7 +910,7 @@
            }
          })
         },
-        
+
 
       //重启主机
         reStartGPU(){
