@@ -7,7 +7,7 @@
           <div></div>
         </router-link>
         <div class="operate">
-          <ul @mouseleave="ME(-1)">
+          <ul>
             <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
@@ -437,6 +437,21 @@
                 ]
               },
               {
+                prod: '域名与备案',
+                prodItem: [
+                  {
+                    title: '域名注册',
+                    desc: '自定义域名注册、查询',
+                    path: '/ruicloud/PdataBase.htm'
+                  },
+                  {
+                    title: '域名备案',
+                    desc: '高效贴心的域名备案服务',
+                    path: '/ruicloud/PdataBase.htm'
+                  },
+                ]
+              },
+              {
                 prod: '云安全',
                 prodItem: [
                   {title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall.htm'},
@@ -446,7 +461,7 @@
               {
                 prod: '云运维',
                 prodItem: [
-                  {title: '云监控（敬请期待）', desc: '自定义监控项、多告警推送方式', path: ''},
+                  {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor.htm'},
                   {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: ''}
                 ]
               }
@@ -518,7 +533,7 @@
           {
             title: '云维护',
             desc: [
-              {subTitle: '云监控（敬请期待）', url: ''},
+              {subTitle: '云监控', url: '/ruicloud/Pmonitor.htm'},
               {subTitle: '访问监控（敬请期待）', url: ''}
             ]
           }

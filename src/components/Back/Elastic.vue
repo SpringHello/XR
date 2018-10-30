@@ -15,7 +15,7 @@
         <div class="text-box">
           <p>一种高效的的计算资源管理策略，您可以设定时间周期或者告警策略，让计算资源按照您预期方式进行增加或减少。既能在早高峰时段保证性能，也能在闲时降低成本。</p>
         </div>
-        <Tabs type="card" :animated="false">
+        <Tabs type="card" :animated="false" style="margin-top:20px;">
           <TabPane label="启动配置">
             <div>
               <Button type="primary" @click="$router.push({path:'newAddElastic'})" style="margin-bottom: 15px;">新建</Button>
@@ -152,9 +152,11 @@
         Groups:h=>{
           return h('div',{on:{
             click:()=>{
-              this.selectAllTelescopic();
-              this.getAllSelect();
               this.isNotCreateElastic();
+              this.selectAllTelescopic();
+              if(this.settingData.length != 0){
+                this.getAllSelect();
+              }
             }
             }},'伸缩组')
        },
@@ -456,7 +458,7 @@
 
       //是否创建了启动配置
       isNotCreateElastic(){
-        if(this.newAddTelescopicList.configureList.length == 0 || this.newAddTelescopicList.configureList == undefined){
+        if(this.settingData.length == 0 || this.settingData == undefined){
           this.$Modal.info({
             title:'提示',
             content:'<p>您还没有创建启动配置，请先<a style="color: #2A99F2;" href="newAddElastic">创建启动配置</a></p>',
