@@ -1371,6 +1371,27 @@
             if (this.status != '关机') {
               return
             }
+            // console.log('aimee')
+            // console.log(this.currentHost)
+            // console.log(this.currentHost[0])
+            // this.$http.get('network/VMIsHaveSnapshot.do', {params: {
+            //   vmId: 111,
+            //   }
+            // }).then(response => {
+            //   if (response.status == 200 && response.data.status == 1) {
+                // this.currentHost[0].computername = response.data.message
+                // this.$Message.success('主机名修改成功')
+            //   }
+            // })
+            // this.$Modal.confirm({
+            //   title: '提示',
+            //   content: '您的主机有快照，无法升级，请删除快照再试',
+            //   scrollable: true,
+            //   okText: '删除快照',
+            //   onOk: () => {
+            //     this.$router.push('snapshot')
+            //   }
+            // })
             if (this.checkSelect()) {
               localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
               localStorage.setItem('disksize', this.currentHost[0].disksize)

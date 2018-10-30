@@ -28,8 +28,8 @@
               <i v-if="computerInfo.zoneName"> | {{computerInfo.zoneName}}</i>
             </div>
             <div>镜像系统：{{computerInfo.template}}</div>
-            <div>到期时间／有效期：{{computerInfo.endTime}}</div>
             <div>内网地址：{{computerInfo.privateIp}}</div>
+            <div>系统盘容量：{{computerInfo.rootDiskSize}}G <span class="bluetext">系统盘扩容</span></div>
             <div>登录密码：
               <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword()">{{codePlaceholder}}</span>
             </div>
@@ -61,6 +61,7 @@
             <div>计费类型：{{computerInfo.case_type == 1 ? '包年' : computerInfo.case_type == 2 ? '包月' : '实时'}}</div>
             <div>创建于：{{computerInfo.createTime}}</div>
             <div>自动续费：<span class="bluetext">{{computerInfo.isAutoRenw ? '开' : '关'}}</span></div>
+            <div>有效期：{{computerInfo.endTime}}</div>
           </div>
         </div>
         <div class="charts">
