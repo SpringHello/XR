@@ -564,7 +564,7 @@
   }
 </script>
 
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
 
   #back {
     height: 100%;

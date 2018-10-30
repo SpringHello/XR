@@ -1,5 +1,15 @@
 <template>
   <div id="front">
+    <transition name="slide-fade">
+      <div class="hint" v-show="hintShow">
+        <div class="center">
+          <div class="countdown">
+            <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
+          </div>
+        </div>
+        <img @click="hintShow = false" src="./assets/img/app/hint-icon1.png"/>
+      </div>
+    </transition>
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -297,9 +307,10 @@
   import debounce from 'throttle-debounce/debounce'
   import '@/assets/iconfont/frontend/iconfont.css'
   import '@/assets/iconfont/frontend/iconfont.js'
+
   export default {
     name: 'app',
-    data () {
+    data() {
       return {
         /*titleItem: [
           {
@@ -537,7 +548,7 @@
         ],
         // 友情链接
         links: [
-          { href: 'https://www.xrcloud.net/ruicloud/', text: '新睿云' }
+          {href: 'https://www.xrcloud.net/ruicloud/', text: '新睿云'}
         ],
         Preparation: [
           {
@@ -551,20 +562,27 @@
         kfURL: '',  // 客服url地址
         QQInfo: [],  // QQ客服在线情况
         xiaoshouInfo: [],  // QQ销售在线情况
-        yunweiInfo: []  // QQ运维在线情况
+        yunweiInfo: [],  // QQ运维在线情况,
+        /* 倒计时参数 */
+        day: '--',
+        hour: '--',
+        minute: '--',
+        second: '--',
+        hintShow: false,
+        timer: null
       }
     },
 
-    beforeRouteEnter(to, from, next){
+    beforeRouteEnter(to, from, next) {
       if (to.query.from) {
         // 流量来源记录
         localStorage.setItem('comefrom', to.query.from)
       }
       // 获取所有后台需要的基本信息
       // 获取用户信息
-      var userInfo = axios.get('user/GetUserInfo.do',{params: {t: new Date().getTime()}})
+      var userInfo = axios.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}})
       // 获取zone信息
-      var zoneList = axios.get('information/zone.do',{params: {t: new Date().getTime()}})
+      var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime()}})
       Promise.all([userInfo, zoneList]).then(values => {
           if (values[0].data.status == 1 && values[0].status == 200) {
             $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
@@ -579,8 +597,11 @@
           next()
         })
     },
-
-    created () {
+    mounted() {
+      this.hintShow = true
+      this.setTime()
+    },
+    created() {
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
@@ -623,24 +644,65 @@
           this.currentItem = index
         }
       }),
-      QME(){
+      QME() {
         this.$refs.qq.style.width = '231px'
       },
-      QML(){
+      QML() {
         this.$refs.qq.style.width = '0px'
       },
-      go(path){
+      go(path) {
         if (path == 'exit') {
           this.exit()
           return
         }
         this.$router.push(path)
       },
-      exit(){
+      exit() {
         localStorage.removeItem("realname")
         axios.get('user/logout.do').then(response => {
           window.location.reload()
         })
+      },
+      /* 倒计时方法 */
+      setTime() {
+        axios.get('network/getTime.do').then(res => {
+          if (res.data.status == 1) {
+            let startTime = res.data.result
+            let endTime = new Date('2018/11/17').getTime()
+            let limitTime = endTime - startTime
+            if (limitTime > 0) {
+              this.setLimit(limitTime)
+              this.timer = setInterval(() => {
+                this.setLimit(limitTime)
+                limitTime -= 1000
+                if (limitTime <= 0) {
+                  window.clearInterval(timer)
+                }
+              }, 1000);
+            } else {
+              this.day = this.checkTime(0);
+              this.hour = this.checkTime(0);
+              this.minute = this.checkTime(0);
+              this.second = this.checkTime(0);
+            }
+          }
+        })
+      },
+      setLimit(time) {
+        let days = parseInt(time / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
+        let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+        let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
+        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒数
+        this.day = this.checkTime(days);
+        this.hour = this.checkTime(hours);
+        this.minute = this.checkTime(minutes);
+        this.second = this.checkTime(seconds);
+      },
+      checkTime(i) { //将0-9的数字前面加上0，例1变为01
+        if (i < 10) {
+          i = '0' + i;
+        }
+        return i;
       }
     },
     computed: mapState({
@@ -648,7 +710,7 @@
     }),
     watch: {
       /* 观察currentItem变化 设置content高度 */
-      currentItem () {
+      currentItem() {
         var content = this.$refs.content
         for (var i in content) {
           if (i == this.currentItem) {
@@ -658,12 +720,48 @@
           }
         }
       }
+    },
+    beforeRouteLeave(to, from, next) {
+      clearInterval(this.timer)
+      next()
     }
   }
 </script>
 
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   #front {
+    .hint {
+      height: 80px;
+      background: url("./assets/img/app/hint-banner.png") center no-repeat, linear-gradient(to right, #FF4439, #FF1569);
+      position: relative;
+      > img {
+        position: absolute;
+        right: 15px;
+        top: 10px;
+        cursor: pointer;
+      }
+      .center {
+        position: relative;
+        width: 1200px;
+        height: 100%;
+        margin: 0 auto;
+        .countdown {
+          position: absolute;
+          left: 78%;
+          top: 38%;
+          > p {
+            font-size: 20px;
+            font-family: MicrosoftYaHei;
+            font-weight: 500;
+            color: rgba(253, 253, 253, 1);
+            > span {
+              font-size: 12px;
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
     header {
       width: 100%;
       height: 70px;
@@ -939,9 +1037,9 @@
             .links-tit {
               float: left;
               margin-right: 30px;
-              font-size:14px;
+              font-size: 14px;
               color: #FFF;
-              line-height:16px;
+              line-height: 16px;
             }
             .links-info {
               width: auto;
@@ -949,9 +1047,9 @@
               a {
                 margin-right: 20px;
                 display: inline-block;
-                font-size:12px;
+                font-size: 12px;
                 color: #fff;
-                line-height:14px;
+                line-height: 14px;
                 &:hover {
                   color: #377dff
                 }
@@ -1117,6 +1215,15 @@
         color: #fff;
       }
     }
+  }
+
+  .slide-fade-enter-active, .slide-fade-leave-active {
+    transition: all .3s ease;
+  }
+
+  .slide-fade-enter, .slide-fade-leave-to {
+    transform: translateY(-10px);
+    opacity: 0;
   }
 
   .circle-dot-a {

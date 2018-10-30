@@ -1706,41 +1706,45 @@
             align: 'left',
             width: 180,
             render: (h, params) => {
-              return h('div', [
-                h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: ' #2A99F2',
-                    },
-                    on: {
-                      click: () => {
-                        this.updateContacts(params.row)
-                      }
-                    }
-                  },
-                  '修改'
-                ),
-                h('Poptip', {
-                    props: {
-                      title: '您确认删除该联系人吗？',
-                      width: 208,
-                      confirm: true
-                    },
-                    on: {
-                      'on-ok': () => {
-                        this.delContacts(params.row.id)
+              if(params.row.systemadd == 0) {
+                return h('div', [
+                  h('span', {
+                      style: {
+                        cursor: 'pointer',
+                        color: ' #2A99F2',
+                      },
+                      on: {
+                        click: () => {
+                          this.updateContacts(params.row)
+                        }
                       }
                     },
-                  },
-                  [h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: '#2A99F2',
-                      marginLeft: '20px',
-                    }
-                  }, '删除')]
-                )
-              ]);
+                    '修改'
+                  ),
+                  h('Poptip', {
+                      props: {
+                        title: '您确认删除该联系人吗？',
+                        width: 208,
+                        confirm: true
+                      },
+                      on: {
+                        'on-ok': () => {
+                          this.delContacts(params.row.id)
+                        }
+                      },
+                    },
+                    [h('span', {
+                      style: {
+                        cursor: 'pointer',
+                        color: '#2A99F2',
+                        marginLeft: '20px',
+                      }
+                    }, '删除')]
+                  )
+                ]);
+              } else{
+                return h('span',{}, '----')
+              }
             }
           }
         ],
