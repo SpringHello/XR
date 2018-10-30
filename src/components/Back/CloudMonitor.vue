@@ -1251,7 +1251,7 @@
             {value: res[1].data.result.shortMessageBuy + res[1].data.result.shortMessageFree, name: '剩余配额'},
             {value: res[1].data.result.shortMessageOwnControlUse, name: '自定义监控告警已发送'},
             {value: res[1].data.result.shortMessageBaseUse, name: '基础告警已发送'},
-            {value: res[1].data.result.shortMessageAccountUse, name: '财务与信息系统已发送'}
+            {value: res[1].data.result.shortMessageAccountUse, name: '财务与系统信息已发送'}
           ]
           mockMessageData.forEach(item => {
             item.name += '(' + item.value + ')条'
@@ -2662,7 +2662,7 @@
             if (item.value == '') {
               this.$Message.info('请输入端口号')
             }
-          } 
+          }
           return item.value == ''
         })
         if (host) {

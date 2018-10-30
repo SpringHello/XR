@@ -60,13 +60,13 @@ const DBActive = () =>import('@/components/App/active/DatabaseActive')
 const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 
 //域名页面路由
-/*const Domainname = () =>import('@/components/App/Domain/Domainname')
+const Domainname = () =>import('@/components/App/Domain/Domainname')
 const DomainResult = () =>import('@/components/App/Domain/DomainResult')
 
 //const DomainTemplate = () =>import('@/components/App/Domain/DomainTemplate')
 
 const DomainInfoTemplate = () =>import('@/components/App/Domain/DomainInfoTemplate')
-const CheckReg = () =>import('@/components/App/Domain/CheckReg')*/
+const CheckReg = () =>import('@/components/App/Domain/CheckReg')
 
 
 
@@ -163,12 +163,6 @@ const WorkOrder = () =>import('@/components/Back/WorkOrder')
 const gpuManage = () =>import('@/components/Back/gpuManage')
 const gpuUpLevel = () =>import('@/components/Back/gpuUpLevel')
 
-// 域名系统 ==============================
-const dManage = () =>import('@/components/Back/dManage')
-const dTemplate = () =>import('@/components/Back/dTemplate')
-const dTransfer = () =>import('@/components/Back/dTransfer')
-const dResolve = () =>import('@/components/Back/dResolve')
-const dEmail = () =>import('@/components/Back/dEmail')
 // 域名系统 ==============================
 
 const Link = () =>import('@/components/Link')
@@ -327,13 +321,13 @@ var router = new Router({
         {path: 'SceneInfo/:type', name: 'SceneInfo', component: SceneInfo},
         {path: 'SceneList', name: 'SceneList', component: SceneList},
 
-/*        {path: 'Domainname', name: 'Domainname', component: Domainname},
+        {path: 'Domainname', name: 'Domainname', component: Domainname},
         {path: 'DomainResult', name: 'DomainResult', component: DomainResult},
 
         //{path: 'DomainTemplate', name: 'DomainTemplate', component: DomainTemplate},
 
         {path: 'DomainInfoTemplate', name: 'DomainInfoTemplate', component: DomainInfoTemplate},
-        {path: 'CheckReg', name: 'CheckReg', component: CheckReg},*/
+        {path: 'CheckReg', name: 'CheckReg', component: CheckReg},
 
 
 
@@ -434,12 +428,6 @@ var router = new Router({
         {path: 'GpuList', name: 'GpuList', component: GpuList},
         {path: 'gpuManage', name: 'gpuManage', component: gpuManage},
         {path: 'gpuUpLevel', name: 'gpuUpLevel', component: gpuUpLevel},
-        // 域名系统 =====================
-        {path: 'dManage', name: 'dManage', component: dManage},
-        {path: 'dTemplate', name: 'dTemplate', component: dTemplate},
-        {path: 'dTransfer', name: 'dTransfer', component: dTransfer},
-        {path: 'dResolve', name: 'dResolve', component: dResolve},
-        {path: 'dEmail', name: 'dEmail', component: dEmail},
         // 域名系统 =====================
         {path: 'Elastic', name: 'Elastic', component:Elastic},
         {path: 'ElasticDetails', name: 'ElasticDetails', component:ElasticDetails},

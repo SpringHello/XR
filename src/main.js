@@ -38,6 +38,8 @@ Vue.prototype.$LR = LR
 Vue.config.productionTip = false
 
 
+
+//axios.defaults.baseURL = 'https://dev.xrcloud.net/ruicloud/'
 // axios.defaults.baseURL = '/ruicloud'
 
 // axios.defaults.baseURL = 'http://zhouyi.xrcloud.net/ruicloud'
@@ -52,22 +54,22 @@ Vue.config.productionTip = false
 
 
   // axios.defaults.baseURL = 'http://192.168.3.234:8085/ruirados/'
-axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
-// axios.defaults.baseURL = 'http://zhouyi.xrcloud.net:8083/ruirados/'
-//axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
-axios.defaults.withCredentials = true
-// window.eventBus = new Vue();
-
-// axios.defaults.baseURL = 'http://zengxin.xrclouds.net/ruicloud/'
-
-
-// axios.defaults.baseURL = 'http://192.168.3.29/ruicloud/'
-
-
-// axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
-
-
-// axios.defaults.baseURL = 'http://192.168.3.187:8080/ruirados/'
+  axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
+  // axios.defaults.baseURL = 'http://zhouyi.xrcloud.net:8083/ruirados/'
+  //axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+  axios.defaults.withCredentials = true
+  // window.eventBus = new Vue();
+  
+  // axios.defaults.baseURL = 'http://zengxin.xrclouds.net/ruicloud/'
+  
+  
+  // axios.defaults.baseURL = 'http://192.168.3.29/ruicloud/'
+  
+  
+  // axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+  
+  
+  // axios.defaults.baseURL = 'http://192.168.3.187:8080/ruirados/'
 
 
 //axios挂载到Vue原型
