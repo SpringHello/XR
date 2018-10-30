@@ -728,7 +728,7 @@
   }
 </script>
 
-<style rel="stylesheet/less" lang="less" scoped>
+<style rel="stylesheet/less" lang="less">
   #front {
     .hint {
       height: 80px;
