@@ -100,10 +100,10 @@
         </p>
         <div style="text-align: right;margin-top: 20px;">
           <Button size="large"
-                  class="btn" @click="addObjCart">
+                  class="btn" @click="addObjCart" :disabled="cost == 0">
             加入预算清单
           </Button>
-          <Button @click="buyObj" type="primary"
+          <Button @click="buyObj" type="primary" :disabled="cost == 0"
                   style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377dff;">
             立即购买
           </Button>
@@ -232,12 +232,12 @@
           timeValue: this.timeForm.currentTimeValue.value
         }
         if (this.group.length == 1 && this.group[0] == '存储包' ) {
-          params.flowPackage = 0
+          params.flowPackage = ''
         } else if(this.group.length == 1 && this.group[0] == '下行流量包'){
-          params.capacity = 0
+          params.capacity = ''
         } else if(this.group.length == 0){
-          params.capacity = 0
-          params.flowPackage = 0
+          params.capacity = ''
+          params.flowPackage = ''
         }
         axios.post('ruiradosPrice/countPirce.do', params).then(response => {
           if (response.status == 200) {

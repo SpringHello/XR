@@ -2006,6 +2006,8 @@
         if(this.weekValue != ''){
           this.weekValue =  (this.weekValue.substring(this.weekValue.length - 1) == ',') ?  this.weekValue.substring(0, this.weekValue.length - 1) :  this.weekValue;
         };
+        this.$refs.timedTask.validate((valid) => {
+            if(valid){
         let obj = {taskname:'创建中',hide:1};
         this.taskData.push(obj);
         this.$http.post('elasticScaling/createTask.do',{
@@ -2036,6 +2038,8 @@
             })
             this.selectTask();
           }
+        })
+         }
         })
       },
 

@@ -37,12 +37,12 @@
           <Form-item label="硬盘名称" prop="diskName">
             <Input v-model="diskForm.diskName" placeholder="小于20位数字或字母"></Input>
           </Form-item>
-          <!--      <Form-item label="区域" prop="diskArea">
-                  <Select v-model="diskForm.diskArea" placeholder="请选择">
-                    <Option v-for="item in diskAreaList" :key="item.zoneid" :value="item.zoneid">{{ item.zonename }}
+           <Form-item label="GPU云服务器" prop="diskGpu" v-if="$store.state.zone.gpuserver == 1">
+                  <Select v-model="diskForm.diskGpu" placeholder="请选择">
+                    <Option v-for="item in diskGpuList" :key="item.serviceType" :value="item.serviceType">{{ item.instancename }}
                     </Option>
                   </Select>
-                </Form-item>-->
+           </Form-item>
           <Form-item label="类型" prop="diskType">
             <Select v-model="diskForm.diskType" placeholder="请选择">
               <Option v-for="item in diskTypeList" :key="item.value" :value="item.value"
@@ -120,11 +120,13 @@
               </Option>
             </Select>
           </Form-item>
-          <span
-            style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 42%;"
-            @click="$router.push('buy')">
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 42%;" @click="$router.push('buy')" v-if="$store.state.zone.gpuserver !=1">
               <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
               购买主机
+            </span>
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 42%;" @click="$router.push('buy/bgpu')" v-else>
+              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
+              购买GPU云服务器
             </span>
         </Form>
         <span>提示：如果您购买了主机但主机列表中无选项，是因为待绑定主机上存在快照，无法完成挂载。</span>
@@ -134,6 +136,8 @@
         <Button type="primary" @click="_checkMountForm">确认挂载</Button>
       </div>
     </Modal>
+
+
     <!-- 扩展磁盘模态框 -->
     <Modal v-model="showModal.dilatationDisk" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -585,6 +589,8 @@
         ],
         // 磁盘数据
         diskData: [],
+        //GPU
+        diskGpuList:[],
         // 控制模态框是否显示
         showModal: {
           // 新增磁盘模态框
@@ -619,6 +625,7 @@
           diskType: '',
           diskArea: '',
           timeType: '',
+          diskGpu:'',
           timeValue: '',
           diskSize: 20,
           // 购买磁盘数量
@@ -665,6 +672,9 @@
           ],
           timeValue: [
             {required: true, message: '请选择购买时长', trigger: 'change'}
+          ],
+          diskGpu: [
+            {required: true, message: '请选择GPU云服务器', trigger: 'change'}
           ]
         },
         // 时间配置对象
@@ -739,8 +749,9 @@
       }
     },
     created() {
-      this.diskAreaList = this.$store.state.zoneList
-      this.listDisk()
+      this.diskAreaList = this.$store.state.zoneList;
+      this.listDisk();
+      this.getGpuList();
     },
     methods: {
       /* 刷新页面 */
@@ -921,7 +932,8 @@
             diskOfferingId: diskType,
             timeType: this.diskForm.timeType,
             timeValue: this.diskForm.timeValue || 1,
-            isAutorenew: 0
+            isAutorenew: 0,
+            serviceType:this.$store.state.zone.gpuServer == 1?this.diskForm.diskGpu:''
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1290,6 +1302,31 @@
           default:
             break
         }
+      },
+
+      //获取GPU
+      getGpuList(){
+        this.$http.get('gpuserver/listGpuServer.do',{
+          params:{
+            num:'',
+            vpcId:'',
+            zoneId:this.$store.state.zone.zoneid,
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            var list = [];
+            if(Object.keys(res.data.result).length != 0){
+              for(let index in res.data.result){
+                for (let i = 0; i < res.data.result[index].list.length; i++) {
+                  list.push(res.data.result[index].list[i]);
+                }
+                this.diskGpuList = list;
+              }
+            }else{
+              this.diskGpuList = [];
+            }
+          }
+        })
       }
     },
     computed: {

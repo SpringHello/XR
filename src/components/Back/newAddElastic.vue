@@ -17,7 +17,7 @@
         <hr color="#D8D8D8" size="1">
         <br>
         <div class="next_pace">
-          <div class="next_box" :class="item.className" v-for="(item,index) in nextList">
+          <div class="next_box" :class="item.className" v-for="(item,index) in nextList" :key="index"> 
             <div :class="item.yuanName">{{item.number}}</div>
             <span style="margin-left: 10px;font-size: 14px;">{{item.value}}</span>
             <i :class="item.arrowName" v-if="index !=3">
@@ -47,19 +47,19 @@
             <div class="cpu_list">
               <span>核心数</span>
               <ul>
-                <li v-for="(item,index) in hostSpecification.cpuList" class="nav_item" :class="hostSpecification.cpuIndex == index  ?'nav_item_click':''"  @click="cpuClick('cpu',index)">{{item.CPU}}核</li>
+                <li v-for="(item,index) in hostSpecification.cpuList" :key="index" class="nav_item" :class="hostSpecification.cpuIndex == index  ?'nav_item_click':''"  @click="cpuClick('cpu',index)">{{item.CPU}}核</li>
               </ul>
             </div>
             <div class="cpu_list" style="margin: 20px 0;">
               <span style="margin-right: 42px">内存</span>
               <ul>
-                <li v-for="(item,index) in hostSpecification.memoryList" class="nav_item" :class="hostSpecification.memoryIndex == index  ?'nav_item_click':''"  @click="cpuClick('memory',index)">{{item.memory}}G</li>
+                <li v-for="(item,index) in hostSpecification.memoryList" :key="index" class="nav_item" :class="hostSpecification.memoryIndex == index  ?'nav_item_click':''"  @click="cpuClick('memory',index)">{{item.memory}}G</li>
               </ul>
             </div>
             <div class="cpu_list">
               <span>系统盘</span>
               <ul>
-                <li v-for="(item,index) in hostSpecification.systemData" class="nav_item" :class="hostSpecification.systemIndex == index  ?'nav_item_click':''"  @click="cpuClick('system',index)">{{item.value}}</li>
+                <li v-for="(item,index) in hostSpecification.systemData" :key="index" class="nav_item" :class="hostSpecification.systemIndex == index  ?'nav_item_click':''"  @click="cpuClick('system',index)">{{item.value}}</li>
               </ul>
             </div>
             <div style="margin: 20px 0;">
@@ -88,8 +88,8 @@
                 <p>系统盘容量</p>
                 <p v-if="hostSpecification.nextIndex > 2">镜像</p>
                 <div v-if="hostSpecification.nextIndex > 3">
-                  <p v-if="dataIndex != -1">数据盘类型</p>
-                  <p v-if="dataIndex != -1">数据盘容量</p>
+                  <p v-if="dataCheckout">数据盘类型</p>
+                  <p v-if="dataCheckout">数据盘容量</p>
                   <p>公网IP</p>
                   <p v-if="single">带宽</p>
                 </div>
@@ -103,11 +103,11 @@
                 <p>{{selectedList.zoneName}}</p>
                 <p>{{selectedList.hostFormat}}</p>
                 <p>{{selectedList.systemDiskType}}</p>
-                <p>{{selectedList.diskSize}}GB</p>
+                <p>40GB</p>
                 <p v-if="hostSpecification.nextIndex > 2">{{selectedList.mirrorName}}</p>
                 <div v-if="hostSpecification.nextIndex > 3">
-                  <p v-if="dataIndex != -1">{{selectedList.dataDiskType}}</p>
-                  <p v-if="dataIndex != -1">{{selectedList.dataDiskSize}}GB</p>
+                  <p v-if="dataCheckout">{{selectedList.dataDiskType}}</p>
+                  <p v-if="dataCheckout">{{selectedList.diskSize}}GB</p>
                   <p>{{selectedList.publicIp}}</p>
                   <p v-if="single">{{selectedList.bandWidth}}MB</p>
                 </div>
@@ -125,12 +125,12 @@
             </div>
             <div style="width: 100%;">
               <ul>
-                <li v-for="(item,index) in mirror" class="nav_item" :class="mirrorIndex == index  ?'nav_item_click':''"  @click="cpuClick('mirror',index)">{{item.value}}</li>
+                <li v-for="(item,index) in mirror" class="nav_item" :key="index" :class="mirrorIndex == index  ?'nav_item_click':''"  @click="cpuClick('mirror',index)">{{item.value}}</li>
               </ul>
               <p style="color: #666666;margin: 10px 0 20px 0;">为了使主机创建完成后直接可用，强烈建议您将业务应用部署在自定义镜像中</p>
               <div v-if="mirrorIndex == 0">
-                <Select v-model="mirrorName" style="width:200px" v-if="mirrorList.length !=0">
-                  <Option v-for="item in mirrorList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Select v-model="mirrorName" style="width:200px" v-if="mirrorList.length !=0" >
+                  <Option v-for="item in mirrorList" :value="item.systemtemplateid" :key="item.systemtemplateid">{{ item.ostypename }}</Option>
                 </Select>
                 <div v-else >您还没有自定义镜像，点击<span @click="showModal.createMirror = true" style="color: #2A99F2;cursor: pointer;">新建镜像</span></div>
               </div>
@@ -151,17 +151,21 @@
         <div v-if="hostSpecification.nextIndex == 3">
           <div style="display:flex;padding: 20px 0;">
             <div class="next_wo">
-              <p style="height: 32px;line-height: 32px;">数据盘类型</p>
-              <p style="margin: 26px 0;height: 40px;line-height: 40px;">容量</p>
+              <p>数据盘</p>
+              <p style="height: 32px;line-height: 32px;" v-if="dataCheckout">数据盘类型</p>
+              <p style="margin: 26px 0;height: 40px;line-height: 40px;" v-if="dataCheckout">容量</p>
               <p>公网IP</p>
               <p style="margin: 26px 0;height: 40px;line-height: 40px;"  v-if="single">带宽</p>
               <p v-if="hostSpecification.nextIndex == 3" style="margin-top: 28px;">资费</p>
             </div>
             <div style="width: 100%;">
-              <ul>
-                <li v-for="(item,index) in dataDiskType" class="nav_item" :class="dataIndex == index  ?'nav_item_click':''"  @click="cpuClick('data',index)">{{item.value}}</li>
+              <div>
+                <Checkbox v-model="dataCheckout" @on-change="getCapacityPrice" style="margin-bottom:10px;">数据盘</Checkbox> 
+              </div>
+              <ul v-if="dataCheckout">
+                <li v-for="(item,index) in dataDiskType" class="nav_item" :key="index" :class="dataIndex == index  ?'nav_item_click':''"  @click="cpuClick('data',index)">{{item.value}}</li>
               </ul>
-              <div style="width:500px;display: flex;align-items:center;margin: 26px 0;">
+              <div v-if="dataCheckout" style="width:500px;display: flex;align-items:center;margin: 26px 0;">
                 <i-slider
                   v-model="diskSize"
                   unit="GB"
@@ -175,7 +179,9 @@
                              @on-blur="changeDiskSize(index,diskSize)"
                              @on-focus="changeDiskSize(index,diskSize)"></InputNumber>
               </div>
-              <Checkbox v-model="single" @on-change="getCapacityPrice">公网IP</Checkbox>
+              <div>
+                <Checkbox v-model="single" @on-change="getCapacityPrice">公网IP</Checkbox>
+              </div>
               <div style="width:500px;display: flex;align-items:center;margin-top: 28px;" v-if="single">
                 <i-slider
                   v-model="bandWidth"
@@ -488,10 +494,11 @@
             label:'ssd'
           }
         ],
-        dataIndex:-1,
+        dataIndex:0,
+        dataCheckout:false,
 
         //容量
-        diskSize:0,
+        diskSize:20,
         single:false,
 
         //带宽
@@ -635,6 +642,7 @@
           }
         })
       },
+
       //系统镜像
       getTemplates(){
         this.$http.get('information/listTemplates.do',{
@@ -673,16 +681,24 @@
 
       //获取资费
       getCapacityPrice(){
-        let bindWidth = this.$http.post('device/queryIpPrice.do',{timeType:'current',timeValue:'1',brand:this.bandWidth});
+        let bindWidth = this.single ? this.$http.post('device/queryIpPrice.do',{timeType:'current',timeValue:'1',brand:this.bandWidth}):null;
         let params = {  cpuNum:'0',
           memory:'0',
           timeType:'current',
           timeValue:'1',
           diskType:this.dataDiskType[this.dataIndex].label,
           diskSize:this.diskSize.toString()}
-        let capacity = this.$http.post('device/QueryBillingPrice.do',params);
+        let capacity =this.dataCheckout ? this.$http.post('device/QueryBillingPrice.do',params):null;
         Promise.all([bindWidth,capacity]).then(res =>{
-          this.price = (res[0].data.cost + res[1].data.cost).toFixed(2);
+          if(this.single && this.dataCheckout){
+             this.price = (res[0].data.cost + res[1].data.cost).toFixed(2);
+          }else if(this.dataCheckout){
+             this.price = res[1].data.cost;
+          }else if(this.single){
+             this.price = res[0].data.cost;
+          }else{
+             this.price = 0;
+          }
         }).catch(error =>{
           console.log(error+'带宽容量资费');
         })
@@ -708,12 +724,12 @@
                 systemTemplateId:this.systemMirror.system.systemId,
                 cpu:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
                 memory:this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory.toString(),
-                diskSize:this.diskSize,
+                diskSize:this.dataCheckout ? this.diskSize : '',
                 bandwidth:this.selectedList.bandWidth.toString(),
                 computerName:this.computerName,
                 loginPassword:this.password.divPassWord,
                 billingtype:this.selectedList.money,
-                diskType:this.dataIndex == -1 ? '' : this.dataDiskType[this.dataIndex].label,
+                diskType:this.dataCheckout ? this.dataDiskType[this.dataIndex].label : '',
                 loginWay:this.passwordList,
                 systemDiskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
                 systemUserName:this.systemUsername
@@ -736,12 +752,12 @@
             systemTemplateId:this.systemMirror.system.systemId,
             cpu:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
             memory:this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory.toString(),
-            diskSize:this.selectedList.diskSize,
+            diskSize:this.dataCheckout ? this.selectedList.diskSize : '',
             bandwidth:this.selectedList.bandWidth.toString(),
             computerName:this.computerName,
             loginPassword:this.password.divPassWord,
             billingtype:this.selectedList.money,
-            diskType:this.dataIndex == -1 ? '' : this.dataDiskType[this.dataIndex].label,
+            diskType:this.dataCheckout ? this.dataDiskType[this.dataIndex].label : '',
             loginWay:this.passwordList,
             systemDiskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
             systemUserName:this.systemUsername
@@ -765,7 +781,7 @@
               user:'1',
             }
         }).then(res => {
-          if(res.status == 1 && res.data.status == 1){
+          if(res.status == 200 && res.data.status == 1){
            this.mirrorList = res.data.result.window.concat(res.data.result.centos, res.data.result.debian, res.data.result.ubuntu);
           }
         })
