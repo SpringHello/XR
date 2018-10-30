@@ -18,10 +18,10 @@
           <p>专业的云数据库服务，支持Mysql、SQL Server、PostgreSQL、MangoDB引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。</p>
         </div>
         <div class="operator-bar">
-          <!--<Button type="primary" @click="createDatabase">
-            &lt;!&ndash; <router-link to="/ruicloud/buy" style="color:#fff">创建云数据库</router-link> &ndash;&gt;
+          <Button type="primary" @click="createDatabase">
+            <!-- <router-link to="/ruicloud/buy" style="color:#fff">创建云数据库</router-link> -->
             创建云数据库
-          </Button>-->
+          </Button>
         </div>
         <div class="databases">
           <Table :columns="databaseColumns" :data="dataBaseData"></Table>
@@ -345,6 +345,9 @@
                 case 2:
                   text = '创建中';
                   break;
+                case 4:
+                  text = '重启中';
+                  break;
                 case 5:
                   text = '扩容中';
                   break;
@@ -361,7 +364,7 @@
                   text = '修改中';
                   break;
               }
-              if (row.status == 2 || row.status == 5 || row.status == 6 || row.status == 7 || row.status == 8 || row.status == 9) {
+              if (row.status == 2 || row.status == 4 || row.status == 5 || row.status == 6 || row.status == 7 || row.status == 8 || row.status == 9) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
@@ -885,7 +888,7 @@
         this.showModal.restart = false
         this.dataBaseData.forEach(item => {
           if (item.computerid == this.current.computerid) {
-            item.dbStatus = '4'
+            item.status = 4
           }
         })
         this.$http.get('database/rebooteDB.do', {
@@ -1080,7 +1083,7 @@
         axios.get('database/upDB.do', {
           params: {
             DBId: this.current.computerid,
-            diskSize: this.dilatationForm.databaseSize,
+            diskSize: this.dilatationForm.databaseSize - this.dilatationForm.minDatabaseSize,
             zoneId: this.current.zoneid
           }
         }).then(response => {
@@ -1180,11 +1183,12 @@
       }
     }
   }
+
   .renewal-info {
     margin-bottom: 20px;
     padding: 20px 10px;
     width: 100%;
-    background:rgba(245,245,245,1);
+    background: rgba(245, 245, 245, 1);
     ul {
       li {
         font-size: 14px;
