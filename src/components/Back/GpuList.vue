@@ -150,6 +150,42 @@
         </p>
       </Modal>
 
+      <!-- 资费变更弹出框 -->
+    <Modal v-model="showModal.ratesChange" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">变更资费选择（资费变更适用于按需收费转包月/年）</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="变更类型 :">
+            <Select v-model="ratesChangeType" @on-change='ratesChangeTimes'>
+              <Option v-for="item in renewValidate.time" :value="item.value" :key="item.value">{{item.timeType}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="变更时长 :">
+            <Select v-model="ratesChangeTime">
+              <Option v-for="item in timeValueList" :value="item.label" :key="item.label">{{ item.value }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="是否同时变更绑定IP与磁盘" v-if="relevanceDisks||relevanceIps">
+            <CheckboxGroup v-model="relevanceAlteration">
+              <Checkbox label="ip" v-if="relevanceIps">变更绑定IP</Checkbox>
+              <Checkbox label="disk" v-if="relevanceDisks">变更绑定磁盘</Checkbox>
+            </CheckboxGroup>
+          </FormItem>
+        </Form>
+        <div style="font-size:16px;">
+          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{ratesChangeCost}}/</span></span>
+          <span style="text-decoration: line-through">原价{{originRatesChangeCost}}</span>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.ratesChange=false">取消</Button>
+        <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
+      </div>
+    </Modal>
+
     </div>
 </template>
 
@@ -234,7 +270,8 @@
             // snapshot:false,
             mirror:false,
             renew:false,
-            publicIPHint:false
+            publicIPHint:false,
+            ratesChange:false
           },
           //弹性ip
           ipValidate:{
@@ -345,6 +382,15 @@
           timeValue:'',
           timeValueList:[],
 
+          //资费变更
+          ratesChangeType:'',
+          ratesChangeTime:'',
+          ratesChangeCost:'--',
+          originRatesChangeCost:'--',
+          relevanceDisks:false,
+          relevanceIps: false,
+          relevanceAlteration:[],
+
           //table
           hostList:[
             {
@@ -425,7 +471,8 @@
                             this.$router.push({path: 'gpuManage'});
                             sessionStorage.setItem('uuId', params.row.computerid);
                             sessionStorage.setItem('gpuId',params.row.id);
-                            sessionStorage.setItem('gpu_name',params.row.computername)
+                            sessionStorage.setItem('gpu_name',params.row.computername);
+                            sessionStorage.setItem('instancename',params.row.instancename)
                           }
                         }
                       }
@@ -615,6 +662,27 @@
                           }
                         }
                       }, '重启主机'),
+                         h('DropdownItem', {
+                        nativeOn: {
+                          click: () => {
+                            if(params.row.status == 2 || params.row.status ==3){
+                              this.$Message.info('请等待主机完成当前操作');
+                            }else {
+                              // if(params.row.computerstate == '0' && params.row.status=='1'){
+                              //   this.$Message.info('主机续费需要关闭主机')
+                              // }
+                              if(params.row.caseType == 3){
+                                this.$Message.info('请选择实时计费的云主机进行资费变更');
+                                return
+                              }
+                                this.VMId = params.row.id;
+                               this.uuId = params.row.computerid;
+                              this.ratesChange();
+                              this.showModal.ratesChange = true;
+                            }
+                          }
+                        }
+                      }, '资费变更'),
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
@@ -794,7 +862,7 @@
          })
         },
 
-        //主机关机
+      //主机关机
        stopHost(){
          this.$http.get('gpuserver/stopGPU.do',{
            params:{
@@ -812,7 +880,7 @@
          })
         },
 
-        //删除主机
+      //删除主机
        deleteHost(info){
          if(info.caseType != 3){
            this.$Message.warning('只能删除实时计费主机');
@@ -841,10 +909,10 @@
              })
            }
          })
-
         },
+        
 
-        //重启主机
+      //重启主机
         reStartGPU(){
           this.$http.get('gpuserver/reStartGPU.do',{
             params:{
@@ -920,14 +988,24 @@
          }
         },
 
-        //获取主机续费价格
+        //资费变更切换
+        ratesChangeTimes(index){
+            this.ratesChangeTime = '';
+          if(index == 'year'){
+            this.timeValueList = this.renewValidate.time[0].date;
+          }else if(index == 'month'){
+            this.timeValueList = this.renewValidate.time[1].date;
+          }
+        },
+
+         //获取主机续费价格
         getGpuMonery(){
          axios.get('information/getYjPrice.do',{
            params:{
-             timeType:this.timeType,
-             timeValue:this.timeValue,
-             gpuArr:this.VMId,
-             zoneId:this.$store.state.zone.zoneid
+            timeType:this.timeType,
+            timeValue:this.timeValue,
+            gpuArr:this.VMId,
+            zoneId:this.$store.state.zone.zoneid
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
@@ -964,6 +1042,84 @@
           })
         },
 
+      //资费变更查询ip
+       ratesChange() {
+        let url = 'information/listVirtualMachinesById.do'
+        axios.get(url, {
+          params: {
+            VMId: this.uuId,
+            zoneId: this.$store.state.zone.zoneid,
+            changeCost: '1'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            var disks = response.data.result[0].attachDisk.map(item => {
+              return item.id
+            })
+            this.relevanceDisks = disks.join()
+            var ips = response.data.result[0].attachPublicIp.map(item => {
+              return item.id
+            })
+            this.relevanceIps = ips.join()
+            this.relevanceAlteration = ['ip', 'disk']
+            this.ratesChangeType = ''
+            this.ratesChangeTime = ''
+            this.ratesChangeCost = '--'
+            this.originRatesChangeCost = '--'
+            this.showModal.ratesChange = true
+            // console.log(this.relevanceDisks)
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+
+        //资费变更确定
+       ratesChange_ok() {
+        var selectIp = ''
+        var selectDisk = ''
+        for (var i = 0; i < this.relevanceAlteration.length; i++) {
+          if (this.relevanceAlteration[i] == 'ip') {
+            selectIp = this.relevanceIps
+          }
+          if (this.relevanceAlteration[i] == 'disk') {
+            selectDisk = this.relevanceDisks
+          }
+        }
+        var iplist = []
+        if (selectIp != '') {
+          iplist = selectIp.split(',').map(item => {
+            return {type: 2, id: parseInt(item)}
+          })
+        }
+        var disklist = []
+        if (selectDisk != '') {
+          disklist = selectDisk.split(',').map(item => {
+            return {type: 1, id: parseInt(item)}
+          })
+        }
+        var host = [
+          {type: 6, id: this.VMId}
+        ]
+        var list = host.concat(iplist, disklist)
+        list = JSON.stringify(list)
+        let url = 'continue/changeMoney.do'
+        this.$http.post(url, {
+          list: list,
+          timeType: this.ratesChangeType,
+          timeValue: this.ratesChangeTime + '',
+        }).then(response => {
+          if (response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
 
         //连接主机
         link(item) {
@@ -975,12 +1131,92 @@
         },
       },
       created(){
-        this.intervalInstance = setInterval(() => {
-          this.getGpuServerList()
-        }, 5 * 1000)
+        // this.intervalInstance = setInterval(() => {
+        //   this.getGpuServerList()
+        // }, 5 * 1000)
       },
       mounted(){
           this.getGpuServerList();
+      },
+      watch: {
+        ratesChangeTime(time) {
+        if (time == '') {
+          this.ratesChangeCost = '--'
+        } else {
+          var selectIp = ''
+          var selectDisk = ''
+          for (var i = 0; i < this.relevanceAlteration.length; i++) {
+            if (this.relevanceAlteration[i] == 'ip') {
+              selectIp = this.relevanceIps
+            }
+            if (this.relevanceAlteration[i] == 'disk') {
+              selectDisk = this.relevanceDisks
+            }
+          }
+          // console.log(this.relevanceDisks)
+          let url = 'information/getYjPrice.do'
+          this.$http.get(url, {
+            params: {
+              timeValue: this.ratesChangeTime,
+              timeType: this.ratesChangeType,
+              gpuArr: this.VMId,
+              ipIdArr: selectIp,
+              diskArr: selectDisk
+            }
+          })
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.ratesChangeCost = response.data.result.toFixed(2)
+                console.log(response.data.result);
+                this.originRatesChangeCost = response.data.result
+                if (response.data.cuspon) {
+                  this.originRatesChangeCost = Number((this.originRatesChangeCost + response.data.cuspon).toFixed(2))
+                }
+                if (response.data.continueDiscount) {
+                  this.originRatesChangeCost = (this.originRatesChangeCost + response.data.continueDiscount).toFixed(2)
+                }
+              }
+            })
+        }
+      },
+       relevanceAlteration() {
+        if (this.ratesChangeTime == '') {
+          this.ratesChangeCost = '--'
+        } else {
+          var selectIp = ''
+          var selectDisk = ''
+          for (var i = 0; i < this.relevanceAlteration.length; i++) {
+            if (this.relevanceAlteration[i] == 'ip') {
+              selectIp = this.relevanceIps
+            }
+            if (this.relevanceAlteration[i] == 'disk') {
+              selectDisk = this.relevanceDisks
+            }
+          }
+          let url = 'information/getYjPrice.do'
+          this.$http.get(url, {
+            params: {
+              timeValue: this.ratesChangeTime,
+              timeType: this.ratesChangeType,
+              gpuArr: this.VMId,
+              ipIdArr: selectIp,
+              diskArr: selectDisk
+            }
+          })
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.ratesChangeCost = response.data.result.toFixed(2)
+                this.originRatesChangeCost = response.data.result
+                if (response.data.cuspon) {
+                  this.originRatesChangeCost = Number((this.originRatesChangeCost + response.data.cuspon).toFixed(2))
+                }
+                if (response.data.continueDiscount) {
+                  this.originRatesChangeCost = (this.originRatesChangeCost + response.data.continueDiscount).toFixed(2)
+                }
+              }
+            })
+        }
+       }
       }
     }
 </script>

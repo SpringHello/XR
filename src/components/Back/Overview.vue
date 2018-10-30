@@ -295,9 +295,9 @@
                 content.cartUrl = 'buy/bdata#Pdisk'
               } else if (content.itemName == 'NAT网关') {
                 content.cartUrl = 'vpc#NAT'
-              } /* if (content.itemName == '数据库') {
+              }  if (content.itemName == '数据库') {
                 content.cartUrl = 'buy/bdata#NAT'
-              }*/else if (content.itemName == 'GPU服务器'){
+              }else if (content.itemName == 'GPU服务器'){
                 content.cartUrl = 'buy/bgpu'
               }else if(content.itemName == '对象存储'){
                 content.cartUrl = 'buy/bobj'
@@ -335,6 +335,7 @@
       togo(url, pane){
         if(url == 'objectStorage'){
           window.open('https://testoss-console.xrcloud.net/ruirados/objectStorage');
+          // window.open('https://oss-console.xrcloud.net/ruirados/objectStorage');
         }else{
           this.$router.push(url)
         }

@@ -379,7 +379,7 @@
   import $store from '@/vuex'
   export default{
     data(){
-      var confInfo = localStorage.serviceoffername.match(/\d+/g)
+      var confInfo = localStorage.getItem('serviceoffername').match(/\d+/g)
       var currentCPUNum = Number.parseInt(confInfo[0])
       var currentRAMSize = Number.parseInt(confInfo[2])
       var hostname = sessionStorage.getItem('hostname')

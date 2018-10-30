@@ -583,6 +583,7 @@
       Promise.all([userInfo, zoneList]).then(values => {
           if (values[0].data.status == 1 && values[0].status == 200) {
             $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+            localStorage.setItem('realname', values[0].data.result.realname)
           }
           if (values[1].data.status == 1 && values[1].status == 200) {
             $store.commit('setZoneList', values[1].data.result)
@@ -651,6 +652,7 @@
         this.$router.push(path)
       },
       exit(){
+        localStorage.removeItem("realname")
         axios.get('user/logout.do').then(response => {
           window.location.reload()
         })

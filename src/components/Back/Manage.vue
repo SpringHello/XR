@@ -28,8 +28,8 @@
               <i v-if="computerInfo.zoneName"> | {{computerInfo.zoneName}}</i>
             </div>
             <div>镜像系统：{{computerInfo.template}}</div>
-            <div>到期时间／有效期：{{computerInfo.endTime}}</div>
             <div>内网地址：{{computerInfo.privateIp}}</div>
+            <div>系统盘容量：{{computerInfo.rootDiskSize}}G <span class="bluetext" @click="systemDiskLarger">系统盘扩容</span></div>
             <div>登录密码：
               <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword()">{{codePlaceholder}}</span>
             </div>
@@ -61,13 +61,14 @@
             <div>计费类型：{{computerInfo.case_type == 1 ? '包年' : computerInfo.case_type == 2 ? '包月' : '实时'}}</div>
             <div>创建于：{{computerInfo.createTime}}</div>
             <div>自动续费：<span class="bluetext">{{computerInfo.isAutoRenw ? '开' : '关'}}</span></div>
+            <div>有效期：{{computerInfo.endTime}}</div>
           </div>
         </div>
         <div class="charts">
           <Tabs type="card" :animated="false">
             <Tab-pane label="监控">
               <div class="body">
-                <Button type="primary" @click="setMonitoring">监控告警设置</Button>
+                <!--<Button type="primary" @click="setMonitoring">监控告警设置</Button>-->
                 <div class="flex">
                   <div class="item">
                     <label>CPU利用率 <span class="timeText">{{ CPUTime}}</span></label>
@@ -949,6 +950,39 @@
             }
           })
         }, 1000 * 10)
+      },
+      systemDiskLarger() {
+        if (this.computerInfo.computerStatus) {
+          this.$Message.info('请先关闭主机')
+          return false
+        }
+        this.$http.get('network/VMIsHaveSnapshot.do', {params: {
+          VMId: this.computerInfo.computerId
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (!response.data.result) {
+              this.$Modal.confirm({
+                title: '提示',
+                content: '您的主机有快照，无法升级，请删除快照再试',
+                scrollable: true,
+                okText: '删除快照',
+                onOk: () => {
+                  this.$router.push('snapshot')
+                }
+              })
+            } else {
+              localStorage.setItem('serviceoffername', this.computerInfo.cpuNum + 'CPU' + 1 + 'Ghz' + this.computerInfo.memory + 'GMemory')
+              localStorage.setItem('virtualMachineid', this.computerInfo.computerId)
+              localStorage.setItem('zoneid', this.$route.query.zoneid)
+              sessionStorage.setItem('hostname', this.$route.query.computername)
+              sessionStorage.setItem('endtime', this.computerInfo.endTime)
+              this.$router.push({
+                name: 'upgrade'
+              })
+            }
+          }
+        })
       },
       currentChange(currentPage) {
         this.currentPage = currentPage;
