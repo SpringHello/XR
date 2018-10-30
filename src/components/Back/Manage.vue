@@ -29,7 +29,7 @@
             </div>
             <div>镜像系统：{{computerInfo.template}}</div>
             <div>内网地址：{{computerInfo.privateIp}}</div>
-            <div>系统盘容量：{{computerInfo.rootDiskSize}}G <span class="bluetext">系统盘扩容</span></div>
+            <div>系统盘容量：{{computerInfo.rootDiskSize}}G <span class="bluetext" @click="systemDiskLarger">系统盘扩容</span></div>
             <div>登录密码：
               <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword()">{{codePlaceholder}}</span>
             </div>
@@ -950,6 +950,39 @@
             }
           })
         }, 1000 * 10)
+      },
+      systemDiskLarger() {
+        if (this.computerInfo.computerStatus) {
+          this.$Message.info('请先关闭主机')
+          return false
+        }
+        this.$http.get('network/VMIsHaveSnapshot.do', {params: {
+          VMId: this.computerInfo.computerId
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (!response.data.result) {
+              this.$Modal.confirm({
+                title: '提示',
+                content: '您的主机有快照，无法升级，请删除快照再试',
+                scrollable: true,
+                okText: '删除快照',
+                onOk: () => {
+                  this.$router.push('snapshot')
+                }
+              })
+            } else {
+              localStorage.setItem('serviceoffername', this.computerInfo.cpuNum + 'CPU' + 1 + 'Ghz' + this.computerInfo.memory + 'GMemory')
+              localStorage.setItem('virtualMachineid', this.computerInfo.computerId)
+              localStorage.setItem('zoneid', this.$route.query.zoneid)
+              sessionStorage.setItem('hostname', this.$route.query.computername)
+              sessionStorage.setItem('endtime', this.computerInfo.endTime)
+              this.$router.push({
+                name: 'upgrade'
+              })
+            }
+          }
+        })
       },
       currentChange(currentPage) {
         this.currentPage = currentPage;
