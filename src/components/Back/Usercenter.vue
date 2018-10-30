@@ -23,7 +23,7 @@
                 </div>
                 <div class="pi-base-info">
                   <ul>
-                    <li><span>用户名称</span><span style="display: inline">{{ userInfo.realname}}</span>
+                    <li><span>用户名称</span><span style="display: inline">{{ authInfo.name? authInfo.name:userInfo.realname}}</span>
                       <span v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
