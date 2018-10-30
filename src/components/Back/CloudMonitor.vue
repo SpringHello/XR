@@ -225,8 +225,7 @@
                               </Select>
                             </Col>
                             <Col span="1">
-                              <span v-if="item.alarmname=='flow'">KB/s</span>
-                              <span v-else>%</span>
+                              <span v-for="(item1,index) in selectedTarget.target"  :key="index" v-if="item.alarmname==item1.value">{{item1.unit}}</span>
                             </Col>
                             <Col span="4">
                               <Select v-model="item.continuecircle">
@@ -549,36 +548,47 @@
           target: [
             {
               value: 'CPU使用率',
+              unit: '%'
             },
             {
               value: '内存使用率',
+              unit: '%'
             },
             {
               value: '磁盘使用率',
+              unit: '%'
             },
             {
               value: '磁盘读速率',
+              unit: 'kb/s'
             },
             {
               value: '磁盘写速率',
+              unit: 'kb/s'
             },
             {
               value: '磁盘读操作速率',
+              unit: 'kb/s'
             },
             {
               value: '磁盘写操作速率',
+              unit: 'kb/s'
             },
             {
               value: '带内网络流入速率',
+              unit: 'kb/s'
             },
             {
               value: '带内网络流出速率',
+              unit: 'kb/s'
             },
             {
               value: '带外网络流入速率',
+              unit: 'kb/s'
             },
             {
               value: '带外网络流出速率',
+              unit: 'kb/s'
             }
           ]
         },
@@ -586,16 +596,24 @@
         alarmObjTarget: {
           target: [
             {
-              value: '云硬盘读速率',
+              value: '下载流量',
+              unit: 'Byte'
             },
             {
-              value: '云硬盘写速率',
+              value: '上传流量',
+              unit: 'Byte'
             },
             {
-              value: '云硬盘读操作速率',
+              value: 'GET类请求次数',
+              unit: 'Counts'
             },
             {
-              value: '云硬盘写操作速率',
+              value: 'PUT类请求次数',
+              unit: 'Counts'
+            },
+            {
+              value: 'GET类请求首字节平均时延',
+              unit: 'ms'
             }
           ],
 
@@ -2800,22 +2818,19 @@
           }
         })
       }
-    }
-    ,
+    },
     computed: {
       auth() {
         return this.$store.state.authInfo != null
       }
-    }
-    ,
+    },
     watch: {
       '$store.state.zone':
         {
           handler: function () {
             this.refresh()
           }
-        }
-      ,
+        },
     }
   }
 </script>
