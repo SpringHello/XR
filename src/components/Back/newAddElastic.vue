@@ -130,7 +130,7 @@
               <p style="color: #666666;margin: 10px 0 20px 0;">为了使主机创建完成后直接可用，强烈建议您将业务应用部署在自定义镜像中</p>
               <div v-if="mirrorIndex == 0">
                 <Select v-model="mirrorName" style="width:200px" v-if="mirrorList.length !=0">
-                  <Option v-for="item in mirrorList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  <Option v-for="item in mirrorList" :value="item.systemtemplateid" :key="item.systemtemplateid">{{ item.ostypename }}</Option>
                 </Select>
                 <div v-else >您还没有自定义镜像，点击<span @click="showModal.createMirror = true" style="color: #2A99F2;cursor: pointer;">新建镜像</span></div>
               </div>
@@ -765,7 +765,7 @@
               user:'1',
             }
         }).then(res => {
-          if(res.status == 1 && res.data.status == 1){
+          if(res.status == 200 && res.data.status == 1){
            this.mirrorList = res.data.result.window.concat(res.data.result.centos, res.data.result.debian, res.data.result.ubuntu);
           }
         })
