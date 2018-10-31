@@ -129,8 +129,8 @@
               </ul>
               <p style="color: #666666;margin: 10px 0 20px 0;">为了使主机创建完成后直接可用，强烈建议您将业务应用部署在自定义镜像中</p>
               <div v-if="mirrorIndex == 0">
-                <Select v-model="mirrorName" style="width:200px" v-if="mirrorList.length !=0" >
-                  <Option v-for="item in mirrorList" :value="item.systemtemplateid" :key="item.systemtemplateid">{{ item.ostypename }}</Option>
+                <Select v-model="mirrorName" style="width:200px" v-if="mirrorList.length !=0" @on-change='setPrivateOs'>
+                  <Option v-for="item in mirrorList" :value="item.systemtemplateid" :key="item.systemtemplateid">{{ item.templatename }}</Option>
                 </Select>
                 <div v-else >您还没有自定义镜像，点击<span @click="showModal.createMirror = true" style="color: #2A99F2;cursor: pointer;">新建镜像</span></div>
               </div>
@@ -517,7 +517,10 @@
           ]
         },
         //主机名称
-        computerName:''
+        computerName:'',
+
+        //获取私有镜像类型
+        privateOS:''
       }
     },
     created(){
@@ -579,7 +582,7 @@
           diskSize:this.diskSize,
           systemDiskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].value,
           zoneName:this.$store.state.zone.zonename,
-          mirrorName:this.mirrorIndex == 0? this.mirrorName :this.systemMirror.publicList[this.systemIndex].selectSystem,
+          mirrorName:this.mirrorIndex == 0? this.privateOS :this.systemMirror.publicList[this.systemIndex].selectSystem,
           dataDiskType:this.dataIndex == -1 ? '':this.dataDiskType[this.dataIndex].value,
           bandWidth:this.single == true ? this.bandWidth:'',
           publicIp:this.single == true ? '有' :'无',
@@ -679,6 +682,21 @@
         this.systemMirror.publicList[arg[2]].selectSystem = arg[0];
       },
 
+      //私有镜像
+      setPrivateOs(){
+         for(let key in this.mirrorList){
+            if(this.mirrorList[key].systemtemplateid = this.mirrorName){
+              this.privateOS = this.mirrorList[key].ostypename;
+               let str = this.mirrorList[key].ostypename.substr(0,1);
+                  if (str === 'W' || str === 'w') {
+                    this.systemUsername = 'administrator'
+                  } else {
+                    this.systemUsername = 'root'
+                  }
+            }
+         } 
+      },
+
       //获取资费
       getCapacityPrice(){
         let bindWidth = this.single ? this.$http.post('device/queryIpPrice.do',{timeType:'current',timeValue:'1',brand:this.bandWidth}):null;
@@ -721,7 +739,7 @@
             if(vaild){
               this.$http.post('elasticScaling/newCreateElasticScalingRunConfig.do',{
                 ElasticScalingName:this.selectedList.name,
-                systemTemplateId:this.systemMirror.system.systemId,
+                systemTemplateId:this.mirrorIndex == 0 ? this.mirrorName : this.systemMirror.system.systemId,
                 cpu:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
                 memory:this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory.toString(),
                 diskSize:this.dataCheckout ? this.diskSize : '',
@@ -749,7 +767,7 @@
         }else {
           this.$http.post('elasticScaling/newCreateElasticScalingRunConfig.do',{
             ElasticScalingName:this.selectedList.name,
-            systemTemplateId:this.systemMirror.system.systemId,
+            systemTemplateId:this.mirrorIndex == 0 ? this.mirrorName : this.systemMirror.system.systemId,
             cpu:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
             memory:this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory.toString(),
             diskSize:this.dataCheckout ? this.selectedList.diskSize : '',
@@ -1010,7 +1028,7 @@
     font-size: 14px;
     width: 90px;
     p{
-      margin-bottom: 10px;
+      margin-bottom: 16px;
     }
   }
   .mirror{
