@@ -400,14 +400,6 @@
           callback();
         }
       };
-      const validUnitProperties = (rule, value, callback) => {
-        let regCord = /^[0-9]*$/;
-        if (!regCord.test(value)) {
-          return callback(new Error("请输入正确的证件号码"));
-        } else {
-          callback();
-        }
-      };
       const validCertificateNumber = (rule, value, callback) => {
         let reg1 = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
         let reg2 = /^((14)|(15)[0-9]{7})|(G|S|D[0-9]{8})|((P.)|(S.)[0-9]{7})$/
