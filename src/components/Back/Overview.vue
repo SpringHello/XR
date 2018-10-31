@@ -15,7 +15,7 @@
           </svg>
               <span v-if="userInfo.loginname" style="vertical-align: middle">{{userInfo.loginname}}</span>
               <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;"
-                    @click="togo('/ruicloud/userCenter','safe')">点击绑定</span>
+                    @click="togo('/ruicloud/userCenter','personalInfo')">点击绑定</span>
             </span>
             <span>
               <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">

@@ -6,7 +6,7 @@
             <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
           </div>
         </div>
-        <img v-if="hintShow" @click="hintShow = false,$refs.hint.style.height = 0" src="./assets/img/app/hint-icon1.png"/>
+        <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
       </div>
     <!-- 首页公用header -->
     <header>
@@ -596,11 +596,16 @@
         })
     },
     mounted() {
-      this.$refs.hint.style.height = '80px'
-      this.hintShow = true
+      this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
+      if(sessionStorage.getItem('hintShow') == 'true'){
+        this.$refs.hint.style.height = '80px'
+      }
       this.setTime()
     },
     created() {
+      if(sessionStorage.getItem('hintShow') == null){
+        sessionStorage.setItem('hintShow','true')
+      }
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
@@ -702,6 +707,11 @@
           i = '0' + i;
         }
         return i;
+      },
+      closeHeadHint(){
+        this.hintShow = false
+        this.$refs.hint.style.height = 0
+        sessionStorage.setItem('hintShow','false')
       }
     },
     computed: mapState({
