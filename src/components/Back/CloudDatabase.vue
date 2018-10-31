@@ -834,6 +834,7 @@
         },
         // 当前操作的数据库
         current: null,
+        timer: null
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -851,7 +852,9 @@
       })
     },
     created() {
-
+      this.timer = setInterval(() => {
+        this.listDatabase()
+      }, 5000)
     },
     methods: {
       // 绑定公网ip
@@ -1166,6 +1169,10 @@
         },
         deep: true
       }
+    },
+    beforeRouteLeave(to, from, next) {
+      clearInterval(this.timer)
+      next()
     }
   }
 </script>

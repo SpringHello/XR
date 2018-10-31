@@ -1,15 +1,13 @@
 <template>
   <div id="front">
-    <transition name="slide-fade">
-      <div class="hint" v-show="hintShow">
+      <div class="app-hint" ref="hint">
         <div class="center">
-          <div class="countdown">
+          <div class="countdown" v-if="hintShow">
             <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
           </div>
         </div>
-        <img @click="hintShow = false" src="./assets/img/app/hint-icon1.png"/>
+        <img v-if="hintShow" @click="hintShow = false,$refs.hint.style.height = 0" src="./assets/img/app/hint-icon1.png"/>
       </div>
-    </transition>
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -598,6 +596,7 @@
         })
     },
     mounted() {
+      this.$refs.hint.style.height = '80px'
       this.hintShow = true
       this.setTime()
     },
@@ -730,10 +729,11 @@
 
 <style rel="stylesheet/less" lang="less">
   #front {
-    .hint {
-      height: 80px;
+    .app-hint {
+      height: 0;
       background: url("./assets/img/app/hint-banner.png") center no-repeat, linear-gradient(to right, #FF4439, #FF1569);
       position: relative;
+      transition: height .5s ease;
       > img {
         position: absolute;
         right: 15px;
