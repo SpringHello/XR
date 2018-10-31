@@ -21,7 +21,7 @@
               <span>{{details.maximumexpansionnumber}}</span>
             </div>
             <div>
-              <span>初始实例数 :</span>
+              <span>期望实例数 :</span>
               <span>{{details.initialinstancenumber}}</span>
             </div>
             <div>
@@ -111,7 +111,6 @@
           <Input v-model="alarmStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
-
       <div>
         <p style="margin-bottom: 12px">伸缩组内所有云主机<span style="color: #2A99F2;">查看详细统计规则</span></p>
         <div>
@@ -158,7 +157,7 @@
       </div>
       <div>
           <FormItem label="告警通知" prop="contacts">
-            <Select v-model="alarmStrategy.contacts" style="width:240px"  placeholder="选择联系人">
+            <Select v-model="alarmStrategy.contacts" style="width:240px"  placeholder="选择联系人" >
               <Option v-for="item in alarmStrategy.contactsList" :value="item.id" :key="item.id">{{ item.username }}</Option>
             </Select>
           </FormItem>
@@ -312,13 +311,13 @@
       <div style="margin-top: 20px;">
         <p>伸缩组活动</p>
         <div>
-          <span>更改最小实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.minNumber"></InputNumber><span>台</span>
+          <span>更改最小实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.minNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
         <div style="margin: 10px 0;">
-          <span>更改最大实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.maxNumber"></InputNumber><span>台</span>
+          <span>更改最大实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.maxNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
         <div>
-          <span>更改初始实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.initialNumber"></InputNumber><span>台</span>
+          <span>更改期望实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.initialNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
       </div>
       <br>
@@ -400,13 +399,13 @@
       <div style="margin-top: 20px;">
         <p>伸缩组活动</p>
         <div>
-          <span>更改最小实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.minNumber"></InputNumber><span>台</span>
+          <span>更改最小实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.minNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
         <div style="margin: 10px 0;">
-          <span>更改最大实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.maxNumber"></InputNumber><span>台</span>
+          <span>更改最大实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.maxNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
         <div>
-          <span>更改初始实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.initialNumber"></InputNumber><span>台</span>
+          <span>更改期望实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.initialNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
       </div>
       <br>
@@ -428,7 +427,7 @@
             <div>
               <p style="height: 27px;">该区域下所有主机</p>
             </div>
-            <div class="list_box" v-for="(item,index) in intoCloudHost">
+            <div class="list_box" v-for="(item,index) in intoCloudHost" v-if="item == '' || item == undefined">
               <div>
                 <p :title="item.computername">{{item.instancename}}</p>
               </div>
@@ -437,6 +436,7 @@
                 <span>添加</span>
               </div>
             </div>
+            <div v-else>暂无可移入的云主机</div>
           </div>
           <div class="move_box_left">
             <div>
@@ -678,7 +678,7 @@
             {required:true,validator:nameValidator,trigger:'blur'}
           ],
           contacts:[
-            {required:true,message:'请选择告警通知人',trigger:'change'}
+            {required:true,message:'请选择告警通知人'}
           ]
         },
         alarmStrategy:{
@@ -824,7 +824,7 @@
             {required:true,validator:nameValidator,trigger:'blur'}
           ],
           contacts:[
-            {required:true,message:'请选择告警通知人',trigger:'change'}
+            {required:true,message:'请选择告警通知人'}
           ]
         },
         updateStrategy:{
@@ -1159,13 +1159,21 @@
                   on:{
                     click:()=>{
                       this.updateTask = true;
+                      this.updateTimedTask.id = params.row.id;
                       this.updateTimedTask.name = params.row.taskname;
+                      //开始时间
                       this.updateTimedTask.startTime = params.row.starttime.substring(0,params.row.starttime.indexOf(' '));
                       this.updateTimedTask.hour = params.row.starttime.substring(params.row.starttime.indexOf(' ')+1,params.row.starttime.indexOf(':'));
                       this.updateTimedTask.minute = params.row.starttime.substring(params.row.starttime.indexOf(':')+1,params.row.starttime.length);
-                      this.updateTimedTask.maxNumber = params.row.readjustMaxSize;
-                      this.updateTimedTask.minNumber = params.row.readjustMixSize;
-                      this.updateTimedTask.initialNumber = params.row.readjustDesiredCapacity;
+                      //结束时间
+                      this.updateTimedTask.endTime = params.row.endtime.substring(0,params.row.endtime.indexOf(' '));
+                      this.updateTimedTask.endHour = params.row.endtime.substring(params.row.endtime.indexOf(' ')+1,params.row.endtime.indexOf(':'));
+                      this.updateTimedTask.endMinute = params.row.endtime.substring(params.row.endtime.indexOf(':')+1,params.row.endtime.length);
+                      this.updateTimedTask.date = params.row.day == 'day' ? '0':params.row.day == 'week' ? '2':'1';
+                      this.updateTimedTask.dayNumber = Number(params.row.daycount);
+                      this.updateTimedTask.maxNumber = params.row.readjustmaxsize;
+                      this.updateTimedTask.minNumber = params.row.readjustmixsize;
+                      this.updateTimedTask.initialNumber = params.row.readjustdesiredcapacity;
                       this.updateTimedTask.repeat = params.row.recurrence;
                     }
                   }
@@ -1491,6 +1499,7 @@
         //修改定时任务
         updateTask:false,
         updateTimedTask:{
+          id:'',
           name:'',
           //小时
           hour:'',
@@ -2006,6 +2015,10 @@
         if(this.weekValue != ''){
           this.weekValue =  (this.weekValue.substring(this.weekValue.length - 1) == ',') ?  this.weekValue.substring(0, this.weekValue.length - 1) :  this.weekValue;
         };
+        if(this.timedTask.minNumber > this.timedTask.maxNumber){
+          this.$Message.warning('最小实例数不能大于最大实例数');
+          return;
+        }
         this.$refs.timedTask.validate((valid) => {
             if(valid){
         let obj = {taskname:'创建中',hide:1};
@@ -2069,7 +2082,12 @@
         if(this.weekValue != ''){
           this.weekValue =  (this.weekValue.substring(this.weekValue.length - 1) == ',') ?  this.weekValue.substring(0, this.weekValue.length - 1) :  this.weekValue;
         };
+           if(this.updateTimedTask.minNumber > this.updateTimedTask.maxNumber){
+          this.$Message.warning('最小实例数不能大于最大实例数');
+          return;
+        }
         this.$http.post('elasticScaling/updateTask.do',{
+          id:this.updateTimedTask.id,
           taskName:this.updateTimedTask.name,
           recurrence:this.updateTimedTask.repeat,
           startTime:  this.updateTimedTask.startTime.format('yyyy-MM-dd') +' ' +this.updateTimedTask.hour + ':'+ this.updateTimedTask.minute,
@@ -2086,8 +2104,9 @@
           monthStartCount:this.updateTimedTask.monthStartNumber.toString(),
           monthEndCount:this.updateTimedTask.monthEndNumber.toString(),
         }).then(res =>{
-            if(res.status == 200 && res.data.status ==1){
+            if(res.status == 200 && res.data.status == 1){
               this.$Message.success('修改定时任务成功');
+              this.updateTask = false;
               this.selectTask();
             }else{
               this.$Message.info(res.data.message);
