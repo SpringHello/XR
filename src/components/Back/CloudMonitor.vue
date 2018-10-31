@@ -94,7 +94,7 @@
             <div class="cm-content">
               <div class="cm-item" v-for="(item,index) in customMonitoringData">
                 <div class="cm-item-title">
-                  <p>我关注的指标<span @click="deleteAttention(item)">&nbsp删除</span><span
+                  <p>{{ item.name}}<span @click="deleteAttention(item)">&nbsp删除</span><span
                     @click="editAttention(item)">编辑 |</span></p>
                 </div>
                 <div class="cm-item-switch">
@@ -945,8 +945,8 @@
                     })
                     this.contacts.allContacts.forEach((item, index) => {
                       allIndexsman.push(index)
-                      for (var i = 0; i < this.selectedContactsCopy.length; i++){
-                        if (this.selectedContactsCopy[i] == item.id){
+                      for (var i = 0; i < this.selectedContactsCopy.length; i++) {
+                        if (this.selectedContactsCopy[i] == item.id) {
                           this.contacts.selectedContacts.push(item)
                           selectedIndexsman.push(index)
                         }
@@ -965,8 +965,8 @@
                     })
                     this.strategyhost.allHost.forEach((item, index) => {
                       allIndexs.push(index)
-                      for (var i = 0; i < this.resourceId.length; i++){
-                        if (this.resourceId[i] == item.id){
+                      for (var i = 0; i < this.resourceId.length; i++) {
+                        if (this.resourceId[i] == item.id) {
                           this.strategyhost.selectedHost.push(item)
                           selectedIndexs.push(index)
                         }
@@ -1045,8 +1045,8 @@
                     })
                     this.contacts.allContacts.forEach((item, index) => {
                       allIndexsman.push(index)
-                      for (var i = 0; i < this.selectedContactsCopy.length; i++){
-                        if (this.selectedContactsCopy[i] == item.id){
+                      for (var i = 0; i < this.selectedContactsCopy.length; i++) {
+                        if (this.selectedContactsCopy[i] == item.id) {
                           this.contacts.selectedContacts.push(item)
                           selectedIndexsman.push(index)
                         }
@@ -1065,8 +1065,8 @@
                     })
                     this.strategyhost.allHost.forEach((item, index) => {
                       allIndexs.push(index)
-                      for (var i = 0; i < this.resourceId.length; i++){
-                        if (this.resourceId[i] == item.id){
+                      for (var i = 0; i < this.resourceId.length; i++) {
+                        if (this.resourceId[i] == item.id) {
                           this.strategyhost.selectedHost.push(item)
                           selectedIndexs.push(index)
                         }
@@ -1241,12 +1241,12 @@
     },
     methods: {
       setData(res) {
-        if(res[0].status == 200 && res[0].data.status == 1){
+        if (res[0].status == 200 && res[0].data.status == 1) {
           this.monitorData[0].num = res[0].data.cantnotPing
           this.monitorData[1].num = res[0].data.AlarmNotHandled
           this.monitorData[2].num = res[0].data.shutdownCount
         }
-        if(res[1].status == 200 && res[1].data.status == 1){
+        if (res[1].status == 200 && res[1].data.status == 1) {
           let mockMessageData = [
             {value: res[1].data.result.shortMessageBuy + res[1].data.result.shortMessageFree, name: '剩余配额'},
             {value: res[1].data.result.shortMessageOwnControlUse, name: '自定义监控告警已发送'},
@@ -1262,7 +1262,7 @@
           this.messageData.series[0].data = mockMessageData
           this.messageData.legend.data = mockMessagelegend
         }
-        if(res[2].status == 200 && res[2].data.status == 1){
+        if (res[2].status == 200 && res[2].data.status == 1) {
           if (res[2].data.list.length != 0) {
             let name = ''
             let brokenLine = JSON.parse(JSON.stringify(line))
@@ -1320,7 +1320,7 @@
             this.firstMonitoringOverview.showChart = null
           }
         }
-        if(res[3].status == 200 && res[3].data.status == 1){
+        if (res[3].status == 200 && res[3].data.status == 1) {
           if (res[3].data.list.length != 0) {
             let name = ''
             let brokenLine = JSON.parse(JSON.stringify(line))
@@ -2831,6 +2831,48 @@
             this.refresh()
           }
         },
+      customMonitoringData() {
+        if (this.customMonitoringData.length != 0) {
+          this.customMonitoringData.forEach(item => {
+            switch (item.name) {
+              case 'cpu':
+                item.name = 'CPU使用率'
+                break
+              case 'disk':
+                item.name = '磁盘使用率'
+                break
+              case 'memory':
+                item.name = '内存使用率'
+                break
+              case 'networkin':
+                item.name = '网进'
+                break
+              case 'networkout':
+                item.name = '网出'
+                break
+              case 'capacity':
+                item.name = '对象存储容量'
+                break
+              case 'flow':
+                item.name = '流量'
+                break
+              case 'gethttp':
+                item.name = 'get请求次数'
+                break
+              case 'posthttp':
+                item.name = 'post请求次数'
+                break
+              case 'puthttp':
+                item.name = 'put请求次数'
+                break
+              case 'deletehttp':
+                item.name = 'delete请求次数'
+                break
+
+            }
+          })
+        }
+      }
     }
   }
 </script>

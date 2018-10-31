@@ -29,7 +29,7 @@
             </div>
             <div>镜像系统：{{computerInfo.template}}</div>
             <div>内网地址：{{computerInfo.privateIp}}</div>
-            <div>系统盘容量：{{computerInfo.rootDiskSize}}G <span class="bluetext" @click="systemDiskLarger">系统盘扩容</span></div>
+            <div>系统盘容量：{{computerInfo.rootDiskSize}}G <span class="bluetext" @click="systemDiskLarger" style="cursor: pointer">系统盘扩容</span></div>
             <div>登录密码：
               <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword()">{{codePlaceholder}}</span>
             </div>
@@ -182,34 +182,35 @@
                 <label>重装系统</label>
                 <Form :model="reloadForm" :label-width="100" label-position="left" style="margin-top:20px;width:350px;">
                   <Form-item label="选择镜像">
-                    <Select v-model="reloadForm.system">
+                    <Cascader :data="osOptions" v-model="reloadForm.system"></Cascader>
+                    <!--       <Select v-model="reloadForm.system">
 
-                      <OptionGroup :label="key" v-for="(val, key, index) in osOptions" :key="key">
-                        <Option v-for="(item,index) in val" :key="index" :value="item.systemtemplateid">
-                          {{item.templatedescript}}
-                        </Option>
-                      </OptionGroup>
+                             <OptionGroup :label="key" v-for="(val, key, index) in osOptions" :key="key">
+                               <Option v-for="(item,index) in val" :key="index" :value="item.systemtemplateid">
+                                 {{item.templatedescript}}
+                               </Option>
+                             </OptionGroup>-->
 
-                      <!--<OptionGroup label="ubuntu" v-show="osOptions.ubuntu.length>0">
-                        <Option v-for="(item,index) in osOptions.ubuntu" :key="index" :value="item.systemtemplateid">
-                          {{item.templatename}}
-                        </Option>
-                      </OptionGroup>
-                      <OptionGroup label="window" v-show="osOptions.window.length>0">
-                        <Option v-for="(item,index) in osOptions.window" :key="index" :value="item.systemtemplateid">
-                          {{item.templatename}}
-                        </Option>
-                      </OptionGroup>
-                      <OptionGroup label="centos" v-show="osOptions.centos.length>0">
-                        <Option v-for="(item,index) in osOptions.centos" :key="index" :value="item.systemtemplateid">
-                          {{item.templatename}}
-                        </Option>
-                      </OptionGroup>
-                      <OptionGroup label="debian" v-show="osOptions.debian.length>0">
-                        <Option v-for="(item,index) in osOptions.debian" :key="index" :value="item.systemtemplateid">
-                          {{item.templatename}}
-                        </Option>
-                      </OptionGroup>-->
+                    <!--<OptionGroup label="ubuntu" v-show="osOptions.ubuntu.length>0">
+                      <Option v-for="(item,index) in osOptions.ubuntu" :key="index" :value="item.systemtemplateid">
+                        {{item.templatename}}
+                      </Option>
+                    </OptionGroup>
+                    <OptionGroup label="window" v-show="osOptions.window.length>0">
+                      <Option v-for="(item,index) in osOptions.window" :key="index" :value="item.systemtemplateid">
+                        {{item.templatename}}
+                      </Option>
+                    </OptionGroup>
+                    <OptionGroup label="centos" v-show="osOptions.centos.length>0">
+                      <Option v-for="(item,index) in osOptions.centos" :key="index" :value="item.systemtemplateid">
+                        {{item.templatename}}
+                      </Option>
+                    </OptionGroup>
+                    <OptionGroup label="debian" v-show="osOptions.debian.length>0">
+                      <Option v-for="(item,index) in osOptions.debian" :key="index" :value="item.systemtemplateid">
+                        {{item.templatename}}
+                      </Option>
+                    </OptionGroup>-->
                     </Select>
                   </Form-item>
                   <Form-item label="账号密码">
@@ -746,15 +747,10 @@
           ]
         },
         reloadForm: {
-          system: '',
+          system: [],
           password: ''
         },
-        osOptions: {
-          ubuntu: [],
-          window: [],
-          centos: [],
-          debian: []
-        },
+        osOptions: [],
         searchDate: [],
         reloadButton: '确认重装',
         showModal: {
@@ -842,36 +838,15 @@
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.computerInfo = response.data.result
-          // 主机镜像
-          let tem = axios.get('information/listTemplates.do', {
+          let url = 'information/getTemplateAndTemplateFunction.do'
+          axios.get(url, {
             params: {
-              //osType: this.computerInfo.computerOsType,
               zoneId: this.$route.query.zoneid
             }
-          })
-          // 镜像+应用 模版
-          let fun = axios.get('information/listTemplateFunctionAll.do', {
-            params: {
-              zoneId: this.$store.state.zone.zoneid
+          }).then(res => {
+            if (res.data.status == 1) {
+              this.osOptions = res.data.result
             }
-          })
-          Promise.all([tem, fun]).then(response => {
-            //console.log(response)
-            let res1 = response[0]
-            let res2 = response[1]
-            if (res1.data.status == 1) {
-              for (let t in res1.data.result) {
-                this.osOptions[t] = res1.data.result[t]
-              }
-            }
-            console.log(res2)
-            if (res2.data.status == 1) {
-              for (let t in res2.data.result) {
-                console.log(t)
-                this.osOptions[t] = res2.data.result[t]
-              }
-            }
-            console.log(this.osOptions)
           })
         }
       })
@@ -956,8 +931,9 @@
           this.$Message.info('请先关闭主机')
           return false
         }
-        this.$http.get('network/VMIsHaveSnapshot.do', {params: {
-          VMId: this.computerInfo.computerId
+        this.$http.get('network/VMIsHaveSnapshot.do', {
+          params: {
+            VMId: this.computerInfo.computerId
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1094,7 +1070,7 @@
         this.reloadButton = '正在重装...'
         this.$http.post('information/restoreVirtualMachine.do', {
           VMId: this.computerInfo.computerId,
-          templateId: this.reloadForm.system,
+          templateId: this.reloadForm.system[1],
           adminPassword: this.reloadForm.password
         }).then(response => {
           this.reloadButton = '确认重装'
@@ -1105,7 +1081,7 @@
               content: response.data.message
             })
           }
-          this.reloadForm.system = ''
+          this.reloadForm.system = []
           this.reloadForm.password = ''
         })
       },

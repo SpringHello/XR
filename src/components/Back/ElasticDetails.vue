@@ -67,7 +67,7 @@
               <span style="color: #2A99F2;font-size: 14px;cursor: pointer;"  @click="elasticJump(item)">{{item.stretchname}}</span>
               <span style="color: #2A99F2;font-size: 14px;cursor: pointer;margin:0 10px 0 10px;" @click="changeTelescopic(index)" >更改伸缩组</span>
             </div> 
-             <p v-else>暂无伸缩组，<span style="color:#2A99F2;cursor:pointer;" @click="$router.push({path:'elastic'})">立即创建伸缩组</span></p>
+             <p style="margin:10px 0;" v-if="telescopicList.length == 0">暂无伸缩组，<span style="color:#2A99F2;cursor:pointer;" @click="$router.push({path:'elastic'})">立即创建伸缩组</span></p>
           </div>
         </div>
       </div>
@@ -207,7 +207,6 @@
       callback();
     }
   }
-
 
   export default {
     data(){
@@ -363,14 +362,6 @@
           if(res.status == 200 && res.data.status == 1){
             if(res.data.result.publicLoadbalance.length != 0 || res.data.result.internalLoadbalance.length != 0 ){
               this.updateTeleList.balancingList = res.data.result.publicLoadbalance.concat(res.data.result.internalLoadbalance);
-            }else {
-              this.$Modal.info({
-                title:'提示',
-                content:'<p>您还没有创建负载均衡，请先<a style="color: #2A99F2;" href="balance">创建负载均衡</a></p>',
-                onOk:()=>{
-                  this.$router.push({path:'balance'});
-                }
-              })
             }
           }
         });
@@ -432,6 +423,7 @@
           }
         }).then(res =>{
             this.telescopicList = res.data.list;
+            console.log(this.telescopicList.length)
              this.tList = JSON.parse(JSON.stringify(res.data.list));
         });
       },
