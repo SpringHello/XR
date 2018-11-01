@@ -642,7 +642,6 @@
                       this.updateStrategy.value = parmas.row.total;
                       this.updateStrategy.coolingNumber = Number(parmas.row.loolingtime);
                       this.updateStrategy.isAdd = parmas.row.isadd;
-                      this.updateStrategy.contacts = parmas.row.alarmlinkmanname;
                       this.updateStrategy.id = parmas.row.id.toString();
                     }
                   }
@@ -1002,7 +1001,20 @@
             },
             {
               title:'启动配置',
-              key:'startconfigurationname'
+              render:(h,params) =>{
+                return h('span',{
+                  style:{
+                    color:'#2A99F2',
+                    cursor:'pointer'
+                  },
+                  on:{
+                    click:()=>{
+                       sessionStorage.setItem('elastic_id',params.row.startconfiguration);
+                       this.$router.push({path:'elasticDetails'})
+                    }
+                  }
+                },params.row.startconfigurationname)
+              }
             },
             {
               title:'加入时间',
@@ -1092,7 +1104,7 @@
             {
               title:'活动ID',
               key:'telescopicgroupid',
-              width:200
+              width:100
             },
             {
               title:'描述',
@@ -1920,31 +1932,36 @@
 
       //修改告警策略
       updateAlarmStrategy(){
-        this.$http.post('elasticScaling/updateScaleAlarmStrategy.do',{
-          id:this.updateStrategy.id,
-          strategyName:this.updateStrategy.name,
-          alarmType:'0',
-          alarmLinkmanId:this.updateStrategy.contacts.toString(),
-          telescopicgroupId:sessionStorage.getItem('vpc_id').toString(),
-          alarmName:this.updateStrategy.cpuValue,
-          countcircle:this.updateStrategy.time,
-          valueType:this.updateStrategy.symbol,
-          value:this.updateStrategy.percentage.toString(),
-          continuecircle:this.updateStrategy.count,
-          addCount:this.updateStrategy.addcount.toString(),
-          total:this.updateStrategy.value,
-          loolingTime:this.updateStrategy.coolingNumber.toString(),
-          isAdd:this.updateStrategy.isAdd
-        }).then(res =>{
-          if(res.status == 200 && res.data.status == 1){
-            this.$Message.success('修改成功');
-            this.updateStrategy.newAddStrategy = false;
-            this.getScaleAlarmStrategy();
-          }else{
-            this.$Message.info(res.data.message);
-            this.getScaleAlarmStrategy();
+        this.$refs.updateStrategy.validate((valid) => {
+          if(valid){
+            this.$http.post('elasticScaling/updateScaleAlarmStrategy.do',{
+              id:this.updateStrategy.id,
+              strategyName:this.updateStrategy.name,
+              alarmType:'0',
+              alarmLinkmanId:this.updateStrategy.contacts.toString(),
+              telescopicgroupId:sessionStorage.getItem('vpc_id').toString(),
+              alarmName:this.updateStrategy.cpuValue,
+              countcircle:this.updateStrategy.time,
+              valueType:this.updateStrategy.symbol,
+              value:this.updateStrategy.percentage.toString(),
+              continuecircle:this.updateStrategy.count,
+              addCount:this.updateStrategy.addcount.toString(),
+              total:this.updateStrategy.value,
+              loolingTime:this.updateStrategy.coolingNumber.toString(),
+              isAdd:this.updateStrategy.isAdd
+            }).then(res =>{
+              if(res.status == 200 && res.data.status == 1){
+                this.$Message.success('修改成功');
+                this.updateStrategy.newAddStrategy = false;
+                this.getScaleAlarmStrategy();
+              }else{
+                this.$Message.info(res.data.message);
+                this.getScaleAlarmStrategy();
+              }
+            })
           }
         })
+      
       },
 
       //删除告警策略

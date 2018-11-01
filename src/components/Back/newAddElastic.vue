@@ -220,7 +220,7 @@
                   <Radio label="2">
                     <span>系统密码</span>
                   </Radio>
-                  <Radio label="3" style="display: none">
+                  <Radio label="3">
                     <span>保留镜像设置</span>
                   </Radio>
                 </RadioGroup>
