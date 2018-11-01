@@ -160,32 +160,34 @@ var messageMap = {
 export default {
   created () {
     // 获取token
-    axios.post('user/getRuiRadosApiacess.do', {
-      zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
-      companyId: $store.state.authInfo.companyid
-    }).then(response => {
-      if (response.status == 200 && response.data.status == 1) {
-        var radosApIaccessKey = response.data.data.data
-        axios.get('user/getRadosToken.do', {
-          params: {
-            companyId: $store.state.authInfo.companyid,
-            secret: radosApIaccessKey
-          }
-        }).then(response => {
-          if (response.status == 200) {
-            this.token = response.data.token
-            axios.post('user/getFluxs.do', { token: this.token }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.fulxSize = response.data.data.fulxList[0].size
-                // 2领取成功 1未领取成功
-                this.isReceive = response.data.data.fulxList[0].status == '2' ? false : true
-                this.fulxId = response.data.data.fulxList[0].id
-              }
-            })
-          }
-        })
-      }
-    })
+    if (this.$store.state.authInfo) {
+      axios.post('user/getRuiRadosApiacess.do', {
+        zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+        companyId: $store.state.authInfo.companyid
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          var radosApIaccessKey = response.data.data.data
+          axios.get('user/getRadosToken.do', {
+            params: {
+              companyId: $store.state.authInfo.companyid,
+              secret: radosApIaccessKey
+            }
+          }).then(response => {
+            if (response.status == 200) {
+              this.token = response.data.token
+              axios.post('user/getFluxs.do', { token: this.token }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.fulxSize = response.data.data.fulxList[0].size
+                  // 2领取成功 1未领取成功
+                  this.isReceive = response.data.data.fulxList[0].status == '2' ? false : true
+                  this.fulxId = response.data.data.fulxList[0].id
+                }
+              })
+            }
+          })
+        }
+      })
+    }
   },
   data () {
     return {
