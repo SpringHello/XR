@@ -56,17 +56,19 @@
         <Form :model="createSnapsForm" ref="createSnapsForm" :rules="createSnapsRule">
           <FormItem label="选择数据库" prop="database">
             <Select v-model="createSnapsForm.database">
-                <Option v-for="item in databaseList" :value="`${item.computerid}#${item.computername}`" :key="item.computerid">{{ item.computername }}
+                <Option v-for="item in databaseList" :value="item.computerid" :key="item.computerid">{{ item.computername }}
                  </Option>
             </Select>
-            <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
+          </FormItem>
+          <FormItem>
+            <span style="color:#2A99F2;font-size:14px;position:absolute;top:36px;">
               <span style="font-weight:800;font-size:20px;">+</span>
-              <span style="cursor:pointer;" @click="tobuy_database()">购买数据库</span>
+              <span style="cursor:pointer;" @click="$router.push('buy/bdata')">购买数据库</span>
             </span>
           </FormItem>
-          <!-- <FormItem label="备份名称" prop="name">
+          <FormItem label="备份名称" prop="name">
             <Input v-model="createSnapsForm.name" placeholder="请输入备份名称"></Input>
-          </FormItem> -->
+          </FormItem>
         </Form>
         <p class="mb20">备份时间为：{{new Date().format('yyyy-MM-dd hh:mm:ss')}}</p>
       </div>
@@ -121,8 +123,8 @@
           <Form-item label="备份策略应用数据库">
             <Select v-model="newStrategyForm.strategyForDatabase" filterable multiple style="width: 229px">
               <Option v-for="item in newStrategyForm.applyDatabaseGroup" :value="item.diskid" :key="item.diskid">{{ item.diskname
-                }}
-              </Option>
+                }}                 
+                </Option>
             </Select>
           </Form-item>
           <div>
@@ -196,6 +198,16 @@
   import axios from '../../util/axiosInterceptor'
   export default {
     data() {
+      // 匹配中文
+      const validChinese = (rule, value, callback) => {
+        if (/[\u4e00-\u9fa5]/.test(value)) {
+          return callback(new Error("不能输入中文"))
+        } else if (value == '') {
+          return callback(new Error("备份名称不能为空"))
+        } else {
+          callback()
+        }
+      }
       return {
         databaseList: [],
         tabPane: 'Snapshot',
@@ -296,13 +308,12 @@
         },
         createSnapsForm: {
           database: '',
-          // name: '',
-          // radio: '1'
+          name: '',
         },
         createSnapsRule: {
-          // name: [
-          //   {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
-          // ],
+          name: [
+            {required: true, validator: validChinese, trigger: 'blur'}
+          ],
           database: [
             {required: true, message: '请选择数据库', trigger: 'change'}
           ]
@@ -565,10 +576,6 @@
           this.backupData = response.data.result
         }
       },
-      tobuy_database() {
-        this.$router.push('buy')
-        sessionStorage.setItem('pane', 'Pdatabase')
-      },
       rollback_ok() {
         this.showModal.rollback = false
         this.$http.get('database/BDRestore.do', {
@@ -608,15 +615,14 @@
       },
       NewSnaps_ok(name) {
         // console.log('aimee')
-        // console.log(this.createSnapsForm.database)
-        var paramsArry = this.createSnapsForm.database.split('#')
+        // console.log(this.createSnapsForm)
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.$http.get('database/DBBackup.do', {
               params: {
-                DBId: paramsArry[0],
+                DBId: this.createSnapsForm.database,
                 allDataBases: '0',
-                dbName: paramsArry[1]
+                dbName: this.createSnapsForm.name
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
