@@ -7,7 +7,7 @@
           <div></div>
         </router-link>
         <div class="operate">
-          <ul>
+          <ul @mouseleave="ME(-1)">
             <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
