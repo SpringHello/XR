@@ -509,15 +509,19 @@
           },
           {
             title: '型号',
-            key: 'servicetype'
+            key: 'gpunumber'
           },
           {
             title: 'vCPU',
-            key: 'cpunum'
+            render:(h,params)=>{
+              return h('span',{},params.row.cpunum+'核')
+            }
           },
           {
             title: '内存',
-            key: 'memory'
+            render:(h,params)=>{
+              return h('span',{},params.row.memory+'G')
+            }
           },
           {
             title: 'GPU/FPGA',
