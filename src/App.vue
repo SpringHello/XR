@@ -28,7 +28,7 @@
                               <p>{{i.desc}}</p>
                             </div>
                           </div>
-                          <!--添加域名-->
+                          <!--添加域名与备案-->
                           <div v-if="prod.subProd" style="margin-top: 30px;">
                             <div v-for="(subi,index) in prod.subProd" :key="index">
                               <h2>{{subi.prod}}</h2>
