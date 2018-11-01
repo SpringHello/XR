@@ -1103,7 +1103,7 @@
           activityList:[
             {
               title:'活动ID',
-              key:'telescopicgroupid',
+              key:'id',
               width:100
             },
             {
