@@ -1308,7 +1308,7 @@
         })
       },
       reload() {
-        if (this.reloadForm.system == '') {
+        if (this.reloadForm.system.length == 0) {
           this.$Message.info('请选择一个重装模版')
         } else if (this.reloadForm.password == '') {
           this.$Message.info('请输入登录密码')

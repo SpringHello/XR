@@ -242,6 +242,27 @@
                 </div>
               </div>
             </div>
+            <!-- 系统盘大小选择 -->
+            <div class="item-wrapper">
+              <div style="display: flex">
+                <div>
+                  <p class="item-title">系统盘容量</p>
+                </div>
+                <div style="width:500px;display: flex;align-items:center">
+                  <i-slider
+                    v-model="vmConfig.diskSize"
+                    unit="GB"
+                    :min=40
+                    :max=1000
+                    :step=10
+                    :points="[500,800]"
+                    style="margin-right:30px;vertical-align: middle;">
+                  </i-slider>
+                  <InputNumber :max="1000" :min="40" v-model="vmConfig.diskSize" size="large" :step=10
+                               :precision="0"></InputNumber>
+                </div>
+              </div>
+            </div>
             <!-- 核心数选择 -->
             <div class="item-wrapper">
               <div style="display: flex">
@@ -914,7 +935,7 @@
       calculate() {
         var params = {
           cpuNum: this.PecsInfo.vmConfig.kernel.toString(),
-          diskSize: '40',
+          diskSize: this.PecsInfo.vmConfig.diskSize,
           diskType: this.PecsInfo.vmConfig.diskType,
           memory: this.PecsInfo.vmConfig.RAM.toString(),
           timeType: this.PecsInfo.timeForm.currentTimeValue.type,
@@ -1024,6 +1045,7 @@
           params.memory = this.vmConfig.RAM
           params.bandWidth = this.IPConfig.publicIP ? this.IPConfig.bandWidth : 0
           params.rootDiskType = this.vmConfig.diskType
+          params.rootDiskSize = this.vmConfig.diskSize
           params.networkId = this.network
           params.vpcId = this.vpc
           var diskType = '', diskSize = ''
@@ -1102,7 +1124,7 @@
       queryCustomVM() {
         var params = {
           cpuNum: this.vmConfig.kernel.toString(),
-          diskSize: '40',
+          diskSize: this.vmConfig.diskSize,
           diskType: this.vmConfig.diskType,
           memory: this.vmConfig.RAM.toString(),
           timeType: this.timeForm.currentTimeValue.type,
