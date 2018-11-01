@@ -1229,10 +1229,10 @@
         if (res[0].status == 200 && res[0].data.status == 1 && res[1].status == 200 && res[1].data.status == 1) {
           let id_1 = ''
           let id_2 = ''
-          if(res[0].data.list.length !=0){
+          if (res[0].data.list.length != 0) {
             id_1 = res[0].data.list[0].customMonitorIndex.id
           }
-          if(res[1].data.list.length !=0){
+          if (res[1].data.list.length != 0) {
             id_2 = res[1].data.list[0].customMonitorIndex.id
           }
           let data1 = axios.get('monitor/getCanNotPingAndAlarmNotHandledAndShutdownTotalCount.do', {
@@ -2490,7 +2490,7 @@
             type: 1
           }
         }).then(res => {
-          if (res.data.status == 1) {
+          if (res.data.status == 1 && res.data.list.length != 0) {
             let url = 'monitor/listPandectCustomMonitorIndexWeek.do'
             this.$http.get(url, {
               params: {
@@ -2558,76 +2558,90 @@
                 }
               }
             })
+          } else {
+            this.firstMonitoringOverview.title = '我关注的指标'
+            this.firstMonitoringOverview.showChart = null
           }
         })
       },
       // 获取总览第二个监控图
       getSecondOverviewMonitor() {
-        let url = 'monitor/listPandectCustomMonitorIndexWeek.do'
-        this.$http.get(url, {
+        this.$http.get('monitor/listPandectCustomMonitorIndexTodaySingleById.do', {
           params: {
-            type: 2,
-            id: this.secondMonitoringOverview.id,
-            datetype: 'month'
+            type: 2
           }
         }).then(res => {
-          if (res.data.status == 1) {
-            if (res.data.list.length != 0) {
-              let name = ''
-              let brokenLine = JSON.parse(JSON.stringify(line))
-              switch (res.data.list[0].name) {
-                case 'cpu':
-                  name = 'CPU使用率'
-                  break
-                case 'disk':
-                  name = '磁盘使用率'
-                  break
-                case 'memory':
-                  name = '内存使用率'
-                  break
-                case 'networkin':
-                  name = '网进'
-                  break
-                case 'networkout':
-                  name = '网出'
-                  break
-                case 'capacity':
-                  name = '容量'
-                  break
-                case 'flow':
-                  name = '流量'
-                  break
-                case 'gethttp':
-                  name = 'get请求次数'
-                  break
-                case 'posthttp':
-                  name = 'post请求次数'
-                  break
-                case 'puthttp':
-                  name = 'put请求次数'
-                  break
-                case 'deletehttp':
-                  name = 'delete请求次数'
-                  break
-
+          if (res.data.status == 1 && res.data.list.length != 0) {
+            let url = 'monitor/listPandectCustomMonitorIndexWeek.do'
+            this.$http.get(url, {
+              params: {
+                type: 2,
+                id: res.data.list[0].customMonitorIndex.id,
+                datetype: 'month'
               }
-              brokenLine.xAxis.data = res.data.list[0].x
-              res.data.list[0].data.forEach(data => {
-                brokenLine.series.push({
-                  name: data.computerName + name,
-                  type: 'line',
-                  data: data.data,
-                  barWidth: '15%'
-                })
-              })
-              this.secondMonitoringOverview.showChart = brokenLine
-              this.secondMonitoringOverview.id = res.data.list[0].customMonitorIndex.id
-              this.secondMonitoringOverview.productType = res.data.list[0].customMonitorIndex.producttype
-              this.secondMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
-              this.secondMonitoringOverview.x = res.data.list[0].x
-            } else {
-              this.secondMonitoringOverview.showChart = null
-            }
+            }).then(res => {
+              if (res.data.status == 1) {
+                if (res.data.list.length != 0) {
+                  let name = ''
+                  let brokenLine = JSON.parse(JSON.stringify(line))
+                  switch (res.data.list[0].name) {
+                    case 'cpu':
+                      name = 'CPU使用率'
+                      break
+                    case 'disk':
+                      name = '磁盘使用率'
+                      break
+                    case 'memory':
+                      name = '内存使用率'
+                      break
+                    case 'networkin':
+                      name = '网进'
+                      break
+                    case 'networkout':
+                      name = '网出'
+                      break
+                    case 'capacity':
+                      name = '容量'
+                      break
+                    case 'flow':
+                      name = '流量'
+                      break
+                    case 'gethttp':
+                      name = 'get请求次数'
+                      break
+                    case 'posthttp':
+                      name = 'post请求次数'
+                      break
+                    case 'puthttp':
+                      name = 'put请求次数'
+                      break
+                    case 'deletehttp':
+                      name = 'delete请求次数'
+                      break
+
+                  }
+                  brokenLine.xAxis.data = res.data.list[0].x
+                  res.data.list[0].data.forEach(data => {
+                    brokenLine.series.push({
+                      name: data.computerName + name,
+                      type: 'line',
+                      data: data.data,
+                      barWidth: '15%'
+                    })
+                  })
+                  this.secondMonitoringOverview.showChart = brokenLine
+                  this.secondMonitoringOverview.id = res.data.list[0].customMonitorIndex.id
+                  this.secondMonitoringOverview.productType = res.data.list[0].customMonitorIndex.producttype
+                  this.secondMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
+                  this.secondMonitoringOverview.x = res.data.list[0].x
+                } else {
+                  this.secondMonitoringOverview.showChart = null
+                }
+              }
+            })
+          } else {
+            this.secondMonitoringOverview.title = '我关注的指标'
+            this.secondMonitoringOverview.showChart = null
           }
         })
       },
