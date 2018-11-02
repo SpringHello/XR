@@ -31,7 +31,7 @@
               <span class="refresh-time">刷新时间:{{ refreshTime }}</span>
             </div>
             <section>
-              <div class="disk">
+              <div class="show-chart">
                 <div class="header">
                   {{ firstMonitoringOverview.title }}
                   <span v-if="firstMonitoringOverview.showChart">
@@ -57,12 +57,13 @@
                   <div class="cross"></div>
                   <p>您还未添加关注的指标，点击“+”添加指标。</p>
                 </div>
+                <div class="chart-shade" ref="firstShade"></div>
               </div>
               <chart :options="messageData"
                      style="border: solid 1px #D8D8D8;padding: 20px;padding-right:0;box-sizing: border-box;width: 366px;height:297px;"></chart>
             </section>
             <section>
-              <div class="disk" style="width: 1160px;height: 390px">
+              <div class="show-chart" style="width: 1160px;height: 390px">
                 <div class="header">
                   {{ secondMonitoringOverview.title }}
                   <span v-if="secondMonitoringOverview.showChart">
@@ -3088,8 +3089,9 @@
     }
   }
 
-  .disk {
+  .show-chart {
     width: 774px;
+    position: relative;
     .om-content {
       height: 80%;
       padding-top: 6%;
@@ -3117,6 +3119,26 @@
         font-family: MicrosoftYaHei;
         color: rgba(153, 153, 153, 1);
         line-height: 16px;
+      }
+    }
+    .chart-shade{
+      position: absolute;
+      background-color: #5c95fd;
+      color: #ffffff;
+      height: 0px;
+      line-height: 20px;
+      overflow: hidden;
+      transition: height .3s;
+      bottom: 0px;
+      opacity: 0;
+      left: 0px;
+    }
+    &:hover {
+      .chart-shade {
+        width: 774px;
+        height: 100%;
+        background:rgba(42,153,242,1);
+        opacity:0.8;
       }
     }
   }
