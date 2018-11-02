@@ -455,12 +455,12 @@
                       {
                         title: '域名注册',
                         desc: '自定义域名注册、查询',
-                        path: '/ruicloud/PdataBase.htm'
+                        path: '/ruicloud/domainname'
                       },
                       {
                         title: '域名备案',
                         desc: '高效贴心的域名备案服务',
-                        path: '/ruicloud/PdataBase.htm'
+                        path: '/ruicloud/entrance'
                       },
                     ]
                   },
