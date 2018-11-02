@@ -469,6 +469,7 @@
                         click: () => {
                           if (params.row.status != -1) {
                             this.$router.push({path: 'gpuManage'});
+                            this.$store.commit('setZone',params.row);
                             sessionStorage.setItem('uuId', params.row.computerid);
                             sessionStorage.setItem('gpuId',params.row.id);
                             sessionStorage.setItem('gpu_name',params.row.computername);
@@ -1023,7 +1024,7 @@
 
         //主机续费提交
         setGPuMoney(){
-         let gpuList =JSON.stringify([{type:6,id:Number(sessionStorage.getItem('gpuId'))}]);
+         let gpuList =JSON.stringify([{type:6,id:this.VMId}]);
           axios.post('continue/continueOrder.do',{
             zoneId:this.$store.state.zone.zoneid,
             timeType:this.timeType,
