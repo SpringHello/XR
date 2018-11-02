@@ -469,6 +469,7 @@
                         click: () => {
                           if (params.row.status != -1) {
                             this.$router.push({path: 'gpuManage'});
+                            this.$store.commit('setZone',params.row);
                             sessionStorage.setItem('uuId', params.row.computerid);
                             sessionStorage.setItem('gpuId',params.row.id);
                             sessionStorage.setItem('gpu_name',params.row.computername);
@@ -671,7 +672,7 @@
                               // if(params.row.computerstate == '0' && params.row.status=='1'){
                               //   this.$Message.info('主机续费需要关闭主机')
                               // }
-                              if(params.row.caseType == 3){
+                              if(params.row.caseType != 3){
                                 this.$Message.info('请选择实时计费的云主机进行资费变更');
                                 return
                               }
@@ -1023,7 +1024,7 @@
 
         //主机续费提交
         setGPuMoney(){
-         let gpuList =JSON.stringify([{type:6,id:Number(sessionStorage.getItem('gpuId'))}]);
+         let gpuList =JSON.stringify([{type:6,id:this.VMId}]);
           axios.post('continue/continueOrder.do',{
             zoneId:this.$store.state.zone.zoneid,
             timeType:this.timeType,
@@ -1131,9 +1132,9 @@
         },
       },
       created(){
-        // this.intervalInstance = setInterval(() => {
-        //   this.getGpuServerList()
-        // }, 5 * 1000)
+        this.intervalInstance = setInterval(() => {
+          this.getGpuServerList()
+        }, 5 * 1000)
       },
       mounted(){
           this.getGpuServerList();
