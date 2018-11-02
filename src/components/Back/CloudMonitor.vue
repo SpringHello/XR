@@ -31,7 +31,7 @@
               <span class="refresh-time">刷新时间:{{ refreshTime }}</span>
             </div>
             <section>
-              <div class="show-chart">
+              <div class="show-chart" @mouseenter="enterChart('firstShade')" @mouseleave="leaveChart('firstShade')">
                 <div class="header">
                   {{ firstMonitoringOverview.title }}
                   <span v-if="firstMonitoringOverview.showChart">
@@ -53,17 +53,25 @@
                   </div>
                 </div>
                 <chart v-if="firstMonitoringOverview.showChart" :options="firstMonitoringOverview.showChart" style="width: 714px;height:172px;margin-top: 20px;"></chart>
-                <div v-else class="om-content" @click="addOverviewMonitoring(1)">
+                <div v-if="!firstMonitoringOverview.showChart&&firstMonitoringOverview.chart == 'noChart'" class="om-content" @click="addOverviewMonitoring(1)">
                   <div class="cross"></div>
                   <p>您还未添加关注的指标，点击“+”添加指标。</p>
                 </div>
-                <div class="chart-shade" ref="firstShade"></div>
+                <div class="chart-shade" ref="firstShade">
+                  <p style="margin-top: 100px">请购买弹性云服务器后查看信息</p>
+                  <button v-if="!noHost" style="margin-right: 10px" @click="$router.push('buy/bhost')">购买云主机</button>
+                  <button v-if="!noHost" @click="$router.push('documentInfo/kiRWuMFJd/kly3c37B1')">查看云主机购买指南</button>
+                  <button v-if="noHost" @click="addOverviewMonitoring(1)">添加监控指标</button>
+                </div>
+                <div v-if="!firstMonitoringOverview.showChart&&firstMonitoringOverview.chart == 'falseChart'" class="chart-banner" style="padding: 22px">
+                  <img src="../../assets/img/cloudmonitor/cm-banner1.png"/>
+                </div>
               </div>
               <chart :options="messageData"
                      style="border: solid 1px #D8D8D8;padding: 20px;padding-right:0;box-sizing: border-box;width: 366px;height:297px;"></chart>
             </section>
             <section>
-              <div class="show-chart" style="width: 1160px;height: 390px">
+              <div class="show-chart" style="width: 1160px;height: 390px" @mouseenter="enterChart('secondShade')" @mouseleave="leaveChart('secondShade')">
                 <div class="header">
                   {{ secondMonitoringOverview.title }}
                   <span v-if="secondMonitoringOverview.showChart">
@@ -85,11 +93,20 @@
                   </div>
                 </div>
                 <chart v-if="secondMonitoringOverview.showChart" :options="secondMonitoringOverview.showChart" style="width:1110px;height:268px;margin-top: 20px;"></chart>
-                <div v-else class="om-content" @click="addOverviewMonitoring(2)" style="padding-top: 10%">
+                <div v-if="!secondMonitoringOverview.showChart&&secondMonitoringOverview.chart == 'noChart'" class="om-content" @click="addOverviewMonitoring(2)"
+                     style="padding-top: 10%">
                   <div class="cross"></div>
                   <p>您还未添加关注的指标，点击“+”添加指标。</p>
                 </div>
-                <div class="chart-shade" style="width: 1160px" ref="secondShade"></div>
+                <div class="chart-shade" style="width: 1160px;" ref="secondShade">
+                  <p style="margin-top: 150px">请购买弹性云服务器后查看信息</p>
+                  <button v-if="!noHost" style="margin-right: 10px" @click="$router.push('buy/bhost')">购买云主机</button>
+                  <button v-if="!noHost" @click="$router.push('documentInfo/kiRWuMFJd/kly3c37B1')">查看云主机购买指南</button>
+                  <button v-if="noHost" @click="addOverviewMonitoring(2)">添加监控指标</button>
+                </div>
+                <div v-if="!secondMonitoringOverview.showChart&&secondMonitoringOverview.chart == 'falseChart'" class="chart-banner" style="width: 1160px;padding: 40px 15px;">
+                  <img src="../../assets/img/cloudmonitor/cm-banner2.png"/>
+                </div>
               </div>
             </section>
           </TabPane>
@@ -524,8 +541,9 @@
             alarmtype: 1
           }
         ],
+        noHost: false,
         firstMonitoringOverview: {
-          title: '我关注的指标',
+          title: '',
           showChart: null,
           mapType: 'line',
           dateType: 'month',
@@ -537,7 +555,7 @@
           chart: 'falseChart'
         },
         secondMonitoringOverview: {
-          title: '我关注的指标',
+          title: '',
           showChart: null,
           mapType: 'line',
           dateType: 'month',
@@ -1355,6 +1373,7 @@
             this.firstMonitoringOverview.productType = res[2].data.list[0].customMonitorIndex.producttype
             this.firstMonitoringOverview.indexs = res[2].data.list[0].customMonitorIndex.indexs
             this.firstMonitoringOverview.x = res[2].data.list[0].x
+            this.firstMonitoringOverview.chart = 'trueChart'
           } else {
             this.firstMonitoringOverview.showChart = null
           }
@@ -1413,6 +1432,7 @@
             this.secondMonitoringOverview.productType = res[3].data.list[0].customMonitorIndex.producttype
             this.secondMonitoringOverview.indexs = res[3].data.list[0].customMonitorIndex.indexs
             this.secondMonitoringOverview.x = res[3].data.list[0].x
+            this.secondMonitoringOverview.chart = 'trueChart'
           } else {
             this.secondMonitoringOverview.showChart = null
           }
@@ -1472,6 +1492,7 @@
             }).then(res => {
               if (res.data.status == 1) {
                 this.$Message.success('删除成功')
+                val === 1 ? this.firstMonitoringOverview.chart = 'noChart' : this.secondMonitoringOverview.chart = 'noChart'
                 val === 1 ? this.getFirstOverviewMonitor() : this.getSecondOverviewMonitor()
               } else {
                 this.$message.info({
@@ -1572,7 +1593,32 @@
       eventHandleRemove(index) {
         this.eventformDynamic.splice(index, 1)
       },
-
+      enterChart(val) {
+        if (val === 'firstShade' && this.firstMonitoringOverview.chart === 'falseChart') {
+          this.$refs.firstShade.style.width = '774px'
+          this.$refs.firstShade.style.height = '100%'
+          this.$refs.firstShade.style.background = 'rgba(42,153,242,1)'
+          this.$refs.firstShade.style.opacity = '0.8'
+          this.$refs.firstShade.style.zIndex = '1'
+        } else if (this.secondMonitoringOverview.chart === 'falseChart' && val === 'secondShade') {
+          this.$refs.secondShade.style.width = '1160px'
+          this.$refs.secondShade.style.height = '100%'
+          this.$refs.secondShade.style.background = 'rgba(42,153,242,1)'
+          this.$refs.secondShade.style.opacity = '0.8'
+          this.$refs.secondShade.style.zIndex = '1'
+        }
+      },
+      leaveChart(val) {
+        if (val === 'firstShade' && this.firstMonitoringOverview.chart === 'falseChart') {
+          this.$refs.firstShade.style.width = '0'
+          this.$refs.firstShade.style.height = '0'
+          this.$refs.firstShade.style.opacity = '0'
+        } else if (this.secondMonitoringOverview.chart === 'falseChart' && val === 'secondShade') {
+          this.$refs.secondShade.style.width = '0'
+          this.$refs.secondShade.style.height = '0'
+          this.$refs.secondShade.style.opacity = '0'
+        }
+      },
       // 区域变更，刷新数据
       refresh() {
         this.getShortMessageControl()
@@ -2558,13 +2604,15 @@
                   this.firstMonitoringOverview.productType = res.data.list[0].customMonitorIndex.producttype
                   this.firstMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
                   this.firstMonitoringOverview.x = res.data.list[0].x
+                  this.firstMonitoringOverview.chart = 'trueChart'
                 } else {
                   this.firstMonitoringOverview.showChart = null
+                  this.firstMonitoringOverview.title = this.firstMonitoringOverview.chart === 'falseChart' ? '' : '我关注的指标'
                 }
               }
             })
           } else {
-            this.firstMonitoringOverview.title = '我关注的指标'
+            this.firstMonitoringOverview.title = this.firstMonitoringOverview.chart === 'falseChart' ? '' : '我关注的指标'
             this.firstMonitoringOverview.showChart = null
           }
         })
@@ -2639,13 +2687,15 @@
                   this.secondMonitoringOverview.productType = res.data.list[0].customMonitorIndex.producttype
                   this.secondMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
                   this.secondMonitoringOverview.x = res.data.list[0].x
+                  this.secondMonitoringOverview.chart = 'trueChart'
                 } else {
                   this.secondMonitoringOverview.showChart = null
+                  this.secondMonitoringOverview.title = this.secondMonitoringOverview.chart === 'falseChart' ? '' : '我关注的指标'
                 }
               }
             })
           } else {
-            this.secondMonitoringOverview.title = '我关注的指标'
+            this.secondMonitoringOverview.title = this.secondMonitoringOverview.chart === 'falseChart' ? '' : '我关注的指标'
             this.secondMonitoringOverview.showChart = null
           }
         })
@@ -3122,25 +3172,47 @@
         line-height: 16px;
       }
     }
-    .chart-shade{
+    .chart-shade {
       position: absolute;
       background-color: #5c95fd;
       color: #ffffff;
       height: 0px;
       line-height: 20px;
       overflow: hidden;
-      transition: height .3s;
+      transition: height .5s;
       top: 0px;
       opacity: 0;
       left: 0px;
-    }
-    &:hover {
-      .chart-shade {
-        width: 774px;
-        height: 100%;
-        background:rgba(42,153,242,1);
-        opacity:0.8;
+      text-align: center;
+      > p {
+        font-size: 12px;
+        font-family: MicrosoftYaHei;
+        color: rgba(255, 255, 255, 1);
+        margin-bottom: 20px;
       }
+      > button {
+        cursor: pointer;
+        outline: none;
+        padding: 5px 15px;
+        border-radius: 4px;
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 1);
+        ont-size: 12px;
+        font-family: MicrosoftYaHei;
+        color: rgba(255, 255, 255, 1);
+        &:hover {
+          color: rgba(42, 153, 242, 1);
+          background: rgba(255, 255, 255, 1);
+        }
+      }
+    }
+    .chart-banner {
+      position: absolute;
+      height: 100%;
+      top: 0px;
+      opacity: 1;
+      left: 0px;
+      overflow: hidden;
     }
   }
 
