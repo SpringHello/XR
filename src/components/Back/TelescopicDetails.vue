@@ -56,6 +56,10 @@
               <span>创建时间 :</span>
               <span>{{details.createtime}}</span>
             </div>
+             <div>
+              <span>创建时间 :</span>
+              <span>{{details.updatetime}}</span>
+            </div>
             <div>
               <span style="color: #2A99F2;cursor: pointer;" @click="updateTelescopic = true">修改伸缩组配置</span>
             </div>

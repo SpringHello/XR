@@ -749,7 +749,6 @@
       }
     },
     created() {
-      console.log(this.$store.state.zone.gpuServer+'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       this.diskAreaList = this.$store.state.zoneList;
       this.listDisk();
       this.getGpuList();
@@ -934,7 +933,7 @@
             timeType: this.diskForm.timeType,
             timeValue: this.diskForm.timeValue || 1,
             isAutorenew: 0,
-            serviceType:this.$store.state.zone.gpuServer == 1?this.diskForm.diskGpu:''
+            serviceType:this.$store.state.zone.gpuserver == 1?this.diskForm.diskGpu:''
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {

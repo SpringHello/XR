@@ -133,7 +133,7 @@
                                style="width: 200px" :transfer="true"  @on-change="dataTimeChange"></Date-picker>
                   <Button type="primary" size="small" @click="selectOperationLog">查询</Button>
                 </div>
-                <Table :columns="journalList" :data="journalData" style="margin-top: 10px;"></Table>
+                <Table :columns="journalList" :data="journalData" :loading='logLoading' style="margin-top: 10px;"></Table>
                 <div style="margin: 10px;overflow: hidden">
                   <div style="float: right;">
                     <Page :total="total" :current="1" @on-change="currentChange"></Page>
@@ -331,6 +331,8 @@
         cpu:JSON.parse(cpu),
         momery:JSON.parse(momery),
 
+        //操作日志查询动效
+        logLoading:false,
         //快照id
           ids:'',
         //gpuName
@@ -837,6 +839,7 @@
 
       //获取操作日志
       selectOperationLog(){
+        this.logLoading = true;
         axios.get('log/queryLog.do',{
           params:{
             zoneId:this.$store.state.zone.zoneid,
@@ -849,13 +852,15 @@
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.journalData = res.data.tableData;
+            this.logLoading = false;
           }else{
             this.$Message.info(res.data.message);
+            this.logLoading = false;
           }
         })
       },
       dataTimeChange(time){
-        this.logTime = time
+        this.logTime = time.join(',');
       },
       currentChange(currentPage){
         this.currentPage = currentPage;
@@ -1050,14 +1055,6 @@
     },
 
     created(){
-      axios.get('information/zone.do',{
-        params:{
-          gpuServer:'1'
-        }
-      }).then(res => {
-        $store.state.zone= res.data.result[0];
-        // $store.commit('setZone');
-      })
       this.getGpuHostDetail();
 
         this.getUtilization();
