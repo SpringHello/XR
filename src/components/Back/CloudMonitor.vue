@@ -89,6 +89,7 @@
                   <div class="cross"></div>
                   <p>您还未添加关注的指标，点击“+”添加指标。</p>
                 </div>
+                <div class="chart-shade" style="width: 1160px" ref="secondShade"></div>
               </div>
             </section>
           </TabPane>
@@ -3129,7 +3130,7 @@
       line-height: 20px;
       overflow: hidden;
       transition: height .3s;
-      bottom: 0px;
+      top: 0px;
       opacity: 0;
       left: 0px;
     }
