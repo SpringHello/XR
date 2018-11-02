@@ -530,7 +530,9 @@
           id: '',
           productType: '',
           indexs: '',
-          x: []
+          x: [],
+          // 标记监控图的状态： falseChart 假图， trueChart 真实图  noChart 没有图
+          chart: 'falseChart'
         },
         secondMonitoringOverview: {
           title: '我关注的指标',
@@ -540,7 +542,8 @@
           id: '',
           productType: '',
           indexs: '',
-          x: []
+          x: [],
+          chart: 'falseChart'
         },
         isAddOverviewMonitorIndex: true,
         // 标记总览监控大图小图
