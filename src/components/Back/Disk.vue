@@ -749,6 +749,7 @@
       }
     },
     created() {
+      console.log(this.$store.state.zone.gpuServer+'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       this.diskAreaList = this.$store.state.zoneList;
       this.listDisk();
       this.getGpuList();

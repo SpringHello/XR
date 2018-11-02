@@ -730,12 +730,11 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.resetPasswordForm.buttonMessage = '正在重置中...'
-            axios.get('information/resetPasswordForVirtualMachine.do', {
+            this.$http.get('information/resetPasswordForVirtualMachine.do', {
               params: {
                 VMId: sessionStorage.getItem('uuId'),
                 password: this.resetPasswordForm.newPassword,
                 oldPassword: this.resetPasswordForm.oldPassword,
-                zoneId:this.$store.state.zone.zoneid
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {

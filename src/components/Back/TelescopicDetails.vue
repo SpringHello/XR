@@ -96,6 +96,7 @@
                 </div>
               </div>
               <Table :loading="activityLoading" :columns="telescopicActivity.activityList" :data="telescopicActivity.activityData"></Table>
+               <Page style="margin-top:10px;" :total="total" :current='current' @on-change='selectActivity'	></Page>
             </div>
           </TabPane>
         </Tabs>
@@ -581,6 +582,11 @@
   export default {
     data(){
       return{
+
+        //伸缩活动页码
+        current:1,
+        total:0,
+
         //关联云主机
         hostDomain:h=>{
           return h('div',{
@@ -2152,7 +2158,7 @@
       },
 
       //获取伸缩活动
-      selectActivity(){
+      selectActivity(current){
         this.activityLoading = true;
         let date = '';
         for (let i=0;i< this.telescopicActivity.operationTime.length;i++){
@@ -2165,16 +2171,21 @@
           params:{
             telescopicGroupId:sessionStorage.getItem('vpc_id'),
             dataTime:date,
-            status:this.telescopicActivity.status
+            status:this.telescopicActivity.status,
+            page:current,
+            pageSize:25
           }
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.telescopicActivity.activityData = res.data.list;
+            this.total = res.data.total;
             this.activityLoading = false;
           }else{
             this.$Message.info(res.data.message);
             this.activityLoading = false;
           }
+        }).catch(error =>{
+          this.activityLoading = false;
         })
       },
 
@@ -2344,7 +2355,6 @@
           if(res.status == 200 && res.data.status == 1){
             if(res.data.result.publicLoadbalance.length != 0 || res.data.result.internalLoadbalance.length != 0 ){
               this.updateTeleList.balancingList = res.data.result.publicLoadbalance.concat(res.data.result.internalLoadbalance);
-              console.log(this.updateTeleList.balancingList);
             }else {
               this.$Modal.info({
                 title:'提示',
@@ -2419,7 +2429,7 @@
       this.getDetails();
       this.minuteListCount();
       this.getScaleAlarmStrategy();
-      this.selectActivity();
+      this.selectActivity(1);
       this.selectTask();
       this.getContacts();
       this.percentageF();
