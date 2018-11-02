@@ -26,8 +26,20 @@
             </div>
             <p class="content-title">系统盘</p>
             <span class="systemdisk-type">{{systemDiskType}}</span>
-            <div class="cpu">
-              <span v-for="(size,index) in systemDiskList" :key="index" :class="{select:systemDiskSize==size}" @click="changeSystemDisk(size)">{{size}}G</span>
+            <div>
+              <div style="width:500px;display: flex;align-items:center">
+                <i-slider
+                  v-model="systemDiskSize"
+                  unit="GB"
+                  :min='rootdisksize'
+                  :max=1000
+                  :step=10
+                  :points="[500,800]"
+                  style="margin-right:30px;vertical-align: middle;">
+                </i-slider>
+                <InputNumber :max="1000" :min='rootdisksize' v-model="systemDiskSize" size="large" :step=10
+                              :precision="0"></InputNumber>
+              </div>
             </div>
           </div>
           <div class="conf-wrapper">
@@ -58,6 +70,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import uuid from 'uuid'
 var info = [
   {
     zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858',
@@ -389,8 +402,10 @@ export default {
     var currentRAMSize = Number.parseInt(confInfo[2])
     var hostname = sessionStorage.getItem('hostname')
     var endtime = sessionStorage.getItem('endtime')
-    sessionStorage.removeItem('hostname')
-    sessionStorage.removeItem('endtime')
+    var rootdiskid = sessionStorage.getItem('rootdiskid')
+    var rootdisksize = parseInt(sessionStorage.getItem('rootdisksize'))
+    // sessionStorage.removeItem('hostname')
+    // sessionStorage.removeItem('endtime')
     var zoneInfo = null
     info.forEach(item => {
       if (item.zoneId == $store.state.zone.zoneid) {
@@ -398,9 +413,11 @@ export default {
       }
     })
     return {
+      // diskSize: rootdisksize,
       systemDiskType: 'SSD存储',
-      systemDiskList: [40, 100, 500, 1000],
-      systemDiskSize: '40',
+      // systemDiskList: [40, 100, 500, 1000],
+      rootdisksize,
+      systemDiskSize: rootdisksize,
       currentCPUNum,
       currentRAMSize,
       hostname,
@@ -408,7 +425,9 @@ export default {
       CPUNum: currentCPUNum,
       RAMSize: currentRAMSize,
       virtualMachineid: localStorage.virtualMachineid,
-      cost: 0,
+      rootdiskid,
+      systemDiskCost: 0,
+      cpuMemoryCost: 0,
       CPU: [1, 2, 4, 8, 16, 32],
       RAM: [1, 2, 4, 8, 16, 32],
       zoneInfo
@@ -438,9 +457,6 @@ export default {
       this.RAMSize = ram
       this.calCost()
     },
-    changeSystemDisk (size) {
-      this.systemDiskSize = size
-    },
     calCost () {
       this.$http.get('information/UpVMConfigCost.do', {
         params: {
@@ -450,30 +466,111 @@ export default {
         }
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
-          this.cost = response.data.result
+          this.cpuMemoryCost = response.data.result
         } else {
           this.$Message.error(response.data.result.message)
         }
       })
     },
     payOrder () {
-      if (this.CPUNum + this.RAMSize == this.currentCPUNum + this.currentRAMSize) {
-        return
+      if (this.cost == 0) {
+        return false
       }
-      this.$http.get('information/UpVMConfig.do', {
-        params: {
-          cpunum: this.CPUNum,
-          memory: this.RAMSize,
-          VMId: this.virtualMachineid,
-        }
-      }).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.$Message.success('订单提交成功')
-          this.$router.replace("order")
-        } else {
-          this.$Message.error(response.data.message)
-        }
-      })
+      if (this.CPUNum + this.RAMSize != this.currentCPUNum + this.currentRAMSize && this.systemDiskSize == this.rootdisksize) {
+        // console.log(1)
+        this.$http.get('information/UpVMConfig.do', {
+          params: {
+            cpunum: this.CPUNum,
+            memory: this.RAMSize,
+            VMId: this.virtualMachineid,
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success('订单提交成功')
+            this.$router.replace("order")
+          } else {
+            this.$Message.error(response.data.message)
+          }
+        })
+      } else if (this.CPUNum + this.RAMSize == this.currentCPUNum + this.currentRAMSize && this.systemDiskSize != this.rootdisksize){
+        // console.log(2)
+        this.$http.get('information/resizeRootVolume.do', {
+          params: {
+            computerId: this.virtualMachineid,
+            roodDiskId: this.rootdiskid,
+            rootDiskSize: this.systemDiskSize,
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success('订单提交成功')
+            this.$router.replace("order")
+          } else {
+            this.$Message.error(response.data.message)
+          }
+        })
+      } else if (this.CPUNum + this.RAMSize != this.currentCPUNum + this.currentRAMSize && this.systemDiskSize != this.rootdisksize) {
+        // console.log(3)
+        var countOrder = uuid.v4()
+        var cpuMemoryRsp = this.$http.get('information/UpVMConfig.do', {
+          params: {
+            cpunum: this.CPUNum,
+            memory: this.RAMSize,
+            VMId: this.virtualMachineid,
+            countOrder
+          }
+        })
+        var systemDiskRsp = this.$http.get('information/resizeRootVolume.do', {
+          params: {
+            computerId: this.virtualMachineid,
+            roodDiskId: this.rootdiskid,
+            rootDiskSize: this.systemDiskSize,
+            countOrder
+          }
+        })
+        // var systemDiskRsp = this.$http.get('information/UpVMConfig.do', {
+        //   params: {
+        //     cpunum: 8,
+        //     memory: 8,
+        //     VMId: '6a1e3b7b-5714-441b-912b-8b50aebadc9c',
+        //     countOrder
+        //   }
+        // })
+        Promise.all([cpuMemoryRsp, systemDiskRsp]).then(res => {
+          if (res[0].status == 200 && res[0].data.status == 1 && res[1].status == 200 && res[1].data.status == 1) {
+            this.$Message.success('订单提交成功')
+            // this.$router.replace("order")
+            this.$router.push({
+              path: '/ruicloud/order', query: {
+                countOrder
+              }
+            })
+          }
+        })
+      }
+    }
+  },
+  computed: {
+    cost() {
+      return this.systemDiskCost + this.cpuMemoryCost
+    }
+  },
+  watch: {
+    'systemDiskSize': {
+      handler() {
+        this.$http.get('information/resizeRootVolumeCost.do', {
+          params: {
+            computerId: this.virtualMachineid,
+            roodDiskId: this.rootdiskid,
+            rootDiskSize: this.systemDiskSize,
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.systemDiskCost = response.data.result
+          } else {
+            this.$Message.error(response.data.result.message)
+          }
+        })
+      }
     }
   }
 }
