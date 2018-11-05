@@ -2087,13 +2087,17 @@
         }
       },
       getPhone() {
-        axios.post('user/getPhone.do', {
+        if ($store.state.authInfo.companyid) {
+          axios.post('user/getPhone.do', {
           companyId: $store.state.authInfo.companyid
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.keyForm.phone = response.data.data.phone
-          }
-        })
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.keyForm.phone = response.data.data.phone
+            }
+          })
+        } else {
+          this.$Message.info('请先实名认证')
+        }
       },
       // 获取系统头像列表
       getSystemHead() {
@@ -3015,7 +3019,7 @@
               this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.keyWeight = response.data.data.weight
             } else {
-              this.$Message.info(response.data.message)
+              this.$Message.info(response.data.msg)
             }
           })
         } else {
