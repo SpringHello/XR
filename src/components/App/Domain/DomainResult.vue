@@ -9,10 +9,12 @@
               <span style="display: inline-block">{{append}}</span>
             </div>
             </Input>
-            <div v-show="choose" class="change">
+            <transition name="showChosse">
+              <div v-show="choose" class="change" @mouseleave="choose=!choose">
               <span v-for="(item,index) in suffixChange.en" :key="index"
                     style="width:70px;display:inline-block;height: 20px" @click="append=item">{{item}}</span>
-            </div>
+              </div>
+            </transition>
           </div>
           <button @click="Search">搜索</button>
 
@@ -45,7 +47,7 @@
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
-          <button class="showAll" @click="exhibition" v-show="isShowAll">显示全部
+          <button class="showAll" @click="exhibition" v-show="isShowAll&&Results.length>=7">显示全部
             <Icon type="ios-arrow-down"></Icon>
           </button>
         </div>
@@ -233,6 +235,13 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .showChosse-enter, .showChosse-leave-to {
+    opacity: 0;
+  }
+
+  .showChosse-enter-active, .showChosse-leave-active {
+    transition: all .5s
+  }
 
   .topTwo {
     .search {
@@ -415,7 +424,7 @@
             font-size: 20px;
             color: rgba(51, 51, 51, 1);
             padding: 0 14px 19px 14px;
-            border-bottom: 2px solid rgba(204, 204, 204, 1);
+            border-bottom: 1px solid rgba(204, 204, 204, 1);
             button {
               float: right;
               font-size: 16px;
@@ -428,7 +437,7 @@
           }
           .all-data {
             padding: 30px 0 9px 0;
-            border-bottom: 2px solid rgba(204, 204, 204, 1);
+            border-bottom: 1px solid rgba(204, 204, 204, 1);
             li {
               list-style: none;
               display: flex;
