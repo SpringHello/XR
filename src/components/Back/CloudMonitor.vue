@@ -57,14 +57,14 @@
                   <div class="cross"></div>
                   <p>您还未添加关注的指标，点击“+”添加指标。</p>
                 </div>
-                <div class="chart-shade" ref="firstShade">
-                  <p style="margin-top: 100px">请购买弹性云服务器后查看信息</p>
-                  <button v-if="!noHost" style="margin-right: 10px" @click="$router.push('buy/bhost')">购买云主机</button>
-                  <button v-if="!noHost" @click="$router.push('documentInfo/kiRWuMFJd/kly3c37B1')">查看云主机购买指南</button>
-                  <button v-if="noHost" @click="addOverviewMonitoring(1)">添加监控指标</button>
-                </div>
                 <div v-if="!firstMonitoringOverview.showChart&&firstMonitoringOverview.chart == 'falseChart'" class="chart-banner" style="padding: 22px">
                   <img src="../../assets/img/cloudmonitor/cm-banner1.png"/>
+                </div>
+                <div class="chart-shade" ref="firstShade">
+                  <p style="margin-top: 100px">请购买弹性云服务器后查看信息</p>
+                  <button v-if="noHost" style="margin-right: 10px" @click="$router.push('buy/bhost')">购买云主机</button>
+                  <button v-if="noHost" @click="$router.push('documentInfo/kiRWuMFJd/kly3c37B1')">查看云主机购买指南</button>
+                  <button v-if="!noHost" @click="addOverviewMonitoring(1)">添加监控指标</button>
                 </div>
               </div>
               <chart :options="messageData"
@@ -98,14 +98,14 @@
                   <div class="cross"></div>
                   <p>您还未添加关注的指标，点击“+”添加指标。</p>
                 </div>
-                <div class="chart-shade" style="width: 1160px;" ref="secondShade">
-                  <p style="margin-top: 150px">请购买弹性云服务器后查看信息</p>
-                  <button v-if="!noHost" style="margin-right: 10px" @click="$router.push('buy/bhost')">购买云主机</button>
-                  <button v-if="!noHost" @click="$router.push('documentInfo/kiRWuMFJd/kly3c37B1')">查看云主机购买指南</button>
-                  <button v-if="noHost" @click="addOverviewMonitoring(2)">添加监控指标</button>
-                </div>
                 <div v-if="!secondMonitoringOverview.showChart&&secondMonitoringOverview.chart == 'falseChart'" class="chart-banner" style="width: 1160px;padding: 40px 15px;">
                   <img src="../../assets/img/cloudmonitor/cm-banner2.png"/>
+                </div>
+                <div class="chart-shade" style="width: 1160px;" ref="secondShade">
+                  <p style="margin-top: 150px">请购买弹性云服务器后查看信息</p>
+                  <button v-if="noHost" style="margin-right: 10px" @click="$router.push('buy/bhost')">购买云主机</button>
+                  <button v-if="noHost" @click="$router.push('documentInfo/kiRWuMFJd/kly3c37B1')">查看云主机购买指南</button>
+                  <button v-if="!noHost" @click="addOverviewMonitoring(2)">添加监控指标</button>
                 </div>
               </div>
             </section>
@@ -541,7 +541,7 @@
             alarmtype: 1
           }
         ],
-        noHost: false,
+        noHost: true,
         firstMonitoringOverview: {
           title: '',
           showChart: null,
@@ -1294,6 +1294,7 @@
 
     },
     created() {
+      this.hasHost()
     },
     methods: {
       setData(res) {
@@ -1437,6 +1438,14 @@
             this.secondMonitoringOverview.showChart = null
           }
         }
+      },
+      hasHost() {
+        let url = 'information/findIsVM.do'
+        this.$http.get(url, {params: {}}).then(res => {
+          if (res.data.status == 1) {
+            this.noHost = !res.data.result
+          }
+        })
       },
       newStrategy_back() {
         this.isNewAlarmStrategy = false
