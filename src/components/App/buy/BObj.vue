@@ -200,8 +200,8 @@
           return
         }
         var params = {
-          flowPackage: this.save,
-          capacity: this.downLoad,
+          flowPackage: this.downLoad,
+          capacity: this.save,
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value,
           zoneId: this.zone.zoneid
@@ -226,8 +226,8 @@
       },
       queryObjPrice: debounce(500, function () {
         var params = {
-          flowPackage: this.save,
-          capacity: this.downLoad,
+          flowPackage: this.downLoad,
+          capacity: this.save,
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value
         }

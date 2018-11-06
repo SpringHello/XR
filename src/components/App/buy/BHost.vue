@@ -1052,6 +1052,10 @@
             this.$router.push({
               path: '/ruicloud/order'
             })
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
           }
         })
       },

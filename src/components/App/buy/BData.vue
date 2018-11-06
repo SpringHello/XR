@@ -544,7 +544,7 @@
         var params = {
           cpuNum: this.vmConfig.kernel.toString(),
           diskSize: '40',
-          diskType: this.vmConfig.diskType,
+          diskType: 'ssd',
           memory: this.vmConfig.RAM.toString(),
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value,

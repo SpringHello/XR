@@ -59,6 +59,8 @@ const DBActive = () =>import('@/components/App/active/DatabaseActive')
 
 const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 
+const AnniversaryActive = () => import('@/components/App/active/anniversaryActive')
+
 //域名页面路由
 /*const Domainname = () =>import('@/components/App/Domain/Domainname')
 const DomainResult = () =>import('@/components/App/Domain/DomainResult')
@@ -322,6 +324,7 @@ var router = new Router({
         {path: 'frActive', name: 'frActive', component: FrActive},
 
         {path: 'dbActive', name: 'dbActive', component: DBActive},
+        {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
 
         {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},
         {path: 'SceneInfo/:type', name: 'SceneInfo', component: SceneInfo},

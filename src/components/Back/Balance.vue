@@ -526,6 +526,10 @@
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.creatbalancemodal.formInline.subnetList = response.data.result
+              if (response.data.result.length != 0) {
+                let prefix = response.data.result[0].ipsegment.split('.')
+                this.creatbalancemodal.formInline.intranetIpNum = prefix[0]+ '.' + prefix[1] + '.' + prefix[2]
+              }
             }
           })
         }
