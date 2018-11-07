@@ -90,6 +90,12 @@
       }).then(res => {
         next(vm => {
           vm.Results = res.data.data.results
+          let len = JSON.parse(sessionStorage.getItem("suffix")).length
+          if (len !== 0) {
+            vm.singles = JSON.parse(sessionStorage.getItem("suffix"))
+          } else {
+            vm.singles = JSON.parse(sessionStorage.getItem('suffixChange')).en
+          }
         })
       })
     },
@@ -101,7 +107,7 @@
         choose: false,
         suffixChange: JSON.parse(sessionStorage.getItem('suffixChange')),
         show: false,
-        singles: JSON.parse(sessionStorage.getItem('suffixChange')).en,
+        singles: [],
         num: 5,
         isShowAll: true,
         Results: [],
@@ -124,7 +130,7 @@
           tids: this.append,
         }).then(res => {
           this.Results = res.data.data.results
-          this.singles.push(this.append)
+          this.singles.unshift(this.append)
         })
       },
       //显示全部
@@ -211,32 +217,20 @@
         })
       },
       append(){
-        axios.post('domain/domainFound.do', {
-          domainName: this.searchText,
-          tids: this.append,
-        }).then(res => {
-          if (this.Results.every(item => {
-              return item.name != res.data.data.results[0].name
-            })) {
-            this.Results.unshift(res.data.data.results[0])
-            this.singles.forEach(e => {
-              if (e != this.append) {
-                this.singles.push(this.append)
-              }
-            })
-          } else {
-
-          }
-        })
+        this.singles.unshift(this.append)
       },
-//      singles(){
-//        axios.post('domain/domainFound.do', {
-//          domainName: this.searchText,
-//          tids: this.singles.join(','),
-//        }).then(res => {
-//          this.Results = res.data.data.results
-//        })
-//      }
+      singles(){
+        if (this.singles.length != 0) {
+          axios.post('domain/domainFound.do', {
+            domainName: this.searchText,
+            tids: this.singles.join(','),
+          }).then(res => {
+            this.Results = res.data.data.results
+          })
+        } else {
+          this.Results = []
+        }
+      }
     }
   }
 </script>
