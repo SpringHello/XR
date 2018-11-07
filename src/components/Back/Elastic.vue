@@ -562,13 +562,12 @@
         },
 
 
-      //获取所属子网，防火墙
+      //获取防火墙
       changeNetWork(id){
-        let f = this.$http.get('network/listAclList.do',{params:{vpcId:id}});
-        // let l = this.$http.get('network/getnetworkAndVpcByloadbalance.do',{params:{vpcId:id,type:'1'}});
-        Promise.all([f]).then(res =>{
-          this.newAddTelescopicList.firewallList = res[0].data.result;
-          // this.newAddTelescopicList.belongSubnetList = res[1].data.list;
+        let f = this.$http.get('network/listAclList.do',{params:{vpcId:id}}).then(res=>{
+          if(res.status == 200 && res.data.status == 1){
+             this.newAddTelescopicList.firewallList = res.data.result;
+          }
         })
       },
 
