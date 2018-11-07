@@ -217,7 +217,11 @@
         })
       },
       append(){
-        this.singles.unshift(this.append)
+        this.singles.forEach(e => {
+          if (e != this.append) {
+            this.singles.unshift(this.append)
+          }
+        })
       },
       singles(){
         if (this.singles.length != 0) {
