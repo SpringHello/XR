@@ -23,15 +23,19 @@
                 </div>
                 <div class="pi-base-info">
                   <ul>
-                    <li><span>用户名称</span><span style="display: inline">{{ userInfo.realname}}</span>
+                    <li><span>用户名称</span><span style="display: inline">{{(authInfo&&authInfo.name)? authInfo.name:userInfo.realname}}</span>
                       <span v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
-                    <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
-                    <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
-                    <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
-                    <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
+                    <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span
+                      @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
+                    <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span
+                      @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
+                    <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span
+                      @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
+                    <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span
+                      @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
                     <li v-if="!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
@@ -684,7 +688,7 @@
       </div>
       <div style="display: flex;margin-top:20px">
         <div style="width:50%;text-align: center">
-          <Button type="primary" @click="showModal.selectAuthType = false">立即认证</Button>
+          <Button type="primary" @click="showModal.selectAuthType = false;currentTab='certification'">立即认证</Button>
         </div>
         <div style="width:50%;text-align: center">
           <Button type="primary" @click="showModal.selectAuthType = false;currentTab='companyInfo'">立即认证</Button>
@@ -1096,7 +1100,7 @@
       if (authType == 'company') {
         currentTab = 'companyInfo'
       } else if (authType == 'person') {
-        currentTab = ''
+        currentTab = 'personalInfo'
       } else {
         currentTab = authType
       }
@@ -1188,7 +1192,7 @@
 
       return {
         // 当前选中的tab页
-        currentTab,
+        currentTab: currentTab ? currentTab : 'personalInfo',
         authType,
         showModal: {
           selectAuthType: false,
@@ -1706,41 +1710,45 @@
             align: 'left',
             width: 180,
             render: (h, params) => {
-              return h('div', [
-                h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: ' #2A99F2',
-                    },
-                    on: {
-                      click: () => {
-                        this.updateContacts(params.row)
-                      }
-                    }
-                  },
-                  '修改'
-                ),
-                h('Poptip', {
-                    props: {
-                      title: '您确认删除该联系人吗？',
-                      width: 208,
-                      confirm: true
-                    },
-                    on: {
-                      'on-ok': () => {
-                        this.delContacts(params.row.id)
+              if (params.row.systemadd == 0) {
+                return h('div', [
+                  h('span', {
+                      style: {
+                        cursor: 'pointer',
+                        color: ' #2A99F2',
+                      },
+                      on: {
+                        click: () => {
+                          this.updateContacts(params.row)
+                        }
                       }
                     },
-                  },
-                  [h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: '#2A99F2',
-                      marginLeft: '20px',
-                    }
-                  }, '删除')]
-                )
-              ]);
+                    '修改'
+                  ),
+                  h('Poptip', {
+                      props: {
+                        title: '您确认删除该联系人吗？',
+                        width: 208,
+                        confirm: true
+                      },
+                      on: {
+                        'on-ok': () => {
+                          this.delContacts(params.row.id)
+                        }
+                      },
+                    },
+                    [h('span', {
+                      style: {
+                        cursor: 'pointer',
+                        color: '#2A99F2',
+                        marginLeft: '20px',
+                      }
+                    }, '删除')]
+                  )
+                ]);
+              } else {
+                return h('span', {}, '----')
+              }
             }
           }
         ],
@@ -2018,7 +2026,9 @@
         }
       }
       this.tabSwitching(this.currentTab)
-      this.getPhone()
+      if ($store.state.authInfo && $store.state.authInfo.companyid) {
+        this.getPhone()
+      }
       this.listNotice()
       this.getContacts()
       this.getSystemHead()
@@ -2087,13 +2097,17 @@
         }
       },
       getPhone() {
-        axios.post('user/getPhone.do', {
+        if ($store.state.authInfo.companyid) {
+          axios.post('user/getPhone.do', {
           companyId: $store.state.authInfo.companyid
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.keyForm.phone = response.data.data.phone
-          }
-        })
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.keyForm.phone = response.data.data.phone
+            }
+          })
+        } else {
+          this.$Message.info('请先实名认证')
+        }
       },
       // 获取系统头像列表
       getSystemHead() {
@@ -3015,7 +3029,7 @@
               this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.keyWeight = response.data.data.weight
             } else {
-              this.$Message.info(response.data.message)
+              this.$Message.info(response.data.msg)
             }
           })
         } else {

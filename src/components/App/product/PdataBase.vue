@@ -7,7 +7,7 @@
         <div class="info">
           <span class="title">{{logo.title}}</span>
           <span class="desc">{{logo.desc}}</span>
-          <router-link :to="logo.linkRouter">立即体验</router-link>
+          <router-link :to="logo.linkRouter">立即购买</router-link>
         </div>
       </div>
     </div>
@@ -117,7 +117,7 @@
           img: require('../../../assets/img/product/p-database.png'),
           title: '数据库',
           desc: '专业化的高性能、高可靠云数据库服务，支持Mysql、SQL Server、PostgreSQL、mongoDB、Redis引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。 ',
-          linkRouter: $store.state.userInfo ? 'cloudDatabase' : 'login'
+          linkRouter: 'buy/bdata'
         },
         features: [
           {
