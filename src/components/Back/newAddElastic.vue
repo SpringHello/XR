@@ -685,8 +685,8 @@
       //私有镜像
       setPrivateOs(){
          for(let key in this.mirrorList){
-            if(this.mirrorList[key].systemtemplateid = this.mirrorName){
-              this.privateOS = this.mirrorList[key].ostypename;
+            if(this.mirrorList[key].systemtemplateid == this.mirrorName){
+              this.privateOS = this.mirrorList[key].templatename;
                let str = this.mirrorList[key].ostypename.substr(0,1);
                   if (str === 'W' || str === 'w') {
                     this.systemUsername = 'administrator'
