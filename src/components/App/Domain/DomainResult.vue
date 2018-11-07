@@ -66,11 +66,11 @@
             </ul>
           </div>
           <div class="statistical">
-            <p>
-              <span>已加入域名 {{addNum}} 个</span>
-              <span>优惠金额：¥00.00</span>
-            </p>
-            <h1>应付金额：¥{{payMoney}}</h1>
+            <div>
+              <p>已加入域名 <span>{{addNum}}</span> 个</p>
+              <p>优惠金额：¥00.00</p>
+            </div>
+            <h1>应付金额：<span>¥{{payMoney.toFixed(2)}}</span></h1>
             <button @click="nowBuy">立即购买</button>
           </div>
         </div>
@@ -118,11 +118,13 @@
       //域名搜索结果
       Search(){
         this.Results = []
+        this.singles = []
         axios.post('domain/domainFound.do', {
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
           this.Results = res.data.data.results
+          this.singles.push(this.append)
         })
       },
       //显示全部
@@ -217,19 +219,24 @@
               return item.name != res.data.data.results[0].name
             })) {
             this.Results.unshift(res.data.data.results[0])
+            this.singles.forEach(e => {
+              if (e != this.append) {
+                this.singles.push(this.append)
+              }
+            })
           } else {
 
           }
         })
       },
-      singles(){
-        axios.post('domain/domainFound.do', {
-          domainName: this.searchText,
-          tids: this.singles.join(','),
-        }).then(res => {
-          this.Results = res.data.data.results
-        })
-      }
+//      singles(){
+//        axios.post('domain/domainFound.do', {
+//          domainName: this.searchText,
+//          tids: this.singles.join(','),
+//        }).then(res => {
+//          this.Results = res.data.data.results
+//        })
+//      }
     }
   }
 </script>
@@ -463,12 +470,14 @@
         }
         .statistical {
           text-align: center;
-          p {
-            span {
+          div {
+            p {
               font-size: 14px;
               color: rgba(102, 102, 102, 1);
-
               display: inline-block;
+              span {
+                color: #F85E1D;
+              }
               &:first-of-type {
                 margin-right: 28px;
               }
@@ -479,6 +488,10 @@
             font-size: 16px;
             color: rgba(51, 51, 51, 1);
             padding: 9px 0 30px 0;
+            span {
+              color: #F85E1D;
+              font-size: 20px;
+            }
           }
           button {
             background: rgba(55, 125, 255, 1);
