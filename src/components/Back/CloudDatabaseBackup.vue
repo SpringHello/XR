@@ -618,6 +618,7 @@
         // console.log(this.createSnapsForm)
         this.$refs[name].validate((valid) => {
           if (valid) {
+            this.showModal.newSnapshot = false
             this.$http.get('database/DBBackup.do', {
               params: {
                 DBId: this.createSnapsForm.database,
@@ -631,7 +632,6 @@
                 this.$Message.error(response.data.message)
               }
             })
-          } else {
           }
         })
       },

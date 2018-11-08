@@ -602,19 +602,19 @@
               unit: 'kb/s'
             },
             {
-              value: '带内网络流入速率',
+              value: '内网带宽流入速率',
               unit: 'kb/s'
             },
             {
-              value: '带内网络流出速率',
+              value: '内网带宽流出速率',
               unit: 'kb/s'
             },
             {
-              value: '带外网络流入速率',
+              value: '外网带宽流入速率',
               unit: 'kb/s'
             },
             {
-              value: '带外网络流出速率',
+              value: '外网带宽流出速率',
               unit: 'kb/s'
             }
           ]
@@ -697,12 +697,44 @@
           ],
           Percentage: [
             {
-              label: '80',
-              value: ''
+              label: '10',
+              value: 10
+            },
+            {
+              label: '20',
+              value: 20
+            },
+             {
+              label: '30',
+              value: 30
+            },
+            {
+              label: '40',
+              value: 40
+            },
+             {
+              label: '50',
+              value: 50
             },
             {
               label: '60',
               value: 60
+            },
+             {
+              label: '70',
+              value: 70
+            },
+            {
+              label: '80',
+              value: 80
+            },
+             {
+              label: '90',
+              value: 90
+            },
+            {
+              label: '100',
+              value: 100
             }
           ],
           keepCycle: [
@@ -2782,12 +2814,13 @@
         })
       },
       newAlarmStrategy_ok() {
-        var host = this.eventformDynamic.some(item => {
-          if (item.alarmname == '应用中断') {
+        var appInterruptArray = this.eventformDynamic.filter(item => {
+          return item.alarmname == '应用中断'
+        })
+        var host = appInterruptArray.some(item => {
             if (item.value == '') {
               this.$Message.info('请输入端口号')
             }
-          }
           return item.value == ''
         })
         if (host) {
