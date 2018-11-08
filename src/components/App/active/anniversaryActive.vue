@@ -35,6 +35,9 @@
         <div class="progress" :style="{'width': hasCost/5000*100 + '%'}"></div>
       </div>
     </div>
+    <div>
+
+    </div>
   </div>
 </template>
 
