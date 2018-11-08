@@ -2058,7 +2058,7 @@
           }else {
             this.task = false;
             this.$Modal.confirm({
-             content:'<p>定时任务创建失败，您可以<span style="color: #2A99F2">联系客服</span>，或重试</p>'
+             content:res.data.message
             })
             this.selectTask();
           }

@@ -28,8 +28,8 @@
             <p>镜像</p>
             <p v-if="elastic.disktype">数据盘类型</p>
             <p v-if="elastic.disktype">数据盘容量</p>
-            <p >公网IP</p>
-            <p>带宽</p>
+            <p>公网IP</p>
+            <p v-if="elastic.bandwidth">带宽</p>
             <p>主机名称</p>
             <p>用户名</p>
             <p>登录方式</p>
@@ -47,8 +47,8 @@
             <p>{{elastic.templatename}}</p>
             <p>{{elastic.disktype}}</p>
             <p v-if="elastic.disktype">{{elastic.disksize}}GB</p>
-            <p>有</p>
-            <p>{{elastic.bandwidth}}MB</p>
+            <p>{{elastic.bandwidth ? '有':'无'}}</p>
+            <p v-if="elastic.bandwidth">{{elastic.bandwidth}}MB</p>
             <p>{{elastic.computername == '' ? '---':elastic.computername}}</p>
             <p>{{elastic.systemusername == '' ? '---':elastic.systemusername}}</p>
             <p>{{elastic.loginway == 1 ? '密码设置' : '系统密码'}}</p>
