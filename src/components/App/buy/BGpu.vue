@@ -772,7 +772,7 @@
       queryCustomVM() {
         var params = {
           cpuNum: this.gpuSelection.cpunum,
-          diskSize: '40',
+          diskSize: '128',
           diskType: this.gpuSelection.rootdisktype,
           memory: this.gpuSelection.memory,
           timeType: this.timeForm.currentTimeValue.type,

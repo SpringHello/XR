@@ -57,7 +57,7 @@
               <span>{{details.createtime}}</span>
             </div>
              <div>
-              <span>创建时间 :</span>
+              <span>修改时间 :</span>
               <span>{{details.updatetime}}</span>
             </div>
             <div>
@@ -152,7 +152,7 @@
             <Option value="%" :disabled="alarmStrategy.disabled">%</Option>
           </Select>
           <span>云主机，冷却</span>
-          <InputNumber  :min="30" :max="9999" v-model="alarmStrategy.coolingNumber"></InputNumber>
+          <InputNumber  :min="60" :max="9999" v-model="alarmStrategy.coolingNumber"></InputNumber>
           <span>秒</span>
           <Tooltip  placement="right" transfer>
             <p slot="content" style="white-space:normal;">冷却时间是指在同一个伸缩组内，一个伸缩活动（添加或移出云主机）执行完成后的一段锁定时间。在这段时间内，该伸缩组不执行伸缩活动。</p>
@@ -221,7 +221,7 @@
             <Option value="%" :disabled="updateStrategy.disabled">%</Option>
           </Select>
           <span>云主机，冷却</span>
-          <InputNumber  :min="1" v-model="updateStrategy.coolingNumber"></InputNumber>
+          <InputNumber  :min="60" :max="999" v-model="updateStrategy.coolingNumber"></InputNumber>
           <span>秒</span>
           <Tooltip  placement="right" transfer>
             <p slot="content" style="white-space:normal;">冷却时间是指在同一个伸缩组内，一个伸缩活动（添加或移出云主机）执行完成后的一段锁定时间。在这段时间内，该伸缩组不执行伸缩活动。</p>
@@ -430,9 +430,9 @@
         <div class="move_box">
           <div class="move_box_left">
             <div>
-              <p style="height: 27px;">该区域下所有主机</p>
+              <p style="height: 27px;">该子网<span style="color:#2A99F2">({{details.subnetname}})</span>下所有主机</p>
             </div>
-            <div class="list_box" v-for="(item,index) in intoCloudHost" v-if="item == '' || item == undefined">
+            <div class="list_box" v-for="(item,index) in intoCloudHost" :key="index">
               <div>
                 <p :title="item.computername">{{item.instancename}}</p>
               </div>
@@ -441,13 +441,13 @@
                 <span>添加</span>
               </div>
             </div>
-            <div v-else>暂无可移入的云主机</div>
+          
           </div>
           <div class="move_box_left">
             <div>
               <p style="height: 27px;">已选择主机</p>
             </div>
-            <div class="list_box" v-for="(item,index) in removeCloudHost">
+            <div class="list_box" v-for="(item,index) in removeCloudHost" :key="index">
               <div>
                 <p :title="item.computername">{{item.computername}}</p>
               </div>
@@ -799,7 +799,7 @@
             },
           ],
           //冷却几秒
-          coolingNumber:1,
+          coolingNumber:60,
           //联系人
           contacts:'',
           contactsList:[],
@@ -1077,23 +1077,7 @@
         },
 
         //移入云主机
-        intoCloudHost:[
-          {
-            name:'云主机1云主机1云主机1云主机1云主机1云主机1云主机1云主机1'
-          },
-          {
-            name:'云主机2'
-          },
-          {
-            name:'云主机3'
-          },
-          {
-            name:'云主机5'
-          },
-          {
-            name:'云主机6'
-          }
-        ],
+        intoCloudHost:[],
         removeCloudHost:[],
 
         //伸缩组活动

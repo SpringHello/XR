@@ -15,7 +15,7 @@
           </svg>
               <span v-if="userInfo.loginname" style="vertical-align: middle">{{userInfo.loginname}}</span>
               <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;"
-                    @click="togo('/ruicloud/userCenter','safe')">点击绑定</span>
+                    @click="togo('/ruicloud/userCenter','personalInfo')">点击绑定</span>
             </span>
             <span>
               <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
@@ -157,6 +157,7 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   import axios from '@/util/axiosInterceptor'
+
   export default {
     name: 'overview',
     data() {
@@ -166,7 +167,7 @@
         sourceUrl: [
           {
             prod: '云计算',
-            prodUrl: ['host', 'mirror#own', 'snapshot', '', '','GpuList']
+            prodUrl: ['host', 'mirror#own', 'snapshot', '', '', 'GpuList']
           },
           {
             prod: '云网络',
@@ -217,7 +218,7 @@
         ]
       }
     },
-    beforeRouteEnter(to, from, next){
+    beforeRouteEnter(to, from, next) {
       var zoneId = $store.state.zone.zoneid
       // 获取总览页账户信息
       var accountInfo = axios.get('user/userAccountInfo.do', {
@@ -246,11 +247,11 @@
         })
       })
     },
-    created(){
+    created() {
     },
     methods: {
       // 设置数据
-      setData(values){
+      setData(values) {
         var response = values[0]
         if (response.status == 200 && response.data.status == 1) {
           this.accountInfo = response.data.result[0].items
@@ -295,11 +296,12 @@
                 content.cartUrl = 'buy/bdata#Pdisk'
               } else if (content.itemName == 'NAT网关') {
                 content.cartUrl = 'vpc#NAT'
-              }  if (content.itemName == '数据库') {
+              }
+              if (content.itemName == '数据库') {
                 content.cartUrl = 'buy/bdata#NAT'
-              }else if (content.itemName == 'GPU服务器'){
+              } else if (content.itemName == 'GPU服务器') {
                 content.cartUrl = 'buy/bgpu'
-              }else if(content.itemName == '对象存储'){
+              } else if (content.itemName == '对象存储') {
                 content.cartUrl = 'buy/bobj'
               }
             })
@@ -313,7 +315,7 @@
         }
       },
       // 区域变更，刷新数据
-      refresh(){
+      refresh() {
         var zoneId = $store.state.zone.zoneid
         // 获取总览页账户信息
         var accountInfo = axios.get('user/userAccountInfo.do', {
@@ -332,11 +334,11 @@
         })
       },
       // 跳转到相应的页面
-      togo(url, pane){
-        if(url == 'objectStorage'){
+      togo(url, pane) {
+        if (url == 'objectStorage') {
           window.open('https://testoss-console.xrcloud.net/ruirados/objectStorage');
-          // window.open('https://oss-console.xrcloud.net/ruirados/objectStorage');
-        }else{
+          //window.open('https://oss-console.xrcloud.net/ruirados/objectStorage');
+        } else {
           this.$router.push(url)
         }
         // console.log(url, pane)
@@ -350,16 +352,16 @@
         }
         sessionStorage.setItem('pane', pane)
       },
-      change(){
+      change() {
 
       },
-      goDynamic(type, id){
+      goDynamic(type, id) {
         this.$router.push({path: 'dynamic', query: {type, id}})
       }
     },
     computed: {
       // 当有告警时返回{allnum:true}
-      warning(){
+      warning() {
         return {
           allnum: !this.warnData.every(item => {
             return item.value == 0
@@ -367,21 +369,21 @@
         }
       },
       // 个人信息
-      userInfo(){
+      userInfo() {
         if ($store.state.userInfo) {
           return $store.state.userInfo
         }
         return {}
       },
       // 认证信息
-      authInfo(){
+      authInfo() {
         if ($store.state.authInfo) {
           return $store.state.authInfo
         }
         return {}
       },
       // 认证状态
-      auth(){
+      auth() {
         return {
           // 未认证
           'not-auth': this.userInfo.personalauth == 1 && this.userInfo.companyauth == 1 && this.authInfo.checkstatus == undefined,

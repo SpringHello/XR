@@ -2483,7 +2483,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Peip',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                useLink: $store.state.userInfo ? 'buy/bip' : 'buy/ip',
                 ME: false
               },
               {
@@ -2543,7 +2543,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pdisk',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                useLink: $store.state.userInfo ? 'buy/bdisk' : 'buy/disk',
                 ME: true
               },
               {
@@ -2637,15 +2637,15 @@
             clickImg: '#icon-yunshujuku-lan',
             prodItem: [
               {
-                title: '云监控',
-                desc: '自定义监控项、多告警推送方式',
-                img: '#icon-yunjiankong2',
+                title: '云数据库',
+                desc: 'MySQL、PostgreSQL、mongoDB、Redis',
+                img: '#houtaiicon-yunshujukuMySQL',
                 detailText: '查看详情',
-                useText: '敬请期待',
+                useText: '立即购买',
                 detailLink: 'PdataBase',
-                useLink: '',
+                useLink: $store.state.userInfo ? 'buy/bdata' : 'buy/bdata',
                 ME: true
-              }
+              },
             ],
             desc: '24小时不间断监控，可视化数据看板，异常自动报警，使您随时掌握业务情况。',
             select: false,

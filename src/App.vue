@@ -1,5 +1,13 @@
 <template>
   <div id="front">
+      <div class="app-hint" ref="hint">
+        <div class="center">
+          <div class="countdown" v-if="hintShow">
+            <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
+          </div>
+        </div>
+        <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
+      </div>
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -310,9 +318,10 @@
   import debounce from 'throttle-debounce/debounce'
   import '@/assets/iconfont/frontend/iconfont.css'
   import '@/assets/iconfont/frontend/iconfont.js'
+
   export default {
     name: 'app',
-    data () {
+    data() {
       return {
         /*titleItem: [
          {
@@ -583,11 +592,18 @@
         kfURL: '',  // 客服url地址
         QQInfo: [],  // QQ客服在线情况
         xiaoshouInfo: [],  // QQ销售在线情况
-        yunweiInfo: []  // QQ运维在线情况
+        yunweiInfo: [],  // QQ运维在线情况,
+        /* 倒计时参数 */
+        day: '--',
+        hour: '--',
+        minute: '--',
+        second: '--',
+        hintShow: false,
+        timer: null
       }
     },
 
-    beforeRouteEnter(to, from, next){
+    beforeRouteEnter(to, from, next) {
       if (to.query.from) {
         // 流量来源记录
         localStorage.setItem('comefrom', to.query.from)
@@ -611,8 +627,17 @@
           next()
         })
     },
-
-    created () {
+    mounted() {
+      this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
+      if(sessionStorage.getItem('hintShow') == 'true'){
+        this.$refs.hint.style.height = '80px'
+      }
+      this.setTime()
+    },
+    created() {
+      if(sessionStorage.getItem('hintShow') == null){
+        sessionStorage.setItem('hintShow','true')
+      }
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
@@ -655,24 +680,70 @@
           this.currentItem = index
         }
       }),
-      QME(){
+      QME() {
         this.$refs.qq.style.width = '231px'
       },
-      QML(){
+      QML() {
         this.$refs.qq.style.width = '0px'
       },
-      go(path){
+      go(path) {
         if (path == 'exit') {
           this.exit()
           return
         }
         this.$router.push(path)
       },
-      exit(){
+      exit() {
         localStorage.removeItem("realname")
         axios.get('user/logout.do').then(response => {
           window.location.reload()
         })
+      },
+      /* 倒计时方法 */
+      setTime() {
+        axios.get('network/getTime.do').then(res => {
+          if (res.data.status == 1) {
+            let startTime = res.data.result
+            let endTime = new Date('2018/11/17').getTime()
+            let limitTime = endTime - startTime
+            if (limitTime > 0) {
+              this.setLimit(limitTime)
+              this.timer = setInterval(() => {
+                this.setLimit(limitTime)
+                limitTime -= 1000
+                if (limitTime <= 0) {
+                  window.clearInterval(timer)
+                }
+              }, 1000);
+            } else {
+              this.day = this.checkTime(0);
+              this.hour = this.checkTime(0);
+              this.minute = this.checkTime(0);
+              this.second = this.checkTime(0);
+            }
+          }
+        })
+      },
+      setLimit(time) {
+        let days = parseInt(time / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
+        let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+        let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
+        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒数
+        this.day = this.checkTime(days);
+        this.hour = this.checkTime(hours);
+        this.minute = this.checkTime(minutes);
+        this.second = this.checkTime(seconds);
+      },
+      checkTime(i) { //将0-9的数字前面加上0，例1变为01
+        if (i < 10) {
+          i = '0' + i;
+        }
+        return i;
+      },
+      closeHeadHint(){
+        this.hintShow = false
+        this.$refs.hint.style.height = 0
+        sessionStorage.setItem('hintShow','false')
       }
     },
     computed: mapState({
@@ -680,7 +751,7 @@
     }),
     watch: {
       /* 观察currentItem变化 设置content高度 */
-      currentItem () {
+      currentItem() {
         var content = this.$refs.content
         for (var i in content) {
           if (i == this.currentItem) {
@@ -690,12 +761,49 @@
           }
         }
       }
+    },
+    beforeRouteLeave(to, from, next) {
+      clearInterval(this.timer)
+      next()
     }
   }
 </script>
 
 <style rel="stylesheet/less" lang="less">
   #front {
+    .app-hint {
+      height: 0;
+      background: url("./assets/img/app/hint-banner.png") center no-repeat, linear-gradient(to right, #FF4439, #FF1569);
+      position: relative;
+      transition: height .5s ease;
+      > img {
+        position: absolute;
+        right: 15px;
+        top: 10px;
+        cursor: pointer;
+      }
+      .center {
+        position: relative;
+        width: 1200px;
+        height: 100%;
+        margin: 0 auto;
+        .countdown {
+          position: absolute;
+          left: 78%;
+          top: 38%;
+          > p {
+            font-size: 20px;
+            font-family: MicrosoftYaHei;
+            font-weight: 500;
+            color: rgba(253, 253, 253, 1);
+            > span {
+              font-size: 12px;
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
     header {
       width: 100%;
       height: 70px;
@@ -1159,6 +1267,15 @@
         color: #fff;
       }
     }
+  }
+
+  .slide-fade-enter-active, .slide-fade-leave-active {
+    transition: all .3s ease;
+  }
+
+  .slide-fade-enter, .slide-fade-leave-to {
+    transform: translateY(-10px);
+    opacity: 0;
   }
 
   .circle-dot-a {
