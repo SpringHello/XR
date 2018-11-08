@@ -64,7 +64,7 @@
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Select v-model="newAddTelescopicList.balancing" style="width:240px" placeholder="选择负载均衡" @on-change="balancings(newAddTelescopicList.balancing)">
-            <Option v-for="item in newAddTelescopicList.balancingList" :value="item.loadbalanceroleid" :key="item.loadbalanceroleid">{{ item.name }}</Option>
+            <Option v-for="item in newAddTelescopicList.balancingList" :value="item.lbIds" :key="item.lbIds">{{ item.lbNames }}</Option>
           </Select>
         </FormItem>
         <FormItem label="最大伸缩数" class="formitem1" prop="maxNumber">
@@ -543,7 +543,7 @@
 
       //获取负载均衡
       getAllSelect(){
-         this.$http.get('loadbalance/listLoadBalanceRole.do',{
+         this.$http.get('loadbalance/listLoadBalanceRoleAndInterLoadBalance.do',{
           }).then(res =>{
             if(res.status == 200 && res.data.status == 1){
               if(res.data.result.publicLoadbalance.length != 0 || res.data.result.internalLoadbalance.length != 0 ){

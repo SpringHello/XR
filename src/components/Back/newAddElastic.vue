@@ -377,7 +377,7 @@
           //CPU
           cpuList:[
             {
-              CPU:'',
+              CPU:'1',
               List:[
               ],
             },

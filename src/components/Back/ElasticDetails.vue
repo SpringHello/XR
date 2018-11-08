@@ -28,7 +28,7 @@
             <p>镜像</p>
             <p v-if="elastic.disktype">数据盘类型</p>
             <p v-if="elastic.disktype">数据盘容量</p>
-            <p>公网IP</p>
+            <p >公网IP</p>
             <p>带宽</p>
             <p>主机名称</p>
             <p>用户名</p>
@@ -48,7 +48,7 @@
             <p>{{elastic.disktype}}</p>
             <p v-if="elastic.disktype">{{elastic.disksize}}GB</p>
             <p>有</p>
-            <p>10MB</p>
+            <p>{{elastic.bandwidth}}MB</p>
             <p>{{elastic.computername == '' ? '---':elastic.computername}}</p>
             <p>{{elastic.systemusername == '' ? '---':elastic.systemusername}}</p>
             <p>{{elastic.loginway == 1 ? '密码设置' : '系统密码'}}</p>
@@ -67,7 +67,7 @@
               <span style="color: #2A99F2;font-size: 14px;cursor: pointer;"  @click="elasticJump(item)">{{item.stretchname}}</span>
               <span style="color: #2A99F2;font-size: 14px;cursor: pointer;margin:0 10px 0 10px;" @click="changeTelescopic(index)" >更改伸缩组</span>
             </div> 
-             <p style="margin:10px 0;" v-if="telescopicList.length == 0">暂无伸缩组，<span style="color:#2A99F2;cursor:pointer;" @click="$router.push({path:'elastic'})">立即创建伸缩组</span></p>
+             <p style="margin:10px 0;" v-if="telescopicList == undefined">暂无伸缩组，<span style="color:#2A99F2;cursor:pointer;" @click="$router.push({path:'elastic'})">立即创建伸缩组</span></p>
           </div>
         </div>
       </div>
@@ -194,6 +194,7 @@
       return callback(new callback('伸缩组名称格式不正确'));
     }else{
       callback();
+      
     }
   }
 
@@ -334,6 +335,7 @@
         }).then(res => {
             if(res.status == 200 && res.data.status == 1){
               this.elastic = res.data.list[0];
+                console.log(this.elastic);
                 this.updateTeleList.configureList = res.data.list;
             }
         })
@@ -419,7 +421,7 @@
       getTelescopic(){
         this.$http.get('elasticScaling/listTelescopicGroupByFeild.do',{
           params:{
-            feild:sessionStorage.getItem('telescopic_id')
+            feild:sessionStorage.getItem('telescopic_id')== undefined ? '':sessionStorage.getItem('telescopic_id')
           }
         }).then(res =>{
             this.telescopicList = res.data.list;
@@ -430,7 +432,7 @@
 
 
     //跳转伸缩组详情页面
-      elasticJump(item){
+    elasticJump(item){
         sessionStorage.setItem('vpc_id',item.id);
         this.$router.push({path:'telescopicDetails'})
       }
