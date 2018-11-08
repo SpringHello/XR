@@ -67,7 +67,7 @@
               <span style="color: #2A99F2;font-size: 14px;cursor: pointer;"  @click="elasticJump(item)">{{item.stretchname}}</span>
               <span style="color: #2A99F2;font-size: 14px;cursor: pointer;margin:0 10px 0 10px;" @click="changeTelescopic(index)" >更改伸缩组</span>
             </div> 
-             <p style="margin:10px 0;" v-if="telescopicList == undefined">暂无伸缩组，<span style="color:#2A99F2;cursor:pointer;" @click="$router.push({path:'elastic'})">立即创建伸缩组</span></p>
+             <p style="margin:10px 0;" v-if="telescopicList == undefined || telescopicList.length == 0">暂无伸缩组，<span style="color:#2A99F2;cursor:pointer;" @click="$router.push({path:'elastic'})">立即创建伸缩组</span></p>
           </div>
         </div>
       </div>
@@ -421,7 +421,7 @@
       getTelescopic(){
         this.$http.get('elasticScaling/listTelescopicGroupByFeild.do',{
           params:{
-            feild:sessionStorage.getItem('telescopic_id')== undefined ? '':sessionStorage.getItem('telescopic_id')
+            feild:sessionStorage.getItem('telescopic_id')== undefined ? 'undefined':sessionStorage.getItem('telescopic_id')
           }
         }).then(res =>{
             this.telescopicList = res.data.list;
