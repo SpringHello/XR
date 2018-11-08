@@ -1,24 +1,26 @@
 <template>
   <div>
-    <div class="banner">
-      这是页面banner
-    </div>
     <!-- 抽奖 -->
-    <div class="lottery">
-      <div id="rotary-table">
-        <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]">
-          {{award.name}}
-        </div>
-        <div id="start-btn" @click="start">开始</div>
+    <div class="active-1">
+      <div class="banner">
+        这是页面banner
       </div>
-      <div id="lottery-right">
-        <div class="lottery-rules"><h3>活动规则</h3></div>
-        <div class="lottery-particulars">
-          <h3>中奖详情</h3>
-          <div class="win-list">
-            <ul class="win-content" :style="{ top }">
-              <li v-for="item in winList"> {{ item}}</li>
-            </ul>
+      <div class="lottery">
+        <div id="rotary-table">
+          <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]">
+            {{award.name}}
+          </div>
+          <div id="start-btn" @click="start">开始</div>
+        </div>
+        <div id="lottery-right">
+          <div class="lottery-rules"><h3>活动规则</h3></div>
+          <div class="lottery-particulars">
+            <h3>中奖详情</h3>
+            <div class="win-list">
+              <ul class="win-content" :style="{ top }">
+                <li v-for="item in winList"> {{ item}}</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -171,16 +173,17 @@
     margin: 0 auto;
   }
 
-  .banner {
-    height: 400px;
-    text-align: center;
-    background: #00c1de;
-  }
-
-  .lottery {
-    display: flex;
-    justify-content: space-around;
-    .center();
+  .active-1 {
+    background-color: #FEEDDF;
+    .banner {
+      height: 830px;
+      background: #FEEDDF url("../../../assets/img/active/anniversary/aa-banner1.png") center no-repeat;
+    }
+    .lottery {
+      display: flex;
+      justify-content: space-around;
+      .center();
+    }
   }
 
   .spend-to-send {
