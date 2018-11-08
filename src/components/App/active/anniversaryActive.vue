@@ -3,7 +3,7 @@
     <!-- 抽奖 -->
     <div class="active-1">
       <div class="banner">
-        这是页面banner
+        <img src="../../../assets/img/active/anniversary/aa-banner1.png" />
       </div>
       <div class="lottery">
         <div id="rotary-table">
@@ -176,8 +176,8 @@
   .active-1 {
     background-color: #FEEDDF;
     .banner {
-      height: 830px;
-      background: #FEEDDF url("../../../assets/img/active/anniversary/aa-banner1.png") center no-repeat;
+      height: 837px;
+      background: #FEEDDF url("../../../assets/img/active/anniversary/aa-banner2.png") center no-repeat;
     }
     .lottery {
       display: flex;
