@@ -3,7 +3,13 @@
     <!-- 抽奖 -->
     <div class="active-1">
       <div class="banner">
-        <img src="../../../assets/img/active/anniversary/aa-banner1.png" />
+        <p>登录即可参与抽奖(100%中奖)，戴森(Dyson)，黑莓等你来拿！</p>
+        <img src="../../../assets/img/active/anniversary/aa-banner1.png"/>
+        <div class="lottery-title">
+          <img src="../../../assets/img/active/anniversary/aa-icon1.png"/>
+          <h2><img style="position: absolute;left: 40.5%;top: 7%;" src="../../../assets/img/active/anniversary/text_bg2.png"/>11.17周年庆 幸运抽大奖</h2>
+          <p>见面礼！<span>用户登录即可获得一次抽奖机会，人气大奖，大额现金券等你来拿！</span></p>
+        </div>
       </div>
       <div class="lottery">
         <div id="rotary-table">
@@ -13,16 +19,29 @@
           <div id="start-btn" @click="start">开始</div>
         </div>
         <div id="lottery-right">
-          <div class="lottery-rules"><h3>活动规则</h3></div>
+          <div class="lottery-rules">
+            <h3>活动规则</h3>
+            <p>1、活动时间：2018.11.17-2019.01.05</p>
+            <p> 2、活动内容：新老用户第一次购买任意活动产品获得一次抽奖机会。</p>
+            <p> 3、活动期间参与抽奖活动获得的代金券或优惠券不能与本次活动叠加使用。</p>
+          </div>
           <div class="lottery-particulars">
-            <h3>中奖详情</h3>
+            <h3 style="margin-top: 20px">中奖详情</h3>
             <div class="win-list">
-              <ul class="win-content" :style="{ top }">
+              <ul class="win-content" :style="{top}">
                 <li v-for="item in winList"> {{ item}}</li>
               </ul>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <!--  云服务器、对象存储、数据库专区 -->
+    <div class="active-2">
+      <div class="productList">
+        <p>{{ hour}}:{{ minute}}: {{second}}</p>
+
+        <p>{{ gpuHour}}:{{ gpuMinute}}: {{gpuSecond}}</p>
       </div>
     </div>
     <!-- 消费大满送-->
@@ -84,14 +103,26 @@
           '恭喜用户1543XXXXX,抽中iponexs一台',
           '恭喜用户1543XXXXX,抽中iponexs一台',
           '恭喜用户1543XXXXX,抽中iponexs一台',],
-        timer: null,
-        hasCost: 1000
+        moveTimer: null,
+        countDownTimer: null,
+        hasCost: 1000,
+        serverTime: '', // 当前服务器时间（时间戳）
+        serverTimeHour: '', // 当前服务器时间（几时）
+        serverTimeMinute: '',
+        hour: '--',
+        minute: '--',
+        second: '--',
+        gpuHour: '--',
+        gpuMinute: '--',
+        gpuSecond: '--',
+        productNode: 'host', // 产品节点
       }
     },
     created() {
+      this.getTimeNodes()
     },
     mounted() {
-      this.timer = setInterval(() => {
+      this.moveTimer = setInterval(() => {
         if (this.activeIndex < this.winList.length - 3) {
           this.activeIndex += 1;
         } else {
@@ -102,9 +133,32 @@
     methods: {
       setData(resArr) {
         if (resArr[0].status == 200 && resArr[0].data.status == 1) {
-          let serverTime = resArr[0].data.result
-          console.log(new Date(serverTime).getHours())
-          console.log(new Date(serverTime).getMinutes())
+          this.serverTime = resArr[0].data.result
+          this.serverTimeHour = new Date(this.serverTime).getHours()
+          this.serverTimeMinute = new Date(this.serverTime).getMinutes()
+          if ((this.serverTimeHour == 8 && this.serverTimeMinute >= 30) || this.serverTimeHour == 9 || (this.serverTimeHour == 10 && this.serverTimeMinute < 30)) {
+            this.productNode = 'host'
+            this.getTimeNodes('10:30')
+          } else if ((this.serverTimeHour == 10 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 11 && this.serverTimeMinute < 30)) {
+            this.productNode = 'objStorage'
+            this.getTimeNodes('11:30')
+          } else if (this.serverTimeHour == 13 || this.serverTimeHour == 14) {
+            this.productNode = 'host'
+            this.getTimeNodes('15:00')
+          } else if (this.serverTimeHour == 15) {
+            this.productNode = 'objStorage'
+            this.getTimeNodes('16:00')
+          } else if ((this.serverTimeHour == 16 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 17 && this.serverTimeMinute < 30)) {
+            this.productNode = 'database'
+            this.getTimeNodes('17:30')
+          } else if(this.serverTimeHour == 19){
+            this.getTimeNodes('20:00')
+          }else if (this.serverTimeHour == 20 || this.serverTimeHour == 21) {
+            this.productNode = 'host'
+            this.getTimeNodes('22:00')
+          } else {
+            this.productNode = 'host'
+          }
         }
       },
       start() {
@@ -152,16 +206,61 @@
           this.move();
 
         }, this.speed);
-      }
+      },
+      /* 获取购买时间节点 */
+      getTimeNodes(val) {
+        let myDate = new Date()
+        let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
+        this.setTime(new Date(currentDay + ' ' + val).getTime())
+      },
+      /* 倒计时方法 */
+      setTime(endTime) {
+        let startTime = this.serverTime
+        let limitTime = endTime - startTime
+        if (limitTime > 0) {
+          this.setLimit(limitTime)
+          this.countDownTimer = setInterval(() => {
+            this.setLimit(limitTime)
+            limitTime -= 1000
+            if (limitTime <= 0) {
+              window.clearInterval(this.countDownTimer)
+            }
+          }, 1000);
+        } else {
+          this.hour = '--';
+          this.minute = '--';
+          this.second = '--';
+          this.gpuHour = '--';
+          this.gpuMinute = '--';
+          this.gpuSecond = '--';
+        }
+      },
+      setLimit(time) {
+        //let days = parseInt(time / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
+        let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+        let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
+        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒数
+        //this.day = this.checkTime(days);
+        this.hour = this.checkTime(hours);
+        this.minute = this.checkTime(minutes);
+        this.second = this.checkTime(seconds);
+      },
+      checkTime(i) { //将0-9的数字前面加上0，例1变为01
+        if (i < 10) {
+          i = '0' + i;
+        }
+        return i;
+      },
     },
     computed: {
       top() {
-        return -this.activeIndex * 12 + 'px';
+        return -this.activeIndex * 35 + 'px';
       }
     },
     watch: {},
     beforeRouteLeave(to, from, next) {
-      clearInterval(this.timer)
+      clearInterval(this.moveTimer)
+      clearInterval(this.countDownTimer)
       next()
     }
   }
@@ -174,15 +273,73 @@
   }
 
   .active-1 {
-    background-color: #FEEDDF;
+    background: linear-gradient(180deg, rgba(255, 122, 34, 0.6), rgba(254, 237, 225, 1));
     .banner {
-      height: 837px;
-      background: #FEEDDF url("../../../assets/img/active/anniversary/aa-banner2.png") center no-repeat;
+      height: 840px;
+      padding-top: 45px;
+      background: url("../../../assets/img/active/anniversary/aa-banner2.png") center no-repeat;
+      > p {
+        background: #FA531C;
+        padding: 8px 26px 8px 21px;
+        border: 2px solid rgba(255, 215, 78, 1);
+        border-radius: 19px;
+        font-size: 20px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: rgba(253, 253, 253, 1);
+        width: 629px;
+        margin: 0 auto;
+      }
+      > img {
+        display: inherit;
+        margin: 0 auto;
+      }
+      .lottery-title {
+        margin-top: 70px;
+        text-align: center;
+        position: relative;
+        > img {
+          position: absolute;
+          left: 33%;
+          top: -50%;
+        }
+        > h2 {
+          font-size: 36px;
+          font-family: MicrosoftYaHei;
+          font-weight: bold;
+          font-style: italic;
+          color: rgba(255, 48, 0, 1);
+          position: relative;
+        }
+        > p {
+          font-size: 22px;
+          font-family: MicrosoftYaHei;
+          font-weight: 500;
+          color: rgba(255, 48, 0, 1);
+          > span {
+            font-size: 16px;
+            color: #222222;
+          }
+        }
+      }
     }
     .lottery {
       display: flex;
       justify-content: space-around;
       .center();
+      margin-top: 60px;
+      padding-bottom: 30px;
+    }
+  }
+
+  .active-2 {
+    padding: 172px 0 75px;
+    background: #ed3f14;
+    .productList {
+      padding: 20px;
+      .center();
+      background: #FFF;
+      height: 720px;
     }
   }
 
@@ -222,8 +379,8 @@
   }
 
   #rotary-table {
-    width: 340px;
-    height: 349px;
+    width: 600px;
+    height: 365px;
     position: relative;
     background-color: antiquewhite;
 
@@ -289,15 +446,27 @@
 
   #lottery-right {
     h3 {
-      font-weight: normal;
+      font-size: 22px;
+      font-family: MicrosoftYaHei;
+      font-weight: 500;
+      color: rgba(34, 34, 34, 1);
+      text-align: center;
+      margin-bottom: 15px;
     }
     .lottery-rules {
-
+      width: 377px;
+      > p {
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
+        line-height: 28px;
+      }
     }
     .lottery-particulars {
       .win-list {
-        height: 58px;
-        width: 500px;
+        height: 107px;
+        width: 376px;
         border: 1px dashed red;
         overflow: hidden;
         .win-content {
@@ -305,6 +474,11 @@
           transition: top .5s;
           li {
             text-align: center;
+            font-size: 16px;
+            font-family: MicrosoftYaHei;
+            font-weight: 400;
+            color: rgba(34, 34, 34, 1);
+            line-height: 35px;
           }
         }
       }
