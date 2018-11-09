@@ -680,7 +680,7 @@
                 this.setLimit(limitTime)
                 limitTime -= 1000
                 if (limitTime <= 0) {
-                  window.clearInterval(timer)
+                  window.clearInterval(this.timer)
                 }
               }, 1000);
             } else {
