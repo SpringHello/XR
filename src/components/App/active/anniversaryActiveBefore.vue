@@ -14,7 +14,7 @@
     <div class="introduct center">
       <div class="top headline">
         <h2>11.17周年庆 幸运抽大奖</h2>
-        <p><span>见面礼！</span>用户登录或者注册后即可获得一次抽奖机会，Ipad pro、iPhone XS Max等你拿！</p>
+        <p><span>见面礼！</span>用户登录或者注册后即可获得一次抽奖机会，下方活动奖品的 一二等奖等你拿！</p>
       </div>
       <div class="content center">
         <div class="player">
