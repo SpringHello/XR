@@ -23,10 +23,11 @@
             <h3>活动规则</h3>
             <p>1、活动时间：2018.11.17-2019.01.05</p>
             <p> 2、活动内容：新老用户第一次购买任意活动产品获得一次抽奖机会。</p>
-            <p> 3、活动期间参与抽奖活动获得的代金券或优惠券不能与本次活动叠加使用。</p>
+            <p> 3、活动期间参与抽奖活动获得的代金券或优惠券不能与本次活动叠加使用。 <span style="cursor: pointer;color: #FF3000;text-decoration: underline">详情</span></p>
           </div>
           <div class="lottery-particulars">
-            <h3 style="margin-top: 20px">中奖详情</h3>
+            <h3 style="margin-top: 20px;position: relative">中奖详情 <span
+              style="cursor: pointer;color: #FF3000;font-size:16px;text-decoration: underline;position: absolute;left: 66%;top:25%">中奖纪录</span></h3>
             <div class="win-list">
               <ul class="win-content" :style="{top}">
                 <li v-for="item in winList"> {{ item}}</li>
@@ -38,11 +39,28 @@
     </div>
     <!--  云服务器、对象存储、数据库专区 -->
     <div class="active-2">
-      <div class="productList">
-        <p>{{ hour}}:{{ minute}}: {{second}}</p>
-
-        <p>{{ gpuHour}}:{{ gpuMinute}}: {{gpuSecond}}</p>
+      <div class="active-2-title">
+        <img src="../../../assets/img/active/anniversary/aa-icon2.png"/>
+        <h2><img style="position: absolute;left: 41.5%;top: 7%;" src="../../../assets/img/active/anniversary/text_bg1.png"/>爆款高配 超低折扣</h2>
+        <p>各类产品<span>1.7折</span>分时抢购，首次购买任意产品均可获得抽奖机会! <span
+          style="cursor: pointer;color: #FEC7B8;font-size:16px;text-decoration: underline;position: absolute;left: 64%;top:25%">活动规则</span></p>
       </div>
+      <div class="productList">
+        <div class="products">
+          <div class="products-title">
+            <img src="../../../assets/img/active/anniversary/aa-icon3.png"/>
+            <span>云服务器限时抢购中</span>
+            <div>
+              <span>本场结束倒计时:</span>
+              <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- gpu专区 -->
+    <div class="active-3">
+      <p>{{ gpuHour}}:{{ gpuMinute}}: {{gpuSecond}}</p>
     </div>
     <!-- 消费大满送-->
     <div class="spend-to-send">
@@ -151,9 +169,9 @@
           } else if ((this.serverTimeHour == 16 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 17 && this.serverTimeMinute < 30)) {
             this.productNode = 'database'
             this.getTimeNodes('17:30')
-          } else if(this.serverTimeHour == 19){
+          } else if (this.serverTimeHour == 19) {
             this.getTimeNodes('20:00')
-          }else if (this.serverTimeHour == 20 || this.serverTimeHour == 21) {
+          } else if (this.serverTimeHour == 20 || this.serverTimeHour == 21) {
             this.productNode = 'host'
             this.getTimeNodes('22:00')
           } else {
@@ -211,7 +229,11 @@
       getTimeNodes(val) {
         let myDate = new Date()
         let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
-        this.setTime(new Date(currentDay + ' ' + val).getTime())
+        if (val == '20:00') {
+          this.setGpuTime(new Date(currentDay + ' ' + val).getTime())
+        } else {
+          this.setTime(new Date(currentDay + ' ' + val).getTime())
+        }
       },
       /* 倒计时方法 */
       setTime(endTime) {
@@ -230,20 +252,41 @@
           this.hour = '--';
           this.minute = '--';
           this.second = '--';
+        }
+      },
+      setLimit(time) {
+        let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+        let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
+        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒
+        this.hour = this.checkTime(hours);
+        this.minute = this.checkTime(minutes);
+        this.second = this.checkTime(seconds);
+      },
+      setGpuTime(endTime) {
+        let startTime = this.serverTime
+        let limitTime = endTime - startTime
+        if (limitTime > 0) {
+          this.setGpuLimit(limitTime)
+          this.countDownTimer = setInterval(() => {
+            this.setGpuLimit(limitTime)
+            limitTime -= 1000
+            if (limitTime <= 0) {
+              window.clearInterval(this.countDownTimer)
+            }
+          }, 1000);
+        } else {
           this.gpuHour = '--';
           this.gpuMinute = '--';
           this.gpuSecond = '--';
         }
       },
-      setLimit(time) {
-        //let days = parseInt(time / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
+      setGpuLimit(time) {
         let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
         let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
-        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒数
-        //this.day = this.checkTime(days);
-        this.hour = this.checkTime(hours);
-        this.minute = this.checkTime(minutes);
-        this.second = this.checkTime(seconds);
+        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒
+        this.gpuHour = this.checkTime(hours);
+        this.gpuMinute = this.checkTime(minutes);
+        this.gpuSecond = this.checkTime(seconds);
       },
       checkTime(i) { //将0-9的数字前面加上0，例1变为01
         if (i < 10) {
@@ -333,13 +376,79 @@
   }
 
   .active-2 {
-    padding: 172px 0 75px;
-    background: #ed3f14;
+    padding: 75px 0;
+    background: #FEEDE0 url("../../../assets/img/active/anniversary/aa-banner3.png") center no-repeat;
+    .active-2-title {
+      position: relative;
+      text-align: center;
+      > img {
+        position: absolute;
+        left: 33%;
+        top: -50%;
+      }
+      > h2 {
+        font-size: 36px;
+        font-family: MicrosoftYaHei;
+        font-weight: bold;
+        font-style: italic;
+        color: #FFF;
+        position: relative;
+      }
+      > p {
+        font-size: 18px;
+        font-family: MicrosoftYaHei;
+        font-weight: 500;
+        color: #FFF;
+        position: relative;
+        > span {
+          font-size: 22px;
+          color: #FFF;
+        }
+      }
+    }
     .productList {
       padding: 20px;
       .center();
       background: #FFF;
       height: 720px;
+      margin-top: 25px;
+      .products {
+        .products-title {
+          > img {
+            margin: 0 15px;
+          }
+          > span {
+            font-size: 32px;
+            font-family: MicrosoftYaHei;
+            color: rgba(255, 48, 0, 1);
+          }
+          > div {
+            float: right;
+            display: flex;
+            > span {
+              font-size: 18px;
+              font-family: MicrosoftYaHei;
+              font-weight: 400;
+              color: rgba(34, 34, 34, 1);
+              padding-top: 20px;
+              margin-right: 10px;
+            }
+            > p {
+              height: 46px;
+              width: 196px;
+              background: url("../../../assets/img/active/anniversary/aa-banner4.png");
+              text-align: center;
+              padding-top: 5px;
+              > span {
+                font-size: 28px;
+                font-family: MicrosoftYaHei;
+                font-weight: 400;
+                color: rgba(253, 253, 253, 1);
+              }
+            }
+          }
+        }
+      }
     }
   }
 
