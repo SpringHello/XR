@@ -1,5 +1,5 @@
 <template>
-  <div class="anniversary-active-before">
+  <div id="anniversary-active-before">
     <div class="banner center">
       <div class="content">
         <img src="../../../assets/img/active/anniversary/aa-banner1.png" />
@@ -14,11 +14,11 @@
     <div class="introduct center">
       <div class="top headline">
         <h2>11.17周年庆 幸运抽大奖</h2>
-        <p><span>见面礼！</span>用户登录或者注册后即可获得一次抽奖机会，Ipad pro、iPhone XS Max等你拿！</p>
+        <p><span>见面礼！</span>用户登录或者注册后即可获得一次抽奖机会，戴森（Dyson）Airwrap美发造型器等你拿！</p>
       </div>
       <div class="content center">
         <div class="player">
-          <video controls="" autoplay="" name="media" width="648px"><source src="http://www.xrcloud.net:8777/activity/movie.mp4" type="video/mp4"></video>
+          <video controls="controls"  name="media" width="648px"><source src="http://www.xrcloud.net:8777/activity/movie.mp4" type="video/mp4"></video>
         </div>
         <div class="prize">
           <p>活动奖品</p>
@@ -34,7 +34,7 @@
     <div class="host center">
       <div class="top headline">
         <h2>爆款高配 超低折扣</h2>
-        <p>各类产品<i>1.7折</i>分时抢购，首次购买任意产品均可获得抽奖机会!<strong>活动规则</strong></p>
+        <p>各类产品<i>1.7折</i>分时抢购，首次购买任意产品均可获得抽奖机会!<span class="rule" @click="ruleShow=true">活动规则</span></p>
       </div>
       <div class="content center">
         <ul class="item">
@@ -47,36 +47,36 @@
               <div class="top">
                 <p><span>爆款</span>云服务器</p>
                 <ul>
-                  <li><span>4核</span>cpu</li>
-                  <li><span>8G</span>内存</li>
-                  <li><span>40G</span>系统盘</li>
+                  <li><span>{{item.cpu}}核</span>内存</li>
+                  <li><span>{{item.memroy}}G</span>内存</li>
+                  <li><span>{{item.disk}}G</span>系统盘</li>
                 </ul>
               </div>
               <div class="config">
-                <Form :model="formLeft" label-position="left" :label-width="100" style="width:300px;">
+                <Form  label-position="left" :label-width="100" style="width:300px;">
                   <FormItem label="请选择带宽">
-                      <Select v-model="item.network">
+                      <Select v-model="item.network" disabled>
                         <Option v-for="(item,index) in network" :key="index" :value="item.value">{{item.value}}M</Option>
                     </Select>
                   </FormItem>
                   <FormItem label="请选择区域">
-                      <Select v-model="item.zone">
+                      <Select v-model="item.zone" disabled>
                        <Option v-for="(item,index) in zone" :key="index" :value="item.value">{{item.value}}</Option>
                     </Select>
                   </FormItem>
                   <FormItem label="请选择系统">
-                      <Select v-model="item.system">
+                      <Select v-model="item.system" disabled>
                         <Option v-for="(item,index) in system" :key="index" :value="item.value">{{item.value}}</Option>
                     </Select>
                     </FormItem>
                     <FormItem label="请选择时长">
-                      <Select v-model="item.sectime">
+                      <Select v-model="item.sectime" disabled>
                         <Option v-for="(item,index) in time" :key="index" :value="item.value">{{item.value}}个月</Option>
                     </Select>
                   </FormItem>
               </Form>
               </div>
-              <div class="cost">￥650<span>原件：123456</span></div>
+              <div class="cost">￥{{item.discount}}<span>原件：{{item.cost}}元</span></div>
               <Button>1117盛大开启</Button>
             </div>
           </li>
@@ -84,6 +84,33 @@
       </div>
       <div class="more">
         <h2>更多惊喜优惠，敬请期待...</h2>
+          <button @click="$router.push('activecenter')" class="activecenter-btn">点击查看其他优惠活动</button>
+      </div>
+    </div>
+    <div class="overlay" :class="{isShow:ruleShow}">
+      <div class="rules-modal center">
+        <div class="head-title">折扣活动规则</div>
+        <div class="content center" >
+          <h3>（1）活动时间：2018年11月17日-2018年12月17日</h3>
+          <h3>（2）活动内容：新老用户皆可以参加此活动。具体活动购买限制如下：</h3>
+          <p>·云主机每位用户只可购买5次；</p>
+          <p>·对象存储每位用户只可购买1次。</p>
+          <p>·云数据库每位用户只可购买1次。</p>
+          <p>·GPU服务器每位用户只可购买1次</p>
+          <h3 class="padl">具体购买时间如下： </h3>
+          <p>·云主机购买时间：上午8:30-10：30；下午13:00-15:00；晚上20:00-22:00；</p>
+          <p>·对象存储购买时间：上午10:30-11:30；下午15:00-16:00</p>
+          <p>·云数据库购买时间：下午16:30-17:30</p>
+          <p>·GPU服务器购买时间：晚上19:00-20:00</p>
+          <h3>（3）用户在此活动页面中进行购买产品，购买价格直接为折扣价格，无需领取任何优惠券或折扣
+        券，若在正常购买页面购买则为原价购买。</h3>
+          <h3>（4）参与此活动的用户在购买产品时不能使用以任何形式获得的优惠券或折扣券。</h3>
+          <h3>（5）本次活动购买的产品可申请7天无理由退款，若您中奖之后仍申请退款，我们将默认您放弃与退款订单相关的中奖奖品。</h3>
+        <h3>（6）若用户已领取奖品但在两次发放奖品日都未填写收货信息，新睿云默认为用户放弃中奖奖品。</h3>
+        <h3>（7）奖品发出后新睿云会将奖品物流订单号码通过短信形式发送给客户，客户可通过物流订单号</h3>
+        <h3>（8）此活动最终解释权为新睿云所有。</h3>
+        </div>
+        <Button @click="ruleShow=false">我知道了</Button>
       </div>
     </div>
   </div>
@@ -94,17 +121,12 @@ import axios from '@/util/axiosInterceptor'
 export default {
   data () {
     return {
+      ruleShow: false,
       day: '--',
       hour: '--',
       minute: '--',
       second: '--',
       timer: null,
-      formLeft: {
-        network: '',
-        zone: '',
-        system: '',
-        time: ''
-      },
       winList: [
         { head: '一等奖', content: '戴森（Dyson）Airwrap美发造型器' },
         { head: '二等奖', content: '黑莓KEYone 4G全网通手机' },
@@ -117,41 +139,59 @@ export default {
         {
           title: '云服务器',
           time: '8:30-10:30; 13:00-15:00; 20:00-22:00;',
-          network: '',
-          zone: '',
-          system: '',
-          sectime: ''
+          network: '2',
+          zone: '北方一区',
+          system: 'windows2012-64',
+          sectime: '3',
+          cost: '1131.16',
+          discount: '226.3',
+          cpu: '4',
+          memroy: '8',
+          disk: '40'
         },
         {
           title: '对象存储',
-          time: '8:30-10:30; 13:00-15:00; 20:00-22:00;',
-          network: '',
-          zone: '',
-          system: '',
-          sectime: ''
+          time: '10:30-11:30; 15:00-16:00;',
+          network: '2',
+          zone: '北京一区',
+          system: 'windows2008-64',
+          sectime: '3',
+          cost: '2162.16',
+          discount: '367.57',
+
+          cpu: '8',
+          memroy: '16',
+          disk: '40'
         },
         {
-          title: '对象存储',
-          time: '8:30-10:30; 13:00-15:00; 20:00-22:00;',
-          network: '',
-          zone: '',
-          system: '',
-          sectime: ''
+          title: '云数据库',
+          time: '16:30-17:30;',
+          network: '2',
+          zone: '华东一区',
+          system: 'Centos-6.8-64',
+          sectime: '3',
+          cost: '4106.16',
+          discount: '698.04',
+          cpu: '16',
+          memroy: '32',
+          disk: '40'
         }
       ],
       network: [
-        { value: 2 },
-        { value: 4 },
-        { value: 6 },
-        { value: 8 }
+        { value: '2' },
+        { value: '4' },
+        { value: '6' },
+        { value: '8' }
       ],
       zone: [
-        { value: '华中二区' },
-        { value: '北方一区' }
+        { value: '北方一区' },
+        { value: '北京一区' },
+        { value: '华东一区' }
       ],
       system: [
-        { value: 'window 2017' },
-        { value: 'window 2012' }
+        { value: 'windows2012-64' },
+        { value: 'Centos-6.8-64' },
+        { value: 'windows2008-64' }
       ],
       time: [
         { value: '3' },
@@ -222,19 +262,18 @@ export default {
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-.anniversary-active-before {
+#anniversary-active-before {
   text-align: center;
   font-family: PingFangSC-Semibold;
+  overflow-x: hidden;
   .center {
     margin: 0 auto;
   }
   .headline {
-    // padding-top: 50px;
     position: relative;
     margin-bottom: 35px;
     &::after {
       content: url(../../../assets/img/active/anniversary/aa-icon1.png);
-      // width: 50px;
       display: inline-block;
       position: absolute;
       top: -40px;
@@ -268,12 +307,12 @@ export default {
       rgba(255, 122, 34, 0.6),
       rgba(254, 237, 225, 1)
     );
-    // background: green;
     .content {
-      background:url("../../../assets/img/active/anniversary/aa-banner2.png") center no-repeat;
+      background: url("../../../assets/img/active/anniversary/aa-banner2.png")
+        center no-repeat;
       height: 844px;
       .timer {
-        padding-top: 30px; 
+        padding-top: 30px;
         h3 {
           font-size: 30px;
           font-family: PingFangSC-Semibold;
@@ -282,7 +321,7 @@ export default {
           line-height: 42px;
         }
         .countdown {
-          margin-top: 20px; 
+          margin-top: 20px;
           width: 403px;
           height: 48px;
           background: rgba(255, 0, 58, 1);
@@ -358,7 +397,7 @@ export default {
         height: 289px;
         background: rgba(255, 218, 88, 0.22);
         li {
-          padding-left: 52px; 
+          padding-left: 52px;
           text-align: left;
           font-size: 18px;
           line-height: 36px;
@@ -373,19 +412,21 @@ export default {
     width: 1920px;
     height: 1059px;
     padding-top: 50px;
-    background: url("../../../assets/img/active/anniversary/red_bg.png") center
-      no-repeat;
+    background: url("../../../assets/img/active/anniversary/red_bg.png") center no-repeat;
     > .top {
       color: #fff;
+      margin-bottom: 24px;
       p {
         i {
           font-size: 22px;
           font-weight: bold;
         }
-        strong {
+        .rule {
+          color: #fff;
           font-size: 16px;
           margin-left: 10px;
           text-decoration: underline;
+          cursor: pointer;
         }
       }
       position: relative;
@@ -398,9 +439,10 @@ export default {
       }
     }
     > .content {
-      padding: 40px 20px;
+      padding-top: 20px;
       background: #fff;
       width: 1200px;
+      height: 674px;
       .item {
         display: flex;
         justify-content: space-around;
@@ -418,47 +460,47 @@ export default {
           }
         }
         > li {
-          .top {
-            width: 350px;
-            height: 153px;
-            padding: 30px 20px 0 20px;
-            background: url(../../../assets/img/active/anniversary/card_top.png);
-            color: #fff;
-            p {
-              text-align: left;
-              font-size: 28px;
-              margin-bottom: 20px;
-              span {
-                font-size: 36px;
-                font-family: PingFangSC-Semibold;
-                font-weight: 600;
-                line-height: 45px;
-              }
-            }
-            ul {
-              display: flex;
-              justify-content: space-between;
-              li {
-                border-right: 1px solid #fff; 
-                font-size: 18px;
-                padding-right:14px; 
-                span {
-                  font-size: 28px;
-                }
-                &:last-child {
-                  border-right: none;
-                  padding-right:0px; 
-                }
-              }
-            }
-          }
           .card {
             margin-top: 20px;
-            padding-top: 2px;
-            width: 356px;
-            // height: 522px;
+            padding-top: 4px;
+            width: 360px;
+            height: 522px;
             border: 1px solid rgba(255, 117, 85, 1);
             position: relative;
+            .top {
+              width: 350px;
+              height: 160px;
+              padding: 30px 20px 0 20px;
+              background: url(../../../assets/img/active/anniversary/card_top.png) 2px 2px no-repeat;
+              color: #fff;
+              p {
+                text-align: left;
+                font-size: 28px;
+                margin-bottom: 20px;
+                span {
+                  font-size: 36px;
+                  font-family: PingFangSC-Semibold;
+                  font-weight: 600;
+                  line-height: 45px;
+                }
+              }
+              ul {
+                display: flex;
+                justify-content: space-between;
+                li {
+                  border-right: 1px solid #fff;
+                  font-size: 18px;
+                  padding-right: 6px;
+                  span {
+                    font-size: 28px;
+                  }
+                  &:last-child {
+                    border-right: none;
+                    padding-right: 0px;
+                  }
+                }
+              }
+            }
             &::after {
               content: url(../../../assets/img/active/anniversary/label.png);
               display: inline-block;
@@ -468,13 +510,17 @@ export default {
             }
             .config {
               padding: 20px;
+              padding-top: 10px; 
               padding-bottom: 0;
+              .ivu-form-item {
+                margin-bottom: 20px;
+              }
             }
           }
         }
       }
       .cost {
-        padding: 0 20px 35px 20px;
+        padding: 0 20px 20px 20px;
         text-align: left;
         font-size: 40px;
         font-family: PingFangSC-Regular;
@@ -482,7 +528,7 @@ export default {
         color: rgba(255, 53, 8, 1);
         line-height: 45px;
         span {
-          margin-left: 10px;
+          // margin-left: 10px;
           font-size: 18px;
           font-weight: 400;
           text-decoration: line-through;
@@ -502,7 +548,7 @@ export default {
     }
     .more {
       h2 {
-        margin-top: 40px;
+        margin-top: 60px;
         font-size: 36px;
         font-family: PingFangSC-Semibold;
         font-weight: bold;
@@ -510,7 +556,86 @@ export default {
         color: rgba(255, 255, 255, 1);
         line-height: 46px;
       }
+      .activecenter-btn {
+        margin-top: 20px;
+        width:227px;
+        height:36px;
+        background:rgba(255,145,92,1);
+        border-radius:5px;
+        font-size:18px;
+        font-family:PingFangSC-Medium;
+        font-weight:500;
+        color:rgba(255,255,255,1);
+        line-height:36px;
+        border: none;
+      }
     }
+  }
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(55, 55, 55, 0.6);
+    height: 100%;
+    z-index: 1000;
+    .rules-modal {
+      position: relative;
+      margin: 0 auto;
+      top: 180px;
+      width: 800px;
+      height: 570px;
+      background: rgba(255, 255, 255, 1);
+      > .head-title {
+        padding-top: 14px;
+        height: 70px;
+        font-size: 28px;
+        font-family: PingFangSC-Semibold;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 1);
+        background: url(../../../assets/img/active/anniversary/rule_title_bg.png);
+      }
+      > .content {
+        margin: 20px auto;
+        padding: 22px;
+        width: 724px;
+        height: 380px;
+        border: 1px solid rgba(234, 234, 234, 1);
+        overflow-y: auto;
+        text-align: left;
+        font-size: 14px;
+        p,
+        h3 {
+          font-size: 16px;
+          font-family: PingFangSC-Regular;
+          font-weight: 400;
+          color: rgba(34, 34, 34, 1);
+          line-height: 30px;
+        }
+        p {
+          padding-left: 120px;
+        }
+        .padl {
+          padding-left: 40px;
+        }
+      }
+      button {
+        width: 160px;
+        height: 46px;
+        background: url(../../../assets/img/active/anniversary/rule_btn_bg.png);
+        font-size: 20px;
+        color: rgba(255, 255, 255, 1);
+        border-radius: 0;
+        // &:hover{
+        //   outline: 0;
+        // }
+      }
+    }
+  }
+  .isShow {
+    display: block;
   }
 }
 </style>

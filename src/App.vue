@@ -1,6 +1,6 @@
 <template>
   <div id="front">
-      <div class="app-hint" ref="hint">
+      <div class="app-hint" ref="hint" @click="$router.push('anniversaryActiveBefore')">
         <div class="center">
           <div class="countdown" v-if="hintShow">
             <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
@@ -744,6 +744,7 @@
       background: url("./assets/img/app/hint-banner.png") center no-repeat, linear-gradient(to right, #FF4439, #FF1569);
       position: relative;
       transition: height .5s ease;
+      cursor: pointer;
       > img {
         position: absolute;
         right: 15px;
