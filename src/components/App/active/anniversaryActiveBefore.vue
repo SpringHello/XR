@@ -14,7 +14,7 @@
     <div class="introduct center">
       <div class="top headline">
         <h2>11.17周年庆 幸运抽大奖</h2>
-        <p><span>见面礼！</span>用户登录或者注册后即可获得一次抽奖机会，下方活动奖品的 一二等奖等你拿！</p>
+        <p><span>见面礼！</span>用户登录或者注册后即可获得一次抽奖机会，戴森（Dyson）Airwrap美发造型器等你拿！</p>
       </div>
       <div class="content center">
         <div class="player">
@@ -84,6 +84,7 @@
       </div>
       <div class="more">
         <h2>更多惊喜优惠，敬请期待...</h2>
+          <button @click="$router.push('activecenter')" class="activecenter-btn">点击查看其他优惠活动</button>
       </div>
     </div>
     <div class="overlay" :class="{isShow:ruleShow}">
@@ -143,7 +144,7 @@ export default {
           system: 'windows2012-64',
           sectime: '3',
           cost: '1131.16',
-          discount: '192.29',
+          discount: '226.3',
           cpu: '4',
           memroy: '8',
           disk: '40'
@@ -170,7 +171,7 @@ export default {
           system: 'Centos-6.8-64',
           sectime: '3',
           cost: '4106.16',
-          discount: '698.05',
+          discount: '698.04',
           cpu: '16',
           memroy: '32',
           disk: '40'
@@ -411,10 +412,10 @@ export default {
     width: 1920px;
     height: 1059px;
     padding-top: 50px;
-    background: url("../../../assets/img/active/anniversary/red_bg.png") center
-      no-repeat;
+    background: url("../../../assets/img/active/anniversary/red_bg.png") center no-repeat;
     > .top {
       color: #fff;
+      margin-bottom: 24px;
       p {
         i {
           font-size: 22px;
@@ -438,9 +439,10 @@ export default {
       }
     }
     > .content {
-      padding: 40px 20px;
+      padding-top: 20px;
       background: #fff;
       width: 1200px;
+      height: 674px;
       .item {
         display: flex;
         justify-content: space-around;
@@ -546,13 +548,26 @@ export default {
     }
     .more {
       h2 {
-        margin-top: 50px;
+        margin-top: 60px;
         font-size: 36px;
         font-family: PingFangSC-Semibold;
         font-weight: bold;
         font-style: italic;
         color: rgba(255, 255, 255, 1);
         line-height: 46px;
+      }
+      .activecenter-btn {
+        margin-top: 20px;
+        width:227px;
+        height:36px;
+        background:rgba(255,145,92,1);
+        border-radius:5px;
+        font-size:18px;
+        font-family:PingFangSC-Medium;
+        font-weight:500;
+        color:rgba(255,255,255,1);
+        line-height:36px;
+        border: none;
       }
     }
   }
