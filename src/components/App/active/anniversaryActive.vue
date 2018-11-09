@@ -46,37 +46,176 @@
           style="cursor: pointer;color: #FEC7B8;font-size:16px;text-decoration: underline;position: absolute;left: 64%;top:25%">活动规则</span></p>
       </div>
       <div class="productList">
-        <div class="products">
+        <div class="products" v-if="productNode == 'host'">
           <div class="products-title">
             <img src="../../../assets/img/active/anniversary/aa-icon3.png"/>
             <span>云服务器限时抢购中</span>
-            <div>
+            <div style="margin-top: 8px">
               <span>本场结束倒计时:</span>
               <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
             </div>
           </div>
+          <div style="height:4px;background:rgba(255,108,62,1);margin-top: 10px"></div>
+          <div class="product-item">
+            <div v-for="(item,index) in hostList" class="item">
+              <div class="item-title">
+                <p>爆款<span>云服务器</span></p>
+                <ul>
+                  <li>4核<span>CPU</span></li>
+                  <li>8G<span>内存</span></li>
+                  <li>40G<span>系统盘</span></li>
+                </ul>
+              </div>
+              <div class="item-select">
+                <span>请选择带宽</span>
+                <Select class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                </Select>
+                <span>请选择区域</span>
+                <Select class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                </Select>
+                <span>请选择系统</span>
+                <Select class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                </Select>
+                <span>请选择时长</span>
+                <Select class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                </Select>
+              </div>
+              <div class="item-price">
+                <p>¥625 <span>原价：12345元</span></p>
+              </div>
+              <div class="item-footer">
+                <button :class="{disabled: false}">立即抢购</button>
+              </div>
+            </div>
+          </div>
+          <div class="products-footer">
+            <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：对象存储（10:30开始）、云数据库（16:30开始）</span></p>
+          </div>
+        </div>
+        <div class="products" v-if="productNode == 'objStorage'">
+          <div class="products-title">
+            <img src="../../../assets/img/active/anniversary/aa-icon5.png"/>
+            <span style="position: relative;bottom: 20px;">对象存储限时抢购中</span>
+            <div style="margin-top: 8px">
+              <span>本场结束倒计时:</span>
+              <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
+            </div>
+          </div>
+          <div style="height:4px;background:rgba(255,108,62,1);margin-top: 10px"></div>
+          <div class="product-item">
+            <div v-for="(item,index) in objStorageList" class="item">
+              <div class="item-title">
+                <p>对象存储</p>
+                <ul>
+                  <li>50G<span>存储</span></li>
+                  <li style="border: none">50G<span>外网下载流量</span></li>
+                </ul>
+              </div>
+              <div class="item-select">
+                <span>请选择区域</span>
+                <Select class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                </Select>
+                <span>请选择时长</span>
+                <Select class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                </Select>
+              </div>
+              <div class="item-price">
+                <p>¥625 <span>原价：12345元</span></p>
+              </div>
+              <div class="item-footer">
+                <button :class="{disabled: false}">立即抢购</button>
+              </div>
+            </div>
+          </div>
+          <div class="products-footer">
+            <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：云主机（10:30开始）、云数据库（16:30开始）</span></p>
+          </div>
+        </div>
+        <div class="products" v-if="productNode == 'database'">
+          <div class="products-title">
+            <img src="../../../assets/img/active/anniversary/aa-icon6.png"/>
+            <span>云数据库限时抢购中</span>
+            <div style="margin-top: 8px">
+              <span>本场结束倒计时:</span>
+              <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
+            </div>
+          </div>
+          <div style="height:4px;background:rgba(255,108,62,1);margin-top: 10px"></div>
+          <div class="product-item" style="justify-content: center">
+            <div v-for="(item,index) in databaseList" class="item">
+              <div class="item-title">
+                <p>云数据库</p>
+                <ul>
+                  <li>4核<span>CPU</span></li>
+                  <li>8G<span>内存</span></li>
+                  <li>40G<span>系统盘</span></li>
+                </ul>
+              </div>
+              <div class="item-select">
+                <span>请选择类型</span>
+                <Select class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                </Select>
+                <span>数据中心&#12288</span>
+                <Select class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                </Select>
+                <span>请选择时长</span>
+                <Select class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                </Select>
+              </div>
+              <div class="item-price">
+                <p>¥625 <span>原价：12345元</span></p>
+              </div>
+              <div class="item-footer">
+                <button :class="{disabled: false}">立即抢购</button>
+              </div>
+            </div>
+          </div>
+          <div class="products-footer">
+            <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：今日最后场次 云主机（20:00开始）</span></p>
+          </div>
         </div>
       </div>
     </div>
-    <!-- gpu专区 -->
+    <!-- gpu专区 + 消费大满送-->
     <div class="active-3">
-      <p>{{ gpuHour}}:{{ gpuMinute}}: {{gpuSecond}}</p>
-    </div>
-    <!-- 消费大满送-->
-    <div class="spend-to-send">
-      <span :style="{'left': 2000/5000*100 - 5 + '%' }">2000</span>
-      <span :style="{'left': 3500/5000*100 - 5 + '%' }">3500</span>
-      <span :style="{'left': 5000/5000*100 - 5 + '%' }">5000元</span>
-      <img width="10" height="10" :style="{'left': hasCost/5000*100 - 0.5 + '%'}" src="../../../assets/img/records/records-icon8.png"/>
-      <div class="progressBar">
-        <div class="article-stage" :style="{'left': 2000/5000*100 + '%' }"></div>
-        <div class="article-stage" :style="{'left': 3500/5000*100 + '%' }"></div>
-        <div class="progress" :style="{'width': hasCost/5000*100 + '%'}"></div>
+      <div class="active-3-title">
+        <img style="position: absolute;left: 30%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon7.png"/>
+        <img style="margin-left: 145px;" src="../../../assets/img/active/anniversary/aa-banner6.png"/>
+        <p>全网首次<span>GPU服务器折扣活动</span>，每日抢购时间 19:00-20:00！</p>
+      </div>
+      <div class="gpuList">
+        <div class="gpu-title">
+          <img src="../../../assets/img/active/anniversary/aa-icon8.png"/>
+          <span>GPU云服务器 每日19:00开启抢购</span>
+          <div style="margin-top: 8px">
+            <span>本场结束倒计时:</span>
+            <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
+          </div>
+        </div>
       </div>
     </div>
-    <div>
-
-    </div>
+    <!-- 消费大满送-->
+    <!--    <div class="spend-to-send">
+          <span :style="{'left': 2000/5000*100 - 5 + '%' }">2000</span>
+          <span :style="{'left': 3500/5000*100 - 5 + '%' }">3500</span>
+          <span :style="{'left': 5000/5000*100 - 5 + '%' }">5000元</span>
+          <img width="10" height="10" :style="{'left': hasCost/5000*100 - 0.5 + '%'}" src="../../../assets/img/records/records-icon8.png"/>
+          <div class="progressBar">
+            <div class="article-stage" :style="{'left': 2000/5000*100 + '%' }"></div>
+            <div class="article-stage" :style="{'left': 3500/5000*100 + '%' }"></div>
+            <div class="progress" :style="{'width': hasCost/5000*100 + '%'}"></div>
+          </div>
+        </div>
+        <div>-->
   </div>
 </template>
 
@@ -133,7 +272,11 @@
         gpuHour: '--',
         gpuMinute: '--',
         gpuSecond: '--',
-        productNode: 'host', // 产品节点
+        productNode: 'database', // 产品节点
+        hostList: [{}, {}, {}],
+        objStorageList: [{}, {}, {}],
+        databaseList: [{}],
+        areaGroup: [{value: '1', name: '1号'}],
       }
     },
     created() {
@@ -445,6 +588,177 @@
                 font-weight: 400;
                 color: rgba(253, 253, 253, 1);
               }
+            }
+          }
+        }
+        .product-item {
+          display: flex;
+          justify-content: space-between;
+          .item {
+            width: 360px;
+            border: 1px solid rgba(255, 117, 85, 1);
+            .item-title {
+              background: #FFF url("../../../assets/img/active/anniversary/aa-banner5.png") center no-repeat;
+              height: 163px;
+              padding: 40px 20px;
+              > p {
+                font-size: 36px;
+                font-family: MicrosoftYaHei;
+                font-weight: 600;
+                color: rgba(255, 255, 255, 1);
+                > span {
+                  font-size: 28px;
+                }
+              }
+              > ul {
+                display: flex;
+                margin-top: 20px;
+                li {
+                  font-size: 28px;
+                  font-family: MicrosoftYaHei;
+                  font-weight: 500;
+                  color: rgba(255, 255, 255, 1);
+                  border-right: 1px solid #FFF;
+                  padding: 0 12px;
+                  > span {
+                    font-size: 18px;
+                  }
+                }
+                li:nth-child(1) {
+                  padding-left: 0;
+                }
+                li:nth-child(3) {
+                  padding-right: 0;
+                  border: none;
+                }
+              }
+            }
+            .item-select {
+              padding: 15px;
+              > span {
+                font-size: 18px;
+                font-family: PingFangSC-Regular;
+                font-weight: 400;
+                color: rgba(102, 102, 102, 1);
+                margin-right: 18px;
+                position: relative;
+                top: 13px;
+              }
+            }
+            .item-price {
+              padding: 20px 15px;
+              > p {
+                font-size: 40px;
+                font-family: MicrosoftYaHei;
+                font-weight: bold;
+                color: rgba(255, 53, 8, 1);
+                > span {
+                  font-size: 18px;
+                  font-family: MicrosoftYaHei;
+                  font-weight: 400;
+                  text-decoration: line-through;
+                  color: rgba(102, 102, 102, 1);
+                }
+              }
+            }
+            .item-footer {
+              padding: 4px;
+              > button {
+                outline: none;
+                border: none;
+                cursor: pointer;
+                padding: 12px;
+                width: 100%;
+                font-size: 28px;
+                font-family: MicrosoftYaHei;
+                font-weight: 500;
+                color: rgba(255, 255, 255, 1);
+                background: rgba(255, 66, 23, 1);
+                &:hover {
+                  background: rgba(255, 132, 72, 1);
+                }
+                &.disabled {
+                  background: rgba(192, 192, 192, 1);
+                  cursor: not-allowed;
+                }
+              }
+            }
+          }
+        }
+        .products-footer {
+          margin-top: 30px;
+          > p {
+            > img {
+              margin-right: 12px;
+            }
+            > span {
+              font-size: 18px;
+              font-family: MicrosoftYaHei;
+              font-weight: 500;
+              color: #FF4217;
+              position: relative;
+              bottom: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .active-3 {
+    padding: 30px 0;
+    height: 1000px;
+    background: #FEEDE0 url("../../../assets/img/active/anniversary/aa-banner7.png") center no-repeat;
+    .active-3-title {
+      text-align: center;
+      position: relative;
+      margin-bottom: 40px;
+      > p {
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
+        >span{
+          color: #FF3000;
+        }
+      }
+    }
+    .gpuList{
+      padding: 40px 20px;
+      .center();
+      background: #FFF;
+      height: 686px;
+      .gpu-title{
+        > img {
+          margin: 0 15px;
+        }
+        > span {
+          font-size: 32px;
+          font-family: MicrosoftYaHei;
+          color: rgba(255, 48, 0, 1);
+        }
+        > div {
+          float: right;
+          display: flex;
+          > span {
+            font-size: 18px;
+            font-family: MicrosoftYaHei;
+            font-weight: 400;
+            color: rgba(34, 34, 34, 1);
+            padding-top: 20px;
+            margin-right: 10px;
+          }
+          > p {
+            height: 46px;
+            width: 196px;
+            background: url("../../../assets/img/active/anniversary/aa-banner4.png");
+            text-align: center;
+            padding-top: 5px;
+            > span {
+              font-size: 28px;
+              font-family: MicrosoftYaHei;
+              font-weight: 400;
+              color: rgba(253, 253, 253, 1);
             }
           }
         }

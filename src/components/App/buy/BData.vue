@@ -545,6 +545,7 @@
           cpuNum: this.vmConfig.kernel.toString(),
           diskSize: '40',
           diskType: 'ssd',
+          resourceType: 'db',
           memory: this.vmConfig.RAM.toString(),
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value,
@@ -583,6 +584,7 @@
           diskSize,
           diskType,
           memory: '0',
+          resourceType: 'db',
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value,
           zoneId: this.zone.zoneid

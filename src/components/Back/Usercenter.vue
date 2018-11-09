@@ -1710,7 +1710,9 @@
             align: 'left',
             width: 180,
             render: (h, params) => {
-              if (params.row.systemadd == 0) {
+              if (params.row.systemadd == 1) {
+                return h('span', {}, '----')
+              } else {
                 return h('div', [
                   h('span', {
                       style: {
@@ -1746,8 +1748,6 @@
                     }, '删除')]
                   )
                 ]);
-              } else {
-                return h('span', {}, '----')
               }
             }
           }
