@@ -2483,7 +2483,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Peip',
-                useLink: $store.state.userInfo ? 'buy/bip' : 'buy/ip',
+                useLink: $store.state.userInfo ? 'buy/bip' : 'buy/bip',
                 ME: false
               },
               {
@@ -2543,7 +2543,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pdisk',
-                useLink: $store.state.userInfo ? 'buy/bdisk' : 'buy/disk',
+                useLink: $store.state.userInfo ? 'buy/bdisk' : 'buy/bdisk',
                 ME: true
               },
               {
