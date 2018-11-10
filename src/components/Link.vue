@@ -183,6 +183,7 @@
           params: {
             type: '0',
             isemail: '0',
+            aim: this.formInline.userPhone,
             vailCode: this.formInline.code,
           }
         }).then(response => {

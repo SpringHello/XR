@@ -7,16 +7,15 @@
         <img src="../../../assets/img/active/anniversary/aa-banner1.png"/>
         <div class="lottery-title">
           <img src="../../../assets/img/active/anniversary/aa-icon1.png"/>
-          <h2><img style="position: absolute;left: 40.5%;top: 7%;" src="../../../assets/img/active/anniversary/text_bg2.png"/>11.17周年庆 幸运抽大奖</h2>
+          <h2><img style="position: absolute;left: 39%;top: 7%;" src="../../../assets/img/active/anniversary/text_bg2.png"/>幸运抽奖 数百万好礼</h2>
           <p>见面礼！<span>用户登录即可获得一次抽奖机会，人气大奖，大额现金券等你来拿！</span></p>
         </div>
       </div>
       <div class="lottery">
         <div id="rotary-table">
-          <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]">
-            {{award.name}}
+          <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]" :style="{'background-image': 'url(' + award.src + ')' }">
           </div>
-          <div id="start-btn" @click="start">开始</div>
+          <div id="start-btn" @click="start">(剩余抽奖次数 {{ lotteryNumber }}次)</div>
         </div>
         <div id="lottery-right">
           <div class="lottery-rules">
@@ -55,37 +54,37 @@
               <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
             </div>
           </div>
-          <div style="height:4px;background:rgba(255,108,62,1);margin-top: 10px"></div>
+          <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
           <div class="product-item">
             <div v-for="(item,index) in hostList" class="item">
               <div class="item-title">
                 <p>爆款<span>云服务器</span></p>
                 <ul>
-                  <li>4核<span>CPU</span></li>
-                  <li>8G<span>内存</span></li>
-                  <li>40G<span>系统盘</span></li>
+                  <li>{{ item.cpu}}核<span>CPU</span></li>
+                  <li>{{ item.memory}}G<span>内存</span></li>
+                  <li>{{ item.rootDisk}}G<span>系统盘</span></li>
                 </ul>
               </div>
               <div class="item-select">
                 <span>请选择带宽</span>
-                <Select class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                <Select v-model="item.bandwidth" class="fr-select" style="width:216px;margin-top: 20px" @on-change="hostBandwidthChange(index)">
+                  <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择区域</span>
-                <Select class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px" @on-change="hostZoneChange(index)">
+                  <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择系统</span>
-                <Select class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                <Select v-model="item.system" class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择时长</span>
-                <Select class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                <Select v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px" @on-change="hostDurationChange(index)">
+                  <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
               </div>
               <div class="item-price">
-                <p>¥625 <span>原价：12345元</span></p>
+                <p>¥{{ item.currentPrice}} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
                 <button :class="{disabled: false}">立即抢购</button>
@@ -111,22 +110,22 @@
               <div class="item-title">
                 <p>对象存储</p>
                 <ul>
-                  <li>50G<span>存储</span></li>
-                  <li style="border: none">50G<span>外网下载流量</span></li>
+                  <li>{{ item.capacity }}G<span>存储</span></li>
+                  <li style="border: none">{{item.flow }}G<span>外网下载流量</span></li>
                 </ul>
               </div>
               <div class="item-select">
                 <span>请选择区域</span>
-                <Select class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px" @on-change="objStorageZoneChange(index)">
+                  <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择时长</span>
-                <Select class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                <Select v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px" @on-change="objStorageDurationChange(index)">
+                  <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
               </div>
               <div class="item-price">
-                <p>¥625 <span>原价：12345元</span></p>
+                <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
                 <button :class="{disabled: false}">立即抢购</button>
@@ -152,27 +151,27 @@
               <div class="item-title">
                 <p>云数据库</p>
                 <ul>
-                  <li>4核<span>CPU</span></li>
-                  <li>8G<span>内存</span></li>
-                  <li>40G<span>系统盘</span></li>
+                  <li>{{ item.cpu}}核<span>CPU</span></li>
+                  <li>{{ item.memory}}G<span>内存</span></li>
+                  <li>{{ item.rootDisk}}G<span>系统盘</span></li>
                 </ul>
               </div>
               <div class="item-select">
                 <span>请选择类型</span>
-                <Select class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                <Select v-model="item.databaseType" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseTypeChange(index)">
+                  <Option v-for="item in databaseTypeList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>数据中心&#12288</span>
-                <Select class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseZoneChange(index)">
+                  <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择时长</span>
-                <Select class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                <Select v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseDurationChange(index)">
+                  <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
               </div>
               <div class="item-price">
-                <p>¥625 <span>原价：12345元</span></p>
+                <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
                 <button :class="{disabled: false}">立即抢购</button>
@@ -198,24 +197,60 @@
           <span>GPU云服务器 每日19:00开启抢购</span>
           <div style="margin-top: 8px">
             <span>本场结束倒计时:</span>
-            <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
+            <p><span>{{ gpuHour}} : {{ gpuMinute}} : {{gpuSecond}}</span></p>
+          </div>
+        </div>
+        <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
+        <div class="gpu-item">
+          <div v-for="(item,index) in gpuList" class="item">
+            <div class="item-title">
+              <p>GPU<span>云服务器</span></p>
+              <ul>
+                <li>{{ item.cpu }}核<span>vCPU</span></li>
+                <li>{{ item.memory }}G<span>内存</span></li>
+                <li>{{ item.rootDisk }}G<span>系统盘</span></li>
+                <li>P40<span>显卡</span></li>
+              </ul>
+            </div>
+            <div class="item-select">
+              <span>请选择带宽</span>
+              <Select v-model="item.bandwidth" @on-change="gpuBandwidthChange(index)" class="fr-select" style="width:216px;margin-top: 20px">
+                <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+              </Select>
+              <span>请选择区域</span>
+              <Select v-model="item.zoneId" @on-change="gpuZoneChange(index)" class="fr-select" style="width:216px;margin-top: 20px">
+                <Option v-for="item in gpuZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+              </Select>
+              <span>请选择系统</span>
+              <Select v-model="item.system" class="fr-select" style="width:216px;margin-top: 20px">
+                <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+              </Select>
+              <span>请选择时长</span>
+              <Select v-model="item.duration" @on-change="gpuDurationChange(index)" class="fr-select" style="width:216px;margin-top: 20px">
+                <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+              </Select>
+            </div>
+            <div class="item-price">
+              <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
+            </div>
+            <div class="item-footer">
+              <button :class="{disabled: false}">立即抢购</button>
+            </div>
           </div>
         </div>
       </div>
+      <div class="active-4-title">
+        <img src="../../../assets/img/active/anniversary/aa-icon1.png"/>
+        <h2><img style="position: absolute;left: 38%;top: 7%;" src="../../../assets/img/active/anniversary/text_bg2.png"/>消费回馈 满额返礼</h2>
+        <p><span>购买云产品获赠好礼，最高额消费可领全部礼品 </span></p>
+      </div>
     </div>
-    <!-- 消费大满送-->
-    <!--    <div class="spend-to-send">
-          <span :style="{'left': 2000/5000*100 - 5 + '%' }">2000</span>
-          <span :style="{'left': 3500/5000*100 - 5 + '%' }">3500</span>
-          <span :style="{'left': 5000/5000*100 - 5 + '%' }">5000元</span>
-          <img width="10" height="10" :style="{'left': hasCost/5000*100 - 0.5 + '%'}" src="../../../assets/img/records/records-icon8.png"/>
-          <div class="progressBar">
-            <div class="article-stage" :style="{'left': 2000/5000*100 + '%' }"></div>
-            <div class="article-stage" :style="{'left': 3500/5000*100 + '%' }"></div>
-            <div class="progress" :style="{'width': hasCost/5000*100 + '%'}"></div>
-          </div>
-        </div>
-        <div>-->
+    <!-- footer -->
+    <div class="active-footer">
+      <p @click="$LR({type: 'register'})">立即注册</p>
+    </div>
+    <!-- 弹窗专区 -->
+
   </div>
 </template>
 
@@ -233,22 +268,25 @@
     },
     data() {
       return {
+        showModal: {
+          discountRuleModal: true
+        },
         current: 0, // 标记抽奖奖品
         awards: [
-          {id: 1, name: '空'},
-          {id: 2, name: '眼镜'},
-          {id: 3, name: '包'},
-          {id: 4, name: '笨驴'},
-          {id: 5, name: '书'},
-          {id: 6, name: '手链'},
-          {id: 7, name: '美女'},
-          {id: 8, name: 'iphone'}
+          {id: 1, name: '空', src: require('../../../assets/img/active/anniversary/1.png')},
+          {id: 2, name: '眼镜', src: require('../../../assets/img/active/anniversary/1.png')},
+          {id: 3, name: '包', src: require('../../../assets/img/active/anniversary/1.png')},
+          {id: 4, name: '笨驴', src: require('../../../assets/img/active/anniversary/1.png')},
+          {id: 5, name: '书', src: require('../../../assets/img/active/anniversary/1.png')},
+          {id: 6, name: '手链', src: require('../../../assets/img/active/anniversary/1.png')},
+          {id: 7, name: '美女', src: require('../../../assets/img/active/anniversary/1.png')},
+          {id: 8, name: 'iphone', src: require('../../../assets/img/active/anniversary/1.png')}
         ],
         speed: 200, // 速度
         diff: 15, // 速度增加的值
         award: {}, // 抽中的奖品
         time: 0,  // 记录开始抽奖时的时间
-        lotteryNumber: 0, //抽奖次数
+        lotteryNumber: 1, //抽奖次数
         activeIndex: 0,
         winList: [
           '恭喜用户1543XXXXX,抽中iponexs一台',
@@ -273,9 +311,160 @@
         gpuMinute: '--',
         gpuSecond: '--',
         productNode: 'database', // 产品节点
-        hostList: [{}, {}, {}],
-        objStorageList: [{}, {}, {}],
-        databaseList: [{}],
+        hostList: [
+          {
+            cpu: '4',
+            memory: '8',
+            rootDisk: '40',
+            bandwidth: '2',
+            zoneId: '',
+            system: 'linux',
+            duration: '3',
+            originalPrice: '1131.16',
+            currentPrice: '192.29',
+            vmConfigId: ''
+          }, {
+            cpu: '8',
+            memory: '16',
+            rootDisk: '40',
+            bandwidth: '2',
+            zoneId: '',
+            system: 'linux',
+            duration: '3',
+            originalPrice: '2162.16',
+            currentPrice: '367.57',
+            vmConfigId: ''
+          }, {
+            cpu: '16',
+            memory: '32',
+            rootDisk: '40',
+            bandwidth: '2',
+            zoneId: '',
+            system: 'linux',
+            duration: '3',
+            originalPrice: '4106.16',
+            currentPrice: '698.05',
+            vmConfigId: ''
+          }],
+        hostZoneList: [
+          {
+            name: '华中二区',
+            value: 'hz'
+          }],
+        bandwidthList: [
+          {
+            name: '2M',
+            value: '2'
+          }, {
+            name: '5M',
+            value: '5'
+          }, {
+            name: '10M',
+            value: '10'
+          }
+        ],
+        systemList: [
+          {
+            name: 'Centos',
+            value: 'linux'
+          }, {
+            name: 'Windows',
+            value: 'windows'
+          },],
+        durationList: [
+          {
+            name: '3个月',
+            value: '3'
+          }, {
+            name: '6个月',
+            value: '6'
+          }, {
+            name: '1年',
+            value: '1'
+          }, {
+            name: '2年',
+            value: '2'
+          }, {
+            name: '3年',
+            value: 'n3'
+          },],
+        objStorageList: [
+          {
+            capacity: '50',
+            flow: '50',
+            zoneId: '',
+            duration: '3',
+            originalPrice: '87',
+            currentPrice: '14.79',
+          }, {
+            capacity: '100',
+            flow: '100',
+            zoneId: '',
+            duration: '3',
+            originalPrice: '174',
+            currentPrice: '29.58',
+          }, {
+            capacity: '300',
+            flow: '300',
+            zoneId: '',
+            duration: '3',
+            originalPrice: '522',
+            currentPrice: '88.74',
+          }],
+        databaseList: [{
+          cpu: '4',
+          memory: '8',
+          rootDisk: '40',
+          zoneId: '',
+          databaseType: 'mysql',
+          duration: '3',
+          originalPrice: '1611.06',
+          currentPrice: '273.88',
+          vmConfigId: ''
+        }],
+        databaseTypeList: [
+          {
+            name: 'Mysql 单实例',
+            value: 'mysql'
+          }, {
+            name: 'Redis分布式缓存服务',
+            value: 'redis'
+          }, {
+            name: 'PostgreSQL 单实例',
+            value: 'postgresql'
+          }, {
+            name: 'MongoDB 单实例',
+            value: 'mongo'
+          }
+        ],
+        gpuList: [
+          {
+            cpu: '16',
+            memory: '64',
+            rootDisk: '128',
+            bandwidth: '2',
+            zoneId: '',
+            system: 'linux',
+            duration: '3',
+            originalPrice: '16069.56',
+            currentPrice: '12855.64',
+            vmConfigId: ''
+          }, {
+            cpu: '16',
+            memory: '128',
+            rootDisk: '128',
+            bandwidth: '2',
+            zoneId: '',
+            system: 'linux',
+            duration: '3',
+            originalPrice: '27169.56',
+            currentPrice: '21735.64',
+            vmConfigId: ''
+          }],
+        gpuZoneList: [{
+          name: '华中二区',
+          value: 'hz'
+        }],
         areaGroup: [{value: '1', name: '1号'}],
       }
     },
@@ -436,6 +625,40 @@
           i = '0' + i;
         }
         return i;
+      },
+
+      hostBandwidthChange(index) {
+        console.log(index)
+      },
+      hostZoneChange(index) {
+        console.log(index)
+      },
+      hostDurationChange(index) {
+        console.log(index)
+      },
+      objStorageZoneChange(index) {
+        console.log(index)
+      },
+      objStorageDurationChange(index) {
+        console.log(index)
+      },
+      databaseTypeChange(index) {
+        console.log(index)
+      },
+      databaseZoneChange(index) {
+        console.log(index)
+      },
+      databaseDurationChange(index) {
+        console.log(index)
+      },
+      gpuBandwidthChange(index) {
+        console.log(index)
+      },
+      gpuZoneChange(index) {
+        console.log(index)
+      },
+      gpuDurationChange(index) {
+        console.log(index)
       },
     },
     computed: {
@@ -614,7 +837,7 @@
                 display: flex;
                 margin-top: 20px;
                 li {
-                  font-size: 28px;
+                  font-size: 22px;
                   font-family: MicrosoftYaHei;
                   font-weight: 500;
                   color: rgba(255, 255, 255, 1);
@@ -648,7 +871,7 @@
             .item-price {
               padding: 20px 15px;
               > p {
-                font-size: 40px;
+                font-size: 32px;
                 font-family: MicrosoftYaHei;
                 font-weight: bold;
                 color: rgba(255, 53, 8, 1);
@@ -707,7 +930,6 @@
 
   .active-3 {
     padding: 30px 0;
-    height: 1000px;
     background: #FEEDE0 url("../../../assets/img/active/anniversary/aa-banner7.png") center no-repeat;
     .active-3-title {
       text-align: center;
@@ -718,17 +940,18 @@
         font-family: MicrosoftYaHei;
         font-weight: 400;
         color: rgba(34, 34, 34, 1);
-        >span{
+        > span {
+          font-size: 20px;
           color: #FF3000;
         }
       }
     }
-    .gpuList{
+    .gpuList {
       padding: 40px 20px;
       .center();
       background: #FFF;
       height: 686px;
-      .gpu-title{
+      .gpu-title {
         > img {
           margin: 0 15px;
         }
@@ -751,7 +974,7 @@
           > p {
             height: 46px;
             width: 196px;
-            background: url("../../../assets/img/active/anniversary/aa-banner4.png");
+            background: url("../../../assets/img/active/anniversary/aa-banner8.png");
             text-align: center;
             padding-top: 5px;
             > span {
@@ -763,41 +986,137 @@
           }
         }
       }
+      .gpu-item {
+        display: flex;
+        justify-content: space-around;
+        .item {
+          width: 530px;
+          background: #FFF url("../../../assets/img/active/anniversary/aa-banner9.png") center no-repeat;
+          .item-title {
+            height: 163px;
+            padding: 40px 20px;
+            > p {
+              font-size: 36px;
+              font-family: MicrosoftYaHei;
+              font-weight: 600;
+              color: rgba(255, 255, 255, 1);
+              > span {
+                font-size: 28px;
+              }
+            }
+            > ul {
+              display: flex;
+              margin-top: 20px;
+              li {
+                font-size: 24px;
+                font-family: MicrosoftYaHei;
+                font-weight: 500;
+                color: rgba(255, 255, 255, 1);
+                padding: 0 12px;
+                > span {
+                  font-size: 18px;
+                }
+              }
+            }
+          }
+          .item-select {
+            padding: 0 100px;
+            > span {
+              font-size: 18px;
+              font-family: PingFangSC-Regular;
+              font-weight: 400;
+              color: rgba(102, 102, 102, 1);
+              margin-right: 18px;
+              position: relative;
+              top: 13px;
+            }
+          }
+          .item-price {
+            padding: 20px 100px;
+            > p {
+              font-size: 32px;
+              font-family: MicrosoftYaHei;
+              font-weight: bold;
+              color: rgba(255, 53, 8, 1);
+              > span {
+                font-size: 18px;
+                font-family: MicrosoftYaHei;
+                font-weight: 400;
+                text-decoration: line-through;
+                color: rgba(102, 102, 102, 1);
+              }
+            }
+          }
+          .item-footer {
+            padding: 4px;
+            > button {
+              outline: none;
+              border: none;
+              cursor: pointer;
+              padding: 12px;
+              width: 100%;
+              font-size: 28px;
+              font-family: MicrosoftYaHei;
+              font-weight: 500;
+              color: rgba(255, 255, 255, 1);
+              background: rgba(255, 66, 23, 1);
+              &:hover {
+                background: rgba(255, 132, 72, 1);
+              }
+              &.disabled {
+                background: rgba(192, 192, 192, 1);
+                cursor: not-allowed;
+              }
+            }
+          }
+        }
+      }
+    }
+    .active-4-title {
+      margin-top: 70px;
+      text-align: center;
+      position: relative;
+      > img {
+        position: absolute;
+        left: 33%;
+        top: -50%;
+      }
+      > h2 {
+        font-size: 36px;
+        font-family: MicrosoftYaHei;
+        font-weight: bold;
+        font-style: italic;
+        color: rgba(255, 48, 0, 1);
+        position: relative;
+      }
+      > p {
+        font-size: 22px;
+        font-family: MicrosoftYaHei;
+        font-weight: 500;
+        color: rgba(255, 48, 0, 1);
+        > span {
+          font-size: 16px;
+          color: #222222;
+        }
+      }
     }
   }
 
-  .spend-to-send {
-    .center();
-    position: relative;
-    margin-top: 40px;
-    > span {
-      position: absolute;
-      top: -15px;
-    }
-    > img {
-      position: absolute;
-      top: -11px;
-    }
-    .progressBar {
-      height: 15px;
-      background: #FAE1E1;
-      border: 1px solid #000000;
-      border-radius: 8px;
-      overflow: hidden;
-      position: relative;
-      .progress {
-        height: 100%;
-        background: #E6686A;
-        border-radius: 8px;
-        transform: translateX(0);
-        transition: all 1s;
-        position: relative;
-      }
-      .article-stage {
-        height: 100%;
-        border-left: 1px solid #000;
-        position: absolute
-      }
+  .active-footer {
+    height: 245px;
+    background: #FEEDE0 url("../../../assets/img/active/anniversary/aa-banner10.png") center 15px no-repeat;
+    padding-top: 110px;
+    > p {
+      height: 80px;
+      width: 300px;
+      background: url('../../../assets/img/active/anniversary/aa-banner11.png') center no-repeat;
+      cursor: pointer;
+      font-size: 28px;
+      font-family: MicrosoftYaHei;
+      font-weight: 600;
+      color: rgba(255, 132, 72, 1);
+      margin: 0 auto;
+      padding: 20px 94px;
     }
   }
 
@@ -805,65 +1124,76 @@
     width: 600px;
     height: 365px;
     position: relative;
-    background-color: antiquewhite;
+    background: #FEEDE0 url("../../../assets/img/active/anniversary/aa-banner12.png") center no-repeat;
 
     .award {
-      width: 90px;
-      height: 96px;
-      line-height: 96px;
-      text-align: center;
+      width: 170px;
+      height: 92px;
       float: left;
       position: absolute;
       overflow: hidden;
-      background-color: aquamarine;
-
+      &::before {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        height: 92px;
+        width: 170px;
+        background: rgba(0, 0, 0, 1);
+        opacity: 0.2;
+      }
       &.active {
-        background-color: darkgoldenrod;
+        &::before {
+          display: none;
+        }
       }
 
       &.award0 {
-        top: 21px;
-        left: 21px;
+        top: 30px;
+        left: 35px;
       }
       &.award1 {
-        top: 21px;
-        left: 125px;
+        top: 30px;
+        left: 215px;
       }
       &.award2 {
-        top: 21px;
-        right: 22px;
+        top: 30px;
+        right: 35px;
       }
       &.award3 {
-        top: 126px;
-        right: 22px;
+        top: 134px;
+        right: 35px;
       }
       &.award4 {
-        bottom: 22.5px;
-        right: 22px;
+        bottom: 35px;
+        right: 35px;
       }
       &.award5 {
-        bottom: 22.5px;
-        right: 125.5px;
+        bottom: 35px;
+        right: 215px;
       }
       &.award6 {
-        bottom: 22.5px;
-        left: 21px;
+        bottom: 35px;
+        left: 35px;
       }
       &.award7 {
-        top: 126px;
-        left: 21px;
+        top: 134px;
+        left: 35px;
       }
     }
     #start-btn {
       position: absolute;
-      top: 125px;
-      left: 124px;
-      width: 90px;
-      height: 96px;
-      line-height: 90px;
+      top: 135px;
+      left: 215px;
+      width: 170px;
+      height: 94px;
+      background: url("../../../assets/img/active/anniversary/aa-banner13.png") center no-repeat;
       text-align: center;
-      background-color: coral;
       cursor: pointer;
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      color: rgba(1, 1, 1, 1);
+      padding-top: 55px;
     }
   }
 
