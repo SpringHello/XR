@@ -6,6 +6,10 @@
   border-bottom: none;
 }
 
+.aa-modal .ivu-modal-header {
+  padding: 0;
+}
+
 .mySelect .ivu-select-selection {
   background: #F7F7F7;
   border: 0;
@@ -420,6 +424,7 @@ div.modal-header-border {
   left: 0px;
   right: unset;
 }
-.ivu-select-disabled .ivu-select-selection{
+
+.ivu-select-disabled .ivu-select-selection {
   color: black;
 }
