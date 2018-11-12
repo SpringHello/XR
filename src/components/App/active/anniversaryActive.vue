@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="false">
+    <div v-show="true">
       <!-- 抽奖 -->
       <div class="active-1">
         <div class="banner">
@@ -328,7 +328,7 @@
       </div>
     </div>
     <!-- 中奖纪录 -->
-    <div v-show="true">
+    <div v-show="false">
       <!-- 中奖纪录 -->
       <div class="active-1">
         <div class="banner">
