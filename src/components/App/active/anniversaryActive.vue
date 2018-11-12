@@ -42,7 +42,7 @@
           <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon2.png"/>
           <img style="margin-left: 100px" src="../../../assets/img/active/anniversary/aa-banner15.png"/>
           <p>各类产品<span>1.7折</span>分时抢购，首次购买任意产品均可获得抽奖机会! <span
-            style="cursor: pointer;color: #FEC7B8;font-size:16px;text-decoration: underline;">活动规则</span></p>
+            style="cursor: pointer;color: #FEC7B8;font-size:16px;text-decoration: underline;" @click="showModal.discountRuleModal=true">活动规则</span></p>
         </div>
         <div class="productList">
           <div class="products" v-if="productNode == 'host'">
@@ -343,18 +343,126 @@
         </div>
       </div>
     </div>
-    <!-- 弹窗专区 -->
-    <Modal v-model="showModal.notLoginModal" :scrollable="true" :closable="false" :width="600" class="aa-modal">
-      <div slot="header" class="modal-title">
-        <span>温馨提示</span>
+    <!-- 登陆注册弹窗 -->
+    <transition name="fade">
+      <div class="overlay"  @click.stop="showModal.notLoginModal=false" v-if="showModal.notLoginModal"> 
+        <div class="all-modal modal1" @click.stop="showModal.notLoginModal=true">
+          <div class="header">温馨提示</div>
+          <div class="body">
+            <span style="padding: 58px 0 44px 0;display:block"> 您还没有登录，请登录后参与抽奖！</span>
+            <button @click.stop="$router.push('login')" style="margin-bottom: 20px;" class="button-primary">立即登录</button>
+            <p>还没有账号？<span @click.stop="$router.push('register')" style="color: #FF8448;cursor:pointer;">去注册 →</span></p>
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-        <span> 您还没有登录，请登录后参与抽奖！</span>
+    </transition>
+    <!-- 没有抽奖机会弹窗 -->
+    <transition name="fade">
+      <div class="overlay"  @click.stop="showModal.notPrizeChanceModal=false" v-if="showModal.notPrizeChanceModal"> 
+        <div class="all-modal modal1" @click.stop="showModal.notPrizeChanceModal=true">
+          <div class="header">新睿云11.17周年庆典</div>
+          <div class="body" >
+            <img src="../../../assets/img/active/anniversary/regret-text.png" style="margin:30px 0 25px 0;"/>
+            <p style="margin-bottom:38px;"> 您没有抽奖机会了，请返回活动页面购买产品获得抽奖次数！</p>
+            <button @click.stop="showModal.notPrizeChanceModal=false" class="button-primary">返回活动</button>
+          </div>
+        </div>
       </div>
-      <p slot="footer" class="modal-footer">
-        <button>立即登录</button>
-      </p>
-    </Modal>
+    </transition>
+    <!-- 抽中奖品弹窗 -->
+    <transition name="fade">
+      <div class="overlay"  @click.stop="showModal.winPrizeModal=false" v-if="showModal.winPrizeModal"> 
+        <div class="modal2" @click.stop="showModal.winPrizeModal=true">
+          <div class="body" >
+            <img src="../../../assets/img/active/anniversary/win-prize.png" style="margin:110px 0 30px 0;"/>
+            <p style="" class="text">
+              <span>恭喜您，抽中了</span> 
+              <span>价值128元的拓客智能充电眼罩</span>
+            </p>
+            <button @click.stop="showModal.winPrizeModal=false;showModal.authGetPrizeModal=true" class="button-primary">立即领取</button>
+            <p style="font-size:14px;">请前往 <span @click.stop="$router.push('')" class="towinpage">获奖记录页面</span> 填写收件信息</p>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <!-- 请填写认证信息完成领取弹窗 -->
+    <transition name="fade">
+      <div class="overlay"  @click.stop="showModal.authGetPrizeModal=false" v-if="showModal.authGetPrizeModal"> 
+        <div class="all-modal modal1" @click.stop="showModal.authGetPrizeModal=true" style="height:434px;">
+          <div class="header" style="padding-left: 50px;">请填写认证信息完成领取</div>
+          <div class="body auth-form-validate1" >
+            <Form ref="authFormValidate" :model="authFormValidate" :rules="ruleValidate" :label-width="80" class="auth-form-validate">
+                <FormItem label="真实姓名" prop="name">
+                    <Input v-model="authFormValidate.name" placeholder=" 请输入您的真实姓名"></Input>
+                </FormItem>
+                <FormItem label="身份证号" prop="id">
+                    <Input v-model="authFormValidate.id" placeholder=" 请输入您的身份证号"></Input>
+                </FormItem>
+                <FormItem label="手机号码" prop="tel">
+                    <Input v-model="authFormValidate.tel" placeholder=" 请输入您的手机号码" style="width:192px;"></Input>
+                    <Button type="text" style="margin-left: 28px;background: none;color: #FF8448;">获取验证码</Button>
+                </FormItem>
+                <FormItem label="验证码" prop="vailCode">
+                    <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" @click.stop=""></Input>
+                </FormItem>
+            </Form>
+            <button @click.stop="" style="margin-top:50px;margin-bottom:20px;width:305px" class="button-primary">确认信息并领取奖品</button>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <!-- 幸运抽奖活动规则弹窗 -->
+    <transition name="fade">
+      <div class="overlay"  @click.stop="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal"> 
+        <div class="all-modal modal3" @click.stop="showModal.luckDrawRuleModal=true">
+          <div class="header">幸运抽奖活动规则</div>
+          <div class="body" style="overflow-y:hidden;border:0;">
+            <h3>（1）活动时间：2018.11.17-2018.12.16</h3>
+            <h3>（2）活动内容：新老用户可通过购买打折产品获得抽奖次数。具体如何获得抽奖次数如下：</h3>
+            <p>·无论新老用户只要注册/登录新睿云的账号即可获得一次抽奖机。</p>
+            <p>·用户第一次购买1.7折云主机可获得一次抽奖机会。</p>
+            <p>·购买1.7折对象存储可获得一次抽奖机会。</p>
+            <p>·购买1.7折云数据库可获得一次抽奖机会。</p>
+            <p>·购买8.0折GPU服务器可获得一次抽奖机会。</p>
+            <h3>（3）抽奖成功后，领取奖品时没有实名认证的用户需要先进行实名认证才可领取奖品。</h3>
+            <h3>（4）领取奖品成功后，需在“我的奖品”中完善收货地址，方便新睿云发放奖品。</h3>
+            <h3>（5）活动期间任何优惠券折扣券不能在折扣活动中使用。</h3>
+          <h3>（6）每个用户可购买5台云主机，其余产品均为一台。</h3>
+          <h3>（7）若购买5台云主机，只能获得1次抽奖机会。</h3>
+          </div>
+          <button @click.stop="showModal.luckDrawRuleModal=false" class="button-primary">我知道了</button>
+        </div>
+      </div>
+    </transition>
+    <!-- 折扣活动规则弹窗 -->
+    <transition name="fade">
+      <div class="overlay"  @click.stop="showModal.discountRuleModal=false" v-if="showModal.discountRuleModal"> 
+        <div class="all-modal modal3" @click.stop="showModal.discountRuleModal=true">
+          <div class="header">折扣活动规则</div>
+          <div class="body" >
+            <h3>（1）活动时间：2018年11月17日-2018年12月17日</h3>
+            <h3>（2）活动内容：新老用户皆可以参加此活动。具体活动购买限制如下：</h3>
+            <p>·云主机每位用户只可购买5次；</p>
+            <p>·对象存储每位用户只可购买1次。</p>
+            <p>·云数据库每位用户只可购买1次。</p>
+            <p>·GPU服务器每位用户只可购买1次</p>
+            <h3 class="padl">具体购买时间如下： </h3>
+            <p>·云主机购买时间：上午8:30-10：30；下午13:00-15:00；晚上20:00-22:00；</p>
+            <p>·对象存储购买时间：上午10:30-11:30；下午15:00-16:00</p>
+            <p>·云数据库购买时间：下午16:30-17:30</p>
+            <p>·GPU服务器购买时间：晚上19:00-20:00</p>
+            <h3>（3）用户在此活动页面中进行购买产品，购买价格直接为折扣价格，无需领取任何优惠券或折扣
+          券，若在正常购买页面购买则为原价购买。</h3>
+            <h3>（4）参与此活动的用户在购买产品时不能使用以任何形式获得的优惠券或折扣券。</h3>
+            <h3>（5）本次活动购买的产品可申请7天无理由退款，若您中奖之后仍申请退款，我们将默认您放弃与退款订单相关的中奖奖品。</h3>
+          <h3>（6）若用户已领取奖品但在两次发放奖品日都未填写收货信息，新睿云默认为用户放弃中奖奖品。</h3>
+          <h3>（7）奖品发出后新睿云会将奖品物流订单号码通过短信形式发送给客户，客户可通过物流订单号</h3>
+          <h3>（8）此活动最终解释权为新睿云所有。</h3>
+          </div>
+          <button @click.stop="showModal.discountRuleModal=false" class="button-primary">我知道了</button>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -373,9 +481,19 @@
     },
     data() {
       return {
+        authFormValidate: {
+          name: '',
+          id: '',
+          tel: '',
+          vailCode: ''
+        },
         aa_scrollTop: 0,
         showModal: {
-          notLoginModal: true,
+          notLoginModal: false,
+          notPrizeChanceModal: false,
+          winPrizeModal: false,
+          authGetPrizeModal: false,
+          luckDrawRuleModal: false,
           discountRuleModal: false,
         },
         current: 0, // 标记抽奖奖品
@@ -1687,5 +1805,130 @@
         }
       }
     }
+  }
+  // 公共按钮样式
+  .button-primary {
+    display: block;
+    margin: 0 auto;
+    width: 160px;
+    height: 46px;
+    line-height: 46px;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 1);
+    border-radius: 0;
+    border: none;
+    cursor: pointer;
+  }
+  // 弹窗公共样式 
+  .overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(55, 55, 55, 0.6);
+    height: 100%;
+    z-index: 1000;
+    .all-modal {
+      position: relative;
+      margin: 0 auto;
+      top: 180px;
+      background: rgba(255, 255, 255, 1);
+      text-align: center;
+      font-size:16px;
+      > .header {
+        height: 70px;
+        line-height: 70px;
+        font-size: 24px;
+        font-family: PingFangSC-Semibold;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 1);
+      }
+      button {
+        background: url(../../../assets/img/active/anniversary/rule_btn_bg.png);
+      }
+    }
+  }
+  .modal1 {
+    width: 600px;
+    height: 300px;
+    >.header {
+      background: url("../../../assets/img/active/anniversary/aa-banner19.png");
+    }
+  }
+  .modal2 {
+    position: relative;
+    top: 180px;
+    margin: 0 auto;
+    width: 306px;
+    height: 435px;
+    background: url("../../../assets/img/active/anniversary/win-prize-bg.png") center no-repeat;
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+    >.body {
+      .text {
+        margin-bottom:30px;
+        span {
+          display: block;
+           line-height:30px;
+        }
+      }
+      button {
+        color:rgba(255,132,72,1);
+        background: #fff;
+        margin-bottom: 18px;
+      }
+      .towinpage {
+        text-decoration:underline;
+        font-size:16px;
+        cursor:pointer
+      }
+    }
+  }
+  .modal3 {
+    width: 800px;
+      height: 570px;
+      >.header {
+        background: url(../../../assets/img/active/anniversary/rule_title_bg.png);
+      }
+      > .body {
+        margin: 20px auto;
+        padding: 22px;
+        width: 724px;
+        height: 380px;
+        border: 1px solid rgba(234, 234, 234, 1);
+        overflow-y: auto;
+        text-align: left;
+        font-size: 14px;
+        p,
+        h3 {
+          font-size: 16px;
+          font-family: PingFangSC-Regular;
+          font-weight: 400;
+          color: rgba(34, 34, 34, 1);
+          line-height: 30px;
+        }
+        p {
+          padding-left: 120px;
+        }
+        .padl {
+          padding-left: 40px;
+        }
+      }
+  }
+  .auth-form-validate { 
+    padding-top: 40px;
+    margin: 0 auto;
+    width: 400px;
+    .ivu-form-item {
+      margin-bottom: 22px;
+    }
+  }
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
   }
 </style>
