@@ -375,8 +375,8 @@
       return {
         aa_scrollTop: 0,
         showModal: {
-          notLoginModal: false,
-          discountRuleModal: true,
+          notLoginModal: true,
+          discountRuleModal: false,
         },
         current: 0, // 标记抽奖奖品
         awards: [
