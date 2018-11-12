@@ -1,6 +1,6 @@
 <template>
   <div id="front">
-      <div class="app-hint" ref="hint" @click="$router.push('anniversaryActiveBefore')">
+      <div class="app-hint" ref="hint" @click="$router.push('anniversaryActive')">
         <div class="center">
           <div class="countdown" v-if="hintShow">
             <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
