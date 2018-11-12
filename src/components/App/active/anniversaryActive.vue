@@ -8,12 +8,12 @@
           <div class="lottery-title">
             <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
             <img style="margin-left: 70px" src="../../../assets/img/active/anniversary/aa-banner14.png"/>
-            <p>见面礼！<span>见面礼！登录认证即可获得一次抽奖机会，人气大奖，高额现金券等你来拿！</span></p>
+            <p>见面礼！<span>包含戴森、科沃斯爆款奖品，100%中奖率，注册登录即可拥有一次抽奖机会</span></p>
           </div>
         </div>
         <div class="lottery">
           <div id="rotary-table">
-            <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]" :style="{'background-image': 'url(' + award.src + ')' }">
+            <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]" :style="{'background-image': 'url(' + award.imgUrl + ')' }">
             </div>
             <div id="start-btn" @click="start">(剩余抽奖次数 {{ lotteryNumber }}次)</div>
           </div>
@@ -21,16 +21,17 @@
             <div class="lottery-rules">
               <h3>活动规则</h3>
               <p>1、活动时间：2018.11.17-2019.01.05</p>
-              <p> 2、活动内容：新老用户第一次购买任意活动产品获得一次抽奖机会。</p>
-              <p> 3、活动期间参与抽奖活动获得的代金券或优惠券不能与本次活动叠加使用。 <span style="cursor: pointer;color: #FF3000;text-decoration: underline">详情</span></p>
+              <p>2、11月17日活动当日登录即可获得抽奖机会</p>
+              <p>3、新老用户第一次购买任意活动产品可获得一次抽奖机会，最多可获得五次抽奖机会</p>
+              <p>4、抽中实物奖品的用户，活动期间新睿云将在12月2日进行第一次实物奖品发放、12月18日进行第二次实物奖品发放，请用户在发放奖品日前完成收货信息填写 <span style="cursor: pointer;color: #FF3000;text-decoration: underline">详情</span></p>
             </div>
             <div class="lottery-particulars">
               <h3 style="margin-top: 20px;position: relative">中奖详情 <span
-                style="cursor: pointer;color: #FF3000;font-size:16px;text-decoration: underline;position: absolute;left: 66%;top:25%" @click="winningRecordShow = true">中奖纪录</span>
+                style="cursor: pointer;color: #FF3000;font-size:16px;text-decoration: underline;position: absolute;left: 66%;top:25%" @click="winningRecordShow = true">我的奖品</span>
               </h3>
               <div class="win-list">
                 <ul class="win-content" :style="{top}">
-                  <li v-for="item in winList"> {{ item}}</li>
+                  <li v-for="item in winList"> 恭喜用户{{ item.anonymous}} 抽中{{ item.giftAbbreviation}}</li>
                 </ul>
               </div>
             </div>
@@ -88,7 +89,7 @@
                   <p>¥{{ item.currentPrice}} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button :class="{disabled: false}">立即抢购</button>
+                  <button :class="{disabled: hostDisabled}" :disabled="hostDisabled" @click="buyHost(index)">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -117,19 +118,19 @@
                 </div>
                 <div class="item-select">
                   <span>请选择区域</span>
-                  <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px" @on-change="objStorageZoneChange(index)">
-                    <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px">
+                    <Option v-for="item in objStorageZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                   </Select>
                   <span>请选择时长</span>
                   <Select v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px" @on-change="objStorageDurationChange(index)">
-                    <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                    <Option v-for="item in objDurationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                   </Select>
                 </div>
                 <div class="item-price">
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button :class="{disabled: false}">立即抢购</button>
+                  <button :class="{disabled: objStorageDisabled}" :disabled="objStorageDisabled" @click="buyObjStorage(index)">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -164,7 +165,7 @@
                   </Select>
                   <span>数据中心&#12288</span>
                   <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseZoneChange(index)">
-                    <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                    <Option v-for="item in databaseZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                   </Select>
                   <span>请选择时长</span>
                   <Select v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseDurationChange(index)">
@@ -175,7 +176,7 @@
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button :class="{disabled: false}">立即抢购</button>
+                  <button :class="{disabled: databaseDisabled}" :disabled="databaseDisabled" @click="buyDatabase(index)">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -210,7 +211,7 @@
                   <li>{{ item.cpu }}核<span>vCPU</span></li>
                   <li>{{ item.memory }}G<span>内存</span></li>
                   <li>{{ item.rootDisk }}G<span>系统盘</span></li>
-                  <li>P40<span>显卡</span></li>
+                  <li>{{ item.graphicsCard}}<span>显卡</span></li>
                 </ul>
               </div>
               <div class="item-select">
@@ -235,7 +236,7 @@
                 <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button :class="{disabled: false}">立即抢购</button>
+                <button :class="{disabled: gpuDisabled}" :disabled="gpuDisabled" @click="buyGPU(index)">立即抢购</button>
               </div>
             </div>
           </div>
@@ -271,7 +272,7 @@
               <div class="item-select">
                 <span>请选择区域</span>
                 <Select v-model="item.zoneId" @on-change="freeHostZoneChange(index)" class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  <Option v-for="item in freeHostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择系统</span>
                 <Select v-model="item.system" class="fr-select" style="width:216px;margin-top: 20px">
@@ -296,7 +297,7 @@
       <div class="active-5">
         <div class="active-5-title">
           <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
-          <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner16.png"/>
+          <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner21.png"/>
           <p><span>购买云产品获赠好礼，最高额消费可领全部礼品</span></p>
         </div>
         <div class="send-full">
@@ -322,7 +323,7 @@
           <li @click="roll(700)">幸运抽奖</li>
           <li @click="roll(1500)">1.7折云产品</li>
           <li @click="roll(2400)">8折GPU服务器</li>
-          <li @click="roll(3200)">0元用一年</li>
+          <li @click="roll(3300)">0元用一年</li>
           <li @click="roll(4100)">消费回赠好礼</li>
           <li @click="roll(0)">↑返回顶部</li>
         </ul>
@@ -353,7 +354,7 @@
               <li>{{ item.b }}</li>
               <li>{{ item.c }}</li>
               <li>{{ item.d }}</li>
-              <li></li>
+              <li>填写／修改收货信息</li>
             </ul>
             <ul class="records-content" v-if="winningRecords.length ==0 ">
               <li style="width: 100%">暂无获奖记录</li>
@@ -387,7 +388,7 @@
       let res_1 = axios.get('network/getTime.do')
       Promise.all([res_1]).then(resArr => {
         next(vm => {
-          vm.setData(resArr)
+          //vm.setData(resArr)
         })
       })
     },
@@ -409,31 +410,31 @@
         },
         current: 0, // 标记抽奖奖品
         awards: [
-          {id: 1, name: '空', src: require('../../../assets/img/active/anniversary/1.png')},
-          {id: 2, name: '眼镜', src: require('../../../assets/img/active/anniversary/1.png')},
-          {id: 3, name: '包', src: require('../../../assets/img/active/anniversary/1.png')},
-          {id: 4, name: '笨驴', src: require('../../../assets/img/active/anniversary/1.png')},
-          {id: 5, name: '书', src: require('../../../assets/img/active/anniversary/1.png')},
-          {id: 6, name: '手链', src: require('../../../assets/img/active/anniversary/1.png')},
-          {id: 7, name: '美女', src: require('../../../assets/img/active/anniversary/1.png')},
-          {id: 8, name: 'iphone', src: require('../../../assets/img/active/anniversary/1.png')}
+          {id: 1, name: '空', imgUrl: require('../../../assets/img/active/anniversary/award-1.png')},
+          {id: 2, name: '眼镜', imgUrl: require('../../../assets/img/active/anniversary/award-2.png')},
+          {id: 3, name: '包', imgUrl: require('../../../assets/img/active/anniversary/award-3.png')},
+          {id: 4, name: '笨驴', imgUrl: require('../../../assets/img/active/anniversary/award-4.png')},
+          {id: 5, name: '书', imgUrl: require('../../../assets/img/active/anniversary/award-5.png')},
+          {id: 6, name: '手链', imgUrl: require('../../../assets/img/active/anniversary/award-6.png')},
+          {id: 7, name: '美女', imgUrl: require('../../../assets/img/active/anniversary/award-7.png')},
+          {id: 8, name: 'iphone', imgUrl: require('../../../assets/img/active/anniversary/award-8.png')}
         ],
         speed: 200, // 速度
         diff: 15, // 速度增加的值
         award: {}, // 抽中的奖品
         time: 0,  // 记录开始抽奖时的时间
-        lotteryNumber: 1, //抽奖次数
+        lotteryNumber: 0, //抽奖次数
         activeIndex: 0,
         winList: [
-          '恭喜用户1543XXXXX,抽中iponexs一台',
-          '恭喜用户1543XXXXX,抽中iponexs一台',
-          '恭喜用户1543XXXXX,抽中iponexs一台',
-          '恭喜用户1543XXXXX,抽中iponexs一台',
-          '恭喜用户1543XXXXX,抽中iponexs一台',
-          '恭喜用户1543XXXXX,抽中iponexs一台',
-          '恭喜用户1543XXXXX,抽中iponexs一台',
-          '恭喜用户1543XXXXX,抽中iponexs一台',
-          '恭喜用户1543XXXXX,抽中iponexs一台',],
+          '恭喜用户1593XXXXX,抽中127抵用券',
+          '恭喜用户1873XXXXX,抽中27抵用券',
+          '恭喜用户1633XXXXX,抽中27抵用券',
+          '恭喜用户1323XXXXX,抽中27抵用券',
+          '恭喜用户1323XXXXX,抽中27抵用券',
+          '恭喜用户1873XXXXX,抽中227抵用券',
+          '恭喜用户1523XXXXX,抽中127抵用券',
+          '恭喜用户1523XXXXX,抽中27抵用券',
+          '恭喜用户1871XXXXX,抽中27抵用券',],
         moveTimer: null,
         countDownTimer: null,
         hasCost: 1000,
@@ -446,7 +447,7 @@
         gpuHour: '--',
         gpuMinute: '--',
         gpuSecond: '--',
-        productNode: 'database', // 产品节点
+        productNode: 'objStorage', // 产品节点
         hostList: [
           {
             cpu: '4',
@@ -457,8 +458,8 @@
             system: 'linux',
             duration: '3',
             originalPrice: '1131.16',
-            currentPrice: '192.29',
-            vmConfigId: ''
+            currentPrice: '226.30',
+            vmConfigId: '50'
           }, {
             cpu: '8',
             memory: '16',
@@ -469,7 +470,7 @@
             duration: '3',
             originalPrice: '2162.16',
             currentPrice: '367.57',
-            vmConfigId: ''
+            vmConfigId: '65'
           }, {
             cpu: '16',
             memory: '32',
@@ -480,13 +481,9 @@
             duration: '3',
             originalPrice: '4106.16',
             currentPrice: '698.05',
-            vmConfigId: ''
+            vmConfigId: '80'
           }],
-        hostZoneList: [
-          {
-            name: '华中二区',
-            value: 'hz'
-          }],
+        hostZoneList: [],
         bandwidthList: [
           {
             name: '2M',
@@ -516,13 +513,30 @@
             value: '6'
           }, {
             name: '1年',
-            value: '1'
+            value: '12'
           }, {
             name: '2年',
-            value: '2'
+            value: '24'
           }, {
             name: '3年',
-            value: 'n3'
+            value: '36'
+          },],
+        objDurationList: [
+          {
+            name: '3个月',
+            value: '3'
+          }, {
+            name: '6个月',
+            value: '6'
+          }, {
+            name: '1年',
+            value: '12'
+          }, {
+            name: '2年',
+            value: '24'
+          }, {
+            name: '3年',
+            value: '36'
           },],
         objStorageList: [
           {
@@ -547,6 +561,7 @@
             originalPrice: '522',
             currentPrice: '88.74',
           }],
+        objStorageZoneList: [],
         databaseList: [{
           cpu: '4',
           memory: '8',
@@ -556,7 +571,7 @@
           duration: '3',
           originalPrice: '1611.06',
           currentPrice: '273.88',
-          vmConfigId: ''
+          vmConfigId: '96'
         }],
         databaseTypeList: [
           {
@@ -573,34 +588,34 @@
             value: 'mongo'
           }
         ],
+        databaseZoneList: [],
         gpuList: [
           {
             cpu: '16',
             memory: '64',
             rootDisk: '128',
             bandwidth: '2',
+            graphicsCard: 'P40',
             zoneId: '',
             system: 'linux',
             duration: '3',
-            originalPrice: '16069.56',
-            currentPrice: '12855.64',
-            vmConfigId: ''
+            originalPrice: '16325.11',
+            currentPrice: '13060.1',
+            vmConfigId: '101'
           }, {
             cpu: '16',
             memory: '128',
             rootDisk: '128',
             bandwidth: '2',
+            graphicsCard: 'P100',
             zoneId: '',
             system: 'linux',
             duration: '3',
-            originalPrice: '27169.56',
-            currentPrice: '21735.64',
-            vmConfigId: ''
+            originalPrice: '27425.11',
+            currentPrice: '21940.1',
+            vmConfigId: '116'
           }],
-        gpuZoneList: [{
-          name: '华中二区',
-          value: 'hz'
-        }],
+        gpuZoneList: [],
         freeHostList: [
           {
             cpu: '4',
@@ -638,36 +653,51 @@
             value: '1'
           },
         ],
+        freeHostZoneList: [],
         sendFullList: [
           {
             text_1: '¥1117',
             text_2: '50元苏宁卡／京东E卡',
-            src_1: '',
-            src_2: require('../../../assets/img/active/anniversary/aa-icon10.png')
+            src_1: require('../../../assets/img/active/anniversary/aa-icon9.png'),
+            src_2: require('../../../assets/img/active/anniversary/aa-icon12.png')
           },
           {
             text_1: '¥6117',
             text_2: '350元苏宁卡／京东E卡',
-            src_1: '',
-            src_2: require('../../../assets/img/active/anniversary/aa-icon10.png')
+            src_1: require('../../../assets/img/active/anniversary/aa-icon9.png'),
+            src_2: require('../../../assets/img/active/anniversary/aa-icon12.png')
           },
           {
             text_1: '¥11117',
             text_2: '1000元苏宁卡／京东E卡',
-            src_1: '',
-            src_2: require('../../../assets/img/active/anniversary/aa-icon10.png')
+            src_1: require('../../../assets/img/active/anniversary/aa-icon13.png'),
+            src_2: require('../../../assets/img/active/anniversary/aa-icon12.png')
           },
           {
             text_1: '¥31117',
             text_2: '3100元苏宁卡／京东E卡',
-            src_1: '',
-            src_2: require('../../../assets/img/active/anniversary/aa-icon10.png')
+            src_1: require('../../../assets/img/active/anniversary/aa-icon15.png'),
+            src_2: require('../../../assets/img/active/anniversary/aa-icon12.png')
           }
         ],
+        hostDisabled: false,
+        objStorageDisabled: false,
+        databaseDisabled: false,
+        gpuDisabled: false
       }
     },
     created() {
-      this.getTimeNodes()
+      this.getAwardList()
+      this.getOtherWinningInfo()
+      this.getHostZoneList()
+      this.getObjStorageZoneList()
+      this.getDatabaseZoneList()
+      this.getGPUZoneList()
+      this.getFreeHostZoneList()
+      //  需要登录才能调用的接口
+      if (this.authInfo) {
+        this.getLotteryNumber()
+      }
     },
     mounted() {
       this.moveTimer = setInterval(() => {
@@ -680,6 +710,13 @@
       window.addEventListener('scroll', this.getScrollTop)
     },
     methods: {
+      init() {
+        axios.get('user/GetUserInfo.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+          }
+        })
+      },
       getScrollTop() {
         this.aa_scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       },
@@ -694,28 +731,167 @@
           if ((this.serverTimeHour == 8 && this.serverTimeMinute >= 30) || this.serverTimeHour == 9 || (this.serverTimeHour == 10 && this.serverTimeMinute < 30)) {
             this.productNode = 'host'
             this.getTimeNodes('10:30')
+            this.hostDisabled = false
+            this.objStorageDisabled = true
+            this.databaseDisabled = true
+            this.gpuDisabled = true
           } else if ((this.serverTimeHour == 10 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 11 && this.serverTimeMinute < 30)) {
             this.productNode = 'objStorage'
             this.getTimeNodes('11:30')
+            this.hostDisabled = true
+            this.objStorageDisabled = false
+            this.databaseDisabled = true
+            this.gpuDisabled = true
           } else if (this.serverTimeHour == 13 || this.serverTimeHour == 14) {
             this.productNode = 'host'
             this.getTimeNodes('15:00')
+            this.hostDisabled = false
+            this.objStorageDisabled = true
+            this.databaseDisabled = true
+            this.gpuDisabled = true
           } else if (this.serverTimeHour == 15) {
             this.productNode = 'objStorage'
             this.getTimeNodes('16:00')
+            this.hostDisabled = true
+            this.objStorageDisabled = false
+            this.databaseDisabled = true
+            this.gpuDisabled = true
           } else if ((this.serverTimeHour == 16 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 17 && this.serverTimeMinute < 30)) {
             this.productNode = 'database'
             this.getTimeNodes('17:30')
+            this.hostDisabled = true
+            this.objStorageDisabled = true
+            this.databaseDisabled = false
+            this.gpuDisabled = true
           } else if (this.serverTimeHour == 19) {
             this.getTimeNodes('20:00')
+            this.hostDisabled = true
+            this.objStorageDisabled = true
+            this.databaseDisabled = true
+            this.gpuDisabled = false
           } else if (this.serverTimeHour == 20 || this.serverTimeHour == 21) {
             this.productNode = 'host'
             this.getTimeNodes('22:00')
+            this.hostDisabled = false
+            this.objStorageDisabled = true
+            this.databaseDisabled = true
+            this.gpuDisabled = true
           } else {
-            this.productNode = 'host'
+            this.hostDisabled = true
+            this.objStorageDisabled = true
+            this.databaseDisabled = true
+            this.gpuDisabled = true
           }
         }
       },
+      // 获取奖品列表
+      getAwardList() {
+        let url = 'activity/listGifts.do'
+        axios.get(url, {
+          params: {
+            activityNum: '31'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.awards = res.data.result
+          }
+        })
+      },
+      // 获取抽奖次数
+      getLotteryNumber() {
+        let url = 'activity/getLotteryNumber.do'
+        axios.get(url, {
+          params: {
+            activityNum: '31'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.lotteryNumber = res.data.result
+          }
+        })
+      },
+      // 获取其他中奖信息
+      getOtherWinningInfo() {
+        let url = 'activity/listAllGift.do'
+        axios.get(url, {
+          params: {
+            activityNum: '31',
+            type: '0'
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.winList = res.data.result
+          }
+        })
+      },
+
+      /* 获取各个活动配置区域 */
+      getHostZoneList() {
+        let url = 'activity/getTemActInfo.do'
+        axios.post(url, {
+          activityName: '最低1.7折购买云主机'
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.hostZoneList = res.data.result.optionalArea
+            this.hostList.forEach(item => {
+              item.zoneId = this.hostZoneList[0].value
+            })
+          }
+        })
+      },
+      getObjStorageZoneList() {
+        let url = 'activity/getTemActInfo.do'
+        axios.post(url, {
+          activityName: '最低1.7折购买对象存储'
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.objStorageZoneList = res.data.result.optionalArea
+            this.objStorageList.forEach(item => {
+              item.zoneId = this.objStorageZoneList[0].value
+            })
+          }
+        })
+      },
+      getDatabaseZoneList() {
+        let url = 'activity/getTemActInfo.do'
+        axios.post(url, {
+          activityName: '最低1.7折购买云数据库'
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.databaseZoneList = res.data.result.optionalArea
+            this.databaseList.forEach(item => {
+              item.zoneId = this.databaseZoneList[0].value
+            })
+          }
+        })
+      },
+      getGPUZoneList() {
+        let url = 'activity/getTemActInfo.do'
+        axios.post(url, {
+          activityName: '8折爆款GPU服务器'
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.gpuZoneList = res.data.result.optionalArea
+            this.gpuList.forEach(item => {
+              item.zoneId = this.gpuZoneList[0].value
+            })
+          }
+        })
+      },
+      getFreeHostZoneList() {
+        let url = 'activity/getTemActInfo.do'
+        axios.post(url, {
+          activityName: '免费领主机'
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.freeHostZoneList = res.data.result.optionalArea
+            this.freeHostList.forEach(item => {
+              item.zoneId = this.freeHostZoneList[0].value
+            })
+          }
+        })
+      },
+
       start() {
         if (this.lotteryNumber == 0) {
           alert('没有抽奖次数')
@@ -833,38 +1009,322 @@
       },
 
       hostBandwidthChange(index) {
-        console.log(index)
+        let url = 'activity/getVMConfigId.do'
+        axios.get(url, {
+          params: {
+            cpu: this.hostList[index].cpu,
+            mem: this.hostList[index].memory,
+            month: this.hostList[index].duration,
+            bandwith: this.hostList[index].bandwidth,
+            activityNum: '27'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.hostList[index].vmConfigId = res.data.result
+            this.getHostOriginalPrice(this.hostList[index].zoneId, this.hostList[index].vmConfigId, this.hostList[index].duration, index)
+          }
+        })
       },
       hostZoneChange(index) {
-        console.log(index)
+        let url = 'activity/getVMConfigId.do'
+        axios.get(url, {
+          params: {
+            cpu: this.hostList[index].cpu,
+            mem: this.hostList[index].memory,
+            month: this.hostList[index].duration,
+            bandwith: this.hostList[index].bandwidth,
+            activityNum: '27'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.hostList[index].vmConfigId = res.data.result
+            this.getHostOriginalPrice(this.hostList[index].zoneId, this.hostList[index].vmConfigId, this.hostList[index].duration, index)
+          }
+        })
       },
       hostDurationChange(index) {
-        console.log(index)
+        let url = 'activity/getVMConfigId.do'
+        axios.get(url, {
+          params: {
+            cpu: this.hostList[index].cpu,
+            mem: this.hostList[index].memory,
+            month: this.hostList[index].duration,
+            bandwith: this.hostList[index].bandwidth,
+            activityNum: '27'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.hostList[index].vmConfigId = res.data.result
+            this.getHostOriginalPrice(this.hostList[index].zoneId, this.hostList[index].vmConfigId, this.hostList[index].duration, index)
+          }
+        })
       },
-      objStorageZoneChange(index) {
-        console.log(index)
+
+      // 获取主机原价
+      getHostOriginalPrice(zoneId, vmConfigId, month, index) {
+        let url = 'activity/getOriginalPrice.do'
+        axios.get(url, {
+          params: {
+            zoneId: zoneId,
+            vmConfigId: vmConfigId,
+            month: month
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.hostList[index].currentPrice = res.data.result.cost
+            this.hostList[index].originalPrice = res.data.result.originalPrice
+          }
+        })
       },
+
+      buyHost(index) {
+        if (!this.$store.state.userInfo) {
+          this.$LR({type: 'login'})
+          return
+        }
+        if (!this.hostList[index].zoneId) {
+          this.$Message.info('请选择购买的区域')
+          return
+        }
+        let url = 'information/getDiskcountMv.do'
+        axios.get(url, {
+          params: {
+            vmConfigId: this.hostList[index].vmConfigId,
+            osType: this.hostList[index].system,
+            defzoneid: this.hostList[index].zoneId
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+
       objStorageDurationChange(index) {
-        console.log(index)
+        let url = 'ruiradosPrice/countPirce.do'
+        let params = {
+          flowPackage: this.objStorageList[index].flow + 'GB',
+          capacity: this.objStorageList[index].capacity + 'GB',
+          timeValue: this.objStorageList[index].duration,
+          timeType: 'month',
+        }
+        axios.post(url, params).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.objStorageList[index].currentPrice = res.data.data.priceSpread
+            this.objStorageList[index].originalPrice = res.data.data.price
+          }
+        })
+      },
+      buyObjStorage(index) {
+        let url = 'ruiradosPrice/createOrder.do'
+        let params = {
+          flowPackage: this.objStorageList[index].flow + 'GB',
+          capacity: this.objStorageList[index].capacity + 'GB',
+          timeValue: this.objStorageList[index].duration,
+          timeType: 'month',
+          zoneId: this.objStorageList[index].zoneId
+        }
+        axios.post(url, params).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+           this.$Message.info('创建订单成功')
+          }
+        })
       },
       databaseTypeChange(index) {
-        console.log(index)
+        let url = 'activity/getVMConfigId.do'
+        axios.get(url, {
+          params: {
+            cpu: this.databaseList[index].cpu,
+            mem: this.databaseList[index].memory,
+            month: this.databaseList[index].duration,
+            bandwith: '0',
+            activityNum: '29'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.databaseList[index].vmConfigId = res.data.result
+            this.getDatabaseOriginalPrice(this.databaseList[index].zoneId, this.databaseList[index].vmConfigId, this.databaseList[index].duration, index)
+          }
+        })
       },
       databaseZoneChange(index) {
-        console.log(index)
+        let url = 'activity/getVMConfigId.do'
+        axios.get(url, {
+          params: {
+            cpu: this.databaseList[index].cpu,
+            mem: this.databaseList[index].memory,
+            month: this.databaseList[index].duration,
+            bandwith: '0',
+            activityNum: '29'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.databaseList[index].vmConfigId = res.data.result
+            this.getDatabaseOriginalPrice(this.databaseList[index].zoneId, this.databaseList[index].vmConfigId, this.databaseList[index].duration, index)
+          }
+        })
       },
       databaseDurationChange(index) {
-        console.log(index)
+        let url = 'activity/getVMConfigId.do'
+        axios.get(url, {
+          params: {
+            cpu: this.databaseList[index].cpu,
+            mem: this.databaseList[index].memory,
+            month: this.databaseList[index].duration,
+            bandwith: '0',
+            activityNum: '29'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.databaseList[index].vmConfigId = res.data.result
+            this.getDatabaseOriginalPrice(this.databaseList[index].zoneId, this.databaseList[index].vmConfigId, this.databaseList[index].duration, index)
+          }
+        })
       },
+      // 数据库查询价格
+      getDatabaseOriginalPrice(zoneId, vmConfigId, month, index) {
+        let url = 'activity/getOriginalPrice.do'
+        axios.get(url, {
+          params: {
+            zoneId: zoneId,
+            vmConfigId: vmConfigId,
+            month: month
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.databaseList[index].currentPrice = res.data.result.cost
+            this.databaseList[index].originalPrice = res.data.result.originalPrice
+          }
+        })
+      },
+      buyDatabase(index) {
+        if (!this.$store.state.userInfo) {
+          this.$LR({type: 'login'})
+          return
+        }
+        if (!this.databaseList[index].zoneId) {
+          this.$Message.info('请选择购买的区域')
+          return
+        }
+        let url = 'database/getDeductionsDatabase.do'
+        axios.get(url, {
+          params: {
+            vmConfigId: this.databaseList[index].vmConfigId,
+            dbVersion: this.databaseList[index].databaseType,
+            defzoneid: this.databaseList[index].zoneId
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+
       gpuBandwidthChange(index) {
-        console.log(index)
+        let url = 'activity/getVMConfigId.do'
+        axios.get(url, {
+          params: {
+            cpu: this.gpuList[index].cpu,
+            mem: this.gpuList[index].memory,
+            month: this.gpuList[index].duration,
+            bandwith: this.gpuList[index].bandwidth,
+            activityNum: '30'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.gpuList[index].vmConfigId = res.data.result
+            this.getGPUOriginalPrice(this.gpuList[index].zoneId, this.gpuList[index].vmConfigId, this.gpuList[index].duration, index)
+          }
+        })
       },
       gpuZoneChange(index) {
-        console.log(index)
+        let url = 'activity/getVMConfigId.do'
+        axios.get(url, {
+          params: {
+            cpu: this.gpuList[index].cpu,
+            mem: this.gpuList[index].memory,
+            month: this.gpuList[index].duration,
+            bandwith: this.gpuList[index].bandwidth,
+            activityNum: '30'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.gpuList[index].vmConfigId = res.data.result
+            this.getGPUOriginalPrice(this.gpuList[index].zoneId, this.gpuList[index].vmConfigId, this.gpuList[index].duration, index)
+          }
+        })
       },
       gpuDurationChange(index) {
-        console.log(index)
+        let url = 'activity/getVMConfigId.do'
+        axios.get(url, {
+          params: {
+            cpu: this.gpuList[index].cpu,
+            mem: this.gpuList[index].memory,
+            month: this.gpuList[index].duration,
+            bandwith: this.gpuList[index].bandwidth,
+            activityNum: '30'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.gpuList[index].vmConfigId = res.data.result
+            this.getGPUOriginalPrice(this.gpuList[index].zoneId, this.gpuList[index].vmConfigId, this.gpuList[index].duration, index)
+          }
+        })
       },
+      getGPUOriginalPrice(zoneId, vmConfigId, month, index) {
+        let url = 'activity/getOriginalPrice.do'
+        axios.get(url, {
+          params: {
+            zoneId: zoneId,
+            vmConfigId: vmConfigId,
+            month: month
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.gpuList[index].currentPrice = res.data.result.cost
+            this.gpuList[index].originalPrice = res.data.result.originalPrice
+          }
+        })
+      },
+      buyGPU(index) {
+        if (!this.$store.state.userInfo) {
+          this.$LR({type: 'login'})
+          return
+        }
+        if (!this.gpuList[index].zoneId) {
+          this.$Message.info('请选择购买的区域')
+          return
+        }
+        let url = 'activity/getDiskcountGPU.do'
+        axios.get(url, {
+          params: {
+            vmConfigId: this.gpuList[index].vmConfigId,
+            osType: this.gpuList[index].system,
+            defzoneid: this.gpuList[index].zoneId
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+
+
       freeHostZoneChange(index) {
         console.log(index)
       },
@@ -878,7 +1338,10 @@
     computed: {
       top() {
         return -this.activeIndex * 35 + 'px';
-      }
+      },
+      authInfo() {
+        return this.$store.state.authInfo ? this.$store.state.authInfo : null
+      },
     },
     watch: {},
     beforeRouteLeave(to, from, next) {
@@ -958,25 +1421,32 @@
             line-height: 60px;
           }
         }
-        .records-content{
+        .records-content {
           height: 60px;
           display: flex;
-          border: 0.5px solid rgba(192,192,192,0.3);
-          >li{
+          border: 0.5px solid rgba(192, 192, 192, 0.3);
+          > li {
             text-align: center;
             width: 20%;
-            font-size:18px;
-            font-family:MicrosoftYaHei;
-            font-weight:400;
-            color:rgba(34,34,34,1);
+            font-size: 18px;
+            font-family: MicrosoftYaHei;
+            font-weight: 400;
+            color: rgba(34, 34, 34, 1);
             line-height: 60px;
+          }
+          li:nth-child(5) {
+            cursor: pointer;
+            color: #FF8448;
+            &:hover {
+              color: #FF3000;
+            }
           }
         }
       }
     }
     .lottery {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
       .center();
       margin-top: 60px;
       padding-bottom: 30px;
@@ -1252,7 +1722,7 @@
               display: flex;
               margin-top: 20px;
               li {
-                font-size: 24px;
+                font-size: 22px;
                 font-family: MicrosoftYaHei;
                 font-weight: 500;
                 color: rgba(255, 255, 255, 1);
@@ -1320,8 +1790,9 @@
   }
 
   .active-4 {
-    padding-bottom: 60px;
-    background: #FFE8D7 url("../../../assets/img/active/anniversary/aa-banner7.png") center no-repeat;
+    height: 962px;
+    padding-top: 70px;
+    background: #FEEDE0 url("../../../assets/img/active/anniversary/aa-banner20.png") center no-repeat;
     .active-4-title {
       text-align: center;
       position: relative;
@@ -1458,8 +1929,8 @@
   }
 
   .active-5 {
-    background: #FFE8D7;
-    padding-bottom: 40px;
+    background: #FEEDE0;
+    padding-top: 20px;
     .active-5-title {
       text-align: center;
       position: relative;
@@ -1728,9 +2199,9 @@
       margin-bottom: 15px;
     }
     .lottery-rules {
-      width: 377px;
+      width: 550px;
       > p {
-        font-size: 16px;
+        font-size: 14px;
         font-family: MicrosoftYaHei;
         font-weight: 400;
         color: rgba(34, 34, 34, 1);
@@ -1740,7 +2211,7 @@
     .lottery-particulars {
       .win-list {
         height: 107px;
-        width: 376px;
+        width: 550px;
         border: 1px dashed red;
         overflow: hidden;
         .win-content {
