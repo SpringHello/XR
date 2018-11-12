@@ -191,7 +191,7 @@
                 </Select>
               </div>
               <div class="item-price">
-                <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
+                <p>¥{{ item.cashPledge }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
                 <button :class="{disabled: false}">立即抢购</button>
@@ -209,12 +209,12 @@
         </div>
         <div class="send-full w12">
           <ul v-for="(item,index) in sendFullList">
-            <li><p :class="{'onStep': true}">消费满<span> {{ item.text_1}} </span>可领</p></li>
-            <li><i :class="{'onStep': true}"></i></li>
-            <li><i :class="{'onStep': true}"></i></li>
-            <li><img :src="item.src_2"/></li>
-            <li :class="{'onStep': true}">{{ item.text_2}}</li>
-            <button @click="getSendFull(index)" :class="{'disabled': true}" :disabled="true">立即领取</button>
+            <li><p :class="{'onStep': false}">消费满<span> {{ item.text_1}} </span>可领</p></li>
+            <li><i :class="{'onStep': false}"></i></li>
+            <li><i :class="{'onStep': false}"></i></li>
+            <li><img :src="item.src_1"/></li>
+            <li :class="{'onStep': false}">{{ item.text_2}}</li>
+            <!-- <button @click="getSendFull(index)" :class="{'disabled': true}" :disabled="true">立即领取</button> -->
             <div v-if="index !=3" class="send-full-dashed"></div>
           </ul>
         </div>
@@ -227,10 +227,10 @@
       <div class="page-pilot">
         <ul>
           <li @click="$router.push('/ruicloud/index.htm')">新睿云首页</li>
-          <li @click="roll(700)">幸运抽奖</li>
-          <li @click="roll(1500)">1.7折云产品</li>
-          <li @click="roll(2400)">8折GPU服务器</li>
-          <li @click="roll(3200)">0元用一年</li>
+          <li @click="roll(1000)">幸运抽奖</li>
+          <li @click="roll(1700)">1.7折云产品</li>
+          <li @click="roll(2700)">8折GPU服务器</li>
+          <li @click="roll(3600)">0元用一年</li>
           <li @click="roll(4100)">消费回赠好礼</li>
           <li @click="roll(0)">↑返回顶部</li>
         </ul>
@@ -279,7 +279,7 @@
         timer: null,
         winList: [
           {head: '一等奖', content: '戴森（Dyson）Airwrap美发造型器'},
-          {head: '二等奖', content: '黑莓KEYone 4G全网通手机'},
+          {head: '二等奖', content: '科沃斯扫地机器人'},
           {head: '三等奖', content: '亚马逊Kindle入门版电子书阅读器'},
           {head: '四等奖', content: '黑科技创意实用智能充电护眼仪'},
           {head: '五等奖', content: '金士顿32GB USB3.0 黑色U盘'},
@@ -354,23 +354,25 @@
             memory: '64',
             rootDisk: '128',
             bandwidth: '2',
+            graphicsCard: 'P40',
             zoneId: 'hz',
             system: 'linux',
             duration: '3',
-            originalPrice: '16069.56',
-            currentPrice: '12855.64',
-            vmConfigId: ''
+            originalPrice: '16325.11',
+            currentPrice: '13060.1',
+            vmConfigId: '101'
           }, {
             cpu: '16',
             memory: '128',
             rootDisk: '128',
             bandwidth: '2',
+            graphicsCard: 'P100',
             zoneId: 'hz',
             system: 'linux',
             duration: '3',
-            originalPrice: '27169.56',
-            currentPrice: '21735.64',
-            vmConfigId: ''
+            originalPrice: '27425.11',
+            currentPrice: '21940.1',
+            vmConfigId: '116'
           }],
           durationList: [
           {
@@ -409,51 +411,53 @@
           {
             text_1: '¥1117',
             text_2: '50元苏宁卡／京东E卡',
-            src_1: '',
+            src_1: require('../../../assets/img/active/anniversary/aa-icon9.png'),
             src_2: require('../../../assets/img/active/anniversary/aa-icon10.png')
           },
           {
             text_1: '¥6117',
             text_2: '350元苏宁卡／京东E卡',
-            src_1: '',
-            src_2: require('../../../assets/img/active/anniversary/aa-icon10.png')
+            src_1: require('../../../assets/img/active/anniversary/aa-icon11.png'),
+            src_2: require('../../../assets/img/active/anniversary/aa-icon12.png')
           },
           {
             text_1: '¥11117',
             text_2: '1000元苏宁卡／京东E卡',
-            src_1: '',
-            src_2: require('../../../assets/img/active/anniversary/aa-icon10.png')
+            src_1: require('../../../assets/img/active/anniversary/aa-icon13.png'),
+            src_2: require('../../../assets/img/active/anniversary/aa-icon14.png')
           },
           {
             text_1: '¥31117',
             text_2: '3100元苏宁卡／京东E卡',
-            src_1: '',
-            src_2: require('../../../assets/img/active/anniversary/aa-icon10.png')
+            src_1: require('../../../assets/img/active/anniversary/aa-icon15.png'),
+            src_2: require('../../../assets/img/active/anniversary/aa-icon16.png')
           }
         ],
         freeHostList: [
           {
-            cpu: '4',
-            memory: '8',
+            headline: '1核 2G 云服务器专区',
+            cpu: '1',
+            memory: '2',
             rootDisk: '40',
-            bandwidth: '2',
+            bandwidth: '1',
             zoneId: 'hz',
             system: 'linux',
-            duration: '3',
-            originalPrice: '1131.16',
-            currentPrice: '192.29',
-            vmConfigId: ''
+            duration: '1',
+            originalPrice: '118.72',
+            cashPledge: '39.00',
+            vmConfigId: '131'
           }, {
-            cpu: '8',
-            memory: '16',
+            headline: '2核 4G 云服务器专区',
+            cpu: '2',
+            memory: '4',
             rootDisk: '40',
-            bandwidth: '2',
+            bandwidth: '1',
             zoneId: 'hz',
             system: 'linux',
-            duration: '3',
-            originalPrice: '2162.16',
-            currentPrice: '367.57',
-            vmConfigId: ''
+            duration: '1',
+            originalPrice: '196.72',
+            cashPledge: '69.00',
+            vmConfigId: '135'
           },
         ],
         hostZoneList: [
@@ -1104,8 +1108,9 @@
   }
 
   .active-4 {
-    padding-bottom: 60px;
-    background: #FFE8D7 url("../../../assets/img/active/anniversary/aa-banner7.png") center no-repeat;
+    height: 962px;
+    padding-top: 70px;
+    background: #FEEDE0 url("../../../assets/img/active/anniversary/aa-banner20.png") center no-repeat;
     .active-4-title {
       text-align: center;
       position: relative;
@@ -1242,7 +1247,6 @@
   }
 
   .active-5 {
-    background: #FFE8D7;
     padding-bottom: 40px;
     .active-5-title {
       text-align: center;
