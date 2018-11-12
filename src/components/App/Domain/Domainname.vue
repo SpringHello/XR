@@ -11,7 +11,7 @@
                 style="margin: 0px -7px;top: 50%;position: absolute;transform: translateY(-50%);"></Icon>
         </div>
         </Input>
-        <button @click="textSearch">搜索</button>
+        <button @click="textSearch" class="btn">搜索</button>
         <div v-show="choose" class="change">
           <div class="change-top">
             <RadioGroup v-model="suffix" @on-change="changeSuffix">
@@ -19,6 +19,7 @@
               <Radio label="chinese">中文域名</Radio>
               <Radio label="administrative">行政域名</Radio>
             </RadioGroup>
+            <Button type="primary" label="small" @click="checkAll">全选</Button>
           </div>
           <div class="content">
             <CheckboxGroup v-model="suffixList" style="display: flex;flex-wrap: wrap;justify-content: flex-start">
@@ -198,7 +199,22 @@
       }
     },
     methods: {
+      checkAll(){
+        switch (this.suffix) {
+          case 'english':
+            this.suffixList = this.getSuffix.en
+            break;
+          case 'chinese':
+            this.suffixList = this.getSuffix.cn
+            break;
+          case 'administrative':
+            this.suffixList = this.getSuffix.xz
+            break;
+        }
+      },
+
       changeSuffix(){
+        this.suffixList = []
         switch (this.suffix) {
           case 'english':
             this.showSuffix = this.getSuffix.en
@@ -234,10 +250,12 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .topOne {
+    width: 100%;
+    margin: 0 auto;
     height: 400px;
     padding: 87px 0 81px 0;
     text-align: center;
-    background: url('../../../assets/img/domain/banner.png') no-repeat;
+    background: url('../../../assets/img/domain/banner.png') no-repeat, #0475FF;
     p {
       font-size: 48px;
       color: rgba(255, 255, 255, 1);
@@ -260,7 +278,7 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      button {
+      .btn {
         height: 36px;
         background: rgba(255, 231, 119, 1);
         font-size: 20px;
@@ -283,6 +301,9 @@
           margin: 30px 35px 20px 35px;
           padding-bottom: 10px;
           border-bottom: 1px solid #D9D9D9;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
         .content {
           padding: 0 38px 33px 38px;
@@ -373,8 +394,9 @@
   }
 
   .content-advantage {
-    background: linear-gradient(360deg, rgba(247, 250, 255, 1) 0%, rgba(252, 253, 255, 1) 100%);
+    /*background: linear-gradient(360deg, rgba(247, 250, 255, 1) 0%, rgba(252, 253, 255, 1) 100%);*/
     margin-top: 101px;
+    padding-bottom: 70px;
     p {
       font-size: 36px;
       color: rgba(55, 125, 255, 1);
@@ -426,7 +448,6 @@
 
   .selective {
     background: rgba(237, 242, 250, 1);
-    margin-top: 70px;
     padding-bottom: 80px;
     p {
       font-size: 36px;
