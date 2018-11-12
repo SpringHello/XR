@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="true">
+    <div v-show="!winningRecordShow">
       <!-- 抽奖 -->
       <div class="active-1">
         <div class="banner">
@@ -26,7 +26,8 @@
             </div>
             <div class="lottery-particulars">
               <h3 style="margin-top: 20px;position: relative">中奖详情 <span
-                style="cursor: pointer;color: #FF3000;font-size:16px;text-decoration: underline;position: absolute;left: 66%;top:25%">中奖纪录</span></h3>
+                style="cursor: pointer;color: #FF3000;font-size:16px;text-decoration: underline;position: absolute;left: 66%;top:25%" @click="winningRecordShow = true">中奖纪录</span>
+              </h3>
               <div class="win-list">
                 <ul class="win-content" :style="{top}">
                   <li v-for="item in winList"> {{ item}}</li>
@@ -328,7 +329,7 @@
       </div>
     </div>
     <!-- 中奖纪录 -->
-    <div v-show="false">
+    <div v-show="winningRecordShow">
       <!-- 中奖纪录 -->
       <div class="active-1">
         <div class="banner">
@@ -339,8 +340,27 @@
           </div>
         </div>
         <div class="winning-record">
-          <div class="records"></div>
+          <div class="records">
+            <ul class="records-title">
+              <li>奖品</li>
+              <li>状态</li>
+              <li>获奖时间</li>
+              <li>获奖渠道</li>
+              <li>操作</li>
+            </ul>
+            <ul class="records-content" v-for="item in winningRecords" v-if="winningRecords.length !=0 ">
+              <li>{{ item.a }}</li>
+              <li>{{ item.b }}</li>
+              <li>{{ item.c }}</li>
+              <li>{{ item.d }}</li>
+              <li></li>
+            </ul>
+            <ul class="records-content" v-if="winningRecords.length ==0 ">
+              <li style="width: 100%">暂无获奖记录</li>
+            </ul>
+          </div>
         </div>
+        <p @click="winningRecordShow = false">← 返回活动主场</p>
       </div>
     </div>
     <!-- 登陆注册弹窗 -->
@@ -488,6 +508,15 @@
           vailCode: ''
         },
         aa_scrollTop: 0,
+        winningRecordShow: false,
+        winningRecords: [
+          {
+            a: '戴森美发造型器',
+            b: '未发送',
+            c: '2018年11月20日',
+            d: '幸运大抽奖',
+          },
+        ],
         showModal: {
           notLoginModal: false,
           notPrizeChanceModal: false,
@@ -1029,10 +1058,38 @@
     }
     .winning-record {
       padding-bottom: 50px;
-      .records{
+      .records {
         .center();
         background: #FFF;
         padding: 27px 20px 56px;
+        .records-title {
+          height: 60px;
+          background: rgba(255, 132, 72, 1);
+          display: flex;
+          > li {
+            width: 20%;
+            text-align: center;
+            font-size: 22px;
+            font-family: MicrosoftYaHei;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 1);
+            line-height: 60px;
+          }
+        }
+        .records-content{
+          height: 60px;
+          display: flex;
+          border: 0.5px solid rgba(192,192,192,0.3);
+          >li{
+            text-align: center;
+            width: 20%;
+            font-size:18px;
+            font-family:MicrosoftYaHei;
+            font-weight:400;
+            color:rgba(34,34,34,1);
+            line-height: 60px;
+          }
+        }
       }
     }
     .lottery {
@@ -1041,6 +1098,19 @@
       .center();
       margin-top: 60px;
       padding-bottom: 30px;
+    }
+    > p {
+      text-align: center;
+      font-size: 28px;
+      font-family: MicrosoftYaHei;
+      font-weight: 500;
+      text-decoration: underline;
+      color: rgba(255, 132, 72, 1);
+      cursor: pointer;
+      padding-bottom: 70px;
+      &:hover {
+        color: #FF3000;
+      }
     }
   }
 
