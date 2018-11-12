@@ -652,6 +652,7 @@
                       this.updateStrategy.value = parmas.row.total;
                       this.updateStrategy.coolingNumber = Number(parmas.row.loolingtime);
                       this.updateStrategy.isAdd = parmas.row.isadd;
+                      this.updateStrategy.company = '台';
                       this.updateStrategy.id = parmas.row.id.toString();
                     }
                   }

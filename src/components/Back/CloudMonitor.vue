@@ -16,16 +16,16 @@
           <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="universal-alert">
-          <p> 云监控描述</p>
+          <p> 实时、全面、详尽的云产品监控告警运维平台</p>
         </div>
-        <Tabs type="card" :animated="false" style="min-height: 400px" @on-click="labelSwitching" value="overview">
+        <Tabs type="card" v-model='tabsName' :animated="false" style="min-height: 400px" @on-click="labelSwitching" >
           <TabPane label="监控概览" name="overview">
             <div class="host-monitor">
               <p>云服务器监控</p>
               <ul>
-                <li v-for="(item,index) in monitorData" :key="index">
+                <li v-for="(item,index) in monitorData" :key="index" >
                   <p>{{item.text}}</p>
-                  <p><span>{{item.num}}</span>台</p>
+                  <p><span class="warning" @click="tabsClick(index)">{{item.num}}</span>台</p>
                 </li>
               </ul>
               <span class="refresh-time">刷新时间:{{ refreshTime }}</span>
@@ -151,7 +151,7 @@
             </div>
             <div class="nas-content" v-else>
               <div class="nas-content-title">
-                <span>新建告警策略</span>
+                <span>{{btnflag =='更新'?'修改告警策略':'新建告警策略'}}</span>
                 <button @click="newStrategy_back">返回</button>
               </div>
               <div class="nas-content-body">
@@ -856,15 +856,17 @@
         monitorData: [
           {
             text: '云主机PING不可达',
-            num: '0'
+            num: '0',
+            tabsName:'alarmList',
           },
           {
             text: '未处理告警',
-            num: '0'
+            num: '0',
+            tabsName:'alarmList',
           },
           {
             text: '已关机云主机',
-            num: '0'
+            num: '0',
           }
         ],
         showModal: {
@@ -981,6 +983,7 @@
         },
         customMonitoringData: [],
 
+        //告警策略表格
         alarmStrategyColumns: [
           {
             title: '策略名称',
@@ -1178,6 +1181,7 @@
         ],
         alarmStrategyData: [],
         isNewAlarmStrategy: false,
+        //告警策略列表表格
         alarmListColumns: [
           {
             type: 'selection',
@@ -1240,6 +1244,7 @@
           total: 0,
           currentPage: 1
         },
+
         newAlarmStrategyForm: {
           strategyName: '',
           strategyType: '0',
@@ -1263,7 +1268,10 @@
         currentAlarmObj: '',
         allHostLegth: '',
         allHostTem: '',
-        allContactsTemp: ''
+        allContactsTemp: '',
+
+        //tabs 选中项
+        tabsName:'overview'
       }
     },
     beforeRouteEnter(from, to, next) {
@@ -1923,6 +1931,7 @@
       },
       // 获取指标资源
       getIndexResource() {
+         this.monitoringIndexForm.selectedProduct = []
         let url = 'monitor/listZoneVMAndDiskAndVpcAndObject.do'
         if (typeof (this.monitoringIndexForm.productIndex) != 'undefined') {
           this.$http.get(url, {
@@ -1932,12 +1941,13 @@
             }
           }).then(res => {
             if (res.status == 200 && res.data.status == 1) {
-              this.monitoringIndexForm.allProduct = res.data.list
+              this.monitoringIndexForm.allProduct = res.data.list;
             }
           })
         }
       },
       getOverviewIndexResource() {
+        this.overviewMonitorIndexForm.selectedProduct = []
         let url = 'monitor/listPandectZoneVMAndDiskAndVpcAndObject.do'
         if (typeof (this.overviewMonitorIndexForm.productIndex) != 'undefined') {
           this.$http.get(url, {
@@ -2878,6 +2888,7 @@
               this.$http.post('alarmControl/createAlarmControl.do', params).then(res => {
                 if (res.status == 200 && res.data.status == 1) {
                   this.$Message.success(res.data.message)
+                  this.listAlarm();
                   this.isNewAlarmStrategy = false
                 } else {
                   this.$Message.success('创建失败！');
@@ -2888,6 +2899,7 @@
               this.$http.post('alarmControl/updateAlarmControl.do', params1).then(res => {
                 if (res.status == 200 && res.data.status == 1) {
                   this.$Message.success(res.data.message)
+                  this.listAlarm();
                   this.isNewAlarmStrategy = false
                 } else {
                   this.$Message.success('更新失败！');
@@ -2975,6 +2987,15 @@
             this.getAlarmList()
           }
         })
+      },
+
+      //跳转对应列表
+      tabsClick(index){
+        if(index != 2){
+          this.tabsName = this.monitorData[index].tabsName;
+        }else if(index == 2){
+          this.$router.push({path:'host',query:{name:'close'}});
+        }
       }
     },
     computed: {
@@ -3089,7 +3110,7 @@
             this.secondMonitoringOverview.title = '对象存储容量'
             break
           case 'flow':
-            this.secondMonitoringOverview.title = '流量'
+            this.secondMonitoringOverview.title = '对象存储下载流量'
             break
           case 'gethttp':
             this.secondMonitoringOverview.title = 'get请求次数'
@@ -3481,6 +3502,12 @@
         margin-bottom: 10px;
       }
     }
+  }
+
+
+  .warning{
+    cursor: pointer;
+
   }
 
   .alarm-channel {

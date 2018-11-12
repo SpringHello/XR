@@ -788,6 +788,10 @@
       /*if (this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
        this.showModal.selectAuthType = true
        }*/
+       if(this.$route.query.name){
+          this.status = '关机'
+       }
+      
       this.getData()
       // 定时发送ajax 刷新页面
       this.intervalInstance = setInterval(() => {
