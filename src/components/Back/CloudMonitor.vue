@@ -238,7 +238,7 @@
                               </Select>
                             </Col>
                             <Col span="2" class="Percentage">
-                              <Select v-model="item.vaule" style="text-align:center">
+                              <Select v-model="item.value" style="text-align:center">
                                 <Option v-for="item in publicTemp.Percentage" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
@@ -535,7 +535,7 @@
             alarmname: 'CPU使用率',
             countcircle: 1,
             valuetype: '>',
-            vaule: 80,
+            value: 80,
             continuecircle: 1,
             alarmcount: 1,
             alarmtype: 1
@@ -1509,7 +1509,7 @@
             alarmname: 'CPU使用率',
             countcircle: 1,
             valuetype: '>',
-            vaule: 80,
+            value: 80,
             continuecircle: 1,
             alarmcount: 1,
             alarmtype: 1
@@ -1617,7 +1617,7 @@
           alarmname: selectedAttr,
           countcircle: 1,
           valuetype: '>',
-          vaule: 80,
+          value: 80,
           continuecircle: 1,
           alarmcount: 1,
           alarmtype: 1
