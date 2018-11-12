@@ -12,7 +12,7 @@
             <transition name="showChosse">
               <div v-show="choose" class="change" @mouseleave="choose=!choose">
               <span v-for="(item,index) in suffixChange.en" :key="index"
-                    style="width:70px;display:inline-block;height: 20px" @click="append=item">{{item}}</span>
+                    style="width:70px;display:inline-block;height: 20px" @click="addAppend(item)">{{item}}</span>
               </div>
             </transition>
           </div>
@@ -133,6 +133,12 @@
           this.singles.unshift(this.append)
         })
       },
+
+      addAppend(name){
+        this.append = name
+        this.singles.unshift(name)
+      },
+
       //显示全部
       exhibition(){
         this.num = this.Results.length
@@ -216,18 +222,19 @@
           this.payMoney += parseFloat(money.price)
         })
       },
-      append(){
-        this.singles.forEach(e => {
-          if (e != this.append) {
-            this.singles.unshift(this.append)
-          }
-        })
-      },
       singles(){
+        var tids = []
+        for (var i = 0; i < this.singles.length; i++) {    //循环遍历当前数组
+          //判断当前数组下标为i的元素是否已经保存到临时数组
+          //如果已保存，则跳过，否则将此元素保存到临时数组中
+          if (tids.indexOf(this.singles[i]) == -1) {
+            tids.push(this.singles[i]);
+          }
+        }
         if (this.singles.length != 0) {
           axios.post('domain/domainFound.do', {
             domainName: this.searchText,
-            tids: this.singles.join(','),
+            tids: tids.join(','),
           }).then(res => {
             this.Results = res.data.data.results
           })
