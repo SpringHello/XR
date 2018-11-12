@@ -327,6 +327,7 @@
         </ul>
       </div>
     </div>
+    <!-- 中奖纪录 -->
     <div v-show="true">
       <!-- 中奖纪录 -->
       <div class="active-1">
