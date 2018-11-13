@@ -5,6 +5,12 @@
       <my-carousel :interval=5000 class="carousel" @on-change="change">
 
         <my-carousel-item class="carousel-item">
+          <div class="anniversary-active" @click="push('/ruicloud/anniversaryActive')">
+
+          </div>
+        </my-carousel-item>
+
+        <my-carousel-item class="carousel-item">
           <div class="eightscene" @click="push('/ruicloud/sceneList')">
             <div class="wrap">
               <div class="left">
@@ -122,7 +128,7 @@
       <div class="bg">
         <div class="bg-wrap">
           <div class="bg" ref="bgcheck">
-              <img  v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl"/>
+            <img v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl"/>
           </div>
         </div>
       </div>
@@ -323,9 +329,9 @@
           <span class="desc">结合多重实时数据保护与高额度网络攻击防护，为用户交付优质云计算资源。</span>
         </div>
         <div class="main flex-g">
-          <div v-for="(item,index) in requireData" :key="index" >
+          <div v-for="(item,index) in requireData" :key="index">
             <p>{{item.title}}</p>
-            <div class="img-wrap"  @mouseenter="requireEnter(index)" @mouseleave="requireLeave(index)">
+            <div class="img-wrap" @mouseenter="requireEnter(index)" @mouseleave="requireLeave(index)">
               <span>
                 <img :src="item.imgHover" alt="" v-if="item.isShow == 'infinite'">
                 <img :src="item.imgonce" alt="" v-else-if="item.isShow == 'once'">
@@ -2939,7 +2945,7 @@
           this.$LR({type: 'register'})
           return
         }
-        if(index1 == 4 || index1 == 5 || index1 == 6 || index1 == 7){
+        if (index1 == 4 || index1 == 5 || index1 == 6 || index1 == 7) {
           return
         }
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
@@ -2950,7 +2956,7 @@
             this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
             this.time = this.currentSceneGroup[index1].configGroup[index2].title
             this.showModal.rechargeHint = true
-          } else{
+          } else {
             this.$message.info({
               content: '平台开小差了，请稍候再试'
             })
@@ -2958,7 +2964,7 @@
         })
       },
       nextStep() {
-        if (!(this.scene == '游戏服务'||this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
+        if (!(this.scene == '游戏服务' || this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
           // 判断新老用户
           axios.get('activity/jdugeTeam.do', {
             params: {sign: 'freeReceive'}
@@ -3388,7 +3394,7 @@
     li {
       list-style: none;
     }
-    font-family:PingFangSC-Regular;
+    font-family: PingFangSC-Regular;
     .wrap {
       width: 1200px;
       margin: 0 auto;
@@ -3415,27 +3421,26 @@
     .eigth-scene {
       position: relative;
 
-
       width: 100%;
       overflow: hidden;
-      >.bg{
+      > .bg {
         width: 1902px;
-        margin:0 auto;
+        margin: 0 auto;
       }
       .bg-wrap {
         position: relative;
-        margin:0 auto;
+        margin: 0 auto;
         overflow: hidden;
         height: 666px;
-        .bg{
+        .bg {
           transition: all .3s ease;
           margin: auto 0;
           height: 5328px;
-          position:absolute;
+          position: absolute;
           top: 0;
           left: 0;
           z-index: 1;
-          >img {
+          > img {
             margin: 0;
             padding: 0;
             display: block;
@@ -3446,34 +3451,34 @@
         position: relative;
         margin-top: -666px;
         z-index: 2;
-        height:666px;
+        height: 666px;
         display: flex;
         align-items: center;
         justify-content: center;
         .box {
           position: relative;
-          height:586px;
+          height: 586px;
           width: 1120px;
-          background:rgba(255,255,255,1);
-          .container{
+          background: rgba(255, 255, 255, 1);
+          .container {
             display: flex;
           }
-          .left-menu{
+          .left-menu {
             border-right: solid 1px #E6E6E6;
             padding: 20px 0;
             ul {
               li {
-                width:200px;
-                height:68px;
+                width: 200px;
+                height: 68px;
                 line-height: 68px;
-                font-size:20px;
-                font-family:PingFangSC-Semibold;
-                font-weight:400;
+                font-size: 20px;
+                font-family: PingFangSC-Semibold;
+                font-weight: 400;
                 color: #333333;
                 cursor: pointer;
                 text-align: center;
-                &:hover,&.selected {
-                  background:linear-gradient(270deg,rgba(170,202,255,1) 0%,rgba(138,189,253,0) 100%);
+                &:hover, &.selected {
+                  background: linear-gradient(270deg, rgba(170, 202, 255, 1) 0%, rgba(138, 189, 253, 0) 100%);
                   color: #377DFF;
                   border-right: #387DFF 6px solid;
                 }
@@ -3496,29 +3501,29 @@
                 line-height: 90px;
                 width: 126px;
                 text-align: center;
-                font-size:18px;
-                font-family:PingFangSC-Semibold;
-                font-weight:600;
-                color:rgba(255,255,255,1);
+                font-size: 18px;
+                font-family: PingFangSC-Semibold;
+                font-weight: 600;
+                color: rgba(255, 255, 255, 1);
                 transform: rotate(45deg);
                 // transform-origin: 10% 300%;
               }
             }
             > h3 {
               padding-bottom: 20px;
-              font-size:24px;
-              font-family:PingFangSC-Medium;
-              font-weight:500;
-              color:rgba(51,51,51,1);
-              line-height:24px;
+              font-size: 24px;
+              font-family: PingFangSC-Medium;
+              font-weight: 500;
+              color: rgba(51, 51, 51, 1);
+              line-height: 24px;
               border-bottom: dashed 1px #C2C2C2;
             }
             .title {
               padding: 16px 0 18px 0;
-              font-size:18px;
-              font-family:PingFangSC-Medium;
-              font-weight:500;
-              color:rgba(74,74,74,1);
+              font-size: 18px;
+              font-family: PingFangSC-Medium;
+              font-weight: 500;
+              color: rgba(74, 74, 74, 1);
             }
             .scene {
               margin-bottom: 24px;
@@ -3526,11 +3531,11 @@
                 p {
                   max-height: 112px;
                   margin-bottom: 20px;
-                  font-size:14px;
-                  font-family:PingFangSC-Regular;
-                  font-weight:400;
-                  color:rgba(102,102,102,1);
-                  line-height:28px;
+                  font-size: 14px;
+                  font-family: PingFangSC-Regular;
+                  font-weight: 400;
+                  color: rgba(102, 102, 102, 1);
+                  line-height: 28px;
                   display: -webkit-box;
                   -webkit-box-orient: vertical;
                   -webkit-line-clamp: 4;
@@ -3545,19 +3550,19 @@
               span {
                 margin-right: 10px;
                 display: inline-block;
-                width:151px;
-                height:38px;
+                width: 151px;
+                height: 38px;
                 line-height: 38px;
                 text-align: center;
-                background:rgba(255,255,255,0.1);
-                border-radius:4px;
-                border:1px solid rgba(204,204,204,1);
-                color:rgba(136,136,136,1);
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
+                border: 1px solid rgba(204, 204, 204, 1);
+                color: rgba(136, 136, 136, 1);
                 cursor: pointer;
                 &:hover {
                   color: #fff;
-                  border: 1px solid rgba(56,125,255,1);
-                  background: rgba(56,125,255,1);
+                  border: 1px solid rgba(56, 125, 255, 1);
+                  background: rgba(56, 125, 255, 1);
                 }
               }
             }
@@ -3566,7 +3571,7 @@
       }
     }
     .register {
-      height:180px;
+      height: 180px;
       background: url("../../assets/img/home/bg-ripple.png") no-repeat center;
       text-align: center;
       color: #fff;
@@ -3574,17 +3579,17 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-size:24px;
-      font-weight:500;
+      font-size: 24px;
+      font-weight: 500;
       span {
         margin-top: 40px;
         display: inline-block;
-        width:173px;
-        height:46px;
-        font-size:18px;
+        width: 173px;
+        height: 46px;
+        font-size: 18px;
         line-height: 46px;
-        border-radius:4px;
-        border:1px solid rgba(255,255,255,1);
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 1);
         cursor: pointer;
         &:hover {
           background: #fff;
@@ -3596,7 +3601,7 @@
       margin-bottom: 100px;
       height: 688px;
       background: url('../../assets/img/home/datacenter-bg.png') no-repeat top center;
-      .header-g{
+      .header-g {
         padding-top: 50px;
         margin-bottom: 10px;
         .title {
@@ -3615,8 +3620,8 @@
           position: absolute;
           padding: 4px 8px;
           border: solid #fff 1px;
-          border-radius:4px;
-          font-size:14px;
+          border-radius: 4px;
+          font-size: 14px;
           background: #FFD100;
           color: #333;
         }
@@ -3634,7 +3639,7 @@
           justify-content: space-between;
           span {
             color: #fff;
-            font-size:12px;
+            font-size: 12px;
             i {
               display: inline-block;
               width: 12px;
@@ -3653,10 +3658,10 @@
       }
       .bottom-log {
         margin-top: 25px;
-        height:80px;
+        height: 80px;
         background: #fff;
         box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
-        border-radius:4px;
+        border-radius: 4px;
         ul {
           height: 80px;
           display: flex;
@@ -3682,11 +3687,11 @@
         > div {
           width: 300px;
           p {
-            font-size:24px;
-            line-height:24px;
+            font-size: 24px;
+            line-height: 24px;
             font-weight: 500;
           }
-          .img-wrap{
+          .img-wrap {
             margin: 0 auto;
             margin-top: 20px;
             width: 228px;
@@ -3696,15 +3701,15 @@
             align-items: center;
           }
           span {
-            font-size:14px;
-            line-height:28px;
+            font-size: 14px;
+            line-height: 28px;
           }
         }
       }
     }
     .news {
       margin-top: 40px;
-      >.wrap {
+      > .wrap {
         position: relative;
         &::before {
           position: absolute;
@@ -3723,7 +3728,7 @@
         display: flex;
         justify-content: space-between;
         // box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
-        box-shadow:0px 2px 35px -17px rgba(69,69,69,0.86);
+        box-shadow: 0px 2px 35px -17px rgba(69, 69, 69, 0.86);
         background: #fff;
         .main-left {
           padding: 40px 60px 40px 80px;
@@ -3784,8 +3789,8 @@
           }
         }
         .main-right {
-          width:400px;
-          height:286px;
+          width: 400px;
+          height: 286px;
           overflow: hidden;
           background: rgba(231, 231, 231, 1);
           .news-img {
@@ -3814,7 +3819,7 @@
           padding-bottom: 20px;
           overflow: hidden;
           // box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.41);
-          box-shadow:0px 13px 14px -6px rgba(216,216,216,0.5);
+          box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.5);
           dt {
             height: 58px;
             display: flex;
@@ -3824,20 +3829,20 @@
             font-weight: 500;
             font-size: 18px;
             color: #333333;
-            border-bottom:1px solid #cfcfcf;
+            border-bottom: 1px solid #cfcfcf;
             .moreinfo {
               display: block;
               width: 100%;
               &:hover {
                 color: #377DFF;
-                span{
+                span {
                   color: #377DFF;
                 }
-                i{
+                i {
                   color: #377DFF;
                 }
               }
-              span{
+              span {
                 cursor: pointer;
                 color: #333333;
               }
@@ -3854,7 +3859,7 @@
               li {
                 padding: 0;
                 a {
-                  display:block;
+                  display: block;
                   /*justify-content: space-between;*/
                   padding: 10px 0;
                   min-height: 60px;
@@ -3886,7 +3891,7 @@
                       line-height: 20px;
                       text-align: center;
                       background: #FF624B;
-                      border-radius:10px 10px 10px 0px;
+                      border-radius: 10px 10px 10px 0px;
                       font-style: normal;
                       font-size: 12px;
                       color: #fff;
@@ -3897,10 +3902,10 @@
                     margin-bottom: 5px;
                     display: block;
                     width: 100%;
-                    font-size:14px;
-                    font-weight:400;
-                    color:#999999;
-                    line-height:14px;
+                    font-size: 14px;
+                    font-weight: 400;
+                    color: #999999;
+                    line-height: 14px;
                   }
                 }
               }
@@ -4002,7 +4007,7 @@
       height: 120px;
       width: 100%;
       .container {
-        padding: 10px 0 ;
+        padding: 10px 0;
         width: 1200px;
         margin: 0px auto;
         height: 120px;
@@ -4122,8 +4127,7 @@
             .fade-enter-active, .fade-leave-active {
               transition: opacity .2s
             }
-            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */
-            {
+            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
               display: none;
             }
             .bottom-flow {
@@ -4135,10 +4139,10 @@
                 justify-content: space-between;
                 span {
                   display: inline-block;
-                  width:80px;
-                  height:4px;
-                  background:rgba(153,153,153,1);
-                  border-radius:3px;
+                  width: 80px;
+                  height: 4px;
+                  background: rgba(153, 153, 153, 1);
+                  border-radius: 3px;
                   &.blue {
                     background: #377dff;
                   }
@@ -4457,17 +4461,17 @@
         flex-wrap: wrap;
         > div {
           margin-bottom: 20px;
-          width:288px;
-          height:132px;
-          border-radius:4px;
-          border:1px solid rgba(207,207,207,1);
+          width: 288px;
+          height: 132px;
+          border-radius: 4px;
+          border: 1px solid rgba(207, 207, 207, 1);
           background: #fff;
           display: flex;
           align-items: center;
           justify-content: center;
           &:hover {
-            box-shadow:0px 0px 42px -16px rgba(184,184,184,0.72);
-            border:1px solid rgba(56,125,255,1);
+            box-shadow: 0px 0px 42px -16px rgba(184, 184, 184, 0.72);
+            border: 1px solid rgba(56, 125, 255, 1);
           }
         }
       }
@@ -4895,7 +4899,14 @@
       }
     }
   }
-  .eightscene{
+
+  .anniversary-active {
+    height: 400px;
+    cursor: pointer;
+    background: url("../../assets/img/active/anniversary/aa-banner22.png") center no-repeat;
+  }
+
+  .eightscene {
     height: 400px;
     overflow: hidden;
     background: url("../../assets/img/home/eightscene-banner.png") no-repeat;
@@ -4906,8 +4917,8 @@
       .left {
         padding-top: 86px;
         button {
-          width:164px;
-          height:44px;
+          width: 164px;
+          height: 44px;
           display: block;
           background: none;
           outline: none;
@@ -4921,19 +4932,19 @@
           color: #fff;
           &:hover {
             color: #fff;
-            border: 1px solid rgba(56,125,255,1);
-            background: rgba(56,125,255,1);
+            border: 1px solid rgba(56, 125, 255, 1);
+            background: rgba(56, 125, 255, 1);
           }
         }
       }
       .right {
         margin-top: 64px;
         padding: 40px;
-        width:300px;
-        height:266px;
-        background:rgba(255,255,255,1);
-        box-shadow:0px 2px 41px -15px rgba(47,124,253,0.47);
-        border-radius:4px;
+        width: 300px;
+        height: 266px;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0px 2px 41px -15px rgba(47, 124, 253, 0.47);
+        border-radius: 4px;
         p {
           font-size: 18px;
           padding-bottom: 10px;
@@ -4951,11 +4962,11 @@
           }
         }
         button {
-          width:220px;
-          height:38px;
-          background:rgba(56,125,255,1);
-          border-radius:4px;
-          font-size:14px;
+          width: 220px;
+          height: 38px;
+          background: rgba(56, 125, 255, 1);
+          border-radius: 4px;
+          font-size: 14px;
         }
       }
     }
