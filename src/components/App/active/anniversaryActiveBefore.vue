@@ -191,10 +191,10 @@
                 </Select>
               </div>
               <div class="item-price">
-                <p>¥{{ item.cashPledge }} <span>原价：{{ item.originalPrice}}元</span></p>
+                <p class="tl"><span style="text-decoration:none"> 押金 </span>¥{{ item.cashPledge }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button :class="{disabled: false}">立即抢购</button>
+                <button :class="{disabled: false}">立即领取</button>
               </div>
             </div>
           </div>
@@ -204,7 +204,7 @@
       <div class="active-5">
         <div class="active-5-title">
           <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
-          <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner16.png"/>
+          <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner21.png"/>
           <p><span>购买云产品获赠好礼，最高额消费可领全部礼品</span></p>
         </div>
         <div class="send-full w12">
@@ -481,7 +481,7 @@
             name: '6个月',
             value: '6'
           }, {
-            name: '1年',
+            name: '1个月',
             value: '1'
           },
         ],
@@ -1247,6 +1247,7 @@
   }
 
   .active-5 {
+    padding-top: 20px;
     padding-bottom: 40px;
     .active-5-title {
       text-align: center;
