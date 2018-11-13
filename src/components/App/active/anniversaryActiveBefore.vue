@@ -12,15 +12,18 @@
     </div>
     <div class="introduct center">
       <div class="top headline">
-        <h2>11.17周年庆 幸运抽大奖</h2>
-        <p><span>见面礼！</span>用户登录或者注册后即可获得一次抽奖机会，戴森（Dyson）Airwrap美发造型器等你拿！</p>
+        <img style="margin-left:100px;" src="../../../assets/img/active/anniversary/aa-banner14.png"/>
+        <p><span>见面礼！</span>包含<i style="color:#FF3000;font-style:normal"> 戴森、科沃斯 </i>爆款奖品，100%中奖率，注册登录即可拥有一次抽奖机会!</p>
       </div>
       <div class="content center">
-        <div class="player">
+        <!-- <div class="player"> 
           <div class="player-shade" ref="playerShade" @click="controlVideo"></div>
           <video style="display: none" controls="controls" ref="media" name="media" width="648px">
             <source src="http://file.xrcloud.net/vedio/2018-11-09/adver.mp4" type="video/mp4">
           </video>
+        </div> -->
+        <div class="player">
+          <video controls="controls"  name="media" width="648px" poster="/static/img/video_poster.png"><source src="http://file.xrcloud.net/vedio/2018-11-09/adver.mp4" type="video/mp4"></video>
         </div>
         <div class="prize">
           <p>活动奖品</p>
@@ -34,9 +37,9 @@
       </div>
     </div>
     <div class="host center">
-      <div class="top headline" style="margin-top: 54px;">
-        <h2>爆款高配 超低折扣</h2>
-        <p>各类产品<i>1.7折</i>分时抢购，首次购买任意产品均可获得抽奖机会!<span class="rule" @click="ruleShow=true">活动规则</span></p>
+      <div class="top headline" style="margin-top: 54px;margin-bottom:10px;">
+        <img style="margin-left:100px;" src="../../../assets/img/active/anniversary/aa-banner15.png"/>
+        <p>热销云产品<i> 1.7折 </i>分时抢购，首次购买任意产品均可获得抽奖机会!<span class="rule" @click="ruleShow=true">活动规则</span></p>
       </div>
       <div class="content center">
         <div class="products-title tl" style="margin:0 24px;">
@@ -59,24 +62,28 @@
                 </ul>
               </div>
               <div class="config">
-                <Form label-position="left" :label-width="100" style="width:300px;">
-                  <FormItem label="请选择带宽">
-                    <Select v-model="item.network" disabled>
+                <Form :label-width="0" style="width:320px;">
+                  <FormItem>
+                    <span>请选择带宽</span>
+                    <Select v-model="item.network" disabled style="width:216px;">
                       <Option v-for="(item,index) in network" :key="index" :value="item.value">{{item.value}}M</Option>
                     </Select>
                   </FormItem>
-                  <FormItem label="请选择区域">
-                    <Select v-model="item.zone" disabled>
+                  <FormItem>
+                    <span>请选择区域</span>
+                    <Select v-model="item.zone" disabled style="width:216px;">
                       <Option v-for="(item,index) in zone" :key="index" :value="item.value">{{item.value}}</Option>
                     </Select>
                   </FormItem>
-                  <FormItem label="请选择系统">
-                    <Select v-model="item.system" disabled>
+                  <FormItem>
+                    <span>请选择系统</span>
+                    <Select v-model="item.system" disabled style="width:216px;">
                       <Option v-for="(item,index) in system" :key="index" :value="item.value">{{item.value}}</Option>
                     </Select>
                   </FormItem>
-                  <FormItem label="请选择时长">
-                    <Select v-model="item.sectime" disabled>
+                  <FormItem>
+                    <span>请选择时长</span>
+                    <Select v-model="item.sectime" disabled style="width:216px;">
                       <Option v-for="(item,index) in time" :key="index" :value="item.value">{{item.value}}个月</Option>
                     </Select>
                   </FormItem>
@@ -101,7 +108,7 @@
           <p>全网首次<span>GPU服务器折扣活动</span>，每日抢购时间 19:00-20:00！</p>
         </div>
         <div class="gpuList w12">
-          <div class="gpu-title">
+          <div class="gpu-title tl">
             <img src="../../../assets/img/active/anniversary/aa-icon8.png"/>
             <span>GPU云服务器 每日19:00开启抢购</span>
             <div style="margin-top: 8px">
@@ -123,19 +130,19 @@
               </div>
               <div class="item-select">
                 <span>请选择带宽</span>
-                <Select v-model="item.bandwidth" @on-change="gpuBandwidthChange(index)" class="fr-select" style="width:216px;margin-top: 20px" disabled>
+                <Select v-model="item.bandwidth"   style="width:216px;margin-top: 20px" disabled>
                   <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择区域</span>
-                <Select v-model="item.zoneId" @on-change="gpuZoneChange(index)" class="fr-select" style="width:216px;margin-top: 20px" disabled>
+                <Select v-model="item.zoneId"   style="width:216px;margin-top: 20px" disabled>
                   <Option v-for="item in gpuZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择系统</span>
-                <Select v-model="item.system" class="fr-select" style="width:216px;margin-top: 20px" disabled>
+                <Select v-model="item.system"  style="width:216px;margin-top: 20px" disabled>
                   <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择时长</span>
-                <Select v-model="item.duration" @on-change="gpuDurationChange(index)" class="fr-select" style="width:216px;margin-top: 20px" disabled>
+                <Select v-model="item.duration"   style="width:216px;margin-top: 20px" disabled>
                   <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
               </div>
@@ -157,7 +164,7 @@
           <p><span>适用于低负载、低并发、小型开发测试环境、普通数据处理服务等场景</span></p>
         </div>
         <div class="hostList w12">
-          <div class="host-title">
+          <div class="host-title tl">
             <img src="../../../assets/img/active/anniversary/aa-icon3.png"/>
             <span>基础配置云服务器</span>
             <div style="margin-top: 8px">
@@ -178,15 +185,15 @@
               </div>
               <div class="item-select">
                 <span>请选择区域</span>
-                <Select v-model="item.zoneId" @on-change="freeHostZoneChange(index)" class="fr-select" style="width:216px;margin-top: 20px" disabled>
+                <Select v-model="item.zoneId"   style="width:216px;margin-top: 20px" disabled>
                   <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择系统</span>
-                <Select v-model="item.system" class="fr-select" style="width:216px;margin-top: 20px" disabled>
+                <Select v-model="item.system"  style="width:216px;margin-top: 20px" disabled>
                   <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择时长</span>
-                <Select v-model="item.duration" @on-change="freeHostDurationChange(index)" class="fr-select" style="width:216px;margin-top: 20px" disabled>
+                <Select v-model="item.duration"   style="width:216px;margin-top: 20px" disabled>
                   <Option v-for="item in freeHostDurationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
               </div>
@@ -209,11 +216,11 @@
         </div>
         <div class="send-full w12">
           <ul v-for="(item,index) in sendFullList">
-            <li><p :class="{'onStep': false}">消费满<span> {{ item.text_1}} </span>可领</p></li>
-            <li><i :class="{'onStep': false}"></i></li>
-            <li><i :class="{'onStep': false}"></i></li>
-            <li><img :src="item.src_1"/></li>
-            <li :class="{'onStep': false}">{{ item.text_2}}</li>
+            <li><p :class="{'onStep': true}">消费满<span> {{ item.text_1}} </span>可领</p></li>
+            <li><i :class="{'onStep': true}"></i></li>
+            <li><i :class="{'onStep': true}"></i></li>
+            <li><img :src="item.src_2"/></li>
+            <li :class="{'onStep': true}">{{ item.text_2}}</li>
             <!-- <button @click="getSendFull(index)" :class="{'disabled': true}" :disabled="true">立即领取</button> -->
             <div v-if="index !=3" class="send-full-dashed"></div>
           </ul>
@@ -570,13 +577,6 @@
     .headline {
       position: relative;
       margin-bottom: 35px;
-      &::after {
-        content: url(../../../assets/img/active/anniversary/aa-icon1.png);
-        display: inline-block;
-        position: absolute;
-        top: -40px;
-        left: 32%;
-      }
       h2 {
         font-size: 36px;
         font-family: PingFangSC-Semibold;
@@ -647,17 +647,13 @@
       padding-top: 50px;
       background: #feede1;
       .top {
-        h2 {
-          color: rgba(255, 48, 0, 1);
-          position: relative;
-          &::after {
-            content: url(../../../assets/img/active/anniversary/text_bg2.png);
-            display: inline-block;
-            position: absolute;
-            top: 0px;
-            left: 41%;
-          }
-        }
+        &::after {
+        content: url(../../../assets/img/active/anniversary/aa-icon1.png);
+        display: inline-block;
+        position: absolute;
+        top: -40px;
+        left: 32%;
+      }
         p {
           color: #010101;
         }
@@ -710,6 +706,13 @@
       > .top {
         color: #fff;
         margin-bottom: 24px;
+        &::after {
+          content: url(../../../assets/img/active/anniversary/aa-icon2.png);
+          display: inline-block;
+          position: absolute;
+          top: -30px;
+          left: 31%;
+        }
         p {
           i {
             font-size: 22px;
@@ -722,14 +725,6 @@
             text-decoration: underline;
             cursor: pointer;
           }
-        }
-        position: relative;
-        &::after {
-          content: url(../../../assets/img/active/anniversary/text_bg1.png);
-          display: inline-block;
-          position: absolute;
-          top: 0px;
-          left: 42%;
         }
       }
       > .content {
@@ -830,6 +825,12 @@
                 padding: 20px;
                 padding-top: 10px;
                 padding-bottom: 0;
+                span {
+                  font-size:18px;
+                  vertical-align: middle;
+                  margin-right: 10px;
+                  color: #666666;
+                }
                 .ivu-form-item {
                   margin-bottom: 20px;
                 }
@@ -951,12 +952,12 @@
       width: 648px;
       height: 365px;
       position: relative;
-      .player-shade {
-        position: absolute;
-        width: 648px;
-        height: 365px;
-        background: url("../../../assets/img/active/anniversary/aa-shade.png") center no-repeat;
-      }
+      // .player-shade {
+      //   position: absolute;
+      //   width: 648px;
+      //   height: 365px;
+      //   background: url("../../../assets/img/active/anniversary/aa-shade.png") center no-repeat;
+      // }
     }
      .active-3 {
     padding: 30px 0 60px;
@@ -982,6 +983,7 @@
       background: #FFF;
       height: 686px;
       .gpu-title {
+        padding: 0 20px;
         > img {
           margin: 0 15px;
         }
@@ -1132,6 +1134,7 @@
       height: 700px;
       margin-top: 36px;
       .host-title {
+        padding: 0 20px;
         > img {
           margin: 0 15px;
         }
