@@ -285,10 +285,10 @@
                 </Select>
               </div>
               <div class="item-price">
-                <p>¥{{ item.cashPledge }} <span>原价：{{ item.originalPrice}}元</span></p>
+                <p>押金：{{ item.cashPledge }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button :class="{disabled: false}" @click="getHost(index)">立即抢购</button>
+                <button :class="{disabled: false}" @click="getHost(index)">立即领取</button>
               </div>
             </div>
           </div>
@@ -353,8 +353,8 @@
             <ul class="records-content" v-for="item in winningRecords" v-if="winningRecords.length !=0 ">
               <li>{{ item.giftAbbreviation }}</li>
               <li>{{ item.obtain == 0 ? '未发放' : '已发放' }}</li>
-              <li>{{ item.activityName }}</li>
               <li>{{ item.updateDate }}</li>
+              <li>{{ item.activityName}}</li>
               <li @click="">填写／修改收货信息</li>
             </ul>
             <ul class="records-content" v-if="winningRecords.length ==0 ">
@@ -401,8 +401,8 @@
               <span>恭喜您，抽中了</span> 
               <span>{{ award.name }}</span>
             </p>
-            <button @click.stop="showModal.winPrizeModal=false;showModal.authGetPrizeModal=true" class="button-primary">立即领取</button>
-            <p style="font-size:14px;">请前往 <span @click.stop="winningRecordShow = true" class="towinpage">获奖记录页面</span> 填写收件信息</p>
+            <button @click.stop="getPrize" class="button-primary">立即领取</button>
+            <p style="font-size:14px;">请前往 <span @click.stop="winningRecordShow = true,showModal.winPrizeModal=false" class="towinpage">获奖记录页面</span> 填写收件信息</p>
           </div>
         </div>
       </div>
@@ -410,7 +410,7 @@
     <!-- 请填写认证信息完成领取弹窗 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.authGetPrizeModal=false" v-if="showModal.authGetPrizeModal">
-        <div class="all-modal modal1" @click.stop="showModal.authGetPrizeModal=true" style="height:434px;">
+        <div class="all-modal modal1" @click.stop="showModal.authGetPrizeModal=true" style="height:480px;">
           <div class="header" style="padding-left: 50px;">请填写认证信息完成领取</div>
           <div class="body auth-form-validate1">
             <Form ref="authFormValidate" :model="authFormValidate" :rules="authFormRuleValidate" :label-width="90" class="auth-form-validate">
@@ -423,20 +423,20 @@
               <FormItem label="图形验证码" prop="pictureCode">
                 <div style="display: flex">
                   <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码"
-                         style="width:250px;margin-right: 10px"></Input>
+                         style="width:192px;margin-right: 10px"></Input>
                   <img :src="imgSrc" style="height:33px;"
                        @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                 </div>
               </FormItem>
               <FormItem label="手机号码" prop="tel">
                 <Input v-model="authFormValidate.tel" placeholder=" 请输入您的手机号码" style="width:192px;"></Input>
-                <Button type="text" style="margin-left: 28px;background: none;color: #FF8448;">获取验证码</Button>
+                <Button type="text" style="margin-left: 20px;background: none;color: #FF8448;" @click="getVerificationCode">获取验证码</Button>
               </FormItem>
               <FormItem label="验证码" prop="vailCode">
                 <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" @click.stop=""></Input>
               </FormItem>
             </Form>
-            <button @click.stop="" style="margin-top:50px;margin-bottom:20px;width:305px" class="button-primary">确认信息并领取奖品</button>
+            <button @click.stop="" style="margin-top:50px;margin-bottom:20px;width:305px" class="button-primary" @click="authAndGetPrize">确认信息并领取奖品</button>
           </div>
         </div>
       </div>
@@ -753,7 +753,7 @@
           tel: '',
           vailCode: ''
         },
-        authFormRuleValidate:{
+        authFormRuleValidate: {
           name: [
             {required: true, message: '请输入姓名'},
             {validator: validaRegisteredName}
@@ -793,22 +793,14 @@
           orderConfirmationModal: false
         },
         current: 0, // 标记抽奖奖品
-        awards: [
-/*          {id: 1, name: '空', imgUrl: require('../../../assets/img/active/anniversary/award-1.png')},
-          {id: 2, name: '眼镜', imgUrl: require('../../../assets/img/active/anniversary/award-2.png')},
-          {id: 3, name: '包', imgUrl: require('../../../assets/img/active/anniversary/award-3.png')},
-          {id: 4, name: '笨驴', imgUrl: require('../../../assets/img/active/anniversary/award-4.png')},
-          {id: 5, name: '书', imgUrl: require('../../../assets/img/active/anniversary/award-5.png')},
-          {id: 6, name: '手链', imgUrl: require('../../../assets/img/active/anniversary/award-6.png')},
-          {id: 7, name: '美女', imgUrl: require('../../../assets/img/active/anniversary/award-7.png')},
-          {id: 8, name: 'iphone', imgUrl: require('../../../assets/img/active/anniversary/award-8.png')}*/
-        ],
+        awards: [],
         speed: 200, // 速度
         diff: 15, // 速度增加的值
         award: {
           id: '',
           name: '',
-          imgUrl: ''
+          imgUrl: '',
+          code: ''
         }, // 抽中的奖品
         time: 0,  // 记录开始抽奖时的时间
         lotteryNumber: 0, //抽奖次数
@@ -1195,7 +1187,7 @@
       this.getGPUZoneList()
       this.getFreeHostZoneList()
       //  需要登录才能调用的接口
-      if (this.authInfo) {
+      if (this.$store.state.userInfo) {
         this.getLotteryNumber()
         this.getSpentCost()
         this.getPersonalWinningInfo()
@@ -1340,6 +1332,64 @@
           }
         })
       },
+      getPrize() {
+        this.showModal.winPrizeModal = false
+        if (!this.authInfo) {
+          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.showModal.authGetPrizeModal = true
+        }
+        let url = 'activity/giveForAccount.do'
+        axios.get(url, {
+          params: {
+            activityNum: '31',
+            giftUniqueIdentifier: this.award.code
+          }
+        }).then(res => {
+          if (res.status == 1 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      authAndGetPrize() {
+        this.$refs.authFormValidate.validate((valid) => {
+          if (valid) {
+            this.showModal.authGetPrizeModal = false
+            axios.post('user/personalAttest.do', {
+              cardID: this.authFormValidate.id,
+              name: this.authFormValidate.name,
+              phone: this.authFormValidate.tel,
+              phoneCode: this.authFormValidate.vailCode,
+              type: '0'
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                let url = 'activity/giveForAccount.do'
+                axios.get(url, {
+                  params: {
+                    activityNum: '31',
+                    giftUniqueIdentifier: this.award.code
+                  }
+                }).then(res => {
+                  if (res.status == 1 && res.data.status == 1) {
+                    this.$Message.success(res.data.message)
+                  } else {
+                    this.$message.info({
+                      content: res.data.message
+                    })
+                  }
+                })
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
 
       /* 获取各个活动配置区域 */
       getHostZoneList() {
@@ -1434,7 +1484,8 @@
           if (res.data.status == 1 && res.status == 200) {
             this.award.id = res.data.gift_id
             this.award.name = res.data.result
-            this.award.imgUrl = res.data.imgUrl
+            this.award.imgUrl = res.data.gift_url
+            this.award.code = res.data.code
             this.move();
             this.getLotteryNumber()
             this.getPersonalWinningInfo()
@@ -2065,6 +2116,30 @@
           } else {
             this.$message.info({
               content: response.data.message
+            })
+          }
+        })
+      },
+      //领奖时认证验证码
+      getVerificationCode() {
+        if (!this.authFormValidate.vailCode) {
+          this.$Message.info('请输入图形验证码')
+          return
+        }
+        this.$refs.authFormValidate.validateField('tel', val => {
+          if (!val) {
+            axios.get('user/code.do', {
+              params: {
+                aim: this.authFormValidate.tel,
+                isemail: 0,
+                vailCode: this.authFormValidate.vailCode
+              }
+            }).then(res => {
+              if (res.data.status == 1 && res.status == 200) {
+                this.$Message.success(res.data.message)
+              } else {
+                this.$Message.info(res.data.message)
+              }
             })
           }
         })
