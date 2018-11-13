@@ -23,7 +23,7 @@
           </video>
         </div> -->
         <div class="player">
-          <video controls="controls"  name="media" width="648px" poster="/static/img/video_poster.png"><source src="http://file.xrcloud.net/vedio/2018-11-09/adver.mp4" type="video/mp4"></video>
+          <video controls="controls"  name="media" width="648px" poster="http://file.xrcloud.net/pictures/2018-11-13/video_poster.png"><source src="http://file.xrcloud.net/vedio/2018-11-09/adver.mp4" type="video/mp4"></video>
         </div>
         <div class="prize">
           <p>活动奖品</p>
