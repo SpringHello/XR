@@ -502,6 +502,23 @@
         </div>
       </div>
     </transition>
+    <!-- 大满送活动规则弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.bigFullDeliveryModal=false" v-if="showModal.bigFullDeliveryModal">
+        <div class="all-modal modal3" @click.stop="showModal.bigFullDeliveryModal=true" style="height:430px;">
+          <div class="header">消费回赠活动规则</div>
+          <div class="body" style="overflow-y:hidden;border:0;height:226px;">
+            <h3>（1）活动时间：2018年11月17日—2018年12月16日</h3>
+            <h3>（2）消费满***元可获得***购物卡</h3>
+            <h3>（3）当到达消费满送条件时，将在订单支付成功页面中显示达到满送条件提示，后续会有销售人员与用户进行电话沟通确认。</h3>
+            <h3>（4）确认完成后，新睿云将以短信形式发送购物卡信息，请注意查收。</h3>
+            <h3>（5）活动期间，正常购买产品的金额也算入消费满送活动中，领取满送成功后正常购买的产品将不能进行退款。</h3>
+            <h3>（6）此活动最终解释权归新睿云所有。</h3>
+          </div>
+          <button @click.stop="showModal.bigFullDeliveryModal=false" class="button-primary">我知道了</button>
+        </div>
+      </div>
+    </transition>
     <!-- 折扣活动规则弹窗 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.discountRuleModal=false" v-if="showModal.discountRuleModal">
@@ -531,7 +548,7 @@
         </div>
       </div>
     </transition>
-
+    
     <!-- 领取提示 -->
     <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s" style="padding: 30px 30px 0 50px">
@@ -860,6 +877,7 @@
           authGetPrizeModal: false,
           luckDrawRuleModal: false,
           discountRuleModal: false,
+          bigFullDeliveryModal: true,
           receiveGoodInfoModal: false,
           rechargeHint: false,
           inConformityModal: false,
