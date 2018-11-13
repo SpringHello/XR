@@ -352,10 +352,13 @@
             </ul>
             <ul class="records-content" v-for="item in winningRecords" v-if="winningRecords.length !=0 ">
               <li>{{ item.giftAbbreviation }}</li>
-              <li>{{ item.obtain == 0 ? '未发放' : '已发放' }}</li>
+              <li v-if="item.type == 1">{{ item.obtain == 0 ? '未发放' : '已发放' }}</li>
+              <li v-if="item.type == 0">{{ item.receivegifg == 0 ? '未领取' : '已领取' }}</li>
               <li>{{ item.updateDate }}</li>
               <li>{{ item.activityName}}</li>
-              <li @click="">填写／修改收货信息</li>
+              <li @click="fillInAddress(item.code)" v-if="item.type == 1 && item.receivegifg == 1">填写／修改收货信息</li>
+              <!-- <li @click="getPrize(item.code)" v-if="item.type == 1 && item.receivegifg == 0">领取奖品</li>-->
+              <li @click="$router.push('expenses')" v-if="item.type == 0">查看</li>
             </ul>
             <ul class="records-content" v-if="winningRecords.length ==0 ">
               <li style="width: 100%">暂无获奖记录</li>
@@ -413,7 +416,7 @@
         <div class="all-modal modal1" @click.stop="showModal.authGetPrizeModal=true" style="height:480px;">
           <div class="header" style="padding-left: 50px;">请填写认证信息完成领取</div>
           <div class="body auth-form-validate1">
-            <Form ref="authFormValidate" :model="authFormValidate" :rules="authFormRuleValidate" :label-width="90" class="auth-form-validate">
+            <Form ref="authForm" :model="authFormValidate" :rules="authFormRuleValidate" :label-width="90" class="auth-form-validate">
               <FormItem label="真实姓名" prop="name">
                 <Input v-model="authFormValidate.name" placeholder=" 请输入您的真实姓名"></Input>
               </FormItem>
@@ -436,7 +439,7 @@
                 <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" @click.stop=""></Input>
               </FormItem>
             </Form>
-            <button @click.stop="" style="margin-top:50px;margin-bottom:20px;width:305px" class="button-primary" @click="authAndGetPrize">确认信息并领取奖品</button>
+            <button @click.stop="authAndGetPrize" style="margin-top:50px;margin-bottom:20px;width:305px" class="button-primary">确认信息并领取奖品</button>
           </div>
         </div>
       </div>
@@ -448,30 +451,29 @@
         <div class="all-modal modal1" @click.stop="showModal.receiveGoodInfoModal=true" style="height:530px;">
           <div class="header" style="padding-left: 50px;">请填写认证信息完成领取</div>
           <div class="body auth-form-validate1">
-            <Form ref="receiveGoodFormValidate" :model="receiveGoodFormValidate" :rules="receiveGoodFormRuleValidate" :label-width="90" class="receive-good-validate">
-              <FormItem label=" 收件人姓名" prop="name">
+            <Form ref="receiveGoodForm" :model="receiveGoodFormValidate" :rules="receiveGoodFormRuleValidate" :label-width="90" class="receive-good-validate">
+              <FormItem label="收件人姓名" prop="name">
                 <Input v-model="receiveGoodFormValidate.name" placeholder=" 请输入您的真实姓名"></Input>
               </FormItem>
-              <FormItem label=" 联系电话" prop="tel">
+              <FormItem label="联系电话" prop="tel">
                 <Input v-model="receiveGoodFormValidate.tel" placeholder=" 请输入您的联系电话"></Input>
               </FormItem>
-              <FormItem label=" 邮政编码" prop="postCode">
+              <FormItem label="邮政编码" prop="postCode">
                 <Input v-model="receiveGoodFormValidate.postCode" placeholder=" 请输入您的邮政编码"></Input>
               </FormItem>
-              <FormItem prop="district" label-width="0">
-                <span style="margin:10px">收件地址</span>
-                <Select v-model="province" style="width:140px" @on-change="changeProvince">
+              <FormItem prop="province" label="收件地址">
+                <Select v-model="receiveGoodFormValidate.province" style="width:147px" @on-change="changeProvince">
                   <Option v-for="item in provinceList" :value="item.name" :key="item.name">{{ item.name }}</Option>
                 </Select>
-                <Select v-model="city" style="width:140px;margin-left:10px;">
+                <Select v-model="receiveGoodFormValidate.city" style="width:147px;margin-left:10px;">
                   <Option v-for="item in cityList" :value="item.name" :key="item.name">{{ item.name }}</Option>
                 </Select>
               </FormItem>
               <FormItem label="详细地址" prop="detailAddress">
-                  <Input v-model="receiveGoodFormValidate.detailAddress" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="请输入您的详细地址"></Input>
+                <Input v-model="receiveGoodFormValidate.detailAddress" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="请输入您的详细地址"></Input>
               </FormItem>
             </Form>
-            <button @click.stop="" style="margin-top:40px;margin-bottom:20px;width:305px" class="button-primary">确认信息并提交</button>
+            <button @click.stop="fillInAddress_ok" style="margin-top:40px;margin-bottom:20px;width:305px" class="button-primary">确认信息并提交</button>
           </div>
         </div>
       </div>
@@ -782,13 +784,16 @@
           callback()
         }
       }
+      const validaDistrict = (rule, value, callback) => {
+        if (!this.receiveGoodFormValidate.province || !this.receiveGoodFormValidate.city) {
+          return callback(new Error('请选择地区'));
+        } else {
+          callback()
+        }
+      }
       return {
-        area: "",
-        // 省
         provinceList: area,
         province: "",
-        // 市
-        city: "",
         cityList: [],
         authFormValidate: {
           name: '',
@@ -822,8 +827,29 @@
           tel: '',
           postCode: '',
           district: '',
+          province: '',
+          city: '',
+          detailAddress: ''
         },
-        receiveGoodFormRuleValidate: {},
+        receiveGoodFormRuleValidate: {
+          name: [
+            {required: true, message: '请输入姓名'},
+            {validator: validaRegisteredName}
+          ],
+          province: [
+            {required: true, validator: validaDistrict}
+          ],
+          postCode: [
+            {required: true, message: '请输入邮编'}
+          ],
+          tel: [
+            {required: true, message: '请输入手机号码'},
+            {validator: validaRegisteredPhone}
+          ],
+          detailAddress: [
+            {required: true, message: '请输入详细收件地址'}
+          ]
+        },
         aa_scrollTop: 0,
         winningRecordShow: false,
         winningRecords: [],
@@ -834,7 +860,7 @@
           authGetPrizeModal: false,
           luckDrawRuleModal: false,
           discountRuleModal: false,
-          receiveGoodInfoModal: true,
+          receiveGoodInfoModal: false,
           rechargeHint: false,
           inConformityModal: false,
           getSuccessModal: false,
@@ -1404,8 +1430,9 @@
             giftUniqueIdentifier: this.award.code
           }
         }).then(res => {
-          if (res.status == 1 && res.data.status == 1) {
-            this.$Message.success(res.data.message)
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success('领取成功')
+            this.getPersonalWinningInfo()
           } else {
             this.$message.info({
               content: res.data.message
@@ -1414,7 +1441,7 @@
         })
       },
       authAndGetPrize() {
-        this.$refs.authFormValidate.validate((valid) => {
+        this.$refs.authForm.validate((valid) => {
           if (valid) {
             this.showModal.authGetPrizeModal = false
             axios.post('user/personalAttest.do', {
@@ -1432,8 +1459,9 @@
                     giftUniqueIdentifier: this.award.code
                   }
                 }).then(res => {
-                  if (res.status == 1 && res.data.status == 1) {
-                    this.$Message.success(res.data.message)
+                  if (res.status == 200 && res.data.status == 1) {
+                    this.$Message.success('领取成功')
+                    this.getPersonalWinningInfo()
                   } else {
                     this.$message.info({
                       content: res.data.message
@@ -1443,6 +1471,60 @@
               } else {
                 this.$message.info({
                   content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      fillInAddress(code) {
+        if (!this.authInfo) {
+          this.award.code = code
+          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.showModal.authGetPrizeModal = true
+        }
+        let url = 'activity/getUserAddress.do'
+        axios.get(url, {params: {}}).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.receiveGoodFormValidate.name = res.data.result.username ? res.data.result.username : ''
+            this.receiveGoodFormValidate.tel = res.data.result.phone ? res.data.result.phone : ''
+            this.receiveGoodFormValidate.postCode = res.data.result.zipcode ? res.data.result.zipcode : ''
+            this.receiveGoodFormValidate.detailAddress = res.data.result.detailedaddress ? res.data.result.detailedaddress : ''
+            this.receiveGoodFormValidate.province = res.data.result.province ? res.data.result.province : ''
+            area.forEach(item => {
+              if (item.name == this.receiveGoodFormValidate.province) {
+                this.cityList = item.city;
+              }
+            });
+            this.receiveGoodFormValidate.city = res.data.result.city ? res.data.result.city : ''
+            this.showModal.receiveGoodInfoModal = true
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      fillInAddress_ok() {
+        this.$refs.receiveGoodForm.validate((valid) => {
+          console.log(valid)
+          if (valid) {
+            let url = 'activity/addAddress.do'
+            let params = {
+              username: this.receiveGoodFormValidate.name,
+              phone: this.receiveGoodFormValidate.tel,
+              zipCode: this.receiveGoodFormValidate.postCode,
+              province: this.receiveGoodFormValidate.province,
+              city: this.receiveGoodFormValidate.city,
+              detailedAddress: this.receiveGoodFormValidate.detailAddress
+            }
+            axios.post(url, params).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+                this.$Message.success('收货地址填写成功')
+                this.showModal.receiveGoodInfoModal = false
+              } else {
+                this.$message.info({
+                  content: res.data.message
                 })
               }
             })
@@ -2291,7 +2373,7 @@
             activityNum: '32'
           }
         }).then(res => {
-          if (res.data.status == 1 && res.status == 1) {
+          if (res.data.status == 1 && res.status == 200) {
             this.spentCostNode = res.data.grade
           }
         })
@@ -3320,7 +3402,7 @@
     }
   }
 
-  .auth-form-validate,.receive-good-validate{
+  .auth-form-validate, .receive-good-validate {
     padding-top: 40px;
     margin: 0 auto;
     width: 400px;

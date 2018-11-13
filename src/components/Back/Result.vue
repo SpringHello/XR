@@ -268,6 +268,7 @@
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               sessionStorage.setItem('payResult', 'success')
+              sessionStorage.setItem('successMsg', response.data.message)
             } else {
               sessionStorage.setItem('payResult', 'fail')
               sessionStorage.setItem('errMsg', response.data.message)

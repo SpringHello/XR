@@ -25,10 +25,12 @@
             <!--<router-link :to="{ path: 'dynamic', query: { id: '14' }}">全民普惠，3折减单，最高减免7000元！</router-link>-->
             <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券</span>
           </div>
+          <p style="color: #2B99F2">消费满1117元、6117元、11117元、31117元分别送50元、350元、1000元、3100元苏宁卡/京东E卡！</p>
           <p style="text-align: right;font-size:14px;color:rgba(102,102,102,1);line-height:19px;margin-bottom: 20px;">
             原价：<span :class="{cross:couponInfo.originCost!=couponInfo.totalCost}">{{couponInfo.originCost}}元</span><span
             style="font-size:18px;color:rgba(0,0,0,0.65);margin-left: 20px;">总计支付：{{couponInfo.totalCost}}元</span>
           </p>
+          <p style="text-align: right;color: #F85E1D">当前已支付订单金额累计{{ spentCost }}元，再消费{{ otherSpentCost }}元可领取{{ spentCostNode }}元苏宁卡/京东E卡！</p>
           <div style="text-align: right;margin: 10px 0;">
             <ul>
               <li v-for="(item,index) in showFree"
@@ -71,8 +73,9 @@
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
   import store from '@/vuex'
-  export default{
-    data(){
+
+  export default {
+    data() {
       return {
         orderColumns: [
           {
@@ -142,7 +145,7 @@
           },
           {
             title: '原价',
-            render(h, obj){
+            render(h, obj) {
               if (obj.row.originalcost > obj.row.cost) {
                 return h('span', {
                   style: {
@@ -158,7 +161,7 @@
           },
           {
             title: '优惠价',
-            render(h, obj){
+            render(h, obj) {
               if (obj.row.originalcost > obj.row.cost) {
                 return h('span', {}, obj.row.cost)
               } else {
@@ -186,10 +189,12 @@
           exchangeCard: false
         },
         exchangeCardCode: '',
-        exchangeCardCodeError: false
+        exchangeCardCodeError: false,
+        spentCost: 0,
+        spentCostNode: 50
       }
     },
-    beforeRouteEnter(to, from, next){
+    beforeRouteEnter(to, from, next) {
       let params = {}
       if (to.query.countOrder) {
         params.countOrder = to.query.countOrder
@@ -202,11 +207,24 @@
         })
       })
     },
-    created(){
+    created() {
+      this.getSpentCost()
     },
     methods: {
+      getSpentCost() {
+        let url = 'activity/totalMoneyForActivityPeriod.do'
+        axios.get(url, {
+          params: {
+            activityNum: '32'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.spentCost = res.data.result
+          }
+        })
+      },
       // 设置order列表
-      setOrder(response){
+      setOrder(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.orderData = response.data.result.data.map(item => {
             var data = JSON.parse(item.display)
@@ -237,7 +255,7 @@
         })
       },
       // 选中项变化
-      onSelectionChange(selection){
+      onSelectionChange(selection) {
         this.canUseTicket = selection.every(item => {
           return item.discountedorders != 1
         })
@@ -276,19 +294,19 @@
         })
       },
       // 是否使用优惠券开关
-      changeCheckbox(bol){
+      changeCheckbox(bol) {
         if (!bol) {
           this.couponInfo.selectTicket = ''
         }
       },
-      radioChange(){
+      radioChange() {
         if (!this.canUseTicket) {
           this.couponInfo.selectTicket = ''
           this.$message.info('当前订单不可使用优惠券！')
         }
       },
       // 页面支付方法
-      pay(){
+      pay() {
         let order = ''
         this.orderData.forEach(item => {
           if (item._checked) {
@@ -321,7 +339,7 @@
         })
       },
       // 兑换优惠券
-      exchange(){
+      exchange() {
         this.$http.get('user/receiveTicketForUser.do', {
           params: {
             ticketNumber: this.exchangeCardCode
@@ -339,7 +357,23 @@
         })
       }
     },
-    computed: {},
+    computed: {
+      otherSpentCost() {
+        if (this.spentCost < 1117) {
+          this.spentCostNode = 50
+          return 1117 - this.spentCost
+        } else if (1117<this.spentCost < 6117) {
+          this.spentCostNode = 350
+          return 6117 - this.spentCost
+        }else if (6117<this.spentCost < 11117) {
+          this.spentCostNode = 1000
+          return 11117 - this.spentCost
+        }else if (11117<this.spentCost < 31117) {
+          this.spentCostNode = 3100
+          return 31117 - this.spentCost
+        }
+      },
+    },
     watch: {
       'couponInfo.selectTicket': {
         handler: function () {

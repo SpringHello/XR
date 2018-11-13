@@ -75,7 +75,7 @@
                 title="您确认重启主机吗？"
                 @on-ok="reboot"
                 @on-cancel="cancel">
-                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>重启主机</li>
+                <li class="del" v-if="status!='欠费'&&status!='异常'&&status!='关机'" :disabled=true>重启主机</li>
               </Poptip>
 
               <!-- 删除主机 -->
