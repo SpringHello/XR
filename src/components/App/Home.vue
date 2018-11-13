@@ -3,10 +3,11 @@
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
-
         <my-carousel-item class="carousel-item">
-          <div class="anniversary-active" @click="push('/ruicloud/anniversaryActive')">
-
+          <div @click="push('/ruicloud/anniversaryActive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="anniversary-active">
+            </div>
           </div>
         </my-carousel-item>
 
@@ -3942,6 +3943,11 @@
           }
         }
       }
+      .anniversary-active {
+        height: 400px;
+        cursor: pointer;
+        background: #FEEDE0 url("../../assets/img/active/anniversary/aa-banner22.png") center no-repeat;
+      }
       .db-active {
         height: 400px;
         background: url("../../assets/img/active/dbActive/dba-banner7.png") center no-repeat, linear-gradient(90deg, #FFF, #AFCAFF);
@@ -4898,12 +4904,6 @@
         }
       }
     }
-  }
-
-  .anniversary-active {
-    height: 400px;
-    cursor: pointer;
-    background: url("../../assets/img/active/anniversary/aa-banner22.png") center no-repeat;
   }
 
   .eightscene {

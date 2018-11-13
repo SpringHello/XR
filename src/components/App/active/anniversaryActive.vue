@@ -52,7 +52,7 @@
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon3.png"/>
               <span>云服务器限时抢购中</span>
-              <div style="margin-top: 8px">
+              <div style="margin-top: 8px" v-if="countDownShow == 'host'">
                 <span>本场结束倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
@@ -86,7 +86,7 @@
                     <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                   </Select>
                 </div>
-                <div class="item-price">
+                <div class="item-price" style="padding: 15px">
                   <p>¥{{ item.currentPrice}} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
@@ -95,21 +95,22 @@
               </div>
             </div>
             <div class="products-footer">
-              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：对象存储（10:30开始）、云数据库（16:30开始）</span></p>
+              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'objStorage'">对象存储</span>（10:30开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
             </div>
           </div>
           <div class="products" v-if="productNode == 'objStorage'">
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon5.png"/>
               <span style="position: relative;bottom: 20px;">对象存储限时抢购中</span>
-              <div style="margin-top: 8px">
+              <div style="margin-top: 8px" v-if="countDownShow == 'obj'">
                 <span>本场结束倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
             <div style="height:4px;background:rgba(255,108,62,1);margin-top: 10px"></div>
             <div class="product-item">
-              <div v-for="(item,index) in objStorageList" class="item">
+              <div v-for="(item,index) in objStorageList" class="item" style="height: 522px">
                 <div class="item-title">
                   <p>对象存储</p>
                   <ul>
@@ -117,7 +118,7 @@
                     <li style="border: none">{{item.flow }}G<span>外网下载流量</span></li>
                   </ul>
                 </div>
-                <div class="item-select">
+                <div class="item-select" style="padding: 54px 15px">
                   <span>请选择区域</span>
                   <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px">
                     <Option v-for="item in objStorageZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
@@ -136,30 +137,32 @@
               </div>
             </div>
             <div class="products-footer">
-              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：云主机（10:30开始）、云数据库（16:30开始）</span></p>
+              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（10:30开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
             </div>
           </div>
           <div class="products" v-if="productNode == 'database'">
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon6.png"/>
               <span>云数据库限时抢购中</span>
-              <div style="margin-top: 8px">
+              <div style="margin-top: 8px" v-if="countDownShow == 'database'">
                 <span>本场结束倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
-            <div style="height:4px;background:rgba(255,108,62,1);margin-top: 10px"></div>
+            <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
             <div class="product-item" style="justify-content: center">
-              <div v-for="(item,index) in databaseList" class="item">
-                <div class="item-title">
+              <div v-for="(item,index) in databaseList" class="item" style="height: 522px;width: 530px">
+                <div class="item-title database">
                   <p>云数据库</p>
                   <ul>
                     <li>{{ item.cpu}}核<span>CPU</span></li>
                     <li>{{ item.memory}}G<span>内存</span></li>
-                    <li>{{ item.rootDisk}}G<span>系统盘</span></li>
+                    <li style="border-right: 1px solid #FFF;padding-right: 12px">{{ item.rootDisk}}G<span>系统盘</span></li>
+                    <li>{{ item.disk}}G<span>数据盘</span></li>
                   </ul>
                 </div>
-                <div class="item-select">
+                <div class="item-select" style="padding: 20px 90px">
                   <span>请选择类型</span>
                   <Select v-model="item.databaseType" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseTypeChange(index)">
                     <Option v-for="item in databaseTypeList" :value="item.value" :key="item.value">{{ item.name }}</Option>
@@ -173,7 +176,7 @@
                     <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                   </Select>
                 </div>
-                <div class="item-price">
+                <div class="item-price" style="padding: 27px 85px">
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
@@ -182,7 +185,7 @@
               </div>
             </div>
             <div class="products-footer">
-              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：今日最后场次 云主机（20:00开始）</span></p>
+              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：今日最后场次 <span @click="productNode = 'host'">云主机</span>（20:00开始）</span></p>
             </div>
           </div>
         </div>
@@ -539,10 +542,9 @@
             <h3>（3）用户在此活动页面中进行购买产品，购买价格直接为折扣价格，无需领取任何优惠券或折扣
               券，若在正常购买页面购买则为原价购买。</h3>
             <h3>（4）参与此活动的用户在购买产品时不能使用以任何形式获得的优惠券或折扣券。</h3>
-            <h3>（5）本次活动购买的产品可申请7天无理由退款，若您中奖之后仍申请退款，我们将默认您放弃与退款订单相关的中奖奖品。</h3>
-            <h3>（6）若用户已领取奖品但在两次发放奖品日都未填写收货信息，新睿云默认为用户放弃中奖奖品。</h3>
-            <h3>（7）奖品发出后新睿云会将奖品物流订单号码通过短信形式发送给客户，客户可通过物流订单号</h3>
-            <h3>（8）此活动最终解释权为新睿云所有。</h3>
+            <h3>（5）若用户已领取奖品但在两次发放奖品日都未填写收货信息，新睿云默认为用户放弃中奖奖品。</h3>
+            <h3>（6）奖品发出后新睿云会将奖品物流订单号码通过短信形式发送给客户，客户可通过物流订单号查询物流</h3>
+            <h3>（7）此活动最终解释权为新睿云所有。</h3>
           </div>
           <button @click.stop="showModal.discountRuleModal=false" class="button-primary">我知道了</button>
         </div>
@@ -922,7 +924,8 @@
         gpuHour: '--',
         gpuMinute: '--',
         gpuSecond: '--',
-        productNode: 'objStorage', // 产品节点
+        productNode: 'host', // 产品节点
+        countDownShow: 'host',
         hostList: [
           {
             cpu: '4',
@@ -1041,6 +1044,7 @@
           cpu: '4',
           memory: '8',
           rootDisk: '40',
+          disk: '100',
           zoneId: '',
           databaseType: 'mysql',
           duration: '3',
@@ -1327,6 +1331,7 @@
           this.serverTimeMinute = new Date(this.serverTime).getMinutes()
           if ((this.serverTimeHour == 8 && this.serverTimeMinute >= 30) || this.serverTimeHour == 9 || (this.serverTimeHour == 10 && this.serverTimeMinute < 30)) {
             this.productNode = 'host'
+            this.countDownShow = 'host'
             this.getTimeNodes('10:30')
             this.hostDisabled = false
             this.objStorageDisabled = true
@@ -1334,6 +1339,7 @@
             this.gpuDisabled = true
           } else if ((this.serverTimeHour == 10 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 11 && this.serverTimeMinute < 30)) {
             this.productNode = 'objStorage'
+            this.countDownShow = 'obj'
             this.getTimeNodes('11:30')
             this.hostDisabled = true
             this.objStorageDisabled = false
@@ -1341,6 +1347,7 @@
             this.gpuDisabled = true
           } else if (this.serverTimeHour == 13 || this.serverTimeHour == 14) {
             this.productNode = 'host'
+            this.countDownShow = 'host'
             this.getTimeNodes('15:00')
             this.hostDisabled = false
             this.objStorageDisabled = true
@@ -1348,6 +1355,7 @@
             this.gpuDisabled = true
           } else if (this.serverTimeHour == 15) {
             this.productNode = 'objStorage'
+            this.countDownShow = 'obj'
             this.getTimeNodes('16:00')
             this.hostDisabled = true
             this.objStorageDisabled = false
@@ -1355,6 +1363,7 @@
             this.gpuDisabled = true
           } else if ((this.serverTimeHour == 16 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 17 && this.serverTimeMinute < 30)) {
             this.productNode = 'database'
+            this.countDownShow = 'database'
             this.getTimeNodes('17:30')
             this.hostDisabled = true
             this.objStorageDisabled = true
@@ -1368,6 +1377,7 @@
             this.gpuDisabled = false
           } else if (this.serverTimeHour == 20 || this.serverTimeHour == 21) {
             this.productNode = 'host'
+            this.countDownShow = 'host'
             this.getTimeNodes('22:00')
             this.hostDisabled = false
             this.objStorageDisabled = true
@@ -1440,23 +1450,25 @@
         if (!this.authInfo) {
           this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authGetPrizeModal = true
+          return
         }
-        let url = 'activity/giveForAccount.do'
-        axios.get(url, {
-          params: {
-            activityNum: '31',
-            giftUniqueIdentifier: this.award.code
-          }
-        }).then(res => {
-          if (res.status == 200 && res.data.status == 1) {
-            this.$Message.success('领取成功')
-            this.getPersonalWinningInfo()
-          } else {
-            this.$message.info({
-              content: res.data.message
-            })
-          }
-        })
+        /*       let url = 'activity/giveForAccount.do'
+               axios.get(url, {
+                 params: {
+                   activityNum: '31',
+                   giftUniqueIdentifier: this.award.code
+                 }
+               }).then(res => {
+                 if (res.status == 200 && res.data.status == 1) {
+
+                 } else {
+                   this.$message.info({
+                     content: res.data.message
+                   })
+                 }
+               })*/
+        this.$Message.success('领取成功')
+        this.getPersonalWinningInfo()
       },
       authAndGetPrize() {
         this.$refs.authForm.validate((valid) => {
@@ -1470,22 +1482,24 @@
               type: '0'
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                let url = 'activity/giveForAccount.do'
-                axios.get(url, {
-                  params: {
-                    activityNum: '31',
-                    giftUniqueIdentifier: this.award.code
-                  }
-                }).then(res => {
-                  if (res.status == 200 && res.data.status == 1) {
-                    this.$Message.success('领取成功')
-                    this.getPersonalWinningInfo()
-                  } else {
-                    this.$message.info({
-                      content: res.data.message
-                    })
-                  }
-                })
+                /*        let url = 'activity/giveForAccount.do'
+                        axios.get(url, {
+                          params: {
+                            activityNum: '31',
+                            giftUniqueIdentifier: this.award.code
+                          }
+                        }).then(res => {
+                          if (res.status == 200 && res.data.status == 1) {
+                            this.$Message.success('领取成功')
+                            this.getPersonalWinningInfo()
+                          } else {
+                            this.$message.info({
+                              content: res.data.message
+                            })
+                          }
+                        })*/
+                this.$Message.success('领取成功')
+                this.getPersonalWinningInfo()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -1628,10 +1642,6 @@
         }
         // 开始抽奖
         this.drawAward();
-
-        this.time = Date.now();
-        this.speed = 200;
-        this.diff = 15;
       },
       drawAward() {
         let url = 'activity/luckDraw.do'
@@ -1645,11 +1655,13 @@
             this.award.name = res.data.result
             this.award.imgUrl = res.data.gift_url
             this.award.code = res.data.code
+            this.time = Date.now();
+            this.speed = 200;
+            this.diff = 15;
             this.move();
             this.getLotteryNumber()
             this.getPersonalWinningInfo()
           } else {
-            this.move();
             this.$message.info({
               content: res.data.message
             })
@@ -1701,6 +1713,7 @@
             limitTime -= 1000
             if (limitTime <= 0) {
               window.clearInterval(this.countDownTimer)
+              this.$router.go(0)
             }
           }, 1000);
         } else {
@@ -1727,6 +1740,7 @@
             limitTime -= 1000
             if (limitTime <= 0) {
               window.clearInterval(this.countDownTimer)
+              this.$router.go(0)
             }
           }, 1000);
         } else {
@@ -2610,6 +2624,9 @@
               background: #FFF url("../../../assets/img/active/anniversary/aa-banner5.png") center no-repeat;
               height: 163px;
               padding: 40px 20px;
+              &.database {
+                background: #FE7F45 url("../../../assets/img/active/anniversary/aa-banner23.png") center no-repeat;
+              }
               > p {
                 font-size: 36px;
                 font-family: MicrosoftYaHei;
@@ -2637,6 +2654,10 @@
                   padding-left: 0;
                 }
                 li:nth-child(3) {
+                  padding-right: 0;
+                  border: none;
+                }
+                li:nth-child(4) {
                   padding-right: 0;
                   border: none;
                 }
@@ -2707,6 +2728,10 @@
               color: #FF4217;
               position: relative;
               bottom: 8px;
+              span {
+                cursor: pointer;
+                text-decoration: underline;
+              }
             }
           }
         }
@@ -3126,6 +3151,12 @@
     }
   }
 
+  @media screen and (max-width: 1400px) {
+    .page-pilot {
+      display: none;
+    }
+  }
+
   .page-pilot {
     position: fixed;
     height: 401px;
@@ -3204,6 +3235,7 @@
         position: absolute;
         height: 92px;
         width: 170px;
+        border-radius: 12px;
         background: rgba(0, 0, 0, 1);
         opacity: 0.2;
       }
