@@ -441,6 +441,42 @@
         </div>
       </div>
     </transition>
+
+    <!-- 收货信息弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.receiveGoodInfoModal=false" v-if="showModal.receiveGoodInfoModal">
+        <div class="all-modal modal1" @click.stop="showModal.receiveGoodInfoModal=true" style="height:530px;">
+          <div class="header" style="padding-left: 50px;">请填写认证信息完成领取</div>
+          <div class="body auth-form-validate1">
+            <Form ref="receiveGoodFormValidate" :model="receiveGoodFormValidate" :rules="receiveGoodFormRuleValidate" :label-width="90" class="receive-good-validate">
+              <FormItem label=" 收件人姓名" prop="name">
+                <Input v-model="receiveGoodFormValidate.name" placeholder=" 请输入您的真实姓名"></Input>
+              </FormItem>
+              <FormItem label=" 联系电话" prop="tel">
+                <Input v-model="receiveGoodFormValidate.tel" placeholder=" 请输入您的联系电话"></Input>
+              </FormItem>
+              <FormItem label=" 邮政编码" prop="postCode">
+                <Input v-model="receiveGoodFormValidate.postCode" placeholder=" 请输入您的邮政编码"></Input>
+              </FormItem>
+              <FormItem prop="district" label-width="0">
+                <span style="margin:10px">收件地址</span>
+                <Select v-model="province" style="width:140px" @on-change="changeProvince">
+                  <Option v-for="item in provinceList" :value="item.name" :key="item.name">{{ item.name }}</Option>
+                </Select>
+                <Select v-model="city" style="width:140px;margin-left:10px;">
+                  <Option v-for="item in cityList" :value="item.name" :key="item.name">{{ item.name }}</Option>
+                </Select>
+              </FormItem>
+              <FormItem label="详细地址" prop="detailAddress">
+                  <Input v-model="receiveGoodFormValidate.detailAddress" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="请输入您的详细地址"></Input>
+              </FormItem>
+            </Form>
+            <button @click.stop="" style="margin-top:40px;margin-bottom:20px;width:305px" class="button-primary">确认信息并提交</button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
     <!-- 幸运抽奖活动规则弹窗 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal">
@@ -704,6 +740,7 @@
   import $ from 'jquery'
   import reg from '../../../util/regExp'
   import VueQArt from 'vue-qart'
+  import area from "../../../options/area.json";
 
   export default {
     components: {
@@ -746,6 +783,13 @@
         }
       }
       return {
+        area: "",
+        // 省
+        provinceList: area,
+        province: "",
+        // 市
+        city: "",
+        cityList: [],
         authFormValidate: {
           name: '',
           id: '',
@@ -773,6 +817,13 @@
             {required: true, message: '请输入验证码'}
           ]
         },
+        receiveGoodFormValidate: {
+          name: '',
+          tel: '',
+          postCode: '',
+          district: '',
+        },
+        receiveGoodFormRuleValidate: {},
         aa_scrollTop: 0,
         winningRecordShow: false,
         winningRecords: [],
@@ -780,10 +831,10 @@
           notLoginModal: false,
           notPrizeChanceModal: false,
           winPrizeModal: false,
-          authGetPrizeModal: true,
+          authGetPrizeModal: false,
           luckDrawRuleModal: false,
           discountRuleModal: false,
-
+          receiveGoodInfoModal: true,
           rechargeHint: false,
           inConformityModal: false,
           getSuccessModal: false,
@@ -1210,6 +1261,14 @@
             this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
           }
         })
+      },
+      // 重新选择省份
+      changeProvince(val) {
+        area.forEach(item => {
+          if (item.name == val) {
+            this.cityList = item.city;
+          }
+        });
       },
       getScrollTop() {
         this.aa_scrollTop = document.documentElement.scrollTop || document.body.scrollTop
@@ -3261,7 +3320,7 @@
     }
   }
 
-  .auth-form-validate {
+  .auth-form-validate,.receive-good-validate{
     padding-top: 40px;
     margin: 0 auto;
     width: 400px;
