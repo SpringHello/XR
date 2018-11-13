@@ -3,7 +3,7 @@
     <div class="banner center">
       <div class="content">
         <div class="hint-wrap">
-          <p>登录即可参与抽奖(100%中奖)，戴森(Dyson)，黑莓等你来拿！</p>
+          <p>登录即可参与抽奖（100%中奖），认证后有机会领取戴森（Dyson），科沃斯等奖品</p>
         </div>
         <div class="timer">
           <h3>距离活动开启还剩</h3>
@@ -47,7 +47,7 @@
       <div class="content center">
         <div class="products-title tl" style="margin:0 24px;">
           <img src="../../../assets/img/active/anniversary/aa-icon6.png"/>
-          <span>云主机限时抢购中</span>
+          <span>云服务器限时抢购中</span>
           <!-- <div style="margin-top: 8px">
             <span>本场结束倒计时:</span>
             <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
@@ -653,7 +653,7 @@
             font-family: MicrosoftYaHei;
             font-weight: 400;
             color: rgba(253, 253, 253, 1);
-            width: 629px;
+            width: 820px;
             margin: 0 auto;
           }
         }
