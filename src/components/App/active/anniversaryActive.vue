@@ -201,7 +201,7 @@
           <div class="gpu-title">
             <img src="../../../assets/img/active/anniversary/aa-icon8.png"/>
             <span>GPU云服务器 每日19:00开启抢购</span>
-            <div style="margin-top: 8px">
+            <div style="margin-top: 8px" v-if="gpuCountDownShow">
               <span>本场结束倒计时:</span>
               <p><span>{{ gpuHour}} : {{ gpuMinute}} : {{gpuSecond}}</span></p>
             </div>
@@ -302,17 +302,16 @@
         <div class="active-5-title">
           <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
           <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner21.png"/>
-          <p><span>购买云产品获赠好礼，最高额消费可领全部礼品</span></p>
+          <p><span>购买云产品获赠好礼，最高额消费可领全部礼品（礼品卡为苏宁卡/京东E卡）<span style="cursor: pointer;text-decoration: underline">活动规则</span> </span></p>
         </div>
         <div class="send-full">
           <ul v-for="(item,index) in sendFullList">
             <li><p :class="{'onStep': index < spentCostNode}">消费满<span> {{ item.text_1}} </span>可领</p></li>
-            <li><i :class="{'onStep': index < spentCostNode}"></i></li>
-            <li><i :class="{'onStep': index < spentCostNode}"></i></li>
+            <li><span :class="{'onStep': index < spentCostNode}">{{ item.text_2 }}</span></li>
+            <li style="margin-top: 30px"><p style="position: relative;right: 18px" v-if="index < spentCostNode"><img src="../../../assets/img/active/anniversary/aa-icon17.png"/> <img src="../../../assets/img/active/anniversary/aa-icon18.png"/></p>
+              <p style="position: relative;right: 18px" v-else><img src="../../../assets/img/active/anniversary/aa-icon19.png"/> <img src="../../../assets/img/active/anniversary/aa-icon20.png"/></p></li>
             <li><img v-if="index < spentCostNode" :src="item.src_2"/><img v-else :src="item.src_1"/></li>
-            <li :class="{'onStep': index < spentCostNode}">{{ item.text_2}}</li>
-            <!--   <button @click="getSendFull(index)" :class="{'disabled': true}" :disabled="true">立即领取</button>-->
-            <div v-if="index !=3" class="send-full-dashed" :class="{'onStep': index < spentCostNode}"></div>
+            <div v-if="index !=3" class="send-full-dashed" :class="{'onStep': false}"></div>
           </ul>
         </div>
       </div>
@@ -908,6 +907,7 @@
         gpuSecond: '--',
         productNode: 'host', // 产品节点
         countDownShow: 'host',
+        gpuCountDownShow: false,
         hostList: [
           {
             cpu: '4',
@@ -1124,25 +1124,25 @@
         sendFullList: [
           {
             text_1: '¥1117',
-            text_2: '50元苏宁卡／京东E卡',
+            text_2: '好礼一',
             src_1: require('../../../assets/img/active/anniversary/aa-icon9.png'),
-            src_2: require('../../../assets/img/active/anniversary/aa-icon10.png')
+            src_2: require('../../../assets/img/active/anniversary/aa-icon10.png'),
           },
           {
             text_1: '¥6117',
-            text_2: '350元苏宁卡／京东E卡',
+            text_2: '好礼一 + 好礼二',
             src_1: require('../../../assets/img/active/anniversary/aa-icon11.png'),
             src_2: require('../../../assets/img/active/anniversary/aa-icon12.png')
           },
           {
             text_1: '¥11117',
-            text_2: '1000元苏宁卡／京东E卡',
+            text_2: '好礼一 + 好礼二 + 好礼三',
             src_1: require('../../../assets/img/active/anniversary/aa-icon13.png'),
             src_2: require('../../../assets/img/active/anniversary/aa-icon14.png')
           },
           {
             text_1: '¥31117',
-            text_2: '3100元苏宁卡／京东E卡',
+            text_2: '全部礼品',
             src_1: require('../../../assets/img/active/anniversary/aa-icon15.png'),
             src_2: require('../../../assets/img/active/anniversary/aa-icon16.png')
           }
@@ -1353,6 +1353,7 @@
             this.gpuDisabled = true
           } else if (this.serverTimeHour == 19) {
             this.getTimeNodes('20:00')
+            this.gpuCountDownShow = true
             this.hostDisabled = true
             this.objStorageDisabled = true
             this.databaseDisabled = true
@@ -1366,6 +1367,7 @@
             this.databaseDisabled = true
             this.gpuDisabled = true
           } else {
+            this.countDownShow = ''
             this.hostDisabled = true
             this.objStorageDisabled = true
             this.databaseDisabled = true
@@ -3040,6 +3042,12 @@
             font-family: MicrosoftYaHei;
             font-weight: 600;
             color: #666666;
+            >img{
+              vertical-align: middle;
+            }
+            img:nth-child(1){
+              margin-right: 14px;
+            }
             > span {
               font-size: 32px;
             }
@@ -3047,21 +3055,13 @@
               color: #FF3000;
             }
           }
-          > i {
-            &:before {
-              content: '';
-              display: inline-block;
-              height: 15px;
-              width: 15px;
-              transform: rotate(-45deg);
-              border-right: 1px solid #666;
-              border-top: 1px solid #666;
-            }
+          > span {
+            font-size: 20px;
+            font-family: MicrosoftYaHei;
+            font-weight: 600;
+            color: #666666;
             &.onStep {
-              &:before {
-                border-right: 1px solid #FF3000;
-                border-top: 1px solid #FF3000;
-              }
+              color: #FF3000;
             }
           }
         }
@@ -3070,7 +3070,6 @@
         }
         li:nth-child(4) {
           position: relative;
-          bottom: 35px;
         }
         li:nth-child(5) {
           font-size: 18px;
@@ -3104,12 +3103,26 @@
       }
       .send-full-dashed {
         position: absolute;
-        width: 170px;
-        border: 1px dashed #C0C0C0;
-        top: 148px;
-        left: 220px;
+        width: 15px;
+        height: 15px;
+        border-right: 1px solid #C0C0C0;
+        top: 212px;
+        left: 285px;
+        &:before {
+          display: inline-block;
+          content: '';
+          height: 15px;
+          width: 15px;
+          border-top: 1px solid #C0C0C0;
+          position: relative;
+          left: 7px;
+          top: 7px;
+        }
         &.onStep {
-          border: 1px dashed #FF3000;
+          border-right: 1px solid #FF3000;
+          &:before {
+            border-top: 1px solid #FF3000;
+          }
         }
       }
     }

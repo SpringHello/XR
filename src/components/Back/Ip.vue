@@ -1538,7 +1538,7 @@
         }).then(response => {
           this.setData(response)
         })
-      }
+      },
     },
     watch: {
       // 监听计费模式变化
