@@ -302,14 +302,16 @@
         <div class="active-5-title">
           <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
           <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner21.png"/>
-          <p><span>购买云产品获赠好礼，最高额消费可领全部礼品（礼品卡为苏宁卡/京东E卡）<span style="cursor: pointer;text-decoration: underline">活动规则</span> </span></p>
+          <p><span>购买云产品获赠好礼，最高额消费可领全部礼品（礼品卡为苏宁卡/京东E卡）<span style="cursor: pointer;text-decoration: underline" @click="showModal.discountRuleModal=true">活动规则</span> </span></p>
         </div>
         <div class="send-full">
           <ul v-for="(item,index) in sendFullList">
             <li><p :class="{'onStep': index < spentCostNode}">消费满<span> {{ item.text_1}} </span>可领</p></li>
             <li><span :class="{'onStep': index < spentCostNode}">{{ item.text_2 }}</span></li>
-            <li style="margin-top: 30px"><p style="position: relative;right: 18px" v-if="index < spentCostNode"><img src="../../../assets/img/active/anniversary/aa-icon17.png"/> <img src="../../../assets/img/active/anniversary/aa-icon18.png"/></p>
-              <p style="position: relative;right: 18px" v-else><img src="../../../assets/img/active/anniversary/aa-icon19.png"/> <img src="../../../assets/img/active/anniversary/aa-icon20.png"/></p></li>
+            <li style="margin-top: 30px"><p style="position: relative;right: 18px" v-if="index < spentCostNode"><img src="../../../assets/img/active/anniversary/aa-icon17.png"/>
+              <img src="../../../assets/img/active/anniversary/aa-icon18.png"/></p>
+              <p style="position: relative;right: 18px" v-else><img src="../../../assets/img/active/anniversary/aa-icon19.png"/> <img
+                src="../../../assets/img/active/anniversary/aa-icon20.png"/></p></li>
             <li><img v-if="index < spentCostNode" :src="item.src_2"/><img v-else :src="item.src_1"/></li>
             <div v-if="index !=3" class="send-full-dashed" :class="{'onStep': false}"></div>
           </ul>
@@ -553,7 +555,7 @@
         </div>
       </div>
     </transition>
-    
+
     <!-- 领取提示 -->
     <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s" style="padding: 30px 30px 0 50px">
@@ -882,7 +884,7 @@
           authGetPrizeModal: false,
           luckDrawRuleModal: false,
           discountRuleModal: false,
-          bigFullDeliveryModal: true,
+          bigFullDeliveryModal: false,
           receiveGoodInfoModal: false,
           rechargeHint: false,
           inConformityModal: false,
@@ -3064,10 +3066,10 @@
             font-family: MicrosoftYaHei;
             font-weight: 600;
             color: #666666;
-            >img{
+            > img {
               vertical-align: middle;
             }
-            img:nth-child(1){
+            img:nth-child(1) {
               margin-right: 14px;
             }
             > span {
