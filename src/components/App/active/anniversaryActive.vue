@@ -52,7 +52,7 @@
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon3.png"/>
               <span>云服务器限时抢购中</span>
-              <div style="margin-top: 8px">
+              <div style="margin-top: 8px" v-if="countDownShow == 'host'">
                 <span>本场结束倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
@@ -103,7 +103,7 @@
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon5.png"/>
               <span style="position: relative;bottom: 20px;">对象存储限时抢购中</span>
-              <div style="margin-top: 8px">
+              <div style="margin-top: 8px" v-if="countDownShow == 'obj'">
                 <span>本场结束倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
@@ -145,23 +145,24 @@
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon6.png"/>
               <span>云数据库限时抢购中</span>
-              <div style="margin-top: 8px">
+              <div style="margin-top: 8px" v-if="countDownShow == 'database'">
                 <span>本场结束倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
-            <div style="height:4px;background:rgba(255,108,62,1);margin-top: 10px"></div>
+            <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
             <div class="product-item" style="justify-content: center">
-              <div v-for="(item,index) in databaseList" class="item" style="height: 522px">
-                <div class="item-title">
+              <div v-for="(item,index) in databaseList" class="item" style="height: 522px;width: 530px">
+                <div class="item-title database">
                   <p>云数据库</p>
                   <ul>
                     <li>{{ item.cpu}}核<span>CPU</span></li>
                     <li>{{ item.memory}}G<span>内存</span></li>
-                    <li>{{ item.rootDisk}}G<span>系统盘</span></li>
+                    <li style="border-right: 1px solid #FFF;padding-right: 12px">{{ item.rootDisk}}G<span>系统盘</span></li>
+                    <li>{{ item.disk}}G<span>数据盘</span></li>
                   </ul>
                 </div>
-                <div class="item-select" style="padding: 20px 15px">
+                <div class="item-select" style="padding: 20px 90px">
                   <span>请选择类型</span>
                   <Select v-model="item.databaseType" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseTypeChange(index)">
                     <Option v-for="item in databaseTypeList" :value="item.value" :key="item.value">{{ item.name }}</Option>
@@ -175,7 +176,7 @@
                     <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                   </Select>
                 </div>
-                <div class="item-price">
+                <div class="item-price" style="padding: 27px 85px">
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
@@ -905,7 +906,8 @@
         gpuHour: '--',
         gpuMinute: '--',
         gpuSecond: '--',
-        productNode: 'objStorage', // 产品节点
+        productNode: 'host', // 产品节点
+        countDownShow: 'host',
         hostList: [
           {
             cpu: '4',
@@ -1024,6 +1026,7 @@
           cpu: '4',
           memory: '8',
           rootDisk: '40',
+          disk: '100',
           zoneId: '',
           databaseType: 'mysql',
           duration: '3',
@@ -1310,6 +1313,7 @@
           this.serverTimeMinute = new Date(this.serverTime).getMinutes()
           if ((this.serverTimeHour == 8 && this.serverTimeMinute >= 30) || this.serverTimeHour == 9 || (this.serverTimeHour == 10 && this.serverTimeMinute < 30)) {
             this.productNode = 'host'
+            this.countDownShow = 'host'
             this.getTimeNodes('10:30')
             this.hostDisabled = false
             this.objStorageDisabled = true
@@ -1317,6 +1321,7 @@
             this.gpuDisabled = true
           } else if ((this.serverTimeHour == 10 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 11 && this.serverTimeMinute < 30)) {
             this.productNode = 'objStorage'
+            this.countDownShow = 'obj'
             this.getTimeNodes('11:30')
             this.hostDisabled = true
             this.objStorageDisabled = false
@@ -1324,6 +1329,7 @@
             this.gpuDisabled = true
           } else if (this.serverTimeHour == 13 || this.serverTimeHour == 14) {
             this.productNode = 'host'
+            this.countDownShow = 'host'
             this.getTimeNodes('15:00')
             this.hostDisabled = false
             this.objStorageDisabled = true
@@ -1331,6 +1337,7 @@
             this.gpuDisabled = true
           } else if (this.serverTimeHour == 15) {
             this.productNode = 'objStorage'
+            this.countDownShow = 'obj'
             this.getTimeNodes('16:00')
             this.hostDisabled = true
             this.objStorageDisabled = false
@@ -1338,6 +1345,7 @@
             this.gpuDisabled = true
           } else if ((this.serverTimeHour == 16 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 17 && this.serverTimeMinute < 30)) {
             this.productNode = 'database'
+            this.countDownShow = 'database'
             this.getTimeNodes('17:30')
             this.hostDisabled = true
             this.objStorageDisabled = true
@@ -1351,6 +1359,7 @@
             this.gpuDisabled = false
           } else if (this.serverTimeHour == 20 || this.serverTimeHour == 21) {
             this.productNode = 'host'
+            this.countDownShow = 'host'
             this.getTimeNodes('22:00')
             this.hostDisabled = false
             this.objStorageDisabled = true
@@ -2597,6 +2606,9 @@
               background: #FFF url("../../../assets/img/active/anniversary/aa-banner5.png") center no-repeat;
               height: 163px;
               padding: 40px 20px;
+              &.database {
+                background: #FE7F45 url("../../../assets/img/active/anniversary/aa-banner23.png") center no-repeat;
+              }
               > p {
                 font-size: 36px;
                 font-family: MicrosoftYaHei;
@@ -2624,6 +2636,10 @@
                   padding-left: 0;
                 }
                 li:nth-child(3) {
+                  padding-right: 0;
+                  border: none;
+                }
+                li:nth-child(4) {
                   padding-right: 0;
                   border: none;
                 }
