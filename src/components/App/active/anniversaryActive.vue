@@ -86,7 +86,7 @@
                     <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                   </Select>
                 </div>
-                <div class="item-price">
+                <div class="item-price" style="padding: 15px">
                   <p>¥{{ item.currentPrice}} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
@@ -95,7 +95,8 @@
               </div>
             </div>
             <div class="products-footer">
-              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：对象存储（10:30开始）、云数据库（16:30开始）</span></p>
+              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'objStorage'">对象存储</span>（10:30开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
             </div>
           </div>
           <div class="products" v-if="productNode == 'objStorage'">
@@ -109,7 +110,7 @@
             </div>
             <div style="height:4px;background:rgba(255,108,62,1);margin-top: 10px"></div>
             <div class="product-item">
-              <div v-for="(item,index) in objStorageList" class="item">
+              <div v-for="(item,index) in objStorageList" class="item" style="height: 522px">
                 <div class="item-title">
                   <p>对象存储</p>
                   <ul>
@@ -117,7 +118,7 @@
                     <li style="border: none">{{item.flow }}G<span>外网下载流量</span></li>
                   </ul>
                 </div>
-                <div class="item-select">
+                <div class="item-select" style="padding: 54px 15px">
                   <span>请选择区域</span>
                   <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px">
                     <Option v-for="item in objStorageZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
@@ -136,7 +137,8 @@
               </div>
             </div>
             <div class="products-footer">
-              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：云主机（10:30开始）、云数据库（16:30开始）</span></p>
+              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（10:30开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
             </div>
           </div>
           <div class="products" v-if="productNode == 'database'">
@@ -150,7 +152,7 @@
             </div>
             <div style="height:4px;background:rgba(255,108,62,1);margin-top: 10px"></div>
             <div class="product-item" style="justify-content: center">
-              <div v-for="(item,index) in databaseList" class="item">
+              <div v-for="(item,index) in databaseList" class="item" style="height: 522px">
                 <div class="item-title">
                   <p>云数据库</p>
                   <ul>
@@ -159,7 +161,7 @@
                     <li>{{ item.rootDisk}}G<span>系统盘</span></li>
                   </ul>
                 </div>
-                <div class="item-select">
+                <div class="item-select" style="padding: 20px 15px">
                   <span>请选择类型</span>
                   <Select v-model="item.databaseType" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseTypeChange(index)">
                     <Option v-for="item in databaseTypeList" :value="item.value" :key="item.value">{{ item.name }}</Option>
@@ -182,7 +184,7 @@
               </div>
             </div>
             <div class="products-footer">
-              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：今日最后场次 云主机（20:00开始）</span></p>
+              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：今日最后场次 <span @click="productNode = 'host'">云主机</span>（20:00开始）</span></p>
             </div>
           </div>
         </div>
@@ -1422,23 +1424,25 @@
         if (!this.authInfo) {
           this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authGetPrizeModal = true
+          return
         }
-        let url = 'activity/giveForAccount.do'
-        axios.get(url, {
-          params: {
-            activityNum: '31',
-            giftUniqueIdentifier: this.award.code
-          }
-        }).then(res => {
-          if (res.status == 200 && res.data.status == 1) {
-            this.$Message.success('领取成功')
-            this.getPersonalWinningInfo()
-          } else {
-            this.$message.info({
-              content: res.data.message
-            })
-          }
-        })
+        /*       let url = 'activity/giveForAccount.do'
+               axios.get(url, {
+                 params: {
+                   activityNum: '31',
+                   giftUniqueIdentifier: this.award.code
+                 }
+               }).then(res => {
+                 if (res.status == 200 && res.data.status == 1) {
+
+                 } else {
+                   this.$message.info({
+                     content: res.data.message
+                   })
+                 }
+               })*/
+        this.$Message.success('领取成功')
+        this.getPersonalWinningInfo()
       },
       authAndGetPrize() {
         this.$refs.authForm.validate((valid) => {
@@ -1452,22 +1456,24 @@
               type: '0'
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                let url = 'activity/giveForAccount.do'
-                axios.get(url, {
-                  params: {
-                    activityNum: '31',
-                    giftUniqueIdentifier: this.award.code
-                  }
-                }).then(res => {
-                  if (res.status == 200 && res.data.status == 1) {
-                    this.$Message.success('领取成功')
-                    this.getPersonalWinningInfo()
-                  } else {
-                    this.$message.info({
-                      content: res.data.message
-                    })
-                  }
-                })
+                /*        let url = 'activity/giveForAccount.do'
+                        axios.get(url, {
+                          params: {
+                            activityNum: '31',
+                            giftUniqueIdentifier: this.award.code
+                          }
+                        }).then(res => {
+                          if (res.status == 200 && res.data.status == 1) {
+                            this.$Message.success('领取成功')
+                            this.getPersonalWinningInfo()
+                          } else {
+                            this.$message.info({
+                              content: res.data.message
+                            })
+                          }
+                        })*/
+                this.$Message.success('领取成功')
+                this.getPersonalWinningInfo()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -1610,10 +1616,6 @@
         }
         // 开始抽奖
         this.drawAward();
-
-        this.time = Date.now();
-        this.speed = 200;
-        this.diff = 15;
       },
       drawAward() {
         let url = 'activity/luckDraw.do'
@@ -1627,11 +1629,13 @@
             this.award.name = res.data.result
             this.award.imgUrl = res.data.gift_url
             this.award.code = res.data.code
+            this.time = Date.now();
+            this.speed = 200;
+            this.diff = 15;
             this.move();
             this.getLotteryNumber()
             this.getPersonalWinningInfo()
           } else {
-            this.move();
             this.$message.info({
               content: res.data.message
             })
@@ -1683,6 +1687,7 @@
             limitTime -= 1000
             if (limitTime <= 0) {
               window.clearInterval(this.countDownTimer)
+              this.$router.go(0)
             }
           }, 1000);
         } else {
@@ -1709,6 +1714,7 @@
             limitTime -= 1000
             if (limitTime <= 0) {
               window.clearInterval(this.countDownTimer)
+              this.$router.go(0)
             }
           }, 1000);
         } else {
@@ -2689,6 +2695,10 @@
               color: #FF4217;
               position: relative;
               bottom: 8px;
+              span {
+                cursor: pointer;
+                text-decoration: underline;
+              }
             }
           }
         }
@@ -3186,6 +3196,7 @@
         position: absolute;
         height: 92px;
         width: 170px;
+        border-radius: 12px;
         background: rgba(0, 0, 0, 1);
         opacity: 0.2;
       }
