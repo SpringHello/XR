@@ -486,7 +486,7 @@
       <div class="overlay" @click.stop="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal">
         <div class="all-modal modal3" @click.stop="showModal.luckDrawRuleModal=true">
           <div class="header">幸运抽奖活动规则</div>
-          <div class="body" style="overflow-y:hidden;border:0;">
+          <div class="body">
             <h3>（1）活动时间：2018.11.17-2018.12.16</h3>
             <h3>（2）活动内容：新老用户可通过购买打折产品获得抽奖次数。具体如何获得抽奖次数如下：</h3>
             <p>·无论新老用户只要注册/登录新睿云的账号即可获得一次抽奖机。</p>
@@ -496,11 +496,32 @@
             <p>·购买8.0折GPU服务器可获得一次抽奖机会。</p>
             <h3>（3）抽奖成功后，领取奖品时没有实名认证的用户需要先进行实名认证才可领取奖品。</h3>
             <h3>（4）领取奖品成功后，需在“我的奖品”中完善收货地址，方便新睿云发放奖品。</h3>
-            <h3>（5）活动期间任何优惠券折扣券不能在折扣活动中使用。</h3>
-            <h3>（6）每个用户可购买5台云主机，其余产品均为一台。</h3>
-            <h3>（7）若购买5台云主机，只能获得1次抽奖机会。</h3>
+            <h3>（5）领取礼品时填写的收货地址需为真实收货地址，若因填写错误导致奖品没有送达或送错，新睿云不承担相应责任。</h3>
+            <h3>（6）活动期间新睿云将在12月2日进行第一次线下奖品发出、12月18日进行第二次线下奖品发出，请用户在发放奖品日前完成收货信息填写。</h3>
+            <h3>（7）若用户已抽中奖品但在两次发放奖品日都未填写收货信息，新睿云默认为用户放弃中奖奖品。</h3>
+            <h3>（8）活动期间任何优惠券折扣券不能在折扣活动中使用。</h3>
+            <h3>（9）参与本次活动购买的产品不能进行退款（非活动产品可七天无理由退款），若有疑问请联系客服人员。</h3>
+            <h3>（10）活动期间任何优惠券折扣券不能在折扣活动中使用。</h3>
+            <h3>（11）若购买5台云主机，只能获得1次抽奖机会。</h3>
           </div>
           <button @click.stop="showModal.luckDrawRuleModal=false" class="button-primary">我知道了</button>
+        </div>
+      </div>
+    </transition>
+    <!-- 大满送活动规则弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.bigFullDeliveryModal=false" v-if="showModal.bigFullDeliveryModal">
+        <div class="all-modal modal3" @click.stop="showModal.bigFullDeliveryModal=true" style="height:430px;">
+          <div class="header">消费回赠活动规则</div>
+          <div class="body" style="overflow-y:hidden;border:0;height:226px;">
+            <h3>（1）活动时间：2018年11月17日—2018年12月16日</h3>
+            <h3>（2）消费满***元可获得***购物卡</h3>
+            <h3>（3）当到达消费满送条件时，将在订单支付成功页面中显示达到满送条件提示，后续会有销售人员与用户进行电话沟通确认。</h3>
+            <h3>（4）确认完成后，新睿云将以短信形式发送购物卡信息，请注意查收。</h3>
+            <h3>（5）活动期间，正常购买产品的金额也算入消费满送活动中，领取满送成功后正常购买的产品将不能进行退款。</h3>
+            <h3>（6）此活动最终解释权归新睿云所有。</h3>
+          </div>
+          <button @click.stop="showModal.bigFullDeliveryModal=false" class="button-primary">我知道了</button>
         </div>
       </div>
     </transition>
@@ -521,18 +542,18 @@
             <p>·对象存储购买时间：上午10:30-11:30；下午15:00-16:00</p>
             <p>·云数据库购买时间：下午16:30-17:30</p>
             <p>·GPU服务器购买时间：晚上19:00-20:00</p>
-            <h3>（3）用户在此活动页面中进行购买产品，购买价格直接为折扣价格，无需领取任何优惠券或折扣
-              券，若在正常购买页面购买则为原价购买。</h3>
+            <h3>（3）用户在此活动页面中进行购买产品，购买价格直接为折扣价格，无需领取任何优惠券或折扣券，若在正常购买页面购买则为原价购买。</h3>
             <h3>（4）参与此活动的用户在购买产品时不能使用以任何形式获得的优惠券或折扣券。</h3>
-            <h3>（5）若用户已领取奖品但在两次发放奖品日都未填写收货信息，新睿云默认为用户放弃中奖奖品。</h3>
-            <h3>（6）奖品发出后新睿云会将奖品物流订单号码通过短信形式发送给客户，客户可通过物流订单号查询物流</h3>
-            <h3>（7）此活动最终解释权为新睿云所有。</h3>
+            <h3>（5）参与本次活动购买的产品不能进行退款（非活动产品可七天无理由退款），若有疑问请联系客服人员。</h3>
+            <h3>（6）若用户已领取奖品但在两次发放奖品日都未填写收货信息，新睿云默认为用户放弃中奖奖品。</h3>
+            <h3>（7）奖品发出后新睿云会将奖品物流订单号码通过短信形式发送给客户，客户可通过物流订单号查询物流。</h3>
+            <h3>（8）此活动最终解释权为新睿云所有。</h3>
           </div>
           <button @click.stop="showModal.discountRuleModal=false" class="button-primary">我知道了</button>
         </div>
       </div>
     </transition>
-
+    
     <!-- 领取提示 -->
     <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s" style="padding: 30px 30px 0 50px">
@@ -861,6 +882,7 @@
           authGetPrizeModal: false,
           luckDrawRuleModal: false,
           discountRuleModal: false,
+          bigFullDeliveryModal: true,
           receiveGoodInfoModal: false,
           rechargeHint: false,
           inConformityModal: false,

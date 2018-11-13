@@ -39,7 +39,7 @@
     <div class="host center">
       <div class="top headline" style="margin-top: 54px;margin-bottom:10px;">
         <img style="margin-left:100px;" src="../../../assets/img/active/anniversary/aa-banner15.png"/>
-        <p>热销云产品<i> 1.7折 </i>分时抢购，首次购买任意产品均可获得抽奖机会!<span class="rule" @click="ruleShow=true">活动规则</span></p>
+        <p>热销云产品<i> 1.7折 </i>分时抢购，首次购买任意产品均可获得抽奖机会!<span class="rule" @click="showModal.discountRuleModal=true">活动规则</span></p>
       </div>
       <div class="content center">
         <div class="products-title tl" style="margin:0 24px;">
@@ -89,8 +89,8 @@
                   </FormItem>
                 </Form>
               </div>
-              <div class="cost">￥{{item.discount}}<span>原件：{{item.cost}}元</span></div>
-              <Button>1117盛大开启</Button>
+              <div class="cost">￥{{item.discount}}<span>原价：{{item.cost}}元</span></div>
+              <button @click="showModal.activeStart = true">1117盛大开启</button>
             </div>
           </li>
         </ul>
@@ -150,7 +150,7 @@
                 <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button :class="{disabled: false}">立即抢购</button>
+                <button :class="{disabled: false}" @click="showModal.activeStart = true">1117盛大开启</button>
               </div>
             </div>
           </div>
@@ -201,7 +201,7 @@
                 <p class="tl"><span style="text-decoration:none"> 押金 </span>¥{{ item.cashPledge }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button :class="{disabled: false}">立即领取</button>
+                <button :class="{disabled: false}" @click="$router.push('fractive')">立即领取</button>
               </div>
             </div>
           </div>
@@ -225,6 +225,7 @@
             <div v-if="index !=3" class="send-full-dashed"></div>
           </ul>
         </div>
+        <button class="activecenter-btn" @click="$router.push('activecenter')">点击查看其他优惠活动</button>
       </div>
       <!-- footer -->
       <div class="active-footer">
@@ -242,32 +243,49 @@
           <li @click="roll(0)">↑返回顶部</li>
         </ul>
       </div>
-    <div class="overlay" :class="{isShow:ruleShow}">
-      <div class="rules-modal center">
-        <div class="head-title">折扣活动规则</div>
-        <div class="content center">
-          <h3>（1）活动时间：2018年11月17日-2018年12月17日</h3>
-          <h3>（2）活动内容：新老用户皆可以参加此活动。具体活动购买限制如下：</h3>
-          <p>·云主机每位用户只可购买5次；</p>
-          <p>·对象存储每位用户只可购买1次。</p>
-          <p>·云数据库每位用户只可购买1次。</p>
-          <p>·GPU服务器每位用户只可购买1次</p>
-          <h3 class="padl">具体购买时间如下： </h3>
-          <p>·云主机购买时间：上午8:30-10：30；下午13:00-15:00；晚上20:00-22:00；</p>
-          <p>·对象存储购买时间：上午10:30-11:30；下午15:00-16:00</p>
-          <p>·云数据库购买时间：下午16:30-17:30</p>
-          <p>·GPU服务器购买时间：晚上19:00-20:00</p>
-          <h3>（3）用户在此活动页面中进行购买产品，购买价格直接为折扣价格，无需领取任何优惠券或折扣
-            券，若在正常购买页面购买则为原价购买。</h3>
-          <h3>（4）参与此活动的用户在购买产品时不能使用以任何形式获得的优惠券或折扣券。</h3>
-          <h3>（5）本次活动购买的产品可申请7天无理由退款，若您中奖之后仍申请退款，我们将默认您放弃与退款订单相关的中奖奖品。</h3>
-          <h3>（6）若用户已领取奖品但在两次发放奖品日都未填写收货信息，新睿云默认为用户放弃中奖奖品。</h3>
-          <h3>（7）奖品发出后新睿云会将奖品物流订单号码通过短信形式发送给客户，客户可通过物流订单号</h3>
-          <h3>（8）此活动最终解释权为新睿云所有。</h3>
+    <!-- 折扣活动规则弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.discountRuleModal=false" v-if="showModal.discountRuleModal">
+        <div class="all-modal modal3" @click.stop="showModal.discountRuleModal=true">
+          <div class="header">折扣活动规则</div>
+          <div class="body">
+            <h3>（1）活动时间：2018年11月17日-2018年12月17日</h3>
+            <h3>（2）活动内容：新老用户皆可以参加此活动。具体活动购买限制如下：</h3>
+            <p>·云主机每位用户只可购买5次；</p>
+            <p>·对象存储每位用户只可购买1次。</p>
+            <p>·云数据库每位用户只可购买1次。</p>
+            <p>·GPU服务器每位用户只可购买1次</p>
+            <h3 class="padl">具体购买时间如下： </h3>
+            <p>·云主机购买时间：上午8:30-10：30；下午13:00-15:00；晚上20:00-22:00；</p>
+            <p>·对象存储购买时间：上午10:30-11:30；下午15:00-16:00</p>
+            <p>·云数据库购买时间：下午16:30-17:30</p>
+            <p>·GPU服务器购买时间：晚上19:00-20:00</p>
+            <h3>（3）用户在此活动页面中进行购买产品，购买价格直接为折扣价格，无需领取任何优惠券或折扣券，若在正常购买页面购买则为原价购买。</h3>
+            <h3>（4）参与此活动的用户在购买产品时不能使用以任何形式获得的优惠券或折扣券。</h3>
+            <h3>（5）参与本次活动购买的产品不能进行退款（非活动产品可七天无理由退款），若有疑问请联系客服人员。</h3>
+            <h3>（6）若用户已领取奖品但在两次发放奖品日都未填写收货信息，新睿云默认为用户放弃中奖奖品。</h3>
+            <h3>（7）奖品发出后新睿云会将奖品物流订单号码通过短信形式发送给客户，客户可通过物流订单号查询物流。</h3>
+            <h3>（8）此活动最终解释权为新睿云所有。</h3>
+          </div>
+          <button @click.stop="showModal.discountRuleModal=false" class="button-primary">我知道了</button>
         </div>
-        <Button @click="ruleShow=false">我知道了</Button>
       </div>
-    </div>
+    </transition>
+    <!-- 提醒活动弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.activeStart=false" v-if="showModal.activeStart">
+        <div class="all-modal modal1" @click.stop="showModal.activeStart=true">
+          <div class="header">温馨提示</div>
+          <div class="body">
+            <span style="padding-top: 58px;display:block"> 本活动自11月17日开始，您可在活动中心查看其他活动。</span>
+            <div style="display:flex;width:340px;margin-top:64px;" class="center">
+              <button @click.stop="showModal.activeStart=false" style="background:#fc3d26" class="button-primary">关闭弹窗</button>
+              <button @click.stop="$router.push('activecenter')" class="button-primary">去活动中心</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -277,6 +295,10 @@
   export default {
     data() {
       return {
+        showModal: {
+          discountRuleModal: false,
+          activeStart: false,
+        },
         aa_scrollTop: 0,
         ruleShow: false,
         day: '--',
@@ -780,6 +802,13 @@
               height: 522px;
               border: 1px solid rgba(255, 117, 85, 1);
               position: relative;
+              button {
+                outline: none;
+                border: none;
+                &:hover {
+                  background: rgba(255, 132, 72, 1);
+                }
+              }
               .top {
                 width: 350px;
                 height: 160px;
@@ -882,72 +911,119 @@
         }
       }
     }
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: rgba(55, 55, 55, 0.6);
-      height: 100%;
-      z-index: 1000;
-      .rules-modal {
-        position: relative;
-        margin: 0 auto;
-        top: 180px;
-        width: 800px;
-        height: 570px;
-        background: rgba(255, 255, 255, 1);
-        > .head-title {
-          padding-top: 14px;
-          height: 70px;
-          font-size: 28px;
-          font-family: PingFangSC-Semibold;
-          font-weight: 600;
-          color: rgba(255, 255, 255, 1);
-          background: url(../../../assets/img/active/anniversary/rule_title_bg.png);
-        }
-        > .content {
-          margin: 20px auto;
-          padding: 22px;
-          width: 724px;
-          height: 380px;
-          border: 1px solid rgba(234, 234, 234, 1);
-          overflow-y: auto;
-          text-align: left;
-          font-size: 14px;
-          p,
-          h3 {
-            font-size: 16px;
-            font-family: PingFangSC-Regular;
-            font-weight: 400;
-            color: rgba(34, 34, 34, 1);
-            line-height: 30px;
-          }
-          p {
-            padding-left: 120px;
-          }
-          .padl {
-            padding-left: 40px;
-          }
-        }
-        button {
-          width: 160px;
-          height: 46px;
-          background: url(../../../assets/img/active/anniversary/rule_btn_bg.png);
-          font-size: 20px;
-          color: rgba(255, 255, 255, 1);
-          border-radius: 0;
-          // &:hover{
-          //   outline: 0;
-          // }
-        }
+     // 公共按钮样式
+  .button-primary {
+    display: block;
+    margin: 0 auto;
+    width: 160px;
+    height: 46px;
+    line-height: 46px;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 1);
+    border-radius: 0;
+    border: none;
+    cursor: pointer;
+    outline: none;
+  }
+    // 弹窗公共样式
+  .overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(55, 55, 55, 0.6);
+    height: 100%;
+    z-index: 1000;
+    .all-modal {
+      position: relative;
+      margin: 0 auto;
+      top: 180px;
+      background: rgba(255, 255, 255, 1);
+      text-align: center;
+      font-size: 16px;
+      > .header {
+        height: 70px;
+        line-height: 70px;
+        font-size: 24px;
+        font-family: PingFangSC-Semibold;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 1);
+      }
+      button {
+        background: url(../../../assets/img/active/anniversary/rule_btn_bg.png);
       }
     }
-    .isShow {
-      display: block;
+  }
+  .modal1 {
+    width: 600px;
+    height: 300px;
+    > .header {
+      background: url("../../../assets/img/active/anniversary/aa-banner19.png");
     }
+  }
+
+  .modal2 {
+    position: relative;
+    top: 180px;
+    margin: 0 auto;
+    width: 306px;
+    height: 435px;
+    background: url("../../../assets/img/active/anniversary/win-prize-bg.png") center no-repeat;
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+    > .body {
+      .text {
+        margin-bottom: 30px;
+        span {
+          display: block;
+          line-height: 30px;
+        }
+      }
+      button {
+        color: rgba(255, 132, 72, 1);
+        background: #fff;
+        margin-bottom: 18px;
+      }
+      .towinpage {
+        text-decoration: underline;
+        font-size: 16px;
+        cursor: pointer
+      }
+    }
+  }
+  .modal3 {
+    width: 800px;
+    height: 570px;
+    > .header {
+      background: url(../../../assets/img/active/anniversary/rule_title_bg.png);
+    }
+    > .body {
+      margin: 20px auto;
+      padding: 22px;
+      width: 724px;
+      height: 380px;
+      border: 1px solid rgba(234, 234, 234, 1);
+      overflow-y: auto;
+      text-align: left;
+      font-size: 14px;
+      p,
+      h3 {
+        font-size: 16px;
+        font-family: PingFangSC-Regular;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
+        line-height: 30px;
+      }
+      p {
+        padding-left: 120px;
+      }
+      .padl {
+        padding-left: 40px;
+      }
+    }
+  }
     .player {
       width: 648px;
       height: 365px;
@@ -1391,6 +1467,28 @@
         text-align: center;
       }
     }
+  }
+  .activecenter-btn {
+    margin-top: 30px;
+    width: 227px;
+    height: 36px;
+    background: #ff915c;
+    border-radius: 5px;
+    font-size: 18px;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    color: #ffffff;
+    line-height: 36px;
+    border: none;
+    cursor: pointer;
+    outline: none;
+  }
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .3s;
+  }
+
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
   }
   }
 </style>
