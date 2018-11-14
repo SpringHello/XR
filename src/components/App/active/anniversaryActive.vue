@@ -212,9 +212,9 @@
           </div>
           <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
           <div class="gpu-item">
-            <div v-for="(item,index) in gpuList" class="item">
+            <div v-for="(item,index) in gpuList" class="item" :class="{'top': index <2}">
               <div class="item-title">
-                <p>GPU<span>云服务器</span></p>
+                <p>GPU<span v-if="index > 1">云服务器</span><span v-else>云服务器（体验）</span></p>
                 <ul>
                   <li>{{ item.cpu }}核<span>vCPU</span></li>
                   <li>{{ item.memory }}G<span>内存</span></li>
@@ -228,7 +228,7 @@
                   <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择区域</span>
-                <Select v-model="item.zoneId" @on-change="gpuZoneChange(index)" class="fr-select" style="width:216px;margin-top: 20px">
+                <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px">
                   <Option v-for="item in gpuZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择系统</span>
@@ -236,8 +236,11 @@
                   <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择时长</span>
-                <Select v-model="item.duration" @on-change="gpuDurationChange(index)" class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                <Select v-if="index > 1" v-model="item.duration" @on-change="gpuDurationChange(index)" class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in gpuDurationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                </Select>
+                <Select v-else v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in gpuTopDurationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
               </div>
               <div class="item-price">
@@ -292,7 +295,7 @@
                 </Select>
               </div>
               <div class="item-price">
-                <p>押金：{{ item.cashPledge }} <span>原价：{{ item.originalPrice}}元</span></p>
+                <p>押金：¥{{ item.cashPledge }} <span>原价：¥{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
                 <button :class="{disabled: false}" @click="getHost(index)">立即领取</button>
@@ -330,10 +333,10 @@
         <ul>
           <li @click="$router.push('/ruicloud/index.htm')">新睿云首页</li>
           <li @click="roll(700)">幸运抽奖</li>
-          <li @click="roll(1500)">1.7折云产品</li>
-          <li @click="roll(2400)">8折GPU服务器</li>
-          <li @click="roll(3300)">0元用一年</li>
-          <li @click="roll(4100)">消费回赠好礼</li>
+          <li @click="roll(1400)">1.7折云产品</li>
+          <li @click="roll(2300)">8折GPU服务器</li>
+          <li @click="roll(3700)">0元用一年</li>
+          <li @click="roll(4400)">消费回赠好礼</li>
           <li @click="roll(0)">↑返回顶部</li>
         </ul>
       </div>
@@ -1087,10 +1090,36 @@
             graphicsCard: 'P40',
             zoneId: '',
             system: 'linux',
-            duration: '3',
-            originalPrice: '16325.11',
-            currentPrice: '13060.1',
+            duration: '7',
+            originalPrice: '1426.75',
+            currentPrice: '242.55',
             vmConfigId: '101'
+          },
+          {
+            cpu: '16',
+            memory: '128',
+            rootDisk: '128',
+            bandwidth: '2',
+            graphicsCard: 'P100',
+            zoneId: '',
+            system: 'linux',
+            duration: '7',
+            originalPrice: '2397.99',
+            currentPrice: '407.66',
+            vmConfigId: '116'
+          },
+          {
+            cpu: '16',
+            memory: '64',
+            rootDisk: '128',
+            bandwidth: '2',
+            graphicsCard: 'P40',
+            zoneId: '',
+            system: 'linux',
+            duration: '1',
+            originalPrice: '5441.7',
+            currentPrice: '4285.22',
+            vmConfigId: '102'
           }, {
             cpu: '16',
             memory: '128',
@@ -1099,12 +1128,28 @@
             graphicsCard: 'P100',
             zoneId: '',
             system: 'linux',
-            duration: '3',
-            originalPrice: '27425.11',
-            currentPrice: '21940.1',
-            vmConfigId: '116'
+            duration: '1',
+            originalPrice: '9141.7',
+            currentPrice: '7245.22',
+            vmConfigId: '117'
           }],
         gpuZoneList: [],
+        gpuDurationList: [
+          {
+            name: '1个月',
+            value: '1'
+          },
+          {
+            name: '3个月',
+            value: '3'
+          }
+        ],
+        gpuTopDurationList: [
+          {
+            name: '7天',
+            value: '7'
+          }
+        ],
         freeHostList: [
           {
             headline: '1核 2G 云服务器专区',
@@ -1335,14 +1380,6 @@
         $('html, body').animate({scrollTop: val}, 300)
       },
       setData(resArr) {
-        /*
- 云主机购买时间：上午8:30-10：30；下午13:00-15:00；晚上20:00-22:00；
-
-·对象存储购买时间：上午10:30-11:30；下午15:00-16:00
-
-·云数据库购买时间：下午16:30-17:30
-
-·GPU服务器购买时间：晚上19:00-20:00*/
         if (resArr[0].status == 200 && resArr[0].data.status == 1) {
           this.serverTime = resArr[0].data.result
           this.serverTimeHour = new Date(this.serverTime).getHours()
@@ -1471,21 +1508,6 @@
           this.showModal.authGetPrizeModal = true
           return
         }
-        /*       let url = 'activity/giveForAccount.do'
-               axios.get(url, {
-                 params: {
-                   activityNum: '31',
-                   giftUniqueIdentifier: this.award.code
-                 }
-               }).then(res => {
-                 if (res.status == 200 && res.data.status == 1) {
-
-                 } else {
-                   this.$message.info({
-                     content: res.data.message
-                   })
-                 }
-               })*/
         this.$Message.success('领取成功')
         this.getPersonalWinningInfo()
       },
@@ -1501,22 +1523,6 @@
               type: '0'
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                /*        let url = 'activity/giveForAccount.do'
-                        axios.get(url, {
-                          params: {
-                            activityNum: '31',
-                            giftUniqueIdentifier: this.award.code
-                          }
-                        }).then(res => {
-                          if (res.status == 200 && res.data.status == 1) {
-                            this.$Message.success('领取成功')
-                            this.getPersonalWinningInfo()
-                          } else {
-                            this.$message.info({
-                              content: res.data.message
-                            })
-                          }
-                        })*/
                 this.$Message.success('领取成功')
                 this.getPersonalWinningInfo()
               } else {
@@ -2046,32 +2052,26 @@
 
       gpuBandwidthChange(index) {
         let url = 'activity/getVMConfigId.do'
-        axios.get(url, {
-          params: {
+        let params = {}
+        if (index < 2) {
+          params = {
+            cpu: this.gpuList[index].cpu,
+            mem: this.gpuList[index].memory,
+            month: this.gpuList[index].duration,
+            bandwith: this.gpuList[index].bandwidth,
+            type: '1',
+            activityNum: '30'
+          }
+        } else {
+          params = {
             cpu: this.gpuList[index].cpu,
             mem: this.gpuList[index].memory,
             month: this.gpuList[index].duration,
             bandwith: this.gpuList[index].bandwidth,
             activityNum: '30'
           }
-        }).then(res => {
-          if (res.data.status == 1 && res.status == 200) {
-            this.gpuList[index].vmConfigId = res.data.result
-            this.getGPUOriginalPrice(this.gpuList[index].zoneId, this.gpuList[index].vmConfigId, this.gpuList[index].duration, index)
-          }
-        })
-      },
-      gpuZoneChange(index) {
-        let url = 'activity/getVMConfigId.do'
-        axios.get(url, {
-          params: {
-            cpu: this.gpuList[index].cpu,
-            mem: this.gpuList[index].memory,
-            month: this.gpuList[index].duration,
-            bandwith: this.gpuList[index].bandwidth,
-            activityNum: '30'
-          }
-        }).then(res => {
+        }
+        axios.get(url, {params}).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.gpuList[index].vmConfigId = res.data.result
             this.getGPUOriginalPrice(this.gpuList[index].zoneId, this.gpuList[index].vmConfigId, this.gpuList[index].duration, index)
@@ -2097,13 +2097,20 @@
       },
       getGPUOriginalPrice(zoneId, vmConfigId, month, index) {
         let url = 'activity/getOriginalPrice.do'
-        axios.get(url, {
-          params: {
+        let params = {}
+        if (month == '7') {
+          params = {
+            zoneId: zoneId,
+            vmConfigId: vmConfigId,
+          }
+        } else {
+          params = {
             zoneId: zoneId,
             vmConfigId: vmConfigId,
             month: month
           }
-        }).then(res => {
+        }
+        axios.get(url, {params}).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.gpuList[index].currentPrice = res.data.result.cost
             this.gpuList[index].originalPrice = res.data.result.originalPrice
@@ -2136,7 +2143,8 @@
             })
           }
         })
-      },
+      }
+      ,
 
 
       freeHostZoneChange(index) {
@@ -2155,7 +2163,8 @@
             this.getFreeHostOriginalPrice(this.freeHostList[index].zoneId, this.freeHostList[index].vmConfigId, this.freeHostList[index].duration, index)
           }
         })
-      },
+      }
+      ,
       freeHostDurationChange(index) {
         let url = 'activity/getVMConfigId.do'
         axios.get(url, {
@@ -2172,7 +2181,8 @@
             this.getFreeHostOriginalPrice(this.freeHostList[index].zoneId, this.freeHostList[index].vmConfigId, this.freeHostList[index].duration, index)
           }
         })
-      },
+      }
+      ,
       getFreeHostOriginalPrice(zoneId, vmConfigId, month, index) {
         let url = 'activity/getOriginalPrice.do'
         axios.get(url, {
@@ -2187,7 +2197,8 @@
             this.freeHostList[index].originalPrice = res.data.result.originalPrice
           }
         })
-      },
+      }
+      ,
 
       getHost(index) {
         if (!this.freeHostList[index].zoneId) {
@@ -2211,7 +2222,8 @@
             })
           }
         })
-      },
+      }
+      ,
       nextStep() {
         // 判断新老用户
         axios.get('activity/jdugeTeam.do', {
@@ -2240,7 +2252,8 @@
             })
           }
         })
-      },
+      }
+      ,
       getHost_ok() {
         if (this.payWay == 'balancePay') {
           if (this.balance < this.cashPledge) {
@@ -2289,7 +2302,8 @@
               break
           }
         }
-      },
+      }
+      ,
       getFreeHost() {
         this.showModal.paySuccessModal = false
         let url = 'user/getRemainderFrozen.do'
@@ -2324,7 +2338,8 @@
             })
           }
         })
-      },
+      }
+      ,
       //领奖时认证验证码
       getVerificationCode() {
         if (!this.authFormValidate.vailCode) {
@@ -2348,7 +2363,8 @@
             })
           }
         })
-      },
+      }
+      ,
       // 快速认证时发送验证码
       sendCode() {
         this.$refs.sendCode.validate(validate => {
@@ -2378,7 +2394,8 @@
             })
           }
         })
-      },
+      }
+      ,
       // 快速认证
       quicklyAuth() {
         var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
@@ -2406,7 +2423,8 @@
             })
           }
         })
-      },
+      }
+      ,
       isPay() {
         axios.get('user/payStatus.do', {
           params: {
@@ -2420,14 +2438,16 @@
             this.showModal.payDefeatedModal = true
           }
         })
-      },
+      }
+      ,
       payWayChange() {
         if (this.payWay == 'otherPay' && this.otherPayWay == '') {
           this.otherPayWay = 'zfb'
         } else if (this.payWay == 'balancePay') {
           this.otherPayWay = ''
         }
-      },
+      }
+      ,
 
       // 获取消费金额
       getSpentCost() {
@@ -2796,7 +2816,6 @@
       padding: 40px 20px;
       .center();
       background: #FFF;
-      height: 686px;
       .gpu-title {
         > img {
           margin: 0 15px;
@@ -2834,11 +2853,17 @@
       }
       .gpu-item {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-around;
         .item {
           width: 530px;
           height: 522px;
+          margin-top: 40px;
           background: #FFF url("../../../assets/img/active/anniversary/aa-banner9.png") center no-repeat;
+          &.top {
+            margin-top: 0;
+            background: #FFF url("../../../assets/img/active/anniversary/aa-banner24.png") center no-repeat;
+          }
           .item-title {
             height: 163px;
             padding: 40px 20px;
