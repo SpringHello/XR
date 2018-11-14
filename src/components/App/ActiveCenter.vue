@@ -187,7 +187,7 @@
             time: '2018.11.17-2018.12.16',
             activeObj: '新老用户',
             url: 'anniversaryActive',
-            isStart: false,
+            isStart: true,
             weight: '1',
           },
           {
