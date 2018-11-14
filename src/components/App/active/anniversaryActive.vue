@@ -239,7 +239,7 @@
                 <Select v-if="index > 1" v-model="item.duration" @on-change="gpuDurationChange(index)" class="fr-select" style="width:216px;margin-top: 20px">
                   <Option v-for="item in gpuDurationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
-                <Select v-else v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px">
+                <Select v-else v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px" disabled>
                   <Option v-for="item in gpuTopDurationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
               </div>
@@ -3047,12 +3047,12 @@
           .item-price {
             padding: 20px 100px;
             > p {
-              font-size: 32px;
+              font-size: 28px;
               font-family: MicrosoftYaHei;
               font-weight: bold;
               color: rgba(255, 53, 8, 1);
               > span {
-                font-size: 18px;
+                font-size: 16px;
                 font-family: MicrosoftYaHei;
                 font-weight: 400;
                 text-decoration: line-through;
