@@ -219,7 +219,7 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            this.spentCost = res.data.result
+            this.spentCost = parseInt(res.data.result)
           }
         })
       },
@@ -242,7 +242,9 @@
           this.canUseTicket = this.orderData.every(item => {
             return item.discountedorders != 1
           })
-          this.showFree = JSON.parse(response.data.result.data[0].discountmessage)
+          if(response.data.result.data[0].discountmessage){
+            this.showFree = JSON.parse(response.data.result.data[0].discountmessage)
+          }
         }
         this.$http.get('ticket/getUserTicket.do', {
           params: {
@@ -359,18 +361,19 @@
     },
     computed: {
       otherSpentCost() {
-        if (this.spentCost < 1117) {
+        let cost = this.spentCost
+        if (cost < 1117) {
           this.spentCostNode = 50
-          return 1117 - this.spentCost
-        } else if (1117<this.spentCost < 6117) {
+          return 1117 - cost
+        } else if (1117 <= cost && cost < 6117) {
           this.spentCostNode = 350
-          return 6117 - this.spentCost
-        }else if (6117<this.spentCost < 11117) {
+          return 6117 - cost
+        } else if (6117 <= cost && cost < 11117) {
           this.spentCostNode = 1000
-          return 11117 - this.spentCost
-        }else if (11117<this.spentCost < 31117) {
+          return 11117 - cost
+        } else if (11117 <= cost && cost < 31117) {
           this.spentCostNode = 3100
-          return 31117 - this.spentCost
+          return 31117 - cost
         }
       },
     },

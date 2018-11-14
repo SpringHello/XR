@@ -4,31 +4,31 @@
       <!-- 抽奖 -->
       <div class="active-1">
         <div class="banner">
-          <p>登录即可参与抽奖(100%中奖)，戴森(Dyson)，黑莓等你来拿！</p>
+          <p>登录即可参与抽奖（100%中奖），认证后有机会领取戴森（Dyson），科沃斯等奖品</p>
           <div class="lottery-title">
             <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
             <img style="margin-left: 70px" src="../../../assets/img/active/anniversary/aa-banner14.png"/>
-            <p>见面礼！<span>包含戴森、科沃斯爆款奖品，100%中奖率，注册登录即可拥有一次抽奖机会</span></p>
+            <p>见面礼！<span>包含<span style="color:rgba(255, 48, 0, 1); ">戴森、科沃斯</span>爆款奖品，100%中奖率，注册登录即可拥有一次抽奖机会</span></p>
           </div>
         </div>
         <div class="lottery">
           <div id="rotary-table">
             <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]" :style="{'background-image': 'url(' + award.imgUrl + ')' }">
             </div>
-            <div id="start-btn" @click="start">(剩余抽奖次数 {{ lotteryNumber }}次)</div>
+            <div id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled}">(剩余抽奖次数 {{ lotteryNumber }}次)</div>
           </div>
           <div id="lottery-right">
             <div class="lottery-rules">
-              <h3>活动规则</h3>
-              <p>1、活动时间：2018.11.17-2019.01.05</p>
+              <h3>活动时间：2018.11.17-2018.12.16</h3>
+              <h3>活动规则 <span style="cursor: pointer;color: #222222;font-size:16px;text-decoration: underline;position: absolute;right:0;top:25%"
+                             @click="showModal.luckDrawRuleModal = true">规则详情</span></h3>
               <p>2、11月17日活动当日登录即可获得抽奖机会</p>
               <p>3、新老用户第一次购买任意活动产品可获得一次抽奖机会，最多可获得五次抽奖机会</p>
-              <p>4、抽中实物奖品的用户，活动期间新睿云将在12月2日进行第一次实物奖品发放、12月18日进行第二次实物奖品发放，请用户在发放奖品日前完成收货信息填写
-                <span style="cursor: pointer;color: #FF3000;text-decoration: underline" @click="showModal.luckDrawRuleModal = true">详情</span></p>
+              <p>4、抽中实物奖品的用户，活动期间新睿云将在12月2日进行第一次实物奖品发放、12月18日进行第二次实物奖品发放，请用户在发放奖品日前完成收货信息填写</p>
             </div>
             <div class="lottery-particulars">
-              <h3 style="margin-top: 20px;position: relative">中奖详情 <span
-                style="cursor: pointer;color: #FF3000;font-size:16px;text-decoration: underline;position: absolute;left: 66%;top:25%" @click="winningRecordShow = true">我的奖品</span>
+              <h3 style="margin-top: 15px;">中奖详情 <span
+                style="cursor: pointer;color: #222222;font-size:16px;text-decoration: underline;position: absolute;right:0;top:25%" @click="winningRecordShow = true">我的奖品</span>
               </h3>
               <div class="win-list">
                 <ul class="win-content" :style="{top}">
@@ -52,8 +52,9 @@
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon3.png"/>
               <span>云服务器限时抢购中</span>
-              <div style="margin-top: 8px" v-if="countDownShow == 'host'">
-                <span>本场结束倒计时:</span>
+              <div style="margin-top: 8px">
+                <span v-if="countDownShow">本场结束倒计时:</span>
+                <span v-else>距下场开始倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
@@ -103,8 +104,9 @@
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon5.png"/>
               <span style="position: relative;bottom: 20px;">对象存储限时抢购中</span>
-              <div style="margin-top: 8px" v-if="countDownShow == 'obj'">
-                <span>本场结束倒计时:</span>
+              <div style="margin-top: 8px">
+                <span v-if="countDownShow">本场结束倒计时:</span>
+                <span v-else>距下场开始倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
@@ -145,8 +147,9 @@
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon6.png"/>
               <span>云数据库限时抢购中</span>
-              <div style="margin-top: 8px" v-if="countDownShow == 'database'">
-                <span>本场结束倒计时:</span>
+              <div style="margin-top: 8px">
+                <span v-if="countDownShow">本场结束倒计时:</span>
+                <span v-else>距下场开始倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
@@ -201,16 +204,17 @@
           <div class="gpu-title">
             <img src="../../../assets/img/active/anniversary/aa-icon8.png"/>
             <span>GPU云服务器 每日19:00开启抢购</span>
-            <div style="margin-top: 8px" v-if="gpuCountDownShow">
-              <span>本场结束倒计时:</span>
+            <div style="margin-top: 8px">
+              <span v-if="gpuCountDownShow">本场结束倒计时:</span>
+              <span v-else>距抢购开始倒计时:</span>
               <p><span>{{ gpuHour}} : {{ gpuMinute}} : {{gpuSecond}}</span></p>
             </div>
           </div>
           <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
           <div class="gpu-item">
-            <div v-for="(item,index) in gpuList" class="item">
+            <div v-for="(item,index) in gpuList" class="item" :class="{'top': index <2}">
               <div class="item-title">
-                <p>GPU<span>云服务器</span></p>
+                <p>GPU<span v-if="index > 1">云服务器</span><span v-else>云服务器（体验）</span></p>
                 <ul>
                   <li>{{ item.cpu }}核<span>vCPU</span></li>
                   <li>{{ item.memory }}G<span>内存</span></li>
@@ -224,7 +228,7 @@
                   <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择区域</span>
-                <Select v-model="item.zoneId" @on-change="gpuZoneChange(index)" class="fr-select" style="width:216px;margin-top: 20px">
+                <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px">
                   <Option v-for="item in gpuZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择系统</span>
@@ -232,8 +236,11 @@
                   <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
                 <span>请选择时长</span>
-                <Select v-model="item.duration" @on-change="gpuDurationChange(index)" class="fr-select" style="width:216px;margin-top: 20px">
-                  <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                <Select v-if="index > 1" v-model="item.duration" @on-change="gpuDurationChange(index)" class="fr-select" style="width:216px;margin-top: 20px">
+                  <Option v-for="item in gpuDurationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                </Select>
+                <Select v-else v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px" disabled>
+                  <Option v-for="item in gpuTopDurationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                 </Select>
               </div>
               <div class="item-price">
@@ -288,7 +295,7 @@
                 </Select>
               </div>
               <div class="item-price">
-                <p>押金：{{ item.cashPledge }} <span>原价：{{ item.originalPrice}}元</span></p>
+                <p>押金：¥{{ item.cashPledge }} <span>原价：¥{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
                 <button :class="{disabled: false}" @click="getHost(index)">立即领取</button>
@@ -313,7 +320,7 @@
               <p style="position: relative;right: 18px" v-else><img src="../../../assets/img/active/anniversary/aa-icon19.png"/> <img
                 src="../../../assets/img/active/anniversary/aa-icon20.png"/></p></li>
             <li><img v-if="index < spentCostNode" :src="item.src_2"/><img v-else :src="item.src_1"/></li>
-            <div v-if="index !=3" class="send-full-dashed" :class="{'onStep': false}"></div>
+            <div v-if="index !=3" class="send-full-dashed" :class="{'onStep': index < spentCostNode -1 }"></div>
           </ul>
         </div>
       </div>
@@ -326,10 +333,10 @@
         <ul>
           <li @click="$router.push('/ruicloud/index.htm')">新睿云首页</li>
           <li @click="roll(700)">幸运抽奖</li>
-          <li @click="roll(1500)">1.7折云产品</li>
-          <li @click="roll(2400)">8折GPU服务器</li>
-          <li @click="roll(3300)">0元用一年</li>
-          <li @click="roll(4100)">消费回赠好礼</li>
+          <li @click="roll(1400)">1.7折云产品</li>
+          <li @click="roll(2300)">8折GPU服务器</li>
+          <li @click="roll(3700)">0元用一年</li>
+          <li @click="roll(4400)">消费回赠好礼</li>
           <li @click="roll(0)">↑返回顶部</li>
         </ul>
       </div>
@@ -339,7 +346,7 @@
       <!-- 中奖纪录 -->
       <div class="active-1">
         <div class="banner">
-          <p>登录即可参与抽奖(100%中奖)，戴森(Dyson)，黑莓等你来拿！</p>
+          <p>登录即可参与抽奖（100%中奖），认证后有机会领取戴森（Dyson），科沃斯等奖品</p>
           <div class="lottery-title">
             <img style="position: absolute;left: 33%;top: -80%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
             <h2>11.17周年庆活动获奖记录</h2>
@@ -766,7 +773,7 @@
   import $ from 'jquery'
   import reg from '../../../util/regExp'
   import VueQArt from 'vue-qart'
-  import area from "../../../options/area.json";
+  import area from "../../../options/area.json"
 
   export default {
     components: {
@@ -929,8 +936,8 @@
         gpuHour: '--',
         gpuMinute: '--',
         gpuSecond: '--',
-        productNode: 'host', // 产品节点
-        countDownShow: 'host',
+        productNode: '', // 产品节点
+        countDownShow: '',
         gpuCountDownShow: false,
         hostList: [
           {
@@ -1083,10 +1090,36 @@
             graphicsCard: 'P40',
             zoneId: '',
             system: 'linux',
-            duration: '3',
-            originalPrice: '16325.11',
-            currentPrice: '13060.1',
+            duration: '7',
+            originalPrice: '1426.75',
+            currentPrice: '242.55',
             vmConfigId: '101'
+          },
+          {
+            cpu: '16',
+            memory: '128',
+            rootDisk: '128',
+            bandwidth: '2',
+            graphicsCard: 'P100',
+            zoneId: '',
+            system: 'linux',
+            duration: '7',
+            originalPrice: '2397.99',
+            currentPrice: '407.66',
+            vmConfigId: '116'
+          },
+          {
+            cpu: '16',
+            memory: '64',
+            rootDisk: '128',
+            bandwidth: '2',
+            graphicsCard: 'P40',
+            zoneId: '',
+            system: 'linux',
+            duration: '1',
+            originalPrice: '5441.7',
+            currentPrice: '4285.22',
+            vmConfigId: '102'
           }, {
             cpu: '16',
             memory: '128',
@@ -1095,12 +1128,28 @@
             graphicsCard: 'P100',
             zoneId: '',
             system: 'linux',
-            duration: '3',
-            originalPrice: '27425.11',
-            currentPrice: '21940.1',
-            vmConfigId: '116'
+            duration: '1',
+            originalPrice: '9141.7',
+            currentPrice: '7245.22',
+            vmConfigId: '117'
           }],
         gpuZoneList: [],
+        gpuDurationList: [
+          {
+            name: '1个月',
+            value: '1'
+          },
+          {
+            name: '3个月',
+            value: '3'
+          }
+        ],
+        gpuTopDurationList: [
+          {
+            name: '7天',
+            value: '7'
+          }
+        ],
         freeHostList: [
           {
             headline: '1核 2G 云服务器专区',
@@ -1335,67 +1384,66 @@
           this.serverTime = resArr[0].data.result
           this.serverTimeHour = new Date(this.serverTime).getHours()
           this.serverTimeMinute = new Date(this.serverTime).getMinutes()
-          if ((this.serverTimeHour == 8 && this.serverTimeMinute >= 30) || this.serverTimeHour == 9 || (this.serverTimeHour == 10 && this.serverTimeMinute < 30)) {
+          if (this.serverTimeHour < 8 || (this.serverTimeHour == 8 && this.serverTimeMinute < 30)) {
+            this.productNode = 'host'
+            this.countDownShow = ''
+            this.getTimeNodes('08:30')
+          } else if ((this.serverTimeHour == 8 && this.serverTimeMinute >= 30) || this.serverTimeHour == 9 || (this.serverTimeHour == 10 && this.serverTimeMinute < 30)) {
             this.productNode = 'host'
             this.countDownShow = 'host'
             this.getTimeNodes('10:30')
             this.hostDisabled = false
-            this.objStorageDisabled = true
-            this.databaseDisabled = true
-            this.gpuDisabled = true
           } else if ((this.serverTimeHour == 10 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 11 && this.serverTimeMinute < 30)) {
             this.productNode = 'objStorage'
             this.countDownShow = 'obj'
             this.getTimeNodes('11:30')
-            this.hostDisabled = true
             this.objStorageDisabled = false
-            this.databaseDisabled = true
-            this.gpuDisabled = true
+          } else if ((this.serverTimeHour == 11 && this.serverTimeMinute >= 30) || 11 < this.serverTimeHour && this.serverTimeHour < 13) {
+            this.productNode = 'host'
+            this.countDownShow = ''
+            this.getTimeNodes('13:00')
           } else if (this.serverTimeHour == 13 || this.serverTimeHour == 14) {
             this.productNode = 'host'
             this.countDownShow = 'host'
             this.getTimeNodes('15:00')
             this.hostDisabled = false
-            this.objStorageDisabled = true
-            this.databaseDisabled = true
-            this.gpuDisabled = true
           } else if (this.serverTimeHour == 15) {
             this.productNode = 'objStorage'
             this.countDownShow = 'obj'
             this.getTimeNodes('16:00')
-            this.hostDisabled = true
             this.objStorageDisabled = false
-            this.databaseDisabled = true
-            this.gpuDisabled = true
+          } else if (this.serverTimeHour == 16 && this.serverTimeMinute < 30) {
+            this.productNode = 'database'
+            this.countDownShow = ''
+            this.getTimeNodes('16:30')
           } else if ((this.serverTimeHour == 16 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 17 && this.serverTimeMinute < 30)) {
             this.productNode = 'database'
             this.countDownShow = 'database'
             this.getTimeNodes('17:30')
-            this.hostDisabled = true
-            this.objStorageDisabled = true
             this.databaseDisabled = false
-            this.gpuDisabled = true
-          } else if (this.serverTimeHour == 19) {
+          } else if ((this.serverTimeHour == 17 && this.serverTimeMinute >= 30) || this.serverTimeHour == 18 || this.serverTimeHour == 19) {
+            this.productNode = 'host'
+            this.countDownShow = ''
             this.getTimeNodes('20:00')
-            this.gpuCountDownShow = true
-            this.hostDisabled = true
-            this.objStorageDisabled = true
-            this.databaseDisabled = true
-            this.gpuDisabled = false
           } else if (this.serverTimeHour == 20 || this.serverTimeHour == 21) {
             this.productNode = 'host'
             this.countDownShow = 'host'
             this.getTimeNodes('22:00')
             this.hostDisabled = false
-            this.objStorageDisabled = true
-            this.databaseDisabled = true
-            this.gpuDisabled = true
-          } else {
+          } else if (this.serverTimeHour > 21 && this.serverTimeHour < 24) {
+            this.productNode = 'host'
             this.countDownShow = ''
-            this.hostDisabled = true
-            this.objStorageDisabled = true
-            this.databaseDisabled = true
-            this.gpuDisabled = true
+            this.getTimeNodes('nextDay')
+          }
+
+          if (this.serverTimeHour < 19) {
+            this.getGPUTimeNodes('19:00')
+          } else if (this.serverTimeHour == 19) {
+            this.getGPUTimeNodes('20:00')
+            this.gpuDisabled = false
+            this.gpuCountDownShow = true
+          } else if (this.serverTimeHour > 19 && this.serverTimeHour < 24) {
+            this.getGPUTimeNodes('nextDay')
           }
         }
       },
@@ -1460,21 +1508,6 @@
           this.showModal.authGetPrizeModal = true
           return
         }
-        /*       let url = 'activity/giveForAccount.do'
-               axios.get(url, {
-                 params: {
-                   activityNum: '31',
-                   giftUniqueIdentifier: this.award.code
-                 }
-               }).then(res => {
-                 if (res.status == 200 && res.data.status == 1) {
-
-                 } else {
-                   this.$message.info({
-                     content: res.data.message
-                   })
-                 }
-               })*/
         this.$Message.success('领取成功')
         this.getPersonalWinningInfo()
       },
@@ -1490,22 +1523,6 @@
               type: '0'
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                /*        let url = 'activity/giveForAccount.do'
-                        axios.get(url, {
-                          params: {
-                            activityNum: '31',
-                            giftUniqueIdentifier: this.award.code
-                          }
-                        }).then(res => {
-                          if (res.status == 200 && res.data.status == 1) {
-                            this.$Message.success('领取成功')
-                            this.getPersonalWinningInfo()
-                          } else {
-                            this.$message.info({
-                              content: res.data.message
-                            })
-                          }
-                        })*/
                 this.$Message.success('领取成功')
                 this.getPersonalWinningInfo()
               } else {
@@ -1648,6 +1665,9 @@
           this.showModal.notPrizeChanceModal = true
           return
         }
+        if (this.speed != 200) {
+          return
+        }
         // 开始抽奖
         this.drawAward();
       },
@@ -1664,8 +1684,6 @@
             this.award.imgUrl = res.data.gift_url
             this.award.code = res.data.code
             this.time = Date.now();
-            this.speed = 200;
-            this.diff = 15;
             this.move();
             this.getLotteryNumber()
             this.getPersonalWinningInfo()
@@ -1689,6 +1707,8 @@
               clearTimeout(window.timeout);
               setTimeout(() => {
                 this.showModal.winPrizeModal = true
+                this.speed = 200;
+                this.diff = 15;
               }, 0);
               return;
             }
@@ -1700,12 +1720,22 @@
 
         }, this.speed);
       },
+      /* 获取gpu时间节点 */
+      getGPUTimeNodes(val) {
+        let myDate = new Date()
+        let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
+        if (val == 'nextDay') {
+          this.setGpuTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
+        } else {
+          this.setGpuTime(new Date(currentDay + ' ' + val).getTime())
+        }
+      },
       /* 获取购买时间节点 */
       getTimeNodes(val) {
         let myDate = new Date()
         let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
-        if (val == '20:00') {
-          this.setGpuTime(new Date(currentDay + ' ' + val).getTime())
+        if (val == 'nextDay') {
+          this.setTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
         } else {
           this.setTime(new Date(currentDay + ' ' + val).getTime())
         }
@@ -2022,32 +2052,26 @@
 
       gpuBandwidthChange(index) {
         let url = 'activity/getVMConfigId.do'
-        axios.get(url, {
-          params: {
+        let params = {}
+        if (index < 2) {
+          params = {
+            cpu: this.gpuList[index].cpu,
+            mem: this.gpuList[index].memory,
+            month: this.gpuList[index].duration,
+            bandwith: this.gpuList[index].bandwidth,
+            type: '1',
+            activityNum: '30'
+          }
+        } else {
+          params = {
             cpu: this.gpuList[index].cpu,
             mem: this.gpuList[index].memory,
             month: this.gpuList[index].duration,
             bandwith: this.gpuList[index].bandwidth,
             activityNum: '30'
           }
-        }).then(res => {
-          if (res.data.status == 1 && res.status == 200) {
-            this.gpuList[index].vmConfigId = res.data.result
-            this.getGPUOriginalPrice(this.gpuList[index].zoneId, this.gpuList[index].vmConfigId, this.gpuList[index].duration, index)
-          }
-        })
-      },
-      gpuZoneChange(index) {
-        let url = 'activity/getVMConfigId.do'
-        axios.get(url, {
-          params: {
-            cpu: this.gpuList[index].cpu,
-            mem: this.gpuList[index].memory,
-            month: this.gpuList[index].duration,
-            bandwith: this.gpuList[index].bandwidth,
-            activityNum: '30'
-          }
-        }).then(res => {
+        }
+        axios.get(url, {params}).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.gpuList[index].vmConfigId = res.data.result
             this.getGPUOriginalPrice(this.gpuList[index].zoneId, this.gpuList[index].vmConfigId, this.gpuList[index].duration, index)
@@ -2073,13 +2097,20 @@
       },
       getGPUOriginalPrice(zoneId, vmConfigId, month, index) {
         let url = 'activity/getOriginalPrice.do'
-        axios.get(url, {
-          params: {
+        let params = {}
+        if (month == '7') {
+          params = {
+            zoneId: zoneId,
+            vmConfigId: vmConfigId,
+          }
+        } else {
+          params = {
             zoneId: zoneId,
             vmConfigId: vmConfigId,
             month: month
           }
-        }).then(res => {
+        }
+        axios.get(url, {params}).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.gpuList[index].currentPrice = res.data.result.cost
             this.gpuList[index].originalPrice = res.data.result.originalPrice
@@ -2112,7 +2143,8 @@
             })
           }
         })
-      },
+      }
+      ,
 
 
       freeHostZoneChange(index) {
@@ -2131,7 +2163,8 @@
             this.getFreeHostOriginalPrice(this.freeHostList[index].zoneId, this.freeHostList[index].vmConfigId, this.freeHostList[index].duration, index)
           }
         })
-      },
+      }
+      ,
       freeHostDurationChange(index) {
         let url = 'activity/getVMConfigId.do'
         axios.get(url, {
@@ -2148,7 +2181,8 @@
             this.getFreeHostOriginalPrice(this.freeHostList[index].zoneId, this.freeHostList[index].vmConfigId, this.freeHostList[index].duration, index)
           }
         })
-      },
+      }
+      ,
       getFreeHostOriginalPrice(zoneId, vmConfigId, month, index) {
         let url = 'activity/getOriginalPrice.do'
         axios.get(url, {
@@ -2159,11 +2193,12 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            this.freeHostList[index].currentPrice = res.data.result.cost
+            this.freeHostList[index].cashPledge = res.data.result.cost
             this.freeHostList[index].originalPrice = res.data.result.originalPrice
           }
         })
-      },
+      }
+      ,
 
       getHost(index) {
         if (!this.freeHostList[index].zoneId) {
@@ -2187,7 +2222,8 @@
             })
           }
         })
-      },
+      }
+      ,
       nextStep() {
         // 判断新老用户
         axios.get('activity/jdugeTeam.do', {
@@ -2216,7 +2252,8 @@
             })
           }
         })
-      },
+      }
+      ,
       getHost_ok() {
         if (this.payWay == 'balancePay') {
           if (this.balance < this.cashPledge) {
@@ -2265,7 +2302,8 @@
               break
           }
         }
-      },
+      }
+      ,
       getFreeHost() {
         this.showModal.paySuccessModal = false
         let url = 'user/getRemainderFrozen.do'
@@ -2300,7 +2338,8 @@
             })
           }
         })
-      },
+      }
+      ,
       //领奖时认证验证码
       getVerificationCode() {
         if (!this.authFormValidate.vailCode) {
@@ -2324,7 +2363,8 @@
             })
           }
         })
-      },
+      }
+      ,
       // 快速认证时发送验证码
       sendCode() {
         this.$refs.sendCode.validate(validate => {
@@ -2354,7 +2394,8 @@
             })
           }
         })
-      },
+      }
+      ,
       // 快速认证
       quicklyAuth() {
         var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
@@ -2382,7 +2423,8 @@
             })
           }
         })
-      },
+      }
+      ,
       isPay() {
         axios.get('user/payStatus.do', {
           params: {
@@ -2396,14 +2438,16 @@
             this.showModal.payDefeatedModal = true
           }
         })
-      },
+      }
+      ,
       payWayChange() {
         if (this.payWay == 'otherPay' && this.otherPayWay == '') {
           this.otherPayWay = 'zfb'
         } else if (this.payWay == 'balancePay') {
           this.otherPayWay = ''
         }
-      },
+      }
+      ,
 
       // 获取消费金额
       getSpentCost() {
@@ -2428,6 +2472,9 @@
       },
       userInfo() {
         return this.$store.state.userInfo ? this.$store.state.userInfo : null
+      },
+      lotteryDisabled() {
+        return this.speed != 200
       }
     },
     watch: {
@@ -2471,7 +2518,7 @@
         font-family: MicrosoftYaHei;
         font-weight: 400;
         color: rgba(253, 253, 253, 1);
-        width: 629px;
+        width: 820px;
         margin: 0 auto;
       }
       .lottery-title {
@@ -2633,7 +2680,7 @@
               height: 163px;
               padding: 40px 20px;
               &.database {
-                background: #FE7F45 url("../../../assets/img/active/anniversary/aa-banner23.png") center no-repeat;
+                background: #FFF url("../../../assets/img/active/anniversary/aa-banner23.png") center no-repeat;
               }
               > p {
                 font-size: 36px;
@@ -2769,7 +2816,6 @@
       padding: 40px 20px;
       .center();
       background: #FFF;
-      height: 686px;
       .gpu-title {
         > img {
           margin: 0 15px;
@@ -2807,11 +2853,17 @@
       }
       .gpu-item {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-around;
         .item {
           width: 530px;
           height: 522px;
+          margin-top: 40px;
           background: #FFF url("../../../assets/img/active/anniversary/aa-banner9.png") center no-repeat;
+          &.top {
+            margin-top: 0;
+            background: #FFF url("../../../assets/img/active/anniversary/aa-banner24.png") center no-repeat;
+          }
           .item-title {
             height: 163px;
             padding: 40px 20px;
@@ -2995,12 +3047,12 @@
           .item-price {
             padding: 20px 100px;
             > p {
-              font-size: 32px;
+              font-size: 28px;
               font-family: MicrosoftYaHei;
               font-weight: bold;
               color: rgba(255, 53, 8, 1);
               > span {
-                font-size: 18px;
+                font-size: 16px;
                 font-family: MicrosoftYaHei;
                 font-weight: 400;
                 text-decoration: line-through;
@@ -3311,6 +3363,9 @@
       font-weight: 400;
       color: rgba(1, 1, 1, 1);
       padding-top: 55px;
+      &.notAllow {
+        cursor: not-allowed;
+      }
     }
   }
 
@@ -3320,8 +3375,8 @@
       font-family: MicrosoftYaHei;
       font-weight: 500;
       color: rgba(34, 34, 34, 1);
-      text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
+      position: relative
     }
     .lottery-rules {
       width: 550px;
