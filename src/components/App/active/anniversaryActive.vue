@@ -52,8 +52,9 @@
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon3.png"/>
               <span>云服务器限时抢购中</span>
-              <div style="margin-top: 8px" v-if="countDownShow == 'host'">
-                <span>本场结束倒计时:</span>
+              <div style="margin-top: 8px">
+                <span v-if="countDownShow">本场结束倒计时:</span>
+                <span v-else>距下场开始倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
@@ -103,8 +104,9 @@
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon5.png"/>
               <span style="position: relative;bottom: 20px;">对象存储限时抢购中</span>
-              <div style="margin-top: 8px" v-if="countDownShow == 'obj'">
-                <span>本场结束倒计时:</span>
+              <div style="margin-top: 8px">
+                <span v-if="countDownShow">本场结束倒计时:</span>
+                <span v-else>距下场开始倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
@@ -145,8 +147,9 @@
             <div class="products-title">
               <img src="../../../assets/img/active/anniversary/aa-icon6.png"/>
               <span>云数据库限时抢购中</span>
-              <div style="margin-top: 8px" v-if="countDownShow == 'database'">
-                <span>本场结束倒计时:</span>
+              <div style="margin-top: 8px">
+                <span v-if="countDownShow">本场结束倒计时:</span>
+                <span v-else>距下场开始倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
@@ -201,8 +204,9 @@
           <div class="gpu-title">
             <img src="../../../assets/img/active/anniversary/aa-icon8.png"/>
             <span>GPU云服务器 每日19:00开启抢购</span>
-            <div style="margin-top: 8px" v-if="gpuCountDownShow">
-              <span>本场结束倒计时:</span>
+            <div style="margin-top: 8px">
+              <span v-if="gpuCountDownShow">本场结束倒计时:</span>
+              <span v-else>距抢购开始倒计时:</span>
               <p><span>{{ gpuHour}} : {{ gpuMinute}} : {{gpuSecond}}</span></p>
             </div>
           </div>
@@ -929,8 +933,8 @@
         gpuHour: '--',
         gpuMinute: '--',
         gpuSecond: '--',
-        productNode: 'host', // 产品节点
-        countDownShow: 'host',
+        productNode: '', // 产品节点
+        countDownShow: '',
         gpuCountDownShow: false,
         hostList: [
           {
@@ -1331,71 +1335,78 @@
         $('html, body').animate({scrollTop: val}, 300)
       },
       setData(resArr) {
+        /*
+ 云主机购买时间：上午8:30-10：30；下午13:00-15:00；晚上20:00-22:00；
+
+·对象存储购买时间：上午10:30-11:30；下午15:00-16:00
+
+·云数据库购买时间：下午16:30-17:30
+
+·GPU服务器购买时间：晚上19:00-20:00*/
         if (resArr[0].status == 200 && resArr[0].data.status == 1) {
           this.serverTime = resArr[0].data.result
           this.serverTimeHour = new Date(this.serverTime).getHours()
           this.serverTimeMinute = new Date(this.serverTime).getMinutes()
-          if ((this.serverTimeHour == 8 && this.serverTimeMinute >= 30) || this.serverTimeHour == 9 || (this.serverTimeHour == 10 && this.serverTimeMinute < 30)) {
+          if (this.serverTimeHour < 8 || (this.serverTimeHour == 8 && this.serverTimeMinute < 30)) {
+            this.productNode = 'host'
+            this.countDownShow = ''
+            this.getTimeNodes('08:30')
+          } else if ((this.serverTimeHour == 8 && this.serverTimeMinute >= 30) || this.serverTimeHour == 9 || (this.serverTimeHour == 10 && this.serverTimeMinute < 30)) {
             this.productNode = 'host'
             this.countDownShow = 'host'
             this.getTimeNodes('10:30')
             this.hostDisabled = false
-            this.objStorageDisabled = true
-            this.databaseDisabled = true
-            this.gpuDisabled = true
           } else if ((this.serverTimeHour == 10 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 11 && this.serverTimeMinute < 30)) {
             this.productNode = 'objStorage'
             this.countDownShow = 'obj'
             this.getTimeNodes('11:30')
-            this.hostDisabled = true
             this.objStorageDisabled = false
-            this.databaseDisabled = true
-            this.gpuDisabled = true
+          } else if ((this.serverTimeHour == 11 && this.serverTimeMinute >= 30) || 11 < this.serverTimeHour && this.serverTimeHour < 13) {
+            this.productNode = 'host'
+            this.countDownShow = ''
+            this.getTimeNodes('13:00')
           } else if (this.serverTimeHour == 13 || this.serverTimeHour == 14) {
             this.productNode = 'host'
             this.countDownShow = 'host'
             this.getTimeNodes('15:00')
             this.hostDisabled = false
-            this.objStorageDisabled = true
-            this.databaseDisabled = true
-            this.gpuDisabled = true
           } else if (this.serverTimeHour == 15) {
             this.productNode = 'objStorage'
             this.countDownShow = 'obj'
             this.getTimeNodes('16:00')
-            this.hostDisabled = true
             this.objStorageDisabled = false
-            this.databaseDisabled = true
-            this.gpuDisabled = true
+          } else if (this.serverTimeHour == 16 && this.serverTimeMinute < 30) {
+            this.productNode = 'database'
+            this.countDownShow = ''
+            this.getTimeNodes('16:30')
           } else if ((this.serverTimeHour == 16 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 17 && this.serverTimeMinute < 30)) {
             this.productNode = 'database'
             this.countDownShow = 'database'
             this.getTimeNodes('17:30')
-            this.hostDisabled = true
-            this.objStorageDisabled = true
             this.databaseDisabled = false
-            this.gpuDisabled = true
-          } else if (this.serverTimeHour == 19) {
+          } else if ((this.serverTimeHour == 17 && this.serverTimeMinute >= 30) || this.serverTimeHour == 18 || this.serverTimeHour == 19) {
+            this.productNode = 'host'
+            this.countDownShow = ''
             this.getTimeNodes('20:00')
-            this.gpuCountDownShow = true
-            this.hostDisabled = true
-            this.objStorageDisabled = true
-            this.databaseDisabled = true
-            this.gpuDisabled = false
           } else if (this.serverTimeHour == 20 || this.serverTimeHour == 21) {
             this.productNode = 'host'
             this.countDownShow = 'host'
             this.getTimeNodes('22:00')
             this.hostDisabled = false
-            this.objStorageDisabled = true
-            this.databaseDisabled = true
-            this.gpuDisabled = true
-          } else {
+          } else if (this.serverTimeHour > 21 && this.serverTimeHour < 24) {
+            this.productNode = 'host'
             this.countDownShow = ''
-            this.hostDisabled = true
-            this.objStorageDisabled = true
-            this.databaseDisabled = true
-            this.gpuDisabled = true
+            this.getTimeNodes('nextDay')
+          }
+
+          if (this.serverTimeHour < 19) {
+            this.getGPUTimeNodes('19:00')
+          } else if (this.serverTimeHour == 19) {
+            this.getGPUTimeNodes('20:00')
+            this.gpuDisabled = false
+            this.gpuCountDownShow = true
+          } else if (this.serverTimeHour > 19 && this.serverTimeHour < 24) {
+            this.getGPUTimeNodes('nextDay')
           }
         }
       },
@@ -1703,12 +1714,22 @@
 
         }, this.speed);
       },
+      /* 获取gpu时间节点 */
+      getGPUTimeNodes(val) {
+        let myDate = new Date()
+        let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
+        if (val == 'nextDay') {
+          this.setGpuTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
+        } else {
+          this.setGpuTime(new Date(currentDay + ' ' + val).getTime())
+        }
+      },
       /* 获取购买时间节点 */
       getTimeNodes(val) {
         let myDate = new Date()
         let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
-        if (val == '20:00') {
-          this.setGpuTime(new Date(currentDay + ' ' + val).getTime())
+        if (val == 'nextDay') {
+          this.setTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
         } else {
           this.setTime(new Date(currentDay + ' ' + val).getTime())
         }
