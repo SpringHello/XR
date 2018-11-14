@@ -3,6 +3,13 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
+          <div @click="push('/ruicloud/anniversaryActive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="anniversary-active">
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div @click="push('fractive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
@@ -67,17 +74,18 @@
             <span>NOVICE TO CLOUD</span>
           </div>
           <div class="box-wrap">
-            <router-link v-for="(item,index) in activeData" :key="index" :class="{'box':true, graybox:!item.isStart}"
-                         :to="item.url" :style="{background:'url('+item.imgPath+')',backgroundRepeat:'no-repeat'}">
+            <router-link v-for="(item,index) in activeData" :key="index" :class="{'box':true}"
+                         :to="item.isStart?item.url:''" :style="{background:'url('+item.imgPath+')',backgroundRepeat:'no-repeat'}">
               <div class="box-head" :style="{color:item.color}">
                 <p>
                   {{item.name}}
                 </p>
-                <p v-html="item.secSpan"></p>
+                <p v-html="item.desc"></p>
+                <p v-if="item.secDesc">{{item.secDesc}}</p>
               </div>
               <div class="box-bottom">
                 <div>
-                  <p>活动时间：{{item.des}}</p>
+                  <p>活动时间：{{item.time}}</p>
                   <p>活动对象：{{item.activeObj}}</p>
                 </div>
                 <button v-if="item.isStart">立即参与 →</button>
@@ -96,11 +104,11 @@
                 <p>
                   {{item.name}}
                 </p>
-                <p v-html="item.secSpan"></p>
+                <p v-html="item.desc"></p>
               </div>
               <div class="box-bottom">
                 <div>
-                  <p>活动时间：{{item.des}}</p>
+                  <p>活动时间：{{item.time}}</p>
                   <p>活动对象：{{item.activeObj}}</p>
                 </div>
                 <button>立即参与 →</button>
@@ -129,55 +137,64 @@
         active: [],
         activedata: [
           {
-            imgPath: require('../../assets/img/activecenter/bg-objStorage-2.png'),
+            imgPath: require('../../assets/img/activecenter/bg-card-2.png'),
             name: '免费云主机 不限量领取',
-            secSpan: '交押金最长可用一年 押金闪退',
-            des: '2018.08.03开始',
+            desc: '交押金最长可用一年 押金闪退',
+            time: '2018.08.03开始',
             activeObj: '云主机 新注册用户',
             url: 'fractive',
             isStart: true,
             weight: '1'
           },
           {
-            imgPath: require('../../assets/img/activecenter/bg-objStorage-1.png'),
+            imgPath: require('../../assets/img/activecenter/bg-card-1.png'),
             name: '新用户注册领现金豪礼',
-            secSpan: '注册即可领取158元现金大礼包',
-            des: '长期有效',
+            desc: '注册即可领取158元现金大礼包',
+            time: '长期有效',
             activeObj: '新注册用户',
             url: 'register',
             isStart: true,
             weight: '1'
           },
           {
-            imgPath: require('../../assets/img/activecenter/bg-objStorage-3.png'),
+            imgPath: require('../../assets/img/activecenter/bg-card-3.png'),
             name: '对象存储 重磅上线',
-            secSpan: '安全稳定高效的云端存储服务 免费试用50G',
-            des: ' 即将上线',
+            desc: '安全稳定高效的云端存储服务 免费试用50G',
+            time: ' 即将上线',
             activeObj: '对象存储 新老用户',
             url: 'objStorageActive',
-            // url: '',
             isStart: true,
             weight: '1',
             color: 'black'
           },
           {
-            imgPath: require('../../assets/img/activecenter/bg-objStorage-4.png'),
+            imgPath: require('../../assets/img/activecenter/bg-card-4.png'),
             name: '热门云数据库产品免费试用60天',
-            secSpan: '秒级创建 一键恢复 安全可靠',
-            des: '2018.10.19开始',
-            // des: '即将上线',
+            desc: '秒级创建 一键恢复 安全可靠',
+            time: '2018.10.19开始',
+            // time: '即将上线',
             activeObj: '云数据库 新老用户',
             url: 'DBActive',
-            // url: '',
             isStart: true,
             weight: '1',
             color: 'black'
           },
           {
-            imgPath: require('../../assets/img/activecenter/bg-objstorage-onsale.png'),
+            imgPath: require('../../assets/img/activecenter/bg-card-5.png'),
+            name: '周年庆典，钜惠来袭',
+            desc: '爆款高配云产品 限时特惠',
+            secDesc: '不止1.7折，更有百万豪礼，等您来拿！',
+            time: '2018.11.17-2018.12.16',
+            activeObj: '新老用户',
+            url: 'anniversaryActive',
+            isStart: false,
+            weight: '1',
+          },
+          {
+            imgPath: require('../../assets/img/activecenter/bg-card-onsale.png'),
             name: '分享好“云” 你赚时长',
-            secSpan: '每成功一位即赠送一个月 最多可领12个月',
-            des: '2018.07.19开始',
+            desc: '每成功一位即赠送一个月 最多可领12个月',
+            time: '2018.07.19开始',
             activeObj: '云主机 新老用户',
             url: 'groupBooking',
             isStart: true,
@@ -231,6 +248,11 @@
           .xf {
             height: 100%;
             background: url("../../assets/img/active/active_xf_bg.png") no-repeat center;
+          }
+          .anniversary-active {
+            height: 400px;
+            cursor: pointer;
+            background: #FEEDE0 url("../../assets/img/active/anniversary/aa-banner22.png") center no-repeat;
           }
           .free-receive {
             height: 400px;
@@ -444,10 +466,15 @@
             padding: 40px;
             color: #fff;
             font-size: 18px;
+            p {
+              line-height: 26px;
+            }
             p:nth-of-type(1) {
               font-size: 24px;
               margin-bottom: 20px;
+              line-height: 1;
             }
+            
           }
           .box-bottom {
             margin: 20px 40px;
@@ -469,16 +496,8 @@
               border: none;
               color: #fff;
               outline: none;
-            }
-          }
-        }
-        .graybox {
-          .box-head {
-            color: #000;
-          }
-          .box-bottom {
-            button {
-              background: rgba(153, 153, 153, 1);
+              font-size: 14px;
+              font-family:PingFangSC-Medium;
             }
           }
         }
