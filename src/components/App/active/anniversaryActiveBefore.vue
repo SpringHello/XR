@@ -2,6 +2,9 @@
   <div id="anniversary-active-before">
     <div class="banner center">
       <div class="content">
+        <div class="hint-wrap">
+          <p>登录即可参与抽奖（100%中奖），认证后有机会领取戴森（Dyson），科沃斯等奖品</p>
+        </div>
         <div class="timer">
           <h3>距离活动开启还剩</h3>
           <div class="countdown center">
@@ -44,11 +47,11 @@
       <div class="content center">
         <div class="products-title tl" style="margin:0 24px;">
           <img src="../../../assets/img/active/anniversary/aa-icon6.png"/>
-          <span>云数据库限时抢购中</span>
-          <div style="margin-top: 8px">
+          <span>云服务器限时抢购中</span>
+          <!-- <div style="margin-top: 8px">
             <span>本场结束倒计时:</span>
             <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
-          </div>
+          </div> -->
         </div>
         <ul class="item">
           <li v-for="(item,index) in hostData" :key="index">
@@ -111,10 +114,10 @@
           <div class="gpu-title tl">
             <img src="../../../assets/img/active/anniversary/aa-icon8.png"/>
             <span>GPU云服务器 每日19:00开启抢购</span>
-            <div style="margin-top: 8px">
+            <!-- <div style="margin-top: 8px">
               <span>本场结束倒计时:</span>
               <p><span>{{ hour }} : {{ minute }} : {{ second }}</span></p>
-            </div>
+            </div> -->
           </div>
           <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
           <div class="gpu-item">
@@ -214,15 +217,24 @@
           <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner21.png"/>
           <p><span>购买云产品获赠好礼，最高额消费可领全部礼品</span></p>
         </div>
-        <div class="send-full w12">
+        <!-- <div class="send-full w12">
           <ul v-for="(item,index) in sendFullList">
             <li><p :class="{'onStep': true}">消费满<span> {{ item.text_1}} </span>可领</p></li>
             <li><i :class="{'onStep': true}"></i></li>
             <li><i :class="{'onStep': true}"></i></li>
             <li><img :src="item.src_2"/></li>
             <li :class="{'onStep': true}">{{ item.text_2}}</li>
-            <!-- <button @click="getSendFull(index)" :class="{'disabled': true}" :disabled="true">立即领取</button> -->
             <div v-if="index !=3" class="send-full-dashed"></div>
+          </ul>
+        </div> -->
+        <div class="send-full w12">
+          <ul v-for="(item,index) in sendFullList">
+            <li><p :class="{'onStep': index >= spentCostNode}">消费满<span> {{ item.text_1}} </span>可领</p></li>
+            <li><span :class="{'onStep': index >= spentCostNode}">{{ item.text_2 }}</span></li>
+            <li style="margin-top: 30px"><p style="position: relative;right: 18px" v-if="index >= spentCostNode"><img src="../../../assets/img/active/anniversary/aa-icon17.png"/> <img src="../../../assets/img/active/anniversary/aa-icon18.png"/></p>
+              <p style="position: relative;right: 18px" v-else><img src="../../../assets/img/active/anniversary/aa-icon19.png"/> <img src="../../../assets/img/active/anniversary/aa-icon20.png"/></p></li>
+            <li><img v-if="index >= spentCostNode" :src="item.src_2"/><img v-else :src="item.src_1"/></li>
+            <div v-if="index !=3" class="send-full-dashed" :class="{'onStep': true}"></div>
           </ul>
         </div>
         <button class="activecenter-btn" @click="$router.push('activecenter')">点击查看其他优惠活动</button>
@@ -299,6 +311,7 @@
           discountRuleModal: false,
           activeStart: false,
         },
+        spentCostNode: 0,
         aa_scrollTop: 0,
         ruleShow: false,
         day: '--',
@@ -322,7 +335,7 @@
             zone: '北方一区',
             system: 'windows2012-64',
             sectime: '3',
-            cost: '1131.16',
+            cost: '1331.16',
             discount: '226.3',
             cpu: '4',
             memroy: '8',
@@ -627,10 +640,26 @@
         rgba(254, 237, 225, 1)
       );
       .content {
-        background: url("../../../assets/img/active/anniversary/aa-banner2.png") center no-repeat,url("../../../assets/img/active/anniversary/aa-banner1.png") center 0px no-repeat;
+        background: url("../../../assets/img/active/anniversary/aa-banner2.png") center no-repeat,url("../../../assets/img/active/anniversary/aa-banner1.png") center 60px no-repeat;
         height: 844px;
+        > .hint-wrap {
+          padding-top: 45px;
+           p {
+            background: #FA531C;
+            padding: 8px 26px 8px 21px;
+            border: 2px solid rgba(255, 215, 78, 1);
+            border-radius: 19px;
+            font-size: 20px;
+            font-family: MicrosoftYaHei;
+            font-weight: 400;
+            color: rgba(253, 253, 253, 1);
+            width: 820px;
+            margin: 0 auto;
+          }
+        }
+        
         .timer {
-          padding-top: 650px;
+          padding-top: 620px;
           h3 {
             font-size: 30px;
             font-family: PingFangSC-Semibold;
@@ -1356,6 +1385,12 @@
             font-family: MicrosoftYaHei;
             font-weight: 600;
             color: #666666;
+            >img{
+              vertical-align: middle;
+            }
+            img:nth-child(1){
+              margin-right: 14px;
+            }
             > span {
               font-size: 32px;
             }
@@ -1363,21 +1398,13 @@
               color: #FF3000;
             }
           }
-          > i {
-            &:before {
-              content: '';
-              display: inline-block;
-              height: 15px;
-              width: 15px;
-              transform: rotate(-45deg);
-              border-right: 1px solid #666;
-              border-top: 1px solid #666;
-            }
+          > span {
+            font-size: 20px;
+            font-family: MicrosoftYaHei;
+            font-weight: 600;
+            color: #666666;
             &.onStep {
-              &:before {
-                border-right: 1px solid #FF3000;
-                border-top: 1px solid #FF3000;
-              }
+              color: #FF3000;
             }
           }
         }
@@ -1386,7 +1413,6 @@
         }
         li:nth-child(4) {
           position: relative;
-          bottom: 35px;
         }
         li:nth-child(5) {
           font-size: 18px;
@@ -1420,12 +1446,26 @@
       }
       .send-full-dashed {
         position: absolute;
-        width: 170px;
-        border: 1px dashed #C0C0C0;
-        top: 148px;
-        left: 220px;
+        width: 15px;
+        height: 15px;
+        border-right: 1px solid #C0C0C0;
+        top: 212px;
+        left: 285px;
+        &:before {
+          display: inline-block;
+          content: '';
+          height: 15px;
+          width: 15px;
+          border-top: 1px solid #C0C0C0;
+          position: relative;
+          left: 7px;
+          top: 7px;
+        }
         &.onStep {
-          border: 1px dashed #FF3000;
+          border-right: 1px solid #FF3000;
+          &:before {
+            border-top: 1px solid #FF3000;
+          }
         }
       }
     }
@@ -1469,7 +1509,7 @@
     }
   }
   .activecenter-btn {
-    margin-top: 30px;
+    margin-top: 60px;
     width: 227px;
     height: 36px;
     background: #ff915c;
