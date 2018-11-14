@@ -861,7 +861,7 @@
         // 获取ip数据
         axios.get('network/listPublicIp.do', {
           params: {
-            page: 1,
+            page: this.page,
             pageSize: 10,
             zoneId: $store.state.zone.zoneid
           }

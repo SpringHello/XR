@@ -4,31 +4,31 @@
       <!-- 抽奖 -->
       <div class="active-1">
         <div class="banner">
-          <p>登录即可参与抽奖(100%中奖)，戴森(Dyson)，黑莓等你来拿！</p>
+          <p>登录即可参与抽奖（100%中奖），认证后有机会领取戴森（Dyson），科沃斯等奖品</p>
           <div class="lottery-title">
             <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
             <img style="margin-left: 70px" src="../../../assets/img/active/anniversary/aa-banner14.png"/>
-            <p>见面礼！<span>包含戴森、科沃斯爆款奖品，100%中奖率，注册登录即可拥有一次抽奖机会</span></p>
+            <p>见面礼！<span>包含<span style="color:rgba(255, 48, 0, 1); ">戴森、科沃斯</span>爆款奖品，100%中奖率，注册登录即可拥有一次抽奖机会</span></p>
           </div>
         </div>
         <div class="lottery">
           <div id="rotary-table">
             <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]" :style="{'background-image': 'url(' + award.imgUrl + ')' }">
             </div>
-            <div id="start-btn" @click="start">(剩余抽奖次数 {{ lotteryNumber }}次)</div>
+            <div id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled}">(剩余抽奖次数 {{ lotteryNumber }}次)</div>
           </div>
           <div id="lottery-right">
             <div class="lottery-rules">
-              <h3>活动规则</h3>
-              <p>1、活动时间：2018.11.17-2019.01.05</p>
+              <h3>活动时间：2018.11.17-2018.12.16</h3>
+              <h3>活动规则 <span style="cursor: pointer;color: #222222;font-size:16px;text-decoration: underline;position: absolute;right:0;top:25%"
+                             @click="showModal.luckDrawRuleModal = true">规则详情</span></h3>
               <p>2、11月17日活动当日登录即可获得抽奖机会</p>
               <p>3、新老用户第一次购买任意活动产品可获得一次抽奖机会，最多可获得五次抽奖机会</p>
-              <p>4、抽中实物奖品的用户，活动期间新睿云将在12月2日进行第一次实物奖品发放、12月18日进行第二次实物奖品发放，请用户在发放奖品日前完成收货信息填写
-                <span style="cursor: pointer;color: #FF3000;text-decoration: underline" @click="showModal.luckDrawRuleModal = true">详情</span></p>
+              <p>4、抽中实物奖品的用户，活动期间新睿云将在12月2日进行第一次实物奖品发放、12月18日进行第二次实物奖品发放，请用户在发放奖品日前完成收货信息填写</p>
             </div>
             <div class="lottery-particulars">
-              <h3 style="margin-top: 20px;position: relative">中奖详情 <span
-                style="cursor: pointer;color: #FF3000;font-size:16px;text-decoration: underline;position: absolute;left: 66%;top:25%" @click="winningRecordShow = true">我的奖品</span>
+              <h3 style="margin-top: 15px;">中奖详情 <span
+                style="cursor: pointer;color: #222222;font-size:16px;text-decoration: underline;position: absolute;right:0;top:25%" @click="winningRecordShow = true">我的奖品</span>
               </h3>
               <div class="win-list">
                 <ul class="win-content" :style="{top}">
@@ -313,7 +313,7 @@
               <p style="position: relative;right: 18px" v-else><img src="../../../assets/img/active/anniversary/aa-icon19.png"/> <img
                 src="../../../assets/img/active/anniversary/aa-icon20.png"/></p></li>
             <li><img v-if="index < spentCostNode" :src="item.src_2"/><img v-else :src="item.src_1"/></li>
-            <div v-if="index !=3" class="send-full-dashed" :class="{'onStep': false}"></div>
+            <div v-if="index !=3" class="send-full-dashed" :class="{'onStep': index < spentCostNode -1 }"></div>
           </ul>
         </div>
       </div>
@@ -339,7 +339,7 @@
       <!-- 中奖纪录 -->
       <div class="active-1">
         <div class="banner">
-          <p>登录即可参与抽奖(100%中奖)，戴森(Dyson)，黑莓等你来拿！</p>
+          <p>登录即可参与抽奖（100%中奖），认证后有机会领取戴森（Dyson），科沃斯等奖品</p>
           <div class="lottery-title">
             <img style="position: absolute;left: 33%;top: -80%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
             <h2>11.17周年庆活动获奖记录</h2>
@@ -766,7 +766,7 @@
   import $ from 'jquery'
   import reg from '../../../util/regExp'
   import VueQArt from 'vue-qart'
-  import area from "../../../options/area.json";
+  import area from "../../../options/area.json"
 
   export default {
     components: {
@@ -1648,6 +1648,9 @@
           this.showModal.notPrizeChanceModal = true
           return
         }
+        if (this.speed != 200) {
+          return
+        }
         // 开始抽奖
         this.drawAward();
       },
@@ -1664,8 +1667,6 @@
             this.award.imgUrl = res.data.gift_url
             this.award.code = res.data.code
             this.time = Date.now();
-            this.speed = 200;
-            this.diff = 15;
             this.move();
             this.getLotteryNumber()
             this.getPersonalWinningInfo()
@@ -1689,6 +1690,8 @@
               clearTimeout(window.timeout);
               setTimeout(() => {
                 this.showModal.winPrizeModal = true
+                this.speed = 200;
+                this.diff = 15;
               }, 0);
               return;
             }
@@ -2159,7 +2162,7 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            this.freeHostList[index].currentPrice = res.data.result.cost
+            this.freeHostList[index].cashPledge = res.data.result.cost
             this.freeHostList[index].originalPrice = res.data.result.originalPrice
           }
         })
@@ -2428,6 +2431,9 @@
       },
       userInfo() {
         return this.$store.state.userInfo ? this.$store.state.userInfo : null
+      },
+      lotteryDisabled() {
+        return this.speed != 200
       }
     },
     watch: {
@@ -2471,7 +2477,7 @@
         font-family: MicrosoftYaHei;
         font-weight: 400;
         color: rgba(253, 253, 253, 1);
-        width: 629px;
+        width: 820px;
         margin: 0 auto;
       }
       .lottery-title {
@@ -2633,7 +2639,7 @@
               height: 163px;
               padding: 40px 20px;
               &.database {
-                background: #FE7F45 url("../../../assets/img/active/anniversary/aa-banner23.png") center no-repeat;
+                background: #FFF url("../../../assets/img/active/anniversary/aa-banner23.png") center no-repeat;
               }
               > p {
                 font-size: 36px;
@@ -3311,6 +3317,9 @@
       font-weight: 400;
       color: rgba(1, 1, 1, 1);
       padding-top: 55px;
+      &.notAllow {
+        cursor: not-allowed;
+      }
     }
   }
 
@@ -3320,8 +3329,8 @@
       font-family: MicrosoftYaHei;
       font-weight: 500;
       color: rgba(34, 34, 34, 1);
-      text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
+      position: relative
     }
     .lottery-rules {
       width: 550px;
