@@ -309,7 +309,7 @@
         <div class="active-5-title">
           <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
           <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner21.png"/>
-          <p><span>购买云产品获赠好礼，最高额消费可领全部礼品（礼品卡为苏宁卡/京东E卡）<span style="cursor: pointer;text-decoration: underline" @click="showModal.discountRuleModal=true">活动规则</span> </span></p>
+          <p><span>购买云产品获赠好礼，最高额消费可领全部礼品（礼品卡为苏宁卡/京东E卡）<span style="cursor: pointer;text-decoration: underline" @click="showModal.bigFullDeliveryModal=true">活动规则</span> </span></p>
         </div>
         <div class="send-full">
           <ul v-for="(item,index) in sendFullList">
@@ -1605,6 +1605,20 @@
           this.showModal.authGetPrizeModal = true
           return
         }
+        /*       let url = 'activity/giveForAccount.do'
+       axios.get(url, {
+         params: {
+           activityNum: '31',
+           giftUniqueIdentifier: this.award.code
+         }
+       }).then(res => {
+         if (res.status == 200 && res.data.status == 1) {
+         } else {
+           this.$message.info({
+             content: res.data.message
+           })
+         }
+       })*/
         this.$Message.success('领取成功')
         this.getPersonalWinningInfo()
       },
@@ -1612,7 +1626,7 @@
         this.$refs.authForm.validate((valid) => {
           if (valid) {
             this.showModal.authGetPrizeModal = false
-            axios.post('user/personalAttest.do', {
+   /*         axios.post('user/personalAttest.do', {
               cardID: this.authFormValidate.id,
               name: this.authFormValidate.name,
               phone: this.authFormValidate.tel,
@@ -1627,7 +1641,7 @@
                   content: response.data.message
                 })
               }
-            })
+            })*/
           }
         })
       },

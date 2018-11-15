@@ -16,7 +16,7 @@
             <span style="line-height: 32px;">{{this.$route.query.computername}}</span>
             <div>
               <Button class="btn" @click="$router.go(-1)" style="margin-right: 10px;">返回</Button>
-              <a :href="`${this.$route.query.connecturl}`" target="_blank"
+              <a @click="link"
                  style="border:solid 1px #2A99F2;color: #2A99F2;border-radius: 5px;padding: 6px 15px;background-color:#f7f7f7;font-size:12px;">连接主机</a>
             </div>
           </header>
@@ -1357,6 +1357,13 @@
             })
           }
         })
+      },
+      link() {
+        localStorage.setItem('link-companyid', this.computerInfo.companyid)
+        localStorage.setItem('link-vmid', this.computerInfo.computerid)
+        localStorage.setItem('link-zoneid', this.computerInfo.zoneid)
+        localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
+        window.open('/ruicloud/link')
       }
     },
     beforeRouteLeave(to, from, next) {
