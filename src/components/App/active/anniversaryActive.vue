@@ -1129,22 +1129,25 @@
             flow: '50',
             zoneId: '',
             duration: '3',
-            originalPrice: '87',
-            currentPrice: '14.79',
+            originalPrice: '78.3',
+            currentPrice: '8.7',
+            vmConfigId: '139'
           }, {
             capacity: '100',
             flow: '100',
             zoneId: '',
             duration: '3',
-            originalPrice: '174',
-            currentPrice: '29.58',
+            originalPrice: '156.6',
+            currentPrice: '17.4',
+            vmConfigId: '144'
           }, {
             capacity: '300',
             flow: '300',
             zoneId: '',
             duration: '3',
-            originalPrice: '522',
-            currentPrice: '88.74',
+            originalPrice: '469.8',
+            currentPrice: '52.2',
+            vmConfigId: '149'
           }],
         objStorageZoneList: [],
         databaseList: [{
@@ -1994,17 +1997,32 @@
       },
 
       objStorageDurationChange(index) {
-        let url = 'ruiradosPrice/countPirce.do'
-        let params = {
-          flowPackage: this.objStorageList[index].flow + 'GB',
-          capacity: this.objStorageList[index].capacity + 'GB',
-          timeValue: this.objStorageList[index].duration,
-          timeType: 'month',
-        }
-        axios.post(url, params).then(res => {
-          if (res.status == 200 && res.data.status == 1) {
-            this.objStorageList[index].currentPrice = res.data.data.priceSpread
-            this.objStorageList[index].originalPrice = res.data.data.price
+        axios.get('activity/getVMConfigId.do',
+          {
+            params: {
+              activityNum: '28',
+              serviceType: 'oss',
+              flowPackage: this.objStorageList[index].flow,
+              capacity: this.objStorageList[index].capacity,
+              month: this.objStorageList[index].duration
+            }
+          }
+        ).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.objStorageList[index].vmConfigId = response.data.result
+            let url = 'ruiradosPrice/countPirce.do'
+            let params = {
+              flowPackage: this.objStorageList[index].flow + 'GB',
+              capacity: this.objStorageList[index].capacity + 'GB',
+              timeValue: this.objStorageList[index].duration,
+              timeType: 'month',
+            }
+            axios.post(url, params).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+                this.objStorageList[index].currentPrice = res.data.data.priceSpread
+                this.objStorageList[index].originalPrice = res.data.data.price
+              }
+            })
           }
         })
       },
@@ -2023,12 +2041,9 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            let url = 'ruiradosPrice/createOrder.do'
+            let url = 'ruiradosPrice/getDickCountOSS.do'
             let params = {
-              flowPackage: this.objStorageList[index].flow + 'GB',
-              capacity: this.objStorageList[index].capacity + 'GB',
-              timeValue: this.objStorageList[index].duration,
-              timeType: 'month',
+              OOSConfigId: this.objStorageList[index].vmConfigId,
               zoneId: this.objStorageList[index].zoneId
             }
             axios.post(url, params).then(res => {
@@ -2039,7 +2054,6 @@
                 this.$message.info({
                   content: response.data.msg
                 })
-
               }
             })
           } else {
