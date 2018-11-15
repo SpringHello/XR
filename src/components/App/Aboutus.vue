@@ -18,15 +18,28 @@
     <div class="enterprise-info" v-show="num==0">
 
       <section>
-        <div class="section-wrap">
-          <div class="head-info">
+        <div class="section-wrap" style="width:1900px;">
+          <div class="head-info" style="padding-bottom:72px;">
             <h1 class="title">致力于成为高品质云服务提供商，让云触手可及</h1>
-            <p class="desc"><span>中关村高新技术企业</span><span>ISO9001华为云管理网络 ISV</span><span>华为全产品线金牌合作伙伴</span></p>
+            <p class="text-blue">关于新睿云</p>
+            <p class="desc" style="padding:0">中关村高新技术企业 . ISO9001华为云管理网络 ISV . 华为全产品线金牌合作伙伴</p>
           </div>
-          <div class="section-content develop">
+          <div class="news">
+            <div class="news-left">
+              <p>
+                新睿云是为客户提供云服务器、云存储、云网络、云数据库、云安全、云监控等产品的云服务提供商。我们的使命是:让云服务触手可及、简单易用，降低用户IT设施的建设和运维成本，助力企业数字化和面向互联网转型。新睿云通过先进的虚拟化技术将高性能服务器、高性能网络设备、高性能的全场景存储等资源进行虚拟化并形成庞大的资源池，同时通过高性能的云业务运营和管理平台对虚拟化资源进行统一分配、调度与管理，形成高效、稳定、可靠、安全的公有云产品体系，满足不同用户、不同场景对资源的个性化需求，有效降低用户整体的CAPEX和OPEX。
+              </p>
+            </div>
+            <div class="news-right">
+              <img src="../../assets/img/aboutus/news-banner.png" alt="" />
+            </div>
+          </div>
+          <div class="section-content develop" style="margin-top:68px;">
             <div v-for="(item,index) in develop" :key="index">
-              <p>{{item.num}}</p>
-              <span>{{item.desc}}</span>
+              <div class="circle">
+                <p>{{item.num}}</p>
+              </div>
+              <p>{{item.desc}}</p>
             </div>
           </div>
         </div>
@@ -228,7 +241,7 @@
           },
           {
             num: '3',
-            desc: '技术支持研发中心'
+            desc: '研发中心'
           },
           {
             num: '4',
@@ -236,7 +249,7 @@
           },
           {
             num: '20+',
-            desc: '专利/著作权立'
+            desc: '专利/著作权'
           },
           {
             num: '60+',
@@ -345,6 +358,9 @@
   // 全局样式
   @m-color: #377DFF;
   @gray: #999999;
+  .aboutus {
+    font-family:MicrosoftYaHei;
+  }
   .section-wrap {
     padding: 60px 0;
     width: 1200px;
@@ -361,7 +377,12 @@
     font-weight: normal;
     text-align: center;
   }
-
+  .text-blue {
+    color: #377DFF;
+    line-height: 50px;
+    font-size: 16px;
+    margin: 16px 0;
+  }
   .desc {
     margin: 0 auto;
     width: 560px;
@@ -465,39 +486,71 @@
   // 企业介绍样式
   .enterprise-info {
     text-align: center;
+    .news {
+      margin: 0 auto;
+      height: 322px;
+      display: flex;
+      > div {
+        width: 960px;
+      }
+      .news-left {
+        background:rgba(245,245,245,1);
+        p {
+          float: right;
+          margin-top: 64px;
+          margin-right: 54px;
+          width:547px;
+          font-size:14px;
+          color:rgba(102,102,102,1);
+          line-height:28px;
+          text-align: left;
+          position: relative;
+          &::before {
+            content: 'About US';
+            display: block;
+            position: absolute;
+            top: -96px;
+            font-size: 48px;
+            color:rgba(55,125,255,1);
+            line-height:64px;
+          }
+        }
+      }
+      .news-right {
 
+      }
+    }
     .develop {
       margin-top: 30px;
       padding: 20px 0;
       div:last-child {
         margin-right: 0;
       }
-      div:nth-child(2) {
-        span {
-          width: 60%;
-        }
-      }
       div {
-        height: 110px;
-        width: 110px;
-        border-radius: 50%;
-        border: 1px solid @gray;
-        margin-right: 65px;
-        letter-spacing: 1px;
-        p {
-          padding: 30px 0 8px 0;
-          color: @m-color;
-          font-size: 28px;
-        }
-        span {
-          display: inline-block;
-          width: 90%;
+        >p {
+          padding-top: 28px;
+          text-align: center;
           color: @gray;
           font-size: 14px;
+          width: 110px;
+        }
+        .circle {
+          height: 110px;
+          width: 110px;
+          border-radius: 50%;
+          border: 3px solid #8CC9FF;
+          margin-right: 113px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          p {
+            padding-top: 0px;
+            color: @m-color;
+            font-size: 28px;
+          }
         }
       }
     }
-
     .map-box {
       margin: 0 auto;
       margin-top: 30px;
