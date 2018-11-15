@@ -2327,7 +2327,7 @@
               this.orderData.push({
                 productType: '云服务器',
                 configs: this.freeHostList[this.index],
-                originalPrice: this.freeHostList[this.index].originalCost,
+                originalPrice: this.freeHostList[this.index].originalPrice,
                 time: this.freeTime,
                 title: this.freeHostList[this.index].headline,
                 cashPledge: Number(this.cashPledge)
@@ -2434,17 +2434,17 @@
       ,
       //领奖时认证验证码
       getVerificationCode() {
-        if (!this.authFormValidate.vailCode) {
+        if (!this.authFormValidate.pictureCode) {
           this.$Message.info('请输入图形验证码')
           return
         }
-        this.$refs.authFormValidate.validateField('tel', val => {
+        this.$refs.authForm.validateField('tel', val => {
           if (!val) {
             axios.get('user/code.do', {
               params: {
                 aim: this.authFormValidate.tel,
                 isemail: 0,
-                vailCode: this.authFormValidate.vailCode
+                vailCode: this.authFormValidate.pictureCode
               }
             }).then(res => {
               if (res.data.status == 1 && res.status == 200) {
