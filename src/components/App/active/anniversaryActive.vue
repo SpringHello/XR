@@ -512,6 +512,8 @@
             <h3>（9）参与本次活动购买的产品不能进行退款（非活动产品可七天无理由退款），若有疑问请联系客服人员。</h3>
             <h3>（10）活动期间任何优惠券折扣券不能在折扣活动中使用。</h3>
             <h3>（11）若购买5台云主机，只能获得1次抽奖机会。</h3>
+            <h3 style="margin:20px 0; ">抽奖奖品细则</h3>
+            <Table border :columns="awardsRuleColumns" :data="awardsRuleData"></Table>
           </div>
           <button @click.stop="showModal.luckDrawRuleModal=false" class="button-primary">我知道了</button>
         </div>
@@ -823,8 +825,98 @@
         }
       }
       return {
+        awardsRuleColumns: [
+          {
+            title: '奖品等级',
+            key: 'grade'
+          }, {
+            title: '奖品名称',
+            key: 'name'
+          }, {
+            title: '奖品价格/台（张）',
+            key: 'price'
+          }, {
+            title: '奖品渠道',
+            key: 'channel'
+          }, {
+            title: '每日抽取奖品数量',
+            key: 'number'
+          }, {
+            title: '活动时长',
+            key: 'duration'
+          }, {
+            title: '每日奖品总价格金额',
+            key: 'totalPrice'
+          }
+        ],
+        awardsRuleData: [
+          {
+            grade: '一等奖',
+            name: '戴森（Dyson）Airwrap美发造型器',
+            price: '4860元/台',
+            channel: '苏宁、京东、天猫',
+            number: '1台',
+            duration: '30天',
+            totalPrice: '4860元',
+          }, {
+            grade: '二等奖',
+            name: '科沃斯智能扫地机器人',
+            price: '2099元/台',
+            channel: '苏宁、京东、天猫',
+            number: '2台',
+            duration: '30天',
+            totalPrice: '4198元',
+          }, {
+            grade: '三等奖',
+            name: '亚马逊Kindle入门版电子书阅读器',
+            price: '589元/台',
+            channel: '苏宁、京东、天猫',
+            number: '10台',
+            duration: '30天',
+            totalPrice: '5890元',
+          }, {
+            grade: '四等奖',
+            name: '黑科技创意实用智能充电护眼仪',
+            price: '128元/台',
+            channel: '苏宁、京东、天猫',
+            number: '50台',
+            duration: '30天',
+            totalPrice: '6400元',
+          }, {
+            grade: '五等奖',
+            name: '金士顿32GB USB3.0 黑色U盘',
+            price: '38.9元/个',
+            channel: '苏宁、京东、天猫',
+            number: '100个',
+            duration: '30天',
+            totalPrice: '3890元',
+          }, {
+            grade: '六等奖',
+            name: '227元满减券（满500元可用）',
+            price: '227元/张',
+            channel: '苏宁、京东、天猫',
+            number: '20张',
+            duration: '30天',
+            totalPrice: '4540元',
+          }, {
+            grade: '七等奖',
+            name: '117元满减券（满300元可用）',
+            price: '117元/张',
+            channel: '苏宁、京东、天猫',
+            number: '80张',
+            duration: '30天',
+            totalPrice: '9360元',
+          }, {
+            grade: '八等奖',
+            name: '27元满减券（满100元可用）',
+            price: '27元/张',
+            channel: '苏宁、京东、天猫',
+            number: '900张',
+            duration: '30天',
+            totalPrice: '24300元',
+          },
+        ],
         provinceList: area,
-        province: "",
         cityList: [],
         authFormValidate: {
           name: '',
@@ -1329,7 +1421,7 @@
         freeTime: '',
 
         /* 消费回馈 */
-        spentCostNode: 0,
+        spentCostNode: 4,
       }
     },
     created() {
