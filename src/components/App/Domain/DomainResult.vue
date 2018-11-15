@@ -36,7 +36,7 @@
               </Checkbox>
             </CheckboxGroup>
           </div>
-          <li v-for="(item,index) in Results" :key="index" v-show="index<=num">
+          <li v-for="(item,index) in Results" :key="index">
             <p>{{item.name}}
               <button v-show="item.isRes=='available'">未注册</button>
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
@@ -47,9 +47,10 @@
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
-          <button class="showAll" @click="exhibition" v-show="isShowAll&&Results.length>=7">显示全部
-            <Icon type="ios-arrow-down"></Icon>
-          </button>
+          <!--<button class="showAll" @click="exhibition" v-show="isShowAll&&Results.length>=7">显示全部-->
+          <!--<Icon type="ios-arrow-down"></Icon>-->
+          <!--</button>-->
+          <p class="fix" v-show="fix">加载中...</p>
         </div>
       </div>
       <div id="result-right">
@@ -84,19 +85,13 @@
   import $store from '@/vuex'
   export default{
     beforeRouteEnter(to, from, next){
-      axios.post('domain/domainFound.do', {
-        domainName: sessionStorage.getItem('name'),
-        tids: JSON.parse(sessionStorage.getItem("suffix")).join(','),
-      }).then(res => {
-        next(vm => {
-          vm.Results = res.data.data.results
-          let len = JSON.parse(sessionStorage.getItem("suffix")).length
-          if (len !== 0) {
-            vm.singles = JSON.parse(sessionStorage.getItem("suffix"))
-          } else {
-            vm.singles = JSON.parse(sessionStorage.getItem('suffixChange')).en
-          }
-        })
+      next(vm => {
+        let len = JSON.parse(sessionStorage.getItem("suffix")).length
+        if (len !== 0) {
+          vm.singles = JSON.parse(sessionStorage.getItem("suffix"))
+        } else {
+          vm.singles = JSON.parse(sessionStorage.getItem('suffixChange')).en
+        }
       })
     },
     data(){
@@ -108,8 +103,6 @@
         suffixChange: JSON.parse(sessionStorage.getItem('suffixChange')),
         show: false,
         singles: [],
-        num: 5,
-        isShowAll: true,
         Results: [],
 //        域名清单
         buyLists: [],
@@ -117,6 +110,8 @@
         payMoney: 0,
 
         domName: '',
+
+        fix: false
 
       }
     },
@@ -139,11 +134,6 @@
         this.singles.unshift(name)
       },
 
-      //显示全部
-      exhibition(){
-        this.num = this.Results.length
-        this.isShowAll = false
-      },
       //加入清单
       addList(item){
         for (var i = 0; i <= this.buyLists.length; i++) {
@@ -234,10 +224,30 @@
         if (this.singles.length != 0) {
           axios.post('domain/domainFound.do', {
             domainName: this.searchText,
-            tids: tids.join(','),
+            tids: tids.slice(0, 8).join(','),
           }).then(res => {
             this.Results = res.data.data.results
           })
+
+          if (tids.slice(8).length != 0) {
+            this.fix = true
+            setTimeout(() => {
+                axios.post('domain/domainFound.do', {
+                  domainName: this.searchText,
+                  tids: tids.slice(8).join(','),
+                }).then(res => {
+                  if (res.status == 200 && res.data.status == 1) {
+                    this.fix = false
+                    var addList = res.data.data.results
+                    for (var i = 0; i < addList.length; i++) {
+                      this.Results.push(addList[i])
+                    }
+                  }
+                })
+              }
+              , 2000)
+          }
+
         } else {
           this.Results = []
         }
@@ -421,6 +431,13 @@
         padding: 9px 23px;
         outline: none;
         cursor: pointer;
+      }
+
+      .fix {
+        font-size: 16px;
+        color: #2a99f2;
+        text-align: center;
+        padding: 10px;
       }
     }
     #result-right {
