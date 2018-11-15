@@ -19,7 +19,7 @@
 
       <section>
         <div class="section-wrap" style="width:1900px;">
-          <div class="head-info" style="padding-bottom:72px;">
+          <div class="head-info " style="padding-bottom:72px;">
             <h1 class="title">致力于成为高品质云服务提供商，让云触手可及</h1>
             <p class="text-blue">关于新睿云</p>
             <p class="desc" style="padding:0">中关村高新技术企业 . ISO9001华为云管理网络 ISV . 华为全产品线金牌合作伙伴</p>
@@ -34,12 +34,10 @@
               <img src="../../assets/img/aboutus/news-banner.png" alt="" />
             </div>
           </div>
-          <div class="section-content develop" style="margin-top:68px;">
+          <div class="section-content develop ">
             <div v-for="(item,index) in develop" :key="index">
-              <div class="circle">
-                <p>{{item.num}}</p>
-              </div>
-              <p>{{item.desc}}</p>
+              <p>{{item.num}}</p>
+              <span>{{item.desc}}</span>
             </div>
           </div>
         </div>
@@ -241,7 +239,7 @@
           },
           {
             num: '3',
-            desc: '研发中心'
+            desc: '技术支持研发中心'
           },
           {
             num: '4',
@@ -249,10 +247,10 @@
           },
           {
             num: '20+',
-            desc: '专利/著作权'
+            desc: '专利/著作权力'
           },
           {
-            num: '60+',
+            num: '100+',
             desc: '员工'
           }
         ],
@@ -370,7 +368,6 @@
       justify-content: center;
     }
   }
-
   .title {
     font-size: 28px;
     color: #333333;
@@ -516,9 +513,6 @@
           }
         }
       }
-      .news-right {
-
-      }
     }
     .develop {
       margin-top: 30px;
@@ -526,28 +520,28 @@
       div:last-child {
         margin-right: 0;
       }
-      div {
-        >p {
-          padding-top: 28px;
-          text-align: center;
-          color: @gray;
-          font-size: 14px;
-          width: 110px;
+      div:nth-child(2) {
+        span {
+          width: 60%;
         }
-        .circle {
-          height: 110px;
-          width: 110px;
-          border-radius: 50%;
-          border: 3px solid #8CC9FF;
-          margin-right: 113px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          p {
-            padding-top: 0px;
-            color: @m-color;
-            font-size: 28px;
-          }
+      }
+      div {
+        height: 110px;
+        width: 110px;
+        border-radius: 50%;
+        border: 1px solid @gray;
+        margin-right: 65px;
+        letter-spacing: 1px;
+        p {
+          padding: 30px 0 8px 0;
+          color: @m-color;
+          font-size: 28px;
+        }
+        span {
+          display: inline-block;
+          width: 90%;
+          color: #999999;
+          font-size: 14px;
         }
       }
     }
