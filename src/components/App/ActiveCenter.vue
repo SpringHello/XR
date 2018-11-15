@@ -137,6 +137,17 @@
         active: [],
         activedata: [
           {
+            imgPath: require('../../assets/img/activecenter/bg-card-5.png'),
+            name: '周年庆典，钜惠来袭',
+            desc: '爆款高配云产品 限时特惠',
+            secDesc: '不止1.7折，更有百万豪礼，等您来拿！',
+            time: '2018.11.17-2018.12.16',
+            activeObj: '新老用户',
+            url: 'anniversaryActive',
+            isStart: true,
+            weight: '1',
+          },
+          {
             imgPath: require('../../assets/img/activecenter/bg-card-2.png'),
             name: '免费云主机 不限量领取',
             desc: '交押金最长可用一年 押金闪退',
@@ -178,17 +189,6 @@
             isStart: true,
             weight: '1',
             color: 'black'
-          },
-          {
-            imgPath: require('../../assets/img/activecenter/bg-card-5.png'),
-            name: '周年庆典，钜惠来袭',
-            desc: '爆款高配云产品 限时特惠',
-            secDesc: '不止1.7折，更有百万豪礼，等您来拿！',
-            time: '2018.11.17-2018.12.16',
-            activeObj: '新老用户',
-            url: 'anniversaryActive',
-            isStart: true,
-            weight: '1',
           },
           {
             imgPath: require('../../assets/img/activecenter/bg-card-onsale.png'),
