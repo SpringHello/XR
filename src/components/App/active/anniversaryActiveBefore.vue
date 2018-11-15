@@ -123,12 +123,12 @@
           <div class="gpu-item">
             <div v-for="(item,index) in gpuList" class="item">
               <div class="item-title">
-                <p>GPU<span>云服务器</span></p>
+                <p class="tl">GPU<span>云服务器</span><span v-if="item.duration == '7d'">(体验)</span></p>
                 <ul>
                   <li>{{ item.cpu }}核<span>vCPU</span></li>
                   <li>{{ item.memory }}G<span>内存</span></li>
                   <li>{{ item.rootDisk }}G<span>系统盘</span></li>
-                  <li>P40<span>显卡</span></li>
+                  <li>{{ item.graphicsCard }}<span>显卡</span></li>
                 </ul>
               </div>
               <div class="item-select">
@@ -178,7 +178,7 @@
           <div class="host-item">
             <div v-for="(item,index) in freeHostList" class="item">
               <div class="item-title">
-                <p>云服务器</p>
+                <p class="tl">云服务器</p>
                 <ul>
                   <li>{{ item.cpu }}核<span>CPU</span></li>
                   <li>{{ item.memory }}G<span>内存</span></li>
@@ -399,9 +399,9 @@
             graphicsCard: 'P40',
             zoneId: 'hz',
             system: 'linux',
-            duration: '3',
-            originalPrice: '16325.11',
-            currentPrice: '13060.1',
+            duration: '7d',
+            originalPrice: '1426.75',
+            currentPrice: '242.55',
             vmConfigId: '101'
           }, {
             cpu: '16',
@@ -411,12 +411,41 @@
             graphicsCard: 'P100',
             zoneId: 'hz',
             system: 'linux',
-            duration: '3',
-            originalPrice: '27425.11',
-            currentPrice: '21940.1',
+            duration: '7d',
+            originalPrice: '2397.99',
+            currentPrice: '407.66',
+            vmConfigId: '116'
+          },
+          {
+            cpu: '16',
+            memory: '64',
+            rootDisk: '128',
+            bandwidth: '2',
+            graphicsCard: 'P40',
+            zoneId: 'hz',
+            system: 'linux',
+            duration: '1',
+            originalPrice: '5441.7',
+            currentPrice: '4285.22',
+            vmConfigId: '101'
+          }, {
+            cpu: '16',
+            memory: '128',
+            rootDisk: '128',
+            bandwidth: '2',
+            graphicsCard: 'P100',
+            zoneId: 'hz',
+            system: 'linux',
+            duration: '1',
+            originalPrice: '9141.7',
+            currentPrice: '7245.22',
             vmConfigId: '116'
           }],
           durationList: [
+            {
+            name: '7天',
+            value: '7d'
+          },
           {
             name: '3个月',
             value: '3'
@@ -424,7 +453,7 @@
             name: '6个月',
             value: '6'
           }, {
-            name: '1年',
+            name: '1个月',
             value: '1'
           }, {
             name: '2年',
@@ -434,7 +463,7 @@
             value: 'n3'
           }],
           gpuZoneList: [{
-          name: '华中二区',
+          name: '华东一区',
           value: 'hz'
         }],
         bandwidthList: [
@@ -504,7 +533,7 @@
         ],
         hostZoneList: [
           {
-            name: '华中二区',
+            name: '华中一区',
             value: 'hz'
         }],
         systemList: [
@@ -1084,9 +1113,10 @@
     }
     .gpuList {
       padding: 40px 20px;
+      padding-bottom: 10px;
       .center();
       background: #FFF;
-      height: 686px;
+      // height: 686px;
       .gpu-title {
         padding: 0 20px;
         > img {
@@ -1125,11 +1155,16 @@
       }
       .gpu-item {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-around;
         .item {
           width: 530px;
           height: 522px;
+          margin-bottom: 40px;
           background: #FFF url("../../../assets/img/active/anniversary/aa-banner9.png") center no-repeat;
+          &:nth-of-type(1),&:nth-of-type(2) {
+            background: #FFF url("../../../assets/img/active/anniversary/aa-banner24.png") center no-repeat;
+          }
           .item-title {
             height: 163px;
             padding: 40px 20px;
@@ -1151,7 +1186,7 @@
                 font-family: MicrosoftYaHei;
                 font-weight: 500;
                 color: rgba(255, 255, 255, 1);
-                padding: 0 12px;
+                padding: 0 10px;
                 > span {
                   font-size: 18px;
                 }
