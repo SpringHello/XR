@@ -1626,7 +1626,7 @@
         this.$refs.authForm.validate((valid) => {
           if (valid) {
             this.showModal.authGetPrizeModal = false
-   /*         axios.post('user/personalAttest.do', {
+            axios.post('user/personalAttest.do', {
               cardID: this.authFormValidate.id,
               name: this.authFormValidate.name,
               phone: this.authFormValidate.tel,
@@ -1641,7 +1641,7 @@
                   content: response.data.message
                 })
               }
-            })*/
+            })
           }
         })
       },
