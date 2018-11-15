@@ -30,7 +30,8 @@
             原价：<span :class="{cross:couponInfo.originCost!=couponInfo.totalCost}">{{couponInfo.originCost}}元</span><span
             style="font-size:18px;color:rgba(0,0,0,0.65);margin-left: 20px;">总计支付：{{couponInfo.totalCost}}元</span>
           </p>
-          <p style="text-align: right;color: #F85E1D">当前已支付订单金额累计{{ spentCost }}元，再消费{{ otherSpentCost }}元可领取{{ spentCostNode }}元苏宁卡/京东E卡！</p>
+          <p style="text-align: right;color: #F85E1D" v-if="spentCost<31117">当前已支付订单金额累计{{ spentCost }}元，再消费{{ otherSpentCost }}元{{ spentCostNode }}</p>
+          <p style="text-align: right;color: #F85E1D" v-else> 当前已支付订单金额累计{{ spentCost }}元，{{ spentCostNode }}</p>
           <div style="text-align: right;margin: 10px 0;">
             <ul>
               <li v-for="(item,index) in showFree"
@@ -242,19 +243,24 @@
           this.canUseTicket = this.orderData.every(item => {
             return item.discountedorders != 1
           })
-          if(response.data.result.data[0].discountmessage){
+          if (response.data.result.data[0].discountmessage) {
             this.showFree = JSON.parse(response.data.result.data[0].discountmessage)
           }
+          console.log(this.orderData)
+          let orderNumber = this.orderData.map(item => {
+            return item.orderId
+          })
+          this.$http.get('ticket/getUserTicket.do', {
+            params: {
+              ticketType: '',
+              isuse: 0,
+              orderNumber: orderNumber + '',
+              totalCost: this.couponInfo.cost
+            }
+          }).then(response => {
+            this.couponInfo.couponList = response.data.result
+          })
         }
-        this.$http.get('ticket/getUserTicket.do', {
-          params: {
-            ticketType: '',
-            isuse: 0,
-            totalCost: this.couponInfo.cost
-          }
-        }).then(response => {
-          this.couponInfo.couponList = response.data.result
-        })
       },
       // 选中项变化
       onSelectionChange(selection) {
@@ -285,10 +291,14 @@
         } else {
           this.couponInfo.totalCost = 0
         }
+        let orderNumber = this.orderData.map(item => {
+          return item.orderId
+        })
         this.$http.get('ticket/getUserTicket.do', {
           params: {
             ticketType: '',
             isuse: 0,
+            orderNumber: orderNumber + '',
             totalCost: cost
           }
         }).then(response => {
@@ -363,17 +373,20 @@
       otherSpentCost() {
         let cost = this.spentCost
         if (cost < 1117) {
-          this.spentCostNode = 50
+          this.spentCostNode = '可领取50元苏宁卡/京东E卡！'
           return 1117 - cost
         } else if (1117 <= cost && cost < 6117) {
-          this.spentCostNode = 350
+          this.spentCostNode = '可领取350元+50元苏宁卡/京东E卡！'
           return 6117 - cost
         } else if (6117 <= cost && cost < 11117) {
-          this.spentCostNode = 1000
+          this.spentCostNode = '可领取1000元+350元+50元苏宁卡/京东E卡！'
           return 11117 - cost
         } else if (11117 <= cost && cost < 31117) {
-          this.spentCostNode = 3100
+          this.spentCostNode = '可领取3100元+ 1000元+ 350元 + 50元苏宁卡/京东E卡！'
           return 31117 - cost
+        } else {
+          return 0
+          this.spentCostNode = '可领取3100元+ 1000元+ 350元 + 50元苏宁卡/京东E卡！'
         }
       },
     },

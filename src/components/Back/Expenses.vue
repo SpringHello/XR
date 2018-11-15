@@ -1268,7 +1268,7 @@
         /*发送验证码button innerText*/
         codePlaceholder: '发送验证码',
         /*解冻到余额/账户  默认解冻到余额*/
-        unfreezeTo: 'yue',
+        unfreezeTo: 'account',
         // 输入兑换码
         exchangeCardCode: '',
         // 默认不显示兑换码错误

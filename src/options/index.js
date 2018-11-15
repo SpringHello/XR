@@ -28,17 +28,17 @@ const customTimeOptions = {
 }
 /* 磁盘类型 选项列表 */
 const diskTypeList = [
-  // {
-  //   value: 'sas',
-  //   label: 'SAS存储'
-  // },
+  {
+    value: 'sas',
+    label: 'SAS存储'
+  },
   {
     value: 'ssd',
     label: 'SSD存储'
   },
-  // {
-  //   value: 'sata',
-  //   label: 'SATA存储'
-  // }
+  {
+    value: 'sata',
+    label: 'SATA存储'
+  }
 ]
 export {customTimeOptions, diskTypeList}
