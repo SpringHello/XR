@@ -472,7 +472,7 @@
               <FormItem label="邮政编码" prop="postCode">
                 <Input v-model="receiveGoodFormValidate.postCode" placeholder=" 请输入您的邮政编码"></Input>
               </FormItem>
-              <FormItem prop="province" label="收件地址">
+              <FormItem prop="city" label="收件地址">
                 <Select v-model="receiveGoodFormValidate.province" style="width:147px" @on-change="changeProvince">
                   <Option v-for="item in provinceList" :value="item.name" :key="item.name">{{ item.name }}</Option>
                 </Select>
@@ -818,8 +818,10 @@
         }
       }
       const validaDistrict = (rule, value, callback) => {
-        if (!this.receiveGoodFormValidate.province || !this.receiveGoodFormValidate.city) {
-          return callback(new Error('请选择地区'));
+        if (!this.receiveGoodFormValidate.province) {
+          return callback(new Error('请选择省'));
+        } else if (!this.receiveGoodFormValidate.city) {
+          return callback(new Error('请选择市'));
         } else {
           callback()
         }
@@ -959,7 +961,7 @@
             {required: true, message: '请输入姓名'},
             {validator: validaRegisteredName}
           ],
-          province: [
+          city: [
             {required: true, validator: validaDistrict}
           ],
           postCode: [
