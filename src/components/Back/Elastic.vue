@@ -24,7 +24,7 @@
           </TabPane>
           <TabPane :label="Groups">
             <div>
-              <Button type="primary" @click="newAddTelescopic = true" style="margin-bottom: 15px;">新建</Button>
+              <Button type="primary" @click="eject" style="margin-bottom: 15px;">新建</Button>
               <Table :columns="telescopicList" :data="telescopicData"></Table>
             </div>
           </TabPane>
@@ -443,6 +443,12 @@
         }
     },
     methods:{
+      eject(){
+        if(this.getAllSelect() == false){
+          this.newAddTelescopic = true;
+        };
+      },
+
       //获取启动配置
       selectAllElastic(){
         this.$http.get('elasticScaling/listElasticScalingRunConfig.do',{
@@ -543,6 +549,7 @@
 
       //获取负载均衡
       getAllSelect(){
+        var aa = true;
          this.$http.get('loadbalance/listLoadBalanceRoleAndInterLoadBalance.do',{
           }).then(res =>{
             if(res.status == 200 && res.data.status == 1){
@@ -556,9 +563,11 @@
                     this.$router.push({path:'balance'});
                   }
                 })
+                aa = false;
               }
             }
           });
+          return aa;
         },
 
 
