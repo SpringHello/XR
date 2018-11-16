@@ -26,17 +26,17 @@
         <div>
           <div class="left-top">
             <p>域名查询结果</p>
-            <button @click="show=!show">筛选
+            <button @click="showValue=!showValue">筛选
               <Icon type="arrow-down-b"></Icon>
             </button>
           </div>
-          <div class="show" v-show="show">
+          <div class="show" v-show="showValue">
             <CheckboxGroup v-model="singles" style="display: flex;flex-wrap: wrap;justify-content: flex-start">
               <Checkbox v-for="(item,index) in suffixChange.en" :key="index" :label="item" style="width:95px;">{{item}}
               </Checkbox>
             </CheckboxGroup>
           </div>
-          <li v-for="(item,index) in Results" :key="index">
+          <li v-for="(item,index) in Results" :key="item.name">
             <p>{{item.name}}
               <button v-show="item.isRes=='available'">未注册</button>
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
@@ -50,7 +50,6 @@
           <!--<button class="showAll" @click="exhibition" v-show="isShowAll&&Results.length>=7">显示全部-->
           <!--<Icon type="ios-arrow-down"></Icon>-->
           <!--</button>-->
-          <p class="fix" v-show="fix">加载中...</p>
         </div>
       </div>
       <div id="result-right">
@@ -101,7 +100,7 @@
         searchText: sessionStorage.getItem('name'),
         choose: false,
         suffixChange: JSON.parse(sessionStorage.getItem('suffixChange')),
-        show: false,
+        showValue: false,
         singles: [],
         Results: [],
 //        域名清单
@@ -111,7 +110,6 @@
 
         domName: '',
 
-        fix: false
 
       }
     },
@@ -214,14 +212,14 @@
       },
       singles(){
         var tids = []
-        for (var i = 0; i < this.singles.length; i++) {    //循环遍历当前数组
+        for (var i = 0; i < this.singles.length; i++) {
           //判断当前数组下标为i的元素是否已经保存到临时数组
           //如果已保存，则跳过，否则将此元素保存到临时数组中
           if (tids.indexOf(this.singles[i]) == -1) {
             tids.push(this.singles[i]);
           }
         }
-        if (this.singles.length != 0) {
+        if (tids.length != 0) {
           axios.post('domain/domainFound.do', {
             domainName: this.searchText,
             tids: tids.slice(0, 8).join(','),
@@ -230,17 +228,15 @@
           })
 
           if (tids.slice(8).length != 0) {
-            this.fix = true
             setTimeout(() => {
                 axios.post('domain/domainFound.do', {
                   domainName: this.searchText,
                   tids: tids.slice(8).join(','),
                 }).then(res => {
                   if (res.status == 200 && res.data.status == 1) {
-                    this.fix = false
                     var addList = res.data.data.results
-                    for (var i = 0; i < addList.length; i++) {
-                      this.Results.push(addList[i])
+                    for (var i in addList) {
+                      this.Results.push(addList[i]);
                     }
                   }
                 })
@@ -366,7 +362,6 @@
         border-top: none;
         &:hover {
           background: rgba(240, 247, 252, 1);
-          /*border: 1px solid rgba(170, 210, 242, 1);*/
         }
         P {
           font-size: 16px;
