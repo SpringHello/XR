@@ -68,8 +68,8 @@
               <span>按交易时间</span>
               <Row style="display: inline-block;margin-left: 10px">
                 <Col span="12">
-                <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
-                             placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
+                  <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
+                               placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
                 </Col>
               </Row>
               <span style="margin-left: 20px">按交易类型</span>
@@ -107,8 +107,8 @@
               <span style="line-height: 30px;">～</span>
               <Row>
                 <Col span="12">
-                <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
-                             placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
+                  <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
+                               placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
               <Button type="primary" style="margin-left: 197px" @click="orderPay" :disabled="payDisabled">支付</Button>
@@ -948,6 +948,15 @@
                   break
                 case 'disk':
                   type = '云磁盘'
+                  break
+                case 'ruirados':
+                  type = '对象存储'
+                  break
+                case 'gpu':
+                  type = 'GPU服务器'
+                  break
+                case 'database':
+                  type = '数据库'
                   break
                 case 'publicIp':
                   type = '网络'
@@ -2037,7 +2046,7 @@
         //let url = 'user/getRremainderThawing.do'
         //  直接解冻
       },
-      exchange(){
+      exchange() {
         this.$http.get('user/receiveTicketForUser.do', {
           params: {
             ticketNumber: this.exchangeCardCode
@@ -2055,7 +2064,7 @@
         })
       },
       // 提现操作
-      withdraw(){
+      withdraw() {
         this.$refs.withdraw.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建磁盘方法
@@ -2083,7 +2092,7 @@
         })
       },
       // 提现前发送验证码
-      getCode(){
+      getCode() {
         if (this.codePlaceholder != '发送验证码') {
           return
         }
@@ -2147,7 +2156,7 @@
         }
       },
       // 返回一个对象，包含提现时的发送验证码方式（手机、邮箱），号码
-      withdrawConfirm(){
+      withdrawConfirm() {
         var type = '', number = ''
         if (this.$store.state.userInfo.phone) {
           type = 'phone'

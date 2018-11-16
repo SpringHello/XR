@@ -14,7 +14,9 @@
                    style="margin-right:30px;height: 77px;margin-top: 6px;">
               <div style="position:relative;width:100%">
                 <h1 style="margin-bottom:9px;font-size: 24px;color:#111111;font-weight: normal;">{{title}}</h1>
-                <p style="font-size: 14px;color: #292626;line-height: 22px;">{{message}} <span style="cursor: pointer;color: #377dff;margin-left: 10px" @click="$router.push('AnniversaryActive')">再次购买</span></p>
+                <p style="font-size: 14px;color: #292626;line-height: 22px;">{{message}} <span style="cursor: pointer;color: #377dff;margin-left: 10px"
+                                                                                               @click="$router.push('AnniversaryActive')">再次购买</span></p>
+                <p v-if="firstMessage" style="font-size: 14px;color: #3DBD7D;line-height: 22px;"> {{ firstMessage }}</p>
                 <div v-if="payResult=='success'" style="position:absolute;left:0px;bottom:-60px;">
                   <button class="ghost button" @click="push('expenses')">查看订单</button>
                   <button class="primary button" @click="push('overview')">进入控制台</button>
@@ -40,6 +42,7 @@
       if (payResult == 'success') {
         var title = '支付成功'
         var message = sessionStorage.getItem('successMsg') || '您的订单已支付成功，我们需要一到三分钟为您分配云服务，请稍后。'
+        var firstMessage = sessionStorage.getItem('firstMsg') || ''
       } else {
         title = '支付失败'
         message = sessionStorage.getItem('errMsg') || '抱歉，您的订单支付失败。如未完成扣款，请重新提起支付；如已扣款仍支付失败，请联系客服。'
@@ -48,6 +51,7 @@
         payResult,
         title,
         message,
+        firstMessage,
         kfURL: ''
       }
     },

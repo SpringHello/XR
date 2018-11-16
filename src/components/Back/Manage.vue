@@ -1359,9 +1359,9 @@
         })
       },
       link() {
-        localStorage.setItem('link-companyid', this.computerInfo.companyid)
-        localStorage.setItem('link-vmid', this.computerInfo.computerid)
-        localStorage.setItem('link-zoneid', this.computerInfo.zoneid)
+        localStorage.setItem('link-companyid', this.$route.query.companyid)
+        localStorage.setItem('link-vmid', this.$route.query.vmid)
+        localStorage.setItem('link-zoneid', this.$route.query.zoneid)
         localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
         window.open('/ruicloud/link')
       }

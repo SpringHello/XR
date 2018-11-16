@@ -54,7 +54,7 @@
               <span>云服务器限时抢购中</span>
               <div style="margin-top: 8px">
                 <span v-if="countDownShow">本场结束倒计时:</span>
-                <span v-else>距下场开始倒计时:</span>
+                <span v-else>距抢购开始倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
@@ -96,8 +96,29 @@
               </div>
             </div>
             <div class="products-footer">
-              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'objStorage'">对象存储</span>（10:30开始）、<span
+              <p v-if="timeNode == '1'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（08:30开始）、<span
+                @click="productNode = 'objStorage'">对象存储</span>（10:30开始）、<span
                 @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '2' "><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span
+                @click="productNode = 'objStorage'">对象存储</span>（10:30开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '3'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（13:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '4'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（13:00开始）、<span
+                @click="productNode = 'objStorage'">对象存储</span>（15:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '5'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span
+                @click="productNode = 'objStorage'">对象存储</span>（15:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '6'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（20:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '7'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）、<span @click="productNode = 'host'">云主机</span>（20:00开始）、</span></p>
+              <p v-if="timeNode == '8'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：今日最后场次 <span
+                @click="productNode = 'host'">云主机</span>（20:00开始）</span></p>
+              <p v-if="timeNode == '9'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（明日08:30开始）、<span
+                @click="productNode = 'objStorage'">对象存储</span>（明日10:30开始）、<span
+                @click="productNode = 'database'">云数据库</span>（明日16:30开始）</span></p>
             </div>
           </div>
           <div class="products" v-if="productNode == 'objStorage'">
@@ -106,7 +127,7 @@
               <span style="position: relative;bottom: 20px;">对象存储限时抢购中</span>
               <div style="margin-top: 8px">
                 <span v-if="countDownShow">本场结束倒计时:</span>
-                <span v-else>距下场开始倒计时:</span>
+                <span v-else>距抢购开始倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
@@ -139,8 +160,29 @@
               </div>
             </div>
             <div class="products-footer">
-              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（10:30开始）、<span
+              <p v-if="timeNode == '1'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（08:30开始）、<span
+                @click="productNode = 'objStorage'">对象存储</span>（10:30开始）、<span
                 @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '2' "><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span
+                @click="productNode = 'objStorage'">对象存储</span>（10:30开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '3'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（13:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '4'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（13:00开始）、<span
+                @click="productNode = 'objStorage'">对象存储</span>（15:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '5'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span
+                @click="productNode = 'objStorage'">对象存储</span>（15:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '6'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（20:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '7'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）、<span @click="productNode = 'host'">云主机</span>（20:00开始）、</span></p>
+              <p v-if="timeNode == '8'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：今日最后场次 <span
+                @click="productNode = 'host'">云主机</span>（20:00开始）</span></p>
+              <p v-if="timeNode == '9'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（明日08:30开始）、<span
+                @click="productNode = 'objStorage'">对象存储</span>（明日10:30开始）、<span
+                @click="productNode = 'database'">云数据库</span>（明日16:30开始）</span></p>
             </div>
           </div>
           <div class="products" v-if="productNode == 'database'">
@@ -149,7 +191,7 @@
               <span>云数据库限时抢购中</span>
               <div style="margin-top: 8px">
                 <span v-if="countDownShow">本场结束倒计时:</span>
-                <span v-else>距下场开始倒计时:</span>
+                <span v-else>距抢购开始倒计时:</span>
                 <p><span>{{ hour}} : {{ minute}} : {{second}}</span></p>
               </div>
             </div>
@@ -188,7 +230,29 @@
               </div>
             </div>
             <div class="products-footer">
-              <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：今日最后场次 <span @click="productNode = 'host'">云主机</span>（20:00开始）</span></p>
+              <p v-if="timeNode == '1'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（08:30开始）、<span
+                @click="productNode = 'objStorage'">对象存储</span>（10:30开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '2' "><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span
+                @click="productNode = 'objStorage'">对象存储</span>（10:30开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '3'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（13:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '4'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（13:00开始）、<span
+                @click="productNode = 'objStorage'">对象存储</span>（15:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '5'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span
+                @click="productNode = 'objStorage'">对象存储</span>（15:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '6'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（20:00开始）、<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）</span></p>
+              <p v-if="timeNode == '7'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span
+                @click="productNode = 'database'">云数据库</span>（16:30开始）、<span @click="productNode = 'host'">云主机</span>（20:00开始）、</span></p>
+              <p v-if="timeNode == '8'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：今日最后场次 <span
+                @click="productNode = 'host'">云主机</span>（20:00开始）</span></p>
+              <p v-if="timeNode == '9'"><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：<span @click="productNode = 'host'">云主机</span>（明日08:30开始）、<span
+                @click="productNode = 'objStorage'">对象存储</span>（明日10:30开始）、<span
+                @click="productNode = 'database'">云数据库</span>（明日16:30开始）</span></p>
             </div>
           </div>
         </div>
@@ -367,7 +431,10 @@
               <li v-if="item.type == 0">{{ item.receivegifg == 0 ? '未领取' : '已领取' }}</li>
               <li>{{ item.updateDate }}</li>
               <li>{{ item.activityName}}</li>
-              <li @click="fillInAddress(item.code)" v-if="item.type == 1 && item.receivegifg == 1">填写／修改收货信息</li>
+              <li @click="fillInAddress(item.code)" v-if="item.type == 1 && item.obtain == 0">填写／修改收货信息</li>
+              <li @click="showModal.logisticsModal=true,expressCompany = item.expresscompany,courierNumber = item.couriernumber "
+                  v-if="item.type == 1 && (item.obtain == 1 || item.obtain == 2)">查看物流信息
+              </li>
               <!-- <li @click="getPrize(item.code)" v-if="item.type == 1 && item.receivegifg == 0">领取奖品</li>-->
               <li @click="$router.push('expenses')" v-if="item.type == 0">查看</li>
             </ul>
@@ -379,6 +446,19 @@
         <p @click="winningRecordShow = false">← 返回活动主场</p>
       </div>
     </div>
+    <!-- 物流信息 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.logisticsModal=false" v-if="showModal.logisticsModal">
+        <div class="all-modal modal1" @click.stop="showModal.logisticsModal=true">
+          <div class="header">物流信息</div>
+          <div class="body">
+            <span style="padding: 58px 0 20px 0;display:block">物流公司：{{ expressCompany }}</span>
+            <span style="padding: 0px 0 44px 0;display:block">物流单号：{{ courierNumber }}</span>
+            <button @click.stop="showModal.logisticsModal=false" style="margin-bottom: 20px;" class="button-primary">确定</button>
+          </div>
+        </div>
+      </div>
+    </transition>
     <!-- 登陆注册弹窗 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.notLoginModal=false" v-if="showModal.notLoginModal">
@@ -501,17 +581,19 @@
             <p>·无论新老用户只要注册/登录新睿云的账号即可获得一次抽奖机。</p>
             <p>·用户第一次购买1.7折云主机可获得一次抽奖机会。</p>
             <p>·购买1.7折对象存储可获得一次抽奖机会。</p>
-            <p>·购买1.7折云数据库可获得一次抽奖机会。</p>
-            <p>·购买8.0折GPU服务器可获得一次抽奖机会。</p>
+            <p>·购买1.7折云数据库可获得一次抽奖机会</p>
+            <p>·购买活动中任意GPU服务器只可获得一次抽奖机会。</p>
             <h3>（3）抽奖成功后，领取奖品时没有实名认证的用户需要先进行实名认证才可领取奖品。</h3>
             <h3>（4）领取奖品成功后，需在“我的奖品”中完善收货地址，方便新睿云发放奖品。</h3>
             <h3>（5）领取礼品时填写的收货地址需为真实收货地址，若因填写错误导致奖品没有送达或送错，新睿云不承担相应责任。</h3>
             <h3>（6）活动期间新睿云将在12月2日进行第一次线下奖品发出、12月18日进行第二次线下奖品发出，请用户在发放奖品日前完成收货信息填写。</h3>
             <h3>（7）若用户已抽中奖品但在两次发放奖品日都未填写收货信息，新睿云默认为用户放弃中奖奖品。</h3>
-            <h3>（8）活动期间任何优惠券折扣券不能在折扣活动中使用。</h3>
+            <h3>（8）奖品发出后新睿云会将奖品物流订单号码通过短信形式发送给客户，客户可通过物流订单号查询物流。</h3>
             <h3>（9）参与本次活动购买的产品不能进行退款（非活动产品可七天无理由退款），若有疑问请联系客服人员。</h3>
             <h3>（10）活动期间任何优惠券折扣券不能在折扣活动中使用。</h3>
-            <h3>（11）若购买5台云主机，只能获得1次抽奖机会。</h3>
+            <h3>（11） 每个用户可购买5台云主机，其余产品均为一台。</h3>
+            <h3>（12）若购买5台云主机，只能获得1次抽奖机会。</h3>
+            <h3>（13）本次抽奖实物奖品价格均随市场价格变化而变化</h3>
             <h3 style="margin:20px 0; ">抽奖奖品细则</h3>
             <Table border :columns="awardsRuleColumns" :data="awardsRuleData"></Table>
           </div>
@@ -526,7 +608,7 @@
           <div class="header">消费回赠活动规则</div>
           <div class="body" style="overflow-y:hidden;border:0;height:226px;">
             <h3>（1）活动时间：2018年11月17日—2018年12月16日</h3>
-            <h3>（2）消费满***元可获得***购物卡</h3>
+            <h3>（2）消费满1117、6117、11117、31117元可获得50、350、1000、3100元购物卡</h3>
             <h3>（3）当到达消费满送条件时，将在订单支付成功页面中显示达到满送条件提示，后续会有销售人员与用户进行电话沟通确认。</h3>
             <h3>（4）确认完成后，新睿云将以短信形式发送购物卡信息，请注意查收。</h3>
             <h3>（5）活动期间，正常购买产品的金额也算入消费满送活动中，领取满送成功后正常购买的产品将不能进行退款。</h3>
@@ -776,6 +858,7 @@
   import reg from '../../../util/regExp'
   import VueQArt from 'vue-qart'
   import area from "../../../options/area.json"
+  import throttle from 'throttle-debounce/throttle'
 
   export default {
     components: {
@@ -847,7 +930,7 @@
             title: '活动时长',
             key: 'duration'
           }, {
-            title: '每日奖品总价格金额',
+            title: '每日奖品总价格',
             key: 'totalPrice'
           }
         ],
@@ -978,6 +1061,8 @@
         aa_scrollTop: 0,
         winningRecordShow: false,
         winningRecords: [],
+        expressCompany: '',
+        courierNumber: '',
         showModal: {
           notLoginModal: false,
           notPrizeChanceModal: false,
@@ -993,7 +1078,8 @@
           payDefeatedModal: false,
           paySuccessModal: false,
           weChatRechargeModal: false,
-          orderConfirmationModal: false
+          orderConfirmationModal: false,
+          logisticsModal: false
         },
         current: 0, // 标记抽奖奖品
         awards: [],
@@ -1033,6 +1119,7 @@
         productNode: '', // 产品节点
         countDownShow: '',
         gpuCountDownShow: false,
+        timeNode: '',
         hostList: [
           {
             cpu: '4',
@@ -1345,8 +1432,8 @@
             render: (h, params) => {
               let arr = []
               let param3 = h('li', {}, '主机： ' + params.row.title)
-              let param = h('li', {}, '带宽： ' + params.row.configs.bandwidth)
-              let param1 = h('li', {}, '磁盘： ' + params.row.configs.rootDisk)
+              let param = h('li', {}, '带宽： ' + params.row.configs.bandwidth + 'M')
+              let param1 = h('li', {}, '磁盘： ' + params.row.configs.rootDisk + 'G')
               let param2 = h('li', {}, '系统： ' + params.row.configs.system)
               arr.push(param3)
               arr.push(param)
@@ -1467,6 +1554,7 @@
         area.forEach(item => {
           if (item.name == val) {
             this.cityList = item.city;
+            this.receiveGoodFormValidate.city = this.cityList[0].name
           }
         });
       },
@@ -1484,52 +1572,63 @@
           if (this.serverTimeHour < 8 || (this.serverTimeHour == 8 && this.serverTimeMinute < 30)) {
             this.productNode = 'host'
             this.countDownShow = ''
+            this.timeNode = '1'
             this.getTimeNodes('08:30')
           } else if ((this.serverTimeHour == 8 && this.serverTimeMinute >= 30) || this.serverTimeHour == 9 || (this.serverTimeHour == 10 && this.serverTimeMinute < 30)) {
             this.productNode = 'host'
             this.countDownShow = 'host'
+            this.timeNode = '2'
             this.getTimeNodes('10:30')
             this.hostDisabled = false
           } else if ((this.serverTimeHour == 10 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 11 && this.serverTimeMinute < 30)) {
             this.productNode = 'objStorage'
             this.countDownShow = 'obj'
+            this.timeNode = '3'
             this.getTimeNodes('11:30')
             this.objStorageDisabled = false
           } else if ((this.serverTimeHour == 11 && this.serverTimeMinute >= 30) || 11 < this.serverTimeHour && this.serverTimeHour < 13) {
             this.productNode = 'host'
             this.countDownShow = ''
+            this.timeNode = '4'
             this.getTimeNodes('13:00')
           } else if (this.serverTimeHour == 13 || this.serverTimeHour == 14) {
             this.productNode = 'host'
             this.countDownShow = 'host'
+            this.timeNode = '5'
             this.getTimeNodes('15:00')
             this.hostDisabled = false
           } else if (this.serverTimeHour == 15) {
             this.productNode = 'objStorage'
             this.countDownShow = 'obj'
+            this.timeNode = '6'
             this.getTimeNodes('16:00')
             this.objStorageDisabled = false
           } else if (this.serverTimeHour == 16 && this.serverTimeMinute < 30) {
             this.productNode = 'database'
             this.countDownShow = ''
+            this.timeNode = '7'
             this.getTimeNodes('16:30')
           } else if ((this.serverTimeHour == 16 && this.serverTimeMinute >= 30) || (this.serverTimeHour == 17 && this.serverTimeMinute < 30)) {
             this.productNode = 'database'
             this.countDownShow = 'database'
+            this.timeNode = '8'
             this.getTimeNodes('17:30')
             this.databaseDisabled = false
           } else if ((this.serverTimeHour == 17 && this.serverTimeMinute >= 30) || this.serverTimeHour == 18 || this.serverTimeHour == 19) {
             this.productNode = 'host'
             this.countDownShow = ''
+            this.timeNode = '8'
             this.getTimeNodes('20:00')
           } else if (this.serverTimeHour == 20 || this.serverTimeHour == 21) {
             this.productNode = 'host'
             this.countDownShow = 'host'
+            this.timeNode = '9'
             this.getTimeNodes('22:00')
             this.hostDisabled = false
           } else if (this.serverTimeHour > 21 && this.serverTimeHour < 24) {
             this.productNode = 'host'
             this.countDownShow = ''
+            this.timeNode = '9'
             this.getTimeNodes('nextDay')
           }
 
@@ -1600,11 +1699,11 @@
       },
       getPrize() {
         this.showModal.winPrizeModal = false
-        if (!this.authInfo) {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-          this.showModal.authGetPrizeModal = true
-          return
-        }
+        /*        if (!this.authInfo) {
+                  this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+                  this.showModal.authGetPrizeModal = true
+                  return
+                }*/
         /*       let url = 'activity/giveForAccount.do'
        axios.get(url, {
          params: {
@@ -1646,11 +1745,11 @@
         })
       },
       fillInAddress(code) {
-        if (!this.authInfo) {
-          this.award.code = code
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-          this.showModal.authGetPrizeModal = true
-        }
+        /*        if (!this.authInfo) {
+                  this.award.code = code
+                  this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+                  this.showModal.authGetPrizeModal = true
+                }*/
         let url = 'activity/getUserAddress.do'
         axios.get(url, {params: {}}).then(res => {
           if (res.status == 200 && res.data.status == 1) {
@@ -1767,7 +1866,7 @@
         })
       },
 
-      start() {
+      start: throttle(500, function () {
         if (!this.$store.state.userInfo) {
           this.showModal.notLoginModal = true
           return
@@ -1781,7 +1880,7 @@
         }
         // 开始抽奖
         this.drawAward();
-      },
+      }),
       drawAward() {
         let url = 'activity/luckDraw.do'
         axios.get(url, {
@@ -2064,7 +2163,7 @@
                 this.$router.push('order')
               } else {
                 this.$message.info({
-                  content: response.data.msg
+                  content: response.data.message
                 })
               }
             })
@@ -2604,7 +2703,7 @@
           this.getSpentCost()
           this.getPersonalWinningInfo()
         }
-      }
+      },
     },
     beforeRouteLeave(to, from, next) {
       window.removeEventListener('scroll', this.getScrollTop)

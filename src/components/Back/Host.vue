@@ -1105,6 +1105,7 @@
             vmid: item.computerid,
             instancename: item.instancename,
             connecturl: item.connecturl,
+            companyid:item.companyid,
             id: item.id
           }
         })
