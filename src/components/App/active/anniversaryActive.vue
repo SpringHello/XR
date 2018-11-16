@@ -309,7 +309,7 @@
         <div class="active-5-title">
           <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
           <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner21.png"/>
-          <p><span>购买云产品获赠好礼，最高额消费可领全部礼品（礼品卡为苏宁卡/京东E卡）<span style="cursor: pointer;text-decoration: underline" @click="showModal.discountRuleModal=true">活动规则</span> </span></p>
+          <p><span>购买云产品获赠好礼，最高额消费可领全部礼品（礼品卡为苏宁卡/京东E卡）<span style="cursor: pointer;text-decoration: underline" @click="showModal.bigFullDeliveryModal=true">活动规则</span> </span></p>
         </div>
         <div class="send-full">
           <ul v-for="(item,index) in sendFullList">
@@ -472,7 +472,7 @@
               <FormItem label="邮政编码" prop="postCode">
                 <Input v-model="receiveGoodFormValidate.postCode" placeholder=" 请输入您的邮政编码"></Input>
               </FormItem>
-              <FormItem prop="province" label="收件地址">
+              <FormItem prop="city" label="收件地址">
                 <Select v-model="receiveGoodFormValidate.province" style="width:147px" @on-change="changeProvince">
                   <Option v-for="item in provinceList" :value="item.name" :key="item.name">{{ item.name }}</Option>
                 </Select>
@@ -818,8 +818,10 @@
         }
       }
       const validaDistrict = (rule, value, callback) => {
-        if (!this.receiveGoodFormValidate.province || !this.receiveGoodFormValidate.city) {
-          return callback(new Error('请选择地区'));
+        if (!this.receiveGoodFormValidate.province) {
+          return callback(new Error('请选择省'));
+        } else if (!this.receiveGoodFormValidate.city) {
+          return callback(new Error('请选择市'));
         } else {
           callback()
         }
@@ -959,7 +961,7 @@
             {required: true, message: '请输入姓名'},
             {validator: validaRegisteredName}
           ],
-          province: [
+          city: [
             {required: true, validator: validaDistrict}
           ],
           postCode: [
@@ -1129,6 +1131,7 @@
             duration: '3',
             originalPrice: '87',
             currentPrice: '14.79',
+            vmConfigId: '139'
           }, {
             capacity: '100',
             flow: '100',
@@ -1136,13 +1139,15 @@
             duration: '3',
             originalPrice: '174',
             currentPrice: '29.58',
+            vmConfigId: '144'
           }, {
             capacity: '300',
             flow: '300',
             zoneId: '',
             duration: '3',
             originalPrice: '522',
-            currentPrice: '88.74',
+            currentPrice: '52.2',
+            vmConfigId: '273.88'
           }],
         objStorageZoneList: [],
         databaseList: [{
@@ -1600,6 +1605,20 @@
           this.showModal.authGetPrizeModal = true
           return
         }
+        /*       let url = 'activity/giveForAccount.do'
+       axios.get(url, {
+         params: {
+           activityNum: '31',
+           giftUniqueIdentifier: this.award.code
+         }
+       }).then(res => {
+         if (res.status == 200 && res.data.status == 1) {
+         } else {
+           this.$message.info({
+             content: res.data.message
+           })
+         }
+       })*/
         this.$Message.success('领取成功')
         this.getPersonalWinningInfo()
       },
@@ -1992,17 +2011,30 @@
       },
 
       objStorageDurationChange(index) {
-        let url = 'ruiradosPrice/countPirce.do'
-        let params = {
-          flowPackage: this.objStorageList[index].flow + 'GB',
-          capacity: this.objStorageList[index].capacity + 'GB',
-          timeValue: this.objStorageList[index].duration,
-          timeType: 'month',
-        }
-        axios.post(url, params).then(res => {
-          if (res.status == 200 && res.data.status == 1) {
-            this.objStorageList[index].currentPrice = res.data.data.priceSpread
-            this.objStorageList[index].originalPrice = res.data.data.price
+        axios.get('activity/getVMConfigId.do',
+          {
+            params: {
+              activityNum: '28',
+              serviceType: 'oss',
+              flowPackage: this.objStorageList[index].flow,
+              capacity: this.objStorageList[index].capacity,
+              month: this.objStorageList[index].duration
+            }
+          }
+        ).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.objStorageList[index].vmConfigId = response.data.result
+            let url = 'activity/getOriginalPrice.do'
+            let params = {
+              zoneId: this.objStorageList[index].zoneId,
+              vmConfigId: this.objStorageList[index].vmConfigId,
+            }
+            axios.get(url, {params}).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+                this.objStorageList[index].currentPrice = res.data.result.cost
+                this.objStorageList[index].originalPrice = res.data.result.originalPrice
+              }
+            })
           }
         })
       },
@@ -2021,12 +2053,9 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            let url = 'ruiradosPrice/createOrder.do'
+            let url = 'ruiradosPrice/getDickCountOSS.do'
             let params = {
-              flowPackage: this.objStorageList[index].flow + 'GB',
-              capacity: this.objStorageList[index].capacity + 'GB',
-              timeValue: this.objStorageList[index].duration,
-              timeType: 'month',
+              OOSConfigId: this.objStorageList[index].vmConfigId,
               zoneId: this.objStorageList[index].zoneId
             }
             axios.post(url, params).then(res => {
@@ -2037,7 +2066,6 @@
                 this.$message.info({
                   content: response.data.msg
                 })
-
               }
             })
           } else {
