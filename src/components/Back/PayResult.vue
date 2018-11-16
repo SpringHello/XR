@@ -45,7 +45,7 @@
         var firstMessage = sessionStorage.getItem('firstMsg') || ''
       } else {
         title = '支付失败'
-        message = sessionStorage.getItem('errMsg') || '抱歉，您的订单支付失败。如未完成扣款，请重新提起支付；如已扣款仍支付失败，请联系客服。'
+        message = '抱歉，您的订单支付失败。失败原因是：' + sessionStorage.getItem('errMsg') + ',如已扣款仍支付失败，请联系客服。' || '抱歉，您的订单支付失败。如未完成扣款，请重新提起支付；如已扣款仍支付失败，请联系客服。'
       }
       return {
         payResult,
