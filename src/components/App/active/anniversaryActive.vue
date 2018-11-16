@@ -1150,7 +1150,7 @@
         gpuHour: '--',
         gpuMinute: '--',
         gpuSecond: '--',
-        productNode: '', // 产品节点
+        productNode: 'host', // 产品节点
         countDownShow: '',
         gpuCountDownShow: false,
         timeNode: '',
@@ -1280,8 +1280,8 @@
           zoneId: '',
           databaseType: 'mysql',
           duration: '3',
-          originalPrice: '1611.06',
-          currentPrice: '273.88',
+          originalPrice: '1731.06',
+          currentPrice: '294.28',
           vmConfigId: '96'
         }],
         databaseTypeList: [

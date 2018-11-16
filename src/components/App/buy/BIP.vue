@@ -95,7 +95,7 @@
       <div style="margin-top: 20px">
         <!--<p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
            @click="$router.push('computed/3-1')">查看计价详情</p>-->
-        <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
+        <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;"> <span v-if="timeForm.currentTimeType == 'annual'&&timeForm.currentTimeValue.type == 'year'">折后费用：</span><span v-else>费用：</span><span
           style="font-size: 24px;color: #EE6723;">{{cost.toFixed(2)}}元</span><span
           v-show="timeForm.currentTimeType == 'current'">/小时</span></p>
         <p style="text-align: right;font-size: 14px;color: #666666;" v-if="coupon!=0">已省：<span

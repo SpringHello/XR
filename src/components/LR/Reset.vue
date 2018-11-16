@@ -23,7 +23,7 @@
                </div>
              </my-carousel-item>-->
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('anniversaryActive')" class="aa-active">
+              <div @click="$router.push('AnniversaryActive')" class="aa-active">
               </div>
             </my-carousel-item>
             <my-carousel-item class="carousel-item">

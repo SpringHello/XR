@@ -4,7 +4,7 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/anniversaryActive')"
+          <div @click="push('/ruicloud/AnniversaryActive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="anniversary-active">
             </div>

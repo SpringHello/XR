@@ -338,7 +338,7 @@
              @click="$router.push('document')">查看计价详情</p>
           <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">-->
           <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
-            费用：<span
+            <span v-if="timeForm.currentTimeType == 'annual'&&timeForm.currentTimeValue.type == 'year'">折后费用：</span><span v-else>费用：</span><span
             style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
             v-show="timeForm.currentTimeType == 'current'">/小时</span>
           </p>
@@ -364,17 +364,18 @@
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
   import regExp from '@/util/regExp'
+
   var debounce = require('throttle-debounce/debounce')
-  export default{
-    data(){
+  export default {
+    data() {
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 0
       })
       var zone = this.$store.state.zone
       // 如果默认区域在该资源下不存在
-      if(!zoneList.some(i=>{
+      if (!zoneList.some(i => {
         return i.zoneid == zone.zoneid
-        })){
+      })) {
         // 默认选中zoneList中第一个区域
         zone = zoneList[0]
       }
@@ -485,7 +486,7 @@
 
       }
     },
-    created(){
+    created() {
       this.queryVpc()
       this.queryDiskPrice()
       this.queryCustomVM()
@@ -493,7 +494,7 @@
       this.listDbTemplates()
     },
     methods: {
-      listDbTemplates(){
+      listDbTemplates() {
         axios.get('database/listDbTemplates.do', {
           params: {
             zoneId: this.zone.zoneid
@@ -508,7 +509,7 @@
           }
         })
       },
-      setDataOS(name){
+      setDataOS(name) {
         var arg = name.split('#')
         for (var item of this.publicList) {
           item.selectSystem = ''
@@ -532,7 +533,7 @@
         /*this.RAMList = cpu.RAMList
          this.vmConfig.RAM = this.RAMList[0].value*/
       },
-      changeRAM(ram){
+      changeRAM(ram) {
         if (this.system.systemName && this.system.systemName.startsWith('sqlserver') && ram < 4) {
           this.$Message.info('sqlserver数据库内存不能低于4G')
           return
@@ -646,7 +647,7 @@
         })
       }),
       // 数据库加入购物车
-      addDataCart(){
+      addDataCart() {
         if (this.$parent.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
@@ -737,28 +738,28 @@
       },
     },
     computed: {
-      userInfo(){
+      userInfo() {
         return this.$store.state.userInfo
       },
       // 剩余添加磁盘数量
-      remainDisk(){
+      remainDisk() {
         return 5 - this.dataDiskList.length
       },
-      totalDataCost(){
+      totalDataCost() {
         if (this.IPConfig.publicIP) {
           return this.vmCost + this.ipCost + this.dataDiskCost
         } else {
           return this.vmCost + this.dataDiskCost
         }
       },
-      totalDataCoupon(){
+      totalDataCoupon() {
         if (this.IPConfig.publicIP) {
           return this.vmCoupon + this.ipCoupon + this.coupon
         } else {
           return this.vmCoupon + this.coupon
         }
       },
-      info(){
+      info() {
         console.log(this.$parent)
         return this.$parent.info.filter(i => {
           if (i.zoneId == this.zone.zoneid) {
@@ -770,7 +771,7 @@
     },
     watch: {
       'zone': {
-        handler(){
+        handler() {
           this.info.forEach(zone => {
             if (zone.zoneId == this.zone.zoneid) {
               this.vmConfig.kernel = zone.kernelList[0].value
@@ -782,7 +783,7 @@
         deep: true
       },
       'timeForm': {
-        handler(){
+        handler() {
           // 查询自定义配置价格
           this.queryCustomVM()
           this.queryDiskPrice()
@@ -791,7 +792,7 @@
         deep: true
       },
       'vmConfig.kernel': {
-        handler(){
+        handler() {
           this.info.forEach(zone => {
             if (zone.zoneId == this.zone.zoneid) {
               zone.kernelList.forEach(kernel => {
@@ -814,14 +815,14 @@
         deep: true
       },
       'vmConfig': {
-        handler(){
+        handler() {
           // 查询自定义配置价格
           this.queryCustomVM()
         },
         deep: true
       },
       'dataDiskList': {
-        handler(){
+        handler() {
           this.queryDiskPrice()
         },
         deep: true
@@ -830,7 +831,7 @@
         this.changeNetwork()
       },
       'IPConfig': {
-        handler(){
+        handler() {
           this.queryIPPrice()
         },
         deep: true
