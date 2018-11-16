@@ -16,8 +16,7 @@
 
     <!-- 企业介绍 -->
     <div class="enterprise-info" v-show="num==0">
-
-      <section>
+      <section style="background:#fff">
         <div class="section-wrap" style="width:1900px;">
           <div class="head-info " style="padding-bottom:72px;">
             <h1 class="title">致力于成为高品质云服务提供商，让云触手可及</h1>
@@ -515,7 +514,7 @@
       }
     }
     .develop {
-      margin-top: 30px;
+      margin-top: 60px;
       padding: 20px 0;
       div:last-child {
         margin-right: 0;
