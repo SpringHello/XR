@@ -26,17 +26,17 @@
         <div>
           <div class="left-top">
             <p>域名查询结果</p>
-            <button @click="show=!show">筛选
+            <button @click="showValue=!showValue">筛选
               <Icon type="arrow-down-b"></Icon>
             </button>
           </div>
-          <div class="show" v-show="show">
+          <div class="show" v-show="showValue">
             <CheckboxGroup v-model="singles" style="display: flex;flex-wrap: wrap;justify-content: flex-start">
               <Checkbox v-for="(item,index) in suffixChange.en" :key="index" :label="item" style="width:95px;">{{item}}
               </Checkbox>
             </CheckboxGroup>
           </div>
-          <li v-for="(item,index) in Results" :key="index" v-show="index<=num">
+          <li v-for="(item,index) in Results" :key="item.name">
             <p>{{item.name}}
               <button v-show="item.isRes=='available'">未注册</button>
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
@@ -47,9 +47,9 @@
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
-          <button class="showAll" @click="exhibition" v-show="isShowAll&&Results.length>=7">显示全部
-            <Icon type="ios-arrow-down"></Icon>
-          </button>
+          <!--<button class="showAll" @click="exhibition" v-show="isShowAll&&Results.length>=7">显示全部-->
+          <!--<Icon type="ios-arrow-down"></Icon>-->
+          <!--</button>-->
         </div>
       </div>
       <div id="result-right">
@@ -84,19 +84,13 @@
   import $store from '@/vuex'
   export default{
     beforeRouteEnter(to, from, next){
-      axios.post('domain/domainFound.do', {
-        domainName: sessionStorage.getItem('name'),
-        tids: JSON.parse(sessionStorage.getItem("suffix")).join(','),
-      }).then(res => {
-        next(vm => {
-          vm.Results = res.data.data.results
-          let len = JSON.parse(sessionStorage.getItem("suffix")).length
-          if (len !== 0) {
-            vm.singles = JSON.parse(sessionStorage.getItem("suffix"))
-          } else {
-            vm.singles = JSON.parse(sessionStorage.getItem('suffixChange')).en
-          }
-        })
+      next(vm => {
+        let len = JSON.parse(sessionStorage.getItem("suffix")).length
+        if (len !== 0) {
+          vm.singles = JSON.parse(sessionStorage.getItem("suffix"))
+        } else {
+          vm.singles = JSON.parse(sessionStorage.getItem('suffixChange')).en
+        }
       })
     },
     data(){
@@ -106,10 +100,8 @@
         searchText: sessionStorage.getItem('name'),
         choose: false,
         suffixChange: JSON.parse(sessionStorage.getItem('suffixChange')),
-        show: false,
+        showValue: false,
         singles: [],
-        num: 5,
-        isShowAll: true,
         Results: [],
 //        域名清单
         buyLists: [],
@@ -117,6 +109,7 @@
         payMoney: 0,
 
         domName: '',
+
 
       }
     },
@@ -139,11 +132,6 @@
         this.singles.unshift(name)
       },
 
-      //显示全部
-      exhibition(){
-        this.num = this.Results.length
-        this.isShowAll = false
-      },
       //加入清单
       addList(item){
         for (var i = 0; i <= this.buyLists.length; i++) {
@@ -224,20 +212,38 @@
       },
       singles(){
         var tids = []
-        for (var i = 0; i < this.singles.length; i++) {    //循环遍历当前数组
+        for (var i = 0; i < this.singles.length; i++) {
           //判断当前数组下标为i的元素是否已经保存到临时数组
           //如果已保存，则跳过，否则将此元素保存到临时数组中
           if (tids.indexOf(this.singles[i]) == -1) {
             tids.push(this.singles[i]);
           }
         }
-        if (this.singles.length != 0) {
+        if (tids.length != 0) {
           axios.post('domain/domainFound.do', {
             domainName: this.searchText,
-            tids: tids.join(','),
+            tids: tids.slice(0, 8).join(','),
           }).then(res => {
             this.Results = res.data.data.results
           })
+
+          if (tids.slice(8).length != 0) {
+            setTimeout(() => {
+                axios.post('domain/domainFound.do', {
+                  domainName: this.searchText,
+                  tids: tids.slice(8).join(','),
+                }).then(res => {
+                  if (res.status == 200 && res.data.status == 1) {
+                    var addList = res.data.data.results
+                    for (var i in addList) {
+                      this.Results.push(addList[i]);
+                    }
+                  }
+                })
+              }
+              , 2000)
+          }
+
         } else {
           this.Results = []
         }
@@ -356,7 +362,6 @@
         border-top: none;
         &:hover {
           background: rgba(240, 247, 252, 1);
-          /*border: 1px solid rgba(170, 210, 242, 1);*/
         }
         P {
           font-size: 16px;
@@ -421,6 +426,13 @@
         padding: 9px 23px;
         outline: none;
         cursor: pointer;
+      }
+
+      .fix {
+        font-size: 16px;
+        color: #2a99f2;
+        text-align: center;
+        padding: 10px;
       }
     }
     #result-right {
