@@ -19,7 +19,8 @@
               <Radio label="chinese">中文域名</Radio>
               <Radio label="administrative">行政域名</Radio>
             </RadioGroup>
-            <Button type="primary" label="small" @click="checkAll">全选</Button>
+            <Button type="primary" label="small" @click="checkAll" v-if="showButton">全选</Button>
+            <Button type="primary" label="small" @click="notcheckAll" v-else>取消全选</Button>
           </div>
           <div class="content">
             <CheckboxGroup v-model="suffixList" style="display: flex;flex-wrap: wrap;justify-content: flex-start">
@@ -195,11 +196,15 @@
         suffix: 'english',
         getSuffix: {},
         showSuffix: [],
-        suffixList: []
+        suffixList: [],
+
+        showButton: true
       }
     },
     methods: {
+      //全选
       checkAll(){
+        this.showButton = false
         switch (this.suffix) {
           case 'english':
             this.suffixList = this.getSuffix.en
@@ -212,9 +217,15 @@
             break;
         }
       },
+      //取消全选
+      notcheckAll(){
+        this.suffixList = []
+        this.showButton = true
+      },
 
       changeSuffix(){
         this.suffixList = []
+        this.showButton = true
         switch (this.suffix) {
           case 'english':
             this.showSuffix = this.getSuffix.en
@@ -304,6 +315,9 @@
           display: flex;
           justify-content: space-between;
           align-items: center;
+          button {
+            width: 80px;
+          }
         }
         .content {
           padding: 0 38px 33px 38px;
