@@ -4,7 +4,7 @@
     <div class="banner">
     </div>
     <!-- tabs标签 -->
-    <div class="tabs">
+    <div class="tabs">     
       <div class="wrap" v-for="(item,index) in tabsinfo" :key="index" :class="{active:index == num}"
            @click="tab(index,item.view)">
         <div>
@@ -17,12 +17,14 @@
     <!-- 企业介绍 -->
     <div class="enterprise-info" v-show="num==0">
       <section style="background:#fff">
-        <div class="section-wrap" style="width:1900px;">
+        <div class="section-wrap" style="padding-bottom:0;">
           <div class="head-info " style="padding-bottom:72px;">
             <h1 class="title">致力于成为高品质云服务提供商，让云触手可及</h1>
             <p class="text-blue">关于新睿云</p>
             <p class="desc" style="padding:0">中关村高新技术企业 . ISO9001华为云管理网络 ISV . 华为全产品线金牌合作伙伴</p>
           </div>
+        </div>
+        <div class="section-wrap" style="width:1900px;padding:0">
           <div class="news">
             <div class="news-left">
               <p>
@@ -33,6 +35,8 @@
               <img src="../../assets/img/aboutus/news-banner.png" alt="" />
             </div>
           </div>
+        </div>
+         <div class="section-wrap" style="padding-top:0">
           <div class="section-content develop ">
             <div v-for="(item,index) in develop" :key="index">
               <p>{{item.num}}</p>
