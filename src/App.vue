@@ -1,13 +1,13 @@
 <template>
   <div id="front">
-      <div class="app-hint" ref="hint" @click="$router.push('AnniversaryActive')">
+     <!-- <div class="app-hint" ref="hint" @click="$router.push('AnniversaryActive')">
         <div class="center">
           <div class="countdown" v-if="hintShow">
             <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
           </div>
         </div>
         <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
-      </div>
+      </div>-->
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">

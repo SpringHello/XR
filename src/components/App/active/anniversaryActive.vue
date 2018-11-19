@@ -227,7 +227,7 @@
                     <li>{{ item.disk}}G<span>数据盘</span></li>
                   </ul>
                 </div>
-                <div class="item-select" style="padding: 20px 90px">
+                <div class="item-select" style="padding: 15px 90px">
                   <span>请选择带宽</span>
                   <Select v-model="item.bandwidth" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseBandwidthChange(index)">
                     <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
@@ -245,7 +245,7 @@
                     <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                   </Select>
                 </div>
-                <div class="item-price" style="padding: 27px 85px">
+                <div class="item-price" style="padding: 20px 85px">
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">

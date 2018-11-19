@@ -668,6 +668,8 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
+              this.customList = []
+              this.customMirror = {}
               var cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
               if (this.mirrorQuery) {
                 if (this.mirrorQuery) {
@@ -944,7 +946,7 @@
           params.timeType = this.timeForm.currentTimeType
           params.timeValue = '1'
         }
-        if(!this.IPConfig.publicIP){
+        if (!this.IPConfig.publicIP) {
           params.brand = 0
         }
         axios.post('device/queryIpPrice.do', params).then(response => {

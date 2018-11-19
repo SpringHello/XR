@@ -247,7 +247,6 @@
           if (response.data.result.data[0].discountmessage) {
             this.showFree = JSON.parse(response.data.result.data[0].discountmessage)
           }
-          console.log(this.orderData)
           let orderNumber = this.orderData.map(item => {
             return item.orderId
           })

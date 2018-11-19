@@ -1879,11 +1879,15 @@
         if (this.orderNumber.length != 0) {
           if (!this.orderNumber.some(checkPaymentStatus)) {
             this.showModal.clipCoupons = true
+            let orderNumber = this.orderNumber.map(item => {
+              return item.ordernumber
+            })
             this.$http.get('ticket/getUserTicket.do', {
               params: {
                 pageSize: this.card_pageSize,
                 page: this.card_currentPage,
                 ticketType: this.card_type,
+                orderNumber: orderNumber + '',
                 isuse: 0,
                 totalCost: this.totalCost
               }
