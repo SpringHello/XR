@@ -31,6 +31,8 @@
             </button>
           </div>
           <div class="show" v-show="showValue">
+            <Button type="primary" label="small" @click="checkAll" v-if="showButton">全选</Button>
+            <Button type="primary" label="small" @click="notcheckAll" v-else :disabled="cancel">取消全选</Button>
             <CheckboxGroup v-model="singles" style="display: flex;flex-wrap: wrap;justify-content: flex-start">
               <Checkbox v-for="(item,index) in suffixChange.en" :key="index" :label="item" style="width:95px;">{{item}}
               </Checkbox>
@@ -47,9 +49,6 @@
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
-          <!--<button class="showAll" @click="exhibition" v-show="isShowAll&&Results.length>=7">显示全部-->
-          <!--<Icon type="ios-arrow-down"></Icon>-->
-          <!--</button>-->
         </div>
       </div>
       <div id="result-right">
@@ -89,6 +88,7 @@
         if (len !== 0) {
           vm.singles = JSON.parse(sessionStorage.getItem("suffix"))
         } else {
+          vm.showButton = false
           vm.singles = JSON.parse(sessionStorage.getItem('suffixChange')).en
         }
       })
@@ -110,6 +110,9 @@
 
         domName: '',
 
+        showButton: true,
+        cancel: true
+
 
       }
     },
@@ -122,14 +125,30 @@
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
-          this.Results = res.data.data.results
-          this.singles.unshift(this.append)
+          if (res.data.data.results.length != 0) {
+            this.Results = res.data.data.results
+            this.singles.unshift(this.append)
+          } else {
+            this.$Message.info('暂无数据')
+          }
         })
       },
 
       addAppend(name){
         this.append = name
         this.singles.unshift(name)
+      },
+
+      //全选
+      checkAll(){
+        this.showButton = false
+        this.singles = this.suffixChange.en
+      },
+      //取消全选
+      notcheckAll(){
+        this.Results = []
+        this.singles = []
+        this.showButton = true
       },
 
       //加入清单
@@ -224,24 +243,32 @@
             domainName: this.searchText,
             tids: tids.slice(0, 8).join(','),
           }).then(res => {
-            this.Results = res.data.data.results
+            if (res.data.data.results.length != 0) {
+              this.Results = res.data.data.results
+            } else {
+              this.$Message.info('暂无数据')
+            }
           })
 
           if (tids.slice(8).length != 0) {
+            this.cancel = true
             setTimeout(() => {
                 axios.post('domain/domainFound.do', {
                   domainName: this.searchText,
                   tids: tids.slice(8).join(','),
                 }).then(res => {
+
                   if (res.status == 200 && res.data.status == 1) {
+                    this.cancel = false
                     var addList = res.data.data.results
                     for (var i in addList) {
                       this.Results.push(addList[i]);
                     }
+                    this.$Message.info('加载完毕!')
                   }
                 })
               }
-              , 2000)
+              , 500)
           }
 
         } else {
@@ -317,7 +344,7 @@
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    padding: 50px 0 100px 0;
+    padding: 50px 0 250px 0;
     #result-left {
       width: 800px;
       border-bottom: none;
@@ -349,7 +376,15 @@
         /*height: 100px;*/
         box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(230, 230, 230, 1);
-        padding: 35px 55px 41px 54px;
+        padding: 50px 55px 41px 54px;
+        position: relative;
+        button {
+          position: absolute;
+          right: 95px;
+          top: 10px;
+          width: 80px;
+          display: block;
+        }
 
       }
       li {
@@ -438,10 +473,10 @@
     #result-right {
       width: 380px;
       > div {
-        width: 100%;
         background: rgba(255, 255, 255, 1);
         box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
-        padding-bottom: 40px;
+        position: fixed;
+        width: 380px;
         .all {
           padding: 23px 30px 40px 30px;
           p {
@@ -519,6 +554,7 @@
             outline: none;
             border: none;
             cursor: pointer;
+            margin-bottom: 20px;
           }
         }
       }
