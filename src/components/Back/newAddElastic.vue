@@ -220,14 +220,14 @@
                   <Radio label="2">
                     <span>系统密码</span>
                   </Radio>
-                  <Radio label="3">
+                  <!-- <Radio label="3">
                     <span>保留镜像设置</span>
-                  </Radio>
+                  </Radio> -->
                 </RadioGroup>
                 <div style="margin: 30px 0 0 0;" v-if="passwordList == 1">
                   <Form ref="password" :model="password" :rules="passwordValidate">
                     <FormItem label="" prop="divPassWord">
-                      <Input v-model="password.divPassWord" placeholder="请输入6-23位包含大小写与数字的密码"></Input>
+                      <Input v-model="password.divPassWord" type="password" placeholder="请输入6-23位包含大小写与数字的密码"></Input>
                       <p style="color:#999999;margin-top: 10px">登录密码可用特殊字符为：',?</p>
                     </FormItem>
                   </Form>

@@ -642,7 +642,7 @@
                     click:()=>{
                       this.updateStrategy.newAddStrategy = true;
                       this.updateStrategy.name = parmas.row.strategyname;
-                      this.updateStrategy.contacts = parmas.row.alarmlinkmanid;
+                      this.updateStrategy.contacts = Number(parmas.row.alarmlinkmanid);
                       this.updateStrategy.cpuValue = parmas.row.alarmname;
                       this.updateStrategy.time = parmas.row.countcircle.toString();
                       this.updateStrategy.symbol = parmas.row.valuetype;
