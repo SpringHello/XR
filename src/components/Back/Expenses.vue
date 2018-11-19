@@ -111,7 +111,8 @@
                                placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
-              <Button type="primary" style="margin-left: 197px" @click="orderPay" :disabled="payDisabled">支付</Button>
+              <Button type="primary" style="margin-left: 120px" @click="orderRefund" :disabled="refundDisabled">退款</Button>
+              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button>
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
             </div>
@@ -474,6 +475,22 @@
         <Button type="ghost" @click="showModal.withdraw = false">取消</Button>
         <Button type="primary" @click="withdraw">确认</Button>
       </div>
+    </Modal>
+
+    <!-- 退款提示框 -->
+    <Modal v-model="showModal.refundHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">退款期间主机为不可用状态，要删除主机或者释放资源才可以退款产品哦
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.refundHint = false">已释放</Button>
+        <Button type="primary" @click="$router.push('overview')">前往控制台</Button>
+      </p>
     </Modal>
   </div>
 </template>
@@ -883,7 +900,28 @@
             key: 'type',
             align: 'left',
             render: (h, params) => {
-              return h('span', params.row.type == '1' ? '扣费' : '充值')
+              let text = ''
+              switch (params.row.type) {
+                case 0:
+                  text = '充值'
+                  break
+                case 1:
+                  text = '扣费'
+                  break
+                case 2:
+                  text = '冻结'
+                  break
+                case 3:
+                  text = '解冻'
+                  break
+                case 4:
+                  text = '提现'
+                  break
+                case 5:
+                  text = '退款'
+                  break
+              }
+              return h('span', text)
             }
           },
           {
@@ -911,6 +949,22 @@
           {
             value: '0',
             label: '充值'
+          },
+          {
+            value: '2',
+            label: '冻结'
+          },
+          {
+            value: '3',
+            label: '解冻'
+          },
+          {
+            value: '4',
+            label: '提现'
+          },
+          {
+            value: '5',
+            label: '退款'
           }
         ],
         orderList: [
@@ -1215,7 +1269,8 @@
           // 兑换码模态框
           exchangeCard: false,
           // 提现模态框
-          withdraw: false
+          withdraw: false,
+          refundHint: false
         },
         // 提现
         withdrawForm: {
@@ -2138,6 +2193,9 @@
             this.$Message.error(response.data.message)
           }
         })
+      },
+      orderRefund() {
+
       }
     },
     computed: {
@@ -2158,6 +2216,9 @@
         } else {
           return false
         }
+      },
+      refundDisabled() {
+
       },
       // 返回一个对象，包含提现时的发送验证码方式（手机、邮箱），号码
       withdrawConfirm() {
