@@ -29,7 +29,7 @@
               <p>4、抽中实物奖品的用户，活动期间新睿云将在12月2日进行第一次实物奖品发放、12月18日进行第二次实物奖品发放，请用户在发放奖品日前完成收货信息填写</p>
             </div>
             <div class="lottery-particulars">
-              <h3 style="margin-top: 15px;">中奖详情 <span
+              <h3 style="margin-top: 15px;">今日中奖详情 <span
                 style="cursor: pointer;color: #222222;font-size:16px;text-decoration: underline;position: absolute;right:0;top:25%" @click="winningRecordShow = true">我的奖品</span>
               </h3>
               <div class="win-list">
