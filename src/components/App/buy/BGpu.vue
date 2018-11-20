@@ -612,7 +612,6 @@
       }
     },
     created() {
-
       this.setGpuServer()
       this.setTemplate()
       this.queryVpc()
@@ -674,15 +673,13 @@
             if (response.status == 200 && response.data.status == 1) {
               var cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
               if (this.mirrorQuery) {
-                if (this.mirrorQuery) {
                   this.customList.push(this.mirrorQuery);
                   this.customMirror = this.mirrorQuery;
-                }
               } else {
                 for (let i = 0; i < cusList.length; i++) {
                   if (cusList[i].status != -1) {
                     this.customList.push(cusList[i]);
-                    // this.customMirror = {};
+                     this.customMirror = {};
                   }
                 }
               }
@@ -755,6 +752,7 @@
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
+         this.customMirror ={}
         if (this.$route.mirror) {
           this.customMirror = this.mirrorQuery;
         } else {
