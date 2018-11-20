@@ -1,5 +1,12 @@
 <template>
   <div id="front">
+    <div class="app-hint" ref="hint" @click="$router.push('AnniversaryActive')">
+      <div class="center">
+        <div class="countdown" v-if="hintShow">
+        </div>
+      </div>
+      <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
+    </div>
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -485,9 +492,9 @@
               {subTitle: '弹性云服务器（ECS）', url: '/ruicloud/Pecs.htm'},
               {subTitle: '镜像服务', url: '/ruicloud/Phost.htm'},
               {subTitle: 'ESC快照', url: '/ruicloud/Pecss.htm'},
+              {subTitle: 'GPU服务器', url: '/ruicloud/Pgpu.htm'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
-              {subTitle: '弹性伸缩（敬请期待）', url: ''},
-              {subTitle: 'GPU服务器（敬请期待）', url: ''}
+              {subTitle: '弹性伸缩（敬请期待）', url: ''}
             ]
           },
           {
@@ -588,8 +595,16 @@
         })
     },
     mounted() {
+      this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
+      if(sessionStorage.getItem('hintShow') == 'true'){
+        this.$refs.hint.style.height = '80px'
+      }
+
     },
     created() {
+      if(sessionStorage.getItem('hintShow') == null){
+        sessionStorage.setItem('hintShow','true')
+      }
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
@@ -651,6 +666,11 @@
           window.location.reload()
         })
       },
+      closeHeadHint(){
+        this.hintShow = false
+        this.$refs.hint.style.height = 0
+        sessionStorage.setItem('hintShow','false')
+      }
     },
     computed: mapState({
       userInfo: state => state.userInfo
@@ -677,6 +697,41 @@
 
 <style rel="stylesheet/less" lang="less">
   #front {
+    .app-hint {
+      height: 0;
+      background: url("./assets/img/app/hint-banner.png") center no-repeat, linear-gradient(to right, #FF4439, #FF1569);
+      position: relative;
+      transition: height .5s ease;
+      cursor: pointer;
+      > img {
+        position: absolute;
+        right: 15px;
+        top: 10px;
+        cursor: pointer;
+      }
+      .center {
+        position: relative;
+        width: 1200px;
+        height: 100%;
+        margin: 0 auto;
+        .countdown {
+          position: absolute;
+          left: 78%;
+          top: 38%;
+          > p {
+            font-size: 20px;
+            font-family: MicrosoftYaHei;
+            font-weight: 500;
+            color: rgba(253, 253, 253, 1);
+            > span {
+              font-size: 12px;
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
+
     header {
       width: 100%;
       height: 70px;

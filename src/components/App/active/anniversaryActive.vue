@@ -34,7 +34,7 @@
               </h3>
               <div class="win-list">
                 <ul class="win-content" :style="{top}">
-                  <li v-for="item in winList"> 恭喜用户{{ item.anonymous}} 抽中{{ item.giftAbbreviation}}</li>
+                  <li v-for="item in winList"> {{ item}}</li>
                 </ul>
               </div>
             </div>
@@ -42,7 +42,7 @@
         </div>
       </div>
       <!--  云服务器、对象存储、数据库专区 -->
-      <div class="active-2">
+      <!--<div class="active-2">
         <div class="active-2-title">
           <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon2.png"/>
           <img style="margin-left: 100px" src="../../../assets/img/active/anniversary/aa-banner15.png"/>
@@ -289,23 +289,152 @@
             </div>
           </div>
         </div>
+      </div>-->
+      <div class="active-2">
+        <div class="active-2-title">
+          <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon2.png"/>
+          <img style="margin-left: 100px" src="../../../assets/img/active/anniversary/aa-banner15.png"/>
+          <p>各类产品<span>1.7折</span>分时抢购，首次购买任意产品均可获得抽奖机会! <span
+            style="cursor: pointer;color:rgba(254,254,254,1);font-size:16px;text-decoration: underline;" @click="showModal.discountRuleModal=true">活动规则</span></p>
+        </div>
+        <div class="productList">
+          <div class="products">
+            <div class="products-title">
+              <img src="../../../assets/img/active/anniversary/aa-icon3.png"/>
+              <span>云服务器特惠专场</span>
+            </div>
+            <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
+            <div class="product-item">
+              <div v-for="(item,index) in hostList" class="item">
+                <div class="item-title">
+                  <p>爆款<span>云服务器</span></p>
+                  <ul>
+                    <li>{{ item.cpu}}核<span>CPU</span></li>
+                    <li>{{ item.memory}}G<span>内存</span></li>
+                    <li>{{ item.rootDisk}}G<span>系统盘</span></li>
+                  </ul>
+                </div>
+                <div class="item-select">
+                  <span>请选择带宽</span>
+                  <Select v-model="item.bandwidth" class="fr-select" style="width:216px;margin-top: 20px" @on-change="hostBandwidthChange(index)">
+                    <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  </Select>
+                  <span>请选择区域</span>
+                  <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px" @on-change="hostZoneChange(index)">
+                    <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  </Select>
+                  <span>请选择系统</span>
+                  <Select v-model="item.system" class="fr-select" style="width:216px;margin-top: 20px">
+                    <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  </Select>
+                  <span>请选择时长</span>
+                  <Select v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px" @on-change="hostDurationChange(index)">
+                    <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  </Select>
+                </div>
+                <div class="item-price" style="padding: 15px">
+                  <p>¥{{ item.currentPrice}} <span>原价：{{ item.originalPrice}}元</span></p>
+                </div>
+                <div class="item-footer">
+                  <button @click="buyHost(index)">立即抢购</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="productList" style="margin-top: 40px">
+          <div class="products">
+            <div class="products-title">
+              <img src="../../../assets/img/active/anniversary/aa-icon5.png"/>
+              <span style="position: relative;bottom: 20px;">对象存储特惠专场</span>
+            </div>
+            <div style="height:4px;background:rgba(255,108,62,1);margin-top: 10px"></div>
+            <div class="product-item">
+              <div v-for="(item,index) in objStorageList" class="item" style="height: 522px">
+                <div class="item-title">
+                  <p>对象存储</p>
+                  <ul>
+                    <li>{{ item.capacity }}G<span>存储</span></li>
+                    <li style="border: none">{{item.flow }}G<span>外网下载流量</span></li>
+                  </ul>
+                </div>
+                <div class="item-select" style="padding: 54px 15px">
+                  <span>请选择区域</span>
+                  <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px">
+                    <Option v-for="item in objStorageZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  </Select>
+                  <span>请选择时长</span>
+                  <Select v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px" @on-change="objStorageDurationChange(index)">
+                    <Option v-for="item in objDurationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  </Select>
+                </div>
+                <div class="item-price">
+                  <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
+                </div>
+                <div class="item-footer">
+                  <button @click="buyObjStorage(index)">立即抢购</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="productList" style="margin-top: 40px">
+          <div class="products">
+            <div class="products-title">
+              <img src="../../../assets/img/active/anniversary/aa-icon6.png"/>
+              <span>云数据库特惠专场</span>
+            </div>
+            <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
+            <div class="product-item">
+              <div v-for="(item,index) in databaseList" class="item">
+                <div class="item-title">
+                  <p>云数据库<span style="font-size: 20px">（100G数据盘）</span></p>
+                  <ul>
+                    <li>{{ item.cpu}}核<span>CPU</span></li>
+                    <li>{{ item.memory}}G<span>内存</span></li>
+                    <li>{{ item.rootDisk}}G<span>系统盘</span></li>
+                  </ul>
+                </div>
+                <div class="item-select" style="padding: 15px 10px">
+                  <span>请选择带宽</span>
+                  <Select v-model="item.bandwidth" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseBandwidthChange(index)">
+                    <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  </Select>
+                  <span>请选择类型</span>
+                  <Select v-model="item.databaseType" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseTypeChange(index)">
+                    <Option v-for="item in databaseTypeList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  </Select>
+                  <span>数据中心&#12288</span>
+                  <Select v-model="item.zoneId" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseZoneChange(index)">
+                    <Option v-for="item in databaseZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  </Select>
+                  <span>请选择时长</span>
+                  <Select v-model="item.duration" class="fr-select" style="width:216px;margin-top: 20px" @on-change="databaseDurationChange(index)">
+                    <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                  </Select>
+                </div>
+                <div class="item-price">
+                  <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
+                </div>
+                <div class="item-footer">
+                  <button @click="buyDatabase(index)">立即抢购</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- gpu专区-->
       <div class="active-3">
         <div class="active-3-title">
           <img style="position: absolute;left: 30%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon7.png"/>
           <img style="margin-left: 145px;" src="../../../assets/img/active/anniversary/aa-banner6.png"/>
-          <p>全网首次<span>GPU服务器折扣活动</span>，每日抢购时间 19:00-20:00！</p>
+          <p>全网首次<span>GPU服务器折扣活动</span>，7天体验版GPU云服务器，特惠低至<span>1.7折!</span></p>
         </div>
         <div class="gpuList">
           <div class="gpu-title">
             <img src="../../../assets/img/active/anniversary/aa-icon8.png"/>
-            <span>GPU云服务器 每日19:00开启抢购</span>
-            <div style="margin-top: 8px">
-              <span v-if="gpuCountDownShow">本场结束倒计时:</span>
-              <span v-else>距抢购开始倒计时:</span>
-              <p><span>{{ gpuHour}} : {{ gpuMinute}} : {{gpuSecond}}</span></p>
-            </div>
+            <span>GPU云服务器特惠专区</span>
           </div>
           <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
           <div class="gpu-item">
@@ -344,7 +473,7 @@
                 <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button :class="{disabled: gpuDisabled}" :disabled="gpuDisabled" @click="buyGPU(index)">立即抢购</button>
+                <button @click="buyGPU(index)">立即抢购</button>
               </div>
             </div>
           </div>
@@ -431,9 +560,9 @@
           <li @click="$router.push('/ruicloud/index.htm')">新睿云首页</li>
           <li @click="roll(700)">幸运抽奖</li>
           <li @click="roll(1400)">1.7折云产品</li>
-          <li @click="roll(2300)">8折GPU服务器</li>
-          <li @click="roll(3700)">0元用一年</li>
-          <li @click="roll(4400)">消费回赠好礼</li>
+          <li @click="roll(3700)">8折GPU服务器</li>
+          <li @click="roll(5100)">0元用一年</li>
+          <li @click="roll(5800)">消费回赠好礼</li>
           <li @click="roll(0)">↑返回顶部</li>
         </ul>
       </div>
@@ -663,11 +792,11 @@
             <p>·对象存储每位用户只可购买1次。</p>
             <p>·云数据库每位用户只可购买1次。</p>
             <p>·GPU服务器每位用户只可购买1次</p>
-            <h3 class="padl">具体购买时间如下： </h3>
-            <p>·云主机购买时间：上午8:30-10：30；下午13:00-15:00；晚上20:00-22:00；</p>
-            <p>·对象存储购买时间：上午10:30-11:30；下午15:00-16:00</p>
-            <p>·云数据库购买时间：下午16:30-17:30</p>
-            <p>·GPU服务器购买时间：晚上19:00-20:00</p>
+            <!--           <h3 class="padl">具体购买时间如下： </h3>
+                       <p>·云主机购买时间：上午8:30-10：30；下午13:00-15:00；晚上20:00-22:00；</p>
+                       <p>·对象存储购买时间：上午10:30-11:30；下午15:00-16:00</p>
+                       <p>·云数据库购买时间：下午16:30-17:30</p>
+                       <p>·GPU服务器购买时间：晚上19:00-20:00</p>-->
             <h3>（3）用户在此活动页面中进行购买产品，购买价格直接为折扣价格，无需领取任何优惠券或折扣券，若在正常购买页面购买则为原价购买。</h3>
             <h3>（4）参与此活动的用户在购买产品时不能使用以任何形式获得的优惠券或折扣券。</h3>
             <h3>（5）参与本次活动购买的产品不能进行退款（非活动产品可七天无理由退款），若有疑问请联系客服人员。</h3>
@@ -898,12 +1027,13 @@
       VueQArt
     },
     beforeRouteEnter(from, to, next) {
-      let res_1 = axios.get('network/getTime.do')
-      Promise.all([res_1]).then(resArr => {
-        next(vm => {
-          vm.setData(resArr)
-        })
-      })
+      /*      let res_1 = axios.get('network/getTime.do')
+            Promise.all([res_1]).then(resArr => {
+              next(vm => {
+                vm.setData(resArr)
+              })
+            })*/
+      next()
     },
     data() {
       const validaRegisteredPhone = (rule, value, callback) => {
@@ -1128,16 +1258,7 @@
         time: 0,  // 记录开始抽奖时的时间
         lotteryNumber: 0, //抽奖次数
         activeIndex: 0,
-        winList: [
-          '恭喜用户1593XXXXX,抽中127抵用券',
-          '恭喜用户1873XXXXX,抽中27抵用券',
-          '恭喜用户1633XXXXX,抽中27抵用券',
-          '恭喜用户1323XXXXX,抽中27抵用券',
-          '恭喜用户1323XXXXX,抽中27抵用券',
-          '恭喜用户1873XXXXX,抽中227抵用券',
-          '恭喜用户1523XXXXX,抽中127抵用券',
-          '恭喜用户1523XXXXX,抽中27抵用券',
-          '恭喜用户1871XXXXX,抽中27抵用券',],
+        winList: [],
         moveTimer: null,
         countDownTimer: null,
         hasCost: 1000,
@@ -1272,6 +1393,18 @@
           }],
         objStorageZoneList: [],
         databaseList: [{
+          cpu: '2',
+          memory: '4',
+          rootDisk: '40',
+          bandwidth: '2',
+          disk: '100',
+          zoneId: '',
+          databaseType: 'mysql',
+          duration: '3',
+          originalPrice: '981.96',
+          currentPrice: '166.93',
+          vmConfigId: '164'
+        }, {
           cpu: '4',
           memory: '8',
           rootDisk: '40',
@@ -1283,6 +1416,18 @@
           originalPrice: '1731.06',
           currentPrice: '294.28',
           vmConfigId: '96'
+        }, {
+          cpu: '8',
+          memory: '16',
+          rootDisk: '40',
+          bandwidth: '2',
+          disk: '100',
+          zoneId: '',
+          databaseType: 'mysql',
+          duration: '3',
+          originalPrice: '2645.16',
+          currentPrice: '449.68',
+          vmConfigId: '179'
         }],
         databaseTypeList: [
           {
@@ -1571,7 +1716,8 @@
         if (this.activeIndex < this.winList.length - 3) {
           this.activeIndex += 1;
         } else {
-          this.activeIndex = 0;
+          this.activeIndex += 1
+          this.winList = this.winList.concat(this.winList)
         }
       }, 1000);
       window.addEventListener('scroll', this.getScrollTop)
@@ -2207,7 +2353,7 @@
                 this.$router.push('order')
               } else {
                 this.$message.info({
-                  content: response.data.message
+                  content: res.data.message
                 })
               }
             })
@@ -2892,6 +3038,7 @@
   .active-2 {
     padding: 75px 0;
     background: #FEEDE0 url("../../../assets/img/active/anniversary/aa-banner3.png") center no-repeat;
+    height: 2321px;
     .active-2-title {
       position: relative;
       text-align: center;
@@ -2911,7 +3058,6 @@
       padding: 20px;
       .center();
       background: #FFF;
-      height: 720px;
       margin-top: 25px;
       .products {
         .products-title {
