@@ -512,7 +512,7 @@
         strategyId: '',
         targetformDynamic: [
           {
-            alarmname: 'CPU使用率',
+            alarmname: 'CPU利用率',
             countcircle: 1,
             valuetype: '>',
             vaule: 80,
@@ -548,7 +548,7 @@
         alarmHostTarget: {
           target: [
             {
-              value: 'CPU使用率',
+              value: 'CPU利用率',
             },
             {
               value: '内存使用率',
@@ -800,7 +800,7 @@
               value: '云主机',
               indexGroup: [
                 {
-                  label: 'CPU使用率',
+                  label: 'CPU利用率',
                   value: 'cpu'
                 }, {
                   label: '磁盘使用率',
@@ -854,7 +854,7 @@
               value: '云主机',
               indexGroup: [
                 {
-                  label: 'CPU使用率',
+                  label: 'CPU利用率',
                   value: 'cpu'
                 }, {
                   label: '磁盘使用率',
@@ -1250,7 +1250,7 @@
             let brokenLine = JSON.parse(JSON.stringify(line))
             switch (res[2].data.list[0].name) {
               case 'cpu':
-                name = 'CPU使用率'
+                name = 'CPU利用率'
                 break
               case 'disk':
                 name = '磁盘使用率'
@@ -1308,7 +1308,7 @@
             let brokenLine = JSON.parse(JSON.stringify(line))
             switch (res[3].data.list[0].name) {
               case 'cpu':
-                name = 'CPU使用率'
+                name = 'CPU利用率'
                 break
               case 'disk':
                 name = '磁盘使用率'
@@ -1380,7 +1380,7 @@
         // 清空指标数据
         this.targetformDynamic = [
           {
-            alarmname: 'CPU使用率',
+            alarmname: 'CPU利用率',
             countcircle: 1,
             valuetype: '>',
             vaule: 80,
@@ -1849,7 +1849,7 @@
             let name = ''
             switch (item.name) {
               case 'cpu':
-                name = 'CPU使用率'
+                name = 'CPU利用率'
                 break
               case 'disk':
                 name = '磁盘使用率'
@@ -1954,7 +1954,7 @@
               let name = ''
               switch (res.data.list[0].name) {
                 case 'cpu':
-                  name = 'CPU使用率'
+                  name = 'CPU利用率'
                   break
                 case 'disk':
                   name = '磁盘使用率'
@@ -2049,7 +2049,7 @@
               let name = ''
               switch (res.data.list[0].name) {
                 case 'cpu':
-                  name = 'CPU使用率'
+                  name = 'CPU利用率'
                   break
                 case 'disk':
                   name = '磁盘使用率'
@@ -2444,7 +2444,7 @@
               let brokenLine = JSON.parse(JSON.stringify(line))
               switch (res.data.list[0].name) {
                 case 'cpu':
-                  name = 'CPU使用率'
+                  name = 'CPU利用率'
                   break
                 case 'disk':
                   name = '磁盘使用率'
@@ -2512,7 +2512,7 @@
               let brokenLine = JSON.parse(JSON.stringify(line))
               switch (res.data.list[0].name) {
                 case 'cpu':
-                  name = 'CPU使用率'
+                  name = 'CPU利用率'
                   break
                 case 'disk':
                   name = '磁盘使用率'
@@ -2577,7 +2577,7 @@
                 let brokenLine = JSON.parse(JSON.stringify(line))
                 switch (item.name) {
                   case 'cpu':
-                    name = 'CPU使用率'
+                    name = 'CPU利用率'
                     break
                   case 'disk':
                     name = '磁盘使用率'
