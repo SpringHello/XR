@@ -574,7 +574,7 @@
         alarmHostTarget: {
           target: [
             {
-              value: 'CPU使用率',
+              value: 'CPU利用率',
               unit: '%'
             },
             {
@@ -2607,7 +2607,7 @@
                   let brokenLine = JSON.parse(JSON.stringify(line))
                   switch (res.data.list[0].name) {
                     case 'cpu':
-                      name = 'CPU使用率'
+                      name = 'CPU利用率'
                       break
                     case 'disk':
                       name = '磁盘使用率'
@@ -2689,7 +2689,7 @@
                   let brokenLine = JSON.parse(JSON.stringify(line))
                   switch (res.data.list[0].name) {
                     case 'cpu':
-                      name = 'CPU使用率'
+                      name = 'CPU利用率'
                       break
                     case 'disk':
                       name = '磁盘使用率'
@@ -3013,7 +3013,7 @@
           this.customMonitoringData.forEach(item => {
             switch (item.name) {
               case 'cpu':
-                item.name = 'CPU使用率'
+                item.name = 'CPU利用率'
                 break
               case 'disk':
                 item.name = '磁盘使用率'
@@ -3053,7 +3053,7 @@
       'firstMonitoringOverview.indexs'(val) {
         switch (val) {
           case 'cpu':
-            this.firstMonitoringOverview.title = 'CPU使用率'
+            this.firstMonitoringOverview.title = 'CPU利用率'
             break
           case 'disk':
             this.firstMonitoringOverview.title = '磁盘使用率'
@@ -3090,7 +3090,7 @@
       'secondMonitoringOverview.indexs'(val) {
         switch (val) {
           case 'cpu':
-            this.secondMonitoringOverview.title = 'CPU使用率'
+            this.secondMonitoringOverview.title = 'CPU利用率'
             break
           case 'disk':
             this.secondMonitoringOverview.title = '磁盘使用率'
