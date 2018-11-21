@@ -490,9 +490,6 @@
           <div class="host-title">
             <img src="../../../assets/img/active/anniversary/aa-icon3.png"/>
             <span>基础配置云服务器</span>
-            <div style="margin-top: 8px">
-              <span>0元试用，最长可达12个月，押金随时可退！</span>
-            </div>
           </div>
           <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
           <div class="host-item">
@@ -528,6 +525,7 @@
               </div>
             </div>
           </div>
+          <p>0元试用，最长12个月，押金闪退2-4日原路返回至充值账户</p>
         </div>
       </div>
       <!-- 消费满送 -->
@@ -3509,6 +3507,13 @@
             }
           }
         }
+      }
+      > p {
+        font-size: 18px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: rgba(255, 132, 72, 1);
+        padding: 24px;
       }
     }
   }
