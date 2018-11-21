@@ -21,7 +21,7 @@
               <span>{{details.maximumexpansionnumber}}</span>
             </div>
             <div>
-              <span>初始实例数 :</span>
+              <span>期望实例数 :</span>
               <span>{{details.initialinstancenumber}}</span>
             </div>
             <div>
@@ -55,6 +55,10 @@
             <div>
               <span>创建时间 :</span>
               <span>{{details.createtime}}</span>
+            </div>
+             <div>
+              <span>修改时间 :</span>
+              <span>{{details.updatetime}}</span>
             </div>
             <div>
               <span style="color: #2A99F2;cursor: pointer;" @click="updateTelescopic = true">修改伸缩组配置</span>
@@ -96,6 +100,7 @@
                 </div>
               </div>
               <Table :loading="activityLoading" :columns="telescopicActivity.activityList" :data="telescopicActivity.activityData"></Table>
+               <Page style="margin-top:10px;" :total="total" :current='current' @on-change='selectActivity'	></Page>
             </div>
           </TabPane>
         </Tabs>
@@ -111,7 +116,6 @@
           <Input v-model="alarmStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
-
       <div>
         <p style="margin-bottom: 12px">伸缩组内所有云主机<span style="color: #2A99F2;">查看详细统计规则</span></p>
         <div>
@@ -148,7 +152,7 @@
             <Option value="%" :disabled="alarmStrategy.disabled">%</Option>
           </Select>
           <span>云主机，冷却</span>
-          <InputNumber  :min="30" :max="9999" v-model="alarmStrategy.coolingNumber"></InputNumber>
+          <InputNumber  :min="60" :max="9999" v-model="alarmStrategy.coolingNumber"></InputNumber>
           <span>秒</span>
           <Tooltip  placement="right" transfer>
             <p slot="content" style="white-space:normal;">冷却时间是指在同一个伸缩组内，一个伸缩活动（添加或移出云主机）执行完成后的一段锁定时间。在这段时间内，该伸缩组不执行伸缩活动。</p>
@@ -158,7 +162,7 @@
       </div>
       <div>
           <FormItem label="告警通知" prop="contacts">
-            <Select v-model="alarmStrategy.contacts" style="width:240px"  placeholder="选择联系人">
+            <Select v-model="alarmStrategy.contacts" style="width:240px"  placeholder="选择联系人" >
               <Option v-for="item in alarmStrategy.contactsList" :value="item.id" :key="item.id">{{ item.username }}</Option>
             </Select>
           </FormItem>
@@ -217,7 +221,7 @@
             <Option value="%" :disabled="updateStrategy.disabled">%</Option>
           </Select>
           <span>云主机，冷却</span>
-          <InputNumber  :min="1" v-model="updateStrategy.coolingNumber"></InputNumber>
+          <InputNumber  :min="60" :max="999" v-model="updateStrategy.coolingNumber"></InputNumber>
           <span>秒</span>
           <Tooltip  placement="right" transfer>
             <p slot="content" style="white-space:normal;">冷却时间是指在同一个伸缩组内，一个伸缩活动（添加或移出云主机）执行完成后的一段锁定时间。在这段时间内，该伸缩组不执行伸缩活动。</p>
@@ -312,13 +316,13 @@
       <div style="margin-top: 20px;">
         <p>伸缩组活动</p>
         <div>
-          <span>更改最小实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.minNumber"></InputNumber><span>台</span>
+          <span>更改最小实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.minNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
         <div style="margin: 10px 0;">
-          <span>更改最大实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.maxNumber"></InputNumber><span>台</span>
+          <span>更改最大实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.maxNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
         <div>
-          <span>更改初始实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.initialNumber"></InputNumber><span>台</span>
+          <span>更改期望实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="timedTask.initialNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
       </div>
       <br>
@@ -400,13 +404,13 @@
       <div style="margin-top: 20px;">
         <p>伸缩组活动</p>
         <div>
-          <span>更改最小实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.minNumber"></InputNumber><span>台</span>
+          <span>更改最小实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.minNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
         <div style="margin: 10px 0;">
-          <span>更改最大实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.maxNumber"></InputNumber><span>台</span>
+          <span>更改最大实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.maxNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
         <div>
-          <span>更改初始实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.initialNumber"></InputNumber><span>台</span>
+          <span>更改期望实例数为：</span> <InputNumber  style="width: 61px;" :min="1" v-model="updateTimedTask.initialNumber"></InputNumber><span style="margin-left:5px;">台</span>
         </div>
       </div>
       <br>
@@ -426,9 +430,9 @@
         <div class="move_box">
           <div class="move_box_left">
             <div>
-              <p style="height: 27px;">该区域下所有主机</p>
+              <p style="height: 27px;">该子网<span style="color:#2A99F2">({{details.subnetname}})</span>下所有主机</p>
             </div>
-            <div class="list_box" v-for="(item,index) in intoCloudHost">
+            <div class="list_box" v-for="(item,index) in intoCloudHost" :key="index">
               <div>
                 <p :title="item.computername">{{item.instancename}}</p>
               </div>
@@ -437,12 +441,13 @@
                 <span>添加</span>
               </div>
             </div>
+          
           </div>
           <div class="move_box_left">
             <div>
               <p style="height: 27px;">已选择主机</p>
             </div>
-            <div class="list_box" v-for="(item,index) in removeCloudHost">
+            <div class="list_box" v-for="(item,index) in removeCloudHost" :key="index">
               <div>
                 <p :title="item.computername">{{item.computername}}</p>
               </div>
@@ -581,6 +586,11 @@
   export default {
     data(){
       return{
+
+        //伸缩活动页码
+        current:1,
+        total:0,
+
         //关联云主机
         hostDomain:h=>{
           return h('div',{
@@ -642,7 +652,7 @@
                       this.updateStrategy.value = parmas.row.total;
                       this.updateStrategy.coolingNumber = Number(parmas.row.loolingtime);
                       this.updateStrategy.isAdd = parmas.row.isadd;
-                      this.updateStrategy.contacts = parmas.row.alarmlinkmanname;
+                      this.updateStrategy.company = '台';
                       this.updateStrategy.id = parmas.row.id.toString();
                     }
                   }
@@ -678,7 +688,7 @@
             {required:true,validator:nameValidator,trigger:'blur'}
           ],
           contacts:[
-            {required:true,message:'请选择告警通知人',trigger:'change'}
+            {required:true,message:'请选择告警通知人'}
           ]
         },
         alarmStrategy:{
@@ -790,7 +800,7 @@
             },
           ],
           //冷却几秒
-          coolingNumber:1,
+          coolingNumber:60,
           //联系人
           contacts:'',
           contactsList:[],
@@ -824,7 +834,7 @@
             {required:true,validator:nameValidator,trigger:'blur'}
           ],
           contacts:[
-            {required:true,message:'请选择告警通知人',trigger:'change'}
+            {required:true,message:'请选择告警通知人'}
           ]
         },
         updateStrategy:{
@@ -1002,7 +1012,20 @@
             },
             {
               title:'启动配置',
-              key:'startconfigurationname'
+              render:(h,params) =>{
+                return h('span',{
+                  style:{
+                    color:'#2A99F2',
+                    cursor:'pointer'
+                  },
+                  on:{
+                    click:()=>{
+                       sessionStorage.setItem('elastic_id',params.row.startconfiguration);
+                       this.$router.push({path:'elasticDetails'})
+                    }
+                  }
+                },params.row.startconfigurationname)
+              }
             },
             {
               title:'加入时间',
@@ -1055,23 +1078,7 @@
         },
 
         //移入云主机
-        intoCloudHost:[
-          {
-            name:'云主机1云主机1云主机1云主机1云主机1云主机1云主机1云主机1'
-          },
-          {
-            name:'云主机2'
-          },
-          {
-            name:'云主机3'
-          },
-          {
-            name:'云主机5'
-          },
-          {
-            name:'云主机6'
-          }
-        ],
+        intoCloudHost:[],
         removeCloudHost:[],
 
         //伸缩组活动
@@ -1091,8 +1098,8 @@
           activityList:[
             {
               title:'活动ID',
-              key:'telescopicgroupid',
-              width:200
+              key:'id',
+              width:100
             },
             {
               title:'描述',
@@ -1159,13 +1166,21 @@
                   on:{
                     click:()=>{
                       this.updateTask = true;
+                      this.updateTimedTask.id = params.row.id;
                       this.updateTimedTask.name = params.row.taskname;
+                      //开始时间
                       this.updateTimedTask.startTime = params.row.starttime.substring(0,params.row.starttime.indexOf(' '));
                       this.updateTimedTask.hour = params.row.starttime.substring(params.row.starttime.indexOf(' ')+1,params.row.starttime.indexOf(':'));
                       this.updateTimedTask.minute = params.row.starttime.substring(params.row.starttime.indexOf(':')+1,params.row.starttime.length);
-                      this.updateTimedTask.maxNumber = params.row.readjustMaxSize;
-                      this.updateTimedTask.minNumber = params.row.readjustMixSize;
-                      this.updateTimedTask.initialNumber = params.row.readjustDesiredCapacity;
+                      //结束时间
+                      this.updateTimedTask.endTime = params.row.endtime.substring(0,params.row.endtime.indexOf(' '));
+                      this.updateTimedTask.endHour = params.row.endtime.substring(params.row.endtime.indexOf(' ')+1,params.row.endtime.indexOf(':'));
+                      this.updateTimedTask.endMinute = params.row.endtime.substring(params.row.endtime.indexOf(':')+1,params.row.endtime.length);
+                      this.updateTimedTask.date = params.row.day == 'day' ? '0':params.row.day == 'week' ? '2':'1';
+                      this.updateTimedTask.dayNumber = Number(params.row.daycount);
+                      this.updateTimedTask.maxNumber = params.row.readjustmaxsize;
+                      this.updateTimedTask.minNumber = params.row.readjustmixsize;
+                      this.updateTimedTask.initialNumber = params.row.readjustdesiredcapacity;
                       this.updateTimedTask.repeat = params.row.recurrence;
                     }
                   }
@@ -1491,6 +1506,7 @@
         //修改定时任务
         updateTask:false,
         updateTimedTask:{
+          id:'',
           name:'',
           //小时
           hour:'',
@@ -1911,31 +1927,36 @@
 
       //修改告警策略
       updateAlarmStrategy(){
-        this.$http.post('elasticScaling/updateScaleAlarmStrategy.do',{
-          id:this.updateStrategy.id,
-          strategyName:this.updateStrategy.name,
-          alarmType:'0',
-          alarmLinkmanId:this.updateStrategy.contacts.toString(),
-          telescopicgroupId:sessionStorage.getItem('vpc_id').toString(),
-          alarmName:this.updateStrategy.cpuValue,
-          countcircle:this.updateStrategy.time,
-          valueType:this.updateStrategy.symbol,
-          value:this.updateStrategy.percentage.toString(),
-          continuecircle:this.updateStrategy.count,
-          addCount:this.updateStrategy.addcount.toString(),
-          total:this.updateStrategy.value,
-          loolingTime:this.updateStrategy.coolingNumber.toString(),
-          isAdd:this.updateStrategy.isAdd
-        }).then(res =>{
-          if(res.status == 200 && res.data.status == 1){
-            this.$Message.success('修改成功');
-            this.updateStrategy.newAddStrategy = false;
-            this.getScaleAlarmStrategy();
-          }else{
-            this.$Message.info(res.data.message);
-            this.getScaleAlarmStrategy();
+        this.$refs.updateStrategy.validate((valid) => {
+          if(valid){
+            this.$http.post('elasticScaling/updateScaleAlarmStrategy.do',{
+              id:this.updateStrategy.id,
+              strategyName:this.updateStrategy.name,
+              alarmType:'0',
+              alarmLinkmanId:this.updateStrategy.contacts.toString(),
+              telescopicgroupId:sessionStorage.getItem('vpc_id').toString(),
+              alarmName:this.updateStrategy.cpuValue,
+              countcircle:this.updateStrategy.time,
+              valueType:this.updateStrategy.symbol,
+              value:this.updateStrategy.percentage.toString(),
+              continuecircle:this.updateStrategy.count,
+              addCount:this.updateStrategy.addcount.toString(),
+              total:this.updateStrategy.value,
+              loolingTime:this.updateStrategy.coolingNumber.toString(),
+              isAdd:this.updateStrategy.isAdd
+            }).then(res =>{
+              if(res.status == 200 && res.data.status == 1){
+                this.$Message.success('修改成功');
+                this.updateStrategy.newAddStrategy = false;
+                this.getScaleAlarmStrategy();
+              }else{
+                this.$Message.info(res.data.message);
+                this.getScaleAlarmStrategy();
+              }
+            })
           }
         })
+      
       },
 
       //删除告警策略
@@ -2006,6 +2027,10 @@
         if(this.weekValue != ''){
           this.weekValue =  (this.weekValue.substring(this.weekValue.length - 1) == ',') ?  this.weekValue.substring(0, this.weekValue.length - 1) :  this.weekValue;
         };
+        if(this.timedTask.minNumber > this.timedTask.maxNumber){
+          this.$Message.warning('最小实例数不能大于最大实例数');
+          return;
+        }
         this.$refs.timedTask.validate((valid) => {
             if(valid){
         let obj = {taskname:'创建中',hide:1};
@@ -2034,7 +2059,7 @@
           }else {
             this.task = false;
             this.$Modal.confirm({
-             content:'<p>定时任务创建失败，您可以<span style="color: #2A99F2">联系客服</span>，或重试</p>'
+             content:res.data.message
             })
             this.selectTask();
           }
@@ -2069,7 +2094,12 @@
         if(this.weekValue != ''){
           this.weekValue =  (this.weekValue.substring(this.weekValue.length - 1) == ',') ?  this.weekValue.substring(0, this.weekValue.length - 1) :  this.weekValue;
         };
+           if(this.updateTimedTask.minNumber > this.updateTimedTask.maxNumber){
+          this.$Message.warning('最小实例数不能大于最大实例数');
+          return;
+        }
         this.$http.post('elasticScaling/updateTask.do',{
+          id:this.updateTimedTask.id,
           taskName:this.updateTimedTask.name,
           recurrence:this.updateTimedTask.repeat,
           startTime:  this.updateTimedTask.startTime.format('yyyy-MM-dd') +' ' +this.updateTimedTask.hour + ':'+ this.updateTimedTask.minute,
@@ -2086,8 +2116,9 @@
           monthStartCount:this.updateTimedTask.monthStartNumber.toString(),
           monthEndCount:this.updateTimedTask.monthEndNumber.toString(),
         }).then(res =>{
-            if(res.status == 200 && res.data.status ==1){
+            if(res.status == 200 && res.data.status == 1){
               this.$Message.success('修改定时任务成功');
+              this.updateTask = false;
               this.selectTask();
             }else{
               this.$Message.info(res.data.message);
@@ -2116,7 +2147,7 @@
       },
 
       //获取伸缩活动
-      selectActivity(){
+      selectActivity(current){
         this.activityLoading = true;
         let date = '';
         for (let i=0;i< this.telescopicActivity.operationTime.length;i++){
@@ -2129,16 +2160,21 @@
           params:{
             telescopicGroupId:sessionStorage.getItem('vpc_id'),
             dataTime:date,
-            status:this.telescopicActivity.status
+            status:this.telescopicActivity.status,
+            page:current,
+            pageSize:25
           }
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.telescopicActivity.activityData = res.data.list;
+            this.total = res.data.total;
             this.activityLoading = false;
           }else{
             this.$Message.info(res.data.message);
             this.activityLoading = false;
           }
+        }).catch(error =>{
+          this.activityLoading = false;
         })
       },
 
@@ -2308,7 +2344,6 @@
           if(res.status == 200 && res.data.status == 1){
             if(res.data.result.publicLoadbalance.length != 0 || res.data.result.internalLoadbalance.length != 0 ){
               this.updateTeleList.balancingList = res.data.result.publicLoadbalance.concat(res.data.result.internalLoadbalance);
-              console.log(this.updateTeleList.balancingList);
             }else {
               this.$Modal.info({
                 title:'提示',
@@ -2383,7 +2418,7 @@
       this.getDetails();
       this.minuteListCount();
       this.getScaleAlarmStrategy();
-      this.selectActivity();
+      this.selectActivity(1);
       this.selectTask();
       this.getContacts();
       this.percentageF();

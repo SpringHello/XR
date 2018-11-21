@@ -125,25 +125,29 @@
             <FormItem :label="domainTypeName" prop="registrantOrganization">
               <Input v-model="infoTempFormValidate.registrantOrganization"></Input>
             </FormItem>
-            <FormItem label="域名管理联系人（中文）" prop="registrantName">
+            <!-- <FormItem label="域名管理联系人（中文）" prop="registrantName">
               <Input v-model="infoTempFormValidate.registrantName"></Input>
-            </FormItem>
+            </FormItem> -->
             <FormItem>
               <p class="formhint"><span>重要提醒</span>若该域名需备案，请确保域名持有者名称与备案主体名称一致，并完成域名实名认证。</p>
             </FormItem>
-            <FormItem label="所属区域" prop="district">
-              <Select v-model="infoTempFormValidate.country" style="width:170px" @on-change="changeCountry"
-                      placeholder="请选择国家">
-                <Option v-for="(item,index) in countryList" :value="item.Name" :key="index">{{ item.Name }}</Option>
-              </Select>
-              <Select v-model="infoTempFormValidate.province" style="width:140px" @on-change="changeProvince"
-                      placeholder="请选择省">
-                <Option v-for="(item,index) in provinceList" :value="item.Name" :key="index">{{ item.Name }}</Option>
-              </Select>
-              <Select v-model="infoTempFormValidate.city" style="width:100px" placeholder="请选择市">
-                <Option v-for="(item,index) in cityList" :value="item.Name" :key="index">{{ item.Name }}</Option>
-              </Select>
-            </FormItem>
+            <div style="display:flex">
+              <FormItem label="所属区域" prop="country">
+                <Select v-model="infoTempFormValidate.country" style="width:170px" @on-change="changeCountry" placeholder="请选择国家">
+                  <Option v-for="item in countryList" :value="item.Name" :key="item.Code">{{ item.Name }}</Option>
+                </Select>
+              </FormItem>
+              <FormItem  prop="province" :label-width="10">
+                <Select v-model="infoTempFormValidate.province" style="width:140px" @on-change="changeProvince" placeholder="请选择省">
+                  <Option v-for="item in provinceList" :value="item.Name" :key="item.Code">{{ item.Name }}</Option>
+                </Select>
+              </FormItem>
+              <FormItem  prop="city" :label-width="10">
+                <Select v-model="infoTempFormValidate.city" style="width:100px" placeholder="请选择市">
+                  <Option v-for="item in cityList" :value="item.Name" :key="item.Code">{{ item.Name }}</Option>
+                </Select>
+              </FormItem>
+            </div>
             <FormItem label="通讯地址（中文）" prop="address">
               <Input v-model="infoTempFormValidate.address"></Input>
             </FormItem>
@@ -157,37 +161,53 @@
               <p class="formhint"><span>提醒</span>com等国际域名的所有者信息以英文为准，请不要缩写或简写。系统已自动翻译成拼音或全
                 拼，如您有英文名称或翻译有误，请直接进行修改。通讯地址（英文）请按照从小地址到大 地址填写。</p>
             </FormItem>
-            <FormItem label="电话" prop="phone">
-              <div>
-                  <span><span style="margin:0 10px 0 0">国家代码</span><Input v-model="infoTempFormValidate.telArea"
-                                                                          style="width:40px"></Input></span>
-                <span><span style="margin:0 10px 0 20px">区号固定电话或手机号码</span><Input
-                  v-model="infoTempFormValidate.telephone" style="width:112px"></Input></span>
-                <span><span style="margin:0 10px 0 20px">分机号</span><Input v-model="infoTempFormValidate.telExt"
-                                                                          style="width:100px"></Input></span>
-              </div>
-            </FormItem>
+            <div style="display:flex">
+              <FormItem label="电话" ></FormItem>
+              <FormItem label="国家代码" prop="telArea" :label-width="80">
+                <Input v-model="infoTempFormValidate.telArea" style="width:60px"></Input>
+              </FormItem>
+              <FormItem label="区号固定电话或手机号码" prop="telephone" :label-width="180">
+                <Input v-model="infoTempFormValidate.telephone" style="width:112px"></Input>
+              </FormItem>
+              <FormItem label="分机号" prop="telExt" :label-width="75">
+                <Input v-model="infoTempFormValidate.telExt" style="width:100px"></Input>
+              </FormItem>
+            </div>
             <FormItem>
               <p class="formhint" style="color:rgba(17,17,17,0.43);">例如：国家代码：86，电话号码：01012345678</p>
             </FormItem>
-            <FormItem label="传真" prop="fax">
-              <span><Input style="width:100px;" v-model="infoTempFormValidate.faxCountry"></Input></span>
-              <span style="color:#D8D8D8"> —— </span>
-              <span><Input style="width:100px;" v-model="infoTempFormValidate.faxArea"></Input></span>
-              <span style="color:#D8D8D8"> —— </span>
-              <span><Input style="width:100px;" v-model="infoTempFormValidate.faxtelephone"></Input></span>
-              <span style="color:#D8D8D8"> —— </span>
-              <span><Input style="width:100px" v-model="infoTempFormValidate.faxExt"></Input></span>
-            </FormItem>
+            <div style="display:flex">
+              <FormItem label="传真" prop="faxCountry">
+                <Input v-model="infoTempFormValidate.faxCountry" style="width:100px;"></Input>
+              </FormItem>
+              <FormItem :label-width="10" style="color:#D8D8D8">
+                  —— 
+              </FormItem>
+              <FormItem prop="faxArea" :label-width="10">
+                <Input v-model="infoTempFormValidate.faxArea" style="width:100px;"></Input>
+              </FormItem>
+              <FormItem :label-width="10" style="color:#D8D8D8">
+                  —— 
+              </FormItem>
+              <FormItem prop="faxtelephone" :label-width="10">
+                <Input v-model="infoTempFormValidate.faxtelephone" style="width:100px"></Input>
+              </FormItem>
+              <FormItem :label-width="10" style="color:#D8D8D8">
+                  —— 
+              </FormItem>
+              <FormItem prop="faxExt" :label-width="10">
+                <Input v-model="infoTempFormValidate.faxExt" style="width:100px"></Input>
+              </FormItem>
+            </div>
             <FormItem>
               <p class="formhint" style="color:rgba(17,17,17,0.43);">国家区号-地区区号(或手机号码前3位)-电话号码（或手机号码后8位)-分机号(手机不必填)</p>
             </FormItem>
             <FormItem label="域名所有者名称（英文）" prop="enRegistrantOrganization">
               <Input v-model="infoTempFormValidate.enRegistrantOrganization"></Input>
             </FormItem>
-            <FormItem label="域名管理联系人（英文）" prop="enRegistrantName">
+            <!-- <FormItem label="域名管理联系人（英文）" prop="enRegistrantName">
               <Input v-model="infoTempFormValidate.enRegistrantName"></Input>
-            </FormItem>
+            </FormItem> -->
             <FormItem label="省份（英文）" prop="enProvince">
               <Input v-model="infoTempFormValidate.enProvince"></Input>
             </FormItem>
@@ -269,40 +289,24 @@
           callback()
         }
       }
-      // 校验地区
-      const validAdmindateArea = (rule, value, callback) => {
-        if (
-          this.infoTempFormValidate.country == ''
-        ) {
-          return callback(new Error("请选择所属区域"))
+      const validnumber = (rule, value, callback) => {
+        if (!/^\d*$/.test(value)) {
+          return callback(new Error("请输入数字"))
         } else {
           callback()
         }
       }
-      // 校验电话
-      const validphone = (rule, value, callback) => {
-        if (!(/^\d{1,}$/.test(this.infoTempFormValidate.telArea))
-        ) {
-          return callback(new Error("请按提示输入正确格式的国家代码"))
-        } else if (!(/^\d{6,}$/.test(this.infoTempFormValidate.telephone))) {
-          return callback(new Error("请按提示输入正确格式的电话号码"))
-        } else if (!(/^\d{1,}$/.test(this.infoTempFormValidate.telExt))) {
-          return callback(new Error("请按提示输入正确格式的分机号"))
+      const validPhone = (rule, value, callback) => {
+        if (!/^\d{6,}$/.test(value)) {
+          return callback(new Error("电话号码至少为6位数字"))
         } else {
           callback()
         }
       }
-      // 校验传真
-      const validfax = (rule, value, callback) => {
-        if (!(/^\d{1,}$/.test(this.infoTempFormValidate.faxCountry))
-        ) {
-          return callback(new Error("请按提示输入正确格式的国家代码"))
-        } else if (!(/^\d{1,}$/.test(this.infoTempFormValidate.faxArea))) {
-          return callback(new Error("请按提示输入正确格式的区号"))
-        } else if (!(/^\d{6,}$/.test(this.infoTempFormValidate.faxtelephone))) {
-          return callback(new Error("请按提示输入正确格式的电话号码"))
-        } else if (/[^\d]/.test(this.infoTempFormValidate.faxExt)) {
-          return callback(new Error("请按提示输入正确格式的分机号"))
+      // 校验英文地址
+      const validEnAdress = (rule, value, callback) => {
+        if (!/^[a-zA-Z\s-\d]+$/.test(value)) {
+          return callback(new Error("请输入英文地址"))
         } else {
           callback()
         }
@@ -374,49 +378,72 @@
         },
         infoTempRuleValidate: {
           type: [
-            {required: true, message: '请选择类型', trigger: 'change'}
+            { required: true, message: '请选择类型', trigger: 'change' }
           ],
           registrantOrganization: [
-            {required: true, validator: validChinese, trigger: 'change'}
+            { required: true, validator: validChinese, trigger: 'blur' }
           ],
-          registrantName: [
-            {required: true, validator: validChinese, trigger: 'change'}
+          country: [
+            { required: true, message: '请选择国家', trigger: 'change' }
           ],
-          district: [
-            {required: true, validator: validAdmindateArea, trigger: 'change'}
+          province: [
+            { required: true, message: '请选择省', trigger: 'change' }
+          ],
+          city: [
+            { required: true, message: '请选择城市', trigger: 'change' }
           ],
           address: [
-            {required: true, validator: validHaveChinese, trigger: 'change'}
+            { required: true, validator: validHaveChinese, trigger: 'change' }
           ],
           postCode: [
-            {required: true, validator: validpostCode, trigger: 'change'}
+            { required: true, validator: validpostCode, trigger: 'change' }
           ],
           mail: [
-            {required: true, message: '邮箱不能为空', trigger: 'change'},
-            {type: 'email', message: '请输入正确格式的邮箱', trigger: 'change'}
+            { required: true, message: '邮箱不能为空', trigger: 'blur' },
+            { type: 'email', message: '请输入正确格式的邮箱', trigger: 'blur' }
           ],
-          phone: [
-            {required: true, validator: validphone, trigger: 'change'}
+          telArea: [
+            { required: true, message: '请输入国家代码', trigger: 'change' },
+            { required: true, validator: validnumber, trigger: 'change' }
           ],
-          fax: [
-            {required: true, validator: validfax, trigger: 'change'}
+          telephone: [
+            { required: true, message: '请输入电话号码', trigger: 'change' },
+            { required: true, validator: validPhone, trigger: 'blur' }
           ],
-          enRegistrantName: [
-            {required: true, validator: validEn, trigger: 'change'}
+          telExt: [
+            { required: false, validator: validnumber, trigger: 'change' }
           ],
+          faxCountry: [
+            { required: true, message: '请输入国家区号', trigger: 'change' },
+            { required: true, validator: validnumber, trigger: 'change' }
+          ],
+          faxArea: [
+            { required: true, message: '请输入地区区号', trigger: 'change' },
+            { required: true, validator: validnumber, trigger: 'change' }
+          ],
+          faxtelephone: [
+            { required: true, message: '请输入电话号码', trigger: 'change' },
+            { required: true, validator: validPhone, trigger: 'blur' }
+          ],
+          faxExt: [
+            { required: false, validator: validnumber, trigger: 'change' }
+          ],
+          // enRegistrantName: [
+          //   { required: true, validator: validEn, trigger: 'change' }
+          // ],
           enRegistrantOrganization: [
-            {required: true, validator: validEn, trigger: 'change'}
+            { required: true, validator: validEn, trigger: 'change' }
           ],
           enProvince: [
-            {required: true, validator: validEn, trigger: 'change'}
+            { required: true, validator: validEn, trigger: 'change' }
           ],
           enCity: [
-            {required: true, validator: validEn, trigger: 'change'}
+            { required: true, validator: validEn, trigger: 'change' }
           ],
           enAddress: [
-            {required: true, validator: validEn, trigger: 'change'}
-          ],
-        },
+            { required: true, validator: validEnAdress, trigger: 'change' }
+        ],
+      },
         authFormValidate: {
           type: '',
           userid: '',

@@ -788,6 +788,10 @@
       /*if (this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
        this.showModal.selectAuthType = true
        }*/
+       if(this.$route.query.name){
+          this.status = '关机'
+       }
+      
       this.getData()
       // 定时发送ajax 刷新页面
       this.intervalInstance = setInterval(() => {
@@ -1306,6 +1310,8 @@
         localStorage.setItem('zoneid', this.currentHost[0].zoneid)
         sessionStorage.setItem('hostname', this.currentHost[0].computername)
         sessionStorage.setItem('endtime', this.currentHost[0].endtime)
+        sessionStorage.setItem('rootdiskid', this.currentHost[0].rootdiskid)
+        sessionStorage.setItem('rootdisksize', this.currentHost[0].rootdisksize)
         this.$router.push({
           name: 'upgrade'
         })
@@ -1373,15 +1379,36 @@
               return
             }
             if (this.checkSelect()) {
-              localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
-              localStorage.setItem('disksize', this.currentHost[0].disksize)
-              localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
-              localStorage.setItem('zoneid', this.currentHost[0].zoneid)
-              sessionStorage.setItem('hostname', this.currentHost[0].computername)
-              sessionStorage.setItem('endtime', this.currentHost[0].endtime)
-              this.$router.push({
-                name: 'upgrade'
-              })
+            this.$http.get('network/VMIsHaveSnapshot.do', {params: {
+              VMId: this.currentHost[0].computerid
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                if (!response.data.result) {
+                  this.$Modal.confirm({
+                    title: '提示',
+                    content: '您的主机有快照，无法升级，请删除快照再试',
+                    scrollable: true,
+                    okText: '删除快照',
+                    onOk: () => {
+                      this.$router.push('snapshot')
+                    }
+                  })
+                } else {
+                  localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
+                  localStorage.setItem('disksize', this.currentHost[0].disksize)
+                  localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
+                  localStorage.setItem('zoneid', this.currentHost[0].zoneid)
+                  sessionStorage.setItem('hostname', this.currentHost[0].computername)
+                  sessionStorage.setItem('endtime', this.currentHost[0].endtime)
+                  sessionStorage.setItem('rootdiskid', this.currentHost[0].rootdiskid)
+                  sessionStorage.setItem('rootdisksize', this.currentHost[0].rootdisksize)
+                  this.$router.push({
+                    name: 'upgrade'
+                  })
+                }
+              }
+            })
             }
             break
           case 'reboot':

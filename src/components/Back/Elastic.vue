@@ -15,7 +15,7 @@
         <div class="text-box">
           <p>一种高效的的计算资源管理策略，您可以设定时间周期或者告警策略，让计算资源按照您预期方式进行增加或减少。既能在早高峰时段保证性能，也能在闲时降低成本。</p>
         </div>
-        <Tabs type="card" :animated="false">
+        <Tabs type="card" :animated="false" style="margin-top:20px;">
           <TabPane label="启动配置">
             <div>
               <Button type="primary" @click="$router.push({path:'newAddElastic'})" style="margin-bottom: 15px;">新建</Button>
@@ -24,7 +24,7 @@
           </TabPane>
           <TabPane :label="Groups">
             <div>
-              <Button type="primary" @click="newAddTelescopic = true" style="margin-bottom: 15px;">新建</Button>
+              <Button type="primary" @click="eject" style="margin-bottom: 15px;">新建</Button>
               <Table :columns="telescopicList" :data="telescopicData"></Table>
             </div>
           </TabPane>
@@ -64,7 +64,7 @@
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
           <Select v-model="newAddTelescopicList.balancing" style="width:240px" placeholder="选择负载均衡" @on-change="balancings(newAddTelescopicList.balancing)">
-            <Option v-for="item in newAddTelescopicList.balancingList" :value="item.loadbalanceroleid" :key="item.loadbalanceroleid">{{ item.name }}</Option>
+            <Option v-for="item in newAddTelescopicList.balancingList" :value="item.lbIds" :key="item.lbIds">{{ item.lbNames }}</Option>
           </Select>
         </FormItem>
         <FormItem label="最大伸缩数" class="formitem1" prop="maxNumber">
@@ -152,9 +152,11 @@
         Groups:h=>{
           return h('div',{on:{
             click:()=>{
-              this.selectAllTelescopic();
-              this.getAllSelect();
               this.isNotCreateElastic();
+              this.selectAllTelescopic();
+              if(this.settingData.length != 0){
+                this.getAllSelect();
+              }
             }
             }},'伸缩组')
        },
@@ -441,6 +443,12 @@
         }
     },
     methods:{
+      eject(){
+        if(this.getAllSelect() == false){
+          this.newAddTelescopic = true;
+        };
+      },
+
       //获取启动配置
       selectAllElastic(){
         this.$http.get('elasticScaling/listElasticScalingRunConfig.do',{
@@ -456,7 +464,7 @@
 
       //是否创建了启动配置
       isNotCreateElastic(){
-        if(this.newAddTelescopicList.configureList.length == 0 || this.newAddTelescopicList.configureList == undefined){
+        if(this.settingData.length == 0 || this.settingData == undefined){
           this.$Modal.info({
             title:'提示',
             content:'<p>您还没有创建启动配置，请先<a style="color: #2A99F2;" href="newAddElastic">创建启动配置</a></p>',
@@ -541,7 +549,8 @@
 
       //获取负载均衡
       getAllSelect(){
-         this.$http.get('loadbalance/listLoadBalanceRole.do',{
+        var aa = true;
+         this.$http.get('loadbalance/listLoadBalanceRoleAndInterLoadBalance.do',{
           }).then(res =>{
             if(res.status == 200 && res.data.status == 1){
               if(res.data.result.publicLoadbalance.length != 0 || res.data.result.internalLoadbalance.length != 0 ){
@@ -554,19 +563,20 @@
                     this.$router.push({path:'balance'});
                   }
                 })
+                aa = false;
               }
             }
           });
+          return aa;
         },
 
 
-      //获取所属子网，防火墙
+      //获取防火墙
       changeNetWork(id){
-        let f = this.$http.get('network/listAclList.do',{params:{vpcId:id}});
-        // let l = this.$http.get('network/getnetworkAndVpcByloadbalance.do',{params:{vpcId:id,type:'1'}});
-        Promise.all([f]).then(res =>{
-          this.newAddTelescopicList.firewallList = res[0].data.result;
-          // this.newAddTelescopicList.belongSubnetList = res[1].data.list;
+        let f = this.$http.get('network/listAclList.do',{params:{vpcId:id}}).then(res=>{
+          if(res.status == 200 && res.data.status == 1){
+             this.newAddTelescopicList.firewallList = res.data.result;
+          }
         })
       },
 

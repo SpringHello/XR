@@ -528,7 +528,7 @@
               this.creatbalancemodal.formInline.subnetList = response.data.result
               if (response.data.result.length != 0) {
                 let prefix = response.data.result[0].ipsegment.split('.')
-                this.creatbalancemodal.formInline.intranetIpNum = prefix[0]+ '.' + prefix[1] + '.' + prefix[2]
+                this.creatbalancemodal.formInline.intranetIpNum = prefix[0] + '.' + prefix[1] + '.' + prefix[2]
               }
             }
           })
@@ -818,8 +818,9 @@
                 url = 'loadbalance/deleteLoadBalancerRule.do'
               }
               this.balData.forEach(item => {
-                if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
-                ) {
+                if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
+                  console.log(item)
+                  console.log(this.balanceSelection)
                   item.status = 5
                   item._disabled = true
                 }

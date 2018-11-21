@@ -9,10 +9,12 @@
               <span style="display: inline-block">{{append}}</span>
             </div>
             </Input>
-            <div v-show="choose" class="change">
+            <transition name="showChosse">
+              <div v-show="choose" class="change" @mouseleave="choose=!choose">
               <span v-for="(item,index) in suffixChange.en" :key="index"
-                    style="width:70px;display:inline-block;height: 20px" @click="append=item">{{item}}</span>
-            </div>
+                    style="width:70px;display:inline-block;height: 20px" @click="addAppend(item)">{{item}}</span>
+              </div>
+            </transition>
           </div>
           <button @click="Search">搜索</button>
 
@@ -24,17 +26,17 @@
         <div>
           <div class="left-top">
             <p>域名查询结果</p>
-            <button @click="show=!show">筛选
+            <button @click="showValue=!showValue">筛选
               <Icon type="arrow-down-b"></Icon>
             </button>
           </div>
-          <div class="show" v-show="show">
+          <div class="show" v-show="showValue">
             <CheckboxGroup v-model="singles" style="display: flex;flex-wrap: wrap;justify-content: flex-start">
               <Checkbox v-for="(item,index) in suffixChange.en" :key="index" :label="item" style="width:95px;">{{item}}
               </Checkbox>
             </CheckboxGroup>
           </div>
-          <li v-for="(item,index) in Results" :key="index" v-show="index<=num">
+          <li v-for="(item,index) in Results" :key="item.name">
             <p>{{item.name}}
               <button v-show="item.isRes=='available'">未注册</button>
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
@@ -45,9 +47,9 @@
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
-          <button class="showAll" @click="exhibition" v-show="isShowAll">显示全部
-            <Icon type="ios-arrow-down"></Icon>
-          </button>
+          <!--<button class="showAll" @click="exhibition" v-show="isShowAll&&Results.length>=7">显示全部-->
+          <!--<Icon type="ios-arrow-down"></Icon>-->
+          <!--</button>-->
         </div>
       </div>
       <div id="result-right">
@@ -64,11 +66,11 @@
             </ul>
           </div>
           <div class="statistical">
-            <p>
-              <span>已加入域名 {{addNum}} 个</span>
-              <span>优惠金额：¥00.00</span>
-            </p>
-            <h1>应付金额：¥{{payMoney}}</h1>
+            <div>
+              <p>已加入域名 <span>{{addNum}}</span> 个</p>
+              <p>优惠金额：¥00.00</p>
+            </div>
+            <h1>应付金额：<span>¥{{payMoney.toFixed(2)}}</span></h1>
             <button @click="nowBuy">立即购买</button>
           </div>
         </div>
@@ -82,13 +84,13 @@
   import $store from '@/vuex'
   export default{
     beforeRouteEnter(to, from, next){
-      axios.post('domain/domainFound.do', {
-        domainName: sessionStorage.getItem('name'),
-        tids: JSON.parse(sessionStorage.getItem("suffix")).join(','),
-      }).then(res => {
-        next(vm => {
-          vm.Results = res.data.data.results
-        })
+      next(vm => {
+        let len = JSON.parse(sessionStorage.getItem("suffix")).length
+        if (len !== 0) {
+          vm.singles = JSON.parse(sessionStorage.getItem("suffix"))
+        } else {
+          vm.singles = JSON.parse(sessionStorage.getItem('suffixChange')).en
+        }
       })
     },
     data(){
@@ -98,10 +100,8 @@
         searchText: sessionStorage.getItem('name'),
         choose: false,
         suffixChange: JSON.parse(sessionStorage.getItem('suffixChange')),
-        show: false,
-        singles: JSON.parse(sessionStorage.getItem('suffixChange')).en,
-        num: 5,
-        isShowAll: true,
+        showValue: false,
+        singles: [],
         Results: [],
 //        域名清单
         buyLists: [],
@@ -110,24 +110,28 @@
 
         domName: '',
 
+
       }
     },
     methods: {
       //域名搜索结果
       Search(){
         this.Results = []
+        this.singles = []
         axios.post('domain/domainFound.do', {
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
           this.Results = res.data.data.results
+          this.singles.unshift(this.append)
         })
       },
-      //显示全部
-      exhibition(){
-        this.num = this.Results.length
-        this.isShowAll = false
+
+      addAppend(name){
+        this.append = name
+        this.singles.unshift(name)
       },
+
       //加入清单
       addList(item){
         for (var i = 0; i <= this.buyLists.length; i++) {
@@ -206,33 +210,56 @@
           this.payMoney += parseFloat(money.price)
         })
       },
-      append(){
-        axios.post('domain/domainFound.do', {
-          domainName: this.searchText,
-          tids: this.append,
-        }).then(res => {
-          if (this.Results.every(item => {
-              return item.name != res.data.data.results[0].name
-            })) {
-            this.Results.unshift(res.data.data.results[0])
-          } else {
-
-          }
-        })
-      },
       singles(){
-        axios.post('domain/domainFound.do', {
-          domainName: this.searchText,
-          tids: this.singles.join(','),
-        }).then(res => {
-          this.Results = res.data.data.results
-        })
+        var tids = []
+        for (var i = 0; i < this.singles.length; i++) {
+          //判断当前数组下标为i的元素是否已经保存到临时数组
+          //如果已保存，则跳过，否则将此元素保存到临时数组中
+          if (tids.indexOf(this.singles[i]) == -1) {
+            tids.push(this.singles[i]);
+          }
+        }
+        if (tids.length != 0) {
+          axios.post('domain/domainFound.do', {
+            domainName: this.searchText,
+            tids: tids.slice(0, 8).join(','),
+          }).then(res => {
+            this.Results = res.data.data.results
+          })
+
+          if (tids.slice(8).length != 0) {
+            setTimeout(() => {
+                axios.post('domain/domainFound.do', {
+                  domainName: this.searchText,
+                  tids: tids.slice(8).join(','),
+                }).then(res => {
+                  if (res.status == 200 && res.data.status == 1) {
+                    var addList = res.data.data.results
+                    for (var i in addList) {
+                      this.Results.push(addList[i]);
+                    }
+                  }
+                })
+              }
+              , 2000)
+          }
+
+        } else {
+          this.Results = []
+        }
       }
     }
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .showChosse-enter, .showChosse-leave-to {
+    opacity: 0;
+  }
+
+  .showChosse-enter-active, .showChosse-leave-active {
+    transition: all .5s
+  }
 
   .topTwo {
     .search {
@@ -335,7 +362,6 @@
         border-top: none;
         &:hover {
           background: rgba(240, 247, 252, 1);
-          /*border: 1px solid rgba(170, 210, 242, 1);*/
         }
         P {
           font-size: 16px;
@@ -401,6 +427,13 @@
         outline: none;
         cursor: pointer;
       }
+
+      .fix {
+        font-size: 16px;
+        color: #2a99f2;
+        text-align: center;
+        padding: 10px;
+      }
     }
     #result-right {
       width: 380px;
@@ -415,7 +448,7 @@
             font-size: 20px;
             color: rgba(51, 51, 51, 1);
             padding: 0 14px 19px 14px;
-            border-bottom: 2px solid rgba(204, 204, 204, 1);
+            border-bottom: 1px solid rgba(204, 204, 204, 1);
             button {
               float: right;
               font-size: 16px;
@@ -428,7 +461,7 @@
           }
           .all-data {
             padding: 30px 0 9px 0;
-            border-bottom: 2px solid rgba(204, 204, 204, 1);
+            border-bottom: 1px solid rgba(204, 204, 204, 1);
             li {
               list-style: none;
               display: flex;
@@ -454,12 +487,14 @@
         }
         .statistical {
           text-align: center;
-          p {
-            span {
+          div {
+            p {
               font-size: 14px;
               color: rgba(102, 102, 102, 1);
-
               display: inline-block;
+              span {
+                color: #F85E1D;
+              }
               &:first-of-type {
                 margin-right: 28px;
               }
@@ -470,6 +505,10 @@
             font-size: 16px;
             color: rgba(51, 51, 51, 1);
             padding: 9px 0 30px 0;
+            span {
+              color: #F85E1D;
+              font-size: 20px;
+            }
           }
           button {
             background: rgba(55, 125, 255, 1);

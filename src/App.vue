@@ -27,11 +27,24 @@
                     <div class="content" ref="content" style="height:0px;">
                       <div v-if="item.content" class="column">
                         <div v-for="(prod,index) in item.content" :key="index">
-                          <h2>{{prod.prod}}</h2>
-                          <div v-for="(i,index) in prod.prodItem" style="line-height: normal" :key="index">
-                            <router-link :to="i.path" v-if="i.path==''">{{i.title}}</router-link>
-                            <router-link :to="i.path" v-else>{{i.title}}</router-link>
-                            <p>{{i.desc}}</p>
+                          <div>
+                            <h2>{{prod.prod}}</h2>
+                            <div v-for="(i,index) in prod.prodItem" style="line-height: normal" :key="index">
+                              <router-link :to="i.path" v-if="i.path==''">{{i.title}}</router-link>
+                              <router-link :to="i.path" v-else>{{i.title}}</router-link>
+                              <p>{{i.desc}}</p>
+                            </div>
+                          </div>
+                          <!--添加域名与备案-->
+                          <div v-if="prod.subProd" style="margin-top: 30px;">
+                            <div v-for="(subi,index) in prod.subProd" :key="index">
+                              <h2>{{subi.prod}}</h2>
+                              <div v-for="(i,index) in subi.prodItem" style="line-height: normal" :key="index">
+                                <router-link :to="i.path" v-if="i.path==''">{{i.title}}</router-link>
+                                <router-link :to="i.path" v-else>{{i.title}}</router-link>
+                                <p>{{i.desc}}</p>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -310,87 +323,87 @@
     data() {
       return {
         /*titleItem: [
-          {
-            title: '活动中心',
-            path: '/ruicloud/ActiveCenter'
-          },
-          {
-            title: '首页',
-            path: '/ruicloud/home'
-          },
-          {
-            title: '产品',
-            path: '',
-            content: [
-              {
-                prod: '云计算',
-                prodItem: [
-                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ruicloud/Pecs'},
-                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost'},
-                  {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss'},
-                  {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/ruicloud/Pgpu'},
-                  {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
-                  {title: '弹性伸缩（敬请期待）', desc: '高可用、可视化、低成本', path: ''}
-                ]
-              },
-              {
-                prod: '云网络',
-                prodItem: [
-                  {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/ruicloud/Pvpc'},
-                  {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/ruicloud/Peip'},
-                  {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/ruicloud/Pbalance'},
-                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/ruicloud/Pnat'},
-                  {title: '虚拟专网VPN', desc: '跨VPC连接', path: '/ruicloud/Pvirvpn'},
-                  {title: 'CDN（敬请期待）', desc: '节点丰富、安全易用', path: ''}
-                ]
-              },
-              {
-                prod: '云存储',
-                prodItem: [
-                  {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/ruicloud/Pdisk'},
-                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/ruicloud/Pbackupdisk'},
-                  {title: '对象存储', desc: '安全稳定，海量便捷', path: '/ruicloud/PobjStorage'}
-                ]
-              },
-              {
-                prod: '云数据库',
-                prodItem: [
-                  {
-                    title: '云数据库',
-                    desc: 'MySQL、PostgreSQL、mongoDB、Redis',
-                    path: '/ruicloud/PdataBase'
-                  },
-                ]
-              },
-              {
-                prod: '云安全',
-                prodItem: [
-                  {title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall'},
-                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos'}
-                ]
-              },
-              {
-                prod: '云运维',
-                prodItem: [
-                  {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor'},
-                  {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: ''}
-                ]
-              }
-            ]
-          },
-          {
-            title: '文档',
-            path: '/ruicloud/document'
-          },
-          {
-            title: '资讯',
-            path: '/ruicloud/article/1'
-          },
-          {
-            title: '关于我们',
-            path: '/ruicloud/about'
-          }
-        ], // banner item*/
+         {
+         title: '活动中心',
+         path: '/ruicloud/ActiveCenter'
+         },
+         {
+         title: '首页',
+         path: '/ruicloud/home'
+         },
+         {
+         title: '产品',
+         path: '',
+         content: [
+         {
+         prod: '云计算',
+         prodItem: [
+         {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ruicloud/Pecs'},
+         {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost'},
+         {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss'},
+         {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/ruicloud/Pgpu'},
+         {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
+         {title: '弹性伸缩（敬请期待）', desc: '高可用、可视化、低成本', path: ''}
+         ]
+         },
+         {
+         prod: '云网络',
+         prodItem: [
+         {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/ruicloud/Pvpc'},
+         {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/ruicloud/Peip'},
+         {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/ruicloud/Pbalance'},
+         {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/ruicloud/Pnat'},
+         {title: '虚拟专网VPN', desc: '跨VPC连接', path: '/ruicloud/Pvirvpn'},
+         {title: 'CDN（敬请期待）', desc: '节点丰富、安全易用', path: ''}
+         ]
+         },
+         {
+         prod: '云存储',
+         prodItem: [
+         {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/ruicloud/Pdisk'},
+         {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/ruicloud/Pbackupdisk'},
+         {title: '对象存储', desc: '安全稳定，海量便捷', path: '/ruicloud/PobjStorage'}
+         ]
+         },
+         {
+         prod: '云数据库',
+         prodItem: [
+         {
+         title: '云数据库',
+         desc: 'MySQL、PostgreSQL、mongoDB、Redis',
+         path: '/ruicloud/PdataBase'
+         },
+         ]
+         },
+         {
+         prod: '云安全',
+         prodItem: [
+         {title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall'},
+         {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos'}
+         ]
+         },
+         {
+         prod: '云运维',
+         prodItem: [
+         {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor'},
+         {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: ''}
+         ]
+         }
+         ]
+         },
+         {
+         title: '文档',
+         path: '/ruicloud/document'
+         },
+         {
+         title: '资讯',
+         path: '/ruicloud/article/1'
+         },
+         {
+         title: '关于我们',
+         path: '/ruicloud/about'
+         }
+         ], // banner item*/
         titleItem: [
           {
             title: '活动中心',
@@ -412,7 +425,7 @@
                   {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss.htm'},
                   {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/ruicloud/Pgpu.htm'},
                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
-                  {title: '弹性伸缩（敬请期待）', desc: '高可用、可视化、低成本', path: ''}
+                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/ruicloud/Pelastic'}
                 ]
               },
               {
@@ -442,6 +455,23 @@
                     desc: 'MySQL、PostgreSQL、mongoDB、Redis',
                     path: '/ruicloud/PdataBase.htm'
                   },
+                ],
+                subProd: [
+                  {
+                    prod: '域名与备案',
+                    prodItem: [
+                      {
+                        title: '域名注册',
+                        desc: '自定义域名注册、查询',
+                        path: '/ruicloud/domainname'
+                      },
+                      {
+                        title: '域名备案',
+                        desc: '高效贴心的域名备案服务',
+                        path: '/ruicloud/entrance'
+                      },
+                    ]
+                  },
                 ]
               },
               {
@@ -449,15 +479,17 @@
                 prodItem: [
                   {title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall.htm'},
                   {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos.htm'}
+                ],
+                subProd: [
+                  {
+                    prod: '云运维',
+                    prodItem: [
+                      {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor.htm'},
+                      {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: ''}
+                    ]
+                  }
                 ]
               },
-              {
-                prod: '云运维',
-                prodItem: [
-                  {title: '云监控（敬请期待）', desc: '自定义监控项、多告警推送方式', path: ''},
-                  {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: ''}
-                ]
-              }
             ]
           },
           {
@@ -526,7 +558,7 @@
           {
             title: '云维护',
             desc: [
-              {subTitle: '云监控（敬请期待）', url: ''},
+              {subTitle: '云监控', url: '/ruicloud/Pmonitor.htm'},
               {subTitle: '访问监控（敬请期待）', url: ''}
             ]
           }
@@ -834,9 +866,19 @@
                         padding: 26px 0px;
                         justify-content: space-between;
                         text-align: left;
-
                         > div {
                           width: 15%;
+                          &:last-of-type {
+                            > div {
+                              height: 155px;
+                            }
+                          }
+                          &:nth-last-child(2) {
+                            > div {
+                              height: 155px;
+                            }
+                          }
+
                         }
                         h2 {
                           font-size: 18px;
