@@ -350,7 +350,7 @@
         renewalType: '',
         renewalTime: '',
         renewalHost: false,
-        renewalGpu:false,
+        renewalGpu: false,
         renewalNAT: false,
         renewalHostID: '',
         renewalNATID: '',
@@ -386,7 +386,7 @@
           bindIPForDatabase: false,
           charges: false,
           adjust: false,
-          bindIPForGpu:false
+          bindIPForGpu: false
         },
         chargesForm: {
           timeType: '',
@@ -676,8 +676,8 @@
                 return h('div', {}, h('span', {}, '已冻结'))
               } else if (object.row.usetype == 0) {
                 return h('Dropdown', {
-                  props:{
-                    transfer:true
+                  props: {
+                    transfer: true
                   },
                   on: {
                     'on-click': (type) => {
@@ -693,15 +693,15 @@
                     attrs: {
                       name: 'gpu'
                     },
-                    style:{
-                      display:this.hide
+                    style: {
+                      display: this.hide
                     },
                   }, 'GPU云服务器'),
                   h('DropdownItem', {
-                  attrs: {
-                    name: 'NAT'
-                  }
-                }, 'NAT网关'),
+                    attrs: {
+                      name: 'NAT'
+                    }
+                  }, 'NAT网关'),
                   h('DropdownItem', {
                     attrs: {
                       name: 'database'
@@ -753,7 +753,7 @@
           hostOptions: [],
           row: {}
         },
-        bindForGpuForm:{
+        bindForGpuForm: {
           gpu: '',
           gpuOptions: [],
           row: {}
@@ -805,20 +805,20 @@
           bandwidth: '',
           endTime: ''
         },
-        hide:'',
-        intervalInstance:null
+        hide: '',
+        intervalInstance: null
       }
     },
-    beforeRouteLeave(to, from , next){
+    beforeRouteLeave(to, from, next) {
       clearInterval(this.intervalInstance);
       next();
     },
-    created(){
-      if($store.state.zone.zonename.indexOf('GPU')  > 1){
-          this.hide = 'block';
-        }else{
-          this.hide = 'none';
-        }
+    created() {
+      if ($store.state.zone.zonename.indexOf('GPU') > 1) {
+        this.hide = 'block';
+      } else {
+        this.hide = 'none';
+      }
       this.intervalInstance = setInterval(() => {
         this.refresh()
       }, 5 * 1000)
@@ -832,21 +832,21 @@
       // 释放弹性IP
       resetIP() {
         if (this.select != null) {
-          this.$http.get('network/delPublic.do', {
-            params: {
-              id: this.select.id
-            }
-          }).then(response => {
-            if (response.status != 200 || response.data.status != 1) {
-              this.$message.info({
-                content: response.data.message
-              })
-            } else {
-              this.$message.confirm({
-                content: '您正将“' + this.select.publicip + '”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
-                onOk: () => {
-                  this.$Message.success(response.data.message)
+          this.$message.confirm({
+            content: '您正将“' + this.select.publicip + '”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
+            onOk: () => {
+              this.$http.get('network/delPublic.do', {
+                params: {
+                  id: this.select.id
+                }
+              }).then(response => {
+                if (response.status == 200 || response.data.status == 1) {
                   this.refresh()
+                  this.$Message.success(response.data.message)
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
                 }
               })
             }
@@ -999,17 +999,17 @@
           }).then(response => {
             this.bindForDatabaseForm.databaseOptions = response.data.result
           })
-        }else if (type == 'gpu'){
+        } else if (type == 'gpu') {
           this.bindForGpuForm.row = row
           this.showModal.bindIPForGpu = true
           this.$http.get('gpuserver/listGpuServer.do', {
             params: {
               vpcId: row.vpcid,
-              num:0
+              num: 0
             }
           }).then(response => {
             var list = [];
-            if(Object.keys(response.data.result).length != 0) {
+            if (Object.keys(response.data.result).length != 0) {
               for (let index in response.data.result) {
                 for (let i = 0; i < response.data.result[index].list.length; i++) {
                   list.push(response.data.result[index].list[i]);
@@ -1119,7 +1119,7 @@
         this.$refs.bindForNATFormValidate.resetFields();
       },
       //绑定弹性IP到GPU
-      bindGpuSubmit(){
+      bindGpuSubmit() {
         this.$refs.bindForGpuFormValidate.validate(validate => {
           if (validate) {
             this.ipData.forEach(item => {
@@ -1720,9 +1720,9 @@
       // 监听区域变换
       '$store.state.zone': {
         handler: function () {
-          if($store.state.zone.zonename.indexOf('GPU')  > 1){
+          if ($store.state.zone.zonename.indexOf('GPU') > 1) {
             this.hide = 'block';
-          }else{
+          } else {
             this.hide = 'none';
           }
           this.refresh()
