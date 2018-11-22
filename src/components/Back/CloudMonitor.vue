@@ -267,7 +267,7 @@
                           </Row>
                         </FormItem>
                         <FormItem style="margin-bottom:10px">
-                          <Button type="text" @click="targetHandleAdd" style="color:#2A99F2">添加</Button>
+                          <Button type="text" @click="targetHandleAdd" :style="{color:targetformDynamic.length<5?'#2A99F2':''}" :disabled="targetformDynamic.length>=5">添加</Button>
                         </FormItem>
                       </div>
                       <div>
@@ -313,7 +313,7 @@
                           </Row>
                         </FormItem>
                         <FormItem style="margin-bottom:10px">
-                          <Button type="text" @click="eventHandleAdd" style="color:#2A99F2">添加</Button>
+                          <Button type="text" @click="eventHandleAdd" :style="{color:eventformDynamic.length<5?'#2A99F2':''}" :disabled="eventformDynamic.length>=5">添加</Button>
                         </FormItem>
                       </div>
                     </div>
@@ -683,18 +683,18 @@
               label: '=',
               value: '='
             },
-            {
-              label: '>=',
-              value: '>='
-            },
-            {
-              label: '<=',
-              value: '<='
-            },
-            {
-              label: '!=',
-              value: '!='
-            }
+            // {
+            //   label: '>=',
+            //   value: '>='
+            // },
+            // {
+            //   label: '<=',
+            //   value: '<='
+            // },
+            // {
+            //   label: '!=',
+            //   value: '!='
+            // }
           ],
           Percentage: [
             {
@@ -1067,7 +1067,25 @@
               let alarmname = alarmArr.map(item => {
                 return item.alarmname
               })
-              return h('span', {}, alarmname.join())
+              return h('Tooltip', {
+                style: {
+                  width: '172px',
+                  overflow: 'hidden',
+                  whiteSspace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                  cursor: 'pointer'
+                },
+                props: {
+                  placement: "bottom-start"
+                }
+              }, [h('p', {
+                slot: 'content',
+                style: {
+                  whiteSpace: 'normal'
+                }
+              }, alarmname.join()), h('span', {
+
+              }, alarmname.join())])
             }
           }, {
             title: '策略类型',
