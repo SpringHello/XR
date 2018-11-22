@@ -18,12 +18,12 @@
         <div class="universal-alert">
           <p> 实时、全面、详尽的云产品监控告警运维平台</p>
         </div>
-        <Tabs type="card" v-model='tabsName' :animated="false" style="min-height: 400px" @on-click="labelSwitching" >
+        <Tabs type="card" v-model='tabsName' :animated="false" style="min-height: 400px" @on-click="labelSwitching">
           <TabPane label="监控概览" name="overview">
             <div class="host-monitor">
               <p>云服务器监控</p>
               <ul>
-                <li v-for="(item,index) in monitorData" :key="index" >
+                <li v-for="(item,index) in monitorData" :key="index">
                   <p>{{item.text}}</p>
                   <p><span class="warning" @click="tabsClick(index)">{{item.num}}</span>台</p>
                 </li>
@@ -45,7 +45,7 @@
                     <Radio label="week">近一周</Radio>
                   </RadioGroup>
                   <div>
-                    <Button type="primary" class="export-btn">导出</Button>
+                    <Button type="primary" class="export-btn" @click="exportFirstExcelPandect">导出</Button>
                     <RadioGroup type="button" v-model="firstMonitoringOverview.mapType" @on-change="cutMapOverviewMonitoring(1)">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
@@ -85,7 +85,7 @@
                     <Radio label="week">近一周</Radio>
                   </RadioGroup>
                   <div>
-                    <Button type="primary" class="export-btn">导出</Button>
+                    <Button type="primary" class="export-btn" @click="exportSecondExcelPandect">导出</Button>
                     <RadioGroup type="button" v-model="secondMonitoringOverview.mapType" @on-change="cutMapOverviewMonitoring(2)">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
@@ -124,7 +124,7 @@
                     <Radio label="week">近一周</Radio>
                   </RadioGroup>
                   <div>
-                    <Button type="primary" style="margin-right: 5px">导出</Button>
+                    <Button type="primary" style="margin-right: 5px" @click="exportExcelCustom(item)">导出</Button>
                     <RadioGroup type="button" v-model="item.mapType" @on-change="cutMapCustomMonitoring(item,index)">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
@@ -523,6 +523,7 @@
   import regExp from '../../util/regExp'
   import $store from '../../vuex'
   import axios from '../../util/axiosInterceptor'
+  import echarts from 'echarts'
 
   export default {
     data() {
@@ -532,7 +533,7 @@
         refreshTime: '',
         targetformDynamic: [
           {
-            alarmname: 'CPU使用率',
+            alarmname: 'CPU利用率',
             countcircle: 1,
             valuetype: '>',
             value: 80,
@@ -574,7 +575,7 @@
         alarmHostTarget: {
           target: [
             {
-              value: 'CPU使用率',
+              value: 'CPU利用率',
               unit: '%'
             },
             {
@@ -704,7 +705,7 @@
               label: '20',
               value: 20
             },
-             {
+            {
               label: '30',
               value: 30
             },
@@ -712,7 +713,7 @@
               label: '40',
               value: 40
             },
-             {
+            {
               label: '50',
               value: 50
             },
@@ -720,7 +721,7 @@
               label: '60',
               value: 60
             },
-             {
+            {
               label: '70',
               value: 70
             },
@@ -728,7 +729,7 @@
               label: '80',
               value: 80
             },
-             {
+            {
               label: '90',
               value: 90
             },
@@ -857,12 +858,12 @@
           {
             text: '云主机PING不可达',
             num: '0',
-            tabsName:'alarmList',
+            tabsName: 'alarmList',
           },
           {
             text: '未处理告警',
             num: '0',
-            tabsName:'alarmList',
+            tabsName: 'alarmList',
           },
           {
             text: '已关机云主机',
@@ -879,7 +880,7 @@
               value: '云主机',
               indexGroup: [
                 {
-                  label: 'CPU使用率',
+                  label: 'CPU利用率',
                   value: 'cpu'
                 }, {
                   label: '磁盘使用率',
@@ -888,10 +889,10 @@
                   label: '内存使用率',
                   value: 'memory'
                 }, {
-                  label: '网进',
+                  label: '外网流入量',
                   value: 'networkin'
                 }, {
-                  label: '网出',
+                  label: '外网流出量',
                   value: 'networkout'
                 }
               ]
@@ -933,7 +934,7 @@
               value: '云主机',
               indexGroup: [
                 {
-                  label: 'CPU使用率',
+                  label: 'CPU利用率',
                   value: 'cpu'
                 }, {
                   label: '磁盘使用率',
@@ -942,10 +943,10 @@
                   label: '内存使用率',
                   value: 'memory'
                 }, {
-                  label: '网进',
+                  label: '外网流入量',
                   value: 'networkin'
                 }, {
-                  label: '网出',
+                  label: '外网流出量',
                   value: 'networkout'
                 }
               ]
@@ -1271,7 +1272,7 @@
         allContactsTemp: '',
 
         //tabs 选中项
-        tabsName:'overview'
+        tabsName: 'overview'
       }
     },
     beforeRouteEnter(from, to, next) {
@@ -1366,37 +1367,37 @@
             let brokenLine = JSON.parse(JSON.stringify(line))
             switch (res[2].data.list[0].name) {
               case 'cpu':
-                name = 'CPU使用率'
+                name = 'CPU利用率（%）'
                 break
               case 'disk':
-                name = '磁盘使用率'
+                name = '磁盘使用率（%）'
                 break
               case 'memory':
-                name = '内存使用率'
+                name = '内存使用率（%）'
                 break
               case 'networkin':
-                name = '网进'
+                name = '外网流入量（kb/s）'
                 break
               case 'networkout':
-                name = '网出'
+                name = '外网流出量（kb/s）'
                 break
               case 'capacity':
-                name = '容量'
+                name = '使用容量（GB）'
                 break
               case 'flow':
-                name = '流量'
+                name = '流量（kb/s）'
                 break
               case 'gethttp':
-                name = 'get请求次数'
+                name = 'get请求次数（次）'
                 break
               case 'posthttp':
-                name = 'post请求次数'
+                name = 'post请求次数（次）'
                 break
               case 'puthttp':
-                name = 'put请求次数'
+                name = 'put请求次数（次）'
                 break
               case 'deletehttp':
-                name = 'delete请求次数'
+                name = 'delete请求次数（次）'
                 break
 
             }
@@ -1425,37 +1426,37 @@
             let brokenLine = JSON.parse(JSON.stringify(line))
             switch (res[3].data.list[0].name) {
               case 'cpu':
-                name = 'CPU使用率'
+                name = 'CPU利用率（%）'
                 break
               case 'disk':
-                name = '磁盘使用率'
+                name = '磁盘使用率（%）'
                 break
               case 'memory':
-                name = '内存使用率'
+                name = '内存使用率（%）'
                 break
               case 'networkin':
-                name = '网进'
+                name = '外网流入量（kb/s）'
                 break
               case 'networkout':
-                name = '网出'
+                name = '外网流出量（kb/s）'
                 break
               case 'capacity':
-                name = '容量'
+                name = '使用容量（GB）'
                 break
               case 'flow':
-                name = '流量'
+                name = '流量（kb/s）'
                 break
               case 'gethttp':
-                name = 'get请求次数'
+                name = 'get请求次数（次）'
                 break
               case 'posthttp':
-                name = 'post请求次数'
+                name = 'post请求次数（次）'
                 break
               case 'puthttp':
-                name = 'put请求次数'
+                name = 'put请求次数（次）'
                 break
               case 'deletehttp':
-                name = 'delete请求次数'
+                name = 'delete请求次数（次）'
                 break
 
             }
@@ -1506,7 +1507,7 @@
         // 清空指标数据
         this.targetformDynamic = [
           {
-            alarmname: 'CPU使用率',
+            alarmname: 'CPU利用率',
             countcircle: 1,
             valuetype: '>',
             value: 80,
@@ -1931,7 +1932,7 @@
       },
       // 获取指标资源
       getIndexResource() {
-         this.monitoringIndexForm.selectedProduct = []
+        this.monitoringIndexForm.selectedProduct = []
         let url = 'monitor/listZoneVMAndDiskAndVpcAndObject.do'
         if (typeof (this.monitoringIndexForm.productIndex) != 'undefined') {
           this.$http.get(url, {
@@ -2004,37 +2005,37 @@
             let name = ''
             switch (item.name) {
               case 'cpu':
-                name = 'CPU使用率'
+                name = 'CPU利用率（%）'
                 break
               case 'disk':
-                name = '磁盘使用率'
+                name = '磁盘使用率（%）'
                 break
               case 'memory':
-                name = '内存使用率'
+                name = '内存使用率（%）'
                 break
               case 'networkin':
-                name = '网进'
+                name = '外网流入量（kb/s）'
                 break
               case 'networkout':
-                name = '网出'
+                name = '外网流出量（kb/s）'
                 break
               case 'capacity':
-                name = '容量'
+                name = '使用容量（GB）'
                 break
               case 'flow':
-                name = '流量'
+                name = '流量（kb/s）'
                 break
               case 'gethttp':
-                name = 'get请求次数'
+                name = 'get请求次数（次）'
                 break
               case 'posthttp':
-                name = 'post请求次数'
+                name = 'post请求次数（次）'
                 break
               case 'puthttp':
-                name = 'put请求次数'
+                name = 'put请求次数（次）'
                 break
               case 'deletehttp':
-                name = 'delete请求次数'
+                name = 'delete请求次数（次）'
                 break
 
             }
@@ -2109,37 +2110,37 @@
               let name = ''
               switch (res.data.list[0].name) {
                 case 'cpu':
-                  name = 'CPU使用率'
+                  name = 'CPU利用率（%）'
                   break
                 case 'disk':
-                  name = '磁盘使用率'
+                  name = '磁盘使用率（%）'
                   break
                 case 'memory':
-                  name = '内存使用率'
+                  name = '内存使用率（%）'
                   break
                 case 'networkin':
-                  name = '网进'
+                  name = '外网流入量（kb/s）'
                   break
                 case 'networkout':
-                  name = '网出'
+                  name = '外网流出量（kb/s）'
                   break
                 case 'capacity':
-                  name = '容量'
+                  name = '使用容量（GB）'
                   break
                 case 'flow':
-                  name = '流量'
+                  name = '流量（kb/s）'
                   break
                 case 'gethttp':
-                  name = 'get请求次数'
+                  name = 'get请求次数（次）'
                   break
                 case 'posthttp':
-                  name = 'post请求次数'
+                  name = 'post请求次数（次）'
                   break
                 case 'puthttp':
-                  name = 'put请求次数'
+                  name = 'put请求次数（次）'
                   break
                 case 'deletehttp':
-                  name = 'delete请求次数'
+                  name = 'delete请求次数（次）'
                   break
 
               }
@@ -2204,37 +2205,37 @@
               let name = ''
               switch (res.data.list[0].name) {
                 case 'cpu':
-                  name = 'CPU使用率'
+                  name = 'CPU利用率（%）'
                   break
                 case 'disk':
-                  name = '磁盘使用率'
+                  name = '磁盘使用率（%）'
                   break
                 case 'memory':
-                  name = '内存使用率'
+                  name = '内存使用率（%）'
                   break
                 case 'networkin':
-                  name = '网进'
+                  name = '外网流入量（kb/s）'
                   break
                 case 'networkout':
-                  name = '网出'
+                  name = '外网流出量（kb/s）'
                   break
                 case 'capacity':
-                  name = '容量'
+                  name = '使用容量（GB）'
                   break
                 case 'flow':
-                  name = '流量'
+                  name = '流量（kb/s）'
                   break
                 case 'gethttp':
-                  name = 'get请求次数'
+                  name = 'get请求次数（次）'
                   break
                 case 'posthttp':
-                  name = 'post请求次数'
+                  name = 'post请求次数（次）'
                   break
                 case 'puthttp':
-                  name = 'put请求次数'
+                  name = 'put请求次数（次）'
                   break
                 case 'deletehttp':
-                  name = 'delete请求次数'
+                  name = 'delete请求次数（次）'
                   break
 
               }
@@ -2607,39 +2608,38 @@
                   let brokenLine = JSON.parse(JSON.stringify(line))
                   switch (res.data.list[0].name) {
                     case 'cpu':
-                      name = 'CPU使用率'
+                      name = 'CPU使用率（%）'
                       break
                     case 'disk':
-                      name = '磁盘使用率'
+                      name = '磁盘使用率（%）'
                       break
                     case 'memory':
-                      name = '内存使用率'
+                      name = '内存使用率（%）'
                       break
                     case 'networkin':
-                      name = '网进'
+                      name = '外网流入量（kb/s）'
                       break
                     case 'networkout':
-                      name = '网出'
+                      name = '外网流出量（kb/s）'
                       break
                     case 'capacity':
-                      name = '容量'
+                      name = '使用容量（GB）'
                       break
                     case 'flow':
-                      name = '流量'
+                      name = '流量（kb/s）'
                       break
                     case 'gethttp':
-                      name = 'get请求次数'
+                      name = 'get请求次数（次）'
                       break
                     case 'posthttp':
-                      name = 'post请求次数'
+                      name = 'post请求次数（次）'
                       break
                     case 'puthttp':
-                      name = 'put请求次数'
+                      name = 'put请求次数（次）'
                       break
                     case 'deletehttp':
-                      name = 'delete请求次数'
+                      name = 'delete请求次数（次）'
                       break
-
                   }
                   brokenLine.xAxis.data = res.data.list[0].x
                   res.data.list[0].data.forEach(data => {
@@ -2668,6 +2668,35 @@
           }
         })
       },
+      // 导出总览第一个图
+      exportFirstExcelPandect() {
+        let url = 'monitor/exportExcelPandect.do'
+        let params = {
+          type: '1',
+          id: this.firstMonitoringOverview.id
+        }
+        switch (this.firstMonitoringOverview.dateType) {
+          case 'today':
+            params.way = '1'
+            break
+          case 'week':
+            params.way = '2'
+            break
+          case 'month':
+            params.way = '2'
+            params.datetype = 'month'
+            break
+        }
+        this.$http.get(url, {params: params}).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.$Message.success(res.data.message)
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
       // 获取总览第二个监控图
       getSecondOverviewMonitor() {
         this.$http.get('monitor/listPandectCustomMonitorIndexTodaySingleById.do', {
@@ -2690,39 +2719,38 @@
                   let brokenLine = JSON.parse(JSON.stringify(line))
                   switch (res.data.list[0].name) {
                     case 'cpu':
-                      name = 'CPU使用率'
+                      name = 'CPU使用率（%）'
                       break
                     case 'disk':
-                      name = '磁盘使用率'
+                      name = '磁盘使用率（%）'
                       break
                     case 'memory':
-                      name = '内存使用率'
+                      name = '内存使用率（%）'
                       break
                     case 'networkin':
-                      name = '网进'
+                      name = '外网流入量（kb/s）'
                       break
                     case 'networkout':
-                      name = '网出'
+                      name = '外网流出量（kb/s）'
                       break
                     case 'capacity':
-                      name = '容量'
+                      name = '使用容量（GB）'
                       break
                     case 'flow':
-                      name = '流量'
+                      name = '流量（kb/s）'
                       break
                     case 'gethttp':
-                      name = 'get请求次数'
+                      name = 'get请求次数（次）'
                       break
                     case 'posthttp':
-                      name = 'post请求次数'
+                      name = 'post请求次数（次）'
                       break
                     case 'puthttp':
-                      name = 'put请求次数'
+                      name = 'put请求次数（次）'
                       break
                     case 'deletehttp':
-                      name = 'delete请求次数'
+                      name = 'delete请求次数（次）'
                       break
-
                   }
                   brokenLine.xAxis.data = res.data.list[0].x
                   res.data.list[0].data.forEach(data => {
@@ -2751,6 +2779,35 @@
           }
         })
       },
+      // 导出第二个
+      exportSecondExcelPandect() {
+        let url = 'monitor/exportExcelPandect.do'
+        let params = {
+          type: '2',
+          id: this.secondMonitoringOverview.id
+        }
+        switch (this.secondMonitoringOverview.dateType) {
+          case 'today':
+            params.way = '2'
+            break
+          case 'week':
+            params.way = '1'
+            break
+          case 'month':
+            params.way = '2'
+            params.datetype = 'month'
+            break
+        }
+        this.$http.get(url, {params: params}).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.$Message.success(res.data.message)
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
       getCustomMonitorGroup() {
         let url = 'monitor/listCustomMonitorIndexMonth.do'
         this.$http.get(url).then(res => {
@@ -2762,37 +2819,37 @@
                 let brokenLine = JSON.parse(JSON.stringify(line))
                 switch (item.name) {
                   case 'cpu':
-                    name = 'CPU使用率'
+                    name = 'CPU利用率（%）'
                     break
                   case 'disk':
-                    name = '磁盘使用率'
+                    name = '磁盘使用率（%）'
                     break
                   case 'memory':
-                    name = '内存使用率'
+                    name = '内存使用率（%）'
                     break
                   case 'networkin':
-                    name = '网进'
+                    name = '外网流入量（kb/s）'
                     break
                   case 'networkout':
-                    name = '网出'
+                    name = '外网流出量（kb/s）'
                     break
                   case 'capacity':
-                    name = '容量'
+                    name = '使用容量（GB）'
                     break
                   case 'flow':
-                    name = '流量'
+                    name = '流量（kb/s）'
                     break
                   case 'gethttp':
-                    name = 'get请求次数'
+                    name = 'get请求次数（次）'
                     break
                   case 'posthttp':
-                    name = 'post请求次数'
+                    name = 'post请求次数（次）'
                     break
                   case 'puthttp':
-                    name = 'put请求次数'
+                    name = 'put请求次数（次）'
                     break
                   case 'deletehttp':
-                    name = 'delete请求次数'
+                    name = 'delete请求次数（次）'
                     break
 
                 }
@@ -2808,6 +2865,33 @@
                 item.showChart = brokenLine
               })
             }
+          }
+        })
+      },
+      exportExcelCustom(item) {
+        let url = 'monitor/exportExcel.do'
+        let params = {
+          id: item.customMonitorIndex.id
+        }
+        switch (item.timeType) {
+          case 'today':
+            params.type = '1'
+            break
+          case 'week':
+            params.type = '2'
+            break
+          case 'month':
+            params.type = '2'
+            params.datetype = 'month'
+            break
+        }
+        this.$http.get(url, {params: params}).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.$Message.success(res.data.message)
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
           }
         })
       },
@@ -2828,9 +2912,9 @@
           return item.alarmname == '应用中断'
         })
         var host = appInterruptArray.some(item => {
-            if (item.value == '') {
-              this.$Message.info('请输入端口号')
-            }
+          if (item.value == '') {
+            this.$Message.info('请输入端口号')
+          }
           return item.value == ''
         })
         if (host) {
@@ -2990,11 +3074,11 @@
       },
 
       //跳转对应列表
-      tabsClick(index){
-        if(index != 2){
+      tabsClick(index) {
+        if (index != 2) {
           this.tabsName = this.monitorData[index].tabsName;
-        }else if(index == 2){
-          this.$router.push({path:'host',query:{name:'close'}});
+        } else if (index == 2) {
+          this.$router.push({path: 'host', query: {name: 'close'}});
         }
       }
     },
@@ -3015,7 +3099,7 @@
           this.customMonitoringData.forEach(item => {
             switch (item.name) {
               case 'cpu':
-                item.name = 'CPU使用率'
+                item.name = 'CPU利用率'
                 break
               case 'disk':
                 item.name = '磁盘使用率'
@@ -3024,10 +3108,10 @@
                 item.name = '内存使用率'
                 break
               case 'networkin':
-                item.name = '网进'
+                item.name = '外网流入量'
                 break
               case 'networkout':
-                item.name = '网出'
+                item.name = '外网流出量'
                 break
               case 'capacity':
                 item.name = '对象存储容量'
@@ -3055,7 +3139,7 @@
       'firstMonitoringOverview.indexs'(val) {
         switch (val) {
           case 'cpu':
-            this.firstMonitoringOverview.title = 'CPU使用率'
+            this.firstMonitoringOverview.title = 'CPU利用率'
             break
           case 'disk':
             this.firstMonitoringOverview.title = '磁盘使用率'
@@ -3064,10 +3148,10 @@
             this.firstMonitoringOverview.title = '内存使用率'
             break
           case 'networkin':
-            this.firstMonitoringOverview.title = '网进'
+            this.firstMonitoringOverview.title = '外网流入量'
             break
           case 'networkout':
-            this.firstMonitoringOverview.title = '网出'
+            this.firstMonitoringOverview.title = '外网流出量'
             break
           case 'capacity':
             this.firstMonitoringOverview.title = '对象存储容量'
@@ -3092,7 +3176,7 @@
       'secondMonitoringOverview.indexs'(val) {
         switch (val) {
           case 'cpu':
-            this.secondMonitoringOverview.title = 'CPU使用率'
+            this.secondMonitoringOverview.title = 'CPU利用率'
             break
           case 'disk':
             this.secondMonitoringOverview.title = '磁盘使用率'
@@ -3101,10 +3185,10 @@
             this.secondMonitoringOverview.title = '内存使用率'
             break
           case 'networkin':
-            this.secondMonitoringOverview.title = '网进'
+            this.secondMonitoringOverview.title = '外网流入量'
             break
           case 'networkout':
-            this.secondMonitoringOverview.title = '网出'
+            this.secondMonitoringOverview.title = '外网流出量'
             break
           case 'capacity':
             this.secondMonitoringOverview.title = '对象存储容量'
@@ -3504,8 +3588,7 @@
     }
   }
 
-
-  .warning{
+  .warning {
     cursor: pointer;
 
   }
