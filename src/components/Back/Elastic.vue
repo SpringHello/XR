@@ -444,7 +444,7 @@
     },
     methods:{
       eject(){
-        if(this.getAllSelect() == false){
+        if(this.getAllSelect() == true){
           this.newAddTelescopic = true;
         };
       },

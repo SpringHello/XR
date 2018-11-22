@@ -642,14 +642,14 @@
                     click:()=>{
                       this.updateStrategy.newAddStrategy = true;
                       this.updateStrategy.name = parmas.row.strategyname;
-                      this.updateStrategy.contacts = parmas.row.alarmlinkmanid;
+                      this.updateStrategy.contacts = Number(parmas.row.alarmlinkmanid);
                       this.updateStrategy.cpuValue = parmas.row.alarmname;
                       this.updateStrategy.time = parmas.row.countcircle.toString();
                       this.updateStrategy.symbol = parmas.row.valuetype;
-                      this.updateStrategy.percentage = parmas.row.value;
+                      this.updateStrategy.percentage = parmas.row.value <10 ? '0'+parmas.row.value :parmas.row.value+'';
                       this.updateStrategy.count = parmas.row.continuecircle.toString();
                       this.updateStrategy.addCount = Number(parmas.row.addcount);
-                      this.updateStrategy.value = parmas.row.total;
+                      this.updateStrategy.value =  parmas.row.total;
                       this.updateStrategy.coolingNumber = Number(parmas.row.loolingtime);
                       this.updateStrategy.isAdd = parmas.row.isadd;
                       this.updateStrategy.company = '台';
