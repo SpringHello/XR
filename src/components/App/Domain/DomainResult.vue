@@ -49,6 +49,10 @@
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
+          <Spin v-show="showFix">
+            <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
+            <div>Loading</div>
+          </Spin>
         </div>
       </div>
       <div id="result-right">
@@ -111,7 +115,8 @@
         domName: '',
 
         showButton: true,
-        cancel: true
+        cancel: true,
+        showFix: false
 
 
       }
@@ -125,7 +130,9 @@
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
+          this.showFix = true
           if (res.data.data.results.length != 0) {
+            this.showFix = false
             this.Results = res.data.data.results
             this.singles.unshift(this.append)
           } else {
@@ -238,12 +245,15 @@
             tids.push(this.singles[i]);
           }
         }
+
         if (tids.length != 0) {
+          this.showFix = true
           axios.post('domain/domainFound.do', {
             domainName: this.searchText,
             tids: tids.slice(0, 8).join(','),
           }).then(res => {
             if (res.data.data.results.length != 0) {
+              this.showFix = false
               this.Results = res.data.data.results
             } else {
               this.$Message.info('暂无数据')
@@ -252,6 +262,7 @@
 
           if (tids.slice(8).length != 0) {
             this.cancel = true
+            this.showFix = true
             setTimeout(() => {
                 axios.post('domain/domainFound.do', {
                   domainName: this.searchText,
@@ -259,6 +270,7 @@
                 }).then(res => {
 
                   if (res.status == 200 && res.data.status == 1) {
+                    this.showFix = false
                     this.cancel = false
                     var addList = res.data.data.results
                     for (var i in addList) {
@@ -268,7 +280,7 @@
                   }
                 })
               }
-              , 500)
+              , 1000)
           }
 
         } else {
@@ -475,8 +487,6 @@
       > div {
         background: rgba(255, 255, 255, 1);
         box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
-        position: fixed;
-        width: 380px;
         .all {
           padding: 23px 30px 40px 30px;
           p {
