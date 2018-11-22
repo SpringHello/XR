@@ -135,6 +135,9 @@
                 case 'nat' :
                   type = 'NAT网关'
                   break
+                case '域名转入':
+                  type = '域名转入'
+                  break  
               }
               for (var index in params.row['资源']) {
                 for (var key in params.row['资源'][index]) {
