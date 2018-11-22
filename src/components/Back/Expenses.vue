@@ -111,7 +111,7 @@
                                placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
-              <Button type="primary" style="margin-left: 120px" @click="orderRefund" :disabled="refundDisabled">退款</Button>
+              <Button type="primary" style="margin-left: 120px" @click="showModal.refundHint = true" :disabled="refundDisabled">退款</Button>
               <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button>
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
@@ -483,12 +483,12 @@
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
           <strong>提示</strong>
-          <p class="lh24">退款期间主机为不可用状态，要删除主机或者释放资源才可以退款产品哦
+          <p class="lh24">退款期间主机为不可用状态，要删除主机或者释放资源（请确认已清空回收站资源）才可以退款产品哦，<span style="cursor: pointer;color: #1F97F5">查看退款规则</span>
           </p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.refundHint = false">已释放</Button>
+        <Button @click="orderRefund">已释放</Button>
         <Button type="primary" @click="$router.push('overview')">前往控制台</Button>
       </p>
     </Modal>
@@ -1083,6 +1083,10 @@
             render: (h, params) => {
               if (params.row.paymentstatus == '1') {
                 return h('span', {}, '已支付')
+              } else if (params.row.paymentstatus == '3') {
+                return h('span', {}, '退款中')
+              } else if (params.row.paymentstatus == '4') {
+                return h('span', {}, '已退款')
               } else {
                 if (params.row.overTimeStatus == '1') {
                   return h('div', {}, [h('p', {}, '未支付'), h('p', {}, '（超时关闭订单）')])
@@ -2195,7 +2199,7 @@
         })
       },
       orderRefund() {
-
+        this.showModal.refundHint = false
       }
     },
     computed: {
@@ -2218,7 +2222,15 @@
         }
       },
       refundDisabled() {
+        if (this.orderNumber.some(checkReturnMoneyFlag) || this.orderNumber.length === 0) {
+          return true
+        } else {
+          return false
+        }
 
+        function checkReturnMoneyFlag(orderNumber) {
+          return orderNumber.returnMoneyFlag == 0
+        }
       },
       // 返回一个对象，包含提现时的发送验证码方式（手机、邮箱），号码
       withdrawConfirm() {
