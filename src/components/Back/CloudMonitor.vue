@@ -25,7 +25,7 @@
               <ul>
                 <li v-for="(item,index) in monitorData" :key="index">
                   <p>{{item.text}}</p>
-                  <p><span class="warning" @click="tabsClick(index)">{{item.num}}</span>台</p>
+                  <p><span class="warning" @click="tabsClick(index)">{{item.num}}</span>{{ item.unit}}</p>
                 </li>
               </ul>
               <span class="refresh-time">刷新时间:{{ refreshTime }}</span>
@@ -859,15 +859,18 @@
             text: '云主机PING不可达',
             num: '0',
             tabsName: 'alarmList',
+            unit: '台'
           },
           {
             text: '未处理告警',
             num: '0',
             tabsName: 'alarmList',
+            unit: '条'
           },
           {
             text: '已关机云主机',
             num: '0',
+            unit: '台'
           }
         ],
         showModal: {
@@ -2688,8 +2691,11 @@
             break
         }
         this.$http.get(url, {params: params}).then(res => {
-          if (res.data.status == 1 && res.status == 200) {
-            this.$Message.success(res.data.message)
+          if (res.status == 200) {
+            this.$Message.success('导出成功')
+            let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+            let objectUrl = URL.createObjectURL(blob)
+            window.location.href = objectUrl
           } else {
             this.$message.info({
               content: res.data.message
@@ -2799,8 +2805,11 @@
             break
         }
         this.$http.get(url, {params: params}).then(res => {
-          if (res.data.status == 1 && res.status == 200) {
-            this.$Message.success(res.data.message)
+          if (res.status == 200) {
+            this.$Message.success('导出成功')
+            let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+            let objectUrl = URL.createObjectURL(blob)
+            window.location.href = objectUrl
           } else {
             this.$message.info({
               content: res.data.message
@@ -2885,9 +2894,14 @@
             params.datetype = 'month'
             break
         }
-        this.$http.get(url, {params: params}).then(res => {
-          if (res.data.status == 1 && res.status == 200) {
-            this.$Message.success(res.data.message)
+        this.$http.get(url, {
+          responseType: 'arraybuffer', params: params
+        }).then(res => {
+          if (res.status == 200) {
+            this.$Message.success('导出成功')
+            let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+            let objectUrl = URL.createObjectURL(blob)
+            window.location.href = objectUrl
           } else {
             this.$message.info({
               content: res.data.message

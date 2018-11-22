@@ -111,7 +111,7 @@
                                placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
-              <Button type="primary" style="margin-left: 120px" @click="showModal.refundHint = true" :disabled="refundDisabled">退款</Button>
+              <Button type="primary" style="margin-left: 120px" @click="orderRefund" :disabled="refundDisabled">退款</Button>
               <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button>
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
@@ -478,19 +478,19 @@
     </Modal>
 
     <!-- 退款提示框 -->
-    <Modal v-model="showModal.refundHint" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>提示</strong>
-          <p class="lh24">退款期间主机为不可用状态，要删除主机或者释放资源（请确认已清空回收站资源）才可以退款产品哦，<span style="cursor: pointer;color: #1F97F5">查看退款规则</span>
-          </p>
-        </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="orderRefund">已释放</Button>
-        <Button type="primary" @click="$router.push('overview')">前往控制台</Button>
+    <Modal v-model="showModal.refundHint" :scrollable="true" :closable="false" :width="640">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">退款详情</span>
       </p>
+      <div class="universal-modal-content-flex">
+        <Table :columns="refundParticularsColumns" :data="refundParticularsData"></Table>
+        <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;margin-top: 10px">订单总额：¥{{ refundOrderPrice}}</p>
+        <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">退款金额：<span style="font-size: 24px;color: #2A99F2">¥{{ refundPrice}}</span></p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.refundHint = false">取消</Button>
+        <Button type="primary" @click="refund_ok">退款</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -631,6 +631,21 @@
          this.init()*/
       }
       return {
+        refundParticularsColumns: [
+          {
+            title: '产品',
+            key: 'resourceType'
+          }, {
+            title: '付费类型',
+            key: 'costType'
+          }, {
+            title: '付费时长',
+            key: 'timeLong'
+          }
+        ],
+        refundParticularsData: [],
+        refundPrice: '',
+        refundOrderPrice: '',
         payLoading: false,
         cardVolumeColumns: [
           {
@@ -1024,6 +1039,12 @@
                 case 'nat' :
                   type = '网络'
                   break
+                case'domain':
+                  type = '域名'
+                  break
+                case'domaintransfer':
+                  type = '域名转入'
+                  break
               }
               for (var index in data.资源) {
                 for (var key in data.资源[index]) {
@@ -1106,19 +1127,65 @@
             key: 'handle',
             width: 90,
             render: (h, params) => {
-              return h('div', [
-                h('span', {
-                  style: {
-                    cursor: 'pointer',
-                    color: ' #2A99F2'
-                  },
-                  on: {
-                    click: () => {
-                      this.show(params.index)
+              if (params.row.paymentstatus == '3') {
+                return h('div', [
+                  h('span', {
+                    style: {
+                      cursor: 'pointer',
+                      color: ' #2A99F2'
+                    },
+                    on: {
+                      click: () => {
+                        let index = params.index
+                        let data = JSON.parse(this.orderData[index].display)
+                        this.$Modal.info({
+                          title: '订单信息',
+                          scrollable: true,
+                          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
+                   <br>订单状态：退款中<br>退款金额：￥${this.orderData[index].returnmoney}<br>预计到账时间：订单提交过后的3-5日<br>退款渠道：原支付渠道
+                 <br>提交退款时间：${this.orderData[index].ordercreatetime}`
+                        })
+                      }
                     }
-                  }
-                }, '详情')
-              ])
+                  }, '详情')
+                ])
+              } else if (params.row.paymentstatus == '4') {
+                return h('div', [
+                  h('span', {
+                    style: {
+                      cursor: 'pointer',
+                      color: ' #2A99F2'
+                    },
+                    on: {
+                      click: () => {
+                        let index = params.index
+                        let data = JSON.parse(this.orderData[index].display)
+                        this.$Modal.info({
+                          title: '订单信息',
+                          scrollable: true,
+                          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
+                   <br>订单状态：已退款<br>退款金额：￥${this.orderData[index].returnmoney}<br>退款渠道：原支付渠道
+                 <br>提交退款时间：${this.orderData[index].ordercreatetime}`
+                        })
+                      }
+                    }
+                  }, '详情')
+                ])
+              } else {
+                return h('div', [
+                  h('span', {
+                    style: {
+                      cursor: 'pointer',
+                      color: ' #2A99F2'
+                    },
+                    on: {
+                      click: () => {
+                        this.show(params.index)
+                      }
+                    }
+                  }, '详情')
+                ])
+              }
             }
           }
         ],
@@ -2199,7 +2266,48 @@
         })
       },
       orderRefund() {
-        this.showModal.refundHint = false
+        let orderNumber = this.orderNumber.map(item => {
+          return item.ordernumber
+        })
+        let url = 'user/getResourceByOrder.do'
+        this.$http.get(url, {
+          params: {
+            orderNumber: orderNumber + ''
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.showModal.refundHint = true
+            this.refundParticularsData = res.data.result
+            this.refundPrice = res.data.cost
+            this.refundOrderPrice = res.data.orderCost
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      refund_ok() {
+        let orderNumber = this.orderNumber.map(item => {
+          return item.ordernumber
+        })
+        let url = 'user/returnMoneyOrder.do'
+        this.$http.get(url, {
+          params: {
+            orderNumber: orderNumber + ''
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.showModal.refundHint = false
+            this.searchOrderByType()
+            this.init()
+            this.$Message.success('您提交的产品退款已通过，金额将在3-5个工作日退回，请注意查收')
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       }
     },
     computed: {
