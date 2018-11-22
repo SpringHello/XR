@@ -337,7 +337,7 @@ var info = [
     ],
   },
   {
-    zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+    zoneId: 'ac7d0827-a47e-452b-a1fb-67f5a45d0ebc',
     zoneName: '华中二区',
     kernelList: [
       {
