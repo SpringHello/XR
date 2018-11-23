@@ -156,7 +156,7 @@
             <div v-show="applyChange">
               <div class="invoiceType">
                 <div>
-                  <p>温馨提示：1.您选择的发票金额不能小于1000元，增值发票准票金额不能小于10000请累计之后一并申请。</p>
+                  <p>温馨提示：1.您选择的发票金额不能小于1000元，增值税专用发票金额不能小于10000元，请累计之后一并申请</p>
                   <p style="margin-left: 5em">2.发票寄出时间：每月20号统一寄出，15号之前申请的发票将在当月20号寄出，15号之后申请的发票将在次月20号寄出。</p>
                 </div>
                 <p>实际可开金额发票：<span>￥{{ invoice }}</span></p>
@@ -351,11 +351,11 @@
       <div class="universal-modal-content-flex">
         <p style="font-size:14px;color:rgba(102,102,102,1);">解冻条件已达到，可以解冻</p>
         <RadioGroup v-model="unfreezeTo">
-          <Radio label="yue" style="margin:20px 0px">
-            <span>解冻到余额</span>
-          </Radio>
-          <Radio label="account" style="display: block;margin-bottom:20px">
+          <Radio label="account" style="margin:20px 0px">
             <span>解冻到充值账户（需3-5个工作日）</span>
+          </Radio>
+          <Radio label="yue" style="display: block;margin-bottom:20px">
+            <span>解冻到余额<span style="color: #FF1E39;margin-left: 15px">{{ unfreezeToBalanceHintText }}</span></span>
           </Radio>
         </RadioGroup>
         <Form v-if="unfreezeTo=='account'" :model="withdrawForm" :rules="withdrawValidate" ref="unfreeze">
@@ -477,6 +477,30 @@
       </div>
     </Modal>
 
+    <!-- 解冻到余额提示 -->
+    <Modal v-model="showModal.unfreezeToBalanceHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24" style="margin-bottom: 20px">选择“解冻到余额”后期将无法进行提现操作，请您谨慎操作！
+          </p>
+          <RadioGroup v-model="unfreezeTo" vertical>
+            <Radio label="account">
+              <span>解冻到充值账户（需3-5个工作日）</span>
+            </Radio>
+            <Radio label="yue">
+              <span>解冻到余额</span>
+            </Radio>
+          </RadioGroup>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.unfreezeToBalanceHint = false,showModal.unfreeze = true">取消</Button>
+        <Button type="primary" :disabled="unfreezeToBalanceDisabled" @click="unfreezeToBalance">确定{{ unfreezeToBalanceText}}</Button>
+      </p>
+    </Modal>
+
     <!-- 退款提示框 -->
     <Modal v-model="showModal.refundHint" :scrollable="true" :closable="false" :width="640">
       <p slot="header" class="modal-header-border">
@@ -502,8 +526,8 @@
         if (!value) {
           return callback(new Error('开票金额不能为空'))
         }
-        if (!Number.isInteger(value)) {
-          callback(new Error('请输入正确的金额数'))
+        if (!/^([1-9][\d]{0,7}|0)(\.[\d]{1,2})?$/.test(value)) {
+          callback(new Error('请输入保留两位小数的金额数'))
         } else if (this.formInvoiceDate.InvoiceType == 0) {
           if (value < 1000 || value > this.invoice) {
             callback(new Error('开票金额不能少于1000或者多于实际可开金额'))
@@ -1143,7 +1167,7 @@
                           scrollable: true,
                           content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
                    <br>订单状态：退款中<br>退款金额：￥${this.orderData[index].returnmoney}<br>预计到账时间：订单提交过后的3-5日<br>退款渠道：原支付渠道
-                 <br>提交退款时间：${this.orderData[index].ordercreatetime}`
+                 <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
                         })
                       }
                     }
@@ -1165,7 +1189,7 @@
                           scrollable: true,
                           content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
                    <br>订单状态：已退款<br>退款金额：￥${this.orderData[index].returnmoney}<br>退款渠道：原支付渠道
-                 <br>提交退款时间：${this.orderData[index].ordercreatetime}`
+                 <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
                         })
                       }
                     }
@@ -1341,7 +1365,8 @@
           exchangeCard: false,
           // 提现模态框
           withdraw: false,
-          refundHint: false
+          refundHint: false,
+          unfreezeToBalanceHint: false
         },
         // 提现
         withdrawForm: {
@@ -1404,6 +1429,9 @@
         codePlaceholder: '发送验证码',
         /*解冻到余额/账户  默认解冻到余额*/
         unfreezeTo: 'account',
+        unfreezeToBalanceDisabled: true,
+        unfreezeToBalanceText: '(10S)',
+        unfreezeToBalanceTimer: null,
         // 输入兑换码
         exchangeCardCode: '',
         // 默认不显示兑换码错误
@@ -2153,6 +2181,27 @@
           })
           //解冻到余额
         } else {
+          window.clearInterval(this.unfreezeToBalanceTimer)
+          this.unfreezeToBalanceDisabled = true
+          this.unfreezeToBalanceText = '(10S)'
+          let i = 10
+          this.unfreezeToBalanceTimer = setInterval(() => {
+            i -= 1
+            if (i == 0) {
+              window.clearInterval(this.unfreezeToBalanceTimer)
+              this.unfreezeToBalanceDisabled = false
+              this.unfreezeToBalanceText = ''
+            } else {
+              this.unfreezeToBalanceText = '(0' + i + 'S)'
+              this.unfreezeToBalanceDisabled = true
+            }
+          }, 1000)
+          this.showModal.unfreeze = false
+          this.showModal.unfreezeToBalanceHint = true
+        }
+      },
+      unfreezeToBalance() {
+        if (this.unfreezeTo == 'yue') {
           let url = 'user/getRremainderThaw.do'
           let params = {
             id: this.unfreezeId,
@@ -2160,7 +2209,7 @@
           this.$http.post(url, params).then(res => {
             if (res.status == 200 && res.data.status == 1) {
               this.$Message.success('解冻成功')
-              this.showModal.unfreeze = false
+              this.showModal.unfreezeToBalanceHint = false
               this.freezeDetails()
               this.getBalance()
               this.showMoneyByMonth()
@@ -2171,10 +2220,10 @@
               })
             }
           })
+        } else {
+          this.showModal.unfreezeToBalanceHint = false
+          this.showModal.unfreeze = true
         }
-        // 把状态变成解冻中
-        //let url = 'user/getRremainderThawing.do'
-        //  直接解冻
       },
       exchange() {
         this.$http.get('user/receiveTicketForUser.do', {
@@ -2339,6 +2388,9 @@
         function checkReturnMoneyFlag(orderNumber) {
           return orderNumber.returnMoneyFlag == 0
         }
+      },
+      unfreezeToBalanceHintText(){
+        return this.unfreezeTo == 'yue' ?  '*解冻到余额后将无法进行提现操作，请您谨慎操作！' : ''
       },
       // 返回一个对象，包含提现时的发送验证码方式（手机、邮箱），号码
       withdrawConfirm() {

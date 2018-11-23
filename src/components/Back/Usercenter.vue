@@ -112,6 +112,7 @@
                     style="display: flex;padding-left: 20px;align-items: center;height: 40px;background:#F8F8F9 ">
                     <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
                   </div>
+                  <!--  577px-->
                   <div class="infTop" style="height: 241px;border-top:1px solid #E9E9E9; ">
                     <span class="inf">账号信息</span>
                   </div>
@@ -1082,6 +1083,52 @@
       <div slot="footer">
       </div>
     </Modal>
+
+    <Modal v-model="showModal.cancelCheckCreatedHostHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>是否取消勾选创建虚拟机通知？</strong>
+          <p class="lh24" style="margin-bottom: 20px">请注意，若您取消创建虚拟机{{ notificationChannel }}通知，在您下次创建虚拟机的您将不会收到相关{{ notificationChannel
+            }}提醒，提醒内容包括您创建该虚拟机的主机名称与登录密码。在您取消提醒之后，您可以通过云主机-管理，发送密码来查看该主机密码。请再次确认：
+          </p>
+          <RadioGroup v-model="informAffirm" vertical>
+            <Radio label="retain">
+              <span>保留通知</span>
+            </Radio>
+            <Radio label="close">
+              <span>我已阅读注意事项，关闭通知</span>
+            </Radio>
+          </RadioGroup>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="cancelPromptModal('1')">取消</Button>
+        <Button type="primary" :disabled="informAffirmDisabled">确定{{ informAffirmText}}</Button>
+      </p>
+    </Modal>
+    <Modal v-model="showModal.cancelCheckOtherHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>是否取消勾选{{ informAffirmTitle + notificationChannel }}通知？</strong>
+          <p class="lh24" style="margin-bottom: 20px">请注意，若您取消{{ informAffirmTitle + notificationChannel }}通知，您将无法第一时间获取该信息，请再次确认：
+          </p>
+          <RadioGroup v-model="informAffirm" vertical>
+            <Radio label="retain">
+              <span>保留通知</span>
+            </Radio>
+            <Radio label="close">
+              <span>我已阅读注意事项，关闭通知</span>
+            </Radio>
+          </RadioGroup>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="cancelPromptModal('2')">取消</Button>
+        <Button type="primary" :disabled="informAffirmDisabled" @click="informAffirmModifation">确定{{ informAffirmText}}</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -1205,7 +1252,9 @@
           bindingEmail: false,
           modifyPassword: false,
           setHeadPhoto: false,
-          modifyOtherInfo: false
+          modifyOtherInfo: false,
+          cancelCheckCreatedHostHint: false,
+          cancelCheckOtherHint: false
         },
         percent: 0,
         headPhotoType: 'system',
@@ -1799,6 +1848,10 @@
             {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
         },
+        notificationChannel: '邮件',
+        informAffirm: 'retain',
+        informAffirmDisabled: true,
+        informAffirmTitle: '',
         // 通知信息表格
         setColumns: [
           {
@@ -1809,18 +1862,19 @@
             title: '站内信',
             align: 'center',
             render: (h, params) => {
-              let isDisabled = false
-              if (params.row.tempCode == '0101' || params.row.tempCode == '0301') {
-                isDisabled = true
-              }
               return h('div', [
                 h('Checkbox', {
                     props: {
                       value: params.row.isLetter == 1,
-                      disabled: isDisabled
                     },
                     on: {
                       'on-change': () => {
+                        if (params.row.tempCode == '00401' && params.row.isLetter == '1') {
+                          this.cancelPromptHint('1', '站内信')
+                        } else if (params.row.tempCode != '00401' && params.row.isEmail == '1') {
+                          this.informAffirmTitle = params.row.companyid
+                          this.cancelPromptHint('2', '站内信')
+                        }
                         this.changeStatus(params.row, 'isLetter')
                       }
                     },
@@ -1841,6 +1895,12 @@
                   },
                   on: {
                     'on-change': () => {
+                      if (params.row.tempCode == '00401' && params.row.isEmail == '1') {
+                        this.cancelPromptHint('1', '邮件')
+                      } else if (params.row.tempCode != '00401' && params.row.isEmail == '1') {
+                        this.informAffirmTitle = params.row.companyid
+                        this.cancelPromptHint('2', '邮件')
+                      }
                       this.changeStatus(params.row, 'isEmail')
                     }
                   }
@@ -1852,18 +1912,19 @@
             title: '短信',
             align: 'center',
             render: (h, params) => {
-              let isDisabled = false
-              if (params.row.tempCode == '0101' || params.row.tempCode == '0104' || params.row.tempCode == '0301') {
-                isDisabled = true
-              }
               return h('div', [
                 h('Checkbox', {
                   props: {
-                    value: params.row.isTel == 1,
-                    disabled: isDisabled
+                    value: params.row.isTel == 1
                   },
                   on: {
                     'on-change': () => {
+                      if (params.row.tempCode == '00401' && params.row.isTel == '1') {
+                        this.cancelPromptHint('1', '短信')
+                      } else if (params.row.tempCode != '00401' && params.row.isEmail == '1') {
+                        this.informAffirmTitle = params.row.companyid
+                        this.cancelPromptHint('2', '短信')
+                      }
                       this.changeStatus(params.row, 'isTel')
                     }
                   }
@@ -2014,7 +2075,9 @@
         ],
         keyData: [],
         imgSrc: 'user/getKaptchaImage.do',
-        otherInfoShow: false
+        otherInfoShow: false,
+        informAffirmTimer: null,
+        informAffirmText: '(10S)'
       }
     },
     created() {
@@ -2099,7 +2162,7 @@
       getPhone() {
         if ($store.state.authInfo.companyid) {
           axios.post('user/getPhone.do', {
-          companyId: $store.state.authInfo.companyid
+            companyId: $store.state.authInfo.companyid
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.keyForm.phone = response.data.data.phone
@@ -2769,6 +2832,48 @@
         })
       },
 
+      // 弹出取消提示
+      cancelPromptHint(val, text) {
+        window.clearInterval(this.informAffirmTimer)
+        this.informAffirmDisabled = true
+        this.informAffirmText = '(10S)'
+        this.notificationChannel = text
+        this.informAffirm = 'retain'
+        let i = 10
+        this.informAffirmTimer = setInterval(() => {
+          i -= 1
+          if (i == 0) {
+            window.clearInterval(this.informAffirmTimer)
+            this.informAffirmText = ''
+            this.informAffirmDisabled = false
+          } else {
+            this.informAffirmText = '(0' + i + 'S)'
+            this.informAffirmDisabled = true
+          }
+        }, 1000)
+        if (val === '1') {
+          this.showModal.cancelCheckCreatedHostHint = true
+        } else {
+          this.showModal.cancelCheckOtherHint = true
+        }
+      },
+      cancelPromptModal(val) {
+        this.listNotice()
+        if (val == 1) {
+          this.showModal.cancelCheckCreatedHostHint = false
+        } else {
+          this.showModal.cancelCheckOtherHint = false
+        }
+      },
+      informAffirmModifation() {
+        this.showModal.cancelCheckOtherHint = false
+        this.showModal.cancelCheckCreatedHostHint = false
+        if (this.informAffirm != 'retain') {
+          this.updateNotice()
+        } else {
+          this.listNotice()
+        }
+      },
       // 列出通知信息
       listNotice() {
         var url = `user/listNotice.do`
@@ -3175,7 +3280,7 @@
             return true
           }
         }
-      }
+      },
     },
     watch: {}
   }

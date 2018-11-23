@@ -1086,9 +1086,7 @@
                 style: {
                   whiteSpace: 'normal'
                 }
-              }, alarmname.join()), h('span', {
-
-              }, alarmname.join())])
+              }, alarmname.join()), h('span', {}, alarmname.join())])
             }
           }, {
             title: '策略类型',
@@ -2708,7 +2706,7 @@
             params.datetype = 'month'
             break
         }
-        this.$http.get(url, {params: params}).then(res => {
+        this.$http.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
           if (res.status == 200) {
             this.$Message.success('导出成功')
             let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
@@ -2822,7 +2820,7 @@
             params.datetype = 'month'
             break
         }
-        this.$http.get(url, {params: params}).then(res => {
+        this.$http.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
           if (res.status == 200) {
             this.$Message.success('导出成功')
             let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
@@ -3107,6 +3105,13 @@
 
       //跳转对应列表
       tabsClick(index) {
+        this.getShortMessageControl()
+        this.getCanNotPingAndAlarmNotHandledAndShutdownTotalCount()
+        this.getFirstOverviewMonitor()
+        this.getSecondOverviewMonitor()
+        this.getCustomMonitorGroup()
+        this.alarmStrategyInit()
+        this.getAlarmList()
         if (index != 2) {
           this.tabsName = this.monitorData[index].tabsName;
         } else if (index == 2) {
