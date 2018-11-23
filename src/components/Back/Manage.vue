@@ -953,6 +953,8 @@
               localStorage.setItem('zoneid', this.$route.query.zoneid)
               sessionStorage.setItem('hostname', this.$route.query.computername)
               sessionStorage.setItem('endtime', this.computerInfo.endTime)
+              sessionStorage.setItem('rootdiskid', this.computerInfo.rootDiskId)
+              sessionStorage.setItem('rootdisksize', this.computerInfo.rootDiskSize)
               this.$router.push({
                 name: 'upgrade'
               })

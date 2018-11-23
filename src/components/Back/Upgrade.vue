@@ -55,7 +55,7 @@
             <span>主机配置 : {{CPUNum}}核{{RAMSize}}G</span>
             <span>剩余时长 : {{endtime}}</span>
             <span style="line-height:24px;">应付差价 :
-                 <i class="money">{{cost}}元</i>
+                 <i class="money">{{cost.toFixed(2)}}元</i>
               </span>
             <span style="margin-top:10px;">
                 <a href="/ruicloud/#/computed/3-1" target="_blank">购买和计费说明</a>
@@ -557,9 +557,7 @@ export default {
       }
     })
     return {
-      // diskSize: rootdisksize,
       systemDiskType: 'SSD存储',
-      // systemDiskList: [40, 100, 500, 1000],
       rootdisksize,
       systemDiskSize: rootdisksize,
       currentCPUNum,
