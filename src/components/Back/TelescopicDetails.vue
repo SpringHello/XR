@@ -81,7 +81,7 @@
           <TabPane :label="hostDomain">
             <div>
               <Button style="margin-bottom: 10px" type="primary" @click="moveCloudHost = true">移入云主机</Button>
-              <Table :columns="cloudHost.hostList" :data="cloudHost.hostData"></Table>
+              <Table :columns="cloudHost.hostList" :data="cloudHost.hostData" :loading='protectLoading'></Table>
             </div>
           </TabPane>
           <TabPane label="伸缩活动">
@@ -1058,14 +1058,35 @@
                       marginRight:'5px'
                     }
                   },[
-                    h('span',{},'移除保护'),
-                    h('i-switch',{
+                    h('span',{
+                      on:{
+                        click:()=>{
+                          this.outProtect = !this.outProtect
+                          if(this.outProtect){
+                             this.removeProtect(params.row,1);
+                          }else{
+                             this.removeProtect(params.row,0);
+                          }
+                        }
+                      }
+                    },'移除保护'),
+                    h('i-Switch',{
                       props:{
-                        size:'small'
+                        size:'small',
+                        value:params.row.removeprotect == '1' ? true : false
+                      },
+                       style: {
+                        verticalAlign: 'middle'
                       },
                       on:{
-                        change:()=>{
-                          this.removeProtect(params.row,0);
+                        input:(event)=>{
+                          if(event){
+                            this.outProtect = true;
+                            this.removeProtect(params.row,1);
+                          }else{
+                            this.outProtect = false;
+                            this.removeProtect(params.row,0);
+                          }
                         }
                       }
                     })
@@ -1850,7 +1871,11 @@
           ]
         },
 
-        telescopicId:null
+        telescopicId:null,
+
+        //是否移除保护
+        outProtect:true,
+        protectLoading:false
       }
     },
     methods:{
@@ -2306,6 +2331,7 @@
 
       //移除保护
       removeProtect(item,val){
+        this.protectLoading = true;
         this.$http.get('elasticScaling/isRemoveProtection.do',{
           params:{
             id:item.id,
@@ -2313,16 +2339,21 @@
           }
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
+            this.protectLoading = false;
             this.$Message.success(res.data.message);
             this.selectHost();
           }else{
+            this.protectLoading = false;
             this.$Message.info(res.data.message);
             this.selectHost();
           }
+        }).catch(err =>{
+          if(err)
+          this.protectLoading = false;
         })
       },
-
       //去除逗号函数
+
       deleteDouhao(array,keys){
         let val = '';
         for(let i =0; i<array.length;i++){
@@ -2429,6 +2460,13 @@
     },
     mounted(){
       this.selectCloudHost();
+    },
+    watch:{
+      outProtect:function(){
+        if(this.outProtect == 0){
+         console.log('进来了！！');
+        }
+      }
     }
   }
 </script>
