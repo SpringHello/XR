@@ -434,7 +434,7 @@
             </div>
             <div class="list_box" v-for="(item,index) in intoCloudHost" :key="index">
               <div>
-                <p :title="item.computername">{{item.instancename}}</p>
+                <p :title="item.computername">{{item.computername}}</p>
               </div>
               <div  @click="hostRightRmove(index)">
                 <Icon type="plus"></Icon>
@@ -2293,7 +2293,7 @@
         this.$http.get('elasticScaling/joinManualAndAutoAssociatedHost.do',{
           params:{
             computerId:this.deleteDouhao(this.removeCloudHost,'computerid'),
-            lifeTime:this.deleteDouhao(this.removeCloudHost,'status'),
+            lifeTime:'1',
             jojnWay:'manual',
             startConfigurationId:this.startUpId.toString(),
             telescopicGroupId:sessionStorage.getItem('vpc_id')
@@ -2461,13 +2461,6 @@
     mounted(){
       this.selectCloudHost();
     },
-    watch:{
-      outProtect:function(){
-        if(this.outProtect == 0){
-         console.log('进来了！！');
-        }
-      }
-    }
   }
 </script>
 
