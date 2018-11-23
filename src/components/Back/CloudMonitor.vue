@@ -1086,9 +1086,7 @@
                 style: {
                   whiteSpace: 'normal'
                 }
-              }, alarmname.join()), h('span', {
-
-              }, alarmname.join())])
+              }, alarmname.join()), h('span', {}, alarmname.join())])
             }
           }, {
             title: '策略类型',
@@ -3107,6 +3105,13 @@
 
       //跳转对应列表
       tabsClick(index) {
+        this.getShortMessageControl()
+        this.getCanNotPingAndAlarmNotHandledAndShutdownTotalCount()
+        this.getFirstOverviewMonitor()
+        this.getSecondOverviewMonitor()
+        this.getCustomMonitorGroup()
+        this.alarmStrategyInit()
+        this.getAlarmList()
         if (index != 2) {
           this.tabsName = this.monitorData[index].tabsName;
         } else if (index == 2) {
