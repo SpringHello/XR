@@ -1143,7 +1143,7 @@
                           scrollable: true,
                           content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
                    <br>订单状态：退款中<br>退款金额：￥${this.orderData[index].returnmoney}<br>预计到账时间：订单提交过后的3-5日<br>退款渠道：原支付渠道
-                 <br>提交退款时间：${this.orderData[index].ordercreatetime}`
+                 <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
                         })
                       }
                     }
@@ -1165,7 +1165,7 @@
                           scrollable: true,
                           content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
                    <br>订单状态：已退款<br>退款金额：￥${this.orderData[index].returnmoney}<br>退款渠道：原支付渠道
-                 <br>提交退款时间：${this.orderData[index].ordercreatetime}`
+                 <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
                         })
                       }
                     }
