@@ -112,8 +112,7 @@
                     style="display: flex;padding-left: 20px;align-items: center;height: 40px;background:#F8F8F9 ">
                     <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
                   </div>
-                  <!--  577px-->
-                  <div class="infTop" style="height: 241px;border-top:1px solid #E9E9E9; ">
+                  <div class="infTop" style="height: 577px;border-top:1px solid #E9E9E9; ">
                     <span class="inf">账号信息</span>
                   </div>
                   <div
