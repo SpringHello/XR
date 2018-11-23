@@ -2706,7 +2706,7 @@
             params.datetype = 'month'
             break
         }
-        this.$http.get(url, {params: params}).then(res => {
+        this.$http.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
           if (res.status == 200) {
             this.$Message.success('导出成功')
             let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
@@ -2820,7 +2820,7 @@
             params.datetype = 'month'
             break
         }
-        this.$http.get(url, {params: params}).then(res => {
+        this.$http.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
           if (res.status == 200) {
             this.$Message.success('导出成功')
             let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
