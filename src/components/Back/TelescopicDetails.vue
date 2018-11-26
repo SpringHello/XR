@@ -96,7 +96,7 @@
                   <Select v-model="telescopicActivity.status" style="width:240px" placeholder="请选择状态">
                     <Option v-for="item in telescopicActivity.statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                   </Select>
-                  <Button type="primary" @click="selectActivity">查询</Button>
+                  <Button type="primary" @click="selectActivity(1)">查询</Button>
                 </div>
               </div>
               <Table :loading="activityLoading" :columns="telescopicActivity.activityList" :data="telescopicActivity.activityData"></Table>
