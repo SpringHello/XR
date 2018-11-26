@@ -1103,7 +1103,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="cancelPromptModal('1')">取消</Button>
-        <Button type="primary" :disabled="informAffirmDisabled">确定{{ informAffirmText}}</Button>
+        <Button type="primary" :disabled="informAffirmDisabled" @click="informAffirmModifation">确定{{ informAffirmText}}</Button>
       </p>
     </Modal>
     <Modal v-model="showModal.cancelCheckOtherHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
@@ -1870,7 +1870,7 @@
                       'on-change': () => {
                         if (params.row.tempCode == '00401' && params.row.isLetter == '1') {
                           this.cancelPromptHint('1', '站内信')
-                        } else if (params.row.tempCode != '00401' && params.row.isEmail == '1') {
+                        } else if ((params.row.tempCode == '00101' || params.row.tempCode == '00103' || params.row.tempCode == '00202' || params.row.tempCode == '00203' || params.row.tempCode == '00204' || params.row.tempCode == '00208') && params.row.isLetter == '1') {
                           this.informAffirmTitle = params.row.companyid
                           this.cancelPromptHint('2', '站内信')
                         }
@@ -1896,7 +1896,7 @@
                     'on-change': () => {
                       if (params.row.tempCode == '00401' && params.row.isEmail == '1') {
                         this.cancelPromptHint('1', '邮件')
-                      } else if (params.row.tempCode != '00401' && params.row.isEmail == '1') {
+                      } else if ((params.row.tempCode == '00101' || params.row.tempCode == '00103' || params.row.tempCode == '00202' || params.row.tempCode == '00203' || params.row.tempCode == '00204' || params.row.tempCode == '00208') && params.row.isEmail == '1') {
                         this.informAffirmTitle = params.row.companyid
                         this.cancelPromptHint('2', '邮件')
                       }
@@ -1920,7 +1920,7 @@
                     'on-change': () => {
                       if (params.row.tempCode == '00401' && params.row.isTel == '1') {
                         this.cancelPromptHint('1', '短信')
-                      } else if (params.row.tempCode != '00401' && params.row.isEmail == '1') {
+                      } else if ((params.row.tempCode == '00101' || params.row.tempCode == '00103' || params.row.tempCode == '00202' || params.row.tempCode == '00203' || params.row.tempCode == '00204' || params.row.tempCode == '00208') && params.row.isTel == '1') {
                         this.informAffirmTitle = params.row.companyid
                         this.cancelPromptHint('2', '短信')
                       }

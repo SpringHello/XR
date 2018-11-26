@@ -2181,6 +2181,7 @@
           })
           //解冻到余额
         } else {
+          this.unfreezeTo = 'account'
           window.clearInterval(this.unfreezeToBalanceTimer)
           this.unfreezeToBalanceDisabled = true
           this.unfreezeToBalanceText = '(10S)'
