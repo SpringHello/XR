@@ -1306,7 +1306,7 @@
       renewalUpgrade() {
         localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
         localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
-        localStorage.setItem('zoneid', this.currentHost[0].zoneid)
+        // localStorage.setItem('zoneid', this.currentHost[0].zoneid)
         sessionStorage.setItem('hostname', this.currentHost[0].computername)
         sessionStorage.setItem('endtime', this.currentHost[0].endtime)
         sessionStorage.setItem('rootdiskid', this.currentHost[0].rootdiskid)

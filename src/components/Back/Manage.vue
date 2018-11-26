@@ -837,6 +837,7 @@
         }
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
+          // console.log(response.data.result)
           this.computerInfo = response.data.result
           let url = 'information/getTemplateAndTemplateFunction.do'
           axios.get(url, {
@@ -950,7 +951,7 @@
             } else {
               localStorage.setItem('serviceoffername', this.computerInfo.cpuNum + 'CPU' + 1 + 'Ghz' + this.computerInfo.memory + 'GMemory')
               localStorage.setItem('virtualMachineid', this.computerInfo.computerId)
-              localStorage.setItem('zoneid', this.$route.query.zoneid)
+              // localStorage.setItem('zoneid', this.$route.query.zoneid)
               sessionStorage.setItem('hostname', this.$route.query.computername)
               sessionStorage.setItem('endtime', this.computerInfo.endTime)
               sessionStorage.setItem('rootdiskid', this.computerInfo.rootDiskId)
