@@ -485,7 +485,7 @@
           <strong>提示</strong>
           <p class="lh24" style="margin-bottom: 20px">选择“解冻到余额”后期将无法进行提现操作，请您谨慎操作！
           </p>
-          <RadioGroup v-model="unfreezeTo" vertical>
+          <RadioGroup v-model="unfreezeToHint" vertical>
             <Radio label="account">
               <span>解冻到充值账户（需3-5个工作日）</span>
             </Radio>
@@ -1429,6 +1429,7 @@
         codePlaceholder: '发送验证码',
         /*解冻到余额/账户  默认解冻到余额*/
         unfreezeTo: 'account',
+        unfreezeToHint: 'account',
         unfreezeToBalanceDisabled: true,
         unfreezeToBalanceText: '(10S)',
         unfreezeToBalanceTimer: null,
@@ -2181,7 +2182,7 @@
           })
           //解冻到余额
         } else {
-          this.unfreezeTo = 'account'
+          this.unfreezeToHint = 'account'
           window.clearInterval(this.unfreezeToBalanceTimer)
           this.unfreezeToBalanceDisabled = true
           this.unfreezeToBalanceText = '(10S)'
@@ -2197,12 +2198,12 @@
               this.unfreezeToBalanceDisabled = true
             }
           }, 1000)
-          this.showModal.unfreeze = false
           this.showModal.unfreezeToBalanceHint = true
+          this.showModal.unfreeze = false
         }
       },
       unfreezeToBalance() {
-        if (this.unfreezeTo == 'yue') {
+        if (this.unfreezeToHint == 'yue') {
           let url = 'user/getRremainderThaw.do'
           let params = {
             id: this.unfreezeId,
@@ -2390,8 +2391,8 @@
           return orderNumber.returnMoneyFlag == 0
         }
       },
-      unfreezeToBalanceHintText(){
-        return this.unfreezeTo == 'yue' ?  '*解冻到余额后将无法进行提现操作，请您谨慎操作！' : ''
+      unfreezeToBalanceHintText() {
+        return this.unfreezeTo == 'yue' ? '*解冻到余额后将无法进行提现操作，请您谨慎操作！' : ''
       },
       // 返回一个对象，包含提现时的发送验证码方式（手机、邮箱），号码
       withdrawConfirm() {
