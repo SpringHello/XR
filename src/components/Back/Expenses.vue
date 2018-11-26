@@ -496,7 +496,7 @@
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.unfreezeToBalanceHint = false,showModal.unfreeze = true">取消</Button>
+        <Button @click="showModal.unfreezeToBalanceHint = false,showModal.unfreeze = true,unfreezeTo = 'account'">取消</Button>
         <Button type="primary" :disabled="unfreezeToBalanceDisabled" @click="unfreezeToBalance">确定{{ unfreezeToBalanceText}}</Button>
       </p>
     </Modal>
@@ -2223,6 +2223,7 @@
             }
           })
         } else {
+          this.unfreezeTo = 'account'
           this.showModal.unfreezeToBalanceHint = false
           this.showModal.unfreeze = true
         }

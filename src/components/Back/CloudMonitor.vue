@@ -1721,6 +1721,7 @@
       deleteAttention(item) {
         this.$Modal.confirm({
           title: '提示',
+          scrollable: true,
           content: '<p>确定删除当前关注的指标吗？</p>',
           onOk: () => {
             let url = 'monitor/deleteCustomMonitorIndex.do'
