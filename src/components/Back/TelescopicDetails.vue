@@ -81,7 +81,7 @@
           <TabPane :label="hostDomain">
             <div>
               <Button style="margin-bottom: 10px" type="primary" @click="moveCloudHost = true">移入云主机</Button>
-              <Table :columns="cloudHost.hostList" :data="cloudHost.hostData"></Table>
+              <Table :columns="cloudHost.hostList" :data="cloudHost.hostData" :loading='protectLoading'></Table>
             </div>
           </TabPane>
           <TabPane label="伸缩活动">
@@ -96,7 +96,7 @@
                   <Select v-model="telescopicActivity.status" style="width:240px" placeholder="请选择状态">
                     <Option v-for="item in telescopicActivity.statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                   </Select>
-                  <Button type="primary" @click="selectActivity">查询</Button>
+                  <Button type="primary" @click="selectActivity(1)">查询</Button>
                 </div>
               </div>
               <Table :loading="activityLoading" :columns="telescopicActivity.activityList" :data="telescopicActivity.activityData"></Table>
@@ -434,7 +434,7 @@
             </div>
             <div class="list_box" v-for="(item,index) in intoCloudHost" :key="index">
               <div>
-                <p :title="item.computername">{{item.instancename}}</p>
+                <p :title="item.computername">{{item.computername}}</p>
               </div>
               <div  @click="hostRightRmove(index)">
                 <Icon type="plus"></Icon>
@@ -1058,14 +1058,35 @@
                       marginRight:'5px'
                     }
                   },[
-                    h('span',{},'移除保护'),
-                    h('i-switch',{
+                    h('span',{
+                      on:{
+                        click:()=>{
+                          this.outProtect = !this.outProtect
+                          if(this.outProtect){
+                             this.removeProtect(params.row,1);
+                          }else{
+                             this.removeProtect(params.row,0);
+                          }
+                        }
+                      }
+                    },'移除保护'),
+                    h('i-Switch',{
                       props:{
-                        size:'small'
+                        size:'small',
+                        value:params.row.removeprotect == '1' ? true : false
+                      },
+                       style: {
+                        verticalAlign: 'middle'
                       },
                       on:{
-                        change:()=>{
-                          this.removeProtect(params.row,0);
+                        input:(event)=>{
+                          if(event){
+                            this.outProtect = true;
+                            this.removeProtect(params.row,1);
+                          }else{
+                            this.outProtect = false;
+                            this.removeProtect(params.row,0);
+                          }
                         }
                       }
                     })
@@ -1387,7 +1408,7 @@
           monthStartNumber:1,
           monthEndNumber:1,
           //结束小时
-          endHour:'',
+          endHour:'00',
           endHourList:[
             {
               value:'00',
@@ -1487,15 +1508,15 @@
             },
           ],
           //结束分钟
-          endMinute:'',
+          endMinute:'00',
           endMinuteList:[],
           //实例数
           minNumber:1,
           maxNumber:1,
           initialNumber:1,
           //结束执行
-          startTime:'',
-          endTime:''
+          startTime:this.getCurrentDate(),
+          endTime:this.getCurrentDate()
         },
         timedTaskValidtor:{
           name:[
@@ -1850,7 +1871,11 @@
           ]
         },
 
-        telescopicId:null
+        telescopicId:null,
+
+        //是否移除保护
+        outProtect:true,
+        protectLoading:false
       }
     },
     methods:{
@@ -2268,7 +2293,7 @@
         this.$http.get('elasticScaling/joinManualAndAutoAssociatedHost.do',{
           params:{
             computerId:this.deleteDouhao(this.removeCloudHost,'computerid'),
-            lifeTime:this.deleteDouhao(this.removeCloudHost,'status'),
+            lifeTime:'1',
             jojnWay:'manual',
             startConfigurationId:this.startUpId.toString(),
             telescopicGroupId:sessionStorage.getItem('vpc_id')
@@ -2306,6 +2331,7 @@
 
       //移除保护
       removeProtect(item,val){
+        this.protectLoading = true;
         this.$http.get('elasticScaling/isRemoveProtection.do',{
           params:{
             id:item.id,
@@ -2313,16 +2339,21 @@
           }
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
+            this.protectLoading = false;
             this.$Message.success(res.data.message);
             this.selectHost();
           }else{
+            this.protectLoading = false;
             this.$Message.info(res.data.message);
             this.selectHost();
           }
+        }).catch(err =>{
+          if(err)
+          this.protectLoading = false;
         })
       },
-
       //去除逗号函数
+
       deleteDouhao(array,keys){
         let val = '';
         for(let i =0; i<array.length;i++){
@@ -2401,6 +2432,10 @@
         })
       },
 
+     getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
+      },
+
       //获取启动配置
       selectAllElastic(){
         this.$http.get('elasticScaling/listElasticScalingRunConfig.do',{
@@ -2429,7 +2464,7 @@
     },
     mounted(){
       this.selectCloudHost();
-    }
+    },
   }
 </script>
 

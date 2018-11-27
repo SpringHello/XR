@@ -11,7 +11,7 @@
             </div>
             <span>{{elastic.startupconfigname}}</span>
           </div>
-          <Button type="ghost" style="float: right;">刷新</Button>
+          <Button type="ghost" style="float: right;" @click="$router.go(0)">刷新</Button>
         </div>
         <br>
         <hr color="#D8D8D8" size="1">
@@ -354,6 +354,9 @@
           }else {
             this.$Message.info(res.data.message);
           }
+        }).catch(error =>{
+          if(error)
+          this.$Message.info('网络异常');
         })
       },
 

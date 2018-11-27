@@ -1086,7 +1086,8 @@
                 style: {
                   whiteSpace: 'normal'
                 }
-              }, alarmname.join()), h('span', {}, alarmname.join())])
+              }, alarmname.join()), h('span', {
+              }, alarmname.join())])
             }
           }, {
             title: '策略类型',
