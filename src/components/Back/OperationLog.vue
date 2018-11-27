@@ -13,8 +13,8 @@
             <span style="margin-top: 29px;font-size: 12px;">操作时间</span>
             <Row style="margin-left: 10px;margin-right: 20px;margin-top: 20px">
               <Col span="12">
-              <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-end" placeholder="选择日期"
-                           style="width: 231px" @on-change="dataChange"></Date-picker>
+                <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-end" placeholder="选择日期"
+                             style="width: 231px" @on-change="dataChange"></Date-picker>
               </Col>
             </Row>
             <span style="margin-top: 29px;font-size: 12px">请选择操作对象</span>
@@ -38,8 +38,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default{
-    data(){
+  export default {
+    data() {
       return {
         operandList: [
           {
@@ -53,6 +53,14 @@
           {
             value: 'host',
             label: '主机'
+          },
+          {
+            value: 'gpu',
+            label: 'GPU服务器'
+          },
+          {
+            value: 'db',
+            label: '云数据库'
           },
           {
             value: 'disk',
@@ -91,7 +99,7 @@
           shortcuts: [
             {
               text: '最近一周',
-              value () {
+              value() {
                 const end = new Date();
                 end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
                 const start = new Date();
@@ -101,7 +109,7 @@
             },
             {
               text: '最近一个月',
-              value () {
+              value() {
                 const end = new Date();
                 end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
                 const start = new Date();
@@ -111,7 +119,7 @@
             },
             {
               text: '最近三个月',
-              value () {
+              value() {
                 const end = new Date();
                 end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
                 const start = new Date();
@@ -163,7 +171,7 @@
                     },
                     on: {
                       click: () => {
-                        this.$store.commit("setSelect", "workorder")
+                        //this.$store.commit("setSelect", "workorder")
                         this.$router.push({
                           path: '/ruicloud/workOrder',
                           query: {logData: params.row}
@@ -187,7 +195,7 @@
         total: 0,
       }
     },
-    created(){
+    created() {
       this.$http.get('log/queryLog.do', {
         params: {
           pageSize: this.pageSize,
@@ -201,15 +209,15 @@
       })
     },
     methods: {
-      currentChange(currentPage){
+      currentChange(currentPage) {
         this.currentPage = currentPage;
         this.search();
       },
-      dataChange(time){
+      dataChange(time) {
         this.dateRange = time;
       },
-      search(){
-        let queryTime = this.dateRange === ''? '' : this.dateRange.join(',')
+      search() {
+        let queryTime = this.dateRange === '' ? '' : this.dateRange.join(',')
         this.$http.get('log/queryLog.do', {
           params: {
             pageSize: this.pageSize,
