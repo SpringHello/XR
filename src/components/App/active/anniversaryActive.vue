@@ -1453,8 +1453,8 @@
             zoneId: '',
             system: 'linux',
             duration: '7',
-            originalPrice: '1426.75',
-            currentPrice: '242.55',
+            originalPrice: '1471.1',
+            currentPrice: '250.09',
             vmConfigId: '101'
           },
           {
@@ -1466,8 +1466,8 @@
             zoneId: '',
             system: 'linux',
             duration: '7',
-            originalPrice: '2397.99',
-            currentPrice: '407.66',
+            originalPrice: '2442.34',
+            currentPrice: '415.2',
             vmConfigId: '116'
           },
           {
@@ -1480,7 +1480,7 @@
             system: 'linux',
             duration: '1',
             originalPrice: '5441.7',
-            currentPrice: '4285.22',
+            currentPrice: '4353.36',
             vmConfigId: '102'
           }, {
             cpu: '16',
@@ -1492,7 +1492,7 @@
             system: 'linux',
             duration: '1',
             originalPrice: '9141.7',
-            currentPrice: '7245.22',
+            currentPrice: '7313.36',
             vmConfigId: '117'
           }],
         gpuZoneList: [],
