@@ -297,6 +297,12 @@
           case'硬盘':
             this.formItem.product = '31'
             break;
+          case'GPU服务器':
+            this.formItem.product = '32'
+            break;
+          case'云数据库':
+            this.formItem.product = '33'
+            break;
         }
         this.formItem.description = this.$route.query.logData.operatedes + '失败';
       }
