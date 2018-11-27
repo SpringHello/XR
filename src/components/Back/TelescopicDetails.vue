@@ -1408,7 +1408,7 @@
           monthStartNumber:1,
           monthEndNumber:1,
           //结束小时
-          endHour:'',
+          endHour:'00',
           endHourList:[
             {
               value:'00',
@@ -1508,15 +1508,15 @@
             },
           ],
           //结束分钟
-          endMinute:'',
+          endMinute:'00',
           endMinuteList:[],
           //实例数
           minNumber:1,
           maxNumber:1,
           initialNumber:1,
           //结束执行
-          startTime:'',
-          endTime:''
+          startTime:this.getCurrentDate(),
+          endTime:this.getCurrentDate()
         },
         timedTaskValidtor:{
           name:[
@@ -2430,6 +2430,10 @@
             this.updateTeleList.belongSubnetList = res.data.list;
           }
         })
+      },
+
+     getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
       },
 
       //获取启动配置
