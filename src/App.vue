@@ -217,7 +217,7 @@
               </a>
             </li>
             <li>
-              <a href="https://tsm.miit.gov.cn/pages/home.aspx" target="_blank" style="color:#fff">增值电信业务经营许可证
+              <a href="javascript:void(0)" target="_blank" style="color:#fff;cursor: auto">增值电信业务经营许可证
                 B1-20180455</a>
             </li>
             <li>
@@ -628,14 +628,14 @@
     },
     mounted() {
       this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
-      if(sessionStorage.getItem('hintShow') == 'true'){
+      if (sessionStorage.getItem('hintShow') == 'true') {
         this.$refs.hint.style.height = '80px'
       }
 
     },
     created() {
-      if(sessionStorage.getItem('hintShow') == null){
-        sessionStorage.setItem('hintShow','true')
+      if (sessionStorage.getItem('hintShow') == null) {
+        sessionStorage.setItem('hintShow', 'true')
       }
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
@@ -698,11 +698,11 @@
           window.location.reload()
         })
       },
-      closeHeadHint(){
+      closeHeadHint() {
         this.hintShow = false
         this.$refs.hint.style.height = 0
-        sessionStorage.setItem('hintShow','false')
-      }
+        sessionStorage.setItem('hintShow', 'false')
+      },
     },
     computed: mapState({
       userInfo: state => state.userInfo
