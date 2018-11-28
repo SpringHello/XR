@@ -1134,7 +1134,7 @@
                 gpuSize: '1',
                 serviceType: 'G5500',
                 currentPrice: '178',
-                originalPrice: '--',
+                originalPrice: '646.25',
                 zoneId: '',
                 system: 'linux'
               },
@@ -1190,7 +1190,7 @@
                 gpuSize: '1',
                 serviceType: '2288H_v5',
                 currentPrice: '200',
-                originalPrice: '--',
+                originalPrice: '730.26',
                 zoneId: '',
                 system: 'linux'
               },
@@ -1245,7 +1245,7 @@
                 gpuSize: '1',
                 serviceType: 'G5500',
                 currentPrice: '341',
-                originalPrice: '--',
+                originalPrice: '1215.88',
                 zoneId: '',
                 system: 'linux'
               }
@@ -1308,7 +1308,7 @@
                 gpuSize: '1',
                 serviceType: 'G5500',
                 currentPrice: '178',
-                originalPrice: '--',
+                originalPrice: '646.25',
                 zoneId: '',
                 system: 'linux'
               },
@@ -1364,7 +1364,7 @@
                 gpuSize: '1',
                 serviceType: '2288H_v5',
                 currentPrice: '200',
-                originalPrice: '--',
+                originalPrice: '730.26',
                 zoneId: '',
                 system: 'linux'
               },
@@ -1419,7 +1419,7 @@
                 gpuSize: '1',
                 serviceType: 'G5500',
                 currentPrice: '341',
-                originalPrice: '--',
+                originalPrice: '1215.88',
                 zoneId: '',
                 system: 'linux'
               }
@@ -1482,7 +1482,7 @@
                 gpuSize: '1',
                 serviceType: 'G5500',
                 currentPrice: '178',
-                originalPrice: '--',
+                originalPrice: '646.25',
                 zoneId: '',
                 system: 'linux'
               },
@@ -1538,7 +1538,7 @@
                 gpuSize: '1',
                 serviceType: '2288H_v5',
                 currentPrice: '200',
-                originalPrice: '--',
+                originalPrice: '730.26',
                 zoneId: '',
                 system: 'linux'
               },
@@ -1593,7 +1593,7 @@
                 gpuSize: '1',
                 serviceType: 'G5500',
                 currentPrice: '341',
-                originalPrice: '--',
+                originalPrice: '1215.88',
                 zoneId: '',
                 system: 'linux'
               }
@@ -1656,7 +1656,7 @@
                 gpuSize: '1',
                 serviceType: 'G5500',
                 currentPrice: '178',
-                originalPrice: '--',
+                originalPrice: '646.25',
                 zoneId: '',
                 system: 'linux'
               },
@@ -1712,7 +1712,7 @@
                 gpuSize: '1',
                 serviceType: '2288H_v5',
                 currentPrice: '200',
-                originalPrice: '--',
+                originalPrice: '730.26',
                 zoneId: '',
                 system: 'linux'
               },
@@ -1767,7 +1767,7 @@
                 gpuSize: '1',
                 serviceType: 'G5500',
                 currentPrice: '341',
-                originalPrice: '--',
+                originalPrice: '1215.88',
                 zoneId: '',
                 system: 'linux'
               }
@@ -2021,6 +2021,11 @@
                 })
               })
               this.getMirror(this.userType, this.areaGroup[0].value)
+              for (let i = 5; i < 9; i++) {
+                for (let j = 0; j < 3; j++) {
+                  this.getOriginalPrice(i, j)
+                }
+              }
             }
           }
         })
@@ -2306,7 +2311,7 @@
             break
         }
         this.vmConfig = vmConfigId
-        if(this.index1 < 4){
+        if (this.index1 < 4) {
           let url = 'user/getRemainderFrozen.do'
           let params = {
             eachFrozenMoney: this.cashPledge,
