@@ -775,13 +775,13 @@
           if (this.balanceSelection._internal) {
             url = `loadbalance/removeFromInternalLoadBalancerRule.do`
             params = {
-              VMIds: this.unbindForm.vm,
+              VMIds: this.unbindForm.vm + '',
               lbId: this.balanceSelection.lbid
             }
           } else {
             url = `loadbalance/removeFromLoadBalancerRule.do`
             params = {
-              VMIds: this.unbindForm.vm,
+              VMIds: this.unbindForm.vm + '',
               roleId: this.balanceSelection.loadbalanceroleid
             }
           }
