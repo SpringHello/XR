@@ -1211,7 +1211,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1242,7 +1242,7 @@
                   }
                 ],
                 men: '128',
-                gpuSize: '1',
+                gpuSize: '2',
                 serviceType: 'G5500',
                 currentPrice: '341',
                 originalPrice: '1215.88',
@@ -1385,7 +1385,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1416,7 +1416,7 @@
                   }
                 ],
                 men: '128',
-                gpuSize: '1',
+                gpuSize: '2',
                 serviceType: 'G5500',
                 currentPrice: '341',
                 originalPrice: '1215.88',
@@ -1559,7 +1559,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1590,7 +1590,7 @@
                   }
                 ],
                 men: '128',
-                gpuSize: '1',
+                gpuSize: '2',
                 serviceType: 'G5500',
                 currentPrice: '341',
                 originalPrice: '1215.88',
@@ -1733,7 +1733,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1764,7 +1764,7 @@
                   }
                 ],
                 men: '128',
-                gpuSize: '1',
+                gpuSize: '2',
                 serviceType: 'G5500',
                 currentPrice: '341',
                 originalPrice: '1215.88',
