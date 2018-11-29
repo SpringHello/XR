@@ -2414,6 +2414,16 @@
                 ME: true
               },
               {
+                title: 'GPU服务器',
+                desc: 'Tesla P100、Tesla P40 GPU',
+                img: '#houtaiicon-GPUzhuji',
+                detailText: '查看详情',
+                useText: '立即购买',
+                detailLink: 'Pgpu',
+                useLink: $store.state.userInfo ? 'buy/bgpu' : 'buy/bgpu',
+                ME: false
+              },
+              {
                 title: '镜像服务',
                 desc: '公共镜像、功能镜像、自定义镜像',
                 img: '#icon-feiyongzhongxin',
@@ -2447,16 +2457,6 @@
                 title: '弹性伸缩',
                 desc: '高可用、可视化、低成本',
                 img: '#icon-danxingshensuo4',
-                detailText: '查看详情',
-                useText: '敬请期待',
-                detailLink: '',
-                useLink: '',
-                ME: false
-              },
-              {
-                title: 'GPU服务器',
-                desc: 'Tesla P100、Tesla P40 GPU',
-                img: '#houtaiicon-GPUzhuji',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: '',
@@ -2554,22 +2554,22 @@
                 ME: true
               },
               {
+                title: '对象存储',
+                desc: '安全稳定，海量便捷',
+                img: '#houtaiicon-duixiangchunchu',
+                detailText: '查看详情',
+                useText: '立即购买',
+                detailLink: 'PobjStorage',
+                useLink: $store.state.userInfo ? 'buy/bobj' : 'buy/bobj',
+                ME: false
+              },
+              {
                 title: '云硬盘备份',
                 desc: '高可用保障、敏捷易用',
                 img: '#icon-yunyingpanbeifen',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pbackupdisk',
-                useLink: '',
-                ME: false
-              },
-              {
-                title: '对象存储',
-                desc: '安全稳定，海量便捷',
-                img: '#houtaiicon-duixiangchunchu',
-                detailText: '查看详情',
-                useText: '敬请期待',
-                detailLink: 'PobjStorage',
                 useLink: '',
                 ME: false
               }
