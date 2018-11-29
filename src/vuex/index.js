@@ -22,6 +22,7 @@ const store = new Vuex.Store({
     zoneList: null,
     // 当前区域
     zone: null,
+    gpuZone: null,
     // 消息条数
     Msg: 0,
     // 三级pane的状态
@@ -44,6 +45,10 @@ const store = new Vuex.Store({
       for (var zone of zoneList) {
         if (zone.isdefault == 1) {
           state.zone = zone
+        }
+        if (zone.gpuserver == 1) {
+          state.gpuZone = zone
+          break
         }
       }
     },

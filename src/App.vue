@@ -424,8 +424,8 @@
                   {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost.htm'},
                   {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss.htm'},
                   {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/ruicloud/Pgpu.htm'},
+                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/ruicloud/Pelastic.htm'},
                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
-                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/ruicloud/Pelastic'}
                 ]
               },
               {
@@ -525,8 +525,8 @@
               {subTitle: '镜像服务', url: '/ruicloud/Phost.htm'},
               {subTitle: 'ESC快照', url: '/ruicloud/Pecss.htm'},
               {subTitle: 'GPU服务器', url: '/ruicloud/Pgpu.htm'},
+              {subTitle: '弹性伸缩', url: '/ruicloud/Pelastic.htm'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
-              {subTitle: '弹性伸缩（敬请期待）', url: ''}
             ]
           },
           {
