@@ -264,6 +264,7 @@
       },
       // 选中项变化
       onSelectionChange(selection) {
+        this.couponInfo.selectTicket = ''
         this.canUseTicket = selection.every(item => {
           return item.discountedorders != 1
         })
