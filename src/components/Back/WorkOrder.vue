@@ -190,7 +190,7 @@
 
                     </div>
                   </div>
-                  <div style="margin-top:20px;" v-if="orderDetail[2][0].wcSataus==2">
+                  <div style="margin-top:20px;" v-if="orderDetail[2][0].wcSataus!=4">
                     <Input v-model="editorValue" type="textarea" :rows="4" placeholder="请输入..."></Input>
                     <button @click="reply">发送</button>
                   </div>
@@ -297,11 +297,11 @@
           case'硬盘':
             this.formItem.product = '31'
             break;
-          case'GPU服务器':
+          case'云数据库':
             this.formItem.product = '32'
             break;
-          case'云数据库':
-            this.formItem.product = '33'
+          case'GPU服务器':
+            this.formItem.product = '34'
             break;
         }
         this.formItem.description = this.$route.query.logData.operatedes + '失败';
