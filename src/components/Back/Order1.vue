@@ -190,6 +190,7 @@
       }
     },
     beforeRouteEnter(to, from, next){
+      console.log(to);
       let params = {}
       if (to.query.countOrder) {
         params.countOrder = to.query.countOrder
