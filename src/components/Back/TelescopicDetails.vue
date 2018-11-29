@@ -259,11 +259,11 @@
         <p>开始执行时间</p>
         <div>
           <DatePicker type="date" :options="options3"  v-model="timedTask.startTime" placeholder="选择时间" style="width:123px"></DatePicker>
-          <Select v-model="timedTask.hour" style="width:92px" >
+          <Select v-model="timedTask.hour" style="width:92px">
             <Option v-for="item in timedTask.hourList" :value="item.value" :key="item.value" :disabled='item.dis'>{{ item.label }}</Option>
           </Select>
           <span>:</span>
-          <Select v-model="timedTask.minute" style="width:92px">
+          <Select v-model="timedTask.minute" style="width:92px" >
             <Option v-for="item in timedTask.minuteList" :value="item.value" :key="item.value" >{{ item.label }}</Option>
           </Select>
           <Select v-model="timedTask.repeat" style="width:95px">
@@ -2090,6 +2090,7 @@
         }).then(res => {
           if(res.status == 200 && res.data.status ==1){
             this.taskData = res.data.list;
+            // this.dateDisate();
           }
         })
       },
@@ -2304,13 +2305,18 @@
         this.updateTimedTask.minuteList = [],
         this.updateTimedTask.endMinuteList = [];
         // let disIsTrue = false
-        // if(this.taskData.length != 0){
-        //   disIsTrue = true;
-        //   for(let i = 0;i<this.taskData.length;i++){
-        //     let starTime = new Date(this.taskData[i].starttime);
-        //     let endTime = new Date(this.taskData[i].endtime);
-        //   }
-        // }
+        //    let index = 0;
+        //       index =  this.timedTask.minuteList.findIndex(item => {
+        //           return   item.value === this.timedTask.minute
+        //       });
+        //      for(let i = 0;i<this.timedTask.minuteList.length;i++){
+        //         if(i<index){
+        //            disIsTrue = true;
+        //          }else{
+        //           this.timedTask.minute =  this.timedTask.minuteList[index+1].value;
+        //             disIsTrue = false;
+        //          }
+        //      }
         
         for(let i = 0;i<61;i++){
           for(let j = 1;j<5;j++){
@@ -2323,33 +2329,45 @@
             }
           }
         }
-        // function date(time,times){
-         
-        // }
+    
       },
 
+      //切换小时
+      // changeHour(){
+      //    if(this.timedTask.startTime != ''){
+      //      if(this.timedTask.hour == '23'){
+      //        this.timedTask.endTime = this.getTomorrow(this.timedTask.startTime);
+      //      }else{
+      //           let index =  this.timedTask.hourList.findIndex(item => {
+      //             return   item.value === this.timedTask.hour
+      //         });
+      //        for(let i = 0;i<this.timedTask.hourList.length;i++){
+      //           if(i<index){
+      //               this.timedTask.endHourList[i].dis = true;
+      //            }else{
+      //              this.timedTask.endHour = this.timedTask.hour;
+      //                this.timedTask.endHourList[i].dis = false;
+      //            }
+      //        }
+      //      }
+      //     }
+      // },
+
       //切换分钟
-      changeMinute(val){
-         if(this.timedTask.startTime != ''){
-           if(this.timedTask.hour == '23'){
-             this.timedTask.endTime = this.getTomorrow(this.timedTask.startTime);
-           }else{
-              let index = 0;
-              index =  this.timedTask.hourList.findIndex(item => {
-                  return   item.value === this.timedTask.hour
-              });
-             for(let i = 0;i<this.timedTask.hourList.length;i++){
-               if(this.timedTask.hourList[i].value == this.timedTask.hour){
-                
-                 this.timedTask.endHourList[i].dis = false;
-               }
-                if(i<index){
-                    this.timedTask.endHourList[i].dis = true;
-                 }
-             }
-           }
-          }
-      },
+      // changeMinute(){
+      //   if(this.timedTask.startTime != ''){
+
+      //   }
+      // },
+
+      // dateDisate(){
+      //   console.log(this.taskData.length);
+      //   if(this.taskData.length != 0){
+      //     console.log(this.taskData[this.taskData.length-1].startTime)
+      //    let time =  this.taskData[this.taskData.length-1].startTime.substring( this.taskData[this.taskData.length-1].startTime.indexOf(' '),this.taskData.length-1);
+      //     console.log(time);
+      //   }
+      // },
 
      getTomorrow(time) {
         var day = new Date(time)
@@ -2567,7 +2585,7 @@
     },
     created(){
       this.getDetails();
-     
+    
       this.getScaleAlarmStrategy();
       this.selectActivity(1);
       this.selectTask();
