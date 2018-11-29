@@ -293,10 +293,10 @@
     mounted(){
       window.onscroll = () => {
         var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-        if (scrollTop > 300 && this.Results.length >= 8) {
+        if (scrollTop >= 284 && this.Results.length > 8) {
           this.listTop = true
         }
-        if (scrollTop == 0) {
+        if (scrollTop < 284) {
           this.listTop = false
         }
       }
