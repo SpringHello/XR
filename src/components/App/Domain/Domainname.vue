@@ -336,7 +336,7 @@
     p {
       font-size: 36px;
       color: rgba(55, 125, 255, 1);
-      padding: 101px 0 51px 0;
+      padding: 100px 0 51px 0;
       span {
         display: inline-block;
         font-size: 24px;
@@ -388,7 +388,7 @@
     p {
       font-size: 36px;
       color: rgba(55, 125, 255, 1);
-      padding: 101px 0 40px 0;
+      padding: 100px 0 40px 0;
       span {
         display: inline-block;
         font-size: 24px;
@@ -408,14 +408,11 @@
   }
 
   .content-advantage {
-    /*background: linear-gradient(360deg, rgba(247, 250, 255, 1) 0%, rgba(252, 253, 255, 1) 100%);*/
-    margin-top: 101px;
     padding-bottom: 70px;
     p {
       font-size: 36px;
       color: rgba(55, 125, 255, 1);
-
-      padding: 40px 0 51px 0;
+      padding: 100px 0 51px 0;
       span {
         display: inline-block;
         font-size: 24px;
