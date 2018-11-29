@@ -74,7 +74,7 @@
            </TabPane>
           <TabPane label="定时任务">
             <div>
-              <Button type="primary" style="margin-bottom: 10px;"  @click="task = true">新建</Button>
+              <Button type="primary" style="margin-bottom: 10px;"  @click="taskShow">新建</Button>
               <Table :columns="taskList" :data="taskData"></Table>
             </div>
           </TabPane>
@@ -117,7 +117,7 @@
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
       <div>
-        <p style="margin-bottom: 12px">伸缩组内所有云主机<span style="color: #2A99F2;">查看详细统计规则</span></p>
+        <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="https://www.xrcloud.net/ruicloud/documentInfo/wHfINiD0y/wI2GZzD6x" style="color: #2A99F2;" >查看详细统计规则</a></p>
         <div>
           <Select @on-change="cpuSelect" v-model="alarmStrategy.cpuValue" style="width:123px">
             <Option v-for="item in alarmStrategy.cpuList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -152,8 +152,8 @@
             <Option value="%" :disabled="alarmStrategy.disabled">%</Option>
           </Select>
           <span>云主机，冷却</span>
-          <InputNumber  :min="60" :max="9999" v-model="alarmStrategy.coolingNumber"></InputNumber>
-          <span>秒</span>
+          <InputNumber :editable='false' :step="15"  :min="15" :max="9999" v-model="alarmStrategy.coolingNumber"></InputNumber>
+          <span>分</span>
           <Tooltip  placement="right" transfer>
             <p slot="content" style="white-space:normal;">冷却时间是指在同一个伸缩组内，一个伸缩活动（添加或移出云主机）执行完成后的一段锁定时间。在这段时间内，该伸缩组不执行伸缩活动。</p>
             <Icon type="ios-help-outline"></Icon>
@@ -186,7 +186,7 @@
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
       <div>
-        <p style="margin-bottom: 12px">伸缩组内所有云主机<span style="color: #2A99F2;">查看详细统计规则</span></p>
+        <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="https://www.xrcloud.net/ruicloud/documentInfo/wHfINiD0y/wI2GZzD6x" style="color: #2A99F2;">查看详细统计规则</a></p>
         <div>
           <Select @on-change="cpuSelect" v-model="updateStrategy.cpuValue" style="width:123px">
             <Option v-for="item in updateStrategy.cpuList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -221,7 +221,7 @@
             <Option value="%" :disabled="updateStrategy.disabled">%</Option>
           </Select>
           <span>云主机，冷却</span>
-          <InputNumber  :min="60" :max="999" v-model="updateStrategy.coolingNumber"></InputNumber>
+          <InputNumber :editable='false' :step='15' :min="15" :max="999" v-model="updateStrategy.coolingNumber"></InputNumber>
           <span>秒</span>
           <Tooltip  placement="right" transfer>
             <p slot="content" style="white-space:normal;">冷却时间是指在同一个伸缩组内，一个伸缩活动（添加或移出云主机）执行完成后的一段锁定时间。在这段时间内，该伸缩组不执行伸缩活动。</p>
@@ -259,12 +259,12 @@
         <p>开始执行时间</p>
         <div>
           <DatePicker type="date" :options="options3"  v-model="timedTask.startTime" placeholder="选择时间" style="width:123px"></DatePicker>
-          <Select v-model="timedTask.hour" style="width:92px">
-            <Option v-for="item in timedTask.hourList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Select v-model="timedTask.hour" style="width:92px" >
+            <Option v-for="item in timedTask.hourList" :value="item.value" :key="item.value" :disabled='item.dis'>{{ item.label }}</Option>
           </Select>
           <span>:</span>
           <Select v-model="timedTask.minute" style="width:92px">
-            <Option v-for="item in timedTask.minuteList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in timedTask.minuteList" :value="item.value" :key="item.value" >{{ item.label }}</Option>
           </Select>
           <Select v-model="timedTask.repeat" style="width:95px">
             <Option v-for="item in timedTask.repeatList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -302,8 +302,8 @@
           <div style="margin-top: 20px;">
             <p>结束执行时间</p>
             <DatePicker type="date" :options="options3" v-model="timedTask.endTime"  placeholder="选择时间" style="width:123px"></DatePicker>
-            <Select v-model="timedTask.endHour" style="width:92px">
-              <Option v-for="item in timedTask.endHourList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Select v-model="timedTask.endHour" style="width:92px" >
+              <Option v-for="item in timedTask.endHourList" :value="item.value" :key="item.value" :disabled='item.dis'>{{ item.label }}</Option>
             </Select>
             <span>:</span>
             <Select v-model="timedTask.endMinute" style="width:92px">
@@ -646,7 +646,7 @@
                       this.updateStrategy.cpuValue = parmas.row.alarmname;
                       this.updateStrategy.time = parmas.row.countcircle.toString();
                       this.updateStrategy.symbol = parmas.row.valuetype;
-                      this.updateStrategy.percentage = parmas.row.value <10 ? '0'+parmas.row.value :parmas.row.value+'';
+                      this.updateStrategy.percentage = parmas.row.value <10 ? '0'+parmas.row.value :parmas.row.value;
                       this.updateStrategy.count = parmas.row.continuecircle.toString();
                       this.updateStrategy.addCount = Number(parmas.row.addcount);
                       this.updateStrategy.value =  parmas.row.total;
@@ -703,13 +703,23 @@
               danw:'%'
             },
             {
-              value:'带宽',
-              label:'带宽',
-              danw:'Mbps'
+              value:'内存使用率',
+              label:'内存使用率',
+              danw:'%'
             },
             {
-              value:'速率',
-              label:'速率',
+              value:'磁盘使用率',
+              label:'磁盘使用率',
+              danw:'%'
+            },
+            {
+              value:'外网带宽流入速率',
+              label:'外网带宽流入速率',
+              danw:'kb/s'
+            },
+            {
+              value:'外网带宽流出速率',
+              label:'外网带宽流出速率',
               danw:'kb/s'
             }
           ],
@@ -799,8 +809,8 @@
               label:'连续5次'
             },
           ],
-          //冷却几秒
-          coolingNumber:60,
+          //冷却时间单位分钟
+          coolingNumber:15,
           //联系人
           contacts:'',
           contactsList:[],
@@ -849,13 +859,23 @@
               danw:'%'
             },
             {
-              value:'带宽',
-              label:'带宽',
-              danw:'Mbps'
+              value:'内存使用率',
+              label:'内存使用率',
+              danw:'%'
             },
             {
-              value:'速率',
-              label:'速率',
+              value:'磁盘使用率',
+              label:'磁盘使用率',
+              danw:'%'
+            },
+            {
+              value:'外网带宽流入速率',
+              label:'外网带宽流入速率',
+              danw:'kb/s'
+            },
+            {
+              value:'外网带宽流出速率',
+              label:'外网带宽流出速率',
               danw:'kb/s'
             }
           ],
@@ -945,7 +965,7 @@
             },
           ],
           //冷却几秒
-          coolingNumber:1,
+          coolingNumber:15,
           //联系人
           contacts:'',
           contactsList:[],
@@ -1236,103 +1256,127 @@
           hourList:[
             {
               value:'00',
-              label:'00时'
+              label:'00时',
+              dis:false
             },
             {
               value:'01',
-              label:'01时'
+              label:'01时',
+              dis:false
             },
             {
               value:'02',
-              label:'02时'
+              label:'02时',
+              dis:false
             },
             {
               value:'03',
-              label:'03时'
+              label:'03时',
+              dis:false
             },
             {
               value:'04',
-              label:'04时'
+              label:'04时',
+              dis:false
             },
             {
               value:'05',
-              label:'05时'
+              label:'05时',
+              dis:false
             },
             {
               value:'06',
-              label:'06时'
+              label:'06时',
+              dis:false
             },
             {
               value:'07',
-              label:'07时'
+              label:'07时',
+              dis:false
             },
             {
               value:'08',
-              label:'08时'
+              label:'08时',
+              dis:false
             },
             {
               value:'09',
-              label:'09时'
+              label:'09时',
+              dis:false
             },
             {
               value:'10',
-              label:'10时'
+              label:'10时',
+              dis:false
             },
             {
               value:'11',
-              label:'11时'
+              label:'11时',
+              dis:false
             },
             {
               value:'12',
-              label:'12时'
+              label:'12时',
+              dis:false
             },
             {
               value:'13',
-              label:'13时'
+              label:'13时',
+              dis:false
             },
             {
               value:'14',
-              label:'14时'
+              label:'14时',
+              dis:false
             },
             {
               value:'15',
-              label:'15时'
+              label:'15时',
+              dis:false
             },
             {
               value:'16',
-              label:'16时'
+              label:'16时',
+              dis:false
             },
             {
               value:'17',
-              label:'17时'
+              label:'17时',
+              dis:false
             },
             {
               value:'18',
-              label:'18时'
+              label:'18时',
+              dis:false
             },
             {
               value:'19',
-              label:'19时'
+              label:'19时',
+              dis:false
             },
             {
               value:'20',
-              label:'20时'
+              label:'20时',
+              dis:false
             },
             {
               value:'21',
-              label:'21时'
+              label:'21时',
+              dis:false
             },
             {
               value:'22',
-              label:'22时'
+              label:'22时',
+              dis:false
             },
             {
               value:'23',
-              label:'23时'
+              label:'23时',
+              dis:false
             },
           ],
           //分钟
-          minute:'00',
+          minute:'15',
           minuteList:[],
           //是否重复
           repeat:'0',
@@ -1410,105 +1454,129 @@
           //结束小时
           endHour:'00',
           endHourList:[
-            {
+           {
               value:'00',
-              label:'00时'
+              label:'00时',
+              dis:false
             },
             {
               value:'01',
-              label:'01时'
+              label:'01时',
+              dis:false
             },
             {
               value:'02',
-              label:'02时'
+              label:'02时',
+              dis:false
             },
             {
               value:'03',
-              label:'03时'
+              label:'03时',
+              dis:false
             },
             {
               value:'04',
-              label:'04时'
+              label:'04时',
+              dis:false
             },
             {
               value:'05',
-              label:'05时'
+              label:'05时',
+              dis:false
             },
             {
               value:'06',
-              label:'06时'
+              label:'06时',
+              dis:false
             },
             {
               value:'07',
-              label:'07时'
+              label:'07时',
+              dis:false
             },
             {
               value:'08',
-              label:'08时'
+              label:'08时',
+              dis:false
             },
             {
               value:'09',
-              label:'09时'
+              label:'09时',
+              dis:false
             },
             {
               value:'10',
-              label:'10时'
+              label:'10时',
+              dis:false
             },
             {
               value:'11',
-              label:'11时'
+              label:'11时',
+              dis:false
             },
             {
               value:'12',
-              label:'12时'
+              label:'12时',
+              dis:false
             },
             {
               value:'13',
-              label:'13时'
+              label:'13时',
+              dis:false
             },
             {
               value:'14',
-              label:'14时'
+              label:'14时',
+              dis:false
             },
             {
               value:'15',
-              label:'15时'
+              label:'15时',
+              dis:false
             },
             {
               value:'16',
-              label:'16时'
+              label:'16时',
+              dis:false
             },
             {
               value:'17',
-              label:'17时'
+              label:'17时',
+              dis:false
             },
             {
               value:'18',
-              label:'18时'
+              label:'18时',
+              dis:false
             },
             {
               value:'19',
-              label:'19时'
+              label:'19时',
+              dis:false
             },
             {
               value:'20',
-              label:'20时'
+              label:'20时',
+              dis:false
             },
             {
               value:'21',
-              label:'21时'
+              label:'21时',
+              dis:false
             },
             {
               value:'22',
-              label:'22时'
+              label:'22时',
+              dis:false
             },
             {
               value:'23',
-              label:'23时'
+              label:'23时',
+              dis:false
             },
           ],
           //结束分钟
-          endMinute:'00',
+          endMinute:'15',
           endMinuteList:[],
           //实例数
           minNumber:1,
@@ -2231,16 +2299,67 @@
 
       //获取分钟数
       minuteListCount(){
-        for(let i = 0;i<60;i++){
-          if(i<10){
-            i = '0'+i;
+        this.timedTask.minuteList = [],
+        this.timedTask.endMinuteList = [],
+        this.updateTimedTask.minuteList = [],
+        this.updateTimedTask.endMinuteList = [];
+        // let disIsTrue = false
+        // if(this.taskData.length != 0){
+        //   disIsTrue = true;
+        //   for(let i = 0;i<this.taskData.length;i++){
+        //     let starTime = new Date(this.taskData[i].starttime);
+        //     let endTime = new Date(this.taskData[i].endtime);
+        //   }
+        // }
+        
+        for(let i = 0;i<61;i++){
+          for(let j = 1;j<5;j++){
+             if(i==5*(j*3)){
+              let obj = {value:i == 60?'59':i+'',label:i == 60?'59分':i +'分'};
+              this.timedTask.minuteList.push(obj);
+              this.timedTask.endMinuteList.push(obj);
+              this.updateTimedTask.minuteList.push(obj);
+              this.updateTimedTask.endMinuteList.push(obj);
+            }
           }
-          let obj = {value:i,label:i +'分'};
-          this.timedTask.minuteList.push(obj);
-          this.timedTask.endMinuteList.push(obj);
-          this.updateTimedTask.minuteList.push(obj);
-          this.updateTimedTask.endMinuteList.push(obj);
         }
+        // function date(time,times){
+         
+        // }
+      },
+
+      //切换分钟
+      changeMinute(val){
+         if(this.timedTask.startTime != ''){
+           if(this.timedTask.hour == '23'){
+             this.timedTask.endTime = this.getTomorrow(this.timedTask.startTime);
+           }else{
+              let index = 0;
+              index =  this.timedTask.hourList.findIndex(item => {
+                  return   item.value === this.timedTask.hour
+              });
+             for(let i = 0;i<this.timedTask.hourList.length;i++){
+               if(this.timedTask.hourList[i].value == this.timedTask.hour){
+                
+                 this.timedTask.endHourList[i].dis = false;
+               }
+                if(i<index){
+                    this.timedTask.endHourList[i].dis = true;
+                 }
+             }
+           }
+          }
+      },
+
+     getTomorrow(time) {
+        var day = new Date(time)
+        day.setTime(parseInt(day.getTime()) + 24 * 60 * 60 * 1000)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      //显示定时任务弹窗
+      taskShow(){
+        this.task = true;
+        this.minuteListCount();
       },
 
       //获取策略百分比量
@@ -2270,13 +2389,10 @@
 
       //告警类型选择单位
       cpuSelect(){
-          if( this.alarmStrategy.cpuValue == 'CPU利用率' ||  this.updateStrategy.cpuValue == 'CPU利用率'){
+          if( this.alarmStrategy.cpuValue == 'CPU利用率' ||  this.updateStrategy.cpuValue == 'CPU利用率' || this.updateStrategy.cpuValue == '内存使用率' ||  this.updateStrategy.cpuValue == '磁盘使用率' || this.alarmStrategy.cpuValue == '内存使用率'|| this.alarmStrategy.cpuValue == '磁盘使用率'){
             this.alarmStrategy.spanValue = '%';
             this.updateStrategy.spanValue = '%';
-          }else if( this.alarmStrategy.cpuValue == '带宽' ||  this.updateStrategy.cpuValue == '带宽'){
-            this.alarmStrategy.spanValue = 'Mbps';
-            this.updateStrategy.spanValue = 'Mbps';
-          }else if( this.alarmStrategy.cpuValue == '速率' ||  this.updateStrategy.cpuValue == '速率'){
+          }else if( this.alarmStrategy.cpuValue == '外网带宽流入速率' ||  this.updateStrategy.cpuValue == '外网带宽流入速率' || this.alarmStrategy.cpuValue == '外网带宽流出速率' ||  this.updateStrategy.cpuValue == '外网带宽流出速率'){
             this.alarmStrategy.spanValue = 'kb/s';
             this.updateStrategy.spanValue = 'kb/s';
           }
@@ -2434,7 +2550,7 @@
 
      getCurrentDate() {
         return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
-      },
+     },
 
       //获取启动配置
       selectAllElastic(){
@@ -2451,7 +2567,7 @@
     },
     created(){
       this.getDetails();
-      this.minuteListCount();
+     
       this.getScaleAlarmStrategy();
       this.selectActivity(1);
       this.selectTask();
@@ -2465,6 +2581,9 @@
     mounted(){
       this.selectCloudHost();
     },
+    watch:{
+    
+    }
   }
 </script>
 

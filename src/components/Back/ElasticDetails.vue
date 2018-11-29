@@ -62,7 +62,7 @@
         <br>
         <div>
           <p style="color: #333333;font-size: 16px;">关联伸缩组</p>
-          <div class="telescopic">
+          <div>
             <div style="margin:10px 0;"  v-if="telescopicList.length > 0" v-for="(item,index) in telescopicList" :key="index">
               <span style="color: #2A99F2;font-size: 14px;cursor: pointer;"  @click="elasticJump(item)">{{item.stretchname}}</span>
               <span style="color: #2A99F2;font-size: 14px;cursor: pointer;margin:0 10px 0 10px;" @click="changeTelescopic(index)" >更改伸缩组</span>
@@ -509,9 +509,6 @@
         margin: 10px 0;
       }
     }
-  }
-  .telescopic{
-    display: flex;
   }
   .ivu-icon-ios-help-outline:before{
     color: #2A99F2;

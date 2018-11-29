@@ -277,8 +277,8 @@
               key:'startconfigname'
             },
             {
-              title:'子机数量',
-              key:'initialinstancenumber'
+              title:'当前实例数',
+              key:'currentintacecount'
             },
             {
               title:'最小伸缩数',
