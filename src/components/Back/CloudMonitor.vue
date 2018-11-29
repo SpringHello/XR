@@ -1595,6 +1595,7 @@
         }
       },
       changeStrategyType() {
+        this.strategyhost.selectedHost = []
         var objArray = ['云主机', '云硬盘', 'vpc', '对象存储']
         var productType = ''
         objArray.forEach((item, index) => {
