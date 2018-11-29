@@ -53,10 +53,6 @@
           <Icon type="load-c" size=10 class="demo-spin-icon-load"></Icon>
           <div>努力加载中</div>
         </Spin>
-        <Spin v-show="showFix1" size='small'>
-          <Icon type="load-c" size=10 class="demo-spin-icon-load"></Icon>
-          <div>努力加载中</div>
-        </Spin>
       </div>
       <div id="result-right" :class="{titleTop:listTop}">
         <div>
@@ -121,8 +117,6 @@
         showButton: true,
         cancel: true,
         showFix: false,
-        showFix1: false,
-
 
       }
     },
@@ -131,11 +125,11 @@
       Search(){
         this.Results = []
         this.singles = []
+        this.showFix = true
         axios.post('domain/domainFound.do', {
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
-          this.showFix = true
           if (res.data.data.results.length != 0) {
             this.showFix = false
             this.Results = res.data.data.results
