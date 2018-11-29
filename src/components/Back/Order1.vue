@@ -272,7 +272,7 @@
           cost += item.cost
           originCost += item.originalcost
         })
-        this.cost = cost
+        this.couponInfo.cost = cost
         this.couponInfo.originCost = originCost
         if (cost != 0) {
           if (this.couponInfo.selectTicket != '') {
