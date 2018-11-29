@@ -17,7 +17,6 @@
             </transition>
           </div>
           <button @click="Search">搜索</button>
-
         </div>
       </div>
     </div>
@@ -49,26 +48,30 @@
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
-          <Spin v-show="showFix">
-            <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
-            <div>Loading</div>
-          </Spin>
         </div>
+        <Spin v-show="showFix" size='small'>
+          <Icon type="load-c" size=10 class="demo-spin-icon-load"></Icon>
+          <div>努力加载中</div>
+        </Spin>
       </div>
-      <div id="result-right">
+      <div id="result-right" :class="{titleTop:listTop}">
         <div>
           <div class="all">
             <p>域名清单
               <button @click="removeAll">全部移除</button>
             </p>
-            <ul class="all-data">
+            <ul class="all-data" v-show="buyLists.length!=0">
               <li v-for="(item,index) in buyLists">
                 <h2>{{item.name}}</h2>
                 <button @click="remove(index)">移除</button>
               </li>
             </ul>
           </div>
-          <div class="statistical">
+          <div class="zero" v-show="buyLists.length==0">
+            <p>您还没有选择任何域名哦</p>
+            <img src="../../../assets/img/domain/Rectangle.png">
+          </div>
+          <div class="statistical" v-show="buyLists.length!=0">
             <div>
               <p>已加入域名 <span>{{addNum}}</span> 个</p>
               <p>优惠金额：¥00.00</p>
@@ -111,13 +114,13 @@
         buyLists: [],
         addNum: '0',
         payMoney: 0,
+        listTop: false,
 
         domName: '',
 
         showButton: true,
         cancel: true,
-        showFix: false
-
+        showFix: false,
 
       }
     },
@@ -126,11 +129,11 @@
       Search(){
         this.Results = []
         this.singles = []
+        this.showFix = true
         axios.post('domain/domainFound.do', {
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
-          this.showFix = true
           if (res.data.data.results.length != 0) {
             this.showFix = false
             this.Results = res.data.data.results
@@ -245,7 +248,6 @@
             tids.push(this.singles[i]);
           }
         }
-
         if (tids.length != 0) {
           this.showFix = true
           axios.post('domain/domainFound.do', {
@@ -255,38 +257,48 @@
             if (res.data.data.results.length != 0) {
               this.showFix = false
               this.Results = res.data.data.results
-            } else {
+
+              if (tids.slice(8).length != 0) {
+                this.showFix = true
+                this.cancel = true
+                setTimeout(() => {
+                  axios.post('domain/domainFound.do', {
+                    domainName: this.searchText,
+                    tids: tids.slice(8).join(','),
+                  }).then(res => {
+                    if (res.status == 200 && res.data.status == 1) {
+                      this.showFix = false
+                      this.cancel = false
+                      var addList = res.data.data.results
+                      for (var i in addList) {
+                        this.Results.push(addList[i]);
+                      }
+                      this.$Message.info('加载完毕!')
+                    }
+                  })
+                }, 1000)
+              }
+            }
+            else {
               this.$Message.info('暂无数据')
             }
           })
-
-          if (tids.slice(8).length != 0) {
-            this.cancel = true
-            this.showFix = true
-            setTimeout(() => {
-                axios.post('domain/domainFound.do', {
-                  domainName: this.searchText,
-                  tids: tids.slice(8).join(','),
-                }).then(res => {
-
-                  if (res.status == 200 && res.data.status == 1) {
-                    this.showFix = false
-                    this.cancel = false
-                    var addList = res.data.data.results
-                    for (var i in addList) {
-                      this.Results.push(addList[i]);
-                    }
-                    this.$Message.info('加载完毕!')
-                  }
-                })
-              }
-              , 1000)
-          }
-
         } else {
           this.Results = []
         }
       }
+    },
+    mounted(){
+      window.onscroll = () => {
+        var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+        if (scrollTop >= 284 && this.Results.length > 8) {
+          this.listTop = true
+        }
+        if (scrollTop < 284) {
+          this.listTop = false
+        }
+      }
+
     }
   }
 </script>
@@ -356,7 +368,7 @@
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    padding: 50px 0 250px 0;
+    padding: 40px 0 250px 0;
     #result-left {
       width: 800px;
       border-bottom: none;
@@ -385,7 +397,6 @@
         }
       }
       .show {
-        /*height: 100px;*/
         box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(230, 230, 230, 1);
         padding: 50px 55px 41px 54px;
@@ -461,7 +472,6 @@
         }
 
       }
-
       .showAll {
         display: block;
         margin: 0 auto;
@@ -473,13 +483,6 @@
         padding: 9px 23px;
         outline: none;
         cursor: pointer;
-      }
-
-      .fix {
-        font-size: 16px;
-        color: #2a99f2;
-        text-align: center;
-        padding: 10px;
       }
     }
     #result-right {
@@ -567,9 +570,33 @@
             margin-bottom: 20px;
           }
         }
+        .zero {
+          text-align: center;
+          padding-bottom: 70px;
+          p {
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(102, 102, 102, 1);
+            line-height: 20px;
+            padding-bottom: 30px;
+          }
+          img {
+            display: block;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+          }
+        }
       }
+    }
+    .titleTop {
+      position: fixed;
+      right: 350px;
+      top: 0;
     }
   }
 
-
+  .demo-spin-icon-load {
+    font-size: 25px !important;
+  }
 </style>

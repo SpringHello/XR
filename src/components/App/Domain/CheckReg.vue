@@ -19,6 +19,10 @@
     <!--</div>-->
     <!--</div>-->
     <div class="content">
+      <Spin v-show="showTemplate">
+        <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
+        <div>Loading</div>
+      </Spin>
       <div>
         <div class="title">
           <p>域名 <span>{{doname}}</span> 的注册信息</p>
@@ -47,15 +51,7 @@
   import $store from '@/vuex'
   export default{
     beforeRouteEnter(to, from, next){
-      axios.post('domain/getDomainName.do', {
-        domainName: sessionStorage.getItem('checkname'),
-        status: sessionStorage.getItem('status'),
-      }).then(response => {
-        next(vm => {
-          vm.result = response.data.data
-          vm.choosend = JSON.parse(sessionStorage.getItem('suffixChange')).en
-        })
-      })
+      next()
     },
     data(){
       return {
@@ -64,13 +60,27 @@
         doname: sessionStorage.getItem('checkname'),
         result: {},
         choosend: [],
+
+        showTemplate: true
       }
     },
     methods: {
       checkedResult(){
 
       },
-    }
+    },
+    created(){
+      axios.post('domain/getDomainName.do', {
+        domainName: sessionStorage.getItem('checkname'),
+        status: sessionStorage.getItem('status'),
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.result = response.data.data
+          this.choosend = JSON.parse(sessionStorage.getItem('suffixChange')).en
+          this.showTemplate = false
+        }
+      })
+    },
   }
 </script>
 
