@@ -371,11 +371,11 @@
           }
         }
         list-style: none;
-        img {
+        > img {
           width: 48px;
           height: 47px;
         }
-        p {
+        > p {
           padding-top: 30px;
           font-size: 18px;
           color: rgba(145, 145, 145, 1);
@@ -388,7 +388,7 @@
     p {
       font-size: 36px;
       color: rgba(55, 125, 255, 1);
-      padding: 100px 0 40px 0;
+      padding: 49px 0 40px 0;
       span {
         display: inline-block;
         font-size: 24px;
@@ -463,12 +463,10 @@
     p {
       font-size: 36px;
       color: rgba(55, 125, 255, 1);
-
       padding: 72px 0 36px 0;
       span {
         display: inline-block;
         font-size: 24px;
-
         &:first-of-type {
           padding-right: 30px;
         }

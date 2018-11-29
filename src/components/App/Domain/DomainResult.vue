@@ -22,7 +22,7 @@
     </div>
     <div id="searchResult">
       <div id="result-left">
-        <div>
+        <div style="margin-bottom: 20px;">
           <div class="left-top">
             <p>域名查询结果</p>
             <button @click="showValue=!showValue">筛选
