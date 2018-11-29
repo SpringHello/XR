@@ -147,6 +147,7 @@
           <TabPane label="告警策略" name="alarmStrategy">
             <div class="as-content" v-if="!isNewAlarmStrategy">
               <Button type="primary" style="margin-bottom: 10px" @click="btnflag = '完成';isNewAlarmStrategy = true">新建告警策略</Button>
+              <a href="https://www.xrcloud.net/ruicloud/documentInfo/wbOm1R2ti/wbX7w9BdC" style="float: right;line-height: 30px;" target="_blank">查看帮助文档</a>
               <Table :columns="alarmStrategyColumns" :data="alarmStrategyData"></Table>
             </div>
             <div class="nas-content" v-else>
