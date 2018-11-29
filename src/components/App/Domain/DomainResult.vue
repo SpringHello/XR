@@ -60,12 +60,16 @@
             <p>域名清单
               <button @click="removeAll">全部移除</button>
             </p>
-            <ul class="all-data">
+            <ul class="all-data" v-show="buyLists.length!=0">
               <li v-for="(item,index) in buyLists">
                 <h2>{{item.name}}</h2>
                 <button @click="remove(index)">移除</button>
               </li>
             </ul>
+          </div>
+          <div class="zero" v-show="buyLists.length==0">
+            <p>您还没有选择任何域名哦</p>
+            <img src="../../../assets/img/domain/Rectangle.png">
           </div>
           <div class="statistical" v-show="buyLists.length!=0">
             <div>
@@ -564,6 +568,23 @@
             border: none;
             cursor: pointer;
             margin-bottom: 20px;
+          }
+        }
+        .zero {
+          text-align: center;
+          padding-bottom: 70px;
+          p {
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(102, 102, 102, 1);
+            line-height: 20px;
+            padding-bottom: 30px;
+          }
+          img {
+            display: block;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
           }
         }
       }
