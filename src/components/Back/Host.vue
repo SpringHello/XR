@@ -788,10 +788,10 @@
       /*if (this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
        this.showModal.selectAuthType = true
        }*/
-       if(this.$route.query.name){
-          this.status = '关机'
-       }
-      
+      if (this.$route.query.name) {
+        this.status = '关机'
+      }
+
       this.getData()
       // 定时发送ajax 刷新页面
       this.intervalInstance = setInterval(() => {
@@ -1070,14 +1070,14 @@
         })
       },
       toggleData() {
+        this.openHost = []
+        this.closeHost = []
+        this.arrearsHost = []
+        this.errorHost = []
+        this.waitHost = []
+        this.currentHost = []
         this.$http.get('information/listVirtualMachines.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.openHost = []
-            this.closeHost = []
-            this.arrearsHost = []
-            this.errorHost = []
-            this.waitHost = []
-            this.currentHost = []
             // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
             for (var type in response.data.result) {
               var list = []
@@ -1109,7 +1109,7 @@
             vmid: item.computerid,
             instancename: item.instancename,
             connecturl: item.connecturl,
-            companyid:item.companyid,
+            companyid: item.companyid,
             id: item.id
           }
         })
@@ -1129,8 +1129,8 @@
             break
           case '关机':
             if (this.closeHost.every(item => {
-                return item.select == false
-              })) {
+              return item.select == false
+            })) {
               this.$Message.warning('请选择主机')
               return
             }
@@ -1340,12 +1340,12 @@
           case 'renewal':
             if (this.checkSelect()) {
               if (this.currentHost[0].caseType !== 3) {
-              this.renewalInfo = {
-                computername: this.currentHost[0].computername,
-                templatename: this.currentHost[0].templatename,
-                serviceoffername: this.currentHost[0].serviceoffername,
-                endtime: this.currentHost[0].endtime
-              }
+                this.renewalInfo = {
+                  computername: this.currentHost[0].computername,
+                  templatename: this.currentHost[0].templatename,
+                  serviceoffername: this.currentHost[0].serviceoffername,
+                  endtime: this.currentHost[0].endtime
+                }
                 this.renewType()
               } else {
                 this.$Message.info('请选择包年包月的云主机进行续费')
@@ -1378,36 +1378,37 @@
               return
             }
             if (this.checkSelect()) {
-            this.$http.get('network/VMIsHaveSnapshot.do', {params: {
-              VMId: this.currentHost[0].computerid
-              }
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                if (!response.data.result) {
-                  this.$Modal.confirm({
-                    title: '提示',
-                    content: '您的主机有快照，无法升级，请删除快照再试',
-                    scrollable: true,
-                    okText: '删除快照',
-                    onOk: () => {
-                      this.$router.push('snapshot')
-                    }
-                  })
-                } else {
-                  localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
-                  localStorage.setItem('disksize', this.currentHost[0].disksize)
-                  localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
-                  localStorage.setItem('zoneid', this.currentHost[0].zoneid)
-                  sessionStorage.setItem('hostname', this.currentHost[0].computername)
-                  sessionStorage.setItem('endtime', this.currentHost[0].endtime)
-                  sessionStorage.setItem('rootdiskid', this.currentHost[0].rootdiskid)
-                  sessionStorage.setItem('rootdisksize', this.currentHost[0].rootdisksize)
-                  this.$router.push({
-                    name: 'upgrade'
-                  })
+              this.$http.get('network/VMIsHaveSnapshot.do', {
+                params: {
+                  VMId: this.currentHost[0].computerid
                 }
-              }
-            })
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  if (!response.data.result) {
+                    this.$Modal.confirm({
+                      title: '提示',
+                      content: '您的主机有快照，无法升级，请删除快照再试',
+                      scrollable: true,
+                      okText: '删除快照',
+                      onOk: () => {
+                        this.$router.push('snapshot')
+                      }
+                    })
+                  } else {
+                    localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
+                    localStorage.setItem('disksize', this.currentHost[0].disksize)
+                    localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
+                    localStorage.setItem('zoneid', this.currentHost[0].zoneid)
+                    sessionStorage.setItem('hostname', this.currentHost[0].computername)
+                    sessionStorage.setItem('endtime', this.currentHost[0].endtime)
+                    sessionStorage.setItem('rootdiskid', this.currentHost[0].rootdiskid)
+                    sessionStorage.setItem('rootdisksize', this.currentHost[0].rootdisksize)
+                    this.$router.push({
+                      name: 'upgrade'
+                    })
+                  }
+                }
+              })
             }
             break
           case 'reboot':
@@ -1670,15 +1671,15 @@
               VMId: this.currentHost[0].computerid
             }
           }).then(response => {
-              this.loading = false
-              if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success(response.data.message)
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
-            })
+            this.loading = false
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message)
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
         }
       },
       cancel() {
@@ -2071,11 +2072,12 @@
       }
     }
   }
+
   .renewal-info {
     margin-bottom: 20px;
     padding: 20px 10px;
     width: 100%;
-    background:rgba(245,245,245,1);
+    background: rgba(245, 245, 245, 1);
     ul {
       li {
         font-size: 14px;
@@ -2086,6 +2088,7 @@
       }
     }
   }
+
   .renewal-upgrade {
     margin-bottom: 20px;
     width: 100%;
