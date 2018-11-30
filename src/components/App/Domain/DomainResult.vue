@@ -283,10 +283,9 @@
             domainName: this.searchText,
             tids: tids.slice(0, 8).join(','),
           }).then(res => {
+            this.showFix = false
             if (res.data.data.results.length != 0) {
-              this.showFix = false
               this.Results = res.data.data.results
-
               if (tids.slice(8).length != 0) {
                 this.showFix = true
                 this.cancel = true
