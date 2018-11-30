@@ -258,8 +258,8 @@
       <div class="time_task">
         <p>开始执行时间</p>
         <div>
-          <DatePicker type="date" :options="options3"  v-model="timedTask.startTime" placeholder="选择时间" style="width:123px"></DatePicker>
-          <Select v-model="timedTask.hour" style="width:92px">
+          <DatePicker type="date" :options="options3"   v-model="timedTask.startTime" placeholder="选择时间" style="width:123px"></DatePicker>
+          <Select v-model="timedTask.hour" style="width:92px" >
             <Option v-for="item in timedTask.hourList" :value="item.value" :key="item.value" :disabled='item.dis'>{{ item.label }}</Option>
           </Select>
           <span>:</span>
@@ -273,7 +273,7 @@
         <!--重复选择-->
         <div v-if="timedTask.repeat == '1'" style="margin-top: 20px;">
           <p>重复设置</p>
-          <Select v-model="timedTask.date" style="width:123px">
+          <Select v-model="timedTask.date" style="width:123px" @on-change='repeatSetting'>
             <Option v-for="item in timedTask.dateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <!--天-->
@@ -294,15 +294,15 @@
           <div v-if="timedTask.date == '2'" class="date_select">
             <span>每周</span>
             <ul>
-              <li v-for="(item,index) in timedTask.week" @click="weekSelect(index)" :class="{li_select: item.isShow}"   :key="index">{{item.label}}</li>
+              <li v-for="(item,index) in timedTask.week" @click="weekSelect('timedTask',index)" :class="{li_select: item.isShow}"   :key="index">{{item.label}}</li>
             </ul>
             <span>执行一次</span>
           </div>
           <!--结束执行时间-->
           <div style="margin-top: 20px;">
             <p>结束执行时间</p>
-            <DatePicker type="date" :options="options3" v-model="timedTask.endTime"  placeholder="选择时间" style="width:123px"></DatePicker>
-            <Select v-model="timedTask.endHour" style="width:92px" >
+            <DatePicker type="date" :options="options3"  v-model="timedTask.endTime"  placeholder="选择时间" style="width:123px"></DatePicker>
+            <Select v-model="timedTask.endHour" style="width:92px"  >
               <Option v-for="item in timedTask.endHourList" :value="item.value" :key="item.value" :disabled='item.dis'>{{ item.label }}</Option>
             </Select>
             <span>:</span>
@@ -361,7 +361,7 @@
         <!--重复选择-->
         <div v-if="updateTimedTask.repeat == '1'" style="margin-top: 20px;">
           <p>重复设置</p>
-          <Select v-model="updateTimedTask.date" style="width:123px">
+          <Select v-model="updateTimedTask.date" style="width:123px" @on-change='repeatSetting'>
             <Option v-for="item in updateTimedTask.dateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <!--天-->
@@ -382,15 +382,15 @@
           <div v-if="updateTimedTask.date == '2'" class="date_select">
             <span>每周</span>
             <ul>
-              <li v-for="(item,index) in updateTimedTask.week" @click="weekSelect(index)" :class="{li_select: item.isShow}"   :key="index">{{item.label}}</li>
+              <li v-for="(item,index) in updateTimedTask.week" @click="weekSelect('updateTimedTask',index)" :class="{li_select: item.isShow}"   :key="index">{{item.label}}</li>
             </ul>
             <span>执行一次</span>
           </div>
           <!--结束执行时间-->
           <div style="margin-top: 20px;">
             <p>结束执行时间</p>
-            <DatePicker type="date" :options="options3" v-model="updateTimedTask.endTime"  placeholder="Select date" style="width:123px"></DatePicker>
-            <Select v-model="updateTimedTask.endHour" style="width:92px">
+            <DatePicker type="date" :options="options3"  v-model="updateTimedTask.endTime"  placeholder="Select date" style="width:123px"></DatePicker>
+            <Select v-model="updateTimedTask.endHour" style="width:92px" >
               <Option v-for="item in updateTimedTask.endHourList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             <span>:</span>
@@ -1206,6 +1206,7 @@
                   },
                   on:{
                     click:()=>{
+                      this.minuteListCount();
                       this.updateTask = true;
                       this.updateTimedTask.id = params.row.id;
                       this.updateTimedTask.name = params.row.taskname;
@@ -1214,15 +1215,24 @@
                       this.updateTimedTask.hour = params.row.starttime.substring(params.row.starttime.indexOf(' ')+1,params.row.starttime.indexOf(':'));
                       this.updateTimedTask.minute = params.row.starttime.substring(params.row.starttime.indexOf(':')+1,params.row.starttime.length);
                       //结束时间
-                      this.updateTimedTask.endTime = params.row.endtime.substring(0,params.row.endtime.indexOf(' '));
-                      this.updateTimedTask.endHour = params.row.endtime.substring(params.row.endtime.indexOf(' ')+1,params.row.endtime.indexOf(':'));
-                      this.updateTimedTask.endMinute = params.row.endtime.substring(params.row.endtime.indexOf(':')+1,params.row.endtime.length);
-                      this.updateTimedTask.date = params.row.day == 'day' ? '0':params.row.day == 'week' ? '2':'1';
-                      this.updateTimedTask.dayNumber = Number(params.row.daycount);
+                      this.updateTimedTask.endTime = params.row.endtime != undefined ? params.row.endtime.substring(0,params.row.endtime.indexOf(' ')):this.getTomorrow(this.timedTask.startTime);
+                      this.updateTimedTask.endHour = params.row.endtime != undefined ? params.row.endtime.substring(params.row.endtime.indexOf(' ')+1,params.row.endtime.indexOf(':')) : '00';
+                      this.updateTimedTask.endMinute = params.row.endtime != undefined ? params.row.endtime.substring(params.row.endtime.indexOf(':')+1,params.row.endtime.length) :'15';
+                      this.updateTimedTask.date = params.row.day == 'day' ? '0':params.row.week == 'week' ? '2':'1';
+                      this.updateTimedTask.dayNumber = params.row.daycount != undefined? Number(params.row.daycount) :1;
                       this.updateTimedTask.maxNumber = params.row.readjustmaxsize;
                       this.updateTimedTask.minNumber = params.row.readjustmixsize;
                       this.updateTimedTask.initialNumber = params.row.readjustdesiredcapacity;
                       this.updateTimedTask.repeat = params.row.recurrence;
+                      //每周时间
+                      if(params.row.weekcount != undefined){
+                        this.updateTimedTask.weekValue = params.row.weekcount;
+                        let arry = params.row.weekcount.split(',');
+                        for(let i = 0; i<arry.length;i++){
+                          let index = this.updateTimedTask.week.findIndex(item => item.value == arry[i]);
+                            this.updateTimedTask.week[index].isShow = true;
+                        }
+                      }
                     }
                   }
                 },'修改'),
@@ -1409,6 +1419,7 @@
           //重复选项执行天数
           dayNumber:1,
           //重复选项执行周数
+          weekValue:'',
           week:[
             {
               value:'星期一',
@@ -1600,101 +1611,125 @@
           //小时
           hour:'',
           hourList:[
-            {
+           {
               value:'00',
-              label:'00时'
+              label:'00时',
+              dis:false
             },
             {
               value:'01',
-              label:'01时'
+              label:'01时',
+              dis:false
             },
             {
               value:'02',
-              label:'02时'
+              label:'02时',
+              dis:false
             },
             {
               value:'03',
-              label:'03时'
+              label:'03时',
+              dis:false
             },
             {
               value:'04',
-              label:'04时'
+              label:'04时',
+              dis:false
             },
             {
               value:'05',
-              label:'05时'
+              label:'05时',
+              dis:false
             },
             {
               value:'06',
-              label:'06时'
+              label:'06时',
+              dis:false
             },
             {
               value:'07',
-              label:'07时'
+              label:'07时',
+              dis:false
             },
             {
               value:'08',
-              label:'08时'
+              label:'08时',
+              dis:false
             },
             {
               value:'09',
-              label:'09时'
+              label:'09时',
+              dis:false
             },
             {
               value:'10',
-              label:'10时'
+              label:'10时',
+              dis:false
             },
             {
               value:'11',
-              label:'11时'
+              label:'11时',
+              dis:false
             },
             {
               value:'12',
-              label:'12时'
+              label:'12时',
+              dis:false
             },
             {
               value:'13',
-              label:'13时'
+              label:'13时',
+              dis:false
             },
             {
               value:'14',
-              label:'14时'
+              label:'14时',
+              dis:false
             },
             {
               value:'15',
-              label:'15时'
+              label:'15时',
+              dis:false
             },
             {
               value:'16',
-              label:'16时'
+              label:'16时',
+              dis:false
             },
             {
               value:'17',
-              label:'17时'
+              label:'17时',
+              dis:false
             },
             {
               value:'18',
-              label:'18时'
+              label:'18时',
+              dis:false
             },
             {
               value:'19',
-              label:'19时'
+              label:'19时',
+              dis:false
             },
             {
               value:'20',
-              label:'20时'
+              label:'20时',
+              dis:false
             },
             {
               value:'21',
-              label:'21时'
+              label:'21时',
+              dis:false
             },
             {
               value:'22',
-              label:'22时'
+              label:'22时',
+              dis:false
             },
             {
               value:'23',
-              label:'23时'
+              label:'23时',
+              dis:false
             },
           ],
           //分钟
@@ -1731,6 +1766,7 @@
           //重复选项执行天数
           dayNumber:1,
           //重复选项执行周数
+          weekValue:'',
           week:[
             {
               value:'星期一',
@@ -1776,101 +1812,125 @@
           //结束小时
           endHour:'',
           endHourList:[
-            {
+           {
               value:'00',
-              label:'00时'
+              label:'00时',
+              dis:false
             },
             {
               value:'01',
-              label:'01时'
+              label:'01时',
+              dis:false
             },
             {
               value:'02',
-              label:'02时'
+              label:'02时',
+              dis:false
             },
             {
               value:'03',
-              label:'03时'
+              label:'03时',
+              dis:false
             },
             {
               value:'04',
-              label:'04时'
+              label:'04时',
+              dis:false
             },
             {
               value:'05',
-              label:'05时'
+              label:'05时',
+              dis:false
             },
             {
               value:'06',
-              label:'06时'
+              label:'06时',
+              dis:false
             },
             {
               value:'07',
-              label:'07时'
+              label:'07时',
+              dis:false
             },
             {
               value:'08',
-              label:'08时'
+              label:'08时',
+              dis:false
             },
             {
               value:'09',
-              label:'09时'
+              label:'09时',
+              dis:false
             },
             {
               value:'10',
-              label:'10时'
+              label:'10时',
+              dis:false
             },
             {
               value:'11',
-              label:'11时'
+              label:'11时',
+              dis:false
             },
             {
               value:'12',
-              label:'12时'
+              label:'12时',
+              dis:false
             },
             {
               value:'13',
-              label:'13时'
+              label:'13时',
+              dis:false
             },
             {
               value:'14',
-              label:'14时'
+              label:'14时',
+              dis:false
             },
             {
               value:'15',
-              label:'15时'
+              label:'15时',
+              dis:false
             },
             {
               value:'16',
-              label:'16时'
+              label:'16时',
+              dis:false
             },
             {
               value:'17',
-              label:'17时'
+              label:'17时',
+              dis:false
             },
             {
               value:'18',
-              label:'18时'
+              label:'18时',
+              dis:false
             },
             {
               value:'19',
-              label:'19时'
+              label:'19时',
+              dis:false
             },
             {
               value:'20',
-              label:'20时'
+              label:'20时',
+              dis:false
             },
             {
               value:'21',
-              label:'21时'
+              label:'21时',
+              dis:false
             },
             {
               value:'22',
-              label:'22时'
+              label:'22时',
+              dis:false
             },
             {
               value:'23',
-              label:'23时'
+              label:'23时',
+              dis:false
             },
           ],
           //结束分钟
@@ -1889,7 +1949,6 @@
             {required:true,validator:nameValidator,trigger:'blur'}
           ]
         },
-        weekValue:'',
         //启动配置id
         startUpId:'',
 
@@ -2069,16 +2128,38 @@
         })
       },
 
-      weekSelect(index){
-       this.timedTask.week[index].isShow = !this.timedTask.week[index].isShow;
-       if(this.timedTask.week[index].isShow == true){
-         this.timedTask.weekList[index] = this.timedTask.week[index].value;
-       }else{
-         this.timedTask.weekList[index] = '';
-       }
-        if(this.timedTask.weekList[index]!= '' && this.timedTask.weekList[index] !== undefined){
-          this.weekValue += this.timedTask.weekList[index] +',';
-       }
+      weekSelect(name,index){
+        if(name === 'timedTask'){
+           this.timedTask.week[index].isShow = !this.timedTask.week[index].isShow;
+            if(this.timedTask.week[index].isShow == true){
+              this.timedTask.weekList[index] = this.timedTask.week[index].value;
+            }else{
+              this.timedTask.weekList[index] = '';
+            }
+            if(this.timedTask.weekList[index]!= '' && this.timedTask.weekList[index] !== undefined){
+                this.timedTask.weekValue += this.timedTask.weekList[index] +',';
+            }
+        }else{
+             this.updateTimedTask.week[index].isShow = !this.updateTimedTask.week[index].isShow;
+            if(this.updateTimedTask.week[index].isShow == true){
+              this.updateTimedTask.weekList[index] = this.updateTimedTask.week[index].value;
+            }else{
+              this.updateTimedTask.weekList[index] = '';
+            }
+              if(this.updateTimedTask.weekList[index]!= '' && this.updateTimedTask.weekList[index] !== undefined){
+                this.updateTimedTask.weekValue += this.updateTimedTask.weekList[index] +',';
+            }
+        }
+      },
+
+      //重复设置
+      repeatSetting(val){
+        if(val == '2'){
+          for(let i = 0;i<this.timedTask.week.length;i++){
+            this.timedTask.week[i].isShow = false;
+            this.updateTimedTask.week[i].isShow = false;
+          }
+        }
       },
 
       //获取定时任务
@@ -2090,7 +2171,7 @@
         }).then(res => {
           if(res.status == 200 && res.data.status ==1){
             this.taskData = res.data.list;
-            // this.dateDisate();
+            // this.dateDisate(this.taskData);
           }
         })
       },
@@ -2118,8 +2199,8 @@
             this.timedTask.dayNumber = '';
           }
         };
-        if(this.weekValue != ''){
-          this.weekValue =  (this.weekValue.substring(this.weekValue.length - 1) == ',') ?  this.weekValue.substring(0, this.weekValue.length - 1) :  this.weekValue;
+        if(this.timedTask.weekValue != ''){
+          this.timedTask.weekValue =  (this.timedTask.weekValue.substring(this.timedTask.weekValue.length - 1) == ',') ?  this.timedTask.weekValue.substring(0, this.timedTask.weekValue.length - 1) :  this.timedTask.weekValue;
         };
         if(this.timedTask.minNumber > this.timedTask.maxNumber){
           this.$Message.warning('最小实例数不能大于最大实例数');
@@ -2142,7 +2223,7 @@
           month:this.timedTask.date != '1'? '':'month',
           day:this.timedTask.date !='0' ?'' :'day',
           dayCount:this.timedTask.dayNumber.toString(),
-          weekCount: this.weekValue,
+          weekCount: this.timedTask.weekValue,
           monthStartCount:this.timedTask.monthStartNumber.toString(),
           monthEndCount:this.timedTask.monthEndNumber.toString(),
         }).then(res => {
@@ -2185,8 +2266,8 @@
             this.updateTimedTask.dayNumber = '';
           }
         };
-        if(this.weekValue != ''){
-          this.weekValue =  (this.weekValue.substring(this.weekValue.length - 1) == ',') ?  this.weekValue.substring(0, this.weekValue.length - 1) :  this.weekValue;
+        if(this.updateTimedTask.weekValue != ''){
+          this.updateTimedTask.weekValue =  (this.updateTimedTask.weekValue.substring(this.updateTimedTask.weekValue.length - 1) == ',') ?  this.updateTimedTask.weekValue.substring(0, this.updateTimedTask.weekValue.length - 1) :  this.weekValue;
         };
            if(this.updateTimedTask.minNumber > this.updateTimedTask.maxNumber){
           this.$Message.warning('最小实例数不能大于最大实例数');
@@ -2206,7 +2287,7 @@
           month:this.updateTimedTask.date != '1'? '':'month',
           day:this.updateTimedTask.date !='0' ?'' :'day',
           dayCount:this.updateTimedTask.dayNumber.toString(),
-          weekCount: this.weekValue,
+          weekCount: this.updateTimedTask.weekValue,
           monthStartCount:this.updateTimedTask.monthStartNumber.toString(),
           monthEndCount:this.updateTimedTask.monthEndNumber.toString(),
         }).then(res =>{
@@ -2303,21 +2384,7 @@
         this.timedTask.minuteList = [],
         this.timedTask.endMinuteList = [],
         this.updateTimedTask.minuteList = [],
-        this.updateTimedTask.endMinuteList = [];
-        // let disIsTrue = false
-        //    let index = 0;
-        //       index =  this.timedTask.minuteList.findIndex(item => {
-        //           return   item.value === this.timedTask.minute
-        //       });
-        //      for(let i = 0;i<this.timedTask.minuteList.length;i++){
-        //         if(i<index){
-        //            disIsTrue = true;
-        //          }else{
-        //           this.timedTask.minute =  this.timedTask.minuteList[index+1].value;
-        //             disIsTrue = false;
-        //          }
-        //      }
-        
+        this.updateTimedTask.endMinuteList = [];   
         for(let i = 0;i<61;i++){
           for(let j = 1;j<5;j++){
              if(i==5*(j*3)){
@@ -2333,47 +2400,102 @@
       },
 
       //切换小时
-      // changeHour(){
-      //    if(this.timedTask.startTime != ''){
-      //      if(this.timedTask.hour == '23'){
-      //        this.timedTask.endTime = this.getTomorrow(this.timedTask.startTime);
-      //      }else{
-      //           let index =  this.timedTask.hourList.findIndex(item => {
-      //             return   item.value === this.timedTask.hour
-      //         });
-      //        for(let i = 0;i<this.timedTask.hourList.length;i++){
-      //           if(i<index){
-      //               this.timedTask.endHourList[i].dis = true;
-      //            }else{
-      //              this.timedTask.endHour = this.timedTask.hour;
-      //                this.timedTask.endHourList[i].dis = false;
-      //            }
-      //        }
-      //      }
-      //     }
-      // },
+      changeHour(){
+         if(this.timedTask.startTime != ''){
+           if(this.timedTask.hour == '23'){
+             this.timedTask.endTime = this.getTomorrow(this.timedTask.startTime);
+           }else{
+
+              let index =  this.timedTask.hourList.findIndex(item => {
+                  return   item.value === this.timedTask.hour
+              });        
+              if(this.getCurrentDate(this.timedTask.startTime) == this.getCurrentDate(this.timedTask.endTime)){
+                 console.log('进时间true')
+                 for(let i = 0;i<this.timedTask.hourList.length;i++){
+
+                  if(i<index || i==index){
+
+                      this.timedTask.endHourList[i].dis = true;
+                  }else{
+                    this.timedTask.endHour = this.timedTask.hourList[index+1].value;
+                    this.timedTask.endHourList[i].dis = false;
+                  }
+                }
+              }else{
+                console.log('进时间false')
+                for(let i = 0;i<this.timedTask.endHourList.length;i++){
+                  this.timedTask.endHourList[i].dis = false;
+                }
+              }
+           }
+          }
+      },
+
+      changeUpdateHour(){
+          if(this.updateTimedTask.startTime != ''){
+           if(this.updateTimedTask.hour == '23'){
+             this.updateTimedTask.endTime = this.getTomorrow(this.updateTimedTask.startTime);
+           }else{
+
+              let index =  this.updateTimedTask.hourList.findIndex(item => {
+                  return   item.value === this.updateTimedTask.hour
+              });        
+              if(this.getCurrentDate(this.updateTimedTask.startTime) == this.getCurrentDate(this.updateTimedTask.endTime)){
+                 console.log('进时间true')
+                 for(let i = 0;i<this.updateTimedTask.hourList.length;i++){
+
+                  if(i<index || i==index){
+
+                      this.updateTimedTask.endHourList[i].dis = true;
+                  }else{
+                    this.updateTimedTask.endHour = this.updateTimedTask.hourList[index+1].value;
+                    this.updateTimedTask.endHourList[i].dis = false;
+                  }
+                }
+              }else{
+                console.log('进时间false')
+                for(let i = 0;i<this.updateTimedTask.endHourList.length;i++){
+                  this.updateTimedTask.endHourList[i].dis = false;
+                }
+              }
+           }
+          }
+      },
 
       //切换分钟
-      // changeMinute(){
-      //   if(this.timedTask.startTime != ''){
+      changeMinute(){
+        if(this.timedTask.startTime != ''){
 
-      //   }
-      // },
+        }
+      },
 
-      // dateDisate(){
-      //   console.log(this.taskData.length);
-      //   if(this.taskData.length != 0){
-      //     console.log(this.taskData[this.taskData.length-1].startTime)
-      //    let time =  this.taskData[this.taskData.length-1].startTime.substring( this.taskData[this.taskData.length-1].startTime.indexOf(' '),this.taskData.length-1);
-      //     console.log(time);
-      //   }
-      // },
+      dateDisate(taskData){
+        if(taskData.length != 0){
+          for(let i = 0;i<taskData.length; i++){
+            let year = taskData[taskData.length-1].starttime.substring(taskData[taskData.length-1].starttime.indexOf(' '),taskData[taskData.length-1].starttime.length);
+          }
+         let time =  taskData[taskData.length-1].starttime.substring(taskData[taskData.length-1].starttime.indexOf(' '),taskData[taskData.length-1].starttime.length);
+          if(taskData.some(item=> item.starttime === this.timedTask.startTime)){
+            for(let i = 0;i<this.timedTask.hourList.length;i++){
+
+            }
+          }
+        }
+      },
 
      getTomorrow(time) {
         var day = new Date(time)
         day.setTime(parseInt(day.getTime()) + 24 * 60 * 60 * 1000)
         return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
       },
+
+    getCurrentDate(val) {
+      if(val != undefined){
+         return new Date(val).getFullYear().toString() + '.' + (new Date(val).getMonth() + 1).toString() + '.' + new Date(val).getDate().toString()
+      }else{
+         return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
+      }
+     },
       //显示定时任务弹窗
       taskShow(){
         this.task = true;
@@ -2486,8 +2608,8 @@
           this.protectLoading = false;
         })
       },
-      //去除逗号函数
 
+      //去除逗号函数
       deleteDouhao(array,keys){
         let val = '';
         for(let i =0; i<array.length;i++){
@@ -2566,9 +2688,7 @@
         })
       },
 
-     getCurrentDate() {
-        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
-     },
+   
 
       //获取启动配置
       selectAllElastic(){
@@ -2600,7 +2720,62 @@
       this.selectCloudHost();
     },
     watch:{
-    
+      'timedTask.startTime':{
+        handler(newName, oldName) {
+          this.changeHour();
+        },
+        immediate: true,
+        deep: true
+      },
+      'timedTask.endTime':{
+        handler(newName, oldName) {
+          this.changeHour();
+        },
+        immediate: true,
+        deep: true
+      },
+      'timedTask.hour':{
+        handler(newName, oldName) {
+          this.changeHour();
+        },
+        immediate: true,
+        deep: true
+      },
+      'timedTask.endtHour':{
+        handler(newName, oldName) {
+          this.changeHour();
+        },
+        immediate: true,
+        deep: true
+      },
+       'updateTimedTask.startTime':{
+        handler(newName, oldName) {
+          this.changeUpdateHour();
+        },
+        immediate: true,
+        deep: true
+      },
+      'updateTimedTask.endTime':{
+        handler(newName, oldName) {
+          this.changeUpdateHour();
+        },
+        immediate: true,
+        deep: true
+      },
+      'updateTimedTask.hour':{
+        handler(newName, oldName) {
+          this.changeUpdateHour();
+        },
+        immediate: true,
+        deep: true
+      },
+      'updateTimedTask.endtHour':{
+        handler(newName, oldName) {
+          this.changeUpdateHour();
+        },
+        immediate: true,
+        deep: true
+      },
     }
   }
 </script>
