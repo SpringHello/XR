@@ -1356,6 +1356,8 @@
     },
     created() {
       this.hasHost()
+      this.getFirstOverviewMonitor()
+      this.getSecondOverviewMonitor()
     },
     methods: {
       setData(res) {
@@ -1705,8 +1707,6 @@
           case 'overview':
             this.getShortMessageControl()
             this.getCanNotPingAndAlarmNotHandledAndShutdownTotalCount()
-            this.getFirstOverviewMonitor()
-            this.getSecondOverviewMonitor()
             break
           case 'customMonitoring':
             this.getCustomMonitorGroup()
@@ -2678,6 +2678,7 @@
                   this.firstMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
                   this.firstMonitoringOverview.x = res.data.list[0].x
                   this.firstMonitoringOverview.chart = 'trueChart'
+                  this.firstMonitoringOverview.dateType = res.data.list[0].timeType
                 } else {
                   this.firstMonitoringOverview.showChart = null
                   this.firstMonitoringOverview.title = this.firstMonitoringOverview.chart === 'falseChart' ? '' : '我关注的指标'
@@ -2791,6 +2792,7 @@
                   this.secondMonitoringOverview.productType = res.data.list[0].customMonitorIndex.producttype
                   this.secondMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
                   this.secondMonitoringOverview.x = res.data.list[0].x
+                  this.secondMonitoringOverview.dateType = res.data.list[0].timeType
                   this.secondMonitoringOverview.chart = 'trueChart'
                 } else {
                   this.secondMonitoringOverview.showChart = null
