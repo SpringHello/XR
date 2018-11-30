@@ -147,6 +147,7 @@
           <TabPane label="告警策略" name="alarmStrategy">
             <div class="as-content" v-if="!isNewAlarmStrategy">
               <Button type="primary" style="margin-bottom: 10px" @click="btnflag = '完成';isNewAlarmStrategy = true">新建告警策略</Button>
+              <a href="https://www.xrcloud.net/ruicloud/documentInfo/wbOm1R2ti/wbX7w9BdC" style="float: right;line-height: 30px;" target="_blank">查看帮助文档</a>
               <Table :columns="alarmStrategyColumns" :data="alarmStrategyData"></Table>
             </div>
             <div class="nas-content" v-else>
@@ -1355,6 +1356,8 @@
     },
     created() {
       this.hasHost()
+      this.getFirstOverviewMonitor()
+      this.getSecondOverviewMonitor()
     },
     methods: {
       setData(res) {
@@ -1704,8 +1707,6 @@
           case 'overview':
             this.getShortMessageControl()
             this.getCanNotPingAndAlarmNotHandledAndShutdownTotalCount()
-            this.getFirstOverviewMonitor()
-            this.getSecondOverviewMonitor()
             break
           case 'customMonitoring':
             this.getCustomMonitorGroup()
@@ -2677,6 +2678,7 @@
                   this.firstMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
                   this.firstMonitoringOverview.x = res.data.list[0].x
                   this.firstMonitoringOverview.chart = 'trueChart'
+                  this.firstMonitoringOverview.dateType = res.data.list[0].timeType
                 } else {
                   this.firstMonitoringOverview.showChart = null
                   this.firstMonitoringOverview.title = this.firstMonitoringOverview.chart === 'falseChart' ? '' : '我关注的指标'
@@ -2790,6 +2792,7 @@
                   this.secondMonitoringOverview.productType = res.data.list[0].customMonitorIndex.producttype
                   this.secondMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
                   this.secondMonitoringOverview.x = res.data.list[0].x
+                  this.secondMonitoringOverview.dateType = res.data.list[0].timeType
                   this.secondMonitoringOverview.chart = 'trueChart'
                 } else {
                   this.secondMonitoringOverview.showChart = null
