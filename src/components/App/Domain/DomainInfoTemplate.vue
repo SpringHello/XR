@@ -17,8 +17,8 @@
             <p class="formhint">
               <span> 域名所有者类型</span>
               <RadioGroup v-model="type">
-                <Radio label="I">个人</Radio>
-                <Radio label="O">企业</Radio>
+                <Radio label="I" disabled>个人</Radio>
+                <Radio label="O" disabled>企业</Radio>
               </RadioGroup>
             </p>
           </FormItem>
