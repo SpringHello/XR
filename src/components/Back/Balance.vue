@@ -847,7 +847,7 @@
       },
       buyIP() {
         sessionStorage.setItem('pane', 'Peip')
-        this.$router.push('buy')
+        this.$router.push('buy/bip')
       }
     },
     watch: {

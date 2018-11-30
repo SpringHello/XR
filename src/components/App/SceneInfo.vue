@@ -42,7 +42,7 @@
                       <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
                     </Select>
                     <li style="margin-top: 10px"><span class="s1">选择区域</span></li>
-                    <Select v-model="cfg.zoneId" style="width:170px;">
+                    <Select v-model="cfg.zoneId" style="width:170px;" @on-change="getOriginalPrice(currentIndex,index1)">
                       <Option v-for="item2 in areaGroup" :value="item2.value" :key="item2.value">{{ item2.name }}</Option>
                     </Select>
                   </ul>
@@ -1428,7 +1428,7 @@
           },
           {
             currentScene: '人工智能',
-            disc: ' 云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的高性能PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
+            disc: '新睿云人工智能平台基于强劲的 GPU 计算资源，在配置 Tesla P40和 Tesla P100 直通模式的基础上，搭载 Caffe、CNTK、PyTorch 和 Keras 等多个主流深度学习框架，同时集成 Jupyter notebook 开发环境及 numpy、scipy、pandas、等众多数据科学工具包。用户可在新睿云人工智能平台上使用 GPU 或 CPU 进行单机或分布式深度学习模型训练与推断，并可享受云计算弹性特性，按需进行横向、纵向扩展。',
             configGroup: [
               {
                 title: '初创型业务网站（3天）',
