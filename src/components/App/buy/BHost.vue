@@ -178,7 +178,7 @@
                 <div>
                   <div v-for="item in mirrorType" class="zoneItem"
                        :class="{zoneSelect:currentType==item.value}"
-                       @click="currentType==item.value">{{item.label}}
+                       @click="currentType=item.value">{{item.label}}
                   </div>
                   <!--镜像+应用 列表-->
                   <div v-if="currentType=='app'">
@@ -818,6 +818,8 @@
         })
         // 自定义镜像
         if (this.userInfo != null) {
+          this.customList = []
+          this.customMirror = {}
           axios.get('information/listTemplates.do', {
             params: {
               user: '1',

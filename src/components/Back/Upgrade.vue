@@ -46,8 +46,8 @@
             <h1>升级前配置</h1>
             <span>主机名称 : {{hostname}}</span>
             <span>主机配置 : {{currentCPUNum}}核{{currentRAMSize}}G</span>
+            <span>系统盘容量 : {{ rootdisksize }}G</span>
             <span>剩余时长 : {{endtime}}</span>
-            <router-link to="home" style="bottom:23px;position: absolute">全民普惠，3折减单，最高减免7000元！</router-link>
           </div>
           <div class="conf-wrapper">
             <h1>升级后配置</h1>
@@ -58,7 +58,7 @@
                  <i class="money">{{cost.toFixed(2)}}元</i>
               </span>
             <span style="margin-top:10px;">
-                <a href="/ruicloud/#/computed/3-1" target="_blank">购买和计费说明</a>
+                <a href="/ruicloud/documentInfo/l6RqDbCKZ/l6RwGIm3S" target="_blank">购买和计费说明</a>
               </span>
             <button @click="payOrder">立即购买</button>
           </div>
