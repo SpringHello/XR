@@ -348,11 +348,11 @@
         <div>
           <DatePicker type="date" :options="options3"  v-model="updateTimedTask.startTime" placeholder="Select date" style="width:123px"></DatePicker>
           <Select v-model="updateTimedTask.hour" style="width:92px">
-            <Option v-for="item in updateTimedTask.hourList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in updateTimedTask.hourList" :value="item.value" :key="item.value" :disabled='item.dis'>{{ item.label }}</Option>
           </Select>
           <span>:</span>
           <Select v-model="updateTimedTask.minute" style="width:92px">
-            <Option v-for="item in updateTimedTask.minuteList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in updateTimedTask.minuteList" :value="item.value" :key="item.value" >{{ item.label }}</Option>
           </Select>
           <Select v-model="updateTimedTask.repeat" style="width:95px">
             <Option v-for="item in updateTimedTask.repeatList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -391,7 +391,7 @@
             <p>结束执行时间</p>
             <DatePicker type="date" :options="options3"  v-model="updateTimedTask.endTime"  placeholder="Select date" style="width:123px"></DatePicker>
             <Select v-model="updateTimedTask.endHour" style="width:92px" >
-              <Option v-for="item in updateTimedTask.endHourList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Option v-for="item in updateTimedTask.endHourList" :value="item.value" :key="item.value" :disabled='item.dis'>{{ item.label }}</Option>
             </Select>
             <span>:</span>
             <Select v-model="updateTimedTask.endMinute" style="width:92px">
@@ -2410,7 +2410,7 @@
                   return   item.value === this.timedTask.hour
               });        
               if(this.getCurrentDate(this.timedTask.startTime) == this.getCurrentDate(this.timedTask.endTime)){
-                 console.log('进时间true')
+           
                  for(let i = 0;i<this.timedTask.hourList.length;i++){
 
                   if(i<index || i==index){
@@ -2422,7 +2422,7 @@
                   }
                 }
               }else{
-                console.log('进时间false')
+             
                 for(let i = 0;i<this.timedTask.endHourList.length;i++){
                   this.timedTask.endHourList[i].dis = false;
                 }
@@ -2441,32 +2441,24 @@
                   return   item.value === this.updateTimedTask.hour
               });        
               if(this.getCurrentDate(this.updateTimedTask.startTime) == this.getCurrentDate(this.updateTimedTask.endTime)){
-                 console.log('进时间true')
                  for(let i = 0;i<this.updateTimedTask.hourList.length;i++){
 
                   if(i<index || i==index){
 
-                      this.updateTimedTask.endHourList[i].dis = true;
+                    this.updateTimedTask.endHourList[i].dis = true;
+
                   }else{
                     this.updateTimedTask.endHour = this.updateTimedTask.hourList[index+1].value;
                     this.updateTimedTask.endHourList[i].dis = false;
                   }
                 }
               }else{
-                console.log('进时间false')
                 for(let i = 0;i<this.updateTimedTask.endHourList.length;i++){
                   this.updateTimedTask.endHourList[i].dis = false;
                 }
               }
            }
           }
-      },
-
-      //切换分钟
-      changeMinute(){
-        if(this.timedTask.startTime != ''){
-
-        }
       },
 
       dateDisate(taskData){
@@ -2477,33 +2469,44 @@
          let time =  taskData[taskData.length-1].starttime.substring(taskData[taskData.length-1].starttime.indexOf(' '),taskData[taskData.length-1].starttime.length);
           if(taskData.some(item=> item.starttime === this.timedTask.startTime)){
             for(let i = 0;i<this.timedTask.hourList.length;i++){
+              
+                  if(i<index || i==index){
 
+                    this.timedTask.hourList[i].dis = true;
+
+                  }else{
+                    this.timedTask.hour = this.timedTask.hourList[index+1].value;
+                    this.timedTask.hourList[i].dis = false;
+                  }
             }
           }
         }
       },
 
-     getTomorrow(time) {
+    //获取当前选择时间的下一天
+    getTomorrow(time) {
         var day = new Date(time)
         day.setTime(parseInt(day.getTime()) + 24 * 60 * 60 * 1000)
         return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
-      },
+    },
 
+    //获取今天的日期
     getCurrentDate(val) {
       if(val != undefined){
          return new Date(val).getFullYear().toString() + '.' + (new Date(val).getMonth() + 1).toString() + '.' + new Date(val).getDate().toString()
       }else{
          return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
       }
-     },
-      //显示定时任务弹窗
-      taskShow(){
+    },
+
+    //显示定时任务弹窗
+    taskShow(){
         this.task = true;
         this.minuteListCount();
-      },
+    },
 
       //获取策略百分比量
-      percentageF(){
+    percentageF(){
         for(let i =1;i<101;i++){
           if(i<10){
             i = '0'+i;
@@ -2512,10 +2515,10 @@
           this.updateStrategy.percentageList.push(obj);
           this.alarmStrategy.percentageList.push(obj);
         }
-      },
+    },
 
       //单位百分比是否可选
-      theIsdisabled(){
+    theIsdisabled(){
         this.alarmStrategy.company = '';
         this.updateStrategy.company = '';
         if(this.alarmStrategy.isAdd == '调整至' ||   this.updateStrategy.isAdd == '调整至'){
@@ -2525,10 +2528,10 @@
           this.alarmStrategy.disabled = false;
           this.updateStrategy.disabled = false;
         }
-      },
+    },
 
       //告警类型选择单位
-      cpuSelect(){
+    cpuSelect(){
           if( this.alarmStrategy.cpuValue == 'CPU利用率' ||  this.updateStrategy.cpuValue == 'CPU利用率' || this.updateStrategy.cpuValue == '内存使用率' ||  this.updateStrategy.cpuValue == '磁盘使用率' || this.alarmStrategy.cpuValue == '内存使用率'|| this.alarmStrategy.cpuValue == '磁盘使用率'){
             this.alarmStrategy.spanValue = '%';
             this.updateStrategy.spanValue = '%';
@@ -2536,7 +2539,7 @@
             this.alarmStrategy.spanValue = 'kb/s';
             this.updateStrategy.spanValue = 'kb/s';
           }
-      },
+    },
 
       //移入主机
       hostRightRmove(index){
