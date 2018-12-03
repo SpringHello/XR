@@ -1,6 +1,6 @@
 <template>
   <div id="front">
-    <div class="app-hint" ref="hint" @click="$router.push('AnniversaryActive')">
+    <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
       <div class="center">
         <div class="countdown" v-if="hintShow">
         </div>
