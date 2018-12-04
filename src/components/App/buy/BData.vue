@@ -21,13 +21,13 @@
         <div style="border-bottom: 1px solid #D9D9D9;margin-top: 20px">
           <h2>计费方式选择</h2>
           <div class="item-wrapper">
-            <div v-for="item in timeType" :key="item.value" class="zoneItem"
+            <div v-for="(item,index) in timeType" :key="index" class="zoneItem"
                  :class="{zoneSelect:timeForm.currentTimeType==item.value}"
                  @click="timeForm.currentTimeType=item.value">{{item.label}}
             </div>
           </div>
           <div class="item-wrapper" v-if="timeForm.currentTimeType=='annual'">
-            <div v-for="item in timeValue" :key="item.value" class="timeType"
+            <div v-for="(item,index) in timeValue" :key="index" class="timeType"
                  :class="{zoneSelect:timeForm.currentTimeValue.label==item.label}"
                  @click="timeForm.currentTimeValue=item"
                  style="margin:0px;width:55px">
@@ -55,13 +55,13 @@
                   <div>
                     <Dropdown v-for="(item,index) in publicList"
                               style="margin-right:10px;margin-bottom:20px;"
-                              @on-click="setDataOS" :key="item.templateid">
+                              @on-click="setDataOS" :key="index">
                       <div
                         style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
                         {{item.selectSystem||item.system}}
                       </div>
                       <Dropdown-menu slot="list">
-                        <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
+                        <Dropdown-item v-for="(system,index1) in item.systemList" :key="index1"
                                        :name="`${system.dbname}#${system.systemtemplateid}#${index}#${system.dbloginname}#${system.dbport}`"
                                        style="white-space: pre-wrap;display:block;">
                           <span>{{system.dbname}}</span>
@@ -78,7 +78,7 @@
                 <div>
                   <p class="item-title">核心数</p>
                 </div>
-                <div>
+                <div v-if="info.length !==0">
                   <div v-for="cpu in info[0].kernelList" :key="cpu.value" class="zoneItem"
                        :class="{zoneSelect:vmConfig.kernel==cpu.value}"
                        @click="changeKernel(cpu)">{{cpu.name}}
@@ -760,7 +760,6 @@
         }
       },
       info() {
-        console.log(this.$parent)
         return this.$parent.info.filter(i => {
           if (i.zoneId == this.zone.zoneid) {
             this.RAMList = i.kernelList[0].RAMList

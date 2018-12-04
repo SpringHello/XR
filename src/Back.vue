@@ -291,6 +291,8 @@
             mainName: '域名服务',
             type: 'domain',
             subItem: [
+              //{subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
+              //{subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
               {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
               {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
               // {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
@@ -420,7 +422,7 @@
         this.pageInfo.selectItem = pType
         this.pageInfo.sType = sType
         if (sType.indexOf('http') > -1) {
-          window.open(sType);
+          window.open(sType, '_self');
           // axios.get('user/showUserAcessAll.do').then(response => {
           //   if (response.status == 200 && response.data.status == 18) {
           //       this.$Modal.confirm({

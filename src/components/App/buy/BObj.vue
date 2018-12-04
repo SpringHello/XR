@@ -19,13 +19,13 @@
       <div style="border-bottom: 1px solid #D9D9D9;margin-top: 20px">
         <h2>计费方式选择</h2>
         <div class="item-wrapper">
-          <div v-for="item in timeType" :key="item.value" class="zoneItem"
+          <div v-for="(item,index) in timeType" :key="index" class="zoneItem"
                :class="{zoneSelect:timeForm.currentTimeType==item.value}"
                @click="timeForm.currentTimeType=item.value">{{item.label}}
           </div>
         </div>
         <div class="item-wrapper" v-if="timeForm.currentTimeType=='annual'">
-          <div v-for="item in timeValue" :key="item.value" class="timeType"
+          <div v-for="(item,index) in timeValue" :key="index" class="timeType"
                :class="{zoneSelect:timeForm.currentTimeValue.label==item.label}"
                @click="timeForm.currentTimeValue=item"
                style="margin:0px;border-right:none;width:55px">

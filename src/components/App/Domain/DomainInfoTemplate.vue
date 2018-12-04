@@ -17,8 +17,8 @@
             <p class="formhint">
               <span> 域名所有者类型</span>
               <RadioGroup v-model="type">
-                <Radio label="I">个人</Radio>
-                <Radio label="O">企业</Radio>
+                <Radio label="I" disabled>个人</Radio>
+                <Radio label="O" disabled>企业</Radio>
               </RadioGroup>
             </p>
           </FormItem>
@@ -220,7 +220,7 @@
               <Input v-model="infoTempFormValidate.enAddress"></Input>
             </FormItem>
             <FormItem>
-              <Button @click="handleReset('infoTempFormValidate')" style="margin-left: 8px">取消</Button>
+              <Button @click="handleReset('infoTempFormValidate')" style="margin:0 10px 0 8px;">取消</Button>
               <Button type="primary" @click="handleSubmit('infoTempFormValidate')" v-show='index==0'>确认建立模板</Button>
               <Button type="primary" v-show='index==1' @click="payTemplate">保存模版并支付</Button>
             </FormItem>
@@ -273,6 +273,7 @@
   import pinyin from 'chinese-to-pinyin'
   import axios from 'axios'
   import $store from '@/vuex'
+  import uuid from 'uuid'
   export default {
     data () {
       // 匹配中文
@@ -454,25 +455,6 @@
         authRuleValidate: {}
       }
     },
-//    created () {
-//      axios.post('user/getRuiRadosApiacess.do', {
-//        zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
-//        companyId: this.$store.state.userInfo.companyid
-//      }).then(response => {
-//        if (response.status == 200 && response.data.status == 1) {
-//          axios.get('user/getXrdomainToken.do', {
-//            params: {
-//              companyId: this.$store.state.userInfo.companyid,
-//              secret: response.data.data.data
-//            }
-//          }).then(res => {
-//            this.tokenId = res.data.token
-//          })
-//        }
-//      })
-//    },
-    mounted () {
-    },
     methods: {
       clickTemp(){
         axios.post('domain/selectTemplates.do', {
@@ -601,13 +583,17 @@
       //保存模板付费
       payTemplate(){
         var domNames = sessionStorage.getItem('domName')
+        // 批次号
+        var countOrder = uuid.v4()
+
         let params = {
           token: sessionStorage.getItem('tokenId'),
           domainName: domNames.substring(0, domNames.length - 1),
           years: '1',
           isName: '0',
           signature: '',
-          price: sessionStorage.getItem('domPrice')
+          price: sessionStorage.getItem('domPrice'),
+          countOrder
         }
         if (this.btns == 'untemplate') {
           params.userid = this.userid
@@ -617,7 +603,12 @@
         axios.post('domain/createOrder.do', params).then(response => {
           if (response.data.status == 1) {
             sessionStorage.setItem('orderNum', response.data.orderNum)
-            this.$router.push('/ruicloud/order')
+//            this.$router.push('/ruicloud/order')
+            this.$router.push({
+              path: 'order', query: {
+                countOrder
+              }
+            })
           }
         })
       },
@@ -636,7 +627,6 @@
         }
       }
     },
-    computed: {},
     watch: {
       'infoTempFormValidate.type': function (newVal, oldVal) {
         this.domainTypeName = newVal == 'O' ? '域名所有者单位名称（中文）' : '域名所有者名称（中文）'
@@ -716,7 +706,6 @@
       .form-center {
         width: 750px;
         margin: 0 auto;
-        /*margin-top: 15px;*/
         .formhint {
           position: relative;
           color: #666;

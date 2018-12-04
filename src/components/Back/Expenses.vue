@@ -282,6 +282,7 @@
         </Tabs>
       </div>
     </div>
+
     <Modal v-model="showModal.clipCoupons" width="690" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
@@ -520,6 +521,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import axios from 'axios'
   export default {
     data() {
       const validateInvoice = (rule, value, callback) => {
@@ -1536,7 +1538,6 @@
       }
     },
     created() {
-
       if (this.name == 'orderManage') {
         this.changeOrder()
       } else {
