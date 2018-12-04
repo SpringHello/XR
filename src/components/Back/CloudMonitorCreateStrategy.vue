@@ -585,7 +585,7 @@ export default {
       this.newAlarmStrategyForm.strategyName = this.strategyNameGet
       // 策略类型
       this.newAlarmStrategyForm.strategyType = this.strategyTypeGet + ''
-      // 资源复制
+      // 资源复制(建议后端返回没选中的资源)
       this.selectedResources = []
       var nameArr = [ '云主机', '云硬盘', 'vpc', '对象存储' ]
       var productType = ''
@@ -617,22 +617,24 @@ export default {
           originIndexR = this.allResources.map((item, index) => {
             return index
           })
-          console.log('aimee')
-          console.log(originIndexR)
           this.allResources.forEach((item, index) => {
             this.strategyResourceGet.forEach((item1, index1) => {
-              if (item1.id == item.resourceid) {
+              if (item1.resourceid == item.id) {
                 this.selectedResources.push(item)
                 selectedIndexR.push(index)
               }
             })
           })
           var differenceIndexR = originIndexR.concat(selectedIndexR).filter(v => !originIndexR.includes(v) || !selectedIndexR.includes(v))
-          this.allResources = this.allResources.filter((item, index) => {
-            return index == differenceIndexR[index]
-          })
-          console.log('aimee1')
-          console.log(differenceIndexR)
+          var resultArrR = []
+        for (var i = 0; i < this.allResources.length; i++) {
+          for (var j = 0; j < differenceIndexR.length; j++) {
+            if (i == differenceIndexR[j]) {
+              resultArrR.push(this.allResources[i])
+            }
+          }
+        }
+        this.allResources = resultArrR
         }
       })
       // 告警渠道
@@ -663,9 +665,15 @@ export default {
         // 获取两个数组不同的下标（两个数组差集）
         var differenceIndex = originIndex.concat(selectedIndex).filter(v => !originIndex.includes(v) || !selectedIndex.includes(v))
         // 根据交集的下标过滤数组
-        this.allContacts = this.allContacts.filter((item, index) => {
-          return index == differenceIndex[index]
-        })
+        var resultArr = []
+        for (var i = 0; i < this.allContacts.length; i++) {
+          for (var j = 0; j < differenceIndex.length; j++) {
+            if (i == differenceIndex[j]) {
+              resultArr.push(this.allContacts[i])
+            }
+          }
+        }
+        this.allContacts = resultArr
         }
       })
     },
@@ -721,9 +729,7 @@ export default {
           this.allResources = response.data.list
           this.allResourcesOrigin = JSON.stringify(response.data.list)
           this.allResourcesLength = response.data.list.length
-        } else {
-          console.log('获取资源列表报错')
-        }
+        } 
       })
     },
     // 添加资源
