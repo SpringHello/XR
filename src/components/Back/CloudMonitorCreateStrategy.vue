@@ -585,7 +585,56 @@ export default {
       this.newAlarmStrategyForm.strategyName = this.strategyNameGet
       // 策略类型
       this.newAlarmStrategyForm.strategyType = this.strategyTypeGet + ''
-      this.changeResources()
+      // 资源复制
+      this.selectedResources = []
+      var nameArr = [ '云主机', '云硬盘', 'vpc', '对象存储' ]
+      var productType = ''
+      nameArr.forEach((item, index) => {
+        if (this.newAlarmStrategyForm.strategyType == index) {
+          productType = item
+        }
+      })
+      this.selectedResourcesName = productType
+      var indexArr = [this.HostIndex, this.diskIndex, this.vpcIndex, this.objSaveIndex]
+      indexArr.forEach((item, index) => {
+        if (this.newAlarmStrategyForm.strategyType == index) {
+          this.defaultResources = item
+        }
+      })
+      this.indexAlarmForm[0].alarmname = this.defaultResources.alarmname[0].value
+      this.indexAlarmForm.splice(1, this.indexAlarmForm.length - 1)
+      this.$http.get('monitor/listZoneVMAndDiskAndVpcAndObject1.do', {
+        params: {
+          productType: productType
+        }
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.allResources = response.data.list
+          this.allResourcesOrigin = JSON.stringify(response.data.list)
+          this.allResourcesLength = response.data.list.length
+          var originIndexR = []
+          var selectedIndexR = []
+          originIndexR = this.allResources.map((item, index) => {
+            return index
+          })
+          console.log('aimee')
+          console.log(originIndexR)
+          this.allResources.forEach((item, index) => {
+            this.strategyResourceGet.forEach((item1, index1) => {
+              if (item1.id == item.resourceid) {
+                this.selectedResources.push(item)
+                selectedIndexR.push(index)
+              }
+            })
+          })
+          var differenceIndexR = originIndexR.concat(selectedIndexR).filter(v => !originIndexR.includes(v) || !selectedIndexR.includes(v))
+          this.allResources = this.allResources.filter((item, index) => {
+            return index == differenceIndexR[index]
+          })
+          console.log('aimee1')
+          console.log(differenceIndexR)
+        }
+      })
       // 告警渠道
       this.newAlarmStrategyForm.channel = this.strategyChannel
       // 告警策略
@@ -593,49 +642,32 @@ export default {
       // 告警事件
       this.eventAlarmForm = this.eventformDynamicGet
       // 联系人
-      // this.getContacts()
-      // 赋值联系人选择
-        this.$http.get('user/getcontacts.do').then(response => {
-          var originContacts = []
-          if (response.status == 200 && response.data.status == 1) {
-            originContacts = response.data.result
-            
-            originContacts.forEach((item, index) => {
-              this.strategyContactsGet.forEach((item1, index1) => {
-                if (item1.alarmcontactid == item.id) {
-                  // this.addContacts(item, index)
-                  // console.log('jinru')
-                  this.selectedContacts.push(item)
-                } else {
-                  this.allContacts.push(item)
-                }
-              })
+      this.$http.get('user/getcontacts.do').then(response => {
+        // 提取被选中的联系人,并且存储被选中联系人的下标（两个数组对象的交集）
+        if (response.status == 200 && response.data.status == 1) {
+          this.allContacts = response.data.result
+          var originIndex = []
+          var selectedIndex = []
+          // 存储所有联系人下标
+          originIndex = this.allContacts.map((item, index) => {
+            return index
+          })
+          this.allContacts.forEach((item, index) => {
+            this.strategyContactsGet.forEach((item1, index1) => {
+              if (item1.alarmcontactid == item.id) {
+                this.selectedContacts.push(item)
+                selectedIndex.push(index)
+              }
             })
-            // 数组对象去重
-//             var result = [];
-//   var obj = {};
-//     for(var i =0; i<arr.length; i++){
-//        if(!obj[arr[i].key]){
-//           result.push(arr[i]);
-// 25          obj[arr[i].key] = true;
-// 26       }
-// 27    }
-
-// var post = [{id:4,title:"Javascript"},
-//             {id:2, title:"jquery"}];
-// var comments = [
-//    {postId:4,content:"Angular4"},
-//    {postId:2,content:"Vue.js"},
-//    {postId:3,content:"Node.js"},
-//    {postId:5,content:"React.js"},
-// ];
-
-
-            // console.log(this.strategyContactsGet)
-            // this.allContactsTemp = JSON.stringify(this.allContacts)
-            console.log(this.allContacts)
-          }
+          })
+        // 获取两个数组不同的下标（两个数组差集）
+        var differenceIndex = originIndex.concat(selectedIndex).filter(v => !originIndex.includes(v) || !selectedIndex.includes(v))
+        // 根据交集的下标过滤数组
+        this.allContacts = this.allContacts.filter((item, index) => {
+          return index == differenceIndex[index]
         })
+        }
+      })
     },
     back() {
       this.$router.push('CloudMonitor')
