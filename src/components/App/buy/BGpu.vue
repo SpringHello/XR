@@ -126,7 +126,7 @@
                 <div>
                   <p class="item-title">配置类型</p>
                 </div>
-                <Table :columns="serverOfferColumns" :data="serverOfferList" @radio-change="selectGpu"></Table>
+                <Table :columns="serverOfferColumns" :data="serverOfferList" @radio-change="selectGpu" style="width: 629px"></Table>
               </div>
             </div>
             <!--自定义主机价格-->

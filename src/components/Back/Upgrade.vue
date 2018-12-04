@@ -53,6 +53,7 @@
             <h1>升级后配置</h1>
             <span>主机名称 : {{hostname}}</span>
             <span>主机配置 : {{CPUNum}}核{{RAMSize}}G</span>
+            <span>系统盘容量 : {{ systemDiskSize }}G</span>
             <span>剩余时长 : {{endtime}}</span>
             <span style="line-height:24px;">应付差价 :
                  <i class="money">{{cost.toFixed(2)}}元</i>
@@ -781,7 +782,7 @@ export default {
     }
     .conf-wrapper {
       width: 274px;
-      height: 245px;
+      height: 270px;
       background: #ffffff;
       box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
       border-radius: 4px;
