@@ -20,7 +20,7 @@
                     <Input v-model="newAlarmStrategyForm.strategyName" placeholder="请输入" style="width:318px"></Input>
                   </FormItem>
                   <FormItem label="策略类型" prop="strategyType" style="display:flex;">
-                    <Select v-model="newAlarmStrategyForm.strategyType" style="width:318px" @on-change="changeResources">
+                    <Select v-model="newAlarmStrategyForm.strategyType" style="width:318px" @on-change="changeResources()">
                       <Option value="0">云主机</Option>
                       <!-- <Option value="1">云硬盘</Option>
                       <Option value="2">vpc</Option> -->
@@ -28,8 +28,8 @@
                     </Select>
                   </FormItem>
                   <FormItem label="告警对象">
-                    <RadioGroup v-model="newAlarmStrategyForm.alarmObj">
-                      <Radio label="all">全部</Radio>
+                    <RadioGroup v-model="newAlarmStrategyForm.alarmObj" @on-change="changealarmtype">
+                      <Radio label="all" :disabled="allResourcesLength>5">全部</Radio>
                       <Radio label="part">选择部分对象</Radio>
                     </RadioGroup>
                   </FormItem>
@@ -185,14 +185,14 @@
                       </CheckboxGroup>
                     </FormItem>
                     <div class="contacts">
-                      <p>告警接受人<span v-if="contactsHint&&allContacts.length<1"
+                      <p>告警接受人<span v-if="contactsHint&&selectedContacts.length<1"
                                     style="color:#ed3f14;font-size:12px;padding-left:10px;">请至少选择一个联系人</span></p>
                       <div class="list-wrap">
                         <div class="list">
                           <p>所有联系人</p>
                           <ul>
                             <li v-for="(item,index) in allContacts" :key="index">
-                              <span>{{ item.name }}</span>
+                              <span>{{ item.username }}</span>
                               <i class="icon-btn" v-if="allContacts.length<5&&item.name !=''"
                                  @click="addContacts(item,index)">+ 添加</i>
                             </li>
@@ -206,7 +206,7 @@
                           <p>已选择联系人</p>
                           <ul>
                             <li v-for="(item,index) in selectedContacts" :key="index">
-                              <span>{{ item.name }}</span>
+                              <span>{{ item.username }}</span>
                               <i class="icon-btn" @click="deleteContacts(item,index)">
                                 <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
                                 删除</i>
@@ -217,7 +217,7 @@
                     </div>      
                     <p>提示：您可以在个人中心—告警中心—联系人管中添加和编辑联系人信息。</p>
                   </div>
-                  <Button type="primary" @click="newAlarmStrategy_ok" style="margin-top:20px;">{{btnflag?btnflag:'完成'}}</Button>
+                  <Button type="primary" @click="newAlarmStrategy_ok" style="margin-top:20px;">{{btnflag}}</Button>
                 </Form>
               </div>
             </div>
@@ -231,16 +231,37 @@
 import regExp from '../../util/regExp'
 export default {
   data () {
+    var strategyNameGet = sessionStorage.getItem('strategyName')
+    var strategyTypeGet = sessionStorage.getItem('strategyType')
+    var strategyContactsGet = JSON.parse(sessionStorage.getItem('strategyContacts'))
+    var strategyResourceGet = JSON.parse(sessionStorage.getItem('strategyResource'))
+    var strategyChannel = JSON.parse(sessionStorage.getItem('strategyChannel'))
+    var targetformDynamicGet = JSON.parse(sessionStorage.getItem('targetformDynamic'))
+    var eventformDynamicGet = JSON.parse(sessionStorage.getItem('eventformDynamic'))
+    var strategyIdGet = sessionStorage.getItem('strategyId')
+    var btnflagGet = sessionStorage.getItem('btnflag')
     return {
-      btnflag: '完成',
+      strategyNameGet,
+      strategyTypeGet,
+      strategyContactsGet,
+      strategyResourceGet,
+      strategyChannel,
+      targetformDynamicGet,
+      eventformDynamicGet,
+      strategyIdGet,
+      btnflagGet,
+      btnflag: btnflagGet ? btnflagGet : '完成',
       allResources: [],
       selectedResources: [],
+      allResourcesOrigin: [],
+      allResourcesLength: '',
       newAlarmStrategyForm: {
         strategyName: '',
         strategyType: '0',
         alarmObj: 'part',
         channel: [],
       },
+      strategyId: '',
       newAlarmStrategyFormRuleValidate: {
         strategyName: [
           { required: true, validator: regExp.validaRegisteredName, trigger: 'blur' }
@@ -543,20 +564,105 @@ export default {
     }
   },
   created () {
-    this.init()
+    if (this.btnflagGet) {
+      this.copyInit()
+    } else {
+      this.init()
+    }
   },
   mounted () {
 
   },
   methods: {
-    // 初始化
+    // 新建初始化
     init () {
       this.getContacts()
       this.changeResources()
     },
+    copyInit() {
+      this.strategyId = this.strategyIdGet
+      // 策略名
+      this.newAlarmStrategyForm.strategyName = this.strategyNameGet
+      // 策略类型
+      this.newAlarmStrategyForm.strategyType = this.strategyTypeGet + ''
+      this.changeResources()
+      // 告警渠道
+      this.newAlarmStrategyForm.channel = this.strategyChannel
+      // 告警策略
+      this.indexAlarmForm = this.targetformDynamicGet
+      // 告警事件
+      this.eventAlarmForm = this.eventformDynamicGet
+      // 联系人
+      // this.getContacts()
+      // 赋值联系人选择
+        this.$http.get('user/getcontacts.do').then(response => {
+          var originContacts = []
+          if (response.status == 200 && response.data.status == 1) {
+            originContacts = response.data.result
+            
+            originContacts.forEach((item, index) => {
+              this.strategyContactsGet.forEach((item1, index1) => {
+                if (item1.alarmcontactid == item.id) {
+                  // this.addContacts(item, index)
+                  // console.log('jinru')
+                  this.selectedContacts.push(item)
+                } else {
+                  this.allContacts.push(item)
+                }
+              })
+            })
+            // 数组对象去重
+//             var result = [];
+//   var obj = {};
+//     for(var i =0; i<arr.length; i++){
+//        if(!obj[arr[i].key]){
+//           result.push(arr[i]);
+// 25          obj[arr[i].key] = true;
+// 26       }
+// 27    }
+
+// var post = [{id:4,title:"Javascript"},
+//             {id:2, title:"jquery"}];
+// var comments = [
+//    {postId:4,content:"Angular4"},
+//    {postId:2,content:"Vue.js"},
+//    {postId:3,content:"Node.js"},
+//    {postId:5,content:"React.js"},
+// ];
+
+
+            // console.log(this.strategyContactsGet)
+            // this.allContactsTemp = JSON.stringify(this.allContacts)
+            console.log(this.allContacts)
+          }
+        })
+    },
+    back() {
+      this.$router.push('CloudMonitor')
+      sessionStorage.setItem('pane', 'alarmStrategy')
+      sessionStorage.removeItem('strategyName')
+      sessionStorage.removeItem('strategyType')
+      sessionStorage.removeItem('strategyContacts')
+      sessionStorage.removeItem('strategyResource')
+      sessionStorage.removeItem('targetformDynamic')
+      sessionStorage.removeItem('eventformDynamic')
+      sessionStorage.removeItem('strategyId')
+      sessionStorage.removeItem('strategyChannel')
+      sessionStorage.removeItem('btnflag')
+    },
+    // 资源全选或者部分选择
+    changealarmtype() {
+      if (this.newAlarmStrategyForm.alarmObj == 'all') {
+        this.selectedResources = JSON.parse(this.allResourcesOrigin)
+        this.allResources = []
+      } else {
+        this.selectedResources = []
+        this.allResources = JSON.parse(this.allResourcesOrigin)
+      }
+    },
     // 切换资源
     changeResources() {
-      this.strategySelectedHost = []
+      this.selectedResources = []
       var nameArr = [ '云主机', '云硬盘', 'vpc', '对象存储' ]
       var productType = ''
       nameArr.forEach((item, index) => {
@@ -581,8 +687,8 @@ export default {
         if (response.status == 200 && response.data.status == 1) {
           // console.log(response.data.list)
           this.allResources = response.data.list
-          // this.allHostTem = JSON.stringify(this.allResources)
-          // this.allHostLegth = response.data.list.length
+          this.allResourcesOrigin = JSON.stringify(response.data.list)
+          this.allResourcesLength = response.data.list.length
         } else {
           console.log('获取资源列表报错')
         }
@@ -600,8 +706,15 @@ export default {
     },
     // 增加指标告警
       indexAlarmAdd() {
+        var indexArr = [this.HostIndex, this.diskIndex, this.vpcIndex, this.objSaveIndex]
+        indexArr.forEach((item, index) => {
+          if (this.newAlarmStrategyForm.strategyType == index) {
+            this.defaultResources = item
+          }
+        })
+        var selectedAttr = this.defaultResources.alarmname[0].value
         this.indexAlarmForm.push({
-          alarmname: 'CPU利用率',
+          alarmname: selectedAttr,
           countcircle: 1,
           valuetype: '>',
           value: 80,
@@ -637,11 +750,7 @@ export default {
         var url = `user/getcontacts.do`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.allContacts = response.data.result.map(item => {
-              return {name: item.username, id: item.id}
-            })
-            // console.log(this.allContacts)
-            // this.allContactsTemp = JSON.stringify(this.allContacts)
+            this.allContacts = response.data.result
           }
         })
       },
@@ -723,7 +832,7 @@ export default {
                   this.$router.push('CloudMonitor')
                   sessionStorage.setItem('pane', 'alarmStrategy')
                 } else {
-                  this.$Message.success('创建失败！');
+                  this.$Message.error(res.data.message);
                 }
               })
             }
@@ -734,7 +843,7 @@ export default {
                   this.$router.push('CloudMonitor')
                   sessionStorage.setItem('pane', 'alarmStrategy')
                 } else {
-                  this.$Message.success('更新失败！');
+                  this.$Message.error(res.data.message);
                 }
               })
             }
