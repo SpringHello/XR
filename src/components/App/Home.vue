@@ -110,6 +110,22 @@
             </div>
           </div>
         </my-carousel-item>
+        <my-carousel-item class="carousel-item">
+          <div @click="push('active_1')"
+               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+            <div class="head-banner">
+              <div>
+                <div>
+                  <p>
+                    <img style="padding-top: 0" src="../../assets/img/home/home-banner3.png">
+                  </p>
+                  <button style="margin-top: 120px">立即领取</button>
+                </div>
+                <img src="../../assets/img/home/home-banner4.png">
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->

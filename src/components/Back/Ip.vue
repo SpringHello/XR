@@ -40,16 +40,6 @@
         </div>
       </div>
     </div>
-    <!--释放弹性IP-->
-    <!--<Modal v-model="resetip" width="300" :scrollable="true" :closable="false">
-      <div>
-        您正将“ <span>{{publicIP}}</span>”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。
-      </div>
-      <div slot="footer">
-        <Button @click="resetip = false">取消</Button>
-        <Button type="primary" @click="delElasticIP">确定</Button>
-      </div>
-    </Modal>-->
     <!-- 新建vpc modal -->
     <Modal v-model="showModal.newIPModal" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -525,11 +515,11 @@
                         this.renewalHost = false
                         this.renewalGpu = false
                         this.renewalNAT = false
-                        this.currentIp = this.select.id
+                        this.currentIp = this.select[0].id
                         let url = 'network/listPublicIpById.do'
                         this.$http.get(url, {
                           params: {
-                            ipId: this.select.publicipid
+                            ipId: this.select[0].publicipid
                           }
                         }).then(response => {
                           if (response.data.status === 1) {
@@ -819,9 +809,6 @@
       } else {
         this.hide = 'none';
       }
-      /*      this.intervalInstance = setInterval(() => {
-              this.refresh()
-            }, 5 * 1000)*/
     },
     methods: {
       // 跳转到相应的购买页面
@@ -836,7 +823,7 @@
             return item.id
           })
           this.$message.confirm({
-            content: '您正将“' + this.select.publicip + '”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
+            content: '您正将“' + this.select[0].publicip + '”等IP移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
             onOk: () => {
               this.$http.get('network/delPublic.do', {
                 params: {
@@ -861,6 +848,15 @@
         }
       },
       refresh() {
+        if (this.ipData.length !== 0) {
+          function checkStatus(ip) {
+            return ip.status == 2 || ip.status == 3 || ip.status == 4
+          }
+
+          if (!this.ipData.some(checkStatus)) {
+            clearInterval(this.intervalInstance)
+          }
+        }
         // 获取ip数据
         axios.get('network/listPublicIp.do', {
           params: {
@@ -871,6 +867,11 @@
         }).then(response => {
           this.setData(response)
         })
+      },
+      timingRefresh() {
+        this.intervalInstance = setInterval(() => {
+          this.refresh()
+        }, 3000)
       },
       setData(response) {
         if (response.status == 200 && response.data.status == 1) {
@@ -1042,7 +1043,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.refresh()
+                this.timingRefresh()
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1074,7 +1075,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.refresh()
+                this.timingRefresh()
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1107,7 +1108,7 @@
               this.showModal.bindIPForNAT = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.refresh()
+                this.timingRefresh()
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1140,7 +1141,7 @@
               this.showModal.bindIPForGpu = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.refresh()
+                this.timingRefresh()
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1210,7 +1211,7 @@
                 this.$Message.success({
                   content: response.data.message
                 })
-                this.refresh()
+                this.timingRefresh()
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1219,28 +1220,6 @@
                   }
                 })
               }
-            })
-          }
-        })
-      },
-      // 删除弹性ip
-      delElasticIP() {
-        this.resetip = false
-        if (this.select == null) {
-          this.$Message.warning('请选择1个弹性IP')
-          return false
-        }
-        this.$http.get('network/delPublic.do', {
-          params: {
-            id: this.select.id
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message)
-            this.refresh()
-          } else {
-            this.$message.info({
-              content: response.data.message
             })
           }
         })
@@ -1263,8 +1242,8 @@
       },
       adjust() {
         if (this.select.length === 1) {
-          this.adjustForm.minBrand = this.select.bandwith
-          this.adjustForm.brand = this.select.bandwith
+          this.adjustForm.minBrand = this.select[0].bandwith
+          this.adjustForm.brand = this.select[0].bandwith
           switch (this.select[0].caseType) {
             case 1:
               this.adjustFormType = '年'
