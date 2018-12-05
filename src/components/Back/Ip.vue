@@ -35,7 +35,7 @@
           </Dropdown>
         </div>
         <div class="table-content">
-          <Table :columns="ipColumns" :data="ipData" @radio-change="selectIp"></Table>
+          <Table :columns="ipColumns" :data="ipData" @on-selection-change="selectIp"></Table>
           <Page :total="total" :current="page" @on-change="change" style="margin:20px 0px;float:right"/>
         </div>
       </div>
@@ -376,7 +376,7 @@
         },
         currentIp: '',
         // 当前选中项
-        select: null,
+        select: [],
         showModal: {
           // 续费modal
           renew: false,
@@ -409,7 +409,7 @@
         },
         ipColumns: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
           },
           {
@@ -819,25 +819,28 @@
       } else {
         this.hide = 'none';
       }
-      this.intervalInstance = setInterval(() => {
-        this.refresh()
-      }, 5 * 1000)
+      /*      this.intervalInstance = setInterval(() => {
+              this.refresh()
+            }, 5 * 1000)*/
     },
     methods: {
       // 跳转到相应的购买页面
       tobuy(url) {
         sessionStorage.setItem('pane', url)
-        this.$router.push('buy')
+        this.$router.push('buy/bip')
       },
       // 释放弹性IP
       resetIP() {
-        if (this.select != null) {
+        if (this.select.length !== 0) {
+          let ids = this.select.map(item => {
+            return item.id
+          })
           this.$message.confirm({
             content: '您正将“' + this.select.publicip + '”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
             onOk: () => {
               this.$http.get('network/delPublic.do', {
                 params: {
-                  id: this.select.id
+                  ids: ids + ''
                 }
               }).then(response => {
                 if (response.status == 200 || response.data.status == 1) {
@@ -853,7 +856,7 @@
           })
         } else {
           this.$Message.info({
-            content: '请先选择一个弹性IP'
+            content: '请先选择需要释放的弹性IP'
           })
         }
       },
@@ -875,7 +878,7 @@
           this.total = response.data.result.total
         }
       },
-      // 选中当前项
+      // 选中项变化
       selectIp(current) {
         this.select = current
       },
@@ -1259,10 +1262,10 @@
         }
       },
       adjust() {
-        if (this.select) {
+        if (this.select.length === 1) {
           this.adjustForm.minBrand = this.select.bandwith
           this.adjustForm.brand = this.select.bandwith
-          switch (this.select.caseType) {
+          switch (this.select[0].caseType) {
             case 1:
               this.adjustFormType = '年'
               break;
@@ -1284,7 +1287,7 @@
         this.$http.get('continue/UpPublicBnadwith.do', {
           params: {
             bandwith: this.adjustForm.brand,
-            publicIpId: this.select.id
+            publicIpId: this.select[0].id
           }
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -1298,8 +1301,8 @@
         )
       },
       charges() {
-        if (this.select) {
-          if (this.select.caseType != 3) {
+        if (this.select.length === 1) {
+          if (this.select[0].caseType != 3) {
             this.$Message.info("实时计费才能变更资费")
             return
           }
@@ -1314,7 +1317,7 @@
           let url = 'network/listPublicIpById.do'
           this.$http.get(url, {
             params: {
-              ipId: this.select.publicipid,
+              ipId: this.select[0].publicipid,
               changeCost: '1'
             }
           }).then(response => {
@@ -1342,7 +1345,7 @@
         if (this.chargesOther[0] == '变更关联云主机') {
           list = [{
             type: 2,
-            id: this.select.id
+            id: this.select[0].id
           }, {
             type: 0,
             id: this.chargesHostID
@@ -1350,7 +1353,7 @@
         } else if (this.chargesOther[0] == '变更关联NAT网关') {
           list = [{
             type: 2,
-            id: this.select.id,
+            id: this.select[0].id,
           }, {
             type: 4,
             id: this.chargesNATID
@@ -1358,7 +1361,7 @@
         } else {
           list = [{
             type: 2,
-            id: this.select.id
+            id: this.select[0].id
           }]
         }
         let params = {
@@ -1378,11 +1381,11 @@
         )
       },
       renewIP() {
-        if (this.select == null) {
-          this.$Message.info('请选择需要续费的IP')
+        if (this.select.length !== 1) {
+          this.$Message.info('请选择一个需要续费的IP')
           return false
         }
-        if (this.select.caseType === 3) {
+        if (this.select[0].caseType === 3) {
           this.$Message.info('请选择包年或包月的IP进行续费')
           return false
         }
@@ -1391,14 +1394,14 @@
         this.renewalOther = []
         this.renewalHost = false
         this.renewalNAT = false
-        this.currentIp = this.select.id
-        this.renewalInfo.IPAddress = this.select.publicip
-        this.renewalInfo.bandwidth = this.select.bandwith
-        this.renewalInfo.endTime = this.select.endtime
+        this.currentIp = this.select[0].id
+        this.renewalInfo.IPAddress = this.select[0].publicip
+        this.renewalInfo.bandwidth = this.select[0].bandwith
+        this.renewalInfo.endTime = this.select[0].endtime
         let url = 'network/listPublicIpById.do'
         this.$http.get(url, {
           params: {
-            ipId: this.select.publicipid
+            ipId: this.select[0].publicipid
           }
         }).then(response => {
           if (response.data.status === 1) {
@@ -1417,19 +1420,21 @@
         })
       },
       queryAdjustPrice: debounce(500, function () {
-        this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
-          params: {
-            brandwith: this.adjustForm.brand,
-            publicIpId: this.select.id
-          }
-        }).then(response => {
-            if (response.status == 200) {
-              this.adjustForm.cost = response.data.result
-            } else {
-              this.adjustForm.cost = '正在计算'
+        if (this.select.length !== 0) {
+          this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
+            params: {
+              brandwith: this.adjustForm.brand,
+              publicIpId: this.select[0].id
             }
-          }
-        )
+          }).then(response => {
+              if (response.status == 200) {
+                this.adjustForm.cost = response.data.result
+              } else {
+                this.adjustForm.cost = '正在计算'
+              }
+            }
+          )
+        }
       }),
       queryChargePrice() {
         if (this.chargesOther.length != 0) {
@@ -1439,7 +1444,7 @@
           params = {
             timeValue: this.chargesForm.timeValue,
             timeType: this.chargesForm.timeType,
-            ipIdArr: this.select.id,
+            ipIdArr: this.select[0].id,
             hostIdArr: hostArr,
             natArr: natArr
           }
@@ -1466,7 +1471,7 @@
             params: {
               timeValue: this.chargesForm.timeValue,
               timeType: this.chargesForm.timeType,
-              ipIdArr: this.select.id,
+              ipIdArr: this.select[0].id,
             }
           }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -1526,7 +1531,7 @@
       },
       change(page) {
         // 翻页后select重置null
-        this.select = null
+        this.select = []
         this.page = page
         // 获取ip数据
         axios.get('network/listPublicIp.do', {
@@ -1655,7 +1660,7 @@
               params: {
                 timeValue: this.chargesForm.timeValue,
                 timeType: this.chargesForm.timeType,
-                ipIdArr: this.select.id,
+                ipIdArr: this.select[0].id,
                 hostIdArr: this.chargesHostID
               }
             })
@@ -1677,7 +1682,7 @@
               params: {
                 timeValue: this.chargesForm.timeValue,
                 timeType: this.chargesForm.timeType,
-                ipIdArr: this.select.id,
+                ipIdArr: this.select[0].id,
                 natArr: this.chargesNATID
               }
             })
@@ -1699,7 +1704,7 @@
               params: {
                 timeValue: this.chargesForm.timeValue,
                 timeType: this.chargesForm.timeType,
-                ipIdArr: this.select.id,
+                ipIdArr: this.select[0].id,
               }
             })
               .then((response) => {
