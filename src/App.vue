@@ -317,6 +317,8 @@
   import debounce from 'throttle-debounce/debounce'
   import '@/assets/iconfont/frontend/iconfont.css'
   import '@/assets/iconfont/frontend/iconfont.js'
+  import uuid from 'uuid'
+
 
   export default {
     name: 'app',
@@ -598,7 +600,8 @@
         minute: '--',
         second: '--',
         hintShow: false,
-        timer: null
+        timer: null,
+        UUID: ''
       }
     },
 
@@ -607,6 +610,15 @@
         // 流量来源记录
         localStorage.setItem('comefrom', to.query.from)
       }
+      window.UUID = uuid.v4()
+      let params = {
+        batchNumber: window.UUID,
+        type: '0',
+        pageURL: window.location.href
+      }
+      // 写入入口信息
+      axios.post('information/webReachableRecord.do', params
+      )
       // 获取所有后台需要的基本信息
       // 获取用户信息
       var userInfo = axios.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}})
@@ -631,7 +643,16 @@
       if (sessionStorage.getItem('hintShow') == 'true') {
         this.$refs.hint.style.height = '80px'
       }
-
+      if (document.readyState === 'complete') { //当页面加载状态为完全结束时进入
+        let params = {
+          batchNumber: window.UUID,
+          type: '1',
+          pageURL: window.location.href
+        }
+        // 获取入口信息
+        axios.post('information/webReachableRecord.do', params
+        )
+      }
     },
     created() {
       if (sessionStorage.getItem('hintShow') == null) {
@@ -656,15 +677,6 @@
       this.$http.get('article/friendshipLink.do').then(response => {
         this.links = response.data.result
       })
-      /*this.$http.get('user/getEventNum.do', {
-       params: {
-       isRead: '0'
-       }
-       }).then(response => {
-       if (response.status == 200 && response.data.status == 1) {
-       this.$store.commit('setMsg', Number.parseInt(response.data.number))
-       }
-       })*/
     },
     methods: {
       /* li mouseenter事件 重新设置line样式 */
