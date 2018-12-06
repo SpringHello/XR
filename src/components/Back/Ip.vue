@@ -405,7 +405,7 @@
           {
             title: 'IP地址',
             key: 'publicip',
-            width: 150
+            width: 140
           },
           {
             title: '所属VPC',
@@ -434,6 +434,7 @@
           },
           {
             title: '状态',
+            width: 120,
             key: 'status',
             render: (h, obj) => {
               let value = ''
@@ -451,12 +452,12 @@
                   value = '创建中'
                   break
                 case 3:
-                  // value = '绑定中'
-                  value = '正常'
+                  value = '绑定中'
+                  //value = '正常'
                   break
                 case 4:
-                  // value = '解绑中'
-                  value = '正常'
+                  value = '解绑中'
+                  //value = '正常'
                   break
                 case 5:
                   value = '升级中'
@@ -540,14 +541,14 @@
                 }
 
               }
-              // if (obj.row.status != 1 && obj.row.status != 0 && obj.row.status != -1) {
-              //   return h('div', {}, [h('Spin', {
-              //     style: {
-              //       display: "inline-block",
-              //       marginRight: "10px",
-              //     },
-              //   }), h('span', {}, value)]);
-              // }
+              if (obj.row.status == 2 || obj.row.status == 3 || obj.row.status == 4) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: "inline-block",
+                    marginRight: "10px",
+                  },
+                }), h('span', {}, value)]);
+              }
               return h('span', value)
             }
           },
@@ -868,15 +869,40 @@
           this.setData(response)
         })
       },
-      timingRefresh() {
-        this.intervalInstance = setInterval(() => {
-          this.refresh()
+      timingRefresh(id) {
+        let timer = setInterval(() => {
+          axios.get('network/listPublicIpById.do', {
+            params: {
+              zoneId: $store.state.zone.zoneid,
+              ipId: id
+            }
+          }).then(response => {
+            if (response.data.status == 1 && response.status == 200) {
+              let status = response.data.result[0].status
+              this.ipData.forEach(item => {
+                if (item.id === response.data.result[0].id) {
+                  this.refresh()
+                }
+              })
+              if (!(status == 2 || status == 3 || status == 4)) {
+                console.log('清除')
+                clearInterval(timer)
+              }
+            }
+          })
         }, 3000)
       },
       setData(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
           this.total = response.data.result.total
+          this.select.forEach(item => {
+            this.ipData.forEach(ip => {
+              if (item.id === ip.id) {
+                ip._checked = true
+              }
+            })
+          })
         }
       },
       // 选中项变化
@@ -1034,6 +1060,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/enableStaticNat.do', {
               params: {
@@ -1043,7 +1074,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.timingRefresh()
+                this.timingRefresh(this.bindForHostForm.row.publicipid)
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1066,6 +1097,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/enableStaticNat.do', {
               params: {
@@ -1075,7 +1111,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.timingRefresh()
+                this.timingRefresh(this.bindForDatabaseForm.row.publicipid)
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1098,6 +1134,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/bindingElasticIP.do', {
               params: {
@@ -1108,7 +1149,7 @@
               this.showModal.bindIPForNAT = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.timingRefresh()
+                this.timingRefresh(this.bindForNATForm.row.publicipid)
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1131,6 +1172,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/enableStaticNat.do', {
               params: {
@@ -1141,7 +1187,7 @@
               this.showModal.bindIPForGpu = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.timingRefresh()
+                this.timingRefresh(this.bindForGpuForm.row.publicipid)
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1196,22 +1242,26 @@
                   VMId: row.computerid,
                 }
                 break
-
             }
-            // console.log('解绑')
+            this.operatingId = row.id
             this.operatingId = row.id
             this.ipData.forEach(item => {
               if (item.id === this.operatingId) {
                 // 4代表解绑中
                 item.status = 4
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get(url, {params}).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success({
                   content: response.data.message
                 })
-                this.timingRefresh()
+                this.timingRefresh(row.publicipid)
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1257,7 +1307,7 @@
           }
           this.showModal.adjust = true
         } else {
-          this.$Message.warning('请选择1个弹性IP')
+          this.$Message.info('请选择1个弹性IP')
           return false
         }
       },
@@ -1315,7 +1365,7 @@
             }
           })
         } else {
-          this.$Message.warning('请选择1个弹性IP')
+          this.$Message.info('请选择1个弹性IP')
           return false
         }
       },

@@ -193,7 +193,7 @@
 
                     </div>
                   </div>
-                  <div style="margin-top:20px;" v-if="orderDetail[2][0].wc_sataus==2">
+                  <div style="margin-top:20px;" v-if="orderDetail[2][0].wcSataus!=4">
                     <Input v-model="editorValue" type="textarea" :rows="4" placeholder="请输入..."></Input>
                     <button @click="reply">发送</button>
                   </div>
