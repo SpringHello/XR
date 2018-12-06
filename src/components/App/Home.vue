@@ -3223,7 +3223,7 @@
             break
         }
         this.vmConfig = vmConfigId
-        if(this.index1 < 4){
+        if (this.index1 < 4) {
           let url = 'user/getRemainderFrozen.do'
           let params = {
             eachFrozenMoney: this.cashPledge,

@@ -254,7 +254,9 @@
           <p style="font-size: 12px;color: #333;padding-bottom: 10px;">请输入您的邮箱验证码</p>
           <p style="display: flex;align-items: center;">
             <Input v-model="code" style="width: 240px;margin-right: 10px;"/>
-            <Button type="primary" @click="sendCode" style="width: 104px;">{{codeMessage}}</Button>
+            <Button type="primary" @click.prevent="sendCode" style="width: 104px;" :disabled="codeMessage!='发送验证码'">
+              {{codeMessage}}
+            </Button>
           </p>
         </div>
 
@@ -335,7 +337,7 @@
         emailCode: false,
         code: '',
         codeImg: '',
-        codeMessage: '获取验证码',
+        codeMessage: '发送验证码',
         imgSrc: 'user/getKaptchaImage.do',
         index: '0',
         userid: '',
