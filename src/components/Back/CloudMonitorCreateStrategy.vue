@@ -645,7 +645,6 @@ export default {
       this.eventAlarmForm = this.eventformDynamicGet
       // 联系人
       this.$http.get('user/getcontacts.do').then(response => {
-        // 提取被选中的联系人,并且存储被选中联系人的下标（两个数组对象的交集）
         if (response.status == 200 && response.data.status == 1) {
           this.allContacts = response.data.result
           var originIndex = []
@@ -654,6 +653,7 @@ export default {
           originIndex = this.allContacts.map((item, index) => {
             return index
           })
+          // 提取被选中的联系人,并且存储被选中联系人的下标（两个数组对象的交集）
           this.allContacts.forEach((item, index) => {
             this.strategyContactsGet.forEach((item1, index1) => {
               if (item1.alarmcontactid == item.id) {
@@ -664,7 +664,7 @@ export default {
           })
         // 获取两个数组不同的下标（两个数组差集）
         var differenceIndex = originIndex.concat(selectedIndex).filter(v => !originIndex.includes(v) || !selectedIndex.includes(v))
-        // 根据交集的下标过滤数组
+        // 根据不同的下标选取数组
         var resultArr = []
         for (var i = 0; i < this.allContacts.length; i++) {
           for (var j = 0; j < differenceIndex.length; j++) {
