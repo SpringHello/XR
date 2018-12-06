@@ -877,6 +877,13 @@
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
           this.total = response.data.result.total
+          this.select.forEach(item => {
+            this.ipData.forEach(ip => {
+              if (item.id === ip.id) {
+                ip._checked = true
+              }
+            })
+          })
         }
       },
       // 选中项变化
@@ -1034,6 +1041,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/enableStaticNat.do', {
               params: {
@@ -1066,6 +1078,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/enableStaticNat.do', {
               params: {
@@ -1098,6 +1115,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/bindingElasticIP.do', {
               params: {
@@ -1131,6 +1153,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/enableStaticNat.do', {
               params: {
@@ -1196,15 +1223,19 @@
                   VMId: row.computerid,
                 }
                 break
-
             }
-            // console.log('解绑')
+            this.operatingId = row.id
             this.operatingId = row.id
             this.ipData.forEach(item => {
               if (item.id === this.operatingId) {
                 // 4代表解绑中
                 item.status = 4
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get(url, {params}).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -1257,7 +1288,7 @@
           }
           this.showModal.adjust = true
         } else {
-          this.$Message.warning('请选择1个弹性IP')
+          this.$Message.info('请选择1个弹性IP')
           return false
         }
       },
@@ -1315,7 +1346,7 @@
             }
           })
         } else {
-          this.$Message.warning('请选择1个弹性IP')
+          this.$Message.info('请选择1个弹性IP')
           return false
         }
       },
