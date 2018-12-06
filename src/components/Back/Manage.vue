@@ -1078,7 +1078,10 @@
         }).then(response => {
           this.reloadButton = '确认重装'
           if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message)
+            this.$Message.success({
+              content: response.data.message,
+              duration: 5
+              })
           } else {
             this.$message.info({
               content: response.data.message
@@ -1296,7 +1299,10 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success(response.data.message)
+                this.$Message.success({
+                  content: response.data.message,
+                  duration: 5
+                  })
               } else {
                 this.$message.info({
                   content: response.data.message
