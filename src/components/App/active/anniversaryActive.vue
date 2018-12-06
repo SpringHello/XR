@@ -3649,7 +3649,7 @@
       font-weight: 600;
       color: rgba(255, 132, 72, 1);
       margin: 0 auto;
-      padding: 20px 94px;
+      padding: 20px 90px;
     }
   }
 

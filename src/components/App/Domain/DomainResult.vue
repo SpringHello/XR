@@ -83,33 +83,6 @@
           </div>
         </div>
       </Affix>
-      <!--<div id="result-right" :class="{titleTop:listTop}">-->
-      <!--<div>-->
-      <!--<div class="all">-->
-      <!--<p>域名清单-->
-      <!--<button @click="removeAll">全部移除</button>-->
-      <!--</p>-->
-      <!--<ul class="all-data" v-show="buyLists.length!=0">-->
-      <!--<li v-for="(item,index) in buyLists">-->
-      <!--<h2>{{item.name}}</h2>-->
-      <!--<button @click="remove(index)">移除</button>-->
-      <!--</li>-->
-      <!--</ul>-->
-      <!--</div>-->
-      <!--<div class="zero" v-show="buyLists.length==0">-->
-      <!--<p>您还没有选择任何域名哦</p>-->
-      <!--<img src="../../../assets/img/domain/Rectangle.png">-->
-      <!--</div>-->
-      <!--<div class="statistical" v-show="buyLists.length!=0">-->
-      <!--<div>-->
-      <!--<p>已加入域名 <span>{{addNum}}</span> 个</p>-->
-      <!--<p>优惠金额：¥00.00</p>-->
-      <!--</div>-->
-      <!--<h1>应付金额：<span>¥{{payMoney.toFixed(2)}}</span></h1>-->
-      <!--<button @click="nowBuy">立即购买</button>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
     </div>
   </div>
 </template>
@@ -227,16 +200,9 @@
       },
       //查看已注册信息
       checked(name, status){
-        if (this.$store.state.userInfo == null) {
-          this.$LR({
-            type: 'login'
-          })
-          return
-        } else {
-          sessionStorage.setItem('checkname', name)
-          sessionStorage.setItem('status', status)
-          this.$router.push('CheckReg')
-        }
+        sessionStorage.setItem('checkname', name)
+        sessionStorage.setItem('status', status)
+        this.$router.push('CheckReg')
       },
       //立即购买
       nowBuy(){
@@ -316,18 +282,6 @@
         }
       }
     },
-//    mounted(){
-//      window.onscroll = () => {
-//        var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-//        if (scrollTop >= 284 && this.Results.length > 8) {
-//          this.listTop = true
-//        }
-//        if (scrollTop < 284) {
-//          this.listTop = false
-//        }
-//      }
-//
-//    }
   }
 </script>
 
