@@ -837,7 +837,7 @@
             onOk: () => {
               this.$http.get('network/delPublic.do', {
                 params: {
-                  id: this.select.id
+                  ids: this.select.id
                 }
               }).then(response => {
                 if (response.status == 200 || response.data.status == 1) {

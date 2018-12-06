@@ -521,7 +521,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import axios from 'axios'
+  import axios from 'axios'
+
   export default {
     data() {
       const validateInvoice = (rule, value, callback) => {
@@ -703,7 +704,7 @@ import axios from 'axios'
             align: 'left',
             width: 110,
             render: (h, params) => {
-              return h('span', params.row.maketicketover == 1 ? '已使用' : '未使用')
+              return h('span', params.row.maketicketover == 0 ? '未使用' : params.row.maketicketover == 1 ? '已使用' : '已失效')
             }
           },
           {
