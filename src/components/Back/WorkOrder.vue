@@ -298,7 +298,7 @@
             this.formItem.product = '31'
             break;
           case'云数据库':
-            this.formItem.product = '32'
+            this.formItem.product = '33'
             break;
           case'GPU服务器':
             this.formItem.product = '34'
