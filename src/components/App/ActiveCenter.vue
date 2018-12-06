@@ -474,7 +474,7 @@
               margin-bottom: 20px;
               line-height: 1;
             }
-            
+
           }
           .box-bottom {
             margin: 20px 40px;
