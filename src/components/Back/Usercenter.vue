@@ -1051,7 +1051,8 @@
       </div>
       <div class="keyPhoneVal" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p>为保障您的账户安全，请进行手机验证：</p>
-        <p>手机号码： <span>{{keyForm.phone}}</span></p>
+        <p v-if="!isEmailVail">手机号码： <span>{{keyForm.phone}}</span></p>
+        <p v-else>邮箱地址： <span>{{$store.state.userInfo.loginname}}</span></p>
         <p> 图形验证码
           <Input v-model="keyForm.imgCode" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
           <img :src="imgSrc" style="width:80px;height:30px;vertical-align: middle"
@@ -1060,10 +1061,12 @@
         <p> 验证码
           <Input v-model="keyForm.code" placeholder="请输入验证码"
                  style="width: 132px;margin-left: 48px;margin-right: 20px;"></Input>
-          <Button type="primary" :class="{codeDisabled:keycodePlaceholder!='获取验证码'}" @click.prevent="keysendCode"
+          <Button type="primary" :class="{codeDisabled:keycodePlaceholder!='获取验证码'}" @click.prevent="keysendCode('num')"
                   :disabled="keycodePlaceholder!='获取验证码'">{{keycodePlaceholder}}
           </Button>
         </p>
+        <p style="font-size:12px;color:#F10C0C">收不到验证码？请换<span @click="isEmailVail=true" v-if="$store.state.userInfo.loginname" style="color:#4A97EE;cursor:pointer">邮箱验证</span>或<span @click.prevent="keysendCode('voiceVail')" style="color:#4A97EE;cursor:pointer">接收语音验证码</span></p>
+        <P style="font-size:12px;color:#4A97EE;margin-bottom:0">通过身份验证方式找回账号</P>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.keyPhoneVal=false">取消</Button>
@@ -1240,11 +1243,12 @@
         // 当前选中的tab页
         currentTab: currentTab ? currentTab : 'personalInfo',
         authType,
+        isEmailVail: false,
         showModal: {
           selectAuthType: false,
           addLinkman: false,
           updateLinkman: false,
-          keyPhoneVal: false,
+          keyPhoneVal: true,
           showPicture: false,
           setNewPassword: false,
           bindingMobilePhone: false,
@@ -3129,6 +3133,7 @@
             } else if (response.status == 200 && response.data.status == 20) {
               this.keyForm.imgCode = ''
               this.keyForm.code = ''
+              this.isEmailVail = false
               this.showModal.keyPhoneVal = true
               this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.keyWeight = response.data.data.weight
@@ -3143,17 +3148,38 @@
           });
         }
       },
-      keysendCode() {
+      keysendCode(val) {
         if (this.keyForm.imgCode == '') {
           this.$Message.info('图像验证码不能为空')
-          return false
+          return false  
         }
-        axios.get('user/code.do', {
-          params: {
-            aim: this.keyForm.phone,
-            isemail: 0,
+        var resultAim
+        var isemail
+        if (!this.isEmailVail) {
+          resultAim = this.keyForm.phone
+          isemail = 0
+        } else {
+          resultAim = this.$store.state.userInfo.loginname
+          isemail = 1
+        }
+        var params
+        var url = ''
+        if (val == 'num') {
+          url = 'user/code.do'
+          params = {
+            aim: resultAim,
+            isemail: isemail,
             vailCode: this.keyForm.imgCode
           }
+        } else {
+          url = 'user/voiceCode.do'
+          params = {
+            aim: resultAim,
+            vailCode: this.keyForm.imgCode
+          }
+        }
+        axios.get(url, {
+          params: params
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             let countdown = 60
