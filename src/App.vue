@@ -3,7 +3,7 @@
     <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
       <div class="center">
         <div class="countdown" v-if="hintShow">
-          <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
+          <!--<p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>-->
         </div>
       </div>
       <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
@@ -709,7 +709,7 @@
         axios.get('network/getTime.do').then(res => {
           if (res.data.status == 1) {
             let startTime = res.data.result
-            let endTime = new Date('2018/11/17').getTime()
+            let endTime = new Date('2018/12/17').getTime()
             let limitTime = endTime - startTime
             if (limitTime > 0) {
               this.setLimit(limitTime)

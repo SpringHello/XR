@@ -5,9 +5,12 @@
       <div class="active-1">
         <div class="banner">
           <p>登录即可参与抽奖（100%中奖），认证后有机会领取戴森（Dyson），科沃斯等奖品</p>
+          <div class="end-count-down">
+            <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
+          </div>
           <div class="lottery-title">
             <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
-            <img style="margin-left: 70px" src="../../../assets/img/active/anniversary/aa-banner14.png"/>
+            <img style="margin-left: 90px" src="../../../assets/img/active/anniversary/aa-banner14.png"/>
             <p>见面礼！<span>包含<span style="color:rgba(255, 48, 0, 1); ">戴森、科沃斯</span>爆款奖品，100%中奖率，注册登录即可拥有一次抽奖机会</span></p>
           </div>
         </div>
@@ -1263,6 +1266,7 @@
         serverTime: '', // 当前服务器时间（时间戳）
         serverTimeHour: '', // 当前服务器时间（几时）
         serverTimeMinute: '',
+        day: '--',
         hour: '--',
         minute: '--',
         second: '--',
@@ -1719,6 +1723,7 @@
         }
       }, 1000);
       window.addEventListener('scroll', this.getScrollTop)
+      this.setTime()
     },
     methods: {
       /* 开始抽奖按钮 */
@@ -2133,80 +2138,121 @@
 
         }, this.speed);
       },
-      /* 获取gpu时间节点 */
-      getGPUTimeNodes(val) {
-        let myDate = new Date()
-        let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
-        if (val == 'nextDay') {
-          this.setGpuTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
-        } else {
-          this.setGpuTime(new Date(currentDay + ' ' + val).getTime())
-        }
-      },
-      /* 获取购买时间节点 */
-      getTimeNodes(val) {
-        let myDate = new Date()
-        let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
-        if (val == 'nextDay') {
-          this.setTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
-        } else {
-          this.setTime(new Date(currentDay + ' ' + val).getTime())
-        }
-      },
+      /*      /!* 获取gpu时间节点 *!/
+            getGPUTimeNodes(val) {
+              let myDate = new Date()
+              let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
+              if (val == 'nextDay') {
+                this.setGpuTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
+              } else {
+                this.setGpuTime(new Date(currentDay + ' ' + val).getTime())
+              }
+            },
+            /!* 获取购买时间节点 *!/
+            getTimeNodes(val) {
+              let myDate = new Date()
+              let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
+              if (val == 'nextDay') {
+                this.setTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
+              } else {
+                this.setTime(new Date(currentDay + ' ' + val).getTime())
+              }
+            },
+            /!* 倒计时方法 *!/
+            setTime(endTime) {
+              let startTime = this.serverTime
+              let limitTime = endTime - startTime
+              if (limitTime > 0) {
+                this.setLimit(limitTime)
+                this.countDownTimer = setInterval(() => {
+                  this.setLimit(limitTime)
+                  limitTime -= 1000
+                  if (limitTime <= 0) {
+                    window.clearInterval(this.countDownTimer)
+                    this.$router.go(0)
+                  }
+                }, 1000);
+              } else {
+                this.hour = '--';
+                this.minute = '--';
+                this.second = '--';
+              }
+            },
+            setLimit(time) {
+              let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+              let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
+              let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒
+              this.hour = this.checkTime(hours);
+              this.minute = this.checkTime(minutes);
+              this.second = this.checkTime(seconds);
+            },
+            setGpuTime(endTime) {
+              let startTime = this.serverTime
+              let limitTime = endTime - startTime
+              if (limitTime > 0) {
+                this.setGpuLimit(limitTime)
+                this.countDownTimer = setInterval(() => {
+                  this.setGpuLimit(limitTime)
+                  limitTime -= 1000
+                  if (limitTime <= 0) {
+                    window.clearInterval(this.countDownTimer)
+                    this.$router.go(0)
+                  }
+                }, 1000);
+              } else {
+                this.gpuHour = '--';
+                this.gpuMinute = '--';
+                this.gpuSecond = '--';
+              }
+            },
+            setGpuLimit(time) {
+              let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+              let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
+              let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒
+              this.gpuHour = this.checkTime(hours);
+              this.gpuMinute = this.checkTime(minutes);
+              this.gpuSecond = this.checkTime(seconds);
+            },
+            checkTime(i) { //将0-9的数字前面加上0，例1变为01
+              if (i < 10) {
+                i = '0' + i;
+              }
+              return i;
+            },*/
       /* 倒计时方法 */
-      setTime(endTime) {
-        let startTime = this.serverTime
-        let limitTime = endTime - startTime
-        if (limitTime > 0) {
-          this.setLimit(limitTime)
-          this.countDownTimer = setInterval(() => {
-            this.setLimit(limitTime)
-            limitTime -= 1000
-            if (limitTime <= 0) {
-              window.clearInterval(this.countDownTimer)
-              this.$router.go(0)
+      setTime() {
+        axios.get('network/getTime.do').then(res => {
+          if (res.data.status == 1) {
+            let startTime = res.data.result
+            let endTime = new Date('2018/12/17').getTime()
+            let limitTime = endTime - startTime
+            if (limitTime > 0) {
+              this.setLimit(limitTime)
+              this.countDownTimer = setInterval(() => {
+                this.setLimit(limitTime)
+                limitTime -= 1000
+                if (limitTime <= 0) {
+                  window.clearInterval(this.countDownTimer)
+                }
+              }, 1000);
+            } else {
+              this.day = this.checkTime(0);
+              this.hour = this.checkTime(0);
+              this.minute = this.checkTime(0);
+              this.second = this.checkTime(0);
             }
-          }, 1000);
-        } else {
-          this.hour = '--';
-          this.minute = '--';
-          this.second = '--';
-        }
+          }
+        })
       },
       setLimit(time) {
+        let days = parseInt(time / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
         let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
         let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
-        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒
+        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒数
+        this.day = this.checkTime(days);
         this.hour = this.checkTime(hours);
         this.minute = this.checkTime(minutes);
         this.second = this.checkTime(seconds);
-      },
-      setGpuTime(endTime) {
-        let startTime = this.serverTime
-        let limitTime = endTime - startTime
-        if (limitTime > 0) {
-          this.setGpuLimit(limitTime)
-          this.countDownTimer = setInterval(() => {
-            this.setGpuLimit(limitTime)
-            limitTime -= 1000
-            if (limitTime <= 0) {
-              window.clearInterval(this.countDownTimer)
-              this.$router.go(0)
-            }
-          }, 1000);
-        } else {
-          this.gpuHour = '--';
-          this.gpuMinute = '--';
-          this.gpuSecond = '--';
-        }
-      },
-      setGpuLimit(time) {
-        let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
-        let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
-        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒
-        this.gpuHour = this.checkTime(hours);
-        this.gpuMinute = this.checkTime(minutes);
-        this.gpuSecond = this.checkTime(seconds);
       },
       checkTime(i) { //将0-9的数字前面加上0，例1变为01
         if (i < 10) {
@@ -2960,8 +3006,28 @@
         width: 820px;
         margin: 0 auto;
       }
+      .end-count-down {
+        margin: 610px auto 0;
+        height: 33px;
+        width: 413px;
+        background: url("../../../assets/img/active/anniversary/time-banner.png") center no-repeat;
+        > p {
+          font-size: 24px;
+          font-family: PingFangSC-Medium;
+          font-weight: 500;
+          color: rgba(253, 253, 253, 1);
+          position: relative;
+          left: 205px;
+          top: 5px;
+          > span {
+            font-size: 14px;
+            color: #FF3000;
+            margin: 0 8px;
+          }
+        }
+      }
       .lottery-title {
-        margin-top: 680px;
+        margin-top: 40px;
         text-align: center;
         position: relative;
         > h2 {
