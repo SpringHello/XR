@@ -109,6 +109,7 @@ const Pelastic = () => import('@/components/App/product/Pelastic.vue')
 // import Register from '@/components/LR/Register'
 // import Reset from '@/components/LR/Reset'
 const Login = () =>import('@/components/LR/Login')
+const NewLogin = () =>import('@/components/LR/newLogin')
 const Register = () =>import('@/components/LR/Register')
 const Reset = () =>import('@/components/LR/Reset')
 const RegisterSuccess = () =>import('@/components/LR/RegisterSuccess')
@@ -448,6 +449,7 @@ var router = new Router({
       component: LR,
       children: [
         {path: 'login', name: 'login', component: Login},
+        {path: 'newLogin', name: 'newLogin', component: NewLogin},
         {path: 'register', name: 'register', component: Register},
         {path: 'reset', name: 'reset', component: Reset},
         {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess}
