@@ -24,24 +24,29 @@
               <img src="../../assets/img/login/lr-icon1.png"/>
               <input type="text" placeHolder="请输入手机号或邮箱"/>
             </div>
-            <div class="errorMsg"></div>
+            <div class="errorMsg">
+              <div v-if="loginForm.errorMsg === 'notRegister'">
+                <i></i>
+                <p>该号码不存在，请先去<span>注册</span></p>
+              </div>
+            </div>
             <div class="import">
               <img src="../../assets/img/login/lr-icon2.png"/>
               <input ref="loginPasInput" type="password" placeHolder="请输入密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('loginPasInput')" src="../../assets/img/login/lr-icon3.png"/>
             </div>
             <div class="errorMsg"></div>
-            <div id="slideVerify">
-              <div class="image">
-                <div class="chip2"></div>
-                <div class="chip"></div>
-              </div>
-              <div class="drag">
-                <div class="bg"></div>
-                <div class="text" onselectstart="return false;">请拖动滑块解锁</div>
-                <div class="btn">&gt;&gt;</div>
-              </div>
-            </div>
+            <!--  <div id="slideVerify">
+                <div class="image">
+                  <div class="chip2"></div>
+                  <div class="chip"></div>
+                </div>
+                <div class="drag">
+                  <div class="bg"></div>
+                  <div class="text" onselectstart="return false;">请拖动滑块解锁</div>
+                  <div class="btn">&gt;&gt;</div>
+                </div>
+              </div>-->
             <button>登录</button>
             <div class="footer">
               <span>验证码登录</span>
@@ -468,6 +473,42 @@
         }
         .errorMsg {
           height: 30px;
+          > div {
+            display: flex;
+            padding: 8px 0;
+            > i {
+              width: 12px;
+              height: 12px;
+              background: rgba(255, 0, 0, 1);
+              border-radius: 6px;
+              margin-right: 5px;
+              &:before {
+                display: inline-block;
+                width: 6px;
+                height: 1px;
+                content: '';
+                background: #FFF;
+                transform: translate(3px,-6px) rotate(-55deg)
+              }
+              &:after {
+                display: inline-block;
+                width: 6px;
+                height: 1px;
+                content: '';
+                background: #FFF;
+                transform: translate(-3px,-6px) rotate(55deg);
+              }
+            }
+            > p {
+              font-size: 12px;
+              font-family: MicrosoftYaHei;
+              color: rgba(255, 0, 0, 1);
+              > span {
+                color: #2A99F2;
+                cursor: pointer;
+              }
+            }
+          }
         }
         button {
           margin-top: 40px;
@@ -522,13 +563,16 @@
       return {
         formType: 'login',
         activeBanner: 1,
-        ruleModal: false
+        ruleModal: false,
+        loginForm: {
+          errorMsg: 'notRegister'
+        }
       }
     },
     created() {
     },
     mounted() {
-      this.SlideVerify('../../assets/img/imgValidation/', 9)
+      //this.SlideVerify('../../assets/img/imgValidation/', 9)
     },
     methods: {
       /* 切换banner */
@@ -556,9 +600,10 @@
           imgAt = Math.floor(Math.random() * num);
         //var img = document.createElement('img');
         //image.appendChild(img);
-        console.log('url(' + require+ '(' + path + imgAt + '.jpg))')
-        image.style.background = 'url(' + require+ '(' + path + imgAt + '.jpg))'
+        //image.style.background = 'url(' + require+ '(' + path + imgAt + '.jpg))'
+        //console.log('url(' + require('../../assets/img/imgValidation/1.jpg') + ')')
         //image.style.background = 'url(' + require('../../assets/img/imgValidation/1.jpg') + ')'
+        //image.style.background = 'url(' + require('\''  + imgAt + '.jpg\'') + ')'
         console.log(image.style.background)
         var getStatus = function () {
           return status;
