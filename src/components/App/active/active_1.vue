@@ -34,7 +34,7 @@
         <div class="cash-get">
           <div class="container">
             <div class="left">
-              <p>此现金券需前往<span @click="$router.push('usercenter')" style="color:#FF6028">个人中心</span>使用</p>
+              <p>此现金券需前往<span @click="$router.push('expenses')" style="color:#FF6028">个人中心</span>使用</p>
             </div>
           <div class="right" @click="getTicket"></div>
         </div>
