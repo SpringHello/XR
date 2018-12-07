@@ -23,7 +23,7 @@
                     </Form-item>
                     <Form-item label="问题类型" required>
                       <Select v-model="formItem.type" placeholder="产品功能咨询" @on-change="clear">
-                        <Option v-for="item in Object.keys(orderType)" :value="item" :key="item">{{item}}</Option>
+                        <Option v-for="(item,index) in Object.keys(orderType)" :value="item" :key="index">{{item}}</Option>
                       </Select>
                     </Form-item>
                     <Form-item label="产品" required>
@@ -67,7 +67,7 @@
               <div class="operating">
                 <div style="width:35%">
                   <div>
-                    <div v-for="(item,index) in operatingOrder" :key="item" class="item">
+                    <div v-for="(item,index) in operatingOrder" :key="index" class="item">
                       <label>{{item.title}}</label>
                       <div style="display: flex;flex-wrap: wrap">
                         <span style="width:38%">问题类型 : {{item.description}}</span>
@@ -273,7 +273,7 @@
       this.$http.post('device/DescribeWalletsBalance.do').then(response => {
         this.formItem.remainder = Number(response.data.data.remainder)
       })
-      if (this.$route.query.logData) {
+     /* if (this.$route.query.logData) {
         this.formItem.type = '产品故障'
         switch (this.$route.query.logData.operatetarget) {
           case '主机':
@@ -303,9 +303,15 @@
           case '硬盘':
             this.formItem.product = '31'
             break
+          case'云数据库':
+            this.formItem.product = '33'
+            break;
+          case'GPU服务器':
+            this.formItem.product = '34'
+            break;
         }
         this.formItem.description = this.$route.query.logData.operatedes + '失败'
-      }
+      }*/
     },
     methods: {
       urge() {
