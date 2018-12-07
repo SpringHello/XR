@@ -1998,6 +1998,11 @@
             this.hostList.forEach(item => {
               item.zoneId = this.hostZoneList[0].value
             })
+            this.hostZoneList.forEach((item, index) => {
+              if (item.value === '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
+                this.hostZoneList.splice(index, 1)
+              }
+            })
           }
         })
       },
@@ -2024,6 +2029,11 @@
             this.databaseList.forEach(item => {
               item.zoneId = this.databaseZoneList[0].value
             })
+            this.databaseZoneList.forEach((item, index) => {
+              if (item.value === '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
+                this.databaseZoneList.splice(index, 1)
+              }
+            })
           }
         })
       },
@@ -2049,6 +2059,11 @@
             this.freeHostZoneList = res.data.result.optionalArea
             this.freeHostList.forEach(item => {
               item.zoneId = this.freeHostZoneList[0].value
+            })
+            this.freeHostZoneList.forEach((item, index) => {
+              if (item.value === '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
+                this.freeHostZoneList.splice(index, 1)
+              }
             })
           }
         })
