@@ -3,6 +3,7 @@
     <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
       <div class="center">
         <div class="countdown" v-if="hintShow">
+          <!--<p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>-->
         </div>
       </div>
       <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
@@ -631,7 +632,7 @@
       if (sessionStorage.getItem('hintShow') == 'true') {
         this.$refs.hint.style.height = '80px'
       }
-
+      this.setTime()
     },
     created() {
       if (sessionStorage.getItem('hintShow') == null) {
@@ -702,6 +703,47 @@
         this.hintShow = false
         this.$refs.hint.style.height = 0
         sessionStorage.setItem('hintShow', 'false')
+      },
+      /* 倒计时方法 */
+      setTime() {
+        axios.get('network/getTime.do').then(res => {
+          if (res.data.status == 1) {
+            let startTime = res.data.result
+            let endTime = new Date('2018/12/17').getTime()
+            let limitTime = endTime - startTime
+            if (limitTime > 0) {
+              this.setLimit(limitTime)
+              this.timer = setInterval(() => {
+                this.setLimit(limitTime)
+                limitTime -= 1000
+                if (limitTime <= 0) {
+                  window.clearInterval(this.timer)
+                }
+              }, 1000);
+            } else {
+              this.day = this.checkTime(0);
+              this.hour = this.checkTime(0);
+              this.minute = this.checkTime(0);
+              this.second = this.checkTime(0);
+            }
+          }
+        })
+      },
+      setLimit(time) {
+        let days = parseInt(time / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
+        let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+        let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
+        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒数
+        this.day = this.checkTime(days);
+        this.hour = this.checkTime(hours);
+        this.minute = this.checkTime(minutes);
+        this.second = this.checkTime(seconds);
+      },
+      checkTime(i) { //将0-9的数字前面加上0，例1变为01
+        if (i < 10) {
+          i = '0' + i;
+        }
+        return i;
       },
     },
     computed: mapState({
