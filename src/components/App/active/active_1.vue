@@ -39,7 +39,6 @@
           <div class="right" @click="getTicket"></div>
         </div>
           </div>
-         
     </div>
     <div class="foot">
       <div class="recommend-product">
@@ -669,8 +668,21 @@ export default {
     .bottom {
       padding: 20px 40px;
       background: #fff;
+      .parameter {
+        display: flex;
+        justify-content: space-between;
+      }
+      .price {
+        margin-top: 28px;
+        color: rgba(255, 59, 53, 1);
+        font-size: 16px;
+        line-height: 60px;
+        span {
+          font-size: 32px;
+        }
+      }
       .btn-purchase {
-        display: block;
+        display: inline-block;
         margin-top: 10px;
         width: 510px;
         height: 60px;
@@ -683,19 +695,6 @@ export default {
         cursor: pointer;
         &:hover {
           background: rgba(255, 54, 54, 1);
-        }
-      }
-      .parameter {
-        display: flex;
-        justify-content: space-between;
-      }
-      .price {
-        margin-top: 28px;
-        color: rgba(255, 59, 53, 1);
-        font-size: 16px;
-        line-height: 60px;
-        span {
-          font-size: 32px;
         }
       }
     }
