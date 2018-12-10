@@ -231,7 +231,6 @@
     <!-- 客服浮动块 -->
     <div class="affix">
       <div class="registerImg" @click="$router.push('register')">
-        <p>立即领取</p>
       </div>
       <!--<img src="./assets/img/app/regiterTag.png"/>-->
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
@@ -1152,7 +1151,7 @@
         background: #E1E1E1 no-repeat center;
       }
       .registerImg {
-        height: 201px;
+        height: 189px;
         width: 48px;
         background: url("./assets/img/app/regiterTag.png") no-repeat;
         margin-bottom: 10px;
