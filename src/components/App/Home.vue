@@ -10,7 +10,17 @@
             </div>
           </div>
         </my-carousel-item>
-
+        <my-carousel-item class="carousel-item">
+          <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+            <div class="head-banner">
+              <div>
+                <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png"></p>
+                  <button>立即领取</button>
+                </div>
+                <img src="../../assets/img/home/home-banner4.png"></div>
+            </div>
+          </div>
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div class="eightscene" @click="push('/ruicloud/sceneList')">
             <div class="wrap">
@@ -107,17 +117,6 @@
                 <p>万兆光纤极速体验，助力区域企业云上发展</p>
                 <Button>了解详情</Button>
               </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
-            <div class="head-banner">
-              <div>
-                <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png"></p>
-                  <button>立即领取</button>
-                </div>
-                <img src="../../assets/img/home/home-banner4.png"></div>
             </div>
           </div>
         </my-carousel-item>

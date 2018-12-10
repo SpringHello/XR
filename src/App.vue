@@ -3,7 +3,7 @@
     <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
       <div class="center">
         <div class="countdown" v-if="hintShow">
-          <!--<p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>-->
+          <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
         </div>
       </div>
       <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
@@ -790,16 +790,17 @@
         margin: 0 auto;
         .countdown {
           position: absolute;
-          left: 78%;
-          top: 38%;
+          left: 74.4%;
+          top: 45%;
           > p {
-            font-size: 20px;
             font-family: MicrosoftYaHei;
-            font-weight: 500;
-            color: rgba(253, 253, 253, 1);
+            font-size:24px;
+            font-weight:500;
+            color:rgba(255,45,0,1);
             > span {
-              font-size: 12px;
-              margin-right: 5px;
+              font-size: 14px;
+              margin: 0 8px;
+              color: #FFF
             }
           }
         }
