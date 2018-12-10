@@ -114,8 +114,8 @@
           <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
-                <div><p><img style="padding-top: 0" src="../../assets/img/home/home-banner3.png"></p>
-                  <button style="margin-top: 120px">立即领取</button>
+                <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png"></p>
+                  <button>立即领取</button>
                 </div>
                 <img src="../../assets/img/home/home-banner4.png"></div>
             </div>
@@ -4718,16 +4718,19 @@
       div {
         padding-top: 60px;
         button {
-          background: #F26667;
-          border-radius: 100px;
-          font-size: 18px;
-          color: #FFFFFF;
+          width: 176px;
+          height: 54px;
+          background: rgba(255, 96, 40, 1);
+          font-size: 24px;
+          color: #ffffff;
           line-height: 24px;
-          margin-top: 60px;
+          margin-top: 50px;
           outline: none;
           border: none;
           cursor: pointer;
-          padding: 10px 20px;
+          &:hover {
+            background: rgba(255, 57, 54, 1);
+          }
         }
       }
       > img {
