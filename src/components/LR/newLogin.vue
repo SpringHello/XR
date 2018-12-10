@@ -22,17 +22,21 @@
           <div class="login-body" v-show="formType == 'login'">
             <div class="import">
               <img src="../../assets/img/login/lr-icon1.png"/>
-              <input type="text" placeHolder="请输入手机号或邮箱"/>
+              <input v-model="loginForm.loginName" type="text" placeHolder="请输入手机号或邮箱" @blur="verifyIsRegister" @input="loginForm.errorMsg=''"/>
             </div>
             <div class="errorMsg">
               <div v-if="loginForm.errorMsg === 'notRegister'">
                 <i></i>
                 <p>该号码不存在，请先去<span>注册</span></p>
               </div>
+              <div v-if="loginForm.errorMsg === 'formatError'">
+                <i></i>
+                <p>请输入正确的手机号码或者邮箱地址</p>
+              </div>
             </div>
             <div class="import">
               <img src="../../assets/img/login/lr-icon2.png"/>
-              <input ref="loginPasInput" type="password" placeHolder="请输入密码"/>
+              <input v-model="loginForm.password" ref="loginPasInput" type="password" placeHolder="请输入密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('loginPasInput')" src="../../assets/img/login/lr-icon3.png"/>
             </div>
             <div class="errorMsg"></div>
@@ -47,7 +51,7 @@
                   <div class="btn">&gt;&gt;</div>
                 </div>
               </div>-->
-            <button>登录</button>
+            <button :class="{notAllow: loginDisabled}" :disabled="loginDisabled">登录</button>
             <div class="footer">
               <span>验证码登录</span>
               <span style="float: right">忘记密码？</span>
@@ -468,7 +472,7 @@
             height: 100%;
             border: none;
             outline: none;
-            font-size: 18px;
+            font-size: 14px;
           }
         }
         .errorMsg {
@@ -488,7 +492,7 @@
                 height: 1px;
                 content: '';
                 background: #FFF;
-                transform: translate(3px,-6px) rotate(-55deg)
+                transform: translate(3px, -6px) rotate(-55deg)
               }
               &:after {
                 display: inline-block;
@@ -496,7 +500,7 @@
                 height: 1px;
                 content: '';
                 background: #FFF;
-                transform: translate(-3px,-6px) rotate(55deg);
+                transform: translate(-3px, -6px) rotate(55deg);
               }
             }
             > p {
@@ -557,15 +561,23 @@
   }
 </style>
 <script type="text/ecmascript-6">
+  import axios from 'axios'
 
   export default {
     data() {
       return {
+        regExpObj: {
+          phone: /^1[3|5|8|9|6|7]\d{9}$/,
+          email: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
+          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/
+        },
         formType: 'login',
         activeBanner: 1,
         ruleModal: false,
         loginForm: {
-          errorMsg: 'notRegister'
+          loginName: '',
+          password: '',
+          errorMsg: ''
         }
       }
     },
@@ -582,6 +594,24 @@
       /* 切换登录密码明文显示 */
       changeLoginPasType(name) {
         this.$refs[name].type === 'password' ? this.$refs[name].type = 'text' : this.$refs[name].type = 'password'
+      },
+      /* 校验手机号是否注册 */
+      verifyIsRegister() {
+        if (this.regExpObj.phone.test(this.loginForm.loginName) || this.regExpObj.email.test(this.loginForm.loginName)) {
+          axios.get('user/isRegister.do', {
+            params: {
+              username: this.loginForm.loginName
+            }
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.loginForm.errorMsg = 'notRegister'
+            } else {
+              this.loginForm.errorMsg = ''
+            }
+          })
+        } else {
+          this.loginForm.errorMsg = 'formatError'
+        }
       },
       /* 滑动验证 */
       SlideVerify(path, num) {
@@ -711,6 +741,10 @@
         return {getStatus};
       }
     },
-    computed: {}
+    computed: {
+      loginDisabled() {
+        return this.loginForm.errorMsg !== ''
+      }
+    }
   }
 </script>
