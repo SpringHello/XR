@@ -1065,8 +1065,13 @@
                   :disabled="keycodePlaceholder!='获取验证码'">{{keycodePlaceholder}}
           </Button>
         </p>
-        <p style="font-size:12px;color:#F10C0C">收不到验证码？请换<span @click="isEmailVail=true" v-if="$store.state.userInfo.loginname" style="color:#4A97EE;cursor:pointer">邮箱验证</span>或<span @click.prevent="keysendCode('voiceVail')" style="color:#4A97EE;cursor:pointer">接收语音验证码</span></p>
-        <P style="font-size:12px;color:#4A97EE;margin-bottom:0">通过身份验证方式找回账号</P>
+        <p style="font-size:12px;color:#F10C0C">收不到验证码？
+          <span v-if="$store.state.userInfo.loginname">
+            请换<span @click="isEmailVail=true"  style="color:#4A97EE;cursor:pointer">邮箱验证</span>或
+          </span>
+          <span @click.prevent="keysendCode('voiceVail')" style="color:#4A97EE;cursor:pointer">接收语音验证码</span>
+        </p>
+        <P style="font-size:12px;color:#4A97EE;margin-bottom:0;cursor:pointer">通过身份验证方式找回账号</P>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.keyPhoneVal=false">取消</Button>
@@ -1244,6 +1249,7 @@
         currentTab: currentTab ? currentTab : 'personalInfo',
         authType,
         isEmailVail: false,
+        resultAim: '',
         showModal: {
           selectAuthType: false,
           addLinkman: false,
@@ -3153,28 +3159,20 @@
           this.$Message.info('图像验证码不能为空')
           return false  
         }
-        var resultAim
-        var isemail
-        if (!this.isEmailVail) {
-          resultAim = this.keyForm.phone
-          isemail = 0
-        } else {
-          resultAim = this.$store.state.userInfo.loginname
-          isemail = 1
-        }
+        this.resultAim = this.isEmailVail ? this.$store.state.userInfo.loginname : this.keyForm.phone
         var params
         var url = ''
         if (val == 'num') {
           url = 'user/code.do'
           params = {
-            aim: resultAim,
-            isemail: isemail,
+            aim: this.resultAim,
+            isemail: this.isEmailVail ? 1 : 0,
             vailCode: this.keyForm.imgCode
           }
         } else {
           url = 'user/voiceCode.do'
           params = {
-            aim: resultAim,
+            aim: this.resultAim,
             vailCode: this.keyForm.imgCode
           }
         }
@@ -3207,8 +3205,8 @@
         this.showModal.keyPhoneVal = false
         axios.get('user/judgeCode.do', {
           params: {
-            aim: this.keyForm.phone,
-            isemail: 0,
+            aim: this.resultAim,
+            isemail: this.isEmailVail ? 1 : 0,
             code: this.keyForm.code,
             weight: this.keyWeight
           }
