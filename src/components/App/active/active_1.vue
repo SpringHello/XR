@@ -65,7 +65,7 @@
                     <Option v-for="(item3,index) in productHost.zoneList" :value="item3.zoneid" :key="index">{{ item3.zonename }}</Option>
                   </Select>
                 </div>
-                <p class="price">价格：<span>{{productHost.price}}</span>元/小时{{productHost.priceText}}</p>
+                <p class="price">价格：<span>{{productHost.price}}</span>{{productHost.priceText}}</p>
                 <span @click="productBuy_host(productHost)" class="btn-purchase">立即购买</span>
               </div>
             </div>
@@ -104,7 +104,7 @@
               </div>
               <div class="bottom">
                 <div class="parameter">
-                  <p style="font-size:18px;color:rgba(149,149,149,1);margin:0 auto;margin-top:32px;margin-bottom:3px;">对象存储默认区域： 北京一区</p>
+                  <p style="font-size:18px;color:rgba(149,149,149,1);margin:0 auto;margin-top:31px;margin-bottom:3px;">对象存储默认区域： 北京一区</p>
                 </div>
                 <p class="price">价格：<span>{{productObj.price}}</span>{{productObj.priceText}}<span>{{productObj.price1}}</span>{{productObj.priceText1}}</p>
                 <span @click="productBuy_obj(productObj)" class="btn-purchase">立即购买</span>
