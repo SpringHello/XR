@@ -220,7 +220,7 @@
               <Input v-model="infoTempFormValidate.enAddress"></Input>
             </FormItem>
             <FormItem>
-              <Button @click="handleReset('infoTempFormValidate')" style="margin:0 10px 0 8px;">取消</Button>
+              <Button @click="handleReset('infoTempFormValidate')" style="margin:0 10px 0 8px;">重置</Button>
               <Button type="primary" @click="handleSubmit('infoTempFormValidate')" v-show='index==0'>确认建立模板</Button>
               <Button type="primary" v-show='index==1' @click="payTemplate">保存模版并支付</Button>
             </FormItem>
