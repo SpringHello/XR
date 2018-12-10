@@ -592,6 +592,7 @@ export default {
         align-items: center;
         img {
           margin-right: 20px; 
+          margin-left: 50px;
         }
         > div {
           display: inline-block;
