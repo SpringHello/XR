@@ -1254,7 +1254,7 @@
           selectAuthType: false,
           addLinkman: false,
           updateLinkman: false,
-          keyPhoneVal: true,
+          keyPhoneVal: false,
           showPicture: false,
           setNewPassword: false,
           bindingMobilePhone: false,
