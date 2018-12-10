@@ -918,7 +918,7 @@
                 currentPrice: '69.00',
                 originalPrice: '166.72',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: 'b8860b0e-2960-487d-82fa-b43eae0c8315'
               },
               {
                 title: '三个月',
@@ -963,7 +963,7 @@
                 currentPrice: '169.00',
                 originalPrice: '500.16',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: 'b8860b0e-2960-487d-82fa-b43eae0c8315'
               },
               {
                 title: '六个月',
@@ -1007,7 +1007,7 @@
                 currentPrice: '269.00',
                 originalPrice: '1000.32',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: 'b8860b0e-2960-487d-82fa-b43eae0c8315'
               },
               {
                 title: '十二个月',
@@ -1051,7 +1051,7 @@
                 currentPrice: '569.00',
                 originalPrice: '2000.64',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: 'b8860b0e-2960-487d-82fa-b43eae0c8315'
               }
             ],
             bannerImg: require('../../assets/img/sceneInfo/si-banner1.png')
@@ -1103,7 +1103,7 @@
                 currentPrice: '69.00',
                 originalPrice: '166.72',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '58e635ab-654b-42c9-b4ed-78e2e4e3391a'
               },
               {
                 title: '三个月',
@@ -1148,7 +1148,7 @@
                 currentPrice: '169.00',
                 originalPrice: '500.16',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '58e635ab-654b-42c9-b4ed-78e2e4e3391a'
               },
               {
                 title: '六个月',
@@ -1192,7 +1192,7 @@
                 currentPrice: '269.00',
                 originalPrice: '1000.32',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '58e635ab-654b-42c9-b4ed-78e2e4e3391a'
               },
               {
                 title: '十二个月',
@@ -1236,7 +1236,7 @@
                 currentPrice: '569.00',
                 originalPrice: '2000.64',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '58e635ab-654b-42c9-b4ed-78e2e4e3391a'
               }
             ],
             bannerImg: require('../../assets/img/sceneInfo/si-banner2.png')
@@ -1288,7 +1288,7 @@
                 currentPrice: '69.00',
                 originalPrice: '166.72',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '8ea10645-9f6d-46e3-9a35-23a6d3ffa318'
               },
               {
                 title: '三个月',
@@ -1333,7 +1333,7 @@
                 currentPrice: '169.00',
                 originalPrice: '500.16',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '8ea10645-9f6d-46e3-9a35-23a6d3ffa318'
               },
               {
                 title: '六个月',
@@ -1377,7 +1377,7 @@
                 currentPrice: '269.00',
                 originalPrice: '1000.32',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '8ea10645-9f6d-46e3-9a35-23a6d3ffa318'
               },
               {
                 title: '十二个月',
@@ -1421,7 +1421,7 @@
                 currentPrice: '569.00',
                 originalPrice: '2000.64',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '8ea10645-9f6d-46e3-9a35-23a6d3ffa318'
               }
             ],
             bannerImg: require('../../assets/img/sceneInfo/si-banner3.png')
@@ -1473,7 +1473,7 @@
                 currentPrice: '69.00',
                 originalPrice: '166.72',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '333993e2-2207-4273-980a-06b304d5d0a2'
               },
               {
                 title: '三个月',
@@ -1518,7 +1518,7 @@
                 currentPrice: '169.00',
                 originalPrice: '500.16',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '333993e2-2207-4273-980a-06b304d5d0a2'
               },
               {
                 title: '六个月',
@@ -1562,7 +1562,7 @@
                 currentPrice: '269.00',
                 originalPrice: '1000.32',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '333993e2-2207-4273-980a-06b304d5d0a2'
               },
               {
                 title: '十二个月',
@@ -1606,7 +1606,7 @@
                 currentPrice: '569.00',
                 originalPrice: '2000.64',
                 zoneId: $store.state.zone.zoneid,
-                system: 'linux'
+                system: '333993e2-2207-4273-980a-06b304d5d0a2'
               }
             ],
             bannerImg: require('../../assets/img/sceneInfo/si-banner4.png')
@@ -1669,7 +1669,7 @@
                 currentPrice: '178',
                 originalPrice: '646.25',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               },
               {
                 title: '增长型业务网站（3天）',
@@ -1725,7 +1725,7 @@
                 currentPrice: '200',
                 originalPrice: '730.26',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               },
               {
                 title: '稳定型业务网站（3天）',
@@ -1780,7 +1780,7 @@
                 currentPrice: '341',
                 originalPrice: '1215.88',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               }
             ],
             bannerImg: require('../../assets/img/sceneInfo/si-banner5.png')
@@ -1843,7 +1843,7 @@
                 currentPrice: '178',
                 originalPrice: '646.25',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               },
               {
                 title: '增长型业务网站（3天）',
@@ -1899,7 +1899,7 @@
                 currentPrice: '200',
                 originalPrice: '730.26',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               },
               {
                 title: '稳定型业务网站（3天）',
@@ -1954,7 +1954,7 @@
                 currentPrice: '341',
                 originalPrice: '1215.88',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               }
             ],
             bannerImg: require('../../assets/img/sceneInfo/si-banner6.png')
@@ -2017,7 +2017,7 @@
                 currentPrice: '178',
                 originalPrice: '646.25',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               },
               {
                 title: '增长型业务网站（3天）',
@@ -2073,7 +2073,7 @@
                 currentPrice: '200',
                 originalPrice: '730.26',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               },
               {
                 title: '稳定型业务网站（3天）',
@@ -2128,7 +2128,7 @@
                 currentPrice: '341',
                 originalPrice: '1215.88',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               }
             ],
             bannerImg: require('../../assets/img/sceneInfo/si-banner7.png')
@@ -2191,7 +2191,7 @@
                 currentPrice: '178',
                 originalPrice: '646.25',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               },
               {
                 title: '增长型业务网站（3天）',
@@ -2247,7 +2247,7 @@
                 currentPrice: '200',
                 originalPrice: '730.26',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               },
               {
                 title: '稳定型业务网站（3天）',
@@ -2302,7 +2302,7 @@
                 currentPrice: '341',
                 originalPrice: '1215.88',
                 zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
+                system: ''
               }
             ],
             bannerImg: require('../../assets/img/sceneInfo/si-banner8.png')
@@ -2978,10 +2978,16 @@
       // },
       getMirror(userType) {
         let url = 'information/listTemplateFunction.do'
+        var zoneidR = ''
+        if (userType < 4) {
+          zoneidR = 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d'
+        } else {
+          zoneidR = this.$store.state.gpuZone.zoneid
+        }
         axios.get(url, {
           params: {
             useType: userType + 1,
-            zoneId: this.$store.state.gpuZone.zoneid
+            zoneId: zoneidR
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
