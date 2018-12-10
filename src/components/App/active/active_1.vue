@@ -27,9 +27,9 @@
       </div>
     </div>
     <div class="body">
-        <div class="head">
-            <h2 class="head-headline" style="color:#F26667">限时领取</h2>
-            <span>每天9:00、12: 00、15: 00、20:00整点领取，数量有限，先到先得</span>
+        <div class="head-headline">
+            <img src="../../../assets/img/active/active_1/headline_1.png" alt="">
+            <span >每天9:00、12: 00、15: 00、20:00整点领取，数量有限，先到先得</span>
         </div>
         <div class="cash-get">
           <div class="container">
@@ -43,17 +43,19 @@
     <div class="foot">
       <div class="recommend-product">
         <div class="center">
-          <h2 class="head-headline" style="color:#F26667">推荐购买产品</h2>
-          <p style="text-align:center;">领取38元现金券即可用券购买以下爆款云产品以及其他活动外的产品</p>
+          <div class="head-headline">
+            <img src="../../../assets/img/active/active_1/headline_2.png" alt="">
+            <span >领取38元现金券即可用券购买以下爆款云产品以及其他活动外的产品</span>
+          </div>
           <div class="content">
             <div class="item">
               <div class="top">
                 <div class="left">
-                  <p>{{productHost.title}}
+                  <p style="width:210px;">{{productHost.title}}
                   <span v-if="productHost.secTtitle">({{productHost.secTtitle}})</span></p>
                 </div>
                 <ul class="right">
-                  <li v-for="(item1,index) in productHost.params" :key="index">{{item1.val}}<span>{{item1.type}}</span></li>
+                  <li v-for="(item1,index) in productHost.params" :key="index">{{item1.unit}}<span>{{item1.type}}</span></li>
                 </ul>
               </div>
               <div class="bottom">
@@ -76,7 +78,7 @@
                 <span v-if="productDB.secTtitle">({{productDB.secTtitle}})</span></p>
                 </div>
                 <ul class="right">
-                  <li v-for="(item1,index) in productDB.params" :key="index">{{item1.val}}<span>{{item1.type}}</span></li>
+                  <li v-for="(item1,index) in productDB.params" :key="index">{{item1.unit}}<span>{{item1.type}}</span></li>
                 </ul>
               </div>
               <div class="bottom">
@@ -99,7 +101,7 @@
                 <span v-if="productObj.secTtitle">({{productObj.secTtitle}})</span></p>
                 </div>
                 <ul class="right">
-                  <li v-for="(item1,index) in productObj.params" :key="index">{{item1.val}}<span>{{item1.type}}</span></li>
+                  <li v-for="(item1,index) in productObj.params" :key="index">{{item1.unit}}<span>{{item1.type}}</span></li>
                 </ul>
               </div>
               <div class="bottom">
@@ -117,7 +119,7 @@
                 <span v-if="productGpu.secTtitle">({{productGpu.secTtitle}})</span></p>
                 </div>
                 <ul class="right">
-                  <li v-for="(item1,index) in productGpu.params" :key="index">{{item1.val}}<span>{{item1.type}}</span></li>
+                  <li v-for="(item1,index) in productGpu.params" :key="index">{{item1.unit}}<span>{{item1.type}}</span></li>
                 </ul>
               </div>
               <div class="bottom">
@@ -137,7 +139,9 @@
         </div>
       </div>
       <div class="activity-rule">
-        <h2 class="head-headline" style="color:#F26667">活动规则</h2>
+        <div class="head-headline">
+            <img src="../../../assets/img/active/active_1/headline_1.png" alt="">
+        </div>
         <div class="center">
           <div class="rules">
           <p>1. 活动时间：2018年12月7日开始；活动对象：新注册用户。</p>
@@ -164,12 +168,12 @@ export default {
       imgSrc: 'user/getKaptchaImage.do',
       headNav: [
         {
-          img: require("../../../assets/img/active/active_1/Group 9.png"),
+          img: require("../../../assets/img/active/active_1/group_9.png"),
           title: "注册即到账158元现金大礼包",
           desc: "68元（满88元可用）90元（满150元可用）"
         },
         {
-          img: require("../../../assets/img/active/active_1/Group 10.png"),
+          img: require("../../../assets/img/active/active_1/group_10.png"),
           title: "38元无门槛优惠券整点抢",
           desc: "多款云产品免费用，任你挑选"
         }
@@ -479,17 +483,17 @@ export default {
 
 <style rel="stylesheet/less" lang="less" scoped>
 .head-headline {
-  font-size: 36px;
+  margin: 0 auto;
   text-align: center;
-  &::before {
-    content: url(../../../assets/img/active/active_1/title-before-icon.png);
-    width: 50px;
-    display: inline-block;
+  img {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 10px;
   }
-  &::after {
-    content: url(../../../assets/img/active/active_1/title-after-icon.png);
-    width: 50px;
-    display: inline-block;
+  span {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #222222;
   }
 }
 .body {
@@ -583,24 +587,25 @@ export default {
       .nav {
         cursor: pointer;
         width: 600px;
-        padding: 23px 0 0 50px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        img {
+          margin-right: 20px; 
+        }
         > div {
           display: inline-block;
           .title {
             font-size: 24px;
-            color: #f26667;
+            color: #FF3936;
             line-height: 24px;
             margin-bottom: 10px;
           }
           .desc {
             font-size: 16px;
-            color: #666666;
+            color: #222222;
             line-height: 16px;
           }
-        }
-        img {
-          vertical-align: middle;
-          margin-right: 10px;
         }
       }
     }
@@ -633,8 +638,10 @@ export default {
     width: 590px;
     height: 342px;
     background: rgba(255, 255, 255, 1);
-    box-shadow: 0px 6px 14px 0px rgba(244, 76, 44, 0.4);
     border: 1px solid rgba(255, 54, 54, 1);
+    &:hover {
+      box-shadow: 0px 6px 14px 0px rgba(244, 76, 44, 0.4);
+    }
     .top {
       padding: 20px 40px;
       height: 90px;
