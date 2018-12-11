@@ -1,32 +1,33 @@
 <template>
   <div style="background: #FFF; font-family:PingFangSC-Regular;" id="domain">
-    <div class="topOne">
-      <p>域名注册全新上线</p>
-      <span>帮助建立您的网上业务，从这里开始…</span>
-      <div class="search">
-        <Input v-model="searchText" style="width: 550px;" size="large" placeholder="请输入您要查找的域名">
-        <div slot="append" @click="choose=!choose"
-             style="margin: -14px -7px;width: 70px;height: 50px;vertical-align: middle;cursor:pointer">
-          <Icon type="arrow-down-b"
-                style="margin: 0px -7px;top: 50%;position: absolute;transform: translateY(-50%);"></Icon>
-        </div>
-        </Input>
-        <button @click="textSearch" class="btn">搜索</button>
-        <div v-show="choose" class="change">
-          <div class="change-top">
-            <RadioGroup v-model="suffix" @on-change="changeSuffix">
-              <Radio label="english">英文域名</Radio>
-              <Radio label="chinese">中文域名</Radio>
-              <Radio label="administrative">行政域名</Radio>
-            </RadioGroup>
-            <Button type="primary" label="small" @click="checkAll" v-if="showButton">全选</Button>
-            <Button type="primary" label="small" @click="notcheckAll" v-else>取消全选</Button>
+    <div class="domain-wrapper">
+      <div class="topOne">
+        <p>域名注册全新上线</p>
+        <span>帮助建立您的网上业务，从这里开始…</span>
+        <div class="search">
+          <Input v-model="searchText" style="width: 550px;border-radius: 0" size="large" placeholder="请输入您要查找的域名">
+          <div slot="append" @click="choose=!choose"
+               style="margin: -14px -7px;width: 70px;height: 50px;vertical-align: middle;cursor:pointer;border-radius:0;">
+            <Icon type="arrow-down-b"
+                  style="margin: 0px -7px;top: 50%;position: absolute;transform: translateY(-50%);"></Icon>
           </div>
-          <div class="content">
-            <CheckboxGroup v-model="suffixList" style="display: flex;flex-wrap: wrap;justify-content: flex-start">
-              <Checkbox v-for="(item,index) in showSuffix" :key="index" :label="item" style="width:85px;">{{item}}
-              </Checkbox>
-            </CheckboxGroup>
+          </Input>
+          <button @click="textSearch" class="btn">搜索</button>
+          <div v-show="choose" class="change">
+            <div class="change-top">
+              <RadioGroup v-model="suffix" @on-change="changeSuffix">
+                <Radio label="english">英文域名</Radio>
+                <Radio label="chinese">中文域名</Radio>
+                <Radio label="administrative">行政域名</Radio>
+              </RadioGroup>
+              <Checkbox v-model="showButton" @on-change="showBtn">所有后缀</Checkbox>
+            </div>
+            <div class="content">
+              <CheckboxGroup v-model="suffixList" style="display: flex;flex-wrap: wrap;justify-content: flex-start">
+                <Checkbox v-for="(item,index) in showSuffix" :key="index" :label="item" style="width:85px;">{{item}}
+                </Checkbox>
+              </CheckboxGroup>
+            </div>
           </div>
         </div>
       </div>
@@ -202,44 +203,29 @@
         showSuffix: [],
         suffixList: [],
 
-        showButton: true
+        showButton: false
       }
     },
     methods: {
-      //全选
-      checkAll(){
+      changeSuffix(){
+        this.suffixList = []
+        this.showSuffix = []
         this.showButton = false
         switch (this.suffix) {
           case 'english':
-            this.suffixList = this.getSuffix.en
+            var arry = this.getSuffix.en
             break;
           case 'chinese':
-            this.suffixList = this.getSuffix.cn
+            var arry = this.getSuffix.cn
             break;
           case 'administrative':
-            this.suffixList = this.getSuffix.xz
+            var arry = this.getSuffix.xz
             break;
         }
-      },
-      //取消全选
-      notcheckAll(){
-        this.suffixList = []
-        this.showButton = true
-      },
-
-      changeSuffix(){
-        this.suffixList = []
-        this.showButton = true
-        switch (this.suffix) {
-          case 'english':
-            this.showSuffix = this.getSuffix.en
-            break;
-          case 'chinese':
-            this.showSuffix = this.getSuffix.cn
-            break;
-          case 'administrative':
-            this.showSuffix = this.getSuffix.xz
-            break;
+        for (var i = 0; i < arry.length; i++) {
+          if (this.showSuffix.indexOf(arry[i]) == -1) {
+            this.showSuffix.push(arry[i])
+          }
         }
       },
 
@@ -253,80 +239,96 @@
         this.$router.push('DomainResult')
       },
 
+      showBtn(){
+        if (this.showButton) {
+          this.suffixList = this.showSuffix
+        } else {
+          this.suffixList = []
+        }
+      }
     },
     created(){
       axios.post('domain/getSuffix.do', {}).then(res => {
         this.getSuffix = res.data.data
-        this.showSuffix = this.getSuffix.en
+        this.showSuffix = []
+        var arry = this.getSuffix.en
+        for (var i = 0; i < arry.length; i++) {
+          if (this.showSuffix.indexOf(arry[i]) == -1) {
+            this.showSuffix.push(arry[i])
+          }
+        }
       })
-    }
+    },
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  .topOne {
+  .domain-wrapper {
     width: 100%;
-    margin: 0 auto;
-    height: 400px;
-    padding: 87px 0 81px 0;
-    text-align: center;
-    background: url('../../../assets/img/domain/banner.png') no-repeat, #0475FF;
-    p {
-      font-size: 48px;
-      color: rgba(255, 255, 255, 1);
+    background: linear-gradient(90deg, rgba(2, 116, 255, 1) 0%, rgba(83, 160, 255, 1) 50%, rgba(4, 117, 255, 1) 100%);
+    .topOne {
+      width: 100%;
+      height: 400px;
+      padding: 87px 0 81px 0;
+      text-align: center;
+      background: url('../../../assets/img/domain/banner.png') no-repeat center;
+      p {
+        font-size: 48px;
+        color: rgba(255, 255, 255, 1);
 
-    }
-    span {
-      display: block;
-      padding: 23px 0 29px 0;
-      font-size: 24px;
-      color: rgba(255, 255, 255, 1);
-
-    }
-    .search {
-      position: relative;
-      width: 800px;
-      height: 70px;
-      border-radius: 4px;
-      background: rgba(55, 125, 255, 0.5);
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      .btn {
-        height: 36px;
-        background: rgba(255, 231, 119, 1);
-        font-size: 20px;
-        color: rgba(0, 0, 0, 1);
-        padding: 4px 90px;
-        outline: none;
-        border: none;
-        cursor: pointer;
       }
-      .change {
-        position: absolute;
-        top: 70px;
-        text-align: left;
+      span {
+        display: block;
+        padding: 23px 0 29px 0;
+        font-size: 24px;
+        color: rgba(255, 255, 255, 1);
+
+      }
+      .search {
+        position: relative;
+        width: 800px;
+        height: 68px;
+        border-radius: 4px;
+        background: rgba(55, 125, 255, 0.5);
         margin: 0 auto;
-        width: 780px;
-        background: rgba(255, 255, 255, 1);
-        box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(230, 230, 230, 1);
-        .change-top {
-          margin: 30px 35px 20px 35px;
-          padding-bottom: 10px;
-          border-bottom: 1px solid #D9D9D9;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          button {
-            width: 80px;
-          }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 15px;
+        .btn {
+          height: 33px;
+          padding: 3px 83px;
+          background: rgba(255, 231, 119, 1);
+          font-size: 20px;
+          color: rgba(0, 0, 0, 1);
+          outline: none;
+          border: none;
+          cursor: pointer;
         }
-        .content {
-          padding: 0 38px 33px 38px;
-          border-top: 1px dashed #ccc;
+        .change {
+          position: absolute;
+          top: 70px;
           text-align: left;
+          margin: 0 auto;
+          width: 770px;
+          background: rgba(255, 255, 255, 1);
+          box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
+          border: 1px solid rgba(230, 230, 230, 1);
+          .change-top {
+            margin: 30px 35px 20px 35px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #D9D9D9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            button {
+              width: 80px;
+            }
+          }
+          .content {
+            padding: 0 38px 33px 38px;
+            text-align: left;
+          }
         }
       }
     }
@@ -501,5 +503,4 @@
       }
     }
   }
-
 </style>
