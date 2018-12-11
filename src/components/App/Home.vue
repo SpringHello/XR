@@ -2906,7 +2906,7 @@
     created() {
       this.getnews()
       this.getlinkList()
-      this.getMirror(this.eightsceneIndex)
+      //this.getMirror(this.eightsceneIndex)
     },
     methods: {
       init() {

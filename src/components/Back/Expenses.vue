@@ -773,7 +773,7 @@
                         }
                       }
                     }, '立即充值'),
-                    h('span', {
+                    /*h('span', {
                       style: {
                         color: '#2d8cf0',
                         cursor: 'pointer',
@@ -805,7 +805,7 @@
                           })
                         }
                       }
-                    }, '删除')
+                    }, '删除')*/
                   ])
                 } else {
                   return h('div', {}, [
@@ -814,7 +814,7 @@
                         to: 'buy'
                       }
                     }, '立即使用'),
-                    h('span', {
+                    /*h('span', {
                       style: {
                         color: '#2d8cf0',
                         cursor: 'pointer',
@@ -844,11 +844,12 @@
                           })
                         }
                       }
-                    }, '删除')
+                    }, '删除')*/
                   ])
                 }
               } else {
-                return  h('span', {
+                return h('span',{},'--')
+               /* return  h('span', {
                   style: {
                     color: '#2d8cf0',
                     cursor: 'pointer'
@@ -877,7 +878,7 @@
                       })
                     }
                   }
-                }, '删除')
+                }, '删除')*/
               }
             }
           }

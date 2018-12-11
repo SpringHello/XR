@@ -37,27 +37,27 @@
                     <li v-for="(item1,index) in cfg.configs" :class="{special: index == 6|| index == 9}">
                       <span :class="{s1: index == 0||index == 6|| index == 9}">{{ item1.text}}</span>
                       <span :class="{s2: index == 1|| index == 2 || index == 3|| index == 4}">{{ item1.value}}</span></li>
-                    <li class="special"><span class="s1">选择系统</span></li>
-                    <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
-                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
-                    </Select>
                     <li style="margin-top: 10px"><span class="s1">选择区域</span></li>
                     <Select v-model="cfg.zoneId" style="width:170px;" @on-change="getOriginalPrice(currentIndex,index1)">
                       <Option v-for="item2 in areaGroup" :value="item2.value" :key="item2.value">{{ item2.name }}</Option>
+                    </Select>
+                    <li class="special"><span class="s1">选择系统</span></li>
+                    <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
+                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
                     </Select>
                   </ul>
                   <ul v-else>
                     <li v-for="(item1,index) in cfg.configs" :class="{special: index == 4|| index == 7}">
                       <span :class="{s1: index == 0||index == 4|| index == 7}">{{ item1.text}}</span>
                       <span :class="{s2: index == 1|| index == 2 || index == 5}">{{ item1.value}}</span></li>
-                    <li class="special"><span class="s1">选择系统</span></li>
-                    <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
-                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
-                    </Select>
                     <li style="margin-top: 10px"><span class="s1">选择区域</span></li>
                     <Select v-model="cfg.zoneId" style="width:170px;"
                             @on-change="getOriginalPrice(currentIndex,index1)">
                       <Option v-for="item2 in areaGroup" :value="item2.value" :key="item2.value">{{ item2.name }}</Option>
+                    </Select>
+                    <li class="special"><span class="s1">选择系统</span></li>
+                    <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
+                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
                     </Select>
                   </ul>
                 </div>
@@ -1938,64 +1938,79 @@
         }
       },
       getOriginalPrice(currentIndex, index) {
-        let params = {}
-        if (!(this.scene == '游戏服务' || this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
-          switch (index) {
-            case 0:
-              params = {
-                vmConfigId: '45',
-                month: '1',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
-              }
-              break
-            case 1:
-              params = {
-                vmConfigId: '46',
-                month: '3',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
-              }
-              break
-            case 2:
-              params = {
-                vmConfigId: '47',
-                month: '6',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
-              }
-              break
-            case 3:
-              params = {
-                vmConfigId: '48',
-                month: '12',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
-              }
-              break
+        let url = 'information/listTemplateFunction.do'
+        axios.get(url, {
+          params: {
+            useType: this.userType,
+            zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
           }
-        } else {
-          switch (index) {
-            case 0:
-              params = {
-                vmConfigId: '196',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.systemGroup = res.data.result
+            /*this.currentSceneGroup[currentIndex].configGroup.forEach(host => {
+              host.system = this.systemGroup[0].systemtemplateid
+            })*/
+            this.currentSceneGroup[currentIndex].configGroup[index].system = this.systemGroup[0].systemtemplateid
+            let params = {}
+            if (!(this.scene == '游戏服务' || this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
+              switch (index) {
+                case 0:
+                  params = {
+                    vmConfigId: '45',
+                    month: '1',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
+                case 1:
+                  params = {
+                    vmConfigId: '46',
+                    month: '3',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
+                case 2:
+                  params = {
+                    vmConfigId: '47',
+                    month: '6',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
+                case 3:
+                  params = {
+                    vmConfigId: '48',
+                    month: '12',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
               }
-              break
-            case 1:
-              params = {
-                vmConfigId: '194',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+            } else {
+              switch (index) {
+                case 0:
+                  params = {
+                    vmConfigId: '196',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
+                case 1:
+                  params = {
+                    vmConfigId: '194',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
+                case 2:
+                  params = {
+                    vmConfigId: '195',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
               }
-              break
-            case 2:
-              params = {
-                vmConfigId: '195',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+            }
+            let url = 'activity/getOriginalPrice.do'
+            axios.get(url, {params: params}).then(res => {
+              if (res.data.status == 1) {
+                this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
               }
-              break
-          }
-        }
-        let url = 'activity/getOriginalPrice.do'
-        axios.get(url, {params: params}).then(res => {
-          if (res.data.status == 1) {
-            this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
+            })
           }
         })
       },
@@ -2014,7 +2029,12 @@
         axios.post(url, params).then(res => {
           if (res.data.status == 1) {
             this.areaGroup = res.data.result.optionalArea
-            if (res.data.result.optionalArea.length != 0) {
+            this.areaGroup.forEach((item, index) => {
+              if (item.value === '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
+                this.areaGroup.splice(index, 1)
+              }
+            })
+            /*if (res.data.result.optionalArea.length != 0) {
               this.currentSceneGroup.forEach(config => {
                 config.configGroup.forEach(host => {
                   host.zoneId = this.areaGroup[0].value
@@ -2026,7 +2046,7 @@
                   this.getOriginalPrice(i, j)
                 }
               }
-            }
+            }*/
           }
         })
       },
@@ -2040,23 +2060,23 @@
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.systemGroup = res.data.result
-            if (res.data.result.length != 0) {
-              this.currentSceneGroup.forEach(config => {
-                config.configGroup.forEach(host => {
-                  host.system = this.systemGroup[0].systemtemplateid
-                })
-              })
-            }
+            /*           if (res.data.result.length != 0) {
+                         this.currentSceneGroup.forEach(config => {
+                           config.configGroup.forEach(host => {
+                             host.system = this.systemGroup[0].systemtemplateid
+                           })
+                         })
+                       }*/
           }
         })
       },
       getHost(index1, index2) {
-        if (this.systemGroup.length == 0) {
-          this.$Message.info('请选择需要领取的镜像系统')
+        if (!this.currentSceneGroup[index1].configGroup[index2].zoneId) {
+          this.$Message.info('请选择需要领取的区域')
           return
         }
-        if (this.areaGroup.length == 0) {
-          this.$Message.info('请选择需要领取的区域')
+        if (this.systemGroup.length == 0) {
+          this.$Message.info('请选择需要领取的镜像系统')
           return
         }
         if (!this.$store.state.userInfo) {
