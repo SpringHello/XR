@@ -12,7 +12,7 @@
             <transition name="showChosse">
               <div v-show="choose" class="change" @mouseleave="choose=!choose">
               <span v-for="(item,index) in suffixChange" :key="index"
-                    style="width:70px;display:inline-block;height: 20px" @click="addAppend(item)">{{item}}</span>
+                    style="width:70px;display:inline-block;height: 30px;padding: 5px 0;" @click="addAppend(item)">{{item}}</span>
               </div>
             </transition>
           </div>
@@ -362,7 +362,7 @@
               cursor: pointer;
               text-align: center;
               &:hover {
-                background: #ccc;
+                background: #F5F5F6;
               }
             }
           }
