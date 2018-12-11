@@ -23,7 +23,7 @@
             </RadioGroup>
             <!--<span style="display: block;color:#2d8cf0;cursor:pointer;margin-bottom: 20px;"> + 获取优惠券</span>-->
             <!--<router-link :to="{ path: 'dynamic', query: { id: '14' }}">全民普惠，3折减单，最高减免7000元！</router-link>-->
-            <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券</span>
+            <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券（优先使用现金券，点击支付即可）</span>
           </div>
           <p style="color: #2B99F2">消费满1117元、6117元、11117元、31117元分别送50元、350元、1000元、3100元苏宁卡/京东E卡！</p>
           <p style="text-align: right;font-size:14px;color:rgba(102,102,102,1);line-height:19px;margin-bottom: 20px;">

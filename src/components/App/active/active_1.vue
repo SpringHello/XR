@@ -29,7 +29,7 @@
     <div class="body">
         <div class="head-headline">
             <img src="../../../assets/img/active/active_1/headline_1.png" alt="">
-            <span >每天9:00、12: 00、15: 00、20:00整点领取，数量有限，先到先得</span>
+            <span>数量有限，先到先得</span>
         </div>
         <div class="cash-get">
           <div class="container">
@@ -45,7 +45,7 @@
         <div class="center">
           <div class="head-headline">
             <img src="../../../assets/img/active/active_1/headline_2.png" alt="">
-            <span >领取38元现金券即可用券购买以下爆款云产品以及其他活动外的产品</span>
+            <span >领取38元现金券后免费体验以下及其它产品</span>
           </div>
           <div class="content">
             <div class="item">
@@ -67,7 +67,7 @@
                     <Option v-for="(item3,index) in productHost.zoneList" :value="item3.zoneid" :key="index">{{ item3.zonename }}</Option>
                   </Select>
                 </div>
-                <p class="price">价格：<span>{{productHost.price}}</span>{{productHost.priceText}}</p>
+                <p class="price"><span><i>38</i>元/152小时</span><span>（单价：0.25元/小时）</span></p>
                 <span @click="productBuy_host(productHost)" class="btn-purchase">立即购买</span>
               </div>
             </div>
@@ -90,7 +90,7 @@
                     <Option v-for="(item3,index) in productDB.zoneList" :value="item3.zoneid" :key="index">{{ item3.zonename }}</Option>
                   </Select>
                 </div>
-                <p class="price">价格：<span>{{productDB.price}}</span>{{productDB.priceText}}</p>
+                <p class="price"><span><i>38</i>元/97小时</span><span>（单价：0.39元/小时）</span></p>
                 <span @click="productBuy_db(productDB)" class="btn-purchase">立即购买</span>
               </div>
             </div>
@@ -108,7 +108,7 @@
                 <div class="parameter">
                   <p style="font-size:18px;color:rgba(149,149,149,1);margin:0 auto;margin-top:31px;margin-bottom:3px;">对象存储默认区域： 北京一区</p>
                 </div>
-                <p class="price">价格：<span>{{productObj.price}}</span>{{productObj.priceText}}<span>{{productObj.price1}}</span>{{productObj.priceText1}}</p>
+                <p class="price"><span><i>38</i>元/一个月</span><span>（单价：0.003元/GB/天<i>(存储容量)</i>+0.49/GB<i>(下行流量)</i>）</span></p>
                 <span @click="productBuy_obj(productObj)" class="btn-purchase">立即购买</span>
               </div>
             </div>
@@ -131,7 +131,7 @@
                     <Option v-for="(item3,index) in productGpu.zoneList" :value="item3.zoneid" :key="index">{{ item3.zonename }}</Option>
                   </Select>
                 </div>
-                <p class="price">价格：<span>{{productGpu.price}}</span>{{productGpu.priceText}}</p>
+                <p class="price"><span><i>38</i>元/3小时</span><span>（单价：11.5元/小时）</span></p>
                 <span @click="productBuy_gpu(productGpu)" class="btn-purchase">立即购买</span>
               </div>
             </div>
@@ -140,14 +140,14 @@
       </div>
       <div class="activity-rule">
         <div class="head-headline">
-            <img src="../../../assets/img/active/active_1/headline_1.png" alt="">
+            <img src="../../../assets/img/active/active_1/headline_3.png" alt="">
         </div>
         <div class="center">
           <div class="rules">
-          <p>1. 活动时间：2018年12月7日开始；活动对象：新注册用户。</p>
+          <p>1. 活动时间：2018年12月7日开始；活动对象：新老用户。</p>
           <p>2. 新用户注册即可领取38元无门槛券，可用于官网任何产品，包括实时计费和包年包月。但不可用于一些超低折扣产品及特殊说明不可使用优惠券的产品。</p>
           <p>3. 同时注册完成账户可立即获得158元现金红包，可到“费用中心”-“我的卡券”查看。代金券包含68元优惠券（满88元可用，有效期三个月），90元优惠券（满150可用，有效期六个月）。</p>
-          <p>4. 38元无门槛券可在每天9:00、12:00、15:00、20:00整点开抢，数量有限，先到先得，有效期7天。 </p>
+          <p>4. 38元无门槛现金券数量有限，先到先得，有效期7天。 </p>
           <p>5. 优惠券每个用户仅可领取一次，且不可与其他优惠券叠加使用，不可用于押金活动。产品使用前均需完成实名认证。</p>
           <p>6. 此红包仅用于支付新睿云平台订单支付时，抵减应支付的订单金额，不能进行兑现或其他用途。</p>
           </div>
@@ -212,7 +212,7 @@ export default {
       productObj: {
         title: '对象存储',
         params: [
-          { val: 100, unit: '100G', type: '存储盘' },
+          { val: 100, unit: '100G', type: '存储包' },
           { val: 100, unit: '100G', type: '下行流量' }
         ],
         zone: '39a6af0b-6624-4194-b9d5-0c552d903858',
@@ -278,7 +278,7 @@ export default {
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$message.info({
-              content: response.data.message
+              content: '卡券领取成功，请前往费用中心-我的卡券充值后使用。'
             })
           } else {
             this.$message.info({
@@ -685,7 +685,24 @@ export default {
         font-size: 16px;
         line-height: 60px;
         span {
-          font-size: 32px;
+          font-family: 'PingFangSC';
+          font-size: 16px;
+          &:nth-of-type(1) {
+            color: #FF3B35;
+            i {
+              font-size: 24px;
+              font-style: normal;
+              font-family: 'Arial';
+            }
+          }
+          &:nth-of-type(2) {
+            color: #959595;
+             i {
+              font-size: 12px;
+              font-style: normal;
+              font-family: 'Arial';
+            }
+          }
         }
       }
       .btn-purchase {

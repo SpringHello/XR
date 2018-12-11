@@ -158,11 +158,9 @@
           },
           {
             imgPath: require('../../assets/img/activecenter/bg-card-1.png'),
-            // name: '新用户注册领现金豪礼',
-            // desc: '注册即可领取158元现金大礼包',
             textImg: require('../../assets/img/activecenter/text-1.png'),
             time: '2018年12月7日开始',
-            activeObj: '新注册用户',
+            activeObj: '新老用户',
             url: 'active_1',
             isStart: true,
             weight: '1',
