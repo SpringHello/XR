@@ -34,10 +34,15 @@
                 <p>请输入正确的手机号码或者邮箱地址</p>
               </div>
             </div>
-            <div class="import">
+            <div class="import" v-if="false">
               <img src="../../assets/img/login/lr-icon2.png"/>
               <input v-model="loginForm.password" ref="loginPasInput" type="password" placeHolder="请输入密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('loginPasInput')" src="../../assets/img/login/lr-icon3.png"/>
+            </div>
+            <div class="import">
+              <img src="../../assets/img/login/lr-icon4.png"/>
+              <input class="verification" v-model="loginForm.verificationCode" type="text" placeHolder="请输入验证码"/>
+              <a>发送验证码</a>
             </div>
             <div class="errorMsg"></div>
             <!--  <div id="slideVerify">
@@ -473,6 +478,18 @@
             border: none;
             outline: none;
             font-size: 14px;
+            &.verification {
+              width: 55%;
+              height: 70%;
+              border-right: 1px solid rgba(200,200,200,1);
+            }
+          }
+          a{
+            font-size:14px;
+            font-family:MicrosoftYaHei;
+            color:rgba(42,153,242,1);
+            line-height: 44px;
+            padding-left: 10px;
           }
         }
         .errorMsg {
