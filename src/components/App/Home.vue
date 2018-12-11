@@ -170,7 +170,7 @@
               <div class="configure">
                 <p class="title">推荐配置</p>
                 <div>
-                  <span v-for="(item2,index1) in item.configure" :key="index1" @click="getHost(eightsceneIndex,index1)">{{item2}}</span>
+                  <span v-for="(item2,index1) in item.configure" :key="index1" @click="$router.push(item.link)">{{item2}}</span>
                 </div>
               </div>
             </div>
