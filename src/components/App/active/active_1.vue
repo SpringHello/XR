@@ -51,7 +51,7 @@
             <div class="item">
               <div class="top">
                 <div class="left">
-                  <p style="width:210px;">{{productHost.title}}
+                  <p style="width:195px;">{{productHost.title}}
                   <span v-if="productHost.secTtitle">({{productHost.secTtitle}})</span></p>
                 </div>
                 <ul class="right">
@@ -644,7 +644,7 @@ export default {
       box-shadow: 0px 6px 14px 0px rgba(244, 76, 44, 0.4);
     }
     .top {
-      padding: 20px 40px;
+      padding: 20px 10px 20px 40px;
       height: 90px;
       color: #fff;
       font-size: 16px;
@@ -656,7 +656,6 @@ export default {
           margin-right: 20px;
           span {
             font-size: 18px;
-            margin-left: 10px;
           }
         }
       }
