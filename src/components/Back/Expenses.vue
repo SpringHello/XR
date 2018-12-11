@@ -695,7 +695,7 @@
             align: 'left',
             width: 140,
             render: (h, params) => {
-              return h('span', params.row.tickettype == 2 ? '北京一区' : '全区')
+              return h('span', {}, '全区')
             }
           },
           {
