@@ -166,11 +166,17 @@
 
       //加入清单
       addList(item){
-        for (var i = 0; i <= this.buyLists.length; i++) {
-          if (this.buyLists.indexOf(item) == -1) {
-            this.buyLists.push(item)
-          }
+        if (this.buyLists.length == 0) {
+          this.buyLists.push(item)
+        } else {
+          this.buyLists.push(item)
+          let hash = {};
+          this.buyLists = this.buyLists.reduce((preVal, curVal) => {
+            hash[curVal.name] ? '' : hash[curVal.name] = true && preVal.push(curVal);
+            return preVal
+          }, [])
         }
+
       },
       //移除
       remove(index){
@@ -247,6 +253,7 @@
         this.Results = []
         if (tids.length != 0) {
           for (var j = 0; j < tids.length; j += 4) {
+            this.showFix = true
             axios.post('domain/domainFound.do', {
               domainName: this.searchText,
               tids: tids.slice(j, j + 4).join(','),
@@ -260,9 +267,11 @@
                 this.showFix = false
               } else {
                 this.showFix = false
-                this.$Message.info('加载完毕!')
               }
             })
+//            if ((j + 4 ) > tids.length) {
+//              this.$Message.info('加载完毕!')
+//            }
           }
 //          axios.post('domain/domainFound.do', {
 //            domainName: this.searchText,
