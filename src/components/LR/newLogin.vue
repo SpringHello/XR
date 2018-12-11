@@ -41,7 +41,7 @@
             </div>
             <div class="import">
               <img src="../../assets/img/login/lr-icon4.png"/>
-              <input class="verification" v-model="loginForm.verificationCode" type="text" placeHolder="请输入验证码"/>
+              <input class="verification" v-model="loginForm.verificationCode" type="text" placeHolder="请输入收到的验证码"/>
               <a>发送验证码</a>
             </div>
             <div class="errorMsg"></div>
@@ -60,6 +60,21 @@
             <div class="footer">
               <span>验证码登录</span>
               <span style="float: right">忘记密码？</span>
+            </div>
+          </div>
+          <div class="register-body" v-show="formType == 'register'">
+            <div class="import">
+              <img src="../../assets/img/login/lr-icon5.png"/>
+              <Select v-model="registerForm.registerPhonePrefix" style="width:200px">
+                <Option v-for="item in registerForm.phonePrefixList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+              <input v-model="registerForm.loginName" type="text" placeHolder="请输入手机号码" @blur="verifyIsRegister" @input="registerForm.errorMsg=''"/>
+            </div>
+            <div class="errorMsg"></div>
+            <div class="import">
+              <img src="../../assets/img/login/lr-icon4.png"/>
+              <input class="verification" v-model="registerForm.verificationCode" type="text" placeHolder="请输入收到的验证码"/>
+              <a>发送验证码</a>
             </div>
           </div>
         </div>
@@ -481,13 +496,109 @@
             &.verification {
               width: 55%;
               height: 70%;
-              border-right: 1px solid rgba(200,200,200,1);
+              border-right: 1px solid rgba(200, 200, 200, 1);
             }
           }
-          a{
-            font-size:14px;
-            font-family:MicrosoftYaHei;
-            color:rgba(42,153,242,1);
+          a {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(42, 153, 242, 1);
+            line-height: 44px;
+            padding-left: 10px;
+          }
+        }
+        .errorMsg {
+          height: 30px;
+          > div {
+            display: flex;
+            padding: 8px 0;
+            > i {
+              width: 12px;
+              height: 12px;
+              background: rgba(255, 0, 0, 1);
+              border-radius: 6px;
+              margin-right: 5px;
+              &:before {
+                display: inline-block;
+                width: 6px;
+                height: 1px;
+                content: '';
+                background: #FFF;
+                transform: translate(3px, -6px) rotate(-55deg)
+              }
+              &:after {
+                display: inline-block;
+                width: 6px;
+                height: 1px;
+                content: '';
+                background: #FFF;
+                transform: translate(-3px, -6px) rotate(55deg);
+              }
+            }
+            > p {
+              font-size: 12px;
+              font-family: MicrosoftYaHei;
+              color: rgba(255, 0, 0, 1);
+              > span {
+                color: #2A99F2;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+        button {
+          margin-top: 40px;
+          height: 46px;
+          background: rgba(42, 153, 242, 1);
+          border-radius: 4px;
+          cursor: pointer;
+          outline: none;
+          border: none;
+          font-size: 18px;
+          font-family: MicrosoftYaHei;
+          color: rgba(255, 255, 255, 1);
+          padding: 0 151px;
+          &.notAllow {
+            cursor: not-allowed;
+          }
+        }
+        .footer {
+          margin-top: 19px;
+          > span {
+            cursor: pointer;
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(42, 153, 242, 1);
+          }
+        }
+      }
+      .register-body {
+        padding-top: 40px;
+        .import {
+          height: 46px;
+          border-radius: 4px;
+          border: 1px solid rgba(200, 200, 200, 1);
+          display: flex;
+          align-items: center;
+          > img {
+            margin: 0 20px;
+          }
+          input {
+            width: 70%;
+            height: 100%;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            &.verification {
+              width: 55%;
+              height: 70%;
+              border-right: 1px solid rgba(200, 200, 200, 1);
+            }
+          }
+          a {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(42, 153, 242, 1);
             line-height: 44px;
             padding-left: 10px;
           }
@@ -595,6 +706,11 @@
           loginName: '',
           password: '',
           errorMsg: ''
+        },
+        registerForm: {
+          loginName: '',
+          errorMsg: '',
+          verificationCode: ''
         }
       }
     },
