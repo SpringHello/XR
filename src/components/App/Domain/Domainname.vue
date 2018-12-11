@@ -209,17 +209,23 @@
     methods: {
       changeSuffix(){
         this.suffixList = []
+        this.showSuffix = []
         this.showButton = false
         switch (this.suffix) {
           case 'english':
-            this.showSuffix = this.getSuffix.en
+            var arry = this.getSuffix.en
             break;
           case 'chinese':
-            this.showSuffix = this.getSuffix.cn
+            var arry = this.getSuffix.cn
             break;
           case 'administrative':
-            this.showSuffix = this.getSuffix.xz
+            var arry = this.getSuffix.xz
             break;
+        }
+        for (var i = 0; i < arry.length; i++) {
+          if (this.showSuffix.indexOf(arry[i]) == -1) {
+            this.showSuffix.push(arry[i])
+          }
         }
       },
 
@@ -235,17 +241,7 @@
 
       showBtn(){
         if (this.showButton) {
-          switch (this.suffix) {
-            case 'english':
-              this.suffixList = this.getSuffix.en
-              break;
-            case 'chinese':
-              this.suffixList = this.getSuffix.cn
-              break;
-            case 'administrative':
-              this.suffixList = this.getSuffix.xz
-              break;
-          }
+          this.suffixList = this.showSuffix
         } else {
           this.suffixList = []
         }
@@ -254,6 +250,7 @@
     created(){
       axios.post('domain/getSuffix.do', {}).then(res => {
         this.getSuffix = res.data.data
+        this.showSuffix = []
         var arry = this.getSuffix.en
         for (var i = 0; i < arry.length; i++) {
           if (this.showSuffix.indexOf(arry[i]) == -1) {
@@ -268,14 +265,13 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .domain-wrapper {
     width: 100%;
-    background: #0475FF;
+    background: linear-gradient(90deg, rgba(2, 116, 255, 1) 0%, rgba(83, 160, 255, 1) 50%, rgba(4, 117, 255, 1) 100%);
     .topOne {
-      width: 1200px;
-      margin: 0 auto;
+      width: 100%;
       height: 400px;
       padding: 87px 0 81px 0;
       text-align: center;
-      background: url('../../../assets/img/domain/banner.png') no-repeat #0475FF;
+      background: url('../../../assets/img/domain/banner.png') no-repeat center;
       p {
         font-size: 48px;
         color: rgba(255, 255, 255, 1);
@@ -291,7 +287,7 @@
       .search {
         position: relative;
         width: 800px;
-        height: 70px;
+        height: 68px;
         border-radius: 4px;
         background: rgba(55, 125, 255, 0.5);
         margin: 0 auto;
@@ -300,7 +296,7 @@
         align-items: center;
         padding: 0 15px;
         .btn {
-          height: 35px;
+          height: 33px;
           padding: 3px 83px;
           background: rgba(255, 231, 119, 1);
           font-size: 20px;

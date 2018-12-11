@@ -99,7 +99,6 @@
           vm.append = vm.singles[0]
         } else {
           vm.singles = JSON.parse(sessionStorage.getItem('suffixChange')).en
-          vm.cancel = true
           vm.showButton = true
           vm.append = '.com'
         }
@@ -135,6 +134,7 @@
         this.Results = []
         this.singles = []
         this.showFix = true
+        this.showButton = false
         axios.post('domain/domainFound.do', {
           domainName: this.searchText,
           tids: this.append,
@@ -244,40 +244,58 @@
             tids.push(this.singles[i]);
           }
         }
+        this.Results = []
         if (tids.length != 0) {
-          this.showFix = true
-          axios.post('domain/domainFound.do', {
-            domainName: this.searchText,
-            tids: tids.slice(0, 8).join(','),
-          }).then(res => {
-            this.showFix = false
-            if (res.data.data.results.length != 0) {
-              this.Results = res.data.data.results
-              if (tids.slice(8).length != 0) {
-                this.showFix = true
-                this.cancel = true
-                setTimeout(() => {
-                  axios.post('domain/domainFound.do', {
-                    domainName: this.searchText,
-                    tids: tids.slice(8).join(','),
-                  }).then(res => {
-                    if (res.status == 200 && res.data.status == 1) {
-                      this.showFix = false
-                      this.cancel = false
-                      var addList = res.data.data.results
-                      for (var i in addList) {
-                        this.Results.push(addList[i]);
-                      }
-                      this.$Message.info('加载完毕!')
-                    }
-                  })
-                }, 1000)
+          for (var j = 0; j < tids.length; j += 4) {
+            axios.post('domain/domainFound.do', {
+              domainName: this.searchText,
+              tids: tids.slice(j, j + 4).join(','),
+            }).then(res => {
+              this.showFix = true
+              if (res.data.data.results.length != 0) {
+                var addList = res.data.data.results
+                for (var i in addList) {
+                  this.Results.push(addList[i]);
+                }
+                this.showFix = false
+              } else {
+                this.showFix = false
+                this.$Message.info('加载完毕!')
               }
-            }
-            else {
-              this.$Message.info('暂无数据')
-            }
-          })
+            })
+          }
+//          axios.post('domain/domainFound.do', {
+//            domainName: this.searchText,
+//            tids: tids.slice(0, 8).join(','),
+//          }).then(res => {
+//            this.showFix = false
+//            if (res.data.data.results.length != 0) {
+//              this.Results = res.data.data.results
+//              if (tids.slice(8).length != 0) {
+//                this.showFix = true
+//                this.cancel = true
+//                setTimeout(() => {
+//                  axios.post('domain/domainFound.do', {
+//                    domainName: this.searchText,
+//                    tids: tids.slice(8).join(','),
+//                  }).then(res => {
+//                    if (res.status == 200 && res.data.status == 1) {
+//                      this.showFix = false
+//                      this.cancel = false
+//                      var addList = res.data.data.results
+//                      for (var i in addList) {
+//                        this.Results.push(addList[i]);
+//                      }
+//                      this.$Message.info('加载完毕!')
+//                    }
+//                  })
+//                }, 1000)
+//              }
+//            }
+//            else {
+//              this.$Message.info('暂无数据')
+//            }
+//          })
         } else {
           this.Results = []
         }
