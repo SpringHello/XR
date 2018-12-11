@@ -220,7 +220,8 @@
                   zoneId: localStorage.getItem('link-zoneid'),
                   VMId: localStorage.getItem('link-vmid'),
                   companyid: localStorage.getItem('link-companyid'),
-                  phoneCode: this.formInline.PhoneCode
+                  phoneCode: this.formInline.PhoneCode,
+                  phone: this.formInline.userPhone
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {

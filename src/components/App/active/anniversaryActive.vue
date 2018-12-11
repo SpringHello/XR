@@ -3014,7 +3014,7 @@
         background: url("../../../assets/img/active/anniversary/time-banner.png") center no-repeat;
         > p {
           font-size: 24px;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           font-weight: 500;
           color: rgba(253, 253, 253, 1);
           position: absolute;
