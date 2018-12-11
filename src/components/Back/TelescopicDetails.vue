@@ -2461,13 +2461,14 @@
           }
       },
 
+      //判断是否有定时任务
       dateDisate(taskData){
         if(taskData.length != 0){
           for(let i = 0;i<taskData.length; i++){
-            let year = taskData[taskData.length-1].starttime.substring(taskData[taskData.length-1].starttime.indexOf(' '),taskData[taskData.length-1].starttime.length);
-          }
-         let time =  taskData[taskData.length-1].starttime.substring(taskData[taskData.length-1].starttime.indexOf(' '),taskData[taskData.length-1].starttime.length);
-          if(taskData.some(item=> item.starttime === this.timedTask.startTime)){
+            let year = taskData[i].starttime.substring(taskData[i].starttime.indexOf(' '),taskData[i].starttime.length);
+            
+          if( year == this.timedTask.startTime){
+      
             for(let i = 0;i<this.timedTask.hourList.length;i++){
               
                   if(i<index || i==index){
@@ -2479,7 +2480,8 @@
                     this.timedTask.hourList[i].dis = false;
                   }
             }
-          }
+          } 
+        }
         }
       },
 
@@ -2505,7 +2507,7 @@
         this.minuteListCount();
     },
 
-      //获取策略百分比量
+    //获取策略百分比量
     percentageF(){
         for(let i =1;i<101;i++){
           if(i<10){
@@ -2561,6 +2563,7 @@
           if(res.status == 200 && res.data.status == 1){
             this.moveCloudHost = false;
             this.$Message.success('加入云主机成功');
+            this.getDetails();
             this.selectHost();
           }else{
             this.moveCloudHost = false;

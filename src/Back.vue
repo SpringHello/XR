@@ -416,24 +416,11 @@
 
       // 进入三级路由，记录二级路由入口
       push(pType, sType) {
-        this.pageInfo.static = true
-        this.pageInfo.selectItem = pType
-        this.pageInfo.sType = sType
+        this.pageInfo.static = true;
+        this.pageInfo.selectItem = pType;
+        this.pageInfo.sType = sType;
         if (sType.indexOf('http') > -1) {
           window.open(sType);
-          // axios.get('user/showUserAcessAll.do').then(response => {
-          //   if (response.status == 200 && response.data.status == 18) {
-          //       this.$Modal.confirm({
-          //         title: '提示',
-          //         content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;">Access Key管理</span>去创建Access Key。</p>',
-          //
-          //       });
-          //   } else if(response.status == 200 && response.data.status == 1){
-          //     window.open(sType);
-          //   }else{
-          //      this.$Message.info(response.data.msg);
-          //   }
-          // })
         } else {
           this.$router.push(sType)
         }
