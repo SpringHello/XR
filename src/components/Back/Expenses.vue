@@ -695,7 +695,7 @@
             align: 'left',
             width: 140,
             render: (h, params) => {
-              return h('span', params.row.tickettype == 2 ? '北京一区' : '全区')
+              return h('span', {}, '全区')
             }
           },
           {
@@ -740,49 +740,145 @@
               if (obj.row.maketicketover != 1) {
                 // 现金券
                 if (obj.row.tickettype == '2') {
-                  return h('span', {
-                    style: {
-                      color: '#2d8cf0',
-                      cursor: 'pointer'
-                    },
-                    on: {
-                      click: () => {
-                        this.$message.confirm({
-                          content: '确认使用该现金券吗？',
-                          onOk: () => {
-                            // 调用使用现金券接口
-                            this.$http.get('ticket/useMoneyTicket.do', {
-                              params: {
-                                moneyTicketId: obj.row.id
-                              }
-                            }).then(response => {
-                              if (response.status == 200 && response.data.status == 1) {
-                                this.searchCard()
-                                this.$message.info({
-                                  content: '现金券充值成功'
-                                })
-                              } else {
-                                this.$message.info({
-                                  content: response.data.message
-                                })
-                              }
-                            })
-                          }
-                        })
+                  return h('div', {}, [
+                    h('span', {
+                      style: {
+                        color: '#2d8cf0',
+                        cursor: 'pointer'
+                      },
+                      on: {
+                        click: () => {
+                          this.$message.confirm({
+                            content: '确认使用该现金券吗？',
+                            onOk: () => {
+                              // 调用使用现金券接口
+                              this.$http.get('ticket/useMoneyTicket.do', {
+                                params: {
+                                  moneyTicketId: obj.row.id
+                                }
+                              }).then(response => {
+                                if (response.status == 200 && response.data.status == 1) {
+                                  this.searchCard()
+                                  this.$message.info({
+                                    content: '现金券充值成功'
+                                  })
+                                } else {
+                                  this.$message.info({
+                                    content: response.data.message
+                                  })
+                                }
+                              })
+                            }
+                          })
+                        }
                       }
-                    }
-                  }, '立即充值')
+                    }, '立即充值'),
+                    h('span', {
+                      style: {
+                        color: '#2d8cf0',
+                        cursor: 'pointer',
+                        marginLeft: '5px'
+                      },
+                      on: {
+                        click: () => {
+                          this.$message.confirm({
+                            content: '确认删除该优惠券吗？',
+                            onOk: () => {
+                              // 调删除现金券接口
+                              this.$http.get('ticket/delUserTicket.do', {
+                                params: {
+                                  id: obj.row.id
+                                }
+                              }).then(response => {
+                                if (response.status == 200 && response.data.status == 1) {
+                                  this.searchCard()
+                                  this.$message.info({
+                                    content: '现金券删除成功'
+                                  })
+                                } else {
+                                  this.$message.info({
+                                    content: response.data.message
+                                  })
+                                }
+                              })
+                            }
+                          })
+                        }
+                      }
+                    }, '删除')
+                  ])
                 } else {
-                  return h('router-link', {
-                    attrs: {
-                      to: 'buy'
-                    }
-                  }, '立即使用')
+                  return h('div', {}, [
+                    h('router-link', {
+                      attrs: {
+                        to: 'buy'
+                      }
+                    }, '立即使用'),
+                    h('span', {
+                      style: {
+                        color: '#2d8cf0',
+                        cursor: 'pointer',
+                        marginLeft: '5px'
+                      },
+                      on: {
+                        click: () => {
+                          this.$message.confirm({
+                            content: '确认删除该优惠券吗？',
+                            onOk: () => {
+                              // 调删除现金券接口
+                              this.$http.get('ticket/delUserTicket.do', {
+                                params: {
+                                  id: obj.row.id
+                                }
+                              }).then(response => {
+                                if (response.status == 200 && response.data.status == 1) {
+                                  this.searchCard()
+                                  this.$Message.success('优惠券删除成功')
+                                } else {
+                                  this.$message.info({
+                                    content: response.data.message
+                                  })
+                                }
+                              })
+                            }
+                          })
+                        }
+                      }
+                    }, '删除')
+                  ])
                 }
               } else {
-                return h('span', '--')
+                return  h('span', {
+                  style: {
+                    color: '#2d8cf0',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.$message.confirm({
+                        content: '确认删除该优惠券吗？',
+                        onOk: () => {
+                          // 调删除现金券接口
+                          this.$http.get('ticket/delUserTicket.do', {
+                            params: {
+                              id: obj.row.id
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1) {
+                              this.searchCard()
+                              this.$Message.success('优惠券删除成功')
+                            } else {
+                              this.$message.info({
+                                content: response.data.message
+                              })
+                            }
+                          })
+                        }
+                      })
+                    }
+                  }
+                }, '删除')
               }
-
             }
           }
         ],

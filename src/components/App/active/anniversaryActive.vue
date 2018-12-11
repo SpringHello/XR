@@ -3010,13 +3010,14 @@
         margin: 610px auto 0;
         height: 33px;
         width: 413px;
+        position: relative;
         background: url("../../../assets/img/active/anniversary/time-banner.png") center no-repeat;
         > p {
           font-size: 24px;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           font-weight: 500;
           color: rgba(253, 253, 253, 1);
-          position: relative;
+          position: absolute;
           left: 205px;
           top: 5px;
           > span {
