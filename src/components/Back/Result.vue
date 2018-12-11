@@ -268,6 +268,12 @@
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               sessionStorage.setItem('payResult', 'success')
+              sessionStorage.setItem('successMsg', response.data.message)
+              if (response.data.giftNumMessage) {
+                sessionStorage.setItem('firstMsg', response.data.giftNumMessage)
+              } else {
+                sessionStorage.setItem('firstMsg', '')
+              }
             } else {
               sessionStorage.setItem('payResult', 'fail')
               sessionStorage.setItem('errMsg', response.data.message)

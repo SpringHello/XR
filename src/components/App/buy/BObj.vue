@@ -19,13 +19,13 @@
       <div style="border-bottom: 1px solid #D9D9D9;margin-top: 20px">
         <h2>计费方式选择</h2>
         <div class="item-wrapper">
-          <div v-for="item in timeType" :key="item.value" class="zoneItem"
+          <div v-for="(item,index) in timeType" :key="index" class="zoneItem"
                :class="{zoneSelect:timeForm.currentTimeType==item.value}"
                @click="timeForm.currentTimeType=item.value">{{item.label}}
           </div>
         </div>
         <div class="item-wrapper" v-if="timeForm.currentTimeType=='annual'">
-          <div v-for="item in timeValue" :key="item.value" class="timeType"
+          <div v-for="(item,index) in timeValue" :key="index" class="timeType"
                :class="{zoneSelect:timeForm.currentTimeValue.label==item.label}"
                @click="timeForm.currentTimeValue=item"
                style="margin:0px;border-right:none;width:55px">
@@ -92,7 +92,7 @@
       <div style="margin-top: 20px">
         <!--<p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
            @click="$router.push('computed/3-1')">查看计价详情</p>-->
-        <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
+        <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;"> <span v-if="timeForm.currentTimeType == 'annual'&&timeForm.currentTimeValue.type == 'year'">折后费用：</span><span v-else>费用：</span><span
           style="font-size: 24px;color: #EE6723;">{{cost.toFixed(2)}}元</span><span
           v-show="timeForm.currentTimeType == 'current'">/小时</span></p>
         <p style="text-align: right;font-size: 14px;color: #666666;" v-if="coupon!=0">已省：<span
@@ -200,8 +200,8 @@
           return
         }
         var params = {
-          flowPackage: this.save,
-          capacity: this.downLoad,
+          flowPackage: this.downLoad,
+          capacity: this.save,
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value,
           zoneId: this.zone.zoneid
@@ -226,8 +226,8 @@
       },
       queryObjPrice: debounce(500, function () {
         var params = {
-          flowPackage: this.save,
-          capacity: this.downLoad,
+          flowPackage: this.downLoad,
+          capacity: this.save,
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value
         }

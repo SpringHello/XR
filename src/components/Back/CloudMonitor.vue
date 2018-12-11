@@ -25,7 +25,7 @@
               <ul>
                 <li v-for="(item,index) in monitorData" :key="index">
                   <p>{{item.text}}</p>
-                  <p><span class="warning" @click="tabsClick(index)">{{item.num}}</span>台</p>
+                  <p><span class="warning" @click="tabsClick(index)">{{item.num}}</span>{{ item.unit}}</p>
                 </li>
               </ul>
               <span class="refresh-time">刷新时间:{{ refreshTime }}</span>
@@ -145,223 +145,10 @@
             </div>
           </TabPane>
           <TabPane label="告警策略" name="alarmStrategy">
-            <div class="as-content" v-if="!isNewAlarmStrategy">
-              <Button type="primary" style="margin-bottom: 10px" @click="btnflag = '完成';isNewAlarmStrategy = true">新建告警策略</Button>
+            <div class="as-content">
+              <Button type="primary" style="margin-bottom: 10px" @click="$router.push('CloudMonitorCreateStrategy')">新建告警策略</Button>
+              <a href="https://www.xrcloud.net/ruicloud/documentInfo/wbOm1R2ti/wbX7w9BdC" style="float: right;line-height: 30px;" target="_blank">查看帮助文档</a>
               <Table :columns="alarmStrategyColumns" :data="alarmStrategyData"></Table>
-            </div>
-            <div class="nas-content" v-else>
-              <div class="nas-content-title">
-                <span>{{btnflag =='更新'?'修改告警策略':'新建告警策略'}}</span>
-                <button @click="newStrategy_back">返回</button>
-              </div>
-              <div class="nas-content-body">
-                <Form :model="newAlarmStrategyForm" :rules="newAlarmStrategyFormRuleValidate"
-                      ref="newAlarmStrategyForm">
-                  <FormItem label="策略名称" prop="strategyName" style="display:flex">
-                    <Input v-model="newAlarmStrategyForm.strategyName" placeholder="请输入" style="width:318px"></Input>
-                  </FormItem>
-                  <FormItem label="策略类型" prop="strategyType" style="display:flex;">
-                    <Select v-model="newAlarmStrategyForm.strategyType" style="width:318px"
-                            @on-change="changeStrategyType">
-                      <Option value="0">云主机</Option>
-                      <!-- <Option value="1">云硬盘</Option>
-                      <Option value="2">vpc</Option> -->
-                      <Option value="3">对象存储</Option>
-                    </Select>
-                  </FormItem>
-                  <FormItem label="告警对象">
-                    <RadioGroup v-model="newAlarmStrategyForm.alarmObj" @on-change="changealarmtype">
-                      <Radio label="all" :disabled="allHostLegth>5">全部</Radio>
-                      <Radio label="part">选择部分对象</Radio>
-                    </RadioGroup>
-                  </FormItem>
-                  <div class="list-wrap" style="position:relative;" v-if="newAlarmStrategyForm.alarmObj=='part'">
-                    <span v-if="hostHint&&strategyhost.selectedHost.length<1"
-                          style="color:#ed3f14;font-size:12px;position:absolute;top:-20px;">请至少选择一个主机</span>
-                    <div class="list">
-                      <p>该区域下所有{{currentAlarmObj}}</p>
-                      <ul>
-                        <li v-for="(item,index) in strategyhost.allHost" :key="index">
-                          <span>{{ item.instancename}}</span>
-                          <i class="icon-btn" v-if="strategyhost.selectedHost.length<5&&item.name !=''"
-                             @click="addHost(item,index)">+ 添加</i>
-                        </li>
-                      </ul>
-                    </div>
-                    <div class="center-gap">
-                      <span> →</span>
-                      <span>←</span>
-                    </div>
-                    <div class="list" :class="{red:hostHint&&strategyhost.selectedHost.length<1}">
-                      <p>已选择{{currentAlarmObj}}</p>
-                      <ul>
-                        <li v-for="(item,index) in strategyhost.selectedHost" :key="index">
-                          <span>{{ item.instancename}}</span>
-                          <i class="icon-btn" @click="deleteHost(item,index)">
-                            <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
-                            删除</i>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="alarm-strategy">
-                    <p class="headline">告警策略
-                      <span v-if="targetformDynamic.length+eventformDynamic.length<1"
-                            style="color:#ed3f14;font-size:12px;padding-left:10px;">请至少设置一个告警策略</span>
-                    </p>
-                    <div class="content">
-                      <div>
-                        <p>指标告警</p>
-                        <FormItem style="margin-bottom:10px"
-                                  v-for="(item, index) in targetformDynamic"
-                                  :key="index">
-                          <Row :gutter="16">
-                            <Col span="4">
-                              <Select v-model="item.alarmname">
-                                <Option v-for="item in selectedTarget.target" :value="item.value" :key="item.value">
-                                  {{ item.value }}
-                                </Option>
-                              </Select>
-                            </Col>
-                            <Col span="4">
-                              <Select v-model="item.countcircle">
-                                <Option v-for="item in publicTemp.StatisticalCycle" :value="item.value" :key="item.value">
-                                  {{ item.label }}
-                                </Option>
-                              </Select>
-                            </Col>
-                            <Col span="2">
-                              <Select v-model="item.valuetype" style="text-align:center">
-                                <Option v-for="item in publicTemp.standard" :value="item.value" :key="item.value">
-                                  {{ item.label }}
-                                </Option>
-                              </Select>
-                            </Col>
-                            <Col span="2" class="Percentage">
-                              <Select v-model="item.value" style="text-align:center">
-                                <Option v-for="item in publicTemp.Percentage" :value="item.value" :key="item.value">
-                                  {{ item.label }}
-                                </Option>
-                              </Select>
-                            </Col>
-                            <Col span="1">
-                              <span v-for="(item1,index) in selectedTarget.target" :key="index" v-if="item.alarmname==item1.value">{{item1.unit}}</span>
-                            </Col>
-                            <Col span="4">
-                              <Select v-model="item.continuecircle">
-                                <Option v-for="item in publicTemp.keepCycle" :value="item.value" :key="item.value">
-                                  {{ item.label }}
-                                </Option>
-                              </Select>
-                            </Col>
-                            <Col span="4">
-                              <Select v-model="item.alarmcount">
-                                <Option v-for="item in publicTemp.frequency" :value="item.value" :key="item.value">
-                                  {{ item.label }}
-                                </Option>
-                              </Select>
-                            </Col>
-                            <Col span="1">
-                              <Button type="text" @click="targetHandleRemove(index)">×</Button>
-                            </Col>
-                          </Row>
-                        </FormItem>
-                        <FormItem style="margin-bottom:10px">
-                          <Button type="text" @click="targetHandleAdd" :style="{color:targetformDynamic.length<5?'#2A99F2':''}" :disabled="targetformDynamic.length>=5">添加</Button>
-                        </FormItem>
-                      </div>
-                      <div>
-                        <p>事件告警</p>
-                        <FormItem style="margin-bottom:10px"
-                                  v-for="(item, index) in eventformDynamic"
-                                  :key="index">
-                          <Row :gutter="16">
-                            <Col span="4">
-                              <Select v-model="item.alarmname">
-                                <Option v-for="item in eventTem.target" :value="item.value" :key="item.value">
-                                  {{ item.value }}
-                                </Option>
-                              </Select>
-                            </Col>
-                            <Col span="4">
-                              <Select v-model="item.countcircle">
-                                <Option v-for="item in eventTem.StatisticalCycle" :value="item.value" :key="item.value">
-                                  {{ item.label }}
-                                </Option>
-                              </Select>
-                            </Col>
-                            <Col span="4">
-                              <Select v-model="item.continuecircle">
-                                <Option v-for="item in eventTem.keepCycle" :value="item.value" :key="item.value">
-                                  {{ item.label }}
-                                </Option>
-                              </Select>
-                            </Col>
-                            <Col span="4">
-                              <Select v-model="item.alarmcount">
-                                <Option v-for="item in eventTem.frequency" :value="item.value" :key="item.value">
-                                  {{ item.label }}
-                                </Option>
-                              </Select>
-                            </Col>
-                            <Col span="4" v-if="item.alarmname == '应用中断'">
-                              <Input v-model="item.value" placeholder="请输入端口号"/>
-                            </Col>
-                            <Col span="1">
-                              <Button type="text" @click="eventHandleRemove(index)">×</Button>
-                            </Col>
-                          </Row>
-                        </FormItem>
-                        <FormItem style="margin-bottom:10px">
-                          <Button type="text" @click="eventHandleAdd" :style="{color:eventformDynamic.length<5?'#2A99F2':''}" :disabled="eventformDynamic.length>=5">添加</Button>
-                        </FormItem>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="alarm-channel">
-                    <FormItem label="告警渠道" prop="channel">
-                      <CheckboxGroup v-model="newAlarmStrategyForm.channel">
-                        <Checkbox label="phone">短信</Checkbox>
-                        <Checkbox label="email">邮箱</Checkbox>
-                        <Checkbox label="letter">站内信</Checkbox>
-                      </CheckboxGroup>
-                    </FormItem>
-                    <div class="contacts">
-                      <p>告警接受人<span v-if="contactsHint&&contacts.selectedContacts.length<1"
-                                    style="color:#ed3f14;font-size:12px;padding-left:10px;">请至少选择一个联系人</span></p>
-                      <div class="list-wrap">
-                        <div class="list">
-                          <p>所有联系人</p>
-                          <ul>
-                            <li v-for="(item,index) in contacts.allContacts" :key="index">
-                              <span>{{ item.name }}</span>
-                              <i class="icon-btn" v-if="contacts.selectedContacts.length<5&&item.name !=''"
-                                 @click="addContacts(item,index)">+ 添加</i>
-                            </li>
-                          </ul>
-                        </div>
-                        <div class="center-gap">
-                          <span> →</span>
-                          <span>←</span>
-                        </div>
-                        <div class="list" :class="{red:contactsHint&&contacts.selectedContacts.length<1}">
-                          <p>已选择联系人</p>
-                          <ul>
-                            <li v-for="(item,index) in contacts.selectedContacts" :key="index">
-                              <span>{{ item.name }}</span>
-                              <i class="icon-btn" @click="deleteContacts(item,index)">
-                                <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
-                                删除</i>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <p>提示：您可以在个人中心—告警中心—联系人管中添加和编辑联系人信息。</p>
-                  </div>
-                  <Button type="primary" @click="newAlarmStrategy_ok" style="margin-top:20px;">{{btnflag}}</Button>
-                </Form>
-              </div>
             </div>
           </TabPane>
           <TabPane label="告警列表" name="alarmList">
@@ -527,21 +314,12 @@
 
   export default {
     data() {
+      var currentTab = sessionStorage.getItem('pane')
+      sessionStorage.removeItem('pane')
       return {
-        btnflag: '完成',
+        currentTab,
         strategyId: '',
         refreshTime: '',
-        targetformDynamic: [
-          {
-            alarmname: 'CPU利用率',
-            countcircle: 1,
-            valuetype: '>',
-            value: 80,
-            continuecircle: 1,
-            alarmcount: 1,
-            alarmtype: 1
-          }
-        ],
         noHost: true,
         firstMonitoringOverview: {
           title: '',
@@ -569,305 +347,24 @@
         isAddOverviewMonitorIndex: true,
         // 标记总览监控大图小图
         overviewMonitoring: '',
-        // 默认选择哪个资源的指标
-        selectedTarget: {},
-        // 云主机指标
-        alarmHostTarget: {
-          target: [
-            {
-              value: 'CPU利用率',
-              unit: '%'
-            },
-            {
-              value: '内存使用率',
-              unit: '%'
-            },
-            {
-              value: '磁盘使用率',
-              unit: '%'
-            },
-            {
-              value: '磁盘读速率',
-              unit: 'kb/s'
-            },
-            {
-              value: '磁盘写速率',
-              unit: 'kb/s'
-            },
-            {
-              value: '磁盘读操作速率',
-              unit: 'kb/s'
-            },
-            {
-              value: '磁盘写操作速率',
-              unit: 'kb/s'
-            },
-            {
-              value: '内网带宽流入速率',
-              unit: 'kb/s'
-            },
-            {
-              value: '内网带宽流出速率',
-              unit: 'kb/s'
-            },
-            {
-              value: '外网带宽流入速率',
-              unit: 'kb/s'
-            },
-            {
-              value: '外网带宽流出速率',
-              unit: 'kb/s'
-            }
-          ]
-        },
-        // 对象存储指标
-        alarmObjTarget: {
-          target: [
-            {
-              value: '下载流量',
-              unit: 'Byte'
-            },
-            {
-              value: '上传流量',
-              unit: 'Byte'
-            },
-            {
-              value: 'GET类请求次数',
-              unit: 'Counts'
-            },
-            {
-              value: 'PUT类请求次数',
-              unit: 'Counts'
-            },
-            {
-              value: 'GET类请求首字节平均时延',
-              unit: 'ms'
-            }
-          ],
-
-        },
-        // 云硬盘指标
-        alarmDiskTarget: {},
-        // vpc指标
-        alarmVpcTarget: {},
-        // 公共部分指标
-        publicTemp: {
-          StatisticalCycle: [
-            {
-              label: '统计周期：1分钟',
-              value: 1
-            },
-            {
-              label: '统计周期：5分钟',
-              value: 5
-            },
-            {
-              label: '统计周期：10分钟',
-              value: 10
-            },
-            {
-              label: '统计周期：15分钟',
-              value: 15
-            },
-          ],
-          standard: [
-            {
-              label: '>',
-              value: '>'
-            },
-            {
-              label: '<',
-              value: '<'
-            },
-            {
-              label: '=',
-              value: '='
-            },
-            // {
-            //   label: '>=',
-            //   value: '>='
-            // },
-            // {
-            //   label: '<=',
-            //   value: '<='
-            // },
-            // {
-            //   label: '!=',
-            //   value: '!='
-            // }
-          ],
-          Percentage: [
-            {
-              label: '10',
-              value: 10
-            },
-            {
-              label: '20',
-              value: 20
-            },
-            {
-              label: '30',
-              value: 30
-            },
-            {
-              label: '40',
-              value: 40
-            },
-            {
-              label: '50',
-              value: 50
-            },
-            {
-              label: '60',
-              value: 60
-            },
-            {
-              label: '70',
-              value: 70
-            },
-            {
-              label: '80',
-              value: 80
-            },
-            {
-              label: '90',
-              value: 90
-            },
-            {
-              label: '100',
-              value: 100
-            }
-          ],
-          keepCycle: [
-            {
-              label: '持续1个周期',
-              value: 1
-            },
-            {
-              label: '持续2个周期',
-              value: 2
-            },
-            {
-              label: '持续3个周期',
-              value: 3
-            },
-            {
-              label: '持续4个周期',
-              value: 4
-            },
-            {
-              label: '持续5个周期',
-              value: 5
-            }
-          ],
-          frequency: [
-            {
-              label: '每天警告1次',
-              value: 1
-            },
-            {
-              label: '每天警告2次',
-              value: 2
-            }
-          ]
-        },
-        eventformDynamic: [
-          {
-            alarmname: 'PING不可达',
-            countcircle: 1,
-            continuecircle: 1,
-            alarmcount: 1,
-            alarmtype: 2,
-            value: ''
-          }
-        ],
-        eventTem: {
-          target: [
-            {
-              value: 'PING不可达',
-            },
-            {
-              value: '应用中断',
-            }
-          ],
-          StatisticalCycle: [
-            {
-              label: '统计周期：1分钟',
-              value: 1
-            },
-            {
-              label: '统计周期：5分钟',
-              value: 5
-            },
-            {
-              label: '统计周期：10分钟',
-              value: 10
-            },
-            {
-              label: '统计周期：15分钟',
-              value: 15
-            },
-          ],
-          keepCycle: [
-            {
-              label: '持续1个周期',
-              value: 1
-            },
-            {
-              label: '持续2个周期',
-              value: 2
-            },
-            {
-              label: '持续3个周期',
-              value: 3
-            },
-            {
-              label: '持续4个周期',
-              value: 4
-            },
-            {
-              label: '持续5个周期',
-              value: 5
-            }
-          ],
-          frequency: [
-            {
-              label: '每天警告1次',
-              value: 1
-            },
-            {
-              label: '每天警告2次',
-              value: 2
-            }
-          ]
-        },
-        // 对应资源列表
-        strategyhost: {
-          allHost: [],
-          selectedHost: []
-        },
-        resourceId: [],
-        // 联系人列表
-        contacts: {
-          allContacts: [],
-          selectedContacts: []
-        },
-        selectedContactsCopy: [],
         messageData: messageMonitor,
         monitorData: [
           {
             text: '云主机PING不可达',
             num: '0',
             tabsName: 'alarmList',
+            unit: '台'
           },
           {
             text: '未处理告警',
             num: '0',
             tabsName: 'alarmList',
+            unit: '条'
           },
           {
             text: '已关机云主机',
             num: '0',
+            unit: '台'
           }
         ],
         showModal: {
@@ -996,65 +493,28 @@
                   cursor: 'pointer'
                 },
                 on: {
+                  // 更新策略
                   click: () => {
-                    this.newAlarmStrategyForm.strategyName = params.row.name
-                    this.newAlarmStrategyForm.strategyType = params.row.strategytype + ''
-                    this.newAlarmStrategyForm.channel = []
-                    // 赋值联系人
-                    var selectedIndexsman = []
-                    var allIndexsman = []
-                    this.selectedContactsCopy = params.row.AlarmContact.map(item => {
-                      return item.alarmcontactid
-                    })
-                    this.contacts.allContacts.forEach((item, index) => {
-                      allIndexsman.push(index)
-                      for (var i = 0; i < this.selectedContactsCopy.length; i++) {
-                        if (this.selectedContactsCopy[i] == item.id) {
-                          this.contacts.selectedContacts.push(item)
-                          selectedIndexsman.push(index)
-                        }
-                      }
-                    })
-                    var differenceman = allIndexsman.concat(selectedIndexsman).filter(v => !allIndexsman.includes(v) || !selectedIndexsman.includes(v))
-                    var newallContacts = this.contacts.allContacts.filter((item, index) => {
-                      return index == differenceman[index]
-                    })
-                    this.contacts.allContacts = newallContacts
-                    // 赋值资源选择
-                    var selectedIndexs = []
-                    var allIndexs = []
-                    this.resourceId = params.row.resource.map(item => {
-                      return item.resourceid
-                    })
-                    this.strategyhost.allHost.forEach((item, index) => {
-                      allIndexs.push(index)
-                      for (var i = 0; i < this.resourceId.length; i++) {
-                        if (this.resourceId[i] == item.id) {
-                          this.strategyhost.selectedHost.push(item)
-                          selectedIndexs.push(index)
-                        }
-                      }
-                    })
-                    var difference = allIndexs.concat(selectedIndexs).filter(v => !allIndexs.includes(v) || !selectedIndexs.includes(v))
-                    var newallHost = this.strategyhost.allHost.filter((item, index) => {
-                      return index == difference[index]
-                    })
-                    this.strategyhost.allHost = newallHost
-                    // 赋值告警渠道
+                    sessionStorage.setItem('strategyName', params.row.name)
+                    sessionStorage.setItem('strategyType', params.row.strategytype + '')
+                    var channel = []
                     if (params.row.letter) {
-                      this.newAlarmStrategyForm.channel.push('letter')
+                      channel.push('letter')
                     }
                     if (params.row.email) {
-                      this.newAlarmStrategyForm.channel.push('email')
+                      channel.push('email')
                     }
                     if (params.row.phone) {
-                      this.newAlarmStrategyForm.channel.push('phone')
+                      channel.push('phone')
                     }
-                    this.targetformDynamic = params.row.zhibiaoAlarm
-                    this.eventformDynamic = params.row.shijianAlarm
-                    this.strategyId = params.row.id
-                    this.btnflag = '更新'
-                    this.isNewAlarmStrategy = true
+                    sessionStorage.setItem('strategyChannel', JSON.stringify(channel))
+                    sessionStorage.setItem('strategyContacts', JSON.stringify(params.row.AlarmContact))
+                    sessionStorage.setItem('strategyResource', JSON.stringify(params.row.resource))
+                    sessionStorage.setItem('targetformDynamic', JSON.stringify(params.row.zhibiaoAlarm))
+                    sessionStorage.setItem('eventformDynamic', JSON.stringify(params.row.shijianAlarm))
+                    sessionStorage.setItem('strategyId', params.row.id)
+                    sessionStorage.setItem('btnflag', '更新')
+                    this.$router.push('CloudMonitorCreateStrategy')
                   }
                 }
               }, params.row.name)
@@ -1083,9 +543,7 @@
                 style: {
                   whiteSpace: 'normal'
                 }
-              }, alarmname.join()), h('span', {
-
-              }, alarmname.join())])
+              }, alarmname.join()), h('span', {}, alarmname.join())])
             }
           }, {
             title: '策略类型',
@@ -1115,63 +573,26 @@
                 },
                 on: {
                   click: () => {
-                    this.newAlarmStrategyForm.strategyName = params.row.name
-                    this.newAlarmStrategyForm.strategyType = params.row.strategytype + ''
-                    this.newAlarmStrategyForm.channel = []
-                    // 赋值联系人
-                    var selectedIndexsman = []
-                    var allIndexsman = []
-                    this.selectedContactsCopy = params.row.AlarmContact.map(item => {
-                      return item.alarmcontactid
-                    })
-                    this.contacts.allContacts.forEach((item, index) => {
-                      allIndexsman.push(index)
-                      for (var i = 0; i < this.selectedContactsCopy.length; i++) {
-                        if (this.selectedContactsCopy[i] == item.id) {
-                          this.contacts.selectedContacts.push(item)
-                          selectedIndexsman.push(index)
-                        }
-                      }
-                    })
-                    var differenceman = allIndexsman.concat(selectedIndexsman).filter(v => !allIndexsman.includes(v) || !selectedIndexsman.includes(v))
-                    var newallContacts = this.contacts.allContacts.filter((item, index) => {
-                      return index == differenceman[index]
-                    })
-                    this.contacts.allContacts = newallContacts
-                    // 赋值资源选择
-                    var selectedIndexs = []
-                    var allIndexs = []
-                    this.resourceId = params.row.resource.map(item => {
-                      return item.resourceid
-                    })
-                    this.strategyhost.allHost.forEach((item, index) => {
-                      allIndexs.push(index)
-                      for (var i = 0; i < this.resourceId.length; i++) {
-                        if (this.resourceId[i] == item.id) {
-                          this.strategyhost.selectedHost.push(item)
-                          selectedIndexs.push(index)
-                        }
-                      }
-                    })
-                    var difference = allIndexs.concat(selectedIndexs).filter(v => !allIndexs.includes(v) || !selectedIndexs.includes(v))
-                    var newallHost = this.strategyhost.allHost.filter((item, index) => {
-                      return index == difference[index]
-                    })
-                    this.strategyhost.allHost = newallHost
-                    // 赋值告警渠道
+                    sessionStorage.setItem('strategyName', params.row.name)
+                    sessionStorage.setItem('strategyType', params.row.strategytype + '')
+                    var channel = []
                     if (params.row.letter) {
-                      this.newAlarmStrategyForm.channel.push('letter')
+                      channel.push('letter')
                     }
                     if (params.row.email) {
-                      this.newAlarmStrategyForm.channel.push('email')
+                      channel.push('email')
                     }
                     if (params.row.phone) {
-                      this.newAlarmStrategyForm.channel.push('phone')
+                      channel.push('phone')
                     }
-                    this.targetformDynamic = params.row.zhibiaoAlarm
-                    this.eventformDynamic = params.row.shijianAlarm
-                    this.btnflag = '完成'
-                    this.isNewAlarmStrategy = true
+                    sessionStorage.setItem('strategyChannel', JSON.stringify(channel))
+                    sessionStorage.setItem('strategyContacts', JSON.stringify(params.row.AlarmContact))
+                    sessionStorage.setItem('strategyResource', JSON.stringify(params.row.resource))
+                    sessionStorage.setItem('targetformDynamic', JSON.stringify(params.row.zhibiaoAlarm))
+                    sessionStorage.setItem('eventformDynamic', JSON.stringify(params.row.shijianAlarm))
+                    sessionStorage.setItem('strategyId', params.row.id)
+                    sessionStorage.setItem('btnflag', '完成')
+                    this.$router.push('CloudMonitorCreateStrategy')
                   }
                 }
               }, '复制'), h('span', {
@@ -1199,7 +620,7 @@
           }
         ],
         alarmStrategyData: [],
-        isNewAlarmStrategy: false,
+        // isNewAlarmStrategy: false,
         //告警策略列表表格
         alarmListColumns: [
           {
@@ -1263,34 +684,9 @@
           total: 0,
           currentPage: 1
         },
-
-        newAlarmStrategyForm: {
-          strategyName: '',
-          strategyType: '0',
-          channel: [],
-          alarmObj: 'part'
-        },
-        newAlarmStrategyFormRuleValidate: {
-          strategyName: [
-            {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
-          ],
-          strategyType: [
-            {required: true, message: '请选择策略类型', trigger: 'change'}
-          ],
-          channel: [
-            {required: true, type: 'array', min: 1, message: '请至少选择一个告警渠道', trigger: 'change'}
-          ],
-        },
         isAddMonitorIndex: true,
-        hostHint: false,
-        contactsHint: false,
-        currentAlarmObj: '',
-        allHostLegth: '',
-        allHostTem: '',
-        allContactsTemp: '',
-
         //tabs 选中项
-        tabsName: 'overview'
+        tabsName: currentTab ? currentTab : 'overview'
       }
     },
     beforeRouteEnter(from, to, next) {
@@ -1354,6 +750,11 @@
     },
     created() {
       this.hasHost()
+      if (this.currentTab != 'overview') {
+        this.labelSwitching(this.currentTab)
+      }
+      this.getFirstOverviewMonitor()
+      this.getSecondOverviewMonitor()
     },
     methods: {
       setData(res) {
@@ -1507,7 +908,7 @@
         })
       },
       newStrategy_back() {
-        this.isNewAlarmStrategy = false
+        // this.isNewAlarmStrategy = false
         this.listAlarm()
         // 返回清空新建告警策略表单数据
         this.newAlarmStrategyForm = {
@@ -1571,95 +972,12 @@
           }
         });
       },
-      alarmStrategyInit() {
-        this.selectedTarget = this.alarmHostTarget
-        this.getContacts()
-        this.changeStrategyType()
-        this.listAlarm()
-      },
       listAlarm() {
         this.$http.get('alarmControl/listAlarmControl.do').then(res => {
           if (res.status == 200 && res.data.status == 1) {
             this.alarmStrategyData = res.data.result
           }
         })
-      },
-      changealarmtype() {
-        if (this.newAlarmStrategyForm.alarmObj == 'all') {
-          this.strategyhost.selectedHost = JSON.parse(this.allHostTem)
-          this.strategyhost.allHost = []
-        } else {
-          this.strategyhost.selectedHost = []
-          this.strategyhost.allHost = JSON.parse(this.allHostTem)
-        }
-      },
-      changeStrategyType() {
-        var objArray = ['云主机', '云硬盘', 'vpc', '对象存储']
-        var productType = ''
-        objArray.forEach((item, index) => {
-          if (this.newAlarmStrategyForm.strategyType == index) {
-            productType = item
-          }
-        })
-        this.currentAlarmObj = productType
-        var targetArray = [this.alarmHostTarget, this.alarmDiskTarget, this.alarmVpcTarget, this.alarmObjTarget]
-        targetArray.forEach((item, index) => {
-          if (this.newAlarmStrategyForm.strategyType == index) {
-            this.selectedTarget = item
-          }
-        })
-        this.targetformDynamic[0].alarmname = this.selectedTarget.target[0].value
-        this.targetformDynamic.splice(1, this.targetformDynamic.length - 1)
-        this.$http.get('monitor/listZoneVMAndDiskAndVpcAndObject1.do', {
-          params: {
-            productType: productType
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.strategyhost.allHost = response.data.list
-            this.allHostTem = JSON.stringify(this.strategyhost.allHost)
-            this.allHostLegth = response.data.list.length
-          } else {
-            console.log('获取资源列表报错')
-          }
-        })
-      },
-      targetHandleAdd() {
-        var targetArray = [this.alarmHostTarget, this.alarmDiskTarget, this.alarmVpcTarget, this.alarmObjTarget]
-        targetArray.forEach((item, index) => {
-          if (this.newAlarmStrategyForm.strategyType == index) {
-            this.selectedTarget = item
-          }
-        })
-        var selectedAttr = this.selectedTarget.target[0].value
-        this.targetformDynamic.push({
-          alarmname: selectedAttr,
-          countcircle: 1,
-          valuetype: '>',
-          value: 80,
-          continuecircle: 1,
-          alarmcount: 1,
-          alarmtype: 1
-        })
-      },
-      targetHandleRemove(index) {
-        this.targetformDynamic.splice(index, 1)
-      },
-      eventHandleAdd() {
-        this.eventformDynamic.push(
-          {
-            alarmname: 'PING不可达',
-            countcircle: 1,
-            continuecircle: 1,
-            alarmcount: 1,
-            alarmtype: 2,
-            value: ''
-
-          }
-        )
-      },
-      eventHandleRemove(index) {
-        this.eventformDynamic.splice(index, 1)
       },
       enterChart(val) {
         if (val === 'firstShade' && this.firstMonitoringOverview.chart === 'falseChart') {
@@ -1694,7 +1012,7 @@
         this.getFirstOverviewMonitor()
         this.getSecondOverviewMonitor()
         this.getCustomMonitorGroup()
-        this.alarmStrategyInit()
+        // this.alarmStrategyInit()
         this.getAlarmList()
       },
       labelSwitching(name) {
@@ -1702,24 +1020,22 @@
           case 'overview':
             this.getShortMessageControl()
             this.getCanNotPingAndAlarmNotHandledAndShutdownTotalCount()
-            this.getFirstOverviewMonitor()
-            this.getSecondOverviewMonitor()
             break
           case 'customMonitoring':
             this.getCustomMonitorGroup()
             break
           case 'alarmStrategy':
-            this.alarmStrategyInit()
+            this.listAlarm()
             break
           case 'alarmList':
             this.getAlarmList()
             break
         }
       },
-
       deleteAttention(item) {
         this.$Modal.confirm({
           title: '提示',
+          scrollable: true,
           content: '<p>确定删除当前关注的指标吗？</p>',
           onOk: () => {
             let url = 'monitor/deleteCustomMonitorIndex.do'
@@ -2388,22 +1704,6 @@
         this.overviewMonitorIndexForm.selectedProduct.splice(index, 1)
         this.overviewMonitorIndexForm.allProduct.push(item)
       },
-      addHost(item, index) {
-        this.strategyhost.allHost.splice(index, 1)
-        this.strategyhost.selectedHost.push(item)
-      },
-      deleteHost(item, index) {
-        this.strategyhost.selectedHost.splice(index, 1)
-        this.strategyhost.allHost.push(item)
-      },
-      addContacts(item, index) {
-        this.contacts.allContacts.splice(index, 1)
-        this.contacts.selectedContacts.push(item)
-      },
-      deleteContacts(item, index) {
-        this.contacts.selectedContacts.splice(index, 1)
-        this.contacts.allContacts.push(item)
-      },
       addOverviewMonitoring_ok() {
         let computerId = ''
         let vpcId = ''
@@ -2674,6 +1974,7 @@
                   this.firstMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
                   this.firstMonitoringOverview.x = res.data.list[0].x
                   this.firstMonitoringOverview.chart = 'trueChart'
+                  this.firstMonitoringOverview.dateType = res.data.list[0].timeType
                 } else {
                   this.firstMonitoringOverview.showChart = null
                   this.firstMonitoringOverview.title = this.firstMonitoringOverview.chart === 'falseChart' ? '' : '我关注的指标'
@@ -2705,9 +2006,12 @@
             params.datetype = 'month'
             break
         }
-        this.$http.get(url, {params: params}).then(res => {
-          if (res.data.status == 1 && res.status == 200) {
-            this.$Message.success(res.data.message)
+        this.$http.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
+          if (res.status == 200) {
+            this.$Message.success('导出成功')
+            let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+            let objectUrl = URL.createObjectURL(blob)
+            window.location.href = objectUrl
           } else {
             this.$message.info({
               content: res.data.message
@@ -2784,6 +2088,7 @@
                   this.secondMonitoringOverview.productType = res.data.list[0].customMonitorIndex.producttype
                   this.secondMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
                   this.secondMonitoringOverview.x = res.data.list[0].x
+                  this.secondMonitoringOverview.dateType = res.data.list[0].timeType
                   this.secondMonitoringOverview.chart = 'trueChart'
                 } else {
                   this.secondMonitoringOverview.showChart = null
@@ -2816,9 +2121,12 @@
             params.datetype = 'month'
             break
         }
-        this.$http.get(url, {params: params}).then(res => {
-          if (res.data.status == 1 && res.status == 200) {
-            this.$Message.success(res.data.message)
+        this.$http.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
+          if (res.status == 200) {
+            this.$Message.success('导出成功')
+            let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+            let objectUrl = URL.createObjectURL(blob)
+            window.location.href = objectUrl
           } else {
             this.$message.info({
               content: res.data.message
@@ -2903,111 +2211,18 @@
             params.datetype = 'month'
             break
         }
-        this.$http.get(url, {params: params}).then(res => {
-          if (res.data.status == 1 && res.status == 200) {
-            this.$Message.success(res.data.message)
+        this.$http.get(url, {
+          responseType: 'arraybuffer', params: params
+        }).then(res => {
+          if (res.status == 200) {
+            this.$Message.success('导出成功')
+            let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+            let objectUrl = URL.createObjectURL(blob)
+            window.location.href = objectUrl
           } else {
             this.$message.info({
               content: res.data.message
             })
-          }
-        })
-      },
-      // 列出联系人
-      getContacts() {
-        var url = `user/getcontacts.do`
-        this.$http.get(url).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.contacts.allContacts = response.data.result.map(item => {
-              return {name: item.username, id: item.id}
-            })
-            this.allContactsTemp = JSON.stringify(this.contacts.allContacts)
-          }
-        })
-      },
-      newAlarmStrategy_ok() {
-        var appInterruptArray = this.eventformDynamic.filter(item => {
-          return item.alarmname == '应用中断'
-        })
-        var host = appInterruptArray.some(item => {
-          if (item.value == '') {
-            this.$Message.info('请输入端口号')
-          }
-          return item.value == ''
-        })
-        if (host) {
-          return false
-        }
-        var alarmlength = this.targetformDynamic.length + this.eventformDynamic.length < 1
-        this.hostHint = this.strategyhost.selectedHost.length < 1 ? true : false
-        this.contactsHint = this.contacts.selectedContacts.length < 1 ? true : false
-        this.$refs['newAlarmStrategyForm'].validate((valid) => {
-          if (valid && !this.hostHint && !this.contactsHint && !alarmlength) {
-            // 告警渠道选择
-            var channel = {letter: 0, email: 0, phone: 0}
-            this.newAlarmStrategyForm.channel.forEach(item => {
-              var x = ''
-              for (x in channel) {
-                if (x == item) {
-                  channel[x] = 1
-                }
-              }
-            })
-            // 选中的联系人
-            var linkMan = this.contacts.selectedContacts.map(item => {
-              return item.id
-            })
-            // 选中的资源
-            var selectedProduct = []
-            selectedProduct = this.strategyhost.selectedHost.map(item => {
-              return item.id
-            })
-            let params = {
-              name: this.newAlarmStrategyForm.strategyName + '',
-              type: this.newAlarmStrategyForm.strategyType + '',
-              resourceIds: selectedProduct.join(),
-              letter: channel.letter + '',
-              email: channel.email + '',
-              phone: channel.phone + '',
-              linkIds: linkMan.join(),
-              targetAlarmMessage: JSON.stringify(this.targetformDynamic),
-              eventAlarmMessage: JSON.stringify(this.eventformDynamic),
-            }
-            // console.log(params.targetAlarmMessage)
-            let params1 = {
-              id: this.strategyId + '',
-              name: this.newAlarmStrategyForm.strategyName + '',
-              type: this.newAlarmStrategyForm.strategyType + '',
-              resourceIds: selectedProduct.join(),
-              letter: channel.letter + '',
-              email: channel.email + '',
-              phone: channel.phone + '',
-              linkIds: linkMan.join(),
-              targetAlarmMessage: JSON.stringify(this.targetformDynamic),
-              eventAlarmMessage: JSON.stringify(this.eventformDynamic),
-            }
-            if (this.btnflag == '完成') {
-              this.$http.post('alarmControl/createAlarmControl.do', params).then(res => {
-                if (res.status == 200 && res.data.status == 1) {
-                  this.$Message.success(res.data.message)
-                  this.listAlarm();
-                  this.isNewAlarmStrategy = false
-                } else {
-                  this.$Message.success('创建失败！');
-                }
-              })
-            }
-            if (this.btnflag == '更新') {
-              this.$http.post('alarmControl/updateAlarmControl.do', params1).then(res => {
-                if (res.status == 200 && res.data.status == 1) {
-                  this.$Message.success(res.data.message)
-                  this.listAlarm();
-                  this.isNewAlarmStrategy = false
-                } else {
-                  this.$Message.success('更新失败！');
-                }
-              })
-            }
           }
         })
       },
@@ -3093,6 +2308,14 @@
 
       //跳转对应列表
       tabsClick(index) {
+        this.getShortMessageControl()
+        this.getCanNotPingAndAlarmNotHandledAndShutdownTotalCount()
+        this.getFirstOverviewMonitor()
+        this.getSecondOverviewMonitor()
+        this.getCustomMonitorGroup()
+        // this.alarmStrategyInit()
+        this.listAlarm()
+        this.getAlarmList()
         if (index != 2) {
           this.tabsName = this.monitorData[index].tabsName;
         } else if (index == 2) {
@@ -3446,33 +2669,6 @@
   .as-content {
   }
 
-  .nas-content {
-    .nas-content-title {
-      border-bottom: 1px solid #d8d8d8;
-      padding-bottom: 20px;
-      > span {
-        font-size: 24px;
-        font-family: MicrosoftYaHei;
-        color: rgba(51, 51, 51, 1);
-      }
-      button {
-        outline: none;
-        cursor: pointer;
-        padding: 3px 15px;
-        font-size: 12px;
-        font-family: MicrosoftYaHei;
-        color: rgba(42, 153, 242, 1);
-        border-radius: 2px;
-        background: #ffffff;
-        border: 1px solid rgba(42, 153, 242, 1);
-        float: right;
-      }
-    }
-    .nas-content-body {
-      padding: 20px 0 55px;
-    }
-  }
-
   .al-content {
     .al-content-title {
       margin-bottom: 20px;
@@ -3536,97 +2732,8 @@
     }
   }
 
-  .list-wrap {
-    display: flex;
-    justify-content: flex-start;
-    padding-bottom: 20px;
-    border-bottom: solid 1px #d8d8d8;
-    .list {
-      width: 373px;
-      height: 218px;
-      border-radius: 2px;
-      border: 1px solid rgba(216, 216, 216, 1);
-      font-size: 12px;
-      overflow: auto;
-      &.red {
-        border-color: red;
-      }
-      p {
-        padding: 10px;
-        color: #333333;
-      }
-      ul {
-        li {
-          color: #666666;
-          padding: 0 20px 0 10px;
-          line-height: 26px;
-          .icon-btn {
-            float: right;
-            color: rgba(42, 153, 242, 1);
-            font-style: normal;
-            font-size: 10px;
-            cursor: pointer;
-          }
-        }
-        li:nth-of-type(2n + 1) {
-          background: rgba(247, 247, 247, 1);
-        }
-      }
-    }
-    .center-gap {
-      padding: 0 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      color: #999999;
-      span {
-        display: block;
-      }
-    }
-  }
-
-  .alarm-strategy {
-    margin-top: 20px;
-    color: rgba(17, 17, 17, 0.65);
-    font-size: 12px;
-    .headline {
-      font-size: 14px;
-      line-height: 20px;
-    }
-    .content {
-      margin-top: 10px;
-      width: 1100px;
-      padding: 10px;
-      background: rgba(247, 247, 247, 1);
-      border-radius: 2px;
-      border: 1px solid rgba(216, 216, 216, 1);
-      p {
-        margin-bottom: 10px;
-      }
-    }
-  }
-
   .warning {
     cursor: pointer;
 
-  }
-
-  .alarm-channel {
-    margin-top: 20px;
-    border-top: solid 1px #d8d8d8;
-    padding-top: 20px;
-    .contacts {
-      > p {
-        font-size: 14px;
-        color: rgba(102, 102, 102, 1);
-        line-height: 36px;
-      }
-      .list-wrap {
-        border-bottom: none;
-        padding-bottom: 10px;
-      }
-    }
-    border-bottom: solid 1px #d8d8d8;
-    padding-bottom: 20px;
   }
 </style>

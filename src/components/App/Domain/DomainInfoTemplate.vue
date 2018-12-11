@@ -17,8 +17,8 @@
             <p class="formhint">
               <span> 域名所有者类型</span>
               <RadioGroup v-model="type">
-                <Radio label="I">个人</Radio>
-                <Radio label="O">企业</Radio>
+                <Radio label="I" disabled>个人</Radio>
+                <Radio label="O" disabled>企业</Radio>
               </RadioGroup>
             </p>
           </FormItem>
@@ -133,16 +133,18 @@
             </FormItem>
             <div style="display:flex">
               <FormItem label="所属区域" prop="country">
-                <Select v-model="infoTempFormValidate.country" style="width:170px" @on-change="changeCountry" placeholder="请选择国家">
+                <Select v-model="infoTempFormValidate.country" style="width:170px" @on-change="changeCountry"
+                        placeholder="请选择国家">
                   <Option v-for="item in countryList" :value="item.Name" :key="item.Code">{{ item.Name }}</Option>
                 </Select>
               </FormItem>
-              <FormItem  prop="province" :label-width="10">
-                <Select v-model="infoTempFormValidate.province" style="width:140px" @on-change="changeProvince" placeholder="请选择省">
+              <FormItem prop="province" :label-width="10">
+                <Select v-model="infoTempFormValidate.province" style="width:140px" @on-change="changeProvince"
+                        placeholder="请选择省">
                   <Option v-for="item in provinceList" :value="item.Name" :key="item.Code">{{ item.Name }}</Option>
                 </Select>
               </FormItem>
-              <FormItem  prop="city" :label-width="10">
+              <FormItem prop="city" :label-width="10">
                 <Select v-model="infoTempFormValidate.city" style="width:100px" placeholder="请选择市">
                   <Option v-for="item in cityList" :value="item.Name" :key="item.Code">{{ item.Name }}</Option>
                 </Select>
@@ -162,7 +164,7 @@
                 拼，如您有英文名称或翻译有误，请直接进行修改。通讯地址（英文）请按照从小地址到大 地址填写。</p>
             </FormItem>
             <div style="display:flex">
-              <FormItem label="电话" ></FormItem>
+              <FormItem label="电话"></FormItem>
               <FormItem label="国家代码" prop="telArea" :label-width="80">
                 <Input v-model="infoTempFormValidate.telArea" style="width:60px"></Input>
               </FormItem>
@@ -181,19 +183,19 @@
                 <Input v-model="infoTempFormValidate.faxCountry" style="width:100px;"></Input>
               </FormItem>
               <FormItem :label-width="10" style="color:#D8D8D8">
-                  —— 
+                ——
               </FormItem>
               <FormItem prop="faxArea" :label-width="10">
                 <Input v-model="infoTempFormValidate.faxArea" style="width:100px;"></Input>
               </FormItem>
               <FormItem :label-width="10" style="color:#D8D8D8">
-                  —— 
+                ——
               </FormItem>
               <FormItem prop="faxtelephone" :label-width="10">
                 <Input v-model="infoTempFormValidate.faxtelephone" style="width:100px"></Input>
               </FormItem>
               <FormItem :label-width="10" style="color:#D8D8D8">
-                  —— 
+                ——
               </FormItem>
               <FormItem prop="faxExt" :label-width="10">
                 <Input v-model="infoTempFormValidate.faxExt" style="width:100px"></Input>
@@ -218,7 +220,7 @@
               <Input v-model="infoTempFormValidate.enAddress"></Input>
             </FormItem>
             <FormItem>
-              <Button @click="handleReset('infoTempFormValidate')" style="margin-left: 8px">取消</Button>
+              <Button @click="handleReset('infoTempFormValidate')" style="margin:0 10px 0 8px;">取消</Button>
               <Button type="primary" @click="handleSubmit('infoTempFormValidate')" v-show='index==0'>确认建立模板</Button>
               <Button type="primary" v-show='index==1' @click="payTemplate">保存模版并支付</Button>
             </FormItem>
@@ -252,7 +254,9 @@
           <p style="font-size: 12px;color: #333;padding-bottom: 10px;">请输入您的邮箱验证码</p>
           <p style="display: flex;align-items: center;">
             <Input v-model="code" style="width: 240px;margin-right: 10px;"/>
-            <Button type="primary" @click="sendCode" style="width: 104px;">{{codeMessage}}</Button>
+            <Button type="primary" @click.prevent="sendCode" style="width: 104px;" :disabled="codeMessage!='发送验证码'">
+              {{codeMessage}}
+            </Button>
           </p>
         </div>
 
@@ -271,6 +275,7 @@
   import pinyin from 'chinese-to-pinyin'
   import axios from 'axios'
   import $store from '@/vuex'
+  import uuid from 'uuid'
   export default {
     data () {
       // 匹配中文
@@ -332,7 +337,7 @@
         emailCode: false,
         code: '',
         codeImg: '',
-        codeMessage: '获取验证码',
+        codeMessage: '发送验证码',
         imgSrc: 'user/getKaptchaImage.do',
         index: '0',
         userid: '',
@@ -378,72 +383,72 @@
         },
         infoTempRuleValidate: {
           type: [
-            { required: true, message: '请选择类型', trigger: 'change' }
+            {required: true, message: '请选择类型', trigger: 'change'}
           ],
           registrantOrganization: [
-            { required: true, validator: validChinese, trigger: 'blur' }
+            {required: true, validator: validChinese, trigger: 'blur'}
           ],
           country: [
-            { required: true, message: '请选择国家', trigger: 'change' }
+            {required: true, message: '请选择国家', trigger: 'change'}
           ],
           province: [
-            { required: true, message: '请选择省', trigger: 'change' }
+            {required: true, message: '请选择省', trigger: 'change'}
           ],
           city: [
-            { required: true, message: '请选择城市', trigger: 'change' }
+            {required: true, message: '请选择城市', trigger: 'change'}
           ],
           address: [
-            { required: true, validator: validHaveChinese, trigger: 'change' }
+            {required: true, validator: validHaveChinese, trigger: 'change'}
           ],
           postCode: [
-            { required: true, validator: validpostCode, trigger: 'change' }
+            {required: true, validator: validpostCode, trigger: 'change'}
           ],
           mail: [
-            { required: true, message: '邮箱不能为空', trigger: 'blur' },
-            { type: 'email', message: '请输入正确格式的邮箱', trigger: 'blur' }
+            {required: true, message: '邮箱不能为空', trigger: 'blur'},
+            {type: 'email', message: '请输入正确格式的邮箱', trigger: 'blur'}
           ],
           telArea: [
-            { required: true, message: '请输入国家代码', trigger: 'change' },
-            { required: true, validator: validnumber, trigger: 'change' }
+            {required: true, message: '请输入国家代码', trigger: 'change'},
+            {required: true, validator: validnumber, trigger: 'change'}
           ],
           telephone: [
-            { required: true, message: '请输入电话号码', trigger: 'change' },
-            { required: true, validator: validPhone, trigger: 'blur' }
+            {required: true, message: '请输入电话号码', trigger: 'change'},
+            {required: true, validator: validPhone, trigger: 'blur'}
           ],
           telExt: [
-            { required: false, validator: validnumber, trigger: 'change' }
+            {required: false, validator: validnumber, trigger: 'change'}
           ],
           faxCountry: [
-            { required: true, message: '请输入国家区号', trigger: 'change' },
-            { required: true, validator: validnumber, trigger: 'change' }
+            {required: true, message: '请输入国家区号', trigger: 'change'},
+            {required: true, validator: validnumber, trigger: 'change'}
           ],
           faxArea: [
-            { required: true, message: '请输入地区区号', trigger: 'change' },
-            { required: true, validator: validnumber, trigger: 'change' }
+            {required: true, message: '请输入地区区号', trigger: 'change'},
+            {required: true, validator: validnumber, trigger: 'change'}
           ],
           faxtelephone: [
-            { required: true, message: '请输入电话号码', trigger: 'change' },
-            { required: true, validator: validPhone, trigger: 'blur' }
+            {required: true, message: '请输入电话号码', trigger: 'change'},
+            {required: true, validator: validPhone, trigger: 'blur'}
           ],
           faxExt: [
-            { required: false, validator: validnumber, trigger: 'change' }
+            {required: false, validator: validnumber, trigger: 'change'}
           ],
           // enRegistrantName: [
           //   { required: true, validator: validEn, trigger: 'change' }
           // ],
           enRegistrantOrganization: [
-            { required: true, validator: validEn, trigger: 'change' }
+            {required: true, validator: validEn, trigger: 'change'}
           ],
           enProvince: [
-            { required: true, validator: validEn, trigger: 'change' }
+            {required: true, validator: validEn, trigger: 'change'}
           ],
           enCity: [
-            { required: true, validator: validEn, trigger: 'change' }
+            {required: true, validator: validEn, trigger: 'change'}
           ],
           enAddress: [
-            { required: true, validator: validEnAdress, trigger: 'change' }
-        ],
-      },
+            {required: true, validator: validEnAdress, trigger: 'change'}
+          ],
+        },
         authFormValidate: {
           type: '',
           userid: '',
@@ -452,32 +457,13 @@
         authRuleValidate: {}
       }
     },
-//    created () {
-//      axios.post('user/getRuiRadosApiacess.do', {
-//        zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
-//        companyId: this.$store.state.userInfo.companyid
-//      }).then(response => {
-//        if (response.status == 200 && response.data.status == 1) {
-//          axios.get('user/getXrdomainToken.do', {
-//            params: {
-//              companyId: this.$store.state.userInfo.companyid,
-//              secret: response.data.data.data
-//            }
-//          }).then(res => {
-//            this.tokenId = res.data.token
-//          })
-//        }
-//      })
-//    },
-    mounted () {
-    },
     methods: {
       clickTemp(){
         axios.post('domain/selectTemplates.do', {
           token: sessionStorage.getItem('tokenId'),
         }).then(res => {
           if (res.data.status == 1) {
-            if (res.data.data.templates != []) {
+            if (res.data.data.templates.length != 0) {
               this.btns = 'templated'
               this.templateds = res.data.data.templates
               this.templateName = res.data.data.templates[0].id
@@ -517,7 +503,7 @@
         this.$refs[name].resetFields();
       },
       changePinyin (val) {
-        return pinyin(val, {noTone: true,filterChinese: true})
+        return pinyin(val, {noTone: true, filterChinese: true})
       },
       legalPersonIDFront (response) {
         if (response.status == 1) {
@@ -599,13 +585,17 @@
       //保存模板付费
       payTemplate(){
         var domNames = sessionStorage.getItem('domName')
+        // 批次号
+        var countOrder = uuid.v4()
+
         let params = {
           token: sessionStorage.getItem('tokenId'),
           domainName: domNames.substring(0, domNames.length - 1),
           years: '1',
           isName: '0',
           signature: '',
-          price: sessionStorage.getItem('domPrice')
+          price: sessionStorage.getItem('domPrice'),
+          countOrder
         }
         if (this.btns == 'untemplate') {
           params.userid = this.userid
@@ -615,7 +605,12 @@
         axios.post('domain/createOrder.do', params).then(response => {
           if (response.data.status == 1) {
             sessionStorage.setItem('orderNum', response.data.orderNum)
-            this.$router.push('/ruicloud/order')
+//            this.$router.push('/ruicloud/order')
+            this.$router.push({
+              path: 'order', query: {
+                countOrder
+              }
+            })
           }
         })
       },
@@ -634,7 +629,6 @@
         }
       }
     },
-    computed: {},
     watch: {
       'infoTempFormValidate.type': function (newVal, oldVal) {
         this.domainTypeName = newVal == 'O' ? '域名所有者单位名称（中文）' : '域名所有者名称（中文）'
@@ -714,7 +708,6 @@
       .form-center {
         width: 750px;
         margin: 0 auto;
-        /*margin-top: 15px;*/
         .formhint {
           position: relative;
           color: #666;

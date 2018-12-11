@@ -526,6 +526,10 @@
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.creatbalancemodal.formInline.subnetList = response.data.result
+              if (response.data.result.length != 0) {
+                let prefix = response.data.result[0].ipsegment.split('.')
+                this.creatbalancemodal.formInline.intranetIpNum = prefix[0] + '.' + prefix[1] + '.' + prefix[2]
+              }
             }
           })
         }
@@ -692,7 +696,7 @@
         //console.log(this.bindHostForm.vm.join(','))
         this.showModal.bind = false
         this.balData.forEach(item => {
-          if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
+          if (item.lbid && item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid && item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
             item.status = 7
             item._disabled = true
           }
@@ -760,7 +764,7 @@
       unbindHost_ok() {
         this.showModal.unbind = false
         this.balData.forEach(item => {
-          if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
+          if (item.lbid && item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid && item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
             item.status = 6
             item._disabled = true
           }
@@ -771,13 +775,13 @@
           if (this.balanceSelection._internal) {
             url = `loadbalance/removeFromInternalLoadBalancerRule.do`
             params = {
-              VMIds: this.unbindForm.vm,
+              VMIds: this.unbindForm.vm + '',
               lbId: this.balanceSelection.lbid
             }
           } else {
             url = `loadbalance/removeFromLoadBalancerRule.do`
             params = {
-              VMIds: this.unbindForm.vm,
+              VMIds: this.unbindForm.vm + '',
               roleId: this.balanceSelection.loadbalanceroleid
             }
           }
@@ -814,8 +818,7 @@
                 url = 'loadbalance/deleteLoadBalancerRule.do'
               }
               this.balData.forEach(item => {
-                if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
-                ) {
+                if (item.lbid && item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid && item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
                   item.status = 5
                   item._disabled = true
                 }
@@ -844,7 +847,7 @@
       },
       buyIP() {
         sessionStorage.setItem('pane', 'Peip')
-        this.$router.push('buy')
+        this.$router.push('buy/bip')
       }
     },
     watch: {

@@ -1,13 +1,12 @@
 <template>
   <div id="front">
-      <div class="app-hint" ref="hint">
-        <div class="center">
-          <div class="countdown" v-if="hintShow">
-            <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
-          </div>
+    <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
+      <div class="center">
+        <div class="countdown" v-if="hintShow">
         </div>
-        <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
       </div>
+      <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
+    </div>
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -218,7 +217,7 @@
               </a>
             </li>
             <li>
-              <a href="https://tsm.miit.gov.cn/pages/home.aspx" target="_blank" style="color:#fff">增值电信业务经营许可证
+              <a href="javascript:void(0)" target="_blank" style="color:#fff;cursor: auto">增值电信业务经营许可证
                 B1-20180455</a>
             </li>
             <li>
@@ -318,6 +317,8 @@
   import debounce from 'throttle-debounce/debounce'
   import '@/assets/iconfont/frontend/iconfont.css'
   import '@/assets/iconfont/frontend/iconfont.js'
+  import uuid from 'uuid'
+
 
   export default {
     name: 'app',
@@ -425,8 +426,8 @@
                   {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost.htm'},
                   {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss.htm'},
                   {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/ruicloud/Pgpu.htm'},
+                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/ruicloud/Pelastic.htm'},
                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
-                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/ruicloud/Pelastic'}
                 ]
               },
               {
@@ -525,9 +526,9 @@
               {subTitle: '弹性云服务器（ECS）', url: '/ruicloud/Pecs.htm'},
               {subTitle: '镜像服务', url: '/ruicloud/Phost.htm'},
               {subTitle: 'ESC快照', url: '/ruicloud/Pecss.htm'},
+              {subTitle: 'GPU服务器', url: '/ruicloud/Pgpu.htm'},
+              {subTitle: '弹性伸缩', url: '/ruicloud/Pelastic.htm'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
-              {subTitle: '弹性伸缩（敬请期待）', url: ''},
-              {subTitle: 'GPU服务器（敬请期待）', url: ''}
             ]
           },
           {
@@ -599,7 +600,8 @@
         minute: '--',
         second: '--',
         hintShow: false,
-        timer: null
+        timer: null,
+        UUID: ''
       }
     },
 
@@ -608,6 +610,15 @@
         // 流量来源记录
         localStorage.setItem('comefrom', to.query.from)
       }
+      window.UUID = uuid.v4()
+      let params = {
+        batchNumber: window.UUID,
+        type: '0',
+        pageURL: window.location.href
+      }
+      // 写入入口信息
+      axios.post('information/webReachableRecord.do', params
+      )
       // 获取所有后台需要的基本信息
       // 获取用户信息
       var userInfo = axios.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}})
@@ -629,14 +640,23 @@
     },
     mounted() {
       this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
-      if(sessionStorage.getItem('hintShow') == 'true'){
+      if (sessionStorage.getItem('hintShow') == 'true') {
         this.$refs.hint.style.height = '80px'
       }
-      this.setTime()
+      if (document.readyState === 'complete') { //当页面加载状态为完全结束时进入
+        let params = {
+          batchNumber: window.UUID,
+          type: '1',
+          pageURL: window.location.href
+        }
+        // 获取入口信息
+        axios.post('information/webReachableRecord.do', params
+        )
+      }
     },
     created() {
-      if(sessionStorage.getItem('hintShow') == null){
-        sessionStorage.setItem('hintShow','true')
+      if (sessionStorage.getItem('hintShow') == null) {
+        sessionStorage.setItem('hintShow', 'true')
       }
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
@@ -657,15 +677,6 @@
       this.$http.get('article/friendshipLink.do').then(response => {
         this.links = response.data.result
       })
-      /*this.$http.get('user/getEventNum.do', {
-       params: {
-       isRead: '0'
-       }
-       }).then(response => {
-       if (response.status == 200 && response.data.status == 1) {
-       this.$store.commit('setMsg', Number.parseInt(response.data.number))
-       }
-       })*/
     },
     methods: {
       /* li mouseenter事件 重新设置line样式 */
@@ -699,52 +710,11 @@
           window.location.reload()
         })
       },
-      /* 倒计时方法 */
-      setTime() {
-        axios.get('network/getTime.do').then(res => {
-          if (res.data.status == 1) {
-            let startTime = res.data.result
-            let endTime = new Date('2018/11/17').getTime()
-            let limitTime = endTime - startTime
-            if (limitTime > 0) {
-              this.setLimit(limitTime)
-              this.timer = setInterval(() => {
-                this.setLimit(limitTime)
-                limitTime -= 1000
-                if (limitTime <= 0) {
-                  window.clearInterval(timer)
-                }
-              }, 1000);
-            } else {
-              this.day = this.checkTime(0);
-              this.hour = this.checkTime(0);
-              this.minute = this.checkTime(0);
-              this.second = this.checkTime(0);
-            }
-          }
-        })
-      },
-      setLimit(time) {
-        let days = parseInt(time / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
-        let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
-        let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
-        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒数
-        this.day = this.checkTime(days);
-        this.hour = this.checkTime(hours);
-        this.minute = this.checkTime(minutes);
-        this.second = this.checkTime(seconds);
-      },
-      checkTime(i) { //将0-9的数字前面加上0，例1变为01
-        if (i < 10) {
-          i = '0' + i;
-        }
-        return i;
-      },
-      closeHeadHint(){
+      closeHeadHint() {
         this.hintShow = false
         this.$refs.hint.style.height = 0
-        sessionStorage.setItem('hintShow','false')
-      }
+        sessionStorage.setItem('hintShow', 'false')
+      },
     },
     computed: mapState({
       userInfo: state => state.userInfo
@@ -776,6 +746,7 @@
       background: url("./assets/img/app/hint-banner.png") center no-repeat, linear-gradient(to right, #FF4439, #FF1569);
       position: relative;
       transition: height .5s ease;
+      cursor: pointer;
       > img {
         position: absolute;
         right: 15px;
@@ -804,6 +775,7 @@
         }
       }
     }
+
     header {
       width: 100%;
       height: 70px;

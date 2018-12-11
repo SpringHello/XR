@@ -22,7 +22,7 @@
     </div>
     <div id="searchResult">
       <div id="result-left">
-        <div>
+        <div style="margin-bottom: 20px;">
           <div class="left-top">
             <p>域名查询结果</p>
             <button @click="showValue=!showValue">筛选
@@ -54,33 +54,35 @@
           <div>努力加载中</div>
         </Spin>
       </div>
-      <div id="result-right" :class="{titleTop:listTop}">
-        <div>
-          <div class="all">
-            <p>域名清单
-              <button @click="removeAll">全部移除</button>
-            </p>
-            <ul class="all-data" v-show="buyLists.length!=0">
-              <li v-for="(item,index) in buyLists">
-                <h2>{{item.name}}</h2>
-                <button @click="remove(index)">移除</button>
-              </li>
-            </ul>
-          </div>
-          <div class="zero" v-show="buyLists.length==0">
-            <p>您还没有选择任何域名哦</p>
-            <img src="../../../assets/img/domain/Rectangle.png">
-          </div>
-          <div class="statistical" v-show="buyLists.length!=0">
-            <div>
-              <p>已加入域名 <span>{{addNum}}</span> 个</p>
-              <p>优惠金额：¥00.00</p>
+      <Affix :offset-top="5">
+        <div id="result-right">
+          <div>
+            <div class="all">
+              <p>域名清单
+                <button @click="removeAll">全部移除</button>
+              </p>
+              <ul class="all-data" v-show="buyLists.length!=0">
+                <li v-for="(item,index) in buyLists">
+                  <h2>{{item.name}}</h2>
+                  <button @click="remove(index)">移除</button>
+                </li>
+              </ul>
             </div>
-            <h1>应付金额：<span>¥{{payMoney.toFixed(2)}}</span></h1>
-            <button @click="nowBuy">立即购买</button>
+            <div class="zero" v-show="buyLists.length==0">
+              <p>您还没有选择任何域名哦</p>
+              <img src="../../../assets/img/domain/Rectangle.png">
+            </div>
+            <div class="statistical" v-show="buyLists.length!=0">
+              <div>
+                <p>已加入域名 <span>{{addNum}}</span> 个</p>
+                <p>优惠金额：¥00.00</p>
+              </div>
+              <h1>应付金额：<span>¥{{payMoney.toFixed(2)}}</span></h1>
+              <button @click="nowBuy">立即购买</button>
+            </div>
           </div>
         </div>
-      </div>
+      </Affix>
     </div>
   </div>
 </template>
@@ -198,16 +200,9 @@
       },
       //查看已注册信息
       checked(name, status){
-        if (this.$store.state.userInfo == null) {
-          this.$LR({
-            type: 'login'
-          })
-          return
-        } else {
-          sessionStorage.setItem('checkname', name)
-          sessionStorage.setItem('status', status)
-          this.$router.push('CheckReg')
-        }
+        sessionStorage.setItem('checkname', name)
+        sessionStorage.setItem('status', status)
+        this.$router.push('CheckReg')
       },
       //立即购买
       nowBuy(){
@@ -254,10 +249,9 @@
             domainName: this.searchText,
             tids: tids.slice(0, 8).join(','),
           }).then(res => {
+            this.showFix = false
             if (res.data.data.results.length != 0) {
-              this.showFix = false
               this.Results = res.data.data.results
-
               if (tids.slice(8).length != 0) {
                 this.showFix = true
                 this.cancel = true
@@ -288,18 +282,6 @@
         }
       }
     },
-    mounted(){
-      window.onscroll = () => {
-        var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-        if (scrollTop >= 284 && this.Results.length > 8) {
-          this.listTop = true
-        }
-        if (scrollTop < 284) {
-          this.listTop = false
-        }
-      }
-
-    }
   }
 </script>
 
@@ -589,11 +571,11 @@
         }
       }
     }
-    .titleTop {
-      position: fixed;
-      right: 350px;
-      top: 0;
-    }
+    /*.titleTop {*/
+    /*position: fixed;*/
+    /*right: 350px;*/
+    /*top: 0;*/
+    /*}*/
   }
 
   .demo-spin-icon-load {

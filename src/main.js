@@ -11,6 +11,7 @@ import 'iview/dist/styles/iview.css'
 import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
+import '@/assets/css/RedJu.css'
 
 //import './util/BMap'
 // import ECharts from 'vue-echarts/components/ECharts.vue'
@@ -38,17 +39,11 @@ Vue.prototype.$LR = LR
 Vue.config.productionTip = false
 
 
+//axios.defaults.withCredentials = true
+
 axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
-// axios.defaults.baseURL = '/ruicloud'
-
-
-// axios.defaults.withCredentials = true
-
-// axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
+//axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 //axios.defaults.baseURL = 'https://www.xrcloud.net/ruicloud/'
-// axios.defaults.baseURL = 'http://192.168.3.205/ruicloud/'
-//   axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
-axios.defaults.withCredentials = true
 
 // window.eventBus = new Vue();
 

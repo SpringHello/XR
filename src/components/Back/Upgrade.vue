@@ -46,19 +46,20 @@
             <h1>升级前配置</h1>
             <span>主机名称 : {{hostname}}</span>
             <span>主机配置 : {{currentCPUNum}}核{{currentRAMSize}}G</span>
+            <span>系统盘容量 : {{ rootdisksize }}G</span>
             <span>剩余时长 : {{endtime}}</span>
-            <router-link to="home" style="bottom:23px;position: absolute">全民普惠，3折减单，最高减免7000元！</router-link>
           </div>
           <div class="conf-wrapper">
             <h1>升级后配置</h1>
             <span>主机名称 : {{hostname}}</span>
             <span>主机配置 : {{CPUNum}}核{{RAMSize}}G</span>
+            <span>系统盘容量 : {{ systemDiskSize }}G</span>
             <span>剩余时长 : {{endtime}}</span>
             <span style="line-height:24px;">应付差价 :
-                 <i class="money">{{cost}}元</i>
+                 <i class="money">{{cost.toFixed(2)}}元</i>
               </span>
             <span style="margin-top:10px;">
-                <a href="/ruicloud/#/computed/3-1" target="_blank">购买和计费说明</a>
+                <a href="/ruicloud/documentInfo/l6RqDbCKZ/l6RwGIm3S" target="_blank">购买和计费说明</a>
               </span>
             <button @click="payOrder">立即购买</button>
           </div>
@@ -557,9 +558,7 @@ export default {
       }
     })
     return {
-      // diskSize: rootdisksize,
       systemDiskType: 'SSD存储',
-      // systemDiskList: [40, 100, 500, 1000],
       rootdisksize,
       systemDiskSize: rootdisksize,
       currentCPUNum,
@@ -783,7 +782,7 @@ export default {
     }
     .conf-wrapper {
       width: 274px;
-      height: 245px;
+      height: 270px;
       background: #ffffff;
       box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
       border-radius: 4px;

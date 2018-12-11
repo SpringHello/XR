@@ -8,7 +8,7 @@
         <div style="border-bottom: 1px solid #D9D9D9;">
           <h2>区域选择</h2>
           <div class="item-wrapper">
-            <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
+            <div v-for="item in zoneList" :key="item.zoneid" v-if="item.zoneid !== '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'" class="zoneItem"
                  :class="{zoneSelect:zone.zoneid==item.zoneid}"
                  @click="zone=item">{{item.zonename}}
             </div>
@@ -21,13 +21,13 @@
         <div style="border-bottom: 1px solid #D9D9D9;margin-top: 20px">
           <h2>计费方式选择</h2>
           <div class="item-wrapper">
-            <div v-for="item in timeType" :key="item.value" class="zoneItem"
+            <div v-for="(item,index) in timeType" :key="index" class="zoneItem"
                  :class="{zoneSelect:timeForm.currentTimeType==item.value}"
                  @click="timeForm.currentTimeType=item.value">{{item.label}}
             </div>
           </div>
           <div class="item-wrapper" v-if="timeForm.currentTimeType=='annual'">
-            <div v-for="item in timeValue" :key="item.value" class="timeType"
+            <div v-for="(item,index) in timeValue" :key="index" class="timeType"
                  :class="{zoneSelect:timeForm.currentTimeValue.label==item.label}"
                  @click="timeForm.currentTimeValue=item"
                  style="margin:0px;width:55px">
@@ -55,13 +55,13 @@
                   <div>
                     <Dropdown v-for="(item,index) in publicList"
                               style="margin-right:10px;margin-bottom:20px;"
-                              @on-click="setDataOS" :key="item.templateid">
+                              @on-click="setDataOS" :key="index">
                       <div
                         style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
                         {{item.selectSystem||item.system}}
                       </div>
                       <Dropdown-menu slot="list">
-                        <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
+                        <Dropdown-item v-for="(system,index1) in item.systemList" :key="index1"
                                        :name="`${system.dbname}#${system.systemtemplateid}#${index}#${system.dbloginname}#${system.dbport}`"
                                        style="white-space: pre-wrap;display:block;">
                           <span>{{system.dbname}}</span>
@@ -78,7 +78,7 @@
                 <div>
                   <p class="item-title">核心数</p>
                 </div>
-                <div>
+                <div v-if="info.length !==0">
                   <div v-for="cpu in info[0].kernelList" :key="cpu.value" class="zoneItem"
                        :class="{zoneSelect:vmConfig.kernel==cpu.value}"
                        @click="changeKernel(cpu)">{{cpu.name}}
@@ -338,7 +338,7 @@
              @click="$router.push('document')">查看计价详情</p>
           <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">-->
           <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
-            费用：<span
+            <span v-if="timeForm.currentTimeType == 'annual'&&timeForm.currentTimeValue.type == 'year'">折后费用：</span><span v-else>费用：</span><span
             style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
             v-show="timeForm.currentTimeType == 'current'">/小时</span>
           </p>
@@ -364,17 +364,18 @@
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
   import regExp from '@/util/regExp'
+
   var debounce = require('throttle-debounce/debounce')
-  export default{
-    data(){
+  export default {
+    data() {
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 0
       })
       var zone = this.$store.state.zone
       // 如果默认区域在该资源下不存在
-      if(!zoneList.some(i=>{
+      if (!zoneList.some(i => {
         return i.zoneid == zone.zoneid
-        })){
+      })) {
         // 默认选中zoneList中第一个区域
         zone = zoneList[0]
       }
@@ -485,7 +486,7 @@
 
       }
     },
-    created(){
+    created() {
       this.queryVpc()
       this.queryDiskPrice()
       this.queryCustomVM()
@@ -493,7 +494,7 @@
       this.listDbTemplates()
     },
     methods: {
-      listDbTemplates(){
+      listDbTemplates() {
         axios.get('database/listDbTemplates.do', {
           params: {
             zoneId: this.zone.zoneid
@@ -508,7 +509,7 @@
           }
         })
       },
-      setDataOS(name){
+      setDataOS(name) {
         var arg = name.split('#')
         for (var item of this.publicList) {
           item.selectSystem = ''
@@ -532,7 +533,7 @@
         /*this.RAMList = cpu.RAMList
          this.vmConfig.RAM = this.RAMList[0].value*/
       },
-      changeRAM(ram){
+      changeRAM(ram) {
         if (this.system.systemName && this.system.systemName.startsWith('sqlserver') && ram < 4) {
           this.$Message.info('sqlserver数据库内存不能低于4G')
           return
@@ -544,7 +545,8 @@
         var params = {
           cpuNum: this.vmConfig.kernel.toString(),
           diskSize: '40',
-          diskType: this.vmConfig.diskType,
+          diskType: 'ssd',
+          resourceType: 'db',
           memory: this.vmConfig.RAM.toString(),
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value,
@@ -583,6 +585,7 @@
           diskSize,
           diskType,
           memory: '0',
+          resourceType: 'db',
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value,
           zoneId: this.zone.zoneid
@@ -644,7 +647,7 @@
         })
       }),
       // 数据库加入购物车
-      addDataCart(){
+      addDataCart() {
         if (this.$parent.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
@@ -735,29 +738,28 @@
       },
     },
     computed: {
-      userInfo(){
+      userInfo() {
         return this.$store.state.userInfo
       },
       // 剩余添加磁盘数量
-      remainDisk(){
+      remainDisk() {
         return 5 - this.dataDiskList.length
       },
-      totalDataCost(){
+      totalDataCost() {
         if (this.IPConfig.publicIP) {
           return this.vmCost + this.ipCost + this.dataDiskCost
         } else {
           return this.vmCost + this.dataDiskCost
         }
       },
-      totalDataCoupon(){
+      totalDataCoupon() {
         if (this.IPConfig.publicIP) {
           return this.vmCoupon + this.ipCoupon + this.coupon
         } else {
           return this.vmCoupon + this.coupon
         }
       },
-      info(){
-        console.log(this.$parent)
+      info() {
         return this.$parent.info.filter(i => {
           if (i.zoneId == this.zone.zoneid) {
             this.RAMList = i.kernelList[0].RAMList
@@ -768,7 +770,7 @@
     },
     watch: {
       'zone': {
-        handler(){
+        handler() {
           this.info.forEach(zone => {
             if (zone.zoneId == this.zone.zoneid) {
               this.vmConfig.kernel = zone.kernelList[0].value
@@ -780,7 +782,7 @@
         deep: true
       },
       'timeForm': {
-        handler(){
+        handler() {
           // 查询自定义配置价格
           this.queryCustomVM()
           this.queryDiskPrice()
@@ -789,7 +791,7 @@
         deep: true
       },
       'vmConfig.kernel': {
-        handler(){
+        handler() {
           this.info.forEach(zone => {
             if (zone.zoneId == this.zone.zoneid) {
               zone.kernelList.forEach(kernel => {
@@ -812,14 +814,14 @@
         deep: true
       },
       'vmConfig': {
-        handler(){
+        handler() {
           // 查询自定义配置价格
           this.queryCustomVM()
         },
         deep: true
       },
       'dataDiskList': {
-        handler(){
+        handler() {
           this.queryDiskPrice()
         },
         deep: true
@@ -828,7 +830,7 @@
         this.changeNetwork()
       },
       'IPConfig': {
-        handler(){
+        handler() {
           this.queryIPPrice()
         },
         deep: true

@@ -108,14 +108,7 @@
             title: '首年注册',
             key: 'resgister',
             align: 'center',
-            render: (h, params) => {
-              return h('span', {
-                style: {
-                  color: '#F85E1D',
-                  fontSize: '16px'
-                }
-              }, '35')
-            }
+            className: 'demo-table-info-column'
           },
           {
             title: '续费价格',
@@ -126,52 +119,63 @@
             title: '转入价格',
             key: 'priceOld',
             align: 'center',
-            render: (h, params) => {
-              return h('span', {
-                style: {
-                  color: '#F85E1D',
-                  fontSize: '14px'
-                }
-              }, '2000')
-            }
+            className: 'demo-table-info-column'
           },
         ],
         data: [
           {
             type: '.com',
-            priceNew: '38/年',
+            resgister: '55（元/年）',
+            priceNew: '78（元/年）',
+            priceOld: '60（元/年）',
           },
           {
             type: '.cn',
-            priceNew: '23/年',
+            resgister: '35（元/年）',
+            priceNew: '68（元/年）',
+            priceOld: '30（元/年）',
           },
           {
             type: '.top',
-            priceNew: '35/年',
+            resgister: '9（元/年）',
+            priceNew: '34（元/年）',
+            priceOld: '34（元/年）',
           },
           {
             type: '.net',
-            priceNew: '32/年',
+            resgister: '70（元/年）',
+            priceNew: '78（元/年）',
+            priceOld: '68（元/年）',
           },
           {
             type: '.com.cn',
-            priceNew: '20/年',
+            resgister: '35（元/年）',
+            priceNew: '68（元/年）',
+            priceOld: '30（元/年）',
           },
           {
             type: '.wang',
-            priceNew: '20/年',
+            resgister: '29（元/年）',
+            priceNew: '48（元/年）',
+            priceOld: '48（元/年）',
           },
           {
             type: '.xyz',
-            priceNew: '21/年',
+            resgister: '6（元/年）',
+            priceNew: '78（元/年）',
+            priceOld: '78（元/年）',
           },
           {
             type: '.online',
-            priceNew: '45/年',
+            resgister: '7（元/年）',
+            priceNew: '68（元/年）',
+            priceOld: '68（元/年）',
           },
           {
             type: '.shop',
-            priceNew: '34/年',
+            resgister: '58（元/年）',
+            priceNew: '198（元/年）',
+            priceOld: '198（元/年）',
           },
 
 
@@ -371,11 +375,11 @@
           }
         }
         list-style: none;
-        img {
+        > img {
           width: 48px;
           height: 47px;
         }
-        p {
+        > p {
           padding-top: 30px;
           font-size: 18px;
           color: rgba(145, 145, 145, 1);
@@ -388,7 +392,7 @@
     p {
       font-size: 36px;
       color: rgba(55, 125, 255, 1);
-      padding: 100px 0 40px 0;
+      padding: 49px 0 40px 0;
       span {
         display: inline-block;
         font-size: 24px;
@@ -463,12 +467,10 @@
     p {
       font-size: 36px;
       color: rgba(55, 125, 255, 1);
-
       padding: 72px 0 36px 0;
       span {
         display: inline-block;
         font-size: 24px;
-
         &:first-of-type {
           padding-right: 30px;
         }

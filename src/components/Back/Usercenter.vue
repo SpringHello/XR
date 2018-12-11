@@ -112,7 +112,7 @@
                     style="display: flex;padding-left: 20px;align-items: center;height: 40px;background:#F8F8F9 ">
                     <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
                   </div>
-                  <div class="infTop" style="height: 241px;border-top:1px solid #E9E9E9; ">
+                  <div class="infTop" style="height: 577px;border-top:1px solid #E9E9E9; ">
                     <span class="inf">账号信息</span>
                   </div>
                   <div
@@ -1051,7 +1051,8 @@
       </div>
       <div class="keyPhoneVal" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p>为保障您的账户安全，请进行手机验证：</p>
-        <p>手机号码： <span>{{keyForm.phone}}</span></p>
+        <p v-if="!isEmailVail">手机号码： <span>{{keyForm.phone}}</span></p>
+        <p v-else>邮箱地址： <span>{{$store.state.userInfo.loginname}}</span></p>
         <p> 图形验证码
           <Input v-model="keyForm.imgCode" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
           <img :src="imgSrc" style="width:80px;height:30px;vertical-align: middle"
@@ -1060,10 +1061,17 @@
         <p> 验证码
           <Input v-model="keyForm.code" placeholder="请输入验证码"
                  style="width: 132px;margin-left: 48px;margin-right: 20px;"></Input>
-          <Button type="primary" :class="{codeDisabled:keycodePlaceholder!='获取验证码'}" @click.prevent="keysendCode"
+          <Button type="primary" :class="{codeDisabled:keycodePlaceholder!='获取验证码'}" @click.prevent="keysendCode('num')"
                   :disabled="keycodePlaceholder!='获取验证码'">{{keycodePlaceholder}}
           </Button>
         </p>
+        <p style="font-size:12px;color:#F10C0C">收不到验证码？
+          <span v-if="$store.state.userInfo.loginname">
+            请换<span @click="isEmailVail=true"  style="color:#4A97EE;cursor:pointer">邮箱验证</span>或
+          </span>
+          <span @click.prevent="keysendCode('voiceVail')" style="color:#4A97EE;cursor:pointer">接收语音验证码</span>
+        </p>
+        <P style="font-size:12px;color:#4A97EE;margin-bottom:0;cursor:pointer">通过身份验证方式找回账号</P>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.keyPhoneVal=false">取消</Button>
@@ -1081,6 +1089,52 @@
       </div>
       <div slot="footer">
       </div>
+    </Modal>
+
+    <Modal v-model="showModal.cancelCheckCreatedHostHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>是否取消勾选创建虚拟机通知？</strong>
+          <p class="lh24" style="margin-bottom: 20px">请注意，若您取消创建虚拟机{{ notificationChannel }}通知，在您下次创建虚拟机的您将不会收到相关{{ notificationChannel
+            }}提醒，提醒内容包括您创建该虚拟机的主机名称与登录密码。在您取消提醒之后，您可以通过云主机-管理，发送密码来查看该主机密码。请再次确认：
+          </p>
+          <RadioGroup v-model="informAffirm" vertical>
+            <Radio label="retain">
+              <span>保留通知</span>
+            </Radio>
+            <Radio label="close">
+              <span>我已阅读注意事项，关闭通知</span>
+            </Radio>
+          </RadioGroup>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="cancelPromptModal('1')">取消</Button>
+        <Button type="primary" :disabled="informAffirmDisabled" @click="informAffirmModifation">确定{{ informAffirmText}}</Button>
+      </p>
+    </Modal>
+    <Modal v-model="showModal.cancelCheckOtherHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>是否取消勾选{{ informAffirmTitle + notificationChannel }}通知？</strong>
+          <p class="lh24" style="margin-bottom: 20px">请注意，若您取消{{ informAffirmTitle + notificationChannel }}通知，您将无法第一时间获取该信息，请再次确认：
+          </p>
+          <RadioGroup v-model="informAffirm" vertical>
+            <Radio label="retain">
+              <span>保留通知</span>
+            </Radio>
+            <Radio label="close">
+              <span>我已阅读注意事项，关闭通知</span>
+            </Radio>
+          </RadioGroup>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="cancelPromptModal('2')">取消</Button>
+        <Button type="primary" :disabled="informAffirmDisabled" @click="informAffirmModifation">确定{{ informAffirmText}}</Button>
+      </p>
     </Modal>
   </div>
 </template>
@@ -1194,6 +1248,8 @@
         // 当前选中的tab页
         currentTab: currentTab ? currentTab : 'personalInfo',
         authType,
+        isEmailVail: false,
+        resultAim: '',
         showModal: {
           selectAuthType: false,
           addLinkman: false,
@@ -1205,7 +1261,9 @@
           bindingEmail: false,
           modifyPassword: false,
           setHeadPhoto: false,
-          modifyOtherInfo: false
+          modifyOtherInfo: false,
+          cancelCheckCreatedHostHint: false,
+          cancelCheckOtherHint: false
         },
         percent: 0,
         headPhotoType: 'system',
@@ -1710,7 +1768,9 @@
             align: 'left',
             width: 180,
             render: (h, params) => {
-              if (params.row.systemadd == 0) {
+              if (params.row.systemadd == 1) {
+                return h('span', {}, '----')
+              } else {
                 return h('div', [
                   h('span', {
                       style: {
@@ -1746,8 +1806,6 @@
                     }, '删除')]
                   )
                 ]);
-              } else {
-                return h('span', {}, '----')
               }
             }
           }
@@ -1799,6 +1857,10 @@
             {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
         },
+        notificationChannel: '邮件',
+        informAffirm: 'retain',
+        informAffirmDisabled: true,
+        informAffirmTitle: '',
         // 通知信息表格
         setColumns: [
           {
@@ -1809,18 +1871,19 @@
             title: '站内信',
             align: 'center',
             render: (h, params) => {
-              let isDisabled = false
-              if (params.row.tempCode == '0101' || params.row.tempCode == '0301') {
-                isDisabled = true
-              }
               return h('div', [
                 h('Checkbox', {
                     props: {
                       value: params.row.isLetter == 1,
-                      disabled: isDisabled
                     },
                     on: {
                       'on-change': () => {
+                        if (params.row.tempCode == '00401' && params.row.isLetter == '1') {
+                          this.cancelPromptHint('1', '站内信')
+                        } else if ((params.row.tempCode == '00101' || params.row.tempCode == '00103' || params.row.tempCode == '00202' || params.row.tempCode == '00203' || params.row.tempCode == '00204' || params.row.tempCode == '00208') && params.row.isLetter == '1') {
+                          this.informAffirmTitle = params.row.companyid
+                          this.cancelPromptHint('2', '站内信')
+                        }
                         this.changeStatus(params.row, 'isLetter')
                       }
                     },
@@ -1841,6 +1904,12 @@
                   },
                   on: {
                     'on-change': () => {
+                      if (params.row.tempCode == '00401' && params.row.isEmail == '1') {
+                        this.cancelPromptHint('1', '邮件')
+                      } else if ((params.row.tempCode == '00101' || params.row.tempCode == '00103' || params.row.tempCode == '00202' || params.row.tempCode == '00203' || params.row.tempCode == '00204' || params.row.tempCode == '00208') && params.row.isEmail == '1') {
+                        this.informAffirmTitle = params.row.companyid
+                        this.cancelPromptHint('2', '邮件')
+                      }
                       this.changeStatus(params.row, 'isEmail')
                     }
                   }
@@ -1852,18 +1921,19 @@
             title: '短信',
             align: 'center',
             render: (h, params) => {
-              let isDisabled = false
-              if (params.row.tempCode == '0101' || params.row.tempCode == '0104' || params.row.tempCode == '0301') {
-                isDisabled = true
-              }
               return h('div', [
                 h('Checkbox', {
                   props: {
-                    value: params.row.isTel == 1,
-                    disabled: isDisabled
+                    value: params.row.isTel == 1
                   },
                   on: {
                     'on-change': () => {
+                      if (params.row.tempCode == '00401' && params.row.isTel == '1') {
+                        this.cancelPromptHint('1', '短信')
+                      } else if ((params.row.tempCode == '00101' || params.row.tempCode == '00103' || params.row.tempCode == '00202' || params.row.tempCode == '00203' || params.row.tempCode == '00204' || params.row.tempCode == '00208') && params.row.isTel == '1') {
+                        this.informAffirmTitle = params.row.companyid
+                        this.cancelPromptHint('2', '短信')
+                      }
                       this.changeStatus(params.row, 'isTel')
                     }
                   }
@@ -2014,7 +2084,9 @@
         ],
         keyData: [],
         imgSrc: 'user/getKaptchaImage.do',
-        otherInfoShow: false
+        otherInfoShow: false,
+        informAffirmTimer: null,
+        informAffirmText: '(10S)'
       }
     },
     created() {
@@ -2099,7 +2171,7 @@
       getPhone() {
         if ($store.state.authInfo.companyid) {
           axios.post('user/getPhone.do', {
-          companyId: $store.state.authInfo.companyid
+            companyId: $store.state.authInfo.companyid
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.keyForm.phone = response.data.data.phone
@@ -2769,6 +2841,48 @@
         })
       },
 
+      // 弹出取消提示
+      cancelPromptHint(val, text) {
+        window.clearInterval(this.informAffirmTimer)
+        this.informAffirmDisabled = true
+        this.informAffirmText = '(10S)'
+        this.notificationChannel = text
+        this.informAffirm = 'retain'
+        let i = 10
+        this.informAffirmTimer = setInterval(() => {
+          i -= 1
+          if (i == 0) {
+            window.clearInterval(this.informAffirmTimer)
+            this.informAffirmText = ''
+            this.informAffirmDisabled = false
+          } else {
+            this.informAffirmText = '(0' + i + 'S)'
+            this.informAffirmDisabled = true
+          }
+        }, 1000)
+        if (val === '1') {
+          this.showModal.cancelCheckCreatedHostHint = true
+        } else {
+          this.showModal.cancelCheckOtherHint = true
+        }
+      },
+      cancelPromptModal(val) {
+        this.listNotice()
+        if (val == 1) {
+          this.showModal.cancelCheckCreatedHostHint = false
+        } else {
+          this.showModal.cancelCheckOtherHint = false
+        }
+      },
+      informAffirmModifation() {
+        this.showModal.cancelCheckOtherHint = false
+        this.showModal.cancelCheckCreatedHostHint = false
+        if (this.informAffirm != 'retain') {
+          this.updateNotice()
+        } else {
+          this.listNotice()
+        }
+      },
       // 列出通知信息
       listNotice() {
         var url = `user/listNotice.do`
@@ -3025,6 +3139,7 @@
             } else if (response.status == 200 && response.data.status == 20) {
               this.keyForm.imgCode = ''
               this.keyForm.code = ''
+              this.isEmailVail = false
               this.showModal.keyPhoneVal = true
               this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.keyWeight = response.data.data.weight
@@ -3039,17 +3154,30 @@
           });
         }
       },
-      keysendCode() {
+      keysendCode(val) {
         if (this.keyForm.imgCode == '') {
           this.$Message.info('图像验证码不能为空')
-          return false
+          return false  
         }
-        axios.get('user/code.do', {
-          params: {
-            aim: this.keyForm.phone,
-            isemail: 0,
+        this.resultAim = this.isEmailVail ? this.$store.state.userInfo.loginname : this.keyForm.phone
+        var params
+        var url = ''
+        if (val == 'num') {
+          url = 'user/code.do'
+          params = {
+            aim: this.resultAim,
+            isemail: this.isEmailVail ? 1 : 0,
             vailCode: this.keyForm.imgCode
           }
+        } else {
+          url = 'user/voiceCode.do'
+          params = {
+            aim: this.resultAim,
+            vailCode: this.keyForm.imgCode
+          }
+        }
+        axios.get(url, {
+          params: params
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             let countdown = 60
@@ -3077,8 +3205,8 @@
         this.showModal.keyPhoneVal = false
         axios.get('user/judgeCode.do', {
           params: {
-            aim: this.keyForm.phone,
-            isemail: 0,
+            aim: this.resultAim,
+            isemail: this.isEmailVail ? 1 : 0,
             code: this.keyForm.code,
             weight: this.keyWeight
           }
@@ -3175,7 +3303,7 @@
             return true
           }
         }
-      }
+      },
     },
     watch: {}
   }

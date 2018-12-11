@@ -44,8 +44,9 @@
 
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
+
   export default {
-    data () {
+    data() {
       return {
         // 选中项
         selectDoc: true,
@@ -56,20 +57,20 @@
         problems: []
       }
     },
-    beforeRouteEnter(to, from, next){
+    beforeRouteEnter(to, from, next) {
       axios.get('document/getFirstTitle.do').then(response => {
         next(vm => {
           vm.setData(response)
         })
       })
     },
-    created(){
+    created() {
       axios.get('document/listHotQuestion.do').then(response => {
         this.problems = response.data.result
       })
     },
     methods: {
-      setData(response){
+      setData(response) {
         this.contentList = response.data.result
       }
     }
@@ -108,7 +109,6 @@
     .content {
       margin-top: 40px;
       display: flex;
-      justify-content: space-between;
       flex-wrap: wrap;
       > div {
         background: #FFF;
@@ -116,6 +116,7 @@
         height: 380px;
         border: 1px solid #d8d8d8;
         margin-bottom: 20px;
+        margin-right: 40px;
         &:hover {
           box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.2);
         }
@@ -166,6 +167,9 @@
           }
         }
       }
+      > div:nth-child(5) {
+        margin-right: 0;
+      }
     }
     .problem {
       margin-top: 20px;
@@ -185,7 +189,7 @@
         flex-wrap: wrap;
         > div {
           width: 18.5%;
-          margin-bottom: 20px;
+          margin-bottom: 40px;
           p {
             font-size: 14px;
             color: #377DFF;
@@ -194,6 +198,7 @@
             //height: 180px;
             margin-top: 20px;
             border-right: 1px solid #D8D8D8;
+            height: 350px;
             li {
               list-style: none;
               font-size: 14px;
@@ -211,6 +216,11 @@
             ul {
               border-right: none;
             }
+          }
+        }
+        > div:nth-child(5) {
+          ul {
+            border: none;
           }
         }
         .quest-item {

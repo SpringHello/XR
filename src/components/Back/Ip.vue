@@ -35,21 +35,11 @@
           </Dropdown>
         </div>
         <div class="table-content">
-          <Table :columns="ipColumns" :data="ipData" @radio-change="selectIp"></Table>
+          <Table :columns="ipColumns" :data="ipData" @on-selection-change="selectIp"></Table>
           <Page :total="total" :current="page" @on-change="change" style="margin:20px 0px;float:right"/>
         </div>
       </div>
     </div>
-    <!--释放弹性IP-->
-    <!--<Modal v-model="resetip" width="300" :scrollable="true" :closable="false">
-      <div>
-        您正将“ <span>{{publicIP}}</span>”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。
-      </div>
-      <div slot="footer">
-        <Button @click="resetip = false">取消</Button>
-        <Button type="primary" @click="delElasticIP">确定</Button>
-      </div>
-    </Modal>-->
     <!-- 新建vpc modal -->
     <Modal v-model="showModal.newIPModal" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -350,7 +340,7 @@
         renewalType: '',
         renewalTime: '',
         renewalHost: false,
-        renewalGpu:false,
+        renewalGpu: false,
         renewalNAT: false,
         renewalHostID: '',
         renewalNATID: '',
@@ -376,7 +366,7 @@
         },
         currentIp: '',
         // 当前选中项
-        select: null,
+        select: [],
         showModal: {
           // 续费modal
           renew: false,
@@ -386,7 +376,7 @@
           bindIPForDatabase: false,
           charges: false,
           adjust: false,
-          bindIPForGpu:false
+          bindIPForGpu: false
         },
         chargesForm: {
           timeType: '',
@@ -409,13 +399,13 @@
         },
         ipColumns: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
           },
           {
             title: 'IP地址',
             key: 'publicip',
-            width: 150
+            width: 140
           },
           {
             title: '所属VPC',
@@ -444,6 +434,7 @@
           },
           {
             title: '状态',
+            width: 120,
             key: 'status',
             render: (h, obj) => {
               let value = ''
@@ -461,12 +452,12 @@
                   value = '创建中'
                   break
                 case 3:
-                  // value = '绑定中'
-                  value = '正常'
+                  value = '绑定中'
+                  //value = '正常'
                   break
                 case 4:
-                  // value = '解绑中'
-                  value = '正常'
+                  value = '解绑中'
+                  //value = '正常'
                   break
                 case 5:
                   value = '升级中'
@@ -525,11 +516,11 @@
                         this.renewalHost = false
                         this.renewalGpu = false
                         this.renewalNAT = false
-                        this.currentIp = this.select.id
+                        this.currentIp = this.select[0].id
                         let url = 'network/listPublicIpById.do'
                         this.$http.get(url, {
                           params: {
-                            ipId: this.select.publicipid
+                            ipId: this.select[0].publicipid
                           }
                         }).then(response => {
                           if (response.data.status === 1) {
@@ -550,14 +541,14 @@
                 }
 
               }
-              // if (obj.row.status != 1 && obj.row.status != 0 && obj.row.status != -1) {
-              //   return h('div', {}, [h('Spin', {
-              //     style: {
-              //       display: "inline-block",
-              //       marginRight: "10px",
-              //     },
-              //   }), h('span', {}, value)]);
-              // }
+              if (obj.row.status == 2 || obj.row.status == 3 || obj.row.status == 4) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: "inline-block",
+                    marginRight: "10px",
+                  },
+                }), h('span', {}, value)]);
+              }
               return h('span', value)
             }
           },
@@ -676,8 +667,8 @@
                 return h('div', {}, h('span', {}, '已冻结'))
               } else if (object.row.usetype == 0) {
                 return h('Dropdown', {
-                  props:{
-                    transfer:true
+                  props: {
+                    transfer: true
                   },
                   on: {
                     'on-click': (type) => {
@@ -693,15 +684,15 @@
                     attrs: {
                       name: 'gpu'
                     },
-                    style:{
-                      display:this.hide
+                    style: {
+                      display: this.hide
                     },
                   }, 'GPU云服务器'),
                   h('DropdownItem', {
-                  attrs: {
-                    name: 'NAT'
-                  }
-                }, 'NAT网关'),
+                    attrs: {
+                      name: 'NAT'
+                    }
+                  }, 'NAT网关'),
                   h('DropdownItem', {
                     attrs: {
                       name: 'database'
@@ -753,7 +744,7 @@
           hostOptions: [],
           row: {}
         },
-        bindForGpuForm:{
+        bindForGpuForm: {
           gpu: '',
           gpuOptions: [],
           row: {}
@@ -805,63 +796,72 @@
           bandwidth: '',
           endTime: ''
         },
-        hide:'',
-        intervalInstance:null
+        hide: '',
+        intervalInstance: null
       }
     },
-    beforeRouteLeave(to, from , next){
+    beforeRouteLeave(to, from, next) {
       clearInterval(this.intervalInstance);
       next();
     },
-    created(){
-      if($store.state.zone.zonename.indexOf('GPU')  > 1){
-          this.hide = 'block';
-        }else{
-          this.hide = 'none';
-        }
-      this.intervalInstance = setInterval(() => {
-        this.refresh()
-      }, 5 * 1000)
+    created() {
+      if ($store.state.zone.zonename.indexOf('GPU') > 1) {
+        this.hide = 'block';
+      } else {
+        this.hide = 'none';
+      }
     },
     methods: {
       // 跳转到相应的购买页面
       tobuy(url) {
         sessionStorage.setItem('pane', url)
-        this.$router.push('buy')
+        this.$router.push('buy/bip')
       },
       // 释放弹性IP
       resetIP() {
-        if (this.select != null) {
-          this.$http.get('network/delPublic.do', {
-            params: {
-              id: this.select.id
-            }
-          }).then(response => {
-            if (response.status != 200 || response.data.status != 1) {
-              this.$message.info({
-                content: response.data.message
-              })
-            } else {
-              this.$message.confirm({
-                content: '您正将“' + this.select.publicip + '”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
-                onOk: () => {
-                  this.$Message.success(response.data.message)
+        if (this.select.length !== 0) {
+          let ids = this.select.map(item => {
+            return item.id
+          })
+          this.$message.confirm({
+            content: '您正将“' + this.select[0].publicip + '”等IP移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
+            onOk: () => {
+              this.$http.get('network/delPublic.do', {
+                params: {
+                  ids: ids + ''
+                }
+              }).then(response => {
+                if (response.status == 200 || response.data.status == 1) {
                   this.refresh()
+                  this.$Message.success(response.data.message)
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
                 }
               })
             }
           })
         } else {
           this.$Message.info({
-            content: '请先选择一个弹性IP'
+            content: '请先选择需要释放的弹性IP'
           })
         }
       },
       refresh() {
+        if (this.ipData.length !== 0) {
+          function checkStatus(ip) {
+            return ip.status == 2 || ip.status == 3 || ip.status == 4
+          }
+
+          if (!this.ipData.some(checkStatus)) {
+            clearInterval(this.intervalInstance)
+          }
+        }
         // 获取ip数据
         axios.get('network/listPublicIp.do', {
           params: {
-            page: 1,
+            page: this.page,
             pageSize: 10,
             zoneId: $store.state.zone.zoneid
           }
@@ -869,13 +869,43 @@
           this.setData(response)
         })
       },
+      timingRefresh(id) {
+        let timer = setInterval(() => {
+          axios.get('network/listPublicIpById.do', {
+            params: {
+              zoneId: $store.state.zone.zoneid,
+              ipId: id
+            }
+          }).then(response => {
+            if (response.data.status == 1 && response.status == 200) {
+              let status = response.data.result[0].status
+              this.ipData.forEach(item => {
+                if (item.id === response.data.result[0].id) {
+                  this.refresh()
+                }
+              })
+              if (!(status == 2 || status == 3 || status == 4)) {
+                console.log('清除')
+                clearInterval(timer)
+              }
+            }
+          })
+        }, 3000)
+      },
       setData(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
           this.total = response.data.result.total
+          this.select.forEach(item => {
+            this.ipData.forEach(ip => {
+              if (item.id === ip.id) {
+                ip._checked = true
+              }
+            })
+          })
         }
       },
-      // 选中当前项
+      // 选中项变化
       selectIp(current) {
         this.select = current
       },
@@ -999,17 +1029,17 @@
           }).then(response => {
             this.bindForDatabaseForm.databaseOptions = response.data.result
           })
-        }else if (type == 'gpu'){
+        } else if (type == 'gpu') {
           this.bindForGpuForm.row = row
           this.showModal.bindIPForGpu = true
           this.$http.get('gpuserver/listGpuServer.do', {
             params: {
               vpcId: row.vpcid,
-              num:0
+              num: 0
             }
           }).then(response => {
             var list = [];
-            if(Object.keys(response.data.result).length != 0) {
+            if (Object.keys(response.data.result).length != 0) {
               for (let index in response.data.result) {
                 for (let i = 0; i < response.data.result[index].list.length; i++) {
                   list.push(response.data.result[index].list[i]);
@@ -1030,6 +1060,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/enableStaticNat.do', {
               params: {
@@ -1039,7 +1074,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.refresh()
+                this.timingRefresh(this.bindForHostForm.row.publicipid)
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1062,6 +1097,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/enableStaticNat.do', {
               params: {
@@ -1071,7 +1111,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.refresh()
+                this.timingRefresh(this.bindForDatabaseForm.row.publicipid)
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1094,6 +1134,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/bindingElasticIP.do', {
               params: {
@@ -1104,7 +1149,7 @@
               this.showModal.bindIPForNAT = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.refresh()
+                this.timingRefresh(this.bindForNATForm.row.publicipid)
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1119,7 +1164,7 @@
         this.$refs.bindForNATFormValidate.resetFields();
       },
       //绑定弹性IP到GPU
-      bindGpuSubmit(){
+      bindGpuSubmit() {
         this.$refs.bindForGpuFormValidate.validate(validate => {
           if (validate) {
             this.ipData.forEach(item => {
@@ -1127,6 +1172,11 @@
                 // 3代表绑定中
                 item.status = 3
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get('network/enableStaticNat.do', {
               params: {
@@ -1137,7 +1187,7 @@
               this.showModal.bindIPForGpu = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.refresh()
+                this.timingRefresh(this.bindForGpuForm.row.publicipid)
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1192,22 +1242,26 @@
                   VMId: row.computerid,
                 }
                 break
-
             }
-            // console.log('解绑')
+            this.operatingId = row.id
             this.operatingId = row.id
             this.ipData.forEach(item => {
               if (item.id === this.operatingId) {
                 // 4代表解绑中
                 item.status = 4
               }
+              this.select.forEach(ip => {
+                if (item.id === ip.id) {
+                  item._checked = true
+                }
+              })
             })
             this.$http.get(url, {params}).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success({
                   content: response.data.message
                 })
-                this.refresh()
+                this.timingRefresh(row.publicipid)
               } else {
                 this.$message.info({
                   content: response.data.message,
@@ -1216,28 +1270,6 @@
                   }
                 })
               }
-            })
-          }
-        })
-      },
-      // 删除弹性ip
-      delElasticIP() {
-        this.resetip = false
-        if (this.select == null) {
-          this.$Message.warning('请选择1个弹性IP')
-          return false
-        }
-        this.$http.get('network/delPublic.do', {
-          params: {
-            id: this.select.id
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message)
-            this.refresh()
-          } else {
-            this.$message.info({
-              content: response.data.message
             })
           }
         })
@@ -1259,10 +1291,10 @@
         }
       },
       adjust() {
-        if (this.select) {
-          this.adjustForm.minBrand = this.select.bandwith
-          this.adjustForm.brand = this.select.bandwith
-          switch (this.select.caseType) {
+        if (this.select.length === 1) {
+          this.adjustForm.minBrand = this.select[0].bandwith
+          this.adjustForm.brand = this.select[0].bandwith
+          switch (this.select[0].caseType) {
             case 1:
               this.adjustFormType = '年'
               break;
@@ -1275,7 +1307,7 @@
           }
           this.showModal.adjust = true
         } else {
-          this.$Message.warning('请选择1个弹性IP')
+          this.$Message.info('请选择1个弹性IP')
           return false
         }
       },
@@ -1284,7 +1316,7 @@
         this.$http.get('continue/UpPublicBnadwith.do', {
           params: {
             bandwith: this.adjustForm.brand,
-            publicIpId: this.select.id
+            publicIpId: this.select[0].id
           }
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -1298,8 +1330,8 @@
         )
       },
       charges() {
-        if (this.select) {
-          if (this.select.caseType != 3) {
+        if (this.select.length === 1) {
+          if (this.select[0].caseType != 3) {
             this.$Message.info("实时计费才能变更资费")
             return
           }
@@ -1314,7 +1346,7 @@
           let url = 'network/listPublicIpById.do'
           this.$http.get(url, {
             params: {
-              ipId: this.select.publicipid,
+              ipId: this.select[0].publicipid,
               changeCost: '1'
             }
           }).then(response => {
@@ -1333,7 +1365,7 @@
             }
           })
         } else {
-          this.$Message.warning('请选择1个弹性IP')
+          this.$Message.info('请选择1个弹性IP')
           return false
         }
       },
@@ -1342,7 +1374,7 @@
         if (this.chargesOther[0] == '变更关联云主机') {
           list = [{
             type: 2,
-            id: this.select.id
+            id: this.select[0].id
           }, {
             type: 0,
             id: this.chargesHostID
@@ -1350,7 +1382,7 @@
         } else if (this.chargesOther[0] == '变更关联NAT网关') {
           list = [{
             type: 2,
-            id: this.select.id,
+            id: this.select[0].id,
           }, {
             type: 4,
             id: this.chargesNATID
@@ -1358,7 +1390,7 @@
         } else {
           list = [{
             type: 2,
-            id: this.select.id
+            id: this.select[0].id
           }]
         }
         let params = {
@@ -1378,11 +1410,11 @@
         )
       },
       renewIP() {
-        if (this.select == null) {
-          this.$Message.info('请选择需要续费的IP')
+        if (this.select.length !== 1) {
+          this.$Message.info('请选择一个需要续费的IP')
           return false
         }
-        if (this.select.caseType === 3) {
+        if (this.select[0].caseType === 3) {
           this.$Message.info('请选择包年或包月的IP进行续费')
           return false
         }
@@ -1391,14 +1423,14 @@
         this.renewalOther = []
         this.renewalHost = false
         this.renewalNAT = false
-        this.currentIp = this.select.id
-        this.renewalInfo.IPAddress = this.select.publicip
-        this.renewalInfo.bandwidth = this.select.bandwith
-        this.renewalInfo.endTime = this.select.endtime
+        this.currentIp = this.select[0].id
+        this.renewalInfo.IPAddress = this.select[0].publicip
+        this.renewalInfo.bandwidth = this.select[0].bandwith
+        this.renewalInfo.endTime = this.select[0].endtime
         let url = 'network/listPublicIpById.do'
         this.$http.get(url, {
           params: {
-            ipId: this.select.publicipid
+            ipId: this.select[0].publicipid
           }
         }).then(response => {
           if (response.data.status === 1) {
@@ -1417,19 +1449,21 @@
         })
       },
       queryAdjustPrice: debounce(500, function () {
-        this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
-          params: {
-            brandwith: this.adjustForm.brand,
-            publicIpId: this.select.id
-          }
-        }).then(response => {
-            if (response.status == 200) {
-              this.adjustForm.cost = response.data.result
-            } else {
-              this.adjustForm.cost = '正在计算'
+        if (this.select.length !== 0) {
+          this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
+            params: {
+              brandwith: this.adjustForm.brand,
+              publicIpId: this.select[0].id
             }
-          }
-        )
+          }).then(response => {
+              if (response.status == 200) {
+                this.adjustForm.cost = response.data.result
+              } else {
+                this.adjustForm.cost = '正在计算'
+              }
+            }
+          )
+        }
       }),
       queryChargePrice() {
         if (this.chargesOther.length != 0) {
@@ -1439,7 +1473,7 @@
           params = {
             timeValue: this.chargesForm.timeValue,
             timeType: this.chargesForm.timeType,
-            ipIdArr: this.select.id,
+            ipIdArr: this.select[0].id,
             hostIdArr: hostArr,
             natArr: natArr
           }
@@ -1466,7 +1500,7 @@
             params: {
               timeValue: this.chargesForm.timeValue,
               timeType: this.chargesForm.timeType,
-              ipIdArr: this.select.id,
+              ipIdArr: this.select[0].id,
             }
           }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -1526,7 +1560,7 @@
       },
       change(page) {
         // 翻页后select重置null
-        this.select = null
+        this.select = []
         this.page = page
         // 获取ip数据
         axios.get('network/listPublicIp.do', {
@@ -1538,7 +1572,7 @@
         }).then(response => {
           this.setData(response)
         })
-      }
+      },
     },
     watch: {
       // 监听计费模式变化
@@ -1655,7 +1689,7 @@
               params: {
                 timeValue: this.chargesForm.timeValue,
                 timeType: this.chargesForm.timeType,
-                ipIdArr: this.select.id,
+                ipIdArr: this.select[0].id,
                 hostIdArr: this.chargesHostID
               }
             })
@@ -1677,7 +1711,7 @@
               params: {
                 timeValue: this.chargesForm.timeValue,
                 timeType: this.chargesForm.timeType,
-                ipIdArr: this.select.id,
+                ipIdArr: this.select[0].id,
                 natArr: this.chargesNATID
               }
             })
@@ -1699,7 +1733,7 @@
               params: {
                 timeValue: this.chargesForm.timeValue,
                 timeType: this.chargesForm.timeType,
-                ipIdArr: this.select.id,
+                ipIdArr: this.select[0].id,
               }
             })
               .then((response) => {
@@ -1720,9 +1754,9 @@
       // 监听区域变换
       '$store.state.zone': {
         handler: function () {
-          if($store.state.zone.zonename.indexOf('GPU')  > 1){
+          if ($store.state.zone.zonename.indexOf('GPU') > 1) {
             this.hide = 'block';
-          }else{
+          } else {
             this.hide = 'none';
           }
           this.refresh()

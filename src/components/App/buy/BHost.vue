@@ -14,7 +14,7 @@
         <div style="border-bottom: 1px solid #D9D9D9;">
           <h2>区域选择</h2>
           <div class="item-wrapper">
-            <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
+            <div v-for="item in zoneList" :key="item.zoneid" v-if="item.zoneid !== '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'" class="zoneItem"
                  :class="{zoneSelect:zone.zoneid==item.zoneid}"
                  @click="zone=item">{{item.zonename}}
             </div>
@@ -26,7 +26,7 @@
         <div style="border-bottom: 1px solid #D9D9D9;margin-top: 20px">
           <h2>计费方式选择</h2>
           <div class="item-wrapper">
-            <div v-for="item in timeType" :key="item.value" class="zoneItem"
+            <div v-for="(item,index) in timeType" :key="index" class="zoneItem"
                  :class="{zoneSelect:timeForm.currentTimeType==item.value}"
                  @click="timeForm.currentTimeType=item.value">{{item.label}}
             </div>
@@ -65,13 +65,13 @@
                   <div v-if="currentType=='app'">
                     <div v-if="currentType=='app'">
                       <Dropdown v-for="(item,index) in appList" style="margin-right:10px;margin-top:20px;"
-                                @on-click="setAppOS" :key="item.systemtemplateid">
+                                @on-click="setAppOS" :key="index">
                         <div
                           style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
                           {{item.selectSystem||item.system}}
                         </div>
                         <Dropdown-menu slot="list">
-                          <Dropdown-item v-for="system in item.systemList" :key="system.systemtemplateid"
+                          <Dropdown-item v-for="(system,index1) in item.systemList" :key="index1"
                                          :name="`${system.templatedescript}#${system.systemtemplateid}#${index}`"
                                          style="white-space: pre-wrap;display:block;">
                             <span>{{system.templatedescript}}</span>
@@ -84,13 +84,13 @@
                   <!--公共镜像 列表-->
                   <div v-if="currentType=='public'">
                     <Dropdown v-for="(item,index) in publicList" style="margin-right:10px;margin-top:20px;"
-                              @on-click="setOS" :key="item.ostypeid">
+                              @on-click="setOS" :key="index">
                       <div
                         style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
                         {{item.selectSystem||item.system}}
                       </div>
                       <Dropdown-menu slot="list">
-                        <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
+                        <Dropdown-item v-for="(system,index1) in item.systemList" :key="index1"
                                        :name="`${system.templatename}#${system.systemtemplateid}#${index}`"
                                        style="white-space: pre-wrap;display:block;">
                           <span>{{system.templatename}}</span>
@@ -178,18 +178,18 @@
                 <div>
                   <div v-for="item in mirrorType" class="zoneItem"
                        :class="{zoneSelect:currentType==item.value}"
-                       @click="currentType==item.value">{{item.label}}
+                       @click="currentType=item.value">{{item.label}}
                   </div>
                   <!--镜像+应用 列表-->
                   <div v-if="currentType=='app'">
                     <Dropdown v-for="(item,index) in appList" style="margin-right:10px;margin-top:20px;"
-                              @on-click="setAppOS" :key="item.systemtemplateid">
+                              @on-click="setAppOS" :key="index">
                       <div
                         style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
                         {{item.selectSystem||item.system}}
                       </div>
                       <Dropdown-menu slot="list">
-                        <Dropdown-item v-for="system in item.systemList" :key="system.systemtemplateid"
+                        <Dropdown-item v-for="(system,index1) in item.systemList" :key="index1"
                                        :name="`${system.templatedescript}#${system.systemtemplateid}#${index}`"
                                        style="white-space: pre-wrap;display:block;">
                           <span>{{system.templatedescript}}</span>
@@ -201,13 +201,13 @@
                   <!--公共镜像 列表-->
                   <div v-if="currentType=='public'">
                     <Dropdown v-for="(item,index) in publicList" style="margin-right:10px;margin-top:20px;"
-                              @on-click="setOS" :key="item.ostypeid">
+                              @on-click="setOS" :key="index">
                       <div
                         style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
                         {{item.selectSystem||item.system}}
                       </div>
                       <Dropdown-menu slot="list">
-                        <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
+                        <Dropdown-item v-for="(system,index1) in item.systemList" :key="index1"
                                        :name="`${system.templatename}#${system.systemtemplateid}#${index}`"
                                        style="white-space: pre-wrap;display:block;">
                           <span>{{system.templatename}}</span>
@@ -269,7 +269,7 @@
                 <div>
                   <p class="item-title">核心数</p>
                 </div>
-                <div>
+                <div v-if="info.length !== 0">
                   <div v-for="cpu in info[0].kernelList" :key="cpu.value" class="zoneItem"
                        :class="{zoneSelect:vmConfig.kernel==cpu.value}"
                        @click="changeKernel(cpu)">{{cpu.name}}
@@ -560,7 +560,8 @@
           <!--<p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
              @click="$router.push('computed/3-1')">查看计价详情</p>-->
           <p v-if="createType=='fast'"
-             style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
+             style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;"><span
+            v-if="timeForm.currentTimeType == 'annual'&&timeForm.currentTimeValue.type == 'year'">折后费用：</span><span v-else>费用：</span><span
             style="font-size: 24px;color: #EE6723;">{{fastCost.toFixed(2)}}元</span><span
             v-show="timeForm.currentTimeType == 'current'">/小时</span></p>
           <p v-if="createType=='fast'&&fastCoupon!=0"
@@ -568,7 +569,7 @@
             style="font-size: 14px;color: #EE6723;">{{fastCoupon.toFixed(2)}}元</span></p>
           <p v-if="createType=='custom'"
              style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
-            费用：<span
+            <span v-if="timeForm.currentTimeType == 'annual'&&timeForm.currentTimeValue.type == 'year'">折后费用：</span><span v-else>费用：</span><span
             style="font-size: 24px;color: #EE6723;">{{totalCost.toFixed(2)}}元</span><span
             v-show="timeForm.currentTimeType == 'current'">/小时</span>
           </p>
@@ -758,7 +759,7 @@
       this.queryDiskPrice()
       if (this.$route.query.mirrorType) {
         this.currentType = this.$route.query.mirrorType;
-        console.log(this.currentType);
+        this.createType = 'custom'
         setTimeout(() => {
           this.publicList[0].selectSystem = this.mirrorQuery.templatename
         }, 200)
@@ -817,6 +818,8 @@
         })
         // 自定义镜像
         if (this.userInfo != null) {
+          this.customList = []
+          this.customMirror = {}
           axios.get('information/listTemplates.do', {
             params: {
               user: '1',
@@ -1073,6 +1076,10 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({
               path: '/ruicloud/order'
+            })
+          } else {
+            this.$message.info({
+              content: response.data.message
             })
           }
         })

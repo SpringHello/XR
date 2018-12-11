@@ -3,6 +3,13 @@
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
+        <my-carousel-item class="carousel-item">
+          <div @click="push('/ruicloud/AnniversaryActive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="anniversary-active">
+            </div>
+          </div>
+        </my-carousel-item>
 
         <my-carousel-item class="carousel-item">
           <div class="eightscene" @click="push('/ruicloud/sceneList')">
@@ -103,6 +110,22 @@
             </div>
           </div>
         </my-carousel-item>
+        <my-carousel-item class="carousel-item">
+          <div @click="push('active_1')"
+               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+            <div class="head-banner">
+              <div>
+                <div>
+                  <p>
+                    <img style="padding-top: 0" src="../../assets/img/home/home-banner3.png">
+                  </p>
+                  <button style="margin-top: 120px">立即领取</button>
+                </div>
+                <img src="../../assets/img/home/home-banner4.png">
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
@@ -122,7 +145,7 @@
       <div class="bg">
         <div class="bg-wrap">
           <div class="bg" ref="bgcheck">
-              <img  v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl"/>
+            <img v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl"/>
           </div>
         </div>
       </div>
@@ -323,9 +346,9 @@
           <span class="desc">结合多重实时数据保护与高额度网络攻击防护，为用户交付优质云计算资源。</span>
         </div>
         <div class="main flex-g">
-          <div v-for="(item,index) in requireData" :key="index" >
+          <div v-for="(item,index) in requireData" :key="index">
             <p>{{item.title}}</p>
-            <div class="img-wrap"  @mouseenter="requireEnter(index)" @mouseleave="requireLeave(index)">
+            <div class="img-wrap" @mouseenter="requireEnter(index)" @mouseleave="requireLeave(index)">
               <span>
                 <img :src="item.imgHover" alt="" v-if="item.isShow == 'infinite'">
                 <img :src="item.imgonce" alt="" v-else-if="item.isShow == 'once'">
@@ -900,7 +923,7 @@
                 ],
                 currentPrice: '69.00',
                 originalPrice: '166.72',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -945,7 +968,7 @@
                 ],
                 currentPrice: '169.00',
                 originalPrice: '500.16',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -989,7 +1012,7 @@
                 ],
                 currentPrice: '269.00',
                 originalPrice: '1000.32',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -1033,7 +1056,7 @@
                 ],
                 currentPrice: '569.00',
                 originalPrice: '2000.64',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               }
             ],
@@ -1085,7 +1108,7 @@
                 ],
                 currentPrice: '69.00',
                 originalPrice: '166.72',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -1130,7 +1153,7 @@
                 ],
                 currentPrice: '169.00',
                 originalPrice: '500.16',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -1174,7 +1197,7 @@
                 ],
                 currentPrice: '269.00',
                 originalPrice: '1000.32',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -1218,7 +1241,7 @@
                 ],
                 currentPrice: '569.00',
                 originalPrice: '2000.64',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               }
             ],
@@ -1270,7 +1293,7 @@
                 ],
                 currentPrice: '69.00',
                 originalPrice: '166.72',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -1315,7 +1338,7 @@
                 ],
                 currentPrice: '169.00',
                 originalPrice: '500.16',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -1359,7 +1382,7 @@
                 ],
                 currentPrice: '269.00',
                 originalPrice: '1000.32',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -1403,7 +1426,7 @@
                 ],
                 currentPrice: '569.00',
                 originalPrice: '2000.64',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               }
             ],
@@ -1455,7 +1478,7 @@
                 ],
                 currentPrice: '69.00',
                 originalPrice: '166.72',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -1500,7 +1523,7 @@
                 ],
                 currentPrice: '169.00',
                 originalPrice: '500.16',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -1544,7 +1567,7 @@
                 ],
                 currentPrice: '269.00',
                 originalPrice: '1000.32',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               },
               {
@@ -1588,7 +1611,7 @@
                 ],
                 currentPrice: '569.00',
                 originalPrice: '2000.64',
-                zoneId: '',
+                zoneId: $store.state.zone.zoneid,
                 system: 'linux'
               }
             ],
@@ -1599,7 +1622,7 @@
             disc: '新睿云游戏应用能够帮助您实现任意设备的游戏体验: 在任意 PC、Mac、平板电脑、智能手机以及电视上的高画质、低延迟的多设备游戏体验；点击即玩的便捷: 任何时候都可以在云端访问一系列游戏和保存游戏。 在任何地点、任意设备上均可开始新游戏或继续之前的游戏进度；减少麻烦: 没有新硬件、没有复杂的设置、没有游戏光盘、没有数字下载、没有游戏安装、没有游戏补丁。',
             configGroup: [
               {
-                title: '初创型业务网站',
+                title: '初创型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1607,11 +1630,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: '2288H v5',
+                    value: 'G5500',
                   },
                   {
                     text: '主机',
-                    value: '4核32G',
+                    value: '8核64G',
                   },
                   {
                     text: '型号',
@@ -1631,7 +1654,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1646,13 +1669,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '64',
+                gpuSize: '1',
+                serviceType: 'G5500',
+                currentPrice: '178',
+                originalPrice: '646.25',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               },
               {
-                title: '增长型业务网站',
+                title: '增长型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1660,11 +1686,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: 'G5500',
+                    value: '2288H_v5',
                   },
                   {
                     text: '主机',
-                    value: '8核64G',
+                    value: '16核64G',
                   },
                   {
                     text: '型号',
@@ -1684,7 +1710,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1699,13 +1725,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '64',
+                gpuSize: '1',
+                serviceType: '2288H_v5',
+                currentPrice: '200',
+                originalPrice: '730.26',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               },
               {
-                title: '稳定型业务网站',
+                title: '稳定型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1721,7 +1750,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1736,7 +1765,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1751,9 +1780,12 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '128',
+                gpuSize: '2',
+                serviceType: 'G5500',
+                currentPrice: '341',
+                originalPrice: '1215.88',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               }
             ],
@@ -1764,7 +1796,7 @@
             disc: '工程制图、游戏、电影领域有大量需要高计算量的场景需要企业或个人投入较高成本来提高生产计算能力和生产效率。现在借助新睿云3D设计，以远低于自购设备的价格来获取更为稳定优质的计算资源能力提升，成倍提高您的设计工作效率和渲染效率。并且，新睿云3D设计提供按需付费方式，以小时级为单位来获取工业级GPU计算服务能力。 ',
             configGroup: [
               {
-                title: '初创型业务网站',
+                title: '初创型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1772,11 +1804,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: '2288H v5',
+                    value: 'G5500',
                   },
                   {
                     text: '主机',
-                    value: '4核32G',
+                    value: '8核64G',
                   },
                   {
                     text: '型号',
@@ -1796,7 +1828,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1811,13 +1843,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '64',
+                gpuSize: '1',
+                serviceType: 'G5500',
+                currentPrice: '178',
+                originalPrice: '646.25',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               },
               {
-                title: '增长型业务网站',
+                title: '增长型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1825,11 +1860,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: 'G5500',
+                    value: '2288H_v5',
                   },
                   {
                     text: '主机',
-                    value: '8核64G',
+                    value: '16核64G',
                   },
                   {
                     text: '型号',
@@ -1849,7 +1884,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1864,13 +1899,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '64',
+                gpuSize: '1',
+                serviceType: '2288H_v5',
+                currentPrice: '200',
+                originalPrice: '730.26',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               },
               {
-                title: '稳定型业务网站',
+                title: '稳定型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1886,7 +1924,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1901,7 +1939,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1916,9 +1954,12 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '128',
+                gpuSize: '2',
+                serviceType: 'G5500',
+                currentPrice: '341',
+                originalPrice: '1215.88',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               }
             ],
@@ -1929,7 +1970,7 @@
             disc: ' 云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的高性能PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
             configGroup: [
               {
-                title: '初创型业务网站',
+                title: '初创型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1937,11 +1978,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: '2288H v5',
+                    value: 'G5500',
                   },
                   {
                     text: '主机',
-                    value: '4核32G',
+                    value: '8核64G',
                   },
                   {
                     text: '型号',
@@ -1961,7 +2002,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1976,13 +2017,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '64',
+                gpuSize: '1',
+                serviceType: 'G5500',
+                currentPrice: '178',
+                originalPrice: '646.25',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               },
               {
-                title: '增长型业务网站',
+                title: '增长型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1990,11 +2034,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: 'G5500',
+                    value: '2288H_v5',
                   },
                   {
                     text: '主机',
-                    value: '8核64G',
+                    value: '16核64G',
                   },
                   {
                     text: '型号',
@@ -2014,7 +2058,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -2029,13 +2073,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '64',
+                gpuSize: '1',
+                serviceType: '2288H_v5',
+                currentPrice: '200',
+                originalPrice: '730.26',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               },
               {
-                title: '稳定型业务网站',
+                title: '稳定型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -2051,7 +2098,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -2066,7 +2113,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -2081,9 +2128,12 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '128',
+                gpuSize: '2',
+                serviceType: 'G5500',
+                currentPrice: '341',
+                originalPrice: '1215.88',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               }
             ],
@@ -2094,7 +2144,7 @@
             disc: '新睿云深度学习平台基于强劲的 GPU 计算资源，在配置Tesla P40和Tesla P100的基础上。各个行业都可以帮助您成倍提高计算和工作效率。比如在计算机视觉与图像处理领域，图像处理与计算机视觉算法是计算密集型算法。NVIDIA® CUDA® 加速技术可帮助解决该挑战，从而帮助此类应用程序实现交互式视频的帧率性能。用户可在深度学习平台上使用 GPU 或 CPU 进行单机或分布式深度学习模型训练与推断，并可享受云计算弹性特性，按需进行横向、纵向扩展。',
             configGroup: [
               {
-                title: '初创型业务网站',
+                title: '初创型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -2102,11 +2152,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: '2288H v5',
+                    value: 'G5500',
                   },
                   {
                     text: '主机',
-                    value: '4核32G',
+                    value: '8核64G',
                   },
                   {
                     text: '型号',
@@ -2126,7 +2176,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -2141,13 +2191,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '64',
+                gpuSize: '1',
+                serviceType: 'G5500',
+                currentPrice: '178',
+                originalPrice: '646.25',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               },
               {
-                title: '增长型业务网站',
+                title: '增长型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -2155,11 +2208,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: 'G5500',
+                    value: '2288H_v5',
                   },
                   {
                     text: '主机',
-                    value: '8核64G',
+                    value: '16核64G',
                   },
                   {
                     text: '型号',
@@ -2179,7 +2232,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -2194,13 +2247,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '64',
+                gpuSize: '1',
+                serviceType: '2288H_v5',
+                currentPrice: '200',
+                originalPrice: '730.26',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               },
               {
-                title: '稳定型业务网站',
+                title: '稳定型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -2216,7 +2272,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -2231,7 +2287,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -2246,9 +2302,12 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
-                zoneId: '',
+                men: '128',
+                gpuSize: '2',
+                serviceType: 'G5500',
+                currentPrice: '341',
+                originalPrice: '1215.88',
+                zoneId: $store.state.gpuZone.zoneid,
                 system: 'linux'
               }
             ],
@@ -2335,7 +2394,7 @@
               require('../../assets/img/sceneList/sl-icon15.png'),
               require('../../assets/img/sceneList/sl-icon16.png')
             ],
-            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
+            configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
             link: '/ruicloud/sceneInfo/game',
             hint: '免费使用'
           },
@@ -2348,7 +2407,7 @@
               require('../../assets/img/sceneList/sl-icon19.png'),
               require('../../assets/img/sceneList/sl-icon20.png')
             ],
-            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
+            configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
             link: '/ruicloud/sceneInfo/design',
             hint: '免费使用'
           },
@@ -2361,7 +2420,7 @@
               require('../../assets/img/sceneList/sl-icon23.png'),
               require('../../assets/img/sceneList/sl-icon24.png'),
             ],
-            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
+            configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
             link: '/ruicloud/sceneInfo/AI',
             hint: '免费使用'
           },
@@ -2371,7 +2430,7 @@
             software: [
               require('../../assets/img/sceneList/sl-icon25.png')
             ],
-            configure: ['4核32G2288H v5', '8核64GG5500', '16核128GG5500'],
+            configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
             link: '/ruicloud/sceneInfo/supercomputing',
             hint: '免费使用'
           },
@@ -2405,6 +2464,16 @@
                 detailLink: 'Pecs',
                 useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: true
+              },
+              {
+                title: 'GPU服务器',
+                desc: 'Tesla P100、Tesla P40 GPU',
+                img: '#houtaiicon-GPUzhuji',
+                detailText: '查看详情',
+                useText: '立即购买',
+                detailLink: 'Pgpu',
+                useLink: $store.state.userInfo ? 'buy/bgpu' : 'buy/bgpu',
+                ME: false
               },
               {
                 title: '镜像服务',
@@ -2445,16 +2514,6 @@
                 detailLink: '',
                 useLink: '',
                 ME: false
-              },
-              {
-                title: 'GPU服务器',
-                desc: 'Tesla P100、Tesla P40 GPU',
-                img: '#houtaiicon-GPUzhuji',
-                detailText: '查看详情',
-                useText: '敬请期待',
-                detailLink: '',
-                useLink: '',
-                ME: false
               }
             ],
             desc: '新睿云为您提供高性能，高可用，高性价比的计算资源，包括弹性云服务器、镜像与ECS快照等产品。',
@@ -2483,7 +2542,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Peip',
-                useLink: $store.state.userInfo ? 'buy/bip' : 'buy/ip',
+                useLink: $store.state.userInfo ? 'buy/bip' : 'buy/bip',
                 ME: false
               },
               {
@@ -2543,8 +2602,18 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pdisk',
-                useLink: $store.state.userInfo ? 'buy/bdisk' : 'buy/disk',
+                useLink: $store.state.userInfo ? 'buy/bdisk' : 'buy/bdisk',
                 ME: true
+              },
+              {
+                title: '对象存储',
+                desc: '安全稳定，海量便捷',
+                img: '#houtaiicon-duixiangchunchu',
+                detailText: '查看详情',
+                useText: '立即购买',
+                detailLink: 'PobjStorage',
+                useLink: $store.state.userInfo ? 'buy/bobj' : 'buy/bobj',
+                ME: false
               },
               {
                 title: '云硬盘备份',
@@ -2553,16 +2622,6 @@
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pbackupdisk',
-                useLink: '',
-                ME: false
-              },
-              {
-                title: '对象存储',
-                desc: '安全稳定，海量便捷',
-                img: '#houtaiicon-duixiangchunchu',
-                detailText: '查看详情',
-                useText: '敬请期待',
-                detailLink: 'PobjStorage',
                 useLink: '',
                 ME: false
               }
@@ -2863,63 +2922,72 @@
           }
         })
       },
-      getOriginalPrice(currentIndex, index) {
-        let vmConfigId = ''
-        let month = ''
-        switch (index) {
-          case 0:
-            month = '1'
-            vmConfigId = '45'
-            break
-          case 1:
-            month = '3'
-            vmConfigId = '46'
-            break
-          case 2:
-            month = '6'
-            vmConfigId = '47'
-            break
-          case 3:
-            month = '12'
-            vmConfigId = '48'
-            break
-        }
-        let url = 'activity/getOriginalPrice.do'
-        let params = {
-          vmConfigId: vmConfigId,
-          month: month,
-          zoneId: this.$store.state.zone.zoneid
-        }
-        axios.get(url, {params: params}).then(res => {
-          if (res.data.status == 1) {
-            this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
-          }
-        })
-        //this.getMirror(this.userType,this.currentSceneGroup[currentIndex].configGroup[index].zoneId)
-      },
-      getRegion() {
-        let url = 'activity/getTemActInfo.do'
-        axios.post(url, {
-          activityName: '免费领主机'
-        }).then(res => {
-          if (res.data.status == 1) {
-            this.areaGroup = res.data.result.optionalArea
-            if (res.data.result.optionalArea.length != 0) {
-              this.currentSceneGroup.forEach(config => {
-                config.configGroup.forEach(host => {
-                  host.zoneId = this.areaGroup[0].value
-                })
-              })
-            }
-          }
-        })
-      },
+      // getOriginalPrice(currentIndex, index) {
+      //   let vmConfigId = ''
+      //   let month = ''
+      //   switch (index) {
+      //     case 0:
+      //       month = '1'
+      //       vmConfigId = '45'
+      //       break
+      //     case 1:
+      //       month = '3'
+      //       vmConfigId = '46'
+      //       break
+      //     case 2:
+      //       month = '6'
+      //       vmConfigId = '47'
+      //       break
+      //     case 3:
+      //       month = '12'
+      //       vmConfigId = '48'
+      //       break
+      //   }
+      //   let url = 'activity/getOriginalPrice.do'
+      //   let params = {
+      //     vmConfigId: vmConfigId,
+      //     month: month,
+      //     zoneId: this.$store.state.zone.zoneid
+      //   }
+      //   axios.get(url, {params: params}).then(res => {
+      //     if (res.data.status == 1) {
+      //       this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
+      //     }
+      //   })
+      //   //this.getMirror(this.userType,this.currentSceneGroup[currentIndex].configGroup[index].zoneId)
+      // },
+      // getRegion(val) {
+      //   let url = 'activity/getTemActInfo.do'
+      //   let params = {}
+      //   if (val == 'host' || val == 'web' || val == 'disk' || val == 'software') {
+      //     params = {
+      //       activityName: '免费领主机'
+      //     }
+      //   } else {
+      //     params = {
+      //       activityName: '8个场景活动GPU'
+      //     }
+      //   }
+      //   axios.post(url, params).then(res => {
+      //     if (res.data.status == 1) {
+      //       this.areaGroup = res.data.result.optionalArea
+      //       if (res.data.result.optionalArea.length != 0) {
+      //         this.currentSceneGroup.forEach(config => {
+      //           config.configGroup.forEach(host => {
+      //             host.zoneId = this.areaGroup[0].value
+      //           })
+      //         })
+      //         this.getMirror(this.userType, this.areaGroup[0].value)
+      //       }
+      //     }
+      //   })
+      // },
       getMirror(userType) {
         let url = 'information/listTemplateFunction.do'
         axios.get(url, {
           params: {
             useType: userType + 1,
-            zoneId: this.$store.state.zone.zoneid
+            zoneId: this.$store.state.gpuZone.zoneid
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
@@ -2939,9 +3007,6 @@
           this.$LR({type: 'register'})
           return
         }
-        if(index1 == 4 || index1 == 5 || index1 == 6 || index1 == 7){
-          return
-        }
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
           if (response.status == 200 && response.data.status == '1') {
             this.balance = Number(response.data.data.remainder)
@@ -2950,7 +3015,7 @@
             this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
             this.time = this.currentSceneGroup[index1].configGroup[index2].title
             this.showModal.rechargeHint = true
-          } else{
+          } else {
             this.$message.info({
               content: '平台开小差了，请稍候再试'
             })
@@ -2958,34 +3023,38 @@
         })
       },
       nextStep() {
-        if (!(this.scene == '游戏服务'||this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
-          // 判断新老用户
-          axios.get('activity/jdugeTeam.do', {
-            params: {sign: 'freeReceive'}
-          }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              if (response.data.result.flag) {
-                this.orderData = []
-                this.orderData.push({
-                  productType: '云服务器',
-                  configs: this.currentSceneGroup[this.index1].configGroup[this.index2].configs,
-                  originalPrice: this.currentSceneGroup[this.index1].configGroup[this.index2].originalPrice,
-                  time: this.time,
-                  cashPledge: Number(this.cashPledge)
-                })
-                this.showModal.rechargeHint = false
-                this.showModal.orderConfirmationModal = true
-              } else {
-                this.showModal.rechargeHint = false
-                this.showModal.inConformityModal = true
-              }
-            } else {
-              this.$message.info({
-                content: response.data.message
-              })
-            }
-          })
+        let title = ''
+        if (!(this.scene == '游戏服务' || this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
+          title = '云服务器'
+        } else {
+          title = 'GPU服务器'
         }
+        // 判断新老用户
+        axios.get('activity/jdugeTeam.do', {
+          params: {sign: 'freeReceive'}
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (response.data.result.flag) {
+              this.orderData = []
+              this.orderData.push({
+                productType: title,
+                configs: this.currentSceneGroup[this.index1].configGroup[this.index2].configs,
+                originalPrice: this.currentSceneGroup[this.index1].configGroup[this.index2].originalPrice,
+                time: this.time,
+                cashPledge: Number(this.cashPledge)
+              })
+              this.showModal.rechargeHint = false
+              this.showModal.orderConfirmationModal = true
+            } else {
+              this.showModal.rechargeHint = false
+              this.showModal.inConformityModal = true
+            }
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
       },
       getHost_ok() {
         if (this.payWay == 'balancePay') {
@@ -3106,56 +3175,125 @@
             break
           case '40':
             functionType = '5'
-            vmConfigId = '45'
+            vmConfigId = '196'
             break
           case '41':
             functionType = '5'
-            vmConfigId = '46'
+            vmConfigId = '194'
             break
           case '42':
             functionType = '5'
-            vmConfigId = '47'
+            vmConfigId = '195'
             break
-          case '43':
-            functionType = '5'
-            vmConfigId = '48'
+          case '50':
+            functionType = '6'
+            vmConfigId = '196'
+            break
+          case '51':
+            functionType = '6'
+            vmConfigId = '194'
+            break
+          case '52':
+            functionType = '6'
+            vmConfigId = '195'
+            break
+          case '60':
+            functionType = '7'
+            vmConfigId = '196'
+            break
+          case '61':
+            functionType = '7'
+            vmConfigId = '194'
+            break
+          case '62':
+            functionType = '7'
+            vmConfigId = '195'
+            break
+          case '70':
+            functionType = '8'
+            vmConfigId = '196'
+            break
+          case '71':
+            functionType = '8'
+            vmConfigId = '194'
+            break
+          case '72':
+            functionType = '8'
+            vmConfigId = '195'
             break
         }
         this.vmConfig = vmConfigId
-        let url = 'user/getRemainderFrozen.do'
-        let params = {
-          eachFrozenMoney: this.cashPledge,
-          describe: '领取主机',
-          operationType: '领取主机',
-          thawCondition: '删除主机',
-          vmConfig: this.vmConfig
-        }
-        axios.post(url, params).then(response => {
-          if (response.data.status == 1 && response.status == 200) {
-            let url = 'activity/getFreeHost.do'
-            axios.get(url, {
-              params: {
-                vmConfigId: vmConfigId,
-                osType: this.currentSceneGroup[this.index1].configGroup[this.index2].system,
-                defzoneid: this.$store.state.zone.zoneid,
-                templateFunction: '1',
-                functionType: functionType
-              }
-            }).then(res => {
-              if (res.status == 200 && res.data.status == 1) {
-                this.showModal.getSuccessModal = true
-              } else {
-                this.$message.info({
-                  content: res.data.message
-                })
-              }
-            })
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
+        if (this.index1 < 4) {
+          let url = 'user/getRemainderFrozen.do'
+          let params = {
+            eachFrozenMoney: this.cashPledge,
+            describe: '领取主机',
+            operationType: '领取主机',
+            thawCondition: '删除主机',
+            vmConfig: this.vmConfig
           }
-        })
+          axios.post(url, params).then(response => {
+            if (response.data.status == 1 && response.status == 200) {
+              let url = 'activity/getFreeHost.do'
+              axios.get(url, {
+                params: {
+                  vmConfigId: vmConfigId,
+                  osType: this.currentSceneGroup[this.index1].configGroup[this.index2].system,
+                  defzoneid: this.currentSceneGroup[this.index1].configGroup[this.index2].zoneId,
+                  templateFunction: '1',
+                  functionType: functionType
+                }
+              }).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.showModal.getSuccessModal = true
+                } else {
+                  this.$message.info({
+                    content: res.data.message
+                  })
+                }
+              })
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
+        } else {
+          let url = 'user/getRemainderFrozen.do'
+          let params = {
+            eachFrozenMoney: this.cashPledge,
+            describe: '领取GPU服务器',
+            operationType: '领取GPU服务器',
+            thawCondition: '删除GPU服务器',
+            vmConfig: this.vmConfig
+          }
+          axios.post(url, params).then(response => {
+            if (response.data.status == 1 && response.status == 200) {
+              let url = 'activity/getFreeGPU.do'
+              axios.get(url, {
+                params: {
+                  vmConfigId: vmConfigId,
+                  osType: this.currentSceneGroup[this.index1].configGroup[this.index2].system,
+                  defzoneid: this.currentSceneGroup[this.index1].configGroup[this.index2].zoneId,
+                  templateFunction: '1',
+                  functionType: functionType
+                }
+              }).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.showModal.getSuccessModal = true
+                } else {
+                  this.$message.info({
+                    content: res.data.message
+                  })
+                }
+              })
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
+        }
       },
       // 快速认证时发送验证码
       sendCode() {
@@ -3388,7 +3526,7 @@
     li {
       list-style: none;
     }
-    font-family:PingFangSC-Regular;
+    font-family: PingFangSC-Regular;
     .wrap {
       width: 1200px;
       margin: 0 auto;
@@ -3415,27 +3553,26 @@
     .eigth-scene {
       position: relative;
 
-
       width: 100%;
       overflow: hidden;
-      >.bg{
+      > .bg {
         width: 1902px;
-        margin:0 auto;
+        margin: 0 auto;
       }
       .bg-wrap {
         position: relative;
-        margin:0 auto;
+        margin: 0 auto;
         overflow: hidden;
         height: 666px;
-        .bg{
+        .bg {
           transition: all .3s ease;
           margin: auto 0;
           height: 5328px;
-          position:absolute;
+          position: absolute;
           top: 0;
           left: 0;
           z-index: 1;
-          >img {
+          > img {
             margin: 0;
             padding: 0;
             display: block;
@@ -3446,34 +3583,34 @@
         position: relative;
         margin-top: -666px;
         z-index: 2;
-        height:666px;
+        height: 666px;
         display: flex;
         align-items: center;
         justify-content: center;
         .box {
           position: relative;
-          height:586px;
+          height: 586px;
           width: 1120px;
-          background:rgba(255,255,255,1);
-          .container{
+          background: rgba(255, 255, 255, 1);
+          .container {
             display: flex;
           }
-          .left-menu{
+          .left-menu {
             border-right: solid 1px #E6E6E6;
             padding: 20px 0;
             ul {
               li {
-                width:200px;
-                height:68px;
+                width: 200px;
+                height: 68px;
                 line-height: 68px;
-                font-size:20px;
-                font-family:PingFangSC-Semibold;
-                font-weight:400;
+                font-size: 20px;
+                font-family: PingFangSC-Semibold;
+                font-weight: 400;
                 color: #333333;
                 cursor: pointer;
                 text-align: center;
-                &:hover,&.selected {
-                  background:linear-gradient(270deg,rgba(170,202,255,1) 0%,rgba(138,189,253,0) 100%);
+                &:hover, &.selected {
+                  background: linear-gradient(270deg, rgba(170, 202, 255, 1) 0%, rgba(138, 189, 253, 0) 100%);
                   color: #377DFF;
                   border-right: #387DFF 6px solid;
                 }
@@ -3496,29 +3633,29 @@
                 line-height: 90px;
                 width: 126px;
                 text-align: center;
-                font-size:18px;
-                font-family:PingFangSC-Semibold;
-                font-weight:600;
-                color:rgba(255,255,255,1);
+                font-size: 18px;
+                font-family: PingFangSC-Semibold;
+                font-weight: 600;
+                color: rgba(255, 255, 255, 1);
                 transform: rotate(45deg);
                 // transform-origin: 10% 300%;
               }
             }
             > h3 {
               padding-bottom: 20px;
-              font-size:24px;
-              font-family:PingFangSC-Medium;
-              font-weight:500;
-              color:rgba(51,51,51,1);
-              line-height:24px;
+              font-size: 24px;
+              font-family: PingFangSC-Medium;
+              font-weight: 500;
+              color: rgba(51, 51, 51, 1);
+              line-height: 24px;
               border-bottom: dashed 1px #C2C2C2;
             }
             .title {
               padding: 16px 0 18px 0;
-              font-size:18px;
-              font-family:PingFangSC-Medium;
-              font-weight:500;
-              color:rgba(74,74,74,1);
+              font-size: 18px;
+              font-family: PingFangSC-Medium;
+              font-weight: 500;
+              color: rgba(74, 74, 74, 1);
             }
             .scene {
               margin-bottom: 24px;
@@ -3526,11 +3663,11 @@
                 p {
                   max-height: 112px;
                   margin-bottom: 20px;
-                  font-size:14px;
-                  font-family:PingFangSC-Regular;
-                  font-weight:400;
-                  color:rgba(102,102,102,1);
-                  line-height:28px;
+                  font-size: 14px;
+                  font-family: PingFangSC-Regular;
+                  font-weight: 400;
+                  color: rgba(102, 102, 102, 1);
+                  line-height: 28px;
                   display: -webkit-box;
                   -webkit-box-orient: vertical;
                   -webkit-line-clamp: 4;
@@ -3545,19 +3682,19 @@
               span {
                 margin-right: 10px;
                 display: inline-block;
-                width:151px;
-                height:38px;
+                width: 151px;
+                height: 38px;
                 line-height: 38px;
                 text-align: center;
-                background:rgba(255,255,255,0.1);
-                border-radius:4px;
-                border:1px solid rgba(204,204,204,1);
-                color:rgba(136,136,136,1);
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
+                border: 1px solid rgba(204, 204, 204, 1);
+                color: rgba(136, 136, 136, 1);
                 cursor: pointer;
                 &:hover {
                   color: #fff;
-                  border: 1px solid rgba(56,125,255,1);
-                  background: rgba(56,125,255,1);
+                  border: 1px solid rgba(56, 125, 255, 1);
+                  background: rgba(56, 125, 255, 1);
                 }
               }
             }
@@ -3566,7 +3703,7 @@
       }
     }
     .register {
-      height:180px;
+      height: 180px;
       background: url("../../assets/img/home/bg-ripple.png") no-repeat center;
       text-align: center;
       color: #fff;
@@ -3574,17 +3711,17 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-size:24px;
-      font-weight:500;
+      font-size: 24px;
+      font-weight: 500;
       span {
         margin-top: 40px;
         display: inline-block;
-        width:173px;
-        height:46px;
-        font-size:18px;
+        width: 173px;
+        height: 46px;
+        font-size: 18px;
         line-height: 46px;
-        border-radius:4px;
-        border:1px solid rgba(255,255,255,1);
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 1);
         cursor: pointer;
         &:hover {
           background: #fff;
@@ -3596,7 +3733,7 @@
       margin-bottom: 100px;
       height: 688px;
       background: url('../../assets/img/home/datacenter-bg.png') no-repeat top center;
-      .header-g{
+      .header-g {
         padding-top: 50px;
         margin-bottom: 10px;
         .title {
@@ -3615,8 +3752,8 @@
           position: absolute;
           padding: 4px 8px;
           border: solid #fff 1px;
-          border-radius:4px;
-          font-size:14px;
+          border-radius: 4px;
+          font-size: 14px;
           background: #FFD100;
           color: #333;
         }
@@ -3634,7 +3771,7 @@
           justify-content: space-between;
           span {
             color: #fff;
-            font-size:12px;
+            font-size: 12px;
             i {
               display: inline-block;
               width: 12px;
@@ -3653,10 +3790,10 @@
       }
       .bottom-log {
         margin-top: 25px;
-        height:80px;
+        height: 80px;
         background: #fff;
         box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
-        border-radius:4px;
+        border-radius: 4px;
         ul {
           height: 80px;
           display: flex;
@@ -3682,11 +3819,11 @@
         > div {
           width: 300px;
           p {
-            font-size:24px;
-            line-height:24px;
+            font-size: 24px;
+            line-height: 24px;
             font-weight: 500;
           }
-          .img-wrap{
+          .img-wrap {
             margin: 0 auto;
             margin-top: 20px;
             width: 228px;
@@ -3696,15 +3833,15 @@
             align-items: center;
           }
           span {
-            font-size:14px;
-            line-height:28px;
+            font-size: 14px;
+            line-height: 28px;
           }
         }
       }
     }
     .news {
       margin-top: 40px;
-      >.wrap {
+      > .wrap {
         position: relative;
         &::before {
           position: absolute;
@@ -3723,7 +3860,7 @@
         display: flex;
         justify-content: space-between;
         // box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
-        box-shadow:0px 2px 35px -17px rgba(69,69,69,0.86);
+        box-shadow: 0px 2px 35px -17px rgba(69, 69, 69, 0.86);
         background: #fff;
         .main-left {
           padding: 40px 60px 40px 80px;
@@ -3784,8 +3921,8 @@
           }
         }
         .main-right {
-          width:400px;
-          height:286px;
+          width: 400px;
+          height: 286px;
           overflow: hidden;
           background: rgba(231, 231, 231, 1);
           .news-img {
@@ -3814,7 +3951,7 @@
           padding-bottom: 20px;
           overflow: hidden;
           // box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.41);
-          box-shadow:0px 13px 14px -6px rgba(216,216,216,0.5);
+          box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.5);
           dt {
             height: 58px;
             display: flex;
@@ -3824,20 +3961,20 @@
             font-weight: 500;
             font-size: 18px;
             color: #333333;
-            border-bottom:1px solid #cfcfcf;
+            border-bottom: 1px solid #cfcfcf;
             .moreinfo {
               display: block;
               width: 100%;
               &:hover {
                 color: #377DFF;
-                span{
+                span {
                   color: #377DFF;
                 }
-                i{
+                i {
                   color: #377DFF;
                 }
               }
-              span{
+              span {
                 cursor: pointer;
                 color: #333333;
               }
@@ -3854,7 +3991,7 @@
               li {
                 padding: 0;
                 a {
-                  display:block;
+                  display: block;
                   /*justify-content: space-between;*/
                   padding: 10px 0;
                   min-height: 60px;
@@ -3886,7 +4023,7 @@
                       line-height: 20px;
                       text-align: center;
                       background: #FF624B;
-                      border-radius:10px 10px 10px 0px;
+                      border-radius: 10px 10px 10px 0px;
                       font-style: normal;
                       font-size: 12px;
                       color: #fff;
@@ -3897,10 +4034,10 @@
                     margin-bottom: 5px;
                     display: block;
                     width: 100%;
-                    font-size:14px;
-                    font-weight:400;
-                    color:#999999;
-                    line-height:14px;
+                    font-size: 14px;
+                    font-weight: 400;
+                    color: #999999;
+                    line-height: 14px;
                   }
                 }
               }
@@ -3936,6 +4073,11 @@
             background: url('../../assets/img/active/active_xf_bg.png') no-repeat center;
           }
         }
+      }
+      .anniversary-active {
+        height: 400px;
+        cursor: pointer;
+        background: #FEEDE0 url("../../assets/img/active/anniversary/aa-banner22.png") center no-repeat;
       }
       .db-active {
         height: 400px;
@@ -4002,7 +4144,7 @@
       height: 120px;
       width: 100%;
       .container {
-        padding: 10px 0 ;
+        padding: 10px 0;
         width: 1200px;
         margin: 0px auto;
         height: 120px;
@@ -4122,8 +4264,7 @@
             .fade-enter-active, .fade-leave-active {
               transition: opacity .2s
             }
-            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */
-            {
+            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
               display: none;
             }
             .bottom-flow {
@@ -4135,10 +4276,10 @@
                 justify-content: space-between;
                 span {
                   display: inline-block;
-                  width:80px;
-                  height:4px;
-                  background:rgba(153,153,153,1);
-                  border-radius:3px;
+                  width: 80px;
+                  height: 4px;
+                  background: rgba(153, 153, 153, 1);
+                  border-radius: 3px;
                   &.blue {
                     background: #377dff;
                   }
@@ -4457,17 +4598,17 @@
         flex-wrap: wrap;
         > div {
           margin-bottom: 20px;
-          width:288px;
-          height:132px;
-          border-radius:4px;
-          border:1px solid rgba(207,207,207,1);
+          width: 288px;
+          height: 132px;
+          border-radius: 4px;
+          border: 1px solid rgba(207, 207, 207, 1);
           background: #fff;
           display: flex;
           align-items: center;
           justify-content: center;
           &:hover {
-            box-shadow:0px 0px 42px -16px rgba(184,184,184,0.72);
-            border:1px solid rgba(56,125,255,1);
+            box-shadow: 0px 0px 42px -16px rgba(184, 184, 184, 0.72);
+            border: 1px solid rgba(56, 125, 255, 1);
           }
         }
       }
@@ -4895,7 +5036,8 @@
       }
     }
   }
-  .eightscene{
+
+  .eightscene {
     height: 400px;
     overflow: hidden;
     background: url("../../assets/img/home/eightscene-banner.png") no-repeat;
@@ -4906,8 +5048,8 @@
       .left {
         padding-top: 86px;
         button {
-          width:164px;
-          height:44px;
+          width: 164px;
+          height: 44px;
           display: block;
           background: none;
           outline: none;
@@ -4921,19 +5063,19 @@
           color: #fff;
           &:hover {
             color: #fff;
-            border: 1px solid rgba(56,125,255,1);
-            background: rgba(56,125,255,1);
+            border: 1px solid rgba(56, 125, 255, 1);
+            background: rgba(56, 125, 255, 1);
           }
         }
       }
       .right {
         margin-top: 64px;
         padding: 40px;
-        width:300px;
-        height:266px;
-        background:rgba(255,255,255,1);
-        box-shadow:0px 2px 41px -15px rgba(47,124,253,0.47);
-        border-radius:4px;
+        width: 300px;
+        height: 266px;
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0px 2px 41px -15px rgba(47, 124, 253, 0.47);
+        border-radius: 4px;
         p {
           font-size: 18px;
           padding-bottom: 10px;
@@ -4951,11 +5093,11 @@
           }
         }
         button {
-          width:220px;
-          height:38px;
-          background:rgba(56,125,255,1);
-          border-radius:4px;
-          font-size:14px;
+          width: 220px;
+          height: 38px;
+          background: rgba(56, 125, 255, 1);
+          border-radius: 4px;
+          font-size: 14px;
         }
       }
     }

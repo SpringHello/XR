@@ -23,7 +23,7 @@
                     </Form-item>
                     <Form-item label="问题类型" required>
                       <Select v-model="formItem.type" placeholder="产品功能咨询" @on-change="clear">
-                        <Option v-for="item in Object.keys(orderType)" :value="item" :key="item">{{item}}</Option>
+                        <Option v-for="(item,index) in Object.keys(orderType)" :value="item" :key="index">{{item}}</Option>
                       </Select>
                     </Form-item>
                     <Form-item label="产品" required>
@@ -67,7 +67,7 @@
               <div class="operating">
                 <div style="width:35%">
                   <div>
-                    <div v-for="(item,index) in operatingOrder" :key="item" class="item">
+                    <div v-for="(item,index) in operatingOrder" :key="index" class="item">
                       <label>{{item.title}}</label>
                       <div style="display: flex;flex-wrap: wrap">
                         <span style="width:38%">问题类型 : {{item.description}}</span>
@@ -193,7 +193,7 @@
 
                     </div>
                   </div>
-                  <div style="margin-top:20px;" v-if="orderDetail[2][0].wc_sataus==2">
+                  <div style="margin-top:20px;" v-if="orderDetail[2][0].wcSataus!=4">
                     <Input v-model="editorValue" type="textarea" :rows="4" placeholder="请输入..."></Input>
                     <button @click="reply">发送</button>
                   </div>
@@ -225,8 +225,9 @@
 
 <script type="text/ecmascript-6">
   import timeago from 'timeago.js'
-  export default{
-    data(){
+
+  export default {
+    data() {
       return {
         formItem: {
           title: '',
@@ -259,7 +260,7 @@
         loading: false
       }
     },
-    created(){
+    created() {
       this.$http.get('order/orderType.do').then((response) => {
         if (response.status == 200) {
           this.orderType = response.data.result
@@ -272,7 +273,7 @@
       this.$http.post('device/DescribeWalletsBalance.do').then(response => {
         this.formItem.remainder = Number(response.data.data.remainder)
       })
-      if (this.$route.query.logData) {
+     /* if (this.$route.query.logData) {
         this.formItem.type = '产品故障'
         switch (this.$route.query.logData.operatetarget) {
           case '主机':
@@ -302,12 +303,18 @@
           case '硬盘':
             this.formItem.product = '31'
             break
+          case'云数据库':
+            this.formItem.product = '33'
+            break;
+          case'GPU服务器':
+            this.formItem.product = '34'
+            break;
         }
         this.formItem.description = this.$route.query.logData.operatedes + '失败'
-      }
+      }*/
     },
     methods: {
-      urge(){
+      urge() {
         this.$Message.success({
           content: '提醒成功，我们将为您加紧处理。',
           top: 150,
@@ -315,7 +322,7 @@
           closable: true
         })
       },
-      ok(order, index){
+      ok(order, index) {
         var url = 'order/closeOrder.do'
         this.$http.get(url, {
           params: {
@@ -329,7 +336,7 @@
           }
         })
       },
-      del(item, index){
+      del(item, index) {
         var url = 'order/delOrder.do'
         this.$http.get(url, {
           params: {
@@ -342,7 +349,7 @@
           }
         })
       },
-      viewDetail(item){
+      viewDetail(item) {
         var url = 'order/viewOrder.do'
         this.$Loading.start()
         this.$http.get(url, {
@@ -357,10 +364,10 @@
           }
         })
       },
-      clear(value){
+      clear(value) {
         this.formItem.product = ''
       },
-      submit(){
+      submit() {
         if (this.disabled) {
           this.$Message.warning({
             content: '请输入必填项',
@@ -408,7 +415,7 @@
           }
         })
       },
-      reply(){
+      reply() {
         if (this.editorValue.trim() == '') {
           this.$Message.warning('请输入回复内容! ')
           return
@@ -426,7 +433,7 @@
           }
         })
       },
-      getOrders(type){
+      getOrders(type) {
         var url = 'order/getOrders.do'
         this.$http.get(url, {
           params: {
@@ -447,17 +454,17 @@
           }
         })
       },
-      changeOperatingPage(page){
+      changeOperatingPage(page) {
         this.operatingCurrPage = page
         this.getOrders('operating')
       },
-      changeClosingPage(page){
+      changeClosingPage(page) {
         this.closingCurrPage = page
         this.getOrders('closing')
       }
     },
     computed: {
-      disabled(){
+      disabled() {
         return !(this.formItem.title && this.formItem.type && this.formItem.product && this.formItem.description)
       }
     }

@@ -21,13 +21,13 @@
         <div style="border-bottom: 1px solid #D9D9D9;margin-top: 20px">
           <h2>计费方式选择</h2>
           <div class="item-wrapper">
-            <div v-for="item in timeType" :key="item.value" class="zoneItem"
+            <div v-for="(item,index) in timeType" :key="index" class="zoneItem"
                  :class="{zoneSelect:timeForm.currentTimeType==item.value}"
                  @click="timeForm.currentTimeType=item.value">{{item.label}}
             </div>
           </div>
           <div class="item-wrapper" v-if="timeForm.currentTimeType=='annual'">
-            <div v-for="item in timeValue" :key="item.value" class="timeType"
+            <div v-for="(item,index) in timeValue" :key="index" class="timeType"
                  :class="{zoneSelect:timeForm.currentTimeValue.label==item.label}"
                  @click="timeForm.currentTimeValue=item"
                  style="margin:0px;width:55px">
@@ -126,7 +126,7 @@
                 <div>
                   <p class="item-title">配置类型</p>
                 </div>
-                <Table :columns="serverOfferColumns" :data="serverOfferList" @radio-change="selectGpu"></Table>
+                <Table :columns="serverOfferColumns" :data="serverOfferList" @radio-change="selectGpu" style="width: 629px"></Table>
               </div>
             </div>
             <!--自定义主机价格-->
@@ -403,7 +403,7 @@
           <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
              @click="$router.push({path:'/ruicloud/document'})">查看计价详情</p>
           <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
-            费用：<span
+            <span v-if="timeForm.currentTimeType == 'annual'&&timeForm.currentTimeValue.type == 'year'">折后费用：</span><span v-else>费用：</span><span
             style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
             v-show="timeForm.currentTimeType == 'current'">/小时</span>
           </p>
@@ -671,6 +671,8 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
+              this.customList = []
+              this.customMirror = {}
               var cusList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu);
               if (this.mirrorQuery) {
                   this.customList.push(this.mirrorQuery);
@@ -946,7 +948,7 @@
           params.timeType = this.timeForm.currentTimeType
           params.timeValue = '1'
         }
-        if(!this.IPConfig.publicIP){
+        if (!this.IPConfig.publicIP) {
           params.brand = 0
         }
         axios.post('device/queryIpPrice.do', params).then(response => {

@@ -44,7 +44,7 @@ const SceneList = () =>import('@/components/App/SceneList')
 const Vps = () =>import('@/components/App/active/vps')
 /*const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
  const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
-//const active_1 = () => import('@/components/App/active/active_1')
+const active_1 = () => import('@/components/App/active/active_1')
 
 //const active_2 = () => import('@/components/App/active/active_2')
 const objStorageActive = () =>import('@/components/App/active/objStorageActive')
@@ -58,6 +58,9 @@ const FrActive = () =>import('@/components/App/active/freeReceive')
 const DBActive = () =>import('@/components/App/active/DatabaseActive')
 
 const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
+
+const AnniversaryActive = () => import('@/components/App/active/anniversaryActive')
+//const AnniversaryActiveBefore = () => import('@/components/App/active/AnniversaryActiveBefore')
 
 //域名页面路由
 const Domainname = () =>import('@/components/App/Domain/Domainname')
@@ -106,6 +109,7 @@ const Pelastic = () => import('@/components/App/product/Pelastic.vue')
 // import Register from '@/components/LR/Register'
 // import Reset from '@/components/LR/Reset'
 const Login = () =>import('@/components/LR/Login')
+const NewLogin = () =>import('@/components/LR/newLogin')
 const Register = () =>import('@/components/LR/Register')
 const Reset = () =>import('@/components/LR/Reset')
 const RegisterSuccess = () =>import('@/components/LR/RegisterSuccess')
@@ -140,7 +144,7 @@ const TelescopicDetails = () => import('@/components/Back/TelescopicDetails')
 
 //const ObjectStorage = () => import('@/components/Back/ObjectStorage')
 const CloudMonitor = () =>import('@/components/Back/CloudMonitor')
-// const CloudMonitorCreateStrategy = () =>import('@/components/Back/CloudMonitorCreateStrategy')
+const CloudMonitorCreateStrategy = () =>import('@/components/Back/CloudMonitorCreateStrategy')
 const Vpc = () =>import('@/components/Back/Vpc')
 const VpcManage = () =>import('@/components/Back/VpcManage')
 const Vpn = () =>import('@/components/Back/Vpn')
@@ -309,7 +313,7 @@ var router = new Router({
         {path: 'vps', name: 'vps', component: Vps},
         /*{path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
          {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
-        //{path: 'active_1', name: 'active_1', component: active_1},
+        {path: 'active_1', name: 'active_1', component: active_1},
         {path: 'entrance', name: 'entrance', component: Entrance},
         //{path: 'active_2', name: 'active_2', component: active_2},
         {path: 'objStorageActive', name: 'objStorageActive', component: objStorageActive},
@@ -317,6 +321,8 @@ var router = new Router({
         {path: 'frActive', name: 'frActive', component: FrActive},
 
         {path: 'dbActive', name: 'dbActive', component: DBActive},
+        {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
+        //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
 
         {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},
         {path: 'SceneInfo/:type', name: 'SceneInfo', component: SceneInfo},
@@ -390,7 +396,7 @@ var router = new Router({
         {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
         {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
         {path: 'CloudMonitor', name: 'CloudMonitor', component: CloudMonitor},
-        // {path: 'cloudMonitorCreateStrategy', name: 'cloudMonitorCreateStrategy', component: CloudMonitorCreateStrategy},
+        {path: 'cloudMonitorCreateStrategy', name: 'cloudMonitorCreateStrategy', component: CloudMonitorCreateStrategy},
         //{path:'objectStorage',name:'objectStorage',component:ObjectStorage},
         {path: 'snapshot', name: 'snapshot', component: Snapshot},
         {path: 'firewall', name: 'firewall', component: Firewall},
@@ -443,6 +449,7 @@ var router = new Router({
       component: LR,
       children: [
         {path: 'login', name: 'login', component: Login},
+        {path: 'newLogin', name: 'newLogin', component: NewLogin},
         {path: 'register', name: 'register', component: Register},
         {path: 'reset', name: 'reset', component: Reset},
         {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess}

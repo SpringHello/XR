@@ -16,7 +16,7 @@
             <span style="line-height: 32px;">{{this.$route.query.computername}}</span>
             <div>
               <Button class="btn" @click="$router.go(-1)" style="margin-right: 10px;">返回</Button>
-              <a :href="`${this.$route.query.connecturl}`" target="_blank"
+              <a @click="link"
                  style="border:solid 1px #2A99F2;color: #2A99F2;border-radius: 5px;padding: 6px 15px;background-color:#f7f7f7;font-size:12px;">连接主机</a>
             </div>
           </header>
@@ -837,6 +837,7 @@
         }
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
+          // console.log(response.data.result)
           this.computerInfo = response.data.result
           let url = 'information/getTemplateAndTemplateFunction.do'
           axios.get(url, {
@@ -950,9 +951,11 @@
             } else {
               localStorage.setItem('serviceoffername', this.computerInfo.cpuNum + 'CPU' + 1 + 'Ghz' + this.computerInfo.memory + 'GMemory')
               localStorage.setItem('virtualMachineid', this.computerInfo.computerId)
-              localStorage.setItem('zoneid', this.$route.query.zoneid)
+              // localStorage.setItem('zoneid', this.$route.query.zoneid)
               sessionStorage.setItem('hostname', this.$route.query.computername)
               sessionStorage.setItem('endtime', this.computerInfo.endTime)
+              sessionStorage.setItem('rootdiskid', this.computerInfo.rootDiskId)
+              sessionStorage.setItem('rootdisksize', this.computerInfo.rootDiskSize)
               this.$router.push({
                 name: 'upgrade'
               })
@@ -1075,7 +1078,10 @@
         }).then(response => {
           this.reloadButton = '确认重装'
           if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message)
+            this.$Message.success({
+              content: response.data.message,
+              duration: 5
+              })
           } else {
             this.$message.info({
               content: response.data.message
@@ -1293,7 +1299,10 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success(response.data.message)
+                this.$Message.success({
+                  content: response.data.message,
+                  duration: 5
+                  })
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -1367,6 +1376,13 @@
             })
           }
         })
+      },
+      link() {
+        localStorage.setItem('link-companyid', this.$route.query.companyid)
+        localStorage.setItem('link-vmid', this.$route.query.vmid)
+        localStorage.setItem('link-zoneid', this.$route.query.zoneid)
+        localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
+        window.open('/ruicloud/link')
       }
     },
     beforeRouteLeave(to, from, next) {

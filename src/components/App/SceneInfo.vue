@@ -30,7 +30,7 @@
           <h2>典型配置推荐</h2>
           <div class="configGroup">
             <div v-for="(cfg,index1) in item.configGroup" class="config" :class="{gpu: scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'}">
-              <div class="cf-title">{{cfg.title}}</div>
+              <div class="cf-title" :class="{gpu: scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算' }">{{cfg.title}}</div>
               <div class="cf-body">
                 <div class="cf-content">
                   <ul v-if="scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'">
@@ -42,7 +42,7 @@
                       <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
                     </Select>
                     <li style="margin-top: 10px"><span class="s1">选择区域</span></li>
-                    <Select v-model="cfg.zoneId" style="width:170px;">
+                    <Select v-model="cfg.zoneId" style="width:170px;" @on-change="getOriginalPrice(currentIndex,index1)">
                       <Option v-for="item2 in areaGroup" :value="item2.value" :key="item2.value">{{ item2.name }}</Option>
                     </Select>
                   </ul>
@@ -62,10 +62,10 @@
                   </ul>
                 </div>
                 <div class="cf-footer">
-                  <p><span>押金：</span>{{ cfg.currentPrice}}</p>
+                  <p><span>押金：</span>¥{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <Button type="primary" v-if="scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" :disabled="true">敬请期待</Button>
-                  <Button type="primary" v-else @click="getHost(currentIndex,index1)">免费使用</Button>
+                  <!--<Button type="primary" v-if="scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" :disabled="true">敬请期待</Button>-->
+                  <Button type="primary" @click="getHost(currentIndex,index1)">免费使用</Button>
                 </div>
               </div>
             </div>
@@ -290,13 +290,13 @@
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.setData(to.params.type)
-        vm.getRegion()
+        vm.getRegion(to.params.type)
       })
     },
     beforeRouteUpdate(to, from, next) {
       next(vm => {
         vm.setData(to.params.type)
-        vm.getRegion()
+        vm.getRegion(to.params.type)
       })
     },
     data() {
@@ -1083,7 +1083,7 @@
             disc: '新睿云游戏应用能够帮助您实现任意设备的游戏体验: 在任意 PC、Mac、平板电脑、智能手机以及电视上的高画质、低延迟的多设备游戏体验；点击即玩的便捷: 任何时候都可以在云端访问一系列游戏和保存游戏。 在任何地点、任意设备上均可开始新游戏或继续之前的游戏进度；减少麻烦: 没有新硬件、没有复杂的设置、没有游戏光盘、没有数字下载、没有游戏安装、没有游戏补丁。',
             configGroup: [
               {
-                title: '初创型业务网站',
+                title: '初创型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1091,11 +1091,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: '2288H v5',
+                    value: 'G5500',
                   },
                   {
                     text: '主机',
-                    value: '4核32G',
+                    value: '8核64G',
                   },
                   {
                     text: '型号',
@@ -1115,7 +1115,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1130,13 +1130,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '64',
+                gpuSize: '1',
+                serviceType: 'G5500',
+                currentPrice: '178',
+                originalPrice: '646.25',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '增长型业务网站',
+                title: '增长型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1144,11 +1147,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: 'G5500',
+                    value: '2288H_v5',
                   },
                   {
                     text: '主机',
-                    value: '8核64G',
+                    value: '16核64G',
                   },
                   {
                     text: '型号',
@@ -1168,7 +1171,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1183,13 +1186,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '64',
+                gpuSize: '1',
+                serviceType: '2288H_v5',
+                currentPrice: '200',
+                originalPrice: '730.26',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '稳定型业务网站',
+                title: '稳定型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1205,7 +1211,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1220,7 +1226,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1235,8 +1241,11 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '128',
+                gpuSize: '2',
+                serviceType: 'G5500',
+                currentPrice: '341',
+                originalPrice: '1215.88',
                 zoneId: '',
                 system: 'linux'
               }
@@ -1248,7 +1257,7 @@
             disc: '工程制图、游戏、电影领域有大量需要高计算量的场景需要企业或个人投入较高成本来提高生产计算能力和生产效率。现在借助新睿云3D设计，以远低于自购设备的价格来获取更为稳定优质的计算资源能力提升，成倍提高您的设计工作效率和渲染效率。并且，新睿云3D设计提供按需付费方式，以小时级为单位来获取工业级GPU计算服务能力。 ',
             configGroup: [
               {
-                title: '初创型业务网站',
+                title: '初创型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1256,11 +1265,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: '2288H v5',
+                    value: 'G5500',
                   },
                   {
                     text: '主机',
-                    value: '4核32G',
+                    value: '8核64G',
                   },
                   {
                     text: '型号',
@@ -1280,7 +1289,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1295,13 +1304,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '64',
+                gpuSize: '1',
+                serviceType: 'G5500',
+                currentPrice: '178',
+                originalPrice: '646.25',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '增长型业务网站',
+                title: '增长型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1309,11 +1321,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: 'G5500',
+                    value: '2288H_v5',
                   },
                   {
                     text: '主机',
-                    value: '8核64G',
+                    value: '16核64G',
                   },
                   {
                     text: '型号',
@@ -1333,7 +1345,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1348,13 +1360,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '64',
+                gpuSize: '1',
+                serviceType: '2288H_v5',
+                currentPrice: '200',
+                originalPrice: '730.26',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '稳定型业务网站',
+                title: '稳定型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1370,7 +1385,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1385,7 +1400,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1400,8 +1415,11 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '128',
+                gpuSize: '2',
+                serviceType: 'G5500',
+                currentPrice: '341',
+                originalPrice: '1215.88',
                 zoneId: '',
                 system: 'linux'
               }
@@ -1410,10 +1428,10 @@
           },
           {
             currentScene: '人工智能',
-            disc: ' 云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的高性能PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
+            disc: '新睿云人工智能平台基于强劲的 GPU 计算资源，在配置 Tesla P40和 Tesla P100 直通模式的基础上，搭载 Caffe、CNTK、PyTorch 和 Keras 等多个主流深度学习框架，同时集成 Jupyter notebook 开发环境及 numpy、scipy、pandas、等众多数据科学工具包。用户可在新睿云人工智能平台上使用 GPU 或 CPU 进行单机或分布式深度学习模型训练与推断，并可享受云计算弹性特性，按需进行横向、纵向扩展。',
             configGroup: [
               {
-                title: '初创型业务网站',
+                title: '初创型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1421,11 +1439,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: '2288H v5',
+                    value: 'G5500',
                   },
                   {
                     text: '主机',
-                    value: '4核32G',
+                    value: '8核64G',
                   },
                   {
                     text: '型号',
@@ -1445,7 +1463,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1460,13 +1478,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '64',
+                gpuSize: '1',
+                serviceType: 'G5500',
+                currentPrice: '178',
+                originalPrice: '646.25',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '增长型业务网站',
+                title: '增长型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1474,11 +1495,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: 'G5500',
+                    value: '2288H_v5',
                   },
                   {
                     text: '主机',
-                    value: '8核64G',
+                    value: '16核64G',
                   },
                   {
                     text: '型号',
@@ -1498,7 +1519,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1513,13 +1534,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '64',
+                gpuSize: '1',
+                serviceType: '2288H_v5',
+                currentPrice: '200',
+                originalPrice: '730.26',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '稳定型业务网站',
+                title: '稳定型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1535,7 +1559,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1550,7 +1574,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1565,8 +1589,11 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '128',
+                gpuSize: '2',
+                serviceType: 'G5500',
+                currentPrice: '341',
+                originalPrice: '1215.88',
                 zoneId: '',
                 system: 'linux'
               }
@@ -1578,7 +1605,7 @@
             disc: '新睿云深度学习平台基于强劲的 GPU 计算资源，在配置Tesla P40和Tesla P100的基础上。各个行业都可以帮助您成倍提高计算和工作效率。比如在计算机视觉与图像处理领域，图像处理与计算机视觉算法是计算密集型算法。NVIDIA® CUDA® 加速技术可帮助解决该挑战，从而帮助此类应用程序实现交互式视频的帧率性能。用户可在深度学习平台上使用 GPU 或 CPU 进行单机或分布式深度学习模型训练与推断，并可享受云计算弹性特性，按需进行横向、纵向扩展。',
             configGroup: [
               {
-                title: '初创型业务网站',
+                title: '初创型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1586,11 +1613,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: '2288H v5',
+                    value: 'G5500',
                   },
                   {
                     text: '主机',
-                    value: '4核32G',
+                    value: '8核64G',
                   },
                   {
                     text: '型号',
@@ -1610,7 +1637,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1625,13 +1652,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '64',
+                gpuSize: '1',
+                serviceType: 'G5500',
+                currentPrice: '178',
+                originalPrice: '646.25',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '增长型业务网站',
+                title: '增长型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1639,11 +1669,11 @@
                   },
                   {
                     text: 'GPU服务器',
-                    value: 'G5500',
+                    value: '2288H_v5',
                   },
                   {
                     text: '主机',
-                    value: '8核64G',
+                    value: '16核64G',
                   },
                   {
                     text: '型号',
@@ -1663,7 +1693,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1678,13 +1708,16 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '64',
+                gpuSize: '1',
+                serviceType: '2288H_v5',
+                currentPrice: '200',
+                originalPrice: '730.26',
                 zoneId: '',
                 system: 'linux'
               },
               {
-                title: '稳定型业务网站',
+                title: '稳定型业务网站（3天）',
                 configs: [
                   {
                     text: '服务器资源',
@@ -1700,7 +1733,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '2* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1715,7 +1748,7 @@
                   },
                   {
                     text: '弹性公网IP',
-                    value: '按需开通',
+                    value: '1M',
                   },
                   {
                     text: '虚拟私有云VPC',
@@ -1730,8 +1763,11 @@
                     value: '按需开通',
                   }
                 ],
-                currentPrice: '--',
-                originalPrice: '--',
+                men: '128',
+                gpuSize: '2',
+                serviceType: 'G5500',
+                currentPrice: '341',
+                originalPrice: '1215.88',
                 zoneId: '',
                 system: 'linux'
               }
@@ -1900,47 +1936,82 @@
             this.userType = '8'
             break
         }
-        this.getMirror(this.userType,this.$store.state.zone.zoneid)
       },
       getOriginalPrice(currentIndex, index) {
-        let vmConfigId = ''
-        let month = ''
-        switch (index) {
-          case 0:
-            month = '1'
-            vmConfigId = '45'
-            break
-          case 1:
-            month = '3'
-            vmConfigId = '46'
-            break
-          case 2:
-            month = '6'
-            vmConfigId = '47'
-            break
-          case 3:
-            month = '12'
-            vmConfigId = '48'
-            break
+        let params = {}
+        if (!(this.scene == '游戏服务' || this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
+          switch (index) {
+            case 0:
+              params = {
+                vmConfigId: '45',
+                month: '1',
+                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+              }
+              break
+            case 1:
+              params = {
+                vmConfigId: '46',
+                month: '3',
+                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+              }
+              break
+            case 2:
+              params = {
+                vmConfigId: '47',
+                month: '6',
+                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+              }
+              break
+            case 3:
+              params = {
+                vmConfigId: '48',
+                month: '12',
+                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+              }
+              break
+          }
+        } else {
+          switch (index) {
+            case 0:
+              params = {
+                vmConfigId: '196',
+                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+              }
+              break
+            case 1:
+              params = {
+                vmConfigId: '194',
+                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+              }
+              break
+            case 2:
+              params = {
+                vmConfigId: '195',
+                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+              }
+              break
+          }
         }
         let url = 'activity/getOriginalPrice.do'
-        let params = {
-          vmConfigId: vmConfigId,
-          month: month,
-          zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
-        }
         axios.get(url, {params: params}).then(res => {
           if (res.data.status == 1) {
             this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
           }
         })
-        this.getMirror(this.userType,this.currentSceneGroup[currentIndex].configGroup[index].zoneId)
       },
-      getRegion() {
+      getRegion(val) {
         let url = 'activity/getTemActInfo.do'
-        axios.post(url, {
-          activityName: '免费领主机'
-        }).then(res => {
+        let params = {}
+        if (val == 'host' || val == 'web' || val == 'disk' || val == 'software') {
+          params = {
+            activityName: '免费领主机'
+          }
+        } else {
+          params = {
+            activityName: '8个场景活动GPU'
+          }
+        }
+        axios.post(url, params).then(res => {
           if (res.data.status == 1) {
             this.areaGroup = res.data.result.optionalArea
             if (res.data.result.optionalArea.length != 0) {
@@ -1949,6 +2020,12 @@
                   host.zoneId = this.areaGroup[0].value
                 })
               })
+              this.getMirror(this.userType, this.areaGroup[0].value)
+              for (let i = 5; i < 9; i++) {
+                for (let j = 0; j < 3; j++) {
+                  this.getOriginalPrice(i, j)
+                }
+              }
             }
           }
         })
@@ -1986,50 +2063,86 @@
           this.$LR({type: 'register'})
           return
         }
-        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
-          if (response.status == 200 && response.data.status == '1') {
-            this.balance = Number(response.data.data.remainder)
-            this.index1 = index1
-            this.index2 = index2
-            this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
-            this.time = this.currentSceneGroup[index1].configGroup[index2].title
-            this.showModal.rechargeHint = true
-          } else{
-            this.$message.info({
-              content: '平台开小差了，请稍候再试'
-            })
-          }
-        })
-      },
-      nextStep() {
-        if (!(this.scene == '游戏服务'||this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
-          // 判断新老用户
-          axios.get('activity/jdugeTeam.do', {
-            params: {sign: 'freeReceive'}
-          }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              if (response.data.result.flag) {
-                this.orderData = []
-                this.orderData.push({
-                  productType: '云服务器',
-                  configs: this.currentSceneGroup[this.index1].configGroup[this.index2].configs,
-                  originalPrice: this.currentSceneGroup[this.index1].configGroup[this.index2].originalPrice,
-                  time: this.time,
-                  cashPledge: Number(this.cashPledge)
-                })
-                this.showModal.rechargeHint = false
-                this.showModal.orderConfirmationModal = true
-              } else {
-                this.showModal.rechargeHint = false
-                this.showModal.inConformityModal = true
-              }
+        if (!(this.scene == '游戏服务' || this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
+          this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+            if (response.status == 200 && response.data.status == '1') {
+              this.balance = Number(response.data.data.remainder)
+              this.index1 = index1
+              this.index2 = index2
+              this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
+              this.time = this.currentSceneGroup[index1].configGroup[index2].title
+              this.showModal.rechargeHint = true
             } else {
               this.$message.info({
-                content: response.data.message
+                content: '平台开小差了，请稍候再试'
+              })
+            }
+          })
+        } else {
+          axios.get('gpuserver/isCanCreateGpu.do', {
+            params: {
+              men: this.currentSceneGroup[index1].configGroup[index2].men,
+              gpuSize: this.currentSceneGroup[index1].configGroup[index2].gpuSize,
+              serviceType: this.currentSceneGroup[index1].configGroup[index2].serviceType,
+              zoneId: this.currentSceneGroup[index1].configGroup[index2].zoneId
+            }
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+                if (response.status == 200 && response.data.status == '1') {
+                  this.balance = Number(response.data.data.remainder)
+                  this.index1 = index1
+                  this.index2 = index2
+                  this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
+                  this.time = '3天'
+                  this.showModal.rechargeHint = true
+                } else {
+                  this.$message.info({
+                    content: '平台开小差了，请稍候再试'
+                  })
+                }
+              })
+            } else {
+              this.$message.info({
+                content: res.data.message
               })
             }
           })
         }
+      },
+      nextStep() {
+        let title = ''
+        if (!(this.scene == '游戏服务' || this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
+          title = '云服务器'
+        } else {
+          title = 'GPU服务器'
+        }
+        // 判断新老用户
+        axios.get('activity/jdugeTeam.do', {
+          params: {sign: 'freeReceive'}
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (response.data.result.flag) {
+              this.orderData = []
+              this.orderData.push({
+                productType: title,
+                configs: this.currentSceneGroup[this.index1].configGroup[this.index2].configs,
+                originalPrice: this.currentSceneGroup[this.index1].configGroup[this.index2].originalPrice,
+                time: this.time,
+                cashPledge: Number(this.cashPledge)
+              })
+              this.showModal.rechargeHint = false
+              this.showModal.orderConfirmationModal = true
+            } else {
+              this.showModal.rechargeHint = false
+              this.showModal.inConformityModal = true
+            }
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
       },
       getHost_ok() {
         if (this.payWay == 'balancePay') {
@@ -2150,56 +2263,125 @@
             break
           case '40':
             functionType = '5'
-            vmConfigId = '45'
+            vmConfigId = '196'
             break
           case '41':
             functionType = '5'
-            vmConfigId = '46'
+            vmConfigId = '194'
             break
           case '42':
             functionType = '5'
-            vmConfigId = '47'
+            vmConfigId = '195'
             break
-          case '43':
-            functionType = '5'
-            vmConfigId = '48'
+          case '50':
+            functionType = '6'
+            vmConfigId = '196'
+            break
+          case '51':
+            functionType = '6'
+            vmConfigId = '194'
+            break
+          case '52':
+            functionType = '6'
+            vmConfigId = '195'
+            break
+          case '60':
+            functionType = '7'
+            vmConfigId = '196'
+            break
+          case '61':
+            functionType = '7'
+            vmConfigId = '194'
+            break
+          case '62':
+            functionType = '7'
+            vmConfigId = '195'
+            break
+          case '70':
+            functionType = '8'
+            vmConfigId = '196'
+            break
+          case '71':
+            functionType = '8'
+            vmConfigId = '194'
+            break
+          case '72':
+            functionType = '8'
+            vmConfigId = '195'
             break
         }
         this.vmConfig = vmConfigId
-        let url = 'user/getRemainderFrozen.do'
-        let params = {
-          eachFrozenMoney: this.cashPledge,
-          describe: '领取主机',
-          operationType: '领取主机',
-          thawCondition: '删除主机',
-          vmConfig: this.vmConfig
-        }
-        axios.post(url, params).then(response => {
-          if (response.data.status == 1 && response.status == 200) {
-            let url = 'activity/getFreeHost.do'
-            axios.get(url, {
-              params: {
-                vmConfigId: vmConfigId,
-                osType: this.currentSceneGroup[this.index1].configGroup[this.index2].system,
-                defzoneid: this.currentSceneGroup[this.index1].configGroup[this.index2].zoneId,
-                templateFunction: '1',
-                functionType: functionType
-              }
-            }).then(res => {
-              if (res.status == 200 && res.data.status == 1) {
-                this.showModal.getSuccessModal = true
-              } else {
-                this.$message.info({
-                  content: res.data.message
-                })
-              }
-            })
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
+        if (this.index1 < 4) {
+          let url = 'user/getRemainderFrozen.do'
+          let params = {
+            eachFrozenMoney: this.cashPledge,
+            describe: '领取主机',
+            operationType: '领取主机',
+            thawCondition: '删除主机',
+            vmConfig: this.vmConfig
           }
-        })
+          axios.post(url, params).then(response => {
+            if (response.data.status == 1 && response.status == 200) {
+              let url = 'activity/getFreeHost.do'
+              axios.get(url, {
+                params: {
+                  vmConfigId: vmConfigId,
+                  osType: this.currentSceneGroup[this.index1].configGroup[this.index2].system,
+                  defzoneid: this.currentSceneGroup[this.index1].configGroup[this.index2].zoneId,
+                  templateFunction: '1',
+                  functionType: functionType
+                }
+              }).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.showModal.getSuccessModal = true
+                } else {
+                  this.$message.info({
+                    content: res.data.message
+                  })
+                }
+              })
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
+        } else {
+          let url = 'user/getRemainderFrozen.do'
+          let params = {
+            eachFrozenMoney: this.cashPledge,
+            describe: '领取GPU服务器',
+            operationType: '领取GPU服务器',
+            thawCondition: '删除GPU服务器',
+            vmConfig: this.vmConfig
+          }
+          axios.post(url, params).then(response => {
+            if (response.data.status == 1 && response.status == 200) {
+              let url = 'activity/getFreeGPU.do'
+              axios.get(url, {
+                params: {
+                  vmConfigId: vmConfigId,
+                  osType: this.currentSceneGroup[this.index1].configGroup[this.index2].system,
+                  defzoneid: this.currentSceneGroup[this.index1].configGroup[this.index2].zoneId,
+                  templateFunction: '1',
+                  functionType: functionType
+                }
+              }).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.showModal.getSuccessModal = true
+                } else {
+                  this.$message.info({
+                    content: res.data.message
+                  })
+                }
+              })
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
+        }
       },
       // 快速认证时发送验证码
       sendCode() {
@@ -2406,6 +2588,9 @@
               font-family: MicrosoftYaHei;
               font-weight: 600;
               color: rgba(255, 255, 255, 1);
+              &.gpu {
+                padding: 29px 20px 28px;
+              }
             }
             .cf-body {
               padding: 20px 20px;

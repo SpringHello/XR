@@ -41,7 +41,7 @@
               <li>3、购买畅享新睿云</li>
             </ul>
           </div>
-          <button @click="$router.push('register')">立即注册</button>
+          <button @click="$LR({type:'register'})">立即注册</button>
         </div>
       </div>
     </div>
@@ -63,9 +63,9 @@
             </div>
             <div class="right">
               <p><span>￥</span>38<span>现金券</span></p>
-              <button v-if="item.time !== 0">立即领取</button>
-              <button v-if="item.time === 0 && item.ticket !== 0" :class="{canGet: true}" @click="getTicket">立即领取</button>
-              <button v-if="item.time === 0 && item.ticket === 0">本场结束</button>
+           <!--   <button v-if="item.time !== 0">立即领取</button>-->
+              <button @click="getTicket">立即领取</button>
+             <!-- <button v-if="item.time === 0 && item.ticket === 0">本场结束</button>-->
             </div>
           </ul>
         </div>
@@ -180,7 +180,7 @@
   }
   export default {
     data() {
-      window.scrollTo( 0, 0 );
+      window.scrollTo(0, 0);
       return {
         img: false,
         loginModal: false,
@@ -444,7 +444,7 @@
         var minSecondInMinute = 1000 * 60
         var minSecondInHour = minSecondInMinute * 60
 
-        var setTime =  setInterval(() => {
+        var setTime = setInterval(() => {
           serviceTime += 1000
           hours.forEach((hour, index) => {
             let reduce = hour - serviceTime
@@ -470,7 +470,7 @@
       },
       setTicket(data) {
         if (data.length > 0) {
-          this.timeList.forEach((item,index) => {
+          this.timeList.forEach((item, index) => {
             item.ticket = data[index]
           })
         } else {
@@ -481,7 +481,7 @@
       },
       getTicket() {
         if (this.$store.state.userInfo == null) {
-          this.loginModal = true
+          this.$LR({type: 'login'})
           return
         }
         var url = `ticket/takeTicket.do`
@@ -501,7 +501,7 @@
       },
       productBuy(item, index) {
         if (this.$store.state.userInfo == null) {
-          this.loginModal = true
+          this.$LR({type: 'login'})
           return
         }
         var paramsNum = []
@@ -509,18 +509,18 @@
           return content.num.match(/\d+/g).join()
         })
         var params = {
-          zoneId:'39a6af0b-6624-4194-b9d5-0c552d903858',
-          timeType:'current',
-          timeValue:'1',
-          templateId:item.system,
-          isAutoRenew:'0',
-          count:'1',
-          cpuNum:paramsNum[0],
-          memory:paramsNum[1],
-          bandWidth:paramsNum[3],
-          rootDiskType:'ssd',
-          networkId:'no',
-          vpcId:'no'
+          zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858',
+          timeType: 'current',
+          timeValue: '1',
+          templateId: item.system,
+          isAutoRenew: '0',
+          count: '1',
+          cpuNum: paramsNum[0],
+          memory: paramsNum[1],
+          bandWidth: paramsNum[3],
+          rootDiskType: 'ssd',
+          networkId: 'no',
+          vpcId: 'no'
         }
         this.$http.get('information/deployVirtualMachine.do', {params}).then((response) => {
             if (response.status == 200 && response.data.status == 1) {
@@ -812,7 +812,7 @@
           cursor: pointer;
           font-size: 18px;
           line-height: 18px;
-          box-shadow: 0px 7px 26px -10px rgba(242,102,103,1)
+          box-shadow: 0px 7px 26px -10px rgba(242, 102, 103, 1)
         }
       }
     }

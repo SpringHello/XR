@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="wrapper-form">
         <div class="banner" v-show="loginShow">
-          <my-carousel :interval=5000 class="carousel" @on-change="change">
+          <my-carousel :interval=5000 class="carousel">
             <!-- <my-carousel-item class="carousel-item">
                <div @click="push('dbActive')"
                     style="cursor: pointer;background: #F56B23;">
@@ -23,12 +23,11 @@
                </div>
              </my-carousel-item>-->
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('fractive')" class="fr-active">
+              <div @click="$router.push('AnniversaryActive')" class="aa-active">
               </div>
             </my-carousel-item>
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('groupBooking')" class="gb-active">
-
+              <div @click="$router.push('fractive')" class="fr-active">
               </div>
             </my-carousel-item>
           </my-carousel>
@@ -684,13 +683,13 @@
           padding: 7px 29px;
         }
       }
+      .aa-active{
+        height: 100%;
+        background: #FFF url("../../assets/img/login/aa-banner.png") no-repeat;
+      }
       .fr-active {
         height: 100%;
         background: #FFF url("../../assets/img/login/fr-banner.png") no-repeat;
-      }
-      .gb-active {
-        height: 100%;
-        background: #FFF url("../../assets/img/login/gb-banner.png") no-repeat;
       }
     }
     .ivu-carousel-item:nth-last-child(1) .demo-carousel {

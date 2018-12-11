@@ -111,8 +111,8 @@
                                placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
-              <Button type="primary" style="margin-left: 120px" @click="orderRefund" :disabled="refundDisabled">退款</Button>
-              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button>
+              <!--<Button type="primary" style="margin-left: 120px" @click="orderRefund" :disabled="refundDisabled">退款</Button>-->
+              <Button type="primary" style="margin-left: 195px" @click="orderPay" :disabled="payDisabled">支付</Button>
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
             </div>
@@ -521,7 +521,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import axios from 'axios'
+  import axios from 'axios'
+
   export default {
     data() {
       const validateInvoice = (rule, value, callback) => {
@@ -703,7 +704,7 @@ import axios from 'axios'
             align: 'left',
             width: 110,
             render: (h, params) => {
-              return h('span', params.row.maketicketover == 1 ? '已使用' : '未使用')
+              return h('span', params.row.maketicketover == 0 ? '未使用' : params.row.maketicketover == 1 ? '已使用' : '已失效')
             }
           },
           {
@@ -2345,7 +2346,7 @@ import axios from 'axios'
           return item.ordernumber
         })
         let url = 'user/returnMoneyOrder.do'
-        axios.get(url, {
+        this.$http.get(url, {
           params: {
             orderNumber: orderNumber + ''
           }
@@ -2383,7 +2384,6 @@ import axios from 'axios'
         }
       },
       refundDisabled() {
-        console.log(this.orderNumber);
         if (this.orderNumber.some(checkReturnMoneyFlag) || this.orderNumber.length === 0) {
           return true
         } else {

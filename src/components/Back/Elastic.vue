@@ -19,12 +19,14 @@
           <TabPane label="启动配置">
             <div>
               <Button type="primary" @click="$router.push({path:'newAddElastic'})" style="margin-bottom: 15px;">新建</Button>
+              <a href="https://www.xrcloud.net/ruicloud/documentInfo/wHfINiD0y/wHy9ceWfZ" style="float: right;line-height: 30px;" target="_blank">查看帮助文档</a>
               <Table :columns="settingList" :data="settingData"></Table>
             </div>
           </TabPane>
           <TabPane :label="Groups">
             <div>
               <Button type="primary" @click="eject" style="margin-bottom: 15px;">新建</Button>
+              <a href="https://www.xrcloud.net/ruicloud/documentInfo/wHfINiD0y/wZvPELK4R" style="float: right;line-height: 30px;" target="_blank">查看帮助文档</a>
               <Table :columns="telescopicList" :data="telescopicData"></Table>
             </div>
           </TabPane>

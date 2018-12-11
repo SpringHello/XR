@@ -78,6 +78,8 @@
           this.result = response.data.data
           this.choosend = JSON.parse(sessionStorage.getItem('suffixChange')).en
           this.showTemplate = false
+        } else {
+          this.$Message.info(response.data.message)
         }
       })
     },
