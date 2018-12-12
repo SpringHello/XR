@@ -2,147 +2,92 @@
   <div class="login-wrapper">
     <div class="wrapper">
       <div class="wrapper-form">
-        <p class="title">忘记密码 | 重置密码</p>
+        <div class="banner">
+          <my-carousel :interval=5000 class="carousel" >
+            <!-- <my-carousel-item class="carousel-item">
+               <div @click="push('dbActive')"
+                    style="cursor: pointer;background: #F56B23;">
+                 <div class="db-active">
+                   <div class="db-active-content">
+                     <div class="db-active-text">
+                       <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
+                       <p>热门云数据库产品一网打尽</p>
+                       <p><span>1元试用60天</span>每天不限量</p>
+                       <button>立即试用</button>
+                     </div>
+                     <div class="db-active-img">
+                       <img src="../../assets/img/active/dbActive/dba-banner8.png"/>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </my-carousel-item>-->
+            <my-carousel-item class="carousel-item">
+              <div @click="$router.push('AnniversaryActive')" class="aa-active">
+              </div>
+            </my-carousel-item>
+            <my-carousel-item class="carousel-item">
+              <div @click="$router.push('fractive')" class="fr-active">
+              </div>
+            </my-carousel-item>
+          </my-carousel>
+        </div>
         <div class="login-form">
+          <div class="head">
+            <span>重置密码</span>
+          </div>
           <div class="body">
-            <div class="process-header">
-              <ul style="display:flex;">
-                <li v-for="(item,index) in stepList" :key="index" class="process_text" :class="item.style">
-                  <div class="process_pace" v-if="item.failOrSuccess == false">{{index+1}}</div>
-                  <div class="process_ok" v-else></div>
-                  <span>{{item.value}}</span>
-                  <span class="line" :class="{lineselected: item.failOrSuccess}"></span>
-                </li>
-              </ul>
-            </div>
-
-            <!-- 输入账号 -->
-            <div class="verification" v-if="index == 1" :class="style">
-              <p class="ver_p">请输入您的账号</p>
-              <Form ref="formValidate" :model="formValidate" :rules="ruleValidate">
-                <FormItem prop="account">
-                  <x-Input :icon='url.icon1' v-model="formValidate.account" placeholder='请输入账号'></x-Input>
-                  <!-- <Input  v-model="formValidate.account"></Input> -->
-                </FormItem>
-              </Form>
-              <!-- <div class="ver_input" :style="style">
-                <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction" />
-                <p style="color:#ed3f14;">{{messages}}</p>
-              </div> -->
-              <div style="float:right;">
-                <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;">现账号无法使用</p>
-                <Button type="primary" style="width:110px" @click="next()">下一步</Button>
-              </div>
-            </div>
-
-            <!-- 账号能用 -->
-            <div class="verification" v-if="index == 2">
-              <p class="ver_p">您正在为账户：{{account}}重置密码，请选择方式验证。</p>
-              <div class="verifcation_box" v-for="(item,index) in verificationList" :key="index" @click="jump(index)">
-                <div>
-                  <img :src='item.icon'>
-                </div>
-                <div class="ver_font">
-                  <p class="ver_p1">{{item.title}}</p>
-                  <p class="ver_p2">{{item.des}}</p>
-                </div>
-                <div class="ver_arrow" style="position:relative;right:-91px;top:-10px;">
-                </div>
-              </div>
-            </div>
-
-            <!-- 账号不能用 -->
-            <div class="verification" style="margin-top:74px;" v-if="index == 2">
-              <div class="verifcation_box" v-for="(item,index) in popleVerList" :key="index" @click="jump(index)">
-                <div>
-                  <img :src='item.icon'>
-                </div>
-                <div class="ver_font">
-                  <p class="ver_p1">{{item.title}}</p>
-                  <p class="ver_p2">{{item.des}}</p>
-                </div>
-                <div class="ver_arrow" style="position:relative;right:-91px;top:-10px;">
-                </div>
-              </div>
-            </div>
-
-            <!-- 邮箱验证方式 -->
-            <div class="verification" v-if="verPage == 'email'">
-              <p class="ver_p">我们会发送一封验证邮件到您的邮箱，请注意查收</p>
-              <div class="ver_input" :style="style">
-                <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction"/>
-              </div>
-              <div class="v_email">
-                前往邮箱
-              </div>
-            </div>
-
-            <!-- 手机验证方式 -->
-            <div class="verification" v-if="verPage == 'phone'">
-              <p class="ver_p">请输入有效手机号码用于接收验证码</p>
-              <div class="ver_input" :style="style">
-                <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction"/>
-              </div>
-            </div>
-
-            <!-- 身份证验证方式 -->
-            <div class="verification" v-if="verPage == 'card'">
+            <form>
               <div>
-                <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.account" placeholder='请输入您的姓名'></x-Input>
-                <x-Input ref="xinput" :icon='url.iconCard' v-model="formValidate.account" placeholder='请输入您的身份证账号'></x-Input>
-                <Button type="primary">下一步</Button>
+                <span :class="{warning:vailForm.loginname.warning}">{{vailForm.loginname.message}}</span>
+                <input type="text" autocomplete="off" v-model="form.loginname" :placeholder="form.loginnamePlaceholder"
+                       @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
               </div>
-              <!-- 上传身份证照片 -->
-              <div>
-                <Upload
-                  ref="upload"
-                  :show-upload-list="false"
-                  :default-file-list="defaultList"
-                  :on-success="handleSuccess"
-                  :format="['jpg','jpeg','png']"
-                  :max-size="2048"
-                  :on-format-error="handleFormatError"
-                  :on-exceeded-size="handleMaxSize"
-                  :before-upload="handleBeforeUpload"
-                  multiple
-                  type="drag"
-                  action=""
-                  style="display: inline-block;">
-                  <div>
 
-                  </div>
-                </Upload>
-                <p>提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p>
+              <div style="position:relative" class="code">
+                <span>{{vailForm.code.message}}</span>
+                <input type="text" autocomplete="off" v-model="form.code" name="vailCode"
+                       :placeholder="form.codePlaceholder" @blur="vail('code')" @focus="focus('code')"
+                       @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
+                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
               </div>
-            </div>
 
-            <!-- 人工申诉 -->
-            <div class="verification" v-if="verPage == 'people'">
-
-            </div>
-
-            <!-- 设置新密码 -->
-            <div class="verification" v-if="index == 3">
-              <div class="ver_input" :style="style">
-                <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                <input v-model="oldPaw" class="input" placeholder="请输入账号" @blur="focusFunction"/>
+              <div style="position:relative">
+                <span>{{vailForm.vailCode.message}}</span>
+                <input type="text" v-model="form.vailCode" name="vailCode" :placeholder="form.vailCodePlaceholder"
+                       @blur="vail('vailCode')" @focus="focus('vailCode')" @input="isCorrect('vailCode')">
+                <button class="sendCode" :class="{codeDisabled:codePlaceholder!='发送验证码'}" @click.prevent="sendCode"
+                        :disabled="codePlaceholder!='发送验证码'">{{codePlaceholder}}
+                </button>
               </div>
-              <div class="ver_input" :style="style">
-                <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                <input v-model="newPaw" class="input" placeholder="请输入账号" @blur="focusFunction"/>
-              </div>
-            </div>
 
-            <!-- 完成 -->
-            <div class="verification" v-if="index == 4">
-              <div>
-                <img src="../../assets/img/updatePaw/shape.png">
-                <span>重置密码成功</span>
+              <div style="position: relative">
+                <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
+                <input v-show="!form.showPassword" type="password" autocomplete="off" v-model="form.password"
+                       :placeholder="form.passwordPlaceholder"
+                       @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')">
+                <input v-show="form.showPassword" autocomplete="off" v-model="form.password"
+                       :placeholder="form.passwordPlaceholder"
+                       @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')">
+                <img v-show="!form.showPassword" src="../../assets/img/reset/closeEye.png" class="eyeIcon"
+                     @click="form.showPassword=!form.showPassword">
+                <img v-show="form.showPassword" src="../../assets/img/reset/eye.png" class="eyeIcon"
+                     @click="form.showPassword=!form.showPassword">
               </div>
-              <div>立即登录</div>
+              <!--<div>
+                <span>{{vailForm.confirmPassword.message}}</span>
+                <input type="password" autocomplete="off" v-model="form.confirmPassword"
+                       :placeholder="form.confirmPasswordPlaceholder"
+                       @blur="vail('confirmPassword')" @focus="focus('confirmPassword')">
+              </div>-->
+            </form>
+          </div>
+          <div class="foot">
+            <button @click="submit">确认</button>
+            <div>
+              <router-link to="register" style="color:#0EB4FA;cursor:pointer;float:left;font-size: 14px">
+                立即注册
+              </router-link>
             </div>
           </div>
         </div>
@@ -154,8 +99,26 @@
 <script type="text/ecmascript-6">
   import regExp from '../../util/regExp'
   import axios from '@/util/axiosInterceptor'
-  import throttle from 'throttle-debounce/throttle'
-  import popk from '../../myView/input/main'
+  import throttle  from 'throttle-debounce/throttle'
+  var messageMap = {
+    loginname: {
+      placeholder: '登录邮箱/手机号',
+      errorMessage: '请输入正确的邮箱/手机号'
+    },
+    password: {
+      placeholder: '请输入新密码',
+      errorMessage: '密码必须包含数字和字母大小写'
+    },
+    confirmPassword: {
+      placeholder: '请确认新密码'
+    },
+    vailCode: {
+      placeholder: '请输入验证码'
+    },
+    code: {
+      placeholder: '请输入图片验证码'
+    }
+  }
 
   export default {
 
@@ -199,96 +162,12 @@
             warning: false
           }
         },
-
-        //步骤集合
-        stepList: [
-          {
-            value: '输入账号',
-            style: 'process_text_checked',
-            failOrSuccess: false
-          },
-          {
-            value: '选择验证方式',
-            style: '',
-            failOrSuccess: false
-          },
-          {
-            value: '身份验证',
-            style: '',
-            failOrSuccess: false
-          },
-          {
-            value: '设置新密码',
-            style: '',
-            failOrSuccess: false
-          },
-          {
-            value: '完成',
-            style: '',
-            failOrSuccess: false
-          }
-        ],
-
-        verificationList: [
-          {
-            icon: require('../../assets/img/updatePaw/paw_email.png'),
-            title: '邮箱验证',
-            des: '您需要使用注册邮箱进行身份验证'
-          },
-          {
-            icon: require('../../assets/img/updatePaw/paw_phone.png'),
-            title: '手机验证',
-            des: '您需要使用注册手机进行身份验证'
-          },
-          {
-            icon: require('../../assets/img/updatePaw/paw_user.png'),
-            title: '人工申诉',
-            des: '若您未认证且手机和邮箱均不可使用'
-          }
-        ],
-
-        popleVerList: [
-          {
-            icon: require('../../assets/img/updatePaw/paw_card.png'),
-            title: '我已实名验证',
-            des: '您需要使用实名认证信息进行身份验证'
-          },
-          {
-            icon: require('../../assets/img/updatePaw/paw_user.png'),
-            title: '我没有实名认证',
-            des: '若您未认证可以通过人工客服重制账号'
-          },
-        ],
-        formValidate: {
-          account: ''
-        },
-        ruleValidate: {
-          account: [
-            {required: true, message: '请输入账号', trigger: 'blur'}
-          ]
-        },
         isemail: '1',
         type: '1',
-        codePlaceholder: '发送验证码',
-
-        index: 1,
-
-        //验证
-        verPage: '',
-        style: '',
-        account: '',
-        newPaw: '',
-        oldPaw: '',
-        url: {
-          icon1: require('../../assets/img/updatePaw/paw_zhanghao.png'),
-          iconCard: require('../../assets/img/updatePaw/paw_card.png')
-        }
+        codePlaceholder: '发送验证码'
       }
     },
-    components: {
-      'x-Input': popk
-    },
-    created() {
+    created(){
     },
     methods: {
       vail(field) {
@@ -418,52 +297,12 @@
             }
           }
         })
-      },
-
-      //跳转相应验证
-      jump(index) {
-        this.index = 3;
-        if (index == 0) {
-          this.verPage = 'email'
-        } else if (index == 1) {
-          this.verPage = 'phone'
-        } else if (index == 2) {
-          this.verPage = 'card'
-        } else if (index == 3) {
-          this.verPage = 'people'
-        }
-      },
-      focusFunction() {
-        if (this.account == "" || !regExp.phoneVail(this.account)) {
-          this.style = 'border:1px solid #ed3f14;';
-        } else {
-          this.style = ''
-        }
-      },
-      next() {
-        return;
-        if (regExp.phoneVail(this.account)) {
-          this.account = this.account.replace(this.account.substring(3, 7), '****')
-          this.index = 2;
-        }
       }
     },
     computed: {
       disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false && this.vailForm.password.warning == false)
-      },
-    },
-    watch: {
-      index() {
-        for (let i = 1; i < this.stepList.length + 1; i++) {
-          if (this.index === i) {
-            this.stepList[i - 1].style = 'process_text_checked';
-          } else if (i < this.index) {
-            this.stepList[i - 1].failOrSuccess = true;
-            this.stepList[i - 1].style = '';
-          }
-        }
-      },
+      }
     }
   }
 </script>
@@ -472,7 +311,7 @@
   .login-wrapper {
     @diff: 129px;
     min-height: calc(~"100% - @{diff}");
-    background: linear-gradient(#F6FBFE, #D4E9FD);
+    background: #F4F4F4;
     width: 100%;
     .header {
       width: 100%;
@@ -509,20 +348,57 @@
     }
     .wrapper {
       width: 100%;
-      padding: 21px 0px;
+      padding: 120px 0px;
       .wrapper-form {
         width: 1200px;
         margin: 0px auto;
+        display: flex;
         justify-content: space-between;
         align-items: center;
-        .title {
-          color: #333333;
-          font-size: 16px;
-          font-family: 'MicrosoftYaHei';
-          margin-bottom: 19px;
+      }
+    }
+    .banner {
+      height: 493px;
+      width: 730px;
+      cursor: pointer;
+      .banner-text {
+        padding: 140px 0 0 53px;
+        > p {
+          font-size: 24px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(51, 51, 51, 1);
+          line-height: 33px;
+        }
+        p:nth-child(2) {
+          margin-top: 9px;
+          font-size: 40px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 56px;
+        }
+        p:nth-child(3) {
+          margin-top: 8px;
+          font-size: 24px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 33px;
+          span {
+            color: rgba(255, 70, 43, 1);
+            margin-right: 20px;
+          }
+        }
+        button{
+          outline: none;
+          cursor: pointer;
+          border: none;
+          margin-top: 32px;
+          background:rgba(255,70,43,1);
+          border-radius:20px;
+          font-size:18px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color:rgba(255,255,255,1);
+          padding: 7px 29px;
         }
       }
-      .aa-active {
+      .aa-active{
         height: 100%;
         background: #FFF url("../../assets/img/login/aa-banner.png") no-repeat;
       }
@@ -534,15 +410,12 @@
     .ivu-carousel-item:nth-last-child(1) .demo-carousel {
       background: url(../../assets/img/login/login-banner.png) no-repeat center;
     }
-
-    .ver_p {
-      color: #333;
-      font-size: 14px;
-      margin-bottom: 20px;
+    .ivu-carousel-item:nth-last-child(2) .demo-carousel{
+      background: url(../../assets/img/login/login-banner-objactivity.png) no-repeat center;
     }
-
     .login-form {
-      height: 685px;
+      width: 421px;
+      height: 493px;
       background: #FFFFFF;
       border: 1px solid rgba(161, 161, 161, 0.00);
       box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
@@ -568,162 +441,103 @@
         form {
           margin-top: 5px;
         }
-        .process-header {
-          display: flex;
-          justify-content: center;
-          padding-top: 40px;
-        }
-        .process_text {
-          display: inline-block;
-          font-family: 'HelveticaNeue';
-          text-align: center;
-          color: #999999;
-          .process_pace {
-            margin-right: 10px;
-            border: 1px solid #999999;
+        input {
+          border: none;
+          border-bottom: 1px solid #ccc;
+          outline: none;
+          background: rgba(0, 0, 0, 0);
+          height: 50px;
+          font-size: 14px;
+          width: 80%;
+          margin: 0px auto;
+          display: block;
+          margin-bottom: 20px;
+          &:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px white inset;
+          }
+          &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+            font-family: PingFangSC-Regular;
             font-size: 14px;
-            width: 28px;
-            height: 28px;
-            display: inline-block;
-            border-radius: 50%;
-            line-height: 28px;
+            color: #B6B6B6;
           }
-          .process_ok {
-            margin-right: 10px;
-            display: inline-block;
-            border: 1px solid #2A99F2;
-            background: #ffffff;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            line-height: 25px;
-          }
-          .line {
-            width: 70px;
-            height: 1px;
-            margin: 0 20px;
-            background: #E9E9E9;
-            display: inline-block;
-            vertical-align: middle;
-          }
-          &:last-of-type {
-            .line {
-              display: none;
-            }
-          }
-          .lineselected {
-            background: #2A99F2;
-          }
-          .process_ok::before {
-            content: '';
-            width: 7px;
-            height: 12px;
-            border-right: 2px solid #2A99F2;
-            border-bottom: 2px solid #2A99F2;
-            display: inline-block;
-            border-bottom-right-radius: 2px;
-            transform: translateY(0px) rotate(48deg);
-          }
-        }
-        //步骤选择效果
-        .process_text_checked {
-          display: inline-block;
-          font-family: 'HelveticaNeue';
-          text-align: center;
-          .process_pace {
-            background: #4A97EE;
-            border: 1px solid #4A97EE;
-            color: #ffffff;
+          &::-moz-placeholder { /* Firefox 19+ */
+            font-family: PingFangSC-Regular;
             font-size: 14px;
-            width: 28px;
-            height: 28px;
-            display: inline-block;
-            border-radius: 50%;
-            line-height: 28px;
+            color: #B6B6B6;
           }
-          span {
-            color: #333333;
+          &:-ms-input-placeholder { /* IE 10+ */
+            font-family: PingFangSC-Regular;
+            font-size: 14px;
+            color: #B6B6B6;
+          }
+          &:-moz-placeholder { /* Firefox 18- */
+            font-family: PingFangSC-Regular;
+            font-size: 14px;
+            color: #B6B6B6;
+          }
+
+        }
+        span {
+          display: block;
+          width: 80%;
+          margin: 0px auto;
+          font-family: PingFangSC-Regular;
+          font-family: PingFangSC-Regular;
+          font-size: 14px;
+          color: #B6B6B6;
+          font-size: 14px;
+          line-height: 14px;
+          height: 14px;
+          transition: all .5s;
+          &.warning {
+            color: #F24747;
           }
         }
-        @color: #333333;
-        .verification {
-          width: 360px;
-          margin: 0 auto;
-          margin-top: 39px;
-          .v_email {
-            width: 124px;
-            height: 38px;
-            background: rgb(255, 98, 75);
-            border-radius: 4px;
-            color: rgb(255, 255, 255);
-            line-height: 38px;
-            margin-left: 234px;
-            text-align: center;
-            transition: background .2s ease-in-out;
+        .code {
+          img {
+            width: 80px;
+            height: 30px;
+            position: absolute;
+            display: block;
+            bottom: 12px;
+            right: 43px;
+            cursor: pointer;
+            //background: #4990E2;
+            //border: 1px solid white;
+            border-radius: 3px;
+            font-family: PingFangSC-Regular;
+            font-size: 11px;
+            color: #FFFFFF;
+            letter-spacing: 0.71px;
+            outline: none;
           }
-          .v_email:hover {
-            background: rgb(247, 116, 96);
+        }
+        .sendCode {
+          width: 80px;
+          height: 30px;
+          position: absolute;
+          text-align: center;
+          line-height: 27px;
+          display: block;
+          bottom: 12px;
+          right: 43px;
+          cursor: pointer;
+          background: #4990E2;
+          border: 1px solid rgba(15, 179, 250, 0.00);
+          font-family: PingFangSC-Regular;
+          font-size: 11px;
+          color: #FFFFFF;
+          letter-spacing: 0.71px;
+          outline: none;
+          &.codeDisabled {
             cursor: pointer;
           }
-          .v_input {
-            border: 1px solid #ed3f14;
-          }
-
-          .input {
-            width: 85%;
-            border: none;
-            vertical-align: top;
-            height: 44px;
-            margin-left: 20px;
-            outline: 0;
-            text-decoration: none;
-          }
-
-          .verifcation_box {
-            padding: 21px 20px 23px 21px;
-            margin-bottom: 12px;
-            width: 360px;
-            height: 80px;
-            border-radius: 4px;
-            background: rgba(244, 250, 255, 1);
-            & > div {
-              display: inline-block;
-            }
-            .ver_font {
-              vertical-align: top;
-              margin-left: 4px;
-              .ver_p1 {
-                color: @color;
-                font-size: 14px;
-                margin-bottom: 10px;
-              }
-              .ver_p2 {
-                color: #666666;
-              }
-            }
-            @yan: #999999;
-            .ver_arrow {
-              border-bottom: 1px solid @yan;
-              border-right: 1px solid @yan;
-              width: 8px;
-              height: 8px;
-              transform: translateY(0px) rotate(-48deg)
-            }
-
-          }
-          .verifcation_box:hover {
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0px 3px 12px 0px rgba(139, 139, 139, 0.46);
-            cursor: pointer;
-            @color: #2A99F2;
-            .ver_p1 {
-              color: @color
-            }
-            .ver_arrow {
-              border-bottom: 1px solid @color;
-              border-right: 1px solid @color;
-            }
-          }
+        }
+        .eyeIcon {
+          position: absolute;
+          right: 52px;
+          top: 33px;
+          cursor: pointer;
         }
       }
       .foot {

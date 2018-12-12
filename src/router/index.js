@@ -113,6 +113,7 @@ const NewLogin = () =>import('@/components/LR/newLogin')
 const Register = () =>import('@/components/LR/Register')
 const Reset = () =>import('@/components/LR/Reset')
 const RegisterSuccess = () =>import('@/components/LR/RegisterSuccess')
+const ResetNew = () =>import('@/components/LR/ResetNew')
 
 // 后台页面子路由
 // import Overview from '@/components/Back/Overview'
@@ -452,7 +453,8 @@ var router = new Router({
         {path: 'newLogin', name: 'newLogin', component: NewLogin},
         {path: 'register', name: 'register', component: Register},
         {path: 'reset', name: 'reset', component: Reset},
-        {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess}
+        {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess},
+        {path: 'resetNew',name:'resetNew',component:ResetNew}
       ]
     },
     {path: '/ruicloud/link', name: 'link', component: Link},
