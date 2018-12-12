@@ -10,7 +10,7 @@
                 <li v-for="(item,index) in stepList" :key="index" class="process_text" :class="item.style">
                   <div class="process_pace" v-if="item.failOrSuccess == false">{{index+1}}</div>
                   <div class="process_ok" v-else></div>
-                  <span >{{item.value}}</span>
+                  <span>{{item.value}}</span>
                   <span class="line" :class="{lineselected: item.failOrSuccess}"></span>
                 </li>
               </ul>
@@ -18,27 +18,27 @@
 
             <!-- 输入账号 -->
             <div class="verification" v-if="index == 1" :class="style">
-               <p class="ver_p" >请输入您的账号</p>
-              <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" >
+              <p class="ver_p">请输入您的账号</p>
+              <Form ref="formValidate" :model="formValidate" :rules="ruleValidate">
                 <FormItem prop="account">
-                  <x-Input  :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入账号' ></x-Input>
+                  <x-Input :icon='url.icon1' v-model="formValidate.account" placeholder='请输入账号'></x-Input>
                   <!-- <Input  v-model="formValidate.account"></Input> -->
                 </FormItem>
               </Form>
-                <!-- <div class="ver_input" :style="style">
-                  <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                  <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction" />
-                  <p style="color:#ed3f14;">{{messages}}</p>
-                </div> -->
+              <!-- <div class="ver_input" :style="style">
+                <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
+                <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction" />
+                <p style="color:#ed3f14;">{{messages}}</p>
+              </div> -->
               <div style="float:right;">
-                 <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;">现账号无法使用</p>
-                 <Button type="primary" style="width:110px" @click="next()">下一步</Button>
+                <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;">现账号无法使用</p>
+                <Button type="primary" style="width:110px" @click="next()">下一步</Button>
               </div>
             </div>
 
             <!-- 账号能用 -->
             <div class="verification" v-if="index == 2">
-               <p class="ver_p">您正在为账户：{{account}}重置密码，请选择方式验证。</p>
+              <p class="ver_p">您正在为账户：{{account}}重置密码，请选择方式验证。</p>
               <div class="verifcation_box" v-for="(item,index) in verificationList" :key="index" @click="jump(index)">
                 <div>
                   <img :src='item.icon'>
@@ -66,14 +66,14 @@
                 </div>
               </div>
             </div>
-            
+
             <!-- 邮箱验证方式 -->
             <div class="verification" v-if="verPage == 'email'">
               <p class="ver_p">我们会发送一封验证邮件到您的邮箱，请注意查收</p>
-               <div class="ver_input" :style="style">
-                 <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                 <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction" />
-               </div>
+              <div class="ver_input" :style="style">
+                <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
+                <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction"/>
+              </div>
               <div class="v_email">
                 前往邮箱
               </div>
@@ -83,16 +83,16 @@
             <div class="verification" v-if="verPage == 'phone'">
               <p class="ver_p">请输入有效手机号码用于接收验证码</p>
               <div class="ver_input" :style="style">
-                 <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                 <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction" />
-               </div>
+                <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
+                <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction"/>
+              </div>
             </div>
 
             <!-- 身份证验证方式 -->
             <div class="verification" v-if="verPage == 'card'">
               <div>
-                <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入您的姓名' ></x-Input>
-                <x-Input ref="xinput" :icon='url.iconCard' v-model="formValidate.account"  placeholder='请输入您的身份证账号' ></x-Input>
+                <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.account" placeholder='请输入您的姓名'></x-Input>
+                <x-Input ref="xinput" :icon='url.iconCard' v-model="formValidate.account" placeholder='请输入您的身份证账号'></x-Input>
                 <Button type="primary">下一步</Button>
               </div>
               <!-- 上传身份证照片 -->
@@ -112,10 +112,10 @@
                   action=""
                   style="display: inline-block;">
                   <div>
-                     
+
                   </div>
-              </Upload>
-                <p>提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
+                </Upload>
+                <p>提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p>
               </div>
             </div>
 
@@ -127,13 +127,13 @@
             <!-- 设置新密码 -->
             <div class="verification" v-if="index == 3">
               <div class="ver_input" :style="style">
-                 <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                 <input v-model="oldPaw" class="input" placeholder="请输入账号" @blur="focusFunction" />
-               </div>
-               <div class="ver_input" :style="style">
-                 <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                 <input v-model="newPaw" class="input" placeholder="请输入账号" @blur="focusFunction" />
-               </div>
+                <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
+                <input v-model="oldPaw" class="input" placeholder="请输入账号" @blur="focusFunction"/>
+              </div>
+              <div class="ver_input" :style="style">
+                <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
+                <input v-model="newPaw" class="input" placeholder="请输入账号" @blur="focusFunction"/>
+              </div>
             </div>
 
             <!-- 完成 -->
@@ -154,11 +154,12 @@
 <script type="text/ecmascript-6">
   import regExp from '../../util/regExp'
   import axios from '@/util/axiosInterceptor'
-  import throttle  from 'throttle-debounce/throttle'
+  import throttle from 'throttle-debounce/throttle'
   import popk from '../../myView/input/main'
-  export default{
 
-    data(){
+  export default {
+
+    data() {
       return {
         imgSrc: 'user/getKaptchaImage.do',
         form: {
@@ -199,98 +200,98 @@
           }
         },
 
-         //步骤集合
-        stepList:[
-           {
-             value:'输入账号' ,
-             style:'process_text_checked',
-             failOrSuccess:false
+        //步骤集合
+        stepList: [
+          {
+            value: '输入账号',
+            style: 'process_text_checked',
+            failOrSuccess: false
           },
           {
-             value:'选择验证方式' ,
-             style:'',
-             failOrSuccess:false
+            value: '选择验证方式',
+            style: '',
+            failOrSuccess: false
           },
           {
-            value:'身份验证',
-            style:'',
-             failOrSuccess:false
+            value: '身份验证',
+            style: '',
+            failOrSuccess: false
           },
           {
-            value:'设置新密码',
-            style:'',
-             failOrSuccess:false
+            value: '设置新密码',
+            style: '',
+            failOrSuccess: false
           },
           {
-            value:'完成',
-            style:'',
-             failOrSuccess:false
+            value: '完成',
+            style: '',
+            failOrSuccess: false
           }
         ],
 
-        verificationList:[
-           {
-             icon:require('../../assets/img/updatePaw/paw_email.png'),
-             title:'邮箱验证',
-             des:'您需要使用注册邮箱进行身份验证'
-           },
-           {
-             icon:require('../../assets/img/updatePaw/paw_phone.png'),
-             title:'手机验证',
-             des:'您需要使用注册手机进行身份验证'
-           },
-           {
-             icon:require('../../assets/img/updatePaw/paw_user.png'),
-             title:'人工申诉',
-             des:'若您未认证且手机和邮箱均不可使用'
-           }
+        verificationList: [
+          {
+            icon: require('../../assets/img/updatePaw/paw_email.png'),
+            title: '邮箱验证',
+            des: '您需要使用注册邮箱进行身份验证'
+          },
+          {
+            icon: require('../../assets/img/updatePaw/paw_phone.png'),
+            title: '手机验证',
+            des: '您需要使用注册手机进行身份验证'
+          },
+          {
+            icon: require('../../assets/img/updatePaw/paw_user.png'),
+            title: '人工申诉',
+            des: '若您未认证且手机和邮箱均不可使用'
+          }
         ],
 
-        popleVerList:[
+        popleVerList: [
           {
-            icon:require('../../assets/img/updatePaw/paw_card.png'),
-            title:'我已实名验证',
-            des:'您需要使用实名认证信息进行身份验证'
+            icon: require('../../assets/img/updatePaw/paw_card.png'),
+            title: '我已实名验证',
+            des: '您需要使用实名认证信息进行身份验证'
           },
           {
-            icon:require('../../assets/img/updatePaw/paw_user.png'),
-            title:'我没有实名认证',
-            des:'若您未认证可以通过人工客服重制账号'
+            icon: require('../../assets/img/updatePaw/paw_user.png'),
+            title: '我没有实名认证',
+            des: '若您未认证可以通过人工客服重制账号'
           },
         ],
-        formValidate:{
-          account:''
+        formValidate: {
+          account: ''
         },
-        ruleValidate:{
-          account:[
-            {required:true,message:'请输入账号',trigger:'blur'}
+        ruleValidate: {
+          account: [
+            {required: true, message: '请输入账号', trigger: 'blur'}
           ]
         },
         isemail: '1',
         type: '1',
         codePlaceholder: '发送验证码',
 
-        index:1,
-     
+        index: 1,
+
         //验证
-        verPage:'',
-        style:'',
-        account:'',
-        newPaw:'',
-        oldPaw:'',
-        url:{
-          icon1:require('../../assets/img/updatePaw/paw_zhanghao.png'),
-          iconCard:require('../../assets/img/updatePaw/paw_card.png')
+        verPage: '',
+        style: '',
+        account: '',
+        newPaw: '',
+        oldPaw: '',
+        url: {
+          icon1: require('../../assets/img/updatePaw/paw_zhanghao.png'),
+          iconCard: require('../../assets/img/updatePaw/paw_card.png')
         }
       }
     },
-    components:{
-      'x-Input':popk
+    components: {
+      'x-Input': popk
     },
-    created(){
+    created() {
     },
     methods: {
-      vail(field){
+      vail(field) {
         var text = this.form[field]
         if (text == '') {
           this.vailForm[field].message = ''
@@ -308,7 +309,7 @@
           this.vailForm[field].warning = false
         }
       },
-      focus(field){
+      focus(field) {
         if (field == 'vailCode' && this.vailForm.loginname.message == '验证码错误') {
           this.vailForm.loginname.message = ''
           this.vailForm.loginname.warning = false
@@ -334,7 +335,7 @@
           this.vailForm[field].warning = false
         }
       },
-      isCorrect(field){
+      isCorrect(field) {
         if (field == 'vailCode') {
           // 验证码重新输入直接取消警告
           this.vailForm.vailCode.warning = false
@@ -398,7 +399,7 @@
           }
         })
       }),
-      submit(){
+      submit() {
         axios.get('user/findPassword.do', {
           params: {
             username: this.form.loginname,
@@ -420,48 +421,48 @@
       },
 
       //跳转相应验证
-      jump(index){
+      jump(index) {
         this.index = 3;
-        if(index == 0){
+        if (index == 0) {
           this.verPage = 'email'
-        }else if(index == 1){
+        } else if (index == 1) {
           this.verPage = 'phone'
-        }else if(index == 2){
+        } else if (index == 2) {
           this.verPage = 'card'
-        }else if(index == 3){
+        } else if (index == 3) {
           this.verPage = 'people'
         }
       },
-      focusFunction(){
-        if(this.account == "" || !regExp.phoneVail(this.account)){
+      focusFunction() {
+        if (this.account == "" || !regExp.phoneVail(this.account)) {
           this.style = 'border:1px solid #ed3f14;';
-        }else{
-           this.style = ''
+        } else {
+          this.style = ''
         }
       },
-      next(){
+      next() {
         return;
-         if(regExp.phoneVail(this.account)){
-           this.account = this.account.replace(this.account.substring(3,7),'****')
-           this.index = 2;      
+        if (regExp.phoneVail(this.account)) {
+          this.account = this.account.replace(this.account.substring(3, 7), '****')
+          this.index = 2;
         }
       }
     },
     computed: {
-      disabled(){
+      disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false && this.vailForm.password.warning == false)
       },
     },
-    watch:{
-      index(){
-           for(let i = 1; i<this.stepList.length+1;i++){
-            if(this.index === i){
-              this.stepList[i-1].style = 'process_text_checked';
-            }else if(i<this.index){
-               this.stepList[i-1].failOrSuccess = true;
-               this.stepList[i-1].style = '';
-            }
+    watch: {
+      index() {
+        for (let i = 1; i < this.stepList.length + 1; i++) {
+          if (this.index === i) {
+            this.stepList[i - 1].style = 'process_text_checked';
+          } else if (i < this.index) {
+            this.stepList[i - 1].failOrSuccess = true;
+            this.stepList[i - 1].style = '';
           }
+        }
       },
     }
   }
@@ -471,7 +472,7 @@
   .login-wrapper {
     @diff: 129px;
     min-height: calc(~"100% - @{diff}");
-    background: linear-gradient(#F6FBFE,#D4E9FD);
+    background: linear-gradient(#F6FBFE, #D4E9FD);
     width: 100%;
     .header {
       width: 100%;
@@ -514,33 +515,30 @@
         margin: 0px auto;
         justify-content: space-between;
         align-items: center;
-        .title{
+        .title {
           color: #333333;
           font-size: 16px;
           font-family: 'MicrosoftYaHei';
           margin-bottom: 19px;
         }
       }
-<<<<<<< HEAD
-=======
-      .aa-active{
+      .aa-active {
         height: 100%;
         background: #FFF url("../../assets/img/login/aa-banner.png") no-repeat;
       }
-      .fr-active{
+      .fr-active {
         height: 100%;
         background: #FFF url("../../assets/img/login/fr-banner.png") no-repeat;
       }
     }
-    .ivu-carousel-item:nth-last-child(1) .demo-carousel{
+    .ivu-carousel-item:nth-last-child(1) .demo-carousel {
       background: url(../../assets/img/login/login-banner.png) no-repeat center;
->>>>>>> 7b09ab44dd704c4de90fa8e350d7e2be9779c357
     }
 
-    .ver_p{
-      color:#333;
-      font-size:14px;
-      margin-bottom:20px;
+    .ver_p {
+      color: #333;
+      font-size: 14px;
+      margin-bottom: 20px;
     }
 
     .login-form {
@@ -575,160 +573,159 @@
           justify-content: center;
           padding-top: 40px;
         }
-    .process_text{
-      display: inline-block;
-      font-family: 'HelveticaNeue';
-      text-align: center;
-      color: #999999;
-      .process_pace{
-        margin-right: 10px;
-        border: 1px solid #999999;
-        font-size: 14px;
-        width: 28px;
-        height: 28px;
-        display: inline-block;
-        border-radius: 50%;
-        line-height: 28px;
-      }
-    .process_ok{
-      margin-right: 10px;
-      display: inline-block;
-      border:1px solid #2A99F2;
-      background: #ffffff;
-      width: 28px;
-      height: 28px;
-      border-radius:50%;
-      line-height: 25px;
-    }
-    .line {
-      width: 70px;
-      height: 1px;
-      margin: 0 20px;
-      background: #E9E9E9;
-      display: inline-block;
-      vertical-align: middle;
-    }
-    &:last-of-type {
-      .line {
-        display: none;
-      }
-    }
-    .lineselected {
-      background: #2A99F2;
-    }
-     .process_ok::before{
-       content:'';
-        width: 7px ;
-        height: 12px;
-        border-right: 2px solid #2A99F2;
-        border-bottom: 2px solid #2A99F2;
-        display: inline-block;
-        border-bottom-right-radius: 2px;
-        transform: translateY(0px) rotate(48deg);
-      }
-    }
-    //步骤选择效果
-    .process_text_checked{
-      display: inline-block;
-      font-family: 'HelveticaNeue';
-      text-align: center;
-      .process_pace{
-        background: #4A97EE;
-        border: 1px solid #4A97EE;
-        color: #ffffff;
-        font-size: 14px;
-        width: 28px;
-        height: 28px;
-        display: inline-block;
-        border-radius: 50%;
-        line-height: 28px;
-      }
-      span{
-        color:#333333;
-      }
-    }
-    @color:#333333;
-    .verification{
-      width: 360px;
-      margin: 0 auto;
-      margin-top:39px;
-      .v_email{
-        width: 124px;
-        height: 38px;
-        background: rgb(255, 98, 75);
-        border-radius: 4px;
-        color: rgb(255, 255, 255);
-        line-height: 38px;
-        margin-left: 234px;
-        text-align: center;
-        transition: background .2s ease-in-out;
-      }
-      .v_email:hover{
-       background: rgb(247, 116, 96);
-       cursor: pointer;
-      }
-      .v_input{
-        border:1px solid #ed3f14;
-      }
-  
-       .input{
-          width: 85%;
-          border: none;
-          vertical-align: top;
-           height: 44px;
-          margin-left:20px;
-          outline:0;
-          text-decoration: none;
-        }
- 
-
-      .verifcation_box{
-        padding: 21px 20px 23px 21px;
-        margin-bottom:12px;
-        width: 360px;
-        height: 80px;
-        border-radius:4px;
-        background: rgba(244,250,255,1);
-        &>div{
-           display: inline-block;
-        }
-        .ver_font{
-          vertical-align:top;
-          margin-left: 4px;
-          .ver_p1{
-            color:@color;
+        .process_text {
+          display: inline-block;
+          font-family: 'HelveticaNeue';
+          text-align: center;
+          color: #999999;
+          .process_pace {
+            margin-right: 10px;
+            border: 1px solid #999999;
             font-size: 14px;
-            margin-bottom: 10px;
+            width: 28px;
+            height: 28px;
+            display: inline-block;
+            border-radius: 50%;
+            line-height: 28px;
           }
-          .ver_p2{
-            color: #666666;
+          .process_ok {
+            margin-right: 10px;
+            display: inline-block;
+            border: 1px solid #2A99F2;
+            background: #ffffff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            line-height: 25px;
+          }
+          .line {
+            width: 70px;
+            height: 1px;
+            margin: 0 20px;
+            background: #E9E9E9;
+            display: inline-block;
+            vertical-align: middle;
+          }
+          &:last-of-type {
+            .line {
+              display: none;
+            }
+          }
+          .lineselected {
+            background: #2A99F2;
+          }
+          .process_ok::before {
+            content: '';
+            width: 7px;
+            height: 12px;
+            border-right: 2px solid #2A99F2;
+            border-bottom: 2px solid #2A99F2;
+            display: inline-block;
+            border-bottom-right-radius: 2px;
+            transform: translateY(0px) rotate(48deg);
           }
         }
-        @yan:#999999;
-        .ver_arrow{
-          border-bottom: 1px solid @yan;
-          border-right: 1px solid @yan;
-          width: 8px ;
-          height: 8px; 
-          transform: translateY(0px) rotate(-48deg)
+        //步骤选择效果
+        .process_text_checked {
+          display: inline-block;
+          font-family: 'HelveticaNeue';
+          text-align: center;
+          .process_pace {
+            background: #4A97EE;
+            border: 1px solid #4A97EE;
+            color: #ffffff;
+            font-size: 14px;
+            width: 28px;
+            height: 28px;
+            display: inline-block;
+            border-radius: 50%;
+            line-height: 28px;
+          }
+          span {
+            color: #333333;
+          }
         }
-        
+        @color: #333333;
+        .verification {
+          width: 360px;
+          margin: 0 auto;
+          margin-top: 39px;
+          .v_email {
+            width: 124px;
+            height: 38px;
+            background: rgb(255, 98, 75);
+            border-radius: 4px;
+            color: rgb(255, 255, 255);
+            line-height: 38px;
+            margin-left: 234px;
+            text-align: center;
+            transition: background .2s ease-in-out;
+          }
+          .v_email:hover {
+            background: rgb(247, 116, 96);
+            cursor: pointer;
+          }
+          .v_input {
+            border: 1px solid #ed3f14;
+          }
+
+          .input {
+            width: 85%;
+            border: none;
+            vertical-align: top;
+            height: 44px;
+            margin-left: 20px;
+            outline: 0;
+            text-decoration: none;
+          }
+
+          .verifcation_box {
+            padding: 21px 20px 23px 21px;
+            margin-bottom: 12px;
+            width: 360px;
+            height: 80px;
+            border-radius: 4px;
+            background: rgba(244, 250, 255, 1);
+            & > div {
+              display: inline-block;
+            }
+            .ver_font {
+              vertical-align: top;
+              margin-left: 4px;
+              .ver_p1 {
+                color: @color;
+                font-size: 14px;
+                margin-bottom: 10px;
+              }
+              .ver_p2 {
+                color: #666666;
+              }
+            }
+            @yan: #999999;
+            .ver_arrow {
+              border-bottom: 1px solid @yan;
+              border-right: 1px solid @yan;
+              width: 8px;
+              height: 8px;
+              transform: translateY(0px) rotate(-48deg)
+            }
+
+          }
+          .verifcation_box:hover {
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0px 3px 12px 0px rgba(139, 139, 139, 0.46);
+            cursor: pointer;
+            @color: #2A99F2;
+            .ver_p1 {
+              color: @color
+            }
+            .ver_arrow {
+              border-bottom: 1px solid @color;
+              border-right: 1px solid @color;
+            }
+          }
+        }
       }
-      .verifcation_box:hover{
-        background: rgba(255,255,255,1);
-        box-shadow:0px 3px 12px 0px rgba(139, 139, 139, 0.46);
-        cursor: pointer;
-        @color:#2A99F2;
-       .ver_p1{
-         color:@color
-       }
-       .ver_arrow{
-        border-bottom: 1px solid @color;
-        border-right: 1px solid @color;
-       }
-      }
-    }
-  }
       .foot {
         button {
           width: 80%;
