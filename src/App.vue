@@ -317,6 +317,7 @@
   import debounce from 'throttle-debounce/debounce'
   import '@/assets/iconfont/frontend/iconfont.css'
   import '@/assets/iconfont/frontend/iconfont.js'
+  import uuid from 'uuid'
 
   export default {
     name: 'app',
@@ -607,6 +608,15 @@
         // 流量来源记录
         localStorage.setItem('comefrom', to.query.from)
       }
+      window.UUID = uuid.v4()
+      let params = {
+        batchNumber: window.UUID,
+        type: '0',
+        pageURL: window.location.href
+      }
+      // 写入入口信息
+      axios.post('information/webReachableRecord.do', params
+      )
       // 获取所有后台需要的基本信息
       // 获取用户信息
       var userInfo = axios.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}})
@@ -632,6 +642,16 @@
         this.$refs.hint.style.height = '80px'
       }
       this.setTime()
+      if (document.readyState === 'complete') { //当页面加载状态为完全结束时进入
+        let params = {
+          batchNumber: window.UUID,
+          type: '1',
+          pageURL: window.location.href
+        }
+        // 获取入口信息
+        axios.post('information/webReachableRecord.do', params
+        )
+      }
     },
     created() {
       if (sessionStorage.getItem('hintShow') == null) {
