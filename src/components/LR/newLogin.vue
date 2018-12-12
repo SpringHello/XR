@@ -63,18 +63,29 @@
             </div>
           </div>
           <div class="register-body" v-show="formType == 'register'">
-            <div class="import">
+            <div class="import" v-if="false">
               <img style="margin-right: 10px" src="../../assets/img/login/lr-icon5.png"/>
-              <Select v-model="registerForm.registerPhonePrefix" style="width:200px">
-                <Option v-for="item in registerForm.phonePrefixList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Select class="login-select" v-model="registerForm.registerPhonePrefix" style="width:70px;margin-right: 10px">
+                <Option v-for="(item,index) in registerForm.phonePrefixList" :value="item.tel" :key="index"> +{{item.tel }}</Option>
               </Select>
-              <input class="verification"  v-model="registerForm.loginName" type="text" placeHolder="请输入手机号码" @blur="verifyIsRegister" @input="registerForm.errorMsg=''"/>
+              <input class="verificationPhone" v-model="registerForm.loginPhone" type="text" placeHolder="请输入手机号码" @blur="verifyIsRegister" @input="registerForm.errorMsg=''"/>
+            </div>
+            <div class="import">
+              <img src="../../assets/img/login/lr-icon1.png"/>
+              <input v-model="registerForm.loginEmail" type="text" placeHolder="请输入邮箱号码" @blur="verifyIsRegister" @input="registerForm.errorMsg=''"/>
             </div>
             <div class="errorMsg"></div>
             <div class="import">
               <img src="../../assets/img/login/lr-icon4.png"/>
               <input class="verification" v-model="registerForm.verificationCode" type="text" placeHolder="请输入收到的验证码"/>
               <a>发送验证码</a>
+            </div>
+            <div class="errorMsg"></div>
+            <Checkbox v-model="registerForm.agreeStatus"><span style="margin-left: 10px;font-size: 14px">我已阅读并同意<span style="cursor: pointer;color:#4A97EE" @click="ruleModal = true">《睿云用户使用协议》</span></span></Checkbox>
+            <button :class="{notAllow: loginDisabled}" :disabled="loginDisabled">下一步</button>
+            <div class="footer">
+              <span v-show="false">邮箱注册</span>
+              <span>手机注册</span>
             </div>
           </div>
         </div>
@@ -345,7 +356,7 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border" style="text-align: center">
-        <Button>阅读并同意</Button>
+        <Button @click="ruleModal = false,registerForm.agreeStatus = true">阅读并同意</Button>
       </div>
     </Modal>
   </div>
@@ -594,6 +605,12 @@
               height: 70%;
               border-right: 1px solid rgba(200, 200, 200, 1);
             }
+            &.verificationPhone {
+              width: 55%;
+              height: 70%;
+              border-left: 1px solid rgba(200, 200, 200, 1);
+              padding-left: 15px;
+            }
           }
           a {
             font-size: 14px;
@@ -653,7 +670,7 @@
           font-size: 18px;
           font-family: MicrosoftYaHei;
           color: rgba(255, 255, 255, 1);
-          padding: 0 151px;
+          padding: 0 141px;
           &.notAllow {
             cursor: not-allowed;
           }
@@ -690,6 +707,7 @@
 </style>
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import areaTel from '../../options/area_tel'
 
   export default {
     data() {
@@ -708,9 +726,13 @@
           errorMsg: ''
         },
         registerForm: {
-          loginName: '',
+          phonePrefixList: areaTel,
+          registerPhonePrefix: '86',
+          loginPhone: '',
+          loginEmail: '',
           errorMsg: '',
-          verificationCode: ''
+          verificationCode: '',
+          agreeStatus: true
         }
       }
     },
