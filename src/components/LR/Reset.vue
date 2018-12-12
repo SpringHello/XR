@@ -521,20 +521,6 @@
           margin-bottom: 19px;
         }
       }
-<<<<<<< HEAD
-=======
-      .aa-active{
-        height: 100%;
-        background: #FFF url("../../assets/img/login/aa-banner.png") no-repeat;
-      }
-      .fr-active{
-        height: 100%;
-        background: #FFF url("../../assets/img/login/fr-banner.png") no-repeat;
-      }
-    }
-    .ivu-carousel-item:nth-last-child(1) .demo-carousel{
-      background: url(../../assets/img/login/login-banner.png) no-repeat center;
->>>>>>> 7b09ab44dd704c4de90fa8e350d7e2be9779c357
     }
 
     .ver_p{
