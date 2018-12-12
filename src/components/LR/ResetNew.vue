@@ -31,14 +31,14 @@
                   <p style="color:#ed3f14;">{{messages}}</p>
                 </div> -->
               <div style="float:right;">
-                 <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;">现账号无法使用</p>
-                 <Button type="primary" style="width:110px" @click="next()">下一步</Button>
+                 <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;cursor:pointer;" @click="next('no')">现账号无法使用</p>
+                 <Button type="primary" style="width:110px" @click="next('yes')">下一步</Button>
               </div>
             </div>
 
             <!-- 账号能用 -->
-            <div class="verification" v-if="index == 2">
-               <p class="ver_p">您正在为账户：{{account}}重置密码，请选择方式验证。</p>
+            <div class="verification" v-if="index == 2 && !accountIsDis">
+               <p class="ver_p">您正在为账户：{{formValidate.account}}重置密码，请选择方式验证。</p>
               <div class="verifcation_box" v-for="(item,index) in verificationList" :key="index" @click="jump(index)">
                 <div>
                   <img :src='item.icon'>
@@ -53,8 +53,8 @@
             </div>
 
             <!-- 账号不能用 -->
-            <div class="verification" style="margin-top:74px;" v-if="index == 2">
-              <div class="verifcation_box" v-for="(item,index) in popleVerList" :key="index" @click="jump(index)">
+            <div class="verification" style="margin-top:74px;" v-if="index == 2 && accountIsDis">
+              <div class="verifcation_box" v-for="(item,index) in popleVerList" :key="index" @click="jump(index+2)">
                 <div>
                   <img :src='item.icon'>
                 </div>
@@ -86,37 +86,46 @@
                  <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
                  <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction" />
                </div>
+                
+               <Button type="primary">下一步</Button>
             </div>
 
             <!-- 身份证验证方式 -->
             <div class="verification" v-if="verPage == 'card'">
-              <div>
+              <div v-if="absc">
                 <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入您的姓名' ></x-Input>
                 <x-Input ref="xinput" :icon='url.iconCard' v-model="formValidate.account"  placeholder='请输入您的身份证账号' ></x-Input>
-                <Button type="primary">下一步</Button>
+                <Button type="primary" @click="absc = !absc">下一步</Button>
               </div>
               <!-- 上传身份证照片 -->
-              <div>
-                <Upload
-                  ref="upload"
-                  :show-upload-list="false"
-                  :default-file-list="defaultList"
-                  :on-success="handleSuccess"
-                  :format="['jpg','jpeg','png']"
-                  :max-size="2048"
-                  :on-format-error="handleFormatError"
-                  :on-exceeded-size="handleMaxSize"
-                  :before-upload="handleBeforeUpload"
-                  multiple
-                  type="drag"
-                  action=""
-                  style="display: inline-block;">
-                  <div>
-                     
-                  </div>
-              </Upload>
-                <p>提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
+              <div v-else>
+                <div style="display: inline-block;">
+                    <Upload
+                        ref="upload"
+                        :show-upload-list="false"
+                        :default-file-list="defaultList"
+                        :on-success="handleSuccess"
+                        :format="['jpg','jpeg','png']"
+                        :max-size="2048"
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        :before-upload="handleBeforeUpload"
+                        multiple
+                        type="drag"
+                        action=""
+                        style="display: inline-block;">
+                        <div style="width:150px;height:110px;background:#F6FAFD;line-height:110px;">
+                            <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
+                        </div>
+                        <Button type="primary">上传图片</Button>
+                    </Upload>
+                </div>
+                <div style="width:150px;height:110px;display:inline-block;">
+
+                </div>
+                  <p>提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
               </div>
+             
             </div>
 
             <!-- 人工申诉 -->
@@ -125,7 +134,7 @@
             </div>
 
             <!-- 设置新密码 -->
-            <div class="verification" v-if="index == 3">
+            <div class="verification" v-if="index == 4">
               <div class="ver_input" :style="style">
                  <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
                  <input v-model="oldPaw" class="input" placeholder="请输入账号" @blur="focusFunction" />
@@ -137,7 +146,7 @@
             </div>
 
             <!-- 完成 -->
-            <div class="verification" v-if="index == 4">
+            <div class="verification" v-if="index == 5">
               <div>
                 <img src="../../assets/img/updatePaw/shape.png">
                 <span>重置密码成功</span>
@@ -278,9 +287,12 @@
         account:'',
         newPaw:'',
         oldPaw:'',
+        //账号是否可用
+        accountIsDis:false,
+        absc:true,
         url:{
           icon1:require('../../assets/img/updatePaw/paw_zhanghao.png'),
-          iconCard:require('../../assets/img/updatePaw/paw_card.png')
+          iconCard:require('../../assets/img/updatePaw/paw_zhanghao.png')
         }
       }
     },
@@ -439,11 +451,15 @@
            this.style = ''
         }
       },
-      next(){
-        return;
-         if(regExp.phoneVail(this.account)){
-           this.account = this.account.replace(this.account.substring(3,7),'****')
-           this.index = 2;      
+      next(val){
+        if(val == 'yes'){
+            if(regExp.phoneVail(this.formValidate.account)){
+                this.formValidate.account = this.formValidate.account.replace(this.account.substring(3,7),'****')
+                this.index = 2;      
+            }
+        }else{
+            this.accountIsDis = true;
+            this.index = 2;
         }
       }
     },
@@ -463,6 +479,9 @@
             }
           }
       },
+      accountIsDis(){
+        //   return this.accountIsDis ?''
+      }
     }
   }
 </script>
