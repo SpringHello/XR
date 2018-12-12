@@ -11,7 +11,6 @@ import 'iview/dist/styles/iview.css'
 import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
-import '@/assets/css/RedJu.css'
 
 //import './util/BMap'
 // import ECharts from 'vue-echarts/components/ECharts.vue'
