@@ -64,11 +64,11 @@
           </div>
           <div class="register-body" v-show="formType == 'register'">
             <div class="import">
-              <img src="../../assets/img/login/lr-icon5.png"/>
+              <img style="margin-right: 10px" src="../../assets/img/login/lr-icon5.png"/>
               <Select v-model="registerForm.registerPhonePrefix" style="width:200px">
                 <Option v-for="item in registerForm.phonePrefixList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
-              <input v-model="registerForm.loginName" type="text" placeHolder="请输入手机号码" @blur="verifyIsRegister" @input="registerForm.errorMsg=''"/>
+              <input class="verification"  v-model="registerForm.loginName" type="text" placeHolder="请输入手机号码" @blur="verifyIsRegister" @input="registerForm.errorMsg=''"/>
             </div>
             <div class="errorMsg"></div>
             <div class="import">

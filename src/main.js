@@ -53,6 +53,14 @@ Vue.prototype.$http = axios.create({
   params: {}
 })
 
+/* 抛出全局异常*/
+const errorHandler = (error, vm)=>{
+  console.error('抛出全局异常')
+  console.error(error)
+}
+
+Vue.config.errorHandler = errorHandler
+Vue.prototype.$throw = (error)=> errorHandler(error,this)
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {
