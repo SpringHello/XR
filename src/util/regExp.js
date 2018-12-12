@@ -20,7 +20,12 @@ export default {
     return emailRegExp.test(email) || phoneRegExp.test(email);
   },
   phoneVail: (phone) => {
-    return phoneRegExp.test(phone);
+    if(phoneRegExp.test(phone)){
+      return true;
+    }else{
+      return false;
+    }
+   
   },
   passwordVail: (password) => {
     if (!passwordLengthRegExp.exec(password)) {

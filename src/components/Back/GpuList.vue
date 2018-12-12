@@ -543,14 +543,27 @@
                   h('p',{style:{cursor:'pointer',margin:'5px 0'},
                     on:{
                     click:()=> {
-                      if(params.row.status == 2 || params.row.status == 3){
-                        this.$Message.info('请等待主机完成当前操作');
-                      }else {
-                        this.deleteHost(params.row);
-                      }
+                        this.uuId = params.row.computerid;
+                        this.$Modal.confirm({
+                          title:'提示',
+                          content:'确定要开/关机吗',
+                          onOk:()=>{
+                              if(params.row.status == 2){
+                                  this.$Message.info('请等待主机创建完成');
+                              }else if(params.row.status == 3){
+                                  this.$Message.info('主机正在删除中');
+                              }else {
+                              if(params.row.computerstate == '0'){
+                                 this.openHost(params.row._index);
+                              }else if(params.row.computerstate == '1'){
+                                this.stopHost(params.row._index);
+                              }
+                            }
+                          }
+                      })
                     }
                     }
-                  },'删除'),
+                  },params.row.computerstate == '0'?'开机':'关机'),
                     h('Dropdown', {
                       props: {
                         trigger: 'click'
@@ -706,27 +719,14 @@
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                            this.uuId = params.row.computerid;
-                            this.$Modal.confirm({
-                              title:'提示',
-                              content:'确定要开/关机吗',
-                              onOk:()=>{
-                                if(params.row.status == 2){
-                                  this.$Message.info('请等待主机创建完成');
-                                }else if(params.row.status == 3){
-                                  this.$Message.info('主机正在删除中');
-                                }else {
-                                  if(params.row.computerstate == '0'){
-                                    this.openHost(params.row._index);
-                                  }else if(params.row.computerstate == '1'){
-                                    this.stopHost(params.row._index);
-                                  }
-                                }
-                              }
-                            })
+                           if(params.row.status == 2 || params.row.status == 3){
+                              this.$Message.info('请等待主机完成当前操作');
+                            }else {
+                              this.deleteHost(params.row);
+                            }
                           }
                         }
-                      }, '开机/关机'),])
+                      }, '删除'),])
                     ])
                ])
                 }
