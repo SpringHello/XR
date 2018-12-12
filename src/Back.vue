@@ -151,7 +151,7 @@
               <span>售前咨询</span>
               <div class="info-wrapper">
                 <div v-for="(qq,index) of xiaoshouInfo" :key="index">
-              <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
+                <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">

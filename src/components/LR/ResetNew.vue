@@ -131,7 +131,9 @@
             <!-- 人工申诉 -->
             <div class="verification" v-if="verPage == 'people'">
               <p style="color:#F10C0C;margin-top:78px;">注：恶意申诉他人账号是违法行为</p>
-              <p style="margin-top:20px;">如果你的邮箱和手机均不可使用，请您联系<span style="color:#2A99F2;cursor:pointer;">人工客服</span>获取帮助。</p>
+              <p style="margin-top:20px;">如果你的邮箱和手机均不可使用，请您联系<a target="_blank"
+                   :href="`tencent://message/?uin=${QQInfo}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                   style="color:#2A99F2">人工客服</a>获取帮助。</p>
             </div>
 
             <!-- 设置新密码 -->
@@ -294,13 +296,18 @@
         url:{
           icon1:require('../../assets/img/updatePaw/paw_zhanghao.png'),
           iconCard:require('../../assets/img/updatePaw/paw_zhanghao.png')
-        }
+        },
+         QQInfo: '',  // QQ客服在线情况
       }
     },
     components:{
       'x-Input':popk
     },
     created(){
+      this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
+        this.QQInfo = response.data.kefu[0].qqnumber
+        console.log(response.data.kefu);
+      })
     },
     methods: {
       vail(field){
