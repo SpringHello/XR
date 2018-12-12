@@ -130,7 +130,8 @@
 
             <!-- 人工申诉 -->
             <div class="verification" v-if="verPage == 'people'">
-
+              <p style="color:#F10C0C;margin-top:78px;">注：恶意申诉他人账号是违法行为</p>
+              <p style="margin-top:20px;">如果你的邮箱和手机均不可使用，请您联系<span style="color:#2A99F2;cursor:pointer;">人工客服</span>获取帮助。</p>
             </div>
 
             <!-- 设置新密码 -->
@@ -430,7 +431,7 @@
           }
         })
       },
-
+    
       //跳转相应验证
       jump(index){
         this.index = 3;
