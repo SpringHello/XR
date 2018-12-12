@@ -70,19 +70,32 @@
               </Select>
               <input class="verificationPhone" v-model="registerForm.loginPhone" type="text" placeHolder="请输入手机号码" @blur="verifyIsRegister" @input="registerForm.errorMsg=''"/>
             </div>
-            <div class="import">
-              <img src="../../assets/img/login/lr-icon1.png"/>
+            <div class="import" v-if="false">
+              <img src="../../assets/img/login/lr-icon6.png"/>
               <input v-model="registerForm.loginEmail" type="text" placeHolder="请输入邮箱号码" @blur="verifyIsRegister" @input="registerForm.errorMsg=''"/>
             </div>
-            <div class="errorMsg"></div>
             <div class="import">
+              <img src="../../assets/img/login/lr-icon2.png"/>
+              <input v-model="registerForm.password" @focus="registerForm.passwordHint = true" @blur="registerForm.passwordHint = false" ref="registerPasInput" type="password" placeHolder="请输入密码"/>
+              <img style="cursor: pointer" @click="changeLoginPasType('registerPasInput')" src="../../assets/img/login/lr-icon3.png"/>
+              <div class="popTip" v-show="registerForm.passwordHint"></div>
+            </div>
+            <div class="errorMsg"></div>
+            <div class="import" v-if="false">
               <img src="../../assets/img/login/lr-icon4.png"/>
               <input class="verification" v-model="registerForm.verificationCode" type="text" placeHolder="请输入收到的验证码"/>
               <a>发送验证码</a>
             </div>
+            <div class="import">
+              <img src="../../assets/img/login/lr-icon2.png"/>
+              <input v-model="registerForm.passwordAffirm" ref="registerPasInputAffirm" type="password" placeHolder="请确认密码"/>
+              <img style="cursor: pointer" @click="changeLoginPasType('registerPasInputAffirm')" src="../../assets/img/login/lr-icon3.png"/>
+            </div>
             <div class="errorMsg"></div>
-            <Checkbox v-model="registerForm.agreeStatus"><span style="margin-left: 10px;font-size: 14px">我已阅读并同意<span style="cursor: pointer;color:#4A97EE" @click="ruleModal = true">《睿云用户使用协议》</span></span></Checkbox>
-            <button :class="{notAllow: loginDisabled}" :disabled="loginDisabled">下一步</button>
+            <Checkbox v-model="registerForm.agreeStatus"><span style="margin-left: 10px;font-size: 14px">我已阅读并同意<span style="cursor: pointer;color:#4A97EE"
+                                                                                                                      @click="ruleModal = true">《睿云用户使用协议》</span></span></Checkbox>
+            <button v-if="true" :class="{notAllow: loginDisabled}" :disabled="loginDisabled">下一步</button>
+            <button v-if="false" :class="{notAllow: loginDisabled}" :disabled="loginDisabled">注册并登录</button>
             <div class="footer">
               <span v-show="false">邮箱注册</span>
               <span>手机注册</span>
@@ -491,6 +504,7 @@
         padding-top: 40px;
         .import {
           height: 46px;
+          width: 340px;
           border-radius: 4px;
           border: 1px solid rgba(200, 200, 200, 1);
           display: flex;
@@ -568,7 +582,7 @@
           font-size: 18px;
           font-family: MicrosoftYaHei;
           color: rgba(255, 255, 255, 1);
-          padding: 0 151px;
+          width: 340px;
           &.notAllow {
             cursor: not-allowed;
           }
@@ -587,10 +601,12 @@
         padding-top: 40px;
         .import {
           height: 46px;
+          width: 340px;
           border-radius: 4px;
           border: 1px solid rgba(200, 200, 200, 1);
           display: flex;
           align-items: center;
+          position: relative;
           > img {
             margin: 0 20px;
           }
@@ -619,6 +635,15 @@
             line-height: 44px;
             padding-left: 10px;
           }
+          .popTip {
+            height: 106px;
+            width: 300px;
+            position: absolute;
+            background: #FFF;
+            box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
+            left: -90%;
+            z-index: 3;
+          }
         }
         .errorMsg {
           height: 30px;
@@ -662,6 +687,7 @@
         button {
           margin-top: 40px;
           height: 46px;
+          width: 340px;
           background: rgba(42, 153, 242, 1);
           border-radius: 4px;
           cursor: pointer;
@@ -670,7 +696,6 @@
           font-size: 18px;
           font-family: MicrosoftYaHei;
           color: rgba(255, 255, 255, 1);
-          padding: 0 141px;
           &.notAllow {
             cursor: not-allowed;
           }
@@ -730,6 +755,9 @@
           registerPhonePrefix: '86',
           loginPhone: '',
           loginEmail: '',
+          password: '',
+          passwordAffirm: '',
+          passwordHint: false,
           errorMsg: '',
           verificationCode: '',
           agreeStatus: true
