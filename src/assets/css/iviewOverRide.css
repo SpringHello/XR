@@ -428,3 +428,9 @@ div.modal-header-border {
 .ivu-select-disabled .ivu-select-selection {
   color: black;
 }
+
+/* 登录页面select */
+.login-select .ivu-select-selection {
+  border: none;
+  box-shadow: none;
+}

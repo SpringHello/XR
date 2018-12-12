@@ -119,9 +119,10 @@
       placeholder: '请输入图片验证码'
     }
   }
-  export default{
 
-    data(){
+  export default {
+
+    data() {
       return {
         imgSrc: 'user/getKaptchaImage.do',
         form: {
@@ -169,7 +170,7 @@
     created(){
     },
     methods: {
-      vail(field){
+      vail(field) {
         var text = this.form[field]
         if (text == '') {
           this.vailForm[field].message = ''
@@ -187,7 +188,7 @@
           this.vailForm[field].warning = false
         }
       },
-      focus(field){
+      focus(field) {
         if (field == 'vailCode' && this.vailForm.loginname.message == '验证码错误') {
           this.vailForm.loginname.message = ''
           this.vailForm.loginname.warning = false
@@ -213,7 +214,7 @@
           this.vailForm[field].warning = false
         }
       },
-      isCorrect(field){
+      isCorrect(field) {
         if (field == 'vailCode') {
           // 验证码重新输入直接取消警告
           this.vailForm.vailCode.warning = false
@@ -277,7 +278,7 @@
           }
         })
       }),
-      submit(){
+      submit() {
         axios.get('user/findPassword.do', {
           params: {
             username: this.form.loginname,
@@ -299,7 +300,7 @@
       }
     },
     computed: {
-      disabled(){
+      disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false && this.vailForm.password.warning == false)
       }
     }
@@ -401,12 +402,12 @@
         height: 100%;
         background: #FFF url("../../assets/img/login/aa-banner.png") no-repeat;
       }
-      .fr-active{
+      .fr-active {
         height: 100%;
         background: #FFF url("../../assets/img/login/fr-banner.png") no-repeat;
       }
     }
-    .ivu-carousel-item:nth-last-child(1) .demo-carousel{
+    .ivu-carousel-item:nth-last-child(1) .demo-carousel {
       background: url(../../assets/img/login/login-banner.png) no-repeat center;
     }
     .ivu-carousel-item:nth-last-child(2) .demo-carousel{
