@@ -20,7 +20,7 @@
             <span :class="{select: formType == 'register'}" @click="formType = 'register'">注册</span>
           </div>
           <div class="login-body" v-show="formType == 'login'">
-            <div class="import">
+            <div class="import" :class="{error: loginForm.errorMsg === 'notRegister' || loginForm.errorMsg === 'formatError'}">
               <img src="../../assets/img/login/lr-icon1.png"/>
               <input v-model="loginForm.loginName" type="text" placeHolder="请输入手机号或邮箱" @blur="verifyIsRegister" @input="loginForm.errorMsg=''"/>
             </div>
@@ -54,10 +54,11 @@
                          :completed-bg="dragVerifyConfig.completedBg"
                          :handler-bg="dragVerifyConfig.handlerBg"
                          :handler-icon="dragVerifyConfig.handlerIcon"
-                         :success-icon = "dragVerifyConfig.successIcon"
+                         :success-icon="dragVerifyConfig.successIcon"
                          :text-size="dragVerifyConfig.textSize"
                          :circle="dragVerifyConfig.circle"></drag-verify>
-            <button :class="{notAllow: loginDisabled}" :disabled="loginDisabled">登录</button>
+            <div class="errorMsg"></div>
+            <button @click="toLogin">登录</button>
             <div class="footer">
               <span>验证码登录</span>
               <span style="float: right">忘记密码？</span>
@@ -96,8 +97,8 @@
             <div class="errorMsg"></div>
             <Checkbox v-model="registerForm.agreeStatus"><span style="margin-left: 10px;font-size: 14px">我已阅读并同意<span style="cursor: pointer;color:#4A97EE"
                                                                                                                       @click="ruleModal = true">《睿云用户使用协议》</span></span></Checkbox>
-            <button v-if="true" :class="{notAllow: loginDisabled}" :disabled="loginDisabled">下一步</button>
-            <button v-if="false" :class="{notAllow: loginDisabled}" :disabled="loginDisabled">注册并登录</button>
+            <button v-if="true">下一步</button>
+            <button v-if="false">注册并登录</button>
             <div class="footer">
               <span v-show="false">邮箱注册</span>
               <span>手机注册</span>
@@ -511,6 +512,9 @@
           border: 1px solid rgba(200, 200, 200, 1);
           display: flex;
           align-items: center;
+          &.error {
+            border: 1px solid #ff0000;
+          }
           > img {
             margin: 0 20px;
           }
@@ -574,7 +578,7 @@
           }
         }
         button {
-          margin-top: 40px;
+          margin-top: 10px;
           height: 46px;
           background: rgba(42, 153, 242, 1);
           border-radius: 4px;
@@ -816,11 +820,10 @@
           this.loginForm.errorMsg = 'formatError'
         }
       },
-    },
-    computed: {
-      loginDisabled() {
-        return this.loginForm.errorMsg !== ''
+      toLogin() {
+
       }
-    }
+    },
+    computed: {}
   }
 </script>
