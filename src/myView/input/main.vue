@@ -88,7 +88,7 @@ export default {
         inputBlur(e){
             this.$emit('on-blur', e);
             let val = e.target.value;
-            this.$emit('on-form-blur', this.account);
+            this.$emit('FormItem','on-form-blur', this.account);
         },
         handleEnter (event) {
             this.$emit('on-enter', event);
