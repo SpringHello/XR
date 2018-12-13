@@ -22,14 +22,9 @@
               <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" >
                 <FormItem prop="account">
                   <x-Input  :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入账号' ></x-Input>
-                  <!-- <Input  v-model="formValidate.account"></Input> -->
                 </FormItem>
               </Form>
-                <!-- <div class="ver_input" :style="style">
-                  <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                  <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction" />
-                  <p style="color:#ed3f14;">{{messages}}</p>
-                </div> -->
+                
               <div style="float:right;">
                  <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;cursor:pointer;" @click="next('no')">现账号无法使用</p>
                  <Button type="primary" style="width:110px" @click="next('yes')">下一步</Button>
@@ -70,24 +65,18 @@
             <!-- 邮箱验证方式 -->
             <div class="verification" v-if="verPage == 'email'">
               <p class="ver_p">我们会发送一封验证邮件到您的邮箱，请注意查收</p>
-               <div class="ver_input" :style="style">
-                 <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                 <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction" />
-               </div>
+                <x-Input  :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入邮箱' ></x-Input>
               <div class="v_email">
                 前往邮箱
               </div>
             </div>
 
             <!-- 手机验证方式 -->
-            <div class="verification" v-if="verPage == 'phone'">
+            <div class="verification" v-if="verPage == 'phone' && index == 3">
               <p class="ver_p">请输入有效手机号码用于接收验证码</p>
-              <div class="ver_input" :style="style">
-                 <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                 <input v-model="account" class="input" placeholder="请输入账号" @blur="focusFunction" />
-               </div>
-                
-               <Button type="primary">下一步</Button>
+              <x-Input  :icon='url.iconPhone' v-model="formValidate.account"  placeholder='请输入手机号' ></x-Input>
+              <x-Input  :icon='url.iconYan' v-model="formValidate.account"  placeholder='请输入验证码' ></x-Input>
+               <Button type="primary" @click="index = 4">下一步</Button>
             </div>
 
             <!-- 身份证验证方式 -->
@@ -138,14 +127,8 @@
 
             <!-- 设置新密码 -->
             <div class="verification" v-if="index == 4">
-              <div class="ver_input" :style="style">
-                 <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                 <input v-model="oldPaw" class="input" placeholder="请输入账号" @blur="focusFunction" />
-               </div>
-               <div class="ver_input" :style="style">
-                 <img style="margin:14px 0 14px 14px;" src="../../assets/img/updatePaw/paw_zhanghao.png">
-                 <input v-model="newPaw" class="input" placeholder="请输入账号" @blur="focusFunction" />
-               </div>
+               <x-Input  :icon='url.iconLock' v-model="formValidate.account"  placeholder='请输入账号' ></x-Input>
+               <x-Input  :icon='url.iconLock' v-model="formValidate.account"  placeholder='请输入账号' ></x-Input>
             </div>
 
             <!-- 完成 -->
@@ -295,7 +278,10 @@
         absc:true,
         url:{
           icon1:require('../../assets/img/updatePaw/paw_zhanghao.png'),
-          iconCard:require('../../assets/img/updatePaw/paw_zhanghao.png')
+          iconCard:require('../../assets/img/updatePaw/paw_zhanghao.png'),
+          iconLock:require('../../assets/img/login/lr-icon2.png'),
+          iconYan:require('../../assets/img/login/lr-icon4.png'),
+          iconPhone:require('../../assets/img/login/lr-icon5.png')
         },
          QQInfo: '',  // QQ客服在线情况
       }
@@ -461,7 +447,7 @@
       next(val){
         if(val == 'yes'){
             if(regExp.phoneVail(this.formValidate.account)){
-                this.formValidate.account = this.formValidate.account.replace(this.account.substring(3,7),'****')
+                this.formValidate.account = this.formValidate.account.replace(this.formValidate.account.substring(3,7),'****')
                 this.index = 2;      
             }
         }else{
