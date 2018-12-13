@@ -1099,7 +1099,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P40',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1155,7 +1155,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '1* NVIDIA P40',
                   },
                   {
                     text: '系统盘',
@@ -1273,7 +1273,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P40',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1329,7 +1329,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '1* NVIDIA P40',
                   },
                   {
                     text: '系统盘',
@@ -1447,7 +1447,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P40',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1503,7 +1503,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '1* NVIDIA P40',
                   },
                   {
                     text: '系统盘',
@@ -1621,7 +1621,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P40',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1677,7 +1677,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '1* NVIDIA P40',
                   },
                   {
                     text: '系统盘',
