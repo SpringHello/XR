@@ -45,7 +45,7 @@
               <a>发送验证码</a>
             </div>
             <div class="errorMsg"></div>
-            <drag-verify :width="dragVerifyConfig.width"
+            <drag-verify ref="Verify" :width="dragVerifyConfig.width"
                          :height="dragVerifyConfig.height"
                          :text="dragVerifyConfig.text"
                          :success-text="dragVerifyConfig.successText"
@@ -54,6 +54,7 @@
                          :completed-bg="dragVerifyConfig.completedBg"
                          :handler-bg="dragVerifyConfig.handlerBg"
                          :handler-icon="dragVerifyConfig.handlerIcon"
+                         :success-icon = "dragVerifyConfig.successIcon"
                          :text-size="dragVerifyConfig.textSize"
                          :circle="dragVerifyConfig.circle"></drag-verify>
             <button :class="{notAllow: loginDisabled}" :disabled="loginDisabled">登录</button>
@@ -750,7 +751,7 @@
         formType: 'login',
         activeBanner: 1,
         ruleModal: false,
-        dragVerifyConfig:{
+        dragVerifyConfig: {
           width: 340,
           height: 44,
           text: '请按住滑块，拖动到最右边',
@@ -760,6 +761,7 @@
           progressBarBg: '#FEAB7C',
           completedBg: '#FF614B',
           handlerIcon: 'drag-start',
+          successIcon: 'drag-success',
           circle: true,
           textSize: '14px'
         },
@@ -785,6 +787,7 @@
     created() {
     },
     mounted() {
+      console.log(this.$refs.Verify.isPassing)
     },
     methods: {
       /* 切换banner */
