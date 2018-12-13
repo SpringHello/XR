@@ -24,6 +24,7 @@
 
 <script>
  import { oneOf, findComponentUpward } from '../../../node_modules/iview/src/utils/assist';
+//  import Emitter from '../../../node_modules/iview/src/mixins/emitter';
   const prefixCls = 'ivu-input';
 export default {
     name:'xInput',
@@ -88,7 +89,8 @@ export default {
         inputBlur(e){
             this.$emit('on-blur', e);
             let val = e.target.value;
-            this.$emit('on-form-blur', this.account);
+            this.dispatch('FormItem', 'on-form-blur', this.account);
+            // this.$emit('FormItem','on-form-blur', this.account);
         },
         handleEnter (event) {
             this.$emit('on-enter', event);
@@ -105,13 +107,20 @@ export default {
         handleFocus (event) {
             this.$emit('on-focus', event);
         },
-        // valid(rule,value,callback){
-        //     if(!rule.test(value)){
-        //        function callback(error){
-        //            return this.error = error;
-        //        }
-        //     }
-        // }
+        dispatch(componentName, eventName, params) {
+            let parent = this.$parent || this.$root;
+            let name = parent.$options.name;
+            while (parent && (!name || name !== componentName)) {
+                parent = parent.$parent;
+
+                if (parent) {
+                    name = parent.$options.name;
+                }
+            }
+            if (parent) {
+                parent.$emit.apply(parent, [eventName].concat(params));
+            }
+        },
     },
     created(){
      

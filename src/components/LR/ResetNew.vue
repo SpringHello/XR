@@ -306,7 +306,6 @@
     created(){
       this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
         this.QQInfo = response.data.kefu[0].qqnumber
-        console.log(response.data.kefu);
       })
     },
     methods: {
