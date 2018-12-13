@@ -34,17 +34,28 @@
                 <p>请输入正确的手机号码或者邮箱地址</p>
               </div>
             </div>
-            <div class="import" v-if="false">
+            <div class="import" v-if="true">
               <img src="../../assets/img/login/lr-icon2.png"/>
               <input v-model="loginForm.password" ref="loginPasInput" type="password" placeHolder="请输入密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('loginPasInput')" src="../../assets/img/login/lr-icon3.png"/>
             </div>
-            <div class="import">
+            <div class="import" v-if="false">
               <img src="../../assets/img/login/lr-icon4.png"/>
               <input class="verification" v-model="loginForm.verificationCode" type="text" placeHolder="请输入收到的验证码"/>
               <a>发送验证码</a>
             </div>
             <div class="errorMsg"></div>
+            <drag-verify :width="dragVerifyConfig.width"
+                         :height="dragVerifyConfig.height"
+                         :text="dragVerifyConfig.text"
+                         :success-text="dragVerifyConfig.successText"
+                         :background="dragVerifyConfig.background"
+                         :progress-bar-bg="dragVerifyConfig.progressBarBg"
+                         :completed-bg="dragVerifyConfig.completedBg"
+                         :handler-bg="dragVerifyConfig.handlerBg"
+                         :handler-icon="dragVerifyConfig.handlerIcon"
+                         :text-size="dragVerifyConfig.textSize"
+                         :circle="dragVerifyConfig.circle"></drag-verify>
             <button :class="{notAllow: loginDisabled}" :disabled="loginDisabled">登录</button>
             <div class="footer">
               <span>验证码登录</span>
@@ -65,7 +76,8 @@
             </div>
             <div class="import">
               <img src="../../assets/img/login/lr-icon2.png"/>
-              <input v-model="registerForm.password" @focus="registerForm.passwordHint = true" @blur="registerForm.passwordHint = false" ref="registerPasInput" type="password" placeHolder="请输入密码"/>
+              <input v-model="registerForm.password" @focus="registerForm.passwordHint = true" @blur="registerForm.passwordHint = false" ref="registerPasInput" type="password"
+                     placeHolder="请输入密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('registerPasInput')" src="../../assets/img/login/lr-icon3.png"/>
               <div class="popTip" v-show="registerForm.passwordHint"></div>
             </div>
@@ -722,8 +734,12 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import areaTel from '../../options/area_tel'
+  import dragVerify from 'vue-drag-verify'
 
   export default {
+    components: {
+      dragVerify
+    },
     data() {
       return {
         regExpObj: {
@@ -734,6 +750,19 @@
         formType: 'login',
         activeBanner: 1,
         ruleModal: false,
+        dragVerifyConfig:{
+          width: 340,
+          height: 44,
+          text: '请按住滑块，拖动到最右边',
+          successText: '验证通过',
+          background: '#E8E8E8',
+          color: '#999999',
+          progressBarBg: '#FEAB7C',
+          completedBg: '#FF614B',
+          handlerIcon: 'drag-start',
+          circle: true,
+          textSize: '14px'
+        },
         loginForm: {
           loginName: '',
           password: '',
