@@ -1015,7 +1015,7 @@
               return h('Tooltip', {
                   props: {
                     content: params.row.descs,
-                    placement: 'top'
+                    placement: 'top-start'
                   }
                 },
                 params.row.descs
