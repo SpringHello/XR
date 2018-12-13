@@ -408,19 +408,14 @@ export default {
       height: 580px;
       border: 1px solid rgba(217, 217, 217, 1);
       cursor: pointer;
+      transition: all 0.5s ease-out;
       &:hover {
-        width:415px;
-        height:602px;
         box-shadow: 0px 4px 20px -7px rgba(42, 153, 242, 0.5);
+        transform:scale(1.09,1.03);
         .header {
           h2,
           span {
             color: #2a99f2;
-          }
-        }
-        .content {
-          dl {
-            font-size: 18px;
           }
         }
       }
@@ -449,6 +444,9 @@ export default {
           margin: 0 auto;
           margin-bottom: 30px; 
           font-size: 16px;
+          &:nth-last-of-type(1){
+            margin-bottom: 0; 
+          }
           dt {
             font-family: MicrosoftYaHei-Bold;
             font-weight: bold;
