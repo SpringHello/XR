@@ -177,10 +177,13 @@
                   <FormItem label="验证码" prop="verificationCode">
                     <Input v-model="notAuth.cardAuthForm.verificationCode"
                            style="width:280px;margin-right: 10px;"></Input>
-                    <Button type="primary" @click.prevent="sendCodePersonal"
+                    <Button type="primary" @click.prevent="sendCodePersonal('num')"
                             :disabled="notAuth.cardAuthForm.sendCodeText !='获取验证码'">{{notAuth.cardAuthForm.sendCodeText}}
                     </Button>
                   </FormItem>
+                  <FormItem>
+                    <p style="color:#F10C0C">收不到验证码？请<span style="color:#4A97EE">重新获取</span>或<span style="color:#4A97EE;cursor:pointer" @click="sendCodePersonal('voice')">接收语音验证码</span></p>
+                  </FormItem>  
                   <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">请上传实名认证图片
                     上传文件支持jpg/png/gif/pdf，单个文件最大不超过4MB。</p>
                   <div class="IDCard">
@@ -303,7 +306,7 @@
                       <div style="display: flex;justify-content: space-between">
                         <Input v-model="notAuth.quicklyAuthForm.phone" placeholder="请输入以该身份证开户的手机号码"
                                style="width:260px;margin-right: 10px"></Input>
-                        <Button type="primary" @click="sendCode" style="width:92px"
+                        <Button type="primary" @click="sendCode('num')" style="width:92px"
                                 :disabled="notAuth.quicklyAuthForm.sendCodeText!='获取验证码'">
                           {{notAuth.quicklyAuthForm.sendCodeText}}
                         </Button>
@@ -313,6 +316,9 @@
                   <FormItem label="验证码" prop="validateCode">
                     <Input v-model="notAuth.quicklyAuthForm.validateCode" placeholder="请输入验证码"></Input>
                   </FormItem>
+                  <FormItem>
+                    <p style="color:#F10C0C">收不到验证码？请<span style="color:#4A97EE">重新获取</span>或<span style="color:#4A97EE;cursor:pointer" @click="sendCode('voice')">接收语音验证码</span></p>
+                  </FormItem>  
                   <FormItem>
                     <div style="float:right">
                       <Button style="margin-right:10px" @click="reset">重置表单</Button>
@@ -509,7 +515,7 @@
                            style="width: 300px"></Input>
                     <button class="sendCompanyCode"
                             :class="{codeDisabled:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}"
-                            @click.prevent="sendCompanyCode"
+                            @click.prevent="sendCompanyCode('num')"
                             :disabled="notAuth.companyAuthForm.codePlaceholder!='发送验证码'">{{
                       notAuth.companyAuthForm.codePlaceholder }}
                     </button>
@@ -518,6 +524,9 @@
                     <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码"
                            style="width: 300px"></Input>
                   </FormItem>
+                  <FormItem>
+                    <p style="color:#F10C0C">收不到验证码？请<span style="color:#4A97EE">重新获取</span>或<span style="color:#4A97EE;cursor:pointer" @click.prevent="sendCompanyCode('voice')">接收语音验证码</span></p>
+                  </FormItem> 
                   <FormItem label="身份证号码" prop="agentManID">
                     <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码"
                            style="width: 300px;"></Input>
@@ -1051,8 +1060,7 @@
       </div>
       <div class="keyPhoneVal" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p>为保障您的账户安全，请进行手机验证：</p>
-        <p v-if="!isEmailVail">手机号码： <span>{{keyForm.phone}}</span></p>
-        <p v-else>邮箱地址： <span>{{$store.state.userInfo.loginname}}</span></p>
+        <p>手机号码： <span>{{keyForm.phone}}</span></p>
         <p> 图形验证码
           <Input v-model="keyForm.imgCode" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
           <img :src="imgSrc" style="width:80px;height:30px;vertical-align: middle"
@@ -1065,13 +1073,9 @@
                   :disabled="keycodePlaceholder!='获取验证码'">{{keycodePlaceholder}}
           </Button>
         </p>
-        <p style="font-size:12px;color:#F10C0C">收不到验证码？
-          <span v-if="$store.state.userInfo.loginname">
-            请换<span @click="isEmailVail=true"  style="color:#4A97EE;cursor:pointer">邮箱验证</span>或
-          </span>
-          <span @click.prevent="keysendCode('voiceVail')" style="color:#4A97EE;cursor:pointer">接收语音验证码</span>
-        </p>
-        <P style="font-size:12px;color:#4A97EE;margin-bottom:0;cursor:pointer">通过身份验证方式找回账号</P>
+        <p>没有收到验证码？</p>
+        <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" style="cursor:auto">重新获取</span>或<span class="blue"  @click.prevent="keysendCode('voiceVail')">接收语音验证码</span>。</p>
+        <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue">通过身份证号码验证</span>更改手机号。</p>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.keyPhoneVal=false">取消</Button>
@@ -1248,8 +1252,6 @@
         // 当前选中的tab页
         currentTab: currentTab ? currentTab : 'personalInfo',
         authType,
-        isEmailVail: false,
-        resultAim: '',
         showModal: {
           selectAuthType: false,
           addLinkman: false,
@@ -2309,16 +2311,26 @@
         this.notAuth.quicklyAuthForm.validateCode = ''
       },
       // 快速认证时发送验证码
-      sendCode() {
+      sendCode(codeType) {
         this.$refs.sendCode.validate(validate => {
           if (validate) {
-            axios.get('user/code.do', {
-              params: {
+            var url = ''
+            var params
+            if (codeType == 'num') {
+              url = 'user/code.do'
+              params = {
                 aim: this.notAuth.quicklyAuthForm.phone,
                 isemail: 0,
                 vailCode: this.notAuth.quicklyAuthForm.pictureCode
               }
-            }).then(response => {
+            } else {
+              url = 'user/voiceCode.do'
+              params = {
+                aim: this.notAuth.quicklyAuthForm.phone,
+                vailCode: this.notAuth.quicklyAuthForm.pictureCode
+              }
+            }
+            axios.get(url, {params}).then(response => {
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
                 var countdown = 60
@@ -2339,7 +2351,7 @@
         })
       },
       // 个人认证，发送验证码
-      sendCodePersonal() {
+      sendCodePersonal(codeType) {
         var validataTel = null
         var validataImgcode = null
         this.$refs.cardAuth.validateField('tel', function (text) {
@@ -2349,13 +2361,23 @@
           validataImgcode = text == ''
         })
         if (validataTel && validataImgcode) {
-          axios.get('user/code.do', {
-            params: {
+          var url = ''
+          var params
+          if (codeType == 'num') {
+            url = 'user/code.do'
+            params = {
               aim: this.notAuth.cardAuthForm.tel,
               isemail: 0,
               vailCode: this.notAuth.cardAuthForm.imgCode
             }
-          }).then(response => {
+          } else {
+            url = 'user/voiceCode.do'
+            params = {
+              aim: this.notAuth.cardAuthForm.tel,
+              vailCode: this.notAuth.cardAuthForm.imgCode
+            }
+          }
+          axios.get(url, {params}).then(response => {
             // 发送成功，进入倒计时
             if (response.status == 200 && response.data.status == 1) {
               var countdown = 60
@@ -2503,7 +2525,7 @@
         })
       },
       /* 企业认证发送验证码 */
-      sendCompanyCode() {
+      sendCompanyCode(codeType) {
         var regPhone = false
         var regCode = false
         this.$refs.companyAuth.validateField('linkManPhone', (text) => {
@@ -2517,13 +2539,23 @@
           }
         })
         if (regPhone && regPhone) {
-          axios.get('user/code.do', {
-            params: {
+          var url = ''
+          var params
+          if (codeType == 'num') {
+            url = 'user/code.do'
+            params = {
               aim: this.notAuth.companyAuthForm.linkManPhone,
-              isemail: '0',
-              vailCode: this.notAuth.companyAuthForm.imgCode,
+              isemail: 0,
+              vailCode: this.notAuth.companyAuthForm.imgCode
             }
-          }).then(response => {
+          } else {
+            url = 'user/voiceCode.do'
+            params = {
+              aim: this.notAuth.companyAuthForm.linkManPhone,
+              vailCode: this.notAuth.companyAuthForm.imgCode
+            }
+          }
+          axios.get(url, {params}).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               // 发送倒计时
               let countdown = 60
@@ -3139,7 +3171,6 @@
             } else if (response.status == 200 && response.data.status == 20) {
               this.keyForm.imgCode = ''
               this.keyForm.code = ''
-              this.isEmailVail = false
               this.showModal.keyPhoneVal = true
               this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.keyWeight = response.data.data.weight
@@ -3159,20 +3190,19 @@
           this.$Message.info('图像验证码不能为空')
           return false  
         }
-        this.resultAim = this.isEmailVail ? this.$store.state.userInfo.loginname : this.keyForm.phone
         var params
         var url = ''
         if (val == 'num') {
           url = 'user/code.do'
           params = {
-            aim: this.resultAim,
-            isemail: this.isEmailVail ? 1 : 0,
+            aim: this.keyForm.phone,
+            isemail: 0,
             vailCode: this.keyForm.imgCode
           }
         } else {
           url = 'user/voiceCode.do'
           params = {
-            aim: this.resultAim,
+            aim: this.keyForm.phone,
             vailCode: this.keyForm.imgCode
           }
         }
@@ -3205,8 +3235,8 @@
         this.showModal.keyPhoneVal = false
         axios.get('user/judgeCode.do', {
           params: {
-            aim: this.resultAim,
-            isemail: this.isEmailVail ? 1 : 0,
+            aim: this.keyForm.phone,
+            isemail: 0,
             code: this.keyForm.code,
             weight: this.keyWeight
           }
@@ -3310,6 +3340,10 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+.blue {
+  color: #2A99F2;
+  cursor: pointer;
+}
   h2 {
     font-size: 22px;
     font-family: MicrosoftYaHei;
