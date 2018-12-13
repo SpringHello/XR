@@ -16,10 +16,10 @@
         </div>
         <div class="loginOrRegister-form">
           <div class="title">
-            <span :class="{select: formType == 'login'}" @click="formType = 'login'">登录</span>
-            <span :class="{select: formType == 'register'}" @click="formType = 'register'">注册</span>
+            <span :class="{select: formType === 'login'}" @click="formType = 'login'">登录</span>
+            <span :class="{select: formType === 'register'}" @click="formType = 'register'">注册</span>
           </div>
-          <div class="login-body" v-show="formType == 'login'">
+          <div class="login-body" v-show="formType === 'login'">
             <div class="import" :class="{error: loginForm.errorMsg === 'notRegister' || loginForm.errorMsg === 'formatError'}">
               <img src="../../assets/img/login/lr-icon1.png"/>
               <input v-model="loginForm.loginName" type="text" placeHolder="请输入手机号或邮箱" @blur="verifyIsRegister" @input="loginForm.errorMsg=''"/>
@@ -27,45 +27,62 @@
             <div class="errorMsg">
               <div v-if="loginForm.errorMsg === 'notRegister'">
                 <i></i>
-                <p>该号码不存在，请先去<span>注册</span></p>
+                <p>该用户不存在，请先去<span @click="formType = 'register'">注册</span></p>
               </div>
               <div v-if="loginForm.errorMsg === 'formatError'">
                 <i></i>
                 <p>请输入正确的手机号码或者邮箱地址</p>
               </div>
             </div>
-            <div class="import" v-if="true">
+            <div class="import" :class="{error: loginForm.errorMsg === 'passwordMistake'}" v-if="loginForm.loginType === 'password'">
               <img src="../../assets/img/login/lr-icon2.png"/>
-              <input v-model="loginForm.password" ref="loginPasInput" type="password" placeHolder="请输入密码"/>
+              <input v-model="loginForm.password" ref="loginPasInput" @input="loginForm.errorMsg=''" type="password" placeHolder="请输入密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('loginPasInput')" src="../../assets/img/login/lr-icon3.png"/>
             </div>
-            <div class="import" v-if="false">
+            <div class="import" v-if="loginForm.loginType === 'vailCode'">
               <img src="../../assets/img/login/lr-icon4.png"/>
               <input class="verification" v-model="loginForm.verificationCode" type="text" placeHolder="请输入收到的验证码"/>
               <a>发送验证码</a>
             </div>
-            <div class="errorMsg"></div>
-            <drag-verify ref="Verify" :width="dragVerifyConfig.width"
-                         :height="dragVerifyConfig.height"
-                         :text="dragVerifyConfig.text"
-                         :success-text="dragVerifyConfig.successText"
-                         :background="dragVerifyConfig.background"
-                         :progress-bar-bg="dragVerifyConfig.progressBarBg"
-                         :completed-bg="dragVerifyConfig.completedBg"
-                         :handler-bg="dragVerifyConfig.handlerBg"
-                         :handler-icon="dragVerifyConfig.handlerIcon"
-                         :success-icon="dragVerifyConfig.successIcon"
-                         :text-size="dragVerifyConfig.textSize"
-                         :circle="dragVerifyConfig.circle"></drag-verify>
-            <div class="errorMsg"></div>
-            <button @click="toLogin">登录</button>
+            <div class="errorMsg">
+              <div v-if="loginForm.errorMsg === 'passwordMistake'">
+                <i></i>
+                <p>您的密码输入有误，请重新输入</p>
+              </div>
+              <div v-if="loginForm.errorMsg === 'passwordMistakeTanto'">
+                <i></i>
+                <p>您输入的密码错误达4次，请<span @click="loginForm.loginType = 'vailCode'">更换登录方式</span></p>
+              </div>
+            </div>
+            <div @mousedown="enterDrag">
+              <drag-verify ref="Verify" :width="dragVerifyConfig.width"
+                           :height="dragVerifyConfig.height"
+                           :text="dragVerifyConfig.text"
+                           :success-text="dragVerifyConfig.successText"
+                           :background="dragVerifyConfig.background"
+                           :progress-bar-bg="dragVerifyConfig.progressBarBg"
+                           :completed-bg="dragVerifyConfig.completedBg"
+                           :handler-bg="dragVerifyConfig.handlerBg"
+                           :handler-icon="dragVerifyConfig.handlerIcon"
+                           :success-icon="dragVerifyConfig.successIcon"
+                           :text-size="dragVerifyConfig.textSize"
+                           :circle="dragVerifyConfig.circle"></drag-verify>
+            </div>
+            <div class="errorMsg">
+              <div v-if="loginForm.errorMsg === 'notSlidingValidation'">
+                <i></i>
+                <p>您还没有通过验证</p>
+              </div>
+            </div>
+            <button @click="toLogin" :class="{notAllow:loginDisabled}" :disabled="loginDisabled">登录</button>
             <div class="footer">
-              <span>验证码登录</span>
+              <span v-show="loginForm.loginType === 'password'" @click="loginForm.loginType = 'vailCode'">验证码登录</span>
+              <span v-show="loginForm.loginType === 'vailCode'" @click="loginForm.loginType = 'password'">密码登录</span>
               <span style="float: right">忘记密码？</span>
             </div>
           </div>
-          <div class="register-body" v-show="formType == 'register'">
-            <div class="import" v-if="false">
+          <div class="register-body" v-show="formType === 'register'">
+            <div class="import" v-if="true" :class="{error: registerForm.errorMsg === 'isRegister' || registerForm.errorMsg === 'formatPhoneError'}">
               <img style="margin-right: 10px" src="../../assets/img/login/lr-icon5.png"/>
               <Select class="login-select" v-model="registerForm.registerPhonePrefix" style="width:70px;margin-right: 10px">
                 <Option v-for="(item,index) in registerForm.phonePrefixList" :value="item.tel" :key="index"> +{{item.tel }}</Option>
@@ -76,20 +93,29 @@
               <img src="../../assets/img/login/lr-icon6.png"/>
               <input v-model="registerForm.loginEmail" type="text" placeHolder="请输入邮箱号码" @blur="verifyIsRegister" @input="registerForm.errorMsg=''"/>
             </div>
-            <div class="import">
+            <div class="import" v-if="false">
               <img src="../../assets/img/login/lr-icon2.png"/>
               <input v-model="registerForm.password" @focus="registerForm.passwordHint = true" @blur="registerForm.passwordHint = false" ref="registerPasInput" type="password"
                      placeHolder="请输入密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('registerPasInput')" src="../../assets/img/login/lr-icon3.png"/>
               <div class="popTip" v-show="registerForm.passwordHint"></div>
             </div>
-            <div class="errorMsg"></div>
-            <div class="import" v-if="false">
+            <div class="errorMsg">
+              <div v-if="registerForm.errorMsg === 'isRegister'">
+                <i></i>
+                <p>此号码已经注册，请<span @click="formType = 'login'">登录</span></p>
+              </div>
+              <div v-if="registerForm.errorMsg === 'formatPhoneError'">
+                <i></i>
+                <p>请输入正确的手机号码</p>
+              </div>
+            </div>
+            <div class="import" v-if="true">
               <img src="../../assets/img/login/lr-icon4.png"/>
               <input class="verification" v-model="registerForm.verificationCode" type="text" placeHolder="请输入收到的验证码"/>
               <a>发送验证码</a>
             </div>
-            <div class="import">
+            <div class="import" v-if="false">
               <img src="../../assets/img/login/lr-icon2.png"/>
               <input v-model="registerForm.passwordAffirm" ref="registerPasInputAffirm" type="password" placeHolder="请确认密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('registerPasInputAffirm')" src="../../assets/img/login/lr-icon3.png"/>
@@ -613,6 +639,9 @@
           display: flex;
           align-items: center;
           position: relative;
+          &.error {
+            border: 1px solid #ff0000;
+          }
           > img {
             margin: 0 20px;
           }
@@ -772,7 +801,10 @@
         loginForm: {
           loginName: '',
           password: '',
-          errorMsg: ''
+          errorMsg: '', // notRegister: 未注册； formatError： 手机或邮箱格式不对； passwordMistake：密码错误；notSlidingValidation： 未滑动验证;passwordMistakeTanto: 密码错误次数大于4次
+          loginType: 'password', // 登录方式 password: 密码登录   vailCode： 验证码登录
+          passwordErrorNum: 0, // 记录密码错误次数
+          verificationCodeNum: 0 // 记录验证码错误次数
         },
         registerForm: {
           phonePrefixList: areaTel,
@@ -782,16 +814,15 @@
           password: '',
           passwordAffirm: '',
           passwordHint: false,
-          errorMsg: '',
+          errorMsg: '',//isRegister: 已注册 ； formatPhoneError： 手机格式不对；
           verificationCode: '',
           agreeStatus: true
-        }
+        },
       }
     },
     created() {
     },
     mounted() {
-      console.log(this.$refs.Verify.isPassing)
     },
     methods: {
       /* 切换banner */
@@ -804,26 +835,86 @@
       },
       /* 校验手机号是否注册 */
       verifyIsRegister() {
-        if (this.regExpObj.phone.test(this.loginForm.loginName) || this.regExpObj.email.test(this.loginForm.loginName)) {
-          axios.get('user/isRegister.do', {
-            params: {
-              username: this.loginForm.loginName
-            }
-          }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.loginForm.errorMsg = 'notRegister'
-            } else {
-              this.loginForm.errorMsg = ''
-            }
-          })
+        if (this.formType === 'login') {
+          if (this.regExpObj.phone.test(this.loginForm.loginName) || this.regExpObj.email.test(this.loginForm.loginName)) {
+            axios.get('user/isRegister.do', {
+              params: {
+                username: this.loginForm.loginName
+              }
+            }).then(response => {
+              if (response.status === 200 && response.data.status === 1) {
+                this.loginForm.errorMsg = 'notRegister'
+              } else {
+                this.loginForm.errorMsg = ''
+              }
+            })
+          } else {
+            this.loginForm.errorMsg = 'formatError'
+          }
         } else {
-          this.loginForm.errorMsg = 'formatError'
+          if (this.regExpObj.phone.test(this.registerForm.loginPhone)) {
+            axios.get('user/isRegister.do', {
+              params: {
+                username: this.registerForm.loginPhone
+              }
+            }).then(response => {
+              if (response.status === 200 && response.data.status === 1) {
+                this.registerForm.errorMsg = ''
+              } else {
+                this.registerForm.errorMsg = 'isRegister'
+              }
+            })
+          } else {
+            this.registerForm.errorMsg = 'formatPhoneError'
+          }
         }
       },
+      /* 鼠标移入滑动验证 */
+      enterDrag() {
+        this.loginForm.errorMsg === 'notSlidingValidation' ? this.loginForm.errorMsg = '' : null
+      },
       toLogin() {
+        if (!this.loginForm.loginName) {
+          this.loginForm.errorMsg = 'formatError'
+          return
+        }
+        if (!this.loginForm.password) {
+          this.loginForm.errorMsg = 'passwordMistake'
+          return
+        }
+        if (!this.$refs.Verify.isPassing) {
+          this.loginForm.errorMsg = 'notSlidingValidation'
+          return
+        }
+        let url = 'user/login.do', params = {
+          username: this.loginForm.loginName,
+          password: this.loginForm.password,
+          vailCode: '1'
+        }
+        axios.get(url, {params}).then(res => {
+          if (res.data.status === 1 && res.status === 200) {
 
+          } else if (res.data.status === 0) {
+            //&& res.data.message === '账户或密码错误，请重新输入'
+            if (this.loginForm.passwordErrorNum < 4) {
+              this.loginForm.passwordErrorNum += 1
+              this.loginForm.errorMsg = 'passwordMistake'
+            } else {
+              this.loginForm.errorMsg = 'passwordMistakeTanto'
+            }
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       }
     },
-    computed: {}
+    computed: {
+      loginDisabled() {
+        return this.loginForm.errorMsg !== ''
+      }
+    },
+    watch: {}
   }
 </script>
