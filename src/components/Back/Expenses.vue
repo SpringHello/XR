@@ -1470,7 +1470,7 @@
         },
         // 提现
         withdrawForm: {
-          accountList: [{name: '支付宝', type: '支付宝'}, {name: '微信支付', type: '微信'}, {name: '银行卡', type: '银行卡'}],
+          accountList: [{name: '支付宝', type: '支付宝'}, {name: '微信支付', type: '微信'}/*, {name: '银行卡', type: '银行卡'}*/],
           // 账户类型
           accountType: '',
           // 金额
