@@ -255,7 +255,8 @@
               ticketType: '',
               isuse: 0,
               orderNumber: orderNumber + '',
-              totalCost: this.couponInfo.cost
+              totalCost: this.couponInfo.cost,
+              notOverTime: '1'
             }
           }).then(response => {
             this.couponInfo.couponList = response.data.result
@@ -300,7 +301,8 @@
             ticketType: '',
             isuse: 0,
             orderNumber: orderNumber + '',
-            totalCost: cost
+            totalCost: cost,
+            notOverTime: '1'
           }
         }).then(response => {
           this.couponInfo.couponList = response.data.result
