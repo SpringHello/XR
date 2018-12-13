@@ -111,8 +111,8 @@
                                placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
-              <Button type="primary" style="margin-left: 120px" @click="orderRefund" :disabled="refundDisabled">退款</Button>
-              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
+              <!--<Button type="primary" style="margin-left: 120px" @click="orderRefund" :disabled="refundDisabled">退款</Button>-->
+              <Button type="primary" style="margin-left: 195px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
             </div>
@@ -359,6 +359,9 @@
             <span>解冻到余额<span style="color: #FF1E39;margin-left: 15px">{{ unfreezeToBalanceHintText }}</span></span>
           </Radio>
         </RadioGroup>
+        <div v-if="unfreezeTo=='account'" style="border-top:1px dashed rgba(151,151,151,1);padding: 20px 0 10px;">
+          <p style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,57,42,1);">*优先退回到原支付账户，原支付账户不可用时则退回到下方填写的账户。</p>
+        </div>
         <Form v-if="unfreezeTo=='account'" :model="withdrawForm" :rules="withdrawValidate" ref="unfreeze">
           <Form-item label="收款人姓名" prop="payeeName">
             <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
