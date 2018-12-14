@@ -1,12 +1,12 @@
 <template>
     <div  :class="wrapClasses" style=" height: 46px;border-radius:4px;">
       <img class="ver_img" :src="icon">
-        <div style="ver_select" v-if="isSelect">
+        <div class="ver_select" >
             <div>
                 +86
             </div>
             <div class="ver_option">
-                <ul>
+                <ul class="ver_ul">
                     <li v-for="(item,index) in telList" :key="index">{{item.tel}}</li>
                 </ul>
             </div>
@@ -84,10 +84,11 @@ export default {
     data(){
         return{
             account:this.value,
-            style:'height: 44px;padding-left: 39px;',
+            style:'height: 44px;padding-left: 96px;',
             prefixCls: prefixCls,
             isSelect:false,
             isValid:true,
+            telList:telList
         }
     },
     methods:{
@@ -209,15 +210,20 @@ export default {
       .ver_select{
           margin:16px 0 11px 14px;
           cursor: pointer;
-          border: none;
           width:35px;
-          background-color: rgba(0, 0, 0, 0);
+        
           background-image: none;
           position: absolute;
           left: 35px;
           z-index: 3;
-          -webkit-appearance: none;
-		-moz-appearance: none;
+          display: inline-block;
+          div{
+              display: inline-block;
+          }
+          .ver_ul{
+              
+              line-height: 17px;
+          }
       }
       .ver_select::after{
           content: '';
@@ -225,7 +231,15 @@ export default {
     .ver_select::-ms-expand { display: none; }
     .ver_option{
         max-height: 200px;
+        background: #fff;
         overflow: auto;
+        li{
+            padding: 2px 2px 2px 5px;
+            transition:background 0.2 ease-in-out;
+        }
+        li:hover{
+            background: #dddddd;
+        }
     }
     .ver_option::-webkit-scrollbar{
       width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
