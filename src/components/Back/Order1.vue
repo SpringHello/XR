@@ -30,7 +30,7 @@
             原价：<span :class="{cross:couponInfo.originCost!=couponInfo.totalCost}">{{couponInfo.originCost}}元</span><span
             style="font-size:18px;color:rgba(0,0,0,0.65);margin-left: 20px;">总计支付：{{couponInfo.totalCost}}元</span>
           </p>
-          <p style="text-align: right;color: #F85E1D" >{{ spentCostNode }}</p>
+          <p style="text-align: right;color: #F85E1D">{{ spentCostNode }}</p>
           <div style="text-align: right;margin: 10px 0;">
             <ul>
               <li v-for="(item,index) in showFree"
@@ -328,8 +328,8 @@
             order += item.orderId + ','
           }
         })
-        if (order == '') {
-          this.$message.info('请选择需要支付的订单')
+        if (this.couponInfo.totalCost == 0) {
+          this.$Message.info('请选择需要支付的订单')
           return
         }
         axios.get('information/zfconfirm.do', {
@@ -372,8 +372,7 @@
         })
       }
     },
-    computed: {
-    },
+    computed: {},
     watch: {
       'couponInfo.selectTicket': {
         handler: function () {
