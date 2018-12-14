@@ -65,7 +65,7 @@
             <!-- 邮箱验证方式 -->
             <div class="verification" v-if="verPage == 'email'">
               <p class="ver_p">我们会发送一封验证邮件到您的邮箱，请注意查收</p>
-                <x-Input  :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入邮箱' ></x-Input>
+                <x-Input  :icon='url.icon1' v-model="dataFroms.email"  placeholder='请输入邮箱' ></x-Input>
               <div class="v_email">
                 前往邮箱
               </div>
@@ -74,8 +74,8 @@
             <!-- 手机验证方式 -->
             <div class="verification" v-if="verPage == 'phone' && index == 3">
               <p class="ver_p">请输入有效手机号码用于接收验证码</p>
-              <x-Input  :icon='url.iconPhone' v-model="formValidate.account"  placeholder='请输入手机号' ></x-Input>
-              <x-Input  :icon='url.iconYan' v-model="formValidate.account"  placeholder='请输入验证码' ></x-Input>
+              <x-Input  :icon='url.iconPhone' choice='select' v-model="dataFroms.phone"  placeholder='请输入手机号' ></x-Input>
+              <x-Input  :icon='url.iconYan' choice='validate' v-model="dataFroms.code"  placeholder='请输入验证码' ></x-Input>
                <Button type="primary" @click="index = 4">下一步</Button>
             </div>
 
@@ -127,8 +127,8 @@
 
             <!-- 设置新密码 -->
             <div class="verification" v-if="index == 4">
-               <x-Input  :icon='url.iconLock' v-model="formValidate.account"  placeholder='请输入账号' ></x-Input>
-               <x-Input  :icon='url.iconLock' v-model="formValidate.account"  placeholder='请输入账号' ></x-Input>
+               <x-Input  :icon='url.iconLock' v-model="dataFroms.newPaw"  placeholder='请输入账号' ></x-Input>
+               <x-Input  :icon='url.iconLock' v-model="dataFroms.oldPaw"  placeholder='请输入账号' ></x-Input>
             </div>
 
             <!-- 完成 -->
@@ -270,9 +270,15 @@
         //验证
         verPage:'',
         style:'',
-        account:'',
-        newPaw:'',
-        oldPaw:'',
+        dataFroms:{
+          account:'',
+          newPaw:'',
+          oldPaw:'',
+          email:'',
+          phone:'',
+          code:''
+        },
+       
         //账号是否可用
         accountIsDis:false,
         absc:true,

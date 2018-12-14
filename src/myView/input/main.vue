@@ -2,14 +2,16 @@
     <div  :class="wrapClasses" style=" height: 46px;border-radius:4px;">
       <img class="ver_img" :src="icon">
         <div class="ver_select" >
-            <div @click="isShow = !isShow">
+            <div @click="isShow = !isShow" class="verNumber" :class="[isShow ?'verNumber':'verNumbers']">
                 +{{selectValue}}
             </div>
+             <transition name="fade">
             <div class="ver_option" v-show="isShow">
                 <ul class="ver_ul">
                     <li :class="selectIndex == index ?'ver_li':''" v-for="(item,index) in telList" :key="index" @click="selectLiValue(item.tel,index)">{{item.tel}}</li>
                 </ul>
             </div>
+             </transition>
         </div>
         <input :value='account'  :style="style"
         :id="elementId"
@@ -29,6 +31,9 @@
         @keydown="handleKeydown"
         @focus="handleFocus"
         >
+        <div class="ver_yan">
+            获取验证码
+        </div>
         <!-- <img class="ver_img"  :src="icon"> -->
     </div>
 </template>
@@ -145,7 +150,7 @@ export default {
             this.selectIndex = index;
             this.selectValue = tel;
             this.isShow = !this.isShow;
-        }
+        },
     },
     created(){
      
@@ -176,7 +181,7 @@ export default {
             this.style = 'height: 44px;padding-left: 96px;';
         }else if(this.choice == 'validate'){
             this.isValid = true;
-            this.style='height: 44px;padding-left: 39px;padding-right:70px;'
+            this.style='height: 44px;padding-left: 39px;padding-right:98px;'
         }else{
              this.isSelect = false;
              this.isValid = false;
@@ -224,7 +229,6 @@ export default {
           left: 35px;
           z-index: 3;
           display: inline-block;
-        
           div{
               display: inline-block;
           }
@@ -232,15 +236,36 @@ export default {
               line-height: 17px;
           }
       }
-      .ver_select::after{
-          content: '';
+      .verNumber{
+          width: inherit;
       }
-    .ver_select::-ms-expand { display: none; }
+      .verNumber::after{
+          content: '';
+          width: 8px;
+          height: 8px;
+          border: solid #999999;
+          border-width: 0 1px 1px 0;
+          position: absolute;
+          transform: rotate(45deg);
+          transition: transform 0.2 ease-in-out;
+      }
+      .verNumbers::after{
+           content: '';
+          width: 8px;
+          height: 8px;
+          border: solid #999999;
+          border-width: 0 1px 1px 0;
+          position: absolute;
+          transform: rotate(224deg);
+          transition: transform 0.2 ease-in-out;
+      }
     .ver_option{
         max-height: 200px;
         background: #fff;
         overflow: auto;
         transition:display 0.4 ease-in-out;
+        position: relative;
+        z-index: 999;
         margin-top: 5px; 
         .ver_li{
             background:  #2A99F2 !important;
@@ -266,6 +291,26 @@ export default {
     .ver_option::-webkit-scrollbar-track {/*滚动条里面轨道*/
       -webkit-box-shadow: inset 0 0 5px rgba(216,216,216,0.5);
       background:rgba(216,216,216,0.5);
+    }
+    .ver_yan{
+        width: 98px;
+        height: 28px;
+        line-height: 28px;
+        margin-top: 8px;
+        padding: 0 20px 0 17px;
+        border-left: 1px solid  #C8C8C8;
+        color: #4A97EE;
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+    }
+    .fade-enter-active, .fade-leave-active {
+        transition: transform,opacity 6.7s ease-in-out;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        transform: translateY(0,100px);
+        opacity: 0;
     }
 </style>
 
