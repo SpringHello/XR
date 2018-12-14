@@ -2,12 +2,12 @@
     <div  :class="wrapClasses" style=" height: 46px;border-radius:4px;">
       <img class="ver_img" :src="icon">
         <div class="ver_select" >
-            <div>
-                +86
+            <div @click="isShow = !isShow">
+                +{{selectValue}}
             </div>
-            <div class="ver_option">
+            <div class="ver_option" v-show="isShow">
                 <ul class="ver_ul">
-                    <li v-for="(item,index) in telList" :key="index">{{item.tel}}</li>
+                    <li :class="selectIndex == index ?'ver_li':''" v-for="(item,index) in telList" :key="index" @click="selectLiValue(item.tel,index)">{{item.tel}}</li>
                 </ul>
             </div>
         </div>
@@ -88,7 +88,10 @@ export default {
             prefixCls: prefixCls,
             isSelect:false,
             isValid:true,
-            telList:telList
+            telList:telList,
+            selectIndex:null,
+            selectValue:'86',
+            isShow:false
         }
     },
     methods:{
@@ -138,6 +141,11 @@ export default {
                 parent.$emit.apply(parent, [eventName].concat(params));
             }
         },
+        selectLiValue(tel,index){
+            this.selectIndex = index;
+            this.selectValue = tel;
+            this.isShow = !this.isShow;
+        }
     },
     created(){
      
@@ -211,17 +219,16 @@ export default {
           margin:16px 0 11px 14px;
           cursor: pointer;
           width:35px;
-        
           background-image: none;
           position: absolute;
           left: 35px;
           z-index: 3;
           display: inline-block;
+        
           div{
               display: inline-block;
           }
           .ver_ul{
-              
               line-height: 17px;
           }
       }
@@ -233,12 +240,18 @@ export default {
         max-height: 200px;
         background: #fff;
         overflow: auto;
+        transition:display 0.4 ease-in-out;
+        margin-top: 5px; 
+        .ver_li{
+            background:  #2A99F2 !important;
+            color: #fff;
+        }
         li{
             padding: 2px 2px 2px 5px;
             transition:background 0.2 ease-in-out;
         }
         li:hover{
-            background: #dddddd;
+            background: rgba(216,216,216,0.5);
         }
     }
     .ver_option::-webkit-scrollbar{
@@ -246,13 +259,12 @@ export default {
       height: 1px;
     }
     .ver_option::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-      border-radius: 10px;
-      -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-      background:rgba(216,216,216,0.5);
+
+      -webkit-box-shadow: inset 0 0 5px rgba(189, 188, 188, 0.651);
+      background:rgba(189, 188, 188, 0.651);
     }
     .ver_option::-webkit-scrollbar-track {/*滚动条里面轨道*/
-      -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 5px rgba(216,216,216,0.5);
       background:rgba(216,216,216,0.5);
     }
 </style>
