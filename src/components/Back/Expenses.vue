@@ -111,8 +111,8 @@
                                placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
-              <!--<Button type="primary" style="margin-left: 120px" @click="orderRefund" :disabled="refundDisabled">退款</Button>-->
-              <Button type="primary" style="margin-left: 195px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
+              <Button type="primary" style="margin-left: 120px" @click="orderRefund" :disabled="refundDisabled">退款</Button>
+              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
             </div>
@@ -397,7 +397,31 @@
         <Button type="primary" @click="unfreeze_ok">确认</Button>
       </div>
     </Modal>
-
+    <!-- 解冻条件未达成弹窗 -->
+    <Modal v-model="showModal.freezeToRenew" :scrollable="true" :closable="false" :width="550">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">申请解冻</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p style="font-size:14px;color:rgba(102,102,102,1);">解冻条件未达成，可以押金转续费</p>
+        <RadioGroup v-model="freezeToRenew">
+          <Radio label="account" style="margin:20px 0px" disabled>
+            <span>解冻到充值账户（需3-5个工作日）</span>
+          </Radio>
+          <Radio label="yue" style="display: block;margin-bottom:20px" disabled>
+            <span>解冻到余额</span>
+          </Radio>
+          <Radio label="freezeToRenew" style="display: block;margin-bottom:20px">
+            <span>押金转为续费<span style="color: #FF1E39;margin-left: 15px">*资源彻底删除后可以选择解冻到余额或充值帐户</span></span>
+          </Radio>
+        </RadioGroup>
+        <Table :columns="freezeOrderColumns" :data="freezeOrderData" style="margin-top: 20px"></Table>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.freezeToRenew = false">取消</Button>
+        <Button type="primary" @click="freezeToRenew_ok">完成</Button>
+      </div>
+    </Modal>
     <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
@@ -795,9 +819,7 @@
                               }).then(response => {
                                 if (response.status == 200 && response.data.status == 1) {
                                   this.searchCard()
-                                  this.$message.info({
-                                    content: '现金券删除成功'
-                                  })
+                                  this.$Message.success('优惠券删除成功')
                                 } else {
                                   this.$message.info({
                                     content: response.data.message
@@ -852,7 +874,7 @@
                 }
               } else {
                 /*return h('span',{},'--')*/
-                return  h('span', {
+                return h('span', {
                   style: {
                     color: '#2d8cf0',
                     cursor: 'pointer'
@@ -1463,6 +1485,7 @@
           clipCoupons: false,
           freezeParticulars: false,
           unfreeze: false,
+          freezeToRenew: false,
           notUnfreeze: false,
           // 兑换码模态框
           exchangeCard: false,
@@ -1530,6 +1553,34 @@
         imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
         /*发送验证码button innerText*/
         codePlaceholder: '发送验证码',
+        freezeToRenew: 'freezeToRenew',
+        freezeOrderColumns: [
+          {
+            title: '名称/ID',
+            key: '名称/ID'
+          },
+          {
+            title: '资源',
+            width: 200,
+            render: (h, params) => {
+              let obj = JSON.parse(params.row['资源'])
+              let arr = []
+              for (let key in obj) {
+                arr.push(h('li', {}, key + ': ' + obj[key]))
+              }
+              return h('ul', {}, arr)
+            }
+          },
+          {
+            title: '计费类型',
+            key: '计费类型'
+          },
+          {
+            title: '续费时长',
+            key: '续费时长'
+          }
+        ],
+        freezeOrderData: [],
         /*解冻到余额/账户  默认解冻到余额*/
         unfreezeTo: 'account',
         unfreezeToHint: 'account',
@@ -1620,8 +1671,21 @@
                         if (res.status == 200 && res.data.status == 1) {
                           this.showModal.unfreeze = true
                         } else {
-                          this.thawingCondition = params.row.thawCondition
-                          this.showModal.notUnfreeze = true
+                          /* this.thawingCondition = params.row.thawCondition
+                           this.showModal.notUnfreeze = true*/
+                          let url = 'user/judgeRenewalFee.do'
+                          axios.get(url, {
+                            params: {
+                              id: params.row.id
+                            }
+                          }).then(res => {
+                            if (res.status == 200 && res.data.status == 1) {
+                              this.freezeOrderData = res.data.result
+                              this.showModal.freezeToRenew = true
+                            } else {
+                              this.$message.info({content: res.data.message})
+                            }
+                          })
                         }
                       })
                     }
@@ -2146,6 +2210,7 @@
                 ticketType: this.card_type,
                 orderNumber: orderNumber + '',
                 isuse: 0,
+                notOverTime: '1',
                 totalCost: this.totalCost
               }
             }).then(response => {
@@ -2462,6 +2527,25 @@
             })
           }
         })
+      },
+      // 押金转续费
+      freezeToRenew_ok() {
+        let url = 'user/depositRenewal.do'
+        axios.get(url, {
+          params: {
+            id: this.unfreezeId
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.showModal.freezeParticulars = false
+            this.showModal.freezeToRenew = false
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       }
     },
     computed: {
@@ -2511,7 +2595,7 @@
           type,
           number
         }
-      }
+      },
     },
     watch: {
       dateRange() {
