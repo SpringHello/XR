@@ -1,15 +1,17 @@
 <template>
     <div  :class="wrapClasses" style=" height: 46px;border-radius:4px;">
       <img class="ver_img" :src="icon">
-        <div style="ver_select" v-if="isSelect">
-            <div>
-                +86
+        <div class="ver_select" >
+            <div @click="isShow = !isShow" class="verNumber" :class="[isShow ?'verNumber':'verNumbers']">
+                +{{selectValue}}
             </div>
-            <div class="ver_option">
-                <ul>
-                    <li v-for="(item,index) in telList" :key="index">{{item.tel}}</li>
+             <transition name="fade">
+            <div class="ver_option" v-show="isShow">
+                <ul class="ver_ul">
+                    <li :class="selectIndex == index ?'ver_li':''" v-for="(item,index) in telList" :key="index" @click="selectLiValue(item.tel,index)">{{item.tel}}</li>
                 </ul>
             </div>
+             </transition>
         </div>
         <input :value='account'  :style="style"
         :id="elementId"
@@ -29,6 +31,9 @@
         @keydown="handleKeydown"
         @focus="handleFocus"
         >
+        <div class="ver_yan">
+            获取验证码
+        </div>
         <!-- <img class="ver_img"  :src="icon"> -->
     </div>
 </template>
@@ -84,10 +89,14 @@ export default {
     data(){
         return{
             account:this.value,
-            style:'height: 44px;padding-left: 39px;',
+            style:'height: 44px;padding-left: 96px;',
             prefixCls: prefixCls,
             isSelect:false,
             isValid:true,
+            telList:telList,
+            selectIndex:null,
+            selectValue:'86',
+            isShow:false
         }
     },
     methods:{
@@ -137,6 +146,11 @@ export default {
                 parent.$emit.apply(parent, [eventName].concat(params));
             }
         },
+        selectLiValue(tel,index){
+            this.selectIndex = index;
+            this.selectValue = tel;
+            this.isShow = !this.isShow;
+        },
     },
     created(){
      
@@ -167,7 +181,7 @@ export default {
             this.style = 'height: 44px;padding-left: 96px;';
         }else if(this.choice == 'validate'){
             this.isValid = true;
-            this.style='height: 44px;padding-left: 39px;padding-right:70px;'
+            this.style='height: 44px;padding-left: 39px;padding-right:98px;'
         }else{
              this.isSelect = false;
              this.isValid = false;
@@ -209,37 +223,94 @@ export default {
       .ver_select{
           margin:16px 0 11px 14px;
           cursor: pointer;
-          border: none;
           width:35px;
-          background-color: rgba(0, 0, 0, 0);
           background-image: none;
           position: absolute;
           left: 35px;
           z-index: 3;
-          -webkit-appearance: none;
-		-moz-appearance: none;
+          display: inline-block;
+          div{
+              display: inline-block;
+          }
+          .ver_ul{
+              line-height: 17px;
+          }
       }
-      .ver_select::after{
+      .verNumber{
+          width: inherit;
+      }
+      .verNumber::after{
           content: '';
+          width: 8px;
+          height: 8px;
+          border: solid #999999;
+          border-width: 0 1px 1px 0;
+          position: absolute;
+          transform: rotate(45deg);
+          transition: transform 0.2 ease-in-out;
       }
-    .ver_select::-ms-expand { display: none; }
+      .verNumbers::after{
+           content: '';
+          width: 8px;
+          height: 8px;
+          border: solid #999999;
+          border-width: 0 1px 1px 0;
+          position: absolute;
+          transform: rotate(224deg);
+          transition: transform 0.2 ease-in-out;
+      }
     .ver_option{
         max-height: 200px;
+        background: #fff;
         overflow: auto;
+        transition:display 0.4 ease-in-out;
+        position: relative;
+        z-index: 999;
+        margin-top: 5px; 
+        .ver_li{
+            background:  #2A99F2 !important;
+            color: #fff;
+        }
+        li{
+            padding: 2px 2px 2px 5px;
+            transition:background 0.2 ease-in-out;
+        }
+        li:hover{
+            background: rgba(216,216,216,0.5);
+        }
     }
     .ver_option::-webkit-scrollbar{
       width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
       height: 1px;
     }
     .ver_option::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-      border-radius: 10px;
-      -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-      background:rgba(216,216,216,0.5);
+
+      -webkit-box-shadow: inset 0 0 5px rgba(189, 188, 188, 0.651);
+      background:rgba(189, 188, 188, 0.651);
     }
     .ver_option::-webkit-scrollbar-track {/*滚动条里面轨道*/
-      -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 5px rgba(216,216,216,0.5);
       background:rgba(216,216,216,0.5);
+    }
+    .ver_yan{
+        width: 98px;
+        height: 28px;
+        line-height: 28px;
+        margin-top: 8px;
+        padding: 0 20px 0 17px;
+        border-left: 1px solid  #C8C8C8;
+        color: #4A97EE;
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+    }
+    .fade-enter-active, .fade-leave-active {
+        transition: transform,opacity 6.7s ease-in-out;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        transform: translateY(0,100px);
+        opacity: 0;
     }
 </style>
 
