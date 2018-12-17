@@ -889,7 +889,7 @@
     <!-- 绑定手机 -->
     <Modal v-model="showModal.bindingMobilePhone" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">绑定手机号</span>
+        <span class="universal-modal-title">修改手机号码</span>
       </p>
       <div class="universal-modal-content-flex">
         <div>
@@ -937,15 +937,19 @@
             </div>
           </Form>
           <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'phone'&&bindingMobilePhoneForm.step ==0">
-            <p>没有收到验证码？</p>
+            <!-- <p>没有收到验证码？</p>
             <p>1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
-            <p> 2、如果手机已丢失或停机，请<span @click="bindingMobilePhoneForm.verificationMode = 'email'">更换验证方式</span></p>
+            <p> 2、如果手机已丢失或停机，请<span @click="bindingMobilePhoneForm.verificationMode = 'email'">更换验证方式</span></p> -->
+            <p>没有收到验证码？111</p>
+            <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" style="cursor:auto">重新获取</span>或<span class="blue"  @click.prevent="keysendCode('voiceVail')">接收语音验证码</span>。</p>
+            <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue">通过身份证号码验证</span>更改手机号。</p>
           </div>
-          <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'email'&&bindingMobilePhoneForm.step ==0">
+          
+          <!-- <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'email'&&bindingMobilePhoneForm.step ==0">
             <p>没有收到验证码？</p>
             <p>1、检查您的邮箱垃圾箱。</p>
             <p>2、如果邮箱仍收不到验证码，请<span @click="bindingMobilePhoneForm.verificationMode = 'phone'">更换验证方式</span></p>
-          </div>
+          </div> -->
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -1283,7 +1287,7 @@
           keyPhoneVal: false,
           showPicture: false,
           setNewPassword: false,
-          ModifyTelVail: flase,
+          ModifyTelVail: false,
           bindingMobilePhone: false,
           bindingEmail: false,
           modifyPassword: false,

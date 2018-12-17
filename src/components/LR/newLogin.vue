@@ -39,10 +39,10 @@
               <input v-model="loginForm.password" ref="loginPasInput" @input="loginForm.errorMsg=''" type="password" placeHolder="请输入密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('loginPasInput')" src="../../assets/img/login/lr-icon3.png"/>
             </div>
-            <div class="import" v-if="loginForm.loginType === 'vailCode'">
+            <div class="import" :class="{error: loginForm.errorMsg === 'verificationCodeMistake'}" v-if="loginForm.loginType === 'vailCode'">
               <img src="../../assets/img/login/lr-icon4.png"/>
-              <input class="verification" v-model="loginForm.verificationCode" type="text" placeHolder="请输入收到的验证码"/>
-              <a>发送验证码</a>
+              <input class="verification" v-model="loginForm.verificationCode" @input="loginForm.errorMsg=''" type="text" placeHolder="请输入收到的验证码"/>
+              <a @click="sendLoginVailCode" :class="{disabled:loginForm.verificationCodeText !== '发送验证码' }">{{ loginForm.verificationCodeText}}</a>
             </div>
             <div class="errorMsg">
               <div v-if="loginForm.errorMsg === 'passwordMistake'">
@@ -51,11 +51,23 @@
               </div>
               <div v-if="loginForm.errorMsg === 'passwordMistakeTanto'">
                 <i></i>
-                <p>您输入的密码错误达4次，请<span @click="loginForm.loginType = 'vailCode'">更换登录方式</span></p>
+                <p>您输入的密码错误达4次，请<span @click="loginForm.loginType = 'vailCode',loginForm.errorMsg=''">更换登录方式</span></p>
+              </div>
+              <div v-if="loginForm.errorMsg === 'verificationCodeMistake'">
+                <i></i>
+                <p>您输入的验证码有误，请重新输入</p>
+              </div>
+              <div v-if="loginForm.errorMsg === 'notGetVerificationCode'&&loginNameIsPhone">
+                <i></i>
+                <p>收不到验证码？请<span @click="loginForm.loginType='password',loginForm.errorMsg=''">更换登录方式</span>或<span @click="getLoginVoiceCode">接收语音验证码</span></p>
+              </div>
+              <div v-if="loginForm.errorMsg === 'notGetVerificationCode'&&!loginNameIsPhone">
+                <i></i>
+                <p>收不到验证码？请<span @click="loginForm.loginType='password',loginForm.errorMsg=''">更换登录方式</span></p>
               </div>
             </div>
             <div @mousedown="enterDrag">
-              <drag-verify ref="Verify" :width="dragVerifyConfig.width"
+              <drag-verify v-if="dragVerifyStatus" ref="Verify" :width="dragVerifyConfig.width"
                            :height="dragVerifyConfig.height"
                            :text="dragVerifyConfig.text"
                            :success-text="dragVerifyConfig.successText"
@@ -67,6 +79,7 @@
                            :success-icon="dragVerifyConfig.successIcon"
                            :text-size="dragVerifyConfig.textSize"
                            :circle="dragVerifyConfig.circle"></drag-verify>
+              <div v-else style="height: 44px;"></div>
             </div>
             <div class="errorMsg">
               <div v-if="loginForm.errorMsg === 'notSlidingValidation'">
@@ -76,29 +89,37 @@
             </div>
             <button @click="toLogin" :class="{notAllow:loginDisabled}" :disabled="loginDisabled">登录</button>
             <div class="footer">
-              <span v-show="loginForm.loginType === 'password'" @click="loginForm.loginType = 'vailCode'">验证码登录</span>
-              <span v-show="loginForm.loginType === 'vailCode'" @click="loginForm.loginType = 'password'">密码登录</span>
+              <span v-show="loginForm.loginType === 'password'" @click="changeToVailCodeLogin">验证码登录</span>
+              <span v-show="loginForm.loginType === 'vailCode'" @click="changeToPasswordLogin">密码登录</span>
               <span style="float: right">忘记密码？</span>
             </div>
           </div>
           <div class="register-body" v-show="formType === 'register'">
-            <div class="import" v-if="true" :class="{error: registerForm.errorMsg === 'isRegister' || registerForm.errorMsg === 'formatPhoneError'}">
+            <div class="import" v-if="registerForm.registerType==='phone'&& registerForm.onStep === 1"
+                 :class="{error: registerForm.errorMsg === 'isRegister' || registerForm.errorMsg === 'formatPhoneError'}">
               <img style="margin-right: 10px" src="../../assets/img/login/lr-icon5.png"/>
               <Select class="login-select" v-model="registerForm.registerPhonePrefix" style="width:70px;margin-right: 10px">
                 <Option v-for="(item,index) in registerForm.phonePrefixList" :value="item.tel" :key="index"> +{{item.tel }}</Option>
               </Select>
               <input class="verificationPhone" v-model="registerForm.loginPhone" type="text" placeHolder="请输入手机号码" @blur="verifyIsRegister" @input="registerForm.errorMsg=''"/>
             </div>
-            <div class="import" v-if="false">
+            <div class="import" v-if="registerForm.registerType==='email'&& registerForm.onStep === 1" :class="{error: registerForm.errorMsg === 'formatEmailError'}">
               <img src="../../assets/img/login/lr-icon6.png"/>
               <input v-model="registerForm.loginEmail" type="text" placeHolder="请输入邮箱号码" @blur="verifyIsRegister" @input="registerForm.errorMsg=''"/>
             </div>
-            <div class="import" v-if="false">
+            <div class="import" v-if="registerForm.onStep === 2" :class="{error: registerForm.errorMsg === 'passwordTooEasy'}">
               <img src="../../assets/img/login/lr-icon2.png"/>
-              <input v-model="registerForm.password" @focus="registerForm.passwordHint = true" @blur="registerForm.passwordHint = false" ref="registerPasInput" type="password"
+              <input v-model="registerForm.password" @focus="registerForm.passwordHint = true" @blur="registerPasswordBlur" @input="registerForm.errorMsg=''"
+                     ref="registerPasInput" type="password"
                      placeHolder="请输入密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('registerPasInput')" src="../../assets/img/login/lr-icon3.png"/>
-              <div class="popTip" v-show="registerForm.passwordHint"></div>
+              <div class="popTip" v-show="registerForm.passwordHint">
+                <div><i :class="{reach: registerForm.passwordDegree > 0 }"></i>
+                  <p>8-32个字符</p></div>
+                <div><i :class="{reach: registerForm.passwordDegree > 1 }"></i>
+                  <p>包含数字、大小写字母</p></div>
+                <div><p style="color:rgba(102,102,102,1);">可以输入的特殊字符包括：!#$%_()^&*,-<>?@.+=</p></div>
+              </div>
             </div>
             <div class="errorMsg">
               <div v-if="registerForm.errorMsg === 'isRegister'">
@@ -109,25 +130,54 @@
                 <i></i>
                 <p>请输入正确的手机号码</p>
               </div>
+              <div v-if="registerForm.errorMsg === 'formatEmailError'">
+                <i></i>
+                <p>请输入正确的邮箱地址</p>
+              </div>
+              <div v-if="registerForm.errorMsg === 'passwordTooEasy'">
+                <i></i>
+                <p>您输入的密码不符合格式要求，请重新输入</p>
+              </div>
             </div>
-            <div class="import" v-if="true">
+            <div class="import" v-if="registerForm.onStep === 1" :class="{error: registerForm.errorMsg === 'verificationCodeMistake'}">
               <img src="../../assets/img/login/lr-icon4.png"/>
-              <input class="verification" v-model="registerForm.verificationCode" type="text" placeHolder="请输入收到的验证码"/>
-              <a>发送验证码</a>
+              <input class="verification" v-model="registerForm.verificationCode" type="text" @input="registerForm.errorMsg=''" placeHolder="请输入收到的验证码"/>
+              <a @click="sendRegisterVailCode" :class="{disabled:registerForm.verificationCodeText !== '发送验证码' }">{{registerForm.verificationCodeText}}</a>
             </div>
-            <div class="import" v-if="false">
+            <div class="import" v-if="registerForm.onStep === 2" :class="{error: registerForm.errorMsg === 'notConfirmPassword'}">
               <img src="../../assets/img/login/lr-icon2.png"/>
-              <input v-model="registerForm.passwordAffirm" ref="registerPasInputAffirm" type="password" placeHolder="请确认密码"/>
+              <input v-model="registerForm.passwordAffirm" ref="registerPasInputAffirm" @input="registerForm.errorMsg=''" type="password" placeHolder="请确认密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('registerPasInputAffirm')" src="../../assets/img/login/lr-icon3.png"/>
             </div>
-            <div class="errorMsg"></div>
+            <div class="errorMsg">
+              <div v-if="registerForm.errorMsg === 'verificationCodeMistake'">
+                <i></i>
+                <p>您的验证码输入有误，请重新输入</p>
+              </div>
+              <div v-if="registerForm.errorMsg === 'verificationCodeMistakeTanto'">
+                <i></i>
+                <p>您输入的验证码错误达4次，请点击<span>忘记密码</span>或<span>联系客服</span></p>
+              </div>
+              <div v-if="registerForm.errorMsg === 'notGetVerificationCode'&&registerForm.registerType==='phone'">
+                <i></i>
+                <p>收不到验证码？请选择<span @click="registerForm.registerType='email',registerForm.errorMsg=''">邮箱注册</span>或<span>接收语音验证码</span></p>
+              </div>
+              <div v-if="registerForm.errorMsg === 'notGetVerificationCode'&&registerForm.registerType==='email'">
+                <i></i>
+                <p>收不到验证码？请选择<span @click="registerForm.registerType='phone',registerForm.errorMsg=''">手机注册</span></p>
+              </div>
+              <div v-if="registerForm.errorMsg === 'notConfirmPassword'">
+                <i></i>
+                <p>您两次输入的密码不同，请重新输入</p>
+              </div>
+            </div>
             <Checkbox v-model="registerForm.agreeStatus"><span style="margin-left: 10px;font-size: 14px">我已阅读并同意<span style="cursor: pointer;color:#4A97EE"
                                                                                                                       @click="ruleModal = true">《睿云用户使用协议》</span></span></Checkbox>
-            <button v-if="true">下一步</button>
-            <button v-if="false">注册并登录</button>
+            <button v-if="registerForm.onStep === 1" @click="registerNextStep">下一步</button>
+            <button v-if="registerForm.onStep === 2" @click="registerAndLogin">注册并登录</button>
             <div class="footer">
-              <span v-show="false">邮箱注册</span>
-              <span>手机注册</span>
+              <span v-show="registerForm.registerType==='phone'" @click="registerForm.registerType='email',registerForm.errorMsg='',registerForm.onStep = 1">邮箱注册</span>
+              <span v-show="registerForm.registerType==='email'" @click="registerForm.registerType='phone',registerForm.errorMsg='',registerForm.onStep = 1">手机注册</span>
             </div>
           </div>
         </div>
@@ -562,6 +612,10 @@
             color: rgba(42, 153, 242, 1);
             line-height: 44px;
             padding-left: 10px;
+            &.disabled {
+              cursor: not-allowed;
+              color: #c8c8c8;
+            }
           }
         }
         .errorMsg {
@@ -669,15 +723,58 @@
             color: rgba(42, 153, 242, 1);
             line-height: 44px;
             padding-left: 10px;
+            &.disabled {
+              cursor: not-allowed;
+              color: #c8c8c8;
+            }
           }
           .popTip {
             height: 106px;
             width: 300px;
+            padding: 19px 21px;
             position: absolute;
             background: #FFF;
             box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
             left: -90%;
             z-index: 3;
+            > div {
+              display: flex;
+              > i {
+                display: inline-block;
+                border: 1px solid rgba(151, 151, 151, 1);
+                margin-right: 3px;
+                margin-top: 5px;
+                height: 12px;
+                width: 12px;
+                border-radius: 6px;
+                &.reach {
+                  background: #09BC1D;
+                  border: 1px solid #09BC1D;
+                  &:before {
+                    content: '';
+                    display: inline-block;
+                    background: #FFF;
+                    height: 1px;
+                    width: 10px;
+                    transform: translate(3px, -8px) rotate(-55deg);
+                  }
+                  &:after {
+                    content: '';
+                    display: inline-block;
+                    background: #FFF;
+                    height: 1px;
+                    width: 6px;
+                    transform: translate(0px, -23px) rotate(215deg);
+                  }
+                }
+              }
+              > p {
+                font-size: 14px;
+                font-family: MicrosoftYaHei;
+                color: rgba(51, 51, 51, 1);
+                line-height: 24px;
+              }
+            }
           }
         }
         .errorMsg {
@@ -779,7 +876,7 @@
         regExpObj: {
           phone: /^1[3|5|8|9|6|7]\d{9}$/,
           email: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
-          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/
+          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,32}$/
         },
         formType: 'login',
         activeBanner: 1,
@@ -798,25 +895,36 @@
           circle: true,
           textSize: '14px'
         },
+        dragVerifyStatus: true,
         loginForm: {
           loginName: '',
           password: '',
-          errorMsg: '', // notRegister: 未注册； formatError： 手机或邮箱格式不对； passwordMistake：密码错误；notSlidingValidation： 未滑动验证;passwordMistakeTanto: 密码错误次数大于4次
+          verificationCode: '',
+          verificationCodeText: '发送验证码',
+          verificationCodeTimer: null,
+          errorMsg: '', // notRegister: 未注册； formatError： 手机或邮箱格式不对； passwordMistake：密码错误；notSlidingValidation： 未滑动验证;
+          // passwordMistakeTanto: 密码错误次数大于4次;verificationCodeMistake: 验证码错误 notGetVerificationCode: 收不到验证码
           loginType: 'password', // 登录方式 password: 密码登录   vailCode： 验证码登录
           passwordErrorNum: 0, // 记录密码错误次数
           verificationCodeNum: 0 // 记录验证码错误次数
         },
         registerForm: {
           phonePrefixList: areaTel,
+          onStep: 1,
           registerPhonePrefix: '86',
+          registerType: 'phone',
           loginPhone: '',
           loginEmail: '',
           password: '',
           passwordAffirm: '',
+          passwordDegree: 0, // 密码强度
           passwordHint: false,
           errorMsg: '',//isRegister: 已注册 ； formatPhoneError： 手机格式不对；
           verificationCode: '',
-          agreeStatus: true
+          verificationCodeText: '发送验证码',
+          verificationCodeTimer: null,
+          agreeStatus: true,
+          verificationCodeNum: 0 //验证码错误次数
         },
       }
     },
@@ -832,6 +940,18 @@
       /* 切换登录密码明文显示 */
       changeLoginPasType(name) {
         this.$refs[name].type === 'password' ? this.$refs[name].type = 'text' : this.$refs[name].type = 'password'
+      },
+      changeToVailCodeLogin() {
+        if (this.loginForm.errorMsg === 'formatError') {
+          this.loginForm.errorMsg = ''
+        }
+        this.loginForm.loginType = 'vailCode'
+      },
+      changeToPasswordLogin() {
+        if (this.loginForm.errorMsg === 'formatError') {
+          this.loginForm.errorMsg = ''
+        }
+        this.loginForm.loginType = 'password'
       },
       /* 校验手机号是否注册 */
       verifyIsRegister() {
@@ -852,20 +972,38 @@
             this.loginForm.errorMsg = 'formatError'
           }
         } else {
-          if (this.regExpObj.phone.test(this.registerForm.loginPhone)) {
-            axios.get('user/isRegister.do', {
-              params: {
-                username: this.registerForm.loginPhone
-              }
-            }).then(response => {
-              if (response.status === 200 && response.data.status === 1) {
-                this.registerForm.errorMsg = ''
-              } else {
-                this.registerForm.errorMsg = 'isRegister'
-              }
-            })
+          if (this.registerForm.registerType === 'phone') {
+            if (this.regExpObj.phone.test(this.registerForm.loginPhone)) {
+              axios.get('user/isRegister.do', {
+                params: {
+                  username: this.registerForm.loginPhone
+                }
+              }).then(response => {
+                if (response.status === 200 && response.data.status === 1) {
+                  this.registerForm.errorMsg = ''
+                } else {
+                  this.registerForm.errorMsg = 'isRegister'
+                }
+              })
+            } else {
+              this.registerForm.errorMsg = 'formatPhoneError'
+            }
           } else {
-            this.registerForm.errorMsg = 'formatPhoneError'
+            if (this.regExpObj.email.test(this.registerForm.loginEmail)) {
+              axios.get('user/isRegister.do', {
+                params: {
+                  username: this.registerForm.loginEmail
+                }
+              }).then(response => {
+                if (response.status === 200 && response.data.status === 1) {
+                  this.registerForm.errorMsg = ''
+                } else {
+                  this.registerForm.errorMsg = 'isRegister'
+                }
+              })
+            } else {
+              this.registerForm.errorMsg = 'formatEmailError'
+            }
           }
         }
       },
@@ -878,9 +1016,16 @@
           this.loginForm.errorMsg = 'formatError'
           return
         }
-        if (!this.loginForm.password) {
-          this.loginForm.errorMsg = 'passwordMistake'
-          return
+        if (this.loginForm.loginType === 'password') {
+          if (!this.loginForm.password) {
+            this.loginForm.errorMsg = 'passwordMistake'
+            return
+          }
+        } else {
+          if (!this.loginForm.verificationCode) {
+            this.loginForm.errorMsg = 'verificationCodeMistake'
+            return
+          }
         }
         if (!this.$refs.Verify.isPassing) {
           this.loginForm.errorMsg = 'notSlidingValidation'
@@ -908,13 +1053,173 @@
             })
           }
         })
+      },
+      sendLoginVailCode() {
+        if (!this.loginForm.loginName || !(this.regExpObj.phone.test(this.loginForm.loginName) || this.regExpObj.email.test(this.loginForm.loginName))) {
+          this.loginForm.errorMsg = 'formatError'
+          return
+        }
+        if (this.loginForm.verificationCodeText !== '发送验证码') {
+          return
+        }
+        axios.get('user/isRegister.do', {
+          params: {
+            username: this.loginForm.loginName
+          }
+        }).then(response => {
+          if (response.status === 200 && response.data.status === 1) {
+            this.loginForm.errorMsg = 'notRegister'
+          } else {
+            this.loginForm.errorMsg = ''
+            let i = 10
+            this.loginForm.verificationCodeText = '10S'
+            this.loginForm.verificationCodeTimer = setInterval(() => {
+              i -= 1
+              if (i < 10) {
+                this.loginForm.verificationCodeText = '0' + i + 'S'
+              } else {
+                this.loginForm.verificationCodeText = i + 'S'
+              }
+              if (i === 0) {
+                this.loginForm.verificationCodeText = '发送验证码'
+                if (!this.loginForm.verificationCode) {
+                  this.loginForm.errorMsg = 'notGetVerificationCode'
+                }
+                window.clearInterval(this.loginForm.verificationCodeTimer)
+              }
+            }, 1000)
+          }
+        })
+      },
+      getLoginVoiceCode() {
+        if (!this.regExpObj.phone.test(this.loginForm.loginName)) {
+          this.loginForm.errorMsg = 'formatError'
+          return
+        }
+      },
+      sendRegisterVailCode() {
+        let params = {}
+        if (this.registerForm.registerType === 'phone') {
+          if (!this.registerForm.loginPhone || !this.regExpObj.phone.test(this.registerForm.loginPhone)) {
+            this.registerForm.errorMsg = 'formatPhoneError'
+            return
+          }
+          params = {
+            username: this.registerForm.loginPhone
+          }
+        } else {
+          if (!this.registerForm.loginEmail || !this.regExpObj.email.test(this.registerForm.loginEmail)) {
+            this.registerForm.errorMsg = 'formatEmailError'
+            return
+          }
+          params = {
+            username: this.registerForm.loginEmail
+          }
+        }
+        if (this.registerForm.verificationCodeText !== '发送验证码') {
+          return
+        }
+        axios.get('user/isRegister.do', {
+          params
+        }).then(response => {
+          if (response.status === 200 && response.data.status === 1) {
+            this.registerForm.errorMsg = ''
+            let i = 10
+            this.registerForm.verificationCodeText = '10S'
+            this.registerForm.verificationCodeTimer = setInterval(() => {
+              i -= 1
+              if (i < 10) {
+                this.registerForm.verificationCodeText = '0' + i + 'S'
+              } else {
+                this.registerForm.verificationCodeText = i + 'S'
+              }
+              if (i === 0) {
+                this.registerForm.verificationCodeText = '发送验证码'
+                if (!this.registerForm.verificationCode) {
+                  this.registerForm.errorMsg = 'notGetVerificationCode'
+                }
+                window.clearInterval(this.registerForm.verificationCodeTimer)
+              }
+            }, 1000)
+          } else {
+            this.registerForm.errorMsg = 'isRegister'
+          }
+        })
+      },
+      registerNextStep() {
+        let params = {}
+        if (this.registerForm.registerType === 'phone') {
+          if (!this.registerForm.loginPhone) {
+            this.registerForm.errorMsg = 'formatPhoneError'
+            return
+          }
+          params = {
+            username: this.registerForm.loginPhone
+          }
+        } else {
+          if (!this.registerForm.loginEmail) {
+            this.registerForm.errorMsg = 'formatEmailError'
+            return
+          }
+          params = {
+            username: this.registerForm.loginEmail
+          }
+        }
+        if (!this.registerForm.verificationCode) {
+          this.registerForm.errorMsg = 'verificationCodeMistake'
+          return
+        }
+        if (this.registerForm.errorMsg) {
+          return
+        }
+        if (!this.registerForm.agreeStatus) {
+          this.$Message.info('请确认阅读并勾选用户使用协议')
+          return
+        }
+        axios.get('user/isRegister.do', {
+          params
+        }).then(response => {
+          if (response.status === 200 && response.data.status === 1) {
+            this.registerForm.errorMsg = ''
+            this.registerForm.onStep = 2
+          } else {
+            this.registerForm.errorMsg = 'isRegister'
+          }
+        })
+      },
+      registerPasswordBlur(){
+        this.registerForm.passwordHint = false
+        if(this.registerForm.passwordDegree < 2){
+          this.registerForm.errorMsg = 'passwordTooEasy'
+        }
+      },
+      registerAndLogin() {
       }
     },
     computed: {
       loginDisabled() {
         return this.loginForm.errorMsg !== ''
+      },
+      loginNameIsPhone() {
+        return this.regExpObj.phone.test(this.loginForm.loginName)
       }
     },
-    watch: {}
+    watch: {
+      /* 重置滑动验证 副作用是会重新渲染 组件没有提供重置功能 */
+      'loginForm.loginType'() {
+        this.dragVerifyStatus = false
+        setTimeout(() => {
+          this.dragVerifyStatus = true
+        }, 1)
+      },
+      'registerForm.password'(val) {
+        if (val.length >= 8) {
+          this.registerForm.passwordDegree = 1
+        }
+        if(this.regExpObj.password.test(val)){
+          this.registerForm.passwordDegree = 2
+        }
+      }
+    }
   }
 </script>
