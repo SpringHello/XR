@@ -39,10 +39,10 @@
               <input v-model="loginForm.password" ref="loginPasInput" @input="loginForm.errorMsg=''" type="password" placeHolder="请输入密码"/>
               <img style="cursor: pointer" @click="changeLoginPasType('loginPasInput')" src="../../assets/img/login/lr-icon3.png"/>
             </div>
-            <div class="import" v-if="loginForm.loginType === 'vailCode'">
+            <div class="import" :class="{error: loginForm.errorMsg === 'verificationCodeMistake'}" v-if="loginForm.loginType === 'vailCode'">
               <img src="../../assets/img/login/lr-icon4.png"/>
-              <input class="verification" v-model="loginForm.verificationCode" type="text" placeHolder="请输入收到的验证码"/>
-              <a>发送验证码</a>
+              <input class="verification" v-model="loginForm.verificationCode" @input="loginForm.errorMsg=''" type="text" placeHolder="请输入收到的验证码"/>
+              <a @click="sendLoginVailCode" :class="{disabled:loginForm.verificationCodeText !== '发送验证码' }">{{ loginForm.verificationCodeText}}</a>
             </div>
             <div class="errorMsg">
               <div v-if="loginForm.errorMsg === 'passwordMistake'">
@@ -51,7 +51,15 @@
               </div>
               <div v-if="loginForm.errorMsg === 'passwordMistakeTanto'">
                 <i></i>
-                <p>您输入的密码错误达4次，请<span @click="loginForm.loginType = 'vailCode'">更换登录方式</span></p>
+                <p>您输入的密码错误达4次，请<span @click="loginForm.loginType = 'vailCode',loginForm.errorMsg=''">更换登录方式</span></p>
+              </div>
+              <div v-if="loginForm.errorMsg === 'verificationCodeMistake'">
+                <i></i>
+                <p>您输入的验证码有误，请重新输入</p>
+              </div>
+              <div v-if="loginForm.errorMsg === 'notGetVerificationCode'">
+                <i></i>
+                <p>收不到验证码？请<span @click="loginForm.loginType='password'">更换登录方式</span>或<span>接收语音验证码</span></p>
               </div>
             </div>
             <div @mousedown="enterDrag">
@@ -76,8 +84,8 @@
             </div>
             <button @click="toLogin" :class="{notAllow:loginDisabled}" :disabled="loginDisabled">登录</button>
             <div class="footer">
-              <span v-show="loginForm.loginType === 'password'" @click="loginForm.loginType = 'vailCode'">验证码登录</span>
-              <span v-show="loginForm.loginType === 'vailCode'" @click="loginForm.loginType = 'password'">密码登录</span>
+              <span v-show="loginForm.loginType === 'password'" @click="changeToVailCodeLogin">验证码登录</span>
+              <span v-show="loginForm.loginType === 'vailCode'" @click="changeToPasswordLogin">密码登录</span>
               <span style="float: right">忘记密码？</span>
             </div>
           </div>
@@ -562,6 +570,10 @@
             color: rgba(42, 153, 242, 1);
             line-height: 44px;
             padding-left: 10px;
+            &.disabled {
+              cursor: not-allowed;
+              color: #c8c8c8;
+            }
           }
         }
         .errorMsg {
@@ -801,7 +813,11 @@
         loginForm: {
           loginName: '',
           password: '',
-          errorMsg: '', // notRegister: 未注册； formatError： 手机或邮箱格式不对； passwordMistake：密码错误；notSlidingValidation： 未滑动验证;passwordMistakeTanto: 密码错误次数大于4次
+          verificationCode: '',
+          verificationCodeText: '发送验证码',
+          verificationCodeTimer: null,
+          errorMsg: '', // notRegister: 未注册； formatError： 手机或邮箱格式不对； passwordMistake：密码错误；notSlidingValidation： 未滑动验证;
+          // passwordMistakeTanto: 密码错误次数大于4次;verificationCodeMistake: 验证码错误 notGetVerificationCode: 收不到验证码
           loginType: 'password', // 登录方式 password: 密码登录   vailCode： 验证码登录
           passwordErrorNum: 0, // 记录密码错误次数
           verificationCodeNum: 0 // 记录验证码错误次数
@@ -832,6 +848,18 @@
       /* 切换登录密码明文显示 */
       changeLoginPasType(name) {
         this.$refs[name].type === 'password' ? this.$refs[name].type = 'text' : this.$refs[name].type = 'password'
+      },
+      changeToVailCodeLogin() {
+        if (this.loginForm.errorMsg === 'formatError') {
+          this.loginForm.errorMsg = ''
+        }
+        this.loginForm.loginType = 'vailCode'
+      },
+      changeToPasswordLogin() {
+        if (this.loginForm.errorMsg === 'formatError') {
+          this.loginForm.errorMsg = ''
+        }
+        this.loginForm.loginType = 'password'
       },
       /* 校验手机号是否注册 */
       verifyIsRegister() {
@@ -878,9 +906,16 @@
           this.loginForm.errorMsg = 'formatError'
           return
         }
-        if (!this.loginForm.password) {
-          this.loginForm.errorMsg = 'passwordMistake'
-          return
+        if (this.loginForm.loginType === 'password') {
+          if (!this.loginForm.password) {
+            this.loginForm.errorMsg = 'passwordMistake'
+            return
+          }
+        } else {
+          if (!this.loginForm.verificationCode) {
+            this.loginForm.errorMsg = 'verificationCodeMistake'
+            return
+          }
         }
         if (!this.$refs.Verify.isPassing) {
           this.loginForm.errorMsg = 'notSlidingValidation'
@@ -908,6 +943,33 @@
             })
           }
         })
+      },
+      sendLoginVailCode() {
+        if (!this.loginForm.loginName) {
+          this.loginForm.errorMsg = 'formatError'
+          return
+        }
+        if (this.loginForm.verificationCodeText !== '发送验证码') {
+          return
+        }
+        this.loginForm.errorMsg = ''
+        let i = 60
+        this.loginForm.verificationCodeText = '60S'
+        this.verificationCodeTimer = setInterval(() => {
+          i -= 1
+          if (i < 10) {
+            this.loginForm.verificationCodeText = '0' + i + 'S'
+          } else {
+            this.loginForm.verificationCodeText = i + 'S'
+          }
+          if (i === 0) {
+            this.loginForm.verificationCodeText = '发送验证码'
+            if (!this.loginForm.verificationCode) {
+              this.loginForm.errorMsg = 'notGetVerificationCode'
+            }
+            window.clearInterval(this.verificationCodeTimer)
+          }
+        }, 1000)
       }
     },
     computed: {
