@@ -3,29 +3,11 @@
     <div class="wrapper">
       <div class="wrapper-form">
         <div class="banner">
-          <my-carousel :interval=5000 class="carousel" >
-            <!-- <my-carousel-item class="carousel-item">
-               <div @click="push('dbActive')"
-                    style="cursor: pointer;background: #F56B23;">
-                 <div class="db-active">
-                   <div class="db-active-content">
-                     <div class="db-active-text">
-                       <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
-                       <p>热门云数据库产品一网打尽</p>
-                       <p><span>1元试用60天</span>每天不限量</p>
-                       <button>立即试用</button>
-                     </div>
-                     <div class="db-active-img">
-                       <img src="../../assets/img/active/dbActive/dba-banner8.png"/>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </my-carousel-item>-->
-            <my-carousel-item class="carousel-item">
-              <div @click="$router.push('AnniversaryActive')" class="aa-active">
-              </div>
-            </my-carousel-item>
+          <my-carousel :interval=5000 class="carousel">
+            <!--         <my-carousel-item class="carousel-item">
+                       <div @click="$router.push('AnniversaryActive')" class="aa-active">
+                       </div>
+                     </my-carousel-item>-->
             <my-carousel-item class="carousel-item">
               <div @click="$router.push('fractive')" class="fr-active">
               </div>
@@ -83,6 +65,7 @@
   /* 登录名/密码 正则校验 */
   import regExp from '../../util/regExp'
   import axios from '@/util/axiosInterceptor'
+
   const messageMap = {
     /* 登录名input tips */
     loginname: {
@@ -98,13 +81,13 @@
       placeholder: '请输入验证码'
     }
   }
-  export default{
-    beforeRouteEnter(to, from, next){
+  export default {
+    beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.from = from.fullPath
       })
     },
-    data(){
+    data() {
       return {
         // 跳转来源
         from: '',
@@ -138,10 +121,10 @@
         activeBanner: 1,
       }
     },
-    created(){
+    created() {
     },
     methods: {
-      vail(field){
+      vail(field) {
         var text = this.form[field]
         if (text == '') {
           this.vailForm[field].message = ''
@@ -159,7 +142,7 @@
           this.vailForm[field].warning = false
         }
       },
-      focus(field){
+      focus(field) {
         if (field == 'vailCode' && this.vailForm.loginname.message == '验证码错误') {
           this.vailForm.loginname.message = messageMap.loginname.placeholder
           this.vailForm.loginname.warning = false
@@ -184,7 +167,7 @@
           this.vailForm[field].warning = false
         }
       },
-      isCorrect(field){
+      isCorrect(field) {
         if (field == 'vailCode') {
           // 验证码重新输入直接取消警告
           this.vailForm.vailCode.warning = false
@@ -202,7 +185,7 @@
           }
         }
       },
-      submit(){
+      submit() {
         /* if (!regExp.passwordVail(this.form.password)) {
          this.vailForm.loginname.message = '密码不符合要求'
          this.vailForm.loginname.warning = true
@@ -244,7 +227,7 @@
       }
     },
     computed: {
-      disabled () {
+      disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       }
     }
@@ -329,32 +312,32 @@
             margin-right: 20px;
           }
         }
-        button{
+        button {
           outline: none;
           cursor: pointer;
           border: none;
           margin-top: 32px;
-          background:rgba(255,70,43,1);
-          border-radius:20px;
-          font-size:18px;
+          background: rgba(255, 70, 43, 1);
+          border-radius: 20px;
+          font-size: 18px;
           font-family: "Microsoft YaHei", "微软雅黑";
-          color:rgba(255,255,255,1);
+          color: rgba(255, 255, 255, 1);
           padding: 7px 29px;
         }
       }
-      .aa-active{
+      .aa-active {
         height: 100%;
         background: #FFF url("../../assets/img/login/aa-banner.png") no-repeat;
       }
-      .fr-active{
+      .fr-active {
         height: 100%;
         background: #FFF url("../../assets/img/login/fr-banner.png") no-repeat;
       }
     }
-    .ivu-carousel-item:nth-last-child(1) .demo-carousel{
+    .ivu-carousel-item:nth-last-child(1) .demo-carousel {
       background: url(../../assets/img/login/login-banner.png) no-repeat center;
     }
-    .ivu-carousel-item:nth-last-child(2) .demo-carousel{
+    .ivu-carousel-item:nth-last-child(2) .demo-carousel {
       background: url(../../assets/img/login/login-banner-objactivity.png) no-repeat center;
     }
     .login-form {

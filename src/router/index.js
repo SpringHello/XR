@@ -59,7 +59,7 @@ const DBActive = () =>import('@/components/App/active/DatabaseActive')
 
 const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 
-const AnniversaryActive = () => import('@/components/App/active/anniversaryActive')
+//const AnniversaryActive = () => import('@/components/App/active/anniversaryActive')
 //const AnniversaryActiveBefore = () => import('@/components/App/active/AnniversaryActiveBefore')
 
 //域名页面路由
@@ -320,7 +320,7 @@ var router = new Router({
         {path: 'frActive', name: 'frActive', component: FrActive},
 
         {path: 'dbActive', name: 'dbActive', component: DBActive},
-        {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
+        //{path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
 
         {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},

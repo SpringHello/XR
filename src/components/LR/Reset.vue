@@ -4,28 +4,10 @@
       <div class="wrapper-form">
         <div class="banner">
           <my-carousel :interval=5000 class="carousel" >
-            <!-- <my-carousel-item class="carousel-item">
-               <div @click="push('dbActive')"
-                    style="cursor: pointer;background: #F56B23;">
-                 <div class="db-active">
-                   <div class="db-active-content">
-                     <div class="db-active-text">
-                       <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
-                       <p>热门云数据库产品一网打尽</p>
-                       <p><span>1元试用60天</span>每天不限量</p>
-                       <button>立即试用</button>
-                     </div>
-                     <div class="db-active-img">
-                       <img src="../../assets/img/active/dbActive/dba-banner8.png"/>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </my-carousel-item>-->
-            <my-carousel-item class="carousel-item">
+   <!--         <my-carousel-item class="carousel-item">
               <div @click="$router.push('AnniversaryActive')" class="aa-active">
               </div>
-            </my-carousel-item>
+            </my-carousel-item>-->
             <my-carousel-item class="carousel-item">
               <div @click="$router.push('fractive')" class="fr-active">
               </div>

@@ -111,8 +111,8 @@
                                placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
-              <Button type="primary" style="margin-left: 120px" @click="orderRefundBefore" :disabled="refundDisabled">退款</Button>
-              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
+              <!--<Button type="primary" style="margin-left: 120px" @click="orderRefundBefore" :disabled="refundDisabled">退款</Button>-->
+              <Button type="primary" style="margin-left: 195px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
             </div>
@@ -1732,9 +1732,9 @@
                         if (res.status == 200 && res.data.status == 1) {
                           this.showModal.unfreeze = true
                         } else {
-                          /* this.thawingCondition = params.row.thawCondition
-                           this.showModal.notUnfreeze = true*/
-                          let url = 'user/judgeRenewalFee.do'
+                           this.thawingCondition = params.row.thawCondition
+                           this.showModal.notUnfreeze = true
+                 /*         let url = 'user/judgeRenewalFee.do'
                           axios.get(url, {
                             params: {
                               id: params.row.id
@@ -1746,7 +1746,7 @@
                             } else {
                               this.$message.info({content: res.data.message})
                             }
-                          })
+                          })*/
                         }
                       })
                     }

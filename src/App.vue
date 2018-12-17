@@ -1,13 +1,13 @@
 <template>
   <div id="front">
-    <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
+<!--    <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
       <div class="center">
         <div class="countdown" v-if="hintShow">
           <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
         </div>
       </div>
       <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
-    </div>
+    </div>-->
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -637,11 +637,6 @@
         })
     },
     mounted() {
-      this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
-      if (sessionStorage.getItem('hintShow') == 'true') {
-        this.$refs.hint.style.height = '80px'
-      }
-      this.setTime()
       if (document.readyState === 'complete') { //当页面加载状态为完全结束时进入
         let params = {
           batchNumber: window.UUID,
@@ -654,9 +649,6 @@
       }
     },
     created() {
-      if (sessionStorage.getItem('hintShow') == null) {
-        sessionStorage.setItem('hintShow', 'true')
-      }
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
@@ -790,7 +782,7 @@
 
 <style rel="stylesheet/less" lang="less">
   #front {
-    .app-hint {
+  /*  .app-hint {
       height: 0;
       background: url("./assets/img/app/hint-banner.png") center no-repeat, linear-gradient(to right, #FF4439, #FF1569);
       position: relative;
@@ -824,7 +816,7 @@
           }
         }
       }
-    }
+    }*/
 
     header {
       width: 100%;
