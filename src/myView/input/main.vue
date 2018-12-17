@@ -5,8 +5,8 @@
             <div @click="isShow = !isShow" class="verNumber" :class="[isShow ?'verNumber':'verNumbers']">
                 +{{selectValue}}
             </div>
-             <transition name="fade">
-            <div class="ver_option" v-show="isShow">
+             <transition name="fade"  >
+            <div class="ver_option" v-if="isShow" >
                 <ul class="ver_ul">
                     <li :class="selectIndex == index ?'ver_li':''" v-for="(item,index) in telList" :key="index" @click="selectLiValue(item.tel,index)">{{item.tel}}</li>
                 </ul>
@@ -31,10 +31,12 @@
         @keydown="handleKeydown"
         @focus="handleFocus"
         >
-        <div class="ver_yan">
-            获取验证码
+        <div class="ver_yan" >
+            <span @click="timeReduce" v-if="timeBoo">获取验证码</span>
+            <span v-else style="color:#666666;">{{count}}</span>
         </div>
-        <!-- <img class="ver_img"  :src="icon"> -->
+        <img class="ver_eye" @click="isEye = !isEye" :src="eye" v-if="isSelect == 'ear'">
+        <p v-if="timeBoo" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE">重新获取</span>或<span  style="color:#4A97EE">接收语音验证</span></p>
     </div>
 </template>
 
@@ -56,9 +58,6 @@ export default {
         placeholder:{
             type:String,
             default:''
-        },
-        valid:{
-            type:Function,
         },
         disabled: {
             type: Boolean,
@@ -91,12 +90,14 @@ export default {
             account:this.value,
             style:'height: 44px;padding-left: 96px;',
             prefixCls: prefixCls,
-            isSelect:false,
-            isValid:true,
+            isSelect:'',
             telList:telList,
             selectIndex:null,
             selectValue:'86',
-            isShow:false
+            isShow:false,
+            count:10,
+            timeBoo:true,
+            isEye:false
         }
     },
     methods:{
@@ -151,6 +152,20 @@ export default {
             this.selectValue = tel;
             this.isShow = !this.isShow;
         },
+        timeReduce(){
+            this.timeBoo = false;
+            setInterval(()=>{
+                if(this.count != 0){
+                    this.count --;
+                }else{
+                    clearInterval(this.count);
+                    this.timeBoo = true;
+                }
+            },1000);
+        },
+        blur () {
+            this.isShow = false;
+        },
     },
     created(){
      
@@ -165,11 +180,14 @@ export default {
                     }
                 ];
             },
-            wrapClasses () {
+        wrapClasses () {
                 return [
                     `${prefixCls}-wrapper`
                 ];
-            },
+        },
+        eye(){
+            return this.isEye ?require('../../assets/img/login/lr-icon3.png') :require('../../assets/img/updatePaw/paw_closeEye.png')
+        }
     },
     watch:{
       value (val) {
@@ -177,15 +195,18 @@ export default {
       },
       choice(){
         if(this.choice == 'select'){
-            this.isSelect = true;
+            this.isSelect = 'select';
             this.style = 'height: 44px;padding-left: 96px;';
         }else if(this.choice == 'validate'){
-            this.isValid = true;
+            this.isSelect = 'validate';
             this.style='height: 44px;padding-left: 39px;padding-right:98px;'
+        }else if(this.choice == 'eye'){
+             this.isSelect = 'eye';
+            //  this.isValid = false;
+             this.style='height: 44px;padding-left: 39px;padding-right:70px;'
         }else{
-             this.isSelect = false;
-             this.isValid = false;
-             this.style='height: 44px;padding-left: 39px;'
+            this.isSelect = '';
+            this.style='height: 44px;padding-left: 39px;'
         }
         immediate:true;    
       }
@@ -305,8 +326,14 @@ export default {
         right: 0;
         cursor: pointer;
     }
+    .ver_eye{
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+    }
     .fade-enter-active, .fade-leave-active {
-        transition: transform,opacity 6.7s ease-in-out;
+        transition: transform,opacity 0.2s ease-in-out;
     }
     .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
         transform: translateY(0,100px);
