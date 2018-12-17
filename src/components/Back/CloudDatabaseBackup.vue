@@ -420,23 +420,23 @@
             }
 
           },
-          // {
-          //   title: '操作',
-          //   key: 'action',
-          //   render: (h, params) => {
-          //     return h('span', {
-          //       style: {
-          //         color: '#2A99F2',
-          //         cursor: 'pointer'
-          //       },
-          //       on: {
-          //         click: () => {
-          //           this.addOrRemoveDatabase(params.row)
-          //         }
-          //       }
-          //     }, '添加/删除数据库')
-          //   }
-          // }
+          {
+            title: '操作',
+            key: 'action',
+            render: (h, params) => {
+              return h('span', {
+                style: {
+                  color: '#2A99F2',
+                  cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    this.addOrRemoveDatabase(params.row)
+                  }
+                }
+              }, '添加/删除数据库')
+            }
+          }
         ],
         strategyData: [],
         // 新建备份表单
@@ -724,28 +724,20 @@
       },
       addOrRemoveDatabase(data) {
         var leftData = []
+        this.databaselist = []
         this.resourceDatabase = []
-        this.databaseForStrategy = []
-        var vmopenlist = []
-        var vmcloselist = []
         this.$http.get(`database/listDB.do`)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              if (response.data.result.open) {
-                vmopenlist = response.data.result.open.list
-              }
-              if (response.data.result.close) {
-                vmcloselist = response.data.result.close.list
-              }
-              this.databaseForStrategy = vmopenlist.concat(vmcloselist)
-              this.databaseForStrategy.forEach((item) => {
-                if (item.status === 1 && item.bankupstrategyid != data.id) {
+              this.databaselist = response.data.result
+              this.databaselist.forEach((item) => {
+                if (item.status === 1 && item.dbBackstrategyId != data.id) {
                   leftData.push(item)
                 }
               })
             }
           })
-        this.hostForBackupsStrategyList = leftData
+        this.databaseForStrategy = leftData
         data.resourceBean.forEach(item => {
           this.resourceDatabase.push(item)
         })
@@ -753,9 +745,46 @@
         this.strategyId = data.id
         this.showModal.addOrRemoveDatabase = true
       },
-      addDatabase() {},
-      deleteDatabase() {},
-      updateDatabaseIntoStrategy() {},
+      /* 添加数据库到备份策略 */
+      addDatabase(index, data) {
+        this.databaseForStrategy.splice(index, 1)
+        var resource = {
+          resourcesName: data.computername,
+          resourcesId: data.computerid
+        }
+        this.resourceDatabase.push(resource)
+      },
+      /* 删除应用该备份策略的数据库 */
+      deleteDatabase(index, data) {
+        this.resourceDatabase.splice(index, 1)
+        data.computername = data.resourcesName
+        this.databaseForStrategy.push(data)
+      },
+      updateDatabaseIntoStrategy() {
+        var vmids = this.resourceDatabase.map(item => {
+          return item.resourcesId
+        })
+        var snapsURL = 'database/updateDbIntoBackUpStrategy.do'
+        axios.get(snapsURL, {
+          params: {
+            zoneId: $store.state.zone.zoneid,
+            backUpStrategyId: this.strategyId,
+            VMIds: vmids.join(',')
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success({
+              content: response.data.message,
+              duration: 2
+              })
+            this.showModal.addOrRemoveDatabase = false
+            this.strategyList()
+          } else {
+            this.$Message.error(response.data.message)
+            this.showModal.addOrRemoveDatabase = false
+          }
+        })
+      },
       /* 切换备份时间间隔时给准确时间点赋值 */
       changeType(value) {
         switch (value) {
