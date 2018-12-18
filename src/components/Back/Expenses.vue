@@ -2687,6 +2687,11 @@
             this.$Message.success(res.data.message)
             this.showModal.freezeParticulars = false
             this.showModal.freezeToRenew = false
+            this.getBalance()
+            this.showMoneyByMonth()
+            this.search()
+            this.getTicketNumber()
+            this.init()
           } else {
             this.$message.info({
               content: res.data.message

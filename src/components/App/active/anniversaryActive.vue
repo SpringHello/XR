@@ -339,7 +339,7 @@
                   <p>¥{{ item.currentPrice}} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyHost(index)" :class="{disabled: true}" :disabled="true">立即抢购</button>
+                  <button @click="buyHost(index)" :class="{disabled: true}">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -375,7 +375,7 @@
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyObjStorage(index)" :class="{disabled: true}" :disabled="true">立即抢购</button>
+                  <button @click="buyObjStorage(index)" :class="{disabled: true}">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -420,7 +420,7 @@
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyDatabase(index)" :class="{disabled: true}" :disabled="true">立即抢购</button>
+                  <button @click="buyDatabase(index)" :class="{disabled: true}">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -476,7 +476,7 @@
                 <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button @click="buyGPU(index)" :class="{disabled: true}" :disabled="true">立即抢购</button>
+                <button @click="buyGPU(index)" :class="{disabled: true}">立即抢购</button>
               </div>
             </div>
           </div>
@@ -524,7 +524,7 @@
                 <p>押金：¥{{ item.cashPledge }} <span>原价：¥{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button :class="{disabled: true}" :disabled="true" @click="getHost(index)">立即领取</button>
+                <button :class="{disabled: true}"  @click="getHost(index)">立即领取</button>
               </div>
             </div>
           </div>
@@ -2335,6 +2335,10 @@
       },
 
       buyHost(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2391,6 +2395,10 @@
         })
       },
       buyObjStorage(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2512,6 +2520,10 @@
         })
       },
       buyDatabase(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2607,6 +2619,10 @@
         })
       },
       buyGPU(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2686,6 +2702,10 @@
       },
 
       getHost(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.freeHostList[index].zoneId) {
           this.$Message.info('请选择需要领取的区域')
           return
@@ -3264,7 +3284,6 @@
                 }
                 &.disabled {
                   background: rgba(192, 192, 192, 1);
-                  cursor: not-allowed;
                 }
               }
             }
@@ -3438,7 +3457,6 @@
               }
               &.disabled {
                 background: rgba(192, 192, 192, 1);
-                cursor: not-allowed;
               }
             }
           }
@@ -3578,7 +3596,6 @@
               }
               &.disabled {
                 background: rgba(192, 192, 192, 1);
-                cursor: not-allowed;
               }
             }
           }
