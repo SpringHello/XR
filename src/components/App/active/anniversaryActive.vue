@@ -18,7 +18,10 @@
           <div id="rotary-table">
             <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]" :style="{'background-image': 'url(' + award.imgUrl + ')' }">
             </div>
-            <div @mousedown="startLotteryMouseDown" @mouseup="startLotteryMouseUp" id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled,'onClick': mouseDown}">(剩余抽奖次数
+            <!--<div @mousedown="startLotteryMouseDown" @mouseup="startLotteryMouseUp" id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled,'onClick': mouseDown}">(剩余抽奖次数
+              {{lotteryNumber }}次)
+            </div>-->
+            <div id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled}">(剩余抽奖次数
               {{lotteryNumber }}次)
             </div>
           </div>
@@ -3879,7 +3882,7 @@
       left: 215px;
       width: 170px;
       height: 94px;
-      background: url("../../../assets/img/active/anniversary/aa-banner13.png") center no-repeat;
+      background: url("../../../assets/img/active/anniversary/aa-banner26.png") center no-repeat;
       text-align: center;
       cursor: pointer;
       font-size: 14px;

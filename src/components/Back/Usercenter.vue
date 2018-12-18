@@ -142,7 +142,7 @@
                    v-for="(authType,index) in notAuth.authTypes" :key="index" class="authType">
                 <div class="authType-wrapper">
                   <p>{{authType.title}}</p>
-                  <Button type="primary" style="float:right" @click="notAuth.currentStep = authType.go">立即验证</Button>
+                  <Button type="primary" style="float:right" @click="notAuth.currentStep = authType.go,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">立即验证</Button>
                 </div>
                 <div class="authType-flow">认证流程：
                   <div v-for="(step,i) in authType.step" style="display: inline-block">
@@ -2323,6 +2323,7 @@
                 }, 1000)
               } else {
                 this.$Message.error(response.data.message)
+                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2360,6 +2361,7 @@
               }, 1000)
             } else {
               this.$Message.error(response.data.message)
+              this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
             }
           })
         }
@@ -2532,6 +2534,7 @@
               })
             } else {
               this.$Message.error(response.data.message)
+              this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
             }
           })
         }
@@ -2661,6 +2664,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
+                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2700,6 +2704,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
+                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2731,6 +2736,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
+                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2770,6 +2776,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
+                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2801,6 +2808,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
+                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
