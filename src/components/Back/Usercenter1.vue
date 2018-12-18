@@ -35,7 +35,7 @@
                     <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span
                       @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
                     <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span
-                      @click="showModal.ModifyTelVail = true,selectedVailIndex = 1,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
+                      @click="showModal.ModifyTelVail = true,selectedVailIndex = 0,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
                     <li v-if="!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
@@ -895,7 +895,7 @@
         <div>
           <Steps :current="bindingMobilePhoneForm.step" size="small">
             <Step title="验证身份"></Step>
-            <Step title="绑定新手机"></Step>
+            <Step title="设置新手机号码"></Step>
             <Step title="完成"></Step>
           </Steps>
           <Form :model="bindingMobilePhoneForm" :rules="bindingMobilePhoneRuleValidate" ref="bindingMobilePhone">
@@ -914,13 +914,13 @@
               </FormItem>
               <Form-item label="验证码" prop="verificationCode" style="width: 100%">
                 <Input v-model="bindingMobilePhoneForm.verificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
-                <Button type="primary" :disabled="bindingMobilePhoneForm.codeText !='获取验证码'||getBindingMobilePhoneDisabled " @click="getBindingMobilePhoneCode">{{
+                <Button type="primary" :disabled="bindingMobilePhoneForm.codeText !='获取验证码'||getBindingMobilePhoneDisabled " @click="getBindingMobilePhoneCode('num')">{{
                   bindingMobilePhoneForm.codeText}}
                 </Button>
               </Form-item>
             </div>
             <div v-show="bindingMobilePhoneForm.step == 1">
-              <FormItem label="输入新的手机号码" prop="newPhone" style="width: 100%">
+              <FormItem label="绑定新手机" prop="newPhone" style="width: 100%">
                 <Input v-model="bindingMobilePhoneForm.newPhone" placeholder="请输入新手机号码" style="width:240px"></Input>
               </FormItem>
               <FormItem label="图形验证码" style="width: 100%;" prop="pictureCode">
@@ -929,27 +929,30 @@
                 <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
                      style="height:32px;vertical-align: middle">
               </FormItem>
-              <Form-item label="验证码" prop="newVerificationCode" style="width: 100%">
+              <Form-item label="短信验证码" prop="newVerificationCode" style="width: 100%">
                 <Input v-model="bindingMobilePhoneForm.newVerificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
-                <Button type="primary" :disabled="bindingMobilePhoneForm.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode">{{ bindingMobilePhoneForm.newCodeText}}
+                <Button type="primary" :disabled="bindingMobilePhoneForm.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode()">{{ bindingMobilePhoneForm.newCodeText}}
                 </Button>
               </Form-item>
             </div>
           </Form>
-          <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'phone'&&bindingMobilePhoneForm.step ==0">
-            <!-- <p>没有收到验证码？</p>
+          <!-- <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'phone'&&bindingMobilePhoneForm.step ==0">
+            <p>没有收到验证码？</p>
             <p>1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
-            <p> 2、如果手机已丢失或停机，请<span @click="bindingMobilePhoneForm.verificationMode = 'email'">更换验证方式</span></p> -->
-            <p>没有收到验证码？111</p>
-            <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" style="cursor:auto">重新获取</span>或<span class="blue"  @click.prevent="keysendCode('voiceVail')">接收语音验证码</span>。</p>
-            <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue">通过身份证号码验证</span>更改手机号。</p>
+            <p> 2、如果手机已丢失或停机，请<span @click="bindingMobilePhoneForm.verificationMode = 'email'">更换验证方式</span></p>
+            
           </div>
-          
-          <!-- <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'email'&&bindingMobilePhoneForm.step ==0">
+          <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'email'&&bindingMobilePhoneForm.step ==0">
             <p>没有收到验证码？</p>
             <p>1、检查您的邮箱垃圾箱。</p>
             <p>2、如果邮箱仍收不到验证码，请<span @click="bindingMobilePhoneForm.verificationMode = 'phone'">更换验证方式</span></p>
           </div> -->
+          <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'phone'&&bindingMobilePhoneForm.step ==0"> 
+            <p>没有收到验证码？</p>
+            <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" style="cursor:auto">重新获取</span>或<span class="blue"  @click.prevent="getBindingMobilePhoneCode('voice')">接收语音验证码</span>。</p>
+            <p v-if="$store.state.authInfo">2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue">通过身份证号码验证</span>更改手机号。</p>
+            <p v-else>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue">联系客服</span>更改手机号。</p>
+          </div>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -1102,7 +1105,7 @@
           </Button>
         </p>
         <p>没有收到验证码？</p>
-        <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" style="cursor:auto">重新获取</span>或<span class="blue"  @click.prevent="keysendCode('voiceVail')">接收语音验证码</span>。</p>
+        <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" style="cursor:auto">重新获取</span>或<span class="blue"  @click.prevent="keysendCode('voice')">接收语音验证码</span>。</p>
         <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue">通过身份证号码验证</span>更改手机号。</p>
       </div>
       <div slot="footer">
@@ -1297,26 +1300,29 @@
           cancelCheckOtherHint: false
         },
         modifyVailType: [
+          // {
+          //   type: 'email',
+          //   img: require('../../assets/img/usercenter/email_vail_icon.png'),
+          //   title: '邮箱验证',
+          //   desc: '您需要使用注册邮箱进行身份验证',
+          //   exist: 0
+          // },
           {
-            img: require('../../assets/img/usercenter/email_vail_icon.png'),
-            title: '邮箱验证',
-            desc: '您需要使用注册邮箱进行身份验证',
-            exist: 0
-          },
-          {
+            type: 'phone',
             img: require('../../assets/img/usercenter/pho_vail_icon.png'),
             title: '手机验证',
             desc: '您需要使用注册手机进行身份验证',
             exist: 1
           },
           {
+            type: 'auth',
             img: require('../../assets/img/usercenter/realname_vail_icon.png'),
             title: '我已实名认证',
             desc: '您需要使用实名认证信息进行身份验证',
             exist: 0
           }
         ],
-        selectedVailIndex: 1,
+        selectedVailIndex: 0,
         percent: 0,
         headPhotoType: 'system',
         systemPhotoGroup: [],
@@ -2157,10 +2163,13 @@
       this.getContacts()
       this.getSystemHead()
       this.setOccupationalInfo()
-      // 是否绑定邮箱
-      this.modifyVailType[0].exist = this.$store.state.userInfo.loginname ? 1: 0
-      // 是否实名认证
-      this.modifyVailType[2].exist = this.$store.state.authInfo ? 1: 0
+      this.modifyVailType.forEach(item => {
+        if (item.type == 'email'){
+          item.exist = this.$store.state.userInfo.loginname ? 1: 0
+        } else if (item.type == 'auth') {
+          item.exist = this.$store.state.authInfo ? 1: 0
+        }
+      })
     },
     methods: {
       init() {
@@ -2224,14 +2233,17 @@
             break
         }
       },
-      selectedVailType(item,index) {
-        if(item.exist) {
+      selectedVailType (item, index) {
+        if (item.exist) {
           this.selectedVailIndex = index
         }
       },
       selectedVailType_ok() {
         this.showModal.ModifyTelVail = false
         this.showModal.bindingMobilePhone = true
+        this.bindingMobilePhoneForm.pictureCode = ''
+        this.bindingMobilePhoneForm.verificationCode = ''
+        this.bindingMobilePhoneForm.newVerificationCode = ''
       },
       getPhone() {
         if ($store.state.authInfo.companyid) {
@@ -2386,12 +2398,14 @@
                 isemail: 0,
                 vailCode: this.notAuth.quicklyAuthForm.pictureCode
               }
-            } else {
+            } else if (codeType == 'voice' && this.notAuth.quicklyAuthForm.sendCodeText == '获取验证码'){
               url = 'user/voiceCode.do'
               params = {
                 aim: this.notAuth.quicklyAuthForm.phone,
                 vailCode: this.notAuth.quicklyAuthForm.pictureCode
               }
+            } else {
+              return false
             }
             axios.get(url, {params}).then(response => {
               // 发送成功，进入倒计时
@@ -2433,12 +2447,14 @@
               isemail: 0,
               vailCode: this.notAuth.cardAuthForm.imgCode
             }
-          } else {
+          } else if (codeType == 'voice' && this.notAuth.cardAuthForm.sendCodeText == '获取验证码'){
             url = 'user/voiceCode.do'
             params = {
               aim: this.notAuth.cardAuthForm.tel,
               vailCode: this.notAuth.cardAuthForm.imgCode
             }
+          } else {
+            return false
           }
           axios.get(url, {params}).then(response => {
             // 发送成功，进入倒计时
@@ -2611,12 +2627,14 @@
               isemail: 0,
               vailCode: this.notAuth.companyAuthForm.imgCode
             }
-          } else {
+          } else if (codeType == 'voice' && this.notAuth.companyAuthForm.codePlaceholder == '发送验证码'){
             url = 'user/voiceCode.do'
             params = {
               aim: this.notAuth.companyAuthForm.linkManPhone,
               vailCode: this.notAuth.companyAuthForm.imgCode
             }
+          } else {
+            return false
           }
           axios.get(url, {params}).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -2771,24 +2789,42 @@
           }
         })
       },
-      getBindingMobilePhoneCode() {
+      getBindingMobilePhoneCode(codeType) {
         this.$refs.bindingMobilePhone.validateField('pictureCode', (text) => {
           if (text == '') {
-            let params = {}
-            if (this.bindingMobilePhoneForm.verificationMode == 'phone') {
+            // let params = {}
+            // if (this.bindingMobilePhoneForm.verificationMode == 'phone') {
+            //   params = {
+            //     aim: this.userInfo.phone,
+            //     isemail: 0,
+            //     vailCode: this.bindingMobilePhoneForm.pictureCode
+            //   }
+            // } else {
+            //   params = {
+            //     aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+            //     isemail: 1,
+            //     vailCode: this.bindingMobilePhoneForm.pictureCode
+            //   }
+            // }
+            var url = ''
+            var params
+            if (codeType == 'num') {
+              url = 'user/code.do'
               params = {
                 aim: this.userInfo.phone,
                 isemail: 0,
                 vailCode: this.bindingMobilePhoneForm.pictureCode
               }
-            } else {
+            } else if (codeType == 'voice' && this.bindingMobilePhoneForm.codeText == '获取验证码'){
+              url = 'user/voiceCode.do'
               params = {
-                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
-                isemail: 1,
+                aim: this.userInfo.phone,
                 vailCode: this.bindingMobilePhoneForm.pictureCode
               }
+            } else {
+              return false
             }
-            axios.get('user/code.do', {params}).then(response => {
+            axios.get(url, {params}).then(response => {
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
                 var countdown = 60
@@ -3262,12 +3298,14 @@
             isemail: 0,
             vailCode: this.keyForm.imgCode
           }
-        } else {
+        } else if (val == 'voice' && this.keycodePlaceholder == '获取验证码'){
           url = 'user/voiceCode.do'
           params = {
             aim: this.keyForm.phone,
             vailCode: this.keyForm.imgCode
           }
+        } else {
+          return false
         }
         axios.get(url, {
           params: params
@@ -3647,7 +3685,7 @@
   }
 
   .setNewPasswordText {
-    padding: 20px;
+    padding: 10px 20px;
     background: rgba(247, 247, 247, 1);
     > p {
       font-size: 14px;
