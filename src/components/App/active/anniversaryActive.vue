@@ -339,7 +339,7 @@
                   <p>¥{{ item.currentPrice}} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyHost(index)"  :class="{disabled: true}" :disabled="true">立即抢购</button>
+                  <button @click="buyHost(index)" :class="{disabled: true}" :disabled="true">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -375,7 +375,7 @@
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyObjStorage(index)"  :class="{disabled: true}" :disabled="true">立即抢购</button>
+                  <button @click="buyObjStorage(index)" :class="{disabled: true}" :disabled="true">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -420,7 +420,7 @@
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyDatabase(index)"  :class="{disabled: true}" :disabled="true">立即抢购</button>
+                  <button @click="buyDatabase(index)" :class="{disabled: true}" :disabled="true">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -524,7 +524,7 @@
                 <p>押金：¥{{ item.cashPledge }} <span>原价：¥{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button  :class="{disabled: true}" :disabled="true" @click="getHost(index)">立即领取</button>
+                <button :class="{disabled: true}" :disabled="true" @click="getHost(index)">立即领取</button>
               </div>
             </div>
           </div>
@@ -2711,7 +2711,10 @@
       nextStep() {
         // 判断新老用户
         axios.get('activity/jdugeTeam.do', {
-          params: {sign: 'freeReceive',}
+          params: {
+            sign: 'freeReceive',
+            vmConfigId: this.freeHostList[this.index].vmConfigId
+          }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             if (response.data.result.flag) {
