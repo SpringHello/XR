@@ -42,7 +42,7 @@
                   <p class="ver_p1">{{item.title}}</p>
                   <p class="ver_p2">{{item.des}}</p>
                 </div>
-                <div class="ver_arrow" style="position:relative;right:-91px;top:-10px;">
+                <div class="ver_arrow">
                 </div>
               </div>
             </div>
@@ -57,7 +57,7 @@
                   <p class="ver_p1">{{item.title}}</p>
                   <p class="ver_p2">{{item.des}}</p>
                 </div>
-                <div class="ver_arrow" style="position:relative;right:-91px;top:-10px;">
+                <div class="ver_arrow">
                 </div>
               </div>
             </div>
@@ -75,15 +75,15 @@
             <div class="verification" v-if="verPage == 'phone' && index == 3">
               <p class="ver_p">请输入有效手机号码用于接收验证码</p>
               <x-Input  :icon='url.iconPhone' choice='select' v-model="dataFroms.phone"  placeholder='请输入手机号' ></x-Input>
-              <x-Input  :icon='url.iconYan' choice='validate' v-model="dataFroms.code"  placeholder='请输入验证码' ></x-Input>
+              <x-Input  :icon='url.iconYan' choice='validate' style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' ></x-Input>
                <Button type="primary" @click="index = 4">下一步</Button>
             </div>
 
             <!-- 身份证验证方式 -->
-            <div class="verification" v-if="verPage == 'card'">
+            <div class="verification"  v-if="verPage == 'card'">
               <div v-if="absc">
                 <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入您的姓名' ></x-Input>
-                <x-Input ref="xinput" :icon='url.iconCard' v-model="formValidate.account"  placeholder='请输入您的身份证账号' ></x-Input>
+                <x-Input ref="xinput" :icon='url.iconCard' v-model="formValidate.account"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
                 <Button type="primary" @click="absc = !absc">下一步</Button>
               </div>
               <!-- 上传身份证照片 -->
@@ -92,10 +92,9 @@
                     <Upload
                         ref="upload"
                         :show-upload-list="false"
-                        :default-file-list="defaultList"
                         :on-success="handleSuccess"
                         :format="['jpg','jpeg','png']"
-                        :max-size="2048"
+                        :max-size="4096"
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleBeforeUpload"
@@ -127,8 +126,8 @@
 
             <!-- 设置新密码 -->
             <div class="verification" v-if="index == 4">
-               <x-Input  :icon='url.iconLock' v-model="dataFroms.newPaw"  placeholder='请输入账号' ></x-Input>
-               <x-Input  :icon='url.iconLock' v-model="dataFroms.oldPaw"  placeholder='请输入账号' ></x-Input>
+               <x-Input  :icon='url.iconLock' v-model="dataFroms.newPaw"  placeholder='请输入账号' choice='eye'></x-Input>
+               <x-Input  :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请输入账号' choice='eye'></x-Input>
             </div>
 
             <!-- 完成 -->
@@ -151,6 +150,7 @@
   import axios from '@/util/axiosInterceptor'
   import throttle  from 'throttle-debounce/throttle'
   import popk from '../../myView/input/main'
+
   export default{
 
     data(){
@@ -296,7 +296,8 @@
       'x-Input':popk
     },
     created(){
-      this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
+      axios.get('network/getQQCustomerServiceStatus.do',{
+      }).then(response => {
         this.QQInfo = response.data.kefu[0].qqnumber
       })
     },
@@ -460,6 +461,16 @@
             this.accountIsDis = true;
             this.index = 2;
         }
+      },
+
+      //上传照片最大限制
+      handleMaxSize(){
+        this.$Message.error('照片最大只能上传4MB');
+      },
+      
+      //上传图片格式错误
+      handleFormatError(){
+        this.$Message.error('上传文件只能为jpg,png格式');
       }
     },
     computed: {
@@ -653,7 +664,7 @@
     }
     @color:#333333;
     .verification{
-      width: 360px;
+      width: 363px;
       margin: 0 auto;
       margin-top:39px;
       .v_email{
@@ -691,6 +702,7 @@
         margin-bottom:12px;
         width: 360px;
         height: 80px;
+        position: relative;
         border-radius:4px;
         background: rgba(244,250,255,1);
         &>div{
@@ -712,6 +724,9 @@
         .ver_arrow{
           border-bottom: 1px solid @yan;
           border-right: 1px solid @yan;
+          position: absolute;
+          right: 20px;
+          top: 32px;
           width: 8px ;
           height: 8px; 
           transform: translateY(0px) rotate(-48deg)
