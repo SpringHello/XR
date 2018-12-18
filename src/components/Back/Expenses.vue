@@ -111,8 +111,8 @@
                                placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
-              <!--<Button type="primary" style="margin-left: 120px" @click="orderRefundBefore" :disabled="refundDisabled">退款</Button>-->
-              <Button type="primary" style="margin-left: 195px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
+              <Button type="primary" style="margin-left: 120px" @click="orderRefundBefore" :disabled="refundDisabled">退款</Button>
+              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
             </div>
@@ -551,6 +551,8 @@
       <div class="universal-modal-content-flex">
         <Table :columns="refundParticularsColumns" :data="refundParticularsData"></Table>
         <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;margin-top: 10px">订单总额：¥{{ refundOrderPrice}}</p>
+        <p v-if="refundOrderTicket" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">使用优惠券金额：¥{{ refundOrderTicket}}</p>
+        <p v-if="refundOrderVoucher" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">使用代金券金额：¥{{ refundOrderVoucher}}</p>
         <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">退款金额：<span style="font-size: 24px;color: #2A99F2">¥{{ refundPrice}}</span></p>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -758,6 +760,8 @@
         refundParticularsData: [],
         refundPrice: '',
         refundOrderPrice: '',
+        refundOrderTicket:'',
+        refundOrderVoucher: '',
         payLoading: false,
         cardVolumeColumns: [
           {
@@ -1732,9 +1736,9 @@
                         if (res.status == 200 && res.data.status == 1) {
                           this.showModal.unfreeze = true
                         } else {
-                           this.thawingCondition = params.row.thawCondition
-                           this.showModal.notUnfreeze = true
-                 /*         let url = 'user/judgeRenewalFee.do'
+                          /*   this.thawingCondition = params.row.thawCondition
+                             this.showModal.notUnfreeze = true*/
+                          let url = 'user/judgeRenewalFee.do'
                           axios.get(url, {
                             params: {
                               id: params.row.id
@@ -1746,7 +1750,7 @@
                             } else {
                               this.$message.info({content: res.data.message})
                             }
-                          })*/
+                          })
                         }
                       })
                     }
@@ -2587,6 +2591,8 @@
             this.refundParticularsData = res.data.result
             this.refundPrice = res.data.cost
             this.refundOrderPrice = res.data.orderCost
+            this.refundOrderVoucher = res.data.voucherCost ? res.data.voucherCost : 0
+            this.refundOrderTicket = res.data.tickCost ? res.data.tickCost : 0
           } else {
             this.$message.info({
               content: res.data.message
