@@ -3,11 +3,11 @@
     <div class="wrapper">
       <div class="wrapper-form">
         <div class="banner">
-          <my-carousel :interval=5000 class="carousel" >
-   <!--         <my-carousel-item class="carousel-item">
+          <my-carousel :interval=5000 class="carousel">
+            <my-carousel-item class="carousel-item">
               <div @click="$router.push('AnniversaryActive')" class="aa-active">
               </div>
-            </my-carousel-item>-->
+            </my-carousel-item>
             <my-carousel-item class="carousel-item">
               <div @click="$router.push('fractive')" class="fr-active">
               </div>
@@ -81,7 +81,8 @@
 <script type="text/ecmascript-6">
   import regExp from '../../util/regExp'
   import axios from '@/util/axiosInterceptor'
-  import throttle  from 'throttle-debounce/throttle'
+  import throttle from 'throttle-debounce/throttle'
+
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',
@@ -101,9 +102,9 @@
       placeholder: '请输入图片验证码'
     }
   }
-  export default{
+  export default {
 
-    data(){
+    data() {
       return {
         imgSrc: 'user/getKaptchaImage.do',
         form: {
@@ -148,10 +149,10 @@
         codePlaceholder: '发送验证码'
       }
     },
-    created(){
+    created() {
     },
     methods: {
-      vail(field){
+      vail(field) {
         var text = this.form[field]
         if (text == '') {
           this.vailForm[field].message = ''
@@ -169,7 +170,7 @@
           this.vailForm[field].warning = false
         }
       },
-      focus(field){
+      focus(field) {
         if (field == 'vailCode' && this.vailForm.loginname.message == '验证码错误') {
           this.vailForm.loginname.message = ''
           this.vailForm.loginname.warning = false
@@ -195,7 +196,7 @@
           this.vailForm[field].warning = false
         }
       },
-      isCorrect(field){
+      isCorrect(field) {
         if (field == 'vailCode') {
           // 验证码重新输入直接取消警告
           this.vailForm.vailCode.warning = false
@@ -259,7 +260,7 @@
           }
         })
       }),
-      submit(){
+      submit() {
         axios.get('user/findPassword.do', {
           params: {
             username: this.form.loginname,
@@ -281,7 +282,7 @@
       }
     },
     computed: {
-      disabled(){
+      disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false && this.vailForm.password.warning == false)
       }
     }
@@ -366,32 +367,32 @@
             margin-right: 20px;
           }
         }
-        button{
+        button {
           outline: none;
           cursor: pointer;
           border: none;
           margin-top: 32px;
-          background:rgba(255,70,43,1);
-          border-radius:20px;
-          font-size:18px;
+          background: rgba(255, 70, 43, 1);
+          border-radius: 20px;
+          font-size: 18px;
           font-family: "Microsoft YaHei", "微软雅黑";
-          color:rgba(255,255,255,1);
+          color: rgba(255, 255, 255, 1);
           padding: 7px 29px;
         }
       }
-      .aa-active{
+      .aa-active {
         height: 100%;
         background: #FFF url("../../assets/img/login/aa-banner.png") no-repeat;
       }
-      .fr-active{
+      .fr-active {
         height: 100%;
         background: #FFF url("../../assets/img/login/fr-banner.png") no-repeat;
       }
     }
-    .ivu-carousel-item:nth-last-child(1) .demo-carousel{
+    .ivu-carousel-item:nth-last-child(1) .demo-carousel {
       background: url(../../assets/img/login/login-banner.png) no-repeat center;
     }
-    .ivu-carousel-item:nth-last-child(2) .demo-carousel{
+    .ivu-carousel-item:nth-last-child(2) .demo-carousel {
       background: url(../../assets/img/login/login-banner-objactivity.png) no-repeat center;
     }
     .login-form {

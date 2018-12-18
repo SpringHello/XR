@@ -3,13 +3,13 @@
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
-<!--        <my-carousel-item class="carousel-item">
+        <my-carousel-item class="carousel-item">
           <div @click="push('/ruicloud/AnniversaryActive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="anniversary-active">
             </div>
           </div>
-        </my-carousel-item>-->
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
@@ -4074,11 +4074,11 @@
           }
         }
       }
-/*      .anniversary-active {
+      .anniversary-active {
         height: 400px;
         cursor: pointer;
         background: #FEEDE0 url("../../assets/img/active/anniversary/aa-banner22.png") center no-repeat;
-      }*/
+      }
       .db-active {
         height: 400px;
         background: url("../../assets/img/active/dbActive/dba-banner7.png") center no-repeat, linear-gradient(90deg, #FFF, #AFCAFF);

@@ -2,13 +2,13 @@
   <div class="active-center">
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
-<!--        <my-carousel-item class="carousel-item">
+        <my-carousel-item class="carousel-item">
           <div @click="push('/ruicloud/anniversaryActive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="anniversary-active">
             </div>
           </div>
-        </my-carousel-item>-->
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('fractive')"
                style="cursor: pointer;background: #F56B23;">
@@ -135,7 +135,7 @@
       return {
         active: [],
         activedata: [
-  /*        {
+          {
             imgPath: require('../../assets/img/activecenter/bg-card-5.png'),
             name: '周年庆典，钜惠来袭',
             desc: '爆款高配云产品 限时特惠',
@@ -145,7 +145,7 @@
             url: 'anniversaryActive',
             isStart: true,
             weight: '1',
-          },*/
+          },
           {
             imgPath: require('../../assets/img/activecenter/bg-card-2.png'),
             name: '免费云主机 不限量领取',
@@ -247,11 +247,11 @@
             height: 100%;
             background: url("../../assets/img/active/active_xf_bg.png") no-repeat center;
           }
-/*          .anniversary-active {
+          .anniversary-active {
             height: 400px;
             cursor: pointer;
             background: #FEEDE0 url("../../assets/img/active/anniversary/aa-banner22.png") center no-repeat;
-          }*/
+          }
           .free-receive {
             height: 400px;
             background: #f56b23 url("../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
