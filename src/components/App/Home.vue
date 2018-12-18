@@ -4,13 +4,6 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/AnniversaryActive')"
-               style="cursor: pointer;background: #F56B23;">
-            <div class="anniversary-active">
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
           <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
@@ -117,6 +110,13 @@
                 <p>万兆光纤极速体验，助力区域企业云上发展</p>
                 <Button>了解详情</Button>
               </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
+          <div @click="push('/ruicloud/AnniversaryActive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="anniversary-active">
             </div>
           </div>
         </my-carousel-item>

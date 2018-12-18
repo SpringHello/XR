@@ -3,13 +3,6 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/anniversaryActive')"
-               style="cursor: pointer;background: #F56B23;">
-            <div class="anniversary-active">
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
           <div @click="push('fractive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
@@ -56,6 +49,13 @@
                   <button>立即领取</button>
                 </div>
                 <img src="../../assets/img/home/home-banner4.png"></div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
+          <div @click="push('/ruicloud/anniversaryActive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="anniversary-active">
             </div>
           </div>
         </my-carousel-item>
