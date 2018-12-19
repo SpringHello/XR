@@ -2,9 +2,9 @@
     <div>
         <div class="w_header">
             <div class="header_center">
-                <div>
+                <div style="display:inline-block;position:relative;top: 91px;left: 102px;">
                     <p class="pt_denier">双旦同庆，钜惠上云</p>
-                    <p>爆款云产品、高配GPU云服务器等活动产品低至 2.7 折，更有好礼相送，等您来拿!</p>
+                    <p class="pt_white">爆款云产品、高配GPU云服务器等活动产品低至 <span style="font-size:36px;">2.7</span> 折，更有好礼相送，等您来拿!</p>
                     <div class="w_button">
                         <span>登录即可抽奖</span>
                     </div>
@@ -45,14 +45,26 @@ export default {
                 height: 43px;
                 background: rgb(255, 222, 42);
                 box-shadow: 0px 2px 2px 1px rgb(136, 20, 17);
+                cursor: pointer;
             }
             .pt_denier{
                 font-size: 48px;
                 font-family:PingFangSC-Semibold;
                 font-weight:600;
-                background: linear-gradient(to right, red, blue);
+                background: linear-gradient(rgba(255, 251, 227, 1),rgba(255, 200, 75, 1));
                 -webkit-background-clip: text;
                 color: transparent;
+                text-shadow:1px 1px 1px  #000;
+            }
+            .pt_white{
+                color: #FFFFFF;
+                font-family: PingFangSC-Medium;
+                font-size: 18px;
+                margin: 12px 0 48px 0;
+                span{
+                    text-shadow: 2px 1px 4px  #000;
+                    font-style:italic;
+                }
             }
         }
     }
