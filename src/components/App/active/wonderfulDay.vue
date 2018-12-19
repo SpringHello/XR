@@ -3,7 +3,7 @@
         <div class="w_header">
             <div class="header_center">
                 <div>
-                    <p>双旦同庆，钜惠上云</p>
+                    <p class="pt_denier">双旦同庆，钜惠上云</p>
                     <p>爆款云产品、高配GPU云服务器等活动产品低至 2.7 折，更有好礼相送，等您来拿!</p>
                     <div class="w_button">
                         <span>登录即可抽奖</span>
@@ -29,18 +29,30 @@ export default {
         height: 400px;
         .header_center{
             margin: 0 auto;
-            width: 600px;
+            width: 1344px;
             height: inherit;
             background: url('../../../assets/img/active/doubleDenier/double.png');
             background-repeat:no-repeat; background-size:100% 100%;-moz-background-size:100% 100%;
             .w_button{
                 color: rgba(26, 42, 210, 1);
-                font-family: 'PingFangSC-Medium';
+                font-family: PingFangSC-Medium;
+                font-weight: 500;
                 font-size: 13px;
                 width: 140px;
+                line-height: 43px;
+                letter-spacing:3px;
+                text-align: center;
                 height: 43px;
                 background: rgb(255, 222, 42);
-                box-shadow: 0px 0px 0px 0px rgb(136, 20, 17);
+                box-shadow: 0px 2px 2px 1px rgb(136, 20, 17);
+            }
+            .pt_denier{
+                font-size: 48px;
+                font-family:PingFangSC-Semibold;
+                font-weight:600;
+                background: linear-gradient(to right, red, blue);
+                -webkit-background-clip: text;
+                color: transparent;
             }
         }
     }
