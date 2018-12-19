@@ -376,7 +376,7 @@
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
           <p style="line-height: 20px;font-size: 14px;">
-            为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+            为保障您的资金安全，我们将向您的实名认证手机号码（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
           <Form-item label="图片验证码">
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
@@ -387,6 +387,11 @@
             <Button type="primary" @click="getCode">{{codePlaceholder}}</Button>
           </Form-item>
         </Form>
+        <div v-if="unfreezeTo=='account'"> 
+          <p>没有收到验证码？</p>
+          <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" style="cursor:auto">重新获取</span>或<span class="blue"  @click.prevent="getBindingMobilePhoneCode('voice')">接收语音验证码</span>。</p>
+          <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue">通过身份证号码验证</span>更改手机号。</p>
+        </div>
         <div style="clear: both"></div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -394,7 +399,106 @@
         <Button type="primary" @click="unfreeze_ok">确认</Button>
       </div>
     </Modal>
-
+    <!-- 修改手机号码(身份证验证) -->
+    <Modal v-model="showModal.modifyPhoneID" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">修改手机号码</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div>
+          <Steps :current="authModifyPhoneStep" size="small">
+            <Step title="验证身份"></Step>
+            <Step title="手持身份证照"></Step>
+            <Step title="设置新手机号码"></Step>
+            <Step title="完成"></Step>
+          </Steps>
+          <div v-show="authModifyPhoneStep == 0">
+            <Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">          
+              <Form-item label="真实姓名" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
+                <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.userInfo.realname}}</span>
+              </Form-item>
+              <FormItem label="注册身份证号码" style="width: 100%;" prop="ID">
+                <Input v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码"
+                      style="width:240px;"></Input>
+              </FormItem>
+              <p style="color:#FF0000;margin-top:-20px;" v-show="authModifyPhoneFormOne.hint">
+                <Icon type="ios-close"></Icon>
+                身份证号码输入有误，验证失败，请尝试
+                <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push(work)">提交工单</span> 或
+                <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+                <span>{{qqnumber}}</span>
+              </p>
+            </Form>
+          </div>
+          <div v-show="authModifyPhoneStep == 1">
+              <span>上传法人证件</span>
+              <div
+                style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px">
+                <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px;">
+                  <div style="width:130px;">
+                    <Upload
+                      multiple
+                      type="drag"
+                      :show-upload-list="false"
+                      :with-credentials="true"
+                      action="file/upFile.do"
+                      :format="['jpg','jpeg','png','gif']"
+                      :max-size="4096"
+                      :on-format-error="handleFormatError"
+                      :on-exceeded-size="handleMaxSize"
+                      :on-success="legalPersonIDFront">
+                      <div 
+                            style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                        <img src="../../assets/img/usercenter/uc-add.png"/>
+                      </div>
+                      <!-- <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDFront"> -->
+                      <p
+                        style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
+                        上传文件</p>
+                    </Upload>
+                  </div>
+                  <div style="width:130px;margin-left:20px;">
+                    <img src="../../assets/img/usercenter/card-font.png"
+                          style="width:130px;height:74px;margin-bottom: 10px;">
+                    <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人像面</p>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div v-show="authModifyPhoneStep == 2">
+          <Form :model="authModifyPhoneFormThere" :rules="authModifyPhoneThereRuleValidate" ref="authModifyPhoneFormThere">
+              <FormItem label="绑定新手机" prop="newPhone" style="width: 100%">
+                <Input v-model="authModifyPhoneFormThere.newPhone" placeholder="请输入新手机号码" style="width:240px"></Input>
+              </FormItem>
+              <FormItem label="图形验证码" style="width: 100%;" prop="pictureCode">
+                <Input v-model="authModifyPhoneFormThere.pictureCode" placeholder="请输入随机验证码"
+                       style="width:240px;margin-right:20px"></Input>
+                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+                     style="height:32px;vertical-align: middle">
+              </FormItem>
+              <Form-item label="短信验证码" prop="newVerificationCode" style="width: 100%">
+                <Input v-model="authModifyPhoneFormThere.newVerificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
+                <Button type="primary" :disabled="authModifyPhoneFormThere.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode()">{{ authModifyPhoneFormThere.newCodeText}}
+                </Button>
+              </Form-item>
+          </Form>
+          </div>
+          <div v-show="authModifyPhoneStep == 3" style="text-align:center">
+            <Icon type="checkmark-circled" style="font-size:54px;color:#3EBB62;margin:20px 0;"></Icon>
+            <p style="font-size:14px;color:#666;margin-bottom:10px;">您的更改申请提交成功</p>
+            <span style="font-size:12px;color:#666">我们会在24小时内将审核结果发送至您的新手机号：{{authModifyPhoneFormThere.newPhone}}</span>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.modifyPhoneID = false">取消</Button>
+        <Button type="primary" v-if="authModifyPhoneStep == 0" @click="bindingMobilePhoneStepTwo('authModifyPhoneFormOne')">下一步</Button>
+        <Button type="primary" v-if="authModifyPhoneStep == 1" @click="bindingMobilePhoneStepThere">下一步</Button>
+        <Button type="primary" v-if="authModifyPhoneStep == 2" @click="bindingMobilePhoneStepFour">下一步</Button>
+        <Button type="primary" v-if="authModifyPhoneStep == 3" @click="bindMobilePhone">完成</Button>
+      </div>
+    </Modal>
+    <!-- 弹窗 -->
     <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
@@ -522,7 +626,7 @@
 
 <script type="text/ecmascript-6">
   import axios from 'axios'
-
+  import reg from '../../util/regExp'
   export default {
     data() {
       const validateInvoice = (rule, value, callback) => {
@@ -622,10 +726,17 @@
       }
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('注册电话不能为空'))
+          return callback(new Error('电话号码不能为空'))
         }
         if (!(/^1(3|4|5|7|8)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
           callback(new Error('请输入正确的电话号码'))
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredID = (rule, value, callback) => {
+        if (!reg.IDCardVail(value)) {
+          callback(new Error('请输入正确的身份证号码'));
         } else {
           callback()
         }
@@ -658,6 +769,39 @@
          this.init()*/
       }
       return {
+        authModifyPhoneStep: 3,
+        authModifyPhoneFormOne: {
+          ID: '',
+          hint: 0
+        },
+        authModifyPhoneOneRuleValidate: {
+          ID: [
+            {required: true, message: '请输入身份证号码', trigger: 'blur'},
+            {validator: validaRegisteredID, trigger: 'blur'}
+          ]
+        },
+        authModifyPhoneFormThere: {
+          verificationCode: '',
+          pictureCode: '',
+          newCodeText: '获取验证码',
+          newPhone: '',
+          newVerificationCode: ''
+        },
+        authModifyPhoneThereRuleValidate: {
+          verificationCode: [
+            {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+          ],
+          pictureCode: [
+            {required: true, message: '请输入图形验证码', trigger: 'blur'},
+          ],
+          newPhone: [
+            {required: true, message: '请输入新手机号码', trigger: 'blur'},
+            {validator: validaRegisteredPhone, trigger: 'blur'}
+          ],
+          newVerificationCode: [
+            {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+          ],
+        },
         refundParticularsColumns: [
           {
             title: '产品',
@@ -1369,7 +1513,9 @@
           // 提现模态框
           withdraw: false,
           refundHint: false,
-          unfreezeToBalanceHint: false
+          unfreezeToBalanceHint: false,
+          // 修改手机号码（身份证方式）
+          modifyPhoneID: true
         },
         // 提现
         withdrawForm: {
@@ -2203,6 +2349,66 @@
           this.showModal.unfreezeToBalanceHint = true
           this.showModal.unfreeze = false
         }
+      },
+      bindingMobilePhoneStepTwo(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            if (this.authModifyPhoneFormOne.ID == '500227199209095726') {
+              this.authModifyPhoneStep = 1
+              console.log('验证成功')
+            } else {
+              this.authModifyPhoneFormOne.hint = 1
+            }
+          } else {
+            this.authModifyPhoneFormOne.hint = 0
+          }
+        })
+      },
+      bindingMobilePhoneStepThere() {
+        this.authModifyPhoneStep = 2
+      },
+      bindingMobilePhoneStepFour() {
+        this.authModifyPhoneStep = 3
+      },
+      legalPersonIDFront() {
+
+      },
+      handleMaxSize() {
+
+      },
+      handleFormatError() {
+
+      },
+      getBindingNewMobilePhoneCode() {
+        this.$refs.bindingMobilePhone.validateField('newPhone', (text) => {
+          if (text == '') {
+            axios.get('user/code.do', {
+              params: {
+                aim: this.bindingMobilePhoneForm.newPhone,
+                isemail: 0,
+                vailCode: this.bindingMobilePhoneForm.pictureCode
+              }
+            }).then(response => {
+              // 发送成功，进入倒计时
+              if (response.status == 200 && response.data.status == 1) {
+                var countdown = 60
+                this.bindingMobilePhoneForm.newCodeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.bindingMobilePhoneForm.newCodeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.bindingMobilePhoneForm.newCodeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
       },
       unfreezeToBalance() {
         if (this.unfreezeToHint == 'yue') {
