@@ -30,7 +30,8 @@ const store = new Vuex.Store({
       vpc: 'VPC',
       vpn: 'remote'
     },
-    accessKey: null
+    accessKey: null,
+    qq: {}
   },
   getters: {},
 
@@ -63,7 +64,10 @@ const store = new Vuex.Store({
     },
     setKey(state, key) {
       state.accessKey = key;
-    }
+    },
+    setQQInfo(state, qq) {
+      state.qq = qq
+    },
   },
   actions: {
     /* 获取用户信息 */
