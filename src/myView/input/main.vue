@@ -36,7 +36,7 @@
             <span v-else style="color:#666666;">{{count}}</span>
         </div>
         <img class="ver_eye" @click="isEye = !isEye" :src="eye" v-if="isSelect == 'ear'">
-        <p v-if="timeBoo" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE">重新获取</span>或<span  style="color:#4A97EE">接收语音验证</span></p>
+        <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE">重新获取</span>或<span  style="color:#4A97EE">接收语音验证</span></p>
     </div>
 </template>
 
@@ -97,7 +97,8 @@ export default {
             isShow:false,
             count:10,
             timeBoo:true,
-            isEye:false
+            isEye:false,
+            timeP:false
         }
     },
     methods:{
@@ -153,15 +154,21 @@ export default {
             this.isShow = !this.isShow;
         },
         timeReduce(){
-            this.timeBoo = false;
-            setInterval(()=>{
-                if(this.count != 0){
-                    this.count --;
-                }else{
-                    clearInterval(this.count);
-                    this.timeBoo = true;
-                }
-            },1000);
+            if(this.account != ''){
+                this.$emit('count',this.count);
+                this.timeBoo = false;
+                this.timeP = false;
+               let char = setInterval(()=>{
+                    if(this.count != 0){
+                        this.count --;
+                    }else{
+                        clearInterval(char);
+                        this.count = 10;
+                        this.timeBoo = true;
+                        this.timeP = true;
+                    }
+                },1000);
+            }
         },
         blur () {
             this.isShow = false;

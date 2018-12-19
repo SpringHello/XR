@@ -118,7 +118,7 @@
                   <p>8-32个字符</p></div>
                 <div><i :class="{reach: registerForm.passwordDegree > 1 }"></i>
                   <p>包含数字、大小写字母</p></div>
-                <div><p style="color:rgba(102,102,102,1);">可以输入的特殊字符包括：!#$%_()^&*,-<>?@.+=</p></div>
+                <div><p style="color:rgba(102,102,102,1);">可输入特殊字符包括：!#$%_()^&*,-<>?@.+=</p></div>
               </div>
             </div>
             <div class="errorMsg">
@@ -729,11 +729,11 @@
             }
           }
           .popTip {
-            height: 106px;
             width: 300px;
             padding: 19px 21px;
             position: absolute;
             background: #FFF;
+            border-radius: 8px;
             box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
             left: -90%;
             z-index: 3;
@@ -1187,13 +1187,21 @@
           }
         })
       },
-      registerPasswordBlur(){
+      registerPasswordBlur() {
         this.registerForm.passwordHint = false
-        if(this.registerForm.passwordDegree < 2){
+        if (this.registerForm.passwordDegree < 2) {
           this.registerForm.errorMsg = 'passwordTooEasy'
         }
       },
       registerAndLogin() {
+        if (this.registerForm.passwordDegree < 2) {
+          this.registerForm.errorMsg = 'passwordTooEasy'
+          return
+        }
+        if (this.registerForm.password !== this.registerForm.passwordConfirm) {
+          this.registerForm.errorMsg = 'notConfirmPassword'
+          return
+        }
       }
     },
     computed: {
@@ -1216,7 +1224,7 @@
         if (val.length >= 8) {
           this.registerForm.passwordDegree = 1
         }
-        if(this.regExpObj.password.test(val)){
+        if (this.regExpObj.password.test(val)) {
           this.registerForm.passwordDegree = 2
         }
       }
