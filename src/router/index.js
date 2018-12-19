@@ -45,6 +45,7 @@ const Vps = () =>import('@/components/App/active/vps')
 /*const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
  const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
 const active_1 = () => import('@/components/App/active/active_1')
+const wonderfulDay =() => import('@/components/App/active/wonderfulDay')
 
 //const active_2 = () => import('@/components/App/active/active_2')
 const objStorageActive = () =>import('@/components/App/active/objStorageActive')
@@ -318,6 +319,7 @@ var router = new Router({
         {path: 'objStorageActive', name: 'objStorageActive', component: objStorageActive},
         {path: 'smlj', name: 'smlj', component: smlj},
         {path: 'frActive', name: 'frActive', component: FrActive},
+        {path: 'wonderfulDay',name: 'wonderfulDay', component:wonderfulDay},
 
         {path: 'dbActive', name: 'dbActive', component: DBActive},
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
