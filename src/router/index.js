@@ -127,6 +127,7 @@ const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
 const Host = () =>import('@/components/Back/Host')
+const NewHost = () =>import('@/components/Back/newHost')
 const GPU = () =>import('@/components/Back/GPU')
 const GpuList = () =>import('@/components/Back/GpuList')
 const Mirror = () =>import('@/components/Back/Mirror')
@@ -404,6 +405,7 @@ var router = new Router({
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
+        {path: 'newHost', name: 'newHost', component: NewHost},
         {path: 'gpu', name: 'gpu', component: GPU},
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
