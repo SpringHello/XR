@@ -381,15 +381,15 @@
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
                  @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-          </Form-item>
+          </Form-item>    
           <Form-item label="短信/邮箱验证码" prop="phoneCode">
             <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
-            <Button type="primary" @click="getCode">{{codePlaceholder}}</Button>
+            <Button type="primary" @click="getCode('code')">{{codePlaceholder}}</Button>
           </Form-item>
         </Form>
-        <div v-if="unfreezeTo=='account'"> 
+        <div v-if="unfreezeTo=='account'" class="voice-vail"> 
           <p>没有收到验证码？</p>
-          <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" style="cursor:auto">重新获取</span>或<span class="blue"  @click.prevent="getBindingMobilePhoneCode('voice')">接收语音验证码</span>。</p>
+          <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:codePlaceholder!='发送验证码'}"  @click="getCode('againCode')">重新获取</span>或<span class="blue code" :class="{notallow:codePlaceholder!='发送验证码'}"  @click.prevent="getCode('voice')">接收语音验证码</span>。</p>
           <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue">通过身份证号码验证</span>更改手机号。</p>
         </div>
         <div style="clear: both"></div>
@@ -571,7 +571,7 @@
           </Form-item>
           <Form-item label="短信/邮箱验证码" prop="phoneCode">
             <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
-            <Button type="primary" @click="getCode">{{codePlaceholder}}</Button>
+            <Button type="primary" @click="getCode('codeGetCash')">{{codePlaceholder}}</Button>
           </Form-item>
         </Form>
         <div style="clear: both"></div>
@@ -1515,7 +1515,7 @@
           refundHint: false,
           unfreezeToBalanceHint: false,
           // 修改手机号码（身份证方式）
-          modifyPhoneID: true
+          modifyPhoneID: false
         },
         // 提现
         withdrawForm: {
@@ -2482,7 +2482,7 @@
         })
       },
       // 提现前发送验证码
-      getCode() {
+      getCode(codeType) {
         if (this.codePlaceholder != '发送验证码') {
           return
         }
@@ -2493,11 +2493,18 @@
           })
           return
         }
+        var url = ''
+        if (codeType == 'code' || codeType == 'codeGetCash' || codeType == 'againCode') {
+          url = 'user/code.do'
+        } else if (codeType == 'voice'){
+          url = 'user/voiceCode.do'
+        } else {
+          return false
+        }
         this.codePlaceholder = '验证码发送中'
-        this.$http.get('user/code.do', {
+        this.$http.get(url, {
           params: {
             aim: this.withdrawConfirm.number,
-            type: '0',
             isemail: this.withdrawConfirm.type == 'phone' ? '0' : '1',
             vailCode: this.withdrawForm.code,
           }
