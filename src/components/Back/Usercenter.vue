@@ -949,7 +949,7 @@
           </div> -->
           <div v-if="bindingMobilePhoneForm.verificationMode == 'phone'&&bindingMobilePhoneForm.step ==0" class="voice-vail"> 
             <p>没有收到验证码？</p>
-            <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:bindingMobilePhoneForm.newCodeText !='获取验证码'}"  @click="getBindingMobilePhoneCode('againCode')">重新获取</span>或<span class="blue code" :class="{notallow:bindingMobilePhoneForm.newCodeText !='获取验证码'}"  @click.prevent="getBindingMobilePhoneCode('voice')">接收语音验证码</span>。</p>
+            <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码'}"  @click="getBindingMobilePhoneCode('againCode')">重新获取</span>或<span class="blue code" :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码'}"  @click.prevent="getBindingMobilePhoneCode('voice')">接收语音验证码</span>。</p>
             <p v-if="$store.state.authInfo">2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue">通过身份证号码验证</span>更改手机号。</p>
             <p v-else>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span> 或
             <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>

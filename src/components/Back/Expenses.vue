@@ -430,39 +430,36 @@
             </Form>
           </div>
           <div v-show="authModifyPhoneStep == 1">
-              <span>上传法人证件</span>
-              <div
-                style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px">
-                <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px;">
-                  <div style="width:130px;">
+              <div class="upload-img">
+                <div class="content">
+                  <div class="left">
                     <Upload
                       multiple
                       type="drag"
                       :show-upload-list="false"
                       :with-credentials="true"
-                      action="file/upFile.do"
+                      action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
                       :format="['jpg','jpeg','png','gif']"
                       :max-size="4096"
                       :on-format-error="handleFormatError"
                       :on-exceeded-size="handleMaxSize"
                       :on-success="legalPersonIDFront">
-                      <div 
-                            style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                        <img src="../../assets/img/usercenter/uc-add.png"/>
+                      <div class="icon-wrap" v-if="uploadImgDispaly==''">
+                          <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
                       </div>
-                      <!-- <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDFront"> -->
-                      <p
-                        style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
-                        上传文件</p>
+                      <img v-else :src="uploadImgDispaly">
+                      <p>上传图片</p>
                     </Upload>
                   </div>
-                  <div style="width:130px;margin-left:20px;">
-                    <img src="../../assets/img/usercenter/card-font.png"
-                          style="width:130px;height:74px;margin-bottom: 10px;">
-                    <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人像面</p>
+                  <div class="right">
+                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+                    <p>手持身份证人像照片</p>
                   </div>
                 </div>
               </div>
+              <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+                提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过4MB。
+              </p>
           </div>
           <div v-show="authModifyPhoneStep == 2">
           <Form :model="authModifyPhoneFormThere" :rules="authModifyPhoneThereRuleValidate" ref="authModifyPhoneFormThere">
@@ -768,7 +765,8 @@
          this.init()*/
       }
       return {
-        authModifyPhoneStep: 3,
+        uploadImgDispaly: '',
+        authModifyPhoneStep: 0,
         authModifyPhoneFormOne: {
           ID: '',
           hint: 0
@@ -1514,7 +1512,7 @@
           refundHint: false,
           unfreezeToBalanceHint: false,
           // 修改手机号码（身份证方式）
-          modifyPhoneID: false
+          modifyPhoneID: true
         },
         // 提现
         withdrawForm: {
@@ -2350,18 +2348,19 @@
         }
       },
       bindingMobilePhoneStepTwo(name) {
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            if (this.authModifyPhoneFormOne.ID == '500227199209095726') {
-              this.authModifyPhoneStep = 1
-              console.log('验证成功')
-            } else {
-              this.authModifyPhoneFormOne.hint = 1
-            }
-          } else {
-            this.authModifyPhoneFormOne.hint = 0
-          }
-        })
+        // this.$refs[name].validate((valid) => {
+        //   if (valid) {
+        //     if (this.authModifyPhoneFormOne.ID == '500227199209095726') {
+        //       this.authModifyPhoneStep = 1
+        //       console.log('验证成功')
+        //     } else {
+        //       this.authModifyPhoneFormOne.hint = 1
+        //     }
+        //   } else {
+        //     this.authModifyPhoneFormOne.hint = 0
+        //   }
+        // })
+        this.authModifyPhoneStep = 1
       },
       bindingMobilePhoneStepThere() {
         this.authModifyPhoneStep = 2
@@ -2369,14 +2368,20 @@
       bindingMobilePhoneStepFour() {
         this.authModifyPhoneStep = 3
       },
-      legalPersonIDFront() {
-
-      },
-      handleMaxSize() {
-
+      legalPersonIDFront(response) {
+        if (response.status == 1) {
+          this.uploadImgDispaly = response.result
+        }
       },
       handleFormatError() {
-
+        this.$Message.info({
+          content: '仅支持jpg,jpeg,png,gif格式的文件上传'
+        })
+      },
+      handleMaxSize() {
+        this.$Message.info({
+          content: '上传的文件过大'
+        })
       },
       getBindingNewMobilePhoneCode() {
         this.$refs.bindingMobilePhone.validateField('newPhone', (text) => {
