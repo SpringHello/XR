@@ -11,6 +11,27 @@
                 </div>
             </div>
         </div>
+        <div class="w_gift">
+            <div class="gift_one">
+                <img  src="../../../assets/img/active/doubleDenier/li_da.png">
+                <span>查看详情</span>
+            </div>
+            <div class="gift_two">
+                <img  src="../../../assets/img/active/doubleDenier/zhe_da.png">
+                <span>查看详情</span>
+            </div>
+            <div class="gift_three">
+                <img  src="../../../assets/img/active/doubleDenier/0_da.png">
+                <span>查看详情</span>
+            </div>
+            <div class="gift_four">
+                <img  src="../../../assets/img/active/doubleDenier/38_da.png">
+                <span>立即领取</span>
+            </div>
+        </div>
+        <div>
+
+        </div>
     </div>
 </template>
 
@@ -49,7 +70,7 @@ export default {
             }
             .pt_denier{
                 font-size: 48px;
-                font-family:PingFangSC-Semibold;
+                font-family:微软雅黑;
                 font-weight:600;
                 background: linear-gradient(rgba(255, 251, 227, 1),rgba(255, 200, 75, 1));
                 -webkit-background-clip: text;
@@ -65,6 +86,104 @@ export default {
                     text-shadow: 2px 1px 4px  #000;
                     font-style:italic;
                 }
+            }
+        }
+    }
+    .w_gift{
+        position: relative;
+        top: -47px;
+        margin-left: 338px;
+        display: flex;
+        .gift_one{
+            text-align: center;
+            padding: 6px 7px;
+            width: 295px;
+            height: 138px;
+            background: url('../../../assets/img/active/doubleDenier/li_da.png') no-repeat;
+            background-size:100% 100%;-moz-background-size:100% 100%;
+            img{
+                width:265px;height:124px; 
+            }
+            span{
+                position: relative;
+                top: -47px;
+                font-size: 14px;
+                color: #FFFFFF;
+                left: 13px;
+                cursor: pointer;
+            }
+            img:hover{
+                width: 310px;
+                height: 143px;
+            }
+        }
+        .gift_two{
+            text-align: center;
+            padding: 6px 7px;
+            width: 295px;
+            height: 138px;
+            background: url('../../../assets/img/active/doubleDenier/zhe_da.png') no-repeat;
+            background-size:100% 100%;-moz-background-size:100% 100%;
+             img{
+                width:265px;height:124px; 
+            }
+            span{
+                position: relative;
+                top: -47px;
+                font-size: 14px;
+                color: #FFFFFF;
+                left: 13px;
+                cursor: pointer;
+            }
+            img:hover{
+                width: 310px;
+                height: 143px;
+            }
+        }
+        .gift_three{
+            text-align: center;
+            padding: 6px 7px;
+            width: 295px;
+            height: 138px;
+            background: url('../../../assets/img/active/doubleDenier/0_da.png') no-repeat;
+            background-size:100% 100%;-moz-background-size:100% 100%;
+             img{
+                width:265px;height:124px; 
+            }
+            span{
+                position: relative;
+                top: -47px;
+                font-size: 14px;
+                color: #FFFFFF;
+                left: 13px;
+                cursor: pointer;
+            }
+            img:hover{
+                width: 310px;
+                height: 143px;
+            }
+        }
+        .gift_four{
+            text-align: center;
+            padding: 6px 7px;
+            width: 295px;
+            height: 138px;
+            background: url('../../../assets/img/active/doubleDenier/38_da.png') no-repeat;
+            background-size:100% 100%;-moz-background-size:100% 100%;
+             img{
+                width:265px;height:124px; 
+            }
+            span{
+                position: relative;
+                top: -47px;
+                font-size: 14px;
+                color: #FFFFFF;
+                left: 13px;
+                cursor: pointer;
+            }
+            img:hover{
+                width: 310px;
+                height: 143px;
             }
         }
     }
