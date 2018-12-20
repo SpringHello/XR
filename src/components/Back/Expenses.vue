@@ -426,7 +426,6 @@
                 身份证号码输入有误，验证失败，请尝试
                 <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push(work)">提交工单</span> 或
                 <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
-                <span>{{qqnumber}}</span>
               </p>
             </Form>
           </div>

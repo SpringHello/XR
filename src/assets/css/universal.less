@@ -754,11 +754,25 @@
   font-size: 14px;
   p {
     line-height: 20px;
+    a {
+      text-decoration: underline;
+    }
   }
   .blue {
     color: #2A99F2;
     text-decoration: underline;
     cursor: pointer;
+  }
+  .notallow {
+    cursor: not-allowed;
+  }
+}
+// 底部语音验证样式（没有实名认证）
+.noauth-voice {
+  color:#F10C0C;
+  span {
+    color:#4A97EE;
+    cursor:pointer
   }
   .notallow {
     cursor: not-allowed;
