@@ -30,7 +30,15 @@
             </div>
         </div>
         <div class="w_center">
+            <div class="w_give">
+                <p style="color:#FF3000;font-size:32px;font-weight:550;line-height:72px;">活动首购 好礼相送</p>
+                <p style="color:#222222;font-size:16px;">首购享好礼，在此活动中购买任意产品即可领取 “京东E卡（30元）”一张！</p>
+                <!-- <img src="../../../assets/img/active/doubleDenier/"> -->
 
+            </div>
+            <div class="w_draw">
+                <img src="../../../assets/img/active/doubleDenier/back.png">
+            </div>
         </div>
     </div>
 </template>
@@ -189,5 +197,18 @@ export default {
     }
     .w_center{
         height: 485px;
+        background: rgb(253, 239, 220);
+        text-align: center;
+        padding: 58px 0 22px 0;
+        margin-top: -40px;
+        .w_give{
+            display: inline-block;
+            position: relative;
+            text-align: center;
+        }
+        .w_draw{
+            display: inline-block;
+            position: relative;
+        }
     }
 </style>
