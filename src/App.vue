@@ -594,10 +594,10 @@
         xiaoshouInfo: [],  // QQ销售在线情况
         yunweiInfo: [],  // QQ运维在线情况,
         /* 倒计时参数 */
-        day: '--',
-        hour: '--',
-        minute: '--',
-        second: '--',
+        day: '00',
+        hour: '00',
+        minute: '00',
+        second: '00',
         hintShow: false,
         timer: null
       }
@@ -641,7 +641,7 @@
       if (sessionStorage.getItem('hintShow') == 'true') {
         this.$refs.hint.style.height = '80px'
       }
-      this.setTime()
+      //this.setTime()
       if (document.readyState === 'complete') { //当页面加载状态为完全结束时进入
         let params = {
           batchNumber: window.UUID,

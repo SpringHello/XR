@@ -3,13 +3,6 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/anniversaryActive')"
-               style="cursor: pointer;background: #F56B23;">
-            <div class="anniversary-active">
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
           <div @click="push('fractive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
@@ -59,6 +52,13 @@
             </div>
           </div>
         </my-carousel-item>
+        <my-carousel-item class="carousel-item">
+          <div @click="push('/ruicloud/anniversaryActive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="anniversary-active">
+            </div>
+          </div>
+        </my-carousel-item>
       </my-carousel>
     </div>
     <div class="center-active box-g">
@@ -80,7 +80,7 @@
                   <p v-if="item.secDesc">{{item.secDesc}}</p>
                 </div>
                 <img :src="item.textImg" alt="" v-else>
-                
+
               </div>
               <div class="box-bottom">
                 <div>

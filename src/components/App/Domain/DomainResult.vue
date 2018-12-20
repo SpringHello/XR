@@ -527,6 +527,8 @@
           .all-data {
             padding: 30px 0 9px 0;
             border-bottom: 1px solid rgba(204, 204, 204, 1);
+            max-height: 550px;
+            overflow-y: auto;
             li {
               list-style: none;
               display: flex;

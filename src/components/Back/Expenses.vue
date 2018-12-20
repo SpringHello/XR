@@ -551,6 +551,8 @@
       <div class="universal-modal-content-flex">
         <Table :columns="refundParticularsColumns" :data="refundParticularsData"></Table>
         <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;margin-top: 10px">订单总额：¥{{ refundOrderPrice}}</p>
+        <p v-if="refundOrderTicket" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">使用优惠券金额：¥{{ refundOrderTicket}}</p>
+        <p v-if="refundOrderVoucher" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">使用代金券金额：¥{{ refundOrderVoucher}}</p>
         <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">退款金额：<span style="font-size: 24px;color: #2A99F2">¥{{ refundPrice}}</span></p>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -758,6 +760,8 @@
         refundParticularsData: [],
         refundPrice: '',
         refundOrderPrice: '',
+        refundOrderTicket:'',
+        refundOrderVoucher: '',
         payLoading: false,
         cardVolumeColumns: [
           {
@@ -1732,8 +1736,8 @@
                         if (res.status == 200 && res.data.status == 1) {
                           this.showModal.unfreeze = true
                         } else {
-                          /* this.thawingCondition = params.row.thawCondition
-                           this.showModal.notUnfreeze = true*/
+                          /*   this.thawingCondition = params.row.thawCondition
+                             this.showModal.notUnfreeze = true*/
                           let url = 'user/judgeRenewalFee.do'
                           axios.get(url, {
                             params: {
@@ -2587,6 +2591,8 @@
             this.refundParticularsData = res.data.result
             this.refundPrice = res.data.cost
             this.refundOrderPrice = res.data.orderCost
+            this.refundOrderVoucher = res.data.voucherCost ? res.data.voucherCost : 0
+            this.refundOrderTicket = res.data.tickCost ? res.data.tickCost : 0
           } else {
             this.$message.info({
               content: res.data.message
@@ -2681,6 +2687,11 @@
             this.$Message.success(res.data.message)
             this.showModal.freezeParticulars = false
             this.showModal.freezeToRenew = false
+            this.getBalance()
+            this.showMoneyByMonth()
+            this.search()
+            this.getTicketNumber()
+            this.init()
           } else {
             this.$message.info({
               content: res.data.message

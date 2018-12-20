@@ -18,7 +18,10 @@
           <div id="rotary-table">
             <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]" :style="{'background-image': 'url(' + award.imgUrl + ')' }">
             </div>
-            <div @mousedown="startLotteryMouseDown" @mouseup="startLotteryMouseUp" id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled,'onClick': mouseDown}">(剩余抽奖次数
+            <!--<div @mousedown="startLotteryMouseDown" @mouseup="startLotteryMouseUp" id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled,'onClick': mouseDown}">(剩余抽奖次数
+              {{lotteryNumber }}次)
+            </div>-->
+            <div id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled}">(剩余抽奖次数
               {{lotteryNumber }}次)
             </div>
           </div>
@@ -339,7 +342,7 @@
                   <p>¥{{ item.currentPrice}} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyHost(index)">立即抢购</button>
+                  <button @click="buyHost(index)" :class="{disabled: true}">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -375,7 +378,7 @@
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyObjStorage(index)">立即抢购</button>
+                  <button @click="buyObjStorage(index)" :class="{disabled: true}">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -420,7 +423,7 @@
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyDatabase(index)">立即抢购</button>
+                  <button @click="buyDatabase(index)" :class="{disabled: true}">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -476,7 +479,7 @@
                 <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button @click="buyGPU(index)">立即抢购</button>
+                <button @click="buyGPU(index)" :class="{disabled: true}">立即抢购</button>
               </div>
             </div>
           </div>
@@ -524,7 +527,7 @@
                 <p>押金：¥{{ item.cashPledge }} <span>原价：¥{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button :class="{disabled: false}" @click="getHost(index)">立即领取</button>
+                <button :class="{disabled: true}"  @click="getHost(index)">立即领取</button>
               </div>
             </div>
           </div>
@@ -2075,6 +2078,10 @@
       },
 
       start: throttle(500, function (e) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.showModal.notLoginModal = true
           return
@@ -2331,6 +2338,10 @@
       },
 
       buyHost(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2387,6 +2398,10 @@
         })
       },
       buyObjStorage(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2508,6 +2523,10 @@
         })
       },
       buyDatabase(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2603,6 +2622,10 @@
         })
       },
       buyGPU(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2628,8 +2651,7 @@
             })
           }
         })
-      }
-      ,
+      },
 
 
       freeHostZoneChange(index) {
@@ -2648,8 +2670,7 @@
             this.getFreeHostOriginalPrice(this.freeHostList[index].zoneId, this.freeHostList[index].vmConfigId, this.freeHostList[index].duration, index)
           }
         })
-      }
-      ,
+      },
       freeHostDurationChange(index) {
         let url = 'activity/getVMConfigId.do'
         axios.get(url, {
@@ -2666,8 +2687,7 @@
             this.getFreeHostOriginalPrice(this.freeHostList[index].zoneId, this.freeHostList[index].vmConfigId, this.freeHostList[index].duration, index)
           }
         })
-      }
-      ,
+      },
       getFreeHostOriginalPrice(zoneId, vmConfigId, month, index) {
         let url = 'activity/getOriginalPrice.do'
         axios.get(url, {
@@ -2682,10 +2702,13 @@
             this.freeHostList[index].originalPrice = res.data.result.originalPrice
           }
         })
-      }
-      ,
+      },
 
       getHost(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.freeHostList[index].zoneId) {
           this.$Message.info('请选择需要领取的区域')
           return
@@ -2707,12 +2730,14 @@
             })
           }
         })
-      }
-      ,
+      },
       nextStep() {
         // 判断新老用户
         axios.get('activity/jdugeTeam.do', {
-          params: {sign: 'freeReceive'}
+          params: {
+            sign: 'freeReceive',
+            vmConfigId: this.freeHostList[this.index].vmConfigId
+          }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             if (response.data.result.flag) {
@@ -2737,8 +2762,7 @@
             })
           }
         })
-      }
-      ,
+      },
       getHost_ok() {
         if (this.payWay == 'balancePay') {
           if (this.balance < this.cashPledge) {
@@ -2787,8 +2811,7 @@
               break
           }
         }
-      }
-      ,
+      },
       getFreeHost() {
         this.showModal.paySuccessModal = false
         let url = 'user/getRemainderFrozen.do'
@@ -2823,8 +2846,7 @@
             })
           }
         })
-      }
-      ,
+      },
       //领奖时认证验证码
       getVerificationCode() {
         if (!this.authFormValidate.pictureCode) {
@@ -2848,8 +2870,7 @@
             })
           }
         })
-      }
-      ,
+      },
       // 快速认证时发送验证码
       sendCode() {
         this.$refs.sendCode.validate(validate => {
@@ -2879,8 +2900,7 @@
             })
           }
         })
-      }
-      ,
+      },
       // 快速认证
       quicklyAuth() {
         var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
@@ -2908,8 +2928,7 @@
             })
           }
         })
-      }
-      ,
+      },
       isPay() {
         axios.get('user/payStatus.do', {
           params: {
@@ -2923,16 +2942,14 @@
             this.showModal.payDefeatedModal = true
           }
         })
-      }
-      ,
+      },
       payWayChange() {
         if (this.payWay == 'otherPay' && this.otherPayWay == '') {
           this.otherPayWay = 'zfb'
         } else if (this.payWay == 'balancePay') {
           this.otherPayWay = ''
         }
-      }
-      ,
+      },
 
       // 获取消费金额
       getSpentCost() {
@@ -3270,7 +3287,6 @@
                 }
                 &.disabled {
                   background: rgba(192, 192, 192, 1);
-                  cursor: not-allowed;
                 }
               }
             }
@@ -3444,7 +3460,6 @@
               }
               &.disabled {
                 background: rgba(192, 192, 192, 1);
-                cursor: not-allowed;
               }
             }
           }
@@ -3584,7 +3599,6 @@
               }
               &.disabled {
                 background: rgba(192, 192, 192, 1);
-                cursor: not-allowed;
               }
             }
           }
@@ -3868,7 +3882,7 @@
       left: 215px;
       width: 170px;
       height: 94px;
-      background: url("../../../assets/img/active/anniversary/aa-banner13.png") center no-repeat;
+      background: url("../../../assets/img/active/anniversary/aa-banner26.png") center no-repeat;
       text-align: center;
       cursor: pointer;
       font-size: 14px;
