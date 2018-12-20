@@ -29,7 +29,7 @@
                 <span>立即领取</span>
             </div>
         </div>
-        <div>
+        <div class="w_center">
 
         </div>
     </div>
@@ -186,5 +186,8 @@ export default {
                 height: 143px;
             }
         }
+    }
+    .w_center{
+        height: 485px;
     }
 </style>
