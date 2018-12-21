@@ -1,282 +1,282 @@
 <template>
   <div>
     <div v-show="!winningRecordShow">
-    <div class="w_header">
-      <div class="header_center">
-        <div style="display:inline-block;position:relative;top: 91px;left: 102px;">
-          <p class="pt_denier">双旦同庆，钜惠上云</p>
-          <p class="pt_white">选择新睿云，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
-          <div class="w_button">
-            <span @click="getVMConfigId">登录即可抽奖</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="w_gift">
-      <div class="gift_one">
-        <img  src="../../../assets/img/active/doubleDenier/li_da.png">
-        <span>查看详情</span>
-      </div>
-      <div class="gift_two">
-        <img  src="../../../assets/img/active/doubleDenier/zhe_da.png">
-        <span>查看详情</span>
-      </div>
-      <div class="gift_three">
-        <img  src="../../../assets/img/active/doubleDenier/0_da.png">
-        <span>查看详情</span>
-      </div>
-      <div class="gift_four">
-        <img  src="../../../assets/img/active/doubleDenier/38_da.png">
-        <span>立即领取</span>
-      </div>
-    </div>
-    <div class="w_center">
-      <div class="w_give">
-        <p class="w_pFont">活动首购 好礼相送</p>
-        <p style="color:#222222;font-size:16px;margin-bottom:40px;">首购享好礼，在此活动中购买任意产品即可领取 “京东E卡（30元）”一张！</p>
-        <img src="../../../assets/img/active/doubleDenier/JDE.png">
-        <span style="position: absolute; bottom: 85px; left: 245px;color: #FF3000;font-size: 15px;">点击领取</span>
-      </div>
-      <div class="w_draw" >
-        <div style="position: relative;top:54px;" @click="showModal.LotteryModal=true">
-          <img src="../../../assets/img/active/doubleDenier/colorFont.png">
-        </div>
-        <div class="draw_span">
-          <span style="margin-right:29px" @click="showModal.luckDrawRuleModal=true">抽奖规则</span>
-          <span @clock="winningRecordShow = true">我的奖品</span>
-        </div>
-      </div>
-    </div>
-    <div>
-      <div class="w_shoping">
-        <p class="w_pFont">爆款高配 限时特惠</p>
-        <p style="color:#222222;font-size:16px;margin-bottom:31px;">首购享好礼，在此活动中购买任意产品即可领取一张“京东E卡（30元）” ！<span class="w_span">活动规则</span></p>
-        <div class="w_special">
-          <div>
-            <p class="w_pFont">云服务器特惠专场</p>
-            <p style="color:#222222;font-size:16px;">新老用户可无条件领取38元体验券，即领即用，最高可用152个小时 <span class="w_span">立即领取</span></p>
-            <div class="w_host">
-              <div v-for="(item,index) in allObjcet.cloudHost" :key="index">
-                <div class="host_title">
-                  <p style="font-size:24px;">云服务器</p>
-                  <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">{{item.cpu}}核</span>CPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
-                </div>
-                <div class="host_content">
-                  <div>
-                    <span>请选择宽带</span>
-                    <Select v-model="item.bandwidth" style="width:200px;height:26px;" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
-                      <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="margin:10px 0;">
-                    <span>请选择区域</span>
-                    <Select v-model="item.zoneId" style="width:200px" class="fr-select">
-                      <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div >
-                    <span>请选择系统</span>
-                    <Select v-model="item.system" style="width:200px" class="fr-select" >
-                      <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="margin:10px 0;">
-                    <span>请选择时长</span>
-                    <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
-                      <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="text-align:left;margin:26px 0 22px 0;">
-                    <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
-                    <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
-                  </div>
-                  <div class="host_button">立即抢购</div>
-                </div>
-              </div>
+        <div class="w_header">
+        <div class="header_center">
+            <div style="display:inline-block;position:relative;top: 91px;left: 102px;">
+            <p class="pt_denier">双旦同庆，钜惠上云</p>
+            <p class="pt_white">选择新睿云，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
+            <div class="w_button" @click="loginInfo">
+                <span>登录即可抽奖</span>
             </div>
-          </div>
+            </div>
+        </div>
+        </div>
+        <div class="w_gift">
+        <div class="gift_one">
+            <img  src="../../../assets/img/active/doubleDenier/li_da.png">
+            <span>查看详情</span>
+        </div>
+        <div class="gift_two">
+            <img  src="../../../assets/img/active/doubleDenier/zhe_da.png">
+            <span>查看详情</span>
+        </div>
+        <div class="gift_three">
+            <img  src="../../../assets/img/active/doubleDenier/0_da.png">
+            <span>查看详情</span>
+        </div>
+        <div class="gift_four">
+            <img  src="../../../assets/img/active/doubleDenier/38_da.png">
+            <span @click="$router.push({path:'active_1'})">立即领取</span>
+        </div>
+        </div>
+        <div class="w_center">
+        <div class="w_give">
+            <p class="w_pFont">活动首购 好礼相送</p>
+            <p style="color:#222222;font-size:16px;margin-bottom:40px;">首购享好礼，在此活动中购买任意产品即可领取 “京东E卡（30元）”一张！</p>
+            <img src="../../../assets/img/active/doubleDenier/JDE.png">
+            <span style="position: absolute; bottom: 85px; left: 245px;color: #FF3000;font-size: 15px;">点击领取</span>
+        </div>
+        <div class="w_draw" >
+            <div style="position: relative;top:54px;" @click="showModal.LotteryModal=true">
+            <img src="../../../assets/img/active/doubleDenier/colorFont.png">
+            </div>
+            <div class="draw_span">
+            <span style="margin-right:29px" @click="showModal.luckDrawRuleModal=true">抽奖规则</span>
+            <span @click="winningRecordShow = true">我的奖品</span>
+            </div>
+        </div>
+        </div>
+        <div>
+        <div class="w_shoping">
+            <p class="w_pFont">爆款高配 限时特惠</p>
+            <p style="color:#222222;font-size:16px;margin-bottom:31px;">首购享好礼，在此活动中购买任意产品即可领取一张“京东E卡（30元）” ！<span class="w_span" @cli="showModal.discountRuleModal=true">活动规则</span></p>
+            <div class="w_special">
+            <div>
+                <p class="w_pFont">云服务器特惠专场</p>
+                <p style="color:#222222;font-size:16px;">新老用户可无条件领取38元体验券，即领即用，最高可用152个小时 <span class="w_span">立即领取</span></p>
+                <div class="w_host">
+                <div v-for="(item,index) in allObjcet.cloudHost" :key="index">
+                    <div class="host_title">
+                    <p style="font-size:24px;">云服务器</p>
+                    <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">{{item.cpu}}核</span>CPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
+                    </div>
+                    <div class="host_content">
+                    <div>
+                        <span>请选择宽带</span>
+                        <Select v-model="item.bandwidth" style="width:200px;height:26px;" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
+                        <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <span>请选择区域</span>
+                        <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                        <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div >
+                        <span>请选择系统</span>
+                        <Select v-model="item.system" style="width:200px" class="fr-select" >
+                        <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <span>请选择时长</span>
+                        <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
+                        <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="text-align:left;margin:26px 0 22px 0;">
+                        <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
+                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
+                    </div>
+                    <div class="host_button" @click="getDiskcountMv('cloudHost',index)">立即抢购</div>
+                    </div>
+                </div>
+                </div>
+            </div>
 
-          <!--  -->
-          <div>
-            <p class="w_pFont" style="color:#4E49F3">GPU云服务器特惠专场</p>
-            <p style="color:#222222;font-size:16px;">GPU云服务器（16核64G P40显卡）免费体验，最高可用3小时 <span class="w_span">立即领取</span></p>
-            <div class="w_host">
-              <div v-for="(item,index) in allObjcet.gpuHost" :key="index">
-                <div class="gpu_title">
-                  <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
-                  <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">{{item.cpu}}核</span>vCPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
-                  <p style="font-size:20px;margin-top:6px;">{{item.serverType}}<span style="font-size:14px;">显卡</span></p>
+            <!--  -->
+            <div>
+                <p class="w_pFont" style="color:#4E49F3">GPU云服务器特惠专场</p>
+                <p style="color:#222222;font-size:16px;">GPU云服务器（16核64G P40显卡）免费体验，最高可用3小时 <span class="w_span">立即领取</span></p>
+                <div class="w_host">
+                <div v-for="(item,index) in allObjcet.gpuHost" :key="index">
+                    <div class="gpu_title">
+                    <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
+                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">{{item.cpu}}核</span>vCPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
+                    <p style="font-size:20px;margin-top:6px;">{{item.serverType}}<span style="font-size:14px;">显卡</span></p>
+                    </div>
+                    <div class="host_content">
+                    <div>
+                        <span>请选择宽带</span>
+                        <Select v-model="item.bandwidth" style="width:200px;" class="fr-select" @on-change='getVMConfigId("gpuHost",index)'>
+                        <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <span>请选择区域</span>
+                        <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                        <Option v-for="item in gpuZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div >
+                        <span>请选择系统</span>
+                        <Select v-model="item.system" style="width:200px" class="fr-select">
+                        <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <span>请选择时长</span>
+                        <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("gpuHost",index)'>
+                        <Option v-for="item in hostTwo.gpuDay" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="text-align:left;margin:26px 0 22px 0;">
+                        <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
+                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
+                    </div>
+                    <div class="host_button">立即抢购</div>
+                    </div>
                 </div>
-                <div class="host_content">
-                  <div>
-                    <span>请选择宽带</span>
-                    <Select v-model="item.bandwidth" style="width:200px;" class="fr-select" @on-change='getVMConfigId("gpuHost",index)'>
-                      <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="margin:10px 0;">
-                    <span>请选择区域</span>
-                    <Select v-model="item.zoneId" style="width:200px" class="fr-select">
-                      <Option v-for="item in gpuZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div >
-                    <span>请选择系统</span>
-                    <Select v-model="item.system" style="width:200px" class="fr-select">
-                      <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="margin:10px 0;">
-                    <span>请选择时长</span>
-                    <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("gpuHost",index)'>
-                      <Option v-for="item in hostTwo.gpuDay" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="text-align:left;margin:26px 0 22px 0;">
-                    <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
-                    <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
-                  </div>
-                  <div class="host_button">立即抢购</div>
                 </div>
-              </div>
             </div>
-          </div>
 
-          <div>
-            <div class="w_host">
-              <div v-for="(item,index) in allObjcet.gpuHostMoth" :key="index">
-                <div class="gpu_title2">
-                  <p style="font-size:24px;">GPU云服务器</p>
-                  <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">{{item.cpu}}核</span>vCPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
-                  <p style="font-size:20px;margin-top:6px;">{{item.serverType}}<span style="font-size:14px;">显卡</span></p>
+            <div>
+                <div class="w_host">
+                <div v-for="(item,index) in allObjcet.gpuHostMoth" :key="index">
+                    <div class="gpu_title2">
+                    <p style="font-size:24px;">GPU云服务器</p>
+                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">{{item.cpu}}核</span>vCPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
+                    <p style="font-size:20px;margin-top:6px;">{{item.serverType}}<span style="font-size:14px;">显卡</span></p>
+                    </div>
+                    <div class="host_content">
+                    <div>
+                        <span>请选择宽带</span>
+                        <Select v-model="item.bandwidth" style="width:200px;" class="fr-select" @on-change='getVMConfigId("gpuHostMoth",index)'>
+                        <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <span>请选择区域</span>
+                        <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                        <Option v-for="item in gpuZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div >
+                        <span>请选择系统</span>
+                        <Select v-model="item.system" style="width:200px" class="fr-select">
+                        <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <span>请选择时长</span>
+                        <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("gpuHostMoth",index)'>
+                        <Option v-for="item in hostTwo.gpuMoth" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="text-align:left;margin:26px 0 22px 0;">
+                        <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
+                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
+                    </div>
+                    <div class="host_button">立即抢购</div>
+                    </div>
                 </div>
-                <div class="host_content">
-                  <div>
-                    <span>请选择宽带</span>
-                    <Select v-model="item.bandwidth" style="width:200px;" class="fr-select" @on-change='getVMConfigId("gpuHostMoth",index)'>
-                      <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="margin:10px 0;">
-                    <span>请选择区域</span>
-                    <Select v-model="item.zoneId" style="width:200px" class="fr-select">
-                      <Option v-for="item in gpuZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div >
-                    <span>请选择系统</span>
-                    <Select v-model="item.system" style="width:200px" class="fr-select">
-                      <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="margin:10px 0;">
-                    <span>请选择时长</span>
-                    <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("gpuHostMoth",index)'>
-                      <Option v-for="item in hostTwo.gpuMoth" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="text-align:left;margin:26px 0 22px 0;">
-                    <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
-                    <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
-                  </div>
-                  <div class="host_button">立即抢购</div>
                 </div>
-              </div>
             </div>
-          </div>
+            </div>
         </div>
-      </div>
-      <!--  -->
-      <div class="w_other">
-        <p class="w_pFont">其他热销云产品</p>
-        <p style="color:#222222;font-size:16px;margin-bottom:31px;">对象存储、云数据库新品上线享折扣，欢迎购买体验  </p>
-        <div class="w_special">
-          <div>
-            <p class="w_pFont">对象存储特惠专场</p>
-            <p style="color:#222222;font-size:16px;">对象存储（100G存储包+100G下行流量）免费体验，最长可用1个月  <span class="w_span">立即领取</span></p>
-            <div class="w_host">
-              <div v-for="(item,index) in allObjcet.objectHost" :key="index">
-                <div class="host_title">
-                  <p style="font-size:24px;">对象存储</p>
-                  <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">{{item.storage}}G</span>存储 | <span style="font-size:20px">{{item.flow}}G</span>内外网下载流量</p>
+        <!--  -->
+        <div class="w_other">
+            <p class="w_pFont">其他热销云产品</p>
+            <p style="color:#222222;font-size:16px;margin-bottom:31px;">对象存储、云数据库新品上线享折扣，欢迎购买体验  </p>
+            <div class="w_special">
+            <div>
+                <p class="w_pFont">对象存储特惠专场</p>
+                <p style="color:#222222;font-size:16px;">对象存储（100G存储包+100G下行流量）免费体验，最长可用1个月  <span class="w_span">立即领取</span></p>
+                <div class="w_host">
+                <div v-for="(item,index) in allObjcet.objectHost" :key="index">
+                    <div class="host_title">
+                    <p style="font-size:24px;">对象存储</p>
+                    <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">{{item.storage}}G</span>存储 | <span style="font-size:20px">{{item.flow}}G</span>内外网下载流量</p>
+                    </div>
+                    <div class="host_content">
+                    <div style="margin:10px 0;">
+                        <span>请选择区域</span>
+                        <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                        <Option v-for="item in objStorageZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <span>请选择时长</span>
+                        <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("objectHost",index)'>
+                        <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="text-align:left;margin:26px 0 22px 0;">
+                        <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
+                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
+                    </div>
+                    <div class="host_button">立即抢购</div>
+                    </div>
                 </div>
-                <div class="host_content">
-                  <div style="margin:10px 0;">
-                    <span>请选择区域</span>
-                    <Select v-model="item.zoneId" style="width:200px" class="fr-select">
-                      <Option v-for="item in objStorageZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="margin:10px 0;">
-                    <span>请选择时长</span>
-                    <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("objectHost",index)'>
-                      <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="text-align:left;margin:26px 0 22px 0;">
-                    <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
-                    <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
-                  </div>
-                  <div class="host_button">立即抢购</div>
                 </div>
-              </div>
             </div>
-          </div>
 
-          <!--  -->
-          <div>
-            <p class="w_pFont">云数据库特惠专场</p>
-            <p style="color:#222222;font-size:16px;">云数据库（1核1G）免费体验，最高可用97小时   <span class="w_span">立即领取</span></p>
-            <div class="w_host">
-              <div v-for="(item,index) in allObjcet.cloudData" :key="index">
-                <div class="host_title">
-                  <p style="font-size:24px;">云数据库<span style="color:#FFFFFF;font-size:14px;">(100G存储数据盘)</span></p>
-                  <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">{{item.cpu}}核</span>CPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
+            <!--  -->
+            <div>
+                <p class="w_pFont">云数据库特惠专场</p>
+                <p style="color:#222222;font-size:16px;">云数据库（1核1G）免费体验，最高可用97小时   <span class="w_span">立即领取</span></p>
+                <div class="w_host">
+                <div v-for="(item,index) in allObjcet.cloudData" :key="index">
+                    <div class="host_title">
+                    <p style="font-size:24px;">云数据库<span style="color:#FFFFFF;font-size:14px;">(100G存储数据盘)</span></p>
+                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">{{item.cpu}}核</span>CPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
+                    </div>
+                    <div class="host_content">
+                    <div>
+                        <span>请选择宽带</span>
+                        <Select v-model="item.bandwidth" style="width:200px;height:26px;" class="fr-select" @on-change='getVMConfigId("cloudData",index)'>
+                        <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <span>请选择区域</span>
+                        <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                        <Option v-for="item in databaseZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div >
+                        <span>请选择系统</span>
+                        <Select v-model="item.system" style="width:200px" class="fr-select">
+                        <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="margin:10px 0;">
+                        <span>请选择时长</span>
+                        <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("cloudData",index)'>
+                        <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        </Select>
+                    </div>
+                    <div style="text-align:left;margin:26px 0 22px 0;">
+                        <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
+                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
+                    </div>
+                    <div class="host_button">立即领取</div>
+                    </div>
                 </div>
-                <div class="host_content">
-                  <div>
-                    <span>请选择宽带</span>
-                    <Select v-model="item.bandwidth" style="width:200px;height:26px;" class="fr-select" @on-change='getVMConfigId("cloudData",index)'>
-                      <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="margin:10px 0;">
-                    <span>请选择区域</span>
-                    <Select v-model="item.zoneId" style="width:200px" class="fr-select">
-                      <Option v-for="item in databaseZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div >
-                    <span>请选择系统</span>
-                    <Select v-model="item.system" style="width:200px" class="fr-select">
-                      <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="margin:10px 0;">
-                    <span>请选择时长</span>
-                    <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("cloudData",index)'>
-                      <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div style="text-align:left;margin:26px 0 22px 0;">
-                    <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
-                    <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
-                  </div>
-                  <div class="host_button">立即领取</div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-        <div class="w_bottom">
-          <div style="margin:0 auto;width:1140px;height:241px;">
-            <div class="bottom_more">
-              <p @click="$router.push({path:'ActiveCenter'})">查看更多精彩活动</p>
             </div>
-          </div>
+            <div class="w_bottom">
+            <div style="margin:0 auto;width:1140px;height:241px;">
+                <div class="bottom_more">
+                <p @click="$router.push({path:'ActiveCenter'})">查看更多精彩活动</p>
+                </div>
+            </div>
+            </div>
         </div>
-      </div>
-    </div>
+        </div>
     </div>
     <!-- 中奖纪录 -->
     <div v-show="winningRecordShow" style="background: rgba(255,243,227,1);padding-bottom: 60px">
@@ -337,9 +337,9 @@
     </transition>
     <!-- 幸运抽奖活动规则弹窗 -->
     <transition name="fade">
-      <div class="overlay" @click.stop="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal">
-        <div class="all-modal modal3" @click.stop="showModal.luckDrawRuleModal=true">
-          <div class="header"><i @click.stop="showModal.luckDrawRuleModal=false"></i></div>
+      <div class="overlay" @click="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal">
+        <div class="all-modal modal3" @click="showModal.luckDrawRuleModal=true">
+          <div class="header"><i @click="showModal.luckDrawRuleModal=false"></i></div>
           <div class="body">
             <h3>（1）活动时间：2018.12.22-2019.01.31</h3>
             <h3>（2）活动内容：新老用户可通过购买打折产品获得抽奖次数。具体如何获得抽奖次数如下：</h3>
@@ -358,7 +358,7 @@
             <!--    <h3 style="margin:20px 0; ">抽奖奖品细则</h3>
                 <Table border :columns="awardsRuleColumns" :data="awardsRuleData"></Table>-->
           </div>
-          <button @click.stop="showModal.luckDrawRuleModal=false" class="button-primary"><span>我知道了</span></button>
+          <button @click="showModal.luckDrawRuleModal=false" class="button-primary"><span>我知道了</span></button>
         </div>
       </div>
     </transition>
@@ -510,7 +510,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import area from "../../../options/area.json"
   import throttle from 'throttle-debounce/throttle'
   export default {
@@ -838,7 +838,6 @@
           notLoginModal: false,
           luckDrawRuleModal: false,
           notPrizeChanceModal: false,
-          winPrizeModal: false,
           receiveGoodInfoModal: false,
           LotteryModal: false,
           winPrizeModal: false,
@@ -994,28 +993,65 @@
         let obj =  this.allObjcet[key][index];
         axios.get('activity/getVMConfigId.do',{
           params:{
-            activityNum :obj.activityNum,
-            month:obj.duration,
-            cpu:obj.cpu,
-            mem:obj.memory,
-            bandwith:obj.bandwith,
+            activityNum :obj.activityNum != undefined ?obj.activityNum:'',
+            month:obj.duration !=undefined ? obj.duration :'',
+            cpu:obj.cpu!= undefined ? obj.cpu:'',
+            mem:obj.memory!= undefined ?obj.memory:'',
+            bandwith:obj.bandwidth!= undefined?obj.bandwidth:'',
             type:obj.type,
-            serviceType:obj.serviceType,
-            flowPackage:obj.flow,
-            capacity:obj.storage
+            serviceType:obj.serviceType!= undefined?obj.serviceType:'',
+            flowPackage:obj.flow!= undefined?obj.flow:'',
+            capacity:obj.storage!= undefined?obj.storage :""
           }
         }).then(res => {
-          console.log(res);
+            if(res.status == 200 && res.data.status == 1){
+                this.allObjcet[key][index].vmConfigId =  res.data.result;
+                    axios.get('activity/getOriginalPrice.do',{
+                        params:{
+                            zoneId:this.allObjcet[key][index].zoneId,
+                            vmConfigId :this.allObjcet[key][index].vmConfigId,
+                            month:this.allObjcet[key][index].duration
+                        }
+                    }).then(res =>{
+                        if(res.status == 200 && res.data.status == 1){
+                              this.allObjcet[key][index].originalPrice = res.data.result.originalPrice;
+                              this.allObjcet[key][index].currentPrice = res.data.result.cost;
+                        }
+                })
+            }
         })
-        // let activityNum ='',
-        //     month       ='';
-        // function cen(val){
-
-        //   this.allObjcet[key][0]
-
-
-        // }
       },
+
+    //   云主机生成订单
+    getDiskcountMv(key,index){
+        if(this.$store.state.userInfo){
+             let obj = this.allObjcet[key][index];
+            axios.get('information/getDiskcountMv.do',{
+                params:{
+                    vmConfigId:obj.vmConfigId,
+                    osType :obj.system,
+                    defzoneid  :obj.zoneId
+                }
+            }).then(res =>{
+                if(res.status == 200 && res.data.status == 200){
+                    this.$Message.success('创建订单成功')
+                    this.$router.push('order')
+                }else{
+                     this.$message.info({
+                        content: res.data.message
+                        })
+                }   
+            })
+        }else{
+            this.showModal.notLoginModal=true;
+        }
+    },
+
+    // 获取原价
+    getOriginalPrice(){
+       
+    },
+
       startLotteryMouseDown() {
         if (!this.lotteryDisabled) {
           this.mouseDown = true
@@ -1225,6 +1261,13 @@
           }
         })
       },
+      loginInfo(){
+          if(this.$store.state.userInfo){
+              this.$Message.info('您已经登录了');
+          }else{
+              this.showModal.notLoginModal=true;
+          }
+      }
     },
     computed: {
       top() {
@@ -1502,16 +1545,24 @@
       }
       span {
         position: relative;
-        top: -47px;
+        top: -48px;
         font-size: 14px;
         color: #FFFFFF;
         left: 13px;
         cursor: pointer;
       }
-      img:hover {
-        width: 310px;
-        height: 143px;
+      span:hover{
+          text-decoration: underline;
       }
+    }
+    .gift_one:hover {
+        img{
+            width: 100%;
+            height: 130px;
+        }
+        span{
+            top: -51px;
+        }
     }
     .gift_two {
       text-align: center;
@@ -1527,16 +1578,24 @@
       }
       span {
         position: relative;
-        top: -47px;
+        top: -48px;
         font-size: 14px;
         color: #FFFFFF;
         left: 13px;
         cursor: pointer;
       }
-      img:hover {
-        width: 310px;
-        height: 143px;
+      span:hover{
+          text-decoration: underline;
       }
+    }
+    .gift_two:hover {
+        img{
+            width: 100%;
+            height: 130px;
+        }
+          span{
+            top: -51px;
+        }
     }
     .gift_three {
       text-align: center;
@@ -1552,16 +1611,24 @@
       }
       span {
         position: relative;
-        top: -47px;
+        top: -48px;
         font-size: 14px;
         color: #FFFFFF;
-        left: 13px;
+        left: 17px;
         cursor: pointer;
       }
-      img:hover {
-        width: 310px;
-        height: 143px;
+      span:hover{
+          text-decoration: underline;
       }
+    }
+    .gift_three:hover {
+        img{
+            width: 100%;
+            height: 130px;
+        }
+          span{
+            top: -51px;
+        }
     }
     .gift_four {
       text-align: center;
@@ -1577,16 +1644,24 @@
       }
       span {
         position: relative;
-        top: -47px;
+        top: -48px;
         font-size: 14px;
         color: #FFFFFF;
         left: 13px;
         cursor: pointer;
       }
-      img:hover {
-        width: 310px;
-        height: 143px;
+      span:hover{
+          text-decoration: underline;
       }
+    }
+    .gift_four:hover {
+        img{
+            width: 100%;
+            height: 130px;
+        }
+          span{
+            top: -51px;
+        }
     }
 
   }

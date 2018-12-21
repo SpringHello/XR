@@ -27,7 +27,7 @@ function appendMD5(params, type) {
     }
     str = md5(str)
     count = count % 10
-    var mac = str.substr(0, count) + count + str.substr(count)
+    var mac = str.substr(0, count) + count + str.substr(count,str.length)
     return {
       ...params,
       mac: mac.toUpperCase()
