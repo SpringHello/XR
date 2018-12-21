@@ -2094,7 +2094,7 @@
               this.showModal.rechargeHint = true
             } else {
               this.$message.info({
-                content: '平台开小差了，请稍候再试'
+                content: response.data.message
               })
             }
           })
@@ -2118,7 +2118,7 @@
                   this.showModal.rechargeHint = true
                 } else {
                   this.$message.info({
-                    content: '平台开小差了，请稍候再试'
+                    content: response.data.message
                   })
                 }
               })

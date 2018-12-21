@@ -174,6 +174,18 @@
         </div>
       </div>
     </transition>
+
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.welcome=false" v-if="showModal.welcome">
+        <div class="welcome" @click.stop="showModal.welcome=false">
+          <img src="../../../assets/img/active/doubleDenier/dd-banner9.png"/>
+          <img src="../../../assets/img/active/doubleDenier/dd-banner10.png"/>
+          <img src="../../../assets/img/active/doubleDenier/dd-banner11.png"/>
+          <img src="../../../assets/img/active/doubleDenier/dd-banner12.png"/>
+          <img src="../../../assets/img/active/doubleDenier/dd-icon1.png"/>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -221,7 +233,8 @@
           winPrizeModal: false,
           receiveGoodInfoModal: false,
           LotteryModal: false,
-          winPrizeModal: false
+          winPrizeModal: false,
+          welcome: false
         },
         provinceList: area,
         cityList: [],
@@ -289,6 +302,7 @@
           this.winList = this.winList.concat(this.winList)
         }
       }, 1000);
+      this.showModal.welcome = true
     },
     methods: {
       /* 开始抽奖按钮 */
@@ -883,6 +897,88 @@
           }
         }
       }
+    }
+    .welcome {
+      cursor: pointer;
+      margin: 0 auto;
+      top: 180px;
+      height: 500px;
+      width: 729px;
+      position: relative;
+      > img {
+        position: absolute;
+        transition: all 2s linear; /*图片放大过程的时间*/
+      }
+      img:nth-child(1) {
+        animation-duration: 1s;
+        animation-name: slidein_1;
+      }
+      img:nth-child(2) {
+        animation-duration: 1s;
+        animation-name: slidein_2;
+        left: 10%;
+        top: 0%;
+      }
+      img:nth-child(3) {
+        transform: scale(0);
+        animation-fill-mode: forwards;
+        animation-delay: 1s;
+        animation-duration: 1s;
+        animation-name: slidein_3;
+        left: 17%;
+        top: 0%;
+      }
+      img:nth-child(4) {
+        transform: scale(0);
+        animation-fill-mode: forwards;
+        animation-delay: 1s;
+        animation-duration: 1s;
+        animation-name: slidein_4;
+        left: 45%;
+        top: 93%;
+      }
+      img:nth-child(5) {
+        right: 0;
+      }
+    }
+  }
+
+  @keyframes slidein_1 {
+    from {
+      transform: scale(0.2);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slidein_2 {
+    from {
+      transform: scale(0.2);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slidein_3 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slidein_4 {
+    0% {
+      transform: scale(0);
+    }
+    75% {
+      transform: scale(1.4);
+    }
+    100% {
+      transform: scale(1);
     }
   }
 

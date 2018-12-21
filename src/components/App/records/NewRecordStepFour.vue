@@ -428,7 +428,7 @@
             this.nextStep = true
           } else {
             this.$message.info({
-              content: '平台开小差了，请稍候再试'
+              content: res.data.message
             })
           }
         })
@@ -442,7 +442,7 @@
       },
       // 提交幕布申请
       applyCurtain(val) {
-        if(val == 1){
+        if (val == 1) {
           this.siteParams.backgroundAddress = this.receiveForm.address
           this.siteParams.backgroundName = this.receiveForm.person
           this.siteParams.backgroundPhone = this.receiveForm.phone
@@ -474,7 +474,7 @@
               sessionStorage.clear()
             } else {
               this.$message.info({
-                content: '平台开小差了，请稍候再试'
+                content: response[0].data.message
               })
             }
           })
@@ -488,13 +488,13 @@
                   sessionStorage.clear()
                 } else {
                   this.$message.info({
-                    content: '平台开小差了，请稍候再试'
+                    content: res.data.message
                   })
                 }
               })
             } else {
               this.$message.info({
-                content: '平台开小差了，请稍候再试'
+                content: response[0].data.message
               })
             }
           })
@@ -522,7 +522,7 @@
             this.$router.push('waitFirstTrial')
           } else {
             this.$message.info({
-              content: '平台开小差了，请稍候再试'
+              content: res.data.message
             })
           }
         })
