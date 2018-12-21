@@ -327,7 +327,7 @@
       }
       .aa-active {
         height: 100%;
-        background: #FFF url("../../assets/img/login/aa-banner.png") no-repeat;
+        background: #FFF url("../../assets/img/login/bb-banner.png") no-repeat;
       }
       .fr-active {
         height: 100%;

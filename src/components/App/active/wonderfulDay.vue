@@ -4,8 +4,8 @@
         <div class="w_header">
         <div class="header_center">
             <div style="display:inline-block;position:relative;top: 91px;left: 102px;">
-            <p class="pt_denier">双旦同庆，钜惠上云</p>
-            <p class="pt_white">选择新睿云，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
+            <img src="../../../assets/img/active/doubleDenier/dbFont.png">
+            <p class="pt_white" style="margin-top:0;">选择新睿云，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
             <div class="w_button" @click="loginInfo">
                 <span>登录即可抽奖</span>
             </div>
@@ -15,27 +15,27 @@
         <div class="w_gift">
         <div class="gift_one">
             <img  src="../../../assets/img/active/doubleDenier/li_da.png">
-            <span>查看详情</span>
+            <span @click="jumpCnter('center')">查看详情</span>
         </div>
         <div class="gift_two">
             <img  src="../../../assets/img/active/doubleDenier/zhe_da.png">
-            <span>查看详情</span>
+            <span @click="jumpCnter('zhe')">查看详情</span>
         </div>
         <div class="gift_three">
             <img  src="../../../assets/img/active/doubleDenier/0_da.png">
-            <span>查看详情</span>
+            <span @click="$router.push({path:'active_1'})">查看详情</span>
         </div>
         <div class="gift_four">
             <img  src="../../../assets/img/active/doubleDenier/38_da.png">
             <span @click="$router.push({path:'active_1'})">立即领取</span>
         </div>
         </div>
-        <div class="w_center">
+        <div class="w_center" ref="center">
         <div class="w_give">
             <p class="w_pFont">活动首购 好礼相送</p>
             <p style="color:#222222;font-size:16px;margin-bottom:40px;">首购享好礼，在此活动中购买任意产品即可领取 “京东E卡（30元）”一张！</p>
             <img src="../../../assets/img/active/doubleDenier/JDE.png">
-            <span style="position: absolute; bottom: 85px; left: 245px;color: #FF3000;font-size: 15px;">点击领取</span>
+            <span @click="getJDCARD">点击领取</span>
         </div>
         <div class="w_draw" >
             <div style="position: relative;top:54px;" @click="showModal.LotteryModal=true">
@@ -48,13 +48,13 @@
         </div>
         </div>
         <div>
-        <div class="w_shoping">
+        <div class="w_shoping" ref="shoping">
             <p class="w_pFont">爆款高配 限时特惠</p>
-            <p style="color:#222222;font-size:16px;margin-bottom:31px;">首购享好礼，在此活动中购买任意产品即可领取一张“京东E卡（30元）” ！<span class="w_span" @cli="showModal.discountRuleModal=true">活动规则</span></p>
+            <p style="color:#222222;font-size:16px;margin-bottom:31px;">首购享好礼，在此活动中购买任意产品即可领取一张“京东E卡（30元）” ！<span class="w_span" @click="showModal.discountRuleModal=true">活动规则</span></p>
             <div class="w_special">
             <div>
                 <p class="w_pFont">云服务器特惠专场</p>
-                <p style="color:#222222;font-size:16px;">新老用户可无条件领取38元体验券，即领即用，最高可用152个小时 <span class="w_span">立即领取</span></p>
+                <p style="color:#222222;font-size:16px;">新老用户可无条件领取38元体验券，即领即用，最高可用152个小时 <span class="w_span" @click="$router.push({path:'active_1'})">立即领取</span></p>
                 <div class="w_host">
                 <div v-for="(item,index) in allObjcet.cloudHost" :key="index">
                     <div class="host_title">
@@ -99,7 +99,7 @@
             <!--  -->
             <div>
                 <p class="w_pFont" style="color:#4E49F3">GPU云服务器特惠专场</p>
-                <p style="color:#222222;font-size:16px;">GPU云服务器（16核64G P40显卡）免费体验，最高可用3小时 <span class="w_span">立即领取</span></p>
+                <p style="color:#222222;font-size:16px;">GPU云服务器（16核64G P40显卡）免费体验，最高可用3小时 <span class="w_span" @click="$router.push({path:'active_1'})">立即领取</span></p>
                 <div class="w_host">
                 <div v-for="(item,index) in allObjcet.gpuHost" :key="index">
                     <div class="gpu_title">
@@ -193,7 +193,7 @@
             <div class="w_special">
             <div>
                 <p class="w_pFont">对象存储特惠专场</p>
-                <p style="color:#222222;font-size:16px;">对象存储（100G存储包+100G下行流量）免费体验，最长可用1个月  <span class="w_span">立即领取</span></p>
+                <p style="color:#222222;font-size:16px;">对象存储（100G存储包+100G下行流量）免费体验，最长可用1个月  <span class="w_span" @click="$router.push({path:'active_1'})">立即领取</span></p>
                 <div class="w_host">
                 <div v-for="(item,index) in allObjcet.objectHost" :key="index">
                     <div class="host_title">
@@ -226,7 +226,7 @@
             <!--  -->
             <div>
                 <p class="w_pFont">云数据库特惠专场</p>
-                <p style="color:#222222;font-size:16px;">云数据库（1核1G）免费体验，最高可用97小时   <span class="w_span">立即领取</span></p>
+                <p style="color:#222222;font-size:16px;">云数据库（1核1G）免费体验，最高可用97小时   <span class="w_span" @click="$router.push({path:'active_1'})">立即领取</span></p>
                 <div class="w_host">
                 <div v-for="(item,index) in allObjcet.cloudData" :key="index">
                     <div class="host_title">
@@ -395,6 +395,20 @@
             <img src="../../../assets/img/active/anniversary/regret-text.png" style="margin:30px 0 25px 0;"/>
             <p style="margin-bottom:38px;"> 您没有抽奖机会了，请返回活动页面购买产品获得抽奖次数！</p>
             <button @click.stop="showModal.notPrizeChanceModal=false" class="button-primary"><span>返回活动</span></button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- 30元卡领取成功 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.nThirtyCrad=false" v-if="showModal.nThirtyCrad">
+        <div class="all-modal modal1" @click.stop="showModal.nThirtyCrad=true">
+          <div class="header tips"></div>
+          <div class="body">
+            <p style="margin: 20px 0;font-size:20px;color:#FF3000;">  恭喜您！首购好礼领取成功！</p>
+            <p style="color:#222222;font-size:16px;line-height: 30px;padding: 0px 31px;margin-bottom:27px;">我们会在三个工作日内，将卡密以短信的形式发送至您的手机，请注意查收（ 您可前往<span style="color:#FF461E;cursor:pointer;" @click="winningRecordShow = true,showModal.nThirtyCrad=false" >我的奖品</span>查看您的所有奖品）</p>
+            <button @click.stop="showModal.nThirtyCrad=false" class="button-primary"><span>我知道了</span></button>
           </div>
         </div>
       </div>
@@ -841,7 +855,9 @@
           receiveGoodInfoModal: false,
           LotteryModal: false,
           winPrizeModal: false,
-          welcome: false
+          welcome: false,
+          nThirtyCrad:false,
+          discountRuleModal:false
         },
         provinceList: area,
         cityList: [],
@@ -1033,23 +1049,18 @@
                     defzoneid  :obj.zoneId
                 }
             }).then(res =>{
-                if(res.status == 200 && res.data.status == 200){
+                if(res.status == 200 && res.data.status == 1){
                     this.$Message.success('创建订单成功')
                     this.$router.push('order')
                 }else{
                      this.$message.info({
                         content: res.data.message
-                        })
+                    })
                 }   
             })
         }else{
             this.showModal.notLoginModal=true;
         }
-    },
-
-    // 获取原价
-    getOriginalPrice(){
-       
     },
 
       startLotteryMouseDown() {
@@ -1116,25 +1127,25 @@
       },
       getPrize() {
         this.showModal.winPrizeModal = false
-        /*        if (!this.authInfo) {
-                  this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-                  this.showModal.authGetPrizeModal = true
-                  return
-                }*/
-        /*       let url = 'activity/giveForAccount.do'
-       axios.get(url, {
-         params: {
-           activityNum: '31',
-           giftUniqueIdentifier: this.award.code
-         }
-       }).then(res => {
-         if (res.status == 200 && res.data.status == 1) {
-         } else {
-           this.$message.info({
-             content: res.data.message
-           })
-         }
-       })*/
+    //             if (!this.authInfo) {
+    //               this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+    //               this.showModal.authGetPrizeModal = true
+    //               return
+    //             }
+    //            let url = 'activity/giveForAccount.do'
+    //    axios.get(url, {
+    //      params: {
+    //        activityNum: '31',
+    //        giftUniqueIdentifier: this.award.code
+    //      }
+    //    }).then(res => {
+    //      if (res.status == 200 && res.data.status == 1) {
+    //      } else {
+    //        this.$message.info({
+    //          content: res.data.message
+    //        })
+    //      }
+    //    })
         this.$Message.success('领取成功')
         this.getPersonalWinningInfo()
       },
@@ -1267,7 +1278,37 @@
           }else{
               this.showModal.notLoginModal=true;
           }
-      }
+      },
+      jumpCnter(name){
+          if(name == 'center'){
+              this.$refs.center.scrollIntoView();
+          }
+          if(name == 'zhe'){
+              this.$refs.shoping.scrollIntoView();
+          }
+      },
+      
+    //   领取京东30卡
+        getJDCARD(){
+            if(this.$store.state.userInfo){
+            axios.get('activity/getJDCARD.do',{
+                params:{
+                    activityNum:'32'
+                }
+            }).then(res => {
+                if(res.status == 200 && res.data.status == 1){
+                   this.showModal.nThirtyCrad = true;
+                }else{
+                    this.$Modal.info({
+                        title:'提示',
+                        content:res.data.message
+                    })
+                }
+            })
+            }else{
+                this.showModal.notLoginModal=true;
+            }
+        }
     },
     computed: {
       top() {
@@ -1354,20 +1395,28 @@
     background: rgb(253, 239, 220);
     text-align: center;
     padding: 18px 0 22px 0;
+    position: relative;
     margin-top: -40px;
     .w_give{
-      display: inline-block;
+     
       text-align: center;
       vertical-align: top;
       padding-top: 45px ;
       position: relative;
+      span{
+          position: absolute;bottom: 85px; right: 48.6%;color: #FF3000;font-size: 15px;cursor: pointer;
+      }
+      span:hover{
+          text-decoration: underline;
+      }
     }
     .w_draw{
       display: inline-block;
       width: 198px;
       height: 195px;
+      top: -449px;
       position: relative;
-      left: 247px;
+      left: 474px;
       background: url('../../../assets/img/active/doubleDenier/back.png') no-repeat;
       cursor: pointer;
       .draw_span{
@@ -1438,6 +1487,9 @@
           width: 309px;
           background: #ffffff;
           padding: 26px 13px 12px 15px;
+          border: 1px solid #FF5A2E;
+            border-bottom-right-radius: 6px;
+            border-bottom-left-radius: 6px;
           .host_button{
             padding: 2px 0;
             background: #FF5A2E;
@@ -1445,6 +1497,10 @@
             font-size: 20px;
             cursor: pointer;
             border-radius: 3px;
+            transition: background-color 0.2s linear;
+          }
+          .host_button:hover{
+              background-color:#FF3508;
           }
         }
       }
@@ -1483,6 +1539,9 @@
           width: 309px;
           background: #ffffff;
           padding: 26px 13px 12px 15px;
+           border: 1px solid #FF5A2E;
+            border-bottom-right-radius: 6px;
+            border-bottom-left-radius: 6px;
           .host_button{
             padding: 2px 0;
             background: #FF5A2E;
@@ -1490,6 +1549,10 @@
             font-size: 20px;
             cursor: pointer;
             border-radius: 3px;
+             transition: background-color 0.2s linear;
+          }
+          .host_button:hover{
+              background-color:#FF3508;
           }
         }
       }
@@ -2032,6 +2095,9 @@
       }
       &.getInfo {
         background: url("../../../assets/img/active/doubleDenier/dd-banner5.png");
+      }
+      &.tips{
+          background: url("../../../assets/img/active/doubleDenier/tips.png")
       }
     }
     .body {
