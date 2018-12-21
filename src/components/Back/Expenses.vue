@@ -390,7 +390,7 @@
         <div v-if="unfreezeTo=='account'" class="voice-vail"> 
           <p>没有收到验证码？</p>
           <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:codePlaceholder!='发送验证码'}"  @click="getCode('againCode')">重新获取</span>或<span class="blue code" :class="{notallow:codePlaceholder!='发送验证码'}"  @click.prevent="getCode('voice')">接收语音验证码</span>。</p>
-          <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue">通过身份证号码验证</span>更改手机号。</p>
+          <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue" @click="showModal.modifyPhoneID = true;showModal.unfreeze=false">通过身份证号码验证</span>更改手机号。</p>
         </div>
         <div style="clear: both"></div>
       </div>
@@ -474,7 +474,7 @@
               </FormItem>
               <Form-item label="短信验证码" prop="newVerificationCode" style="width: 100%">
                 <Input v-model="authModifyPhoneFormThere.newVerificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
-                <Button type="primary" :disabled="authModifyPhoneFormThere.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode()">{{ authModifyPhoneFormThere.newCodeText}}
+                <Button type="primary" :disabled="authModifyPhoneFormThere.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode('authModifyPhoneFormThere')">{{ authModifyPhoneFormThere.newCodeText}}
                 </Button>
               </Form-item>
           </Form>
@@ -487,11 +487,11 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="showModal.modifyPhoneID = false">取消</Button>
+        <Button type="ghost" @click="modifyPhoneIDcancel()">取消</Button>
         <Button type="primary" v-if="authModifyPhoneStep == 0" @click="bindingMobilePhoneStepTwo('authModifyPhoneFormOne')">下一步</Button>
-        <Button type="primary" v-if="authModifyPhoneStep == 1" @click="bindingMobilePhoneStepThere">下一步</Button>
-        <Button type="primary" v-if="authModifyPhoneStep == 2" @click="bindingMobilePhoneStepFour">下一步</Button>
-        <Button type="primary" v-if="authModifyPhoneStep == 3" @click="bindMobilePhone">完成</Button>
+        <Button type="primary" v-if="authModifyPhoneStep == 1" @click="uploadIDImg()">下一步</Button>
+        <Button type="primary" v-if="authModifyPhoneStep == 2" @click="bindMobilePhone('authModifyPhoneFormThere')">下一步</Button>
+        <Button type="primary" v-if="authModifyPhoneStep == 3" @click="showModal.modifyPhoneID=false">完成</Button>
       </div>
     </Modal>
     <!-- 弹窗 -->
@@ -1512,7 +1512,7 @@
           refundHint: false,
           unfreezeToBalanceHint: false,
           // 修改手机号码（身份证方式）
-          modifyPhoneID: true
+          modifyPhoneID: false
         },
         // 提现
         withdrawForm: {
@@ -2348,25 +2348,29 @@
         }
       },
       bindingMobilePhoneStepTwo(name) {
-        // this.$refs[name].validate((valid) => {
-        //   if (valid) {
-        //     if (this.authModifyPhoneFormOne.ID == '500227199209095726') {
-        //       this.authModifyPhoneStep = 1
-        //       console.log('验证成功')
-        //     } else {
-        //       this.authModifyPhoneFormOne.hint = 1
-        //     }
-        //   } else {
-        //     this.authModifyPhoneFormOne.hint = 0
-        //   }
-        // })
-        this.authModifyPhoneStep = 1
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            if (this.authModifyPhoneFormOne.ID == '500227199209095726') {
+              this.authModifyPhoneStep = 1
+              console.log('验证成功')
+            } else {
+              this.authModifyPhoneFormOne.hint = 1
+            }
+          } else {
+            this.authModifyPhoneFormOne.hint = 0
+          }
+        })
+        // this.authModifyPhoneStep = 1
       },
-      bindingMobilePhoneStepThere() {
-        this.authModifyPhoneStep = 2
-      },
-      bindingMobilePhoneStepFour() {
-        this.authModifyPhoneStep = 3
+      uploadIDImg() {
+        if (this.uploadImgDispaly == '') {
+          this.$Message.info({
+            content: '请上传手持身份证人像照片',
+            duration: 2
+          })
+        } else {
+          this.authModifyPhoneStep = 2
+        }
       },
       legalPersonIDFront(response) {
         if (response.status == 1) {
@@ -2383,26 +2387,26 @@
           content: '上传的文件过大'
         })
       },
-      getBindingNewMobilePhoneCode() {
-        this.$refs.bindingMobilePhone.validateField('newPhone', (text) => {
+      getBindingNewMobilePhoneCode(name) {
+        this.$refs[name].validateField('newPhone', (text) => {
           if (text == '') {
             axios.get('user/code.do', {
               params: {
-                aim: this.bindingMobilePhoneForm.newPhone,
+                aim: this.authModifyPhoneFormThere.newPhone,
                 isemail: 0,
-                vailCode: this.bindingMobilePhoneForm.pictureCode
+                vailCode: this.authModifyPhoneFormThere.pictureCode
               }
             }).then(response => {
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
                 var countdown = 60
-                this.bindingMobilePhoneForm.newCodeText = `${countdown}S`
+                this.authModifyPhoneFormThere.newCodeText = `${countdown}S`
                 var Interval = setInterval(() => {
                   countdown--
-                  this.bindingMobilePhoneForm.newCodeText = `${countdown}S`
+                  this.authModifyPhoneFormThere.newCodeText = `${countdown}S`
                   if (countdown == 0) {
                     clearInterval(Interval)
-                    this.bindingMobilePhoneForm.newCodeText = '获取验证码'
+                    this.authModifyPhoneFormThere.newCodeText = '获取验证码'
                   }
                 }, 1000)
               } else {
@@ -2413,6 +2417,35 @@
             })
           }
         })
+      },
+      // 绑定手机
+      bindMobilePhone(name) {
+        this.$refs[name].validate((vail) => {
+          if (vail) {
+            var url = 'user/updatePhone.do'
+            this.$http.get(url, {
+              params: {
+                code: this.authModifyPhoneFormThere.newVerificationCode,
+                phone: this.authModifyPhoneFormThere.newPhone
+              }
+            }).then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.authModifyPhoneStep = 3
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      modifyPhoneIDcancel() {
+        this.showModal.modifyPhoneID = false
+        this.authModifyPhoneStep = 0
+        this.$refs['authModifyPhoneFormOne'].resetFields()
+        this.$refs['authModifyPhoneFormThere'].resetFields()
+        this.uploadImgDispaly = ''
       },
       unfreezeToBalance() {
         if (this.unfreezeToHint == 'yue') {
