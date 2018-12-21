@@ -422,7 +422,7 @@
         this.pageInfo.selectItem = pType
         this.pageInfo.sType = sType
         if (sType.indexOf('http') > -1) {
-          window.open(sType, '_self');
+          window.open(sType, '_blank');
           // axios.get('user/showUserAcessAll.do').then(response => {
           //   if (response.status == 200 && response.data.status == 18) {
           //       this.$Modal.confirm({
