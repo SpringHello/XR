@@ -36,12 +36,12 @@
                 <img src="../../../assets/img/active/doubleDenier/JDE.png">
                 <span style="position: absolute; bottom: 85px; left: 245px;color: #FF3000;font-size: 15px;">点击领取</span>
             </div>
-            <div class="w_draw">
-                <div style="position: relative;top:54px;">
+            <div class="w_draw" >
+                <div style="position: relative;top:54px;" @click="showModal.LotteryModal=true">
                     <img src="../../../assets/img/active/doubleDenier/colorFont.png">
                 </div>
                 <div class="draw_span">
-                    <span style="margin-right:29px">抽奖规则</span>
+                    <span style="margin-right:29px" @click="showModal.luckDrawRuleModal=true">抽奖规则</span>
                     <span>我的奖品</span>
                 </div>
             </div>
@@ -1284,38 +1284,6 @@ export default {
         }
       }
     
-  
-
-  .w_gift {
-    position: relative;
-    top: -47px;
-    margin-left: 338px;
-    display: flex;
-    .gift_one {
-      text-align: center;
-      padding: 6px 7px;
-      width: 295px;
-      height: 138px;
-      background: url('../../../assets/img/active/doubleDenier/li_da.png') no-repeat;
-      background-size: 100% 100%;
-      -moz-background-size: 100% 100%;
-      img {
-        width: 265px;
-        height: 124px;
-      }
-      span {
-        position: relative;
-        top: -47px;
-        font-size: 14px;
-        color: #FFFFFF;
-        left: 13px;
-        cursor: pointer;
-      }
-      img:hover {
-        width: 310px;
-        height: 143px;
-      }
-    }
     .w_center{
         height: 485px;
         background: rgb(253, 239, 220);
@@ -1485,6 +1453,113 @@ export default {
         text-decoration: underline;
         cursor: pointer;
     }
+
+  .w_gift {
+    position: relative;
+    top: -47px;
+    margin-left: 338px;
+    display: flex;
+    .gift_one {
+      text-align: center;
+      padding: 6px 7px;
+      width: 295px;
+      height: 138px;
+      background: url('../../../assets/img/active/doubleDenier/li_da.png') no-repeat;
+      background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      img {
+        width: 265px;
+        height: 124px;
+      }
+      span {
+        position: relative;
+        top: -47px;
+        font-size: 14px;
+        color: #FFFFFF;
+        left: 13px;
+        cursor: pointer;
+      }
+      img:hover {
+        width: 310px;
+        height: 143px;
+      }
+    }
+     .gift_two {
+      text-align: center;
+      padding: 6px 7px;
+      width: 295px;
+      height: 138px;
+      background: url('../../../assets/img/active/doubleDenier/zhe_da.png') no-repeat;
+      background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      img {
+        width: 265px;
+        height: 124px;
+      }
+      span {
+        position: relative;
+        top: -47px;
+        font-size: 14px;
+        color: #FFFFFF;
+        left: 13px;
+        cursor: pointer;
+      }
+      img:hover {
+        width: 310px;
+        height: 143px;
+      }
+    }
+     .gift_three {
+      text-align: center;
+      padding: 6px 7px;
+      width: 295px;
+      height: 138px;
+      background: url('../../../assets/img/active/doubleDenier/0_da.png') no-repeat;
+      background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      img {
+        width: 265px;
+        height: 124px;
+      }
+      span {
+        position: relative;
+        top: -47px;
+        font-size: 14px;
+        color: #FFFFFF;
+        left: 13px;
+        cursor: pointer;
+      }
+      img:hover {
+        width: 310px;
+        height: 143px;
+      }
+    }
+     .gift_four {
+      text-align: center;
+      padding: 6px 7px;
+      width: 295px;
+      height: 138px;
+      background: url('../../../assets/img/active/doubleDenier/38_da.png') no-repeat;
+      background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      img {
+        width: 265px;
+        height: 124px;
+      }
+      span {
+        position: relative;
+        top: -47px;
+        font-size: 14px;
+        color: #FFFFFF;
+        left: 13px;
+        cursor: pointer;
+      }
+      img:hover {
+        width: 310px;
+        height: 143px;
+      }
+    }
+    
   }
 
   #rotary-table {
