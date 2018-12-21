@@ -806,104 +806,39 @@ export default {
                 }
             }
         }
-    }
-    .w_gift{
+      }
+    
+  
+
+  .w_gift {
+    position: relative;
+    top: -47px;
+    margin-left: 338px;
+    display: flex;
+    .gift_one {
+      text-align: center;
+      padding: 6px 7px;
+      width: 295px;
+      height: 138px;
+      background: url('../../../assets/img/active/doubleDenier/li_da.png') no-repeat;
+      background-size: 100% 100%;
+      -moz-background-size: 100% 100%;
+      img {
+        width: 265px;
+        height: 124px;
+      }
+      span {
         position: relative;
         top: -47px;
-        margin-left: 338px;
-        display: flex;
-        .gift_one{
-            text-align: center;
-            padding: 6px 7px;
-            width: 295px;
-            height: 138px;
-            background: url('../../../assets/img/active/doubleDenier/li_da.png') no-repeat;
-            background-size:100% 100%;-moz-background-size:100% 100%;
-            img{
-                width:265px;height:124px; 
-            }
-            span{
-                position: relative;
-                top: -47px;
-                font-size: 14px;
-                color: #FFFFFF;
-                left: 13px;
-                cursor: pointer;
-            }
-            img:hover{
-                width: 310px;
-                height: 143px;
-            }
-        }
-        .gift_two{
-            text-align: center;
-            padding: 6px 7px;
-            width: 295px;
-            height: 138px;
-            background: url('../../../assets/img/active/doubleDenier/zhe_da.png') no-repeat;
-            background-size:100% 100%;-moz-background-size:100% 100%;
-             img{
-                width:265px;height:124px; 
-            }
-            span{
-                position: relative;
-                top: -47px;
-                font-size: 14px;
-                color: #FFFFFF;
-                left: 13px;
-                cursor: pointer;
-            }
-            img:hover{
-                width: 310px;
-                height: 143px;
-            }
-        }
-        .gift_three{
-            text-align: center;
-            padding: 6px 7px;
-            width: 295px;
-            height: 138px;
-            background: url('../../../assets/img/active/doubleDenier/0_da.png') no-repeat;
-            background-size:100% 100%;-moz-background-size:100% 100%;
-             img{
-                width:265px;height:124px; 
-            }
-            span{
-                position: relative;
-                top: -47px;
-                font-size: 14px;
-                color: #FFFFFF;
-                left: 13px;
-                cursor: pointer;
-            }
-            img:hover{
-                width: 310px;
-                height: 143px;
-            }
-        }
-        .gift_four{
-            text-align: center;
-            padding: 6px 7px;
-            width: 295px;
-            height: 138px;
-            background: url('../../../assets/img/active/doubleDenier/38_da.png') no-repeat;
-            background-size:100% 100%;-moz-background-size:100% 100%;
-             img{
-                width:265px;height:124px; 
-            }
-            span{
-                position: relative;
-                top: -47px;
-                font-size: 14px;
-                color: #FFFFFF;
-                left: 13px;
-                cursor: pointer;
-            }
-            img:hover{
-                width: 310px;
-                height: 143px;
-            }
-        }
+        font-size: 14px;
+        color: #FFFFFF;
+        left: 13px;
+        cursor: pointer;
+      }
+      img:hover {
+        width: 310px;
+        height: 143px;
+      }
     }
     .w_center{
         height: 485px;
@@ -1074,4 +1009,5 @@ export default {
         text-decoration: underline;
         cursor: pointer;
     }
+  }
 </style>
