@@ -397,7 +397,7 @@
         <Button type="primary" @click="unfreeze_ok">确认</Button>
       </div>
     </Modal>
-    <!-- 解冻条件未达成弹窗 -->
+    <!--押金转续费-->
     <Modal v-model="showModal.freezeToRenew" :scrollable="true" :closable="false" :width="550">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">申请解冻</span>
@@ -419,9 +419,27 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.freezeToRenew = false">取消</Button>
-        <Button type="primary" @click="freezeToRenew_ok">完成</Button>
+        <Button type="primary" @click="freezeToRenewNext">下一步</Button>
       </div>
     </Modal>
+
+    <!-- 押金转续费确认 -->
+
+    <Modal v-model="showModal.freezeToRenewAffirm" crollable="true" :closable="false" :width="390" :mask-closable="false">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24" style="margin-bottom: 20px">当前免费剩余时长到期日为<span>{{ freezeEndTime}}</span>，转为续费之后资源到期时间为<span>{{ renewalFeeTime}}</span>，您是否确认将押金转为续费？
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.freezeToRenewAffirm = false">取消</Button>
+        <Button type="primary" :disabled="freezeToRenewAffirmDisabled" @click="freezeToRenew_ok">确定{{ freezeToRenewAffirmText}}</Button>
+      </p>
+    </Modal>
+    <!-- 解冻条件未达成弹窗 -->
     <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
@@ -760,7 +778,7 @@
         refundParticularsData: [],
         refundPrice: '',
         refundOrderPrice: '',
-        refundOrderTicket:'',
+        refundOrderTicket: '',
         refundOrderVoucher: '',
         payLoading: false,
         cardVolumeColumns: [
@@ -1557,7 +1575,8 @@
           refundHint: false,
           unfreezeToBalanceHint: false,
           refundNextHint: false,
-          refundLastHint: false
+          refundLastHint: false,
+          freezeToRenewAffirm: false
         },
         // 提现
         withdrawForm: {
@@ -1746,6 +1765,8 @@
                           }).then(res => {
                             if (res.status == 200 && res.data.status == 1) {
                               this.freezeOrderData = res.data.result
+                              this.freezeEndTime = res.data.endTime
+                              this.renewalFeeTime = res.data.renewalFeeTime
                               this.showModal.freezeToRenew = true
                             } else {
                               this.$message.info({content: res.data.message})
@@ -1772,7 +1793,12 @@
         refundLastHintDisabled: true,
         refundLastHintText: '(10S)',
         refundLastHintTimer: null,
-        refundLastTo: 'account'
+        refundLastTo: 'account',
+        freezeToRenewAffirmDisabled: true,
+        freezeToRenewAffirmText: '(10S)',
+        freezeToRenewAffirmTimer: null,
+        renewalFeeTime: '',
+        freezeEndTime:''
       }
     },
     created() {
@@ -2675,6 +2701,25 @@
           }
         })
       },
+      freezeToRenewNext() {
+        window.clearInterval(this.freezeToRenewAffirmTimer)
+        this.freezeToRenewAffirmDisabled = true
+        this.freezeToRenewAffirmText = '(10S)'
+        let i = 10
+        this.freezeToRenewAffirmTimer = setInterval(() => {
+          i -= 1
+          if (i == 0) {
+            window.clearInterval(this.freezeToRenewAffirmTimer)
+            this.freezeToRenewAffirmDisabled = false
+            this.freezeToRenewAffirmText = ''
+          } else {
+            this.freezeToRenewAffirmText = '(0' + i + 'S)'
+            this.freezeToRenewAffirmDisabled = true
+          }
+        }, 1000)
+        this.showModal.freezeToRenew = false
+        this.showModal.freezeToRenewAffirm = true
+      },
       // 押金转续费
       freezeToRenew_ok() {
         let url = 'user/depositRenewal.do'
@@ -2686,7 +2731,7 @@
           if (res.status == 200 && res.data.status == 1) {
             this.$Message.success(res.data.message)
             this.showModal.freezeParticulars = false
-            this.showModal.freezeToRenew = false
+            this.showModal.freezeToRenewAffirm = false
             this.getBalance()
             this.showMoneyByMonth()
             this.search()
