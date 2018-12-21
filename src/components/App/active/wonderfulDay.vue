@@ -6,7 +6,7 @@
                     <p class="pt_denier">双旦同庆，钜惠上云</p>
                     <p class="pt_white">选择新睿云，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
                     <div class="w_button">
-                        <span>登录即可抽奖</span>
+                        <span @click="getVMConfigId">登录即可抽奖</span>
                     </div>
                 </div>
             </div>
@@ -55,117 +55,41 @@
                         <p class="w_pFont">云服务器特惠专场</p>
                         <p style="color:#222222;font-size:16px;">新老用户可无条件领取38元体验券，即领即用，最高可用152个小时 <span class="w_span">立即领取</span></p>
                         <div class="w_host">
-                            <div style="width:38%;">
+                            <div v-for="(item,index) in cloudHost" :key="index">
                                 <div class="host_title">
                                     <p style="font-size:24px;">云服务器</p>
-                                    <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">2核</span>CPU | <span style="font-size:20px">4G</span>内存  ｜  <span style="font-size:20px">40G</span>系统盘</p>
+                                    <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">{{item.cpu}}核</span>CPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
                                 </div>
                                 <div class="host_content">
                                     <div>
                                         <span>请选择宽带</span>
-                                        <Select v-model="bandwidth" style="width:200px;height:26px;" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.bandwidth" style="width:200px;height:26px;" class="fr-select">
+                                            <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="margin:10px 0;">
                                         <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                                            <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div >
                                         <span>请选择系统</span>
-                                        <Select v-model="system" style="width:200px" class="fr-select">
-                                            <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.system" style="width:200px" class="fr-select">
+                                            <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="margin:10px 0;">
                                         <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.duration" style="width:200px" class="fr-select">
+                                            <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
+                                        <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
+                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                                     </div>
-                                    <div class="host_button">立即领取</div>
-                                </div>
-                            </div>
-                            <!--  -->
-                            <div style="width:38%;">
-                                <div class="host_title">
-                                    <p style="font-size:24px;">云服务器</p>
-                                    <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">4核</span>CPU | <span style="font-size:20px">8G</span>内存  ｜  <span style="font-size:20px">40G</span>系统盘</p>
-                                </div>
-                                <div class="host_content">
-                                    <div>
-                                        <span>请选择宽带</span>
-                                        <Select v-model="bandwidth" style="width:200px;height:26px;" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div >
-                                        <span>请选择系统</span>
-                                        <Select v-model="system" style="width:200px" class="fr-select">
-                                            <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
-                                    </div>
-                                    <div class="host_button">立即领取</div>
-                                </div>
-                            </div>
-
-                            <div style="width:35%;">
-                                <div class="host_title">
-                                    <p style="font-size:24px;">云服务器</p>
-                                    <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">8核</span>CPU | <span style="font-size:20px">16G</span>内存  ｜  <span style="font-size:20px">40G</span>系统盘</p>
-                                </div>
-                                <div class="host_content">
-                                    <div>
-                                        <span>请选择宽带</span>
-                                        <Select v-model="bandwidth" style="width:200px;height:26px;" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div >
-                                        <span>请选择系统</span>
-                                        <Select v-model="system" style="width:200px" class="fr-select">
-                                            <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
-                                    </div>
-                                    <div class="host_button">立即领取</div>
+                                    <div class="host_button">立即抢购</div>
                                 </div>
                             </div>
                         </div>
@@ -176,242 +100,85 @@
                         <p class="w_pFont" style="color:#4E49F3">GPU云服务器特惠专场</p>
                         <p style="color:#222222;font-size:16px;">GPU云服务器（16核64G P40显卡）免费体验，最高可用3小时 <span class="w_span">立即领取</span></p>
                         <div class="w_host">
-                            <div style="width:38%;">
+                            <div v-for="(item,index) in gpuHost" :key="index">
                                 <div class="gpu_title">
                                    <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
-                                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">16核</span>vCPU | <span style="font-size:20px">128G</span>内存  ｜  <span style="font-size:20px">128G</span>系统盘</p>
-                                    <p style="font-size:20px;margin-top:6px;">P100<span style="font-size:14px;">显卡</span></p>
+                                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">{{item.cpu}}核</span>vCPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
+                                    <p style="font-size:20px;margin-top:6px;">{{item.type}}<span style="font-size:14px;">显卡</span></p>
                                 </div>
                                 <div class="host_content">
                                     <div>
                                         <span>请选择宽带</span>
-                                        <Select v-model="bandwidth" style="width:200px;height:26px;" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.bandwidth" style="width:200px;height:26px;" class="fr-select">
+                                            <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="margin:10px 0;">
                                         <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                                            <Option v-for="item in gpuZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div >
                                         <span>请选择系统</span>
-                                        <Select v-model="system" style="width:200px" class="fr-select">
-                                            <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.system" style="width:200px" class="fr-select">
+                                            <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="margin:10px 0;">
                                         <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.duration" style="width:200px" class="fr-select">
+                                            <Option v-for="item in hostTwo.gpuDay" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
+                                        <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
+                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                                     </div>
-                                    <div class="host_button">立即领取</div>
-                                </div>
-                            </div>
-                            <!--  -->
-                            <div style="width:38%;">
-                                <div class="gpu_title">
-                                  <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
-                                   <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">16核</span>vCPU | <span style="font-size:20px">128G</span>内存  ｜  <span style="font-size:20px">128G</span>系统盘</p>
-                                    <p style="font-size:20px;margin-top:6px;">P40<span style="font-size:14px;">显卡</span></p>
-                                </div>
-                                <div class="host_content">
-                                    <div>
-                                        <span>请选择宽带</span>
-                                        <Select v-model="bandwidth" style="width:200px;height:26px;" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div >
-                                        <span>请选择系统</span>
-                                        <Select v-model="system" style="width:200px" class="fr-select">
-                                            <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
-                                    </div>
-                                    <div class="host_button">立即领取</div>
-                                </div>
-                            </div>
-
-                            <div style="width:35%;">
-                                <div class="gpu_title">
-                                    <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
-                                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">16核</span>vCPU | <span style="font-size:20px">128G</span>内存  ｜  <span style="font-size:20px">128G</span>系统盘</p>
-                                    <p style="font-size:20px;margin-top:6px;">P40<span style="font-size:14px;">显卡</span></p>
-                                </div>
-                                <div class="host_content">
-                                    <div>
-                                        <span>请选择宽带</span>
-                                        <Select v-model="bandwidth" style="width:200px;height:26px;" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div >
-                                        <span>请选择系统</span>
-                                        <Select v-model="system" style="width:200px" class="fr-select">
-                                            <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
-                                    </div>
-                                    <div class="host_button">立即领取</div>
+                                    <div class="host_button">立即抢购</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!--  -->
                      <div>
                         <div class="w_host">
-                            <div style="width:38%;">
-                                <div class="gpu_title">
-                                   <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
-                                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">16核</span>vCPU | <span style="font-size:20px">128G</span>内存  ｜  <span style="font-size:20px">128G</span>系统盘</p>
-                                    <p style="font-size:20px;margin-top:6px;">P100<span style="font-size:14px;">显卡</span></p>
+                            <div v-for="(item,index) in gpuHostMoth" :key="index">
+                                <div class="gpu_title2">
+                                   <p style="font-size:24px;">GPU云服务器</p>
+                                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">{{item.cpu}}核</span>vCPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
+                                    <p style="font-size:20px;margin-top:6px;">{{item.type}}<span style="font-size:14px;">显卡</span></p>
                                 </div>
                                 <div class="host_content">
                                     <div>
                                         <span>请选择宽带</span>
-                                        <Select v-model="bandwidth" style="width:200px;height:26px;" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.bandwidth" style="width:200px;height:26px;" class="fr-select">
+                                            <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="margin:10px 0;">
                                         <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                                            <Option v-for="item in gpuZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div >
                                         <span>请选择系统</span>
-                                        <Select v-model="system" style="width:200px" class="fr-select">
-                                            <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.system" style="width:200px" class="fr-select">
+                                            <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="margin:10px 0;">
                                         <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.duration" style="width:200px" class="fr-select">
+                                            <Option v-for="item in hostTwo.gpuMoth" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
+                                        <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
+                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                                     </div>
-                                    <div class="host_button">立即领取</div>
-                                </div>
-                            </div>
-                            <!--  -->
-                            <div style="width:38%;">
-                                <div class="gpu_title">
-                                  <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
-                                   <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">16核</span>vCPU | <span style="font-size:20px">128G</span>内存  ｜  <span style="font-size:20px">128G</span>系统盘</p>
-                                    <p style="font-size:20px;margin-top:6px;">P40<span style="font-size:14px;">显卡</span></p>
-                                </div>
-                                <div class="host_content">
-                                    <div>
-                                        <span>请选择宽带</span>
-                                        <Select v-model="bandwidth" style="width:200px;height:26px;" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div >
-                                        <span>请选择系统</span>
-                                        <Select v-model="system" style="width:200px" class="fr-select">
-                                            <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
-                                    </div>
-                                    <div class="host_button">立即领取</div>
-                                </div>
-                            </div>
-
-                            <div style="width:35%;">
-                                <div class="gpu_title">
-                                    <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
-                                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">16核</span>vCPU | <span style="font-size:20px">128G</span>内存  ｜  <span style="font-size:20px">128G</span>系统盘</p>
-                                    <p style="font-size:20px;margin-top:6px;">P40<span style="font-size:14px;">显卡</span></p>
-                                </div>
-                                <div class="host_content">
-                                    <div>
-                                        <span>请选择宽带</span>
-                                        <Select v-model="bandwidth" style="width:200px;height:26px;" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div >
-                                        <span>请选择系统</span>
-                                        <Select v-model="system" style="width:200px" class="fr-select">
-                                            <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="margin:10px 0;">
-                                        <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
-                                    </div>
-                                    <div class="host_button">立即领取</div>
+                                    <div class="host_button">立即抢购</div>
                                 </div>
                             </div>
                         </div>
@@ -427,85 +194,29 @@
                         <p class="w_pFont">对象存储特惠专场</p>
                         <p style="color:#222222;font-size:16px;">对象存储（100G存储包+100G下行流量）免费体验，最长可用1个月  <span class="w_span">立即领取</span></p>
                         <div class="w_host">
-                            <div style="width:38%;">
+                            <div v-for="(item,index) in objectHost" :key="index">
                                 <div class="host_title">
-                                    <p style="font-size:24px;">云服务器</p>
-                                    <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">2核</span>CPU | <span style="font-size:20px">4G</span>内存  ｜  <span style="font-size:20px">40G</span>系统盘</p>
-                                </div>
-                                <div class="host_content">
-                               
-                                    <div style="margin:10px 0;">
-                                        <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                
-                                    <div style="margin:10px 0;">
-                                        <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
-                                    </div>
-                                    <div class="host_button">立即领取</div>
-                                </div>
-                            </div>
-                            <!--  -->
-                            <div style="width:38%;">
-                                <div class="host_title">
-                                    <p style="font-size:24px;">云服务器</p>
-                                    <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">4核</span>CPU | <span style="font-size:20px">8G</span>内存  ｜  <span style="font-size:20px">40G</span>系统盘</p>
-                                </div>
-                                <div class="host_content">
-                             
-                                    <div style="margin:10px 0;">
-                                        <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                              
-                                    <div style="margin:10px 0;">
-                                        <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
-                                    </div>
-                                    <div class="host_button">立即领取</div>
-                                </div>
-                            </div>
-
-                            <div style="width:35%;">
-                                <div class="host_title">
-                                    <p style="font-size:24px;">云服务器</p>
-                                    <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">8核</span>CPU | <span style="font-size:20px">16G</span>内存  ｜  <span style="font-size:20px">40G</span>系统盘</p>
+                                    <p style="font-size:24px;">对象存储</p>
+                                    <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">{{item.storage}}G</span>存储 | <span style="font-size:20px">{{item.flow}}G</span>内外网下载流量</p>
                                 </div>
                                 <div class="host_content">
                                     <div style="margin:10px 0;">
                                         <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                                            <Option v-for="item in objStorageZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="margin:10px 0;">
                                         <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.duration" style="width:200px" class="fr-select">
+                                            <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
+                                        <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
+                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                                     </div>
-                                    <div class="host_button">立即领取</div>
+                                    <div class="host_button">立即抢购</div>
                                 </div>
                             </div>
                         </div>
@@ -513,91 +224,42 @@
 
                     <!--  -->
                      <div>
-                        <p class="w_pFont" style="color:#4E49F3">云数据库特惠专场</p>
+                        <p class="w_pFont">云数据库特惠专场</p>
                         <p style="color:#222222;font-size:16px;">云数据库（1核1G）免费体验，最高可用97小时   <span class="w_span">立即领取</span></p>
                         <div class="w_host">
-                            <div style="width:38%;">
-                                <div class="gpu_title">
-                                   <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
-                                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">16核</span>vCPU | <span style="font-size:20px">128G</span>内存  ｜  <span style="font-size:20px">128G</span>系统盘</p>
-                                    <p style="font-size:20px;margin-top:6px;">P100<span style="font-size:14px;">显卡</span></p>
+                            <div v-for="(item,index) in cloudData" :key="index">
+                                <div class="host_title">
+                                   <p style="font-size:24px;">云数据库<span style="color:#FFFFFF;font-size:14px;">(100G存储数据盘)</span></p>
+                                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">{{item.cpu}}核</span>CPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
                                 </div>
                                 <div class="host_content">
-                              
-                                    <div style="margin:10px 0;">
-                                        <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                     <div>
+                                        <span>请选择宽带</span>
+                                        <Select v-model="item.bandwidth" style="width:200px;height:26px;" class="fr-select">
+                                            <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
-                               
+                                    <div style="margin:10px 0;">
+                                        <span>请选择区域</span>
+                                        <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                                            <Option v-for="item in databaseZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        </Select>
+                                    </div>
+                                    <div >
+                                        <span>请选择系统</span>
+                                        <Select v-model="item.system" style="width:200px" class="fr-select">
+                                            <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        </Select>
+                                    </div>
                                     <div style="margin:10px 0;">
                                         <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                                        <Select v-model="item.duration" style="width:200px" class="fr-select">
+                                            <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                                         </Select>
                                     </div>
                                     <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
-                                    </div>
-                                    <div class="host_button">立即领取</div>
-                                </div>
-                            </div>
-                            <!--  -->
-                            <div style="width:38%;">
-                                <div class="gpu_title">
-                                  <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
-                                   <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">16核</span>vCPU | <span style="font-size:20px">128G</span>内存  ｜  <span style="font-size:20px">128G</span>系统盘</p>
-                                    <p style="font-size:20px;margin-top:6px;">P40<span style="font-size:14px;">显卡</span></p>
-                                </div>
-                                <div class="host_content">
-                             
-                                    <div style="margin:10px 0;">
-                                        <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                             
-                                    <div style="margin:10px 0;">
-                                        <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
-                                    </div>
-                                    <div class="host_button">立即领取</div>
-                                </div>
-                            </div>
-
-                            <div style="width:35%;">
-                                <div class="gpu_title">
-                                    <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
-                                    <p style="font-size:14px;margin-top:15px;"><span style="font-size:20px">16核</span>vCPU | <span style="font-size:20px">128G</span>内存  ｜  <span style="font-size:20px">128G</span>系统盘</p>
-                                    <p style="font-size:20px;margin-top:6px;">P40<span style="font-size:14px;">显卡</span></p>
-                                </div>
-                                <div class="host_content">
-                                 
-                                    <div style="margin:10px 0;">
-                                        <span>请选择区域</span>
-                                        <Select v-model="bandwidth" style="width:200px" class="fr-select">
-                                            <Option v-for="item in bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                            
-                                    <div style="margin:10px 0;">
-                                        <span>请选择时长</span>
-                                        <Select v-model="duration" style="width:200px" class="fr-select">
-                                            <Option v-for="item in durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                                        </Select>
-                                    </div>
-                                    <div style="text-align:left;margin:26px 0 22px 0;">
-                                        <span style="color:#FF3508;font-size:28px;">￥1396.09</span>
-                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：8212.32元</span>
+                                        <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
+                                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                                     </div>
                                     <div class="host_button">立即领取</div>
                                 </div>
@@ -618,58 +280,479 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data(){
         return{
-            //带宽
-            bandwidth:'2',
-            bandwidthList:[
+            hostTwo:{
+                   //带宽
+                bandwidthList:[
+                    {
+                        name: '2M',
+                        value: '2'
+                    }, {
+                        name: '5M',
+                        value: '5'
+                    }, {
+                        name: '10M',
+                        value: '10'
+                    }
+                ],
+
+                //系统
+                systemList: [
+                    {
+                        name: 'Centos',
+                        value: 'linux'
+                    }, {
+                        name: 'Windows',
+                        value: 'windows'
+                    }],
+
+                //时长
+                durationList:[
+                    {
+                        name:'6月',
+                        value:'6'
+                    },
+                    {
+                        name:'1年',
+                        value:'12'
+                    },
+                    {
+                        name:'2年',
+                        value:'24'
+                    }
+                ],
+                  gpuDay:[
+                        {
+                        name:'7天',
+                        value:'7' 
+                        }
+                    ],
+                    gpuMoth:[
+                        {
+                            name:'1月',
+                            value:'30'
+                        },
+                        {
+                            name:'3月',
+                            value:'90'
+                        }
+                    ],
+            },
+
+            allObjcet:{
+                cloudHost:[
+                    {
+                        cpu: '2',
+                        memory: '4',
+                        rootDisk: '40',
+                        bandwidth: '2',
+                        zoneId: '',
+                        system: 'linux',
+                        duration: '6',
+                        originalPrice: '1131.16',
+                        currentPrice: '226.30',
+                        vmConfigId: '50'
+                    },
+                    {
+                        cpu: '4',
+                        memory: '8',
+                        rootDisk: '40',
+                        bandwidth: '2',
+                        zoneId: '',
+                        system: 'linux',
+                        duration: '6',
+                        originalPrice: '1131.16',
+                        currentPrice: '226.30',
+                        vmConfigId: '65'
+                    },
+                    {
+                        cpu: '8',
+                        memory: '16',
+                        rootDisk: '40',
+                        bandwidth: '2',
+                        zoneId: '',
+                        system: 'linux',
+                        duration: '6',
+                        originalPrice: '1131.16',
+                        currentPrice: '226.30',
+                        vmConfigId: '80'
+                    }
+                ],
+                gpuHost:[
                  {
-                    name: '2M',
-                    value: '2'
-                }, {
-                    name: '5M',
-                    value: '5'
-                }, {
-                    name: '10M',
-                    value: '10'
+                    cpu: '16',
+                    memory: '128',
+                    rootDisk: '128',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '7',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '101',
+                    type:'P100',
+                    
+                },
+                 {
+                    cpu: '16',
+                    memory: '120',
+                    rootDisk: '128',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '7',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '116',
+                    type:'P40',
+                  
+                },
+                 {
+                    cpu: '16',
+                    memory: '64',
+                    rootDisk: '128',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '7',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50',
+                    type:'P40',
+                   
+                }
+            ]
+            },
+
+            // 云服务器
+            cloudHost:[
+                {
+                    cpu: '2',
+                    memory: '4',
+                    rootDisk: '40',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '6',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50'
+                },
+                {
+                    cpu: '4',
+                    memory: '8',
+                    rootDisk: '40',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '6',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '65'
+                },
+                {
+                    cpu: '8',
+                    memory: '16',
+                    rootDisk: '40',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '6',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '80'
                 }
             ],
 
-            //系统
-            system:'linux',
-            systemList: [
-                {
-                    name: 'Centos',
-                    value: 'linux'
-                }, {
-                    name: 'Windows',
-                    value: 'windows'
-                }],
-
-            //时长
-            duration:'6',
-            durationList:[
-                {
-                    name:'6月',
-                    value:'6'
+            // GPU云服务器天
+            gpuHost:[
+                 {
+                    cpu: '16',
+                    memory: '128',
+                    rootDisk: '128',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '7',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '101',
+                    type:'P100',
+                    
                 },
-                {
-                    name:'1年',
-                    value:'12'
+                 {
+                    cpu: '16',
+                    memory: '120',
+                    rootDisk: '128',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '7',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '116',
+                    type:'P40',
+                  
                 },
-                {
-                    name:'2年',
-                    value:'24'
+                 {
+                    cpu: '16',
+                    memory: '64',
+                    rootDisk: '128',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '7',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50',
+                    type:'P40',
+                   
                 }
             ],
 
-            host:[
-                {}
+            // GPU云服务器月
+            gpuHostMoth:[
+                {
+                    cpu: '16',
+                    memory: '128',
+                    rootDisk: '128',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '30',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50',
+                    type:'P100'
+                },
+                 {
+                    cpu: '16',
+                    memory: '120',
+                    rootDisk: '128',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '30',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50',
+                    type:'P40'
+                },
+                 {
+                    cpu: '16',
+                    memory: '64',
+                    rootDisk: '128',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '30',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50',
+                    type:'P40'
+                }
             ],
 
+            // 对象存储
+            objectHost:[
+                {
+                    storage:'50',
+                    flow:'50',
+                    zoneId: '',
+                    duration: '6',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50'
+                },
+                {
+                    storage:'100',
+                    flow:'100',
+                    zoneId: '',
+                    duration: '6',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50'
+                },
+                {
+                    storage:'300',
+                    flow:'300',
+                    zoneId: '',
+                    duration: '6',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50'
+                }
+            ],
+
+            // 云数据库
+            cloudData:[
+                {
+                    cpu: '2',
+                    memory: '4',
+                    rootDisk: '40',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '6',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50'
+                },
+                {
+                    cpu: '4',
+                    memory: '8',
+                    rootDisk: '40',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '6',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50'
+                },
+                {
+                    cpu: '8',
+                    memory: '16',
+                    rootDisk: '40',
+                    bandwidth: '2',
+                    zoneId: '',
+                    system: 'linux',
+                    duration: '6',
+                    originalPrice: '1131.16',
+                    currentPrice: '226.30',
+                    vmConfigId: '50'
+                }
+            ],
+
+          
+
+            //各个活动区域
+            hostZoneList:[],
+            objStorageZoneList:[],
+            databaseZoneList:[],
+            gpuZoneList:[],
         }
-    }
+    },       
+    created(){
+        this.getHostZoneList();
+        this.getObjStorageZoneList();
+        this.getDatabaseZoneList();
+        this.getGPUZoneList();
+    },
+    methods:{
+        // 云服务器获取区域
+        getHostZoneList() {
+            let url = 'activity/getTemActInfoById.do'
+            axios.get(url, {
+                params:{
+                    activityNum: '27'
+                }
+            }).then(res => {
+            if (res.data.status == 1 && res.status == 200) {
+                this.hostZoneList = res.data.result.optionalArea
+                this.cloudHost.forEach(item => {
+                item.zoneId = this.hostZoneList[0].value
+                })
+                this.hostZoneList.forEach((item, index) => {
+                if (item.value === '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
+                    this.hostZoneList.splice(index, 1)
+                }
+                })
+            }
+            })
+        },
+
+        // 获取对象存储区域
+        getObjStorageZoneList() {
+            let url = 'activity/getTemActInfoById.do'
+            axios.get(url, {
+                params:{
+                     activityNum: '28'
+                }
+            }).then(res => {
+            if (res.data.status == 1 && res.status == 200) {
+                this.objStorageZoneList = res.data.result.optionalArea
+                this.objectHost.forEach(item => {
+                 item.zoneId = this.objStorageZoneList[0].value
+                })
+            }
+            })
+      },
+
+        // 获取云数据库区域
+       getDatabaseZoneList() {
+            let url = 'activity/getTemActInfoById.do'
+            axios.get(url, {
+                params:{
+                    activityNum: '29'
+                }
+            }).then(res => {
+            if (res.data.status == 1 && res.status == 200) {
+                this.databaseZoneList = res.data.result.optionalArea
+                this.cloudData.forEach(item => {
+                    item.zoneId = this.databaseZoneList[0].value
+                })
+                this.databaseZoneList.forEach((item, index) => {
+                if (item.value === '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
+                    this.databaseZoneList.splice(index, 1)
+                }
+                })
+            }
+            })
+      },
+
+        // 获取GPU区域
+        getGPUZoneList() {
+            let url = 'activity/getTemActInfoById.do'
+            axios.get(url, {
+                params:{
+                    activityNum: '30'
+                }
+            }).then(res => {
+            if (res.data.status == 1 && res.status == 200) {
+                this.gpuZoneList = res.data.result.optionalArea
+                this.gpuHost.forEach(item => {
+                item.zoneId = this.gpuZoneList[0].value
+                })
+                this.gpuHostMoth.forEach(item => {
+                    item.zoneId = this.gpuZoneList[0].value
+                })
+            }
+            })
+      },
+
+        //  获取配置ID
+        getVMConfigId(){
+            // axios.get('activity/getVMConfigId.do',{
+            //     params:{
+            //         activityNum :'',
+            //         month:'',
+            //         cpu:'',
+            //         mem:'',
+            //         bandwith:'',
+            //         type:'',
+            //         serviceType:'',
+            //         flowPackage:'',
+            //         capacity:''
+            //     }
+            // })
+            // let activityNum ='',
+            //     month       ='';
+            // function cen(val){
+                console.log('22222222222');
+                for(let key in this.allObjcet){
+                    console.log(this.allObjcet[key][0]);
+                //   this.allObjcet[key][0]
+                }
+              
+            // }
+        },
+
+    },
+
 }
 </script>
 
@@ -866,7 +949,11 @@ export default {
           margin: 10px auto;
           .w_host{
               display: flex;
-              margin-top: 32px;
+              -webkit-box-pack: justify;
+                -ms-flex-pack: justify;
+                justify-content: space-between;
+                flex-wrap:wrap;
+                margin-top: 32px;
               .host_title{
                   padding: 35px 0 31px 11px;
                   text-align: left;
@@ -887,6 +974,16 @@ export default {
                       color: #FFFFFF;
                   }
                } 
+               .gpu_title2{
+                padding: 35px 0 31px 11px;
+                  text-align: left;
+                  background: url('../../../assets/img/active/doubleDenier/gpu_ba.png') no-repeat;
+                  width: 309px;
+                  height: 130px;
+                  p{
+                      color: #FFFFFF;
+                  }
+               }
               .host_content{
                   width: 309px;
                   background: #ffffff;
@@ -916,6 +1013,11 @@ export default {
           margin: 10px auto;
           .w_host{
               display: flex;
+               display: flex;
+              -webkit-box-pack: justify;
+                -ms-flex-pack: justify;
+                justify-content: space-between;
+                flex-wrap:wrap;
               margin-top: 32px;
               .host_title{
                   padding: 35px 0 31px 11px;
@@ -927,16 +1029,6 @@ export default {
                       color: #FFFFFF;
                   }  
               }
-              .gpu_title{
-                  padding: 35px 0 31px 11px;
-                  text-align: left;
-                  background: url('../../../assets/img/active/doubleDenier/gpu_bg.png') no-repeat;
-                  width: 309px;
-                  height: 130px;
-                  p{
-                      color: #FFFFFF;
-                  }
-               } 
               .host_content{
                   width: 309px;
                   background: #ffffff;
