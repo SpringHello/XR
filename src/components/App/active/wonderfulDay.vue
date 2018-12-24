@@ -409,7 +409,7 @@
           <div class="header tips"></div>
           <div class="body">
             <p style="margin: 20px 0;font-size:20px;color:#FF3000;">  恭喜您！首购好礼领取成功！</p>
-            <p style="color:#222222;font-size:16px;line-height: 30px;padding: 0px 31px;margin-bottom:27px;">我们会在三个工作日内，将卡密以短信的形式发送至您的手机，请注意查收（ 您可前往<span style="color:#FF461E;cursor:pointer;" @click="winningRecordShow = true,showModal.nThirtyCrad=false" >我的奖品</span>查看您的所有奖品）</p>
+            <p style="color:#222222;font-size:16px;line-height: 30px;padding: 0px 31px;margin-bottom:27px;">我们将在1月12日与2月1日通过短信统一发放中奖奖品，请确认在最后2月1日前完成实名认证（ 您可前往<span style="color:#FF461E;cursor:pointer;" @click="winningRecordShow = true,showModal.nThirtyCrad=false" >我的奖品</span>查看您的所有奖品）</p>
             <button @click.stop="showModal.nThirtyCrad=false" class="button-primary"><span>我知道了</span></button>
           </div>
         </div>
