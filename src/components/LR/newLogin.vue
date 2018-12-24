@@ -66,21 +66,22 @@
                 <p>收不到验证码？请<span @click="loginForm.loginType='password',loginForm.errorMsg=''">更换登录方式</span></p>
               </div>
             </div>
-            <div @mousedown="enterDrag">
-              <drag-verify v-if="dragVerifyStatus" ref="Verify" :width="dragVerifyConfig.width"
-                           :height="dragVerifyConfig.height"
-                           :text="dragVerifyConfig.text"
-                           :success-text="dragVerifyConfig.successText"
-                           :background="dragVerifyConfig.background"
-                           :progress-bar-bg="dragVerifyConfig.progressBarBg"
-                           :completed-bg="dragVerifyConfig.completedBg"
-                           :handler-bg="dragVerifyConfig.handlerBg"
-                           :handler-icon="dragVerifyConfig.handlerIcon"
-                           :success-icon="dragVerifyConfig.successIcon"
-                           :text-size="dragVerifyConfig.textSize"
-                           :circle="dragVerifyConfig.circle"></drag-verify>
-              <div v-else style="height: 44px;"></div>
-            </div>
+            <!--         <div @mousedown="enterDrag">
+                       <drag-verify v-if="dragVerifyStatus" ref="Verify" :width="dragVerifyConfig.width"
+                                    :height="dragVerifyConfig.height"
+                                    :text="dragVerifyConfig.text"
+                                    :success-text="dragVerifyConfig.successText"
+                                    :background="dragVerifyConfig.background"
+                                    :progress-bar-bg="dragVerifyConfig.progressBarBg"
+                                    :completed-bg="dragVerifyConfig.completedBg"
+                                    :handler-bg="dragVerifyConfig.handlerBg"
+                                    :handler-icon="dragVerifyConfig.handlerIcon"
+                                    :success-icon="dragVerifyConfig.successIcon"
+                                    :text-size="dragVerifyConfig.textSize"
+                                    :circle="dragVerifyConfig.circle"></drag-verify>
+                       <div v-else style="height: 44px;"></div>
+                     </div>-->
+            <div id="captchaBox"></div>
             <div class="errorMsg">
               <div v-if="loginForm.errorMsg === 'notSlidingValidation'">
                 <i></i>
@@ -866,6 +867,7 @@
   import axios from 'axios'
   import areaTel from '../../options/area_tel'
   import dragVerify from 'vue-drag-verify'
+  import gt from '../../util/gt'
 
   export default {
     components: {
@@ -929,11 +931,47 @@
       }
     },
     created() {
-      console.log(new BMap.Map("container"))
+      this.gtInit()
     },
     mounted() {
     },
     methods: {
+      /* 滑动验证初始化*/
+      gtInit() {
+        let url = 'user/silpInitialization.do'
+        axios.get(url).then(res => {
+          if (res.status == 200) {
+            initGeetest({
+              // 以下配置参数来自服务端 SDK
+              gt: res.data.gt,
+              challenge: res.data.challenge,
+              offline: !res.data.success,
+              new_captcha: true,
+              width: '100%',
+              product: 'popup'
+            }, captchaObj => {
+              captchaObj.appendTo("#captchaBox"); //将验证按钮插入到宿主页面中captchaBox元素内
+              captchaObj.onReady(() => {
+              }).onSuccess(() => {
+                var result = captchaObj.getValidate()
+                let url = 'user/silpJudge.do'
+                let params = {
+                  geetest_challenge: result.geetest_challenge,
+                  geetest_validate: result.geetest_validate,
+                  geetest_seccode: result.geetest_seccode
+                }
+                axios.post(url,params).then(response=>{
+                  if (response.data.status === 'fail') {
+                    alert('用户名或密码错误，请重新输入并完成验证');
+                    captchaObj.reset(); // 调用该接口进行重置
+                  }
+                })
+              }).onError(() => {
+              })
+            })
+          }
+        })
+      },
       /* 切换banner */
       change(activeIndex) {
         this.activeBanner = activeIndex + 1

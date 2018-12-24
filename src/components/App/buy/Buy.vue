@@ -9,9 +9,9 @@
       </div>
       <div id="body">
         <router-view/>
-        <div id="list">
+        <div id="list" ref="lists">
           <div ref="list"
-               style="padding:30px 30px 0 30px;background-color: #ffffff;max-height: 1050px;overflow-y: auto">
+               style="padding:30px 30px 0 30px;background-color: #ffffff;max-height: 400px;overflow-y: auto">
             <p
               style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #D9D9D9; padding-bottom: 30px;">
               价格预算清单</p>
@@ -311,6 +311,21 @@
           } else {
             this.$refs.buyDiv.style.position = 'unset'
           }
+        },
+        scrollList: () => {
+          // 获取div距顶部距离
+          var top =  this.$refs.lists.offsetTop
+          //获取屏幕高度
+          var windowTop = window.innerHeight
+          //屏幕卷去的高度
+          var scrollTops = document.documentElement.scrollTop || document.body.scrollTop
+          if(top >= scrollTops && top < (scrollTops+windowTop)) {
+            this.$refs.lists.style.position = 'unset'
+          }else {
+            this.$refs.lists.style.position = 'fixed'
+            this.$refs.lists.style.top = 0
+            this.$refs.lists.style.right = '19%'
+          }
         }
       }
     },
@@ -324,6 +339,8 @@
     },
     mounted() {
       window.addEventListener('scroll', this.scrollFun)
+     /* window.addEventListener('scroll', this.scrollList)
+      this.scrollList()*/
     },
     methods: {
       submit() {
