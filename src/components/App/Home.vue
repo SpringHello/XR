@@ -4937,7 +4937,9 @@
       }
     }
   }
-
+  p,span{
+      font-family: 'Microsoft YaHei';
+    }
   // 移入移出动画
   .fade-enter, .fade-leave-to {
     opacity: 0;
