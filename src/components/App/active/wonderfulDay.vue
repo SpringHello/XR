@@ -23,7 +23,7 @@
         </div>
         <div class="gift_three">
             <img  src="../../../assets/img/active/doubleDenier/0_da.png">
-            <a :href="'/ruicloud/fractive'" target="_blank">查看详情</a>
+            <a :href="'/ruicloud/frActive'" target="_blank">查看详情</a>
         </div>
         <div class="gift_four">
             <img  src="../../../assets/img/active/doubleDenier/38_da.png">
@@ -102,7 +102,7 @@
             <div>
                 <p class="w_pfn" style="color:#4E49F3">GPU云服务器特惠专场</p>
                 <p style="color:#222222;font-size:16px;">GPU云服务器（16核64G P40显卡）免费体验，最高可用3小时 <a class="w_span" :href="'/ruicloud/active_1'" target="_blank">立即领取</a></p>
-                <div class="w_host">
+                <div class="w_host" style="margin-top:29px;">
                 <div v-for="(item,index) in allObjcet.gpuHost" :key="index">
                     <div class="gpu_title">
                     <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
@@ -138,14 +138,14 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="gpuHostMoth('gpuHost',index)">立即抢购</div>
+                    <div class="host_button" @click="getDiskcountMv('gpuHost',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
             </div>
 
             <div>
-                <div class="w_host">
+                <div class="w_host" >
                 <div v-for="(item,index) in allObjcet.gpuHostMoth" :key="index">
                     <div class="gpu_title2">
                     <p style="font-size:24px;">GPU云服务器</p>
@@ -181,7 +181,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="gpuHostMoth('gpuHostMoth',index)">立即抢购</div>
+                    <div class="host_button" @click="getDiskcountMv('gpuHostMoth',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -219,7 +219,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="gpuHostMoth('objectHost',index)">立即抢购</div>
+                    <div class="host_button" @click="getDiskcountMv('objectHost',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -264,7 +264,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="gpuHostMoth('cloudData',index)">立即抢购</div>
+                    <div class="host_button" @click="getDiskcountMv('cloudData',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -1043,7 +1043,7 @@
                 params:{
                     vmConfigId:obj.vmConfigId,
                     osType :obj.system,
-                    defzoneid  :obj.zoneId
+                    zoneid  :obj.zoneId
                 }
             }).then(res =>{
                 if(res.status == 200 && res.data.status == 1){
@@ -1271,7 +1271,7 @@
       },
       loginInfo(){
           if(this.$store.state.userInfo){
-              this.$Message.info('您已经登录了');
+             this.showModal.LotteryModal=true;
           }else{
               this.$LR({type: 'login'})
           }
@@ -1358,7 +1358,6 @@
       background-repeat:no-repeat; background-size:100% 100%;-moz-background-size:100% 100%;
       .w_button{
         color: rgba(26, 42, 210, 1);
-        font-family: PingFangSC-Medium;
         font-weight: 500;
         font-size: 13px;
         width: 140px;
@@ -1375,7 +1374,6 @@
       }
       .pt_denier{
         font-size: 48px;
-        font-family:微软雅黑;
         font-weight:600;
         background: linear-gradient(rgba(255, 251, 227, 1),rgba(255, 200, 75, 1));
         -webkit-background-clip: text;
@@ -1421,7 +1419,8 @@
       height: 195px;
       top: 20%;
       position: absolute;
-      left:80%;
+      left:4%;
+      z-index: 999;
       background: url('../../../assets/img/active/doubleDenier/back.png') no-repeat;
       cursor: pointer;
       .draw_span{
@@ -1458,7 +1457,7 @@
         -ms-flex-pack: justify;
         justify-content: space-between;
         flex-wrap:wrap;
-        margin-top: 32px;
+        margin-top: 29px;
         .host_title{
           padding: 35px 0 31px 11px;
           text-align: left;

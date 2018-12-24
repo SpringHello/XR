@@ -3,6 +3,15 @@
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
+      <my-carousel-item class="carousel-item">
+          <div class="dan-banner" @click="push('/ruicloud/sceneList')">
+            <div class="wrap">
+              <div class="left">
+              </div>
+              
+            </div>
+          </div>
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
@@ -5054,6 +5063,10 @@
         }
       }
     }
+  }
+  .dan-banner{
+    height: 400px;
+    background:#ff624b url("../../assets/img/home/dan_banner.png") center no-repeat;
   }
 
   .eightscene {

@@ -2,8 +2,20 @@
   <div class="active-center">
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
+          <my-carousel-item class="carousel-item">
+          <div @click="push('wonderfulDay')"
+               style="cursor: pointer;">
+            <div class="dan-receive">
+              <div class="wrap">
+               <div class="w_button">
+                <span>立即参与</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('fractive')"
+          <div @click="push('frActive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
 
@@ -152,7 +164,7 @@
             desc: '交押金最长可用一年 押金闪退',
             time: '2018.08.03开始',
             activeObj: '云主机 新注册用户',
-            url: 'fractive',
+            url: 'frActive',
             isStart: true,
             weight: '1'
           },
@@ -252,9 +264,32 @@
             cursor: pointer;
             background: #FEEDE0 url("../../assets/img/active/anniversary/aa-banner22.png") center no-repeat;
           }
+          .dan-receive{
+            height: 400px;
+            background: rgb(249, 118, 89) url("../../assets/img/active/doubleDenier/dan_banner.png") center no-repeat;
+            .w_button{
+              position: relative;
+              top: 217px;
+              left: 37px;
+              color: rgba(26, 42, 210, 1);
+              font-weight: 500;
+              font-size: 13px;
+              width: 140px;
+              line-height: 43px;
+              letter-spacing:3px;
+              text-align: center;
+              height: 43px;
+              background: rgb(255, 222, 42);
+              // box-shadow: 0px 2px 2px 1px rgb(136, 20, 17);
+              cursor: pointer;
+            }
+            .w_button:hover{
+              box-shadow: 0px 2px 2px 1px #881411;
+            }
+          }
           .free-receive {
             height: 400px;
-            background: #f56b23 url("../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
+            background:  url("../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
           }
           .obj-storage {
             background: linear-gradient(
