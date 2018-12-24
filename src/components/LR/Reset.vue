@@ -5,11 +5,11 @@
         <div class="banner">
           <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('fractive')" class="fr-active">
+              <div @click="$router.push('AnniversaryActive')" class="aa-active">
               </div>
             </my-carousel-item>
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('AnniversaryActive')" class="aa-active">
+              <div @click="$router.push('fractive')" class="fr-active">
               </div>
             </my-carousel-item>
           </my-carousel>
@@ -382,7 +382,7 @@
       }
       .aa-active {
         height: 100%;
-        background: #FFF url("../../assets/img/login/aa-banner.png") no-repeat;
+        background: #FFF url("../../assets/img/login/bb-banner.png") no-repeat;
       }
       .fr-active {
         height: 100%;

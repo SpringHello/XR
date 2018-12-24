@@ -32,9 +32,9 @@
             srctext:'立即参与'
           },
           {
-            title:'周年庆典，钜惠来袭',
-            text:'不止1.7折，更有百万豪礼！',
-            src:'/ruicloud/AnniversaryActive',
+            title:'双旦同庆，钜惠上云',
+            text:'高配云产品 限时2.7折; 更有首购好礼',
+            src:'/ruicloud/wonderfulDay',
             srctext:'立即抢购'
           },
           {
