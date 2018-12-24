@@ -23,7 +23,7 @@
         </div>
         <div class="gift_three">
             <img  src="../../../assets/img/active/doubleDenier/0_da.png">
-            <a :href="'/ruicloud/fractive'" target="_blank">查看详情</a>
+            <a :href="'/ruicloud/frActive'" target="_blank">查看详情</a>
         </div>
         <div class="gift_four">
             <img  src="../../../assets/img/active/doubleDenier/38_da.png">
@@ -102,7 +102,7 @@
             <div>
                 <p class="w_pfn" style="color:#4E49F3">GPU云服务器特惠专场</p>
                 <p style="color:#222222;font-size:16px;">GPU云服务器（16核64G P40显卡）免费体验，最高可用3小时 <a class="w_span" :href="'/ruicloud/active_1'" target="_blank">立即领取</a></p>
-                <div class="w_host">
+                <div class="w_host" style="margin-top:29px;">
                 <div v-for="(item,index) in allObjcet.gpuHost" :key="index">
                     <div class="gpu_title">
                     <p style="font-size:24px;">GPU云服务器<span style="color:#FFFFFF;font-size:14px;">(体验)</span></p>
@@ -138,14 +138,14 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="gpuHostMoth('gpuHost',index)">立即抢购</div>
+                    <div class="host_button" @click="getDiskcountGPU('gpuHost',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
             </div>
 
             <div>
-                <div class="w_host">
+                <div class="w_host" >
                 <div v-for="(item,index) in allObjcet.gpuHostMoth" :key="index">
                     <div class="gpu_title2">
                     <p style="font-size:24px;">GPU云服务器</p>
@@ -181,7 +181,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="gpuHostMoth('gpuHostMoth',index)">立即抢购</div>
+                    <div class="host_button" @click="getDiskcountGPU('gpuHostMoth',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -219,7 +219,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="gpuHostMoth('objectHost',index)">立即抢购</div>
+                    <div class="host_button" @click="getDickCountOSS('objectHost',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -238,20 +238,20 @@
                     <div class="host_content">
                     <div>
                         <span>请选择宽带</span>
-                        <Select v-model="item.bandwidth" style="width:200px;height:26px;" class="fr-select" @on-change='getVMConfigId("cloudData",index)'>
+                        <Select v-model="item.bandwidth" style="width:200px;" class="fr-select" @on-change='getVMConfigId("cloudData",index)'>
                         <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                         </Select>
                     </div>
                     <div style="margin:10px 0;">
-                        <span>请选择区域</span>
+                        <span style="margin-right:10px;">数据中心</span>
                         <Select v-model="item.zoneId" style="width:200px" class="fr-select">
                         <Option v-for="item in databaseZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                         </Select>
                     </div>
                     <div >
-                        <span>请选择系统</span>
+                        <span>请选择类型</span>
                         <Select v-model="item.system" style="width:200px" class="fr-select">
-                        <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        <Option v-for="item in hostTwo.databaseTypeList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                         </Select>
                     </div>
                     <div style="margin:10px 0;">
@@ -264,7 +264,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="gpuHostMoth('cloudData',index)">立即抢购</div>
+                    <div class="host_button" @click="getDeductionsDatabase('cloudData',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -409,7 +409,7 @@
           <div class="header tips"></div>
           <div class="body">
             <p style="margin: 20px 0;font-size:20px;color:#FF3000;">  恭喜您！首购好礼领取成功！</p>
-            <p style="color:#222222;font-size:16px;line-height: 30px;padding: 0px 31px;margin-bottom:27px;">我们会在三个工作日内，将卡密以短信的形式发送至您的手机，请注意查收（ 您可前往<span style="color:#FF461E;cursor:pointer;" @click="winningRecordShow = true,showModal.nThirtyCrad=false" >我的奖品</span>查看您的所有奖品）</p>
+            <p style="color:#222222;font-size:16px;line-height: 30px;padding: 0px 31px;margin-bottom:27px;">我们将在1月12日与2月1日通过短信统一发放中奖奖品，请确认在最后2月1日前完成实名认证（ 您可前往<span style="color:#FF461E;cursor:pointer;" @click="winningRecordShow = true,showModal.nThirtyCrad=false" >我的奖品</span>查看您的所有奖品）</p>
             <button @click.stop="showModal.nThirtyCrad=false" class="button-primary"><span>我知道了</span></button>
           </div>
         </div>
@@ -549,6 +549,16 @@
           callback()
         }
       }
+      const validaYou = (rule,value,callback) =>{
+        let reg = /^[1-9][0-9]{5}$/
+        if(value == ""){
+          return callback(new Error('请输入邮政编码'))
+        }else if(!reg.test(value)){
+          return callback(new Error('邮政编码格式不正确'))
+        }else{
+          callback();
+        }
+      }
       return{
         hostTwo:{
           //带宽
@@ -606,6 +616,21 @@
               value:'3'
             }
           ],
+          databaseTypeList: [
+            {
+              name: 'Mysql 单实例',
+              value: 'mysql'
+            }, {
+              name: 'Redis分布式缓存服务',
+              value: 'redis'
+            }, {
+              name: 'PostgreSQL 单实例',
+              value: 'postgresql'
+            }, {
+              name: 'MongoDB 单实例',
+              value: 'mongo'
+            }
+        ],
         },
 
         allObjcet:{
@@ -792,7 +817,7 @@
               rootDisk: '40',
               bandwidth: '2',
               zoneId: '',
-              system: 'linux',
+              system: 'mysql',
               duration: '6',
               originalPrice: '1131.16',
               currentPrice: '226.30',
@@ -806,7 +831,7 @@
               rootDisk: '40',
               bandwidth: '2',
               zoneId: '',
-              system: 'linux',
+              system: 'mysql',
               duration: '6',
               originalPrice: '1131.16',
               currentPrice: '226.30',
@@ -820,7 +845,7 @@
               rootDisk: '40',
               bandwidth: '2',
               zoneId: '',
-              system: 'linux',
+              system: 'mysql',
               duration: '6',
               originalPrice: '1131.16',
               currentPrice: '226.30',
@@ -870,7 +895,7 @@
             {required: true, validator: validaDistrict}
           ],
           postCode: [
-            {required: true, message: '请输入邮编'}
+            {required: true,validator:validaYou}
           ],
           tel: [
             {required: true, message: '请输入手机号码'},
@@ -1043,7 +1068,7 @@
                 params:{
                     vmConfigId:obj.vmConfigId,
                     osType :obj.system,
-                    defzoneid  :obj.zoneId
+                    defzoneid :obj.zoneId
                 }
             }).then(res =>{
                 if(res.status == 200 && res.data.status == 1){
@@ -1059,6 +1084,80 @@
             this.showModal.notLoginModal=true;
         }
     },
+
+    //  云数据库生成订单
+    getDeductionsDatabase(key,index){
+      if(this.$store.state.userInfo){
+             let obj = this.allObjcet[key][index];
+            axios.get('database/getDeductionsDatabase.do',{
+                params:{
+                    vmConfigId:obj.vmConfigId,
+                    dbVersion :obj.system,
+                    defzoneid :obj.zoneId
+                }
+            }).then(res =>{
+                if(res.status == 200 && res.data.status == 1){
+                    this.$Message.success('创建订单成功')
+                    this.$router.push('order')
+                }else{
+                     this.$message.info({
+                        content: res.data.message
+                    })
+                }   
+            })
+        }else{
+            this.showModal.notLoginModal=true;
+        }
+    },
+
+     //  云数据库生成订单
+    getDickCountOSS(key,index){
+      if(this.$store.state.userInfo){
+             let obj = this.allObjcet[key][index];
+            axios.post('ruiradosPrice/getDickCountOSS.do',{
+                    OOSConfigId:obj.vmConfigId,
+                    zoneId :obj.zoneId
+            }).then(res =>{
+                if(res.status == 200 && res.data.status == 1){
+                    this.$Message.success('创建订单成功')
+                    this.$router.push('order')
+                }else{
+                     this.$message.info({
+                        content: res.data.message
+                    })
+                }   
+            })
+        }else{
+            this.showModal.notLoginModal=true;
+        }
+    },
+
+    //  云数据库生成订单
+    getDiskcountGPU(key,index){
+      if(this.$store.state.userInfo){
+             let obj = this.allObjcet[key][index];
+            axios.get('activity/getDiskcountGPU.do',{
+              params:{
+                vmConfigId:obj.vmConfigId,
+                osType :obj.system,
+                defzoneid :obj.zoneId
+              }
+            }).then(res =>{
+                if(res.status == 200 && res.data.status == 1){
+                    this.$Message.success('创建订单成功')
+                    this.$router.push('order')
+                }else{
+                     this.$message.info({
+                        content: res.data.message
+                    })
+                }   
+            })
+        }else{
+            this.showModal.notLoginModal=true;
+        }
+    },
+
+
 
       startLotteryMouseDown() {
         if (!this.lotteryDisabled) {
@@ -1271,7 +1370,7 @@
       },
       loginInfo(){
           if(this.$store.state.userInfo){
-              this.$Message.info('您已经登录了');
+             this.showModal.LotteryModal=true;
           }else{
               this.$LR({type: 'login'})
           }
@@ -1358,7 +1457,6 @@
       background-repeat:no-repeat; background-size:100% 100%;-moz-background-size:100% 100%;
       .w_button{
         color: rgba(26, 42, 210, 1);
-        font-family: PingFangSC-Medium;
         font-weight: 500;
         font-size: 13px;
         width: 140px;
@@ -1373,22 +1471,13 @@
       .w_button:hover{
         box-shadow: 0px 2px 2px 1px #881411;
       }
-      .pt_denier{
-        font-size: 48px;
-        font-family:微软雅黑;
-        font-weight:600;
-        background: linear-gradient(rgba(255, 251, 227, 1),rgba(255, 200, 75, 1));
-        -webkit-background-clip: text;
-        color: transparent;
-        text-shadow:1px 1px 1px  #000;
-      }
       .pt_white{
         color: #FFFFFF;
         font-family: PingFangSC-Medium;
         font-size: 18px;
         margin: 12px 0 48px 0;
         span{
-          text-shadow: 2px 1px 4px  #000;
+          text-shadow: 2px 1px 4px  #881411;
           font-style:italic;
         }
       }
@@ -1421,7 +1510,8 @@
       height: 195px;
       top: 20%;
       position: absolute;
-      left:80%;
+      left:4%;
+      z-index: 999;
       background: url('../../../assets/img/active/doubleDenier/back.png') no-repeat;
       cursor: pointer;
       .draw_span{
@@ -1458,7 +1548,7 @@
         -ms-flex-pack: justify;
         justify-content: space-between;
         flex-wrap:wrap;
-        margin-top: 32px;
+        margin-top: 29px;
         .host_title{
           padding: 35px 0 31px 11px;
           text-align: left;
