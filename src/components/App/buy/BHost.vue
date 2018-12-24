@@ -881,7 +881,6 @@
         }
       },
       setAppOS(name) {
-        console.log(name)
         var arg = name.split('#')
         for (var item of this.appList) {
           item.selectSystem = ''
@@ -959,7 +958,6 @@
       },
       // 加入预算清单
       addCart() {
-        console.log(this.appSystem)
         if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
           this.$message.info({
             content: '请选择一个镜像系统'
@@ -991,7 +989,6 @@
         prod.currentLoginType = this.currentLoginType
         prod.computerName = this.computerName
         prod.password = this.password
-        console.log(prod.system)
         if (this.createType == 'fast') {
           prod.currentSystem = this.currentSystem
           prod.cost = this.fastCost
