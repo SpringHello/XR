@@ -255,7 +255,7 @@
     p {
       margin-bottom: 20px;
       font-size: 48px;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       color: rgba(255, 255, 255, 1);
       line-height: 67px;
     }
@@ -307,7 +307,7 @@
     h2 {
       margin-bottom: 40px;
       font-weight: normal;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 36px;
       color: #1F5FFF;
       text-align: center;
@@ -420,7 +420,7 @@
             background: url('../../../assets/img/active/newNodes/hostBanner.png') 430px no-repeat, linear-gradient(90deg,rgba(85,167,255,1),rgba(0,51,255,1));
             p {
               font-size: 30px;
-              font-family: PingFangSC-Medium;
+              font-family: MicrosoftYaHei;
               color: rgba(255, 255, 255, 1);
               line-height: 72px;
             }
@@ -710,7 +710,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;

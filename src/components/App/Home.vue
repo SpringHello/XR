@@ -3644,7 +3644,7 @@
             > h3 {
               padding-bottom: 20px;
               font-size: 24px;
-              font-family: PingFangSC-Medium;
+              font-family: MicrosoftYaHei;
               font-weight: 500;
               color: rgba(51, 51, 51, 1);
               line-height: 24px;
@@ -3653,7 +3653,7 @@
             .title {
               padding: 16px 0 18px 0;
               font-size: 18px;
-              font-family: PingFangSC-Medium;
+              font-family: MicrosoftYaHei;
               font-weight: 500;
               color: rgba(74, 74, 74, 1);
             }
@@ -4662,7 +4662,7 @@
     p {
       margin-bottom: 20px;
       font-size: 48px;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       color: rgba(243, 108, 110, 1);
       line-height: 67px;
     }
@@ -4691,7 +4691,7 @@
     p {
       margin-bottom: 20px;
       font-size: 48px;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       color: rgba(255, 255, 255, 1);
       line-height: 67px;
     }

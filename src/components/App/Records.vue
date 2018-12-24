@@ -234,7 +234,7 @@
           width: 300px;
           height: 50px;
           font-size: 18px;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           color: rgba(55, 125, 255, 1);
           line-height: 25px;
           background: #FFFFFF;
@@ -257,7 +257,7 @@
           width: 140px;
           height: 42px;
           font-size: 14px;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           color: #377dff;
           line-height: 42px;
           text-align: center;
@@ -272,7 +272,7 @@
         }
         p {
           font-size: 14px;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           color: rgba(55, 125, 255, 1);
           line-height: 20px;
           margin-top: 20px;
@@ -365,7 +365,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;
