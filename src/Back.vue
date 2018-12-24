@@ -342,6 +342,7 @@
       // QQ客服在线情况
       this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
         this.QQInfo = response.data.kefu
+        this.$store.commit('setQQInfo', response.data.kefu[0])
         this.xiaoshouInfo = response.data.xiaoshou
         this.yunweiInfo = response.data.yunwei
       })

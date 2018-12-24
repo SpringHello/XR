@@ -66,7 +66,7 @@
             <div class="verification" v-if="verPage == 'email'">
               <p class="ver_p">我们会发送一封验证邮件到您的邮箱，请注意查收</p>
                 <x-Input  :icon='url.icon1' v-model="dataFroms.email"  placeholder='请输入邮箱' ></x-Input>
-              <div class="v_email">
+              <div class="v_email" @click="getVerificationCode('1')">
                 前往邮箱
               </div>
             </div>
@@ -471,6 +471,23 @@
       //上传图片格式错误
       handleFormatError(){
         this.$Message.error('上传文件只能为jpg,png格式');
+      },
+
+      //获取验证码
+      getVerificationCode(code){
+        this.$on('count',item=>{
+          console.log(item);
+        })
+        return;
+        axios.get('user/code.do',{
+          params:{
+            aim:code == '1' ? '':this.account,
+            isemail:code,
+            vailCode:''
+          }
+        }).then(res =>{
+
+        })
       }
     },
     computed: {
@@ -670,7 +687,7 @@
       .v_email{
         width: 124px;
         height: 38px;
-        background: rgb(255, 98, 75);
+        background: rgba(42, 153, 242, 1);
         border-radius: 4px;
         color: rgb(255, 255, 255);
         line-height: 38px;
@@ -679,7 +696,7 @@
         transition: background .2s ease-in-out;
       }
       .v_email:hover{
-       background: rgb(247, 116, 96);
+       background: rgb(71, 167, 245);
        cursor: pointer;
       }
       .v_input{
