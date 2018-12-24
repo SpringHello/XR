@@ -4,11 +4,12 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
       <my-carousel-item class="carousel-item">
-          <div class="dan-banner" @click="push('/ruicloud/sceneList')">
-            <div class="wrap">
-              <div class="left">
-              </div>
-              
+          <div class="dan-banner" @click="push('/ruicloud/wonderfulDay')">
+            <div class="wraps">
+              <img src="../../assets/img/home/dan_banner.png">
+              <div class="w_button">
+                <span>立即参与</span>
+               </div> 
             </div>
           </div>
         </my-carousel-item>
@@ -122,13 +123,13 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!-- <my-carousel-item class="carousel-item">
           <div @click="push('/ruicloud/AnniversaryActive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="anniversary-active">
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item> -->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
@@ -5066,7 +5067,19 @@
   }
   .dan-banner{
     height: 400px;
-    background:#ff624b url("../../assets/img/home/dan_banner.png") center no-repeat;
+    background:#ff624b ;
+    .wraps{
+      width: 1903px;
+      height: 400px;
+      margin: 0 auto;
+    img{
+      width: 100%;
+      height: 100%;
+      max-width: auto;
+      max-height: auto;
+    }
+    } 
+    
   }
 
   .eightscene {
@@ -5394,4 +5407,23 @@
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
   }
+   .w_button{
+       position: relative;
+      top: -162px;
+      left: 21%;
+        color: rgba(26, 42, 210, 1);
+        font-weight: 500;
+        font-size: 13px;
+        width: 140px;
+        line-height: 43px;
+        letter-spacing:3px;
+        text-align: center;
+        height: 43px;
+        background: rgb(255, 222, 42);
+        // box-shadow: 0px 2px 2px 1px rgb(136, 20, 17);
+        cursor: pointer;
+      }
+      .w_button:hover{
+        box-shadow: 0px 2px 2px 1px #881411;
+      }
 </style>

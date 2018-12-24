@@ -138,7 +138,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="getDiskcountMv('gpuHost',index)">立即抢购</div>
+                    <div class="host_button" @click="getDiskcountGPU('gpuHost',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -181,7 +181,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="getDiskcountMv('gpuHostMoth',index)">立即抢购</div>
+                    <div class="host_button" @click="getDiskcountGPU('gpuHostMoth',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -219,7 +219,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="getDiskcountMv('objectHost',index)">立即抢购</div>
+                    <div class="host_button" @click="getDickCountOSS('objectHost',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -238,20 +238,20 @@
                     <div class="host_content">
                     <div>
                         <span>请选择宽带</span>
-                        <Select v-model="item.bandwidth" style="width:200px;height:26px;" class="fr-select" @on-change='getVMConfigId("cloudData",index)'>
+                        <Select v-model="item.bandwidth" style="width:200px;" class="fr-select" @on-change='getVMConfigId("cloudData",index)'>
                         <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                         </Select>
                     </div>
                     <div style="margin:10px 0;">
-                        <span>请选择区域</span>
+                        <span style="margin-right:10px;">数据中心</span>
                         <Select v-model="item.zoneId" style="width:200px" class="fr-select">
                         <Option v-for="item in databaseZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                         </Select>
                     </div>
                     <div >
-                        <span>请选择系统</span>
+                        <span>请选择类型</span>
                         <Select v-model="item.system" style="width:200px" class="fr-select">
-                        <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                        <Option v-for="item in hostTwo.databaseTypeList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                         </Select>
                     </div>
                     <div style="margin:10px 0;">
@@ -264,7 +264,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="getDiskcountMv('cloudData',index)">立即抢购</div>
+                    <div class="host_button" @click="getDeductionsDatabase('cloudData',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -549,6 +549,16 @@
           callback()
         }
       }
+      const validaYou = (rule,value,callback) =>{
+        let reg = /^[1-9][0-9]{5}$/
+        if(value == ""){
+          return callback(new Error('请输入邮政编码'))
+        }else if(!reg.test(value)){
+          return callback(new Error('邮政编码格式不正确'))
+        }else{
+          callback();
+        }
+      }
       return{
         hostTwo:{
           //带宽
@@ -606,6 +616,21 @@
               value:'3'
             }
           ],
+          databaseTypeList: [
+            {
+              name: 'Mysql 单实例',
+              value: 'mysql'
+            }, {
+              name: 'Redis分布式缓存服务',
+              value: 'redis'
+            }, {
+              name: 'PostgreSQL 单实例',
+              value: 'postgresql'
+            }, {
+              name: 'MongoDB 单实例',
+              value: 'mongo'
+            }
+        ],
         },
 
         allObjcet:{
@@ -792,7 +817,7 @@
               rootDisk: '40',
               bandwidth: '2',
               zoneId: '',
-              system: 'linux',
+              system: 'mysql',
               duration: '6',
               originalPrice: '1131.16',
               currentPrice: '226.30',
@@ -806,7 +831,7 @@
               rootDisk: '40',
               bandwidth: '2',
               zoneId: '',
-              system: 'linux',
+              system: 'mysql',
               duration: '6',
               originalPrice: '1131.16',
               currentPrice: '226.30',
@@ -820,7 +845,7 @@
               rootDisk: '40',
               bandwidth: '2',
               zoneId: '',
-              system: 'linux',
+              system: 'mysql',
               duration: '6',
               originalPrice: '1131.16',
               currentPrice: '226.30',
@@ -870,7 +895,7 @@
             {required: true, validator: validaDistrict}
           ],
           postCode: [
-            {required: true, message: '请输入邮编'}
+            {required: true,validator:validaYou}
           ],
           tel: [
             {required: true, message: '请输入手机号码'},
@@ -1043,7 +1068,7 @@
                 params:{
                     vmConfigId:obj.vmConfigId,
                     osType :obj.system,
-                    zoneid  :obj.zoneId
+                    defzoneid :obj.zoneId
                 }
             }).then(res =>{
                 if(res.status == 200 && res.data.status == 1){
@@ -1059,6 +1084,80 @@
             this.showModal.notLoginModal=true;
         }
     },
+
+    //  云数据库生成订单
+    getDeductionsDatabase(key,index){
+      if(this.$store.state.userInfo){
+             let obj = this.allObjcet[key][index];
+            axios.get('database/getDeductionsDatabase.do',{
+                params:{
+                    vmConfigId:obj.vmConfigId,
+                    dbVersion :obj.system,
+                    defzoneid :obj.zoneId
+                }
+            }).then(res =>{
+                if(res.status == 200 && res.data.status == 1){
+                    this.$Message.success('创建订单成功')
+                    this.$router.push('order')
+                }else{
+                     this.$message.info({
+                        content: res.data.message
+                    })
+                }   
+            })
+        }else{
+            this.showModal.notLoginModal=true;
+        }
+    },
+
+     //  云数据库生成订单
+    getDickCountOSS(key,index){
+      if(this.$store.state.userInfo){
+             let obj = this.allObjcet[key][index];
+            axios.post('ruiradosPrice/getDickCountOSS.do',{
+                    OOSConfigId:obj.vmConfigId,
+                    zoneId :obj.zoneId
+            }).then(res =>{
+                if(res.status == 200 && res.data.status == 1){
+                    this.$Message.success('创建订单成功')
+                    this.$router.push('order')
+                }else{
+                     this.$message.info({
+                        content: res.data.message
+                    })
+                }   
+            })
+        }else{
+            this.showModal.notLoginModal=true;
+        }
+    },
+
+    //  云数据库生成订单
+    getDiskcountGPU(key,index){
+      if(this.$store.state.userInfo){
+             let obj = this.allObjcet[key][index];
+            axios.get('activity/getDiskcountGPU.do',{
+              params:{
+                vmConfigId:obj.vmConfigId,
+                osType :obj.system,
+                defzoneid :obj.zoneId
+              }
+            }).then(res =>{
+                if(res.status == 200 && res.data.status == 1){
+                    this.$Message.success('创建订单成功')
+                    this.$router.push('order')
+                }else{
+                     this.$message.info({
+                        content: res.data.message
+                    })
+                }   
+            })
+        }else{
+            this.showModal.notLoginModal=true;
+        }
+    },
+
+
 
       startLotteryMouseDown() {
         if (!this.lotteryDisabled) {
@@ -1372,21 +1471,13 @@
       .w_button:hover{
         box-shadow: 0px 2px 2px 1px #881411;
       }
-      .pt_denier{
-        font-size: 48px;
-        font-weight:600;
-        background: linear-gradient(rgba(255, 251, 227, 1),rgba(255, 200, 75, 1));
-        -webkit-background-clip: text;
-        color: transparent;
-        text-shadow:1px 1px 1px  #000;
-      }
       .pt_white{
         color: #FFFFFF;
         font-family: PingFangSC-Medium;
         font-size: 18px;
         margin: 12px 0 48px 0;
         span{
-          text-shadow: 2px 1px 4px  #000;
+          text-shadow: 2px 1px 4px  #881411;
           font-style:italic;
         }
       }
