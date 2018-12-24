@@ -1443,11 +1443,11 @@
 </script>
 
 <style lang="less" scoped>
+  p,span{
+    font-family: 'Microsoft YaHei';
+  }
   .w_header{
-    background: linear-gradient(left,rgb(233, 40, 49),rgb(250, 107, 53));
-    background:-webkit-linear-gradient(left,rgb(233, 40, 49),rgb(250, 107, 53));
-    background: -moz-linear-gradient(left,rgb(233, 40, 49),rgb(250, 107, 53));
-    background: -o-linear-gradient(left,rgb(233, 40, 49),rgb(250, 107, 53));
+    background: #ff624b url('../../../assets/img/active/doubleDenier/banner_bg.png') no-repeat center;
     height: 400px;
     .header_center{
       margin: 0 auto;
