@@ -5,7 +5,7 @@
         <div class="header_center">
             <div style="display:inline-block;position:relative;top: 91px;left: 102px;">
             <img src="../../../assets/img/active/doubleDenier/dbFont.png">
-            <p class="pt_white" style="margin-top:0;">选择新睿云，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
+            <p class="pt_white" style="margin-top:0;">免费新体验，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
             <div class="w_button" @click="loginInfo">
                 <span>登录即可抽奖</span>
             </div>
@@ -23,21 +23,21 @@
         </div>
         <div class="gift_three">
             <img  src="../../../assets/img/active/doubleDenier/0_da.png">
-            <span @click="$router.push({path:'active_1'})">查看详情</span>
+            <a :href="'/ruicloud/fractive'" target="_blank">查看详情</a>
         </div>
         <div class="gift_four">
             <img  src="../../../assets/img/active/doubleDenier/38_da.png">
-            <span @click="$router.push({path:'active_1'})">立即领取</span>
+            <a :href="'/ruicloud/active_1'" target="_blank">立即领取</a>
         </div>
         </div>
         <div class="w_center" ref="center">
         <div class="w_give">
             <p class="w_pFont">活动首购 好礼相送</p>
-            <p style="color:#222222;font-size:16px;margin-bottom:40px;">首购享好礼，在此活动中购买任意产品即可领取 “京东E卡（30元）”一张！</p>
+            <p style="color:#222222;font-size:16px;margin-bottom:40px;font-family: 'Microsoft YaHei'">首购享好礼，在此活动中购买任意产品即可领取 “京东E卡（30元）”一张！</p>
             <img src="../../../assets/img/active/doubleDenier/JDE.png">
             <span @click="getJDCARD">点击领取</span>
         </div>
-        <div class="w_draw" >
+        <div class="w_draw" ref="draw">
             <div style="position: relative;top:54px;" @click="showModal.LotteryModal=true">
             <img src="../../../assets/img/active/doubleDenier/colorFont.png">
             </div>
@@ -49,57 +49,59 @@
         </div>
         <div>
         <div class="w_shoping" ref="shoping">
-            <p class="w_pFont">爆款高配 限时特惠</p>
-            <p style="color:#222222;font-size:16px;margin-bottom:31px;">首购享好礼，在此活动中购买任意产品即可领取一张“京东E卡（30元）” ！<span class="w_span" @click="showModal.discountRuleModal=true">活动规则</span></p>
-            <div class="w_special">
-            <div>
-                <p class="w_pFont">云服务器特惠专场</p>
-                <p style="color:#222222;font-size:16px;">新老用户可无条件领取38元体验券，即领即用，最高可用152个小时 <span class="w_span" @click="$router.push({path:'active_1'})">立即领取</span></p>
-                <div class="w_host">
-                <div v-for="(item,index) in allObjcet.cloudHost" :key="index">
-                    <div class="host_title">
-                    <p style="font-size:24px;">云服务器</p>
-                    <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">{{item.cpu}}核</span>CPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
-                    </div>
-                    <div class="host_content">
-                    <div>
-                        <span>请选择宽带</span>
-                        <Select v-model="item.bandwidth" style="width:200px;height:26px;" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
-                        <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                        </Select>
-                    </div>
-                    <div style="margin:10px 0;">
-                        <span>请选择区域</span>
-                        <Select v-model="item.zoneId" style="width:200px" class="fr-select">
-                        <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                        </Select>
-                    </div>
-                    <div >
-                        <span>请选择系统</span>
-                        <Select v-model="item.system" style="width:200px" class="fr-select" >
-                        <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                        </Select>
-                    </div>
-                    <div style="margin:10px 0;">
-                        <span>请选择时长</span>
-                        <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
-                        <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                        </Select>
-                    </div>
-                    <div style="text-align:left;margin:26px 0 22px 0;">
-                        <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
-                        <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
-                    </div>
-                    <div class="host_button" @click="getDiskcountMv('cloudHost',index)">立即抢购</div>
-                    </div>
-                </div>
-                </div>
-            </div>
+    
+             <p class="w_pFont">爆款高配 限时特惠</p>
+              <p style="color:#222222;font-size:16px;margin-bottom:31px;">云服务器、GPU云服务器超低折扣，首购更有好礼相送 <span class="w_span" @click="showModal.discountRuleModal=true">活动规则</span></p>
+              <div class="w_special">
+              <div>
+                  <p class="w_pfn" >云服务器特惠专场</p>
+                  <p style="color:#222222;font-size:16px;">云服务器（1核1G）免费体验，最高可用152小时 <a class="w_span" :href="'/ruicloud/active_1'" target="_blank">立即领取</a></p>
+                  <div class="w_host">
+                  <div v-for="(item,index) in allObjcet.cloudHost" :key="index">
+                      <div class="host_title">
+                      <p style="font-size:24px;">云服务器</p>
+                      <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">{{item.cpu}}核</span>CPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
+                      </div>
+                      <div class="host_content">
+                      <div>
+                          <span>请选择宽带</span>
+                          <Select v-model="item.bandwidth" style="width:200px;" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
+                          <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                          </Select>
+                      </div>
+                      <div style="margin:10px 0;">
+                          <span>请选择区域</span>
+                          <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                          <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                          </Select>
+                      </div>
+                      <div >
+                          <span>请选择系统</span>
+                          <Select v-model="item.system" style="width:200px" class="fr-select" >
+                          <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                          </Select>
+                      </div>
+                      <div style="margin:10px 0;">
+                          <span>请选择时长</span>
+                          <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
+                          <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                          </Select>
+                      </div>
+                      <div style="text-align:left;margin:26px 0 22px 0;">
+                          <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
+                          <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
+                      </div>
+                      <div class="host_button" @click="getDiskcountMv('cloudHost',index)">立即抢购</div>
+                      </div>
+                  </div>
+                  </div>
+              </div>
 
+           
             <!--  -->
             <div>
-                <p class="w_pFont" style="color:#4E49F3">GPU云服务器特惠专场</p>
-                <p style="color:#222222;font-size:16px;">GPU云服务器（16核64G P40显卡）免费体验，最高可用3小时 <span class="w_span" @click="$router.push({path:'active_1'})">立即领取</span></p>
+                <p class="w_pfn" style="color:#4E49F3">GPU云服务器特惠专场</p>
+                <p style="color:#222222;font-size:16px;">GPU云服务器（16核64G P40显卡）免费体验，最高可用3小时 <a class="w_span" :href="'/ruicloud/active_1'" target="_blank">立即领取</a></p>
                 <div class="w_host">
                 <div v-for="(item,index) in allObjcet.gpuHost" :key="index">
                     <div class="gpu_title">
@@ -128,7 +130,7 @@
                     </div>
                     <div style="margin:10px 0;">
                         <span>请选择时长</span>
-                        <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("gpuHost",index)'>
+                        <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("gpuHost",index)' disabled>
                         <Option v-for="item in hostTwo.gpuDay" :value="item.value" :key="item.value">{{ item.name }}</Option>
                         </Select>
                     </div>
@@ -136,7 +138,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button">立即抢购</div>
+                    <div class="host_button" @click="gpuHostMoth('gpuHost',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -179,7 +181,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button">立即抢购</div>
+                    <div class="host_button" @click="gpuHostMoth('gpuHostMoth',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -192,8 +194,8 @@
             <p style="color:#222222;font-size:16px;margin-bottom:31px;">对象存储、云数据库新品上线享折扣，欢迎购买体验  </p>
             <div class="w_special">
             <div>
-                <p class="w_pFont">对象存储特惠专场</p>
-                <p style="color:#222222;font-size:16px;">对象存储（100G存储包+100G下行流量）免费体验，最长可用1个月  <span class="w_span" @click="$router.push({path:'active_1'})">立即领取</span></p>
+                <p class="w_pfn">对象存储特惠专场</p>
+                <p style="color:#222222;font-size:16px;">对象存储（100G存储包+100G下行流量）免费体验，最长可用1个月  <a class="w_span" :href="'/ruicloud/active_1'" target="_blank">立即领取</a></p>
                 <div class="w_host">
                 <div v-for="(item,index) in allObjcet.objectHost" :key="index">
                     <div class="host_title">
@@ -217,7 +219,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button">立即抢购</div>
+                    <div class="host_button" @click="gpuHostMoth('objectHost',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -225,8 +227,8 @@
 
             <!--  -->
             <div>
-                <p class="w_pFont">云数据库特惠专场</p>
-                <p style="color:#222222;font-size:16px;">云数据库（1核1G）免费体验，最高可用97小时   <span class="w_span" @click="$router.push({path:'active_1'})">立即领取</span></p>
+                <p class="w_pfn">云数据库特惠专场</p>
+                <p style="color:#222222;font-size:16px;">云数据库（1核1G）免费体验，最高可用97小时   <a class="w_span" :href="'/ruicloud/active_1'" target="_blank">立即领取</a></p>
                 <div class="w_host">
                 <div v-for="(item,index) in allObjcet.cloudData" :key="index">
                     <div class="host_title">
@@ -262,7 +264,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button">立即领取</div>
+                    <div class="host_button" @click="gpuHostMoth('cloudData',index)">立即抢购</div>
                     </div>
                 </div>
                 </div>
@@ -283,17 +285,17 @@
       <div class="w_header">
         <div class="header_center">
           <div style="display:inline-block;position:relative;top: 91px;left: 102px;">
-            <p class="pt_denier">双旦同庆，钜惠上云</p>
-            <p class="pt_white">选择新睿云，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
-            <div class="w_button">
-              <span @click="getVMConfigId">登录即可抽奖</span>
+              <img src="../../../assets/img/active/doubleDenier/dbFont.png">
+            <p class="pt_white" style="margin-top:0;">免费新体验，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
+            <div class="w_button" @click="loginInfo">
+              <span >登录即可抽奖</span>
             </div>
           </div>
         </div>
       </div>
       <div class="winning-record">
         <h3>我的奖品</h3>
-        <p>温馨提示：线上奖品可至个人中心查看；线下实物奖品，请先完善收货信息，我们将于2019.1.15日统一寄出；</p>
+        <p>温馨提示：线上奖品可至个人中心查看；线下实物奖品，请尽快完善收货信息，我们将在发放奖品日统一寄出  <span class="w_span" @click="showModal.luckDrawRuleModal=true">抽奖规则</span></p>
         <div class="records">
           <ul class="records-title">
             <li>奖品</li>
@@ -464,7 +466,7 @@
             </div>
             <div class="lottery-particulars">
               <h3 style="margin-top: 40px;font-size: 22px;color: #FF3000">今日中奖详情 <span
-                style="cursor: pointer;color: #FF3000;font-size:14px;position: absolute;right:0;top:25%">我的奖品</span>
+                style="cursor: pointer;color: #FF3000;font-size:14px;position: absolute;right:0;top:25%" @click.stop="showModal.LotteryModal=false,winningRecordShow = true">我的奖品</span>
               </h3>
               <div class="win-list">
                 <ul class="win-content" :style="{top}">
@@ -508,17 +510,6 @@
       </div>
     </transition>
 
-    <transition name="fade">
-      <div class="overlay" @click.stop="showModal.welcome=false" v-if="showModal.welcome">
-        <div class="welcome" @click.stop="showModal.welcome=false">
-          <img src="../../../assets/img/active/doubleDenier/dd-banner9.png"/>
-          <img src="../../../assets/img/active/doubleDenier/dd-banner10.png"/>
-          <img src="../../../assets/img/active/doubleDenier/dd-banner11.png"/>
-          <img src="../../../assets/img/active/doubleDenier/dd-banner12.png"/>
-          <img src="../../../assets/img/active/doubleDenier/dd-icon1.png"/>
-        </div>
-      </div>
-    </transition>
   </div>
 
 </template>
@@ -914,12 +905,18 @@
       this.getObjStorageZoneList();
       this.getDatabaseZoneList();
       this.getGPUZoneList();
-      this.getAwardList()
-      this.getOtherWinningInfo()
+      this.getAwardList();
+      this.getOtherWinningInfo();
+    
       //  需要登录才能调用的接口
       if (this.$store.state.userInfo) {
-        this.getLotteryNumber()
-        this.getPersonalWinningInfo()
+        for(let key in this.allObjcet){
+          for(let i =0;i<this.allObjcet[key].length;i++){
+            this.getVMConfigId(key,i);
+          }
+        }
+        this.getLotteryNumber();
+        this.getPersonalWinningInfo();
       }
     },
     methods:{
@@ -1026,7 +1023,7 @@
                         params:{
                             zoneId:this.allObjcet[key][index].zoneId,
                             vmConfigId :this.allObjcet[key][index].vmConfigId,
-                            month:this.allObjcet[key][index].duration
+                            month:key == 'gpuHost'?'':this.allObjcet[key][index].duration
                         }
                     }).then(res =>{
                         if(res.status == 200 && res.data.status == 1){
@@ -1276,7 +1273,7 @@
           if(this.$store.state.userInfo){
               this.$Message.info('您已经登录了');
           }else{
-              this.showModal.notLoginModal=true;
+              this.$LR({type: 'login'})
           }
       },
       jumpCnter(name){
@@ -1324,6 +1321,15 @@
       next()
     },
     mounted() {
+      window.addEventListener('scroll',()=>{
+       let scrolltop= document.documentElement.scrollTop ||document.body.scrollTop;
+       if(scrolltop <460){
+         this.$refs.draw.style = 'position:absolute'
+       }else{
+          this.$refs.draw.style='position:fixed;';
+       }
+      })
+
       this.moveTimer = setInterval(() => {
         if (this.activeIndex < this.winList.length - 3) {
           this.activeIndex += 1;
@@ -1332,7 +1338,6 @@
           this.winList = this.winList.concat(this.winList)
         }
       }, 1000);
-      this.showModal.welcome = true
     },
   }
 
@@ -1414,9 +1419,9 @@
       display: inline-block;
       width: 198px;
       height: 195px;
-      top: -449px;
-      position: relative;
-      left: 474px;
+      top: 20%;
+      position: absolute;
+      left:80%;
       background: url('../../../assets/img/active/doubleDenier/back.png') no-repeat;
       cursor: pointer;
       .draw_span{
@@ -1432,6 +1437,7 @@
         }
       }
       img:hover{
+        margin-top: 10px;
         width: 45%;
       }
     }
@@ -1506,7 +1512,9 @@
       }
     }
   }
-
+  a:hover{
+    text-decoration: underline;
+  }
   .w_other{
     margin-top: 40px;
     text-align: center;
@@ -1561,6 +1569,8 @@
 
   .w_bottom{
     text-align: center;
+    max-width: 1980px;
+    margin: 0 auto;
     margin-top: 53px;
     background: url(../../../assets/img/active/doubleDenier/bottom_bg.png) no-repeat;
     .bottom_more{
@@ -1579,13 +1589,18 @@
     }
   }
   .w_pFont{
-    color:#FF3000;font-size:32px;font-weight:550;line-height:72px;
+    color:#FF3000;font-size:32px;font-weight:550;line-height:72px;font-family: 'Microsoft YaHei';
+  }
+   .w_pfn{
+    color:#FF3000;font-size:30px;line-height:72px;font-family: 'Microsoft YaHei';
   }
   .w_span{
     color:#FF3000;
     font-size: 16px;
-    text-decoration: underline;
     cursor: pointer;
+  }
+  .w_span:hover{
+    text-decoration: underline;
   }
 
   .w_gift {
@@ -1599,12 +1614,13 @@
       padding: 6px 7px;
       width: 295px;
       height: 138px;
-      background: url('../../../assets/img/active/doubleDenier/li_da.png') no-repeat;
+      // background: url('../../../assets/img/active/doubleDenier/li_da.png') no-repeat;
       background-size: 100% 100%;
       -moz-background-size: 100% 100%;
       img {
         width: 265px;
         height: 124px;
+        transition:  all 0.1s linear;
       }
       span {
         position: relative;
@@ -1632,12 +1648,13 @@
       padding: 6px 7px;
       width: 295px;
       height: 138px;
-      background: url('../../../assets/img/active/doubleDenier/zhe_da.png') no-repeat;
+      // background: url('../../../assets/img/active/doubleDenier/zhe_da.png') no-repeat;
       background-size: 100% 100%;
       -moz-background-size: 100% 100%;
       img {
         width: 265px;
         height: 124px;
+        transition:  all 0.1s linear;
       }
       span {
         position: relative;
@@ -1665,22 +1682,23 @@
       padding: 6px 7px;
       width: 295px;
       height: 138px;
-      background: url('../../../assets/img/active/doubleDenier/0_da.png') no-repeat;
+      // background: url('../../../assets/img/active/doubleDenier/0_da.png') no-repeat;
       background-size: 100% 100%;
       -moz-background-size: 100% 100%;
       img {
         width: 265px;
         height: 124px;
+        transition:  all 0.1s linear;
       }
-      span {
+      a {
         position: relative;
-        top: -48px;
+        top: -51px;
         font-size: 14px;
         color: #FFFFFF;
-        left: 17px;
+        left: 13px;
         cursor: pointer;
       }
-      span:hover{
+      a:hover{
           text-decoration: underline;
       }
     }
@@ -1689,8 +1707,8 @@
             width: 100%;
             height: 130px;
         }
-          span{
-            top: -51px;
+          a{
+            top: -54px;
         }
     }
     .gift_four {
@@ -1698,22 +1716,23 @@
       padding: 6px 7px;
       width: 295px;
       height: 138px;
-      background: url('../../../assets/img/active/doubleDenier/38_da.png') no-repeat;
+      // background: url('../../../assets/img/active/doubleDenier/38_da.png') no-repeat;
       background-size: 100% 100%;
       -moz-background-size: 100% 100%;
       img {
         width: 265px;
         height: 124px;
+        transition:  all 0.1s linear;
       }
-      span {
+      a {
         position: relative;
-        top: -48px;
+        top: -51px;
         font-size: 14px;
         color: #FFFFFF;
-        left: 13px;
+        left: 17px;
         cursor: pointer;
       }
-      span:hover{
+      a:hover{
           text-decoration: underline;
       }
     }
@@ -1722,8 +1741,8 @@
             width: 100%;
             height: 130px;
         }
-          span{
-            top: -51px;
+          a{
+            top: -54px;
         }
     }
 
@@ -2000,89 +2019,9 @@
         }
       }
     }
-    .welcome {
-      cursor: pointer;
-      margin: 0 auto;
-      top: 10%;
-      height: 500px;
-      width: 729px;
-      position: relative;
-      > img {
-        position: absolute;
-        transition: all 2s linear; /*图片放大过程的时间*/
-      }
-      img:nth-child(1) {
-        animation-duration: 1s;
-        animation-name: slidein_1;
-      }
-      img:nth-child(2) {
-        animation-duration: 1s;
-        animation-name: slidein_2;
-        left: 10%;
-        top: 0%;
-      }
-      img:nth-child(3) {
-        transform: scale(0);
-        animation-fill-mode: forwards;
-        animation-delay: 1s;
-        animation-duration: .8s;
-        animation-name: slidein_3;
-        left: 17%;
-        top: 0%;
-      }
-      img:nth-child(4) {
-        transform: scale(0);
-        animation-fill-mode: forwards;
-        animation-delay: 1s;
-        animation-duration: .8s;
-        animation-name: slidein_4;
-        left: 45%;
-        top: 93%;
-      }
-      img:nth-child(5) {
-        right: 0;
-      }
-    }
+    
   }
 
-  @keyframes slidein_1 {
-    from {
-      transform: scale(0.2);
-    }
-    to {
-      transform: scale(1);
-    }
-  }
-
-  @keyframes slidein_2 {
-    from {
-      transform: scale(0.2);
-    }
-    to {
-      transform: scale(1);
-    }
-  }
-
-  @keyframes slidein_3 {
-    0% {
-      transform: scale(0);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  @keyframes slidein_4 {
-    0% {
-      transform: scale(0);
-    }
-    75% {
-      transform: scale(1.4);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
 
   .modal1 {
     width: 600px;

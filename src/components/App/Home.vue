@@ -693,6 +693,19 @@
         <Button type="primary" @click="getHost_ok">确认</Button>
       </div>
     </Modal>
+
+    <!-- 双旦活动弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.welcome=false" v-if="showModal.welcome">
+        <div class="welcome">
+          <img src="../../assets/img/active/doubleDenier/dd-banner9.png" @click="$router.push({path:'wonderfulDay'})"/>
+          <img src="../../assets/img/active/doubleDenier/dd-banner10.png" @click="$router.push({path:'wonderfulDay'})"/>
+          <img src="../../assets/img/active/doubleDenier/dd-banner11.png" @click="$router.push({path:'wonderfulDay'})"/>
+          <img src="../../assets/img/active/doubleDenier/dd-banner12.png" @click="$router.push({path:'wonderfulDay'})"/>
+          <img src="../../assets/img/active/doubleDenier/dd-icon1.png" @click.stop="showModal.welcome = false"/>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -747,7 +760,8 @@
           payDefeatedModal: false,
           paySuccessModal: false,
           weChatRechargeModal: false,
-          orderConfirmationModal: false
+          orderConfirmationModal: false,
+          welcome:false
         },
         // 标记当前场景信息
         index1: '',
@@ -2859,6 +2873,7 @@
     },
     mounted() {
       // 八大场景切换背景初始化
+      this.showModal.welcome = true;
       this.menuselected(0)
       // echarts.registerMap('china', china)
       // this.myChart = echarts.init(document.getElementById('echarts'))
@@ -2902,6 +2917,7 @@
       })
       this.scrollFn()
       window.addEventListener('scroll', this.scrollFn)
+      
     },
     created() {
       this.getnews()
@@ -5220,5 +5236,149 @@
       font-weight: 400;
       color: rgba(102, 102, 102, 1);
     }
+  }
+
+ .overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(55, 55, 55, 0.6);
+    height: 100%;
+    z-index: 1000;
+    .all-modal {
+      position: relative;
+      margin: 0 auto;
+      top: 10%;
+      background: rgba(255, 255, 255, 1);
+      text-align: center;
+      font-size: 16px;
+      &.lottery {
+        top: 100px;
+      }
+      > .header {
+        height: 80px;
+        line-height: 70px;
+        font-size: 24px;
+        font-family: MicrosoftYaHei;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 1);
+        position: relative;
+        > i {
+          color: rgba(255, 255, 255, 1);
+          cursor: pointer;
+          position: absolute;
+          right: 10px;
+          top: -10px;
+          transform: rotate(45deg);
+          &:before {
+            content: '';
+            display: inline-block;
+            height: 16px;
+            width: 2px;
+            background: #FFF;
+            transform: translateX(9px);
+          }
+          &:after {
+            content: '';
+            display: inline-block;
+            height: 2px;
+            width: 16px;
+            background: #FFF;
+            transform: translateY(-7px);
+          }
+        }
+      }
+    }
+      .welcome {
+      cursor: pointer;
+      margin: 0 auto;
+      top: 20%;
+      height: 500px;
+      width: 729px;
+      position: relative;
+      > img {
+        position: absolute;
+        transition: all 2s linear; /*图片放大过程的时间*/
+      }
+      img:nth-child(1) {
+        animation-duration: 1s;
+        animation-name: slidein_1;
+      }
+      img:nth-child(2) {
+        animation-duration: 1s;
+        animation-name: slidein_2;
+        left: 10%;
+        top: 0%;
+      }
+      img:nth-child(3) {
+        transform: scale(0);
+        animation-fill-mode: forwards;
+        animation-delay: 1s;
+        animation-duration: .8s;
+        animation-name: slidein_3;
+        left: 17%;
+        top: 0%;
+      }
+      img:nth-child(4) {
+        transform: scale(0);
+        animation-fill-mode: forwards;
+        animation-delay: 1s;
+        animation-duration: .8s;
+        animation-name: slidein_4;
+        left: 45%;
+        top: 93%;
+      }
+      img:nth-child(5) {
+        right: 0;
+      }
+    }
+  }
+
+    @keyframes slidein_1 {
+    from {
+      transform: scale(0.2);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slidein_2 {
+    from {
+      transform: scale(0.2);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slidein_3 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slidein_4 {
+    0% {
+      transform: scale(0);
+    }
+    75% {
+      transform: scale(1.4);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+    .fade-enter-active, .fade-leave-active {
+    transition: opacity .2s;
+  }
+
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
   }
 </style>
