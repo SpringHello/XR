@@ -929,6 +929,7 @@
       }
     },
     created() {
+      console.log(new BMap.Map("container"))
     },
     mounted() {
     },
