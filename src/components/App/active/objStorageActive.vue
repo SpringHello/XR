@@ -732,7 +732,7 @@ export default {
       height: 45px;
       background-color: #4990e2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #ffffff;
       letter-spacing: 0.83px;
