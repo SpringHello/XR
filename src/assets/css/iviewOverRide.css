@@ -134,47 +134,64 @@ div.modal-header-border {
   font-size: 12px;
 }
 
-/* 公共样式库 */
+/* 公共样式 */
+
 .btnnormal {
   border: #2a99f2 solid 1px;
   color: #2a99f2
 }
-
+/* 字体大小 */
 .f24 {
   font-size: 24px;
 }
-
 .f16 {
   font-size: 16px;
 }
-
+/* 字体样式 */
+.fsn {
+  font-style: normal;
+}
+/* 字体颜色 */
 .bluetext {
   color: #2d8cf0;
 }
-
-.mr10 {
-  margin-right: 10px;
-}
-
 .orange {
-  color: #F56A00
+  color: #FF392A;
 }
-
 .yellow {
   color: #FFBF00;
 }
-
+/* margin */
 .mt10 {
   margin-top: 10px;
 }
-
+.mb10 {
+  margin-bottom: 10px;
+}
 .mb20 {
   margin-bottom: 20px;
 }
-
+.mb30 {
+  margin-bottom: 30px;
+}
+.ml10 {
+  margin-left: 10px;
+}
+.mr10 {
+  margin-right: 10px;
+}
+/* 行高 */
 .lh24 {
   line-height: 24px;
 }
+/* 浮动 */
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+/* 公共样式结束 */
 
 .ivu-form-item-label {
   display: inline-block;
