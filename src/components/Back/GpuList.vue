@@ -1033,9 +1033,10 @@
           }).then(res => {
             if(res.status == 200 && res.data.status == 1){
               this.$Message.success(res.data.message);
-              this.showModal.publicIPHint = false;
+              this.showModal.renew = false;
+              this.$router.push({path:'order'});
             }else {
-              this.showModal.publicIPHint = false;
+              this.showModal.renew = false;
               this.$Modal.warning({
                 content:res.data.message
               })

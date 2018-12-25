@@ -1404,6 +1404,15 @@
             }else{
                 this.showModal.notLoginModal=true;
             }
+        },
+
+        scrolltop(){
+          let scrolltop= document.documentElement.scrollTop ||document.body.scrollTop;
+            if(scrolltop <460){
+              this.$refs.draw.style = 'position:absolute'
+            }else{
+              this.$refs.draw.style ='position:fixed;';
+            }
         }
     },
     computed: {
@@ -1418,18 +1427,12 @@
       }
     },
     beforeRouteLeave(to, from, next) {
+      removeEventListener('scroll',this.scrolltop);
       clearInterval(this.moveTimer)
       next()
     },
     mounted() {
-      window.addEventListener('scroll',() =>{
-       let scrolltop= document.documentElement.scrollTop ||document.body.scrollTop;
-       if(scrolltop <460){
-         this.$refs.draw.style = 'position:absolute'
-       }else{
-         this.$refs.draw.style ='position:fixed;';
-       }
-      })
+      window.addEventListener('scroll',this.scrolltop);
 
       this.moveTimer = setInterval(() => {
         if (this.activeIndex < this.winList.length - 3) {
