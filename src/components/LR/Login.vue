@@ -5,11 +5,11 @@
         <div class="banner">
           <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('fractive')" class="fr-active">
+              <div @click="$router.push('wonderfulDay')" class="aa-active">
               </div>
             </my-carousel-item>
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('wonderfulDay')" class="aa-active">
+              <div @click="$router.push('fractive')" class="fr-active">
               </div>
             </my-carousel-item>
           </my-carousel>

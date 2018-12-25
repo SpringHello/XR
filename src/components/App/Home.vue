@@ -9,7 +9,7 @@
               <img src="../../assets/img/home/dan_banner.png">
               <div class="w_button">
                 <span>立即参与</span>
-               </div> 
+               </div>
             </div>
           </div>
         </my-carousel-item>
@@ -2882,8 +2882,10 @@
       }
     },
     mounted() {
-      // 八大场景切换背景初始化
-      this.showModal.welcome = true;
+      if(!sessionStorage.getItem('welcome')){
+        this.showModal.welcome = true
+        sessionStorage.setItem('welcome','1')
+      }
       this.menuselected(0)
       // echarts.registerMap('china', china)
       // this.myChart = echarts.init(document.getElementById('echarts'))
@@ -2927,7 +2929,7 @@
       })
       this.scrollFn()
       window.addEventListener('scroll', this.scrollFn)
-      
+
     },
     created() {
       this.getnews()
@@ -5080,8 +5082,8 @@
       max-width: auto;
       max-height: auto;
     }
-    } 
-    
+    }
+
   }
 
   .eightscene {
