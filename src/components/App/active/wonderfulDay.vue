@@ -49,7 +49,7 @@
         </div>
         <div>
         <div class="w_shoping" ref="shoping">
-    
+
              <p class="w_pFont">爆款高配 限时特惠</p>
               <p style="color:#222222;font-size:16px;margin-bottom:31px;">云服务器、GPU云服务器超低折扣，首购更有好礼相送 <span class="w_span" @click="showModal.discountRuleModal=true">活动规则</span></p>
               <div class="w_special">
@@ -97,7 +97,7 @@
                   </div>
               </div>
 
-           
+
             <!--  -->
             <div>
                 <p class="w_pfn" style="color:#4E49F3">GPU云服务器特惠专场</p>
@@ -550,7 +550,7 @@
         }
       }
       const validaYou = (rule,value,callback) =>{
-        let reg = /^[1-9][0-9]{5}$/
+        let reg = /^[0-9][0-9]{5}$/
         if(value == ""){
           return callback(new Error('请输入邮政编码'))
         }else if(!reg.test(value)){
@@ -926,7 +926,7 @@
       }
     },
     created(){
-      
+
       this.getAwardList();
       this.getOtherWinningInfo();
        this.getHostZoneList();
@@ -1078,7 +1078,7 @@
                      this.$message.info({
                         content: res.data.message
                     })
-                }   
+                }
             })
         }else{
             this.showModal.notLoginModal=true;
@@ -1103,7 +1103,7 @@
                      this.$message.info({
                         content: res.data.message
                     })
-                }   
+                }
             })
         }else{
             this.showModal.notLoginModal=true;
@@ -1125,7 +1125,7 @@
                      this.$message.info({
                         content: res.data.message
                     })
-                }   
+                }
             })
         }else{
             this.showModal.notLoginModal=true;
@@ -1150,7 +1150,7 @@
                      this.$message.info({
                         content: res.data.message
                     })
-                }   
+                }
             })
         }else{
             this.showModal.notLoginModal=true;
@@ -1383,7 +1383,7 @@
               this.$refs.shoping.scrollIntoView();
           }
       },
-      
+
     //   领取京东30卡
         getJDCARD(){
             if(this.$store.state.userInfo){
@@ -1505,7 +1505,7 @@
     position: relative;
     margin-top: -40px;
     .w_give{
-     
+
       text-align: center;
       vertical-align: top;
       padding-top: 45px ;
@@ -2122,7 +2122,7 @@
         }
       }
     }
-    
+
   }
 
 

@@ -46,10 +46,6 @@ const store = new Vuex.Store({
         if (zone.isdefault == 1) {
           state.zone = zone
         }
-        if (zone.gpuserver == 1) {
-          state.gpuZone = zone
-          break
-        }
       }
     },
     setMsg(state, Msg) {
