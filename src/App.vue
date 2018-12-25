@@ -526,7 +526,7 @@
               {subTitle: '镜像服务', url: '/ruicloud/Phost.htm'},
               {subTitle: 'ESC快照', url: '/ruicloud/Pecss.htm'},
               {subTitle: 'GPU服务器', url: '/ruicloud/Pgpu.htm'},
-              {subTitle: '弹性伸缩', url: '/ruicloud/Pelastic.htm'},
+              {subTitle: '弹性伸缩', url: '/ruicloud/Pelastic'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
             ]
           },
