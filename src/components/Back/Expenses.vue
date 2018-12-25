@@ -844,7 +844,7 @@
           {
             title: '操作',
             render: (h, obj) => {
-              if (obj.row.maketicketover != 1) {
+              if (obj.row.maketicketover == 0) {
                 // 现金券
                 if (obj.row.tickettype == '2') {
                   return h('div', {}, [
