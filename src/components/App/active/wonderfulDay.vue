@@ -37,7 +37,7 @@
             <img src="../../../assets/img/active/doubleDenier/JDE.png">
             <span @click="getJDCARD">点击领取</span>
         </div>
-        <div class="w_draw" id="draw">
+        <div class="w_draw" ref="draw">
             <div style="position: relative;top:54px;" @click="showModal.LotteryModal=true">
             <img src="../../../assets/img/active/doubleDenier/colorFont.png">
             </div>
@@ -1425,9 +1425,9 @@
       window.addEventListener('scroll',() =>{
        let scrolltop= document.documentElement.scrollTop ||document.body.scrollTop;
        if(scrolltop <460){
-        document.getElementById('draw').style = 'position:absolute'
+         this.$refs.draw.style = 'position:absolute'
        }else{
-          document.getElementById('draw').style='position:fixed;';
+         this.$refs.draw.style ='position:fixed;';
        }
       })
 
