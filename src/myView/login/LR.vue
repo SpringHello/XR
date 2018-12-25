@@ -24,7 +24,7 @@
             <img src="./img/LR-vailcode.png">
             <input v-model="loginForm.vailCode" type="vailCode" placeHolder="请输入验证码">
             <img class="kap-img" :src="imgSrc"
-                 @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                 @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </div>
         <button @click="login">登录</button>
@@ -61,7 +61,7 @@
             <input v-model="registerForm.vailCode" type="vailCode" placeHolder="请输入验证码">
             <div class="kap-img-right">
               <img class="kap-img" :src="imgSrc"
-                   @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                   @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
             </div>
           </div>
           <div class="input-box">
@@ -395,7 +395,7 @@
         },
         warning: '',
         registerWarning: '',
-        imgSrc: `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        imgSrc: `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         // 是否同意注册条款
         single: false,
         getCode: '获取验证码',

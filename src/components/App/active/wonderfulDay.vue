@@ -37,7 +37,7 @@
             <img src="../../../assets/img/active/doubleDenier/JDE.png">
             <span @click="getJDCARD">点击领取</span>
         </div>
-        <div class="w_draw" ref="draw">
+        <div class="w_draw" id="draw">
             <div style="position: relative;top:54px;" @click="showModal.LotteryModal=true">
             <img src="../../../assets/img/active/doubleDenier/colorFont.png">
             </div>
@@ -643,8 +643,8 @@
               zoneId: '',
               system: 'linux',
               duration: '6',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '1300.32',
+              currentPrice: '351.09',
               vmConfigId: '50',
               type:'0',
               activityNum:'27'
@@ -657,8 +657,8 @@
               zoneId: '',
               system: 'linux',
               duration: '6',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '2662.32',
+              currentPrice: '718.83',
               vmConfigId: '65',
               type:'0',
               activityNum:'27'
@@ -671,8 +671,8 @@
               zoneId: '',
               system: 'linux',
               duration: '6',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '4324.32',
+              currentPrice: '1167.57',
               vmConfigId: '80',
               type:'0',
               activityNum:'27'
@@ -687,8 +687,8 @@
               zoneId: '',
               system: 'linux',
               duration: '7',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '2442.34',
+              currentPrice: '659.43',
               vmConfigId: '101',
               type:'1',
               serverType:'P100',
@@ -702,8 +702,8 @@
               zoneId: '',
               system: 'linux',
               duration: '7',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '1729.03',
+              currentPrice: '466.84',
               vmConfigId: '116',
               type:'1',
               serverType:'P40',
@@ -717,8 +717,8 @@
               zoneId: '',
               system: 'linux',
               duration: '7',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '1471.1',
+              currentPrice: '397.2',
               vmConfigId: '50',
               type:'1',
               serverType:'P40',
@@ -734,8 +734,8 @@
               zoneId: '',
               system: 'linux',
               duration: '1',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '9141.7',
+              currentPrice: '7313.36',
               vmConfigId: '50',
               type:'0',
               serverType:'P100',
@@ -749,8 +749,8 @@
               zoneId: '',
               system: 'linux',
               duration: '1',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '6424.31',
+              currentPrice: '5139.45',
               vmConfigId: '50',
               type:'0',
               serverType:'P40',
@@ -764,8 +764,8 @@
               zoneId: '',
               system: 'linux',
               duration: '1',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '5441.7',
+              currentPrice: '4353.36',
               vmConfigId: '50',
               type:'0',
               serverType:'P40',
@@ -778,8 +778,8 @@
               flow:'50',
               zoneId: '',
               duration: '6',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '174',
+              currentPrice: '46.98',
               vmConfigId: '50',
               type:'0',
               serviceType:'oss',
@@ -790,8 +790,8 @@
               flow:'100',
               zoneId: '',
               duration: '6',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '348',
+              currentPrice: '93.96',
               vmConfigId: '50',
               type:'0',
               serviceType:'oss',
@@ -802,8 +802,8 @@
               flow:'300',
               zoneId: '',
               duration: '6',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '1044',
+              currentPrice: '281.88',
               vmConfigId: '50',
               type:'0',
               serviceType:'oss',
@@ -819,8 +819,8 @@
               zoneId: '',
               system: 'mysql',
               duration: '6',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '1963.92',
+              currentPrice: '530.26',
               vmConfigId: '50',
               type:'0',
               activityNum:'29'
@@ -833,8 +833,8 @@
               zoneId: '',
               system: 'mysql',
               duration: '6',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '3462.12',
+              currentPrice: '934.77',
               vmConfigId: '50',
               type:'0',
               activityNum:'29'
@@ -847,8 +847,8 @@
               zoneId: '',
               system: 'mysql',
               duration: '6',
-              originalPrice: '1131.16',
-              currentPrice: '226.30',
+              originalPrice: '5290.32',
+              currentPrice: '1428.39',
               vmConfigId: '50',
               type:'0',
               activityNum:'29'
@@ -926,20 +926,20 @@
       }
     },
     created(){
-      this.getHostZoneList();
-      this.getObjStorageZoneList();
-      this.getDatabaseZoneList();
-      this.getGPUZoneList();
+      
       this.getAwardList();
       this.getOtherWinningInfo();
-    
-      //  需要登录才能调用的接口
-      if (this.$store.state.userInfo) {
-        for(let key in this.allObjcet){
+       this.getHostZoneList();
+        this.getObjStorageZoneList();
+        this.getDatabaseZoneList();
+        this.getGPUZoneList();
+          for(let key in this.allObjcet){
           for(let i =0;i<this.allObjcet[key].length;i++){
             this.getVMConfigId(key,i);
           }
         }
+      //  需要登录才能调用的接口
+      if (this.$store.state.userInfo) {
         this.getLotteryNumber();
         this.getPersonalWinningInfo();
       }
@@ -1412,20 +1412,22 @@
       },
       lotteryDisabled() {
         return this.speed != 200
+      },
+      userInfo(){
+        return this.$store.state.userInfo ? this.$store.state.userInfo : null
       }
     },
-    watch: {},
     beforeRouteLeave(to, from, next) {
       clearInterval(this.moveTimer)
       next()
     },
     mounted() {
-      window.addEventListener('scroll',()=>{
+      window.addEventListener('scroll',() =>{
        let scrolltop= document.documentElement.scrollTop ||document.body.scrollTop;
        if(scrolltop <460){
-         this.$refs.draw.style = 'position:absolute'
+        document.getElementById('draw').style = 'position:absolute'
        }else{
-          this.$refs.draw.style='position:fixed;';
+          document.getElementById('draw').style='position:fixed;';
        }
       })
 
@@ -1438,6 +1440,14 @@
         }
       }, 1000);
     },
+    watch:{
+      userInfo(val){
+         if(val){
+          this.getLotteryNumber();
+          this.getPersonalWinningInfo();
+         }
+      }
+    }
   }
 
 </script>
