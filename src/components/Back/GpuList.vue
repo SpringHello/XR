@@ -516,7 +516,7 @@
               title:'计费类型',
               width:70,
               render:(h,params) =>{
-                return h('span',{},params.row.caseType == 1 ?'包年':params.row.caseType == 2 ? '包月' : params.row.caseType == 3 ? '实时' :'')
+                return h('span',{},params.row.caseType == 1 ?'包年':params.row.caseType == 2 ? '包月' : params.row.caseType == 3 ? '实时' :'7天')
               }
             },
             {
