@@ -79,6 +79,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import axios from 'axios'
 export default {
   data () {
     return {
@@ -210,12 +211,16 @@ export default {
     }
   },
   created () {
-
+    this.getPrice()
   },
   mounted () {
-
   },
   methods: {
+    getPrice() {
+      axios.get('domain/getSSLPrice.do',{}).then(Response => {
+
+      })
+    }
 
   },
   computed: {
