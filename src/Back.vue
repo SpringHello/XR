@@ -479,7 +479,7 @@
         })
         for (var zone of this.zoneList) {
           if (zone.zoneid == zoneId) {
-            $store.commit('setZone', zone)
+            $store.commit('setZone', zone);
           }
         }
       },
