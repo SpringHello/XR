@@ -650,75 +650,79 @@
           {
             title: '操作',
             render: (h, object) => {
-              if (object.row.status == 2) {
-                // 创建中
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block'
-                  }
-                }), h('span', {}, '创建中')])
-              } else if (object.row.status == 3) {
-                // 绑定中
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block'
-                  }
-                }), h('span', {}, '绑定中')])
-              } else if (object.row.status == 4) {
-                // 解绑中
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block'
-                  }
-                }), h('span', {}, '解绑中')])
-              } else if (object.row.status == 6) {
-                // 已冻结
-                return h('div', {}, h('span', {}, '已冻结'))
-              } else if (object.row.usetype == 0) {
-                return h('Dropdown', {
-                  props: {
-                    transfer: true
-                  },
-                  on: {
-                    'on-click': (type) => {
-                      this.openBindIPModal(type, object.row, object.row.id)
-                    }
-                  }
-                }, [h('a', {}, ['绑定资源 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
-                  attrs: {
-                    name: 'host'
-                  }
-                }, '云主机'),
-                  h('DropdownItem', {
-                    attrs: {
-                      name: 'gpu'
-                    },
+              if (this.auth) {
+                if (object.row.status == 2) {
+                  // 创建中
+                  return h('div', {}, [h('Spin', {
                     style: {
-                      display: this.hide
+                      display: 'inline-block'
+                    }
+                  }), h('span', {}, '创建中')])
+                } else if (object.row.status == 3) {
+                  // 绑定中
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block'
+                    }
+                  }), h('span', {}, '绑定中')])
+                } else if (object.row.status == 4) {
+                  // 解绑中
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block'
+                    }
+                  }), h('span', {}, '解绑中')])
+                } else if (object.row.status == 6) {
+                  // 已冻结
+                  return h('div', {}, h('span', {}, '已冻结'))
+                } else if (object.row.usetype == 0) {
+                  return h('Dropdown', {
+                    props: {
+                      transfer: true
                     },
-                  }, 'GPU云服务器'),
-                  h('DropdownItem', {
+                    on: {
+                      'on-click': (type) => {
+                        this.openBindIPModal(type, object.row, object.row.id)
+                      }
+                    }
+                  }, [h('a', {}, ['绑定资源 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
                     attrs: {
-                      name: 'NAT'
+                      name: 'host'
                     }
-                  }, 'NAT网关'),
-                  h('DropdownItem', {
-                    attrs: {
-                      name: 'database'
+                  }, '云主机'),
+                    h('DropdownItem', {
+                      attrs: {
+                        name: 'gpu'
+                      },
+                      style: {
+                        display: this.hide
+                      },
+                    }, 'GPU云服务器'),
+                    h('DropdownItem', {
+                      attrs: {
+                        name: 'NAT'
+                      }
+                    }, 'NAT网关'),
+                    h('DropdownItem', {
+                      attrs: {
+                        name: 'database'
+                      }
+                    }, '云数据库')])])
+                } else if (object.row.usetype != 2) {
+                  return h('span', {
+                    style: {
+                      color: '#2d8cf0',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.unbundle(object.row)
+                      }
                     }
-                  }, '云数据库')])])
-              } else if (object.row.usetype != 2) {
-                return h('span', {
-                  style: {
-                    color: '#2d8cf0',
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.unbundle(object.row)
-                    }
-                  }
-                }, '解绑资源')
+                  }, '解绑资源')
+                } else {
+                  return h('span', {}, '----')
+                }
               } else {
                 return h('span', {}, '----')
               }
@@ -872,6 +876,11 @@
       setData(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
+          if (!this.auth) {
+            this.ipData.forEach(item => {
+              item._disabled = true
+            })
+          }
           this.total = response.data.result.total
         }
       },
@@ -1420,7 +1429,7 @@
         this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
           params: {
             brandwith: this.adjustForm.brand,
-            publicIpId: this.select.id
+            publicIpId: this.select ? this.select.id : ''
           }
         }).then(response => {
             if (response.status == 200) {
