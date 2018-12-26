@@ -2,7 +2,7 @@
     <div  :class="wrapClasses" style=" height: 46px;border-radius:4px;">
       <img class="ver_img" :src="icon">
         <div class="ver_select" >
-            <div @click="isShow = !isShow" class="verNumber" :class="[isShow ?'verNumber':'verNumbers']">
+            <div @click.stop="isShow = !isShow" class="verNumber" :class="[isShow ?'verNumber':'verNumbers']">
                 +{{selectValue}}
             </div>
              <transition name="fade"  >
@@ -271,6 +271,9 @@ export default {
           content: '';
           width: 8px;
           height: 8px;
+          position: absolute;
+          left: 31px;
+          top: 4px;
           border: solid #999999;
           border-width: 0 1px 1px 0;
           position: absolute;
@@ -281,6 +284,9 @@ export default {
            content: '';
           width: 8px;
           height: 8px;
+          position: absolute;
+          left: 31px;
+          top: 4px;
           border: solid #999999;
           border-width: 0 1px 1px 0;
           position: absolute;

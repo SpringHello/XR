@@ -150,9 +150,18 @@
   import axios from '@/util/axiosInterceptor'
   import throttle  from 'throttle-debounce/throttle'
   import popk from '../../myView/input/main'
+  const vailAucct = (rule ,value ,callback)=>{
+    let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+    if(value == ''){
+      return callback(new Error('请输入手机号'));
+    }else if(!reg.rest(value)){
+      return callback(new Error('手机号格式不正确'));
+    }else{
+      callback();
+    }
+  }
 
   export default{
-
     data(){
       return {
         imgSrc: 'user/getKaptchaImage.do',
@@ -258,7 +267,7 @@
         },
         ruleValidate:{
           account:[
-            {required:true,message:'请输入账号',trigger:'blur'}
+            {required:true,validator:vailAucct,trigger:'blur'}
           ]
         },
         isemail: '1',
