@@ -313,7 +313,7 @@
           }
         },
         scrollList: () => {
-          console.log(this.$refs.bo.style)
+          var allWidth = window.screen.width
           // 获取div距顶部距离
           var top = this.$refs.lists.offsetTop
           //获取屏幕高度
@@ -325,7 +325,11 @@
           } else {
             this.$refs.lists.style.position = 'fixed'
             this.$refs.lists.style.top = 0
-            this.$refs.lists.style.right = '19%'
+            if (allWidth > 1670) {
+              this.$refs.lists.style.right = (allWidth - 1570) + 'px'
+            } else {
+              this.$refs.lists.style.right = '80px'
+            }
             if (scrollTops < 1200) {
               this.$refs.list.style.maxHeight = (1300 - scrollTops) + 'px'
             } else {
