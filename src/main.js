@@ -37,6 +37,14 @@ Vue.prototype.$message = message
 Vue.prototype.$LR = LR
 Vue.config.productionTip = false
 
+const errorHandler = (error, vm)=>{
+  console.error('抛出全局异常');
+  console.error(error);
+}
+
+Vue.config.errorHandler = errorHandler;
+Vue.prototype.$throw = (error)=> errorHandler(error,this);
+
 //axios.defaults.withCredentials = true
 
 // axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
