@@ -256,9 +256,9 @@
             </div>
             <span>Mbps</span>
           </Form-item>
-          <Form-item label="资费" style="width: 80%">
+          <Form-item label="应付差价：" style="width: 80%">
             <span style="font-family: Microsoft YaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{adjustForm.cost}}
-              <span>/ <span style="font-size: 16px;">{{adjustFormType}}</span></span>
+           <!--   <span>/ <span style="font-size: 16px;">{{adjustFormType}}</span></span>-->
             </span>
           </Form-item>
         </Form>

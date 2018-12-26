@@ -1167,7 +1167,7 @@
         if (!value) {
           return callback(new Error('电话号码不能为空'));
         }
-        if (!(/^1(3|4|5|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
+        if (!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
           callback(new Error('请输入正确的电话号码'));
         } else {
           callback()

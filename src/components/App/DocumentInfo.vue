@@ -4,7 +4,7 @@
       <div id="head">
         <p>产品文档<img src="../../assets/img/document/menu.png" style="float:right;cursor:pointer" ref="toggle"></p>
       </div>
-      <div id="menu">
+      <div id="menu" ref="menu">
         <p>{{title}}</p>
         <div v-for="item in menuList" class="menu-item">
           <ul v-if="item.subMenu">
@@ -13,8 +13,17 @@
               <ul v-if="i.subMenu">
                 <p :class="{active:i.active,open:i.open}" @click="i.open=!i.open">{{i.title}}</p>
                 <li v-for="it in i.subMenu" v-show="i.open">
-                  <router-link
-                    :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${it.parentId}`">
+                  <ul v-if="it.subMenu">
+                    <p :class="{active:it.active,open:it.open}" @click="it.open=!it.open">{{it.title}}</p>
+                    <li v-for="j in it.subMenu" v-show="it.open">
+                      <router-link
+                        :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${j.parentId}`">
+                        {{j.title}}
+                      </router-link>
+                    </li>
+                  </ul>
+                  <router-link v-else
+                               :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${it.parentId}`">
                     {{it.title}}
                   </router-link>
                 </li>
@@ -52,6 +61,7 @@
 
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
+
   function fetchData(parentId, id) {
     var third = axios.get('document/getThirdTitle.do', {
       params: {
@@ -65,8 +75,9 @@
       }
     })
   }
-  export default{
-    data(){
+
+  export default {
+    data() {
       var main = sessionStorage.getItem('document-main')
       var minor = sessionStorage.getItem('document-minor')
       return {
@@ -84,8 +95,7 @@
         minor
       }
     },
-    beforeRouteEnter(to, from, next){
-      console.log(to)
+    beforeRouteEnter(to, from, next) {
       var first = axios.get('document/getFirstTitle.do')
       var third = axios.get('document/getThirdTitle.do', {
         params: {
@@ -104,7 +114,7 @@
         })
       })
     },
-    beforeRouteUpdate(to, from, next){
+    beforeRouteUpdate(to, from, next) {
       var third = axios.get('document/getThirdTitle.do', {
         params: {
           id: to.params.parentId
@@ -124,19 +134,40 @@
             item.subMenu.forEach(it => {
               if (it.subMenu) {
                 it.open = false
-                it.active = false
-                if (it.subMenu.some((i) => {
-                    return i.parentId == this.$router.currentRoute.params.id
-                  })) {
-                  item.open = true
-                  item.active = true
-                  it.open = true
-                  it.active = true
-                }
+                it.subMenu.forEach(ite => {
+                  if (ite.subMenu) {
+                    ite.open = false
+                    if (ite.subMenu.some((i) => {
+                      return i.parentId == this.$router.currentRoute.params.id
+                    })) {
+                      item.open = true
+                      item.active = true
+                      it.open = true
+                      it.active = true
+                      ite.open = true
+                      ite.active = true
+                    } else {
+                      if (item.subMenu.some((i) => {
+                        return i.parentId == this.$router.currentRoute.params.id
+                      })) {
+                        item.open = true
+                        item.active = true
+                      }
+                    }
+                  } else {
+                    if (item.subMenu.some((i) => {
+                      return i.parentId == this.$router.currentRoute.params.id
+                    })) {
+                      item.open = true
+                      item.active = true
+                    }
+                  }
+                })
+
               } else {
                 if (item.subMenu.some((i) => {
-                    return i.parentId == this.$router.currentRoute.params.id
-                  })) {
+                  return i.parentId == this.$router.currentRoute.params.id
+                })) {
                   item.open = true
                   item.active = true
                 }
@@ -154,7 +185,7 @@
       })
       next()
     },
-    mounted(){
+    mounted() {
       document.addEventListener('click', event => {
         if (event.target != this.$refs.toggle) {
           this.mainOpen = false
@@ -164,7 +195,7 @@
       })
     },
     methods: {
-      setData(value){
+      setData(value) {
         this.mainMenu = value[0].data.result
         value[1].data.result.forEach(item => {
           item.active = false
@@ -173,19 +204,40 @@
             item.subMenu.forEach(it => {
               if (it.subMenu) {
                 it.open = false
-                it.active = false
-                if (it.subMenu.some((i) => {
-                    return i.parentId == this.$router.currentRoute.params.id
-                  })) {
-                  item.open = true
-                  item.active = true
-                  it.open = true
-                  it.active = true
-                }
+                it.subMenu.forEach(ite => {
+                  if (ite.subMenu) {
+                    ite.open = false
+                    if (ite.subMenu.some((i) => {
+                      return i.parentId == this.$router.currentRoute.params.id
+                    })) {
+                      item.open = true
+                      item.active = true
+                      it.open = true
+                      it.active = true
+                      ite.open = true
+                      ite.active = true
+                    } else {
+                      if (item.subMenu.some((i) => {
+                        return i.parentId == this.$router.currentRoute.params.id
+                      })) {
+                        item.open = true
+                        item.active = true
+                      }
+                    }
+                  } else {
+                    if (item.subMenu.some((i) => {
+                      return i.parentId == this.$router.currentRoute.params.id
+                    })) {
+                      item.open = true
+                      item.active = true
+                    }
+                  }
+                })
+
               } else {
                 if (item.subMenu.some((i) => {
-                    return i.parentId == this.$router.currentRoute.params.id
-                  })) {
+                  return i.parentId == this.$router.currentRoute.params.id
+                })) {
                   item.open = true
                   item.active = true
                 }
@@ -201,7 +253,7 @@
         this.title = value[1].data.title
         this.content = value[2].data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
       },
-      getContent(id){
+      getContent(id) {
         this.minor = id || this.minor || this.menuList[0].parentId
         this.refresh()
         axios.get('document/listInformation.do', {
@@ -212,12 +264,12 @@
           this.content = response.data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
         })
       },
-      refresh(){
+      refresh() {
         this.menuList.forEach(item => {
           if (item.subMenu) {
             if (item.subMenu.some((i) => {
-                return i.id == this.minor
-              })) {
+              return i.id == this.minor
+            })) {
               item.active = true
             } else {
               item.active = false
@@ -227,10 +279,10 @@
       }
     },
     watch: {
-      main(){
+      main() {
         sessionStorage.setItem('document-main', this.main)
       },
-      minor(){
+      minor() {
         sessionStorage.setItem('document-minor', this.minor)
       }
     }
