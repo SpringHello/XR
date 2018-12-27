@@ -17,8 +17,8 @@
               v-for="(item,index) in type"
               :key="index"
               class="type-btn"
-              :class="{typeselected: typeSelectedIndex == index}"
-              @click="typeSelectedIndex=index"
+              :class="{typeselected: selectedType.value==item.value}"
+              @click="selectedType.value=item.value"
             >{{item.text}}</span>
           </div>
         </div>
@@ -27,35 +27,38 @@
           <div class="content">
             <Alert type="warning" class="domian-hint">
               <p>1.第一个域名默认为证书显示的主域名，最多100个域名。</p>
-              <p>2.如果您希望一张证书包含多个域名，
+              <p>
+                2.如果您希望一张证书包含多个域名，
                 <span class="orange">每个域名之间使用回车（Enter键）换行输入。</span>
               </p>
-              <p>3.只支持一个通配域名,例如:*.domain.com(一张证书支持所有子域名,不限制使用)
+              <p>
+                3.只支持一个通配域名,例如:*.domain.com(一张证书支持所有子域名,不限制使用)
                 <span class="orange">( 价格:单域购买价*3)。</span>
               </p>
             </Alert>
-            <Input v-model="domain" type="textarea" :rows="5"></Input>
+            <Input v-model="sslForm.domain" type="textarea" :rows="5"></Input>
           </div>
         </div>
         <div class="box">
           <h1 class="headline">免费绑定域名</h1>
           <div class="content">
-            <p class="mb10">根据您填写的域名,证书中将免费绑定域名: xxxxxxxxx
+            <p class="mb10">
+              根据您填写的域名,证书中将免费绑定域名: xxxxxxxxx
               <span class="orange">(方便域名中有无"www"都可以使用https访问)</span>
             </p>
-            <Checkbox size="large" v-model="bingDomain">不需要此免费绑定域名</Checkbox>
+            <Checkbox size="large" v-model="sslForm.bingDomain">不需要此免费绑定域名</Checkbox>
           </div>
         </div>
-        <div class="box">
+        <!-- <div class="box">
           <h1 class="headline">输入证书绑定部门</h1>
           <div class="content">
-            <Input v-model="department" placeholder="选填" style="width: 650px" size="large"></Input>
+            <Input v-model="sslForm.department" placeholder="选填" style="width: 650px" size="large"></Input>
           </div>
-        </div>
+        </div>-->
         <div class="box">
           <h1 class="headline">请选择证书语言</h1>
           <div class="content">
-            <RadioGroup v-model="language">
+            <RadioGroup v-model="sslForm.language">
               <Radio :label="1" size="large">中文 （证书中显示中文单位名称）</Radio>
               <Radio :label="2" size="large">英文 （证书中显示英文单位名称）</Radio>
             </RadioGroup>
@@ -69,32 +72,34 @@
               v-for="(item,index) in timeValue"
               :key="index"
               class="type-btn"
-              :class="{typeselected: timeSelectedIndex == index}"
-              @click="timeSelectedIndex=index"
-            >{{item.label}}</span>
+              :class="{typeselected: yearSelected == index}"
+              @click="yearSelected =index"
+            >{{item}}年</span>
           </div>
         </div>
         <div class="box">
           <h1 class="headline">服务器数量</h1>
           <div class="content mb30" style="color:#333">
             <span>数量选择：</span>
-            <InputNumber :min="1" v-model="hostCount" size="large"></InputNumber>
+            <InputNumber :min="1" v-model="sslForm.hostCount" size="large"></InputNumber>
             <span class="ml10">台</span>
           </div>
         </div>
         <div class="cost">
           <P>
             <a class="fl">查看计价详情</a>
-            <span>总计费用：
-              <i class="orange fsn f24">1254元</i>
+            <span>
+              总计费用：
+              <i class="orange fsn f24">{{cost}}元</i>
             </span>
           </P>
-          <p>已省：
+          <p>
+            已省：
             <span class="orange">35元</span>
           </p>
           <div class="btns">
-            <Button class="f16">加入预算清单</Button>
-            <Button class="f16" @click="postOrder()">下一步</Button>
+            <!-- <Button class="f16">加入预算清单</Button> -->
+            <Button class="f16" @click="post()">下一步</Button>
           </div>
         </div>
       </div>
@@ -116,10 +121,10 @@
           <h1 class="headline">单位类型</h1>
           <div class="content">
             <RadioGroup v-model="sslInfo.unitType">
-              <Radio label="1" size="large">个体</Radio>
-              <Radio label="2" size="large">企业</Radio>
-              <Radio label="3" size="large">政府事业单位</Radio>
-              <Radio label="4" size="large">非商业机构/协会</Radio>
+              <Radio label="BusinessEntity" size="large">个体</Radio>
+              <Radio label="PrivateOrganization" size="large">企业</Radio>
+              <Radio label="GovernmentEntity" size="large">政府事业单位</Radio>
+              <Radio label="Non-CommercialEntity" size="large">非商业机构/协会</Radio>
             </RadioGroup>
           </div>
         </div>
@@ -192,7 +197,8 @@
         <div class="cost">
           <div class="btns">
             <Button class="f16" @click="step=0">上一步</Button>
-            <Button class="f16" @click="post()">提交</Button>
+            <Button class="f16" @click="addObjCart()">加入预算清单</Button>
+            <Button class="f16" @click="postOrder()">提交</Button>
           </div>
         </div>
       </div>
@@ -209,41 +215,35 @@ export default {
   data () {
     return {
       step: 0,
-      typeSelectedIndex: 0,
-      timeSelectedIndex: 0,
-      domain: '',
-      bingDomain: '',
-      department: '',
-      language: 1,
-      hostCount: 1,
+      sslForm: {
+        sslName: '证书',
+        domain: '',
+        // bingDomain: '',
+        // department: '',
+        // language: 1,
+        hostCount: 1,
+      },
+      selectedType: { text: '超真SSL Pro（OV)', value: '1' },
       type: [
-        { text: '超安SSL Pro（EV)' },
-        { text: '超安SSL Pre（EV)' },
-        { text: '超真SSL Pro（OV)' },
-        { text: '超真SSL Pre（OV)' },
-        { text: '超快SSL Pre（DV)' }
+        // { text: '超安SSL Pro（EV)', value: '' },
+        // { text: '超安SSL Pre（EV)', value: '' },
+        { text: '超真SSL Pro（OV)', value: '1' },
+        // { text: '超真SSL Pre（OV)', value: '' },
+        { text: '超快SSL Pre（DV)', value: '2' }
       ],
-      timeValue: [
-        { label: '1年', value: '1', type: 'year' },
-        { label: '2年', value: '2', type: 'year' },
-        { label: '3年', value: '3', type: 'year' },
-        { label: '4年', value: '4', type: 'year' },
-        { label: '5年', value: '5', type: 'year' },
-        { label: '6年', value: '6', type: 'year' },
-        { label: '7年', value: '7', type: 'year' },
-        { label: '8年', value: '8', type: 'year' },
-        { label: '9年', value: '9', type: 'year' },
-        { label: '10年', value: '10', type: 'year' }
-      ],
+      yearSelected: 0,
+      timeValue: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       sslInfo: {
         unitName: '',
-        unitType: '1',
+        unitType: 'PrivateOrganization',
         unitTel: '',
         manName: '',
         manEmail: '',
         certificateType: '1',
         certificateNum: '',
-        contactsTel: ''
+        contactsTel: '',
+        unitEmail: '2420479720@qq.com',
+        certType: '2'
       },
       certificateList: [
         {
@@ -259,6 +259,7 @@ export default {
           label: '其他'
         }
       ],
+      cost: '78'
     }
   },
   created () {
@@ -268,39 +269,76 @@ export default {
       // if(this.sslInfo.unitTel){
 
       // }
+      this.step = 1
     },
     postOrder () {
-      // if (this.userInfo == null) {
-      //   this.$LR({ type: 'login' })
-      //   return
-      // }
-      console.log(1231313)
-      var params = {
-        sslName: '证书',
-        ownUserIdCardNumber: '500227199209095726',
-        ownUserEmail: '2420479720@qq.com',
-        ownUserName: '冷红憬',
-        certallDomain: 'xrstack.cn',
-        ownUserPhone: '+86-755-86008688',
-        orgPhone: '+86-755-86008688',
-        certValidateType: '2',
-        certExpTime: '24',
-        orgName: '北京允睿',
-        orgType: 'PrivateOrganization',
-        certTypeId: '1',
-        orgEmail: '2420479720@qq.com',
-        certserverNumber: '1',
+      if (this.userInfo == null) {
+        this.$LR({ type: 'login' })
+        return
       }
-      axios.post('domain/createSSLOrder.do', params).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.$router.push('/ruicloud/order')
-        } else {
-          this.$message.info({
-            content: response.data.message
-          })
-        }
-      })
-    }
+      var domainList = this.sslForm.domain.split('\n')
+      var params = {
+        sslName: this.sslForm.sslName,
+        ownUserIdCardNumber: this.sslInfo.certificateNum,
+        ownUserEmail: this.sslInfo.manEmail,
+        ownUserName: this.sslInfo.manName,
+        certallDomain: domainList.join(),
+        ownUserPhone: this.sslInfo.contactsTel,
+        orgPhone: this.sslInfo.unitTel,
+        certValidateType: this.sslInfo.certType,
+        certExpTime: (this.yearSelected + 1) * 12,
+        orgName: this.sslInfo.unitName,
+        orgType: this.sslInfo.unitType,
+        certTypeId: this.selectedType.value,
+        orgEmail: this.sslInfo.unitEmail,
+        certserverNumber: this.sslForm.hostCount,
+      }
+      console.log(params)
+      // axios.post('domain/createSSLOrder.do', params).then(response => {
+      //   if (response.status == 200 && response.data.status == 1) {
+      //     this.$router.push('/ruicloud/order')
+      //   } else {
+      //     this.$message.info({
+      //       content: response.data.message
+      //     })
+      //   }
+      // })
+    },
+    // 加入购物清单
+    addObjCart() {
+      if (this.$parent.cart.length > 4) {
+        this.$message.info({
+          content: '购物车已满'
+        })
+      }
+      let domainList = this.sslForm.domain.split('\n')
+      let prod = {
+        typeName: 'ssl证书',
+        type: 'Pssl',
+        cost: this.cost,
+        count: 1,
+        year: this.yearSelected + 1,
+        domianLeagth: domainList.length,
+        mainDomain: domainList[0],
+        // 创建订单需要的参数
+        sslName: this.sslForm.sslName,
+        ownUserIdCardNumber: this.sslInfo.certificateNum,
+        ownUserEmail: this.sslInfo.manEmail,
+        ownUserName: this.sslInfo.manName,
+        certallDomain: domainList.join(),
+        ownUserPhone: this.sslInfo.contactsTel,
+        orgPhone: this.sslInfo.unitTel,
+        certValidateType: this.sslInfo.certType,
+        certExpTime: (this.yearSelected + 1) * 12,
+        orgName: this.sslInfo.unitName,
+        orgType: this.sslInfo.unitType,
+        certTypeId: this.selectedType.value,
+        orgEmail: this.sslInfo.unitEmail,
+        certserverNumber: this.sslForm.hostCount,
+      }
+      this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
+      window.scrollTo(0, 170)
+    },
   },
   computed: {
     userInfo () {
