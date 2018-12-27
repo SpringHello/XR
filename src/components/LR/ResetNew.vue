@@ -309,6 +309,7 @@
       }).then(response => {
         this.QQInfo = response.data.kefu[0].qqnumber
       })
+     
     },
     methods: {
       vail(field){
@@ -484,8 +485,8 @@
 
       //获取验证码
       getVerificationCode(code){
-        this.$on('count',item=>{
-          console.log(item);
+        this.$on('test',msg =>{
+          console.log(msg);
         })
         return;
         axios.get('user/code.do',{

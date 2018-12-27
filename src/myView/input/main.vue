@@ -32,7 +32,7 @@
         @focus="handleFocus"
         >
         <div class="ver_yan" >
-            <span @click="timeReduce" v-if="timeBoo">获取验证码</span>
+            <span @click="timeReduce" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
             <span v-else style="color:#666666;">{{count}}</span>
         </div>
         <img class="ver_eye" @click="isEye = !isEye" :src="eye" v-if="isSelect == 'ear'">
@@ -155,7 +155,7 @@ export default {
         },
         timeReduce(){
             if(this.account != ''){
-                this.$emit('count',this.count);
+                this.$emit('on-click',this.account);
                 this.timeBoo = false;
                 this.timeP = false;
                let char = setInterval(()=>{
@@ -337,7 +337,7 @@ export default {
         position: absolute;
         top: 0;
         right: 0;
-        cursor: pointer;
+        
     }
     .ver_eye{
         position: absolute;
