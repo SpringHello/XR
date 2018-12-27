@@ -13,7 +13,13 @@
         <div class="box">
           <h1 class="headline">证书类型</h1>
           <div class="content">
-            <span v-for="(item,index) in type" :key="index" class="type-btn" :class="{typeselected: typeSelectedIndex == index}" @click="typeSelectedIndex=index">{{item.text}}</span>
+            <span
+              v-for="(item,index) in type"
+              :key="index"
+              class="type-btn"
+              :class="{typeselected: typeSelectedIndex == index}"
+              @click="typeSelectedIndex=index"
+            >{{item.text}}</span>
           </div>
         </div>
         <div class="box">
@@ -21,8 +27,12 @@
           <div class="content">
             <Alert type="warning" class="domian-hint">
               <p>1.第一个域名默认为证书显示的主域名，最多100个域名。</p>
-              <p>2.如果您希望一张证书包含多个域名，<span class="orange">每个域名之间使用回车（Enter键）换行输入。</span></p>
-              <p>3.只支持一个通配域名,例如:*.domain.com(一张证书支持所有子域名,不限制使用)<span class="orange">( 价格:单域购买价*3)。</span></p>
+              <p>2.如果您希望一张证书包含多个域名，
+                <span class="orange">每个域名之间使用回车（Enter键）换行输入。</span>
+              </p>
+              <p>3.只支持一个通配域名,例如:*.domain.com(一张证书支持所有子域名,不限制使用)
+                <span class="orange">( 价格:单域购买价*3)。</span>
+              </p>
             </Alert>
             <Input v-model="domain" type="textarea" :rows="5"></Input>
           </div>
@@ -30,7 +40,9 @@
         <div class="box">
           <h1 class="headline">免费绑定域名</h1>
           <div class="content">
-            <p class="mb10">根据您填写的域名,证书中将免费绑定域名: xxxxxxxxx<span class="orange">(方便域名中有无"www"都可以使用https访问)</span></p>
+            <p class="mb10">根据您填写的域名,证书中将免费绑定域名: xxxxxxxxx
+              <span class="orange">(方便域名中有无"www"都可以使用https访问)</span>
+            </p>
             <Checkbox size="large" v-model="bingDomain">不需要此免费绑定域名</Checkbox>
           </div>
         </div>
@@ -52,7 +64,14 @@
         <div class="box">
           <h1 class="headline">计费方式选择</h1>
           <div class="content">
-            <span style="width:53px;" v-for="(item,index) in timeValue" :key="index" class="type-btn" :class="{typeselected: timeSelectedIndex == index}" @click="timeSelectedIndex=index">{{item.label}}</span>
+            <span
+              style="width:53px;"
+              v-for="(item,index) in timeValue"
+              :key="index"
+              class="type-btn"
+              :class="{typeselected: timeSelectedIndex == index}"
+              @click="timeSelectedIndex=index"
+            >{{item.label}}</span>
           </div>
         </div>
         <div class="box">
@@ -66,24 +85,31 @@
         <div class="cost">
           <P>
             <a class="fl">查看计价详情</a>
-            <span>总计费用：<i class="orange fsn f24">1254元</i></span>
+            <span>总计费用：
+              <i class="orange fsn f24">1254元</i>
+            </span>
           </P>
-          <p>已省：<span class="orange">35元</span></p>
+          <p>已省：
+            <span class="orange">35元</span>
+          </p>
           <div class="btns">
-            <Button class="f16">
-              加入预算清单
-            </Button>
-            <Button class="f16" @click="step=1">
-              下一步
-            </Button>
+            <Button class="f16">加入预算清单</Button>
+            <Button class="f16" @click="postOrder()">下一步</Button>
           </div>
         </div>
       </div>
       <div class="step-two" v-if="step==1">
         <div class="box">
           <h1 class="headline">单位名称</h1>
-          <Input v-model="sslInfo.unitName" placeholder="请输入您单位的全称" style="width: 400px" size="large"></Input>
-          <span class="reg-vail" v-if="!sslInfo.unitName"><Icon type="ios-close"></Icon>请输入单位名称</span>
+          <Input
+            v-model="sslInfo.unitName"
+            placeholder="请输入您单位的全称"
+            style="width: 400px"
+            size="large"
+          ></Input>
+          <span class="reg-vail" v-if="!sslInfo.unitName">
+            <Icon type="ios-close"></Icon>请输入单位名称
+          </span>
           <p class="alert">此单位名称将显示在证书中, 必须与申请单位营业执照的名称保持一致</p>
         </div>
         <div class="box">
@@ -99,44 +125,74 @@
         </div>
         <div class="box">
           <h1 class="headline">单位电话</h1>
-          <Input v-model="sslInfo.unitTel" placeholder="请输入您单位的电话号码" style="width: 400px" size="large"></Input>
-          <span class="reg-vail" v-if="!sslInfo.unitTel"><Icon type="ios-close"></Icon>电话号码格式不正确</span>
+          <Input
+            v-model="sslInfo.unitTel"
+            placeholder="请输入您单位的电话号码"
+            style="width: 400px"
+            size="large"
+          ></Input>
+          <span class="reg-vail" v-if="!sslInfo.unitTel">
+            <Icon type="ios-close"></Icon>电话号码格式不正确
+          </span>
           <p class="alert">请按照标准格式(国家码-区号-号码或国家码+手机前三位+手机后几位)填写电话号码,如:+86-755-86008688</p>
         </div>
         <div class="box">
           <h1 class="headline">申请人姓名</h1>
           <Input v-model="sslInfo.manName" placeholder="请输入您的姓名" style="width: 400px" size="large"></Input>
-          <span class="reg-vail" v-if="!sslInfo.manName"><Icon type="ios-close"></Icon>请输入姓名</span>
+          <span class="reg-vail" v-if="!sslInfo.manName">
+            <Icon type="ios-close"></Icon>请输入姓名
+          </span>
           <p class="alert">请填写与证件一致的真实有效的姓名,这将直接影响到证书能否成功颁发</p>
         </div>
         <div class="box">
           <h1 class="headline">申请人邮箱</h1>
-          <Input v-model="sslInfo.manEmail" placeholder="请输入您的邮箱地址" style="width: 400px" size="large"></Input>
-          <span class="reg-vail" v-if="!sslInfo.manEmail"><Icon type="ios-close"></Icon>请输入邮箱地址</span>
+          <Input
+            v-model="sslInfo.manEmail"
+            placeholder="请输入您的邮箱地址"
+            style="width: 400px"
+            size="large"
+          ></Input>
+          <span class="reg-vail" v-if="!sslInfo.manEmail">
+            <Icon type="ios-close"></Icon>请输入邮箱地址
+          </span>
           <p class="alert">请填写真实有效的邮箱,这将直接影响到证书能否成功颁发</p>
         </div>
-       <div class="box">
+        <div class="box">
           <h1 class="headline">申请人证件号码</h1>
           <Select v-model="sslInfo.certificateType" style="width:140px" size="large">
-            <Option v-for="item in certificateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option
+              v-for="item in certificateList"
+              :value="item.value"
+              :key="item.value"
+            >{{ item.label }}</Option>
           </Select>
-          <Input v-model="sslInfo.certificateNum" placeholder="请输入证件号码" style="width: 250px" size="large"></Input>
-          <span class="reg-vail" v-if="!sslInfo.certificateNum"><Icon type="ios-close"></Icon>请输入证件号码</span>
+          <Input
+            v-model="sslInfo.certificateNum"
+            placeholder="请输入证件号码"
+            style="width: 250px"
+            size="large"
+          ></Input>
+          <span class="reg-vail" v-if="!sslInfo.certificateNum">
+            <Icon type="ios-close"></Icon>请输入证件号码
+          </span>
           <p class="alert">请填写真实有效的证件号码,这将直接影响到证书能否成功颁发</p>
         </div>
         <div class="box">
           <h1 class="headline">联系人手机号码</h1>
-          <Input v-model="sslInfo.contactsTel" placeholder="请输入手机号码" style="width: 400px" size="large"></Input>
-          <span class="reg-vail" v-if="!sslInfo.contactsTel"><Icon type="ios-close"></Icon>请输入手机号码</span>
+          <Input
+            v-model="sslInfo.contactsTel"
+            placeholder="请输入手机号码"
+            style="width: 400px"
+            size="large"
+          ></Input>
+          <span class="reg-vail" v-if="!sslInfo.contactsTel">
+            <Icon type="ios-close"></Icon>请输入手机号码
+          </span>
         </div>
         <div class="cost">
           <div class="btns">
-            <Button class="f16" @click="step=0">
-             上一步
-            </Button>
-            <Button class="f16" @click="post()">
-              提交
-            </Button>
+            <Button class="f16" @click="step=0">上一步</Button>
+            <Button class="f16" @click="post()">提交</Button>
           </div>
         </div>
       </div>
@@ -145,7 +201,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-// import axios from '@/util/axiosInterceptor'
+import axios from '@/util/axiosInterceptor'
 // import regExp from '@/util/regExp'
 
 // var debounce = require('throttle-debounce/debounce')
@@ -208,10 +264,42 @@ export default {
   created () {
   },
   methods: {
-    post() {
+    post () {
       // if(this.sslInfo.unitTel){
 
       // }
+    },
+    postOrder () {
+      // if (this.userInfo == null) {
+      //   this.$LR({ type: 'login' })
+      //   return
+      // }
+      console.log(1231313)
+      var params = {
+        sslName: '证书',
+        ownUserIdCardNumber: '500227199209095726',
+        ownUserEmail: '2420479720@qq.com',
+        ownUserName: '冷红憬',
+        certallDomain: 'xrstack.cn',
+        ownUserPhone: '+86-755-86008688',
+        orgPhone: '+86-755-86008688',
+        certValidateType: '2',
+        certExpTime: '24',
+        orgName: '北京允睿',
+        orgType: 'PrivateOrganization',
+        certTypeId: '1',
+        orgEmail: '2420479720@qq.com',
+        certserverNumber: '1',
+      }
+      axios.post('domain/createSSLOrder.do', params).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.$router.push('/ruicloud/order')
+        } else {
+          this.$message.info({
+            content: response.data.message
+          })
+        }
+      })
     }
   },
   computed: {
