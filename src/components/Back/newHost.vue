@@ -57,7 +57,7 @@
         <Table :columns="hostListColumns" :data="hostListData"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="hostPages" :current="1" :page-size="5"></Page>
+            <Page :total="hostPages" :current="currentPage" :page-size="5"></Page>
           </div>
         </div>
       </div>
@@ -114,31 +114,252 @@
           },
           {
             title: '用户名称/唯一名称',
-            key: 'name'
+            ellipsis: true,
+            render: (h, params) => {
+              let text_1 = params.row.companyname ? params.row.companyname : '----'
+              let text_2 = params.row.computername ? params.row.computername : '----'
+              return h('ul', {}, [
+                h('li', {
+                  style: {
+                    cursor: 'pointer',
+                    color: '#2A99F2'
+                  },
+                  on: {
+                    click: () => {
+                      alert('跳转管理页面')
+                    }
+                  }
+                }, text_1 + ' / '),
+                h('li', {
+                  style: {
+                    cursor: 'pointer',
+                    color: '#2A99F2'
+                  },
+                  on: {
+                    click: () => {
+                      alert('跳转管理页面')
+                    }
+                  }
+                }, text_2)
+              ])
+            }
           },
           {
             title: '状态',
-            key: 'name'
+            render: (h, params) => {
+              let restart = params.row.restart ? params.row.restart : 0
+              let icon_1 = require('../../assets/img/host/h-icon1.png')
+              let icon_2 = require('../../assets/img/host/h-icon2.png')
+              let icon_3 = require('../../assets/img/host/h-icon3.png')
+              let icon_4 = require('../../assets/img/host/h-icon4.png')
+              let styleInfo = {
+                marginLeft: '5px',
+                lineHeight: '16px'
+              }
+              if (restart == 1) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block'
+                  }
+                }), h('span', {style: styleInfo}, '重启中')])
+              } else {
+                switch (params.row.status) {
+                  case -1:
+                    return h('div', {
+                      style: {
+                        display: 'flex'
+                      }
+                    }, [
+                      h('img', {
+                        attrs: {
+                          src: icon_2
+                        }
+                      }, ''),
+                      h('span', {
+                        style: styleInfo
+                      }, '异常')
+                    ])
+                    break
+                  case 0:
+                    return h('div', {
+                      style: {
+                        display: 'flex'
+                      }
+                    }, [
+                      h('img', {
+                        attrs: {
+                          src: icon_3
+                        }
+                      }, ''),
+                      h('span', {
+                        style: styleInfo
+                      }, '欠费')
+                    ])
+                    break
+                  case 1:
+                    if (params.row.computerstate == 1) {
+                      return h('div', {
+                        style: {
+                          display: 'flex'
+                        }
+                      }, [
+                        h('img', {
+                          attrs: {
+                            src: icon_1
+                          }
+                        }, ''),
+                        h('span', {
+                          style: styleInfo
+                        }, '开启')
+                      ])
+                    } else {
+                      return h('div', {
+                        style: {
+                          display: 'flex'
+                        }
+                      }, [
+                        h('img', {
+                          attrs: {
+                            src: icon_4
+                          }
+                        }, ''),
+                        h('span', {
+                          style: styleInfo
+                        }, '关机')
+                      ])
+                    }
+                    break
+                  case 2:
+                    if (params.row.computerstate == 0) {
+                      return h('div', {}, [h('Spin', {
+                        style: {
+                          display: 'inline-block'
+                        }
+                      }), h('span', {style: styleInfo}, '开机中')])
+                    } else {
+                      return h('div', {}, [h('Spin', {
+                        style: {
+                          display: 'inline-block'
+                        }
+                      }), h('span', {style: styleInfo}, '关机中')])
+                    }
+                    break
+                }
+              }
+            }
           },
           {
             title: '主机配置',
-            key: 'name'
+            key: 'serviceoffername'
           },
           {
             title: '镜像系统',
-            key: 'name'
+            key: 'templatename',
+            render: (h, params) => {
+              let templateName = params.row.templatename.substr(0, 1).toUpperCase() // 用第一个字符判断镜像选用图标
+              let icon_1 = require('../../assets/img/host/h-icon5.png')
+              let icon_2 = require('../../assets/img/host/h-icon6.png')
+              let icon_3 = require('../../assets/img/host/h-icon7.png')
+              let icon_4 = require('../../assets/img/host/h-icon8.png')
+              let imgStyle = {
+                height: '16px',
+                width: '16px',
+                marginTop: '10px',
+                marginRight: '5px'
+              }
+              switch (templateName) {
+                case 'W':
+                  return h('div', {
+                    style: {
+                      display: 'flex'
+                    }
+                  }, [
+                    h('img', {
+                      attrs: {
+                        src: icon_1
+                      },
+                      style:imgStyle
+                    }, ''),
+                    h('span', {}, params.row.templatename)
+                  ])
+                  break
+                case 'C':
+                  return h('div', {
+                    style: {
+                      display: 'flex'
+                    }
+                  }, [
+                    h('img', {
+                      attrs: {
+                        src: icon_2
+                      },
+                      style:imgStyle
+                    }, ''),
+                    h('span', {}, params.row.templatename)
+                  ])
+                  break
+                case 'U':
+                  return h('div', {
+                    style: {
+                      display: 'flex'
+                    }
+                  }, [
+                    h('img', {
+                      attrs: {
+                        src: icon_3
+                      },
+                      style:imgStyle
+                    }, ''),
+                    h('span', {}, params.row.templatename)
+                  ])
+                  break
+                case 'D':
+                  return h('div', {
+                    style: {
+                      display: 'flex'
+                    }
+                  }, [
+                    h('img', {
+                      attrs: {
+                        src: icon_4
+                      },
+                      style:imgStyle
+                    }, ''),
+                    h('span', {}, params.row.templatename)
+                  ])
+                  break
+                default:
+                  return h('span', {}, params.row.templatename)
+              }
+            }
           },
           {
             title: 'IP地址',
-            key: 'name'
+            ellipsis: true,
+            render: (h, params) => {
+              let text_1 = params.row.publicip ? params.row.publicip + '（公）' : '----'
+              let text_2 = params.row.privateip ? params.row.privateip + '（内）' : '----'
+              return h('ul', {}, [
+                h('li', {}, text_1),
+                h('li', {}, text_2)
+              ])
+            }
           },
           {
             title: '创建时间/到期时间',
-            key: 'name'
+            ellipsis: true,
+            render: (h, params) => {
+              let text_1 = params.row.createtime ? params.row.createtime + ' / ' : '----'
+              let text_2 = params.row.endtime ? params.row.endtime : '----'
+              return h('ul', {}, [
+                h('li', {}, text_1),
+                h('li', {}, text_2)
+              ])
+            }
           },
           {
             title: '计费类型',
-            key: 'name',
+            key: 'caseType',
             filters: [
               {
                 label: '包年',
@@ -151,15 +372,27 @@
               {
                 label: '实时',
                 value: 3
+              },
+              {
+                label: '7天',
+                value: 4
               }
             ],
             filterMultiple: false,
-            filterMethod (value, row) {
+            filterMethod(value, row) {
               if (value === 1) {
-                return row.name === 'Joe';
+                return row.caseType == '1';
               } else if (value === 2) {
-                return row.name === 'John Brown';
+                return row.caseType == '2';
+              } else if (value === 3) {
+                return row.caseType == '3';
+              } else if (value === 4) {
+                return row.caseType == '4';
               }
+            },
+            render: (h, params) => {
+              let text = params.row.caseType == 1 ? '包年' : params.row.caseType == 2 ? '包月' : params.row.caseType == 3 ? '实时' : '七天'
+              return h('span', {}, text)
             }
           },
           {
@@ -167,8 +400,136 @@
             key: 'name'
           },
         ],
-        hostListData: [{}, {}, {}, {}],
-        hostPages: 50
+        hostListData: [
+          {
+            activitynumber: 22,
+            caseType: 2,
+            companyid: "154234768276",
+            companyname: "冷红憬",
+            computername: "免费试用主机",
+            computertype: "1",
+            connectpassword: "",
+            connecturl: "",
+            connecturlnew: "",
+            cpCase: 60,
+            createtime: "2018-12-21 16:37:37",
+            disksize: 0,
+            endtime: "2019-01-21 16:37:37",
+            id: 1677617,
+            instancename: "i-2-2287-VM",
+            isautorenew: 0,
+            isfreevm: "1",
+            loginname: "administrator",
+            owndiskofferid: "d3cd9e1e-d803-426c-93de-3b7b6ed359ae",
+            privateip: "192.168.0.34",
+            rootdisksize: 40,
+            serviceofferid: "034f9e0c-e9b1-4696-a5cf-5c7ed1354f3b",
+            serviceoffername: "1核+1Ghz+2GMemory",
+            status: 2,
+            computerstate: 1,
+            templateid: "9833e9b8-8c1d-4571-97ad-189ad13c5f09",
+            templatename: "cindows-2008-datacenter-64bit",
+            vpcid: "54cbfa78-8a07-499e-baa3-55bec860214c",
+            vpcname: "默认VPC",
+            zoneid: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc",
+            zonename: "华中二区1",
+          }, {
+            activitynumber: 22,
+            caseType: 2,
+            companyid: "154234768276",
+            companyname: "冷红憬",
+            computername: "免费试用主机",
+            computertype: "1",
+            connectpassword: "",
+            connecturl: "",
+            connecturlnew: "",
+            cpCase: 60,
+            createtime: "2018-12-21 16:37:37",
+            disksize: 0,
+            endtime: "2019-01-21 16:37:37",
+            id: 1677617,
+            instancename: "i-2-2287-VM",
+            isautorenew: 0,
+            isfreevm: "1",
+            loginname: "administrator",
+            owndiskofferid: "d3cd9e1e-d803-426c-93de-3b7b6ed359ae",
+            privateip: "192.168.0.34",
+            rootdisksize: 40,
+            serviceofferid: "034f9e0c-e9b1-4696-a5cf-5c7ed1354f3b",
+            serviceoffername: "1核+1Ghz+2GMemory",
+            status: 2,
+            computerstate: 0,
+            templateid: "9833e9b8-8c1d-4571-97ad-189ad13c5f09",
+            templatename: "dindows-2008-datacenter-64bit",
+            vpcid: "54cbfa78-8a07-499e-baa3-55bec860214c",
+            vpcname: "默认VPC",
+            zoneid: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc",
+            zonename: "华中二区1",
+          }, {
+            activitynumber: 22,
+            caseType: 2,
+            companyid: "154234768276",
+            companyname: "冷红憬",
+            computername: "免费试用主机",
+            computertype: "1",
+            connectpassword: "",
+            connecturl: "",
+            connecturlnew: "",
+            cpCase: 60,
+            createtime: "2018-12-21 16:37:37",
+            disksize: 0,
+            endtime: "2019-01-21 16:37:37",
+            id: 1677617,
+            instancename: "i-2-2287-VM",
+            isautorenew: 0,
+            isfreevm: "1",
+            loginname: "administrator",
+            owndiskofferid: "d3cd9e1e-d803-426c-93de-3b7b6ed359ae",
+            privateip: "192.168.0.34",
+            rootdisksize: 40,
+            serviceofferid: "034f9e0c-e9b1-4696-a5cf-5c7ed1354f3b",
+            serviceoffername: "1核+1Ghz+2GMemory",
+            status: -1,
+            templateid: "9833e9b8-8c1d-4571-97ad-189ad13c5f09",
+            templatename: "uindows-2008-datacenter-64bit",
+            vpcid: "54cbfa78-8a07-499e-baa3-55bec860214c",
+            vpcname: "默认VPC",
+            zoneid: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc",
+            zonename: "华中二区1",
+          }, {
+            activitynumber: 22,
+            caseType: 2,
+            companyid: "154234768276",
+            companyname: "冷红憬",
+            computername: "免费试用主机",
+            computertype: "1",
+            connectpassword: "",
+            connecturl: "",
+            connecturlnew: "",
+            cpCase: 60,
+            createtime: "2018-12-21 16:37:37",
+            disksize: 0,
+            endtime: "2019-01-21 16:37:37",
+            id: 1677617,
+            instancename: "i-2-2287-VM",
+            isautorenew: 0,
+            isfreevm: "1",
+            loginname: "administrator",
+            owndiskofferid: "d3cd9e1e-d803-426c-93de-3b7b6ed359ae",
+            privateip: "192.168.0.34",
+            rootdisksize: 40,
+            serviceofferid: "034f9e0c-e9b1-4696-a5cf-5c7ed1354f3b",
+            serviceoffername: "1核+1Ghz+2GMemory",
+            status: 0,
+            templateid: "9833e9b8-8c1d-4571-97ad-189ad13c5f09",
+            templatename: "windows-2008-datacenter-64bit",
+            vpcid: "54cbfa78-8a07-499e-baa3-55bec860214c",
+            vpcname: "默认VPC",
+            zoneid: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc",
+            zonename: "华中二区1",
+          }],
+        hostPages: 5,
+        currentPage: 1
       }
     },
     created() {
@@ -176,10 +537,26 @@
       if (this.$store.state.authInfo == null) {
         this.showModal.selectAuthType = true
       }
+      this.getHostList()
     },
     methods: {
       hideEvent(name) {
         console.log(name)
+      },
+      getHostList() {
+        let url = 'information/listVirtualMachines.do'
+        this.$http.get(url, {
+          params: {
+            returnList: '1',
+            page: this.currentPage,
+            pageSize: '5'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            // this.hostListData = res.data.result.data
+            this.hostPages = res.data.total
+          }
+        })
       }
     },
     computed: {
