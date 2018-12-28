@@ -884,7 +884,8 @@
                       style: {
                         color: '#2d8cf0',
                         cursor: 'pointer',
-                        marginLeft: '5px'
+                        marginLeft: '5px',
+                        display: 'none'
                       },
                       on: {
                         click: () => {
@@ -923,7 +924,8 @@
                       style: {
                         color: '#2d8cf0',
                         cursor: 'pointer',
-                        marginLeft: '5px'
+                        marginLeft: '5px',
+                        display: 'none'
                       },
                       on: {
                         click: () => {
@@ -953,8 +955,8 @@
                   ])
                 }
               } else {
-                /*return h('span',{},'--')*/
-                return h('span', {
+                return h('span',{},'--')
+                /*return h('span', {
                   style: {
                     color: '#2d8cf0',
                     cursor: 'pointer'
@@ -983,7 +985,7 @@
                       })
                     }
                   }
-                }, '删除')
+                }, '删除')*/
               }
             }
           }

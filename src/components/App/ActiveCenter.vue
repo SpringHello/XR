@@ -181,7 +181,7 @@
             imgPath: require('../../assets/img/activecenter/bg-card-3.png'),
             name: '对象存储 重磅上线',
             desc: '安全稳定高效的云端存储服务 免费试用50G',
-            time: ' 即将上线',
+            time: ' 2018年8月1日',
             activeObj: '对象存储 新老用户',
             url: 'objStorageActive',
             isStart: true,
