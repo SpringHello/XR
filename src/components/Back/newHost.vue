@@ -146,6 +146,36 @@
           },
           {
             title: '状态',
+            filters: [
+              {
+                label: '开启',
+                value: 1
+              },
+              {
+                label: '关机',
+                value: 2
+              },
+              {
+                label: '欠费',
+                value: 3
+              },
+              {
+                label: '异常',
+                value: 4
+              }
+            ],
+            filterMultiple: false,
+            filterMethod(value, row) {
+              if (value === 1) {
+                return row.status == 1 && row.computerstate == 1;
+              } else if (value === 2) {
+                return row.status == 1 && row.computerstate == 0;
+              } else if (value === 3) {
+                return row.status == 0;
+              } else if (value === 4) {
+                return row.status == -1;
+              }
+            },
             render: (h, params) => {
               let restart = params.row.restart ? params.row.restart : 0
               let icon_1 = require('../../assets/img/host/h-icon1.png')
@@ -278,7 +308,7 @@
                       attrs: {
                         src: icon_1
                       },
-                      style:imgStyle
+                      style: imgStyle
                     }, ''),
                     h('span', {}, params.row.templatename)
                   ])
@@ -293,7 +323,7 @@
                       attrs: {
                         src: icon_2
                       },
-                      style:imgStyle
+                      style: imgStyle
                     }, ''),
                     h('span', {}, params.row.templatename)
                   ])
@@ -308,7 +338,7 @@
                       attrs: {
                         src: icon_3
                       },
-                      style:imgStyle
+                      style: imgStyle
                     }, ''),
                     h('span', {}, params.row.templatename)
                   ])
@@ -323,7 +353,7 @@
                       attrs: {
                         src: icon_4
                       },
-                      style:imgStyle
+                      style: imgStyle
                     }, ''),
                     h('span', {}, params.row.templatename)
                   ])
@@ -397,7 +427,255 @@
           },
           {
             title: '操作',
-            key: 'name'
+            render: (h, params) => {
+              switch (params.row.status) {
+                case -1:
+                  return h('div', {}, [h('span', {
+                    style: {
+                      cursor: 'pointer',
+                      color: '#2A99F2',
+                      marginRight: '10px'
+                    },
+                    on: {
+                      click: () => {
+                        alert('联系客服')
+                      }
+                    }
+                  }, '联系客服'), h('span', {
+                    style: {
+                      cursor: 'pointer',
+                      color: '#2A99F2'
+                    },
+                    on: {
+                      click: () => {
+                        alert('删除')
+                      }
+                    }
+                  }, '删除')])
+                  break
+                case 0:
+                  return h('div', {}, [h('span', {
+                    style: {
+                      cursor: 'pointer',
+                      color: '#2A99F2',
+                      marginRight: '10px'
+                    },
+                    on: {
+                      click: () => {
+                        alert('续费')
+                      }
+                    }
+                  }, '续费'), h('span', {
+                    style: {
+                      cursor: 'pointer',
+                      color: '#2A99F2'
+                    },
+                    on: {
+                      click: () => {
+                        alert('删除')
+                      }
+                    }
+                  }, '删除')])
+                  break
+                case 1:
+                  if (params.row.computerstate == 1) {
+                    return h('div', {}, [
+                      h('p', {
+                        style:{
+                          lineHeight: '20px',
+                          cursor: 'pointer',
+                          color: '#2A99F2'
+                        },
+                        on: {
+                          click: () => {
+                            alert('连接')
+                          }
+                        }
+                      }, '连接'),
+                      h('p', {
+                        style:{
+                          lineHeight: '30px',
+                          cursor: 'pointer',
+                          color: '#2A99F2'
+                        },
+                        on: {
+                          click: () => {
+                            alert('管理')
+                          }
+                        }
+                      }, '管理'),
+                      h('Dropdown', {
+                        style:{
+                          marginBottom: '5px'
+                        },
+                        props: {
+                          transfer: true
+                        },
+                        on: {
+                          'on-click': (type) => {
+                            alert(type)
+                          }
+                        }
+                      }, [h('a', {}, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
+                        attrs: {
+                          name: 'joinLoadBalance'
+                        }
+                      }, '加入负载均衡'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'bindingIP'
+                          }
+                        }, '绑定IP'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'rename'
+                          }
+                        }, '重命名'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'ratesChange'
+                          }
+                        }, '资费变更'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'histRenew'
+                          }
+                        }, '主机续费'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'makeSnapshot'
+                          }
+                        }, '制作快照'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'unbindIP'
+                          }
+                        }, '解绑公网IP'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'shutdown'
+                          }
+                        }, '关机'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'restart'
+                          }
+                        }, '重启'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'deleteHost'
+                          }
+                        }, '删除')])])
+                    ])
+                  } else {
+                    return h('div', {}, [
+                      h('p', {
+                        style:{
+                          lineHeight: '20px',
+                          cursor: 'pointer',
+                          color: '#2A99F2'
+                        },
+                        on: {
+                          click: () => {
+                            alert('连接')
+                          }
+                        }
+                      }, '连接'),
+                      h('p', {
+                        style:{
+                          lineHeight: '30px',
+                          cursor: 'pointer',
+                          color: '#2A99F2'
+                        },
+                        on: {
+                          click: () => {
+                            alert('管理')
+                          }
+                        }
+                      }, '管理'),
+                      h('Dropdown', {
+                        style:{
+                          marginBottom: '5px'
+                        },
+                        props: {
+                          transfer: true
+                        },
+                        on: {
+                          'on-click': (type) => {
+                            alert(type)
+                          }
+                        }
+                      }, [h('a', {
+                        style:{
+                          marginBottom: '5px'
+                        }
+                      }, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
+                        attrs: {
+                          name: 'joinLoadBalance'
+                        }
+                      }, '加入负载均衡'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'bindingIP'
+                          }
+                        }, '绑定IP'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'rename'
+                          }
+                        }, '重命名'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'ratesChange'
+                          }
+                        }, '资费变更'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'histRenew'
+                          }
+                        }, '主机续费'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'hostUpgrade'
+                          }
+                        }, '主机升级'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'makeSnapshot'
+                          }
+                        }, '制作快照'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'makeMirror'
+                          }
+                        }, '制作镜像'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'unbindIP'
+                          }
+                        }, '解绑公网IP'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'startingUp'
+                          }
+                        }, '开机'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'restart'
+                          }
+                        }, '重启'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'deleteHost'
+                          }
+                        }, '删除')])])
+                    ])
+                  }
+                  break
+                default:
+                  break
+              }
+            }
           },
         ],
         hostListData: [
