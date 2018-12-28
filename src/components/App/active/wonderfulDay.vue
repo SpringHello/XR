@@ -138,7 +138,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="getDiskcountGPU('gpuHost',index)">立即抢购</div>
+                    <div class="host_button"  style="cursor:not-allowed;background:#bbbec4;">已售罄</div>
                     </div>
                 </div>
                 </div>
@@ -181,7 +181,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="getDiskcountGPU('gpuHostMoth',index)">立即抢购</div>
+                    <div class="host_button"  style="cursor:not-allowed;background:#bbbec4;">已售罄</div>
                     </div>
                 </div>
                 </div>
