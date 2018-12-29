@@ -960,7 +960,7 @@
                   geetest_validate: result.geetest_validate,
                   geetest_seccode: result.geetest_seccode
                 }
-                axios.post(url,params).then(response=>{
+                axios.get(url, {params: params}).then(response => {
                   if (response.data.status === 'fail') {
                     alert('用户名或密码错误，请重新输入并完成验证');
                     captchaObj.reset(); // 调用该接口进行重置
@@ -1066,14 +1066,13 @@
             return
           }
         }
-        if (!this.$refs.Verify.isPassing) {
+/*        if (!this.$refs.Verify.isPassing) {
           this.loginForm.errorMsg = 'notSlidingValidation'
           return
-        }
+        }*/
         let url = 'user/login.do', params = {
           username: this.loginForm.loginName,
           password: this.loginForm.password,
-          vailCode: '1'
         }
         axios.get(url, {params}).then(res => {
           if (res.data.status === 1 && res.status === 200) {

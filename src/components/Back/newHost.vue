@@ -20,10 +20,10 @@
         </div>
         <div class="operator-bar">
           <Button type="primary">+ 创建</Button>
-          <Button type="primary" :disabled="true">关机</Button>
-          <Button type="primary">开机</Button>
-          <Button type="primary">重启</Button>
-          <Button type="primary">删除</Button>
+          <Button type="primary" :disabled="shutdownDisabled">关机</Button>
+          <Button type="primary" :disabled="startDisabled">开机</Button>
+          <Button type="primary" :disabled="restartDisabled">重启</Button>
+          <Button type="primary" :disabled="deleteDisabled">删除</Button>
           <Dropdown style="margin-left: 10px;vertical-align: middle;" @on-click="hideEvent" class="moreOperation">
             <Button type="primary">
               更多操作
@@ -31,30 +31,30 @@
             </Button>
             <Dropdown-menu slot="list">
               <!-- 加入负载均衡 -->
-              <Dropdown-item name="backup">加入负载均衡</Dropdown-item>
+              <Dropdown-item name="backup" :disabled="joinLoadBalanceDisabled">加入负载均衡</Dropdown-item>
               <!-- 绑定ip-->
-              <Dropdown-item name="backup">绑定IP</Dropdown-item>
+              <Dropdown-item name="backup" :disabled="bindingIPDisabled">绑定IP</Dropdown-item>
               <!-- 重命名 -->
-              <Dropdown-item name="rename">重命名</Dropdown-item>
+              <Dropdown-item name="rename" :disabled="renameDisabled">重命名</Dropdown-item>
               <!--资费变更 -->
-              <Dropdown-item name="ratesChange">资费变更</Dropdown-item>
+              <Dropdown-item name="ratesChange" :disabled="ratesChangeDisabled">资费变更</Dropdown-item>
               <!-- 续费 -->
-              <Dropdown-item name="renewal">主机续费</Dropdown-item>
+              <Dropdown-item name="renewal" :disabled="histRenewDisabled">主机续费</Dropdown-item>
               <!-- 备份 -->
-              <Dropdown-item name="backup">制作快照</Dropdown-item>
+              <Dropdown-item name="backup" :disabled="makeSnapshotDisabled">制作快照</Dropdown-item>
               <!-- 镜像 -->
-              <Dropdown-item name="mirror">制作镜像</Dropdown-item>
+              <Dropdown-item name="mirror" :disabled="makeMirrorDisabled">制作镜像</Dropdown-item>
               <!-- 解绑公网IP-->
-              <Dropdown-item name="mirror">解绑公网IP</Dropdown-item>
+              <Dropdown-item name="mirror" :disabled="unbindIPDisabled">解绑公网IP</Dropdown-item>
               <!-- 升级 -->
-              <Dropdown-item name="upgrade">
+              <Dropdown-item name="upgrade" :disabled="hostUpgradeDisabled">
                 主机升级<span
                 style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
               </Dropdown-item>
             </Dropdown-menu>
           </Dropdown>
         </div>
-        <Table :columns="hostListColumns" :data="hostListData"></Table>
+        <Table :columns="hostListColumns" :data="hostListData" @on-selection-change="hostSelectionChange"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="hostPages" :current="currentPage" :page-size="5"></Page>
@@ -113,8 +113,13 @@
             align: 'center'
           },
           {
-            title: '用户名称/唯一名称',
             ellipsis: true,
+            renderHeader: (h, params) => {
+              return h('ul', {}, [
+                h('li', {}, '用户名称 / '),
+                h('li', {}, '唯一名称')
+              ])
+            },
             render: (h, params) => {
               let text_1 = params.row.companyname ? params.row.companyname : '----'
               let text_2 = params.row.computername ? params.row.computername : '----'
@@ -376,7 +381,12 @@
             }
           },
           {
-            title: '创建时间/到期时间',
+            renderHeader: (h, params) => {
+              return h('ul', {}, [
+                h('li', {}, '创建时间 / '),
+                h('li', {}, '到期时间')
+              ])
+            },
             ellipsis: true,
             render: (h, params) => {
               let text_1 = params.row.createtime ? params.row.createtime + ' / ' : '----'
@@ -481,7 +491,7 @@
                   if (params.row.computerstate == 1) {
                     return h('div', {}, [
                       h('p', {
-                        style:{
+                        style: {
                           lineHeight: '20px',
                           cursor: 'pointer',
                           color: '#2A99F2'
@@ -493,7 +503,7 @@
                         }
                       }, '连接'),
                       h('p', {
-                        style:{
+                        style: {
                           lineHeight: '30px',
                           cursor: 'pointer',
                           color: '#2A99F2'
@@ -505,7 +515,7 @@
                         }
                       }, '管理'),
                       h('Dropdown', {
-                        style:{
+                        style: {
                           marginBottom: '5px'
                         },
                         props: {
@@ -570,7 +580,7 @@
                   } else {
                     return h('div', {}, [
                       h('p', {
-                        style:{
+                        style: {
                           lineHeight: '20px',
                           cursor: 'pointer',
                           color: '#2A99F2'
@@ -582,7 +592,7 @@
                         }
                       }, '连接'),
                       h('p', {
-                        style:{
+                        style: {
                           lineHeight: '30px',
                           cursor: 'pointer',
                           color: '#2A99F2'
@@ -594,7 +604,7 @@
                         }
                       }, '管理'),
                       h('Dropdown', {
-                        style:{
+                        style: {
                           marginBottom: '5px'
                         },
                         props: {
@@ -606,7 +616,7 @@
                           }
                         }
                       }, [h('a', {
-                        style:{
+                        style: {
                           marginBottom: '5px'
                         }
                       }, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
@@ -673,6 +683,7 @@
                   }
                   break
                 default:
+                  return h('span', {}, '----')
                   break
               }
             }
@@ -697,6 +708,7 @@
             instancename: "i-2-2287-VM",
             isautorenew: 0,
             isfreevm: "1",
+            restart: 0,
             loginname: "administrator",
             owndiskofferid: "d3cd9e1e-d803-426c-93de-3b7b6ed359ae",
             privateip: "192.168.0.34",
@@ -807,7 +819,8 @@
             zonename: "华中二区1",
           }],
         hostPages: 5,
-        currentPage: 1
+        currentPage: 1,
+        hostSelection: []
       }
     },
     created() {
@@ -835,11 +848,172 @@
             this.hostPages = res.data.total
           }
         })
+      },
+      hostSelectionChange(selected) {
+        this.hostSelection = selected
       }
     },
     computed: {
       auth() {
         return this.$store.state.authInfo != null
+      },
+
+      /* 根据主机状态确定可操作功能 */
+      shutdownDisabled() {
+        let len = this.hostSelection.length
+        if (len === 0) {
+          return true
+        } else {
+          // 只有开机状态的主机才能关机
+          return !this.hostSelection.every(host => {
+            let restart = host.restart ? host.restart : 0
+            return host.status == 1 && host.computerstate == 1 && restart == 0
+          })
+        }
+      },
+      startDisabled() {
+        let len = this.hostSelection.length
+        if (len === 0) {
+          return true
+        } else {
+          // 只有关机状态的主机才能开机
+          return !this.hostSelection.every(host => {
+            let restart = host.restart ? host.restart : 0
+            return host.status == 1 && host.computerstate == 0 && restart == 0
+          })
+        }
+      },
+      restartDisabled() {
+        let len = this.hostSelection.length
+        if (len === 0) {
+          return true
+        } else {
+          // 只有开机状态的主机才能关机
+          return !this.hostSelection.every(host => {
+            let restart = host.restart ? host.restart : 0
+            return host.status == 1 && host.computerstate == 1 && restart == 0
+          })
+        }
+      },
+      deleteDisabled() {
+        return this.hostSelection.length === 0
+      },
+      joinLoadBalanceDisabled() {
+        let len = this.hostSelection.length
+        if (len !== 1) {
+          return true
+        } else {
+          let restart = this.hostSelection[0].restart ? this.hostSelection[0].restart : 0
+          if (restart == 1) {
+            return true
+          } else {
+            return this.hostSelection[0].status != 1
+          }
+        }
+      },
+      bindingIPDisabled() {
+        let len = this.hostSelection.length
+        if (len !== 1) {
+          return true
+        } else {
+          let restart = this.hostSelection[0].restart ? this.hostSelection[0].restart : 0
+          if (restart == 1) {
+            return true
+          } else {
+            return this.hostSelection[0].status != 1
+          }
+        }
+      },
+      renameDisabled() {
+        let len = this.hostSelection.length
+        if (len !== 1) {
+          return true
+        } else {
+          let restart = this.hostSelection[0].restart ? this.hostSelection[0].restart : 0
+          if (restart == 1) {
+            return true
+          } else {
+            return this.hostSelection[0].status != 1
+          }
+        }
+      },
+      ratesChangeDisabled() {
+        let len = this.hostSelection.length
+        if (len !== 1) {
+          return true
+        } else {
+          let restart = this.hostSelection[0].restart ? this.hostSelection[0].restart : 0
+          if (restart == 1) {
+            return true
+          } else {
+            return this.hostSelection[0].status != 1
+          }
+        }
+      },
+      histRenewDisabled() {
+        let len = this.hostSelection.length
+        if (len !== 1) {
+          return true
+        } else {
+          let restart = this.hostSelection[0].restart ? this.hostSelection[0].restart : 0
+          if (restart == 1) {
+            return true
+          } else {
+            return this.hostSelection[0].status != 1 && this.hostSelection[0].status != 0
+          }
+        }
+      },
+      hostUpgradeDisabled() {
+        let len = this.hostSelection.length
+        if (len !== 1) {
+          return true
+        } else {
+          let restart = this.hostSelection[0].restart ? this.hostSelection[0].restart : 0
+          if (restart == 1) {
+            return true
+          } else {
+            return !(this.hostSelection[0].status == 1 && this.hostSelection[0].computerstate == 0)
+          }
+        }
+      },
+      makeSnapshotDisabled() {
+        let len = this.hostSelection.length
+        if (len !== 1) {
+          return true
+        } else {
+          let restart = this.hostSelection[0].restart ? this.hostSelection[0].restart : 0
+          if (restart == 1) {
+            return true
+          } else {
+            return this.hostSelection[0].status != 1
+          }
+        }
+      },
+      makeMirrorDisabled() {
+        let len = this.hostSelection.length
+        if (len !== 1) {
+          return true
+        } else {
+          let restart = this.hostSelection[0].restart ? this.hostSelection[0].restart : 0
+          if (restart == 1) {
+            return true
+          } else {
+            return !(this.hostSelection[0].status == 1 && this.hostSelection[0].computerstate == 0)
+          }
+        }
+      },
+      unbindIPDisabled() {
+        let len = this.hostSelection.length
+        if (len !== 1) {
+          return true
+        } else {
+          let restart = this.hostSelection[0].restart ? this.hostSelection[0].restart : 0
+          if (restart == 1) {
+            return true
+          } else {
+            return this.hostSelection[0].status != 1
+          }
+        }
       }
     },
     watch: {
