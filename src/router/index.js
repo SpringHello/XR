@@ -127,6 +127,7 @@ const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
 const Host = () =>import('@/components/Back/Host')
+const NewHost = () =>import('@/components/Back/newHost')
 const GPU = () =>import('@/components/Back/GPU')
 const GpuList = () =>import('@/components/Back/GpuList')
 const Mirror = () =>import('@/components/Back/Mirror')
@@ -157,7 +158,6 @@ const PayResult = () =>import('@/components/Back/PayResult')
 const Result = () =>import('@/components/Back/Result')
 const Expenses = () =>import('@/components/Back/Expenses')
 const UserCenter = () =>import('@/components/Back/UserCenter')
-const UserCenter1 = () =>import('@/components/Back/UserCenter1')
 const UserInfo = ()=>import('@/components/Back/UserInfo')
 const MsgCenter = () =>import('@/components/Back/MsgCenter')
 const OperationLog = () =>import('@/components/Back/OperationLog')
@@ -405,6 +405,7 @@ var router = new Router({
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
+        {path: 'newHost', name: 'newHost', component: NewHost},
         {path: 'gpu', name: 'gpu', component: GPU},
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
@@ -418,7 +419,6 @@ var router = new Router({
         {path: 'result', name: 'result', component: Result},
         {path: 'expenses', name: 'expenses', component: Expenses},
         {path: 'userCenter', name: 'userCenter', component: UserCenter},
-        {path: 'userCenter1', name: 'userCenter1', component: UserCenter1},
         {path: 'userInfo', name: 'userInfo', component: UserInfo},
         {path: 'operationLog', name: 'operationLog', component: OperationLog},
         {path: 'msgCenter', name: 'msgCenter', component: MsgCenter},
