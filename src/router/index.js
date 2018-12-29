@@ -152,6 +152,7 @@ const Vpn = () =>import('@/components/Back/Vpn')
 const Ip = () =>import('@/components/Back/Ip')
 const Order = () =>import('@/components/Back/Order')
 const Order1 = () =>import('@/components/Back/Order1')
+const OrderNew = () =>import('@/components/Back/OrderNew')
 const PayResult = () =>import('@/components/Back/PayResult')
 const Result = () =>import('@/components/Back/Result')
 const Expenses = () =>import('@/components/Back/Expenses')
@@ -411,7 +412,7 @@ var router = new Router({
         {path: 'vpn', name: 'vpn', component: Vpn},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
-        /*{path: 'order', name: 'order', component: Order},*/
+        {path: 'orderNew', name: 'orderNew', component: OrderNew},
         {path: 'order', name: 'order', component: Order1},
         {path: 'payResult', name: 'payResult', component: PayResult},
         {path: 'result', name: 'result', component: Result},

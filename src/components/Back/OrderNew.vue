@@ -7,11 +7,11 @@
         <div style="margin-top:10px;" class="order">
           <Table :columns="orderColumns" :data="orderData" @on-selection-change="onSelectionChange"></Table>
         </div>
-        <div style="margin-top:10px;" class="coupon">
+        <div style="margin-top:10px;background:#F6FAFD;" class="coupon">
           <Checkbox v-model="couponInfo.isUse" @on-change="changeCheckbox">
-            <p style="font-weight: 700;margin-left: 10px;">使用优惠券（该产品有<span style="color:#30BA78;">{{couponInfo.couponList.length}}张</span>优惠券）</p>
+            <p style="font-weight: 700;margin-left: 10px;display:inline-block">使用优惠券（该产品有<span style="color:#30BA78;">{{couponInfo.couponList.length}}张</span>优惠券）</p>
           </Checkbox>
-          <div style="margin:20px 0px;border-bottom: 1px solid rgb(233,233,233);">
+          <div style="margin:20px 0px;display:inline-block;">
             <RadioGroup v-model="couponInfo.selectTicket" @on-change="radioChange">
               <Radio v-for="item in couponInfo.couponList" :label="item.operatorid" :key="item.operatorid"
                      style="display:block;margin:20px 0px;">
@@ -21,12 +21,30 @@
                 </div>
               </Radio>
             </RadioGroup>
-            <!--<span style="display: block;color:#2d8cf0;cursor:pointer;margin-bottom: 20px;"> + 获取优惠券</span>-->
-            <!--<router-link :to="{ path: 'dynamic', query: { id: '14' }}">全民普惠，3折减单，最高减免7000元！</router-link>-->
             <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券</span>
           </div>
-          <p style="color: #2B99F2">消费满1117元、6117元、11117元、31117元分别送50元、350元、1000元、3100元苏宁卡/京东E卡！</p>
-          <p style="text-align: right;font-size:14px;color:rgba(102,102,102,1);line-height:19px;margin-bottom: 20px;">
+         <div>
+           <Checkbox v-model="couponInfo.isCash" @on-change="changeCheckbox">
+            <p  style="font-weight: 700;margin-left: 10px;display:inline-block;margin-bottom:25px;">使用现金券<span style="color:#FF624B;font-size:18px;">150</span>元</p>
+          </Checkbox>
+         </div>
+          <div>
+            <div>
+               <Checkbox v-model="couponInfo.isRecommend" @on-change="changeCheckbox">
+                  <p style="font-weight: 700;margin-left: 10px;display:inline-block;">使用推荐码</p>
+                </Checkbox>
+                <span style="float:right;">已经抵扣：<strong style="color:#FF624B;font-size:24px;">150</strong>元</span>
+            </div>
+            <div style="display:inline-block;padding:10px 0 0 25px;" v-if="couponInfo.isRecommend">
+              <Input v-model="couponInfo.Recommend" style="width:300px;"></Input>
+              <Button type="primary">确认</Button>
+            </div>
+         </div>
+         <div style="border-top:1px solid #E9E9E9;padding:20px 0;margin-top:20px;">
+           <span style="color:#2d8cf0;cursor:pointer;">全民普惠，3折减单，最高减免7000元！</span>
+           <span style="float:right;">实际支付：<strong style="color:#FF624B;font-size:24px;">{{couponInfo.totalCost}}</strong>元</span>
+         </div>
+          <!-- <p style="text-align: right;font-size:14px;color:rgba(102,102,102,1);line-height:19px;margin-bottom: 20px;">
             原价：<span :class="{cross:couponInfo.originCost!=couponInfo.totalCost}">{{couponInfo.originCost}}元</span><span
             style="font-size:18px;color:rgba(0,0,0,0.65);margin-left: 20px;">总计支付：{{couponInfo.totalCost}}元</span>
           </p>
@@ -38,10 +56,14 @@
                   style="font-size: 12px;color:rgba(102,102,102,1);" :key="item.index">{{item}}
               </li>
             </ul>
-          </div>
-          <Button type="primary" style="float:right" @click="pay">支付</Button>
-          <div style="clear: both"></div>
+          </div> -->
         </div>
+        <div style="text-align:right;margin-top:40px;">
+          <Button  @click="pay">取消订单</Button>
+          <Button type="primary"  @click="pay">提交订单</Button>
+        </div>
+       
+          <div style="clear: both"></div>
       </div>
     </div>
 
@@ -183,7 +205,11 @@
           // 优惠价
           cost: 0,
           // 最后总计支付
-          totalCost: 0
+          totalCost: 0,
+          // 选中的现金券
+          isCash:false,
+          isRecommend:false,
+          Recommend:''
         },
         canUseTicket: true,
         showModal: {

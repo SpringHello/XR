@@ -6,11 +6,11 @@
                 +{{selectValue}}
             </div>
              <transition name="fade"  >
-            <div class="ver_option" v-if="isShow" >
-                <ul class="ver_ul">
-                    <li :class="selectIndex == index ?'ver_li':''" v-for="(item,index) in telList" :key="index" @click="selectLiValue(item.tel,index)">{{item.tel}}</li>
-                </ul>
-            </div>
+                <div class="ver_option" v-if="isShow" >
+                    <ul class="ver_ul">
+                        <li :class="selectIndex == index ?'ver_li':''" v-for="(item,index) in telList" :key="index" @click="selectLiValue(item.tel,index)">{{item.tel}}</li>
+                    </ul>
+                </div>
              </transition>
         </div>
         <input :value='account'  :style="style"
