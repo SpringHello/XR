@@ -1,6 +1,6 @@
 <template>
   <div id="back">
-    <div class="hint" v-show="hintShow">
+    <div class="back-hint" v-show="hintShow">
       <p><img src="./assets/img/back/back-icon1.png"/>
         <span style="position: relative;bottom: 5px">建议使用Chrome谷歌浏览器43+，以获得最佳体验。</span>
         <img style="cursor: pointer;position: relative;bottom: 3px" @click="hintShow = false" src="./assets/img/back/back-icon2.png"/></p>
@@ -793,7 +793,7 @@
     }
   }
 
-  .hint {
+  .back-hint {
     height: 60px;
     background: rgba(245, 245, 245, 1);
     text-align: center;

@@ -142,8 +142,11 @@
           label: '北方二区',
           value: '1ce0d0b9-a964-432f-8078-a61100789e30'
         }, {
-          label: '华中一区',
-          value: '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'
+          label: '华东一区',
+          value: 'c6dcb310-3e37-4431-87f3-d8ada0cf3d91'
+        }, {
+          label: '华南一区',
+          value: 'a6a20cc2-f84c-409d-9c11-c88a04cce852'
         } /*{
          label: '华中二区',
          value: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2'
@@ -198,7 +201,7 @@
     methods: {
       buyNow(index) {
         if (this.$store.state.userInfo == null) {
-          this.$LR({type:'login'})
+          this.$LR({type: 'login'})
           return
         }
         let vmConfigId = index == 0 ? '33' : '34'
