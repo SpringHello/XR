@@ -926,7 +926,9 @@
           verificationCodeText: '发送验证码',
           verificationCodeTimer: null,
           agreeStatus: true,
-          verificationCodeNum: 0 //验证码错误次数
+          verificationCodeNum: 0, //验证码错误次数,
+          captchaObj: null,
+          captchaObjStatus: false
         },
       }
     },
@@ -948,11 +950,13 @@
               offline: !res.data.success,
               new_captcha: true,
               width: '100%',
-              product: 'popup'
+              product: 'float'
             }, captchaObj => {
+              this.captchaObj = captchaObj
               captchaObj.appendTo("#captchaBox"); //将验证按钮插入到宿主页面中captchaBox元素内
               captchaObj.onReady(() => {
               }).onSuccess(() => {
+                this.loginForm.errorMsg = ''
                 var result = captchaObj.getValidate()
                 let url = 'user/silpJudge.do'
                 let params = {
@@ -961,8 +965,8 @@
                   geetest_seccode: result.geetest_seccode
                 }
                 axios.get(url, {params: params}).then(response => {
-                  if (response.data.status === 'fail') {
-                    alert('用户名或密码错误，请重新输入并完成验证');
+                  if (response.data.status != '1') {
+                    this.captchaObjStatus = true
                     captchaObj.reset(); // 调用该接口进行重置
                   }
                 })
@@ -981,12 +985,16 @@
         this.$refs[name].type === 'password' ? this.$refs[name].type = 'text' : this.$refs[name].type = 'password'
       },
       changeToVailCodeLogin() {
+        this.captchaObj.reset()
+        this.captchaObjStatus = false
         if (this.loginForm.errorMsg === 'formatError') {
           this.loginForm.errorMsg = ''
         }
         this.loginForm.loginType = 'vailCode'
       },
       changeToPasswordLogin() {
+        this.captchaObj.reset()
+        this.captchaObjStatus = false
         if (this.loginForm.errorMsg === 'formatError') {
           this.loginForm.errorMsg = ''
         }
@@ -1066,19 +1074,18 @@
             return
           }
         }
-/*        if (!this.$refs.Verify.isPassing) {
+        if (!this.captchaObjStatus) {
           this.loginForm.errorMsg = 'notSlidingValidation'
           return
-        }*/
+        }
         let url = 'user/login.do', params = {
           username: this.loginForm.loginName,
           password: this.loginForm.password,
         }
         axios.get(url, {params}).then(res => {
           if (res.data.status === 1 && res.status === 200) {
-
-          } else if (res.data.status === 0) {
-            //&& res.data.message === '账户或密码错误，请重新输入'
+            alert('登录成功')
+          } else if (res.data.status === 0 && res.data.message === '账户或密码错误，请重新输入') {
             if (this.loginForm.passwordErrorNum < 4) {
               this.loginForm.passwordErrorNum += 1
               this.loginForm.errorMsg = 'passwordMistake'
@@ -1251,13 +1258,6 @@
       }
     },
     watch: {
-      /* 重置滑动验证 副作用是会重新渲染 组件没有提供重置功能 */
-      'loginForm.loginType'() {
-        this.dragVerifyStatus = false
-        setTimeout(() => {
-          this.dragVerifyStatus = true
-        }, 1)
-      },
       'registerForm.password'(val) {
         if (val.length >= 8) {
           this.registerForm.passwordDegree = 1
