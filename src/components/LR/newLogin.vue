@@ -53,6 +53,10 @@
                 <i></i>
                 <p>您输入的密码错误达4次，请<span @click="loginForm.loginType = 'vailCode',loginForm.errorMsg=''">更换登录方式</span></p>
               </div>
+              <div v-if="loginForm.errorMsg === 'verificationCodeMistakeTanto'">
+                <i></i>
+                <p>您的验证码输入次数超限，请点击<span>忘记密码</span>或<span>联系客服</span></p>
+              </div>
               <div v-if="loginForm.errorMsg === 'verificationCodeMistake'">
                 <i></i>
                 <p>您输入的验证码有误，请重新输入</p>
@@ -905,7 +909,7 @@
           verificationCodeText: '发送验证码',
           verificationCodeTimer: null,
           errorMsg: '', // notRegister: 未注册； formatError： 手机或邮箱格式不对； passwordMistake：密码错误；notSlidingValidation： 未滑动验证;
-          // passwordMistakeTanto: 密码错误次数大于4次;verificationCodeMistake: 验证码错误 notGetVerificationCode: 收不到验证码
+          // passwordMistakeTanto: 密码错误次数大于4次;verificationCodeMistakeTanto: 验证码错误次数大于4次;verificationCodeMistake: 验证码错误 notGetVerificationCode: 收不到验证码
           loginType: 'password', // 登录方式 password: 密码登录   vailCode： 验证码登录
           passwordErrorNum: 0, // 记录密码错误次数
           verificationCodeNum: 0 // 记录验证码错误次数
