@@ -10,122 +10,121 @@
         </Steps>
       </div>
       <div class="step-one" v-if="step==0">
-        <div class="box">
-          <h1 class="headline">证书类型</h1>
-          <div class="content">
-            <span
-              v-for="(item,index) in type"
-              :key="index"
-              class="type-btn"
-              :class="{typeselected: selectedType.value==item.value}"
-              @click="selectedType.value=item.value"
-            >{{item.text}}</span>
-          </div>
-        </div>
-        <div class="box">
-          <h1 class="headline">输入证书名称</h1>
-          <div class="content">
-            <Input v-model="sslForm.sslName" placeholder="输入证书名称" style="width: 650px" size="large"></Input>
-          </div>
-        </div>
-        <div class="box">
-          <h1 class="headline">输入绑定域名</h1>
-          <div class="content">
-            <Alert type="warning" class="domian-hint">
-              <p>1.第一个域名默认为证书显示的主域名，最多100个域名。</p>
-              <p>
-                2.如果您希望一张证书包含多个域名，
-                <span class="orange">每个域名之间使用回车（Enter键）换行输入。</span>
-              </p>
-              <p>
-                3.只支持一个通配域名,例如:*.domain.com(一张证书支持所有子域名,不限制使用)
-                <span class="orange">( 价格:单域购买价*3)。</span>
-              </p>
-            </Alert>
-            <Input v-model="sslForm.domain" type="textarea" :rows="5"></Input>
-          </div>
-        </div>
-        <div class="box">
-          <h1 class="headline">计费方式选择</h1>
-          <div class="content">
-            <span
-              style="width:53px;"
-              v-for="(item,index) in timeValue"
-              :key="index"
-              class="type-btn"
-              :class="{typeselected: yearSelected == index}"
-              @click="yearSelected =index"
-            >{{item}}年</span>
-          </div>
-        </div>
-        <!-- <div class="box" v-if="selectedType.value=='1'">
-          <h1 class="headline">服务器数量</h1>
-          <div class="content" style="color:#333">
-            <span>数量选择：</span>
-            <InputNumber :min="1" v-model="sslForm.hostCount" size="large"></InputNumber>
-            <span class="ml10">台</span>
-          </div>
-        </div> -->
-        <div class="box" v-if="selectedType.value=='1'">
-          <h1 class="headline">验证申请</h1>
-          <div class="content mb30" style="color:#333">
-            <div class="vail-gap">
-              <span>验证方式</span>
-              <Select v-model="sslForm.vailType" style="width:140px" size="large">
-                <Option
-                  v-for="item in vailTypeList"
-                  :value="item.value"
-                  :key="item.value"
-                >{{ item.text }}</Option>
-              </Select>
-            </div>
-            <div v-if="sslForm.vailType == '4'">
-              <div class="vail-gap">
-                <span>单位开户行</span>
-                <Input
-                  v-model="sslForm.sslName"
-                  placeholder="输入单位开户行"
-                  style="width: 400px"
-                  size="large"
-                ></Input>
-              </div>
-              <div class="vail-gap">
-                <span>单位银联账号</span>
-                <Input
-                  v-model="sslForm.sslName"
-                  placeholder="输入银联账号"
-                  style="width: 400px"
-                  size="large"
-                ></Input>
-              </div>
-              <div class="vail-gap">
-                <span>单位联行号</span>
-                <Input
-                  v-model="sslForm.sslName"
-                  placeholder="输入单位联行号"
-                  style="width: 400px"
-                  size="large"
-                ></Input>
-              </div>
+          <div class="box">
+            <h1 class="headline">证书类型</h1>
+            <div class="content">
+              <span
+                v-for="(item,index) in type"
+                :key="index"
+                class="type-btn"
+                :class="{typeselected: selectedType.value==item.value}"
+                @click="selectedType.value=item.value"
+              >{{item.text}}</span>
             </div>
           </div>
-        </div>
-        <div class="cost">
-          <P>
-            <a class="fl">查看计价详情</a>
-            <span>
-              总计费用：
-              <i class="orange fsn f24">{{cost}}元</i>
-            </span>
-          </P>
-          <p>
-            已省：
-            <span class="orange">35元</span>
-          </p>
-          <div class="btns">
-            <Button class="f16 btn-blue" @click="post()">下一步</Button>
+          
+          <div class="box">
+            <h1 class="headline">输入证书名称</h1>
+            <div class="content">
+              <Input
+                v-model="sslForm.sslName"
+                placeholder="输入证书名称"
+                style="width: 650px"
+                size="large"
+              ></Input>
+            </div>
           </div>
-        </div>
+          <div class="box">
+            <h1 class="headline">输入绑定域名</h1>
+            <div class="content">
+              <Alert type="warning" class="domian-hint">
+                <p>1.第一个域名默认为证书显示的主域名，最多100个域名。</p>
+                <p>
+                  2.如果您希望一张证书包含多个域名，
+                  <span class="orange">每个域名之间使用回车（Enter键）换行输入。</span>
+                </p>
+                <p>
+                  3.只支持一个通配域名,例如:*.domain.com(一张证书支持所有子域名,不限制使用)
+                  <span class="orange">( 价格:单域购买价*3)。</span>
+                </p>
+              </Alert>
+              <Input v-model="sslForm.domain" type="textarea" :rows="5"></Input>
+            </div>
+          </div>
+          <div class="box">
+            <h1 class="headline">计费方式选择</h1>
+            <div class="content">
+              <span
+                style="width:53px;"
+                v-for="(item,index) in timeValue"
+                :key="index"
+                class="type-btn"
+                :class="{typeselected: yearSelected == index}"
+                @click="yearSelected =index"
+              >{{item}}年</span>
+            </div>
+          </div>
+         
+          <div class="box" v-if="selectedType.value=='1'">
+            <h1 class="headline">验证申请</h1>
+            <div class="content mb30" style="color:#333">
+              <div class="vail-gap">
+                <span>验证方式</span>
+                <Select v-model="sslForm.vailType" style="width:140px" size="large">
+                  <Option
+                    v-for="item in vailTypeList"
+                    :value="item.value"
+                    :key="item.value"
+                  >{{ item.text }}</Option>
+                </Select>
+              </div>
+              <div v-if="sslForm.vailType == '4'">
+                <div class="vail-gap">
+                  <span>单位开户行</span>
+                  <Input
+                    v-model="sslForm.sslName"
+                    placeholder="输入单位开户行"
+                    style="width: 400px"
+                    size="large"
+                  ></Input>
+                </div>
+                <div class="vail-gap">
+                  <span>单位银联账号</span>
+                  <Input
+                    v-model="sslForm.sslName"
+                    placeholder="输入银联账号"
+                    style="width: 400px"
+                    size="large"
+                  ></Input>
+                </div>
+                <div class="vail-gap">
+                  <span>单位联行号</span>
+                  <Input
+                    v-model="sslForm.sslName"
+                    placeholder="输入单位联行号"
+                    style="width: 400px"
+                    size="large"
+                  ></Input>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="cost">
+            <P>
+              <a class="fl">查看计价详情</a>
+              <span>
+                总计费用：
+                <i class="orange fsn f24">{{cost}}元</i>
+              </span>
+            </P>
+            <p>
+              已省：
+              <span class="orange">35元</span>
+            </p>
+            <div class="btns">
+              <Button class="f16 btn-blue" @click="post()">下一步</Button>
+            </div>
+          </div>
       </div>
       <div class="step-two" v-if="step==1">
         <div class="box" v-if="selectedType.value=='1'">
@@ -319,20 +318,35 @@ export default {
       }
       var domainList = this.sslForm.domain.split('\n')
       var params = {}
+      // var params1 = {
+      //   sslName: this.sslForm.sslName,
+      //   ownUserIdCardNumber: this.sslInfo.certificateNum,
+      //   ownUserEmail: this.sslInfo.manEmail,
+      //   ownUserName: this.sslInfo.manName,
+      //   certallDomain: domainList.join(),
+      //   ownUserPhone: this.sslInfo.contactsTel,
+      //   orgPhone: this.sslInfo.unitTel,
+      //   certValidateType: this.sslForm.vailType,
+      //   certExpTime: (this.yearSelected + 1) * 12,
+      //   orgName: this.sslInfo.unitName,
+      //   orgType: this.sslInfo.unitType,
+      //   certTypeId: this.selectedType.value,
+      //   orgEmail: this.sslInfo.unitEmail,
+      // }
       var params1 = {
-        sslName: this.sslForm.sslName,
-        ownUserIdCardNumber: this.sslInfo.certificateNum,
-        ownUserEmail: this.sslInfo.manEmail,
-        ownUserName: this.sslInfo.manName,
-        certallDomain: domainList.join(),
-        ownUserPhone: this.sslInfo.contactsTel,
-        orgPhone: this.sslInfo.unitTel,
-        certValidateType: this.sslForm.vailType,
-        certExpTime: (this.yearSelected + 1) * 12,
-        orgName: this.sslInfo.unitName,
-        orgType: this.sslInfo.unitType,
-        certTypeId: this.selectedType.value,
-        orgEmail: this.sslInfo.unitEmail,
+        sslName: '证书',
+        ownUserIdCardNumber: '500227199209095726',
+        ownUserEmail: '2420479720@qq.com',
+        ownUserName: '冷红憬',
+        certallDomain: 'gt21.top',
+        ownUserPhone: '+86-151-23278316',
+        orgPhone: '+86-151-23278316',
+        certValidateType: '2',
+        certExpTime: '12',
+        orgName: '北京允睿',
+        orgType: 'PrivateOrganization',
+        certTypeId: '1',
+        orgEmail: '2420479720@qq.com',
         // certserverNumber: this.sslForm.hostCount,
       }
       var params2 = {
@@ -344,7 +358,8 @@ export default {
         certExpTime: (this.yearSelected + 1) * 12,
         certTypeId: this.selectedType.value,
       }
-      params = this.selectedType.value == '1' ? params1 : params2
+      // params = this.selectedType.value == '1' ? params1 : params2
+      params = params1
       // console.log(params1)
       axios.post('domain/createSSLOrder.do', params).then(response => {
         if (response.status == 200 && response.data.status == 1) {
