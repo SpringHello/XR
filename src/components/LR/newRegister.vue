@@ -751,7 +751,7 @@
         ruleModal: false,
         registerForm: {
           phonePrefixList: areaTel,
-          onStep: 3,
+          onStep: 1,
           registerPhonePrefix: '86',
           registerType: 'phone',
           loginPhone: '',
