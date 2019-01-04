@@ -228,6 +228,7 @@
 
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import $store from '@/vuex'
   import merge from 'merge'
   const snoapshotName = (rule,value,callback)=>{
     let reg = /^[0-9]{2,4094}$/
@@ -781,6 +782,16 @@
         next();
       },
       methods:{
+        toggleZone(zoneId) {
+          // 切换gpu第一个区为默认区
+          axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+          })
+          for (var zone of this.$store.state.zoneList) {
+            if (zone.zoneid == zoneId) {
+              $store.commit('setZone', zone);
+            }
+          }
+        },
         // 获取GPU主机
        getGpuServerList(){
          axios.get('gpuserver/listGpuServer.do',{
@@ -1171,6 +1182,7 @@
         },
       },
       created(){
+        this.toggleZone(this.$store.state.zone.zoneid)
         if (this.$store.state.authInfo == null) {
           this.showModal.selectAuthType = true
         }
