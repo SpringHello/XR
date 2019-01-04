@@ -924,7 +924,7 @@
                   this.registerForm.verificationCodeText = '60S'
                   this.registerForm.verificationCodeTimer = setInterval(() => {
                     i -= 1
-                    if (i < 60) {
+                    if (i < 10) {
                       this.registerForm.verificationCodeText = '0' + i + 'S'
                     } else {
                       this.registerForm.verificationCodeText = i + 'S'
@@ -970,7 +970,7 @@
             this.registerForm.verificationCodeText = '60S'
             this.registerForm.verificationCodeTimer = setInterval(() => {
               i -= 1
-              if (i < 60) {
+              if (i < 10) {
                 this.registerForm.verificationCodeText = '0' + i + 'S'
               } else {
                 this.registerForm.verificationCodeText = i + 'S'
@@ -1040,7 +1040,7 @@
               }
             }
             axios.get(url, {params: params}).then(res => {
-              if (res.data.status == 1 && res.status == 200) {
+              if (res.data.status === 1 && res.status === 200) {
                 this.registerForm.errorMsg = ''
                 this.registerForm.onStep = 2
               } else {
@@ -1065,7 +1065,7 @@
           this.registerForm.errorMsg = 'passwordTooEasy'
           return
         }
-        if (this.registerForm.password !== this.registerForm.passwordConfirm) {
+        if (this.registerForm.password !== this.registerForm.passwordAffirm) {
           this.registerForm.errorMsg = 'notConfirmPassword'
           return
         }
