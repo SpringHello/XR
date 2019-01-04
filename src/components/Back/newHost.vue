@@ -844,6 +844,7 @@
         this.showModal.selectAuthType = true
       }
       this.getHostList()
+      this.timingRefresh()
     },
     methods: {
       hideEvent(name) {
@@ -874,17 +875,35 @@
       hostSelectionChange(selected) {
         this.hostSelection = selected
       },
-      /* 局部刷新时选中项不变 */
+      /* 局部刷新 */
       timingRefresh() {
         let timer = setInterval(() => {
-          this.getHostList()
-          let flag = !this.hostListData.some(item => {
-            return item.restart == 1 || item.status == 2
-          }) // 主机列表中是否有过渡状态
-          if (flag) {
-            console.log(flag)
-            clearInterval(timer)
-          }
+          let url = 'information/listVirtualMachines.do'
+          this.$http.get(url, {
+            params: {
+              returnList: '1',
+              page: this.currentPage,
+              pageSize: '5'
+            }
+          }).then(res => {
+            if (res.data.status == 1 && res.status == 200) {
+              this.hostListData = res.data.result.data
+              this.hostPages = res.data.total
+              let flag = this.hostListData.some(item => {
+                return item.restart == 1 || item.status == 2
+              }) // 主机列表中是否有过渡状态
+              if (!flag) {
+                clearInterval(timer)
+              }
+              this.hostSelection.forEach(item_1 => {
+                this.hostListData.forEach(item_2 => {
+                  if (item_1.id === item_2.id) {
+                    item_2._checked = true
+                  }
+                })
+              })
+            }
+          })
         }, 3000)
       },
       hostShutdown() {
@@ -895,7 +914,6 @@
           }
         this.$http.get(url, {params}).then(res => {
           if (res.status === 200 && res.data.status === 1) {
-            this.getHostList()
             this.timingRefresh()
           } else {
             this.getHostList()
@@ -912,7 +930,6 @@
           }
         this.$http.get(url, {params}).then(res => {
           if (res.status === 200 && res.data.status === 1) {
-            this.getHostList()
             this.timingRefresh()
           } else {
             this.getHostList()

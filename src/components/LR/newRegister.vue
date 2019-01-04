@@ -732,13 +732,9 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import areaTel from '../../options/area_tel'
-  import dragVerify from 'vue-drag-verify'
   import gt from '../../util/gt'
 
   export default {
-    components: {
-      dragVerify
-    },
     data() {
       return {
         regExpObj: {
