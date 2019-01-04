@@ -849,15 +849,6 @@
         }
       },
       refresh() {
-        if (this.ipData.length !== 0) {
-          function checkStatus(ip) {
-            return ip.status == 2 || ip.status == 3 || ip.status == 4
-          }
-
-          if (!this.ipData.some(checkStatus)) {
-            clearInterval(this.intervalInstance)
-          }
-        }
         // 获取ip数据
         axios.get('network/listPublicIp.do', {
           params: {
@@ -885,7 +876,6 @@
                 }
               })
               if (!(status == 2 || status == 3 || status == 4)) {
-                console.log('清除')
                 clearInterval(timer)
               }
             }
