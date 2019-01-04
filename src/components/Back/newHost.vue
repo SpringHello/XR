@@ -19,11 +19,23 @@
           <p>云主机是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置。XRcloud为您提供的云主机具有安全、弹性、高性能等特点。</p>
         </div>
         <div class="operator-bar">
-          <Button type="primary">+ 创建</Button>
-          <Button type="primary" :disabled="shutdownDisabled">关机</Button>
-          <Button type="primary" :disabled="startDisabled">开机</Button>
-          <Button type="primary" :disabled="restartDisabled">重启</Button>
-          <Button type="primary" :disabled="deleteDisabled">删除</Button>
+          <Button type="primary" @click="$router.push('/ruicloud/buy/bhost')">+ 创建</Button>
+          <Button type="primary" @click="hostShutdown" :disabled="shutdownDisabled">关机</Button>
+          <Button type="primary" @click="hostStart" :disabled="startDisabled">开机</Button>
+          <Poptip
+            confirm
+            width="230"
+            placement="right"
+            title="您确认重启选中的主机吗？" style="margin: 0 10px">
+            <Button type="primary" :disabled="restartDisabled">重启</Button>
+          </Poptip>
+          <Poptip
+            confirm
+            width="230"
+            placement="right"
+            title="您确认删除选中的主机吗？">
+            <Button type="primary" :disabled="deleteDisabled">删除</Button>
+          </Poptip>
           <Dropdown style="margin-left: 10px;vertical-align: middle;" @on-click="hideEvent" class="moreOperation">
             <Button type="primary">
               更多操作
@@ -299,14 +311,14 @@
               let imgStyle = {
                 height: '16px',
                 width: '16px',
-                marginTop: '10px',
                 marginRight: '5px'
               }
               switch (templateName) {
                 case 'W':
                   return h('div', {
                     style: {
-                      display: 'flex'
+                      display: 'flex',
+                      alignItems: 'center'
                     }
                   }, [
                     h('img', {
@@ -321,7 +333,8 @@
                 case 'C':
                   return h('div', {
                     style: {
-                      display: 'flex'
+                      display: 'flex',
+                      alignItems: 'center'
                     }
                   }, [
                     h('img', {
@@ -336,7 +349,8 @@
                 case 'U':
                   return h('div', {
                     style: {
-                      display: 'flex'
+                      display: 'flex',
+                      alignItems: 'center'
                     }
                   }, [
                     h('img', {
@@ -351,7 +365,8 @@
                 case 'D':
                   return h('div', {
                     style: {
-                      display: 'flex'
+                      display: 'flex',
+                      alignItems: 'center'
                     }
                   }, [
                     h('img', {
@@ -829,6 +844,7 @@
         this.showModal.selectAuthType = true
       }
       this.getHostList()
+      this.timingRefresh()
     },
     methods: {
       hideEvent(name) {
@@ -844,20 +860,99 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            // this.hostListData = res.data.result.data
+            this.hostListData = res.data.result.data
             this.hostPages = res.data.total
+            this.hostSelection.forEach(item_1 => {
+              this.hostListData.forEach(item_2 => {
+                if (item_1.id === item_2.id) {
+                  item_2._checked = true
+                }
+              })
+            })
           }
         })
       },
       hostSelectionChange(selected) {
         this.hostSelection = selected
-      }
+      },
+      /* 局部刷新 */
+      timingRefresh() {
+        let timer = setInterval(() => {
+          let url = 'information/listVirtualMachines.do'
+          this.$http.get(url, {
+            params: {
+              returnList: '1',
+              page: this.currentPage,
+              pageSize: '5'
+            }
+          }).then(res => {
+            if (res.data.status == 1 && res.status == 200) {
+              this.hostListData = res.data.result.data
+              this.hostPages = res.data.total
+              let flag = this.hostListData.some(item => {
+                return item.restart == 1 || item.status == 2
+              }) // 主机列表中是否有过渡状态
+              if (!flag) {
+                clearInterval(timer)
+              }
+              this.hostSelection.forEach(item_1 => {
+                this.hostListData.forEach(item_2 => {
+                  if (item_1.id === item_2.id) {
+                    item_2._checked = true
+                  }
+                })
+              })
+            }
+          })
+        }, 3000)
+      },
+      hostShutdown() {
+        let url = 'information/stopVirtualMachine.do',
+          params = {
+            VMId: this.selectHostIds,
+            forced: true
+          }
+        this.$http.get(url, {params}).then(res => {
+          if (res.status === 200 && res.data.status === 1) {
+            this.timingRefresh()
+          } else {
+            this.getHostList()
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      hostStart() {
+        let url = 'information/startVirtualMachine.do',
+          params = {
+            VMId: this.selectHostIds
+          }
+        this.$http.get(url, {params}).then(res => {
+          if (res.status === 200 && res.data.status === 1) {
+            this.timingRefresh()
+          } else {
+            this.getHostList()
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
     },
     computed: {
       auth() {
         return this.$store.state.authInfo != null
       },
-
+      selectHostIds() {
+        let ids = []
+        if (this.hostSelection.length !== 0) {
+          ids = this.hostSelection.map(item => {
+            return item.computerid
+          })
+        }
+        return ids + ''
+      },
       /* 根据主机状态确定可操作功能 */
       shutdownDisabled() {
         let len = this.hostSelection.length
