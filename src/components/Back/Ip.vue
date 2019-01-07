@@ -870,9 +870,9 @@
           }).then(response => {
             if (response.data.status == 1 && response.status == 200) {
               let status = response.data.result[0].status
-              this.ipData.forEach(item => {
+              this.ipData.forEach((item,index) => {
                 if (item.id === response.data.result[0].id) {
-                  this.refresh()
+                  this.ipData.splice(index,1,response.data.result[0])
                 }
               })
               if (!(status == 2 || status == 3 || status == 4)) {

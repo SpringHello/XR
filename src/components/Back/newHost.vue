@@ -844,7 +844,6 @@
         this.showModal.selectAuthType = true
       }
       this.getHostList()
-      this.timingRefresh()
     },
     methods: {
       hideEvent(name) {
@@ -862,13 +861,6 @@
           if (res.data.status == 1 && res.status == 200) {
             this.hostListData = res.data.result.data
             this.hostPages = res.data.total
-            this.hostSelection.forEach(item_1 => {
-              this.hostListData.forEach(item_2 => {
-                if (item_1.id === item_2.id) {
-                  item_2._checked = true
-                }
-              })
-            })
           }
         })
       },
