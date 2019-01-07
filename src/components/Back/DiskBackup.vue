@@ -221,8 +221,9 @@
   import debounce from 'throttle-debounce/debounce'
   import $store from '@/vuex'
   import regExp from '../../util/regExp'
-  export default{
-    data(){
+
+  export default {
+    data() {
       const validaRegisteredName = regExp.validaRegisteredName
       return {
         // 获取磁盘列表，显示穿梭框左面
@@ -660,27 +661,27 @@
         })
       })
     },
-    created(){
+    created() {
       this.getMonthCongigDate()
       this.getWeekTimeData()
     },
     computed: {
       // 该计算属性用于解决观测对象时currentValue与oldValue指向同一对象的问题，没有其他用处
-      copyDiskForm(){
+      copyDiskForm() {
         var obj = {}
         for (var i in this.diskForm) {
           obj[i] = this.diskForm[i]
         }
         return obj
       },
-      auth(){
+      auth() {
         return this.$store.state.authInfo != null
 
       }
     },
     methods: {
       /* 刷新页面 */
-      refreshPage () {
+      refreshPage() {
         if (this.tabPane == 'diskBackups') {
           this.listDiskSnapshots()
         } else {
@@ -689,7 +690,7 @@
         this.$router.go(0)
       },
       /* 区域变更刷新数据 */
-      refresh () {
+      refresh() {
         if (this.tabPane == 'diskBackups') {
           this.listDiskSnapshots()
         } else {
@@ -699,7 +700,7 @@
         this.getWeekTimeData()
       },
       /* 获取月配置时间  */
-      getMonthCongigDate () {
+      getMonthCongigDate() {
         var date = [
           {
             label: '00:00',
@@ -784,7 +785,7 @@
         }
       },
       /* 获取周配置时间 */
-      getWeekTimeData () {
+      getWeekTimeData() {
         var date = [
           {
             label: '00:00',
@@ -891,7 +892,7 @@
         }
       },
       /* 添加磁盘到备份策略 */
-      addDisk (index, data) {
+      addDisk(index, data) {
         this.diskForBackupsStrategyList.splice(index, 1)
         var resource = {
           resourcesName: data.diskname,
@@ -900,13 +901,13 @@
         this.resourceDisk.push(resource)
       },
       /* 删除应用该备份策略的磁盘 */
-      deleteDisk (index, data) {
+      deleteDisk(index, data) {
         this.resourceDisk.splice(index, 1)
         data.diskname = data.resourcesName
         this.diskForBackupsStrategyList.push(data)
       },
       /* 确定从磁盘备份策略添加或移除磁盘 */
-      updateDiskIntoBackUpStrategy () {
+      updateDiskIntoBackUpStrategy() {
         var diskParams = this.resourceDisk.map(function (item) {
           return item.resourcesId
         })
@@ -931,7 +932,7 @@
         })
       },
       /* 添加或删除备份策略应用的磁盘 */
-      addOrDeleteDisk (data) {
+      addOrDeleteDisk(data) {
         var leftData = []
         this.resourceDisk = []
         this.$http.get('Disk/listDisk.do').then(response => {
@@ -956,7 +957,7 @@
         this.showModal.addOrDeleteDisk = true
       },
       /* 把备份列表渲染到表格 */
-      setDiskBackups (response) {
+      setDiskBackups(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.diskBackupsData = response.data.result
           this.diskBackupsTotal = response.data.total
@@ -967,7 +968,7 @@
         }
       },
       // 检测是否选中一项数据
-      checkSelect(){
+      checkSelect() {
         if (this.diskSelectionStrategy === null) {
           this.$Message.info('请选择需要删除的磁盘备份策略')
           return false
@@ -975,7 +976,7 @@
         return true
       },
       // 验证以备份创建磁盘的表单
-      _checkNewForm(){
+      _checkNewForm() {
         this.$refs.newDisk.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建磁盘方法
@@ -984,7 +985,7 @@
         })
       },
       // 验证新建备份策略表单
-      _checkNewBackupsForm(){
+      _checkNewBackupsForm() {
         this.$refs.newBackups.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建备份策略方法
@@ -993,7 +994,7 @@
         })
       },
       /* 验证新建备份 */
-      _checkCreateBackupsForm () {
+      _checkCreateBackupsForm() {
         this.$refs.createBackups.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建备份方法
@@ -1002,7 +1003,7 @@
         })
       },
       /* 购买数量操作 */
-      reduce () {
+      reduce() {
         this.diskForm.quantity -= 1
         switch (this.diskForm.quantity) {
           case 0:
@@ -1013,7 +1014,7 @@
         }
       },
       /* 列出磁盘备份 */
-      listDiskSnapshots () {
+      listDiskSnapshots() {
         this.$http.get('Snapshot/listDiskSnapshots.do', {
           params: {
             pageSize: 10,
@@ -1031,12 +1032,12 @@
         })
       },
       /* 分页 切换 */
-      changePage (page) {
+      changePage(page) {
         this.diskBackupPage = page
         this.listDiskSnapshots()
       },
       /* 创建备份策略 弹出模态框 */
-      createBackupStrategy () {
+      createBackupStrategy() {
         this.backupsForm.applyDiskList = []
         this.showModal.backupsStrategy = true
         this.$http.get('Disk/listDisk.do').then(response => {
@@ -1054,13 +1055,13 @@
         })
       },
       /* 确认创建磁盘备份策略 */
-      createDiskBackupStrategy_ok () {
+      createDiskBackupStrategy_ok() {
         this.$http.get('Disk/createDiskBackUpStrategy.do', {
           params: {
             strategyName: this.backupsForm.backupsName,
             keepCount: this.backupsForm.keepNumber,
             keepInterval: this.backupsForm.timeType,
-            autoBackUpTime: this.backupsForm.timeValue[0],
+            autoBackUpTime: this.backupsForm.timeValue + '',
             diskIds: this.backupsForm.strategyForDisk.join(',')
           }
         }).then(response => {
@@ -1080,7 +1081,7 @@
         })
       },
       /* 列出磁盘备份策略 */
-      listDiskBackUpStrategy () {
+      listDiskBackUpStrategy() {
         this.$http.get('Disk/listDiskBackUpStrategy.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsStrategyData = response.data.result
@@ -1093,7 +1094,7 @@
         })
       },
       /* 以备份创建新磁盘 */
-      createBackupsToDisk (data) {
+      createBackupsToDisk(data) {
         this.showModal.backupsToDisk = true
         this.diskForm.name = data.name
         this.diskForm.diskSize = data.disksize
@@ -1102,7 +1103,7 @@
         this.diskForm.dt = data.diskoffer
       },
       /* 确认以备份创建新磁盘，跳转订单*/
-      createBackupsToDisk_ok () {
+      createBackupsToDisk_ok() {
         console.log(this.diskForm)
         this.$http.get('Disk/createVolume.do', {
           params: {
@@ -1126,7 +1127,7 @@
         })
       },
       /* 创建磁盘备份 */
-      createDiskBackup () {
+      createDiskBackup() {
         this.createBackupsForm.diskList = []
         this.showModal.createDiskBackup = true
         this.$http.get('Disk/listDisk.do').then(response => {
@@ -1169,7 +1170,7 @@
         })
       },
       /* 删除磁盘备份 */
-      deleteDiskBackup () {
+      deleteDiskBackup() {
         if (this.diskBackupsSelection) {
           this.diskBackupsData.forEach(item => {
             if (this.diskBackupsSelection.id === item.id) {
@@ -1197,7 +1198,7 @@
         }
       },
       /* 切换备份时间间隔时给准确时间点赋值 */
-      changeType (value) {
+      changeType(value) {
         switch (value) {
           case 'day':
             this.backupsForm.timeValue = ['00:00']
@@ -1211,11 +1212,11 @@
         }
       },
       /* 选中备份策略 */
-      selectDiskStrategy (currentRow) {
+      selectDiskStrategy(currentRow) {
         this.diskSelectionStrategy = currentRow
       },
       /* 删除备份策略 */
-      deleteDiskStrategy () {
+      deleteDiskStrategy() {
         if (this.checkSelect() === true) {
           this.diskBackupsStrategyData.forEach(item => {
             if (this.diskSelectionStrategy.id === item.id) {
@@ -1241,7 +1242,7 @@
         }
       },
       /* 选择磁盘备份 */
-      selectDiskBackups (currentRow) {
+      selectDiskBackups(currentRow) {
         this.diskBackupsSelection = currentRow
       },
       // 新建磁盘价格查询
@@ -1272,7 +1273,7 @@
     },
     watch: {
       /* 如果标签切换到备份策略，调用列出策略方法 */
-      tabPane () {
+      tabPane() {
         if (this.tabPane === 'diskBackupsStrategy') {
           this.listDiskBackUpStrategy()
         } else {

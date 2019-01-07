@@ -1795,7 +1795,7 @@
         }, 1000 * 10)
       },
       // 分页
-      currentChange(page){
+      currentChange(page) {
         this.page = page
         this.listsnaps()
       },
@@ -2090,7 +2090,7 @@
                 strategyName: this.creatBackupsForm.name,
                 keepCount: this.creatBackupsForm.num,
                 keepInterval: this.creatBackupsForm.timeType,
-                autoBackUpTime: this.creatBackupsForm.timeValue[0],
+                autoBackUpTime: this.creatBackupsForm.timeValue + '',
                 VMIds: vmids,
                 memoryStatus: this.creatBackupsForm.memory
               }
@@ -2117,7 +2117,7 @@
         this.showModal.newBackups = false
       },
       // 区域变更，刷新数据
-      refresh(){
+      refresh() {
         this.listsnaps()
         this.listBackups()
         this.listHost()
