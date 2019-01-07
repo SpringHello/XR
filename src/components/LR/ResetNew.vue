@@ -146,723 +146,743 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import regExp from '../../util/regExp'
-  import axios from '@/util/axiosInterceptor'
-  import throttle  from 'throttle-debounce/throttle'
-  import popk from '../../myView/input/main'
-  const vailAucct = (rule ,value ,callback)=>{
-    let reg = /^1[3|5|8|9|6|7]\d{9}$/;
-    if(value == ''){
-      return callback(new Error('请输入手机号'));
-    }else if(!reg.test(value)){
-      return callback(new Error('手机号格式不正确'));
-    }else{
-      callback();
-    }
+import regExp from "../../util/regExp";
+import axios from "@/util/axiosInterceptor";
+import throttle from "throttle-debounce/throttle";
+import popk from "../../myView/input/main";
+const vailAucct = (rule, value, callback) => {
+  let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+  if (value == "") {
+    return callback(new Error("请输入手机号"));
+  } else if (!reg.test(value)) {
+    return callback(new Error("手机号格式不正确"));
+  } else {
+    callback();
   }
+};
 
-  export default{
-    data(){
-      return {
-        imgSrc: 'user/getKaptchaImage.do',
-        form: {
-          // 是否明文显示密码
-          showPassword: false,
-          loginname: '',
-          // 图形验证码
-          code: '',
-          password: '',
-          confirmPassword: '',
-          vailCode: '',
-          loginnamePlaceholder: '登录邮箱/手机号',
-          passwordPlaceholder: '请输入新密码',
-          confirmPasswordPlaceholder: '请确认新密码',
-          vailCodePlaceholder: '请输入验证码',
-          codePlaceholder: '请输入图片验证码'
+export default {
+  data() {
+    return {
+      imgSrc: "user/getKaptchaImage.do",
+      form: {
+        // 是否明文显示密码
+        showPassword: false,
+        loginname: "",
+        // 图形验证码
+        code: "",
+        password: "",
+        confirmPassword: "",
+        vailCode: "",
+        loginnamePlaceholder: "登录邮箱/手机号",
+        passwordPlaceholder: "请输入新密码",
+        confirmPasswordPlaceholder: "请确认新密码",
+        vailCodePlaceholder: "请输入验证码",
+        codePlaceholder: "请输入图片验证码"
+      },
+      vailForm: {
+        loginname: {
+          message: "",
+          warning: false
         },
-        vailForm: {
-          loginname: {
-            message: '',
-            warning: false
-          },
-          password: {
-            message: '',
-            warning: false
-          },
-          confirmPassword: {
-            message: '',
-            warning: false
-          },
-          vailCode: {
-            message: '',
-            warning: false
-          },
-          code: {
-            message: '',
-            warning: false
-          }
+        password: {
+          message: "",
+          warning: false
         },
+        confirmPassword: {
+          message: "",
+          warning: false
+        },
+        vailCode: {
+          message: "",
+          warning: false
+        },
+        code: {
+          message: "",
+          warning: false
+        }
+      },
 
-         //步骤集合
-        stepList:[
-           {
-             value:'输入账号' ,
-             style:'process_text_checked',
-             failOrSuccess:false
-          },
-          {
-             value:'选择验证方式' ,
-             style:'',
-             failOrSuccess:false
-          },
-          {
-            value:'身份验证',
-            style:'',
-             failOrSuccess:false
-          },
-          {
-            value:'设置新密码',
-            style:'',
-             failOrSuccess:false
-          },
-          {
-            value:'完成',
-            style:'',
-             failOrSuccess:false
-          }
-        ],
+      //步骤集合
+      stepList: [
+        {
+          value: "输入账号",
+          style: "process_text_checked",
+          failOrSuccess: false
+        },
+        {
+          value: "选择验证方式",
+          style: "",
+          failOrSuccess: false
+        },
+        {
+          value: "身份验证",
+          style: "",
+          failOrSuccess: false
+        },
+        {
+          value: "设置新密码",
+          style: "",
+          failOrSuccess: false
+        },
+        {
+          value: "完成",
+          style: "",
+          failOrSuccess: false
+        }
+      ],
 
-        verificationList:[
-           {
-             icon:require('../../assets/img/updatePaw/paw_email.png'),
-             title:'邮箱验证',
-             des:'您需要使用注册邮箱进行身份验证'
-           },
-           {
-             icon:require('../../assets/img/updatePaw/paw_phone.png'),
-             title:'手机验证',
-             des:'您需要使用注册手机进行身份验证'
-           },
-           {
-             icon:require('../../assets/img/updatePaw/paw_user.png'),
-             title:'人工申诉',
-             des:'若您未认证且手机和邮箱均不可使用'
-           }
-        ],
+      verificationList: [
+        {
+          icon: require("../../assets/img/updatePaw/paw_email.png"),
+          title: "邮箱验证",
+          des: "您需要使用注册邮箱进行身份验证"
+        },
+        {
+          icon: require("../../assets/img/updatePaw/paw_phone.png"),
+          title: "手机验证",
+          des: "您需要使用注册手机进行身份验证"
+        },
+        {
+          icon: require("../../assets/img/updatePaw/paw_user.png"),
+          title: "人工申诉",
+          des: "若您未认证且手机和邮箱均不可使用"
+        }
+      ],
 
-        popleVerList:[
-          {
-            icon:require('../../assets/img/updatePaw/paw_card.png'),
-            title:'我已实名验证',
-            des:'您需要使用实名认证信息进行身份验证'
-          },
-          {
-            icon:require('../../assets/img/updatePaw/paw_user.png'),
-            title:'我没有实名认证',
-            des:'若您未认证可以通过人工客服重制账号'
-          },
-        ],
-        formValidate:{
-          account:''
+      popleVerList: [
+        {
+          icon: require("../../assets/img/updatePaw/paw_card.png"),
+          title: "我已实名验证",
+          des: "您需要使用实名认证信息进行身份验证"
         },
-        ruleValidate:{
-          account:[
-            {required:true,validator:vailAucct,trigger:'blur'}
-          ]
-        },
-        isemail: '1',
-        type: '1',
-        codePlaceholder: '发送验证码',
+        {
+          icon: require("../../assets/img/updatePaw/paw_user.png"),
+          title: "我没有实名认证",
+          des: "若您未认证可以通过人工客服重制账号"
+        }
+      ],
+      formValidate: {
+        account: ""
+      },
+      ruleValidate: {
+        account: [{ required: true, validator: vailAucct, trigger: "blur" }]
+      },
+      isemail: "1",
+      type: "1",
+      codePlaceholder: "发送验证码",
 
-        index:1,
-     
-        //验证
-        verPage:'',
-        style:'',
-        dataFroms:{
-          account:'',
-          newPaw:'',
-          oldPaw:'',
-          email:'',
-          phone:'',
-          code:''
-        },
-       
-        //账号是否可用
-        accountIsDis:false,
-        absc:true,
-        url:{
-          icon1:require('../../assets/img/updatePaw/paw_zhanghao.png'),
-          iconCard:require('../../assets/img/updatePaw/paw_zhanghao.png'),
-          iconLock:require('../../assets/img/login/lr-icon2.png'),
-          iconYan:require('../../assets/img/login/lr-icon4.png'),
-          iconPhone:require('../../assets/img/login/lr-icon5.png')
-        },
-         QQInfo: '',  // QQ客服在线情况
+      index: 1,
+
+      //验证
+      verPage: "",
+      style: "",
+      dataFroms: {
+        account: "",
+        newPaw: "",
+        oldPaw: "",
+        email: "",
+        phone: "",
+        code: ""
+      },
+
+      //账号是否可用
+      accountIsDis: false,
+      absc: true,
+      url: {
+        icon1: require("../../assets/img/updatePaw/paw_zhanghao.png"),
+        iconCard: require("../../assets/img/updatePaw/paw_zhanghao.png"),
+        iconLock: require("../../assets/img/login/lr-icon2.png"),
+        iconYan: require("../../assets/img/login/lr-icon4.png"),
+        iconPhone: require("../../assets/img/login/lr-icon5.png")
+      },
+      QQInfo: "" // QQ客服在线情况
+    };
+  },
+  components: {
+    "x-Input": popk
+  },
+  created() {
+    axios.get("network/getQQCustomerServiceStatus.do", {}).then(response => {
+      this.QQInfo = response.data.kefu[0].qqnumber;
+    });
+  },
+  methods: {
+    vail(field) {
+      var text = this.form[field];
+      if (text == "") {
+        this.vailForm[field].message = "";
+        this.form[`${field}Placeholder`] = messageMap[field].placeholder;
+        this.vailForm[field].warning = false;
+        return;
+      }
+
+      var isLegal =
+        field == "loginname"
+          ? regExp.emailVail(text)
+          : field == "password" ? regExp.registerPasswordVail(text) : true;
+      if (!isLegal) {
+        this.vailForm[field].message = messageMap[field].errorMessage;
+        this.vailForm[field].warning = true;
+      } else {
+        this.vailForm[field].message = messageMap[field].placeholder;
+        this.vailForm[field].warning = false;
       }
     },
-    components:{
-      'x-Input':popk
+    focus(field) {
+      if (
+        field == "vailCode" &&
+        this.vailForm.loginname.message == "验证码错误"
+      ) {
+        this.vailForm.loginname.message = "";
+        this.vailForm.loginname.warning = false;
+      }
+      if (
+        (field == "loginname" || field == "password") &&
+        this.vailForm.loginname.message == "用户名/密码 错误"
+      ) {
+        this.vailForm.loginname.message = "";
+        this.vailForm.loginname.warning = false;
+      }
+
+      var text = this.form[field];
+      this.form[`${field}Placeholder`] = "";
+      if (text == "") {
+        this.vailForm[field].message = messageMap[field].placeholder;
+        return;
+      }
+      var isLegal =
+        field == "loginname"
+          ? regExp.emailVail(text)
+          : field == "password" ? regExp.registerPasswordVail(text) : true;
+
+      if (!isLegal) {
+        this.vailForm[field].message = messageMap[field].errorMessage;
+        this.vailForm[field].warning = true;
+      } else {
+        this.vailForm[field].message = messageMap[field].placeholder;
+        this.vailForm[field].warning = false;
+      }
     },
-    created(){
-      axios.get('network/getQQCustomerServiceStatus.do',{
-      }).then(response => {
-        this.QQInfo = response.data.kefu[0].qqnumber
-      })
-     
+    isCorrect(field) {
+      if (field == "vailCode") {
+        // 验证码重新输入直接取消警告
+        this.vailForm.vailCode.warning = false;
+      } else if (field == "loginname") {
+        // 登录名验证是否符合规则，符合规则取消警告
+        if (regExp.emailVail(this.form[field])) {
+          this.vailForm.loginname.message = messageMap.loginname.placeholder;
+          this.vailForm.loginname.warning = false;
+        }
+      } else {
+        // 密码验证是否符合规则，符合规则取消警告
+        if (regExp.registerPasswordVail(this.form[field])) {
+          this.vailForm.password.message = messageMap.password.placeholder;
+          this.vailForm.password.warning = false;
+        }
+      }
     },
-    methods: {
-      vail(field){
-        var text = this.form[field]
-        if (text == '') {
-          this.vailForm[field].message = ''
-          this.form[`${field}Placeholder`] = messageMap[field].placeholder
-          this.vailForm[field].warning = false
-          return
-        }
-
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.registerPasswordVail(text) : true
-        if (!isLegal) {
-          this.vailForm[field].message = messageMap[field].errorMessage
-          this.vailForm[field].warning = true
-        } else {
-          this.vailForm[field].message = messageMap[field].placeholder
-          this.vailForm[field].warning = false
-        }
-      },
-      focus(field){
-        if (field == 'vailCode' && this.vailForm.loginname.message == '验证码错误') {
-          this.vailForm.loginname.message = ''
-          this.vailForm.loginname.warning = false
-        }
-        if ((field == 'loginname' || field == 'password') && this.vailForm.loginname.message == '用户名/密码 错误') {
-          this.vailForm.loginname.message = ''
-          this.vailForm.loginname.warning = false
-        }
-
-        var text = this.form[field]
-        this.form[`${field}Placeholder`] = ''
-        if (text == '') {
-          this.vailForm[field].message = messageMap[field].placeholder
-          return
-        }
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.registerPasswordVail(text) : true
-
-        if (!isLegal) {
-          this.vailForm[field].message = messageMap[field].errorMessage
-          this.vailForm[field].warning = true
-        } else {
-          this.vailForm[field].message = messageMap[field].placeholder
-          this.vailForm[field].warning = false
-        }
-      },
-      isCorrect(field){
-        if (field == 'vailCode') {
-          // 验证码重新输入直接取消警告
-          this.vailForm.vailCode.warning = false
-        } else if (field == 'loginname') {
-          // 登录名验证是否符合规则，符合规则取消警告
-          if (regExp.emailVail(this.form[field])) {
-            this.vailForm.loginname.message = messageMap.loginname.placeholder
-            this.vailForm.loginname.warning = false
-          }
-        } else {
-          // 密码验证是否符合规则，符合规则取消警告
-          if (regExp.registerPasswordVail(this.form[field])) {
-            this.vailForm.password.message = messageMap.password.placeholder
-            this.vailForm.password.warning = false
-          }
-        }
-      },
-      sendCode: throttle(5000, function () {
-        if (!regExp.emailVail(this.form.loginname)) {
-          this.$Message.info('请输入正确手机号')
-          return
-        }
-        if (this.form.code.length != 4) {
-          this.$Message.info('请输入正确的验证码')
-          return
-        }
-        if (regExp.phoneVail(this.form.loginname)) {
-          this.isemail = '0'
-        }
-        let isemail = 0
-        if (this.form.loginname.indexOf('@') > -1) {
-          isemail = 1
-        }
-        axios.get('user/code.do', {
+    sendCode: throttle(5000, function() {
+      if (!regExp.emailVail(this.form.loginname)) {
+        this.$Message.info("请输入正确手机号");
+        return;
+      }
+      if (this.form.code.length != 4) {
+        this.$Message.info("请输入正确的验证码");
+        return;
+      }
+      if (regExp.phoneVail(this.form.loginname)) {
+        this.isemail = "0";
+      }
+      let isemail = 0;
+      if (this.form.loginname.indexOf("@") > -1) {
+        isemail = 1;
+      }
+      axios
+        .get("user/code.do", {
           params: {
             aim: this.form.loginname,
             isemail: isemail,
             vailCode: this.form.code
           }
-        }).then(response => {
+        })
+        .then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            let countdown = 60
-            this.codePlaceholder = '60s'
+            let countdown = 60;
+            this.codePlaceholder = "60s";
             var inter = setInterval(() => {
-              countdown--
-              this.codePlaceholder = countdown + 's'
+              countdown--;
+              this.codePlaceholder = countdown + "s";
               if (countdown == 0) {
-                clearInterval(inter)
-                this.codePlaceholder = '发送验证码'
+                clearInterval(inter);
+                this.codePlaceholder = "发送验证码";
               }
-            }, 1000)
+            }, 1000);
             this.$Message.success({
               content: response.data.message,
               duration: 5
-            })
+            });
           } else {
             this.$Message.error({
               content: response.data.message,
               duration: 5
-            })
+            });
           }
-        })
-      }),
-      submit(){
-        axios.get('user/findPassword.do', {
+        });
+    }),
+    submit() {
+      axios
+        .get("user/findPassword.do", {
           params: {
             username: this.form.loginname,
             password: this.form.password,
             code: this.form.vailCode
           }
-        }).then((response) => {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-          if (response.status == 200 && response.statusText == 'OK') {
+        })
+        .then(response => {
+          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+          if (response.status == 200 && response.statusText == "OK") {
             if (response.data.status == 1) {
-              this.$Message.success(response.data.message)
-              this.$router.push({path: 'login'})
+              this.$Message.success(response.data.message);
+              this.$router.push({ path: "login" });
             } else {
-              this.vailForm.loginname.message = response.data.message
-              this.vailForm.loginname.warning = true
+              this.vailForm.loginname.message = response.data.message;
+              this.vailForm.loginname.warning = true;
             }
           }
-        })
-      },
-    
-      //跳转相应验证
-      jump(index){
-        this.index = 3;
-        if(index == 0){
-          this.verPage = 'email'
-        }else if(index == 1){
-          this.verPage = 'phone'
-        }else if(index == 2){
-          this.verPage = 'card'
-        }else if(index == 3){
-          this.verPage = 'people'
-        }
-      },
-      focusFunction(){
-        if(this.account == "" || !regExp.phoneVail(this.account)){
-          this.style = 'border:1px solid #ed3f14;';
-        }else{
-           this.style = ''
-        }
-      },
-      next(val){
-        if(val == 'yes'){
-            if(regExp.phoneVail(this.formValidate.account)){
-                this.formValidate.account = this.formValidate.account.replace(this.formValidate.account.substring(3,7),'****')
-                this.index = 2;      
-            }
-        }else{
-            this.accountIsDis = true;
-            this.index = 2;
-        }
-      },
+        });
+    },
 
-      //上传照片最大限制
-      handleMaxSize(){
-        this.$Message.error('照片最大只能上传4MB');
-      },
-      
-      //上传图片格式错误
-      handleFormatError(){
-        this.$Message.error('上传文件只能为jpg,png格式');
-      },
-
-      //获取验证码
-      getVerificationCode(code){
-        this.$on('test',msg =>{
-          console.log(msg);
-        })
-        return;
-        axios.get('user/code.do',{
-          params:{
-            aim:code == '1' ? '':this.account,
-            isemail:code,
-            vailCode:''
-          }
-        }).then(res =>{
-
-        })
+    //跳转相应验证
+    jump(index) {
+      this.index = 3;
+      if (index == 0) {
+        this.verPage = "email";
+      } else if (index == 1) {
+        this.verPage = "phone";
+      } else if (index == 2) {
+        this.verPage = "card";
+      } else if (index == 3) {
+        this.verPage = "people";
       }
     },
-    computed: {
-      disabled(){
-        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false && this.vailForm.password.warning == false)
-      },
-    },
-    watch:{
-      index(){
-           for(let i = 1; i<this.stepList.length+1;i++){
-            if(this.index === i){
-              this.stepList[i-1].style = 'process_text_checked';
-            }else if(i<this.index){
-               this.stepList[i-1].failOrSuccess = true;
-               this.stepList[i-1].style = '';
-            }
-          }
-      },
-      accountIsDis(){
-        //   return this.accountIsDis ?''
+    focusFunction() {
+      if (this.account == "" || !regExp.phoneVail(this.account)) {
+        this.style = "border:1px solid #ed3f14;";
+      } else {
+        this.style = "";
       }
+    },
+    next(val) {
+      if (val == "yes") {
+        if (regExp.phoneVail(this.formValidate.account)) {
+          this.formValidate.account = this.formValidate.account.replace(
+            this.formValidate.account.substring(3, 7),
+            "****"
+          );
+          this.index = 2;
+        }
+      } else {
+        this.accountIsDis = true;
+        this.index = 2;
+      }
+    },
+
+    //上传照片最大限制
+    handleMaxSize() {
+      this.$Message.error("照片最大只能上传4MB");
+    },
+
+    //上传图片格式错误
+    handleFormatError() {
+      this.$Message.error("上传文件只能为jpg,png格式");
+    },
+
+    //获取验证码
+    getVerificationCode(code) {
+      this.$on("test", msg => {
+        console.log(msg);
+      });
+      return;
+      axios
+        .get("user/code.do", {
+          params: {
+            aim: code == "1" ? "" : this.account,
+            isemail: code,
+            vailCode: ""
+          }
+        })
+        .then(res => {});
+    }
+  },
+  computed: {
+    disabled() {
+      return !(
+        this.form.loginname &&
+        this.form.password &&
+        this.form.vailCode &&
+        this.vailForm.loginname.warning == false &&
+        this.vailForm.password.warning == false
+      );
+    }
+  },
+  watch: {
+    index() {
+      for (let i = 1; i < this.stepList.length + 1; i++) {
+        if (this.index === i) {
+          this.stepList[i - 1].style = "process_text_checked";
+        } else if (i < this.index) {
+          this.stepList[i - 1].failOrSuccess = true;
+          this.stepList[i - 1].style = "";
+        }
+      }
+    },
+    accountIsDis() {
+      //   return this.accountIsDis ?''
     }
   }
+};
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  .login-wrapper {
-    @diff: 129px;
-    min-height: calc(~"100% - @{diff}");
-    background: linear-gradient(#F6FBFE,#D4E9FD);
+.login-wrapper {
+  @diff: 129px;
+  min-height: calc(~"100% - @{diff}");
+  background: linear-gradient(#f6fbfe, #d4e9fd);
+  width: 100%;
+  .header {
     width: 100%;
-    .header {
-      width: 100%;
-      height: 70px;
-      background-color: #333;
-      .container {
-        width: 1200px;
-        height: 100%;
-        margin: 0px auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .logo {
-          width: 130px;
-          height: 36px;
-          background-color: white;
-          margin: auto 0px;
-          background: url(../../assets/img/app/logo.gif) no-repeat center;
-          background-size: 110% 260%;
-          background-position-y: -29px;
-        }
-        .home {
-          font-size: 18px;
-          height: 70px;
-          padding: 0px 10px;
-          vertical-align: center;
-          cursor: pointer;
-          a {
-            line-height: 70px;
-            color: #fff
-          }
+    height: 70px;
+    background-color: #333;
+    .container {
+      width: 1200px;
+      height: 100%;
+      margin: 0px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .logo {
+        width: 130px;
+        height: 36px;
+        background-color: white;
+        margin: auto 0px;
+        background: url(../../assets/img/app/logo.gif) no-repeat center;
+        background-size: 110% 260%;
+        background-position-y: -29px;
+      }
+      .home {
+        font-size: 18px;
+        height: 70px;
+        padding: 0px 10px;
+        vertical-align: center;
+        cursor: pointer;
+        a {
+          line-height: 70px;
+          color: #fff;
         }
       }
     }
-    .wrapper {
-      width: 100%;
-      padding: 21px 0px;
-      .wrapper-form {
-        width: 1200px;
-        margin: 0px auto;
-        justify-content: space-between;
-        align-items: center;
-        .title{
-          color: #333333;
-          font-size: 16px;
-          font-family: 'MicrosoftYaHei';
-          margin-bottom: 19px;
-        }
+  }
+  .wrapper {
+    width: 100%;
+    padding: 21px 0px;
+    .wrapper-form {
+      width: 1200px;
+      margin: 0px auto;
+      justify-content: space-between;
+      align-items: center;
+      .title {
+        color: #333333;
+        font-size: 16px;
+        font-family: "MicrosoftYaHei";
+        margin-bottom: 19px;
       }
     }
+  }
 
-    .ver_p{
-      color:#333;
-      font-size:14px;
-      margin-bottom:20px;
-    }
+  .ver_p {
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
 
-    .login-form {
-      height: 685px;
-      background: #FFFFFF;
-      border: 1px solid rgba(161, 161, 161, 0.00);
-      box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
-      .disabled {
-        cursor: not-allowed;
-      }
-      .head {
-        text-align: center;
-        line-height: 50px;
+  .login-form {
+    height: 685px;
+    background: #ffffff;
+    border: 1px solid rgba(161, 161, 161, 0);
+    box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
+    .disabled {
+      cursor: not-allowed;
+    }
+    .head {
+      text-align: center;
+      line-height: 50px;
+      font-family: PingFangSC-Regular;
+      font-size: 26px;
+      color: #5f5f5f;
+      margin-top: 5px;
+      letter-spacing: 0.9px;
+      & > span {
         font-family: PingFangSC-Regular;
         font-size: 26px;
-        color: #5F5F5F;
-        margin-top: 5px;
+        color: #5f5f5f;
         letter-spacing: 0.9px;
-        & > span {
-          font-family: PingFangSC-Regular;
-          font-size: 26px;
-          color: #5F5F5F;
-          letter-spacing: 0.9px;
-        }
       }
-      .body {
-        form {
-          margin-top: 5px;
-        }
-        .process-header {
-          display: flex;
-          justify-content: center;
-          padding-top: 40px;
-        }
-    .process_text{
-      display: inline-block;
-      font-family: 'HelveticaNeue';
-      text-align: center;
-      color: #999999;
-      .process_pace{
-        margin-right: 10px;
-        border: 1px solid #999999;
-        font-size: 14px;
-        width: 28px;
-        height: 28px;
+    }
+    .body {
+      form {
+        margin-top: 5px;
+      }
+      .process-header {
+        display: flex;
+        justify-content: center;
+        padding-top: 40px;
+      }
+      .process_text {
         display: inline-block;
-        border-radius: 50%;
-        line-height: 28px;
-      }
-    .process_ok{
-      margin-right: 10px;
-      display: inline-block;
-      border:1px solid #2A99F2;
-      background: #ffffff;
-      width: 28px;
-      height: 28px;
-      border-radius:50%;
-      line-height: 25px;
-    }
-    .line {
-      width: 70px;
-      height: 1px;
-      margin: 0 20px;
-      background: #E9E9E9;
-      display: inline-block;
-      vertical-align: middle;
-    }
-    &:last-of-type {
-      .line {
-        display: none;
-      }
-    }
-    .lineselected {
-      background: #2A99F2;
-    }
-     .process_ok::before{
-       content:'';
-        width: 7px ;
-        height: 12px;
-        border-right: 2px solid #2A99F2;
-        border-bottom: 2px solid #2A99F2;
-        display: inline-block;
-        border-bottom-right-radius: 2px;
-        transform: translateY(0px) rotate(48deg);
-      }
-    }
-    //步骤选择效果
-    .process_text_checked{
-      display: inline-block;
-      font-family: 'HelveticaNeue';
-      text-align: center;
-      .process_pace{
-        background: #4A97EE;
-        border: 1px solid #4A97EE;
-        color: #ffffff;
-        font-size: 14px;
-        width: 28px;
-        height: 28px;
-        display: inline-block;
-        border-radius: 50%;
-        line-height: 28px;
-      }
-      span{
-        color:#333333;
-      }
-    }
-    @color:#333333;
-    .verification{
-      width: 363px;
-      margin: 0 auto;
-      margin-top:39px;
-      .v_email{
-        width: 124px;
-        height: 38px;
-        background: rgba(42, 153, 242, 1);
-        border-radius: 4px;
-        color: rgb(255, 255, 255);
-        line-height: 38px;
-        margin-left: 234px;
+        font-family: "HelveticaNeue";
         text-align: center;
-        transition: background .2s ease-in-out;
+        color: #999999;
+        .process_pace {
+          margin-right: 10px;
+          border: 1px solid #999999;
+          font-size: 14px;
+          width: 28px;
+          height: 28px;
+          display: inline-block;
+          border-radius: 50%;
+          line-height: 28px;
+        }
+        .process_ok {
+          margin-right: 10px;
+          display: inline-block;
+          border: 1px solid #2a99f2;
+          background: #ffffff;
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          line-height: 25px;
+        }
+        .line {
+          width: 70px;
+          height: 1px;
+          margin: 0 20px;
+          background: #e9e9e9;
+          display: inline-block;
+          vertical-align: middle;
+        }
+        &:last-of-type {
+          .line {
+            display: none;
+          }
+        }
+        .lineselected {
+          background: #2a99f2;
+        }
+        .process_ok::before {
+          content: "";
+          width: 7px;
+          height: 12px;
+          border-right: 2px solid #2a99f2;
+          border-bottom: 2px solid #2a99f2;
+          display: inline-block;
+          border-bottom-right-radius: 2px;
+          transform: translateY(0px) rotate(48deg);
+        }
       }
-      .v_email:hover{
-       background: rgb(71, 167, 245);
-       cursor: pointer;
+      //步骤选择效果
+      .process_text_checked {
+        display: inline-block;
+        font-family: "HelveticaNeue";
+        text-align: center;
+        .process_pace {
+          background: #4a97ee;
+          border: 1px solid #4a97ee;
+          color: #ffffff;
+          font-size: 14px;
+          width: 28px;
+          height: 28px;
+          display: inline-block;
+          border-radius: 50%;
+          line-height: 28px;
+        }
+        span {
+          color: #333333;
+        }
       }
-      .v_input{
-        border:1px solid #ed3f14;
-      }
-  
-       .input{
+      @color: #333333;
+      .verification {
+        width: 363px;
+        margin: 0 auto;
+        margin-top: 39px;
+        .v_email {
+          width: 124px;
+          height: 38px;
+          background: rgba(42, 153, 242, 1);
+          border-radius: 4px;
+          color: rgb(255, 255, 255);
+          line-height: 38px;
+          margin-left: 234px;
+          text-align: center;
+          transition: background 0.2s ease-in-out;
+        }
+        .v_email:hover {
+          background: rgb(71, 167, 245);
+          cursor: pointer;
+        }
+        .v_input {
+          border: 1px solid #ed3f14;
+        }
+
+        .input {
           width: 85%;
           border: none;
           vertical-align: top;
-           height: 44px;
-          margin-left:20px;
-          outline:0;
+          height: 44px;
+          margin-left: 20px;
+          outline: 0;
           text-decoration: none;
         }
- 
 
-      .verifcation_box{
-        padding: 21px 20px 23px 21px;
-        margin-bottom:12px;
-        width: 360px;
-        height: 80px;
-        position: relative;
-        border-radius:4px;
-        background: rgba(244,250,255,1);
-        &>div{
-           display: inline-block;
-        }
-        .ver_font{
-          vertical-align:top;
-          margin-left: 4px;
-          .ver_p1{
-            color:@color;
-            font-size: 14px;
-            margin-bottom: 10px;
-          }
-          .ver_p2{
-            color: #666666;
-          }
-        }
-        @yan:#999999;
-        .ver_arrow{
-          border-bottom: 1px solid @yan;
-          border-right: 1px solid @yan;
-          position: absolute;
-          right: 20px;
-          top: 32px;
-          width: 8px ;
-          height: 8px; 
-          transform: translateY(0px) rotate(-48deg)
-        }
-        
-      }
-      .verifcation_box:hover{
-        background: rgba(255,255,255,1);
-        box-shadow:0px 3px 12px 0px rgba(139, 139, 139, 0.46);
-        cursor: pointer;
-        @color:#2A99F2;
-       .ver_p1{
-         color:@color
-       }
-       .ver_arrow{
-        border-bottom: 1px solid @color;
-        border-right: 1px solid @color;
-       }
-      }
-    }
-  }
-      .foot {
-        button {
-          width: 80%;
-          margin: 0px auto;
-          display: block;
-          height: 45px;
-          background-color: #4990E2;
-          border: none;
-          font-family: PingFangSC-Medium;
-          font-size: 14px;
-          color: #FFFFFF;
-          letter-spacing: 0.83px;
-          cursor: pointer;
-          margin-bottom: 15px;
-          &.disabled {
-            cursor: not-allowed;
-          }
-        }
-        .checkBox {
-          width: 12px;
-          height: 12px;
-          border-radius: 2px;
-          display: inline-block;
-          border: 1px solid #ccc;
-          cursor: pointer;
-        }
-        .agree {
-          background-color: #2d8cf0;
-          border-color: #2d8cf0;
+        .verifcation_box {
+          padding: 21px 20px 23px 21px;
+          margin-bottom: 12px;
+          width: 360px;
+          height: 80px;
           position: relative;
-          &::after {
-            content: "";
-            display: table;
-            width: 4px;
-            height: 8px;
+          border-radius: 4px;
+          background: rgba(244, 250, 255, 1);
+          & > div {
+            display: inline-block;
+          }
+          .ver_font {
+            vertical-align: top;
+            margin-left: 4px;
+            .ver_p1 {
+              color: @color;
+              font-size: 14px;
+              margin-bottom: 10px;
+            }
+            .ver_p2 {
+              color: #666666;
+            }
+          }
+          @yan: #999999;
+          .ver_arrow {
+            border-bottom: 1px solid @yan;
+            border-right: 1px solid @yan;
             position: absolute;
-            top: 0px;
-            left: 3px;
-            border: 2px solid #fff;
-            border-top: 0;
-            border-left: 0;
-            transform: rotate(45deg) scale(1);
+            right: 20px;
+            top: 32px;
+            width: 8px;
+            height: 8px;
+            transform: translateY(0px) rotate(-48deg);
           }
         }
-        div {
-          width: 80%;
-          height: 20px;
-          margin: 0px auto;
-        }
-        span {
-          vertical-align: middle;
-          font-family: PingFangSC-Regular;
-          font-size: 14px;
-          letter-spacing: 0.83px;
-        }
-      }
-    }
-    .rules {
-      position: absolute;
-      top: 9%;
-      height: 875px;
-      width: 750px;
-      background: white;
-      left: 30%;
-      overflow-y: scroll;
-      .rulesContent {
-        margin: 20px 75px;
-        & > p {
-          font-family: Microsoft Yahei, 微软雅黑;
-          font-size: 14px;
-          color: #2A2A2A;
-          line-height: 25px;
-          text-indent: 2em;
+        .verifcation_box:hover {
+          background: rgba(255, 255, 255, 1);
+          box-shadow: 0px 3px 12px 0px rgba(139, 139, 139, 0.46);
+          cursor: pointer;
+          @color: #2a99f2;
+          .ver_p1 {
+            color: @color;
+          }
+          .ver_arrow {
+            border-bottom: 1px solid @color;
+            border-right: 1px solid @color;
+          }
         }
       }
     }
-    .foot-bar {
-      position: fixed;
-      height: 60px;
-      width: 100%;
-      bottom: 0px;
-      border-top: 1px solid #3333;
-      background: #F4F4F4;
-      font-size: 14px;
-      line-height: 60px;
-      span, a {
-        margin-right: 40px;
+    .foot {
+      button {
+        width: 80%;
+        margin: 0px auto;
+        display: block;
+        height: 45px;
+        background-color: #4990e2;
+        border: none;
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #ffffff;
+        letter-spacing: 0.83px;
+        cursor: pointer;
+        margin-bottom: 15px;
+        &.disabled {
+          cursor: not-allowed;
+        }
+      }
+      .checkBox {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        display: inline-block;
+        border: 1px solid #ccc;
+        cursor: pointer;
+      }
+      .agree {
+        background-color: #2d8cf0;
+        border-color: #2d8cf0;
+        position: relative;
+        &::after {
+          content: "";
+          display: table;
+          width: 4px;
+          height: 8px;
+          position: absolute;
+          top: 0px;
+          left: 3px;
+          border: 2px solid #fff;
+          border-top: 0;
+          border-left: 0;
+          transform: rotate(45deg) scale(1);
+        }
+      }
+      div {
+        width: 80%;
+        height: 20px;
+        margin: 0px auto;
+      }
+      span {
+        vertical-align: middle;
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        letter-spacing: 0.83px;
       }
     }
   }
+  .rules {
+    position: absolute;
+    top: 9%;
+    height: 875px;
+    width: 750px;
+    background: white;
+    left: 30%;
+    overflow-y: scroll;
+    .rulesContent {
+      margin: 20px 75px;
+      & > p {
+        font-family: Microsoft Yahei, 微软雅黑;
+        font-size: 14px;
+        color: #2a2a2a;
+        line-height: 25px;
+        text-indent: 2em;
+      }
+    }
+  }
+  .foot-bar {
+    position: fixed;
+    height: 60px;
+    width: 100%;
+    bottom: 0px;
+    border-top: 1px solid #3333;
+    background: #f4f4f4;
+    font-size: 14px;
+    line-height: 60px;
+    span,
+    a {
+      margin-right: 40px;
+    }
+  }
+}
 </style>

@@ -1061,7 +1061,7 @@
         }
         axios.get('gpuserver/createGpuServer.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('/ruicloud/order')
+            this.$router.push('/ruicloud/orderNew')
           } else {
             this.$message.info({
               content: response.data.message

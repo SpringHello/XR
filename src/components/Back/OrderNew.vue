@@ -16,7 +16,7 @@
                 </Checkbox>
                 <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券</span>
               </div>
-              <RadioGroup v-model="couponInfo.selectTicket" @on-change="radioChange" type="button" style="display: flex;overflow: auto;" v-if="couponInfo.isUse">
+              <RadioGroup v-model="couponInfo.selectTicket" @on-change="radioChange" type="button" class="coupon_radio"  v-if="couponInfo.isUse">
                 <Radio v-for="item in couponInfo.couponList" :label="item.operatorid" :key="item.operatorid"
                      style="display:block;margin:20px 0px;height:88px;margin-right:10px;">
                   <div class="ticketInfo">
@@ -73,7 +73,7 @@
           </div> -->
         </div>
         <div style="text-align:right;margin-top:40px;">
-          <Button >取消订单</Button>
+          <Button @click="$router.push({path:'overview'})">取消订单</Button>
           <Button type="primary"  @click="pay">提交订单</Button>
         </div>
        
@@ -356,16 +356,21 @@
       },
       // 是否使用优惠券开关
       changeCheckbox(bol) {
-        this.couponInfo.isCash = !this.couponInfo.isUse;
+        if(this.couponInfo.isCash){
+           this.couponInfo.isCash = !this.couponInfo.isUse;
+        }
+       
         if (!bol) {
           this.couponInfo.selectTicket = ''
         }
       },
       changeCashbox(bol){
+         if(this.couponInfo.isUse){
+           this.couponInfo.isUse =  !this.couponInfo.isCash;
+        }
          this.couponInfo.isUse = !this.couponInfo.isCash;
          this.couponInfo.totalCost = this.couponInfo.totalCost - (bol?this.couponInfo.cash:0);
          if(!bol){
-          // this.deductionPrice  = 1.0;
          }else{
             this.couponInfo.selectTicket = '';
          }
@@ -557,6 +562,24 @@
           .cross {
             text-decoration: line-through red;
           }
+          .coupon_radio{
+            display: flex;
+            overflow: auto;
+          }
+          .coupon_radio::-webkit-scrollbar{
+            width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+            height: 5px;
+          }
+          .coupon_radio::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            background:rgba(216,216,216,0.5);
+          }
+          .coupon_radio::-webkit-scrollbar-track {/*滚动条里面轨道*/
+            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            background:rgba(216,216,216,0.5);
+          }
         }
       }
     }
@@ -568,4 +591,5 @@
   .ivu-radio-group-button .ivu-radio-wrapper-checked{
     border: 1px solid #2d8cf0;
   }
+ 
 </style>

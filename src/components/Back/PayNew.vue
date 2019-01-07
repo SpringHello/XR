@@ -7,7 +7,7 @@
       </Spin>
       <span>首页 / 订单确认 / 支付</span>
       <div class="content">
-        <span>支付</span>
+        <span style="font-size:24px;color:#333333;">支付</span>
         <div class="content_pay">
             <div style="border-bottom:1px solid #E9E9E9;padding-bottom:20px;">
                 <span style="font-size:18px;">共支付<span style="color:#FF624B;">{{orderInfo.orderNum}}</span>笔订单</span>
@@ -23,7 +23,7 @@
         </div>
 
         <p style="color:#333333;font-size:14px;">账户余额支付</p>
-        <div class="accountInfo" v-if="currentTab=='otherPay'">
+        <div class="accountInfo">
           <CheckboxGroup v-model="accountPay" @on-change="checkUseVoucher">
             <Checkbox label="account" style="margin-right:40px;user-select: none">
               <span>使用余额</span>
@@ -36,66 +36,39 @@
         <p style="color:#333333;font-size:14px;">其他支付方式支付</p>
         <div class="pay">
           <!--包年包月第三方支付页面-->
-          <div v-if="currentTab=='otherPay'&&orderInfo.timeType!=1">
-            <span style="margin-bottom: 20px;display:block;font-size: 14px;">第三方支付渠道<span style="float:right">其他支付方式支付：{{otherPayCount.toFixed(2)}}元</span></span>
-            <div class="payContent">
-              <RadioGroup v-model="otherPay" @on-change="otherPayChange">
-                <Radio label="ali" style="margin-right: 40px;">
-                  <img src="../../assets/img/payresult/alipay.png">
-                </Radio>
-                <Radio label="wx">
-                  <img src="../../assets/img/payresult/wxpay.png">
-                </Radio>
+          <Tabs value="name1" @on-click="currentTabs">
+            <span slot="extra">其他支付方式支付：<span style="color:#FF624B;font-size:18px;">{{otherPayCount.toFixed(2)}}</span>元</span>
+            <TabPane label="第三方支付" name="name1">
+                <RadioGroup v-model="otherPay" @on-change="otherPayChange">
+                    <Radio label="ali" style="margin-right: 40px;">
+                    <img style="vertical-align: middle;" src="../../assets/img/payresult/alipay.png">
+                    </Radio>
+                    <Radio label="wx">
+                    <img style="vertical-align: middle;" src="../../assets/img/payresult/wxpay.png">
+                    </Radio>
               </RadioGroup>
-              <p style="font-size: 14px;margin-top: 20px;">除以上在线支付方式之外，您也可以使用<span style="color:#2A99F2;cursor: pointer"
-                                                                                   @click="currentTab='outLine'">线下汇款充值</span>的方式先充值到您的新睿云账户，再用账户余额进行支付。
-              </p>
-            </div>
-          </div>
-
-          <!--实时资源第三方支付页面-->
-          <div v-if="currentTab=='otherPay'&&orderInfo.timeType==1">
-            <span style="margin-bottom: 20px;display:block;font-size: 14px;">第三方支付渠道<span style="float:right">使用其他支付需渠道金额：{{rechargeValue!=otherPayCount?rechargeValue:otherPayCount.toFixed(2)}}元</span></span>
-            <p style="margin-bottom: 20px;color:rgba(153,153,153,1);line-height:16px;">
-              为保障您的服务体验，建议您在购买实时主机之时预留足够余额，避免频繁欠费充值。</p>
-            <div style="margin-bottom: 20px;">
-              <InputNumber :min="rechargeMin" v-model="rechargeValue" style="margin-right: 20px;"
-                           :precision="0"></InputNumber>
-              <div class="rechargeItem" v-for="item in rechargeArray" @click="resetRecharge(item)">{{item}}元</div>
-            </div>
-            <div class="payContent">
-              <RadioGroup v-model="otherPay" @on-change="otherPayChange">
-                <Radio label="ali" style="margin-right: 40px;">
-                  <img src="../../assets/img/payresult/alipay.png">
-                </Radio>
-                <Radio label="wx">
-                  <img src="../../assets/img/payresult/wxpay.png">
-                </Radio>
-              </RadioGroup>
-              <p style="font-size: 14px;margin-top: 20px;">除以上在线支付方式之外，您也可以使用<span style="color:#2A99F2;cursor: pointer"
-                                                                                   @click="currentTab='outLine'">线下汇款充值</span>的方式先充值到您的新睿云账户，再用账户余额进行支付。
-              </p>
-            </div>
-          </div>
-
-          <div class="outLineContent" v-if="currentTab=='outLine'">
-            <p class="p">公司名称：北京允睿讯通科技有限公司</p>
-            <p class="p">开户银行：中国建设银行北京龙锦支行</p>
-            <p class="p">开户行所在地：北京</p>
-            <p class="p">银行账号：11001018402059000005</p>
-            <div class="hint">
-              <p style="line-height: 25px;"><span style="color: #2A99F2">提示：</span>请您在汇款摘要中注明“云服务”。汇款成功后请将汇款凭证（汇款凭证扫描件或者图片、网银付款截图）
-                、汇款人姓名、联系电话、注册手机或邮箱地址发送到“公司邮箱”以便财务进行进行确认。财务确认到账后
-                ，会将汇款金额充值到您的注册账户。为了避免因账户欠帐影响您的正常使用，请务必至少提前三到五个工作日进行线下汇款
-                ，以免造成不必要的损失。</p>
-            </div>
-            <p style="font-size: 14px;margin-top: 20px;">除以上线下汇款的支付方式之外，您也可以使用<span
-              style="color:#2A99F2;cursor: pointer"
-              @click="currentTab='otherPay'">线上充值</span>的方式先充值到您的新睿云账户。</p>
-          </div>
+            </TabPane>
+            <TabPane label="线下汇款" name="name2">
+                <div class="outLineContent" v-if="currentTab == 'outLine'">
+                    <div style="width:550px;height:180px;background:#F6FAFD;padding:20px 0 20px 20px;">
+                        <p class="p">公司名称：北京允睿讯通科技有限公司</p>
+                        <p class="p">开户银行：中国建设银行北京龙锦支行</p>
+                        <p class="p">开户行所在地：北京</p>
+                        <p class="p">银行账号：11001018402059000005</p>
+                    </div>
+                    <div class="out_hint">
+                        <div>
+                            <img src="../../assets/img/payresult/Shape.png">
+                            <span style="font-size:14px;color:#333333;">提示</span>
+                        </div>
+                        <p style="line-height: 25px;"><span style="color: #2A99F2"></span>请您在汇款摘要中注明“云服务”。汇款成功后请将汇款凭证（汇款凭证扫描件或者图片、网银付款截图）、汇款人姓名、联系电话、注册手机或邮箱地址发送到“公司邮箱”以便财务进行进行确认。财务确认到账后，会讲汇款金额充值到您的注册账户。为了避免因账户欠帐影响您的正常使用，请务必至少提前三到五个工作日进行线下汇款，以免造成不必要的损失。</p>
+                    </div>
+                </div>
+            </TabPane>
+        </Tabs>
         </div>
         <div style="margin-top:20px;text-align:right;" v-if="currentTab=='otherPay'">
-          <Button >取消支付</Button>
+          <Button @click="$router.push({path:'orderNew'})">取消支付</Button>
           <Button type="primary" @click="pay" :disabled="payText!='确认支付'">{{payText}}</Button>
         </div>
       </div>
@@ -286,7 +259,7 @@
               sessionStorage.setItem('payResult', 'fail')
               sessionStorage.setItem('errMsg', response.data.message)
             }
-            this.$router.push('payResult')
+            this.$router.push('resultNew')
           })
         } else if (this.otherPay == 'ali') {
           // 支付宝支付
@@ -355,10 +328,10 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             sessionStorage.setItem('payResult', 'success')
-            this.$router.push('payResult')
+            this.$router.push('resultNew')
           } else {
             sessionStorage.setItem('payResult', 'fail')
-            this.$router.push('payResult')
+            this.$router.push('resultNew')
           }
         })
       },
@@ -397,6 +370,13 @@
           i = '0' + i;
         }
         return i;
+      },
+      currentTabs(name){
+          if(name =='name2'){
+            this.currentTab = 'outLine'
+          }else{
+             this.currentTab = 'otherPay' 
+          }
       }
     },
     computed: {
@@ -520,6 +500,10 @@
           border: 1px solid rgb(233, 233, 233);
           border-radius: 3px;
           padding: 20px 15px;
+          .other_pay{
+            margin-bottom:20px;padding-bottom:12px;
+            border: 1px solid #E9E9E9;
+          }
           .toggleWrapper {
             border-bottom: 1px solid #f0f0f0;
             margin-bottom: 20px;
@@ -556,9 +540,12 @@
             cursor: pointer;
           }
           .outLineContent {
-            .hint {
+              display: flex;
+            .out_hint {
               width: 476px;
               line-height: 25px;
+              background: #F6FAFD;
+              padding: 20px 20px 10px 20px;
             }
             p {
               margin-top: 10px;

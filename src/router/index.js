@@ -157,6 +157,7 @@ const Order1 = () =>import('@/components/Back/Order1')
 const OrderNew = () =>import('@/components/Back/OrderNew')
 const PayResult = () =>import('@/components/Back/PayResult')
 const Result = () =>import('@/components/Back/Result')
+const ResultNew = () => import('@/components/Back/ResultNew')
 const PayNew = () =>import('@/components/Back/PayNew')
 const Expenses = () =>import('@/components/Back/Expenses')
 const UserCenter = () =>import('@/components/Back/UserCenter')
@@ -419,6 +420,7 @@ var router = new Router({
         {path: 'order', name: 'order', component: Order1},
         {path: 'payResult', name: 'payResult', component: PayResult},
         {path: 'result', name: 'result', component: Result},
+        {path: 'resultNew', name:'resultNew', component:ResultNew},
         {path: 'payNew', name:'payNew', component: PayNew},
         {path: 'expenses', name: 'expenses', component: Expenses},
         {path: 'userCenter', name: 'userCenter', component: UserCenter},
