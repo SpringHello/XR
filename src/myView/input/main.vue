@@ -2,13 +2,13 @@
     <div  :class="wrapClasses" style=" height: 46px;border-radius:4px;">
       <img class="ver_img" :src="icon">
         <div class="ver_select" >
-            <div @click.stop="isShow = !isShow" class="verNumber" :class="[isShow ?'verNumber':'verNumbers']">
+            <div @click="isShow = !isShow" class="verNumber" :class="[isShow ?'verNumber':'verNumbers']">
                 +{{selectValue}}
             </div>
              <transition name="fade"  >
-                <div class="ver_option" v-if="isShow" >
-                    <ul class="ver_ul">
-                        <li :class="selectIndex == index ?'ver_li':''" v-for="(item,index) in telList" :key="index" @click="selectLiValue(item.tel,index)">{{item.tel}}</li>
+                <div class="ver_option" v-if="isShow" @click="handleClose">
+                    <ul class="ver_ul" >
+                        <li  :class="selectIndex == index ?'ver_li':''" v-for="(item,index) in telList" :key="index" @click="selectLiValue(item.tel,index)">{{item.tel}}</li>
                     </ul>
                 </div>
              </transition>
@@ -170,8 +170,14 @@ export default {
                 },1000);
             }
         },
-        blur () {
-            this.isShow = false;
+        handleClose () {
+            document.addEventListener('click',function(e){
+                console.log(e);
+                if(e.target.className!='usermessage'){
+                    that.userClick=false;
+                }
+            })
+            // this.isShow = false;
         },
     },
     created(){
