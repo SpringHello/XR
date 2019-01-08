@@ -7,82 +7,104 @@
           <p>在云上签发各品牌数字证书，实现网站HTTPS化，使网站可信，防 劫持、防篡改、防监听。并进行统一生命周期管理，简化证书部署， 一键分发到云上产品，实现网站的可信身份认证与安全数据传输。</p>
           <Button>立即购买</Button>
         </div>
-        <img src="../../assets/img/ssl/banner.png" alt="">
+        <img src="../../assets/img/ssl/banner.png" alt>
       </div>
     </div>
-    <div class="brand">
+    <div class="nav">
       <div class="wrap">
-        <div class="header-a">
-          <h1 class="headline">SSL证书品牌</h1>
-        </div>
         <div class="container">
-          <div class="desc">
-            <img src="../../assets/img/ssl/wosign_logo_mobile.png" alt="">
-            <p>沃通全球著名的SSL证书提供商已经为全球180多个国家和地区超过十万个网站颁发了全球信任的SSL证书。</p>
+          <div @click="selectedTab = 'home'" :class="{selected:selectedTab == 'home'}">首页</div>
+          <div @click="selectedTab = 'detail'" :class="{selected:selectedTab == 'detail'}">证书详情</div>
+        </div>
+      </div>
+    </div>
+    <div class="home" v-if="selectedTab == 'home'">
+      <div class="brand">
+        <div class="wrap">
+          <div class="header-a">
+            <h1 class="headline">SSL证书品牌</h1>
           </div>
-          <dl v-for="(item,index) in certificate" :key="index">
-            <dt>{{item.name}} SSL证书</dt>
-            <dd >
-              <ul v-for="(secItem,index) in item.list" :key="index">
-                <li>{{secItem.name}}</li>
-                <li v-for="(innerItem,index) in secItem.config" :key="index">
-                  <p>保护<span>{{innerItem.num}}</span><i v-if="innerItem.text"></i>{{innerItem.text ? '个通配符域名的同级所有子域名' :'个域名'}} </p>
-                  <p>¥<span>{{innerItem.price}}</span>元/年</p>
-                  <Button>立即购买</Button>
-                </li>
-                <li v-if="item.name == 'EV'">
-                  <p style="color:#999999;font-size:12px;">不支持通配符</p>
-                  <p style="color:#2A99F2;font-size:12px;cursor:pointer;" @click="$router.push('buy')">前往购买页面查看更多 → </p>
-                </li>
-              </ul>
-            </dd>
-          </dl>
-        </div>
-      </div>
-    </div>
-    <div class="advantage">
-      <div class="wrap">
-        <div class="header-a">
-          <h1 class="headline">产品优势</h1>
-        </div>
-        <div class="container">
-          <div class="box" v-for="(item,index) in advantage" :key="index">
-            <img :src="item.img" alt="">
-            <h2>{{item.title}}</h2>
-            <p>{{item.text}}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="scene">
-      <div class="wrap">
-        <div class="header-a">
-          <h1 class="headline">使用场景</h1>
-        </div>
-        <div class="container">
-          <div class="box" v-for="(item,index) in scene" :key="index">
-            <div class="header">
-              <h2>{{item.name}}</h2>
-              <span>{{item.text}}</span>
+          <div class="container">
+            <div class="desc">
+              <img src="../../assets/img/ssl/wosign_logo_mobile.png" alt>
+              <p>沃通全球著名的SSL证书提供商已经为全球180多个国家和地区超过十万个网站颁发了全球信任的SSL证书。</p>
             </div>
-            <div class="content">
-              <dl v-for="(secItem,index) in item.list" :key="index">
-                <dt>{{secItem.title}}</dt>
-                <dd>{{secItem.desc}}</dd>
-              </dl>
+            <dl v-for="(item,index) in certificate" :key="index">
+              <dt>{{item.name}} SSL证书</dt>
+              <dd>
+                <ul v-for="(secItem,index) in item.list" :key="index">
+                  <li>{{secItem.name}}</li>
+                  <li v-for="(innerItem,index) in secItem.config" :key="index">
+                    <p>保护
+                      <span>{{innerItem.num}}</span>
+                      <i v-if="innerItem.text"></i>
+                      {{innerItem.text ? '个通配符域名的同级所有子域名' :'个域名'}}
+                    </p>
+                    <p>¥
+                      <span>{{innerItem.price}}</span>元/年
+                    </p>
+                    <Button>立即购买</Button>
+                  </li>
+                  <li v-if="item.name == 'EV'">
+                    <p style="color:#999999;font-size:12px;">不支持通配符</p>
+                    <p
+                      style="color:#2A99F2;font-size:12px;cursor:pointer;"
+                      @click="$router.push('buy')"
+                    >前往购买页面查看更多 →</p>
+                  </li>
+                </ul>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <div class="advantage">
+        <div class="wrap">
+          <div class="header-a">
+            <h1 class="headline">产品优势</h1>
+          </div>
+          <div class="container">
+            <div class="box" v-for="(item,index) in advantage" :key="index">
+              <img :src="item.img" alt>
+              <h2>{{item.title}}</h2>
+              <p>{{item.text}}</p>
             </div>
           </div>
         </div>
       </div>
+      <div class="scene">
+        <div class="wrap">
+          <div class="header-a">
+            <h1 class="headline">使用场景</h1>
+          </div>
+          <div class="container">
+            <div class="box" v-for="(item,index) in scene" :key="index">
+              <div class="header">
+                <h2>{{item.name}}</h2>
+                <span>{{item.text}}</span>
+              </div>
+              <div class="content">
+                <dl v-for="(secItem,index) in item.list" :key="index">
+                  <dt>{{secItem.title}}</dt>
+                  <dd>{{secItem.desc}}</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <sslDetail v-if="selectedTab == 'detail'"></sslDetail>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import axios from 'axios'
+import sslDetail from './sslDetail'
 export default {
   data () {
     return {
+      selectedTab: 'home',
       certificate: [
         {
           name: 'EV',
@@ -216,8 +238,8 @@ export default {
   mounted () {
   },
   methods: {
-    getPrice() {
-      axios.get('domain/getSSLPrice.do',{}).then(Response => {
+    getPrice () {
+      axios.get('domain/getSSLPrice.do', {}).then(Response => {
 
       })
     }
@@ -230,7 +252,7 @@ export default {
 
   },
   components: {
-
+    sslDetail
   }
 }
 </script>
@@ -416,7 +438,7 @@ export default {
       transition: all 0.5s ease-out;
       &:hover {
         box-shadow: 0px 4px 20px -7px rgba(42, 153, 242, 0.5);
-        transform:scale(1.09,1.03);
+        transform: scale(1.09, 1.03);
         .header {
           h2,
           span {
@@ -447,10 +469,10 @@ export default {
         dl {
           width: 275px;
           margin: 0 auto;
-          margin-bottom: 30px; 
+          margin-bottom: 30px;
           font-size: 16px;
-          &:nth-last-of-type(1){
-            margin-bottom: 0; 
+          &:nth-last-of-type(1) {
+            margin-bottom: 0;
           }
           dt {
             font-family: MicrosoftYaHei-Bold;
@@ -464,6 +486,27 @@ export default {
           }
         }
       }
+    }
+  }
+}
+.nav {
+  height: 60px;
+  background: rgba(166, 185, 255, 1);
+  font-size: 24px;
+  color: rgba(255, 255, 255, 1);
+  line-height: 60px;
+  .container {
+    display: flex;
+    div {
+      width: 600px;
+      text-align: center;
+      cursor: pointer;
+      &:hover {
+        background: rgba(99, 133, 255, 1);
+      }
+    }
+    .selected {
+      background: rgba(99, 133, 255, 1);
     }
   }
 }

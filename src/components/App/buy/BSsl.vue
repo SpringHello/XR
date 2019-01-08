@@ -362,7 +362,7 @@ export default {
         sslName: '证书',
         ownUserEmail: '2420479720@qq.com',
         ownUserName: '冷红憬',
-        certallDomain: 'gt21.top',
+        certallDomain: 'gt21.top,aimee.cn,lhj.com',
         ownUserPhone: '+86-151-23278316',
         certExpTime: '24',
         certTypeId: '2',
