@@ -48,7 +48,7 @@
             <p slot="content" style="white-space: normal;">启动配置是自动创建云服务器的模版。</p>
            <Icon type="ios-help-outline"></Icon>
           </Tooltip>
-          <Select v-model="newAddTelescopicList.configure" style="width:240px" placeholder="请选择启动配置">
+          <Select v-model="newAddTelescopicList.configure" style="width:240px" placeholder="请选择启动配置" transfer>
             <Option v-for="item in newAddTelescopicList.configureList" :value="item.id" :key="item.id">{{ item.startupconfigname}}</Option>
           </Select>
           <p style="color: #2A99F2;cursor: pointer;margin-top: 11px;" @click="$router.push({path:'newAddElastic'})">新建启动配置</p>
@@ -65,7 +65,7 @@
             <p slot="content" style="white-space: normal;">伸缩组会自动将新加入的主机添加到负载均衡中。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
-          <Select v-model="newAddTelescopicList.balancing" style="width:240px" placeholder="选择负载均衡" @on-change="balancings(newAddTelescopicList.balancing)">
+          <Select v-model="newAddTelescopicList.balancing" style="width:240px" placeholder="选择负载均衡" @on-change="balancings(newAddTelescopicList.balancing)" transfer>
             <Option v-for="item in newAddTelescopicList.balancingList" :value="item.lbIds" :key="item.lbIds">{{ item.lbNames }}</Option>
           </Select>
         </FormItem>
@@ -77,7 +77,7 @@
           <Input v-model="newAddTelescopicList.maxNumber" style="width: 240px" placeholder="请输入1-30之间的数字"></Input>
         </FormItem>
         <FormItem label="所属网络">
-          <Select v-model="newAddTelescopicList.belongNetwork" style="width:240px" placeholder="请选择网络" @on-change="changeNetWork">
+          <Select v-model="newAddTelescopicList.belongNetwork" style="width:240px" placeholder="请选择网络" @on-change="changeNetWork" transfer>
             <Option v-for="item in newAddTelescopicList.belongNetworkList" :value="item.vpcid" :key="item.vpcid">{{ item.vpcname }}</Option>
           </Select>
         </FormItem>
@@ -89,7 +89,7 @@
           <Input v-model="newAddTelescopicList.exampleNumber" style="width: 240px" placeholder="请输入0-30之间的数字"></Input>
         </FormItem>
         <FormItem label="所属子网">
-          <Select v-model="newAddTelescopicList.belongSubnet"  style="width:240px" placeholder="请选择网络">
+          <Select v-model="newAddTelescopicList.belongSubnet"  style="width:240px" placeholder="请选择网络" transfer>
             <Option v-for="item in newAddTelescopicList.belongSubnetList"   :value="item.ipsegmentid" :key="item.ipsegmentid">{{ item.netoffername }}</Option>
           </Select>
         </FormItem>
@@ -98,7 +98,7 @@
             <p slot="content" style="white-space: normal;">当伸缩组要减少实例且有多重选择时，将根据移出策略来选择移出的主机</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
-          <Select v-model="newAddTelescopicList.removePolicy" style="width:240px">
+          <Select v-model="newAddTelescopicList.removePolicy" style="width:240px" transfer>
             <Option v-for="item in newAddTelescopicList.removePolicyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
@@ -107,7 +107,7 @@
             <p slot="content" style="white-space: normal;">默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
-          <Select v-model="newAddTelescopicList.firewall" style="width:240px">
+          <Select v-model="newAddTelescopicList.firewall" style="width:240px" transfer>
             <Option v-for="item in newAddTelescopicList.firewallList" :value="item.acllistid" :key="item.acllistid">{{ item.acllistname }}</Option>
           </Select>
         </FormItem>
@@ -150,7 +150,6 @@
 
     data(){
       return{
-
         Groups:h=>{
           return h('div',{on:{
             click:()=>{
@@ -440,8 +439,6 @@
               {required:true,validator:minNumberValidator,trigger:'blur'}
             ]
           },
-
-
         }
     },
     methods:{
