@@ -19,8 +19,10 @@
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
-                                                                        v-if="item.title=='活动中心'"></sup></span>
+                  <a v-if="item.title=='资讯'" :href="item.path" target="_blank"><span>{{item.title}}</span>
+                  </a>
+                  <router-link v-else :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
+                                                                               v-if="item.title=='活动中心'"></sup></span>
                   </router-link>
                 </div>
                 <div class="menu-dropdown-list">
@@ -92,14 +94,14 @@
           </ul>
           <!-- 已登录 -->
           <ul v-else @mouseleave="ME(-1)">
-            <li @mouseenter="ME(4,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
                 </div>
               </div>
             </li>
-            <li @mouseenter="ME(4,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/entrance"><span>备案</span></router-link>
