@@ -5,7 +5,7 @@
         <div class="text">
           <h1>SSL证书</h1>
           <p>在云上签发各品牌数字证书，实现网站HTTPS化，使网站可信，防 劫持、防篡改、防监听。并进行统一生命周期管理，简化证书部署， 一键分发到云上产品，实现网站的可信身份认证与安全数据传输。</p>
-          <Button>立即购买</Button>
+          <Button @click="$router.push('buy/bssl')">立即购买</Button>
         </div>
         <img src="../../assets/img/ssl/banner.png" alt>
       </div>
@@ -33,14 +33,16 @@
               <dt>{{item.name}} SSL证书</dt>
               <dd>
                 <ul v-for="(secItem,index) in item.list" :key="index">
-                  <li>{{secItem.name}}</li>
+                  <li @click="jumpTo(item.name)">{{secItem.name}}</li>
                   <li v-for="(innerItem,index) in secItem.config" :key="index">
-                    <p>保护
+                    <p>
+                      保护
                       <span>{{innerItem.num}}</span>
                       <i v-if="innerItem.text"></i>
                       {{innerItem.text ? '个通配符域名的同级所有子域名' :'个域名'}}
                     </p>
-                    <p>¥
+                    <p>
+                      ¥
                       <span>{{innerItem.price}}</span>元/年
                     </p>
                     <Button>立即购买</Button>
@@ -94,7 +96,7 @@
         </div>
       </div>
     </div>
-    <sslDetail v-if="selectedTab == 'detail'"></sslDetail>
+    <sslDetail v-if="selectedTab == 'detail'" :selectedTab="selectedTabSec" @changeTabSec="changeTabSec"></sslDetail>
   </div>
 </template>
 
@@ -105,52 +107,55 @@ export default {
   data () {
     return {
       selectedTab: 'home',
+      selectedTabSec: 'OV',
+      // OV超真SSL Pro
+      // DV超快SSL Pre
       certificate: [
-        {
-          name: 'EV',
-          list: [
-            {
-              name: 'EV超安SSL Pro证书',
-              config: [
-                { num: 1, price: '1254' },
-                { num: 3, price: '1254' }
-              ]
-            },
-            {
-              name: 'EV超安SSL Pre证书',
-              config: [
-                { num: 1, price: '1254' },
-                { num: 3, price: '1254' }
-              ]
-            }
-          ]
-        },
+        // {
+        //   name: 'EV',
+        //   list: [
+        //     {
+        //       name: 'EV超安SSL Pro证书',
+        //       config: [
+        //         { num: 1, price: '1254' },
+        //         { num: 3, price: '1254' }
+        //       ]
+        //     },
+        //     {
+        //       name: 'EV超安SSL Pre证书',
+        //       config: [
+        //         { num: 1, price: '1254' },
+        //         { num: 3, price: '1254' }
+        //       ]
+        //     }
+        //   ]
+        // },
         {
           name: 'OV',
           list: [
             {
-              name: 'OV超安SSL Pro证书',
+              name: 'OV超真SSL Pro证书',
               config: [
                 { num: 1, price: '1254' },
                 { num: 3, price: '1254' },
                 { num: 1, price: '1254', text: '个通配符域名的同级所有子域名' }
               ]
             },
-            {
-              name: 'OV超安SSL Pre证书',
-              config: [
-                { num: 1, price: '1254' },
-                { num: 3, price: '1254' },
-                { num: 1, price: '1254', text: '个通配符域名的同级所有子域名' }
-              ]
-            }
+            // {
+            //   name: 'OV超安SSL Pre证书',
+            //   config: [
+            //     { num: 1, price: '1254' },
+            //     { num: 3, price: '1254' },
+            //     { num: 1, price: '1254', text: '个通配符域名的同级所有子域名' }
+            //   ]
+            // }
           ]
         },
         {
           name: 'DV',
           list: [
             {
-              name: 'DV超安SSL Pre证书',
+              name: 'DV超快SSL Pre证书',
               config: [
                 { num: 1, price: '1254' },
                 { num: 3, price: '1254' },
@@ -242,8 +247,14 @@ export default {
       axios.get('domain/getSSLPrice.do', {}).then(Response => {
 
       })
+    },
+    jumpTo(detailTab) {
+      this.selectedTab = 'detail'
+      this.selectedTabSec = detailTab
+    },
+    changeTabSec(data) {
+      this.selectedTabSec = data
     }
-
   },
   computed: {
 
@@ -368,6 +379,10 @@ export default {
               font-family: MicrosoftYaHei-Bold;
               font-weight: bold;
               color: rgba(51, 51, 51, 1);
+              cursor: pointer;
+              &:hover {
+                color: #387DFF;
+              }
             }
             p {
               color: #666666;
@@ -501,9 +516,6 @@ export default {
       width: 600px;
       text-align: center;
       cursor: pointer;
-      &:hover {
-        background: rgba(99, 133, 255, 1);
-      }
     }
     .selected {
       background: rgba(99, 133, 255, 1);

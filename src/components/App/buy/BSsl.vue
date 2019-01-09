@@ -538,21 +538,6 @@ export default {
       .alert {
         margin-top: 10px;
       }
-      // .reg-vail {
-      //   display: inline-block;
-      //   margin-left: 15px;
-      //   padding: 0 20px;
-      //   height: 36px;
-      //   line-height: 36px;
-      //   background: rgba(255, 255, 255, 1);
-      //   box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
-      //   border-radius: 2px;
-      //   vertical-align: middle;
-      //   color: #ff392a;
-      //   i {
-      //     margin-right: 8px;
-      //   }
-      // }
       .reg-vail {
         color: #ff392a;
         padding-left: 15px;

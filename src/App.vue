@@ -471,6 +471,11 @@
                         desc: '高效贴心的域名备案服务',
                         path: '/ruicloud/entrance'
                       },
+                      {
+                        title: 'SSL证书',
+                        desc: '网站可信身份认证与安全数据传输',
+                        path: '/ruicloud/ssl'
+                      },
                     ]
                   },
                 ]
