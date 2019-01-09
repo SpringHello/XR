@@ -94,6 +94,25 @@
                   </Form>
                 </div>
               </div>
+              <h2 style="margin-top: 20px">资源配额</h2>
+              <div class="pi-resourcesQuota">
+                <p><span @click="resourcesQuotaShow = !resourcesQuotaShow"><i :class="{top:!resourcesQuotaShow}"></i></span>资源配额</p>
+                <div style="margin-top: 20px;display: flex" v-show="resourcesQuotaShow">
+                  <div style="width: 280px;border-left: 1px solid #E9E9E9;border-top: 1px solid #E9E9E9;">
+                    <div
+                      style="display: flex;padding-left: 20px;align-items: center;height: 39px;background:#F8F8F9 ">
+                      <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
+                    </div>
+                    <div class="infTop" :class="{one: index==0,two: index==1||index==3||index==4||index==6||index==9||index==10,three:index== 8,four: index == 11}"
+                         v-for="(item,index) in resourcesQuotaList">
+                      <span class="inf">{{ item.title}}</span>
+                    </div>
+                  </div>
+                  <div style="width: 840px">
+                    <Table :columns="resourcesQuotaColumns" :data="resourcesQuotaData"></Table>
+                  </div>
+                </div>
+              </div>
             </div>
           </Tab-pane>
           <Tab-pane label="提醒设置" name="remainder">
@@ -107,10 +126,10 @@
                 为了保障您在第一时间接收到有关财务、账号安全和系统公告等关键信息，本设置页面部分选项（打勾图标）默认激活且无法更改。其余可配置选项请依据您的具体需求激活或禁用。
               </p>
               <div style="margin-top: 20px;display: flex">
-                <div style="width: 200px">
+                <div style="width: 200px;border-left: 1px solid #E9E9E9;border-top: 1px solid #E9E9E9;">
                   <div
-                    style="display: flex;padding-left: 20px;align-items: center;height: 40px;background:#F8F8F9 ">
-                    <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
+                    style="display: flex;padding-left: 20px;align-items: center;height: 39px;background:#F8F8F9 ">
+                    <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder;">信息项</span>
                   </div>
                   <div class="infTop" style="height: 577px;border-top:1px solid #E9E9E9; ">
                     <span class="inf">账号信息</span>
@@ -1579,7 +1598,33 @@
             {validator: validaRegisteredPassWordTwo, trigger: 'blur'}
           ],
         },
-
+        resourcesQuotaColumns: [
+          {
+            title: '资源类型',
+          },
+          {
+            title: '已用配额',
+          },
+          {
+            title: '总配额',
+          },
+        ],
+        resourcesQuotaData: [],
+        resourcesQuotaList: [
+          {title: '弹性云服务器ECS'},
+          {title: '镜像服务'},
+          {title: '弹性伸缩'},
+          {title: 'GPU服务器'},
+          {title: '裸金属服务器'},
+          {title: '云硬盘'},
+          {title: '云硬盘备份'},
+          {title: '对象存储'},
+          {title: '虚拟私有云VPC'},
+          {title: '弹性负载均衡'},
+          {title: '云数据库'},
+          {title: '云监控服务'}
+        ],
+        resourcesQuotaShow: true,
         // 联系人表格
         linkManColumns: [
           {
@@ -2323,7 +2368,7 @@
                 }, 1000)
               } else {
                 this.$Message.error(response.data.message)
-                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2361,7 +2406,7 @@
               }, 1000)
             } else {
               this.$Message.error(response.data.message)
-              this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
             }
           })
         }
@@ -2534,7 +2579,7 @@
               })
             } else {
               this.$Message.error(response.data.message)
-              this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
             }
           })
         }
@@ -2664,7 +2709,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
-                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2704,7 +2749,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
-                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2736,7 +2781,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
-                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2776,7 +2821,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
-                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2808,7 +2853,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
-                this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -3359,7 +3404,6 @@
     .pi-otherInfo {
       margin-top: 14px;
       border-top: 1px solid #E9E9E9;
-      height: 536px;
       ol {
         margin-top: 28px;
         li {
@@ -3384,6 +3428,47 @@
       .pi-otherInfo-form {
         padding-left: 105px;
         margin-top: 20px;
+      }
+    }
+    .pi-resourcesQuota {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 1);
+      border-radius: 4px;
+      border: 1px solid rgba(233, 233, 233, 1);
+      padding: 20px;
+      > p {
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 1);
+        > span {
+          height: 14px;
+          width: 14px;
+          border: 1px solid #2A99F2;
+          border-radius: 7px;
+          display: inline-block;
+          margin-right: 5px;
+          text-align: center;
+          cursor: pointer;
+          position: relative;
+          top: 2px;
+          > i {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            transform: rotate(225deg);
+            position: relative;
+            top: -6px;
+            transition: all 0.5s;
+            border-top: 1px solid #2A99F2;
+            border-left: 1px solid #2A99F2;
+            &.top {
+              transition: all 0.5s;
+              transform: rotate(45deg);
+              top: -4px;
+            }
+          }
+        }
       }
     }
   }
@@ -3699,6 +3784,18 @@
     align-items: center;
     height: 96px;
     border-bottom: 1px solid #E9E9E9;
+    &.one {
+      border-top: 1px solid #E9E9E9;
+    }
+    &.two {
+      height: 48px;
+    }
+    &.three {
+      height: 336px;
+    }
+    &.four {
+      height: 144px;
+    }
     .inf {
       font-family: Microsoft YaHei;
       font-size: 16px;
