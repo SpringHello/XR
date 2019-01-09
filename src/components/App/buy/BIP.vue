@@ -225,7 +225,7 @@
         }
         axios.get('network/createPublicIp.do', {params}).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$router.push('/ruicloud/order')
+              this.$router.push('/ruicloud/orderNew')
             } else {
               this.$message.info({
                 content: response.data.message
@@ -555,7 +555,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;

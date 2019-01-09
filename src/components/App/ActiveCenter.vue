@@ -2,15 +2,20 @@
   <div class="active-center">
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
-        <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/anniversaryActive')"
-               style="cursor: pointer;background: #F56B23;">
-            <div class="anniversary-active">
+          <my-carousel-item class="carousel-item">
+          <div @click="push('wonderfulDay')"
+               style="cursor: pointer;">
+            <div class="dan-receive">
+              <div class="wrap">
+               <div class="w_button">
+                <span>立即参与</span>
+                </div>
+              </div>
             </div>
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('fractive')"
+          <div @click="push('frActive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
 
@@ -49,18 +54,20 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('active_1')"
-               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+          <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
-                <div>
-                  <p>
-                    <img style="padding-top: 0" src="../../assets/img/home/home-banner3.png">
-                  </p>
-                  <button style="margin-top: 120px">立即领取</button>
+                <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png"></p>
+                  <button>立即领取</button>
                 </div>
-                <img src="../../assets/img/home/home-banner4.png">
-              </div>
+                <img src="../../assets/img/home/home-banner4.png"></div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
+          <div @click="push('/ruicloud/anniversaryActive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="anniversary-active">
             </div>
           </div>
         </my-carousel-item>
@@ -77,11 +84,15 @@
             <router-link v-for="(item,index) in activeData" :key="index" :class="{'box':true}"
                          :to="item.isStart?item.url:''" :style="{background:'url('+item.imgPath+')',backgroundRepeat:'no-repeat'}">
               <div class="box-head" :style="{color:item.color}">
-                <p>
-                  {{item.name}}
-                </p>
-                <p v-html="item.desc"></p>
-                <p v-if="item.secDesc">{{item.secDesc}}</p>
+                <div v-if="item.name">
+                  <p>
+                    {{item.name}}
+                  </p>
+                  <p v-html="item.desc"></p>
+                  <p v-if="item.secDesc">{{item.secDesc}}</p>
+                </div>
+                <img :src="item.textImg" alt="" v-else>
+
               </div>
               <div class="box-bottom">
                 <div>
@@ -137,13 +148,13 @@
         active: [],
         activedata: [
           {
-            imgPath: require('../../assets/img/activecenter/bg-card-5.png'),
-            name: '周年庆典，钜惠来袭',
-            desc: '爆款高配云产品 限时特惠',
-            secDesc: '不止1.7折，更有百万豪礼，等您来拿！',
-            time: '2018.11.17-2018.12.16',
+             imgPath: require('../../assets/img/activecenter/dan.png'),
+            name: '双旦同庆，钜惠上云',
+            desc: '高配云产品 限时2.7折; 更有首购好礼',
+            secDesc: '免费产品体验等内容',
+            time: '2018.12.24-2019.01.30',
             activeObj: '新老用户',
-            url: 'anniversaryActive',
+            url: 'wonderfulDay',
             isStart: true,
             weight: '1',
           },
@@ -153,25 +164,24 @@
             desc: '交押金最长可用一年 押金闪退',
             time: '2018.08.03开始',
             activeObj: '云主机 新注册用户',
-            url: 'fractive',
+            url: 'frActive',
             isStart: true,
             weight: '1'
           },
           {
             imgPath: require('../../assets/img/activecenter/bg-card-1.png'),
-            name: '新用户注册领现金豪礼',
-            desc: '注册即可领取158元现金大礼包',
-            time: '长期有效',
-            activeObj: '新注册用户',
+            textImg: require('../../assets/img/activecenter/text-1.png'),
+            time: '2018年12月7日开始',
+            activeObj: '新老用户',
             url: 'active_1',
             isStart: true,
-            weight: '1'
+            weight: '1',
           },
           {
             imgPath: require('../../assets/img/activecenter/bg-card-3.png'),
             name: '对象存储 重磅上线',
             desc: '安全稳定高效的云端存储服务 免费试用50G',
-            time: ' 即将上线',
+            time: ' 2018年8月1日',
             activeObj: '对象存储 新老用户',
             url: 'objStorageActive',
             isStart: true,
@@ -254,9 +264,32 @@
             cursor: pointer;
             background: #FEEDE0 url("../../assets/img/active/anniversary/aa-banner22.png") center no-repeat;
           }
+          .dan-receive{
+            height: 400px;
+            background: rgb(249, 118, 89) url("../../assets/img/active/doubleDenier/dan_banner.png") center no-repeat;
+            .w_button{
+              position: relative;
+              top: 217px;
+              left: 37px;
+              color: rgba(26, 42, 210, 1);
+              font-weight: 500;
+              font-size: 13px;
+              width: 140px;
+              line-height: 43px;
+              letter-spacing:3px;
+              text-align: center;
+              height: 43px;
+              background: rgb(255, 222, 42);
+              // box-shadow: 0px 2px 2px 1px rgb(136, 20, 17);
+              cursor: pointer;
+            }
+            .w_button:hover{
+              box-shadow: 0px 2px 2px 1px #881411;
+            }
+          }
           .free-receive {
             height: 400px;
-            background: #f56b23 url("../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
+            background:  url("../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
           }
           .obj-storage {
             background: linear-gradient(
@@ -376,16 +409,19 @@
               div {
                 padding-top: 60px;
                 button {
-                  background: #f26667;
-                  border-radius: 100px;
-                  font-size: 18px;
+                  width: 176px;
+                  height: 54px;
+                  background: rgba(255, 96, 40, 1);
+                  font-size: 24px;
                   color: #ffffff;
                   line-height: 24px;
-                  margin-top: 60px;
+                  margin-top: 50px;
                   outline: none;
                   border: none;
                   cursor: pointer;
-                  padding: 10px 20px;
+                  &:hover {
+                    background: rgba(255, 57, 54, 1);
+                  }
                 }
               }
               > img {

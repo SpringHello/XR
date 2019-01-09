@@ -1228,7 +1228,8 @@
           onOk: () => {
             this.$http.get('network/restartVpc.do', {
               params: {
-                vpcId: item.vpcid
+                vpcId: item.vpcid,
+                cleanup: true
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {

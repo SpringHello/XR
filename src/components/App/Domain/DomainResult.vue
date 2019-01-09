@@ -11,8 +11,8 @@
             </Input>
             <transition name="showChosse">
               <div v-show="choose" class="change" @mouseleave="choose=!choose">
-              <span v-for="(item,index) in suffixChange.en" :key="index"
-                    style="width:70px;display:inline-block;height: 20px" @click="addAppend(item)">{{item}}</span>
+              <span v-for="(item,index) in suffixChange" :key="index"
+                    style="width:70px;display:inline-block;height: 30px;padding: 5px 0;" @click="addAppend(item)">{{item}}</span>
               </div>
             </transition>
           </div>
@@ -30,10 +30,10 @@
             </button>
           </div>
           <div class="show" v-show="showValue">
-            <Button type="primary" label="small" @click="checkAll" v-if="showButton">全选</Button>
-            <Button type="primary" label="small" @click="notcheckAll" v-else :disabled="cancel">取消全选</Button>
-            <CheckboxGroup v-model="singles" style="display: flex;flex-wrap: wrap;justify-content: flex-start">
-              <Checkbox v-for="(item,index) in suffixChange.en" :key="index" :label="item" style="width:95px;">{{item}}
+            <Checkbox v-model="showButton" @on-change="showBtn" :disabled="cancel">所有后缀</Checkbox>
+            <CheckboxGroup v-model="singles"
+                           style="display: flex;flex-wrap: wrap;justify-content: flex-start;margin-top: 20px;">
+              <Checkbox v-for="(item,index) in suffixChange" :key="index" :label="item" style="width:108px;">{{item}}
               </Checkbox>
             </CheckboxGroup>
           </div>
@@ -96,19 +96,21 @@
         let len = JSON.parse(sessionStorage.getItem("suffix")).length
         if (len !== 0) {
           vm.singles = JSON.parse(sessionStorage.getItem("suffix"))
+          vm.append = vm.singles[0]
         } else {
-          vm.showButton = false
           vm.singles = JSON.parse(sessionStorage.getItem('suffixChange')).en
+          vm.showButton = true
+          vm.append = '.com'
         }
       })
     },
     data(){
       window.scrollTo(0, 0);
       return {
-        append: '.com',
+        append: '',
         searchText: sessionStorage.getItem('name'),
         choose: false,
-        suffixChange: JSON.parse(sessionStorage.getItem('suffixChange')),
+        suffixChange: [],
         showValue: false,
         singles: [],
         Results: [],
@@ -120,8 +122,8 @@
 
         domName: '',
 
-        showButton: true,
-        cancel: true,
+        showButton: false,
+        cancel: false,
         showFix: false,
 
       }
@@ -132,17 +134,18 @@
         this.Results = []
         this.singles = []
         this.showFix = true
+        this.showButton = false
         axios.post('domain/domainFound.do', {
           domainName: this.searchText,
           tids: this.append,
         }).then(res => {
           if (res.data.data.results.length != 0) {
-            this.showFix = false
             this.Results = res.data.data.results
             this.singles.unshift(this.append)
           } else {
             this.$Message.info('暂无数据')
           }
+          this.showFix = false
         })
       },
 
@@ -152,24 +155,28 @@
       },
 
       //全选
-      checkAll(){
-        this.showButton = false
-        this.singles = this.suffixChange.en
-      },
-      //取消全选
-      notcheckAll(){
-        this.Results = []
-        this.singles = []
-        this.showButton = true
+      showBtn(){
+        if (this.showButton) {
+          this.singles = this.suffixChange
+        } else {
+          this.Results = []
+          this.singles = []
+        }
       },
 
       //加入清单
       addList(item){
-        for (var i = 0; i <= this.buyLists.length; i++) {
-          if (this.buyLists.indexOf(item) == -1) {
-            this.buyLists.push(item)
-          }
+        if (this.buyLists.length == 0) {
+          this.buyLists.push(item)
+        } else {
+          this.buyLists.push(item)
+          let hash = {};
+          this.buyLists = this.buyLists.reduce((preVal, curVal) => {
+            hash[curVal.name] ? '' : hash[curVal.name] = true && preVal.push(curVal);
+            return preVal
+          }, [])
         }
+
       },
       //移除
       remove(index){
@@ -243,45 +250,74 @@
             tids.push(this.singles[i]);
           }
         }
+        this.Results = []
         if (tids.length != 0) {
-          this.showFix = true
-          axios.post('domain/domainFound.do', {
-            domainName: this.searchText,
-            tids: tids.slice(0, 8).join(','),
-          }).then(res => {
-            this.showFix = false
-            if (res.data.data.results.length != 0) {
-              this.Results = res.data.data.results
-              if (tids.slice(8).length != 0) {
-                this.showFix = true
-                this.cancel = true
-                setTimeout(() => {
-                  axios.post('domain/domainFound.do', {
-                    domainName: this.searchText,
-                    tids: tids.slice(8).join(','),
-                  }).then(res => {
-                    if (res.status == 200 && res.data.status == 1) {
-                      this.showFix = false
-                      this.cancel = false
-                      var addList = res.data.data.results
-                      for (var i in addList) {
-                        this.Results.push(addList[i]);
-                      }
-                      this.$Message.info('加载完毕!')
-                    }
-                  })
-                }, 1000)
+          for (var j = 0; j < tids.length; j += 4) {
+            this.showFix = true
+            axios.post('domain/domainFound.do', {
+              domainName: this.searchText,
+              tids: tids.slice(j, j + 4).join(','),
+            }).then(res => {
+              this.showFix = true
+              if (res.data.data.results.length != 0) {
+                var addList = res.data.data.results
+                for (var i in addList) {
+                  this.Results.push(addList[i]);
+                }
+                this.showFix = false
+              } else {
+                this.showFix = false
               }
-            }
-            else {
-              this.$Message.info('暂无数据')
-            }
-          })
+            })
+//            if ((j + 4 ) > tids.length) {
+//              this.$Message.info('加载完毕!')
+//            }
+          }
+//          axios.post('domain/domainFound.do', {
+//            domainName: this.searchText,
+//            tids: tids.slice(0, 8).join(','),
+//          }).then(res => {
+//            this.showFix = false
+//            if (res.data.data.results.length != 0) {
+//              this.Results = res.data.data.results
+//              if (tids.slice(8).length != 0) {
+//                this.showFix = true
+//                this.cancel = true
+//                setTimeout(() => {
+//                  axios.post('domain/domainFound.do', {
+//                    domainName: this.searchText,
+//                    tids: tids.slice(8).join(','),
+//                  }).then(res => {
+//                    if (res.status == 200 && res.data.status == 1) {
+//                      this.showFix = false
+//                      this.cancel = false
+//                      var addList = res.data.data.results
+//                      for (var i in addList) {
+//                        this.Results.push(addList[i]);
+//                      }
+//                      this.$Message.info('加载完毕!')
+//                    }
+//                  })
+//                }, 1000)
+//              }
+//            }
+//            else {
+//              this.$Message.info('暂无数据')
+//            }
+//          })
         } else {
           this.Results = []
         }
       }
     },
+    created(){
+      var arry = (JSON.parse(sessionStorage.getItem('suffixChange'))).en
+      for (var i = 0; i < arry.length; i++) {
+        if (this.suffixChange.indexOf(arry[i]) == -1) {
+          this.suffixChange.push(arry[i])
+        }
+      }
+    }
   }
 </script>
 
@@ -326,7 +362,7 @@
               cursor: pointer;
               text-align: center;
               &:hover {
-                background: #ccc;
+                background: #F5F5F6;
               }
             }
           }
@@ -381,7 +417,7 @@
       .show {
         box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(230, 230, 230, 1);
-        padding: 50px 55px 41px 54px;
+        padding: 20px 20px 40px 20px;
         position: relative;
         button {
           position: absolute;
@@ -390,7 +426,6 @@
           width: 80px;
           display: block;
         }
-
       }
       li {
         list-style: none;
@@ -492,6 +527,8 @@
           .all-data {
             padding: 30px 0 9px 0;
             border-bottom: 1px solid rgba(204, 204, 204, 1);
+            max-height: 550px;
+            overflow-y: auto;
             li {
               list-style: none;
               display: flex;
@@ -571,11 +608,6 @@
         }
       }
     }
-    /*.titleTop {*/
-    /*position: fixed;*/
-    /*right: 350px;*/
-    /*top: 0;*/
-    /*}*/
   }
 
   .demo-spin-icon-load {

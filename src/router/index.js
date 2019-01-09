@@ -45,6 +45,7 @@ const Vps = () =>import('@/components/App/active/vps')
 /*const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
  const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
 const active_1 = () => import('@/components/App/active/active_1')
+const wonderfulDay =() => import('@/components/App/active/wonderfulDay')
 
 //const active_2 = () => import('@/components/App/active/active_2')
 const objStorageActive = () =>import('@/components/App/active/objStorageActive')
@@ -111,6 +112,7 @@ const Pelastic = () => import('@/components/App/product/Pelastic.vue')
 const Login = () =>import('@/components/LR/Login')
 const NewLogin = () =>import('@/components/LR/newLogin')
 const Register = () =>import('@/components/LR/Register')
+const NewRegister = () =>import('@/components/LR/newRegister')
 const Reset = () =>import('@/components/LR/Reset')
 const RegisterSuccess = () =>import('@/components/LR/RegisterSuccess')
 const ResetNew = () =>import('@/components/LR/ResetNew')
@@ -127,6 +129,7 @@ const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
 const Host = () =>import('@/components/Back/Host')
+const NewHost = () =>import('@/components/Back/newHost')
 const GPU = () =>import('@/components/Back/GPU')
 const GpuList = () =>import('@/components/Back/GpuList')
 const Mirror = () =>import('@/components/Back/Mirror')
@@ -152,8 +155,11 @@ const Vpn = () =>import('@/components/Back/Vpn')
 const Ip = () =>import('@/components/Back/Ip')
 const Order = () =>import('@/components/Back/Order')
 const Order1 = () =>import('@/components/Back/Order1')
+const OrderNew = () =>import('@/components/Back/OrderNew')
 const PayResult = () =>import('@/components/Back/PayResult')
 const Result = () =>import('@/components/Back/Result')
+const ResultNew = () => import('@/components/Back/ResultNew')
+const PayNew = () =>import('@/components/Back/PayNew')
 const Expenses = () =>import('@/components/Back/Expenses')
 const UserCenter = () =>import('@/components/Back/UserCenter')
 const UserInfo = ()=>import('@/components/Back/UserInfo')
@@ -320,6 +326,7 @@ var router = new Router({
         {path: 'objStorageActive', name: 'objStorageActive', component: objStorageActive},
         {path: 'smlj', name: 'smlj', component: smlj},
         {path: 'frActive', name: 'frActive', component: FrActive},
+        {path: 'wonderfulDay',name: 'wonderfulDay', component:wonderfulDay},
 
         {path: 'dbActive', name: 'dbActive', component: DBActive},
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
@@ -403,6 +410,7 @@ var router = new Router({
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
+        {path: 'newHost', name: 'newHost', component: NewHost},
         {path: 'gpu', name: 'gpu', component: GPU},
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
@@ -410,10 +418,12 @@ var router = new Router({
         {path: 'vpn', name: 'vpn', component: Vpn},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
-        /*{path: 'order', name: 'order', component: Order},*/
+        {path: 'orderNew', name: 'orderNew', component: OrderNew},
         {path: 'order', name: 'order', component: Order1},
         {path: 'payResult', name: 'payResult', component: PayResult},
         {path: 'result', name: 'result', component: Result},
+        {path: 'resultNew', name:'resultNew', component:ResultNew},
+        {path: 'payNew', name:'payNew', component: PayNew},
         {path: 'expenses', name: 'expenses', component: Expenses},
         {path: 'userCenter', name: 'userCenter', component: UserCenter},
         {path: 'userInfo', name: 'userInfo', component: UserInfo},
@@ -452,6 +462,7 @@ var router = new Router({
         {path: 'login', name: 'login', component: Login},
         {path: 'newLogin', name: 'newLogin', component: NewLogin},
         {path: 'register', name: 'register', component: Register},
+        {path: 'newRegister', name: 'newRegister', component: NewRegister},
         {path: 'reset', name: 'reset', component: Reset},
         {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess},
         {path: 'resetNew',name:'resetNew',component:ResetNew}

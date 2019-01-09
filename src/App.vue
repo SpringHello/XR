@@ -1,12 +1,13 @@
 <template>
   <div id="front">
-    <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
+    <!-- <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
       <div class="center">
         <div class="countdown" v-if="hintShow">
+          <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
         </div>
       </div>
       <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
-    </div>
+    </div> -->
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -230,7 +231,6 @@
     <!-- 客服浮动块 -->
     <div class="affix">
       <div class="registerImg" @click="$router.push('register')">
-        <p>立即领取</p>
       </div>
       <!--<img src="./assets/img/app/regiterTag.png"/>-->
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
@@ -318,7 +318,6 @@
   import '@/assets/iconfont/frontend/iconfont.css'
   import '@/assets/iconfont/frontend/iconfont.js'
   import uuid from 'uuid'
-
 
   export default {
     name: 'app',
@@ -426,7 +425,7 @@
                   {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost.htm'},
                   {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss.htm'},
                   {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/ruicloud/Pgpu.htm'},
-                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/ruicloud/Pelastic.htm'},
+                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/ruicloud/Pelastic'},
                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
                 ]
               },
@@ -527,7 +526,7 @@
               {subTitle: '镜像服务', url: '/ruicloud/Phost.htm'},
               {subTitle: 'ESC快照', url: '/ruicloud/Pecss.htm'},
               {subTitle: 'GPU服务器', url: '/ruicloud/Pgpu.htm'},
-              {subTitle: '弹性伸缩', url: '/ruicloud/Pelastic.htm'},
+              {subTitle: '弹性伸缩', url: '/ruicloud/Pelastic'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
             ]
           },
@@ -595,10 +594,10 @@
         xiaoshouInfo: [],  // QQ销售在线情况
         yunweiInfo: [],  // QQ运维在线情况,
         /* 倒计时参数 */
-        day: '--',
-        hour: '--',
-        minute: '--',
-        second: '--',
+        day: '00',
+        hour: '00',
+        minute: '00',
+        second: '00',
         hintShow: false,
         timer: null,
         UUID: ''
@@ -639,10 +638,11 @@
         })
     },
     mounted() {
-      this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
-      if (sessionStorage.getItem('hintShow') == 'true') {
-        this.$refs.hint.style.height = '80px'
-      }
+      // this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
+      // if (sessionStorage.getItem('hintShow') == 'true') {
+      //   this.$refs.hint.style.height = '80px'
+      // }
+      //this.setTime()
       if (document.readyState === 'complete') { //当页面加载状态为完全结束时进入
         let params = {
           batchNumber: window.UUID,
@@ -655,9 +655,9 @@
       }
     },
     created() {
-      if (sessionStorage.getItem('hintShow') == null) {
-        sessionStorage.setItem('hintShow', 'true')
-      }
+      // if (sessionStorage.getItem('hintShow') == null) {
+      //   sessionStorage.setItem('hintShow', 'true')
+      // }
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
@@ -715,6 +715,47 @@
         this.$refs.hint.style.height = 0
         sessionStorage.setItem('hintShow', 'false')
       },
+      /* 倒计时方法 */
+      setTime() {
+        axios.get('network/getTime.do').then(res => {
+          if (res.data.status == 1) {
+            let startTime = res.data.result
+            let endTime = new Date('2018/12/17').getTime()
+            let limitTime = endTime - startTime
+            if (limitTime > 0) {
+              this.setLimit(limitTime)
+              this.timer = setInterval(() => {
+                this.setLimit(limitTime)
+                limitTime -= 1000
+                if (limitTime <= 0) {
+                  window.clearInterval(this.timer)
+                }
+              }, 1000);
+            } else {
+              this.day = this.checkTime(0);
+              this.hour = this.checkTime(0);
+              this.minute = this.checkTime(0);
+              this.second = this.checkTime(0);
+            }
+          }
+        })
+      },
+      setLimit(time) {
+        let days = parseInt(time / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
+        let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+        let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
+        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒数
+        this.day = this.checkTime(days);
+        this.hour = this.checkTime(hours);
+        this.minute = this.checkTime(minutes);
+        this.second = this.checkTime(seconds);
+      },
+      checkTime(i) { //将0-9的数字前面加上0，例1变为01
+        if (i < 10) {
+          i = '0' + i;
+        }
+        return i;
+      },
     },
     computed: mapState({
       userInfo: state => state.userInfo
@@ -760,16 +801,17 @@
         margin: 0 auto;
         .countdown {
           position: absolute;
-          left: 78%;
-          top: 38%;
+          left: 74.4%;
+          top: 45%;
           > p {
-            font-size: 20px;
             font-family: MicrosoftYaHei;
-            font-weight: 500;
-            color: rgba(253, 253, 253, 1);
+            font-size:24px;
+            font-weight:500;
+            color:rgba(255,45,0,1);
             > span {
-              font-size: 12px;
-              margin-right: 5px;
+              font-size: 14px;
+              margin: 0 8px;
+              color: #FFF
             }
           }
         }
@@ -1121,7 +1163,7 @@
         background: #E1E1E1 no-repeat center;
       }
       .registerImg {
-        height: 201px;
+        height: 189px;
         width: 48px;
         background: url("./assets/img/app/regiterTag.png") no-repeat;
         margin-bottom: 10px;

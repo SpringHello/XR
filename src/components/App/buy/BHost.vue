@@ -881,7 +881,6 @@
         }
       },
       setAppOS(name) {
-        console.log(name)
         var arg = name.split('#')
         for (var item of this.appList) {
           item.selectSystem = ''
@@ -959,7 +958,6 @@
       },
       // 加入预算清单
       addCart() {
-        console.log(this.appSystem)
         if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
           this.$message.info({
             content: '请选择一个镜像系统'
@@ -991,7 +989,6 @@
         prod.currentLoginType = this.currentLoginType
         prod.computerName = this.computerName
         prod.password = this.password
-        console.log(prod.system)
         if (this.createType == 'fast') {
           prod.currentSystem = this.currentSystem
           prod.cost = this.fastCost
@@ -1075,7 +1072,7 @@
         axios.get('information/deployVirtualMachine.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({
-              path: '/ruicloud/order'
+              path: '/ruicloud/orderNew'
             })
           } else {
             this.$message.info({
@@ -1599,7 +1596,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;

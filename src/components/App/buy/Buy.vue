@@ -7,9 +7,9 @@
         </Select>
         <router-link :to="`/ruicloud/${docPath}`" target="_blank">查看产品详情</router-link>
       </div>
-      <div id="body">
+      <div id="body" ref="bo">
         <router-view/>
-        <div id="list">
+        <div id="list" ref="lists">
           <div ref="list"
                style="padding:30px 30px 0 30px;background-color: #ffffff;max-height: 1050px;overflow-y: auto">
             <p
@@ -311,6 +311,31 @@
           } else {
             this.$refs.buyDiv.style.position = 'unset'
           }
+        },
+        scrollList: () => {
+          var allWidth = window.screen.width
+          // 获取div距顶部距离
+          var top = this.$refs.lists.offsetTop
+          //获取屏幕高度
+          var windowTop = window.innerHeight
+          //屏幕卷去的高度
+          var scrollTops = document.documentElement.scrollTop || document.body.scrollTop
+          if (top >= scrollTops && top < (scrollTops + windowTop)) {
+            this.$refs.lists.style.position = 'unset'
+          } else {
+            this.$refs.lists.style.position = 'fixed'
+            this.$refs.lists.style.top = 0
+            if (allWidth > 1670) {
+              this.$refs.lists.style.right = (allWidth - 1570) + 'px'
+            } else {
+              this.$refs.lists.style.right = '80px'
+            }
+            if (scrollTops < 1200) {
+              this.$refs.list.style.maxHeight = (1300 - scrollTops) + 'px'
+            } else {
+              this.$refs.list.style.maxHeight = 100 + 'px'
+            }
+          }
         }
       }
     },
@@ -324,6 +349,8 @@
     },
     mounted() {
       window.addEventListener('scroll', this.scrollFun)
+      window.addEventListener('scroll', this.scrollList)
+      this.scrollList()
     },
     methods: {
       submit() {
@@ -520,7 +547,7 @@
             return item.status == 200 && item.data.status == 1
           })) {
             this.$router.push({
-              path: '/ruicloud/order', query: {
+              path: '/ruicloud/orderNew', query: {
                 countOrder
               }
             })
@@ -612,6 +639,7 @@
     },
     destroyed() {
       window.removeEventListener('scroll', this.scrollFun)
+      window.removeEventListener('scroll', this.scrollList)
     }
   }
 </script>
@@ -871,7 +899,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;

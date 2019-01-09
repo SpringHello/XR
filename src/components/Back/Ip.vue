@@ -246,9 +246,9 @@
             </div>
             <span>Mbps</span>
           </Form-item>
-          <Form-item label="资费" style="width: 80%">
+          <Form-item label="应付差价：" style="width: 80%">
             <span style="font-family: Microsoft YaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{adjustForm.cost}}
-              <span>/ <span style="font-size: 16px;">{{adjustFormType}}</span></span>
+              <!--   <span>/ <span style="font-size: 16px;">{{adjustFormType}}</span></span>-->
             </span>
           </Form-item>
         </Form>
@@ -641,75 +641,79 @@
           {
             title: '操作',
             render: (h, object) => {
-              if (object.row.status == 2) {
-                // 创建中
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block'
-                  }
-                }), h('span', {}, '创建中')])
-              } else if (object.row.status == 3) {
-                // 绑定中
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block'
-                  }
-                }), h('span', {}, '绑定中')])
-              } else if (object.row.status == 4) {
-                // 解绑中
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block'
-                  }
-                }), h('span', {}, '解绑中')])
-              } else if (object.row.status == 6) {
-                // 已冻结
-                return h('div', {}, h('span', {}, '已冻结'))
-              } else if (object.row.usetype == 0) {
-                return h('Dropdown', {
-                  props: {
-                    transfer: true
-                  },
-                  on: {
-                    'on-click': (type) => {
-                      this.openBindIPModal(type, object.row, object.row.id)
-                    }
-                  }
-                }, [h('a', {}, ['绑定资源 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
-                  attrs: {
-                    name: 'host'
-                  }
-                }, '云主机'),
-                  h('DropdownItem', {
-                    attrs: {
-                      name: 'gpu'
-                    },
+              if (this.auth) {
+                if (object.row.status == 2) {
+                  // 创建中
+                  return h('div', {}, [h('Spin', {
                     style: {
-                      display: this.hide
+                      display: 'inline-block'
+                    }
+                  }), h('span', {}, '创建中')])
+                } else if (object.row.status == 3) {
+                  // 绑定中
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block'
+                    }
+                  }), h('span', {}, '绑定中')])
+                } else if (object.row.status == 4) {
+                  // 解绑中
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block'
+                    }
+                  }), h('span', {}, '解绑中')])
+                } else if (object.row.status == 6) {
+                  // 已冻结
+                  return h('div', {}, h('span', {}, '已冻结'))
+                } else if (object.row.usetype == 0) {
+                  return h('Dropdown', {
+                    props: {
+                      transfer: true
                     },
-                  }, 'GPU云服务器'),
-                  h('DropdownItem', {
+                    on: {
+                      'on-click': (type) => {
+                        this.openBindIPModal(type, object.row, object.row.id)
+                      }
+                    }
+                  }, [h('a', {}, ['绑定资源 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
                     attrs: {
-                      name: 'NAT'
+                      name: 'host'
                     }
-                  }, 'NAT网关'),
-                  h('DropdownItem', {
-                    attrs: {
-                      name: 'database'
+                  }, '云主机'),
+                    h('DropdownItem', {
+                      attrs: {
+                        name: 'gpu'
+                      },
+                      style: {
+                        display: this.hide
+                      },
+                    }, 'GPU云服务器'),
+                    h('DropdownItem', {
+                      attrs: {
+                        name: 'NAT'
+                      }
+                    }, 'NAT网关'),
+                    h('DropdownItem', {
+                      attrs: {
+                        name: 'database'
+                      }
+                    }, '云数据库')])])
+                } else if (object.row.usetype != 2) {
+                  return h('span', {
+                    style: {
+                      color: '#2d8cf0',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.unbundle(object.row)
+                      }
                     }
-                  }, '云数据库')])])
-              } else if (object.row.usetype != 2) {
-                return h('span', {
-                  style: {
-                    color: '#2d8cf0',
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.unbundle(object.row)
-                    }
-                  }
-                }, '解绑资源')
+                  }, '解绑资源')
+                } else {
+                  return h('span', {}, '----')
+                }
               } else {
                 return h('span', {}, '----')
               }
@@ -849,15 +853,6 @@
         }
       },
       refresh() {
-        if (this.ipData.length !== 0) {
-          function checkStatus(ip) {
-            return ip.status == 2 || ip.status == 3 || ip.status == 4
-          }
-
-          if (!this.ipData.some(checkStatus)) {
-            clearInterval(this.intervalInstance)
-          }
-        }
         // 获取ip数据
         axios.get('network/listPublicIp.do', {
           params: {
@@ -879,13 +874,12 @@
           }).then(response => {
             if (response.data.status == 1 && response.status == 200) {
               let status = response.data.result[0].status
-              this.ipData.forEach(item => {
+              this.ipData.forEach((item, index) => {
                 if (item.id === response.data.result[0].id) {
-                  this.refresh()
+                  this.ipData.splice(index, 1, response.data.result[0])
                 }
               })
               if (!(status == 2 || status == 3 || status == 4)) {
-                console.log('清除')
                 clearInterval(timer)
               }
             }
@@ -895,6 +889,11 @@
       setData(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
+          if (!this.auth) {
+            this.ipData.forEach(item => {
+              item._disabled = true
+            })
+          }
           this.total = response.data.result.total
           this.select.forEach(item => {
             this.ipData.forEach(ip => {
@@ -1453,16 +1452,15 @@
           this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
             params: {
               brandwith: this.adjustForm.brand,
-              publicIpId: this.select[0].id
+              publicIpId: this.select ? this.select.id : ''
             }
           }).then(response => {
-              if (response.status == 200) {
-                this.adjustForm.cost = response.data.result
-              } else {
-                this.adjustForm.cost = '正在计算'
-              }
+            if (response.status == 200) {
+              this.adjustForm.cost = response.data.result
+            } else {
+              this.adjustForm.cost = '正在计算'
             }
-          )
+          })
         }
       }),
       queryChargePrice() {

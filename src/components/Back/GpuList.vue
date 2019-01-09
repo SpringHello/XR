@@ -4,6 +4,9 @@
           <span class="title">云服务器 /
             <span>GPU云服务器</span>
           </span>
+          <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
+            <router-link to="/ruicloud/userCenter">立即认证</router-link>
+          </Alert>
         <div id="content">
             <div id="header">
               <svg class="icon" aria-hidden="true">
@@ -186,11 +189,46 @@
       </div>
     </Modal>
 
+     <!--选择两种认证方式-->
+    <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" :styles="{top:'172px'}">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        选择认证方式
+      </div>
+      <div style="display: flex">
+        <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
+          <h2>个人用户</h2>
+          <p><i></i>可以使用睿云所有资源</p>
+          <p><i></i>个人级别的资源建立额度</p>
+        </div>
+        <div class="selectAuthType">
+          <h2>企业用户</h2>
+          <p><i></i>可以使用睿云所有资源</p>
+          <p><i></i>企业级无限量的资源建立额度</p>
+          <p><i></i>专业免费的点对点咨询服务</p>
+        </div>
+      </div>
+      <div style="display: flex;margin-top:20px">
+        <div style="width:50%;text-align: center">
+          <Button type="primary" @click="push('person')">立即认证</Button>
+        </div>
+        <div style="width:50%;text-align: center">
+          <Button type="primary" @click="push('company')">立即认证</Button>
+        </div>
+      </div>
+      <div slot="footer">
+        <p class="modal-text-hint-bottom">
+          提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
+      </div>
+    </Modal>
+
+
     </div>
 </template>
 
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import $store from '@/vuex'
   import merge from 'merge'
   const snoapshotName = (rule,value,callback)=>{
     let reg = /^[0-9]{2,4094}$/
@@ -271,7 +309,8 @@
             mirror:false,
             renew:false,
             publicIPHint:false,
-            ratesChange:false
+            ratesChange:false,
+            selectAuthType:false
           },
           //弹性ip
           ipValidate:{
@@ -516,19 +555,19 @@
               title:'计费类型',
               width:70,
               render:(h,params) =>{
-                return h('span',{},params.row.caseType == 1 ?'包年':params.row.caseType == 2 ? '包月' : params.row.caseType == 3 ? '实时' :'')
+                return h('span',{},params.row.caseType == 1 ?'包年':params.row.caseType == 2 ? '包月' : params.row.caseType == 3 ? '实时' :'7天')
               }
             },
             {
               title:'操作',
               width:100,
               render:(h,params)=>{
-                if(params.row.status == -1){
+                if(params.row.status == -1 || this.$store.state.authInfo ==null){
                   return h('div',
                     {
                       style:{padding:'8px 0',display:'inline-block'}
                     },[
-                    h('p',{style:{color:'#2A99F2'}},'联系客服'),
+                    h('p',{style:{color:this.$store.state.authInfo?'#B2B2B2':'#2A99F2'}},this.$store.state.authInfo?'远程连接':'联系客服'),
                     h('p',{style:{margin:'5px 0',color:'#B2B2B2'}},'删除'),
                     h('p',{style:{color:'#B2B2B2'}},'更多操作')
                   ])
@@ -743,6 +782,16 @@
         next();
       },
       methods:{
+        toggleZone(zoneId) {
+          // 切换gpu第一个区为默认区
+          axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+          })
+          for (var zone of this.$store.state.zoneList) {
+            if (zone.zoneid == zoneId) {
+              $store.commit('setZone', zone);
+            }
+          }
+        },
         // 获取GPU主机
        getGpuServerList(){
          axios.get('gpuserver/listGpuServer.do',{
@@ -1033,9 +1082,10 @@
           }).then(res => {
             if(res.status == 200 && res.data.status == 1){
               this.$Message.success(res.data.message);
-              this.showModal.publicIPHint = false;
+              this.showModal.renew = false;
+              this.$router.push({path:'order'});
             }else {
-              this.showModal.publicIPHint = false;
+              this.showModal.renew = false;
               this.$Modal.warning({
                 content:res.data.message
               })
@@ -1132,9 +1182,18 @@
         },
       },
       created(){
+        this.toggleZone(this.$store.state.zone.zoneid)
+        if (this.$store.state.authInfo == null) {
+          this.showModal.selectAuthType = true
+        }
         this.intervalInstance = setInterval(() => {
           this.getGpuServerList()
         }, 5 * 1000)
+      },
+      computed:{
+        auth() {
+          return this.$store.state.authInfo != null
+        }
       },
       mounted(){
           this.getGpuServerList();
@@ -1168,7 +1227,6 @@
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.ratesChangeCost = response.data.result.toFixed(2)
-                console.log(response.data.result);
                 this.originRatesChangeCost = response.data.result
                 if (response.data.cuspon) {
                   this.originRatesChangeCost = Number((this.originRatesChangeCost + response.data.cuspon).toFixed(2))
@@ -1233,4 +1291,41 @@
   font-size: 14px;
   color: #666666;
 }
+.selectAuthType {
+    width: 50%;
+    h2 {
+      text-align: center;
+      font-size: 16px;
+      color: rgba(17, 17, 17, 0.75);
+      margin-bottom: 20px;
+    }
+    p {
+      position: relative;
+      font-size: 14px;
+      color: rgba(17, 17, 17, 0.65);
+      margin-bottom: 10px;
+      padding-left: 60px;
+      i {
+        transform: rotate(-45deg);
+        position: absolute;
+        width: 7px;
+        height: 4px;
+        top: 5px;
+        left: 62px;
+        border-left: 1px solid #3DBD7D;
+        border-bottom: 1px solid #3DBD7D;
+        display: inline-block;
+      }
+      &::before {
+        margin-right: 7px;
+        content: '';
+        width: 12px;
+        height: 12px;
+        border: 1px solid #3DBD7D;
+        border-radius: 50%;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+  }
 </style>

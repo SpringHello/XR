@@ -164,10 +164,10 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <div style="float: left">
-          <span class="universal-middle">资费：</span>
+          <span class="universal-middle">应付差价：</span>
           <span class="universal-price"> ￥{{ diskSizeExpenses }}</span>
-          <span style="color: #2A99F2;font-size: 24px;"> / </span>
-          <span style="font-size: 16px;color: #2A99F2;">{{dilatationDiskCaseType}}</span>
+  <!--        <span style="color: #2A99F2;font-size: 24px;"> / </span>
+          <span style="font-size: 16px;color: #2A99F2;">{{dilatationDiskCaseType}}</span>-->
         </div>
         <Button type="ghost" @click="showModal.dilatationDisk = false">取消</Button>
         <Button type="primary" :disabled="dilatationForm.minDiskSize==dilatationForm.diskSize"

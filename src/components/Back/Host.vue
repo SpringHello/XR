@@ -781,6 +781,7 @@
       }
     },
     created() {
+      this.toggleZone(this.$store.state.zone.zoneid)
       // 用户未认证，弹出认证提示框
       if (this.$store.state.authInfo == null) {
         this.showModal.selectAuthType = true
@@ -799,7 +800,16 @@
       }, 5 * 1000)
     },
     methods: {
-
+      toggleZone(zoneId) {
+        // 切换默认区域
+        axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+        })
+        for (var zone of this.$store.state.zoneList) {
+          if (zone.zoneid == zoneId) {
+            $store.commit('setZone', zone);
+          }
+        }
+      },
       publicIPHint_ok() {
         this.$router.push('/ruicloud/buy/bip')
       },

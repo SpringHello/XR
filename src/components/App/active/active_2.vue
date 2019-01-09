@@ -710,7 +710,7 @@
       width: 384px;
 
       font-size: 14px;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       color: rgba(255, 255, 255, 1);
       background: url("../../../assets/img/active/active_2/bg-success-geted.png") no-repeat;
     }
@@ -725,14 +725,14 @@
       margin: 0 auto;
       h2 {
         font-size: 36px;
-        font-family: PingFangSC-Medium;
+        font-family: MicrosoftYaHei;
         color: rgba(255, 255, 255, 1);
         line-height: 36px;
         text-align: center;
         margin-bottom: 15px;
       }
       .free-product {
-        font-family: PingFangSC-Medium;
+        font-family: MicrosoftYaHei;
         padding-bottom: 40px;
         .item {
           display: flex;
@@ -749,7 +749,7 @@
             background: url("../../../assets/img/active/active_2/bg-product-item.png") no-repeat;
             background-size: 100% 100%;
             color: #fff;
-            font-family: PingFangSC-Medium;
+            font-family: MicrosoftYaHei;
             h4 {
               margin-bottom: 20px;
               font-size: 24px;
@@ -1096,7 +1096,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;

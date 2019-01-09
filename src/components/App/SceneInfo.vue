@@ -37,35 +37,35 @@
                     <li v-for="(item1,index) in cfg.configs" :class="{special: index == 6|| index == 9}">
                       <span :class="{s1: index == 0||index == 6|| index == 9}">{{ item1.text}}</span>
                       <span :class="{s2: index == 1|| index == 2 || index == 3|| index == 4}">{{ item1.value}}</span></li>
-                    <li class="special"><span class="s1">选择系统</span></li>
-                    <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
-                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
-                    </Select>
                     <li style="margin-top: 10px"><span class="s1">选择区域</span></li>
                     <Select v-model="cfg.zoneId" style="width:170px;" @on-change="getOriginalPrice(currentIndex,index1)">
                       <Option v-for="item2 in areaGroup" :value="item2.value" :key="item2.value">{{ item2.name }}</Option>
+                    </Select>
+                    <li class="special"><span class="s1">选择系统</span></li>
+                    <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
+                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
                     </Select>
                   </ul>
                   <ul v-else>
                     <li v-for="(item1,index) in cfg.configs" :class="{special: index == 4|| index == 7}">
                       <span :class="{s1: index == 0||index == 4|| index == 7}">{{ item1.text}}</span>
                       <span :class="{s2: index == 1|| index == 2 || index == 5}">{{ item1.value}}</span></li>
-                    <li class="special"><span class="s1">选择系统</span></li>
-                    <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
-                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
-                    </Select>
                     <li style="margin-top: 10px"><span class="s1">选择区域</span></li>
                     <Select v-model="cfg.zoneId" style="width:170px;"
                             @on-change="getOriginalPrice(currentIndex,index1)">
                       <Option v-for="item2 in areaGroup" :value="item2.value" :key="item2.value">{{ item2.name }}</Option>
+                    </Select>
+                    <li class="special"><span class="s1">选择系统</span></li>
+                    <Select v-model="cfg.system" style="width:170px;margin-bottom: 10px">
+                      <Option v-for="item3 in systemGroup" :value="item3.systemtemplateid" :key="item3.systemtemplateid">{{ item3.templatedescript }}</Option>
                     </Select>
                   </ul>
                 </div>
                 <div class="cf-footer">
                   <p><span>押金：</span>¥{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <!--<Button type="primary" v-if="scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" :disabled="true">敬请期待</Button>-->
-                  <Button type="primary" @click="getHost(currentIndex,index1)">免费使用</Button>
+                  <Button type="primary" v-if="(scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算')&& cfg.gpuSize == 2" :disabled="true">已售罄</Button>
+                  <Button type="primary" v-else @click="getHost(currentIndex,index1)">免费使用</Button>
                 </div>
               </div>
             </div>
@@ -340,7 +340,7 @@
         currentSceneGroup: [
           {
             currentScene: '云电脑',
-            disc: ' 云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的高性能PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
+            disc: ' 云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
             configGroup: [
               {
                 title: '一个月',
@@ -1080,7 +1080,7 @@
           },
           {
             currentScene: '游戏服务',
-            disc: '新睿云游戏应用能够帮助您实现任意设备的游戏体验: 在任意 PC、Mac、平板电脑、智能手机以及电视上的高画质、低延迟的多设备游戏体验；点击即玩的便捷: 任何时候都可以在云端访问一系列游戏和保存游戏。 在任何地点、任意设备上均可开始新游戏或继续之前的游戏进度；减少麻烦: 没有新硬件、没有复杂的设置、没有游戏光盘、没有数字下载、没有游戏安装、没有游戏补丁。',
+            disc: '借助新睿云游戏服务革新您的开发平台，您能够以更快的速度完成大型3D游戏的开发测试工作。凭借超高的运算速度与传输速度，加速您的大规模图形演算与视频处理能力；搭配新睿云云主机、对象存储与云数据库使用，完成从生产研发到部署测试的全流程工作。并且，新睿云游戏服务提供按需付费方式，以小时级为单位来获取工业级GPU计算服务能力。',
             configGroup: [
               {
                 title: '初创型业务网站（3天）',
@@ -1099,7 +1099,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P40',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1155,7 +1155,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '1* NVIDIA P40',
                   },
                   {
                     text: '系统盘',
@@ -1273,7 +1273,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P40',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1329,7 +1329,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '1* NVIDIA P40',
                   },
                   {
                     text: '系统盘',
@@ -1447,7 +1447,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P40',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1503,7 +1503,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '1* NVIDIA P40',
                   },
                   {
                     text: '系统盘',
@@ -1621,7 +1621,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P40',
+                    value: '1* NVIDIA P100',
                   },
                   {
                     text: '系统盘',
@@ -1677,7 +1677,7 @@
                   },
                   {
                     text: '型号',
-                    value: '1* NVIDIA P100',
+                    value: '1* NVIDIA P40',
                   },
                   {
                     text: '系统盘',
@@ -1938,64 +1938,79 @@
         }
       },
       getOriginalPrice(currentIndex, index) {
-        let params = {}
-        if (!(this.scene == '游戏服务' || this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
-          switch (index) {
-            case 0:
-              params = {
-                vmConfigId: '45',
-                month: '1',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
-              }
-              break
-            case 1:
-              params = {
-                vmConfigId: '46',
-                month: '3',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
-              }
-              break
-            case 2:
-              params = {
-                vmConfigId: '47',
-                month: '6',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
-              }
-              break
-            case 3:
-              params = {
-                vmConfigId: '48',
-                month: '12',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
-              }
-              break
+        let url = 'information/listTemplateFunction.do'
+        axios.get(url, {
+          params: {
+            useType: this.userType,
+            zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
           }
-        } else {
-          switch (index) {
-            case 0:
-              params = {
-                vmConfigId: '196',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.systemGroup = res.data.result
+            /*this.currentSceneGroup[currentIndex].configGroup.forEach(host => {
+              host.system = this.systemGroup[0].systemtemplateid
+            })*/
+            this.currentSceneGroup[currentIndex].configGroup[index].system = this.systemGroup[0].systemtemplateid
+            let params = {}
+            if (!(this.scene == '游戏服务' || this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
+              switch (index) {
+                case 0:
+                  params = {
+                    vmConfigId: '45',
+                    month: '1',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
+                case 1:
+                  params = {
+                    vmConfigId: '46',
+                    month: '3',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
+                case 2:
+                  params = {
+                    vmConfigId: '47',
+                    month: '6',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
+                case 3:
+                  params = {
+                    vmConfigId: '48',
+                    month: '12',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
               }
-              break
-            case 1:
-              params = {
-                vmConfigId: '194',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+            } else {
+              switch (index) {
+                case 0:
+                  params = {
+                    vmConfigId: '196',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
+                case 1:
+                  params = {
+                    vmConfigId: '194',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
+                case 2:
+                  params = {
+                    vmConfigId: '195',
+                    zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+                  }
+                  break
               }
-              break
-            case 2:
-              params = {
-                vmConfigId: '195',
-                zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+            }
+            let url = 'activity/getOriginalPrice.do'
+            axios.get(url, {params: params}).then(res => {
+              if (res.data.status == 1) {
+                this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
               }
-              break
-          }
-        }
-        let url = 'activity/getOriginalPrice.do'
-        axios.get(url, {params: params}).then(res => {
-          if (res.data.status == 1) {
-            this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
+            })
           }
         })
       },
@@ -2014,7 +2029,12 @@
         axios.post(url, params).then(res => {
           if (res.data.status == 1) {
             this.areaGroup = res.data.result.optionalArea
-            if (res.data.result.optionalArea.length != 0) {
+            this.areaGroup.forEach((item, index) => {
+              if (item.value === '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
+                this.areaGroup.splice(index, 1)
+              }
+            })
+            /*if (res.data.result.optionalArea.length != 0) {
               this.currentSceneGroup.forEach(config => {
                 config.configGroup.forEach(host => {
                   host.zoneId = this.areaGroup[0].value
@@ -2026,7 +2046,7 @@
                   this.getOriginalPrice(i, j)
                 }
               }
-            }
+            }*/
           }
         })
       },
@@ -2040,23 +2060,23 @@
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.systemGroup = res.data.result
-            if (res.data.result.length != 0) {
-              this.currentSceneGroup.forEach(config => {
-                config.configGroup.forEach(host => {
-                  host.system = this.systemGroup[0].systemtemplateid
-                })
-              })
-            }
+            /*           if (res.data.result.length != 0) {
+                         this.currentSceneGroup.forEach(config => {
+                           config.configGroup.forEach(host => {
+                             host.system = this.systemGroup[0].systemtemplateid
+                           })
+                         })
+                       }*/
           }
         })
       },
       getHost(index1, index2) {
-        if (this.systemGroup.length == 0) {
-          this.$Message.info('请选择需要领取的镜像系统')
+        if (!this.currentSceneGroup[index1].configGroup[index2].zoneId) {
+          this.$Message.info('请选择需要领取的区域')
           return
         }
-        if (this.areaGroup.length == 0) {
-          this.$Message.info('请选择需要领取的区域')
+        if (this.systemGroup.length == 0) {
+          this.$Message.info('请选择需要领取的镜像系统')
           return
         }
         if (!this.$store.state.userInfo) {
@@ -2074,7 +2094,7 @@
               this.showModal.rechargeHint = true
             } else {
               this.$message.info({
-                content: '平台开小差了，请稍候再试'
+                content: response.data.message
               })
             }
           })
@@ -2098,7 +2118,7 @@
                   this.showModal.rechargeHint = true
                 } else {
                   this.$message.info({
-                    content: '平台开小差了，请稍候再试'
+                    content: response.data.message
                   })
                 }
               })
