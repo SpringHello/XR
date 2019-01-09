@@ -21,7 +21,7 @@
                <p class="ver_p" >请输入您的账号</p>
               <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" >
                 <FormItem prop="account">
-                  <x-Input  :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入账号' ></x-Input>
+                  <x-Input   :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入账号' ></x-Input>
                 </FormItem>
               </Form>
                 
@@ -65,7 +65,11 @@
             <!-- 邮箱验证方式 -->
             <div class="verification" v-if="verPage == 'email'">
               <p class="ver_p">我们会发送一封验证邮件到您的邮箱，请注意查收</p>
-                <x-Input  :icon='url.icon1' v-model="dataFroms.email"  placeholder='请输入邮箱' ></x-Input>
+                <Form  :model="dataFroms" :rules="dataFromsValidate" >
+                  <FormItem prop='email'>
+                    <x-Input   :icon='url.icon1' v-model="dataFroms.email"  placeholder='请输入邮箱' ></x-Input>
+                  </FormItem>
+                </Form>
               <div class="v_email" @click="getVerificationCode('1')">
                 前往邮箱
               </div>
@@ -74,16 +78,33 @@
             <!-- 手机验证方式 -->
             <div class="verification" v-if="verPage == 'phone' && index == 3">
               <p class="ver_p">请输入有效手机号码用于接收验证码</p>
-              <x-Input  :icon='url.iconPhone' choice='select' v-model="dataFroms.phone"  placeholder='请输入手机号' ></x-Input>
-              <x-Input  :icon='url.iconYan' choice='validate' style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' ></x-Input>
-               <Button type="primary" @click="index = 4">下一步</Button>
+               <Form  :model="dataFroms" :rules="dataFromsValidate" >
+                   <FormItem prop='phone' style="margin-bottom:0px;">
+                     <x-Input  :icon='url.iconPhone'  v-model="dataFroms.phone"  placeholder='请输入手机号' choice='select'></x-Input>
+                   </FormItem>
+                   <FormItem prop='code'>
+                      <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
+                          <div class="ver_yan" slot="code">
+                              <span @click="timeReduce" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
+                              <span v-else style="color:#666666;">{{count}}</span>
+                          </div>
+                      </x-Input>
+                   </FormItem>
+               </Form>
+               <Button type="primary" @click="index = 4" style="float:right;margin-top:42px;">下一步</Button>
             </div>
 
             <!-- 身份证验证方式 -->
             <div class="verification"  v-if="verPage == 'card'">
               <div v-if="absc">
-                <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入您的姓名' ></x-Input>
-                <x-Input ref="xinput" :icon='url.iconCard' v-model="formValidate.account"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
+                <Form  :model="dataFroms" :rules="dataFromsValidate" >
+                  <FormItem prop='phone'>
+                    <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入您的姓名' ></x-Input>
+                  </FormItem>
+                  <FormItem prop='phone'>
+                    <x-Input ref="xinput" :icon='url.iconCard' v-model="formValidate.account"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
+                  </FormItem>
+                </Form>
                 <Button type="primary" @click="absc = !absc">下一步</Button>
               </div>
               <!-- 上传身份证照片 -->
@@ -126,8 +147,15 @@
 
             <!-- 设置新密码 -->
             <div class="verification" v-if="index == 4">
-               <x-Input  :icon='url.iconLock' v-model="dataFroms.newPaw"  placeholder='请输入账号' choice='eye'></x-Input>
-               <x-Input  :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请输入账号' choice='eye'></x-Input>
+               <Form  :model="dataFroms" :rules="dataFromsValidate" >
+                <FormItem prop='newPaw'>
+                  <x-Input  :icon='url.iconLock' v-model="dataFroms.newPaw"  placeholder='请设置新密码' choice='eye'></x-Input>
+                </FormItem>
+                <FormItem prop='oldPaw'>
+                  <x-Input  :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请确认新密码' choice='eye'></x-Input>
+                </FormItem>
+               </Form>
+               <Button type="primary" style="margin-top:21px;float:right;">确认</Button>
             </div>
 
             <!-- 完成 -->
@@ -262,12 +290,26 @@ export default {
           des: "若您未认证可以通过人工客服重制账号"
         }
       ],
+
+      // 输入账号
       formValidate: {
         account: ""
       },
       ruleValidate: {
         account: [{ required: true, validator: vailAucct, trigger: "blur" }]
       },
+
+      // 邮箱表单
+      emailValidate:{
+        email:''
+      },
+      dataFromsValidate:{
+        email:[
+          {required:true,message:'请输入邮箱',trigger:'blur'},
+          {type: 'email',message:'邮箱格式不正确',trigger:'blur'}
+        ]
+      },
+
       isemail: "1",
       type: "1",
       codePlaceholder: "发送验证码",
@@ -296,7 +338,9 @@ export default {
         iconYan: require("../../assets/img/login/lr-icon4.png"),
         iconPhone: require("../../assets/img/login/lr-icon5.png")
       },
-      QQInfo: "" // QQ客服在线情况
+      QQInfo: "", // QQ客服在线情况
+      count:10,
+      timeBoo:true,
     };
   },
   components: {
@@ -513,7 +557,22 @@ export default {
           }
         })
         .then(res => {});
-    }
+    },
+
+    timeReduce(){
+      this.timeBoo = false;
+      this.timeP = false;
+      let char = setInterval(()=>{
+        if(this.count != 0){
+          this.count --;
+        }else{
+          clearInterval(char);
+          this.count = 10;
+          this.timeBoo = true;
+          this.timeP = true;
+        }
+          },1000);
+        },
   },
   computed: {
     disabled() {
