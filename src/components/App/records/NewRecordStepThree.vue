@@ -895,7 +895,7 @@
   // 定义h2公用样式
   .h2() {
     font-size: 24px;
-    font-family: PingFangSC-Medium;
+    font-family: MicrosoftYaHei;
     color: rgba(51, 51, 51, 1);
     line-height: 24px;
     font-weight: normal;
@@ -1014,7 +1014,7 @@
       }
       .titleDescription {
         font-size: 14px;
-        font-family: PingFangSC-Medium;
+        font-family: MicrosoftYaHei;
         color: rgba(153, 153, 153, 1);
         margin-top: 10px;
       }

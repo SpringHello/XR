@@ -38,10 +38,10 @@ Vue.prototype.$LR = LR
 Vue.config.productionTip = false
 
 
-axios.defaults.withCredentials = true
+//axios.defaults.withCredentials = true
 
-// axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
-axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
+ axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
+//axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 //axios.defaults.baseURL = 'https://www.xrcloud.net/ruicloud/'
 
 // window.eventBus = new Vue();
@@ -87,7 +87,6 @@ function appendMD5(params, type) {
   }
   var str = '', count = 0
   for (let i in params) {
-    console.log(i)
     str += i.substr(0, 1) + params[i]
     count++
   }
@@ -96,9 +95,7 @@ function appendMD5(params, type) {
     if (type != 'post') {
       str = encodeURI(str)
     }
-    //console.log(str)
     str = md5(str)
-    //console.log(str)
     count = count % 10
     var mac = str.substr(0, count) + count + str.substr(count)
     return {

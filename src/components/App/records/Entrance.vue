@@ -556,7 +556,7 @@
   // 定义h2公用样式
   .h2() {
     font-size: 24px;
-    font-family: PingFangSC-Medium;
+    font-family: MicrosoftYaHei;
     color: rgba(51, 51, 51, 1);
     font-weight: normal;
     &:before {
@@ -578,7 +578,7 @@
     background: rgba(55, 125, 255, 0.05);
     border-radius: 4px;
     font-size: 18px;
-    font-family: PingFangSC-Medium;
+    font-family: MicrosoftYaHei;
     color: rgba(102, 102, 102, 1);
     margin: 20px 15px 0 0;
     line-height: 25px;
@@ -610,7 +610,7 @@
           cursor: pointer;
           p {
             font-size: 24px;
-            font-family: PingFangSC-Medium;
+            font-family: MicrosoftYaHei;
             color: rgba(102, 102, 102, 1);
             line-height: 33px;
           }
@@ -656,7 +656,7 @@
         z-index: 0;
         p {
           font-size: 18px;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           color: rgba(51, 51, 51, 1);
           line-height: 25px;
           margin-top: 20px;
@@ -722,7 +722,7 @@
         width: 221px;
         height: 49px;
         font-size: 18px;
-        font-family: PingFangSC-Medium;
+        font-family: MicrosoftYaHei;
         color: rgba(51, 51, 51, 1);
         line-height: 25px;
         background: rgba(255, 231, 119, 1);
@@ -816,7 +816,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;
