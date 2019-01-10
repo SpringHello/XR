@@ -104,8 +104,8 @@
                   <FormItem prop='name'>
                     <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.name"  placeholder='请输入您的姓名' ></x-Input>
                   </FormItem>
-                  <FormItem prop='phone'>
-                    <x-Input ref="xinput" :icon='url.iconCard' v-model="formValidate.account"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
+                  <FormItem prop='idCard'>
+                    <x-Input ref="xinput" :icon='url.iconIdCard' v-model="formValidate.idCard"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
                   </FormItem>
                 </Form>
                 <Button type="primary" @click="absc = !absc">下一步</Button>
@@ -204,7 +204,7 @@ const vailAucct = (rule, value, callback) => {
     callback();
   }
 };
-
+// const phoneVail =(rule)
 
 
 export default {
@@ -343,7 +343,8 @@ export default {
         email: "",
         phone: "",
         code: "",
-        name:''
+        name:'',
+        idCard:''
       },
 
       //账号是否可用
@@ -354,7 +355,8 @@ export default {
         iconCard: require("../../assets/img/updatePaw/paw_zhanghao.png"),
         iconLock: require("../../assets/img/login/lr-icon2.png"),
         iconYan: require("../../assets/img/login/lr-icon4.png"),
-        iconPhone: require("../../assets/img/login/lr-icon5.png")
+        iconPhone: require("../../assets/img/login/lr-icon5.png"),
+        iconIdCard: require("../../assets/img/updatePaw/paw_card.png")
       },
       QQInfo: "", // QQ客服在线情况
       count:10,
