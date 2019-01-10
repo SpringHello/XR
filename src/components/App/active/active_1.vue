@@ -5,15 +5,16 @@
         <div>
           <div>
             <p>
-              <img src="../../../assets/img/active/active_1/ziti1.png">
+              <img src="../../../assets/img/active/active_1/ziti2.png">
             </p>
+            <button @click="roll(600)">立即领取</button>
           </div>
           <transition name="list">
             <img v-if="img" src="../../../assets/img/active/active_1/baner.png">
           </transition>
         </div>
       </div>
-      <div class="head-nav">
+      <div class="head-nav">    
         <div>
           <div v-for="item in headNav" class="nav">
             <img :src=item.img>
@@ -24,38 +25,16 @@
           </div>
         </div>
       </div>
-      <div class="head-progress">
-        <div class="progress">
-          <div class="pro-itr">
-            <img src="../../../assets/img/active/active_1/pr01.png">
-            <h1>活动流程</h1>
-            <img src="../../../assets/img/active/active_1/pr02.png">
-          </div>
-          <div class="pro-libao">
-            <p>注册即可获得196元现金大礼包</p>
-          </div>
-          <div class="prg-liuc">
-            <ul>
-              <li>1、注册即得158元红包</li>
-              <li>2、限时领取38元代金券</li>
-              <li>3、购买畅享新睿云</li>
-            </ul>
-          </div>
-          <button @click="$LR({type:'register'})">立即注册</button>
-        </div>
-      </div>
     </div>
     <div class="body">
-      <div class="content">
-        <h2>
-          <img style="position: relative; top: 15px;" src="../../../assets/img/active/active_1/redPacket_icon_2.png"/>
-          限时领取
-          <img src="../../../assets/img/active/active_1/redPacket_icon_1.png"/>
-        </h2>
-        <p>10点、12点、15点、17点整点领取38元现金券</p>
-        <div class="red-packet-active">
-          <ul v-for="item in timeList">
+        <div class="head-headline">
+            <img src="../../../assets/img/active/active_1/headline_1.png" alt="">
+            <span>数量有限，先到先得</span>
+        </div>
+        <div class="cash-get">
+          <div class="container">
             <div class="left">
+<<<<<<< HEAD
               <p :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.text}}</p>
               <p :class="{notGet: item.time ===0 && item.ticket === 0}"><span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.h1 }}{{ item.h2}}</span>:<span
                 :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.m1 }}{{ item.m2 }}</span>:<span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.s1 }}{{ item.s2 }}</span>
@@ -66,420 +45,244 @@
            <!--   <button v-if="item.time !== 0">立即领取</button>-->
               <button @click="getTicket">立即领取</button>
              <!-- <button v-if="item.time === 0 && item.ticket === 0">本场结束</button>-->
+=======
+              <p>此现金券需前往<span @click="$router.push('expenses')" style="color:#FF6028">个人中心</span>使用</p>
+>>>>>>> master
             </div>
-          </ul>
+          <div class="right" @click="getTicket"></div>
         </div>
-      </div>
+          </div>
     </div>
     <div class="foot">
-      <div class="recommend-product" style="height:546px;">
+      <div class="recommend-product">
         <div class="center">
-          <h2 class="head-headline" style="color:#F26667">推荐购买产品</h2>
+          <div class="head-headline">
+            <img src="../../../assets/img/active/active_1/headline_2.png" alt="">
+            <span >领取38元现金券后免费体验以下及其它产品</span>
+          </div>
           <div class="content">
-            <div class="item" v-for="(item,index) in product" :key="index">
+            <div class="item">
               <div class="top">
-                <h4>{{item.title}}</h4>
-                <p>{{item.desc}}</p>
+                <div class="left">
+                  <p style="width:195px;">{{productHost.title}}
+                  <span v-if="productHost.secTtitle">({{productHost.secTtitle}})</span></p>
+                </div>
+                <ul class="right">
+                  <li v-for="(item1,index) in productHost.params" :key="index">{{item1.unit}}<span>{{item1.type}}</span></li>
+                </ul>
               </div>
               <div class="bottom">
                 <div class="parameter">
-                  <p>
-                  <span v-for="(secitem,index) in item.params" :key="index">
-                    {{secitem.num}}
-                    <i>{{secitem.unit}}</i>
-                  </span>
-                  </p>
-                  <RadioGroup v-model="item.system" class="activity-radio" size="large">
-                    <Radio :label="system.label" v-for="(system,index) in systemList" :key="index">{{system.text}}</Radio>
-                  </RadioGroup>
+                  <Select v-model="productHost.system"  style="width:235px;margin-top: 20px">
+                    <Option v-for="(item2,index) in productHost.systemList" :value="item2.systemtemplateid" :key="index">{{ item2.ostypename }}</Option>
+                  </Select>
+                  <Select v-model="productHost.zone"  style="width:235px;margin-top: 20px" @on-change="changeZoneHost()">
+                    <Option v-for="(item3,index) in productHost.zoneList" :value="item3.zoneid" :key="index">{{ item3.zonename }}</Option>
+                  </Select>
                 </div>
-                <div class="count">
-                  <p>{{item.price}}</p>
-                  <span @click="productBuy(item,index)">立即购买</span>
+                <p class="price"><span><i>38</i>元/152小时</span><span>（单价：0.25元/小时）</span></p>
+                <span @click="productBuy_host(productHost)" class="btn-purchase">立即购买</span>
+              </div>
+            </div>
+            <div class="item">
+              <div class="top">
+                <div class="left">
+                <p>{{productDB.title}}
+                <span v-if="productDB.secTtitle">({{productDB.secTtitle}})</span></p>
                 </div>
+                <ul class="right">
+                  <li v-for="(item1,index) in productDB.params" :key="index">{{item1.unit}}<span>{{item1.type}}</span></li>
+                </ul>
+              </div>
+              <div class="bottom">
+                <div class="parameter">
+                  <Select v-model="productDB.system"  style="width:235px;margin-top: 20px">
+                    <Option v-for="(item2,index) in productDB.systemList" :value="item2.systemtemplateid" :key="index">{{ item2.dbname }}</Option>
+                  </Select>
+                  <Select v-model="productDB.zone"  style="width:235px;margin-top: 20px"  @on-change="changeZoneDB()">
+                    <Option v-for="(item3,index) in productDB.zoneList" :value="item3.zoneid" :key="index">{{ item3.zonename }}</Option>
+                  </Select>
+                </div>
+                <p class="price"><span><i>38</i>元/97小时</span><span>（单价：0.39元/小时）</span></p>
+                <span @click="productBuy_db(productDB)" class="btn-purchase">立即购买</span>
+              </div>
+            </div>
+            <div class="item">
+              <div class="top">
+                <div class="left">
+                <p>{{productObj.title}}
+                <span v-if="productObj.secTtitle">({{productObj.secTtitle}})</span></p>
+                </div>
+                <ul class="right">
+                  <li v-for="(item1,index) in productObj.params" :key="index">{{item1.unit}}<span>{{item1.type}}</span></li>
+                </ul>
+              </div>
+              <div class="bottom">
+                <div class="parameter">
+                  <p style="font-size:18px;color:rgba(149,149,149,1);margin:0 auto;margin-top:31px;margin-bottom:3px;">对象存储默认区域： 北京一区</p>
+                </div>
+                <p class="price"><span><i>38</i>元/一个月</span><span>（单价：0.003元/GB/天<i>(存储容量)</i>+0.49/GB<i>(下行流量)</i>）</span></p>
+                <span @click="productBuy_obj(productObj)" class="btn-purchase">立即购买</span>
+              </div>
+            </div>
+            <div class="item">
+              <div class="top">
+                <div class="left">
+                <p style="width:200px;">{{productGpu.title}}
+                <span v-if="productGpu.secTtitle">({{productGpu.secTtitle}})</span></p>
+                </div>
+                <ul class="right">
+                  <li v-for="(item1,index) in productGpu.params" :key="index">{{item1.unit}}<span>{{item1.type}}</span></li>
+                </ul>
+              </div>
+              <div class="bottom">
+                <div class="parameter">
+                  <Select v-model="productGpu.system"  style="width:235px;margin-top: 20px">
+                    <Option v-for="(item2,index) in productGpu.systemList" :value="item2.systemtemplateid" :key="index">{{ item2.templatename }}</Option>
+                  </Select>
+                  <Select v-model="productGpu.zone"  style="width:235px;margin-top: 20px" @on-change="changeZoneGpu()">
+                    <Option v-for="(item3,index) in productGpu.zoneList" :value="item3.zoneid" :key="index">{{ item3.zonename }}</Option>
+                  </Select>
+                </div>
+                <p class="price"><span><i>38</i>元/3小时</span><span>（单价：11.5元/小时）</span></p>
+                <span @click="productBuy_gpu(productGpu)" class="btn-purchase">立即购买</span>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="activity-rule">
+        <div class="head-headline">
+            <img src="../../../assets/img/active/active_1/headline_3.png" alt="">
+        </div>
         <div class="center">
           <div class="rules">
-            <h2>活动规则</h2>
-            <p>1. 新用户完成注册即可领取196元现金红包。</p>
-            <p>2. 代金券包括68元优惠券（满88元可用，有效期三个月），90元优惠券（满150元可用，有效期六个月）和38元无门槛代金券（需在官网领取，有效期7天） </p>
-            <p>3. 38元无门槛优惠券领取规则：可在活动页面每天整点抢购。整点抢购时间：每个工作日早上10点、12点、 15点、17点共四轮，数量多多，机会多多。 </p>
-            <p>4. 注册完成158元代金券将会下发到用户账户，38元优惠券抢到后即可使用（不可与其他免费活动同时使用）。使用前均需实名认证，且同一用户仅能领取一次。（同一用户是指：根据不同新睿云账号在注册、登录、使用中的关联信息，新睿云判断其实际为同一用户。关联信息举例：同一证件、同一手机号、同一支付账号、同一设备、同一地址等。） </p>
-            <p>5. 若之前注册用户尚未使用过新睿云平台产品，经判定，可向客服申请，领取优惠券。 </p>
-            <p>6. 此现金红包仅用于支付新睿云平台北京节点订单，抵减相应金额，不能进行兑现或其他用途。 </p>
-            <p>7. 代金券有有效期的，失效后，未使用的余额无法使用，您可在已失效代金券中查看 </p>
-            <p>8. 使用代金券支付的订单，发生退款时，代金券支付的部分不予返还 </p>
-            <p>9. 活动最终解释权在法律范围内归新睿云所有</p>
+          <p>1. 活动时间：2018年12月7日开始；活动对象：新老用户。</p>
+          <p>2. 新用户注册即可领取38元无门槛券，可用于官网任何产品，包括实时计费和包年包月。但不可用于一些超低折扣产品及特殊说明不可使用优惠券的产品。</p>
+          <p>3. 同时注册完成账户可立即获得158元现金红包，可到“费用中心”-“我的卡券”查看。代金券包含68元优惠券（满88元可用，有效期三个月），90元优惠券（满150可用，有效期六个月）。</p>
+          <p>4. 38元无门槛现金券数量有限，先到先得，有效期7天。 </p>
+          <p>5. 优惠券每个用户仅可领取一次，且不可与其他优惠券叠加使用，不可用于押金活动。产品使用前均需完成实名认证。</p>
+          <p>6. 此红包仅用于支付新睿云平台订单支付时，抵减应支付的订单金额，不能进行兑现或其他用途。</p>
           </div>
         </div>
       </div>
     </div>
-    <Modal v-model="loginModal" width="420" class="login-modal" :scrollable="true">
-      <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
-        <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
-      </p>
-      <div class="modal-body">
-        <form>
-          <div>
-            <span :class="{warning:vailForm.loginname.warning}">{{vailForm.loginname.message}}</span>
-            <input type="text" autocomplete="off" v-model="form.loginname" :placeholder="form.loginnamePlaceholder"
-                   @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
-          </div>
-          <div>
-            <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
-            <input type="text" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
-                   @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
-                   v-on:keyup.enter="submit" onfocus="this.type='password'">
-          </div>
-          <div style="position:relative">
-            <span>{{vailForm.vailCode.message}}</span>
-            <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
-                   :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
-                   @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-          </div>
-        </form>
-      </div>
-      <div slot="footer" class="modal-foot">
-        <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">登录</button>
-        <div>
-          <!--span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
-          style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span-->
-          <router-link to="register" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
-            立即注册
-          </router-link>
-          <router-link to="reset" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:right;font-size:14px">
-            忘记密码
-          </router-link>
-        </div>
-      </div>
-    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import axios from 'axios'
-  import regExp from '../../../util/regExp'
-
-  var messageMap = {
-    loginname: {
-      placeholder: '登录邮箱/手机号',
-      errorMessage: '请输入正确的邮箱/手机号'
-    },
-    password: {
-      placeholder: '密码',
-    },
-    vailCode: {
-      placeholder: '请输入验证码',
-    },
-  }
-  export default {
-    data() {
-      window.scrollTo(0, 0);
-      return {
-        img: false,
-        loginModal: false,
-        form: {
-          loginname: '',
-          password: '',
-          vailCode: '',
-          loginnamePlaceholder: '登录邮箱/手机号',
-          passwordPlaceholder: '密码',
-          vailCodePlaceholder: '请输入验证码',
+import axios from 'axios'
+import $ from 'jquery'
+export default {
+  data () {
+    window.scrollTo(0, 0);
+    return {
+      img: false,
+      imgSrc: 'user/getKaptchaImage.do',
+      headNav: [
+        {
+          img: require("../../../assets/img/active/active_1/group_9.png"),
+          title: "注册即到账158元现金大礼包",
+          desc: "68元（满88元可用）90元（满150元可用）"
         },
-        vailForm: {
-          loginname: {
-            message: '',
-            warning: false
-          },
-          password: {
-            message: '',
-            warning: false
-          },
-          vailCode: {
-            message: '',
-            warning: false
-          },
-        },
-        imgSrc: 'user/getKaptchaImage.do',
-        timeList: [
-          {
-            text: '距离10点场还剩',
-            h1: 0,
-            h2: 0,
-            m1: 0,
-            m2: 0,
-            s1: 0,
-            s2: 0,
-            time: 1,
-            ticket: 0
-          },
-          {
-            text: '距离12点场还剩',
-            h1: 0,
-            h2: 0,
-            m1: 0,
-            m2: 0,
-            s1: 0,
-            s2: 0,
-            time: 1,
-            ticket: 0
-          },
-          {
-            text: '距离15点场还剩',
-            h1: 0,
-            h2: 0,
-            m1: 0,
-            m2: 0,
-            s1: 0,
-            s2: 0,
-            time: 1,
-            ticket: 0
-          },
-          {
-            text: '距离17点场还剩',
-            h1: 0,
-            h2: 0,
-            m1: 0,
-            m2: 0,
-            s1: 0,
-            s2: 0,
-            time: 1,
-            ticket: 0
-          }
+        {
+          img: require("../../../assets/img/active/active_1/group_10.png"),
+          title: "38元无门槛优惠券整点抢",
+          desc: "多款云产品免费用，任你挑选"
+        }
+      ],
+      productHost: {
+        title: '云服务器',
+        secTtitle: '基础型',
+        params: [
+          { val: 1, unit: '1核', type: 'CPU' },
+          { val: 1, unit: '1G', type: '内存' },
+          { val: 40, unit: '40G', type: '磁盘' },
+          { val: 1, unit: '1M', type: '带宽' },
         ],
-        serviceTime: 0,
-        headNav: [
-          {
-            img: require("../../../assets/img/active/active_1/Group 9.png"),
-            title: "注册即可获得158元现金大礼包",
-            desc: "注册送现金，云上主机0元购超高性能超靠谱!"
-          },
-          {
-            img: require("../../../assets/img/active/active_1/Group 10.png"),
-            title: "38元无门槛优惠券整点抢",
-            desc: "发现金啦！买云服务器不花钱，统统拿到你手软!"
-          }
+        zoneList: [],
+        systemList: [],
+        zone: '',
+        system: '',
+        price: '0.26',
+        priceText: '元/小时 最高可用152小时'
+      },
+      productDB: {
+        title: '云数据库',
+        params: [
+          { val: 1, unit: '1核', type: 'CPU' },
+          { val: 1, unit: '1G', type: '内存' },
+          { val: 40, unit: '40G', type: '磁盘' },
+          { val: 1, unit: '1M', type: '带宽' },
         ],
-        product: [
-          {
-            title: '高IO型',
-            desc: '高磁盘IO的最佳选择，提供每秒数万次低延迟性随机 I/O (IOPS)，适合于低延时，I/O密集型应用。',
-            system: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
-            price: '0.35元／小时',
-            params: [
-              {num: '1核', unit: 'CPU'},
-              {num: '1G', unit: '内存'},
-              {num: '40G', unit: '磁盘'},
-              {num: '1mb/s', unit: '带宽'},
-            ]
-          },
-          {
-            title: '超高IO型',
-            desc: '采用高性能SSD系统盘，适用于NoSQL 数据库、群集化数据库、联机事务处理等高I/O负载需求。',
-            system: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
-            price: '0.6元／小时',
-            params: [
-              {num: '2核', unit: 'CPU'},
-              {num: '4G', unit: '内存'},
-              {num: '40G', unit: '磁盘'},
-              {num: '2mb/s', unit: '带宽'},
-            ]
-          }
+        zoneList: [],
+        systemList: [],
+        zone: '',
+        system: '',
+        price: '0.37',
+        priceText: '元/小时 最高可用97小时'
+      },
+      productObj: {
+        title: '对象存储',
+        params: [
+          { val: 100, unit: '100G', type: '存储包' },
+          { val: 100, unit: '100G', type: '下行流量' }
         ],
-        systemList: [
-          {
-            label: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
-            text: 'CentOS'
-          },
-          {
-            label: '86a0d0fc-6645-48dd-8bfe-306def16c4f8',
-            text: 'Windows'
-          },
-        ]
+        zone: '39a6af0b-6624-4194-b9d5-0c552d903858',
+        price: '0.003',
+        priceText: '元/GB/天(存储容量) + ',
+        price1: '0.49',
+        priceText1: '元/GB(下行流量)',
+      },
+      productGpu: {
+        title: 'GPU云服务器',
+        params: [
+          { val: 16, unit: '16核', type: 'VCPU' },
+          { val: 64, unit: '64G', type: '内存' },
+          { val: 128, unit: '128G', type: '系统盘' },
+          { val: 40, unit: 'P40', type: '显卡' },
+          { val: 1, unit: '1M', type: '带宽' }
+        ],
+        zoneList: [],
+        systemList: [],
+        zone: '',
+        system: '',
+        price: '11.56',
+        priceText: '元/小时 最高可用3小时'
       }
+    }
+  },
+  created () {
+    // 区域 云主机 云数据库 gpu
+    axios.get('information/zone.do').then(res => {
+      if (res.status == 200 && res.data.status == 1) {
+        this.productHost.zoneList = res.data.result.filter(item => {
+          return item.gpuserver == 0
+        })
+        // 过滤华中一区不显示
+        this.productHost.zoneList.forEach((item, index) => {
+          if (item.zonename == '华中一区') {
+            this.productHost.zoneList.splice(index, 1)
+            return false
+          }
+        })
+        this.productDB.zoneList = this.productHost.zoneList
+        this.productGpu.zoneList = res.data.result.filter(item => {
+          return item.gpuserver == 1
+        })
+        // 默认选择区域
+        this.productHost.zone = this.productHost.zoneList[0].zoneid
+        this.productDB.zone = this.productHost.zoneList[0].zoneid
+        this.productGpu.zone = this.productGpu.zoneList[0].zoneid
+      }
+    })
+  },
+  components: {},
+  methods: {
+    roll (val) {
+      $('html, body').animate({ scrollTop: val }, 300)
     },
-    created() {
-    },
-    beforeRouteEnter(to, from, next) {
-      var serviceTime = axios.get(`network/getTime.do`)
-      var tickets = axios.get('ticket/couponIsUsed.do')
-      Promise.all([serviceTime, tickets]).then(values => {
-        next(vm => {
-          vm.setData(values)
-        })
-      }, values => {
-        next(vm => {
-          vm.setData(values)
-        })
-      })
-    },
-    components: {},
-    methods: {
-      // 领取成功后需要刷新剩余现金券数量
-      getResidue() {
-        var url = `ticket/couponIsUsed.do`
-        var tickets = []
-        axios.get(url).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            tickets = response.data.data
-            this.setTicket(tickets)
-          }
-        })
-      },
-      // 设置数据
-      setData(values) {
-        var response = values[0]
-        var serviceTime = 0
-        if (response.status == 200 && response.data.status == 1) {
-          serviceTime = response.data.result
-        } else {
-          serviceTime = new Date().getTime()
-        }
-        this.setServerTime(serviceTime)
-        response = values[1]
-        var tickets = []
-        if (response.status == 200 && response.data.status == 1) {
-          tickets = response.data.data
-        } else {
-          tickets = []
-        }
-        this.setTicket(tickets)
-      },
-      vail(field) {
-        var text = this.form[field];
-        if (text == '') {
-          this.vailForm[field].message = ''
-          this.form[`${field}Placeholder`] = messageMap[field].placeholder
-          this.vailForm[field].warning = false;
-          return
-        }
-
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
-        if (!isLegal && field == 'loginname') {
-          this.vailForm[field].message = messageMap[field].errorMessage;
-          this.vailForm[field].warning = true
-        } else {
-          this.vailForm[field].message = messageMap[field].placeholder;
-          this.vailForm[field].warning = false
-        }
-      },
-      isCorrect(field) {
-        if (field == 'vailCode') {
-          //this.vailForm.vailCode.message = messageMap.vailCode.placeholder
-          this.vailForm.vailCode.warning = false
-        } else if (field == 'loginname') {
-          if (regExp.emailVail(this.form[field])) {
-            this.vailForm.loginname.message = messageMap.loginname.placeholder
-            this.vailForm.loginname.warning = false
-          }
-        } else {
-          if (regExp.passwordVail(this.form[field])) {
-            this.vailForm.loginname.message = messageMap.loginname.placeholder
-            this.vailForm.loginname.warning = false
-          }
-        }
-
-      },
-      focus(field) {
-        if (field == 'vailCode' && this.vailForm.loginname.message == '验证码错误') {
-          this.vailForm.loginname.message = messageMap.loginname.placeholder
-          this.vailForm.loginname.warning = false
-        }
-        if ((field == 'loginname' || field == 'password') && this.vailForm.loginname.message == '用户名或密码错误') {
-          this.vailForm.loginname.message = messageMap.loginname.placeholder
-          this.vailForm.loginname.warning = false
-        }
-        var text = this.form[field];
-        this.form[`${field}Placeholder`] = ''
-        if (text == '') {
-          this.vailForm[field].message = messageMap[field].placeholder
-          return
-        }
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
-
-        if (!isLegal && field == 'loginname') {
-          this.vailForm[field].message = messageMap[field].errorMessage;
-          this.vailForm[field].warning = true
-        } else {
-          this.vailForm[field].message = messageMap[field].placeholder;
-          this.vailForm[field].warning = false
-        }
-      },
-      submit() {
-        this.$http.get('user/login.do', {
-          params: {
-            username: this.form.loginname,
-            password: this.form.password,
-            vailCode: this.form.vailCode
-          }
-        }).then((response) => {
-            if (response.status == 200 && response.statusText == 'OK') {
-              if (response.data.status == 1) {
-                this.$router.go(0)
-              } else {
-                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-                this.vailForm.loginname.message = response.data.message
-                this.vailForm.loginname.warning = true
-              }
-            }
-          }
-        )
-        ;
-      },
-      setServerTime(serviceTime) {
-        let hours = [10, 12, 15, 17].map(function (hour) {
-          let h = new Date()
-          h.setHours(hour)
-          h.setMinutes(0)
-          h.setSeconds(0)
-          return h.getTime()
-        })
-
-        var minSecondInMinute = 1000 * 60
-        var minSecondInHour = minSecondInMinute * 60
-
-        var setTime = setInterval(() => {
-          serviceTime += 1000
-          hours.forEach((hour, index) => {
-            let reduce = hour - serviceTime
-            if (reduce > 0) {
-              let hourRemainder = parseInt(reduce / minSecondInHour)
-              let minRemainder = parseInt((reduce % minSecondInHour) / minSecondInMinute)
-              let secRemainder = parseInt((reduce % minSecondInMinute) / 1000)
-              this.timeList[index].h1 = parseInt(hourRemainder / 10)
-              this.timeList[index].h2 = parseInt(hourRemainder % 10)
-              this.timeList[index].m1 = parseInt(minRemainder / 10)
-              this.timeList[index].m2 = parseInt(minRemainder % 10)
-              this.timeList[index].s1 = parseInt(secRemainder / 10)
-              this.timeList[index].s2 = parseInt(secRemainder % 10)
-              this.timeList[index].time = reduce
-            } else {
-              this.timeList[index].time = 0
-            }
-          })
-        }, 1000)
-        if (this.timeList[3].time === 0) {
-          clearInterval(setTime)
-        }
-      },
-      setTicket(data) {
-        if (data.length > 0) {
-          this.timeList.forEach((item, index) => {
-            item.ticket = data[index]
-          })
-        } else {
-          this.timeList.forEach(item => {
-            item.ticket = 0
-          })
-        }
-      },
-      getTicket() {
+     getTicket() {
         if (this.$store.state.userInfo == null) {
           this.$LR({type: 'login'})
           return
@@ -488,595 +291,487 @@
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$message.info({
-              content: response.data.message
+              content: '卡券领取成功，请前往费用中心-我的卡券充值后使用。'
             })
-            this.getResidue()
           } else {
             this.$message.info({
               content: response.data.message
             })
-            this.getResidue()
           }
         })
       },
-      productBuy(item, index) {
-        if (this.$store.state.userInfo == null) {
-          this.$LR({type: 'login'})
-          return
+    changeZoneHost () {
+      // 云主机镜像
+      axios.get('information/listTemplates.do', {
+        params: {
+          zoneId: this.productHost.zone,
+          user: 0
         }
-        var paramsNum = []
-        paramsNum = item.params.map(content => {
-          return content.num.match(/\d+/g).join()
-        })
-        var params = {
-          zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858',
-          timeType: 'current',
-          timeValue: '1',
-          templateId: item.system,
-          isAutoRenew: '0',
-          count: '1',
-          cpuNum: paramsNum[0],
-          memory: paramsNum[1],
-          bandWidth: paramsNum[3],
-          rootDiskType: 'ssd',
-          networkId: 'no',
-          vpcId: 'no'
-        }
-        this.$http.get('information/deployVirtualMachine.do', {params}).then((response) => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.$router.push('order')
-            } else {
-              this.$message.info({
-                content: response.data.message
-              })
+      }).then(res => {
+        if (res.status == 200 && res.data.status == 1) {
+          var allSystemList = res.data.result
+          var newSystemArr = []
+          var x
+          for (x in allSystemList) {
+            if (allSystemList[x].length) {
+              newSystemArr.push(allSystemList[x][0])
             }
           }
-        )
+          this.productHost.systemList = newSystemArr
+          this.productHost.system = this.productHost.systemList[0].systemtemplateid
+        }
+      })
+    },
+    changeZoneDB () {
+      // 云数据库镜像
+      axios.get('database/listDbTemplates.do', {
+        params: {
+          zoneId: this.productDB.zone,
+          user: 0
+        }
+      }).then(res => {
+        if (res.status == 200 && res.data.status == 1) {
+          var allSystemList = res.data.result
+          var newSystemArr = []
+          var x
+          for (x in allSystemList) {
+            if (allSystemList[x].length) {
+              newSystemArr.push(allSystemList[x][0])
+            }
+          }
+          this.productDB.systemList = newSystemArr
+          this.productDB.system = this.productDB.systemList[0].systemtemplateid
+        }
+      })
+    },
+    changeZoneGpu () {
+      // gpu镜像
+      axios.get('information/listTemplates.do', {
+        params: {
+          zoneId: this.productGpu.zone,
+          user: 0,
+          gpu: 1
+        }
+      }).then(res => {
+        if (res.status == 200 && res.data.status == 1) {
+          var allSystemList = res.data.result
+          var newSystemArr = []
+          var x
+          for (x in allSystemList) {
+            if (allSystemList[x].length) {
+              newSystemArr.push(allSystemList[x][0])
+            }
+          }
+          this.productGpu.systemList = newSystemArr
+          this.productGpu.system = this.productGpu.systemList[0].systemtemplateid
+        }
+      })
+    },
+    productBuy_host (item) {
+      if (this.$store.state.userInfo == null) {
+        this.$LR({ type: 'login' })
+        return
       }
+      var params = {
+        zoneId: item.zone,
+        timeType: 'current',
+        timeValue: '1',
+        templateId: item.system,
+        isAutoRenew: '0',
+        count: '1',
+        cpuNum: '1',
+        memory: '1',
+        bandWidth: '1',
+        rootDiskType: 'sas',
+        networkId: 'no',
+        vpcId: 'no'
+      }
+      this.$http.get('information/deployVirtualMachine.do', { params }).then((response) => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.$router.push('order')
+        } else {
+          this.$message.info({
+            content: response.data.message
+          })
+        }
+      })
     },
-    computed: {
-      disabled() {
-        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
-      },
+    productBuy_db (item) {
+      if (this.$store.state.userInfo == null) {
+        this.$LR({ type: 'login' })
+        return
+      }
+      var params = {
+        zoneId: item.zone,
+        timeType: 'current',
+        timeValue: '1',
+        templateId: item.system,
+        isAutoRenew: '0',
+        cpuNum: '1',
+        memory: '1',
+        bandWidth: '1',
+        rootDiskType: 'ssd',
+        networkId: 'no',
+        vpcId: 'no',
+        diskType: 'sas',
+        diskSize: '20'
+      }
+      this.$http.get('database/createDB.do', { params }).then((response) => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.$router.push('order')
+        } else {
+          this.$message.info({
+            content: response.data.message
+          })
+        }
+      })
     },
-    watch: {},
-    mounted() {
-      this.img = true
-    }
+    productBuy_obj (item) {
+      if (this.$store.state.userInfo == null) {
+        this.$LR({ type: 'login' })
+        return
+      }
+      var params = {
+        capacity: '50GB',
+        flowPackage: '50GB',
+        timeType: 'month',
+        timeValue: '1',
+        zoneId: item.zone
+      }
+      this.$http.post('ruiradosPrice/createOrder.do', params).then((response) => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.$router.push('order')
+        } else {
+          this.$message.info({
+            content: response.data.message
+          })
+        }
+      })
+    },
+    productBuy_gpu (item) {
+      if (this.$store.state.userInfo == null) {
+        this.$LR({ type: 'login' })
+        return
+      }
+      var params = {
+        zoneId: item.zone,
+        templateId: item.system,
+        bandWidth: 1,
+        timeType: 'current',
+        timeValue: 1,
+        count: 1,
+        isAutoRenew: 1,
+        cpuNum: 16,
+        memory: 64,
+        networkId: 'no',
+        rootDiskType: 'ssd',
+        vpcId: 'no',
+        gpusize: 1,
+        serviceType: '2288H_V5',
+        diskType: 'ssd',
+        diskSize: 20,
+      }
+      this.$http.get('gpuserver/createGpuServer.do', { params }).then((response) => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.$router.push('order')
+        } else {
+          this.$message.info({
+            content: response.data.message
+          })
+        }
+      })
+    },
+  },
+  computed: {
+    disabled () {
+      return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
+    },
+  },
+  watch: {},
+  mounted () {
+    this.img = true
   }
+}
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  .body {
-    background: url("../../../assets/img/active/active_1/redPacket_background_1.png") no-repeat, url("../../../assets/img/active/active_1/redPacket_background_1.png") 140% 200% no-repeat, rgba(249, 175, 128, 1);
-    padding-top: 110px;
-    padding-bottom: 100px;
-    .content {
-      width: 1200px;
-      margin: 0 auto;
-      h2 {
-        font-size: 36px;
-        font-family: PingFangSC-Medium;
-        color: rgba(255, 255, 255, 1);
-        line-height: 36px;
-        text-align: center;
-        margin-bottom: 15px;
-      }
-      > p {
-        font-size: 18px;
-        font-family: PingFangSC-Regular;
-        color: rgba(255, 255, 255, 1);
-        line-height: 25px;
-        padding: 8px;
-        text-align: center;
-        margin-bottom: 50px;
-        background: url("../../../assets/img/active/active_1/redPacket_background_2.png") 370px no-repeat;
-      }
-      .red-packet-active {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 0 25px;
-        justify-content: space-between;
-        > ul {
-          width: 550px;
-          height: 178px;
-          background: url("../../../assets/img/active/active_1/redPacket_background_3.png");
-          box-shadow: 0px 9px 16px -8px rgba(242, 102, 103, 0.37);
-          .left {
-            float: left;
-            width: 59.5%;
-            padding: 40px;
-            border-right: 1px dashed #F9AF80;
-            > p {
-              font-size: 32px;
-              font-family: PingFangSC-Medium;
-              color: rgba(242, 102, 103, 1);
-              line-height: 32px;
-              text-align: center;
-              &.notGet {
-                color: rgba(214, 214, 214, 1);
-              }
-            }
-            p:first-child {
-              font-size: 24px;
-              font-family: PingFangSC-Medium;
-              line-height: 24px;
-              margin-bottom: 20px;
-            }
-            p:last-child {
-              span {
-                display: inline-block;
-                font-size: 32px;
-                font-family: PingFangSC-Medium;
-                color: rgba(255, 255, 255, 1);
-                line-height: 32px;
-                padding: 8px 9px 10px;
-                background: rgba(242, 102, 103, 1);
-                width: 55px;
-                height: 50px;
-                &.notGet {
-                  background: rgba(214, 214, 214, 1);
-                }
-              }
-              span:nth-child(1) {
-                margin-right: 9px;
-              }
-              span:nth-child(2) {
-                margin-left: 9px;
-                margin-right: 9px;
-              }
-              span:nth-child(3) {
-                margin-left: 9px;
-              }
-            }
-          }
-          .right {
-            float: right;
-            width: 40.5%;
-            padding-top: 36px;
-            > p {
-              font-size: 60px;
-              font-family: Arial-Black;
-              color: rgba(242, 102, 103, 1);
-              line-height: 60px;
-              text-align: center;
-              margin-bottom: 20px;
-              span:nth-child(1) {
-                font-size: 18px;
-              }
-              span:nth-child(2) {
-                font-size: 14px;
-              }
-            }
-            button {
-              font-size: 18px;
-              font-family: PingFangSC-Regular;
-              color: rgba(255, 255, 255, 1);
-              line-height: 18px;
-              outline: none;
-              border: none;
-              padding: 12px 40px;
-              border-radius: 24px;
-              margin-left: 34px;
-              background: #D6D6D6;
-              &.canGet {
-                cursor: pointer;
-                background: rgba(242, 102, 103, 1);
-                box-shadow: 0px 7px 26px -10px rgba(242, 102, 103, 1);
-                &:hover {
-                  background: rgba(249, 175, 128, 1);
-                  box-shadow: 0px 7px 26px -8px rgba(227, 147, 96, 1)
-                }
-              }
-            }
-          }
-        }
-        ul:nth-child(1) {
-          margin-bottom: 48px;
-        }
-        ul:nth-child(2) {
-          margin-bottom: 48px;
-        }
-      }
-    }
+.head-headline {
+  margin: 0 auto;
+  text-align: center;
+  img {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 10px;
   }
-
+  span {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #222222;
+  }
+}
+.body {
+  padding-top: 58px;
+  height: 433px;
+  background: rgba(255, 221, 201, 1)
+    url("../../../assets/img/active/active_1/progress-bg.png") no-repeat;
   .head {
-    .head-banner {
-      background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
-      > div {
-        width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        padding-bottom: 65px;
-        div {
-          padding-top: 133px;
-          button {
-            width: 176px;
-            height: 54px;
-            background: #F26667;
-            border-radius: 100px;
-            font-size: 24px;
-            color: #FFFFFF;
-            line-height: 24px;
-            margin-top: 100px;
-            outline: none;
-            border: none;
-            cursor: pointer;
-          }
-        }
-        img {
-          padding-top: 70px;
-        }
-      }
-    }
-    .head-nav {
-      background: rgba(249, 175, 128, 0.5);
-      > div {
-        width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        .nav {
-          cursor: pointer;
-          width: 600px;
-          padding: 23px 0 0 50px;
-          &:hover {
-            background-color: rgba(255, 255, 255, 0.4);
-          }
-          > div {
-            display: inline-block;
-            .title {
-              font-size: 24px;
-              color: #F26667;
-              line-height: 24px;
-              margin-bottom: 5px;
-            }
-            .desc {
-              font-size: 16px;
-              color: #666666;
-              line-height: 16px;
-            }
-          }
-          img {
-            vertical-align: middle;
-            margin-right: 10px;
-          }
-
-        }
-      }
-    }
-    .head-progress {
-      .progress {
-        width: 1200px;
-        margin: 0 auto;
-        text-align: center;
-        padding: 120px 0 50px 0;
-        .pro-itr {
-          margin-bottom: 10px;
-          h1 {
-            font-size: 36px;
-            color: #F26667;
-            line-height: 36px;
-            display: inline-block;
-          }
-          img {
-            position: relative;
-            bottom: 10px;
-            &:first-of-type {
-              position: relative;
-              top: 10px;
-            }
-          }
-        }
-        .pro-libao {
-          background: url("../../../assets/img/active/active_1/pr-1.png") no-repeat center;
-          padding: 10px 0;
-          p {
-            font-size: 18px;
-            color: #FFFFFF;
-            line-height: 25px;
-          }
-        }
-        .prg-liuc {
-          margin-top: 40px;
-          ul {
-            display: flex;
-            text-align: center;
-            li {
-              background: rgba(249, 175, 128, 1);
-              width: 400px;
-              height: 70px;
-              padding-top: 22px;
-              font-size: 18px;
-              color: #FFFFFF;
-              &:first-of-type {
-                background-color: rgba(249, 175, 128, 0.6);
-              }
-              &:nth-last-of-type(2) {
-                background-color: rgba(249, 175, 128, 0.8);
-              }
-            }
-          }
-        }
-        button {
-          width: 153px;
-          height: 42px;
-          background: rgba(242, 102, 103, 1);
-          border-radius: 21px;
-          color: #FFFFFF;
-          border: none;
-          outline: none;
-          margin-top: 40px;
-          cursor: pointer;
-          font-size: 18px;
-          line-height: 18px;
-          box-shadow: 0px 7px 26px -10px rgba(242, 102, 103, 1)
-        }
-      }
-    }
-  }
-
-  .modal-body {
-    height: 55%;
-    form {
-      margin-top: 15px;
-    }
-    input {
-      border: none;
-      border-bottom: 1px solid #ccc;
-      outline: none;
-      background: rgba(0, 0, 0, 0);
-      height: 50px;
-      font-size: 14px;
-      width: 80%;
-      margin: 0px auto;
-      display: block;
-      margin-bottom: 20px;
-      &:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px white inset;
-      }
-      &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-        font-family: PingFangSC-Regular;
-        font-size: 14px;
-        color: #B6B6B6;
-      }
-      &::-moz-placeholder { /* Firefox 19+ */
-        font-family: PingFangSC-Regular;
-        font-size: 14px;
-        color: #B6B6B6;
-      }
-      &:-ms-input-placeholder { /* IE 10+ */
-        font-family: PingFangSC-Regular;
-        font-size: 14px;
-        color: #B6B6B6;
-      }
-      &:-moz-placeholder { /* Firefox 18- */
-        font-family: PingFangSC-Regular;
-        font-size: 14px;
-        color: #B6B6B6;
-      }
-    }
-    span {
-      display: block;
-      width: 80%;
-      margin: 0px auto;
-      font-family: PingFangSC-Regular;
-      font-family: PingFangSC-Regular;
-      font-size: 14px;
-      color: #B6B6B6;
-      font-size: 14px;
-      line-height: 14px;
-      height: 14px;
-      transition: all .5s;
-      &.warning {
-        color: #F24747;
-      }
-    }
-    img {
-      width: 80px;
-      height: 30px;
-      position: absolute;
-      display: block;
-      bottom: 12px;
-      right: 43px;
-      cursor: pointer;
-      //background: #4990E2;
-      //border: 1px solid white;
-      border-radius: 3px;
-      font-family: PingFangSC-Regular;
-      font-size: 11px;
-      color: #FFFFFF;
-      letter-spacing: 0.71px;
-      outline: none;
-    }
-  }
-
-  .modal-foot {
-    padding-top: 10px;
-    height: 32.1%;
-    button {
-      width: 80%;
-      margin: 0px auto;
-      display: block;
-      height: 45px;
-      background-color: #4990E2;
-      border: none;
-      font-family: PingFangSC-Medium;
-      font-size: 14px;
-      color: #FFFFFF;
-      letter-spacing: 0.83px;
-      cursor: pointer;
-      margin-bottom: 15px;
-      &.disabled {
-        cursor: not-allowed;
-      }
-    }
-    .checkBox {
-      width: 12px;
-      height: 12px;
-      border-radius: 2px;
-      display: inline-block;
-      border: 1px solid #ccc;
-      cursor: pointer;
-    }
-    .agree {
-      background-color: #2d8cf0;
-      border-color: #2d8cf0;
-      position: relative;
-      &::after {
-        content: "";
-        display: table;
-        width: 4px;
-        height: 8px;
-        position: absolute;
-        top: 0px;
-        left: 3px;
-        border: 2px solid #fff;
-        border-top: 0;
-        border-left: 0;
-        transform: rotate(45deg) scale(1);
-      }
-    }
-    div {
-      width: 80%;
-      height: 35px;
-      margin: 0px auto;
-    }
-    span {
-      vertical-align: middle;
-      font-family: PingFangSC-Regular;
-      font-size: 14px;
-      letter-spacing: 0.83px;
-    }
-  }
-
-  .head-headline {
-    font-size: 36px;
     text-align: center;
-    &::before {
-      content: url(../../../assets/img/active/active_1/title-before-icon.png);
-      width: 50px;
-      display: inline-block;
-    }
-    &::after {
-      content: url(../../../assets/img/active/active_1/title-after-icon.png);
-      width: 50px;
-      display: inline-block;
-    }
   }
-
-  .recommend-product {
-    padding-top: 100px;
-    background-color: #FFF8F6;
-    .center {
-      width: 1200px;
-      margin: 0 auto;
-    }
-    .content {
+  .cash-get {
+    width: 508px;
+    margin: 0 auto;
+    margin-top: 38px;
+    .container {
       display: flex;
       justify-content: space-between;
-    }
-    .item:nth-of-type(2) .top {
-      background: url("../../../assets/img/active/active_1/bg-product-right.png") no-repeat center;
-    }
-    .item {
-      margin-top: 50px;
-      width: 590px;
-      height: 266px;
-      box-shadow: 0px 4px 20px 0px rgba(242, 102, 103, 0.35);
-      .top {
-        padding: 20px 40px;
-        height: 144px;
-        color: #fff;
-        text-align: center;
-        font-size: 16px;
-        background: url("../../../assets/img/active/active_1/bg-product-left.png") no-repeat center;
-        h4 {
-          font-size: 30px;
-        }
+      .left {
+        width: 393px;
+        height: 188px;
+        background: url("../../../assets/img/active/active_1/cash-bg-left.png")
+          no-repeat;
         p {
-          line-height: 32px;
+          margin-top: 104px;
+          text-align: right;
+          padding-right: 34px;
+          font-size: 12px;
+          span {
+            cursor: pointer;
+          }
         }
       }
-      .bottom {
-        padding: 20px 40px;
-        display: flex;
-        justify-content: space-between;
-        height: 122px;
-        background: #fff;
-        .parameter {
-          p {
-            margin-bottom: 24px;
-            span {
-              font-size: 18px;
-              color: #333;
-              line-height: 24px;
-              i {
-                font-size: 14px;
-                color: #999999;
-                margin-right: 20px;
-                font-style: normal;
-              }
-            }
-          }
-        }
-        .count {
-          color: #F26667;
-          font-size: 18px;
-          p {
-            text-align: right;
-          }
-          span {
-            display: inline-block;
-            margin-top: 10px;
-            width: 136px;
-            height: 34px;
-            color: #fff;
-            background: #F26667;
-            text-align: center;
-            line-height: 34px;
-            cursor: pointer;
-            &:hover {
-              box-shadow: 0px 2px 13px 0px rgba(242, 115, 105, 1);
-            }
-          }
+      .right {
+        width: 115px;
+        height: 188px;
+        background: url("../../../assets/img/active/active_1/cash-bg-right.png")
+          no-repeat;
+        cursor: pointer;
+        &:hover {
+          background: url("../../../assets/img/active/active_1/cash-bg-right1.png")
+            no-repeat;
         }
       }
     }
   }
+}
 
-  .activity-rule {
-    background: #fff8f6 url(../../../assets/img/active/active_1/bg-rules.png) no-repeat center;
-    .center {
+.head {
+  .head-banner {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 251, 250, 1),
+      rgba(255, 248, 246, 1)
+    );
+    > div {
       width: 1200px;
       margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 65px;
+      div {
+        padding-top: 66px;
+        margin-left: -30px;
+        button {
+          width: 176px;
+          height: 54px;
+          background: rgba(255, 96, 40, 1);
+          font-size: 24px;
+          color: #ffffff;
+          line-height: 24px;
+          margin-top: 50px;
+          outline: none;
+          border: none;
+          cursor: pointer;
+          &:hover {
+            background: rgba(255, 57, 54, 1);
+          }
+        }
+      }
+      img {
+        padding-top: 70px;
+      }
     }
-    .rules {
-      padding: 20px 0 50px;
-      font-family: PingFangSC;
-      color: #666666;
-      h2 {
+  }
+  .head-nav {
+    > div {
+      width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      .nav {
+        cursor: pointer;
+        width: 600px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        img {
+          margin-right: 20px; 
+          margin-left: 50px;
+        }
+        > div {
+          display: inline-block;
+          .title {
+            font-size: 24px;
+            color: #FF3936;
+            line-height: 24px;
+            margin-bottom: 10px;
+          }
+          .desc {
+            font-size: 16px;
+            color: #222222;
+            line-height: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.recommend-product {
+  padding-top: 100px;
+  background-color: #fff8f6;
+  height: 1000px;
+  .center {
+    width: 1200px;
+    margin: 0 auto;
+  }
+  .content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .item:nth-of-type(odd) .top {
+    background: url("../../../assets/img/active/active_1/product-bg-1.png")
+      no-repeat center;
+  }
+  .item:nth-of-type(even) .top {
+    background: url("../../../assets/img/active/active_1/product-bg-2.png")
+      no-repeat center;
+  }
+  .item {
+    margin-top: 50px;
+    width: 590px;
+    height: 342px;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(255, 54, 54, 1);
+    &:hover {
+      box-shadow: 0px 6px 14px 0px rgba(244, 76, 44, 0.4);
+    }
+    .top {
+      padding: 20px 10px 20px 40px;
+      height: 90px;
+      color: #fff;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      .left {
+        p {
+          font-size: 30px;
+          margin-right: 20px;
+          span {
+            font-size: 18px;
+          }
+        }
+      }
+      .right {
+        display: flex;
+        margin-top: 10px;
+        flex-wrap: wrap;
+        li {
+          margin-right: 20px;
+          font-size: 18px;
+          span {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+    .bottom {
+      padding: 20px 40px;
+      background: #fff;
+      .parameter {
+        display: flex;
+        justify-content: space-between;
+      }
+      .price {
+        margin-top: 28px;
+        color: rgba(255, 59, 53, 1);
         font-size: 16px;
-        line-height: 22px;
-        margin-bottom: 10px;
+        line-height: 60px;
+        span {
+          font-family: 'PingFangSC';
+          font-size: 16px;
+          &:nth-of-type(1) {
+            color: #FF3B35;
+            i {
+              font-size: 24px;
+              font-style: normal;
+              font-family: 'Arial';
+            }
+          }
+          &:nth-of-type(2) {
+            color: #959595;
+             i {
+              font-size: 12px;
+              font-style: normal;
+              font-family: 'Arial';
+            }
+          }
+        }
       }
-      p {
-        font-size: 14px;
-        line-height: 28px;
+      .btn-purchase {
+        display: inline-block;
+        margin-top: 10px;
+        width: 510px;
+        height: 60px;
+        background: rgba(255, 96, 40, 1);
+        text-align: center;
+        line-height: 60px;
+        color: #fff;
+        font-size: 24px;
+        font-family: PingFangSC-Semibold;
+        cursor: pointer;
+        &:hover {
+          background: rgba(255, 54, 54, 1);
+        }
       }
     }
   }
+}
 
-  .list-enter-active, .list-leave-active {
-    transition: all 1s;
+.activity-rule {
+  background: #fff8f6 url(../../../assets/img/active/active_1/bg-rules1.png)
+  no-repeat center;
+  height: 558px;
+  margin-top: -200px;
+  padding-top: 260px; 
+  .center {
+    width: 1200px;
+    margin: 0 auto;
   }
+  .rules {
+    padding: 20px 0 50px;
+    font-family: PingFangSC;
+    color: #666666;
+    h2 {
+      font-size: 16px;
+      line-height: 22px;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 14px;
+      line-height: 28px;
+    }
+  }
+}
 
-  .list-enter, .list-leave-to
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s;
+}
+
+.list-enter, .list-leave-to
     /* .list-leave-active for below version 2.1.8 */ {
-    opacity: 0;
-    transform: translateY(300px);
-  }
-
+  opacity: 0;
+  transform: translateY(300px);
+}
 </style>

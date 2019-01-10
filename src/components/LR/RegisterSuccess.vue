@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="top">
         <img src="../../assets/img/login/coupon.png"/>
-        <h3><img src="../../assets/img/login/success.png"/>恭喜您，注册成功！158元注册奖励已发至您个人账户中</h3>
+        <h3><img src="../../assets/img/login/success.png"/>恭喜您，注册成功！158元注册奖励已经发送至您的个人账户中，您还可以点此领取<span style="cursor: pointer;color: #2a99f2" @click="$router.push('active_1')">【38元现金抵扣券】</span></h3>
         <!-- <button @click="$router.push('buy')">立即使用</button> -->
         <p class="text-s">你可以通过费用中心-我的卡券查看并使用礼券</p>
 
@@ -25,22 +25,22 @@
       return {
         recommendData:[
           {
-            title:'全民狂欢趴',
+            title:'0元购',
             img:require('../../assets/img/login/icon-fire.png'),
-            text:'每成功邀请一位，即赠送1个月免费时长',
-            src:'/ruicloud/groupBooking',
+            text:'领现金豪礼，享免费产品！',
+            src:'/ruicloud/active_1',
             srctext:'立即参与'
           },
           {
-            title:'新手特惠',
-            text:'爆款云主机免费使用一年！',
-            src:'/ruicloud/fractive',
+            title:'双旦同庆，钜惠上云',
+            text:'高配云产品 限时2.7折; 更有首购好礼',
+            src:'/ruicloud/wonderfulDay',
             srctext:'立即抢购'
           },
           {
-            title:'华南、华东盛大开服',
-            text:'万兆光纤极速体验，助力区域企业云上发展！',
-            src:'/ruicloud/EastSouthNode',
+            title:'免费云主机 不限量领取',
+            text:'交押金最长可用1年，押金闪退！',
+            src:'/ruicloud/fractive',
             srctext:'立即抢购'
           },
         ]
@@ -77,7 +77,7 @@
         }
         >h3{
           text-align: center;
-          font-size: 26px;
+          font-size: 20px;
           color: rgba(51,51,51,1);
           margin: 40px 0 10px;
           >img{

@@ -33,10 +33,12 @@
       </div>
     </div>
     <Modal v-model="showModal.recordInfo" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示信息</strong>
           <p class="lh24">您选择的区域未查询到符合要求的公网IP与云服务器，请先购买该资源然后在进行备案。<span style="color: #377dff;cursor: pointer;" @click="$router.push('buy')">立即购买</span></p>
         </div>
       </div>
@@ -86,10 +88,12 @@
     </Modal>
     <!-- 用户已备案提示框 -->
     <Modal v-model="showModal.hint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">您已在新睿云备过案，请选择新增网站进行备案
           </p>
         </div>
@@ -101,10 +105,12 @@
     </Modal>
     <!-- 用户没有主体提示框 -->
     <Modal v-model="showModal.hasMainWep" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">您未在新睿云备过案，请选择新增备案进行下一步操作
           </p>
         </div>
@@ -116,10 +122,12 @@
     </Modal>
     <!-- 用户已有备案 -->
     <Modal v-model="showModal.hasRecord" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">您当前的备案尚未完成，请完成当前备案完成后再进行新的备案
           </p>
         </div>
@@ -556,7 +564,7 @@
   // 定义h2公用样式
   .h2() {
     font-size: 24px;
-    font-family: PingFangSC-Medium;
+    font-family: MicrosoftYaHei;
     color: rgba(51, 51, 51, 1);
     font-weight: normal;
     &:before {
@@ -578,7 +586,7 @@
     background: rgba(55, 125, 255, 0.05);
     border-radius: 4px;
     font-size: 18px;
-    font-family: PingFangSC-Medium;
+    font-family: MicrosoftYaHei;
     color: rgba(102, 102, 102, 1);
     margin: 20px 15px 0 0;
     line-height: 25px;
@@ -610,7 +618,7 @@
           cursor: pointer;
           p {
             font-size: 24px;
-            font-family: PingFangSC-Medium;
+            font-family: MicrosoftYaHei;
             color: rgba(102, 102, 102, 1);
             line-height: 33px;
           }
@@ -656,7 +664,7 @@
         z-index: 0;
         p {
           font-size: 18px;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           color: rgba(51, 51, 51, 1);
           line-height: 25px;
           margin-top: 20px;
@@ -722,7 +730,7 @@
         width: 221px;
         height: 49px;
         font-size: 18px;
-        font-family: PingFangSC-Medium;
+        font-family: MicrosoftYaHei;
         color: rgba(51, 51, 51, 1);
         line-height: 25px;
         background: rgba(255, 231, 119, 1);
@@ -816,7 +824,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;

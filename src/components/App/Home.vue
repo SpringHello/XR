@@ -4,13 +4,26 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/AnniversaryActive')"
-               style="cursor: pointer;background: #F56B23;">
-            <div class="anniversary-active">
+          <div class="dan-banner" @click="push('/ruicloud/wonderfulDay')">
+            <div class="wraps">
+              <img src="../../assets/img/home/dan_banner.png">
+              <div class="w_button">
+                <span>立即参与</span>
+              </div>
             </div>
           </div>
         </my-carousel-item>
-
+        <my-carousel-item class="carousel-item">
+          <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+            <div class="head-banner">
+              <div>
+                <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png"></p>
+                  <button>立即领取</button>
+                </div>
+                <img src="../../assets/img/home/home-banner4.png"></div>
+            </div>
+          </div>
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div class="eightscene" @click="push('/ruicloud/sceneList')">
             <div class="wrap">
@@ -176,7 +189,7 @@
               <div class="configure">
                 <p class="title">推荐配置</p>
                 <div>
-                  <span v-for="(item2,index1) in item.configure" :key="index1" @click="getHost(eightsceneIndex,index1)">{{item2}}</span>
+                  <span v-for="(item2,index1) in item.configure" :key="index1" @click="$router.push(item.link)">{{item2}}</span>
                 </div>
               </div>
             </div>
@@ -497,208 +510,19 @@
       <p>为您提供出众的上云实践机会和全面的尊贵服务</p>
       <span @click="$router.push('register')">立即注册</span>
     </div>
-    <!-- 领取提示 -->
-    <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s" style="padding: 30px 30px 0 50px">
-        <div>
-          <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-success" style="top: 48px;left: 30px;">
-            <i class="ivu-icon ivu-icon-checkmark-circled"></i>
-          </div>
-          <strong>提示</strong>
-          <p class="lh24">本免费活动充值押金<span style="color: #D0021B ">{{ cashPledge }}</span>元，主机到期或删除时押金自动退还到账户余额。
-          </p>
-        </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.rechargeHint = false">取消</Button>
-        <Button type="primary" @click="nextStep">下一步</Button>
-      </p>
-    </Modal>
-    <!-- 不满足条件-->
-    <Modal v-model="showModal.inConformityModal" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s" style="padding: 30px 30px 0 50px">
-        <div>
-          <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-warning" style="top: 48px;left: 30px;">
-            <i class="ivu-icon ivu-icon-android-alert"></i>
-          </div>
-          <p class="lh24">您好，您不符合本活动的参与条件，去<span style="color: #2A99F2;cursor: pointer" @click="$router.push('/ruicloud/ActiveCenter')">活动中心</span>看看其他活动吧！如果有其他需要可联系我们销售或者客服。
-          </p>
-        </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.inConformityModal = false">取消</Button>
-        <Button type="primary" @click="$router.push('/ruicloud/ActiveCenter')">去活动中心</Button>
-      </p>
-    </Modal>
-    <!-- 领取成功 -->
-    <Modal v-model="showModal.getSuccessModal" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s" style="padding: 30px 30px 0 50px">
-        <div>
-          <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-success" style="top: 48px;left: 30px;">
-            <i class="ivu-icon ivu-icon-checkmark-circled"></i>
-          </div>
-          <strong>提示</strong>
-          <p class="lh24">恭喜您押金已冻结完成，主机领取成功，主机在实名认证之前只可保留3天，请尽快使用。
-          </p>
-        </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.getSuccessModal = false">取消</Button>
-        <Button type="primary" @click="$router.push('/ruicloud/host')">查看主机</Button>
-      </p>
-    </Modal>
-    <!-- 支付充值失败 -->
-    <Modal v-model="showModal.payDefeatedModal" width="640" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">支付/充值</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <div class="modal-p">
-          <Steps :current="2" status="error">
-            <Step title="订单确认"></Step>
-            <Step title="支付"></Step>
-            <Step title="支付失败"></Step>
-          </Steps>
-          <p><img src="../../assets/img/sceneInfo/si-defeated.png"/><span>抱歉，支付失败，请再次尝试！</span></p>
-        </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="showModal.payDefeatedModal = false,showModal.orderConfirmationModal = true">再次支付</Button>
-      </div>
-    </Modal>
-    <!-- 支付充值成功 -->
-    <Modal v-model="showModal.paySuccessModal" width="640" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">支付/充值</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <div class="modal-p">
-          <Steps :current="2">
-            <Step title="订单确认"></Step>
-            <Step title="支付"></Step>
-            <Step title="支付成功"></Step>
-          </Steps>
-          <p><img src="../../assets/img/sceneInfo/si-success.png"/><span>恭喜您支付成功！我们即将冻结押金</span><span style="color: #D0021B;margin-left: 0">{{ cashPledge }}</span><span
-            style="margin-left: 0">元</span></p>
-        </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="getFreeHost">确认冻结</Button>
-      </div>
-    </Modal>
 
-    <!-- 微信支付弹窗 -->
-    <Modal v-model="showModal.weChatRechargeModal" width="640" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">微信支付/充值</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <div class="modal-p">
-          <Steps :current="1">
-            <Step title="订单确认"></Step>
-            <Step title="支付"></Step>
-            <Step title="支付成功"></Step>
-          </Steps>
-          <div class="payInfo">
-            <div id="code">
-              <vue-q-art :config="config" v-if="config.value!=''"></vue-q-art>
-            </div>
-            <div class="pay-p">
-              <p>应付金额(元)：<span>{{cashPledge}}</span></p>
-              <p>请使用微信扫一扫，扫描二维码支付</p>
-            </div>
-          </div>
+    <!-- 双旦活动弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.welcome=false" v-if="showModal.welcome">
+        <div class="welcome">
+          <img src="../../assets/img/active/doubleDenier/dd-banner9.png" @click="$router.push({path:'wonderfulDay'})"/>
+          <img src="../../assets/img/active/doubleDenier/dd-banner10.png" @click="$router.push({path:'wonderfulDay'})"/>
+          <img src="../../assets/img/active/doubleDenier/dd-banner11.png" @click="$router.push({path:'wonderfulDay'})"/>
+          <img src="../../assets/img/active/doubleDenier/dd-banner12.png" @click="$router.push({path:'wonderfulDay'})"/>
+          <img src="../../assets/img/active/doubleDenier/dd-icon1.png" @click.stop="showModal.welcome = false"/>
         </div>
       </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button @click="isPay">已完成支付</Button>
-        <Button type="primary" @click="showModal.weChatRechargeModal = false,showModal.orderConfirmationModal = true">更换支付方式</Button>
-      </div>
-    </Modal>
-
-    <!-- 订单确认弹窗 -->
-    <Modal v-model="showModal.orderConfirmationModal" width="640" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">订单确认</span>
-      </p>
-      <div>
-        <div class="modal-p">
-          <Steps :current="0">
-            <Step title="订单确认"></Step>
-            <Step title="支付"></Step>
-            <Step title="支付成功"></Step>
-          </Steps>
-        </div>
-        <Table :columns="orderColumns" :data="orderData" style="margin-top: 30px"></Table>
-        <div class="pay-wap">
-          <p>选择支付方式</p>
-          <RadioGroup v-model="payWay" vertical @on-change="payWayChange">
-            <Radio label="balancePay">
-              <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 40px">余额支付</span>
-              <span style="color:rgba(102,102,102,1);font-size: 14px">账户余额：</span>
-              <span style="color:#D0021B;font-size: 14px">¥{{ balance }}</span>
-            </Radio>
-            <Radio label="otherPay" class="pw-img" :disabled="balance >= cashPledge">
-              <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
-              <img src="../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null">
-              <img src="../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null">
-            </Radio>
-          </RadioGroup>
-        </div>
-        <p class="p1">注：没有实名认证的用户领取主机成功后，需要进行实名认证才可以使用。您可以点击实名认证 现在进行认证，也可以在领取主机之后点击个人中心-个人认证进行实名认证。</p>
-        <div class="attestationForm">
-          <p>实名认证</p>
-          <div class="click_icon icons" :class="{hide_icon:!attestationShow}" @click="attestationShow = !attestationShow"></div>
-        </div>
-        <div v-show="attestationShow">
-          <div v-if="authInfo&&authInfo.checkstatus==0" class="modal-p">
-            <p><img src="../../assets/img/sceneInfo/si-success.png"/><span>恭喜您，实名认证成功！</span></p>
-          </div>
-          <Form :model="quicklyAuthForm" :label-width="100" ref="quicklyAuth"
-                :rules="quicklyAuthFormValidate"
-                style="width:450px;margin-top:20px;" v-else>
-            <FormItem label="真实姓名" prop="name" style="width: 100%">
-              <Input v-model="quicklyAuthForm.name" placeholder="请输入姓名"></Input>
-            </FormItem>
-            <FormItem label="身份证号" prop="IDCard" style="width: 100%">
-              <Input v-model="quicklyAuthForm.IDCard" placeholder="请输入身份证号"></Input>
-            </FormItem>
-            <Form :model="quicklyAuthForm" :rules="quicklyAuthFormValidate" ref="sendCode"
-                  :label-width="100">
-              <FormItem label="图形验证码" prop="pictureCode">
-                <div style="display: flex">
-                  <Input v-model="quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
-                         style="width:250px;margin-right: 10px"></Input>
-                  <img :src="imgSrc" style="height:33px;"
-                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-                </div>
-              </FormItem>
-              <FormItem label="手机号码" prop="phone" style="width: 100%">
-                <div style="display: flex;justify-content: space-between">
-                  <Input v-model="quicklyAuthForm.phone" placeholder="请输入以该身份证开户的手机号码"
-                         style="width:260px;margin-right: 10px"></Input>
-                  <Button type="primary" @click="sendCode" style="width:92px"
-                          :disabled="quicklyAuthForm.sendCodeText!='获取验证码'">
-                    {{quicklyAuthForm.sendCodeText}}
-                  </Button>
-                </div>
-              </FormItem>
-            </Form>
-            <FormItem label="验证码" prop="validateCode" style="width: 100%">
-              <Input v-model="quicklyAuthForm.validateCode" placeholder="请输入验证码"></Input>
-            </FormItem>
-            <FormItem>
-              <div style="float:right">
-                <Button type="primary" @click="quicklyAuth">确认提交</Button>
-              </div>
-            </FormItem>
-          </Form>
-        </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="getHost_ok">确认</Button>
-      </div>
-    </Modal>
+    </transition>
   </div>
 </template>
 
@@ -717,33 +541,6 @@
       VueQArt
     },
     data() {
-      const validaRegisteredPhone = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('电话号码不能为空'));
-        }
-        if (!(/^1(3|4|5|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
-          callback(new Error('请输入正确的电话号码'));
-        } else {
-          callback()
-        }
-      }
-      const validaRegisteredID = (rule, value, callback) => {
-        if (!reg.IDCardVail(value)) {
-          callback(new Error('请输入正确的身份证号码'));
-        } else {
-          callback()
-        }
-      }
-      const validaRegisteredName = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('联系人不能为空'));
-        }
-        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
-          callback(new Error('输入姓名不能包含特殊字符、空格或是纯数字'));
-        } else {
-          callback()
-        }
-      }
       return {
         selectedBar: true,
         showModal: {
@@ -753,7 +550,8 @@
           payDefeatedModal: false,
           paySuccessModal: false,
           weChatRechargeModal: false,
-          orderConfirmationModal: false
+          orderConfirmationModal: false,
+          welcome: false
         },
         // 标记当前场景信息
         index1: '',
@@ -770,89 +568,10 @@
           filter: 'black',
           size: 500
         },
-        orderColumns: [
-          {
-            title: '产品类型',
-            key: 'productType'
-          },
-          {
-            title: '资源',
-            width: 200,
-            render: (h, params) => {
-              let arr = []
-              params.row.configs.forEach(item => {
-                let params = h('li', {}, item.text + '： ' + item.value)
-                arr.push(params)
-              })
-              return h('ul', {}, arr)
-            }
-          },
-          {
-            title: '计费类型',
-            render: (h, params) => {
-              return h('span', {}, '包年包月')
-            }
-          },
-          {
-            title: '购买时长',
-            key: 'time'
-          },
-          {
-            title: '押金金额',
-            width: 130,
-            render: (h, params) => {
-              let arr = []
-              let param1 = h('li', {
-                style: {
-                  textDecoration: 'line-through'
-                }
-              }, '原价：¥' + params.row.originalPrice)
-              let param2 = h('li', {
-                style: {
-                  color: '#D0021B'
-                }
-              }, '¥' + params.row.cashPledge)
-              arr.push(param1)
-              arr.push(param2)
-              return h('ul', {}, arr)
-            }
-          },
-        ],
-        orderData: [],
         payWay: 'balancePay',
         otherPayWay: '',
         balance: '0.0',
         attestationShow: false,
-        // 快速认证表单
-        quicklyAuthForm: {
-          name: '',
-          IDCard: '',
-          pictureCode: '',
-          phone: '',
-          validateCode: '',
-          sendCodeText: '获取验证码'
-        },
-        // 快速认证表单验证
-        quicklyAuthFormValidate: {
-          name: [
-            {required: true, message: '请输入姓名'},
-            {validator: validaRegisteredName}
-          ],
-          IDCard: [
-            {required: true, message: '请输入身份证号'},
-            {validator: validaRegisteredID}
-          ],
-          pictureCode: [
-            {required: true, message: '请输入图片验证码'}
-          ],
-          phone: [
-            {required: true, message: '请输入以该身份证开户的手机号码'},
-            {validator: validaRegisteredPhone}
-          ],
-          validateCode: [
-            {required: true, message: '请输入验证码'}
-          ]
-        },
         imgSrc: `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         //定时器
         pageTimer: null,
@@ -876,1444 +595,6 @@
         authorityFade: true,
         requireflag: false,
         eightsceneIndex: 0,
-        currentSceneGroup: [
-          {
-            currentScene: '云电脑',
-            disc: ' 云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的高性能PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
-            configGroup: [
-              {
-                title: '一个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '69.00',
-                originalPrice: '166.72',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '三个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '169.00',
-                originalPrice: '500.16',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '六个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '269.00',
-                originalPrice: '1000.32',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '十二个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '569.00',
-                originalPrice: '2000.64',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              }
-            ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner1.png')
-          },
-          {
-            currentScene: '自助建站',
-            disc: ' 基于新睿云个人建站服务，助您轻松获得一站式的建站服务方案支持。包括配置好各类开源建站镜像模板，帮助您快速搭建网站、微博、论坛等服务内容；可无限扩容的对象存储OSS服务帮助您存储网站内容与数据；域名购买注册系统、备案系统等一套完整的服务流程。并且因所有内容部署于云端，您可以根据内容与实际需要，弹性调整您的计算规格与资源大小，合理控制预算，以极具性价比的方式完成个人网站搭建。',
-            configGroup: [
-              {
-                title: '一个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '69.00',
-                originalPrice: '166.72',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '三个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '169.00',
-                originalPrice: '500.16',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '六个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '269.00',
-                originalPrice: '1000.32',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '十二个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '569.00',
-                originalPrice: '2000.64',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              }
-            ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner2.png')
-          },
-          {
-            currentScene: '存储&网盘',
-            disc: ' 独立服务模式数据安全存储、多终端同步、文件在线预览，个人网盘让您的数据存储于传输有更简单可靠的选择。新睿云个人网盘服务具有使用方便、管理简单、稳定可靠等特点。具备多协议支持能力（包括FTP、FTPS、SFTP等文件传输协议）；远程文件查找能力；多标签界面管理能力；断点续传；站点管理与传输队列管理等能力。',
-            configGroup: [
-              {
-                title: '一个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '69.00',
-                originalPrice: '166.72',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '三个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '169.00',
-                originalPrice: '500.16',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '六个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '269.00',
-                originalPrice: '1000.32',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '十二个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '569.00',
-                originalPrice: '2000.64',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              }
-            ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner3.png')
-          },
-          {
-            currentScene: '软件研发',
-            disc: '基于新睿云云主机的集成开发环境包含jave的Eclipse、PHP的Sublime、PHPstrom、Python的PyCharm。帮助您快速部署开发环境与依赖包，降低开发前期准备并提升研发效率。借助新睿云成熟的云计算基础服务能力，开发人员可以随时创建与释放所需的开发环境与相关计算资源，主机信息可自动与手动备份，多种方式保障您的数据安全。',
-            configGroup: [
-              {
-                title: '一个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '69.00',
-                originalPrice: '166.72',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '三个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '169.00',
-                originalPrice: '500.16',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '六个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '269.00',
-                originalPrice: '1000.32',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '十二个月',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: '服务器ECS',
-                    value: '2核 4G',
-                  },
-                  {
-                    text: '系统盘',
-                    value: '40G SSD',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                currentPrice: '569.00',
-                originalPrice: '2000.64',
-                zoneId: $store.state.zone.zoneid,
-                system: 'linux'
-              }
-            ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner4.png')
-          },
-          {
-            currentScene: '游戏服务',
-            disc: '新睿云游戏应用能够帮助您实现任意设备的游戏体验: 在任意 PC、Mac、平板电脑、智能手机以及电视上的高画质、低延迟的多设备游戏体验；点击即玩的便捷: 任何时候都可以在云端访问一系列游戏和保存游戏。 在任何地点、任意设备上均可开始新游戏或继续之前的游戏进度；减少麻烦: 没有新硬件、没有复杂的设置、没有游戏光盘、没有数字下载、没有游戏安装、没有游戏补丁。',
-            configGroup: [
-              {
-                title: '初创型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: 'G5500',
-                  },
-                  {
-                    text: '主机',
-                    value: '8核64G',
-                  },
-                  {
-                    text: '型号',
-                    value: '1* NVIDIA P40',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '64',
-                gpuSize: '1',
-                serviceType: 'G5500',
-                currentPrice: '178',
-                originalPrice: '646.25',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '增长型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: '2288H_v5',
-                  },
-                  {
-                    text: '主机',
-                    value: '16核64G',
-                  },
-                  {
-                    text: '型号',
-                    value: '1* NVIDIA P100',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '64',
-                gpuSize: '1',
-                serviceType: '2288H_v5',
-                currentPrice: '200',
-                originalPrice: '730.26',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '稳定型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: 'G5500',
-                  },
-                  {
-                    text: '主机',
-                    value: '16核128G',
-                  },
-                  {
-                    text: '型号',
-                    value: '2* NVIDIA P100',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '128',
-                gpuSize: '2',
-                serviceType: 'G5500',
-                currentPrice: '341',
-                originalPrice: '1215.88',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              }
-            ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner5.png')
-          },
-          {
-            currentScene: '图形设计',
-            disc: '工程制图、游戏、电影领域有大量需要高计算量的场景需要企业或个人投入较高成本来提高生产计算能力和生产效率。现在借助新睿云3D设计，以远低于自购设备的价格来获取更为稳定优质的计算资源能力提升，成倍提高您的设计工作效率和渲染效率。并且，新睿云3D设计提供按需付费方式，以小时级为单位来获取工业级GPU计算服务能力。 ',
-            configGroup: [
-              {
-                title: '初创型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: 'G5500',
-                  },
-                  {
-                    text: '主机',
-                    value: '8核64G',
-                  },
-                  {
-                    text: '型号',
-                    value: '1* NVIDIA P40',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '64',
-                gpuSize: '1',
-                serviceType: 'G5500',
-                currentPrice: '178',
-                originalPrice: '646.25',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '增长型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: '2288H_v5',
-                  },
-                  {
-                    text: '主机',
-                    value: '16核64G',
-                  },
-                  {
-                    text: '型号',
-                    value: '1* NVIDIA P100',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '64',
-                gpuSize: '1',
-                serviceType: '2288H_v5',
-                currentPrice: '200',
-                originalPrice: '730.26',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '稳定型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: 'G5500',
-                  },
-                  {
-                    text: '主机',
-                    value: '16核128G',
-                  },
-                  {
-                    text: '型号',
-                    value: '2* NVIDIA P100',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '128',
-                gpuSize: '2',
-                serviceType: 'G5500',
-                currentPrice: '341',
-                originalPrice: '1215.88',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              }
-            ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner6.png')
-          },
-          {
-            currentScene: '人工智能',
-            disc: ' 云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的高性能PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
-            configGroup: [
-              {
-                title: '初创型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: 'G5500',
-                  },
-                  {
-                    text: '主机',
-                    value: '8核64G',
-                  },
-                  {
-                    text: '型号',
-                    value: '1* NVIDIA P40',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '64',
-                gpuSize: '1',
-                serviceType: 'G5500',
-                currentPrice: '178',
-                originalPrice: '646.25',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '增长型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: '2288H_v5',
-                  },
-                  {
-                    text: '主机',
-                    value: '16核64G',
-                  },
-                  {
-                    text: '型号',
-                    value: '1* NVIDIA P100',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '64',
-                gpuSize: '1',
-                serviceType: '2288H_v5',
-                currentPrice: '200',
-                originalPrice: '730.26',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '稳定型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: 'G5500',
-                  },
-                  {
-                    text: '主机',
-                    value: '16核128G',
-                  },
-                  {
-                    text: '型号',
-                    value: '2* NVIDIA P100',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '128',
-                gpuSize: '2',
-                serviceType: 'G5500',
-                currentPrice: '341',
-                originalPrice: '1215.88',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              }
-            ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner7.png')
-          },
-          {
-            currentScene: '超级运算',
-            disc: '新睿云深度学习平台基于强劲的 GPU 计算资源，在配置Tesla P40和Tesla P100的基础上。各个行业都可以帮助您成倍提高计算和工作效率。比如在计算机视觉与图像处理领域，图像处理与计算机视觉算法是计算密集型算法。NVIDIA® CUDA® 加速技术可帮助解决该挑战，从而帮助此类应用程序实现交互式视频的帧率性能。用户可在深度学习平台上使用 GPU 或 CPU 进行单机或分布式深度学习模型训练与推断，并可享受云计算弹性特性，按需进行横向、纵向扩展。',
-            configGroup: [
-              {
-                title: '初创型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: 'G5500',
-                  },
-                  {
-                    text: '主机',
-                    value: '8核64G',
-                  },
-                  {
-                    text: '型号',
-                    value: '1* NVIDIA P40',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '64',
-                gpuSize: '1',
-                serviceType: 'G5500',
-                currentPrice: '178',
-                originalPrice: '646.25',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '增长型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: '2288H_v5',
-                  },
-                  {
-                    text: '主机',
-                    value: '16核64G',
-                  },
-                  {
-                    text: '型号',
-                    value: '1* NVIDIA P100',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  },
-                  {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '64',
-                gpuSize: '1',
-                serviceType: '2288H_v5',
-                currentPrice: '200',
-                originalPrice: '730.26',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              },
-              {
-                title: '稳定型业务网站（3天）',
-                configs: [
-                  {
-                    text: '服务器资源',
-                    value: '',
-                  },
-                  {
-                    text: 'GPU服务器',
-                    value: 'G5500',
-                  },
-                  {
-                    text: '主机',
-                    value: '16核128G',
-                  },
-                  {
-                    text: '型号',
-                    value: '2* NVIDIA P100',
-                  },
-                  {
-                    text: '系统盘',
-                    value: 'SSD存储',
-                  },
-                  {
-                    text: '弹性负载均衡',
-                    value: '按需开通',
-                  }, {
-                    text: '网络',
-                    value: '',
-                  },
-                  {
-                    text: '弹性公网IP',
-                    value: '1M',
-                  },
-                  {
-                    text: '虚拟私有云VPC',
-                    value: '默认开通',
-                  },
-                  {
-                    text: '存储',
-                    value: '',
-                  },
-                  {
-                    text: '对象存储服务OBS',
-                    value: '按需开通',
-                  }
-                ],
-                men: '128',
-                gpuSize: '2',
-                serviceType: 'G5500',
-                currentPrice: '341',
-                originalPrice: '1215.88',
-                zoneId: $store.state.gpuZone.zoneid,
-                system: 'linux'
-              }
-            ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner8.png')
-          },
-        ],
         eigthimgs: [
           {bgUrl: require('../../assets/img/home/eightscene-bg-1.png')},
           {bgUrl: require('../../assets/img/home/eightscene-bg-2.png')},
@@ -2337,7 +618,7 @@
         eigthSceneContent: [
           {
             title: '云电脑',
-            scene: '云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，云电脑助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的高性能PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
+            scene: '云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，云电脑助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
             software: [
               require('../../assets/img/sceneList/sl-icon1.png'),
               require('../../assets/img/sceneList/sl-icon2.png'),
@@ -2389,7 +670,7 @@
           },
           {
             title: '游戏服务',
-            scene: '新睿云游戏应用能够帮助您实现任意设备的游戏体验: 在任意 PC、Mac、平板电脑、智能手机以及电视上的高画质、低延迟的多设备游戏体验；点击即玩的便捷: 任何时候都可以在云端访问一系列游戏和保存游戏。 在任何地点、任意设备上均可开始新游戏或继续之前的游戏进度；减少麻烦: 没有新硬件、没有复杂的设置、没有游戏光盘、没有数字下载、没有游戏安装、没有游戏补丁。',
+            scene: '借助新睿云游戏服务革新您的开发平台，您能够以更快的速度完成大型3D游戏的开发测试工作。凭借超高的运算速度与传输速度，加速您的大规模图形演算与视频处理能力；搭配新睿云云主机、对象存储与云数据库使用，完成从生产研发到部署测试的全流程工作。并且，新睿云游戏服务提供按需付费方式，以小时级为单位来获取工业级GPU计算服务能力。',
             software: [
               require('../../assets/img/sceneList/sl-icon15.png'),
               require('../../assets/img/sceneList/sl-icon16.png')
@@ -2864,7 +1145,10 @@
       }
     },
     mounted() {
-      // 八大场景切换背景初始化
+      if (!sessionStorage.getItem('welcome')) {
+        this.showModal.welcome = true
+        sessionStorage.setItem('welcome', '1')
+      }
       this.menuselected(0)
       // echarts.registerMap('china', china)
       // this.myChart = echarts.init(document.getElementById('echarts'))
@@ -2908,11 +1192,12 @@
       })
       this.scrollFn()
       window.addEventListener('scroll', this.scrollFn)
+
     },
     created() {
       this.getnews()
       this.getlinkList()
-      this.getMirror(this.eightsceneIndex)
+      //this.getMirror(this.eightsceneIndex)
     },
     methods: {
       init() {
@@ -2922,462 +1207,9 @@
           }
         })
       },
-      // getOriginalPrice(currentIndex, index) {
-      //   let vmConfigId = ''
-      //   let month = ''
-      //   switch (index) {
-      //     case 0:
-      //       month = '1'
-      //       vmConfigId = '45'
-      //       break
-      //     case 1:
-      //       month = '3'
-      //       vmConfigId = '46'
-      //       break
-      //     case 2:
-      //       month = '6'
-      //       vmConfigId = '47'
-      //       break
-      //     case 3:
-      //       month = '12'
-      //       vmConfigId = '48'
-      //       break
-      //   }
-      //   let url = 'activity/getOriginalPrice.do'
-      //   let params = {
-      //     vmConfigId: vmConfigId,
-      //     month: month,
-      //     zoneId: this.$store.state.zone.zoneid
-      //   }
-      //   axios.get(url, {params: params}).then(res => {
-      //     if (res.data.status == 1) {
-      //       this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
-      //     }
-      //   })
-      //   //this.getMirror(this.userType,this.currentSceneGroup[currentIndex].configGroup[index].zoneId)
-      // },
-      // getRegion(val) {
-      //   let url = 'activity/getTemActInfo.do'
-      //   let params = {}
-      //   if (val == 'host' || val == 'web' || val == 'disk' || val == 'software') {
-      //     params = {
-      //       activityName: '免费领主机'
-      //     }
-      //   } else {
-      //     params = {
-      //       activityName: '8个场景活动GPU'
-      //     }
-      //   }
-      //   axios.post(url, params).then(res => {
-      //     if (res.data.status == 1) {
-      //       this.areaGroup = res.data.result.optionalArea
-      //       if (res.data.result.optionalArea.length != 0) {
-      //         this.currentSceneGroup.forEach(config => {
-      //           config.configGroup.forEach(host => {
-      //             host.zoneId = this.areaGroup[0].value
-      //           })
-      //         })
-      //         this.getMirror(this.userType, this.areaGroup[0].value)
-      //       }
-      //     }
-      //   })
-      // },
-      getMirror(userType) {
-        let url = 'information/listTemplateFunction.do'
-        axios.get(url, {
-          params: {
-            useType: userType + 1,
-            zoneId: this.$store.state.gpuZone.zoneid
-          }
-        }).then(res => {
-          if (res.data.status == 1 && res.status == 200) {
-            this.systemGroup = res.data.result
-            if (res.data.result.length != 0) {
-              this.currentSceneGroup.forEach(config => {
-                config.configGroup.forEach(host => {
-                  host.system = this.systemGroup[0].systemtemplateid
-                })
-              })
-            }
-          }
-        })
-      },
-      getHost(index1, index2) {
-        if (!this.$store.state.userInfo) {
-          this.$LR({type: 'register'})
-          return
-        }
-        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
-          if (response.status == 200 && response.data.status == '1') {
-            this.balance = Number(response.data.data.remainder)
-            this.index1 = index1
-            this.index2 = index2
-            this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
-            this.time = this.currentSceneGroup[index1].configGroup[index2].title
-            this.showModal.rechargeHint = true
-          } else {
-            this.$message.info({
-              content: '平台开小差了，请稍候再试'
-            })
-          }
-        })
-      },
-      nextStep() {
-        let title = ''
-        if (!(this.scene == '游戏服务' || this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
-          title = '云服务器'
-        } else {
-          title = 'GPU服务器'
-        }
-        // 判断新老用户
-        axios.get('activity/jdugeTeam.do', {
-          params: {sign: 'freeReceive'}
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            if (response.data.result.flag) {
-              this.orderData = []
-              this.orderData.push({
-                productType: title,
-                configs: this.currentSceneGroup[this.index1].configGroup[this.index2].configs,
-                originalPrice: this.currentSceneGroup[this.index1].configGroup[this.index2].originalPrice,
-                time: this.time,
-                cashPledge: Number(this.cashPledge)
-              })
-              this.showModal.rechargeHint = false
-              this.showModal.orderConfirmationModal = true
-            } else {
-              this.showModal.rechargeHint = false
-              this.showModal.inConformityModal = true
-            }
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      },
-      getHost_ok() {
-        if (this.payWay == 'balancePay') {
-          if (this.balance < this.cashPledge) {
-            this.$Message.info('可用余额不足')
-          } else {
-            this.showModal.orderConfirmationModal = false
-            this.getFreeHost()
-          }
-        } else {
-          switch (this.otherPayWay) {
-            case '':
-              this.$Message.info('请选择一个支付方式')
-              break
-            case 'zfb':
-              window.open(`zfb/alipayapi.do?total_fee=${this.cashPledge}`)
-              this.pageTimer = setInterval(() => {
-                axios.get('activity/compareForMoney.do', {
-                  params: {freezeMoney: this.cashPledge}
-                }).then(val => {
-                  if (val.data.status == 1) {
-                    this.showModal.orderConfirmationModal = false
-                    clearInterval(this.pageTimer)
-                    this.showModal.paySuccessModal = true
-                  }
-                })
-              }, 2000)
-              break
-            case 'wx':
-              clearInterval(this.pageTimer)
-              axios.get('wx/wxpayapi.do', {
-                params: {
-                  total_fee: this.cashPledge
-                }
-              }).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.serialNum = response.data.result.serialNum
-                  this.config.value = response.data.result.codeUrl
-                  this.showModal.orderConfirmationModal = false
-                  this.showModal.weChatRechargeModal = true
-                } else {
-                  this.$message.info({
-                    content: response.data.message
-                  })
-                }
-              })
-              break
-          }
-        }
-      },
-      getFreeHost() {
-        this.showModal.paySuccessModal = false
-        let vmConfigId = '', functionType = ''
-        switch (this.index1 + '' + this.index2) {
-          case '00':
-            functionType = '1'
-            vmConfigId = '45'
-            break
-          case '01':
-            functionType = '1'
-            vmConfigId = '46'
-            break
-          case '02':
-            functionType = '1'
-            vmConfigId = '47'
-            break
-          case '03':
-            functionType = '1'
-            vmConfigId = '48'
-            break
-          case '10':
-            functionType = '2'
-            vmConfigId = '45'
-            break
-          case '11':
-            functionType = '2'
-            vmConfigId = '46'
-            break
-          case '12':
-            functionType = '2'
-            vmConfigId = '47'
-            break
-          case '13':
-            functionType = '2'
-            vmConfigId = '48'
-            break
-          case '20':
-            functionType = '3'
-            vmConfigId = '45'
-            break
-          case '21':
-            functionType = '3'
-            vmConfigId = '46'
-            break
-          case '22':
-            functionType = '3'
-            vmConfigId = '47'
-            break
-          case '23':
-            functionType = '3'
-            vmConfigId = '48'
-            break
-          case '30':
-            functionType = '4'
-            vmConfigId = '45'
-            break
-          case '31':
-            functionType = '4'
-            vmConfigId = '46'
-            break
-          case '32':
-            functionType = '4'
-            vmConfigId = '47'
-            break
-          case '33':
-            functionType = '4'
-            vmConfigId = '48'
-            break
-          case '40':
-            functionType = '5'
-            vmConfigId = '196'
-            break
-          case '41':
-            functionType = '5'
-            vmConfigId = '194'
-            break
-          case '42':
-            functionType = '5'
-            vmConfigId = '195'
-            break
-          case '50':
-            functionType = '6'
-            vmConfigId = '196'
-            break
-          case '51':
-            functionType = '6'
-            vmConfigId = '194'
-            break
-          case '52':
-            functionType = '6'
-            vmConfigId = '195'
-            break
-          case '60':
-            functionType = '7'
-            vmConfigId = '196'
-            break
-          case '61':
-            functionType = '7'
-            vmConfigId = '194'
-            break
-          case '62':
-            functionType = '7'
-            vmConfigId = '195'
-            break
-          case '70':
-            functionType = '8'
-            vmConfigId = '196'
-            break
-          case '71':
-            functionType = '8'
-            vmConfigId = '194'
-            break
-          case '72':
-            functionType = '8'
-            vmConfigId = '195'
-            break
-        }
-        this.vmConfig = vmConfigId
-        if (this.index1 < 4) {
-          let url = 'user/getRemainderFrozen.do'
-          let params = {
-            eachFrozenMoney: this.cashPledge,
-            describe: '领取主机',
-            operationType: '领取主机',
-            thawCondition: '删除主机',
-            vmConfig: this.vmConfig
-          }
-          axios.post(url, params).then(response => {
-            if (response.data.status == 1 && response.status == 200) {
-              let url = 'activity/getFreeHost.do'
-              axios.get(url, {
-                params: {
-                  vmConfigId: vmConfigId,
-                  osType: this.currentSceneGroup[this.index1].configGroup[this.index2].system,
-                  defzoneid: this.currentSceneGroup[this.index1].configGroup[this.index2].zoneId,
-                  templateFunction: '1',
-                  functionType: functionType
-                }
-              }).then(res => {
-                if (res.status == 200 && res.data.status == 1) {
-                  this.showModal.getSuccessModal = true
-                } else {
-                  this.$message.info({
-                    content: res.data.message
-                  })
-                }
-              })
-            } else {
-              this.$message.info({
-                content: response.data.message
-              })
-            }
-          })
-        } else {
-          let url = 'user/getRemainderFrozen.do'
-          let params = {
-            eachFrozenMoney: this.cashPledge,
-            describe: '领取GPU服务器',
-            operationType: '领取GPU服务器',
-            thawCondition: '删除GPU服务器',
-            vmConfig: this.vmConfig
-          }
-          axios.post(url, params).then(response => {
-            if (response.data.status == 1 && response.status == 200) {
-              let url = 'activity/getFreeGPU.do'
-              axios.get(url, {
-                params: {
-                  vmConfigId: vmConfigId,
-                  osType: this.currentSceneGroup[this.index1].configGroup[this.index2].system,
-                  defzoneid: this.currentSceneGroup[this.index1].configGroup[this.index2].zoneId,
-                  templateFunction: '1',
-                  functionType: functionType
-                }
-              }).then(res => {
-                if (res.status == 200 && res.data.status == 1) {
-                  this.showModal.getSuccessModal = true
-                } else {
-                  this.$message.info({
-                    content: res.data.message
-                  })
-                }
-              })
-            } else {
-              this.$message.info({
-                content: response.data.message
-              })
-            }
-          })
-        }
-      },
-      // 快速认证时发送验证码
-      sendCode() {
-        this.$refs.sendCode.validate(validate => {
-          if (validate) {
-            axios.get('user/code.do', {
-              params: {
-                aim: this.quicklyAuthForm.phone,
-                isemail: 0,
-                vailCode: this.quicklyAuthForm.pictureCode
-              }
-            }).then(response => {
-              // 发送成功，进入倒计时
-              if (response.status == 200 && response.data.status == 1) {
-                var countdown = 60
-                this.quicklyAuthForm.sendCodeText = `${countdown}S`
-                var Interval = setInterval(() => {
-                  countdown--
-                  this.quicklyAuthForm.sendCodeText = `${countdown}S`
-                  if (countdown == 0) {
-                    clearInterval(Interval)
-                    this.quicklyAuthForm.sendCodeText = '获取验证码'
-                  }
-                }, 1000)
-              } else {
-                this.$Message.error(response.data.message)
-              }
-            })
-          }
-        })
-      },
-      // 快速认证
-      quicklyAuth() {
-        var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
-          return Promise.resolve(validate)
-        })
-        var sendCode = this.$refs.sendCode.validate(validate => {
-          return Promise.resolve(validate)
-        })
-        Promise.all([quicklyAuth, sendCode]).then(results => {
-          if (results[0] === true && results[1] === true) {
-            axios.post('user/personalAttest.do', {
-              cardID: this.quicklyAuthForm.IDCard,
-              name: this.quicklyAuthForm.name,
-              phone: this.quicklyAuthForm.phone,
-              phoneCode: this.quicklyAuthForm.validateCode,
-              type: '0'
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.init()
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
-            })
-          }
-        })
-      },
-      isPay() {
-        axios.get('user/payStatus.do', {
-          params: {
-            serialNum: this.serialNum
-          }
-        }).then(response => {
-          this.showModal.weChatRechargeModal = false
-          if (response.status == 200 && response.data.status == 1) {
-            this.showModal.paySuccessModal = true
-          } else {
-            this.showModal.payDefeatedModal = true
-          }
-        })
-      },
-      payWayChange() {
-        if (this.payWay == 'otherPay' && this.otherPayWay == '') {
-          this.otherPayWay = 'zfb'
-        } else if (this.payWay == 'balancePay') {
-          this.otherPayWay = ''
-        }
-      },
       menuselected(index) {
         this.eightsceneIndex = index
         this.$refs.bgcheck.style.marginTop = -666 * index + 'px'
-        this.getMirror(index)
       },
       datacenterEnter(selectedIndex) {
         this.authorityContainer.forEach((item, index) => {
@@ -3644,7 +1476,7 @@
             > h3 {
               padding-bottom: 20px;
               font-size: 24px;
-              font-family: PingFangSC-Medium;
+              font-family: MicrosoftYaHei;
               font-weight: 500;
               color: rgba(51, 51, 51, 1);
               line-height: 24px;
@@ -3653,7 +1485,7 @@
             .title {
               padding: 16px 0 18px 0;
               font-size: 18px;
-              font-family: PingFangSC-Medium;
+              font-family: MicrosoftYaHei;
               font-weight: 500;
               color: rgba(74, 74, 74, 1);
             }
@@ -4662,7 +2494,7 @@
     p {
       margin-bottom: 20px;
       font-size: 48px;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       color: rgba(243, 108, 110, 1);
       line-height: 67px;
     }
@@ -4691,7 +2523,7 @@
     p {
       margin-bottom: 20px;
       font-size: 48px;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       color: rgba(255, 255, 255, 1);
       line-height: 67px;
     }
@@ -4723,16 +2555,19 @@
       div {
         padding-top: 60px;
         button {
-          background: #F26667;
-          border-radius: 100px;
-          font-size: 18px;
-          color: #FFFFFF;
+          width: 176px;
+          height: 54px;
+          background: rgba(255, 96, 40, 1);
+          font-size: 24px;
+          color: #ffffff;
           line-height: 24px;
-          margin-top: 60px;
+          margin-top: 50px;
           outline: none;
           border: none;
           cursor: pointer;
-          padding: 10px 20px;
+          &:hover {
+            background: rgba(255, 57, 54, 1);
+          }
         }
       }
       > img {
@@ -4909,6 +2744,10 @@
     }
   }
 
+  p, span {
+    font-family: 'Microsoft YaHei';
+  }
+
   // 移入移出动画
   .fade-enter, .fade-leave-to {
     opacity: 0;
@@ -5035,6 +2874,23 @@
         }
       }
     }
+  }
+
+  .dan-banner {
+    height: 400px;
+    background: #ff624b;
+    .wraps {
+      width: 1903px;
+      height: 400px;
+      margin: 0 auto;
+      img {
+        width: 100%;
+        height: 100%;
+        max-width: auto;
+        max-height: auto;
+      }
+    }
+
   }
 
   .eightscene {
@@ -5217,5 +3073,171 @@
       font-weight: 400;
       color: rgba(102, 102, 102, 1);
     }
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(55, 55, 55, 0.6);
+    height: 100%;
+    z-index: 1000;
+    .all-modal {
+      position: relative;
+      margin: 0 auto;
+      top: 10%;
+      background: rgba(255, 255, 255, 1);
+      text-align: center;
+      font-size: 16px;
+      &.lottery {
+        top: 100px;
+      }
+      > .header {
+        height: 80px;
+        line-height: 70px;
+        font-size: 24px;
+        font-family: MicrosoftYaHei;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 1);
+        position: relative;
+        > i {
+          color: rgba(255, 255, 255, 1);
+          cursor: pointer;
+          position: absolute;
+          right: 10px;
+          top: -10px;
+          transform: rotate(45deg);
+          &:before {
+            content: '';
+            display: inline-block;
+            height: 16px;
+            width: 2px;
+            background: #FFF;
+            transform: translateX(9px);
+          }
+          &:after {
+            content: '';
+            display: inline-block;
+            height: 2px;
+            width: 16px;
+            background: #FFF;
+            transform: translateY(-7px);
+          }
+        }
+      }
+    }
+    .welcome {
+      cursor: pointer;
+      margin: 0 auto;
+      top: 20%;
+      height: 500px;
+      width: 729px;
+      position: relative;
+      > img {
+        position: absolute;
+        transition: all 2s linear; /*图片放大过程的时间*/
+      }
+      img:nth-child(1) {
+        animation-duration: 1s;
+        animation-name: slidein_1;
+      }
+      img:nth-child(2) {
+        animation-duration: 1s;
+        animation-name: slidein_2;
+        left: 10%;
+        top: 0%;
+      }
+      img:nth-child(3) {
+        transform: scale(0);
+        animation-fill-mode: forwards;
+        animation-delay: 1s;
+        animation-duration: .8s;
+        animation-name: slidein_3;
+        left: 17%;
+        top: 0%;
+      }
+      img:nth-child(4) {
+        transform: scale(0);
+        animation-fill-mode: forwards;
+        animation-delay: 1s;
+        animation-duration: .8s;
+        animation-name: slidein_4;
+        left: 45%;
+        top: 93%;
+      }
+      img:nth-child(5) {
+        right: 0;
+      }
+    }
+  }
+
+  @keyframes slidein_1 {
+    from {
+      transform: scale(0.2);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slidein_2 {
+    from {
+      transform: scale(0.2);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slidein_3 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slidein_4 {
+    0% {
+      transform: scale(0);
+    }
+    75% {
+      transform: scale(1.4);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .2s;
+  }
+
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+
+  .w_button {
+    position: relative;
+    top: -162px;
+    left: 21%;
+    color: rgba(26, 42, 210, 1);
+    font-weight: 500;
+    font-size: 13px;
+    width: 140px;
+    line-height: 43px;
+    letter-spacing: 3px;
+    text-align: center;
+    height: 43px;
+    background: rgb(255, 222, 42);
+    // box-shadow: 0px 2px 2px 1px rgb(136, 20, 17);
+    cursor: pointer;
+  }
+
+  .w_button:hover {
+    box-shadow: 0px 2px 2px 1px #881411;
   }
 </style>

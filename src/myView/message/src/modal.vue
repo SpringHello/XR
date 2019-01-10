@@ -152,26 +152,27 @@
       width: 350px;
       background-color: #ffffff;
       .header {
-        padding: 30px 30px 0px;
+        background: #333;
+        padding: 15px 30px ;
         .icon {
           margin-right: 10px;
-          font-size: 24px;
+          font-size: 20px;
           vertical-align: middle;
         }
         .info-icon {
-          color: #2d8cf0
+          color: #FFBF00;
         }
         .warning-icon {
           color: #FFBF00;
         }
         .error-icon {
 
-          color: #ed3f14;
+          color: #FFBF00;
         }
         span {
           vertical-align: middle;
           font-size: 14px;
-          color: #333333;
+          color: #FFF;
         }
       }
       .modal-body {

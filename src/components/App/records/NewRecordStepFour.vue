@@ -108,6 +108,12 @@
           </div>
         </div>
       </div>
+      <div class="rule">
+        <p>应部分管局要求：</p>
+        <p>1.用户拍照的照片上面要显示拍照时间（水印）</p>
+        <p>2.拍照时穿的衣服必须符合当时的季节</p>
+        <p>为保障您的资料顺利通过管局审核，请根据以上提示上传符合管局要求图片，如有问题可咨询客服专员<a target="_blank" :href="`tencent://message/?uin=1746856113&amp;Site=www.cloudsoar.com&amp;Menu=yes`">（QQ客服-备案）</a></p>
+      </div>
       <div style="margin-top: 60px;height: 2px;background: #d9d9d9"></div>
     </div>
     <div class="ImageView is-active" style="padding-bottom: 10px;" v-show="imageViewShow" @click="imageViewShow=false">
@@ -135,10 +141,12 @@
     </Modal>
     <!-- 申请幕布提示 -->
     <Modal v-model="showModal.applyHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">由于背景幕布需回收并多次使用，寄送幕布需要从您的账户冻结50元押金，待我们确认回收幕布之后，押金即解冻。注意：冻结押金不可用于购买和续费。您可以在费用中心查看冻结押金详情。
           </p>
         </div>
@@ -150,10 +158,12 @@
     </Modal>
     <!-- 冻结资金提示 -->
     <Modal v-model="showModal.freezeHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">冻结金额：50元</p>
           <p class="lh24">冻结事由：备案幕布申请</p>
           <p class="lh24">冻结时间：{{ currentData }}-幕布回收确认日</p>
@@ -167,10 +177,12 @@
     </Modal>
     <!-- 资金不足提示 -->
     <Modal v-model="showModal.shortageHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">您的账户余额小于50元，冻结资金不足。请先充值。
           </p>
         </div>
@@ -428,7 +440,7 @@
             this.nextStep = true
           } else {
             this.$message.info({
-              content: '平台开小差了，请稍候再试'
+              content: res.data.message
             })
           }
         })
@@ -442,7 +454,7 @@
       },
       // 提交幕布申请
       applyCurtain(val) {
-        if(val == 1){
+        if (val == 1) {
           this.siteParams.backgroundAddress = this.receiveForm.address
           this.siteParams.backgroundName = this.receiveForm.person
           this.siteParams.backgroundPhone = this.receiveForm.phone
@@ -474,7 +486,7 @@
               sessionStorage.clear()
             } else {
               this.$message.info({
-                content: '平台开小差了，请稍候再试'
+                content: response[0].data.message
               })
             }
           })
@@ -488,13 +500,13 @@
                   sessionStorage.clear()
                 } else {
                   this.$message.info({
-                    content: '平台开小差了，请稍候再试'
+                    content: res.data.message
                   })
                 }
               })
             } else {
               this.$message.info({
-                content: '平台开小差了，请稍候再试'
+                content: response[0].data.message
               })
             }
           })
@@ -522,7 +534,7 @@
             this.$router.push('waitFirstTrial')
           } else {
             this.$message.info({
-              content: '平台开小差了，请稍候再试'
+              content: res.data.message
             })
           }
         })
@@ -581,7 +593,7 @@
   // 定义h2公用样式
   .h2() {
     font-size: 24px;
-    font-family: PingFangSC-Medium;
+    font-family: MicrosoftYaHei;
     color: rgba(51, 51, 51, 1);
     line-height: 24px;
     font-weight: normal;
@@ -607,7 +619,7 @@
       }
       > p {
         font-size: 14px;
-        font-family: PingFangSC-Medium;
+        font-family: MicrosoftYaHei;
         color: rgba(102, 102, 102, 1);
         line-height: 14px;
         margin-top: 10px;
@@ -637,7 +649,7 @@
     > p {
       margin: 30px 0 20px;
       font-size: 14px;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       color: rgba(102, 102, 102, 1);
       line-height: 14px;
     }
@@ -650,7 +662,7 @@
         > p {
           width: 50%;
           font-size: 14px;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           color: rgba(153, 153, 153, 1);
           line-height: 40px;
           text-align: center;
@@ -666,7 +678,7 @@
         padding: 17px 0 0 20px;
         > p {
           font-size: 14px;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           color: rgba(102, 102, 102, 1);
           line-height: 28px;
           > span {
@@ -679,7 +691,7 @@
         padding: 40px 0 40px 20px;
         > button {
           font-size: 14px;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           color: #333;
           outline: none;
           cursor: pointer;
@@ -689,7 +701,7 @@
         }
         > p {
           font-size: 12px;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           color: rgba(153, 153, 153, 1);
           line-height: 17px;
           margin-top: 10px;
@@ -731,7 +743,7 @@
       }
       > p {
         font-size: 14px;
-        font-family: PingFangSC-Medium;
+        font-family: MicrosoftYaHei;
         color: rgba(102, 102, 102, 1);
         line-height: 14px;
         margin-top: 10px;
@@ -799,6 +811,15 @@
             }
           }
         }
+      }
+    }
+    .rule {
+      >p{
+        font-size: 14px;
+        font-family: MicrosoftYaHei;
+        color: #666666;
+        line-height: 14px;
+        margin-top: 10px;
       }
     }
   }

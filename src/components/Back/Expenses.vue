@@ -111,8 +111,8 @@
                                placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
-              <!--<Button type="primary" style="margin-left: 120px" @click="orderRefund" :disabled="refundDisabled">退款</Button>-->
-              <Button type="primary" style="margin-left: 195px" @click="orderPay" :disabled="payDisabled">支付</Button>
+              <Button type="primary" style="margin-left: 120px" @click="orderRefundBefore" :disabled="refundDisabled">退款</Button>
+              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
             </div>
@@ -359,6 +359,9 @@
             <span>解冻到余额<span style="color: #FF1E39;margin-left: 15px">{{ unfreezeToBalanceHintText }}</span></span>
           </Radio>
         </RadioGroup>
+        <div v-if="unfreezeTo=='account'" style="border-top:1px dashed rgba(151,151,151,1);padding: 20px 0 10px;">
+          <p style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,57,42,1);">*优先退回到原支付账户，原支付账户不可用时则退回到下方填写的账户。</p>
+        </div>
         <Form v-if="unfreezeTo=='account'" :model="withdrawForm" :rules="withdrawValidate" ref="unfreeze">
           <Form-item label="收款人姓名" prop="payeeName">
             <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
@@ -394,12 +397,58 @@
         <Button type="primary" @click="unfreeze_ok">确认</Button>
       </div>
     </Modal>
+    <!--押金转续费-->
+    <Modal v-model="showModal.freezeToRenew" :scrollable="true" :closable="false" :width="550">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">申请解冻</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p style="font-size:14px;color:rgba(102,102,102,1);">解冻条件未达成，可以押金转续费</p>
+        <RadioGroup v-model="freezeToRenew">
+          <Radio label="account" style="margin:20px 0px" disabled>
+            <span>解冻到充值账户（需3-5个工作日）</span>
+          </Radio>
+          <Radio label="yue" style="display: block;margin-bottom:20px" disabled>
+            <span>解冻到余额</span>
+          </Radio>
+          <Radio label="freezeToRenew" style="display: block;margin-bottom:20px">
+            <span>押金转为续费<span style="color: #FF1E39;margin-left: 15px">*资源彻底删除后可以选择解冻到余额或充值帐户</span></span>
+          </Radio>
+        </RadioGroup>
+        <Table :columns="freezeOrderColumns" :data="freezeOrderData" style="margin-top: 20px"></Table>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.freezeToRenew = false">取消</Button>
+        <Button type="primary" @click="freezeToRenewNext">下一步</Button>
+      </div>
+    </Modal>
 
-    <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
+    <!-- 押金转续费确认 -->
+
+    <Modal v-model="showModal.freezeToRenewAffirm" crollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>申请解冻</strong>
+          <p class="lh24" style="margin-bottom: 20px">当前免费剩余时长到期日为<span style="color: #2A99F2">{{ freezeEndTime}}</span>，转为续费之后资源到期时间为<span style="color: #2A99F2">{{ renewalFeeTime}}</span>，您是否确认将押金转为续费？
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.freezeToRenewAffirm = false">取消</Button>
+        <Button type="primary" :disabled="freezeToRenewAffirmDisabled" @click="freezeToRenew_ok">确定{{ freezeToRenewAffirmText}}</Button>
+      </p>
+    </Modal>
+    <!-- 解冻条件未达成弹窗 -->
+    <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">申请解冻</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
           <p class="lh24">解冻条件:{{thawingCondition}}未达成，请确认上述内容都已彻底删除，包括回收站也已清除资源。详情可咨询客服。
           </p>
         </div>
@@ -480,11 +529,13 @@
 
     <!-- 解冻到余额提示 -->
     <Modal v-model="showModal.unfreezeToBalanceHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
-          <p class="lh24" style="margin-bottom: 20px">选择“解冻到余额”后期将无法进行提现操作，请您谨慎操作！
+          <p class="lh24" style="margin-bottom: 20px">选择“解冻到余额”后，将无法进行提现操作，请您谨慎操作！
           </p>
           <RadioGroup v-model="unfreezeToHint" vertical>
             <Radio label="account">
@@ -501,8 +552,24 @@
         <Button type="primary" :disabled="unfreezeToBalanceDisabled" @click="unfreezeToBalance">确定{{ unfreezeToBalanceText}}</Button>
       </p>
     </Modal>
-
-    <!-- 退款提示框 -->
+    <!-- 退款第一次提示-->
+    <Modal v-model="showModal.refundBeforeHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24" style="margin-bottom: 20px">请注意，订单退款会直接删除与之相关的资源，请您确认已完成对订单资源的数据备份。再次提示，订单退款之后相关资源会被直接删除，请谨慎操作。
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.refundBeforeHint = false">取消退款</Button>
+        <Button type="primary" @click="orderRefund" :disabled="refundBeforeHintDisabled">确定退款{{ refundBeforeHintText}}</Button>
+      </p>
+    </Modal>
+    <!-- 退款订单详情提示框 -->
     <Modal v-model="showModal.refundHint" :scrollable="true" :closable="false" :width="640">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">退款详情</span>
@@ -510,12 +577,60 @@
       <div class="universal-modal-content-flex">
         <Table :columns="refundParticularsColumns" :data="refundParticularsData"></Table>
         <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;margin-top: 10px">订单总额：¥{{ refundOrderPrice}}</p>
+        <p v-if="refundOrderTicket" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">使用优惠券金额：¥{{ refundOrderTicket}}</p>
+        <p v-if="refundOrderVoucher" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">使用代金券金额：¥{{ refundOrderVoucher}}</p>
         <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">退款金额：<span style="font-size: 24px;color: #2A99F2">¥{{ refundPrice}}</span></p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.refundHint = false">取消</Button>
-        <Button type="primary" @click="refund_ok">退款</Button>
+        <Button type="primary" @click="showModal.refundNextHint = true,showModal.refundHint = false">下一步</Button>
       </div>
+    </Modal>
+    <!-- 退款下一步提示 -->
+    <Modal v-model="showModal.refundNextHint" :scrollable="true" :closable="false" :width="550">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">退款渠道</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p style="font-size:14px;color:rgba(102,102,102,1);">请选择退款渠道</p>
+        <RadioGroup v-model="refundTo">
+          <Radio label="account" style="margin:20px 0px">
+            <span>退款到充值账户（需3-5个工作日）</span>
+          </Radio>
+          <Radio label="yue" style="display: block;margin-bottom:20px">
+            <span>退款到余额<span style="color: #FF1E39;margin-left: 15px">选择“退款到余额”后，将无法进行提现操作，请您谨慎操作！</span></span>
+          </Radio>
+        </RadioGroup>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.refundNextHint = false">取消</Button>
+        <Button type="primary" @click="refund_ok">确认</Button>
+      </div>
+    </Modal>
+    <!-- 退款最终确认提示 -->
+    <Modal v-model="showModal.refundLastHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24" style="margin-bottom: 20px">选择“退款到余额”后，将无法进行提现操作，请您谨慎操作！
+          </p>
+          <RadioGroup v-model="refundLastTo" vertical>
+            <Radio label="account">
+              <span>退款到充值账户（需3-5个工作日）</span>
+            </Radio>
+            <Radio label="yue">
+              <span>退款到余额</span>
+            </Radio>
+          </RadioGroup>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.refundLastHint = false,showModal.refundNextHint = true,refundTo = 'account'">取消</Button>
+        <Button type="primary" :disabled="refundLastHintDisabled" @click="refundLsat_ok">确定{{ refundLastHintText}}</Button>
+      </p>
     </Modal>
   </div>
 </template>
@@ -673,6 +788,8 @@
         refundParticularsData: [],
         refundPrice: '',
         refundOrderPrice: '',
+        refundOrderTicket: '',
+        refundOrderVoucher: '',
         payLoading: false,
         cardVolumeColumns: [
           {
@@ -695,7 +812,7 @@
             align: 'left',
             width: 140,
             render: (h, params) => {
-              return h('span', params.row.tickettype == 2 ? '北京一区' : '全区')
+              return h('span', {}, '全区')
             }
           },
           {
@@ -737,52 +854,149 @@
           {
             title: '操作',
             render: (h, obj) => {
-              if (obj.row.maketicketover != 1) {
+              if (obj.row.maketicketover == 0) {
                 // 现金券
                 if (obj.row.tickettype == '2') {
-                  return h('span', {
-                    style: {
-                      color: '#2d8cf0',
-                      cursor: 'pointer'
-                    },
-                    on: {
-                      click: () => {
-                        this.$message.confirm({
-                          content: '确认使用该现金券吗？',
-                          onOk: () => {
-                            // 调用使用现金券接口
-                            this.$http.get('ticket/useMoneyTicket.do', {
-                              params: {
-                                moneyTicketId: obj.row.id
-                              }
-                            }).then(response => {
-                              if (response.status == 200 && response.data.status == 1) {
-                                this.searchCard()
-                                this.$message.info({
-                                  content: '现金券充值成功'
-                                })
-                              } else {
-                                this.$message.info({
-                                  content: response.data.message
-                                })
-                              }
-                            })
-                          }
-                        })
+                  return h('div', {}, [
+                    h('span', {
+                      style: {
+                        color: '#2d8cf0',
+                        cursor: 'pointer'
+                      },
+                      on: {
+                        click: () => {
+                          this.$message.confirm({
+                            content: '确认使用该现金券吗？',
+                            onOk: () => {
+                              // 调用使用现金券接口
+                              this.$http.get('ticket/useMoneyTicket.do', {
+                                params: {
+                                  moneyTicketId: obj.row.id
+                                }
+                              }).then(response => {
+                                if (response.status == 200 && response.data.status == 1) {
+                                  this.searchCard()
+                                  this.$message.info({
+                                    content: '现金券充值成功'
+                                  })
+                                } else {
+                                  this.$message.info({
+                                    content: response.data.message
+                                  })
+                                }
+                              })
+                            }
+                          })
+                        }
                       }
-                    }
-                  }, '立即充值')
+                    }, '立即充值'),
+                    h('span', {
+                      style: {
+                        color: '#2d8cf0',
+                        cursor: 'pointer',
+                        marginLeft: '5px',
+                        display: 'none'
+                      },
+                      on: {
+                        click: () => {
+                          this.$message.confirm({
+                            content: '确认删除该优惠券吗？',
+                            onOk: () => {
+                              // 调删除现金券接口
+                              this.$http.get('ticket/delUserTicket.do', {
+                                params: {
+                                  id: obj.row.id
+                                }
+                              }).then(response => {
+                                if (response.status == 200 && response.data.status == 1) {
+                                  this.searchCard()
+                                  this.$Message.success('优惠券删除成功')
+                                } else {
+                                  this.$message.info({
+                                    content: response.data.message
+                                  })
+                                }
+                              })
+                            }
+                          })
+                        }
+                      }
+                    }, '删除')
+                  ])
                 } else {
-                  return h('router-link', {
-                    attrs: {
-                      to: 'buy'
-                    }
-                  }, '立即使用')
+                  return h('div', {}, [
+                    h('router-link', {
+                      attrs: {
+                        to: 'buy'
+                      }
+                    }, '立即使用'),
+                    h('span', {
+                      style: {
+                        color: '#2d8cf0',
+                        cursor: 'pointer',
+                        marginLeft: '5px',
+                        display: 'none'
+                      },
+                      on: {
+                        click: () => {
+                          this.$message.confirm({
+                            content: '确认删除该优惠券吗？',
+                            onOk: () => {
+                              // 调删除现金券接口
+                              this.$http.get('ticket/delUserTicket.do', {
+                                params: {
+                                  id: obj.row.id
+                                }
+                              }).then(response => {
+                                if (response.status == 200 && response.data.status == 1) {
+                                  this.searchCard()
+                                  this.$Message.success('优惠券删除成功')
+                                } else {
+                                  this.$message.info({
+                                    content: response.data.message
+                                  })
+                                }
+                              })
+                            }
+                          })
+                        }
+                      }
+                    }, '删除')
+                  ])
                 }
               } else {
-                return h('span', '--')
+                return h('span',{},'--')
+                /*return h('span', {
+                  style: {
+                    color: '#2d8cf0',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.$message.confirm({
+                        content: '确认删除该优惠券吗？',
+                        onOk: () => {
+                          // 调删除现金券接口
+                          this.$http.get('ticket/delUserTicket.do', {
+                            params: {
+                              id: obj.row.id
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1) {
+                              this.searchCard()
+                              this.$Message.success('优惠券删除成功')
+                            } else {
+                              this.$message.info({
+                                content: response.data.message
+                              })
+                            }
+                          })
+                        }
+                      })
+                    }
+                  }
+                }, '删除')*/
               }
-
             }
           }
         ],
@@ -918,7 +1132,7 @@
               return h('Tooltip', {
                   props: {
                     content: params.row.descs,
-                    placement: 'top'
+                    placement: 'top-start'
                   }
                 },
                 params.row.descs
@@ -1363,17 +1577,22 @@
           clipCoupons: false,
           freezeParticulars: false,
           unfreeze: false,
+          freezeToRenew: false,
           notUnfreeze: false,
           // 兑换码模态框
           exchangeCard: false,
           // 提现模态框
           withdraw: false,
+          refundBeforeHint: false,
           refundHint: false,
-          unfreezeToBalanceHint: false
+          unfreezeToBalanceHint: false,
+          refundNextHint: false,
+          refundLastHint: false,
+          freezeToRenewAffirm: false
         },
         // 提现
         withdrawForm: {
-          accountList: [{name: '支付宝', type: '支付宝'}, {name: '微信支付', type: '微信'}, {name: '银行卡', type: '银行卡'}],
+          accountList: [{name: '支付宝', type: '支付宝'}, {name: '微信支付', type: '微信'}/*, {name: '银行卡', type: '银行卡'}*/],
           // 账户类型
           accountType: '',
           // 金额
@@ -1430,6 +1649,34 @@
         imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
         /*发送验证码button innerText*/
         codePlaceholder: '发送验证码',
+        freezeToRenew: 'freezeToRenew',
+        freezeOrderColumns: [
+          {
+            title: '名称/ID',
+            key: '名称/ID'
+          },
+          {
+            title: '资源',
+            width: 200,
+            render: (h, params) => {
+              let obj = JSON.parse(params.row['资源'])
+              let arr = []
+              for (let key in obj) {
+                arr.push(h('li', {}, key + ': ' + obj[key]))
+              }
+              return h('ul', {}, arr)
+            }
+          },
+          {
+            title: '计费类型',
+            key: '计费类型'
+          },
+          {
+            title: '续费时长',
+            key: '续费时长'
+          }
+        ],
+        freezeOrderData: [],
         /*解冻到余额/账户  默认解冻到余额*/
         unfreezeTo: 'account',
         unfreezeToHint: 'account',
@@ -1520,8 +1767,23 @@
                         if (res.status == 200 && res.data.status == 1) {
                           this.showModal.unfreeze = true
                         } else {
-                          this.thawingCondition = params.row.thawCondition
-                          this.showModal.notUnfreeze = true
+                          /*   this.thawingCondition = params.row.thawCondition
+                             this.showModal.notUnfreeze = true*/
+                          let url = 'user/judgeRenewalFee.do'
+                          axios.get(url, {
+                            params: {
+                              id: params.row.id
+                            }
+                          }).then(res => {
+                            if (res.status == 200 && res.data.status == 1) {
+                              this.freezeOrderData = res.data.result
+                              this.freezeEndTime = res.data.endTime
+                              this.renewalFeeTime = res.data.renewalFeeTime
+                              this.showModal.freezeToRenew = true
+                            } else {
+                              this.$message.info({content: res.data.message})
+                            }
+                          })
                         }
                       })
                     }
@@ -1535,7 +1797,20 @@
         ],
         freezeParticularsData: [],
         unfreezeId: '',
-        exchangeCardMessage: ''
+        exchangeCardMessage: '',
+        refundTo: 'account',
+        refundBeforeHintText: '(10S)',
+        refundBeforeHintDisabled: true,
+        refundBeforeHintTimer: null,
+        refundLastHintDisabled: true,
+        refundLastHintText: '(10S)',
+        refundLastHintTimer: null,
+        refundLastTo: 'account',
+        freezeToRenewAffirmDisabled: true,
+        freezeToRenewAffirmText: '(10S)',
+        freezeToRenewAffirmTimer: null,
+        renewalFeeTime: '',
+        freezeEndTime:''
       }
     },
     created() {
@@ -2046,6 +2321,7 @@
                 ticketType: this.card_type,
                 orderNumber: orderNumber + '',
                 isuse: 0,
+                notOverTime: '1',
                 totalCost: this.totalCost
               }
             }).then(response => {
@@ -2319,6 +2595,24 @@
           }
         })
       },
+      orderRefundBefore() {
+        window.clearInterval(this.refundBeforeHintTimer)
+        this.refundBeforeHintDisabled = true
+        this.refundBeforeHintText = '(10S)'
+        let i = 10
+        this.refundBeforeHintTimer = setInterval(() => {
+          i -= 1
+          if (i == 0) {
+            window.clearInterval(this.refundBeforeHintTimer)
+            this.refundBeforeHintDisabled = false
+            this.refundBeforeHintText = ''
+          } else {
+            this.refundBeforeHintText = '(0' + i + 'S)'
+            this.refundBeforeHintDisabled = true
+          }
+        }, 1000)
+        this.showModal.refundBeforeHint = true
+      },
       orderRefund() {
         let orderNumber = this.orderNumber.map(item => {
           return item.ordernumber
@@ -2330,10 +2624,13 @@
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
+            this.showModal.refundBeforeHint = false
             this.showModal.refundHint = true
             this.refundParticularsData = res.data.result
             this.refundPrice = res.data.cost
             this.refundOrderPrice = res.data.orderCost
+            this.refundOrderVoucher = res.data.voucherCost ? res.data.voucherCost : 0
+            this.refundOrderTicket = res.data.tickCost ? res.data.tickCost : 0
           } else {
             this.$message.info({
               content: res.data.message
@@ -2342,20 +2639,116 @@
         })
       },
       refund_ok() {
+        if (this.refundTo == 'account') {
+          let orderNumber = this.orderNumber.map(item => {
+            return item.ordernumber
+          })
+          let url = 'user/returnMoneyOrder.do'
+          this.$http.get(url, {
+            params: {
+              orderNumber: orderNumber + ''
+            }
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.showModal.refundNextHint = false
+              this.showModal.refundHint = false
+              this.searchOrderByType()
+              this.init()
+              this.$Message.success('您提交的产品退款已通过，金额将在3-5个工作日退回，请注意查收')
+            } else {
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
+        } else {
+          window.clearInterval(this.refundLastHintTimer)
+          this.refundLastHintDisabled = true
+          this.refundLastHintText = '(10S)'
+          let i = 10
+          this.refundLastHintTimer = setInterval(() => {
+            i -= 1
+            if (i == 0) {
+              window.clearInterval(this.refundLastHintTimer)
+              this.refundLastHintDisabled = false
+              this.refundLastHintText = ''
+            } else {
+              this.refundLastHintText = '(0' + i + 'S)'
+              this.refundLastHintDisabled = true
+            }
+          }, 1000)
+          this.showModal.refundNextHint = false
+          this.showModal.refundLastHint = true
+        }
+      },
+      refundLsat_ok() {
         let orderNumber = this.orderNumber.map(item => {
           return item.ordernumber
         })
         let url = 'user/returnMoneyOrder.do'
-        this.$http.get(url, {
-          params: {
+        let params = {}
+        if (this.refundLastTo == 'account') {
+          params = {
             orderNumber: orderNumber + ''
           }
+        } else {
+          params = {
+            orderNumber: orderNumber + '',
+            backRemainder: '1'
+          }
+        }
+        this.$http.get(url, {
+          params
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
             this.showModal.refundHint = false
+            this.showModal.refundLastHint = false
             this.searchOrderByType()
             this.init()
             this.$Message.success('您提交的产品退款已通过，金额将在3-5个工作日退回，请注意查收')
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      freezeToRenewNext() {
+        window.clearInterval(this.freezeToRenewAffirmTimer)
+        this.freezeToRenewAffirmDisabled = true
+        this.freezeToRenewAffirmText = '(10S)'
+        let i = 10
+        this.freezeToRenewAffirmTimer = setInterval(() => {
+          i -= 1
+          if (i == 0) {
+            window.clearInterval(this.freezeToRenewAffirmTimer)
+            this.freezeToRenewAffirmDisabled = false
+            this.freezeToRenewAffirmText = ''
+          } else {
+            this.freezeToRenewAffirmText = '(0' + i + 'S)'
+            this.freezeToRenewAffirmDisabled = true
+          }
+        }, 1000)
+        this.showModal.freezeToRenew = false
+        this.showModal.freezeToRenewAffirm = true
+      },
+      // 押金转续费
+      freezeToRenew_ok() {
+        let url = 'user/depositRenewal.do'
+        axios.get(url, {
+          params: {
+            id: this.unfreezeId
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.showModal.freezeParticulars = false
+            this.showModal.freezeToRenewAffirm = false
+            this.getBalance()
+            this.showMoneyByMonth()
+            this.search()
+            this.getTicketNumber()
+            this.init()
           } else {
             this.$message.info({
               content: res.data.message
@@ -2411,7 +2804,7 @@
           type,
           number
         }
-      }
+      },
     },
     watch: {
       dateRange() {

@@ -1,6 +1,6 @@
 <template>
   <div id="back">
-    <div class="hint" v-show="hintShow">
+    <div class="back-hint" v-show="hintShow">
       <p><img src="./assets/img/back/back-icon1.png"/>
         <span style="position: relative;bottom: 5px">建议使用Chrome谷歌浏览器43+，以获得最佳体验。</span>
         <img style="cursor: pointer;position: relative;bottom: 3px" @click="hintShow = false" src="./assets/img/back/back-icon2.png"/></p>
@@ -254,8 +254,8 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              //{subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
+              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              //{subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
@@ -423,7 +423,20 @@
         this.pageInfo.selectItem = pType;
         this.pageInfo.sType = sType;
         if (sType.indexOf('http') > -1) {
-          window.open(sType);
+          window.open(sType, '_blank');
+          // axios.get('user/showUserAcessAll.do').then(response => {
+          //   if (response.status == 200 && response.data.status == 18) {
+          //       this.$Modal.confirm({
+          //         title: '提示',
+          //         content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;">Access Key管理</span>去创建Access Key。</p>',
+          //
+          //       });
+          //   } else if(response.status == 200 && response.data.status == 1){
+          //     window.open(sType);
+          //   }else{
+          //      this.$Message.info(response.data.msg);
+          //   }
+          // })
         } else {
           this.$router.push(sType)
         }
@@ -467,7 +480,7 @@
         })
         for (var zone of this.zoneList) {
           if (zone.zoneid == zoneId) {
-            $store.commit('setZone', zone)
+            $store.commit('setZone', zone);
           }
         }
       },
@@ -781,7 +794,7 @@
     }
   }
 
-  .hint {
+  .back-hint {
     height: 60px;
     background: rgba(245, 245, 245, 1);
     text-align: center;

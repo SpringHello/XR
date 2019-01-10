@@ -5,9 +5,12 @@
       <div class="active-1">
         <div class="banner">
           <p>登录即可参与抽奖（100%中奖），认证后有机会领取戴森（Dyson），科沃斯等奖品</p>
+          <div class="end-count-down">
+            <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
+          </div>
           <div class="lottery-title">
             <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png"/>
-            <img style="margin-left: 70px" src="../../../assets/img/active/anniversary/aa-banner14.png"/>
+            <img style="margin-left: 90px" src="../../../assets/img/active/anniversary/aa-banner14.png"/>
             <p>见面礼！<span>包含<span style="color:rgba(255, 48, 0, 1); ">戴森、科沃斯</span>爆款奖品，100%中奖率，注册登录即可拥有一次抽奖机会</span></p>
           </div>
         </div>
@@ -15,7 +18,10 @@
           <div id="rotary-table">
             <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]" :style="{'background-image': 'url(' + award.imgUrl + ')' }">
             </div>
-            <div @mousedown="startLotteryMouseDown" @mouseup="startLotteryMouseUp" id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled,'onClick': mouseDown}">(剩余抽奖次数
+            <!--<div @mousedown="startLotteryMouseDown" @mouseup="startLotteryMouseUp" id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled,'onClick': mouseDown}">(剩余抽奖次数
+              {{lotteryNumber }}次)
+            </div>-->
+            <div id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled}">(剩余抽奖次数
               {{lotteryNumber }}次)
             </div>
           </div>
@@ -336,7 +342,7 @@
                   <p>¥{{ item.currentPrice}} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyHost(index)">立即抢购</button>
+                  <button @click="buyHost(index)" :class="{disabled: true}">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -372,7 +378,7 @@
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyObjStorage(index)">立即抢购</button>
+                  <button @click="buyObjStorage(index)" :class="{disabled: true}">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -417,7 +423,7 @@
                   <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
                 </div>
                 <div class="item-footer">
-                  <button @click="buyDatabase(index)">立即抢购</button>
+                  <button @click="buyDatabase(index)" :class="{disabled: true}">立即抢购</button>
                 </div>
               </div>
             </div>
@@ -473,7 +479,7 @@
                 <p>¥{{ item.currentPrice }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button @click="buyGPU(index)">立即抢购</button>
+                <button @click="buyGPU(index)" :class="{disabled: true}">立即抢购</button>
               </div>
             </div>
           </div>
@@ -521,7 +527,7 @@
                 <p>押金：¥{{ item.cashPledge }} <span>原价：¥{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button :class="{disabled: false}" @click="getHost(index)">立即领取</button>
+                <button :class="{disabled: true}"  @click="getHost(index)">立即领取</button>
               </div>
             </div>
           </div>
@@ -1263,6 +1269,7 @@
         serverTime: '', // 当前服务器时间（时间戳）
         serverTimeHour: '', // 当前服务器时间（几时）
         serverTimeMinute: '',
+        day: '--',
         hour: '--',
         minute: '--',
         second: '--',
@@ -1719,6 +1726,7 @@
         }
       }, 1000);
       window.addEventListener('scroll', this.getScrollTop)
+      this.setTime()
     },
     methods: {
       /* 开始抽奖按钮 */
@@ -2070,6 +2078,10 @@
       },
 
       start: throttle(500, function (e) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.showModal.notLoginModal = true
           return
@@ -2133,80 +2145,121 @@
 
         }, this.speed);
       },
-      /* 获取gpu时间节点 */
-      getGPUTimeNodes(val) {
-        let myDate = new Date()
-        let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
-        if (val == 'nextDay') {
-          this.setGpuTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
-        } else {
-          this.setGpuTime(new Date(currentDay + ' ' + val).getTime())
-        }
-      },
-      /* 获取购买时间节点 */
-      getTimeNodes(val) {
-        let myDate = new Date()
-        let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
-        if (val == 'nextDay') {
-          this.setTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
-        } else {
-          this.setTime(new Date(currentDay + ' ' + val).getTime())
-        }
-      },
+      /*      /!* 获取gpu时间节点 *!/
+            getGPUTimeNodes(val) {
+              let myDate = new Date()
+              let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
+              if (val == 'nextDay') {
+                this.setGpuTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
+              } else {
+                this.setGpuTime(new Date(currentDay + ' ' + val).getTime())
+              }
+            },
+            /!* 获取购买时间节点 *!/
+            getTimeNodes(val) {
+              let myDate = new Date()
+              let currentDay = myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
+              if (val == 'nextDay') {
+                this.setTime(new Date(currentDay + ' ' + '8:30').getTime() + 24 * 60 * 60 * 1000) // 计算到第二天8:30的倒计时
+              } else {
+                this.setTime(new Date(currentDay + ' ' + val).getTime())
+              }
+            },
+            /!* 倒计时方法 *!/
+            setTime(endTime) {
+              let startTime = this.serverTime
+              let limitTime = endTime - startTime
+              if (limitTime > 0) {
+                this.setLimit(limitTime)
+                this.countDownTimer = setInterval(() => {
+                  this.setLimit(limitTime)
+                  limitTime -= 1000
+                  if (limitTime <= 0) {
+                    window.clearInterval(this.countDownTimer)
+                    this.$router.go(0)
+                  }
+                }, 1000);
+              } else {
+                this.hour = '--';
+                this.minute = '--';
+                this.second = '--';
+              }
+            },
+            setLimit(time) {
+              let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+              let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
+              let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒
+              this.hour = this.checkTime(hours);
+              this.minute = this.checkTime(minutes);
+              this.second = this.checkTime(seconds);
+            },
+            setGpuTime(endTime) {
+              let startTime = this.serverTime
+              let limitTime = endTime - startTime
+              if (limitTime > 0) {
+                this.setGpuLimit(limitTime)
+                this.countDownTimer = setInterval(() => {
+                  this.setGpuLimit(limitTime)
+                  limitTime -= 1000
+                  if (limitTime <= 0) {
+                    window.clearInterval(this.countDownTimer)
+                    this.$router.go(0)
+                  }
+                }, 1000);
+              } else {
+                this.gpuHour = '--';
+                this.gpuMinute = '--';
+                this.gpuSecond = '--';
+              }
+            },
+            setGpuLimit(time) {
+              let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+              let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
+              let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒
+              this.gpuHour = this.checkTime(hours);
+              this.gpuMinute = this.checkTime(minutes);
+              this.gpuSecond = this.checkTime(seconds);
+            },
+            checkTime(i) { //将0-9的数字前面加上0，例1变为01
+              if (i < 10) {
+                i = '0' + i;
+              }
+              return i;
+            },*/
       /* 倒计时方法 */
-      setTime(endTime) {
-        let startTime = this.serverTime
-        let limitTime = endTime - startTime
-        if (limitTime > 0) {
-          this.setLimit(limitTime)
-          this.countDownTimer = setInterval(() => {
-            this.setLimit(limitTime)
-            limitTime -= 1000
-            if (limitTime <= 0) {
-              window.clearInterval(this.countDownTimer)
-              this.$router.go(0)
+      setTime() {
+        axios.get('network/getTime.do').then(res => {
+          if (res.data.status == 1) {
+            let startTime = res.data.result
+            let endTime = new Date('2018/12/17').getTime()
+            let limitTime = endTime - startTime
+            if (limitTime > 0) {
+              this.setLimit(limitTime)
+              this.countDownTimer = setInterval(() => {
+                this.setLimit(limitTime)
+                limitTime -= 1000
+                if (limitTime <= 0) {
+                  window.clearInterval(this.countDownTimer)
+                }
+              }, 1000);
+            } else {
+              this.day = this.checkTime(0);
+              this.hour = this.checkTime(0);
+              this.minute = this.checkTime(0);
+              this.second = this.checkTime(0);
             }
-          }, 1000);
-        } else {
-          this.hour = '--';
-          this.minute = '--';
-          this.second = '--';
-        }
+          }
+        })
       },
       setLimit(time) {
+        let days = parseInt(time / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
         let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
         let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
-        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒
+        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒数
+        this.day = this.checkTime(days);
         this.hour = this.checkTime(hours);
         this.minute = this.checkTime(minutes);
         this.second = this.checkTime(seconds);
-      },
-      setGpuTime(endTime) {
-        let startTime = this.serverTime
-        let limitTime = endTime - startTime
-        if (limitTime > 0) {
-          this.setGpuLimit(limitTime)
-          this.countDownTimer = setInterval(() => {
-            this.setGpuLimit(limitTime)
-            limitTime -= 1000
-            if (limitTime <= 0) {
-              window.clearInterval(this.countDownTimer)
-              this.$router.go(0)
-            }
-          }, 1000);
-        } else {
-          this.gpuHour = '--';
-          this.gpuMinute = '--';
-          this.gpuSecond = '--';
-        }
-      },
-      setGpuLimit(time) {
-        let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
-        let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
-        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒
-        this.gpuHour = this.checkTime(hours);
-        this.gpuMinute = this.checkTime(minutes);
-        this.gpuSecond = this.checkTime(seconds);
       },
       checkTime(i) { //将0-9的数字前面加上0，例1变为01
         if (i < 10) {
@@ -2285,6 +2338,10 @@
       },
 
       buyHost(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2341,6 +2398,10 @@
         })
       },
       buyObjStorage(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2462,6 +2523,10 @@
         })
       },
       buyDatabase(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2557,6 +2622,10 @@
         })
       },
       buyGPU(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -2582,8 +2651,7 @@
             })
           }
         })
-      }
-      ,
+      },
 
 
       freeHostZoneChange(index) {
@@ -2602,8 +2670,7 @@
             this.getFreeHostOriginalPrice(this.freeHostList[index].zoneId, this.freeHostList[index].vmConfigId, this.freeHostList[index].duration, index)
           }
         })
-      }
-      ,
+      },
       freeHostDurationChange(index) {
         let url = 'activity/getVMConfigId.do'
         axios.get(url, {
@@ -2620,8 +2687,7 @@
             this.getFreeHostOriginalPrice(this.freeHostList[index].zoneId, this.freeHostList[index].vmConfigId, this.freeHostList[index].duration, index)
           }
         })
-      }
-      ,
+      },
       getFreeHostOriginalPrice(zoneId, vmConfigId, month, index) {
         let url = 'activity/getOriginalPrice.do'
         axios.get(url, {
@@ -2636,10 +2702,13 @@
             this.freeHostList[index].originalPrice = res.data.result.originalPrice
           }
         })
-      }
-      ,
+      },
 
       getHost(index) {
+        this.$message.info({
+          content: '此活动已结束，近期将开启双旦活动，先去看看其他活动吧！'
+        })
+        return false
         if (!this.freeHostList[index].zoneId) {
           this.$Message.info('请选择需要领取的区域')
           return
@@ -2657,16 +2726,18 @@
             this.showModal.rechargeHint = true
           } else {
             this.$message.info({
-              content: '平台开小差了，请稍候再试'
+              content: response.data.message
             })
           }
         })
-      }
-      ,
+      },
       nextStep() {
         // 判断新老用户
         axios.get('activity/jdugeTeam.do', {
-          params: {sign: 'freeReceive'}
+          params: {
+            sign: 'freeReceive',
+            vmConfigId: this.freeHostList[this.index].vmConfigId
+          }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             if (response.data.result.flag) {
@@ -2691,8 +2762,7 @@
             })
           }
         })
-      }
-      ,
+      },
       getHost_ok() {
         if (this.payWay == 'balancePay') {
           if (this.balance < this.cashPledge) {
@@ -2741,8 +2811,7 @@
               break
           }
         }
-      }
-      ,
+      },
       getFreeHost() {
         this.showModal.paySuccessModal = false
         let url = 'user/getRemainderFrozen.do'
@@ -2777,8 +2846,7 @@
             })
           }
         })
-      }
-      ,
+      },
       //领奖时认证验证码
       getVerificationCode() {
         if (!this.authFormValidate.pictureCode) {
@@ -2802,8 +2870,7 @@
             })
           }
         })
-      }
-      ,
+      },
       // 快速认证时发送验证码
       sendCode() {
         this.$refs.sendCode.validate(validate => {
@@ -2833,8 +2900,7 @@
             })
           }
         })
-      }
-      ,
+      },
       // 快速认证
       quicklyAuth() {
         var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
@@ -2862,8 +2928,7 @@
             })
           }
         })
-      }
-      ,
+      },
       isPay() {
         axios.get('user/payStatus.do', {
           params: {
@@ -2877,16 +2942,14 @@
             this.showModal.payDefeatedModal = true
           }
         })
-      }
-      ,
+      },
       payWayChange() {
         if (this.payWay == 'otherPay' && this.otherPayWay == '') {
           this.otherPayWay = 'zfb'
         } else if (this.payWay == 'balancePay') {
           this.otherPayWay = ''
         }
-      }
-      ,
+      },
 
       // 获取消费金额
       getSpentCost() {
@@ -2960,8 +3023,29 @@
         width: 820px;
         margin: 0 auto;
       }
+      .end-count-down {
+        margin: 610px auto 0;
+        height: 33px;
+        width: 413px;
+        position: relative;
+        background: url("../../../assets/img/active/anniversary/time-banner.png") center no-repeat;
+        > p {
+          font-size: 24px;
+          font-family: MicrosoftYaHei;
+          font-weight: 500;
+          color: rgba(253, 253, 253, 1);
+          position: absolute;
+          left: 205px;
+          top: 5px;
+          > span {
+            font-size: 14px;
+            color: #FF3000;
+            margin: 0 8px;
+          }
+        }
+      }
       .lottery-title {
-        margin-top: 680px;
+        margin-top: 40px;
         text-align: center;
         position: relative;
         > h2 {
@@ -3203,7 +3287,6 @@
                 }
                 &.disabled {
                   background: rgba(192, 192, 192, 1);
-                  cursor: not-allowed;
                 }
               }
             }
@@ -3377,7 +3460,6 @@
               }
               &.disabled {
                 background: rgba(192, 192, 192, 1);
-                cursor: not-allowed;
               }
             }
           }
@@ -3517,7 +3599,6 @@
               }
               &.disabled {
                 background: rgba(192, 192, 192, 1);
-                cursor: not-allowed;
               }
             }
           }
@@ -3801,7 +3882,7 @@
       left: 215px;
       width: 170px;
       height: 94px;
-      background: url("../../../assets/img/active/anniversary/aa-banner13.png") center no-repeat;
+      background: url("../../../assets/img/active/anniversary/aa-banner26.png") center no-repeat;
       text-align: center;
       cursor: pointer;
       font-size: 14px;

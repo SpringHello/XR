@@ -17,7 +17,7 @@
         <hr color="#D8D8D8" size="1">
         <br>
         <div class="next_pace">
-          <div class="next_box" :class="item.className" v-for="(item,index) in nextList" :key="index"> 
+          <div class="next_box" :class="item.className" v-for="(item,index) in nextList" :key="index">
             <div :class="item.yuanName">{{item.number}}</div>
             <span style="margin-left: 10px;font-size: 14px;">{{item.value}}</span>
             <i :class="item.arrowName" v-if="index !=3">
@@ -47,19 +47,25 @@
             <div class="cpu_list">
               <span>核心数</span>
               <ul>
-                <li v-for="(item,index) in hostSpecification.cpuList" :key="index" class="nav_item" :class="hostSpecification.cpuIndex == index  ?'nav_item_click':''"  @click="cpuClick('cpu',index)">{{item.CPU}}核</li>
+                <li v-for="(item,index) in hostSpecification.cpuList" :key="index" class="nav_item" :class="hostSpecification.cpuIndex == index  ?'nav_item_click':''"
+                    @click="cpuClick('cpu',index)">{{item.CPU}}核
+                </li>
               </ul>
             </div>
             <div class="cpu_list" style="margin: 20px 0;">
               <span style="margin-right: 42px">内存</span>
               <ul>
-                <li v-for="(item,index) in hostSpecification.memoryList" :key="index" class="nav_item" :class="hostSpecification.memoryIndex == index  ?'nav_item_click':''"  @click="cpuClick('memory',index)">{{item.memory}}G</li>
+                <li v-for="(item,index) in hostSpecification.memoryList" :key="index" class="nav_item" :class="hostSpecification.memoryIndex == index  ?'nav_item_click':''"
+                    @click="cpuClick('memory',index)">{{item.memory}}G
+                </li>
               </ul>
             </div>
             <div class="cpu_list">
               <span>系统盘</span>
               <ul>
-                <li v-for="(item,index) in hostSpecification.systemData" :key="index" class="nav_item" :class="hostSpecification.systemIndex == index  ?'nav_item_click':''"  @click="cpuClick('system',index)">{{item.value}}</li>
+                <li v-for="(item,index) in hostSpecification.systemData" :key="index" class="nav_item" :class="hostSpecification.systemIndex == index  ?'nav_item_click':''"
+                    @click="cpuClick('system',index)">{{item.value}}
+                </li>
               </ul>
             </div>
             <div style="margin: 20px 0;">
@@ -125,22 +131,26 @@
             </div>
             <div style="width: 100%;">
               <ul>
-                <li v-for="(item,index) in mirror" class="nav_item" :key="index" :class="mirrorIndex == index  ?'nav_item_click':''"  @click="cpuClick('mirror',index)">{{item.value}}</li>
+                <li v-for="(item,index) in mirror" class="nav_item" :key="index" :class="mirrorIndex == index  ?'nav_item_click':''" @click="cpuClick('mirror',index)">
+                  {{item.value}}
+                </li>
               </ul>
               <p style="color: #666666;margin: 10px 0 20px 0;">为了使主机创建完成后直接可用，强烈建议您将业务应用部署在自定义镜像中</p>
               <div v-if="mirrorIndex == 0">
                 <Select v-model="mirrorName" style="width:200px" v-if="mirrorList.length !=0" @on-change='setPrivateOs'>
                   <Option v-for="item in mirrorList" :value="item.systemtemplateid" :key="item.systemtemplateid">{{ item.templatename }}</Option>
                 </Select>
-                <div v-else >您还没有自定义镜像，点击<span @click="showModal.createMirror = true" style="color: #2A99F2;cursor: pointer;">新建镜像</span></div>
+                <div v-else>您还没有自定义镜像，点击<span @click="showModal.createMirror = true" style="color: #2A99F2;cursor: pointer;">新建镜像</span></div>
               </div>
               <div v-if="mirrorIndex == 1">
-                <Dropdown v-for="(item,index) in systemMirror.publicList"  :key="item.ostypeid" @on-click="setOs">
-                    <div class="mirror">
-                      {{item.selectSystem||item.system}}
-                    </div>
+                <Dropdown v-for="(item,index) in systemMirror.publicList" :key="item.ostypeid" @on-click="setOs">
+                  <div class="mirror">
+                    {{item.selectSystem||item.system}}
+                  </div>
                   <DropdownMenu slot="list">
-                    <DropdownItem  style="white-space: pre-wrap;display:block;" v-for="system in item.systemList" :key="system.ostypeid" :name="`${system.ostypename}#${system.systemtemplateid}#${index}`">{{system.templatename}}</DropdownItem>
+                    <DropdownItem style="white-space: pre-wrap;display:block;" v-for="system in item.systemList" :key="system.ostypeid"
+                                  :name="`${system.ostypename}#${system.systemtemplateid}#${index}`">{{system.templatename}}
+                    </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
               </div>
@@ -155,15 +165,17 @@
               <p style="height: 32px;line-height: 32px;" v-if="dataCheckout">数据盘类型</p>
               <p style="margin: 26px 0;height: 40px;line-height: 40px;" v-if="dataCheckout">容量</p>
               <p>公网IP</p>
-              <p style="margin: 26px 0;height: 40px;line-height: 40px;"  v-if="single">带宽</p>
+              <p style="margin: 26px 0;height: 40px;line-height: 40px;" v-if="single">带宽</p>
               <p v-if="hostSpecification.nextIndex == 3" style="margin-top: 28px;">资费</p>
             </div>
             <div style="width: 100%;">
               <div>
-                <Checkbox v-model="dataCheckout" @on-change="getCapacityPrice" style="margin-bottom:10px;">数据盘</Checkbox> 
+                <Checkbox v-model="dataCheckout" @on-change="getCapacityPrice" style="margin-bottom:10px;">数据盘</Checkbox>
               </div>
               <ul v-if="dataCheckout">
-                <li v-for="(item,index) in dataDiskType" class="nav_item" :key="index" :class="dataIndex == index  ?'nav_item_click':''"  @click="cpuClick('data',index)">{{item.value}}</li>
+                <li v-for="(item,index) in dataDiskType" class="nav_item" :key="index" :class="dataIndex == index  ?'nav_item_click':''" @click="cpuClick('data',index)">
+                  {{item.value}}
+                </li>
               </ul>
               <div v-if="dataCheckout" style="width:500px;display: flex;align-items:center;margin: 26px 0;">
                 <i-slider
@@ -203,37 +215,37 @@
         <!--第四步-->
         <div v-if="hostSpecification.nextIndex == 4">
           <div style="display:flex;padding: 20px 0;">
-              <div class="next_wo">
-                <p style="height: 32px;line-height: 32px;">主机名称</p>
-                <p style="margin: 26px 0;height: 40px;line-height: 40px;">系统用户名</p>
-                <p >登录方式</p>
-                <p v-if="passwordList == 1" style="margin: 26px 0;height: 40px;line-height: 40px;">登录密码</p>
+            <div class="next_wo">
+              <p style="height: 32px;line-height: 32px;">主机名称</p>
+              <p style="margin: 26px 0;height: 40px;line-height: 40px;">系统用户名</p>
+              <p>登录方式</p>
+              <p v-if="passwordList == 1" style="margin: 26px 0;height: 40px;line-height: 40px;">登录密码</p>
+            </div>
+            <div>
+              <Input v-model="computerName"></Input>
+              <p style="color:#999999;margin: 10px 0 17px 0;">当购买数量大于1台之时，主机命名规则为主机名称加随机数字。</p>
+              <p>{{systemUsername}}</p>
+              <RadioGroup v-model="passwordList" style="margin-top: 40px">
+                <Radio label="1">
+                  <span>密码设置</span>
+                </Radio>
+                <Radio label="2">
+                  <span>系统密码</span>
+                </Radio>
+                <!-- <Radio label="3">
+                  <span>保留镜像设置</span>
+                </Radio> -->
+              </RadioGroup>
+              <div style="margin: 30px 0 0 0;" v-if="passwordList == 1">
+                <Form ref="password" :model="password" :rules="passwordValidate">
+                  <FormItem label="" prop="divPassWord">
+                    <Input v-model="password.divPassWord" type="password" placeholder="请输入6-23位包含大小写与数字的密码"></Input>
+                    <p style="color:#999999;margin-top: 10px">登录密码可用特殊字符为：',?</p>
+                  </FormItem>
+                </Form>
               </div>
-              <div>
-                <Input v-model="computerName" ></Input>
-                <p style="color:#999999;margin: 10px 0 17px 0;">当购买数量大于1台之时，主机命名规则为主机名称加随机数字。</p>
-                <p>{{systemUsername}}</p>
-                <RadioGroup v-model="passwordList" style="margin-top: 40px">
-                  <Radio label="1">
-                    <span>密码设置</span>
-                  </Radio>
-                  <Radio label="2">
-                    <span>系统密码</span>
-                  </Radio>
-                  <!-- <Radio label="3">
-                    <span>保留镜像设置</span>
-                  </Radio> -->
-                </RadioGroup>
-                <div style="margin: 30px 0 0 0;" v-if="passwordList == 1">
-                  <Form ref="password" :model="password" :rules="passwordValidate">
-                    <FormItem label="" prop="divPassWord">
-                      <Input v-model="password.divPassWord" type="password" placeholder="请输入6-23位包含大小写与数字的密码"></Input>
-                      <p style="color:#999999;margin-top: 10px">登录密码可用特殊字符为：',?</p>
-                    </FormItem>
-                  </Form>
-                </div>
-                <p style="color:#999999;margin-top: 10px" v-if="passwordList == 2">系统密码在主机创建成功之后将通过密码/邮箱与站内信发送给您</p>
-              </div>
+              <p style="color:#999999;margin-top: 10px" v-if="passwordList == 2">系统密码在主机创建成功之后将通过密码/邮箱与站内信发送给您</p>
+            </div>
           </div>
         </div>
         <br>
@@ -288,34 +300,35 @@
 
 <script>
   import regExp from '../../util/regExp'
+
   const validaRegisteredName = regExp.validaRegisteredName
-  const validConfigName = (rule,value,callback)=>{
-    let reg =/^[0-9a-zA-z\u4E00-\u9FA5]{0,16}$/;
-    if(value == ""){
+  const validConfigName = (rule, value, callback) => {
+    let reg = /^[0-9a-zA-z\u4E00-\u9FA5]{0,16}$/;
+    if (value == "") {
       return callback(new Error('请输入配置名称'));
-    }else if(!reg.test(value)){
+    } else if (!reg.test(value)) {
       return callback(new Error('配置名称不符合规范'));
-    }else {
+    } else {
       callback();
     }
   }
 
-  const validLoginPassword = (rule,value,callback)=>{
+  const validLoginPassword = (rule, value, callback) => {
     let reg = /^[0-9a-zA-z\u4E00-\u9FA5',?？]{6,23}$/;
-    if(value == ''){
+    if (value == '') {
       return callback(new Error('请输入登录密码'));
-    }else if(!reg.test(value)){
+    } else if (!reg.test(value)) {
       return callback(new Error('登录密码格式不正确'));
-    }else{
+    } else {
       callback();
     }
   }
   export default {
-    data(){
-      return{
+    data() {
+      return {
         //新建镜像
-        showModal:{
-          createMirror:false
+        showModal: {
+          createMirror: false
         },
         hostName: [],
         formItem: {
@@ -333,138 +346,130 @@
         },
 
         //步骤条
-        nextList:[
+        nextList: [
           {
-            number:1,
-            value:'选择机型',
-            className:'next_pace_select',
-            yuanName:'next_numbers',
-            arrowName:'next_arrows'
+            number: 1,
+            value: '选择机型',
+            className: 'next_pace_select',
+            yuanName: 'next_numbers',
+            arrowName: 'next_arrows'
           },
           {
-            number:2,
-            value:'选择镜像',
-            className:'',
-            yuanName:'next_number',
-            arrowName:'next_arrow'
+            number: 2,
+            value: '选择镜像',
+            className: '',
+            yuanName: 'next_number',
+            arrowName: 'next_arrow'
           },
           {
-            number:3,
-            value:'选择存储网络',
-            className:'',
-            yuanName:'next_number',
-            arrowName:'next_arrow'
+            number: 3,
+            value: '选择存储网络',
+            className: '',
+            yuanName: 'next_number',
+            arrowName: 'next_arrow'
           },
           {
-            number:4,
-            value:'主机登录信息设置',
-            className:'',
-            yuanName:'next_number',
-            arrowName:'next_arrow'
+            number: 4,
+            value: '主机登录信息设置',
+            className: '',
+            yuanName: 'next_number',
+            arrowName: 'next_arrow'
           }
         ],
         //配置名称
-        config:{
-          configName:''
+        config: {
+          configName: ''
         },
         configValidate: {
           configName: [
-            {required:true,validator:validConfigName,trigger:'blur'}
+            {required: true, validator: validConfigName, trigger: 'blur'}
           ]
         },
         //主机规格
-        hostSpecification:{
+        hostSpecification: {
           //CPU
-          cpuList:[
+          cpuList: [
             {
-              CPU:'1',
-              List:[
-              ],
+              CPU: '1',
+              List: [],
             },
             {
-              CPU:'',
-              List:[
-              ],
+              CPU: '',
+              List: [],
             },
             {
-              CPU:'',
-             List:[
-              ],
+              CPU: '',
+              List: [],
             },
             {
-              CPU:'',
-              List:[
-              ],
+              CPU: '',
+              List: [],
             },
             {
-              CPU:'',
-              List:[
-
-              ],
+              CPU: '',
+              List: [],
             },
             {
-              CPU:'',
-              List:[]
+              CPU: '',
+              List: []
             },
             {
-              CPU:'',
-              List:[
-              ]
+              CPU: '',
+              List: []
             }
           ],
-          cpuIndex:0,
+          cpuIndex: 0,
           //内存
-          memoryList:[
+          memoryList: [
             {
-              memory:'1'
+              memory: '1'
             },
             {
-              memory:'2'
+              memory: '2'
             },
             {
-              memory:'4'
+              memory: '4'
             },
             {
-              memory:'8'
+              memory: '8'
             }
           ],
-          memoryIndex:0,
+          memoryIndex: 0,
           //系统盘
-          systemData:[
+          systemData: [
             {
-              value:'SAS',
-              label:'sas'
+              value: 'SAS',
+              label: 'sas'
             },
             {
-              value:'SSD',
-              label:'ssd'
+              value: 'SSD',
+              label: 'ssd'
             }
           ],
-          systemIndex:0,
+          systemIndex: 0,
           //下一步坐标
-          nextIndex:1,
-          money:0
+          nextIndex: 1,
+          money: 0
         },
         //已选配置
         selectedList: {},
 
         //镜像
-        mirror:[
+        mirror: [
           {
-            value:'自定义镜像'
+            value: '自定义镜像'
           },
           {
-            value:'系统镜像'
+            value: '系统镜像'
           }
         ],
-        mirrorIndex:0,
-        mirrorName:'',
-        mirrorList:[
-        ],
+        mirrorIndex: 0,
+        mirrorName: '',
+        mirrorList: [],
 
         //系统镜像
-        systemMirror:{
-          publicList:[
+        systemMirror: {
+          publicList: [
             {
               system: 'Windows', systemList: [], selectSystem: ''
             },
@@ -478,137 +483,137 @@
               system: 'Debian', systemList: [], selectSystem: ''
             }
           ],
-          system:{}
+          system: {}
         },
-        systemIndex:0,
-        systemUsername:'',
+        systemIndex: 0,
+        systemUsername: '',
 
         //数据盘类型
-        dataDiskType:[
+        dataDiskType: [
           {
-            value:'SAS',
-            label:'sas'
+            value: 'SAS',
+            label: 'sas'
           },
           {
-            value:'SSD',
-            label:'ssd'
+            value: 'SSD',
+            label: 'ssd'
           }
         ],
-        dataIndex:0,
-        dataCheckout:false,
+        dataIndex: 0,
+        dataCheckout: false,
 
         //容量
-        diskSize:20,
-        single:false,
+        diskSize: 20,
+        single: false,
 
         //带宽
-        bandWidth:1,
+        bandWidth: 1,
         //带宽和容量资费
-        price:0,
+        price: 0,
 
         //登录密码
-        passwordList:"1",
-        password:{
-          divPassWord:''
+        passwordList: "1",
+        password: {
+          divPassWord: ''
         },
-        passwordValidate:{
-          divPassWord:[
-            {required:true,validator:validLoginPassword,trigger:'blur'}
+        passwordValidate: {
+          divPassWord: [
+            {required: true, validator: validLoginPassword, trigger: 'blur'}
           ]
         },
         //主机名称
-        computerName:'',
+        computerName: '',
 
         //获取私有镜像类型
-        privateOS:''
+        privateOS: ''
       }
     },
-    created(){
+    created() {
       this.getTemplates();
       // this.getCapacityPrice();
       this.getZonesConfig();
       this.getPrivateMirror();
       this.closeHostList();
-      setTimeout(()=>{
+      setTimeout(() => {
         this.getMoeny();
-      },200)
+      }, 200)
     },
-    methods:{
+    methods: {
       //选择cpu，内存，系统盘
-      cpuClick(name,val){
-        if(name == 'cpu'){
+      cpuClick(name, val) {
+        if (name == 'cpu') {
           this.hostSpecification.cpuIndex = val;
           this.hostSpecification.memoryList = this.hostSpecification.cpuList[val].list;
           this.hostSpecification.memoryIndex = 0;
           this.getMoeny();
-        }else if (name == 'memory') {
+        } else if (name == 'memory') {
           this.hostSpecification.memoryIndex = val;
           this.getMoeny();
-        }else if (name == 'system') {
+        } else if (name == 'system') {
           this.hostSpecification.systemIndex = val;
           this.getMoeny();
-        }else if (name == 'mirror'){
+        } else if (name == 'mirror') {
           this.mirrorIndex = val;
-        }else if (name == 'data'){
+        } else if (name == 'data') {
           this.dataIndex = val;
           this.getCapacityPrice();
         }
       },
 
       //下一步
-      next(){
-        if(this.hostSpecification.nextIndex == 3){
-          if(this.mirrorIndex == 0){
-            if(this.mirrorName == ''){
+      next() {
+        if (this.hostSpecification.nextIndex == 3) {
+          if (this.mirrorIndex == 0) {
+            if (this.mirrorName == '') {
               this.$Modal.info({
-                title:'提示',
-                content:'请选择一个镜像'
+                title: '提示',
+                content: '请选择一个镜像'
               })
             }
-          }else{
-            if(this.systemMirror.publicList[this.systemIndex].selectSystem == ''){
+          } else {
+            if (this.systemMirror.publicList[this.systemIndex].selectSystem == '') {
               this.$Modal.info({
-                title:'提示',
-                content:'请选择一个镜像'
+                title: '提示',
+                content: '请选择一个镜像'
               })
             }
           }
         }
-        let params ={
-          hostFormat:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU+'核'+this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory+'G',
-          name:this.config.configName,
-          timeType:'实时计费',
-          timeValue:'1',
-          diskSize:this.diskSize,
-          systemDiskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].value,
-          zoneName:this.$store.state.zone.zonename,
-          mirrorName:this.mirrorIndex == 0? this.privateOS :this.systemMirror.publicList[this.systemIndex].selectSystem,
-          dataDiskType:this.dataIndex == -1 ? '':this.dataDiskType[this.dataIndex].value,
-          bandWidth:this.single == true ? this.bandWidth:'',
-          publicIp:this.single == true ? '有' :'无',
-          money:(this.hostSpecification.money+Number(this.price)).toFixed(2)
+        let params = {
+          hostFormat: this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU + '核' + this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory + 'G',
+          name: this.config.configName,
+          timeType: '实时计费',
+          timeValue: '1',
+          diskSize: this.diskSize,
+          systemDiskType: this.hostSpecification.systemData[this.hostSpecification.systemIndex].value,
+          zoneName: this.$store.state.zone.zonename,
+          mirrorName: this.mirrorIndex == 0 ? this.privateOS : this.systemMirror.publicList[this.systemIndex].selectSystem,
+          dataDiskType: this.dataIndex == -1 ? '' : this.dataDiskType[this.dataIndex].value,
+          bandWidth: this.single == true ? this.bandWidth : '',
+          publicIp: this.single == true ? '有' : '无',
+          money: (this.hostSpecification.money + Number(this.price)).toFixed(2)
         }
-        this.$refs.config.validate((vaild)=>{
-          if(vaild){
-            if(this.hostSpecification.nextIndex == 2){
-              if(this.systemMirror.publicList[this.systemIndex].selectSystem == '' && this.mirrorName == ''){
+        this.$refs.config.validate((vaild) => {
+          if (vaild) {
+            if (this.hostSpecification.nextIndex == 2) {
+              if (this.systemMirror.publicList[this.systemIndex].selectSystem == '' && this.mirrorName == '') {
                 this.$Modal.info({
                   title: '信息',
                   content: '请选择一个镜像'
                 });
-              }else{
-                if(this.hostSpecification.nextIndex<this.nextList.length){
-                  let i =  this.hostSpecification.nextIndex++;
-                  this.nextList[i].className ='next_pace_select';
+              } else {
+                if (this.hostSpecification.nextIndex < this.nextList.length) {
+                  let i = this.hostSpecification.nextIndex++;
+                  this.nextList[i].className = 'next_pace_select';
                   this.nextList[i].yuanName = 'next_numbers';
                   this.nextList[i].arrowName = 'next_arrows';
                   this.selectedList = JSON.parse(JSON.stringify(params));
                 }
               }
-            }else{
-              if(this.hostSpecification.nextIndex<this.nextList.length){
-                let i =  this.hostSpecification.nextIndex++;
-                this.nextList[i].className ='next_pace_select';
+            } else {
+              if (this.hostSpecification.nextIndex < this.nextList.length) {
+                let i = this.hostSpecification.nextIndex++;
+                this.nextList[i].className = 'next_pace_select';
                 this.nextList[i].yuanName = 'next_numbers';
                 this.nextList[i].arrowName = 'next_arrows';
                 this.selectedList = JSON.parse(JSON.stringify(params));
@@ -619,40 +624,40 @@
       },
 
       //上一步
-      upper(){
-        if(this.hostSpecification.nextIndex >1){
-          let i =  --this.hostSpecification.nextIndex;
-          this.nextList[i].className ='next_box';
+      upper() {
+        if (this.hostSpecification.nextIndex > 1) {
+          let i = --this.hostSpecification.nextIndex;
+          this.nextList[i].className = 'next_box';
           this.nextList[i].yuanName = 'next_number';
           this.nextList[i].arrowName = 'next_arrow';
         }
       },
 
       //获取金额
-      getMoeny(){
-       this.$http.post('device/QueryBillingPrice.do',{
-          cpuNum:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
-          memory:this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory,
-          timeType:'current',
-          timeValue:'1',
-          diskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
-          diskSize:this.diskSize
+      getMoeny() {
+        this.$http.post('device/QueryBillingPrice.do', {
+          cpuNum: this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
+          memory: this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory,
+          timeType: 'current',
+          timeValue: '1',
+          diskType: this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
+          diskSize: this.diskSize
         }).then(res => {
-          if(res.data.cost){
+          if (res.data.cost) {
             this.hostSpecification.money = res.data.cost;
-          }else{
+          } else {
             this.hostSpecification.money = 0;
           }
         })
       },
 
       //系统镜像
-      getTemplates(){
-        this.$http.get('information/listTemplates.do',{
-          params:{
-            user:'0'
+      getTemplates() {
+        this.$http.get('information/listTemplates.do', {
+          params: {
+            user: '0'
           }
-        }).then(res =>{
+        }).then(res => {
           this.systemMirror.publicList[0].systemList = res.data.result.window;
           this.systemMirror.publicList[1].systemList = res.data.result.centos;
           this.systemMirror.publicList[2].systemList = res.data.result.ubuntu;
@@ -662,7 +667,7 @@
       },
 
       //镜像
-      setOs(name){
+      setOs(name) {
         let arg = name.split('#');
         this.systemIndex = arg[2];
         for (var item of this.systemMirror.publicList) {
@@ -683,109 +688,111 @@
       },
 
       //私有镜像
-      setPrivateOs(){
-         for(let key in this.mirrorList){
-            if(this.mirrorList[key].systemtemplateid == this.mirrorName){
-              this.privateOS = this.mirrorList[key].templatename;
-               let str = this.mirrorList[key].ostypename.substr(0,1);
-                  if (str === 'W' || str === 'w') {
-                    this.systemUsername = 'administrator'
-                  } else {
-                    this.systemUsername = 'root'
-                  }
+      setPrivateOs() {
+        for (let key in this.mirrorList) {
+          if (this.mirrorList[key].systemtemplateid == this.mirrorName) {
+            this.privateOS = this.mirrorList[key].templatename;
+            let str = this.mirrorList[key].ostypename.substr(0, 1);
+            if (str === 'W' || str === 'w') {
+              this.systemUsername = 'administrator'
+            } else {
+              this.systemUsername = 'root'
             }
-         } 
+          }
+        }
       },
 
       //获取资费
-      getCapacityPrice(){
-        let bindWidth = this.single ? this.$http.post('device/queryIpPrice.do',{timeType:'current',timeValue:'1',brand:this.bandWidth}):null;
-        let params = {  cpuNum:'0',
-          memory:'0',
-          timeType:'current',
-          timeValue:'1',
-          diskType:this.dataDiskType[this.dataIndex].label,
-          diskSize:this.diskSize.toString()}
-        let capacity =this.dataCheckout ? this.$http.post('device/QueryBillingPrice.do',params):null;
-        Promise.all([bindWidth,capacity]).then(res =>{
-          if(this.single && this.dataCheckout){
-             this.price = (res[0].data.cost + res[1].data.cost).toFixed(2);
-          }else if(this.dataCheckout){
-             this.price = res[1].data.cost;
-          }else if(this.single){
-             this.price = res[0].data.cost;
-          }else{
-             this.price = 0;
+      getCapacityPrice() {
+        let bindWidth = this.single ? this.$http.post('device/queryIpPrice.do', {timeType: 'current', timeValue: '1', brand: this.bandWidth}) : null;
+        let params = {
+          cpuNum: '0',
+          memory: '0',
+          timeType: 'current',
+          timeValue: '1',
+          diskType: this.dataDiskType[this.dataIndex].label,
+          diskSize: this.diskSize.toString()
+        }
+        let capacity = this.dataCheckout ? this.$http.post('device/QueryBillingPrice.do', params) : null;
+        Promise.all([bindWidth, capacity]).then(res => {
+          if (this.single && this.dataCheckout) {
+            this.price = (res[0].data.cost + res[1].data.cost).toFixed(2);
+          } else if (this.dataCheckout) {
+            this.price = res[1].data.cost;
+          } else if (this.single) {
+            this.price = res[0].data.cost;
+          } else {
+            this.price = 0;
           }
-        }).catch(error =>{
-          console.log(error+'带宽容量资费');
+        }).catch(error => {
+          console.log(error + '带宽容量资费');
         })
       },
 
       //获取cpu和内存
-      getZonesConfig(){
-        this.$http.get("information/getZonesConfig.do",{}).then(res =>{
-          if(res.status == 200 && res.data.status == 1){
+      getZonesConfig() {
+        this.$http.get("information/getZonesConfig.do", {}).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
             this.hostSpecification.cpuList = res.data.data;
             this.hostSpecification.memoryList = res.data.data[0].list;
           }
         });
-     },
+      },
 
       //完成设置
-      okSetting(){
-        if(this.passwordList == '1'){
-          this.$refs.password.validate((vaild)=>{
-            if(vaild){
-              this.$http.post('elasticScaling/newCreateElasticScalingRunConfig.do',{
-                ElasticScalingName:this.selectedList.name,
-                systemTemplateId:this.mirrorIndex == 0 ? this.mirrorName : this.systemMirror.system.systemId,
-                cpu:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
-                memory:this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory.toString(),
-                diskSize:this.dataCheckout ? this.diskSize : '',
-                bandwidth:this.selectedList.bandWidth.toString(),
-                computerName:this.computerName,
-                loginPassword:this.password.divPassWord,
-                billingtype:this.selectedList.money,
-                diskType:this.dataCheckout ? this.dataDiskType[this.dataIndex].label : '',
-                loginWay:this.passwordList,
-                systemDiskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
-                systemUserName:this.systemUsername
+      okSetting() {
+        if (this.passwordList == '1') {
+          this.$refs.password.validate((vaild) => {
+            if (vaild) {
+              this.$http.post('elasticScaling/newCreateElasticScalingRunConfig.do', {
+                ElasticScalingName: this.selectedList.name,
+                systemTemplateId: this.mirrorIndex == 0 ? this.mirrorName : this.systemMirror.system.systemId,
+                cpu: this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
+                memory: this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory.toString(),
+                diskSize: this.dataCheckout ? this.diskSize : '',
+                bandwidth: this.selectedList.bandWidth.toString(),
+                computerName: this.computerName,
+                loginPassword: this.password.divPassWord,
+                billingtype: this.selectedList.money,
+                diskType: this.dataCheckout ? this.dataDiskType[this.dataIndex].label : '',
+                loginWay: this.passwordList,
+                systemDiskType: this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
+                systemUserName: this.systemUsername
               }).then(res => {
-                if(res.status == 200 && res.data.status ==1){
+                if (res.status == 200 && res.data.status == 1) {
                   this.$Message.success('启动配置创建成功');
-                  this.$router.push({path:'elastic'});
-                }else{
+                  this.$router.push({path: 'elastic'});
+                } else {
                   this.$Modal.confirm({
-                    content:res.data.message
+                    content: res.data.message
                   })
                   // this.$Message.info(res.data.message);
                 }
               })
             }
           })
-        }else {
-          this.$http.post('elasticScaling/newCreateElasticScalingRunConfig.do',{
-            ElasticScalingName:this.selectedList.name,
-            systemTemplateId:this.mirrorIndex == 0 ? this.mirrorName : this.systemMirror.system.systemId,
-            cpu:this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
-            memory:this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory.toString(),
-            diskSize:this.dataCheckout ? this.selectedList.diskSize : '',
-            bandwidth:this.selectedList.bandWidth.toString(),
-            computerName:this.computerName,
-            loginPassword:this.password.divPassWord,
-            billingtype:this.selectedList.money,
-            diskType:this.dataCheckout ? this.dataDiskType[this.dataIndex].label : '',
-            loginWay:this.passwordList,
-            systemDiskType:this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
-            systemUserName:this.systemUsername
+        } else {
+          this.$http.post('elasticScaling/newCreateElasticScalingRunConfig.do', {
+            ElasticScalingName: this.selectedList.name,
+            systemTemplateId: this.mirrorIndex == 0 ? this.mirrorName : this.systemMirror.system.systemId,
+            cpu: this.hostSpecification.cpuList[this.hostSpecification.cpuIndex].CPU,
+            memory: this.hostSpecification.memoryList[this.hostSpecification.memoryIndex].memory.toString(),
+            diskSize: this.dataCheckout ? this.selectedList.diskSize : '',
+            bandwidth: this.selectedList.bandWidth.toString(),
+            computerName: this.computerName,
+            loginPassword: this.password.divPassWord,
+            billingtype: this.selectedList.money,
+            diskType: this.dataCheckout ? this.dataDiskType[this.dataIndex].label : '',
+            loginWay: this.passwordList,
+            systemDiskType: this.hostSpecification.systemData[this.hostSpecification.systemIndex].label,
+            systemUserName: this.systemUsername
           }).then(res => {
-            if(res.status == 200 && res.data.status ==1){
+            if (res.status == 200 && res.data.status == 1) {
               this.$Message.success('启动配置创建成功');
-              this.$router.push({path:'elastic'});
-            }else{
+              this.$router.push({path: 'elastic'});
+            } else {
               this.$Modal.confirm({
-                content:"启动创建配置失败,您可以联系客服，或重试"
+                content: res.data.message
               })
             }
           })
@@ -793,20 +800,20 @@
       },
 
       //获取私有镜像
-      getPrivateMirror(){
-        this.$http.get('information/listTemplates.do',{
-            params:{
-              user:'1',
-            }
+      getPrivateMirror() {
+        this.$http.get('information/listTemplates.do', {
+          params: {
+            user: '1',
+          }
         }).then(res => {
-          if(res.status == 200 && res.data.status == 1){
-           this.mirrorList = res.data.result.window.concat(res.data.result.centos, res.data.result.debian, res.data.result.ubuntu);
+          if (res.status == 200 && res.data.status == 1) {
+            this.mirrorList = res.data.result.window.concat(res.data.result.centos, res.data.result.debian, res.data.result.ubuntu);
           }
         })
       },
 
       //新建镜像
-      checkFormItem(){
+      checkFormItem() {
         this.$refs.formItem.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用制作镜像的方法
@@ -816,7 +823,7 @@
       },
       ok() {
         this.showModal.createMirror = false
-        this.$http.get('Snapshot/createTemplate.do',{
+        this.$http.get('Snapshot/createTemplate.do', {
           params: {
             rootDiskId: this.formItem.vmInfo.split('#')[0],
             templateName: this.formItem.mirrorName,
@@ -847,13 +854,13 @@
           })
       },
     },
-    mounted(){
+    mounted() {
     },
-    watch:{
-      diskSize:function(){
-          this.getCapacityPrice();
+    watch: {
+      diskSize: function () {
+        this.getCapacityPrice();
       },
-      bandWidth:function(){
+      bandWidth: function () {
         this.getCapacityPrice();
       }
     }
@@ -861,30 +868,30 @@
 </script>
 
 <style lang="less" rel="stylesheet/less">
-  .ela_head{
-    .head_right{
+  .ela_head {
+    .head_right {
       display: inline-block;
-      .back{
+      .back {
         width: 52px;
         height: 25px;
         position: relative;
         line-height: 25px;
         display: inline-block;
         cursor: pointer;
-        .back_icon{
+        .back_icon {
           border-top: 1px solid #2A99F2;
           border-left: 1px solid #2A99F2;
           width: 9px;
-          height:9px;
+          height: 9px;
           display: inline-block;
           transform: rotate(-45deg);
         }
-        >span{
+        > span {
           font-size: 14px;
           color: #2A99F2;
         }
       }
-      .back::after{
+      .back::after {
         content: '';
         width: 1px;
         height: 25px;
@@ -892,7 +899,7 @@
         right: 0px;
         background: #D8D8D8;
       }
-      >span{
+      > span {
         margin-left: 10px;
         vertical-align: middle;
         font-size: 18px;
@@ -900,18 +907,19 @@
       }
     }
   }
+
   /*下一步*/
-  .next_pace{
+  .next_pace {
     box-shadow: 0px 2px 3px 0px RGBA(0, 0, 0, 0.35);
     height: 49px;
     padding: 0 65px;
     line-height: 49px;
     display: flex;
     font-family: 'Microsoft YaHei';
-    .next_pace_select{
+    .next_pace_select {
       color: #2A99F2;
-      .next_numbers{
-        border:1px solid #2A99F2;
+      .next_numbers {
+        border: 1px solid #2A99F2;
         -webkit-border-radius: 50px;
         -moz-border-radius: 50px;
         border-radius: 50px;
@@ -923,10 +931,10 @@
         font-family: "Microsoft YaHei";
       }
     }
-    .next_box{
+    .next_box {
       width: 33%;
       position: relative;
-      .next_number{
+      .next_number {
         border: 1px solid #666666;
         -webkit-border-radius: 50px;
         -moz-border-radius: 50px;
@@ -938,44 +946,44 @@
         line-height: 14px;
         font-family: "Microsoft YaHei";
       }
-      .next_arrow{
+      .next_arrow {
         position: relative;
         left: 27%;
         top: 20px;
-        i{
+        i {
           height: 1px;
           width: 14px;
           background: #666666;
-          position:absolute;
-          top:-0.71973rem;
+          position: absolute;
+          top: -0.71973rem;
           left: -4px;
         }
       }
-      .next_arrow::after{
-        content:'';
-        width:10px;
+      .next_arrow::after {
+        content: '';
+        width: 10px;
         height: 10px;
         transform: rotate(45deg);
         border-top: 1px solid #666666;
         border-right: 1px solid #666666;
         position: absolute;
       }
-      .next_arrows{
-          position: relative;
-          left: 27%;
-          top: 20px;
-          i{
-            height: 1px;
-            width: 14px;
-            background: #2A99F2;
-            position:absolute;
-            top:-0.71973rem;
-            left: -4px;
-          }
+      .next_arrows {
+        position: relative;
+        left: 27%;
+        top: 20px;
+        i {
+          height: 1px;
+          width: 14px;
+          background: #2A99F2;
+          position: absolute;
+          top: -0.71973rem;
+          left: -4px;
         }
-      .next_arrows::after{
-        content:'';
-        width:10px;
+      }
+      .next_arrows::after {
+        content: '';
+        width: 10px;
         height: 10px;
         transform: rotate(45deg);
         border-top: 1px solid #2A99F2;
@@ -985,13 +993,13 @@
     }
   }
 
-  .cpu_list{
+  .cpu_list {
     display: flex;
     height: 32px;
-    ul{
-    width: 90%;
+    ul {
+      width: 90%;
     }
-    span{
+    span {
       margin-right: 28px;
       vertical-align: middle;
       display: inline-block;
@@ -999,7 +1007,8 @@
       color: #333333;
     }
   }
-  .nav_item{
+
+  .nav_item {
     border: 1px solid #2A99F2;
     padding: 6px 22px;
     display: inline-block;
@@ -1007,31 +1016,35 @@
     cursor: pointer;
     margin-right: 2%;
   }
-  .nav_item_click{
+
+  .nav_item_click {
     background: #2A99F2;
     color: #FFFFFF;
   }
+
   /*第二步*/
-  .selected{
+  .selected {
     display: flex;
     padding: 0 0 20px 0;
     border-bottom: 1px solid #D8D8D8;
     font-family: 'MicrosoftYaHei';
-    .next_two{
+    .next_two {
       font-size: 14px;
-      p{
+      p {
         margin-bottom: 10px;
       }
     }
   }
-  .next_wo{
+
+  .next_wo {
     font-size: 14px;
     width: 90px;
-    p{
+    p {
       margin-bottom: 16px;
     }
   }
-  .mirror{
+
+  .mirror {
     border: 1px solid #2A99F2;
     color: #2A99F2;
     width: 184px;
@@ -1040,7 +1053,8 @@
     text-align: center;
     margin-right: 20px;
   }
-  .mirror:hover{
+
+  .mirror:hover {
     background: #2A99F2;
     color: #FFFFFF;
   }

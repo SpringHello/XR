@@ -3,25 +3,7 @@
     <div class="wrapper">
       <div class="wrapper-form">
         <div class="banner">
-          <my-carousel :interval=5000 class="carousel" >
-            <!-- <my-carousel-item class="carousel-item">
-               <div @click="push('dbActive')"
-                    style="cursor: pointer;background: #F56B23;">
-                 <div class="db-active">
-                   <div class="db-active-content">
-                     <div class="db-active-text">
-                       <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
-                       <p>热门云数据库产品一网打尽</p>
-                       <p><span>1元试用60天</span>每天不限量</p>
-                       <button>立即试用</button>
-                     </div>
-                     <div class="db-active-img">
-                       <img src="../../assets/img/active/dbActive/dba-banner8.png"/>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </my-carousel-item>-->
+          <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
               <div @click="$router.push('AnniversaryActive')" class="aa-active">
               </div>
@@ -99,7 +81,8 @@
 <script type="text/ecmascript-6">
   import regExp from '../../util/regExp'
   import axios from '@/util/axiosInterceptor'
-  import throttle  from 'throttle-debounce/throttle'
+  import throttle from 'throttle-debounce/throttle'
+
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',
@@ -121,7 +104,6 @@
   }
 
   export default {
-
     data() {
       return {
         imgSrc: 'user/getKaptchaImage.do',
@@ -167,7 +149,7 @@
         codePlaceholder: '发送验证码'
       }
     },
-    created(){
+    created() {
     },
     methods: {
       vail(field) {
@@ -385,22 +367,22 @@
             margin-right: 20px;
           }
         }
-        button{
+        button {
           outline: none;
           cursor: pointer;
           border: none;
           margin-top: 32px;
-          background:rgba(255,70,43,1);
-          border-radius:20px;
-          font-size:18px;
+          background: rgba(255, 70, 43, 1);
+          border-radius: 20px;
+          font-size: 18px;
           font-family: "Microsoft YaHei", "微软雅黑";
-          color:rgba(255,255,255,1);
+          color: rgba(255, 255, 255, 1);
           padding: 7px 29px;
         }
       }
-      .aa-active{
+      .aa-active {
         height: 100%;
-        background: #FFF url("../../assets/img/login/aa-banner.png") no-repeat;
+        background: #FFF url("../../assets/img/login/bb-banner.png") no-repeat;
       }
       .fr-active {
         height: 100%;
@@ -410,7 +392,7 @@
     .ivu-carousel-item:nth-last-child(1) .demo-carousel {
       background: url(../../assets/img/login/login-banner.png) no-repeat center;
     }
-    .ivu-carousel-item:nth-last-child(2) .demo-carousel{
+    .ivu-carousel-item:nth-last-child(2) .demo-carousel {
       background: url(../../assets/img/login/login-banner-objactivity.png) no-repeat center;
     }
     .login-form {
@@ -548,7 +530,7 @@
           height: 45px;
           background-color: #4990E2;
           border: none;
-          font-family: PingFangSC-Medium;
+          font-family: MicrosoftYaHei;
           font-size: 14px;
           color: #FFFFFF;
           letter-spacing: 0.83px;

@@ -23,15 +23,14 @@
             </RadioGroup>
             <!--<span style="display: block;color:#2d8cf0;cursor:pointer;margin-bottom: 20px;"> + 获取优惠券</span>-->
             <!--<router-link :to="{ path: 'dynamic', query: { id: '14' }}">全民普惠，3折减单，最高减免7000元！</router-link>-->
-            <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券</span>
+            <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券（优先使用现金券，点击支付即可）</span>
           </div>
-          <p style="color: #2B99F2">消费满1117元、6117元、11117元、31117元分别送50元、350元、1000元、3100元苏宁卡/京东E卡！</p>
+          <p style="color: #2B99F2">{{spentCost}}</p>
           <p style="text-align: right;font-size:14px;color:rgba(102,102,102,1);line-height:19px;margin-bottom: 20px;">
             原价：<span :class="{cross:couponInfo.originCost!=couponInfo.totalCost}">{{couponInfo.originCost}}元</span><span
             style="font-size:18px;color:rgba(0,0,0,0.65);margin-left: 20px;">总计支付：{{couponInfo.totalCost}}元</span>
           </p>
-          <p style="text-align: right;color: #F85E1D" v-if="spentCost<31117">当前已支付订单金额累计{{ spentCost }}元，再消费{{ otherSpentCost }}元{{ spentCostNode }}</p>
-          <p style="text-align: right;color: #F85E1D" v-else> 当前已支付订单金额累计{{ spentCost }}元，{{ spentCostNode }}</p>
+          <p style="text-align: right;color: #F85E1D">{{ spentCostNode }}</p>
           <div style="text-align: right;margin: 10px 0;">
             <ul>
               <li v-for="(item,index) in showFree"
@@ -191,8 +190,8 @@
         },
         exchangeCardCode: '',
         exchangeCardCodeError: false,
-        spentCost: 0,
-        spentCostNode: 50
+        spentCost: '',
+        spentCostNode: ''
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -221,7 +220,8 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            this.spentCost = parseInt(res.data.result)
+            this.spentCost = res.data.info1
+            this.spentCostNode = res.data.info2
           }
         })
       },
@@ -255,7 +255,8 @@
               ticketType: '',
               isuse: 0,
               orderNumber: orderNumber + '',
-              totalCost: this.couponInfo.cost
+              totalCost: this.couponInfo.cost,
+              notOverTime: '1'
             }
           }).then(response => {
             this.couponInfo.couponList = response.data.result
@@ -300,7 +301,8 @@
             ticketType: '',
             isuse: 0,
             orderNumber: orderNumber + '',
-            totalCost: cost
+            totalCost: cost,
+            notOverTime: '1'
           }
         }).then(response => {
           this.couponInfo.couponList = response.data.result
@@ -326,8 +328,8 @@
             order += item.orderId + ','
           }
         })
-        if (order == '') {
-          this.$message.info('请选择需要支付的订单')
+        if (this.couponInfo.totalCost == 0) {
+          this.$Message.info('请选择需要支付的订单')
           return
         }
         axios.get('information/zfconfirm.do', {
@@ -370,27 +372,7 @@
         })
       }
     },
-    computed: {
-      otherSpentCost() {
-        let cost = this.spentCost
-        if (cost < 1117) {
-          this.spentCostNode = '可领取50元苏宁卡/京东E卡！'
-          return 1117 - cost
-        } else if (1117 <= cost && cost < 6117) {
-          this.spentCostNode = '可领取350元+50元苏宁卡/京东E卡！'
-          return 6117 - cost
-        } else if (6117 <= cost && cost < 11117) {
-          this.spentCostNode = '可领取1000元+350元+50元苏宁卡/京东E卡！'
-          return 11117 - cost
-        } else if (11117 <= cost && cost < 31117) {
-          this.spentCostNode = '可领取3100元+ 1000元+ 350元 + 50元苏宁卡/京东E卡！'
-          return 31117 - cost
-        } else {
-          return 0
-          this.spentCostNode = '可领取3100元+ 1000元+ 350元 + 50元苏宁卡/京东E卡！'
-        }
-      },
-    },
+    computed: {},
     watch: {
       'couponInfo.selectTicket': {
         handler: function () {

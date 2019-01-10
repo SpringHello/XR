@@ -387,10 +387,12 @@
     </Modal>
     <!-- 只有一个vpc时创建互联-->
     <Modal v-model="showModal.notHaveNAT" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">VPC不存在NAT网关或者NAT网关没有绑定公网IP。</p>
         </div>
       </div>

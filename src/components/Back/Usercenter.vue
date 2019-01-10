@@ -94,6 +94,25 @@
                   </Form>
                 </div>
               </div>
+              <h2 style="margin-top: 20px">资源配额</h2>
+              <div class="pi-resourcesQuota">
+                <p><span @click="resourcesQuotaShow = !resourcesQuotaShow"><i :class="{top:!resourcesQuotaShow}"></i></span>资源配额</p>
+                <div style="margin-top: 20px;display: flex" v-show="resourcesQuotaShow">
+                  <div style="width: 280px;border-left: 1px solid #E9E9E9;border-top: 1px solid #E9E9E9;">
+                    <div
+                      style="display: flex;justify-content:center;align-items: center;height: 39px;background:#F8F8F9 ">
+                      <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
+                    </div>
+                    <div class="infTop" :class="{one: index==0,two: index==1||index==2||index==3||index==4||index==5||index==6||index==9||index==10,three:index== 8}"
+                         v-for="(item,index) in resourcesQuotaList">
+                      <span class="inf">{{ item.title}}</span>
+                    </div>
+                  </div>
+                  <div style="width: 840px">
+                    <Table :columns="resourcesQuotaColumns" :data="resourcesQuotaData"></Table>
+                  </div>
+                </div>
+              </div>
             </div>
           </Tab-pane>
           <Tab-pane label="提醒设置" name="remainder">
@@ -107,10 +126,10 @@
                 为了保障您在第一时间接收到有关财务、账号安全和系统公告等关键信息，本设置页面部分选项（打勾图标）默认激活且无法更改。其余可配置选项请依据您的具体需求激活或禁用。
               </p>
               <div style="margin-top: 20px;display: flex">
-                <div style="width: 200px">
+                <div style="width: 200px;border-left: 1px solid #E9E9E9;border-top: 1px solid #E9E9E9;">
                   <div
-                    style="display: flex;padding-left: 20px;align-items: center;height: 40px;background:#F8F8F9 ">
-                    <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
+                    style="display: flex;justify-content:center;align-items: center;height: 39px;background:#F8F8F9 ">
+                    <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder;">信息项</span>
                   </div>
                   <div class="infTop" style="height: 577px;border-top:1px solid #E9E9E9; ">
                     <span class="inf">账号信息</span>
@@ -142,7 +161,7 @@
                    v-for="(authType,index) in notAuth.authTypes" :key="index" class="authType">
                 <div class="authType-wrapper">
                   <p>{{authType.title}}</p>
-                  <Button type="primary" style="float:right" @click="notAuth.currentStep = authType.go">立即验证</Button>
+                  <Button type="primary" style="float:right" @click="notAuth.currentStep = authType.go,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">立即验证</Button>
                 </div>
                 <div class="authType-flow">认证流程：
                   <div v-for="(step,i) in authType.step" style="display: inline-block">
@@ -1084,10 +1103,12 @@
     </Modal>
 
     <Modal v-model="showModal.cancelCheckCreatedHostHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">是否取消勾选创建虚拟机通知？</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>是否取消勾选创建虚拟机通知？</strong>
           <p class="lh24" style="margin-bottom: 20px">请注意，若您取消创建虚拟机{{ notificationChannel }}通知，在您下次创建虚拟机的您将不会收到相关{{ notificationChannel
             }}提醒，提醒内容包括您创建该虚拟机的主机名称与登录密码。在您取消提醒之后，您可以通过云主机-管理，发送密码来查看该主机密码。请再次确认：
           </p>
@@ -1107,10 +1128,12 @@
       </p>
     </Modal>
     <Modal v-model="showModal.cancelCheckOtherHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">是否取消勾选{{ informAffirmTitle + notificationChannel }}通知？</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>是否取消勾选{{ informAffirmTitle + notificationChannel }}通知？</strong>
           <p class="lh24" style="margin-bottom: 20px">请注意，若您取消{{ informAffirmTitle + notificationChannel }}通知，您将无法第一时间获取该信息，请再次确认：
           </p>
           <RadioGroup v-model="informAffirm" vertical>
@@ -1167,7 +1190,7 @@
         if (!value) {
           return callback(new Error('电话号码不能为空'));
         }
-        if (!(/^1(3|4|5|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
+        if (!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
           callback(new Error('请输入正确的电话号码'));
         } else {
           callback()
@@ -1579,7 +1602,36 @@
             {validator: validaRegisteredPassWordTwo, trigger: 'blur'}
           ],
         },
-
+        resourcesQuotaColumns: [
+          {
+            title: '资源类型',
+            key: 'name'
+          },
+          {
+            title: '已用配额',
+            key: 'usedQuota'
+          },
+          {
+            title: '总配额',
+            key: 'totalQuota'
+          },
+        ],
+        resourcesQuotaData: [],
+        resourcesQuotaList: [
+          {title: '弹性云服务器ECS'},
+          {title: '镜像服务'},
+          {title: '弹性伸缩'},
+          {title: 'GPU服务器'},
+          {title: '裸金属服务器'},
+          {title: '云硬盘'},
+          {title: '云硬盘备份'},
+          {title: '对象存储'},
+          {title: '虚拟私有云VPC'},
+   /*       {title: '弹性负载均衡'},*/
+          {title: '云数据库'},
+          {title: '云监控服务'}
+        ],
+        resourcesQuotaShow: true,
         // 联系人表格
         linkManColumns: [
           {
@@ -2095,6 +2147,7 @@
       this.getContacts()
       this.getSystemHead()
       this.setOccupationalInfo()
+      this.getResourceAllocation()
     },
     methods: {
       init() {
@@ -2323,6 +2376,7 @@
                 }, 1000)
               } else {
                 this.$Message.error(response.data.message)
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2360,6 +2414,7 @@
               }, 1000)
             } else {
               this.$Message.error(response.data.message)
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
             }
           })
         }
@@ -2532,6 +2587,7 @@
               })
             } else {
               this.$Message.error(response.data.message)
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
             }
           })
         }
@@ -2661,6 +2717,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2700,6 +2757,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2731,6 +2789,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2770,6 +2829,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -2801,6 +2861,7 @@
                 this.$message.info({
                   content: response.data.message
                 })
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               }
             })
           }
@@ -3205,6 +3266,13 @@
             this.$Message.error(response.data.msg)
           }
         })
+      },
+      getResourceAllocation() {
+        this.$http.get('user/personalCenterResourceQuota.do', {params: {}}).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.resourcesQuotaData = res.data.result
+          }
+        })
       }
     },
     computed: {
@@ -3281,7 +3349,14 @@
         }
       },
     },
-    watch: {}
+    watch: {
+      '$store.state.zone': {
+        handler: function () {
+          this.getResourceAllocation()
+        },
+        deep: true
+      }
+    }
   }
 </script>
 
@@ -3351,7 +3426,6 @@
     .pi-otherInfo {
       margin-top: 14px;
       border-top: 1px solid #E9E9E9;
-      height: 536px;
       ol {
         margin-top: 28px;
         li {
@@ -3376,6 +3450,47 @@
       .pi-otherInfo-form {
         padding-left: 105px;
         margin-top: 20px;
+      }
+    }
+    .pi-resourcesQuota {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 1);
+      border-radius: 4px;
+      border: 1px solid rgba(233, 233, 233, 1);
+      padding: 20px;
+      > p {
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 1);
+        > span {
+          height: 14px;
+          width: 14px;
+          border: 1px solid #2A99F2;
+          border-radius: 7px;
+          display: inline-block;
+          margin-right: 5px;
+          text-align: center;
+          cursor: pointer;
+          position: relative;
+          top: 2px;
+          > i {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            transform: rotate(225deg);
+            position: relative;
+            top: -6px;
+            transition: all 0.5s;
+            border-top: 1px solid #2A99F2;
+            border-left: 1px solid #2A99F2;
+            &.top {
+              transition: all 0.5s;
+              transform: rotate(45deg);
+              top: -4px;
+            }
+          }
+        }
       }
     }
   }
@@ -3691,6 +3806,19 @@
     align-items: center;
     height: 96px;
     border-bottom: 1px solid #E9E9E9;
+    &.one {
+      height: 96.5px;
+      border-top: 1px solid #E9E9E9;
+    }
+    &.two {
+      height: 48px;
+    }
+    &.three {
+      height: 288px;
+    }
+    &.four {
+      height: 144px;
+    }
     .inf {
       font-family: Microsoft YaHei;
       font-size: 16px;

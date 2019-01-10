@@ -628,10 +628,12 @@
 
     <!-- 绑定ip时，没有公网ip提示 -->
     <Modal v-model="showModal.publicIPHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">您还未拥有公网IP，请先创建公网IP。</p>
         </div>
       </div>
@@ -781,6 +783,7 @@
       }
     },
     created() {
+      this.toggleZone(this.$store.state.zone.zoneid)
       // 用户未认证，弹出认证提示框
       if (this.$store.state.authInfo == null) {
         this.showModal.selectAuthType = true
@@ -799,7 +802,16 @@
       }, 5 * 1000)
     },
     methods: {
-
+      toggleZone(zoneId) {
+        // 切换默认区域
+        axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+        })
+        for (var zone of this.$store.state.zoneList) {
+          if (zone.zoneid == zoneId) {
+            $store.commit('setZone', zone);
+          }
+        }
+      },
       publicIPHint_ok() {
         this.$router.push('/ruicloud/buy/bip')
       },

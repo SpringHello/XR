@@ -1035,11 +1035,12 @@
           diskSize += `${item.size},`
           diskType += `${item.type},`
         })
+ 
         let params = {
           zoneId: this.zone.zoneid,
           templateId: this.currentType == 'public' ? this.system.systemId : this.customMirror.systemtemplateid,
           bandWidth: this.IPConfig.publicIP ? this.IPConfig.bandWidth : 0,
-          timeType: this.timeForm.currentTimeType == 'annual' ? this.timeForm.currentTimeValue.type : 'current',
+          timeType: this.timeForm.currentTimeType == 'annual' ? this.timeForm.currentTimeValue.type : this.timeForm.currentTimeType == 'week'?'week' : 'current',
           timeValue: this.timeForm.currentTimeValue.value,
           count: 1,
           isAutoRenew: this.autoRenewal ? '1' : '0',
@@ -1410,7 +1411,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;
