@@ -502,23 +502,23 @@
           },
           {
             title: '资讯',
-            path: 'https://news.xrcloud.net/homePage/1.html',
+            path: 'https://news.xrcloud.net',
             content: [
               {
                 prod: '云服务',
-                path: 'https://news.xrcloud.net/yunfuwu/article/1.html'
+                path: 'https://news.xrcloud.net/yunfuwu'
               },
               {
                 prod: '云咨询',
-                path: 'https://news.xrcloud.net/yunzixun/article/1.html'
+                path: 'https://news.xrcloud.net/yunzixun'
               },
               {
                 prod: '云技术',
-                path: 'https://news.xrcloud.net/yunjishu/article/1.html'
+                path: 'https://news.xrcloud.net/yunjishu'
               },
               {
                 prod: '云安全',
-                path: 'https://news.xrcloud.net/yunanquan/article/1.html'
+                path: 'https://news.xrcloud.net/yunanquan'
               }
             ]
           },
