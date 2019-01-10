@@ -34,10 +34,12 @@
     </div>
     <!-- 还原弹窗 -->
     <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">数据库还原</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>数据库还原</strong>
           <p class="lh24">是否确定还原数据库</p>
           <p class="lh24">提示：您正使用<span class="bluetext">{{rollbackData.databaseName}}</span>还原<span class="bluetext">{{rollbackData.vmName}}</span>至<span
             class="bluetext">{{rollbackData.createTime}}</span>，当您确认操作之后，此<span class="bluetext">{{rollbackData.createTime}}</span>之后的数据库内的数据将丢失。</p>
@@ -80,10 +82,12 @@
     </Modal>
     <!-- 删除备份弹窗 -->
     <Modal v-model="showModal.deleteSnapshot" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">删除备份</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>删除备份</strong>
           <p class="lh24">确定要删除选中的备份吗？</p>
         </div>
       </div>
@@ -148,10 +152,12 @@
     </Modal>
     <!-- 删除备份策略弹窗 -->
     <Modal v-model="showModal.deleteStrategy" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">删除备份策略</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>删除备份策略</strong>
           <p class="lh24">确定要删除选中的备份策略吗？</p>
         </div>
       </div>

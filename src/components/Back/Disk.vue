@@ -189,10 +189,12 @@
 
     <!-- 卸载硬盘确认框 -->
     <Modal v-model="showModal.diskUnload" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">卸载硬盘</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>卸载硬盘</strong>
           <p class="lh24">是否将确认将硬盘<span style="color: #2A99F2 ">（{{ diskName }}）</span>从主机<span style="color: #2A99F2 ">（{{ hostName }}）</span>卸载，卸载之后该主机将失去该硬盘所存信息
           </p>
         </div>
@@ -205,10 +207,12 @@
 
     <!-- 该磁盘已挂载主机，无法删除。弹出确认卸载框，点击卸载 -->
     <Modal v-model="showModal.beforeDelete" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">删除硬盘</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>删除硬盘</strong>
           <p class="lh24">所选硬盘已挂载主机，无法删除，若您确认删除，请先卸载该硬盘</p>
         </div>
       </div>

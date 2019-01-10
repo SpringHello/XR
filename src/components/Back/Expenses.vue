@@ -426,10 +426,12 @@
     <!-- 押金转续费确认 -->
 
     <Modal v-model="showModal.freezeToRenewAffirm" crollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24" style="margin-bottom: 20px">当前免费剩余时长到期日为<span style="color: #2A99F2">{{ freezeEndTime}}</span>，转为续费之后资源到期时间为<span style="color: #2A99F2">{{ renewalFeeTime}}</span>，您是否确认将押金转为续费？
           </p>
         </div>
@@ -441,10 +443,12 @@
     </Modal>
     <!-- 解冻条件未达成弹窗 -->
     <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">申请解冻</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>申请解冻</strong>
           <p class="lh24">解冻条件:{{thawingCondition}}未达成，请确认上述内容都已彻底删除，包括回收站也已清除资源。详情可咨询客服。
           </p>
         </div>
@@ -525,10 +529,12 @@
 
     <!-- 解冻到余额提示 -->
     <Modal v-model="showModal.unfreezeToBalanceHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24" style="margin-bottom: 20px">选择“解冻到余额”后，将无法进行提现操作，请您谨慎操作！
           </p>
           <RadioGroup v-model="unfreezeToHint" vertical>
@@ -548,10 +554,12 @@
     </Modal>
     <!-- 退款第一次提示-->
     <Modal v-model="showModal.refundBeforeHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24" style="margin-bottom: 20px">请注意，订单退款会直接删除与之相关的资源，请您确认已完成对订单资源的数据备份。再次提示，订单退款之后相关资源会被直接删除，请谨慎操作。
           </p>
         </div>
@@ -601,10 +609,12 @@
     </Modal>
     <!-- 退款最终确认提示 -->
     <Modal v-model="showModal.refundLastHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24" style="margin-bottom: 20px">选择“退款到余额”后，将无法进行提现操作，请您谨慎操作！
           </p>
           <RadioGroup v-model="refundLastTo" vertical>
