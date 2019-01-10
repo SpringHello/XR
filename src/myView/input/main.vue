@@ -3,7 +3,7 @@
       <img class="ver_img" :src="icon">
         <div class="ver_select" v-if="isSelect == 'select'">
             <div @click="isShow = !isShow" class="verNumber" :class="[isShow ?'verNumber':'verNumbers']">
-                +{{selectValue}}
+               <span>+{{selectValue}}</span> 
             </div>
              <transition name="fade">
                 <div class="ver_option" v-if="isShow" @click="handleClose">
@@ -244,7 +244,7 @@ export default {
       .ver_select{
           margin:16px 0 11px 14px;
           cursor: pointer;
-          width:35px;
+          width:50px;
           background-image: none;
           position: absolute;
           left: 35px;
