@@ -1084,10 +1084,12 @@
     </Modal>
 
     <Modal v-model="showModal.cancelCheckCreatedHostHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">是否取消勾选创建虚拟机通知？</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>是否取消勾选创建虚拟机通知？</strong>
           <p class="lh24" style="margin-bottom: 20px">请注意，若您取消创建虚拟机{{ notificationChannel }}通知，在您下次创建虚拟机的您将不会收到相关{{ notificationChannel
             }}提醒，提醒内容包括您创建该虚拟机的主机名称与登录密码。在您取消提醒之后，您可以通过云主机-管理，发送密码来查看该主机密码。请再次确认：
           </p>
@@ -1107,10 +1109,12 @@
       </p>
     </Modal>
     <Modal v-model="showModal.cancelCheckOtherHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">是否取消勾选{{ informAffirmTitle + notificationChannel }}通知？</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>是否取消勾选{{ informAffirmTitle + notificationChannel }}通知？</strong>
           <p class="lh24" style="margin-bottom: 20px">请注意，若您取消{{ informAffirmTitle + notificationChannel }}通知，您将无法第一时间获取该信息，请再次确认：
           </p>
           <RadioGroup v-model="informAffirm" vertical>

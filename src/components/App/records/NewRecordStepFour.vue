@@ -141,10 +141,12 @@
     </Modal>
     <!-- 申请幕布提示 -->
     <Modal v-model="showModal.applyHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">由于背景幕布需回收并多次使用，寄送幕布需要从您的账户冻结50元押金，待我们确认回收幕布之后，押金即解冻。注意：冻结押金不可用于购买和续费。您可以在费用中心查看冻结押金详情。
           </p>
         </div>
@@ -156,10 +158,12 @@
     </Modal>
     <!-- 冻结资金提示 -->
     <Modal v-model="showModal.freezeHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">冻结金额：50元</p>
           <p class="lh24">冻结事由：备案幕布申请</p>
           <p class="lh24">冻结时间：{{ currentData }}-幕布回收确认日</p>
@@ -173,10 +177,12 @@
     </Modal>
     <!-- 资金不足提示 -->
     <Modal v-model="showModal.shortageHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">您的账户余额小于50元，冻结资金不足。请先充值。
           </p>
         </div>
