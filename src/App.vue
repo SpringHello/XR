@@ -305,7 +305,7 @@
         <span class="phone"></span>
       </Poptip>
       <div>
-        <BackTop :bottom="161" :right="50" :duration="0" :height="1600" style="position: unset">
+        <BackTop :bottom="161" :right="50" :duration="300" :height="1000" style="position: unset">
           <span class="topLink"></span>
         </BackTop>
       </div>
