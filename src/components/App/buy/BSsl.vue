@@ -443,7 +443,7 @@ export default {
           //   ownUserIdCardNumber: '500227199209095726',
           //   ownUserEmail: '2420479720@qq.com',
           //   ownUserName: '冷红憬',
-          //   certallDomain: 'wosign.com',
+          //   certallDomain: 'wosign123132.com',
           //   ownUserPhone: '+86-151-23278316',
           //   orgPhone: '+86-151-23278316',
           //   certValidateType: '2',
