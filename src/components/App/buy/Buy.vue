@@ -25,7 +25,7 @@
               </div>
               <div style="padding-top:20px">
                 <!--公共展示区-->
-                <div class="public">
+                <div class="public" v-if="prod.type!='Pssl'">
                   <p class="item"><span class="hidden">$</span><span class="title">区域</span><span
                     class="hidden">#</span>{{prod.zone.zonename}}
                   </p>
@@ -143,6 +143,37 @@
                     class="hidden">#</span>{{prod.downLoad}}
                   </p>
                 </div>
+                <!--ssl证书清单字段-->
+                <div v-if="prod.type=='Pssl'">
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">证书类型</span><span
+                    class="hidden">#</span>{{prod.certTypeId}}
+                  </p>
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">申请年限</span><span
+                    class="hidden">#</span>{{prod.year}}年
+                  </p>
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">域名数量</span><span
+                    class="hidden">#</span>{{prod.domianLeagth}}
+                  </p>
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">服务数量</span><span
+                    class="hidden">#</span>{{prod.certserverNumber}}
+                  </p>
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">主域名</span><span
+                    class="hidden">#</span>{{prod.mainDomain}}
+                  </p>
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">绑定域名</span>
+                    <span class="hidden">#</span>{{prod.mainDomain}}
+                  </p>
+                  <p class="item" v-for="(item,index) in prod.certallDomain.split(',')" :key="index">
+                    <span class="hidden">$</span><span class="title" v-if="index==0">绑定域名</span><span class="title" v-else></span>
+                    <span class="hidden">#</span>{{item}}
+                  </p>
+                </div>
                 <!--底部价格公共区域-->
                 <div style="border-bottom:1px solid #ccc;padding-bottom: 20px">
                   <p class="item" style="margin-top: 10px">
@@ -151,7 +182,7 @@
                     <span class="hidden">#</span>
                     <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{(prod.cost * prod.count).toFixed(2)}}元</span>
                   </p>
-                  <p class="item" style="margin-top: 10px" v-if="prod.type!='Pobj'">
+                  <p class="item" style="margin-top: 10px" v-if="!(prod.type=='Pssl'||prod.type=='Pobj')">
                     <span class="title" style="vertical-align: middle">购买数量</span>
                   <ul style="display: inline-block;font-size: 14px;user-select: none">
                     <span class="numberAdd" v-if="prod.count == 1">-</span>
@@ -163,7 +194,6 @@
                           @click="prod.count += 1" v-else>+</span>
                   </ul>
                   </p>
-
                 </div>
               </div>
             </div>
@@ -266,10 +296,15 @@
         // 产品类型及选中类型
         product: {
           currentProduct: this.$route.name,
-          productList: [{label: '云主机', value: 'bhost'}, {label: '云硬盘', value: 'bdisk'}, {
-            label: '公网IP',
-            value: 'bip'
-          }, {label: '数据库', value: 'bdata'}, {label: '对象存储', value: 'bobj'}, {label: 'GPU服务器', value: 'bgpu'}]
+          productList: [
+            {label: '云主机', value: 'bhost'},
+            {label: '云硬盘', value: 'bdisk'},
+            {label: '公网IP', value: 'bip'},
+            {label: '数据库', value: 'bdata'},
+            {label: '对象存储', value: 'bobj'},
+            {label: 'GPU服务器', value: 'bgpu'},
+            {label: 'SSL证书', value: 'bssl'}
+          ]
         },
         // 当前可以创建的剩余资源数
         remainCount: {},
@@ -530,6 +565,7 @@
             }
             PromiseList.push(axios.get('gpuserver/createGpuServer.do', {params}))
           } else if (prod.type == 'Pobj') {
+            // 对象存储
             let params = {
               flowPackage: prod.save,
               capacity: prod.downLoad,
@@ -539,6 +575,26 @@
               countOrder
             }
             PromiseList.push(axios.post('ruiradosPrice/createOrder.do', params))
+          } else if (prod.type == 'Pssl') {
+            // ssl证书
+            let params = {
+                  sslName: prod.sslName,
+                  ownUserIdCardNumber: prod.ownUserIdCardNumber,
+                  ownUserEmail: prod.ownUserEmail,
+                  ownUserName: prod.ownUserName,
+                  certallDomain: prod.certallDomain,
+                  ownUserPhone: prod.ownUserPhone,
+                  orgPhone: prod.orgPhone,
+                  certValidateType: prod.certValidateType,
+                  certExpTime: prod.certExpTime,
+                  orgName: prod.orgName,
+                  orgType: prod.orgType,
+                  certTypeId: prod.certTypeId,
+                  orgEmail: prod.orgEmail,
+                  certserverNumber: prod.certserverNumber,
+                  countOrder
+                }
+            PromiseList.push(axios.post('domain/createSSLOrder.do', params))
           }
         }
         sessionStorage.removeItem('cart')
