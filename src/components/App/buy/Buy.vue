@@ -345,7 +345,7 @@
         },
         scrollList: () => {
           var allWidth = window.screen.width
-          console.log(allWidth)
+          // console.log(allWidth)
           // 获取div距顶部距离
           var top = this.$refs.lists.offsetTop
           //获取屏幕高度
