@@ -19,7 +19,7 @@
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a v-if="item.title=='资讯'" :href="item.path" target="_blank"><span>{{item.title}}</span>
+                  <a v-if="item.title=='资讯'"  :href="item.path" target="_blank"><span>{{item.title}}</span>
                   </a>
                   <router-link v-else :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
                                                                                v-if="item.title=='活动中心'"></sup></span>
@@ -958,6 +958,9 @@
                           width: 400px;
                           margin: 0 auto;
                         }
+                        .info:hover{
+                          color: #2A99F2;
+                        }
                         > div {
                           width: 15%;
                           &:last-of-type {
@@ -1342,4 +1345,5 @@
     border-radius: 50%;
     background-color: rgb(237, 63, 20, 0.5);
   }
+ 
 </style>
