@@ -25,7 +25,6 @@ const BDisk = () =>import('@/components/App/buy/BDisk')
 const BData = () =>import('@/components/App/buy/BData')
 const BGpu = () =>import('@/components/App/buy/BGpu')
 const BSsl = () =>import('@/components/App/buy/BSsl')
-const BSsl1 = () =>import('@/components/App/buy/BSsl1')
 const Ecs = () =>import('@/components/App/product/ECS')
 const Document = () =>import('@/components/App/Document')
 const Document1 = () =>import('@/components/App/Document1')
@@ -317,8 +316,7 @@ var router = new Router({
             {path: 'bdata', name: 'bdata', component: BData},
             {path: 'bobj', name: 'bobj', component: BObj},
             {path: 'bgpu', name: 'bgpu', component: BGpu},
-            {path: 'bssl', name: 'bssl', component: BSsl},
-            {path: 'bssl1', name: 'bssl1', component: BSsl1}
+            {path: 'bssl', name: 'bssl', component: BSsl}
           ]
         },
 

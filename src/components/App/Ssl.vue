@@ -45,7 +45,7 @@
                       ¥
                       <span>{{innerItem.price}}</span>元/年
                     </p>
-                    <Button>立即购买</Button>
+                    <Button @click="toBuy(item.name)">立即购买</Button>
                   </li>
                   <li v-if="item.name == 'EV'">
                     <p style="color:#999999;font-size:12px;">不支持通配符</p>
@@ -251,6 +251,10 @@ export default {
     jumpTo(detailTab) {
       this.selectedTab = 'detail'
       this.selectedTabSec = detailTab
+    },
+    toBuy(defaultType) {
+      sessionStorage.setItem('defaultType', defaultType)
+      this.$router.push('buy/bssl')
     },
     changeTabSec(data) {
       this.selectedTabSec = data

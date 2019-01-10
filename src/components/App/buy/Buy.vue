@@ -158,10 +158,6 @@
                     class="hidden">#</span>{{prod.domianLeagth}}
                   </p>
                   <p class="item">
-                    <span class="hidden">$</span><span class="title">服务数量</span><span
-                    class="hidden">#</span>{{prod.certserverNumber}}
-                  </p>
-                  <p class="item">
                     <span class="hidden">$</span><span class="title">主域名</span><span
                     class="hidden">#</span>{{prod.mainDomain}}
                   </p>
@@ -591,7 +587,6 @@
                   orgType: prod.orgType,
                   certTypeId: prod.certTypeId,
                   orgEmail: prod.orgEmail,
-                  certserverNumber: prod.certserverNumber,
                   countOrder
                 }
             PromiseList.push(axios.post('domain/createSSLOrder.do', params))

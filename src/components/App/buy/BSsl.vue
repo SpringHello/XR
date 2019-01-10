@@ -1,5 +1,5 @@
 <template>
-  <div id="bhost">
+  <div id="bhost" class="bssl">
     <div class="wrap">
       <div class="box">
         <Steps :current="step">
@@ -9,7 +9,8 @@
           <Step title="支付成功"></Step>
         </Steps>
       </div>
-      <div class="step-one" v-if="step==0">
+      <div class="step-one universal-form-tips-line" v-if="step==0">
+        <Form ref="formValidateOne" :model="formValidateOne" :rules="ruleValidateOne" size="large">
           <div class="box">
             <h1 class="headline">证书类型</h1>
             <div class="content">
@@ -17,24 +18,23 @@
                 v-for="(item,index) in type"
                 :key="index"
                 class="type-btn"
-                :class="{typeselected: selectedType.value==item.value}"
-                @click="selectedType.value=item.value"
+                :class="{typeselected: formValidateOne.selectedType==item.value}"
+                @click="formValidateOne.selectedType=item.value"
               >{{item.text}}</span>
             </div>
           </div>
-          
           <div class="box">
             <h1 class="headline">输入证书名称</h1>
-            <div class="content">
+            <FormItem prop="sslName" size="large">
               <Input
-                v-model="sslForm.sslName"
+                v-model="formValidateOne.sslName"
                 placeholder="输入证书名称"
-                style="width: 650px"
+                style="width: 400px"
                 size="large"
               ></Input>
-            </div>
+            </FormItem>
           </div>
-          <div class="box">
+          <div class="box" style="padding-bottom:40px;">
             <h1 class="headline">输入绑定域名</h1>
             <div class="content">
               <Alert type="warning" class="domian-hint">
@@ -48,7 +48,9 @@
                   <span class="orange">( 价格:单域购买价*3)。</span>
                 </p>
               </Alert>
-              <Input v-model="sslForm.domain" type="textarea" :rows="5"></Input>
+              <FormItem prop="domain" size="large" class="domain-textarea">
+                <Input v-model="formValidateOne.domain" type="textarea" :rows="5"></Input>
+              </FormItem>
             </div>
           </div>
           <div class="box">
@@ -59,52 +61,55 @@
                 v-for="(item,index) in timeValue"
                 :key="index"
                 class="type-btn"
-                :class="{typeselected: yearSelected == index}"
-                @click="yearSelected =index"
+                :class="{typeselected: formValidateOne.yearSelected == index}"
+                @click="formValidateOne.yearSelected =index"
               >{{item}}年</span>
             </div>
           </div>
-         
-          <div class="box" v-if="selectedType.value=='1'">
+          <div class="box" v-if="formValidateOne.selectedType=='1'">
             <h1 class="headline">验证申请</h1>
             <div class="content mb30" style="color:#333">
               <div class="vail-gap">
-                <span>验证方式</span>
-                <Select v-model="sslForm.vailType" style="width:140px" size="large">
-                  <Option
-                    v-for="item in vailTypeList"
-                    :value="item.value"
-                    :key="item.value"
-                  >{{ item.text }}</Option>
-                </Select>
+                <FormItem label="验证方式" prop="vailType" size="large">
+                  <Select v-model="formValidateOne.vailType" style="width:140px" size="large">
+                    <Option
+                      v-for="item in vailTypeList"
+                      :value="item.value"
+                      :key="item.value"
+                    >{{ item.text }}</Option>
+                  </Select>
+                </FormItem>
               </div>
-              <div v-if="sslForm.vailType == '4'">
+              <div v-if="formValidateOne.vailType == '4'">
                 <div class="vail-gap">
-                  <span>单位开户行</span>
-                  <Input
-                    v-model="sslForm.sslName"
-                    placeholder="输入单位开户行"
-                    style="width: 400px"
-                    size="large"
-                  ></Input>
+                  <FormItem label="单位开户行" prop="bankName" size="large">
+                    <Input
+                      v-model="formValidateOne.bankName"
+                      placeholder="输入单位开户行"
+                      style="width: 400px"
+                      size="large"
+                    ></Input>
+                  </FormItem>
                 </div>
                 <div class="vail-gap">
-                  <span>单位银联账号</span>
-                  <Input
-                    v-model="sslForm.sslName"
-                    placeholder="输入银联账号"
-                    style="width: 400px"
-                    size="large"
-                  ></Input>
+                  <FormItem label="单位银联账号" prop="bankAccountNum" size="large">
+                    <Input
+                      v-model="formValidateOne.bankAccountNum"
+                      placeholder="输入银联账号"
+                      style="width: 400px"
+                      size="large"
+                    ></Input>
+                  </FormItem>
                 </div>
                 <div class="vail-gap">
-                  <span>单位联行号</span>
-                  <Input
-                    v-model="sslForm.sslName"
-                    placeholder="输入单位联行号"
-                    style="width: 400px"
-                    size="large"
-                  ></Input>
+                  <FormItem label="单位联行号" prop="bankNum" size="large">
+                    <Input
+                      v-model="formValidateOne.bankNum"
+                      placeholder="输入单位联行号"
+                      style="width: 400px"
+                      size="large"
+                    ></Input>
+                  </FormItem>
                 </div>
               </div>
             </div>
@@ -122,104 +127,115 @@
               <span class="orange">35元</span>
             </p>
             <div class="btns">
-              <Button class="f16 btn-blue" @click="post()">下一步</Button>
+              <Button class="f16 btn-blue" @click="stepOne_ok('formValidateOne')">下一步</Button>
             </div>
           </div>
+        </Form>
       </div>
-      <div class="step-two" v-if="step==1">
-        <div class="box" v-if="selectedType.value=='1'">
-          <h1 class="headline">单位信息</h1>
-          <div class="content mb30" style="color:#333">
-            <div>
-              <div class="vail-gap">
-                <span>单位名称</span>
-                <Input
-                  v-model="sslInfo.unitName"
-                  placeholder="请输入您单位的全称"
-                  style="width: 400px"
-                  size="large"
-                ></Input>
-              </div>
-              <div class="vail-gap">
-                <span>单位邮箱</span>
-                <Input
-                  v-model="sslInfo.unitEmail"
-                  placeholder="请输入您单位的邮箱"
-                  style="width: 400px"
-                  size="large"
-                ></Input>
-              </div>
-              <div class="vail-gap">
-                <span>单位类型</span>
-                <RadioGroup v-model="sslInfo.unitType">
-                  <Radio label="PrivateOrganization" size="large">企业</Radio>
-                  <Radio label="BusinessEntity" size="large">个体</Radio>
-                  <Radio label="GovernmentEntity" size="large">政府事业单位</Radio>
-                  <Radio label="Non-CommercialEntity" size="large">非商业机构/协会</Radio>
-                </RadioGroup>
-              </div>
-              <div class="vail-gap">
-                <span>单位电话</span>
-                <Input
-                  v-model="sslInfo.unitTel"
-                  placeholder="请输入单位电话"
-                  style="width: 400px"
-                  size="large"
-                ></Input>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="box">
-          <h1 class="headline">被授权人信息</h1>
-          <div class="content mb30" style="color:#333">
-            <div>
-              <div class="vail-gap">
-                <span>姓名</span>
-                <Input
-                  v-model="sslInfo.manName"
-                  placeholder="请输入您单位的全称"
-                  style="width: 400px"
-                  size="large"
-                ></Input>
-              </div>
-              <div class="vail-gap">
-                <span>邮箱地址</span>
-                <Input
-                  v-model="sslInfo.manEmail"
-                  placeholder="请输入您单位的邮箱"
-                  style="width: 400px"
-                  size="large"
-                ></Input>
-              </div>
-              <div class="vail-gap">
-                <span>电话</span>
-                <Input
-                  v-model="sslInfo.contactsTel"
-                  placeholder="请输入单位电话"
-                  style="width: 400px"
-                  size="large"
-                ></Input>
-              </div>
-              <div class="vail-gap" v-if="selectedType.value=='1'">
-                <span>身份证号码</span>
-                <Input
-                  v-model="sslInfo.certificateNum"
-                  placeholder="请输入单位电话"
-                  style="width: 400px"
-                  size="large"
-                ></Input>
+      <div class="step-two universal-form-tips-line" v-if="step==1">
+        <Form ref="formValidateTwo" :model="formValidateTwo" :rules="ruleValidateTwo" size="large">
+          <div class="box" v-if="formValidateOne.selectedType=='1'">
+            <h1 class="headline">单位信息</h1>
+            <div class="content mb30" style="color:#333">
+              <div>
+                <div class="vail-gap">
+                  <FormItem label="单位名称" prop="unitName" size="large">
+                    <Input
+                      v-model="formValidateTwo.unitName"
+                      placeholder="请输入您单位的全称"
+                      style="width: 400px"
+                      size="large"
+                    ></Input>
+                  </FormItem>
+                </div>
+                <div class="vail-gap">
+                  <FormItem label="单位邮箱" prop="unitEmail" size="large">
+                    <Input
+                      v-model="formValidateTwo.unitEmail"
+                      placeholder="请输入您单位的邮箱"
+                      style="width: 400px"
+                      size="large"
+                    ></Input>
+                  </FormItem>
+                </div>
+                <div class="vail-gap">
+                  <FormItem label="单位类型" size="large">
+                    <RadioGroup v-model="formValidateTwo.unitType">
+                      <Radio label="PrivateOrganization" size="large">企业</Radio>
+                      <Radio label="BusinessEntity" size="large">个体</Radio>
+                      <Radio label="GovernmentEntity" size="large">政府事业单位</Radio>
+                      <Radio label="Non-CommercialEntity" size="large">非商业机构/协会</Radio>
+                    </RadioGroup>
+                  </FormItem>
+                </div>
+                <div class="vail-gap">
+                  <FormItem label="单位电话" prop="unitTel" size="large">
+                    <Input
+                      v-model="formValidateTwo.unitTel"
+                      placeholder="请输入单位电话"
+                      style="width: 400px"
+                      size="large"
+                    ></Input>
+                  </FormItem>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="cost">
-          <div class="btns">
-            <Button class="f16" @click="addObjCart()">加入预算清单</Button>
-            <Button class="f16" @click="step=0">上一步</Button>
-            <Button class="f16 btn-blue" @click="postOrder()">提交</Button>
+          <div class="box">
+            <h1 class="headline">被授权人信息</h1>
+            <div class="content mb30" style="color:#333">
+              <div>
+                <div class="vail-gap">
+                  <FormItem label="姓名" prop="manName" size="large">
+                    <Input
+                      v-model="formValidateTwo.manName"
+                      placeholder="请输入被授权人的姓名"
+                      style="width: 400px"
+                      size="large"
+                    ></Input>
+                  </FormItem>
+                </div>
+                <div class="vail-gap">
+                  <FormItem label="邮箱地址" prop="manEmail" size="large">
+                    <Input
+                      v-model="formValidateTwo.manEmail"
+                      placeholder="请输入邮箱"
+                      style="width: 400px"
+                      size="large"
+                    ></Input>
+                  </FormItem>
+                </div>
+                <div class="vail-gap">
+                  <FormItem label="电话" prop="contactsTel" size="large">
+                    <Input
+                      v-model="formValidateTwo.contactsTel"
+                      placeholder="请输入电话"
+                      style="width: 400px"
+                      size="large"
+                    ></Input>
+                  </FormItem>
+                </div>
+                <div class="vail-gap" v-if="formValidateOne.selectedType=='1'">
+                  <FormItem label="身份证号码" prop="certificateNum" size="large">
+                    <Input
+                      v-model="formValidateTwo.certificateNum"
+                      placeholder="请输入身份证号码"
+                      style="width: 400px"
+                      size="large"
+                    ></Input>
+                  </FormItem>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+          <div class="cost">
+            <div class="btns">
+              <Button class="f16" @click="addObjCart()">加入预算清单</Button>
+              <Button class="f16" @click="step=0">上一步</Button>
+              <Button class="f16 btn-blue" @click="postOrder('formValidateTwo')">提交</Button>
+            </div>
+          </div>
+        </Form>
       </div>
     </div>
   </div>
@@ -227,25 +243,70 @@
 
 <script type="text/ecmascript-6">
 import axios from '@/util/axiosInterceptor'
-// import regExp from '@/util/regExp'
+import reg from '@/util/regExp'
 
 var debounce = require('throttle-debounce/debounce')
 export default {
   data () {
+    // 域名正则批量判断
+    const validateDomain = (rule, value, callback) => {
+      var flag = this.domainReg(value)
+      if (flag) {
+        callback()
+      } else if (/\s/.test(value)) {
+        callback(new Error('不要输入空格'));
+      } else {
+        callback(new Error('请输入正确的域名格式'));
+      }
+    }
+    const validaRegisteredID = (rule, value, callback) => {
+      if (!reg.IDCardVail(value)) {
+        callback(new Error('请输入正确的身份证号码'));
+      } else {
+        callback()
+      }
+    }
+    const validaPhone = (rule, value, callback) => {
+      if (!reg.phoneVail(value)) {
+        callback(new Error('电话号码格式不正确'));
+      } else {
+        callback()
+      }
+    }
     return {
+      domainList: [],
       step: 0,
-      sslForm: {
+      formValidateOne: {
         sslName: '',
         domain: '',
-        // hostCount: 1,
-        vailType: '2'
+        vailType: '2',
+        selectedType: '1',
+        yearSelected: 0,
+        bankName: '',
+        bankAccountNum: '',
+        bankNum: '',
+      },
+      ruleValidateOne: {
+        sslName: [
+          { required: true, message: '请输入证书名称', trigger: 'blur' }
+        ],
+        domain: [
+          { required: true, message: '请输入域名', trigger: 'blur' },
+          { required: true, validator: validateDomain, trigger: 'blur' },
+        ],
+        bankName: [
+          { required: true, message: '请输入单位开户行', trigger: 'blur' }
+        ],
+        bankAccountNum: [
+          { required: true, message: '请输入单位银联账号', trigger: 'blur' }
+        ]
       },
       vailTypeList: [
         { text: '电话验证', value: '2' },
         { text: '小额验证', value: '4' },
       ],
       // 2-超快SSL Pre,1-超真SSL Pro,3-超安SSL Pre,4-超真SSL Pre,5-超安SSL Pro
-      selectedType: { text: '超真SSL Pro（OV)', value: '1' },
+      // selectedType: { text: '超真SSL Pro（OV)', value: '1' },
       type: [
         { text: '超真SSL Pro（OV)', value: '1' },
         { text: '超快SSL Pre（DV)', value: '2' },
@@ -253,17 +314,44 @@ export default {
         // { text: '超真SSL Pre（OV)', value: '4' },
         // { text: '超安SSL Pre（EV)', value: '5' }
       ],
-      yearSelected: 0,
       timeValue: [1, 2],
-      sslInfo: {
+      formValidateTwo: {
         unitName: '',
+        unitEmail: '',
         unitType: 'PrivateOrganization',
         unitTel: '',
         manName: '',
         manEmail: '',
-        certificateNum: '',
         contactsTel: '',
-        unitEmail: '',
+        certificateNum: ''
+      },
+      ruleValidateTwo: {
+        unitName: [
+          { required: true, message: '请输入单位名称', trigger: 'blur' }
+        ],
+        unitEmail: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+        ],
+        unitTel: [
+          { required: true, message: '请输入电话号码', trigger: 'blur' },
+          { required: true, validator: validaPhone, trigger: 'blur' }
+        ],
+        manName: [
+          { required: true, message: '请输入姓名', trigger: 'blur' }
+        ],
+        manEmail: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+        ],
+        contactsTel: [
+          { required: true, message: '请输入电话号码', trigger: 'blur' },
+          { required: true, validator: validaPhone, trigger: 'blur' }
+        ],
+        certificateNum: [
+          { required: true, message: '请输入证件号码', trigger: 'blur' },
+          { required: true, validator: validaRegisteredID, trigger: 'blur' }
+        ]
       },
       certificateList: [
         {
@@ -283,25 +371,37 @@ export default {
     }
   },
   created () {
-    // if (this.sslForm.domain) {
-    //   this.price()
-    // }
+    if (sessionStorage.getItem('defaultType')) {
+      var val = sessionStorage.getItem('defaultType')
+      this.formValidateOne.selectedType = val == 'OV' ? '1' : (val == 'DV' ? '2' : '')
+    }
     this.price()
   },
   methods: {
-    post () {
-      // if(this.sslInfo.unitTel){
-
-      // }
-      this.step = 1
+    stepOne_ok (name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          this.step = 1
+        }
+      })
+    },
+    domainReg (string) {
+      let reg = /^[a-zA-Z0-9\u4e00-\u9fa5][-a-zA-Z0-9\u4e00-\u9fa5]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/
+      this.domainList = string.split('\n').filter(item => {
+        return item != ''
+      })
+      let flag = this.domainList.every(item => {
+        return reg.test(item)
+      })
+      return flag
     },
     price () {
-      if (this.selectedType.value && this.sslForm.domain && (this.yearSelected + 1)) {
-        let domainList = this.sslForm.domain.split('\n')
+      let flag = this.domainReg(this.formValidateOne.domain)
+      if (this.formValidateOne.selectedType && flag && (this.formValidateOne.yearSelected + 1)) {
         axios.post('domain/getSSLPriceFromType.do', {
-          certTypeId: this.selectedType.value,
-          certallDomain: domainList.join(),
-          certExpTime: (this.yearSelected + 1) * 12
+          certTypeId: this.formValidateOne.selectedType,
+          certallDomain: this.domainList.join(),
+          certExpTime: (this.formValidateOne.yearSelected + 1) * 12
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.cost = response.data.data.sslCost
@@ -311,74 +411,75 @@ export default {
         })
       }
     },
-    postOrder () {
+    phoneReg (val) {
+      var tel = val.replace(/(\d{3})(\d{8})/, "$1-$2")
+      return '+86-' + tel
+    },
+    postOrder (name) {
       if (this.userInfo == null) {
         this.$LR({ type: 'login' })
         return
       }
-      var domainList = this.sslForm.domain.split('\n')
-      var params = {}
-      // var params1 = {
-      //   sslName: this.sslForm.sslName,
-      //   ownUserIdCardNumber: this.sslInfo.certificateNum,
-      //   ownUserEmail: this.sslInfo.manEmail,
-      //   ownUserName: this.sslInfo.manName,
-      //   certallDomain: domainList.join(),
-      //   ownUserPhone: this.sslInfo.contactsTel,
-      //   orgPhone: this.sslInfo.unitTel,
-      //   certValidateType: this.sslForm.vailType,
-      //   certExpTime: (this.yearSelected + 1) * 12,
-      //   orgName: this.sslInfo.unitName,
-      //   orgType: this.sslInfo.unitType,
-      //   certTypeId: this.selectedType.value,
-      //   orgEmail: this.sslInfo.unitEmail,
-      // }
-      var params1 = {
-        sslName: '证书',
-        ownUserIdCardNumber: '500227199209095726',
-        ownUserEmail: '2420479720@qq.com',
-        ownUserName: '冷红憬',
-        certallDomain: 'gt21.top',
-        ownUserPhone: '+86-151-23278316',
-        orgPhone: '+86-151-23278316',
-        certValidateType: '2',
-        certExpTime: '12',
-        orgName: '北京允睿',
-        orgType: 'PrivateOrganization',
-        certTypeId: '1',
-        orgEmail: '2420479720@qq.com',
-        // certserverNumber: this.sslForm.hostCount,
-      }
-      // var params2 = {
-      //   sslName: this.sslForm.sslName,
-      //   ownUserEmail: this.sslInfo.manEmail,
-      //   ownUserName: this.sslInfo.manName,
-      //   certallDomain: domainList.join(),
-      //   ownUserPhone: this.sslInfo.contactsTel,
-      //   certExpTime: (this.yearSelected + 1) * 12,
-      //   certTypeId: this.selectedType.value,
-      // }
-      var params2 = {
-        sslName: '证书',
-        ownUserEmail: '2420479720@qq.com',
-        ownUserName: '冷红憬',
-        certallDomain: 'gt21.top,aimee.cn,lhj.com',
-        ownUserPhone: '+86-151-23278316',
-        certExpTime: '24',
-        certTypeId: '2',
-      }
-      // params = this.selectedType.value == '1' ? params1 : params2
-      params = params2
-      console.log(params)
-      axios.post('domain/createSSLOrder.do', params).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.$router.push('/ruicloud/order')
-        } else {
-          this.$message.info({
-            content: response.data.message
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          var params = {}
+          var params1 = {
+            sslName: this.formValidateOne.sslName,
+            ownUserIdCardNumber: this.formValidateTwo.certificateNum,
+            ownUserEmail: this.formValidateTwo.manEmail,
+            ownUserName: this.formValidateTwo.manName,
+            certallDomain: this.domainList.join(),
+            ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
+            orgPhone: this.phoneReg(this.formValidateTwo.unitTel),
+            certValidateType: this.formValidateOne.vailType,
+            certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+            orgName: this.formValidateTwo.unitName,
+            orgType: this.formValidateTwo.unitType,
+            certTypeId: this.formValidateOne.selectedType,
+            orgEmail: this.formValidateTwo.unitEmail,
+          }
+          // var params1 = {
+          //   sslName: '证书',
+          //   ownUserIdCardNumber: '500227199209095726',
+          //   ownUserEmail: '2420479720@qq.com',
+          //   ownUserName: '冷红憬',
+          //   certallDomain: 'wosign.com',
+          //   ownUserPhone: '+86-151-23278316',
+          //   orgPhone: '+86-151-23278316',
+          //   certValidateType: '2',
+          //   certExpTime: '12',
+          //   orgName: '北京允睿',
+          //   orgType: 'PrivateOrganization',
+          //   certTypeId: '1',
+          //   orgEmail: '2420479720@qq.com',
+          //   // certserverNumber: this.formValidateOne.hostCount,
+          // }
+          var params2 = {
+            sslName: this.formValidateOne.sslName,
+            ownUserEmail: this.formValidateTwo.manEmail,
+            ownUserName: this.formValidateTwo.manName,
+            certallDomain: this.domainList.join(),
+            ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
+            certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+            certTypeId: this.formValidateOne.selectedType,
+          }
+          params = this.formValidateOne.selectedType == '1' ? params1 : params2
+          // params = params1
+          console.log(params)
+          axios.post('domain/createSSLOrder.do', params).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$router.push('/ruicloud/order')
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
           })
+        } else {
+          this.$Message.error('Fail!');
         }
       })
+
     },
     // 加入购物清单
     addObjCart () {
@@ -387,50 +488,48 @@ export default {
           content: '购物车已满'
         })
       }
-      let domainList = this.sslForm.domain.split('\n')
       let prod = {}
       let params1 = {
         typeName: 'ssl证书',
         type: 'Pssl',
         cost: this.cost,
         count: 1,
-        year: this.yearSelected + 1,
-        domianLeagth: domainList.length,
-        mainDomain: domainList[0],
+        year: this.formValidateOne.yearSelected + 1,
+        domianLeagth: this.domainList.length,
+        mainDomain: this.domainList[0],
         // 创建订单需要的参数
-        sslName: this.sslForm.sslName,
-        ownUserIdCardNumber: this.sslInfo.certificateNum,
-        ownUserEmail: this.sslInfo.manEmail,
-        ownUserName: this.sslInfo.manName,
-        certallDomain: domainList.join(),
-        ownUserPhone: this.sslInfo.contactsTel,
-        orgPhone: this.sslInfo.unitTel,
-        certValidateType: this.sslForm.vailType,
-        certExpTime: (this.yearSelected + 1) * 12,
-        orgName: this.sslInfo.unitName,
-        orgType: this.sslInfo.unitType,
-        certTypeId: this.selectedType.value,
-        orgEmail: this.sslInfo.unitEmail,
-        // certserverNumber: this.sslForm.hostCount,
+        sslName: this.formValidateOne.sslName,
+        ownUserIdCardNumber: this.formValidateTwo.certificateNum,
+        ownUserEmail: this.formValidateTwo.manEmail,
+        ownUserName: this.formValidateTwo.manName,
+        certallDomain: this.domainList.join(),
+        ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
+        orgPhone: this.phoneReg(this.formValidateTwo.unitTel),
+        certValidateType: this.formValidateOne.vailType,
+        certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+        orgName: this.formValidateTwo.unitName,
+        orgType: this.formValidateTwo.unitType,
+        certTypeId: this.formValidateOne.selectedType,
+        orgEmail: this.formValidateTwo.unitEmail,
       }
       let params2 = {
         typeName: 'ssl证书',
         type: 'Pssl',
         cost: this.cost,
         count: 1,
-        year: this.yearSelected + 1,
-        domianLeagth: domainList.length,
-        mainDomain: domainList[0],
+        year: this.formValidateOne.yearSelected + 1,
+        domianLeagth: this.domainList.length,
+        mainDomain: this.domainList[0],
         // 创建订单需要的参数
-        sslName: this.sslForm.sslName,
-        ownUserEmail: this.sslInfo.manEmail,
-        ownUserName: this.sslInfo.manName,
-        certallDomain: domainList.join(),
-        ownUserPhone: this.sslInfo.contactsTel,
-        certExpTime: (this.yearSelected + 1) * 12,
-        certTypeId: this.selectedType.value,
+        sslName: this.formValidateOne.sslName,
+        ownUserEmail: this.formValidateTwo.manEmail,
+        ownUserName: this.formValidateTwo.manName,
+        certallDomain: this.domainList.join(),
+        ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
+        certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+        certTypeId: this.formValidateOne.selectedType,
       }
-      prod = this.selectedType.value == '1' ? params1 : params2
+      prod = this.formValidateOne.selectedType == '1' ? params1 : params2
       this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
       window.scrollTo(0, 170)
     },
@@ -441,16 +540,19 @@ export default {
     },
   },
   watch: {
-    'selectedType.value': function () {
+    'formValidateOne.selectedType': function () {
       this.price()
     },
-    'sslForm.domain': debounce(1000, function () {
+    'formValidateOne.domain': debounce(1000, function () {
       this.price()
     }),
-    yearSelected () {
-      this.price()
+  },
+  beforeRouteLeave (from, to, next) {
+    if (sessionStorage.getItem('defaultType')) {
+      sessionStorage.removeItem('defaultType')
     }
-  }
+    next()
+  },
 }
 </script>
 
@@ -477,10 +579,6 @@ export default {
       }
       .vail-gap {
         margin-bottom: 20px;
-        span {
-          display: inline-block;
-          width: 100px;
-        }
       }
     }
     .type-btn {

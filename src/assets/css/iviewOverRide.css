@@ -65,6 +65,12 @@
   line-height: 36px;
   padding: 0; 
 }
+.universal-form-tips-line .domain-textarea .ivu-form-item-error-tip {
+  position: absolute;
+  line-height: 1;
+  padding-top: 6px;
+  margin-left: 0;
+}
 /* .universal-form-tips-line .ivu-form-item-error-tip:before {
   content: '';
   margin-right: 0px;
