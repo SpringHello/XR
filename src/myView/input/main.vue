@@ -19,6 +19,7 @@
         :spellcheck="spellcheck" 
         :disabled="disabled"
         :readonly="readonly"
+        :type="type"
         ref='xInput'
         :class="inputClasses"
         :placeholder="placeholder" 
@@ -32,8 +33,7 @@
         @focus="handleFocus"
         >
         <slot name="code"></slot>
-        <img class="ver_eye" @click="isEye = !isEye" :src="eye" v-if="isSelect == 'eye'">
-        <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE">重新获取</span>或<span  style="color:#4A97EE">接收语音验证</span></p>
+        <img class="ver_eye" @click="eyeType" :src="eye" v-if="isSelect == 'eye'">
     </div>
 </template>
 
@@ -80,7 +80,11 @@ export default {
         choice:{
             type:String,
             default:''
-        }
+        },
+        // type:{
+        //     type:String,
+        //     default:''
+        // }
     },
     data(){
         return{
@@ -95,7 +99,8 @@ export default {
             count:10,
             timeBoo:true,
             isEye:false,
-            timeP:false
+            timeP:false,
+            type:''
         }
     },
     mounted(){
@@ -163,6 +168,14 @@ export default {
             })
             }
         },
+        eyeType(){
+            this.isEye = !this.isEye;
+            if(this.isEye){
+                this.type ='';
+            }else{
+                this.type = 'password';
+            }
+        }
     },
     created(){
      

@@ -2,7 +2,7 @@
   <div class="login-wrapper">
     <div class="wrapper">
       <div class="wrapper-form">
-        <p class="title">忘记密码 | 重置密码</p>
+        <p class="title">忘记密码 | {{resetAccount?'重置账号':'重置密码'}}</p>
         <div class="login-form">
           <div class="body">
             <div class="process-header">
@@ -84,10 +84,13 @@
                    </FormItem>
                    <FormItem prop='code'>
                       <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
-                          <div class="ver_yan" slot="code">
+                        <div slot="code">
+                          <div class="ver_yan">
                               <span @click="timeReduce" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
                               <span v-else style="color:#666666;">{{count}}</span>
                           </div>
+                          <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE;cursor:pointer;" @click="timeReduce">重新获取</span>或<span  style="color:#4A97EE;cursor:pointer;" >接收语音验证</span></p>
+                        </div>
                       </x-Input>
                    </FormItem>
                </Form>
@@ -98,8 +101,8 @@
             <div class="verification"  v-if="verPage == 'card'">
               <div v-if="absc">
                 <Form  :model="dataFroms" :rules="dataFromsValidate" >
-                  <FormItem prop='phone'>
-                    <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入您的姓名' ></x-Input>
+                  <FormItem prop='name'>
+                    <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.name"  placeholder='请输入您的姓名' ></x-Input>
                   </FormItem>
                   <FormItem prop='phone'>
                     <x-Input ref="xinput" :icon='url.iconCard' v-model="formValidate.account"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
@@ -149,7 +152,7 @@
             <div class="verification" v-if="index == 4">
                <Form  :model="dataFroms" :rules="dataFromsValidate" >
                 <FormItem prop='newPaw'>
-                  <x-Input  :icon='url.iconLock' v-model="dataFroms.newPaw"  placeholder='请设置新密码' choice='eye'></x-Input>
+                  <x-Input   :icon='url.iconLock' v-model="dataFroms.newPaw"  placeholder='请设置新密码' choice='eye'></x-Input>
                 </FormItem>
                 <FormItem prop='oldPaw'>
                   <x-Input  :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请确认新密码' choice='eye'></x-Input>
@@ -160,11 +163,24 @@
 
             <!-- 完成 -->
             <div class="verification" v-if="index == 5">
-              <div>
-                <img src="../../assets/img/updatePaw/shape.png">
-                <span>重置密码成功</span>
+              <div v-if="!resetAccount" style="text-align:center;">
+                <div>
+                  <img src="../../assets/img/updatePaw/shape.png">
+                  <span style="color:#333333;font-size:18px;">重置密码成功</span>
+                  <div style="text-align:center;margin-top:20px;">
+                    <Button type="primary">立即登录</Button>
+                  </div>
+                </div>
               </div>
-              <div>立即登录</div>
+              <div v-else>
+                <div class="reset_acc">
+                  <img src="../../assets/img/updatePaw/shape.png">
+                  <p style="font-size:18px;margin-top:20px;">您的更改申请提交成功</p>
+                  <p style="font-size:14px;margin:10px 0;">我们会在24小时内将审核结果发至您的新手机号：{{formValidate.account}}</p>
+                  <p style="font-size:14px;">——请注意查收——</p>
+                  <Button type="primary" style="margin-top:20px;" @click="$router.push({path:'login'})">完成</Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -189,9 +205,12 @@ const vailAucct = (rule, value, callback) => {
   }
 };
 
+
+
 export default {
   data() {
     return {
+       
       imgSrc: "user/getKaptchaImage.do",
       form: {
         // 是否明文显示密码
@@ -299,10 +318,7 @@ export default {
         account: [{ required: true, validator: vailAucct, trigger: "blur" }]
       },
 
-      // 邮箱表单
-      emailValidate:{
-        email:''
-      },
+      
       dataFromsValidate:{
         email:[
           {required:true,message:'请输入邮箱',trigger:'blur'},
@@ -314,6 +330,7 @@ export default {
       type: "1",
       codePlaceholder: "发送验证码",
 
+      // 步骤
       index: 1,
 
       //验证
@@ -325,7 +342,8 @@ export default {
         oldPaw: "",
         email: "",
         phone: "",
-        code: ""
+        code: "",
+        name:''
       },
 
       //账号是否可用
@@ -341,6 +359,9 @@ export default {
       QQInfo: "", // QQ客服在线情况
       count:10,
       timeBoo:true,
+      timeP:false,
+      // 重置账号
+      resetAccount:false
     };
   },
   components: {
@@ -507,7 +528,7 @@ export default {
       } else if (index == 2) {
         this.verPage = "card";
       } else if (index == 3) {
-        this.verPage = "people";
+        this.verPage = 'people';
       }
     },
     focusFunction() {
@@ -529,6 +550,7 @@ export default {
       } else {
         this.accountIsDis = true;
         this.index = 2;
+        this.resetAccount = true
       }
     },
 
@@ -789,21 +811,8 @@ export default {
           background: rgb(71, 167, 245);
           cursor: pointer;
         }
-        .v_input {
-          border: 1px solid #ed3f14;
-        }
-
-        .input {
-          width: 85%;
-          border: none;
-          vertical-align: top;
-          height: 44px;
-          margin-left: 20px;
-          outline: 0;
-          text-decoration: none;
-        }
-
-        .verifcation_box {
+     
+         .verifcation_box {
           padding: 21px 20px 23px 21px;
           margin-bottom: 12px;
           width: 360px;
@@ -853,62 +862,7 @@ export default {
         }
       }
     }
-    .foot {
-      button {
-        width: 80%;
-        margin: 0px auto;
-        display: block;
-        height: 45px;
-        background-color: #4990e2;
-        border: none;
-        font-family: PingFangSC-Medium;
-        font-size: 14px;
-        color: #ffffff;
-        letter-spacing: 0.83px;
-        cursor: pointer;
-        margin-bottom: 15px;
-        &.disabled {
-          cursor: not-allowed;
-        }
-      }
-      .checkBox {
-        width: 12px;
-        height: 12px;
-        border-radius: 2px;
-        display: inline-block;
-        border: 1px solid #ccc;
-        cursor: pointer;
-      }
-      .agree {
-        background-color: #2d8cf0;
-        border-color: #2d8cf0;
-        position: relative;
-        &::after {
-          content: "";
-          display: table;
-          width: 4px;
-          height: 8px;
-          position: absolute;
-          top: 0px;
-          left: 3px;
-          border: 2px solid #fff;
-          border-top: 0;
-          border-left: 0;
-          transform: rotate(45deg) scale(1);
-        }
-      }
-      div {
-        width: 80%;
-        height: 20px;
-        margin: 0px auto;
-      }
-      span {
-        vertical-align: middle;
-        font-family: PingFangSC-Regular;
-        font-size: 14px;
-        letter-spacing: 0.83px;
-      }
-    }
+
   }
   .rules {
     position: absolute;
@@ -929,19 +883,13 @@ export default {
       }
     }
   }
-  .foot-bar {
-    position: fixed;
-    height: 60px;
-    width: 100%;
-    bottom: 0px;
-    border-top: 1px solid #3333;
-    background: #f4f4f4;
-    font-size: 14px;
-    line-height: 60px;
-    span,
-    a {
-      margin-right: 40px;
+  .reset_acc{
+    font-family: 'MicrosoftYaHei';
+    text-align: center;
+    p{
+      color:#666666;
     }
   }
+
 }
 </style>
