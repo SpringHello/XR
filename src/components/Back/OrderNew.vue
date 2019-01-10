@@ -366,9 +366,9 @@
       },
       changeCashbox(bol){
          if(this.couponInfo.isUse){
-           this.couponInfo.isUse =  !this.couponInfo.isCash;
+          this.couponInfo.isUse = !this.couponInfo.isCash;
         }
-         this.couponInfo.isUse = !this.couponInfo.isCash;
+         
          this.couponInfo.totalCost = this.couponInfo.totalCost - (bol?this.couponInfo.cash:0);
          if(!bol){
          }else{
