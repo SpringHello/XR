@@ -100,10 +100,10 @@
                 <div style="margin-top: 20px;display: flex" v-show="resourcesQuotaShow">
                   <div style="width: 280px;border-left: 1px solid #E9E9E9;border-top: 1px solid #E9E9E9;">
                     <div
-                      style="display: flex;padding-left: 20px;align-items: center;height: 39px;background:#F8F8F9 ">
+                      style="display: flex;justify-content:center;align-items: center;height: 39px;background:#F8F8F9 ">
                       <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
                     </div>
-                    <div class="infTop" :class="{one: index==0,two: index==1||index==3||index==4||index==6||index==9||index==10,three:index== 8,four: index == 11}"
+                    <div class="infTop" :class="{one: index==0,two: index==1||index==2||index==3||index==4||index==5||index==6||index==9||index==10,three:index== 8}"
                          v-for="(item,index) in resourcesQuotaList">
                       <span class="inf">{{ item.title}}</span>
                     </div>
@@ -128,7 +128,7 @@
               <div style="margin-top: 20px;display: flex">
                 <div style="width: 200px;border-left: 1px solid #E9E9E9;border-top: 1px solid #E9E9E9;">
                   <div
-                    style="display: flex;padding-left: 20px;align-items: center;height: 39px;background:#F8F8F9 ">
+                    style="display: flex;justify-content:center;align-items: center;height: 39px;background:#F8F8F9 ">
                     <span style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder;">信息项</span>
                   </div>
                   <div class="infTop" style="height: 577px;border-top:1px solid #E9E9E9; ">
@@ -1601,12 +1601,15 @@
         resourcesQuotaColumns: [
           {
             title: '资源类型',
+            key: 'name'
           },
           {
             title: '已用配额',
+            key: 'usedQuota'
           },
           {
             title: '总配额',
+            key: 'totalQuota'
           },
         ],
         resourcesQuotaData: [],
@@ -1620,7 +1623,7 @@
           {title: '云硬盘备份'},
           {title: '对象存储'},
           {title: '虚拟私有云VPC'},
-          {title: '弹性负载均衡'},
+   /*       {title: '弹性负载均衡'},*/
           {title: '云数据库'},
           {title: '云监控服务'}
         ],
@@ -2140,6 +2143,7 @@
       this.getContacts()
       this.getSystemHead()
       this.setOccupationalInfo()
+      this.getResourceAllocation()
     },
     methods: {
       init() {
@@ -3258,6 +3262,13 @@
             this.$Message.error(response.data.msg)
           }
         })
+      },
+      getResourceAllocation() {
+        this.$http.get('user/personalCenterResourceQuota.do', {params: {}}).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.resourcesQuotaData = res.data.result
+          }
+        })
       }
     },
     computed: {
@@ -3334,7 +3345,14 @@
         }
       },
     },
-    watch: {}
+    watch: {
+      '$store.state.zone': {
+        handler: function () {
+          this.getResourceAllocation()
+        },
+        deep: true
+      }
+    }
   }
 </script>
 
@@ -3785,13 +3803,14 @@
     height: 96px;
     border-bottom: 1px solid #E9E9E9;
     &.one {
+      height: 96.5px;
       border-top: 1px solid #E9E9E9;
     }
     &.two {
       height: 48px;
     }
     &.three {
-      height: 336px;
+      height: 288px;
     }
     &.four {
       height: 144px;
