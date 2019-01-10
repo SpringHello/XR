@@ -295,7 +295,7 @@
               {subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
               //{subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
               //{subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              // {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
+              {subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'},
               /*{subName: '邮箱验证', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'}*/
             ]
           },
