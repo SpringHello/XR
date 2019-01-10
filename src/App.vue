@@ -16,20 +16,23 @@
         </router-link>
         <div class="operate">
           <ul @mouseleave="ME(-1)">
-            <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
+            <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
-                                                                        v-if="item.title=='活动中心'"></sup></span>
+                  <a v-if="item.title=='资讯'" :href="item.path" target="_blank"><span>{{item.title}}</span>
+                  </a>
+                  <router-link v-else :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
+                                                                               v-if="item.title=='活动中心'"></sup></span>
                   </router-link>
                 </div>
                 <div class="menu-dropdown-list">
                   <div class="content-dropdown">
                     <div class="content" ref="content" style="height:0px;">
-                      <div v-if="item.content" class="column">
+                      <div v-if="item.content" class="column" :class="{info:index1 == 4}">
                         <div v-for="(prod,index) in item.content" :key="index">
                           <div>
-                            <h2>{{prod.prod}}</h2>
+                            <h2 v-if="index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
+                            <h2 v-else>{{prod.prod}}</h2>
                             <div v-for="(i,index) in prod.prodItem" style="line-height: normal" :key="index">
                               <router-link :to="i.path" v-if="i.path==''">{{i.title}}</router-link>
                               <router-link :to="i.path" v-else>{{i.title}}</router-link>
@@ -60,45 +63,45 @@
         <div class="operate">
           <!-- 尚未登录 -->
           <ul v-if="!userInfo" @mouseleave="ME(-1)">
-            <li @mouseenter="ME(4,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
                 </div>
               </div>
             </li>
-            <li @mouseenter="ME(4,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/entrance.htm"><span>备案</span></router-link>
                 </div>
               </div>
             </li>
-            <li @mouseenter="ME(4,$event)">
-              <div class="menu-dropdown">
-                <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/register"><span>注册</span></router-link>
-                </div>
-              </div>
-            </li>
-            <li @mouseenter="ME(5,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/login"><span>登录</span></router-link>
                 </div>
               </div>
             </li>
+            <li @mouseenter="ME(1,$event)">
+              <div class="menu-dropdown">
+                <div class="menu-dropdown-rel">
+                  <router-link to="/ruicloud/register"><span>注册</span></router-link>
+                </div>
+              </div>
+            </li>
           </ul>
           <!-- 已登录 -->
           <ul v-else @mouseleave="ME(-1)">
-            <li @mouseenter="ME(4,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
                 </div>
               </div>
             </li>
-            <li @mouseenter="ME(4,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/entrance"><span>备案</span></router-link>
@@ -302,7 +305,7 @@
         <span class="phone"></span>
       </Poptip>
       <div>
-        <BackTop :bottom="161" :right="50" :duration="0" :height="1600" style="position: unset">
+        <BackTop :bottom="161" :right="50" :duration="300" :height="1000" style="position: unset">
           <span class="topLink"></span>
         </BackTop>
       </div>
@@ -500,11 +503,29 @@
           },
           {
             title: '文档',
-            path: '/ruicloud/document'
+            path: '/ruicloud/document',
           },
           {
             title: '资讯',
-            path: '/ruicloud/article/1'
+            path: 'https://news.xrcloud.net/homePage/1.html',
+            content: [
+              {
+                prod: '云服务',
+                path: 'https://news.xrcloud.net/yunfuwu/article/1.html'
+              },
+              {
+                prod: '云咨询',
+                path: 'https://news.xrcloud.net/yunzixun/article/1.html'
+              },
+              {
+                prod: '云技术',
+                path: 'https://news.xrcloud.net/yunjishu/article/1.html'
+              },
+              {
+                prod: '云安全',
+                path: 'https://news.xrcloud.net/yunanquan/article/1.html'
+              }
+            ]
           },
           {
             title: '关于我们',
@@ -761,6 +782,9 @@
         }
         return i;
       },
+      openInfo(href) {
+        window.open(href)
+      }
     },
     computed: mapState({
       userInfo: state => state.userInfo
@@ -810,9 +834,9 @@
           top: 45%;
           > p {
             font-family: MicrosoftYaHei;
-            font-size:24px;
-            font-weight:500;
-            color:rgba(255,45,0,1);
+            font-size: 24px;
+            font-weight: 500;
+            color: rgba(255, 45, 0, 1);
             > span {
               font-size: 14px;
               margin: 0 8px;
@@ -925,6 +949,12 @@
                         padding: 26px 0px;
                         justify-content: space-between;
                         text-align: left;
+                        &.info {
+                          padding: 10px 0;
+                          height: 50px;
+                          width: 400px;
+                          margin: 0 auto;
+                        }
                         > div {
                           width: 15%;
                           &:last-of-type {
@@ -946,6 +976,11 @@
                           font-weight: normal;
                           border-bottom: 1px solid rgba(255, 255, 255, 0.35);
                           padding-bottom: 10px;
+                          &.info {
+                            border: none;
+                            cursor: pointer;
+                            font-size: 14px;
+                          }
                         }
                         a {
                           margin-top: 10px;
