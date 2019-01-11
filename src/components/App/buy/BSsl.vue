@@ -386,18 +386,23 @@ export default {
       })
     },
     domainReg (string) {
-      let reg = /^[a-zA-Z0-9\u4e00-\u9fa5][-a-zA-Z0-9\u4e00-\u9fa5]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/
-      this.domainList = string.split('\n').filter(item => {
-        return item != ''
-      })
-      let flag = this.domainList.every(item => {
-        return reg.test(item)
-      })
-      return flag
+      if (string) {
+        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5][-a-zA-Z0-9\u4e00-\u9fa5]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/
+        this.domainList = string.split('\n').filter(item => {
+          return item != ''
+        })
+        let flag = this.domainList.every(item => {
+          return reg.test(item)
+        })
+        return flag
+      } else {
+        return false
+      }
     },
     price () {
       let flag = this.domainReg(this.formValidateOne.domain)
-      if (this.formValidateOne.selectedType && flag && (this.formValidateOne.yearSelected + 1)) {
+      console.log(flag)
+      if (flag) {
         axios.post('domain/getSSLPriceFromType.do', {
           certTypeId: this.formValidateOne.selectedType,
           certallDomain: this.domainList.join(),
@@ -412,8 +417,10 @@ export default {
       }
     },
     phoneReg (val) {
-      var tel = val.replace(/(\d{3})(\d{8})/, "$1-$2")
-      return '+86-' + tel
+      if (val) {
+        var tel = val.replace(/(\d{3})(\d{8})/, "$1-$2")
+        return '+86-' + tel
+      }
     },
     postOrder (name) {
       if (this.userInfo == null) {
