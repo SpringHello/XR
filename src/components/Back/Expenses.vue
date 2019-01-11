@@ -430,7 +430,7 @@
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
           <strong>提示</strong>
-          <p class="lh24" style="margin-bottom: 20px">当前免费剩余时长到期日为<span style="color: #2A99F2">{{ freezeEndTime}}</span>，转为续费之后资源到期时间为<span style="color: #2A99F2">{{ renewalFeeTime}}</span>，您是否确认将押金转为续费？
+          <p class="lh24" style="margin-bottom: 20px">转为续费之后当前续费起始日为<span style="color: #2A99F2">{{ freezeEndTime}}</span>，资源到期时间为<span style="color: #2A99F2">{{ renewalFeeTime}}</span>，您是否确认将押金转为续费？
           </p>
         </div>
       </div>
