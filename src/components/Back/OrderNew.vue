@@ -243,9 +243,12 @@
     },
     beforeRouteEnter(to, from, next) {
       let params = {}
-      if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
-        params.countOrder = to.query.countOrder || sessionStorage.getItem('countOrder')
-        sessionStorage.setItem('countOrder', to.query.countOrder + '')
+      // if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
+      //   params.countOrder = to.query.countOrder || sessionStorage.getItem('countOrder')
+      //   sessionStorage.setItem('countOrder', to.query.countOrder + '')
+      // }
+      if (to.query.countOrder) {
+        params.countOrder = to.query.countOrder
       }
       axios.get('user/searchOrderByBuy.do', {
         params

@@ -443,7 +443,7 @@ export default {
           //   ownUserIdCardNumber: '500227199209095726',
           //   ownUserEmail: '2420479720@qq.com',
           //   ownUserName: '冷红憬',
-          //   certallDomain: 'wosign.com',
+          //   certallDomain: 'wosign123132.com',
           //   ownUserPhone: '+86-151-23278316',
           //   orgPhone: '+86-151-23278316',
           //   certValidateType: '2',
@@ -468,7 +468,7 @@ export default {
           console.log(params)
           axios.post('domain/createSSLOrder.do', params).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$router.push('/ruicloud/order')
+              this.$router.push('/ruicloud/orderNew')
             } else {
               this.$message.info({
                 content: response.data.message
