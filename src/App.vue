@@ -28,7 +28,7 @@
                 <div class="menu-dropdown-list">
                   <div class="content-dropdown">
                     <div class="content" ref="content" style="height:0px;">
-                      <div v-if="item.content" class="column" :class="{info:index1 == 4}">
+                      <div v-if="item.content" class="column" :class="{info:index1 == 4}" style="padding:21px 0;">
                         <div v-for="(prod,index) in item.content" :key="index">
                           <div>
                             <h2 v-if="index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
@@ -84,9 +84,9 @@
                 </div>
               </div>
             </li>
-            <li @mouseenter="ME(1,$event)">
+            <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
-                <div class="menu-dropdown-rel">
+                <div class="menu-dropdown-rels">
                   <router-link to="/ruicloud/register"><span>注册</span></router-link>
                 </div>
               </div>
@@ -798,7 +798,7 @@
         var content = this.$refs.content
         for (var i in content) {
           if (i == this.currentItem) {
-            content[i].style.height = `${content[i].firstChild.clientHeight}px`
+            content[i].style.height = `${content[i].firstChild.clientHeight+25}px`
           } else {
             content[i].style.height = '0px'
           }
@@ -924,6 +924,19 @@
                     }
                     &:hover {
                       color: #2d8cf0;
+                    }
+                  }
+                }
+                 .menu-dropdown-rels {
+                  a {
+                    color: #fff;
+                    transition: all .3s;
+                    cursor: pointer;
+                    display: block;
+                    line-height: 70px;
+                    span {
+                      padding: 0px 25px;
+                      line-height: 70px;
                     }
                   }
                 }

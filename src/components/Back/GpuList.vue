@@ -562,6 +562,7 @@
               title:'操作',
               width:100,
               render:(h,params)=>{
+                var pros = params.row.status == '0'?true:false
                 if(params.row.status == -1 || this.$store.state.authInfo ==null){
                   return h('div',
                     {
@@ -576,7 +577,7 @@
                   {
                     style:{color:'#2A99F2',padding:'8px 0',display:'inline-block'}
                   },[
-                  h('p',{style:{cursor:'pointer'},on:{click:()=>{ if(params.row.status == 2 || params.row.status == 3){
+                  h('p',{style:{cursor:'pointer',display:pros?'none':'inline-block'},on:{click:()=>{ if(params.row.status == 2 || params.row.status == 3){
                         this.$Message.info('请等待主机完成当前操作');
                       }else {this.link(params.row)}}}},'远程链接'),
                   h('p',{style:{cursor:'pointer',margin:'5px 0'},
@@ -601,6 +602,9 @@
                     }, '更多操作'), h('DropdownMenu', {
                       slot: 'list'
                     }, [h('DropdownItem', {
+                       props:{
+                          disabled:pros
+                        },
                       nativeOn: {
                         click: () => {
                           if(params.row.publicip != '' && params.row.publicip != undefined){
@@ -654,6 +658,9 @@
                       //   }
                       // }, '制作快照'),
                       h('DropdownItem', {
+                         props:{
+                          disabled:pros
+                        },
                         nativeOn: {
                           click: () => {
                             if(params.row.computerstate == '0' && params.row.status=='1'){
@@ -670,25 +677,10 @@
                           }
                         }
                       }, '制作镜像'),
-                      // h('DropdownItem', {
-                      //   nativeOn: {
-                      //     click: () => {
-                      //       if (params.row.computerstate == '0' && params.row.status == '1') {
-                      //         if (params.row.status == 2 || params.row.status == 3) {
-                      //           this.$Message.info('请等待主机完成当前操作');
-                      //         } else {
-                      //           this.$router.push({path: 'gpuUpLevel'});
-                      //           sessionStorage.setItem('uuId', params.row.computerid);
-                      //           sessionStorage.setItem('comptername', params.row.companyname)
-                      //           sessionStorage.setItem('serviceofferid', params.row.serviceofferid);
-                      //         }
-                      //       }else{
-                      //         this.$Message.info('升级主机前请先关闭主机');
-                      //       }
-                      //     }
-                      //   }
-                      // }, '主机升级'),
                       h('DropdownItem', {
+                         props:{
+                          disabled:pros
+                        },
                         nativeOn: {
                           click: () => {
                             this.uuId = params.row.computerid;
@@ -703,6 +695,9 @@
                         }
                       }, '重启主机'),
                          h('DropdownItem', {
+                            props:{
+                          disabled:pros
+                        },
                         nativeOn: {
                           click: () => {
                             if(params.row.status == 2 || params.row.status ==3){
@@ -724,6 +719,9 @@
                         }
                       }, '资费变更'),
                       h('DropdownItem', {
+                         props:{
+                          disabled:pros?false:true
+                        },
                         nativeOn: {
                           click: () => {
                             if(params.row.status == 2 || params.row.status ==3){
@@ -743,6 +741,9 @@
                         }
                       }, '主机续费'),
                       h('DropdownItem', {
+                         props:{
+                          disabled:pros
+                        },
                         nativeOn: {
                           click: () => {
                             this.uuId = params.row.computerid;

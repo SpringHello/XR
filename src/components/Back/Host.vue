@@ -33,7 +33,7 @@
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
               <Dropdown-item name="ratesChange" :disabled="status=='欠费'||status=='异常'">资费变更</Dropdown-item>
               <!-- 续费 -->
-              <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费
+              <Dropdown-item name="renewal" v-if="status=='异常'" :disabled=true>主机续费
                 <!--<span
                   style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>-->
               </Dropdown-item>

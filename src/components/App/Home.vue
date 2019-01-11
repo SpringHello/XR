@@ -406,9 +406,9 @@
               <dd v-html="showNews.abstracts">
               </dd>
               <dd>
-                <router-link :to="`article/${showNews.code}.html`" target="_blank" class="news-btn">
+                <a  :href='`https://news.xrcloud.net`' target="_blank" class="news-btn">
                   查看详情
-                </router-link>
+                </a>
               </dd>
             </dl>
           </div>
@@ -419,22 +419,22 @@
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
             <dt>
-              <router-link :to="`article/${item.id}`" class="moreinfo">
+              <a :href="`https://news.xrcloud.net/yunzixun/${item.id}`" class="moreinfo">
                 <Icon type="chevron-right"></Icon>
                 <span>{{item.typename}}</span>
-              </router-link>
+              </a>
             </dt>
             <dd>
               <ul>
                 <li v-for="(secitem,i) in item.artile" :key="i">
-                  <router-link :to="`article/${secitem.code}.html`" target="_blank">
+                    <a :href="`https://news.xrcloud.net/essay/${secitem.code}.html`" target="_blank">
                     <div class="alink">
                       <div class="title">{{secitem.title}}</div>
                       <i v-if="secitem.isHot">HOT</i>
                       <i v-if="secitem.isNew" style="background:#4B97EE">NEW</i>
                     </div>
                     <div class="blink">{{secitem.createtime.split(' ')[0]}}</div>
-                  </router-link>
+                  </a>
                 </li>
               </ul>
             </dd>
