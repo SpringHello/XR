@@ -19,7 +19,12 @@
           <p>基于GPU应用的计算服务，具有实时的并行计算和浮点计算能力，适用于3D图形应用、深度学习、科学计算等</p>
           </div>
           <div style="margin:16px 0 16px 0;">
-            <Button type="primary" @click="$router.push({path:'/ruicloud/buy/bgpu'})">创建</Button>
+            <Button type="primary" @click="$router.push({path:'/ruicloud/buy/bgpu'})">+  创建</Button>
+            <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">关机</Button>
+            <Button type="primary" @click="$router.push({path:'/ruicloud/buy/bgpu'})">开机</Button>
+            <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">重启</Button>
+            <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">删除</Button>
+            <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">更多操作</Button>
             <div style="display: inline-block;float: right;">
               <Select v-model="gpuTimeValue" style="width:200px" placeholder="计费类型" @on-change="getGpuServerList">
                 <Option v-for="item in gpuTimeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -29,7 +34,7 @@
               </Select>
             </div>
           </div>
-          <Table :columns="hostList" :data="hostData"></Table>
+          <Table :columns="hostList" :data="hostData" @on-select='selectGpu'></Table>
         </div>
       </div>
 
@@ -435,6 +440,11 @@
           //table
           hostList:[
             {
+              type: 'selection',
+              width: 55,
+              align: 'center'
+            },
+            {
               title:'用户名称/唯一名称',
               width:109,
               render:(h,params)=> {
@@ -526,7 +536,10 @@
               title:'状态',
               width:70,
               render:(h,params) => {
-                return h('span',{},params.row.status == '-1' ? '异常' :params.row.status == '0' ? '欠费' : params.row.computerstate == '0' && params.row.status=='1' ? '关机' :params.row.computerstate == '1' && params.row.status=='1'  ? '开机' :'')
+                return h('div',[
+                  h('img',{}),
+                  h('span',{}, params.row.status == '-1' ? '异常' :params.row.status == '0' ? '欠费' : params.row.computerstate == '0' && params.row.status=='1' ? '关机' :params.row.computerstate == '1' && params.row.status=='1'  ? '开机' :'')
+                 ])
               }
             },
             {
@@ -585,9 +598,10 @@
                     on:{
                     click:()=> {
                         this.uuId = params.row.computerid;
+                        let msg = params.row.computerstate == '0' ?'确定要关机吗':'确定要关机吗'
                         this.$Modal.confirm({
                           title:'提示',
-                          content:'确定要开/关机吗',
+                          content:msg,
                           onOk:()=>{
                               if(params.row.status == 2){
                                   this.$Message.info('请等待主机创建完成');
@@ -983,6 +997,11 @@
             }
           })
         },
+
+      // 选中主机
+      selectGpu(selecion,row){
+        console.log(selecion,row);
+      }, 
 
         //创建镜像
         createMrrior(){

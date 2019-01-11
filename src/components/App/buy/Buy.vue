@@ -345,7 +345,6 @@
         },
         scrollList: () => {
           var allWidth = window.screen.width
-          // console.log(allWidth)
           // 获取div距顶部距离
           var top = this.$refs.lists.offsetTop
           //获取屏幕高度
@@ -424,6 +423,7 @@
         // 批次号
         var countOrder = uuid.v4()
         // 创建的主机数量  创建的磁盘数量 创建的公网IP数量
+        
         for (var prod of this.cart) {
           if (prod.type == 'Pecs') {
             var params = {

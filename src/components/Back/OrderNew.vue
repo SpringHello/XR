@@ -4,7 +4,8 @@
       <span>首页 / 新建云主机 / 订单确认</span>
       <div class="content">
         <span>订单确认</span>
-        <div style="margin-top:10px;" class="order">
+        <Button  style="float:right">返回</Button>
+        <div style="margin-top:20px;" class="order">
           <Table :columns="orderColumns" :data="orderData" @on-selection-change="onSelectionChange"></Table>
         </div>
         <div style="margin-top:10px;background:#F6FAFD;" class="coupon">
@@ -73,7 +74,7 @@
           </div> -->
         </div>
         <div style="text-align:right;margin-top:40px;">
-          <Button @click="$router.push({path:'overview'})">取消订单</Button>
+          <Button @click="$router.push({path:'overview'})" style="margin-right:20px;">取消订单</Button>
           <Button type="primary"  @click="pay">提交订单</Button>
         </div>
        
@@ -369,9 +370,9 @@
       },
       changeCashbox(bol){
          if(this.couponInfo.isUse){
-           this.couponInfo.isUse =  !this.couponInfo.isCash;
+          this.couponInfo.isUse = !this.couponInfo.isCash;
         }
-         this.couponInfo.isUse = !this.couponInfo.isCash;
+         
          this.couponInfo.totalCost = this.couponInfo.totalCost - (bol?this.couponInfo.cash:0);
          if(!bol){
          }else{
@@ -534,6 +535,7 @@
         display: block;
       }
       .content {
+        font-family: 'MicrosoftYaHei';
         background-color: white;
         padding: 20px;
         & > span {

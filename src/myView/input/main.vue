@@ -1,11 +1,11 @@
 <template>
     <div  :class="wrapClasses" style=" height: 46px;border-radius:4px;">
-      <img class="ver_img" :src="icon">
-        <div class="ver_select" >
+      <img class="ver_img" :src="icon" style="width:16px;height:18px;">
+        <div class="ver_select" v-if="isSelect == 'select'">
             <div @click="isShow = !isShow" class="verNumber" :class="[isShow ?'verNumber':'verNumbers']">
-                +{{selectValue}}
+               <span>+{{selectValue}}</span> 
             </div>
-             <transition name="fade"  >
+             <transition name="fade">
                 <div class="ver_option" v-if="isShow" @click="handleClose">
                     <ul class="ver_ul" >
                         <li  :class="selectIndex == index ?'ver_li':''" v-for="(item,index) in telList" :key="index" @click="selectLiValue(item.tel,index)">{{item.tel}}</li>
@@ -19,6 +19,7 @@
         :spellcheck="spellcheck" 
         :disabled="disabled"
         :readonly="readonly"
+        :type="type"
         ref='xInput'
         :class="inputClasses"
         :placeholder="placeholder" 
@@ -31,12 +32,8 @@
         @keydown="handleKeydown"
         @focus="handleFocus"
         >
-        <div class="ver_yan" >
-            <span @click="timeReduce" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
-            <span v-else style="color:#666666;">{{count}}</span>
-        </div>
-        <img class="ver_eye" @click="isEye = !isEye" :src="eye" v-if="isSelect == 'ear'">
-        <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE">重新获取</span>或<span  style="color:#4A97EE">接收语音验证</span></p>
+        <slot name="code"></slot>
+        <img class="ver_eye" @click="eyeType" :src="eye" v-if="isSelect == 'eye'">
     </div>
 </template>
 
@@ -83,12 +80,16 @@ export default {
         choice:{
             type:String,
             default:''
-        }
+        },
+        // type:{
+        //     type:String,
+        //     default:''
+        // }
     },
     data(){
         return{
             account:this.value,
-            style:'height: 44px;padding-left: 96px;',
+            style:'height: 44px;padding-left: 48px;',
             prefixCls: prefixCls,
             isSelect:'',
             telList:telList,
@@ -98,8 +99,12 @@ export default {
             count:10,
             timeBoo:true,
             isEye:false,
-            timeP:false
+            timeP:false,
+            type:''
         }
+    },
+    mounted(){
+        this.handleClose();
     },
     methods:{
         setInputValue(value){
@@ -153,32 +158,24 @@ export default {
             this.selectValue = tel;
             this.isShow = !this.isShow;
         },
-        timeReduce(){
-            if(this.account != ''){
-                this.$emit('on-click',this.account);
-                this.timeBoo = false;
-                this.timeP = false;
-               let char = setInterval(()=>{
-                    if(this.count != 0){
-                        this.count --;
-                    }else{
-                        clearInterval(char);
-                        this.count = 10;
-                        this.timeBoo = true;
-                        this.timeP = true;
-                    }
-                },1000);
-            }
-        },
+       
         handleClose () {
-            document.addEventListener('click',function(e){
-                console.log(e);
-                if(e.target.className!='usermessage'){
-                    that.userClick=false;
+            if(this.isSelect == 'select'){
+            document.addEventListener('click',e=>{
+                if(e.target.className !='verNumbers' && e.target.className =='login-form' ||  e.target.className ==''){
+                    this.isShow = false;
                 }
             })
-            // this.isShow = false;
+            }
         },
+        eyeType(){
+            this.isEye = !this.isEye;
+            if(this.isEye){
+                this.type ='';
+            }else{
+                this.type = 'password';
+            }
+        }
     },
     created(){
      
@@ -206,22 +203,25 @@ export default {
       value (val) {
         this.setInputValue(val);
       },
-      choice(){
-        if(this.choice == 'select'){
+      choice:{
+         handler(){
+            if(this.choice == 'select'){
             this.isSelect = 'select';
             this.style = 'height: 44px;padding-left: 96px;';
-        }else if(this.choice == 'validate'){
-            this.isSelect = 'validate';
-            this.style='height: 44px;padding-left: 39px;padding-right:98px;'
-        }else if(this.choice == 'eye'){
-             this.isSelect = 'eye';
-            //  this.isValid = false;
-             this.style='height: 44px;padding-left: 39px;padding-right:70px;'
-        }else{
-            this.isSelect = '';
-            this.style='height: 44px;padding-left: 39px;'
-        }
-        immediate:true;    
+            // return;
+            }
+            if(this.choice == 'validate'){
+                this.isSelect = 'validate';
+                this.style='height: 44px;padding-left: 48px;padding-right:98px;'
+                // return;
+            }
+            if(this.choice == 'eye'){
+                this.isSelect = 'eye';
+                this.style='height: 44px;padding-left: 48px;padding-right:70px;'
+                //  return;
+            }
+         },
+        immediate:true
       }
     }
 }
@@ -257,7 +257,7 @@ export default {
       .ver_select{
           margin:16px 0 11px 14px;
           cursor: pointer;
-          width:35px;
+          width:50px;
           background-image: none;
           position: absolute;
           left: 35px;
@@ -347,8 +347,8 @@ export default {
     }
     .ver_eye{
         position: absolute;
-        top: 0;
-        right: 0;
+        top: 17px;
+        right: 20px;
         cursor: pointer;
     }
     .fade-enter-active, .fade-leave-active {

@@ -1000,6 +1000,7 @@
           prod.network = this.network
           prod.cost = this.totalCost
         }
+        
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
       },
       // 购买主机

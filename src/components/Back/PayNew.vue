@@ -11,7 +11,7 @@
         <div class="content_pay">
             <div style="border-bottom:1px solid #E9E9E9;padding-bottom:20px;">
                 <span style="font-size:18px;">共支付<span style="color:#FF624B;">{{orderInfo.orderNum}}</span>笔订单</span>
-                <span style="float:right;">总计:<strong style="color:#FF624B;font-size:24px;">{{orderInfo.money}}</strong>元</span>
+                <span style="float:right;margin-top:4px;">总计支付:<strong style="color:#FF624B;font-size:24px;">{{orderInfo.money}}</strong>元</span>
             </div>
            <div class="pay_time">
                 <p>请在
@@ -22,14 +22,14 @@
            </div>
         </div>
 
-        <p style="color:#333333;font-size:14px;">账户余额支付</p>
+        <p style="color:#333333;font-size:14px;margin-top:40px;">账户余额支付</p>
         <div class="accountInfo">
           <CheckboxGroup v-model="accountPay" @on-change="checkUseVoucher">
             <Checkbox label="account" style="margin-right:40px;user-select: none">
               <span>使用余额</span>
               <span class="remain">￥{{orderInfo.remainder}}</span>
             </Checkbox>
-            <span style="float:right;line-height:31px">余额支付：<span style="color:#FF624B;font-size:18px;">{{accountPayCount}}</span>元</span>
+            <span style="float:right;line-height:31px;font-size:14px;">余额支付：<span style="color:#FF624B;font-size:24px;">{{accountPayCount}}</span>元</span>
           </CheckboxGroup>
         </div>
 
@@ -48,9 +48,9 @@
                     </Radio>
               </RadioGroup>
             </TabPane>
-            <TabPane label="线下汇款" name="name2">
+            <!-- <TabPane label="线下汇款" name="name2">
                 <div class="outLineContent" v-if="currentTab == 'outLine'">
-                    <div style="width:550px;height:180px;background:#F6FAFD;padding:20px 0 20px 20px;">
+                    <div style="width:555px;height:180px;background:#F6FAFD;padding:20px 0 20px 20px;">
                         <p class="p">公司名称：北京允睿讯通科技有限公司</p>
                         <p class="p">开户银行：中国建设银行北京龙锦支行</p>
                         <p class="p">开户行所在地：北京</p>
@@ -58,17 +58,17 @@
                     </div>
                     <div class="out_hint">
                         <div>
-                            <img src="../../assets/img/payresult/Shape.png">
-                            <span style="font-size:14px;color:#333333;">提示</span>
+                            <img src="../../assets/img/payresult/Shape.png" style="margin-right:7px;vertical-align:middle;">
+                            <span style="font-size:14px;color:#333333;vertical-align:middle;" >提示</span>
                         </div>
                         <p style="line-height: 25px;"><span style="color: #2A99F2"></span>请您在汇款摘要中注明“云服务”。汇款成功后请将汇款凭证（汇款凭证扫描件或者图片、网银付款截图）、汇款人姓名、联系电话、注册手机或邮箱地址发送到“公司邮箱”以便财务进行进行确认。财务确认到账后，会讲汇款金额充值到您的注册账户。为了避免因账户欠帐影响您的正常使用，请务必至少提前三到五个工作日进行线下汇款，以免造成不必要的损失。</p>
                     </div>
                 </div>
-            </TabPane>
+            </TabPane> -->
         </Tabs>
         </div>
         <div style="margin-top:20px;text-align:right;" v-if="currentTab=='otherPay'">
-          <Button @click="$router.push({path:'orderNew'})">取消支付</Button>
+          <Button @click="$router.push({path:'orderNew'})" style="margin-right:10px;">取消支付</Button>
           <Button type="primary" @click="pay" :disabled="payText!='确认支付'">{{payText}}</Button>
         </div>
       </div>
@@ -451,6 +451,7 @@
         display: block;
       }
       .content {
+        font-family: 'MicrosoftYaHei';
         background-color: white;
         padding: 20px;
         min-height: 700px;
@@ -461,7 +462,7 @@
             .pay_time{
                 padding-top:20px;
                 > p {
-                font-size: 20px;
+                font-size: 17px;
                 font-family: PingFangSC-Regular;
                 color: rgba(51, 51, 51, 1);
                 line-height: 28px;
@@ -543,8 +544,9 @@
           }
           .outLineContent {
               display: flex;
+              justify-content: space-between;
             .out_hint {
-              width: 476px;
+              width: 555px;
               line-height: 25px;
               background: #F6FAFD;
               padding: 20px 20px 10px 20px;
