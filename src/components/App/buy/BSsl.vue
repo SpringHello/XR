@@ -445,22 +445,6 @@ export default {
             certTypeId: this.formValidateOne.selectedType,
             orgEmail: this.formValidateTwo.unitEmail,
           }
-          // var params1 = {
-          //   sslName: '证书',
-          //   ownUserIdCardNumber: '500227199209095726',
-          //   ownUserEmail: '2420479720@qq.com',
-          //   ownUserName: '冷红憬',
-          //   certallDomain: 'wosign123132.com',
-          //   ownUserPhone: '+86-151-23278316',
-          //   orgPhone: '+86-151-23278316',
-          //   certValidateType: '2',
-          //   certExpTime: '12',
-          //   orgName: '北京允睿',
-          //   orgType: 'PrivateOrganization',
-          //   certTypeId: '1',
-          //   orgEmail: '2420479720@qq.com',
-          //   // certserverNumber: this.formValidateOne.hostCount,
-          // }
           var params2 = {
             sslName: this.formValidateOne.sslName,
             ownUserEmail: this.formValidateTwo.manEmail,
@@ -471,8 +455,6 @@ export default {
             certTypeId: this.formValidateOne.selectedType,
           }
           params = this.formValidateOne.selectedType == '1' ? params1 : params2
-          // params = params1
-          console.log(params)
           axios.post('domain/createSSLOrder.do', params).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push('/ruicloud/orderNew')
