@@ -629,6 +629,10 @@
         // 流量来源记录
         localStorage.setItem('comefrom', to.query.from)
       }
+      if (to.query.sellCode) {
+        // 销售来源渠道
+        localStorage.setItem('sellCode', to.query.sellCode)
+      }
       window.UUID = uuid.v4()
       let params = {
         batchNumber: window.UUID,
@@ -1358,5 +1362,5 @@
     border-radius: 50%;
     background-color: rgb(237, 63, 20, 0.5);
   }
- 
+
 </style>
