@@ -12,7 +12,7 @@
 								<span>57</span>
 								<span>.00元</span>
 							</div>
-							<Button type="primary" style="margin-top: 17px;">申请线上提现</Button>
+							<Button type="primary" style="margin-top: 17px;" @click="showModal.Paymentdetails = true">申请线上提现</Button>
 						</div>
 					</div>
 					<div class="remindbox-right">
@@ -39,6 +39,43 @@
 				</div>
 				<Table border :columns="columns5" :data="data5" style="margin-top: 10px;"></Table>
 			</div>
+			<!-- 线上提现弹窗 -->
+			<Modal v-model="showModal.Cashconfirmation" :scrollable="true" :closable="false" :width="390">
+			  <p slot="header" class="modal-header-border">
+			    <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+			    <span class="universal-modal-title">线上提现</span>
+			  </p>
+			  <div class="modal-content-s" style="width: 101%;">
+			    <div>
+			      <p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">您正在申请线上提现，申请后您的款项将在<span style="color: #FF624B">5个工作日</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。
+			      </p>
+						<!-- @click="$router.push('/ruicloud/cashwithdrawal')" -->
+						<p class="lh24">若您的线下汇款（对公转账）金额需要提现，请点击查看 <a href="#" style="color: #2A99F2; text-decoration: underline;">线下汇款提现方式</a>。
+						</p>
+			    </div>
+			  </div>
+			  <p slot="footer" class="modal-footer-s">
+			    <Button @click="showModal.Cashconfirmation = false">取消</Button>
+			    <Button type="primary" @click="">确认</Button>
+			  </p>
+			</Modal>
+			<!-- 打款详情弹窗 -->
+			<Modal v-model="showModal.Paymentdetails" :scrollable="true" :closable="false" :width="390">
+			  <p slot="header" class="modal-header-border">
+			    <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+			    <span class="universal-modal-title">线上提现</span>
+			  </p>
+			  <div class="modal-content-s">
+			    <div>
+			      <p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">审核已通过，正在打款中。您的款项将在 <span style="color: #FF624B">5个工作日</span> 内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。请您耐心等待。
+			      </p>
+			    </div>
+			  </div>
+			  <p slot="footer" class="modal-footer-s">
+			    <Button @click="showModal.Paymentdetails = false">取消</Button>
+			    <Button type="primary" @click="showModal.Paymentdetails = false">确定</Button>
+			  </p>
+			</Modal>
     </div>
   </div>
 </template>
@@ -48,6 +85,12 @@
     data(){
       return {
 				ordertime: '',
+				showModal: {
+					// 线上提现弹窗
+					Cashconfirmation: false,
+					// 打款详情弹窗
+					Paymentdetails:false
+				},
 				options: {
 				  shortcuts: [
 				    {
@@ -122,6 +165,12 @@
 			  this.order_dateRange = ordertime
 			  this.init()
 			  this.searchOrderByType()
+			},
+			init() {
+			  
+			},
+			searchOrderByType() {
+			  
 			}
     },
     computed: {
