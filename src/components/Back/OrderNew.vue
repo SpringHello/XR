@@ -182,8 +182,8 @@
           {
             title: '操作',
             render(h, obj) {
-              if (obj.row['错误信息']) {
-                if (obj.row['错误信息'] == '0') {
+              if (obj.row['订单状态']) {
+                if (obj.row['订单状态'] == '1') {
                   return h('span', {
                     style: {
                       color: '#2A99F2',
