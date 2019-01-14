@@ -111,9 +111,9 @@
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
   import store from '@/vuex'
-
   export default {
     data() {
+      let that = this
       return {
         orderColumns: [
           {
@@ -167,7 +167,51 @@
                 }
               }, arr)
             },
-            width: 400
+            width: 216
+          },
+          {
+            title: '状态',
+            render(h, obj) {
+              let text = '正常'
+              if (obj.row['订单状态']) {
+                text = obj.row['订单状态'] == '0' ? '正常' : '错误'
+              }
+              return h('span', {}, text)
+            }
+          },
+          {
+            title: '操作',
+            render(h, obj) {
+              if (obj.row['错误信息']) {
+                if (obj.row['错误信息'] == '0') {
+                  return h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        that.$message.confirm({
+                          content: obj.row['错误信息']
+                        })
+                      }
+                    }
+                  }, '查看')
+                } else {
+                  return h('span', {
+                    style: {
+                      color: '#666666'
+                    }
+                  }, '--')
+                }
+              } else {
+                return h('span', {
+                  style: {
+                    color: '#666666'
+                  }
+                }, '--')
+              }
+            }
           },
           {
             title: '计费类型',
