@@ -20,12 +20,20 @@
         </div>
         <div class="operator-bar">
           <Button type="primary" @click="$router.push('/ruicloud/buy/bhost')">+ 创建</Button>
-          <Button type="primary" @click="hostShutdown" :disabled="shutdownDisabled">关机</Button>
+          <Poptip
+            confirm
+            width="230"
+            placement="right"
+            @on-ok="hostShutdown"
+            title="您确认关闭选中的主机吗？" style="margin: 0 10px">
+            <Button type="primary" :disabled="shutdownDisabled">关机</Button>
+          </Poptip>
           <Button type="primary" @click="hostStart" :disabled="startDisabled">开机</Button>
           <Poptip
             confirm
             width="230"
             placement="right"
+            @on-ok="hostRestart"
             title="您确认重启选中的主机吗？" style="margin: 0 10px">
             <Button type="primary" :disabled="restartDisabled">重启</Button>
           </Poptip>
@@ -33,6 +41,7 @@
             confirm
             width="230"
             placement="right"
+            @on-ok="hostDelete"
             title="您确认删除选中的主机吗？">
             <Button type="primary" :disabled="deleteDisabled">删除</Button>
           </Poptip>
@@ -66,10 +75,14 @@
             </Dropdown-menu>
           </Dropdown>
         </div>
+        <div class="selectMark">
+          <img src="../../assets/img/host/h-icon10.png"/>
+          <span>共 {{ pageSize}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
+        </div>
         <Table :columns="hostListColumns" :data="hostListData" @on-selection-change="hostSelectionChange"></Table>
         <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
-            <Page :total="hostPages" :current="currentPage" :page-size="5"></Page>
+            <Page :total="hostPages" :current="currentPage" :page-size="pageSize" @on-change="changePage"></Page>
           </div>
         </div>
       </div>
@@ -162,7 +175,7 @@
             }
           },
           {
-            title: '状态',
+            title: '状态/监控',
             filters: [
               {
                 label: '开启',
@@ -297,7 +310,18 @@
           },
           {
             title: '主机配置',
-            key: 'serviceoffername'
+            key: 'serviceoffername',
+            render: (h, params) => {
+              let textArr = params.row.serviceoffername.split('+')
+              let text_1 = 'CPU:' + textArr[0]
+              let text_2 = '内存:' + textArr[2]
+              let text_3 = '带宽:' + textArr[1]
+              return h('ul', {}, [
+                h('li', {}, text_1),
+                h('li', {}, text_2),
+                h('li', {}, text_3)
+              ])
+            }
           },
           {
             title: '镜像系统',
@@ -704,136 +728,9 @@
             }
           },
         ],
-        hostListData: [
-          {
-            activitynumber: 22,
-            caseType: 2,
-            companyid: "154234768276",
-            companyname: "冷红憬",
-            computername: "免费试用主机",
-            computertype: "1",
-            connectpassword: "",
-            connecturl: "",
-            connecturlnew: "",
-            cpCase: 60,
-            createtime: "2018-12-21 16:37:37",
-            disksize: 0,
-            endtime: "2019-01-21 16:37:37",
-            id: 1677617,
-            instancename: "i-2-2287-VM",
-            isautorenew: 0,
-            isfreevm: "1",
-            restart: 0,
-            loginname: "administrator",
-            owndiskofferid: "d3cd9e1e-d803-426c-93de-3b7b6ed359ae",
-            privateip: "192.168.0.34",
-            rootdisksize: 40,
-            serviceofferid: "034f9e0c-e9b1-4696-a5cf-5c7ed1354f3b",
-            serviceoffername: "1核+1Ghz+2GMemory",
-            status: 1,
-            computerstate: 1,
-            templateid: "9833e9b8-8c1d-4571-97ad-189ad13c5f09",
-            templatename: "cindows-2008-datacenter-64bit",
-            vpcid: "54cbfa78-8a07-499e-baa3-55bec860214c",
-            vpcname: "默认VPC",
-            zoneid: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc",
-            zonename: "华中二区1",
-          }, {
-            activitynumber: 22,
-            caseType: 2,
-            companyid: "154234768276",
-            companyname: "冷红憬",
-            computername: "免费试用主机",
-            computertype: "1",
-            connectpassword: "",
-            connecturl: "",
-            connecturlnew: "",
-            cpCase: 60,
-            createtime: "2018-12-21 16:37:37",
-            disksize: 0,
-            endtime: "2019-01-21 16:37:37",
-            id: 1677617,
-            instancename: "i-2-2287-VM",
-            isautorenew: 0,
-            isfreevm: "1",
-            loginname: "administrator",
-            owndiskofferid: "d3cd9e1e-d803-426c-93de-3b7b6ed359ae",
-            privateip: "192.168.0.34",
-            rootdisksize: 40,
-            serviceofferid: "034f9e0c-e9b1-4696-a5cf-5c7ed1354f3b",
-            serviceoffername: "1核+1Ghz+2GMemory",
-            status: 1,
-            computerstate: 0,
-            templateid: "9833e9b8-8c1d-4571-97ad-189ad13c5f09",
-            templatename: "dindows-2008-datacenter-64bit",
-            vpcid: "54cbfa78-8a07-499e-baa3-55bec860214c",
-            vpcname: "默认VPC",
-            zoneid: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc",
-            zonename: "华中二区1",
-          }, {
-            activitynumber: 22,
-            caseType: 2,
-            companyid: "154234768276",
-            companyname: "冷红憬",
-            computername: "免费试用主机",
-            computertype: "1",
-            connectpassword: "",
-            connecturl: "",
-            connecturlnew: "",
-            cpCase: 60,
-            createtime: "2018-12-21 16:37:37",
-            disksize: 0,
-            endtime: "2019-01-21 16:37:37",
-            id: 1677617,
-            instancename: "i-2-2287-VM",
-            isautorenew: 0,
-            isfreevm: "1",
-            loginname: "administrator",
-            owndiskofferid: "d3cd9e1e-d803-426c-93de-3b7b6ed359ae",
-            privateip: "192.168.0.34",
-            rootdisksize: 40,
-            serviceofferid: "034f9e0c-e9b1-4696-a5cf-5c7ed1354f3b",
-            serviceoffername: "1核+1Ghz+2GMemory",
-            status: -1,
-            templateid: "9833e9b8-8c1d-4571-97ad-189ad13c5f09",
-            templatename: "uindows-2008-datacenter-64bit",
-            vpcid: "54cbfa78-8a07-499e-baa3-55bec860214c",
-            vpcname: "默认VPC",
-            zoneid: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc",
-            zonename: "华中二区1",
-          }, {
-            activitynumber: 22,
-            caseType: 2,
-            companyid: "154234768276",
-            companyname: "冷红憬",
-            computername: "免费试用主机",
-            computertype: "1",
-            connectpassword: "",
-            connecturl: "",
-            connecturlnew: "",
-            cpCase: 60,
-            createtime: "2018-12-21 16:37:37",
-            disksize: 0,
-            endtime: "2019-01-21 16:37:37",
-            id: 1677617,
-            instancename: "i-2-2287-VM",
-            isautorenew: 0,
-            isfreevm: "1",
-            loginname: "administrator",
-            owndiskofferid: "d3cd9e1e-d803-426c-93de-3b7b6ed359ae",
-            privateip: "192.168.0.34",
-            rootdisksize: 40,
-            serviceofferid: "034f9e0c-e9b1-4696-a5cf-5c7ed1354f3b",
-            serviceoffername: "1核+1Ghz+2GMemory",
-            status: 0,
-            templateid: "9833e9b8-8c1d-4571-97ad-189ad13c5f09",
-            templatename: "windows-2008-datacenter-64bit",
-            vpcid: "54cbfa78-8a07-499e-baa3-55bec860214c",
-            vpcname: "默认VPC",
-            zoneid: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc",
-            zonename: "华中二区1",
-          }],
-        hostPages: 5,
+        hostListData: [],
+        hostPages: 0,
+        pageSize: 10,
         currentPage: 1,
         hostSelection: []
       }
@@ -855,58 +752,72 @@
           params: {
             returnList: '1',
             page: this.currentPage,
-            pageSize: '5'
+            pageSize: this.pageSize
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.hostListData = res.data.result.data
-            this.hostPages = res.data.total
+            this.hostPages = res.data.result.total
           }
         })
+      },
+      changePage(page) {
+        this.currentPage = page
+        this.hostSelection = []
+        this.getHostList()
       },
       hostSelectionChange(selected) {
         this.hostSelection = selected
       },
       /* 局部刷新 */
-      timingRefresh() {
+      timingRefresh(ids) {
         let timer = setInterval(() => {
           let url = 'information/listVirtualMachines.do'
           this.$http.get(url, {
             params: {
               returnList: '1',
-              page: this.currentPage,
-              pageSize: '5'
+              ids: ids
             }
           }).then(res => {
             if (res.data.status == 1 && res.status == 200) {
-              this.hostListData = res.data.result.data
-              this.hostPages = res.data.total
-              let flag = this.hostListData.some(item => {
+              let locality = res.data.result.data
+              let flag = locality.some(item => {
                 return item.restart == 1 || item.status == 2
-              }) // 主机列表中是否有过渡状态
+              }) // 操作的主机中是否有过渡状态，没有就清除定时器，取消刷新
               if (!flag) {
+                this.hostListData.forEach((host, index) => {
+                  locality.forEach(item => {
+                    if (host.id == item.id) {
+                      this.hostListData.splice(index, 1, item)
+                    }
+                  })
+                })
                 clearInterval(timer)
               }
-              this.hostSelection.forEach(item_1 => {
-                this.hostListData.forEach(item_2 => {
-                  if (item_1.id === item_2.id) {
-                    item_2._checked = true
-                  }
-                })
-              })
+
             }
           })
         }, 3000)
       },
       hostShutdown() {
+        this.hostListData.forEach(host => {
+          this.selectHostIds.forEach(item => {
+            if (host.id == item) {
+              host.status = 2
+              host.computerstate = 1
+            }
+          })
+        })
         let url = 'information/stopVirtualMachine.do',
           params = {
-            VMId: this.selectHostIds,
+            VMId: this.selectHostComputerIds + '',
             forced: true
           }
         this.$http.get(url, {params}).then(res => {
           if (res.status === 200 && res.data.status === 1) {
-            this.timingRefresh()
+            this.$Message.success(res.data.message)
+            this.timingRefresh(this.selectHostIds + '')
+            this.hostSelection = []
           } else {
             this.getHostList()
             this.$message.info({
@@ -916,13 +827,23 @@
         })
       },
       hostStart() {
+        this.hostListData.forEach(host => {
+          this.selectHostIds.forEach(item => {
+            if (host.id == item) {
+              host.status = 2
+              host.computerstate = 0
+            }
+          })
+        })
         let url = 'information/startVirtualMachine.do',
           params = {
-            VMId: this.selectHostIds
+            VMId: this.selectHostComputerIds + ''
           }
         this.$http.get(url, {params}).then(res => {
           if (res.status === 200 && res.data.status === 1) {
-            this.timingRefresh()
+            this.$Message.success(res.data.message)
+            this.timingRefresh(this.selectHostIds + '')
+            this.hostSelection = []
           } else {
             this.getHostList()
             this.$message.info({
@@ -931,6 +852,38 @@
           }
         })
       },
+      hostRestart() {
+        this.hostListData.forEach(host => {
+          this.selectHostIds.forEach(item => {
+            if (host.id == item) {
+              host.restart = 1
+            }
+          })
+        })
+        let url = 'information/rebootVirtualMachine.do'
+        this.$http.get(url, {
+          params: {
+            VMId: this.selectHostComputerIds + ''
+          }
+        }).then(res => {
+          if (res.status === 200 && res.data.status === 1) {
+            this.$Message.success(res.data.message)
+            this.timingRefresh(this.selectHostIds + '')
+            this.hostSelection = []
+          } else {
+            this.getHostList()
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      hostDelete() {
+        if (this.hostSelection.length > 5) {
+          this.$Message.info('删除主机至多选择 5 项')
+          return
+        }
+      }
     },
     computed: {
       auth() {
@@ -940,10 +893,19 @@
         let ids = []
         if (this.hostSelection.length !== 0) {
           ids = this.hostSelection.map(item => {
+            return item.id
+          })
+        }
+        return ids
+      },
+      selectHostComputerIds() {
+        let ids = []
+        if (this.hostSelection.length !== 0) {
+          ids = this.hostSelection.map(item => {
             return item.computerid
           })
         }
-        return ids + ''
+        return ids
       },
       /* 根据主机状态确定可操作功能 */
       shutdownDisabled() {
@@ -1106,6 +1068,7 @@
     watch: {
       '$store.state.zone': {
         handler: function () {
+          this.getHostList()
         },
         deep: true
       }
@@ -1157,4 +1120,16 @@
     }
   }
 
+  .selectMark {
+    margin-bottom: 10px;
+    > img {
+      position: relative;
+      top: 4px;
+    }
+    > span {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(102, 102, 102, 1);
+    }
+  }
 </style>
