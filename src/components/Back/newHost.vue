@@ -120,16 +120,48 @@
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
       </div>
     </Modal>
+
+    <!-- 加入负载均衡弹窗 -->
+    <Modal v-model="showModal.balance" width="590" :scrollable="true">
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">加入负载均衡</span>
+      </div>
+      <div class="universal-modal-content-flex">
+        <Form :model="loadBalanceForm" ref="loadBalanceForm" :rules="loadBalanceFormRule">
+          <Form-item label="选择弹性负载均衡名称" prop="loadbalanceroleid">
+            <Select v-model="loadBalanceForm.loadbalanceroleid" placeholder="请选择" style="width:240px;">
+              <Option v-for="(item,index) in listLoadBalanceRole" :key="index"
+                      :value="item.loadbalanceroleid+item.type||item.lbid">
+                <span v-if="item.name">{{item.name}}</span>
+                <span v-if="item.lbname">{{item.lbname}}</span>
+              </Option>
+            </Select>
+            <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
+              <span style="font-weight:800;font-size:20px;">+</span>
+              <span style="cursor:pointer;" @click="$router.push('balance')">创建负载均衡</span>
+            </span>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.balance = false">取消</Button>
+        <Button type="primary" @click="joinBalanceSubm('loadBalanceForm')">确定
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import $store from '@/vuex'
+  import axios from 'axios'
 
   export default {
     data() {
       return {
         showModal: {
-          selectAuthType: false
+          selectAuthType: false,
+          balance: false
         },
         hostListColumns: [
           {
@@ -208,6 +240,8 @@
             },
             render: (h, params) => {
               let restart = params.row.restart ? params.row.restart : 0
+              let restore = params.row.restore ? params.row.restore : 0
+              let bindip = params.row.bindip ? params.row.bindip : 0
               let icon_1 = require('../../assets/img/host/h-icon1.png')
               let icon_2 = require('../../assets/img/host/h-icon2.png')
               let icon_3 = require('../../assets/img/host/h-icon3.png')
@@ -216,95 +250,94 @@
                 marginLeft: '5px',
                 lineHeight: '16px'
               }
-              if (restart == 1) {
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block'
+              switch (params.row.status) {
+                case -2:
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block'
+                    }
+                  }), h('span', {style: styleInfo}, '销毁中')])
+                  break
+                case -1:
+                  return h('div', {
+                    style: {
+                      display: 'flex'
+                    }
+                  }, [
+                    h('img', {
+                      attrs: {
+                        src: icon_2
+                      }
+                    }, ''),
+                    h('span', {
+                      style: styleInfo
+                    }, '异常')
+                  ])
+                  break
+                case 0:
+                  return h('div', {
+                    style: {
+                      display: 'flex'
+                    }
+                  }, [
+                    h('img', {
+                      attrs: {
+                        src: icon_3
+                      }
+                    }, ''),
+                    h('span', {
+                      style: styleInfo
+                    }, '欠费')
+                  ])
+                  break
+                case 1:
+                  if (params.row.computerstate == 1) {
+                    return h('div', {
+                      style: {
+                        display: 'flex'
+                      }
+                    }, [
+                      h('img', {
+                        attrs: {
+                          src: icon_1
+                        }
+                      }, ''),
+                      h('span', {
+                        style: styleInfo
+                      }, '开启')
+                    ])
+                  } else {
+                    return h('div', {
+                      style: {
+                        display: 'flex'
+                      }
+                    }, [
+                      h('img', {
+                        attrs: {
+                          src: icon_4
+                        }
+                      }, ''),
+                      h('span', {
+                        style: styleInfo
+                      }, '关机')
+                    ])
                   }
-                }), h('span', {style: styleInfo}, '重启中')])
-              } else {
-                switch (params.row.status) {
-                  case -1:
-                    return h('div', {
+                  break
+                case 2:
+                  if (params.row.computerstate == 0) {
+                    return h('div', {}, [h('Spin', {
                       style: {
-                        display: 'flex'
+                        display: 'inline-block'
                       }
-                    }, [
-                      h('img', {
-                        attrs: {
-                          src: icon_2
-                        }
-                      }, ''),
-                      h('span', {
-                        style: styleInfo
-                      }, '异常')
-                    ])
-                    break
-                  case 0:
-                    return h('div', {
+                    }), h('span', {style: styleInfo}, '开机中')])
+                  } else {
+                    return h('div', {}, [h('Spin', {
                       style: {
-                        display: 'flex'
+                        display: 'inline-block'
                       }
-                    }, [
-                      h('img', {
-                        attrs: {
-                          src: icon_3
-                        }
-                      }, ''),
-                      h('span', {
-                        style: styleInfo
-                      }, '欠费')
-                    ])
-                    break
-                  case 1:
-                    if (params.row.computerstate == 1) {
-                      return h('div', {
-                        style: {
-                          display: 'flex'
-                        }
-                      }, [
-                        h('img', {
-                          attrs: {
-                            src: icon_1
-                          }
-                        }, ''),
-                        h('span', {
-                          style: styleInfo
-                        }, '开启')
-                      ])
-                    } else {
-                      return h('div', {
-                        style: {
-                          display: 'flex'
-                        }
-                      }, [
-                        h('img', {
-                          attrs: {
-                            src: icon_4
-                          }
-                        }, ''),
-                        h('span', {
-                          style: styleInfo
-                        }, '关机')
-                      ])
-                    }
-                    break
-                  case 2:
-                    if (params.row.computerstate == 0) {
-                      return h('div', {}, [h('Spin', {
-                        style: {
-                          display: 'inline-block'
-                        }
-                      }), h('span', {style: styleInfo}, '开机中')])
-                    } else {
-                      return h('div', {}, [h('Spin', {
-                        style: {
-                          display: 'inline-block'
-                        }
-                      }), h('span', {style: styleInfo}, '关机中')])
-                    }
-                    break
-                }
+                    }), h('span', {style: styleInfo}, '关机中')])
+                  }
+                  break
               }
             }
           },
@@ -732,10 +765,21 @@
         hostPages: 0,
         pageSize: 10,
         currentPage: 1,
-        hostSelection: []
+        hostSelection: [],
+
+        listLoadBalanceRole: [],
+        loadBalanceForm: {
+          loadbalanceroleid: ''
+        },
+        loadBalanceFormRule: {
+          loadbalanceroleid: [
+            {required: true, message: '请选择', trigger: 'change'}
+          ]
+        },
       }
     },
     created() {
+      this.toggleZone(this.$store.state.zone.zoneid)
       // 用户未认证，弹出认证提示框
       if (this.$store.state.authInfo == null) {
         this.showModal.selectAuthType = true
@@ -743,8 +787,23 @@
       this.getHostList()
     },
     methods: {
+      toggleZone(zoneId) {
+        // 切换默认区域
+        axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+        })
+        for (var zone of this.$store.state.zoneList) {
+          if (zone.zoneid == zoneId) {
+            $store.commit('setZone', zone);
+          }
+        }
+      },
       hideEvent(name) {
         console.log(name)
+        switch (name) {
+          case 'backup':
+            this.joinBalance()
+            break
+        }
       },
       getHostList() {
         let url = 'information/listVirtualMachines.do'
@@ -883,7 +942,144 @@
           this.$Message.info('删除主机至多选择 5 项')
           return
         }
-      }
+      },
+      //加入负载均衡
+      joinBalance() {
+        axios.get('information/isloadbananceRoleAndServiceSchemeMatching.do', {
+          params: {
+            zoneId: $store.state.zone.zoneid,
+            VMIds: this.hostSelection[0].computerid,
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            // 成功的情况
+            axios.get('information/listVMByComputerId.do', {
+              params: {
+                VMId: this.hostSelection[0].computerid,
+                zoneId: this.hostSelection[0].zoneid
+              }
+            }).then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                if (response.data.result.loadbalance != '') {
+                  this.$message.confirm({
+                    title: '提示',
+                    content: `该主机已加入负载均衡：${response.data.result.loadbalance[0]}，若您需要修改主机所属负载均衡请先将主机移出该负载均衡在进行操作`,
+                    okText: '移出主机',
+                    onOk: () => {
+                      axios.get('loadbalance/listBalanceRoleAndVMByVMId.do', {
+                        params: {
+                          computerId: this.hostSelection[0].computerid,
+                          zoneId: this.hostSelection[0].zoneid
+                        }
+                      }).then(response => {
+                        if (response.status == 200 && response.data.status == 1) {
+                          sessionStorage.setItem('balanceInfo', JSON.stringify(response.data.result.loadBalance[0]))
+                          this.$router.push('BalanceParticulars')
+                        }
+                      })
+                    }
+                  })
+                } else {
+                  axios.get('loadbalance/listLoadBalanceRoleVM.do', {
+                    params: {
+                      zoneId: $store.state.zone.zoneid,
+                      VMId: this.hostSelection[0].computerid
+                    }
+                  }).then(response => {
+                    if (response.status == 200 && response.data.status == 1) {
+                      var publicLoadbalance = response.data.result.publicLoadbalance
+                      publicLoadbalance.forEach(item => {
+                        item.type = '#public'
+                      })
+                      this.listLoadBalanceRole = publicLoadbalance.concat(response.data.result.internalLoadbalance)
+                      this.showModal.balance = true
+                    }
+                  })
+                }
+              }
+            })
+          } else if (response.status == 200 && response.data.status == 3) {
+            // 需要创建公网负载均衡
+            this.$message.confirm({
+              title: '提示',
+              content: '您还未创建一个负载均衡，请先创建公网负载均衡。',
+              okText: '创建负载均衡',
+              onOk: () => {
+                this.$router.push('balance')
+              }
+            })
+          } else if (response.status == 200 && response.data.status == 4) {
+            // 需要创建内网负载均衡
+            this.$message.confirm({
+              title: '提示',
+              content: '您还未创建一个负载均衡，请先创建内网负载均衡。',
+              okText: '创建负载均衡',
+              onOk: () => {
+                this.$router.push('balance')
+              }
+            })
+          } else if (response.status == 200 && response.data.status == 5) {
+            // 网络不匹配
+            this.$message.confirm({
+              title: '提示',
+              okText: '调整子网',
+              content: '您选择的主机的子网的网络服务方案为普通网络，不支持负载均衡。若您需要将该主机加入负载均衡可将该主机移入子网服务方案为：公网/私网负载均衡网络的子网之后在进行加入负载均衡操作',
+              onOk: () => {
+                sessionStorage.setItem('vpcId', this.hostSelection[0].vpcid)
+                this.$router.push('vpcManage')
+              }
+            })
+          } else {
+            this.$Message.info(response.data.message)
+          }
+        })
+      },
+      // 确定加入负载均衡
+      joinBalanceSubm(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showModal.balance = false
+            this.$Message.info('主机正在加入负载均衡，请稍后')
+            if (this.loadBalanceForm.loadbalanceroleid.split('#')[1] == 'public') {
+              axios.get('loadbalance/assignToLoadBalancerRule.do', {
+                params: {
+                  VMIds: this.hostSelection[0].computerid,
+                  zoneId: this.hostSelection[0].zoneid,
+                  roleId: this.loadBalanceForm.loadbalanceroleid.split('#')[0]
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success(response.data.message)
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+                this.loadBalanceForm.loadbalanceroleid == ''
+              })
+            } else {
+              axios.get('loadbalance/assignToInternalLoadBalancerRule.do', {
+                params: {
+                  VMIds: this.hostSelection[0].computerid,
+                  zoneId: this.hostSelection[0].zoneid,
+                  roleId: this.loadBalanceForm.loadbalanceroleid,
+                  lbId: this.loadBalanceForm.loadbalanceroleid
+                }
+              })
+                .then(response => {
+                  if (response.status == 200 && response.data.status == 1) {
+                    this.$Message.success(response.data.message)
+                  } else {
+                    this.$message.info({
+                      content: response.data.message
+                    })
+                  }
+                  this.loadBalanceForm.loadbalanceroleid == ''
+                })
+            }
+          }
+        })
+      },
     },
     computed: {
       auth() {

@@ -176,6 +176,7 @@ const Wxpay = () =>import('@/components/Back/Wxpay')
 const WorkOrder = () =>import('@/components/Back/WorkOrder')
 const gpuManage = () =>import('@/components/Back/gpuManage')
 const gpuUpLevel = () =>import('@/components/Back/gpuUpLevel')
+const Cashwithdrawal = () =>import('@/components/Back/Cashwithdrawal')
 
 // 域名系统 ==============================
 
@@ -429,6 +430,7 @@ var router = new Router({
         {path: 'resultNew', name:'resultNew', component:ResultNew},
         {path: 'payNew', name:'payNew', component: PayNew},
         {path: 'expenses', name: 'expenses', component: Expenses},
+				{path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
         {path: 'userCenter', name: 'userCenter', component: UserCenter},
         {path: 'userInfo', name: 'userInfo', component: UserInfo},
         {path: 'operationLog', name: 'operationLog', component: OperationLog},
