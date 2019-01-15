@@ -144,7 +144,7 @@
                   </p>
                 </div>
                 <!--ssl证书清单字段-->
-                <div v-if="prod.type=='Pssl'">
+                <!-- <div v-if="prod.type=='Pssl'">
                   <p class="item">
                     <span class="hidden">$</span><span class="title">证书类型</span><span
                     class="hidden">#</span>{{prod.certTypeId}}
@@ -169,7 +169,7 @@
                     <span class="hidden">$</span><span class="title" v-if="index==0">绑定域名</span><span class="title" v-else></span>
                     <span class="hidden">#</span>{{item}}
                   </p>
-                </div>
+                </div> -->
                 <!--底部价格公共区域-->
                 <div style="border-bottom:1px solid #ccc;padding-bottom: 20px">
                   <p class="item" style="margin-top: 10px">
@@ -576,26 +576,27 @@
               countOrder
             }
             PromiseList.push(axios.post('ruiradosPrice/createOrder.do', params))
-          } else if (prod.type == 'Pssl') {
-            // ssl证书
-            let params = {
-                  sslName: prod.sslName,
-                  ownUserIdCardNumber: prod.ownUserIdCardNumber,
-                  ownUserEmail: prod.ownUserEmail,
-                  ownUserName: prod.ownUserName,
-                  certallDomain: prod.certallDomain,
-                  ownUserPhone: prod.ownUserPhone,
-                  orgPhone: prod.orgPhone,
-                  certValidateType: prod.certValidateType,
-                  certExpTime: prod.certExpTime,
-                  orgName: prod.orgName,
-                  orgType: prod.orgType,
-                  certTypeId: prod.certTypeId,
-                  orgEmail: prod.orgEmail,
-                  countOrder
-                }
-            PromiseList.push(axios.post('domain/createSSLOrder.do', params))
-          }
+          } 
+          // else if (prod.type == 'Pssl') {
+          //   // ssl证书
+          //   let params = {
+          //         sslName: prod.sslName,
+          //         ownUserIdCardNumber: prod.ownUserIdCardNumber,
+          //         ownUserEmail: prod.ownUserEmail,
+          //         ownUserName: prod.ownUserName,
+          //         certallDomain: prod.certallDomain,
+          //         ownUserPhone: prod.ownUserPhone,
+          //         orgPhone: prod.orgPhone,
+          //         certValidateType: prod.certValidateType,
+          //         certExpTime: prod.certExpTime,
+          //         orgName: prod.orgName,
+          //         orgType: prod.orgType,
+          //         certTypeId: prod.certTypeId,
+          //         orgEmail: prod.orgEmail,
+          //         countOrder
+          //       }
+          //   PromiseList.push(axios.post('domain/createSSLOrder.do', params))
+          // }
         }
         sessionStorage.removeItem('cart')
         Promise.all(PromiseList).then(responseList => {

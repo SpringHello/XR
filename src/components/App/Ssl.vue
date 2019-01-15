@@ -347,15 +347,18 @@ export default {
     .desc {
       p {
         margin: 10px 0;
+        padding-bottom: 10px;
         font-size: 16px;
+        line-height: 1.5;
         color: rgba(102, 102, 102, 1);
+        border-bottom: solid #666666 1px;
       }
     }
     dl {
       margin-bottom: 20px;
       dt {
         height: 40px;
-        line-height: 40px;
+        padding-top: 8px; 
         color: rgba(59, 134, 255, 1);
         background: rgba(222, 235, 255, 1);
         font-size: 18px;
