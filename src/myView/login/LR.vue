@@ -535,6 +535,9 @@
         if (localStorage.getItem('comefrom')) {
           params.qdCode = localStorage.getItem('comefrom')
         }
+        if (localStorage.getItem('sellCode')) {
+          params.sellCode  = localStorage.getItem('sellCode')
+        }
         axios.get('user/register.do', {
           params
         }).then(response => {

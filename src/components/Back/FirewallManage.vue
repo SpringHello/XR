@@ -57,10 +57,10 @@
           <Form-item label="方向" prop="way">
             <Select v-model="newRuleForm.way" placeholder="请选择">
               <Option value="Egress">
-                入站规则
+                出站规则
               </Option>
               <Option value="Ingress">
-                出站规则
+                入站规则
               </Option>
             </Select>
           </Form-item>
