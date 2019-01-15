@@ -7,23 +7,31 @@
 				<div class="remindbox">
 					<div class="remindbox-left">
 						<div class="font">
-							<span>可提现金额</span>
+							<span>可<span style="color: #FF624B;">线上</span>提现金额</span>
 							<div class="money">
 								<span>57</span>
 								<span>.00元</span>
 							</div>
-							<Button type="primary" style="margin-top: 17px;" @click="showModal.Paymentdetails = true">申请线上提现</Button>
+							<Button type="primary" style="margin-top: 17px;" @click="showModal.Cashconfirmation = true">申请线上提现</Button>
+						</div>
+						<div class="font">
+							<span>可<span style="color: #FF624B;">银行卡</span>提现金额</span>
+							<div class="money">
+								<span>23</span>
+								<span>.00元</span>
+							</div>
+							<Button type="primary" style="margin-top: 17px;" @click="showModal.Cashconfirmation = true">申请银行卡提现</Button>
 						</div>
 					</div>
 					<div class="remindbox-right">
 						<div class="right">
 							<span><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。如需帮助，可查看 <a href="#" style="color: #2A99F2;text-decoration: underline;">自助提现常见问题</a></span>
-							<span>可开票金额为负时，提现须请您先回寄发票，<a href="#" style="color: #2A99F2;text-decoration: underline;">详情查看</a></span>
 							<div class="following">
-								<span>以下几种现金充值金额不支持自助线上提现：</span>
+								<span>以下几种现金充值金额不支持自助线上提现：</span><br />
 								<span>1、被暂时冻结的现金充值金额</span>
-								<span>2、充值时间超过一年的现金充值金额</span>
+								<span>2、通过微信充值时间超过1年或通过支付宝充值时间超过3个月的现金充值金额</span>
 								<span>3、通过线下打款进账的现金充值金额提现方式请 <a href="#" style="color: #2A99F2;text-decoration: underline;">点击这里查看</a></span>
+								<span>4、单次提现金额上限2000元，7天内最多提现4次</span>
 							</div>
 						</div>
 					</div>
@@ -50,13 +58,13 @@
 			      <p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">您正在申请线上提现，申请后您的款项将在<span style="color: #FF624B">5个工作日</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。
 			      </p>
 						<!-- @click="$router.push('/ruicloud/cashwithdrawal')" -->
-						<p class="lh24">若您的线下汇款（对公转账）金额需要提现，请点击查看 <a href="#" style="color: #2A99F2; text-decoration: underline;">线下汇款提现方式</a>。
+						<p class="lh24" style="margin-top: 10px;">若您的线下汇款（对公转账）金额需要提现，请点击查看 <a href="#" style="color: #2A99F2; text-decoration: underline;">线下汇款提现方式</a>。
 						</p>
 			    </div>
 			  </div>
 			  <p slot="footer" class="modal-footer-s">
 			    <Button @click="showModal.Cashconfirmation = false">取消</Button>
-			    <Button type="primary" @click="">确认</Button>
+			    <Button type="primary" @click="$router.push('/ruicloud/cashprocess')">确认</Button>
 			  </p>
 			</Modal>
 			<!-- 打款详情弹窗 -->
@@ -217,7 +225,7 @@
 			border:1px solid rgba(42,153,242,1);
 		}
 		.remindbox-left{
-			width: 18%;
+			width: 24%;
 			height: 100%;
 			float: left;
 		}
@@ -251,7 +259,7 @@
 			margin-top: 9px;
 		}
 		.remindbox-right{
-			width: 82%;
+			width: 76%;
 			height: 100%;
 			float: left;
 		}
@@ -266,8 +274,8 @@
 			float: left;
 		}
 		.following{
-			width: 335px;
-			height: 80px;
+			width: 418px;
+			height: 100px;
 		}
 		.following span:nth-of-type(1)
 		{
@@ -275,6 +283,7 @@
 			font-family:MicrosoftYaHei;
 			color:rgba(51,51,51,1);
 			line-height:22px;
+			width: 100%;
 		}
 		.following span:nth-of-type(2)
 		{
@@ -291,6 +300,13 @@
 			line-height:20px;
 		}
 		.following span:nth-of-type(4)
+		{
+			font-size:12px;
+			font-family:MicrosoftYaHei;
+			color:#666666;
+			line-height:20px;
+		}
+		.following span:nth-of-type(5)
 		{
 			font-size:12px;
 			font-family:MicrosoftYaHei;
