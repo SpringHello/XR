@@ -406,7 +406,7 @@
               <dd v-html="showNews.abstracts">
               </dd>
               <dd>
-                <a  :href='`https://news.xrcloud.net`' target="_blank" class="news-btn">
+                <a  :href='`https://news.xrcloud.net/essay/${showNews.code}.html`' target="_blank" class="news-btn">
                   查看详情
                 </a>
               </dd>
@@ -419,7 +419,7 @@
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
             <dt>
-              <a :href="`https://news.xrcloud.net/yunzixun/${item.id}`" class="moreinfo">
+              <a :href="`https://news.xrcloud.net/${item.EnglishName}`" class="moreinfo">
                 <Icon type="chevron-right"></Icon>
                 <span>{{item.typename}}</span>
               </a>
