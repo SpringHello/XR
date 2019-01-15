@@ -152,6 +152,7 @@
       width: 350px;
       background-color: #ffffff;
       .header {
+        border-radius: 5px 5px 0 0;
         background: #333;
         padding: 15px 30px ;
         .icon {

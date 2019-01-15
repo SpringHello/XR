@@ -116,16 +116,16 @@
           </div>
           <div class="cost">
             <P>
-              <a class="fl">查看计价详情</a>
+              <!-- <a class="fl">查看计价详情</a> -->
               <span>
                 总计费用：
                 <i class="orange fsn f24">{{cost}}元</i>
               </span>
             </P>
-            <p>
+            <!-- <p>
               已省：
               <span class="orange">35元</span>
-            </p>
+            </p> -->
             <div class="btns">
               <Button class="f16 btn-blue" @click="stepOne_ok('formValidateOne')">下一步</Button>
             </div>
@@ -230,7 +230,7 @@
           </div>
           <div class="cost">
             <div class="btns">
-              <Button class="f16" @click="addObjCart()">加入预算清单</Button>
+              <!-- <Button class="f16" @click="addObjCart()">加入预算清单</Button> -->
               <Button class="f16" @click="step=0">上一步</Button>
               <Button class="f16 btn-blue" @click="postOrder('formValidateTwo')">提交</Button>
             </div>
@@ -471,57 +471,57 @@ export default {
 
     },
     // 加入购物清单
-    addObjCart () {
-      if (this.$parent.cart.length > 4) {
-        this.$message.info({
-          content: '购物车已满'
-        })
-      }
-      let prod = {}
-      let params1 = {
-        typeName: 'ssl证书',
-        type: 'Pssl',
-        cost: this.cost,
-        count: 1,
-        year: this.formValidateOne.yearSelected + 1,
-        domianLeagth: this.domainList.length,
-        mainDomain: this.domainList[0],
-        // 创建订单需要的参数
-        sslName: this.formValidateOne.sslName,
-        ownUserIdCardNumber: this.formValidateTwo.certificateNum,
-        ownUserEmail: this.formValidateTwo.manEmail,
-        ownUserName: this.formValidateTwo.manName,
-        certallDomain: this.domainList.join(),
-        ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
-        orgPhone: this.phoneReg(this.formValidateTwo.unitTel),
-        certValidateType: this.formValidateOne.vailType,
-        certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
-        orgName: this.formValidateTwo.unitName,
-        orgType: this.formValidateTwo.unitType,
-        certTypeId: this.formValidateOne.selectedType,
-        orgEmail: this.formValidateTwo.unitEmail,
-      }
-      let params2 = {
-        typeName: 'ssl证书',
-        type: 'Pssl',
-        cost: this.cost,
-        count: 1,
-        year: this.formValidateOne.yearSelected + 1,
-        domianLeagth: this.domainList.length,
-        mainDomain: this.domainList[0],
-        // 创建订单需要的参数
-        sslName: this.formValidateOne.sslName,
-        ownUserEmail: this.formValidateTwo.manEmail,
-        ownUserName: this.formValidateTwo.manName,
-        certallDomain: this.domainList.join(),
-        ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
-        certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
-        certTypeId: this.formValidateOne.selectedType,
-      }
-      prod = this.formValidateOne.selectedType == '1' ? params1 : params2
-      this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
-      window.scrollTo(0, 170)
-    },
+    // addObjCart () {
+    //   if (this.$parent.cart.length > 4) {
+    //     this.$message.info({
+    //       content: '购物车已满'
+    //     })
+    //   }
+    //   let prod = {}
+    //   let params1 = {
+    //     typeName: 'ssl证书',
+    //     type: 'Pssl',
+    //     cost: this.cost,
+    //     count: 1,
+    //     year: this.formValidateOne.yearSelected + 1,
+    //     domianLeagth: this.domainList.length,
+    //     mainDomain: this.domainList[0],
+    //     // 创建订单需要的参数
+    //     sslName: this.formValidateOne.sslName,
+    //     ownUserIdCardNumber: this.formValidateTwo.certificateNum,
+    //     ownUserEmail: this.formValidateTwo.manEmail,
+    //     ownUserName: this.formValidateTwo.manName,
+    //     certallDomain: this.domainList.join(),
+    //     ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
+    //     orgPhone: this.phoneReg(this.formValidateTwo.unitTel),
+    //     certValidateType: this.formValidateOne.vailType,
+    //     certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+    //     orgName: this.formValidateTwo.unitName,
+    //     orgType: this.formValidateTwo.unitType,
+    //     certTypeId: this.formValidateOne.selectedType,
+    //     orgEmail: this.formValidateTwo.unitEmail,
+    //   }
+    //   let params2 = {
+    //     typeName: 'ssl证书',
+    //     type: 'Pssl',
+    //     cost: this.cost,
+    //     count: 1,
+    //     year: this.formValidateOne.yearSelected + 1,
+    //     domianLeagth: this.domainList.length,
+    //     mainDomain: this.domainList[0],
+    //     // 创建订单需要的参数
+    //     sslName: this.formValidateOne.sslName,
+    //     ownUserEmail: this.formValidateTwo.manEmail,
+    //     ownUserName: this.formValidateTwo.manName,
+    //     certallDomain: this.domainList.join(),
+    //     ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
+    //     certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+    //     certTypeId: this.formValidateOne.selectedType,
+    //   }
+    //   prod = this.formValidateOne.selectedType == '1' ? params1 : params2
+    //   this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
+    //   window.scrollTo(0, 170)
+    // },
   },
   computed: {
     userInfo () {
@@ -600,7 +600,7 @@ export default {
       color: #666;
       > p {
         line-height: 25px;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
       }
       .btns {
         font-size: 16px;
