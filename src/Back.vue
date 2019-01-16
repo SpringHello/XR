@@ -38,7 +38,7 @@
             <li>
               <Dropdown @on-click="go">
                 <a href="javascript:void(0)" style="position:relative">
-                  {{userInfo.realname}}
+                  {{userInfo?userInfo.realname:''}}
                   <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
                   <Icon type="arrow-down-b"></Icon>
                 </a>
@@ -254,8 +254,8 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              //{subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
+              // {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
@@ -296,7 +296,7 @@
               //{subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
               {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
               {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
+              // {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
               /*{subName: '邮箱验证', type: 'https://test-test-domain.xrcloud.net/xrdomain/domainGroup'}*/
             ]
           },

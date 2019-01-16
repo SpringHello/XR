@@ -54,10 +54,10 @@
             </div>
           </div>
           <div class="box">
-            <h1 class="headline">计费方式选择</h1>
+            <h1 class="headline">申请年限选择</h1>
             <div class="content">
               <span
-                style="width:53px;"
+                style="width:80px;margin-right: 10px;"
                 v-for="(item,index) in timeValue"
                 :key="index"
                 class="type-btn"
@@ -125,7 +125,7 @@
             <!-- <p>
               已省：
               <span class="orange">35元</span>
-            </p> -->
+            </p>-->
             <div class="btns">
               <Button class="f16 btn-blue" @click="stepOne_ok('formValidateOne')">下一步</Button>
             </div>
@@ -251,10 +251,11 @@ export default {
     // 域名正则批量判断
     const validateDomain = (rule, value, callback) => {
       var flag = this.domainReg(value)
-      if (flag) {
+      var domainRepeat = this.domainRepeat(value)
+      if (flag && domainRepeat) {
+        callback(new Error('存在重复的域名'));
+      } else if (flag) {
         callback()
-      } else if (/\s/.test(value)) {
-        callback(new Error('不要输入空格'));
       } else {
         callback(new Error('请输入正确的域名格式'));
       }
@@ -399,9 +400,23 @@ export default {
         return false
       }
     },
+    domainRepeat (string) {
+      if (string) {
+        this.domainList = string.split('\n').filter(item => {
+          return item != ''
+        })
+        for (var i = 0; i < this.domainList.length; i++) {
+          for (var j = i + 1; j < this.domainList.length; j++) {
+            if (this.domainList[i] == this.domainList[j]) {
+              return true
+            }
+          }
+        }
+      }
+    },
     price () {
       let flag = this.domainReg(this.formValidateOne.domain)
-      console.log(flag)
+      // console.log(flag)
       if (flag) {
         axios.post('domain/getSSLPriceFromType.do', {
           certTypeId: this.formValidateOne.selectedType,
@@ -520,7 +535,7 @@ export default {
     //   }
     //   prod = this.formValidateOne.selectedType == '1' ? params1 : params2
     //   this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
-    //   window.scrollTo(0, 170)
+    //   window.scrollTo(0, 182)
     // },
   },
   computed: {

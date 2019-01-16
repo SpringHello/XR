@@ -111,7 +111,7 @@
             <li @mouseenter="ME(5,$event)">
               <Dropdown @on-click="go">
                 <a href="javascript:void(0)" style="position:relative">
-                  {{userInfo.realname}}
+                  {{ userInfo?userInfo.realname:''}}
                   <!--<sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>-->
                   <Icon type="arrow-down-b"></Icon>
                 </a>
@@ -474,11 +474,6 @@
                         desc: '高效贴心的域名备案服务',
                         path: '/ruicloud/entrance'
                       },
-                      {
-                        title: 'SSL证书',
-                        desc: '网站可信身份认证与安全数据传输',
-                        path: '/ruicloud/ssl'
-                      },
                     ]
                   },
                 ]
@@ -487,7 +482,12 @@
                 prod: '云安全',
                 prodItem: [
                   {title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall.htm'},
-                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos.htm'}
+                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos.htm'},
+                  {
+                    title: 'SSL证书',
+                    desc: '网站可信身份认证与安全数据传输',
+                    path: '/ruicloud/ssl'
+                  },
                 ],
                 subProd: [
                   {
@@ -957,16 +957,16 @@
                         }
                         > div {
                           width: 15%;
-                          &:last-of-type {
-                            > div {
-                              height: 155px;
-                            }
-                          }
-                          &:nth-last-child(2) {
-                            > div {
-                              height: 155px;
-                            }
-                          }
+                          // &:last-of-type {
+                          //   > div {
+                          //     height: 155px;
+                          //   }
+                          // }
+                          // &:nth-last-child(2) {
+                          //   > div {
+                          //     height: 155px;
+                          //   }
+                          // }
 
                         }
                         h2 {
