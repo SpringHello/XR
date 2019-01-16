@@ -20,7 +20,7 @@ const BObj = () => import('@/components/App/buy/BObj')
 
 const Buy = () =>import('@/components/App/buy/Buy')
 const BHost = () =>import('@/components/App/buy/BHost')
-const BIP = () =>import('@/components/App/buy/BIP')  
+const BIP = () =>import('@/components/App/buy/BIP')
 const BDisk = () =>import('@/components/App/buy/BDisk')
 const BData = () =>import('@/components/App/buy/BData')
 const BGpu = () =>import('@/components/App/buy/BGpu')
@@ -132,6 +132,7 @@ const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
 const Host = () =>import('@/components/Back/Host')
 const NewHost = () =>import('@/components/Back/newHost')
+const NewUpgrade = () =>import('@/components/Back/newUpgrade')
 const GPU = () =>import('@/components/Back/GPU')
 const GpuList = () =>import('@/components/Back/GpuList')
 const Mirror = () =>import('@/components/Back/Mirror')
@@ -416,6 +417,7 @@ var router = new Router({
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
         {path: 'newHost', name: 'newHost', component: NewHost},
+        {path: 'newUpgrade', name: 'newUpgrade', component: NewUpgrade},
         {path: 'gpu', name: 'gpu', component: GPU},
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},

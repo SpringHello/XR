@@ -16,7 +16,7 @@
 
     <Modal v-model="linkPassword" width="360" :scrollable="true">
       <p slot="header">
-        <span>远程连接密码</span>
+        <span class="universal-modal-title">远程连接密码</span>
       </p>
       <div>
         <p style="font-size: 20px;margin-bottom: 15px;">您的远程连接密码是：{{linkCode}}</p>
@@ -29,7 +29,7 @@
     </Modal>
     <Modal v-model="confirm" width="550" scrollable @keydown.native.enter.prevent ="keyDownEvent">
       <p slot="header" class="modal-header-border">
-        <span style="font-size: 16px;">输入远程连接密码</span>
+        <span style="font-size: 16px;" class="universal-modal-title">输入远程连接密码</span>
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="loginForm" :rules="loginRuleValidate" ref="loginForm">
