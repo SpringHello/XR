@@ -19,7 +19,8 @@
               <div class="item">
                 <span>余额</span>
                 <button @click="torecharge">充值</button>
-								<button @click="$router.push('/ruicloud/cashwithdrawal')" style="margin-right: 10px;">提现</button>
+								<!-- $router.push('/ruicloud/cashwithdrawal') -->
+								<button @click="Cashforwithdrawa" style="margin-right: 10px;">提现</button>
                 <div>
                   <ul style="width: 50%">
                     <li>可用余额</li>
@@ -1824,6 +1825,15 @@
       }
     },
     methods: {
+			Cashforwithdrawa(){
+				axios.get('user/selectValidRefundAmount.do', {
+				}).then(response => {
+					if (response.status == 200 && response.data.status == 1) {
+						sessionStorage.setItem('cashWithdrawalAmount', response.data.cashWithdrawalAmount)
+						this.$router.push('/ruicloud/cashwithdrawal')
+					}
+				})
+			},
       selectChange(item, index) {
         if (item.startmoney > this.totalCost) {
           this.activeIndex = null
