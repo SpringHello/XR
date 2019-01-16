@@ -18,7 +18,7 @@
                 <p v-if="firstMessage" style="font-size: 14px;color: #3DBD7D;line-height: 22px;margin-bottom:40px;"> {{ firstMessage }}</p>
                 <div v-if="payResult=='success'">
                   <button class="ghost button" @click="push('expenses')">查看订单</button>
-                  <button class="primary button" @click="push('overview')">进入控制台</button>
+                  <button class="primary button" @click="revertOrder">查看已购买产品</button>
                 </div>
                 <div v-if="payResult=='fail'" >
                   <button class="ghost button" @click="kf">联系客服</button>
@@ -85,6 +85,29 @@
           }, 1000)
         } else {
         }
+      },
+      // 进入购买的产品页
+      revertOrder(){
+        let name = sessionStorage.getItem('routerName');
+        let router ='';
+        if(name == 'bhost'){
+          router = 'host';
+        }else if(name == 'bgpu'){
+          router = 'gouList';
+        }else if(name == 'bip'){
+          router = 'ip';
+        }else if(name == 'bdisk'){
+          router = 'disk';
+        }else if(name == 'bdata'){
+          router = 'cloudDataBase';
+        }else if(name == 'bobj'){
+          window.location.href = 'https://testoss-console.xrcloud.net/ruirados/objectStorage';
+          return;
+        }else if(name == 'bssl'){
+          window.location.href = 'https://test-domain.xrcloud.net/xrdomain/domainSSL';
+          return;
+        }
+        this.$router.push(router)
       }
     },
   }

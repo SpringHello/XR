@@ -626,6 +626,7 @@
       },
       change(value) {
         this.$router.push(`/ruicloud/buy/${value}`)
+        sessionStorage.setItem('routerName',value);
       },
       // 导出清单
       exportXLSX() {

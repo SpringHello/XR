@@ -19,22 +19,15 @@
           <p>基于GPU应用的计算服务，具有实时的并行计算和浮点计算能力，适用于3D图形应用、深度学习、科学计算等</p>
           </div>
           <div style="margin:16px 0 16px 0;">
-            <Button type="primary" @click="$router.push({path:'/ruicloud/buy/bgpu'})">+  创建</Button>
-            <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">关机</Button>
-            <Button type="primary" @click="$router.push({path:'/ruicloud/buy/bgpu'})">开机</Button>
-            <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">重启</Button>
-            <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">删除</Button>
+            <Button type="primary"  @click="$router.push({path:'/ruicloud/buy/bgpu'})">+  创建</Button>
+            <Button type="primary" :disabled='disabledList.closeDisabled' style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">关机</Button>
+            <Button type="primary" :disabled='disabledList.openDisabled' @click="$router.push({path:'/ruicloud/buy/bgpu'})">开机</Button>
+            <Button type="primary" :disabled='disabledList.closeDisabled' style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">重启</Button>
+            <Button type="primary" :disabled='disabledList.deleteDisabled' style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">删除</Button>
             <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">更多操作</Button>
-            <div style="display: inline-block;float: right;">
-              <Select v-model="gpuTimeValue" style="width:200px" placeholder="计费类型" @on-change="getGpuServerList">
-                <Option v-for="item in gpuTimeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-              <Select v-model="gpuStatus" style="width:200px" placeholder="主机状态" @on-change="getGpuServerList">
-                <Option v-for="item in gpuStatusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-            </div>
           </div>
-          <Table :columns="hostList" :data="hostData" @on-select='selectGpu'></Table>
+          <p style="font-size:14px;margin:10px 0;">共{{selectLength.total}}项|   已选择<span style="color:#FF624B;">{{selectLength.selection}}</span>项</p>
+          <Table :columns="hostList" :data="hostData"  @on-select-change="selectIndex"></Table>
         </div>
       </div>
 
@@ -533,13 +526,42 @@
               }
             },
             {
-              title:'状态',
-              width:70,
+              title:'状态/监控(全部)',
               render:(h,params) => {
                 return h('div',[
                   h('img',{}),
                   h('span',{}, params.row.status == '-1' ? '异常' :params.row.status == '0' ? '欠费' : params.row.computerstate == '0' && params.row.status=='1' ? '关机' :params.row.computerstate == '1' && params.row.status=='1'  ? '开机' :'')
                  ])
+              },
+               filters: [
+                {
+                  label: '开机',
+                  value: 1
+                },
+                {
+                  label: '关机',
+                  value: 2
+                },
+                {
+                  label: '欠费',
+                  value: 3
+                },
+                {
+                  label: '异常',
+                  value: 4
+                }
+              ],
+              filterMultiple: false,
+              filterMethod (value, row) {
+                if (value === 1) {
+                  return row.status === '1'&&row.computerstate=='1';
+                } else if (value === 2) {
+                  return row.status === '1'&&row.computerstate=='0';
+                }else if(value === 3){
+                  return row.status === '0'
+                }else if(value === 4){
+                  return row.status === '-1'
+                }
               }
             },
             {
@@ -556,7 +578,12 @@
             },
             {
               title:'IP地址',
-              key:'publicip'
+              render:(h,params)=>{
+                return h('div',[
+                  h('span',{},params.row.publicip ?params.row.publicip+'(公)':''),
+                  h('span',{},params.row.publicip ?params.row.publicip+'(内)':'')
+                ])
+              }
             },
             {
               title:'创建时间/到期时间',
@@ -567,8 +594,7 @@
               }
             },
             {
-              title:'计费类型',
-              width:70,
+              title:'计费类型(全部)',
               render:(h,params) =>{
                 return h('span',{},params.row.caseType == 1 ?'包年':params.row.caseType == 2 ? '包月' : params.row.caseType == 3 ? '实时' :'7天')
               }
@@ -577,7 +603,7 @@
               title:'操作',
               width:100,
               render:(h,params)=>{
-                if(params.row.status == -1 || this.$store.state.authInfo ==null){
+                if(params.row.status == '-1' || this.$store.state.authInfo ==null){
                   return h('div',
                     {
                       style:{padding:'8px 0',display:'inline-block'}
@@ -598,7 +624,7 @@
                     on:{
                     click:()=> {
                         this.uuId = params.row.computerid;
-                        let msg = params.row.computerstate == '0' ?'确定要关机吗':'确定要关机吗'
+                        let msg = params.row.computerstate == '0' ?'确定要开机吗':'确定要关机吗'
                         this.$Modal.confirm({
                           title:'提示',
                           content:msg,
@@ -618,7 +644,7 @@
                       })
                     }
                     }
-                  },params.row.computerstate == '0'?'开机':'关机'),
+                  },params.row.computerstate == '0' && params.row.status == '1'?'开机':'关机'),
                     h('Dropdown', {
                       props: {
                         trigger: 'click'
@@ -791,6 +817,15 @@
           hostData:[],
           zoneId:'',
           intervalInstance: null,
+          disabledList:{
+            openDisbled:false,
+            closeDisbled:false,
+            deleteDisbled:false,
+          },
+          selectLength:{
+            total:0,
+            selection:0
+          },
         }
       },
       beforeRouteLeave(to, from , next){
@@ -828,6 +863,7 @@
                     }
                   this.hostData = list;
                 }
+                this.selectLength.total = list.length;
               }else{
                 this.hostData = [];
               }
@@ -999,8 +1035,18 @@
         },
 
       // 选中主机
-      selectGpu(selecion,row){
-        console.log(selecion,row);
+      selectIndex(selecion){
+         this.selectLength.selection = selection.length;
+        for(let i = 0;i<selecion.length;i++){
+          this.uuid += selecion.computerid+','
+            if(selecion[i].row.computerstate != '1' && selecion[i].row.status !='1'){ //开机状态
+                this.disabledList.openDisbled = true;
+            }else if(selecion[i].computerstate != '0' && selecion[i].row.status !='1'){ // 关机状态
+              this.disabledList.closeDisbled = true;
+            }else if(selecion[i].status == '-1'){
+              this.disabledList.deleteDisbled = true;
+            }
+        }
       }, 
 
         //创建镜像

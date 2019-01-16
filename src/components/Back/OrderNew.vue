@@ -1,15 +1,19 @@
 <template>
   <div class="background">
     <div class="wrapper">
-      <span>首页 / 新建云主机 / 订单确认</span>
+      <span>首页 / {{routerName}} / 订单确认</span>
       <div class="content">
         <span>订单确认</span>
-        <Button  style="float:right">返回</Button>
+        <button style="float:right" class="button" @click="$router.push('buy')">返回</button>
+        <div class="order_text">
+          <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
+          <p style="margin-top:10px;">请牢记您所设置的密码，如遗忘可登录云服务器控制台重置密码。<span style="color:#2A99F2;cursor:pointer;">查看</span></p>
+        </div>
+        <p style="font-size:14px;margin-top:20px;">共{{selectLength.total}}项|   已选择<span style="color:#FF624B;">{{selectLength.selection}}</span>项</p>
         <div style="margin-top:20px;" class="order">
-          <Table :columns="orderColumns" :data="orderData" @on-selection-change="onSelectionChange"></Table>
+          <Table class="my_table" :columns="orderColumns" :data="orderData" @on-selection-change="onSelectionChange"></Table>
         </div>
         <div style="margin-top:10px;background:#F6FAFD;" class="coupon">
-      
             <div>
               <div>
                 <Checkbox  v-model="couponInfo.isUse" @on-change="changeCheckbox">
@@ -119,47 +123,28 @@
           {
             type: 'selection',
             width: 60,
-            align: 'center'
+            align: 'center',
           },
           {
             title: '资源',
+            // type: 'expand',
             render: (h, params) => {
-              // var type = ''
               var arr = []
-              // switch (params.row['订单类型']) {
-              //   case 'host':
-              //     type = '云主机'
-              //     break
-              //   case 'vpc':
-              //     type = 'vpc'
-              //     break
-              //   case 'disk':
-              //     type = '云硬盘'
-              //     break
-              //   case 'publicIp':
-              //     type = '弹性IP'
-              //     break
-              //   case 'continue':
-              //     type = '续费'
-              //     break
-              //   case 'upconfig':
-              //     type = '升级'
-              //     break
-              //   case 'nat' :
-              //     type = 'NAT网关'
-              //     break
-              // }
               for (var index in params.row['资源']) {
                 let parr = []
                 for (var key in params.row['资源'][index]) {
                   parr.push(h('p', {style: {marginBottom: '10px',lineHeight:'1.2'}}, `${key}  :  ${params.row['资源'][index][key]}`))
                 }
-                arr.push(h('div', {
+                arr.push(
+                 h('div', {
                   style: {
                     borderBottom: index == params.row['资源'].length - 1 ? 'none' : '1px solid rgb(233, 234, 236)',
                     padding: '10px'
                   }
-                }, parr))
+                }, parr)
+                // h('div',{},params.row),
+                // h('div',{},params.row.)
+                )
               }
               return h('div', {
                 style: {
@@ -169,75 +154,88 @@
             },
             width: 216
           },
-          {
-            title: '状态',
-            render(h, obj) {
-              let text = '正常'
-              if (obj.row['订单状态']) {
-                text = obj.row['订单状态'] == '0' ? '正常' : '错误'
-              }
-              return h('span', {}, text)
-            }
-          },
-          {
-            title: '操作',
-            render(h, obj) {
-              if (obj.row['订单状态']) {
-                if (obj.row['订单状态'] == '1') {
-                  return h('span', {
-                    style: {
-                      color: '#2A99F2',
-                      cursor: 'pointer'
-                    },
-                    on: {
-                      click: () => {
-                        that.$message.confirm({
-                          content: obj.row['错误信息']
-                        })
-                      }
-                    }
-                  }, '查看')
-                } else {
-                  return h('span', {
-                    style: {
-                      color: '#666666'
-                    }
-                  }, '--')
-                }
-              } else {
-                return h('span', {
-                  style: {
-                    color: '#666666'
-                  }
-                }, '--')
+           {
+            title:'状态',
+            width:150,
+            render:(h,params)=>{
+              if(params.row.订单状态 == 0 || params.row.订单状态 == undefined){
+                 return h('span',{},'成功')
+              }else{
+                 return h('div',[
+                   h('span',{
+                     style:{
+                       color:'#FF0000',
+                       marginRight:'10px'
+                     }
+                   },'失败'),
+                   h('span',{
+                     style:{
+                       color:'#2A99F2',
+                       cursor:'pointer'
+                     },
+                     on:{
+                       click:()=>{
+                         this.$Modal.error({
+                           title:'失败',
+                           content:params.row['错误信息']
+                         })
+                       }
+                     }
+                   },'详情')
+                  //   h('span',{
+                  //    style:{
+                  //      margin:'0 10px'
+                  //    }
+                  //  },'|'),
+                  //  h('span',{
+                  //    style:{
+                  //      color:'#2A99F2',
+                  //      cursor:'pointer'
+                  //    },
+                  //    on:{
+                  //      click:()=>{
+                  //        this.$Modal.error({
+                  //          title:'失败',
+                  //          content:params.row['错误信息']
+                  //        })
+                  //      }
+                  //    }
+                  //  },'重试')
+                 ])
               }
             }
           },
           {
             title: '计费类型',
-            key: '类型'
+              render:(h,params)=>{
+              return h('span',{},params.row.订单状态 == 0 || params.row.订单状态 == undefined?params.row.类型:'--')
+            }
           },
           {
             title: '购买时长',
-            key: '时长'
+             render:(h,params)=>{
+              return h('span',{},params.row.订单状态 == 0 || params.row.订单状态 == undefined?params.row.时长:'--')
+            }
           },
           {
             title: '数量',
-            key: '数量'
+             render:(h,params)=>{
+              return h('span',{},params.row.订单状态 == 0 || params.row.订单状态 == undefined?params.row.数量:'--')
+            }
           },
           {
             title: '原价',
-            render(h, obj) {
-              if (obj.row.originalcost > obj.row.cost) {
+            render(h, params) {
+              if (params.row.originalcost > params.row.cost) {
                 return h('span', {
                   style: {
                     textDecorationLine: 'line-through',
                     textDecorationStyle: 'initial',
                     textDecorationColor: 'red',
                   }
-                }, obj.row.originalcost)
+                }, params.row.订单状态 == 0 || params.row.订单状态 == undefined?params.row.originalcost:'--')
               } else {
-                return h('span', {}, obj.row.originalcost)
+                return h('span', {}, params.row.订单状态 == 0 || params.row.订单状态 == undefined?params.row.originalcost:'--')
               }
             }
           },
@@ -249,9 +247,8 @@
               } else {
                 return h('span', '--')
               }
-            },
-            width:100
-          },
+            }
+          }
         ],
         orderData: [],
         showFree: [],
@@ -283,15 +280,23 @@
         exchangeCardCode: '',
         exchangeCardCodeError: false,
         spentCost: 0,
-        spentCostNode: 50
+        spentCostNode: 50,
+        // 订单选择数量
+        selectLength:{
+          total:0,
+          selection:0
+        },
+        
       }
     },
     beforeRouteEnter(to, from, next) {
       let params = {}
-      // if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
-      //   params.countOrder = to.query.countOrder || sessionStorage.getItem('countOrder')
-      //   sessionStorage.setItem('countOrder', to.query.countOrder + '')
-      // }
+     let order = to.query.countOrder == undefined ?'':to.query.countOrder;
+      let orderS = sessionStorage.getItem('countOrder') == 'undefined'?null:sessionStorage.getItem('countOrder')
+      if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
+        params.countOrder = order || orderS
+        sessionStorage.setItem('countOrder', order + '')
+      }
       if (to.query.countOrder) {
         params.countOrder = to.query.countOrder
       }
@@ -323,6 +328,7 @@
       // 设置order列表
       setOrder(response) {
         if (response.status == 200 && response.data.status == 1) {
+          this.selectLength.total = response.data.result.data.length;
           this.orderData = response.data.result.data.map(item => {
             var data = JSON.parse(item.display)
             data.orderId = item.ordernumber
@@ -330,12 +336,25 @@
             data.cost = item.cost
             data.discountedorders = item.discountedorders
             data.overTime = item.overTime
-            this.couponInfo.originCost += item.originalcost
-            this.couponInfo.cost += item.cost
-            this.couponInfo.totalCost += item.cost
-            data._checked = true
+           if(data['订单状态']){
+              this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
+              this.couponInfo.cost += data['订单状态'] == 1 ? 0:item.cost
+              this.couponInfo.totalCost += data['订单状态'] == 1 ? 0:item.cost
+                data._checked = data['订单状态'] == 1 ?false:true
+                data._disabled= data['订单状态'] == 1 ?true:false
+              }else{
+                data._checked = true
+              this.couponInfo.originCost += item.originalcost
+              this.couponInfo.cost += item.cost
+              this.couponInfo.totalCost += item.cost
+              }
             return data
           })
+         for(let i =0;i<this.orderData.length;i++){
+             if(this.orderData[i]._checked == true){
+               this.selectLength.selection ++ ;
+             }
+         }
           this.canUseTicket = this.orderData.every(item => {
             return item.discountedorders != 1
           })
@@ -359,7 +378,7 @@
       },
       // 选中项变化
       onSelectionChange(selection) {
-        
+        this.selectLength.selection = selection.length;
         this.couponInfo.selectTicket = ''
         this.canUseTicket = selection.every(item => {
           return item.discountedorders != 1
@@ -533,6 +552,24 @@
             }
         }
         return 0.0;
+      },
+      routerName(){
+        let name = sessionStorage.getItem('routerName');
+        if(name == 'bhost'){
+          return '新建云主机'
+        }else if(name == 'bgpu'){
+          return '新建GPU云服务器'
+        }else if(name == 'bip'){
+          return '新建公网IP'
+        }else if(name == 'bdisk'){
+          return '新建云硬盘'
+        }else if(name == 'bdata'){
+          return '新建数据库'
+        }else if(name == 'bobj'){
+          return '新建对象存储'
+        }else if(name == 'bssl'){
+          return '新建SSL证书'
+        }
       }
     },
     watch: {
@@ -562,6 +599,7 @@
 <style rel="stylesheet/less" lang="less" scoped>
 
   .background {
+    font-family: 'MicrosoftYaHei';
     background-color: #f5f5f5;
     width: 100%;
     @diff: 101px;
@@ -587,6 +625,18 @@
           font-size: 24px;
           color: rgba(17, 17, 17, 0.75);
           font-weight: bold;
+        }
+        .order_text{
+          font-family: 'MicrosoftYaHei';
+          margin-top:20px;
+          padding: 10px 0 10px 20px;
+          background: rgb(255,248,230);
+          border: 1px solid rgb(255, 233, 183);
+          border-radius: 4px;
+          p{
+            color:#666666;
+            font-size:14px;
+          }
         }
         .coupon {
           border: 1px solid #dddee1;
@@ -640,5 +690,20 @@
   .ivu-radio-group-button .ivu-radio-wrapper-checked{
     border: 1px solid #2d8cf0;
   }
- 
+  .button{
+    border: 1px solid #2A99F2;
+    color: #2A99F2;
+    background: #FFFFFF;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    width: 58px;
+    height: 30px;
+    cursor: pointer;
+  }
+  .button:hover{
+    background: #2A99F2;
+    color: #FFFFFF;
+  }
+  
 </style>
