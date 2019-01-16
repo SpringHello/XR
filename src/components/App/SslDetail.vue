@@ -2,7 +2,7 @@
   <div class="ssl">
     <div class="nav">
       <div class="wrap">
-        <div class="container">
+        <div class="container" style="height:60px;line-height: 60px;background:rgba(237,238,242,1);">
           <!-- <div @click="selectedTabSec = 'EV'" :class="{selected:selectedTabSec == 'EV'}">EV超安SSL Pre</div> -->
           <div @click="changeTab('OV')" :class="{selected:selectedTabSec == 'OV'}">OV超真SSL Pre</div>
           <div @click="changeTab('DV')" :class="{selected:selectedTabSec == 'DV'}">DV超快SSL Pre</div>
@@ -83,7 +83,7 @@
           >超真OV SSL证书</span> 能解决电子商务中遇到的两大问题(安全与信任)：
         </p>
         <p>(1) 部署SSL证书，能 100% 保证网站在线交易数据传输的安全。</p>
-        <p>(2) 浏览器地址栏显示安全锁标志和在网站显著位置显示网站安全认证标识， 能解决在线信任问题。</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;超真OV SSL证书为WoSign 专业级
+        <p>(2) 浏览器地址栏显示安全锁标志和在网站显著位置显示网站安全认证标识， 能解决在线信任问题。</p>        	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;超真OV SSL证书为WoSign 专业级
         <a href="#">SSL证书产品</a>，支持40位至256位自适应加密强度。同时验证域名所有权和申请单位的真实身份验证，10分钟颁发。超真OV SSL证书不仅保证了网站的机密信息从用户浏览器到服务器之间的传输是高强度加密传输的，是不会被非法窃取和非法篡改的；同时还保证了网站所属单位的真实身份已经经过权威的第三方严格验证，让网上用户放心。此SSL证书可用于SSL VPN设备的SSL加密通信。
         <div>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WoSign 致力于为我们的客户保持领先一步，我们已经确保所有 WoSign
@@ -170,7 +170,7 @@
         <div class="characteristics">&nbsp;&nbsp;&nbsp;特点</div>
         <div class="characteristics-content">
           <ul>
-            <li>加密强度</li>
+            <li style="font-size: 14px;">加密强度</li>
             <li>证书内容</li>
             <li>颁发根证书</li>
             <li>技术支持</li>
@@ -256,11 +256,13 @@ export default {
 .ssl {
   margin: 0 auto;
   width: 1200px;
+	background:rgba(255,255,255,1);
+	box-shadow:0px 2px 30px 0px rgba(0,0,0,0.1);
 }
 
 .nav {
   width: 1200px;
-  margin: 80px 0;
+  margin: 60px 0;
   font-size: 20px;
   font-family: MicrosoftYaHei-Bold;
   font-weight: bold;
@@ -282,6 +284,7 @@ export default {
 
     .selected {
       color: rgba(56, 125, 255, 1);
+			background:rgba(255,255,255,1);
     }
   }
 }
@@ -344,7 +347,9 @@ export default {
   font-family: MicrosoftYaHei;
   color: rgba(102, 102, 102, 1);
 }
-
+ul li{
+	font-size: 14px;
+}
 .Template {
   width: 100%;
   height: 40px;
