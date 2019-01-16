@@ -10,12 +10,20 @@
       <div id="body" ref="bo">
         <router-view/>
         <div id="list" ref="lists">
-          <div ref="list"
+          <div v-if="billListCost == 0" class="no-goods" >
+            <p style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #EDEDED; padding-bottom: 30px;">
+              价格预算清单</p>
+            <div style="height:310px">
+              <img src="../../../assets/img/buy/no-goods.png" alt="">
+              <p>还没有任何内容加入清单哦</p>
+            </div>
+          </div>
+          <div v-else ref="list"
                style="padding:30px 30px 0 30px;background-color: #ffffff;overflow-y: auto">
             <p
-              style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #D9D9D9; padding-bottom: 30px;">
+              style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #EDEDED; padding-bottom: 30px;">
               价格预算清单</p>
-            <div v-for="(prod,index) in cart" ref="detailed" style="padding-top: 20px">
+            <div  v-for="(prod,index) in cart" ref="detailed" :key="index" style="padding-top: 20px">
               <div style="display: flex;justify-content: space-between;">
                 <h2 style="width:110px;text-align: center;font-size: 18px;color: #333333;line-height: 32px;">
                   {{prod.typeName}}</h2>
@@ -171,7 +179,7 @@
                   </p>
                 </div> -->
                 <!--底部价格公共区域-->
-                <div style="border-bottom:1px solid #ccc;padding-bottom: 20px;">
+                <div style="border-bottom:1px solid #EDEDED;padding-bottom: 20px;">
                   <p class="item" style="margin-top: 10px">
                     <span class="hidden">$</span>
                     <span class="title" style="vertical-align: middle">价格</span>
@@ -194,7 +202,7 @@
               </div>
             </div>
           </div>
-          <div
+          <div v-if="billListCost != 0"
             style="padding:30px 40px;box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);background-color: #fff;width:380px;height:290px;overflow:hidden"
             ref="buyDiv">
             <p
@@ -1040,5 +1048,18 @@
     border: 1px solid #D9D9D9;
     padding: 4px 8px;
     margin-left: -5px;
+  }
+  .no-goods {
+    background: #fff;
+    padding: 30px 30px 0px;
+    > div {
+      text-align: center;
+      padding: 60px 0;
+      p {
+        margin-top: 20px;
+        font-size:14px;
+        color:rgba(102,102,102,1);
+      }
+    }
   }
 </style>

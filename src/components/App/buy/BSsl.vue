@@ -54,10 +54,10 @@
             </div>
           </div>
           <div class="box">
-            <h1 class="headline">计费方式选择</h1>
+            <h1 class="headline">申请年限选择</h1>
             <div class="content">
               <span
-                style="width:53px;"
+                style="width:80px;margin-right: 10px;"
                 v-for="(item,index) in timeValue"
                 :key="index"
                 class="type-btn"
