@@ -498,3 +498,13 @@ div.modal-header-border {
 .ivu-modal-close .ivu-icon-ios-close-empty{
   color: #fff;
 }
+
+.my_table .ivu-table th{
+  background-color: #F6FAFD;
+}
+.my_table .ivu-table{
+box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
+}
+.my_table .ivu-table td, .ivu-table th{
+  border: none
+}

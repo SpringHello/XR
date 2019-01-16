@@ -132,30 +132,87 @@
             width: 300
           },
           {
+            title:'状态',
+            width:150,
+            render:(h,params)=>{
+              if(params.row.订单状态 == 0 || params.row.订单状态 == undefined){
+                 return h('span',{},'成功')
+              }else{
+                 return h('div',[
+                   h('span',{
+                     style:{
+                       color:'#FF0000',
+                       marginRight:'10px'
+                     }
+                   },'失败'),
+                   h('span',{
+                     style:{
+                       color:'#2A99F2',
+                       cursor:'pointer'
+                     },
+                     on:{
+                       click:()=>{
+                         this.$Modal.error({
+                           title:'失败',
+                           content:params.row['错误信息']
+                         })
+                       }
+                     }
+                   },'详情')
+                  //   h('span',{
+                  //    style:{
+                  //      margin:'0 10px'
+                  //    }
+                  //  },'|'),
+                  //  h('span',{
+                  //    style:{
+                  //      color:'#2A99F2',
+                  //      cursor:'pointer'
+                  //    },
+                  //    on:{
+                  //      click:()=>{
+                  //        this.$Modal.error({
+                  //          title:'失败',
+                  //          content:params.row['错误信息']
+                  //        })
+                  //      }
+                  //    }
+                  //  },'重试')
+                 ])
+              }
+            }
+          },
+          {
             title: '计费类型',
-            key: '类型'
+              render:(h,params)=>{
+              return h('span',{},params.row.订单状态 == 0 || params.row.订单状态 == undefined?params.row.类型:'--')
+            }
           },
           {
             title: '购买时长',
-            key: '时长'
+             render:(h,params)=>{
+              return h('span',{},params.row.订单状态 == 0 || params.row.订单状态 == undefined?params.row.时长:'--')
+            }
           },
           {
             title: '数量',
-            key: '数量'
+             render:(h,params)=>{
+              return h('span',{},params.row.订单状态 == 0 || params.row.订单状态 == undefined?params.row.数量:'--')
+            }
           },
           {
             title: '原价',
-            render(h, obj) {
-              if (obj.row.originalcost > obj.row.cost) {
+            render(h, params) {
+              if (params.row.originalcost > params.row.cost) {
                 return h('span', {
                   style: {
                     textDecorationLine: 'line-through',
                     textDecorationStyle: 'initial',
                     textDecorationColor: 'red',
                   }
-                }, obj.row.originalcost)
+                }, params.row.订单状态 == 0 || params.row.订单状态 == undefined?params.row.originalcost:'--')
               } else {
-                return h('span', {}, obj.row.originalcost)
+                return h('span', {}, params.row.订单状态 == 0 || params.row.订单状态 == undefined?params.row.originalcost:'--')
               }
             }
           },
@@ -168,7 +225,7 @@
                 return h('span', '--')
               }
             }
-          },
+          }
         ],
         orderData: [],
         showFree: [],
@@ -235,10 +292,18 @@
             data.cost = item.cost
             data.discountedorders = item.discountedorders
             data.overTime = item.overTime
-            this.couponInfo.originCost += item.originalcost
-            this.couponInfo.cost += item.cost
-            this.couponInfo.totalCost += item.cost
-            data._checked = true
+             if(data['订单状态']){
+              this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
+              this.couponInfo.cost += data['订单状态'] == 1 ? 0:item.cost
+              this.couponInfo.totalCost += data['订单状态'] == 1 ? 0:item.cost
+                data._checked = data['订单状态'] == 1 ?false:true
+                data._disabled= data['订单状态'] == 1 ?true:false
+              }else{
+                data._checked = true
+              this.couponInfo.originCost += item.originalcost
+              this.couponInfo.cost += item.cost
+              this.couponInfo.totalCost += item.cost
+              } 
             return data
           })
           this.canUseTicket = this.orderData.every(item => {

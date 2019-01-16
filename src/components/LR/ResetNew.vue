@@ -78,7 +78,7 @@
             <!-- 手机验证方式 -->
             <div class="verification" v-if="verPage == 'phone' && index == 3">
               <p class="ver_p">请输入有效手机号码用于接收验证码</p>
-               <Form  :model="dataFroms" :rules="dataFromsValidate" >
+               <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" >
                    <FormItem prop='phone' style="margin-bottom:0px;">
                      <x-Input  :icon='url.iconPhone'  v-model="dataFroms.phone"  placeholder='请输入手机号' choice='select'></x-Input>
                    </FormItem>
@@ -86,10 +86,10 @@
                       <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
                         <div slot="code">
                           <div class="ver_yan">
-                              <span @click="timeReduce" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
+                              <span @click="sendCode" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
                               <span v-else style="color:#666666;">{{count}}</span>
                           </div>
-                          <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE;cursor:pointer;" @click="timeReduce">重新获取</span>或<span  style="color:#4A97EE;cursor:pointer;" >接收语音验证</span></p>
+                          <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE;cursor:pointer;" @click="sendCode">重新获取</span>或<span  style="color:#4A97EE;cursor:pointer;" >接收语音验证</span></p>
                         </div>
                       </x-Input>
                    </FormItem>
@@ -204,8 +204,6 @@ const vailAucct = (rule, value, callback) => {
     callback();
   }
 };
-// const phoneVail =(rule)
-
 
 export default {
   data() {
@@ -323,7 +321,20 @@ export default {
         email:[
           {required:true,message:'请输入邮箱',trigger:'blur'},
           {type: 'email',message:'邮箱格式不正确',trigger:'blur'}
-        ]
+        ],
+        phone:[
+          {required:true,validator: vailAucct,trigger:'blur'}
+        ],
+        newPaw:[
+          {
+            required: true, message:'请输入新密码', trigger:'blur'
+          }
+        ],
+        oldPaw:[
+          {
+            required: true, message:'请输入新密码', trigger:'blur'
+          }
+        ],
       },
 
       isemail: "1",
@@ -375,27 +386,6 @@ export default {
     });
   },
   methods: {
-    vail(field) {
-      var text = this.form[field];
-      if (text == "") {
-        this.vailForm[field].message = "";
-        this.form[`${field}Placeholder`] = messageMap[field].placeholder;
-        this.vailForm[field].warning = false;
-        return;
-      }
-
-      var isLegal =
-        field == "loginname"
-          ? regExp.emailVail(text)
-          : field == "password" ? regExp.registerPasswordVail(text) : true;
-      if (!isLegal) {
-        this.vailForm[field].message = messageMap[field].errorMessage;
-        this.vailForm[field].warning = true;
-      } else {
-        this.vailForm[field].message = messageMap[field].placeholder;
-        this.vailForm[field].warning = false;
-      }
-    },
     focus(field) {
       if (
         field == "vailCode" &&
@@ -431,71 +421,43 @@ export default {
         this.vailForm[field].warning = false;
       }
     },
-    isCorrect(field) {
-      if (field == "vailCode") {
-        // 验证码重新输入直接取消警告
-        this.vailForm.vailCode.warning = false;
-      } else if (field == "loginname") {
-        // 登录名验证是否符合规则，符合规则取消警告
-        if (regExp.emailVail(this.form[field])) {
-          this.vailForm.loginname.message = messageMap.loginname.placeholder;
-          this.vailForm.loginname.warning = false;
-        }
-      } else {
-        // 密码验证是否符合规则，符合规则取消警告
-        if (regExp.registerPasswordVail(this.form[field])) {
-          this.vailForm.password.message = messageMap.password.placeholder;
-          this.vailForm.password.warning = false;
-        }
-      }
-    },
     sendCode: throttle(5000, function() {
-      if (!regExp.emailVail(this.form.loginname)) {
-        this.$Message.info("请输入正确手机号");
-        return;
-      }
-      if (this.form.code.length != 4) {
-        this.$Message.info("请输入正确的验证码");
-        return;
-      }
-      if (regExp.phoneVail(this.form.loginname)) {
-        this.isemail = "0";
-      }
-      let isemail = 0;
-      if (this.form.loginname.indexOf("@") > -1) {
-        isemail = 1;
-      }
-      axios
-        .get("user/code.do", {
+      this.$refs.dataPhone.validate((valid) => {
+        console.log(valid);
+        if(valid){
+          axios.get("user/code.do", {
           params: {
-            aim: this.form.loginname,
+            aim: this.dataFroms.phone,
             isemail: isemail,
             vailCode: this.form.code
           }
-        })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            let countdown = 60;
-            this.codePlaceholder = "60s";
-            var inter = setInterval(() => {
-              countdown--;
-              this.codePlaceholder = countdown + "s";
-              if (countdown == 0) {
-                clearInterval(inter);
-                this.codePlaceholder = "发送验证码";
-              }
-            }, 1000);
-            this.$Message.success({
-              content: response.data.message,
-              duration: 5
-            });
-          } else {
-            this.$Message.error({
-              content: response.data.message,
-              duration: 5
-            });
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+               this.timeBoo = false;
+                this.timeP = false;
+                let char = setInterval(()=>{
+                  if(this.count != 0){
+                    this.count --;
+                  }else{
+                    clearInterval(char);
+                    this.count = 10;
+                    this.timeBoo = true;
+                    this.timeP = true;
+                  }
+                    },1000);
+                this.$Message.success({
+                  content: response.data.message,
+                  duration: 5
+                });
+            } else {
+              this.$Message.error({
+                content: response.data.message,
+                duration: 5
+              });
+            }
+          });
           }
-        });
+        })
     }),
     submit() {
       axios
@@ -584,19 +546,7 @@ export default {
     },
 
     timeReduce(){
-      this.timeBoo = false;
-      this.timeP = false;
-      let char = setInterval(()=>{
-        if(this.count != 0){
-          this.count --;
-        }else{
-          clearInterval(char);
-          this.count = 10;
-          this.timeBoo = true;
-          this.timeP = true;
-        }
-          },1000);
-        },
+    }
   },
   computed: {
     disabled() {

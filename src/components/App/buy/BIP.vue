@@ -206,7 +206,7 @@
           count: 1
         }
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
-        window.scrollTo(0, 170)
+        // window.scrollTo(0, 182)
       },
       buyIP() {
         if (this.userInfo == null) {
