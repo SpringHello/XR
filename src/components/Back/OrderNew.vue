@@ -9,7 +9,10 @@
           <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
           <p style="margin-top:10px;">请牢记您所设置的密码，如遗忘可登录云服务器控制台重置密码。<span style="color:#2A99F2;cursor:pointer;">查看</span></p>
         </div>
-        <p style="font-size:14px;margin-top:20px;">共{{selectLength.total}}项|   已选择<span style="color:#FF624B;">{{selectLength.selection}}</span>项</p>
+        <div class="selectMark">
+          <img src="../../assets/img/host/h-icon10.png"/>
+          <span>共 {{ selectLength.total}} 项 | 已选择 <span style="color:#FF624B;">{{ selectLength.selection }} </span>项</span>
+        </div>
         <div style="margin-top:20px;" class="order">
           <Table class="my_table" :columns="orderColumns" :data="orderData" @on-selection-change="onSelectionChange"></Table>
         </div>
@@ -705,5 +708,16 @@
     background: #2A99F2;
     color: #FFFFFF;
   }
-  
+   .selectMark {
+    margin: 10px 0;
+    > img {
+      position: relative;
+      top: 4px;
+    }
+    > span {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(102, 102, 102, 1);
+    }
+  }
 </style>
