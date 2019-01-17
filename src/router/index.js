@@ -62,6 +62,7 @@ const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 
 const AnniversaryActive = () => import('@/components/App/active/anniversaryActive')
 //const AnniversaryActiveBefore = () => import('@/components/App/active/AnniversaryActiveBefore')
+const xianNode = () => import('@/components/App/active/xianNode')
 
 //域名页面路由
 const Domainname = () =>import('@/components/App/Domain/Domainname')
@@ -324,6 +325,7 @@ var router = new Router({
         {path: 'dbActive', name: 'dbActive', component: DBActive},
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
+        {path: 'xianNode', name: 'xianNode', component: xianNode},
 
         {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},
         {path: 'SceneInfo/:type', name: 'SceneInfo', component: SceneInfo},

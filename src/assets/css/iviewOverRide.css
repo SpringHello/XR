@@ -175,7 +175,12 @@ div.modal-header-border {
 .lh24 {
   line-height: 24px;
 }
-
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
 .ivu-form-item-label {
   display: inline-block;
 }
@@ -390,6 +395,9 @@ div.modal-header-border {
 
 .fr-select .ivu-select-arrow {
   color: #FF881C;
+}
+.xian-input .ivu-input{
+ text-align: center;
 }
 
 /* 自定义监控下拉框 */
