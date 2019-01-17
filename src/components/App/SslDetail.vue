@@ -91,15 +91,15 @@
         </div>
         <div class="characteristics">&nbsp;&nbsp;&nbsp;客户案例</div>
         <div style="width: 100%;margin-top: 20px;margin-left: 30px;">
-          <a href="#">平安银行</a>、
-          <a href="#">太平洋保险</a>、
-          <a href="#">139邮箱</a>、
-          <a href="#">当当网</a>、
-          <a href="#">360充值中心</a>、
-          <a href="#">浙江中医药大学</a>、
-          <a href="#">深圳大学</a>、
-          <a href="#">长虹网上商场</a>-
-          <a href="#">更多案例</a>
+          <span class="spana">平安银行</span>、
+          <span class="spana">太平洋保险</span>、
+          <span class="spana">139邮箱</span>、
+          <span class="spana">当当网</span>、
+          <span class="spana">360充值中心</span>、
+          <span class="spana">浙江中医药大学</span>、
+          <span class="spana">深圳大学</span>、
+          <span class="spana">长虹网上商场</span>-
+          <span class="spana">更多案例</span>
         </div>
         <div class="characteristics">&nbsp;&nbsp;&nbsp;产品特点</div>
         <div class="characteristics-content">
@@ -290,6 +290,8 @@ export default {
 }
 
 .security {
+	width: 1100px;
+	margin-left: 50px;
   font-size: 16px;
   font-family: MicrosoftYaHei;
   color: rgba(51, 51, 51, 1);
@@ -364,6 +366,7 @@ ul li{
 }
 
 .Template-content {
+	width:1067px;
   font-size: 16px;
   font-family: MicrosoftYaHei;
   color: rgba(51, 51, 51, 1);
@@ -387,4 +390,8 @@ a:hover {
   color: black;
   text-decoration: none;
 }
+.spana{
+		color: #2a99f2;
+		text-decoration: underline;
+	}
 </style>
