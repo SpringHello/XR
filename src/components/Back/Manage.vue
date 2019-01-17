@@ -977,7 +977,7 @@
             pageSize: this.pageSize,
             currentPage: this.currentPage,
             target: this.target,
-            queryTime: this.logTime,
+            queryTime: this.logTime +'',
             targetId: this.$route.query.id
           }
         }).then(response => {
