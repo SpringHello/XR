@@ -36,7 +36,7 @@
           </p>
         </div>
         <div class="main flex">
-          <div class="box" v-for="(item,index) in itemData" :key="index" :style="{background:'url('+item.bgSrc+')',backgroundRepeat:'no-repeat'}">
+          <div class="box" v-for="(item,index1) in productData" :key="index1" :style="{background:'url('+item.bgSrc+')',backgroundRepeat:'no-repeat'}">
             <div class="head">
               <ul class="flex">
                 <li>{{item.host}}核</li>
@@ -48,25 +48,27 @@
             <div class="content">
               <div>
                 <span>请选择系统</span> 
-                <Select v-model="system" style="width: 190px;text-align:center">
+                <Select v-model="item.selectedSystem" style="width: 190px;text-align:center">
                   <Option value="windows">windows</option>
                   <Option value="centos">centos</option>
                 </Select>
               </div>
               <div>
                 <span>请选择区域</span>
-                <Input v-model="zone" style="width: 190px;" class="xian-input" readonly/>
+                <Select v-model="selectedZone" style="width: 190px;text-align:center" disabled>
+                  <Option v-for="(item2,index) in zoneList" :key="index" :value="item2.value">{{item2.name}}</option>
+                </Select>
               </div>
               <div>
                 <span>请选择时长</span>
                 <ul class="time-change flex">
-                  <li v-for="(item1,index) in timeYear" :key="index" @click="item1.selectedYear=item1" :class="{selected:item1.selectedYear==item1}">{{item1}}年</li>
+                  <li v-for="(item1,index) in timeYear" :key="index" @click="getVMConfigId(item,index1,item1)" :class="{selected:item.selectedYear==item1}">{{item1}}年</li>
                 </ul>
               </div>
               <div class="flex-vertical-center price">
                 <div>
-                  <span><i style="font-size:20px;font-style: normal;">￥</i>{{discountCost}}</span>
-                  <p>原件：{{originCost}}</p>
+                  <span><i style="font-size:20px;font-style: normal;">￥</i>{{item.discountCost}}</span>
+                  <p>原件：{{item.originCost}}</p>
                 </div>
                 <i class="btn">立即购买</i>
               </div>
@@ -95,37 +97,45 @@
 </template>
 
 <script type="text/ecmascript-6">
+import axios from '@/util/axiosInterceptor'
 export default {
   data () {
     return {
-      system: 'windows',
-      zone: '西安区',
-      discountCost: '224.93',
-      originCost: '1124.64',
-      itemData: [
+      zoneList: [],
+      selectedZone: '',
+      productData: [
         {
           host: '1',
           size: '1',
           bandwidth: '1',
           systemSize: '40',
+          selectedSystem: 'windows',
           selectedYear: 1,
-          bgSrc: require('../../../assets/img/active/xianNode/item-bg-1.png')
+          bgSrc: require('../../../assets/img/active/xianNode/item-bg-1.png'),
+          discountCost: '224.93',
+          originCost: '1124.64'
         },
         {
           host: '1',
           size: '2',
           bandwidth: '1',
           systemSize: '40',
+          selectedSystem: 'windows',
           selectedYear: 1,
-          bgSrc: require('../../../assets/img/active/xianNode/item-bg-2.png')
+          bgSrc: require('../../../assets/img/active/xianNode/item-bg-2.png'),
+          discountCost: '224.93',
+          originCost: '1124.64'
         },
         {
           host: '2',
           size: '4',
           bandwidth: '1',
           systemSize: '40',
+          selectedSystem: 'windows',
           selectedYear: 1,
-          bgSrc: require('../../../assets/img/active/xianNode/item-bg-3.png')
+          bgSrc: require('../../../assets/img/active/xianNode/item-bg-3.png'),
+          discountCost: '224.93',
+          originCost: '1124.64'
         }
       ],
       timeYear: [1, 2, 3],
@@ -154,13 +164,57 @@ export default {
     }
   },
   created () {
-
+    this.getHostZoneList()
+    this.getVMConfigId(this.productData[0], 0, 1)
+    this.getVMConfigId(this.productData[1], 1, 1)
+    this.getVMConfigId(this.productData[2], 2, 1)
   },
   mounted () {
 
   },
   methods: {
-
+    // 云服务器获取区域
+    getHostZoneList() {
+      let url = 'activity/getTemActInfoById.do'
+      axios.get(url, {
+        params: {
+          activityNum: '36'
+        }
+      }).then(res => {
+        if (res.data.status == 1 && res.status == 200) {
+          this.selectedZone = res.data.result.optionalArea[0].value
+          this.zoneList = res.data.result.optionalArea
+        }
+      })
+    },
+    //  获取配置ID
+    getVMConfigId (item, index, year) {
+      this.productData[index].selectedYear = year
+      axios.get('activity/getVMConfigId.do', {
+        params: {
+          activityNum: '36',
+          month: year * 12 + '',
+          cpu: item.host + '',
+          mem: item.size + '',
+          bandwith: item.bandwidth + '',
+        }
+      }).then(res => {
+        if (res.status == 200 && res.data.status == 1) {
+          axios.get('activity/getOriginalPrice.do', {
+            params: {
+              zoneId: this.selectedZone,
+              vmConfigId: res.data.result + '',
+              month: year * 12 + ''
+            }
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.productData[index].originCost = res.data.result.originalPrice;
+              this.productData[index].discountCost = res.data.result.cost;
+            }
+          })
+        }
+      })
+    }
   },
   computed: {
 
@@ -274,22 +328,12 @@ export default {
       background: url(../../../assets/img/active/xianNode/item-bg-1.png) center
         no-repeat;
       .head {
-        padding: 28px;
-        background: linear-gradient(
-          0deg,
-          rgba(184, 0, 173, 1) 0%,
-          rgba(255, 48, 0, 1) 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 600;
+        padding: 24px;
         li {
           font-size: 20px;
           font-family: PingFangSC-Medium;
-        }
-        ul {
-          // display: flex;
-          // justify-content: space-between;
+          font-weight: 600;
+          color: #ff3000;
         }
       }
       .content {
