@@ -425,7 +425,7 @@
                 operation: this.newRuleForm.access == 'Allow' ? '接受' : '拒绝',
                 _status: 1
               }
-              if (this.newRuleForm.way == 'Egress') {
+              if (this.newRuleForm.way != 'Egress') {
                 this.upInformation.tableData.push(data)
               } else {
                 this.downInformation.tableData.push(data)
