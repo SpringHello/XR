@@ -9,8 +9,8 @@
 						<div class="font">
 							<span>可<span style="color: #FF624B;">线上</span>提现金额</span>
 							<div class="money">
-								<span>57</span>
-								<span>.00元</span>
+								<span>{{Onlinemoney}}</span>
+								<span>.{{Onlinedecimalmoney}}元</span>
 							</div>
 							<Button type="primary" style="margin-top: 17px;" @click="showModal.Cashconfirmation = true">申请线上提现</Button>
 						</div>
@@ -20,7 +20,7 @@
 								<span>23</span>
 								<span>.00元</span>
 							</div>
-							<Button type="primary" style="margin-top: 17px;" @click="showModal.Cashconfirmation = true">申请银行卡提现</Button>
+							<Button type="primary" style="margin-top: 17px;" @click="showModal.cardfirmation = true">申请银行卡提现</Button>
 						</div>
 					</div>
 					<div class="remindbox-right">
@@ -67,6 +67,77 @@
 			    <Button type="primary" @click="$router.push('/ruicloud/cashprocess')">确认</Button>
 			  </p>
 			</Modal>
+			<!-- 银行卡提现弹窗 -->
+			<Modal v-model="showModal.cardfirmation" :scrollable="true" :closable="false" :width="500">
+			  <p slot="header" class="modal-header-border">
+			    <span class="universal-modal-title">银行卡提现</span>
+			  </p>
+				<div class="modal-content-s">
+						<div class="cardt" >
+							<span class="cardspan1">本次提现金额</span>
+							<span class="cardspan2"><span class="cardspan3">23</span>.00元</span>
+						</div>
+				</div>
+				<div class="" style="margin-top: 20px;margin-left: 10px;">
+						<!-- <div class="bankcol">
+							<span class="bankspan">银行开户名</span>
+							<Input class="bankinput" v-model="cardneed.Accountname" placeholder="请输入银行开户名" ></Input>
+						</div>
+						<div class="bankcol">
+							<span class="bankspan">开户银行名称</span>
+							<Input class="bankinput" v-model="cardneed.Bankname" placeholder="请输入开户银行名称" ></Input>
+						</div>
+						<div class="bankcol">
+							<span class="bankspan">银行所在地</span>
+							<Input class="bankinput" v-model="cardneed.Banklocation" placeholder="请输入银行所在地" ></Input>
+						</div>
+						<div class="bankcol">
+							<span class="bankspan">开户支行名称</span>
+							<Input class="bankinput" v-model="cardneed.Bankchname" placeholder="请输入开户支行名称"></Input>
+						</div>
+						<div class="bankcol">
+							<span class="bankspan">银行预留电话</span>
+							<Input class="bankinput" v-model="cardneed.Bankphone" placeholder="请输入银行预留电话"></Input>
+						</div> -->
+						<Form ref="formAppreciationDate" :model="formAppreciationDate" :rules="ruleValidate"
+						      :label-width="100" label-position="left">
+						  <Form-item label="银行开户名" prop="companyName" style="height: 30px;">
+						    <Input :maxlength="32" v-model="formAppreciationDate.companyName" placeholder="请输入银行开户名"
+						           style="width: 300px;"></Input>
+						  </Form-item>
+							<Form-item label="开户银行名称" prop="depositBank" style="height: 30px;">
+							  <Input :maxlength="32" v-model="formAppreciationDate.depositBank" placeholder="请输入开户银行名称"
+							         style="width: 300px"></Input>
+							</Form-item>
+							<Tooltip :content="bank_account" placement="bottom" :disabled="disabled" v-bind:class="{ active: isActive }">
+							  <Form-item label="银行账户" prop="bankAccount" style="height: 30px;">
+							    <Input :maxlength="32" v-model="formAppreciationDate.bankAccount" placeholder="请输入银行账户"
+							           style="width: 300px"
+							           v-on:input="conversion"></Input>
+							  </Form-item>
+							</Tooltip>
+							<Form-item label="银行所在地" prop="registeredAddress" style="height: 30px;">
+							  <Input :maxlength="64" v-model="formAppreciationDate.registeredAddress" placeholder="请输入银行所在地"
+							         style="width: 300px"></Input>
+							</Form-item>
+							<Form-item label="开户支行名称" prop="taxpayerID" style="height: 30px;">
+							  <Input :maxlength="32" v-model="formAppreciationDate.taxpayerID" placeholder="请输入开户支行名称"
+							         style="width: 300px"></Input>
+							</Form-item>
+						  
+						  <Form-item label="银行预留电话" prop="registeredPhone" style="height: 30px;">
+						    <Input :maxlength="20" v-model="formAppreciationDate.registeredPhone" placeholder="请输入银行预留电话"
+						           style="width: 300px"></Input>
+						  </Form-item>
+						  
+						  
+						</Form>
+					</div>
+			  <p slot="footer" class="modal-footer-s">
+			    <Button @click="showModal.cardfirmation = false">取消</Button>
+			    <Button type="primary" @click="$router.push('/ruicloud/cashprocess')">确定</Button>
+			  </p>
+			</Modal>
 			<!-- 打款详情弹窗 -->
 			<Modal v-model="showModal.Paymentdetails" :scrollable="true" :closable="false" :width="390">
 			  <p slot="header" class="modal-header-border">
@@ -91,13 +162,125 @@
 <script type="text/ecmascript-6">
   export default{
     data(){
+			const validateCompanyName = (rule, value, callback) => {
+			  if (!value) {
+			    return callback(new Error('银行开户名不能为空'))
+			  }
+			  if ((/^[ ]+$/.test(value))) {
+			    callback(new Error('银行开户名不能为空格'))
+			  } else {
+			    callback()
+			  }
+			}
+			const validaTetaxpayerID = (rule, value, callback) => {
+			  if (!value) {
+			    return callback(new Error('开户支行名称不能为空'))
+			  }
+			  if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+			    callback(new Error('开户支行名称不能包含特殊字符、空格或是纯数字'));
+			  } else {
+			    callback()
+			  }
+			}
+			const validaRegisteredAddress = (rule, value, callback) => {
+			  if (!value) {
+			    return callback(new Error('银行所在地不能为空'))
+			  }
+			  if (/^[0-9a-zA-Z]+$/.test(value)) {
+			    callback(new Error('银行所在地不能包含纯数字或纯英文'))
+			  } else {
+			    callback()
+			  }
+			}
+			const validaRegisteredPhone = (rule, value, callback) => {
+			  if (!value) {
+			    return callback(new Error('银行预留电话不能为空'))
+			  }
+			  if (!(/^1(3|4|5|7|8)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
+			    callback(new Error('请输入正确的电话号码'))
+			  } else {
+			    callback()
+			  }
+			}
+			const validaDepositBank = (rule, value, callback) => {
+			  if (!value) {
+			    return callback(new Error('开户银行名称不能为空'))
+			  }
+			  if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+			    callback(new Error('开户银行名称不能包含特殊字符、空格或是纯数字'));
+			  } else {
+			    callback()
+			  }
+			}
+			const validaBankAccount = (rule, value, callback) => {
+			  if (!value) {
+			    return callback(new Error('银行账户不能为空'))
+			  }
+			  if (!(/^[1-9]\d{7,27}$/.test(value.replace(/\s/g, '')))) {
+			    callback(new Error('请输入正确的银行账户'))
+			  } else {
+			    callback()
+			  }
+			}
       return {
 				ordertime: '',
+				//线上提现金额整数
+				Onlinemoney:'',
+				//线上提现金额小数
+				Onlinedecimalmoney:'',
+				bank_account: '',
+				disabled: true,
+				isActive:false,
+				formAppreciationDate: {
+				  companyName: '',
+				  taxpayerID: '',
+				  registeredAddress: '',
+				  registeredPhone: '',
+				  depositBank: '',
+				  bankAccount: ''
+				},
+				ruleValidate: {
+				  companyName: [
+				    {required: true, validator: validateCompanyName, trigger: 'blur'}
+				  ],
+				  taxpayerId: [
+				    {required: true, validator: validaTetaxpayerID, trigger: 'blur'}
+				  ],
+				  taxpayerID: [
+				    {required: true, validator: validaTetaxpayerID, trigger: 'blur'}
+				  ],
+				  registeredAddress: [
+				    {required: true, validator: validaRegisteredAddress, trigger: 'blur'}
+				  ],
+				  registeredPhone: [
+				    {required: true, validator: validaRegisteredPhone, trigger: 'blur'}
+				  ],
+				  depositBank: [
+				    {required: true, validator: validaDepositBank, trigger: 'blur'}
+				  ],
+				  bankAccount: [
+				    {required: true, validator: validaBankAccount, trigger: 'blur'}
+				  ]
+				},
+				cardneed: {
+					//银行开户名
+					Accountname:'',
+					//开户银行名称
+					Bankname:'',
+					//银行所在地
+					Banklocation:'',
+					//开户支行名称
+					Bankchname:'',
+					//银行预留电话
+					Bankphone:'',
+				},
 				showModal: {
 					// 线上提现弹窗
 					Cashconfirmation: false,
 					// 打款详情弹窗
-					Paymentdetails:false
+					Paymentdetails:false,
+					// 银行卡提现弹窗
+					cardfirmation:false
 				},
 				options: {
 				  shortcuts: [
@@ -166,7 +349,7 @@
       }
     },
     created(){
-		
+			this.money()
     },
     methods: {
 			order_dataChange(ordertime) {
@@ -179,13 +362,29 @@
 			},
 			searchOrderByType() {
 			  
-			}
+			},
+			money(){
+				var ary = sessionStorage.getItem('cashWithdrawalAmount')
+				this.Onlinemoney = ary.split(".")[0]
+				this.Onlinedecimalmoney=ary.split(".")[1]
+			},
+			conversion() {
+			  this.formAppreciationDate.bankAccount = this.formAppreciationDate.bankAccount.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
+			  this.bank_account = this.formAppreciationDate.bankAccount
+			},
     },
     computed: {
 		
     },
     watch: {
-		
+			'formAppreciationDate.bankAccount': function(val){
+				if(val==null){
+					this.disabled=true
+				}
+				else{
+					this.disabled=false
+				}
+			}
     }
   }
 </script>
@@ -321,5 +520,56 @@
 			font-family:MicrosoftYaHei;
 			color:rgba(102,102,102,1);
 			float: left;
+		}
+		.cardt{
+			width:100%;
+			height:40px;
+			background:rgba(239,247,254,1);
+			border-radius:4px;
+			border:1px solid rgba(42,153,242,1);
+			line-height: 40px;
+			float: left;
+		}
+		.cardspan1{
+			font-size:14px;
+			font-family:MicrosoftYaHei;
+			color:rgba(51,51,51,1);
+			line-height:20px;margin-left: 10px;
+		}
+		.cardspan2{
+			font-family:ArialMT;
+			color:rgba(255,98,75,1);
+			font-size: 12px;
+			margin-left: 5px;
+		}
+		.cardspan3{
+			font-family:ArialMT;
+			color:rgba(255,98,75,1);
+			font-size: 14px;
+		}
+		.bankcol{
+			width: 380px;
+			line-height:38px;
+			margin-top: 5px;
+		}
+		.bankspan{
+			width:100px;
+			height:20px;
+			font-size:14px;
+			font-family:MicrosoftYaHei;
+			color:rgba(51,51,51,1);
+		}
+		.bankinput{
+			float: right;
+			width: 280px;
+		}
+		.bottom{
+			margin-top: -20px;
+		}
+		.active{
+			height: 100px;
+		}
+		.isActive{
+			height: 100px;
 		}
 </style>

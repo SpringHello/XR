@@ -20,16 +20,16 @@
 			 </div>
 		 </div>
 		 <div class="box1">
-			 <span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。如需帮助，可查看 <a href="#" style="color: #2A99F2;text-decoration: underline;">自助提现常见问题</a></span>
+			 <span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。如需帮助，可查看 <a href="#" class="colora">自助提现常见问题</a></span>
 		 </div>
 		 <p style="margin-left: 20px;margin-top: 20px;float: left;">
-			 <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:20px;">可提现金额</span>
-			 <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:20px;margin-left: 15px;">57.00 元</span>
+			 <span class="spanall">可提现金额</span>
+			 <span class="spanall" style="margin-left: 15px;">57.00 元</span>
 		 </p>
 		 <div style="margin-left: 20px;margin-top: 150px;">
-			 <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);margin-left: -15px;float: left;margin-top: 5px;">本次提现金额</span>
+			 <span class="spanall" style="margin-left: -15px;float: left;margin-top: 5px;">本次提现金额</span>
 			 <RadioGroup vertical v-model="vertical" style="margin-left: 15px;margin-top: -3px;">
-			    <Radio label="l1"><span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);">57.00 元（可提现金额）</span></Radio>
+			    <Radio label="l1"><span class="spanall">57.00 元（可提现金额）</span></Radio>
 				<Radio label="l2">其他金额<span style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);margin-left: 20px;">50</span><span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-left: 40px;">元</span></Radio>
 			 </RadioGroup>
 		 </div>
@@ -83,11 +83,11 @@
 				</FormItem>
 			</Form>
 		</div>
-		<div class="modal-content-s" style="background:rgba(239,247,254,1);border-radius:2px;border:1px solid rgba(42,153,242,1);width:460px;height:85px;margin-top: 10px;margin-left: 10px;">
+		<div class="modal-content-s divall">
 			<div style="width: 100%;">
-				<p style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:20px;float: left;">没有收到验证码？</p><br />
-				<p style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:20px;">1、网络通讯异常可能会造成短信丢失，请<a href="#" style="color: #2A99F2;text-decoration: underline;font-size:12px;font-family:MicrosoftYaHei;">重新获取</a>或<a a href="#" style="color: #2A99F2;text-decoration: underline;font-size:12px;font-family:MicrosoftYaHei;">获取语音验证码</a>。</p>
-				<p style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:20px;">2、如果手机已丢失或停机，请<a href="#" style="color: #2A99F2;text-decoration: underline;font-size:12px;font-family:MicrosoftYaHei;">通过身份证号码验证</a>或<a a href="#" style="color: #2A99F2;text-decoration: underline;font-size:12px;font-family:MicrosoftYaHei;">提交工单</a>更改手机号。</p>
+				<p class="pall" style="float: left;">没有收到验证码？</p><br />
+				<p class="pall" >1、网络通讯异常可能会造成短信丢失，请<a href="#" class="colora" >重新获取</a>或<a class="colora" href="#">获取语音验证码</a>。</p>
+				<p class="pall" >2、如果手机已丢失或停机，请<a href="#" class="colora">通过身份证号码验证</a>或<a href="#" class="colora">提交工单</a>更改手机号。</p>
 			</div>
 		</div>
 	    <p slot="footer" class="modal-footer-s">
@@ -135,7 +135,7 @@
 		//验证码和短信验证
 		const validatePass = (rule, value, callback) => {
                 if (value === '') {
-                    callback(new Error('请输入您的图片验证码'));
+                    callback(new Error('请输入您的图形验证码'));
                 } else {
                     if (this.formCustom.passwdCheck !== '') {
                         // 对第二个密码框单独验证
@@ -202,13 +202,13 @@
 		  this.$emit('changeTabSec', name)
 		},
 		ffff(){
-			this.$refs[name].validate((valid) => {
-			    if (valid) {
-			        this.$Message.success('Success!');
-			    } else {
-			        this.$Message.error('Fail!');
-			    }
-			})
+			//this.$refs[name].validate((valid) => {
+			    //if (valid) {
+			      //  this.$Message.success('Success!');
+			   // } else {
+			    //    this.$Message.error('Fail!');
+			   // }
+			//})
 			this.showModal.cashverification = false
 			this.changeTab('content2')
 		}
@@ -289,5 +289,32 @@
 		float: left;
 		line-height: 32px;
 		margin-top: 20px;
+	}
+	.colora{
+		color: #2A99F2;
+		text-decoration: underline;
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+	}
+	.spanall{
+		font-size:14px;
+		font-family:MicrosoftYaHei;
+		color:rgba(102,102,102,1);
+		line-height:20px;
+	}
+	.divall{
+		background:rgba(239,247,254,1);
+		border-radius:2px;
+		border:1px solid rgba(42,153,242,1);
+		width:460px;
+		height:85px;
+		margin-top: 10px;
+		margin-left: 10px;
+	}
+	.pall{
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		color:rgba(102,102,102,1);
+		line-height:20px;
 	}
 </style>
