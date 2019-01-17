@@ -580,9 +580,8 @@
     </Modal>
     <!--选择两种认证方式-->
     <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" :styles="{top:'172px'}">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        选择认证方式
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title"> 选择认证方式</span>
       </div>
       <div style="display: flex">
         <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
