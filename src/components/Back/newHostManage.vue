@@ -19,6 +19,17 @@
             @click="hostUpgrade">[升级]</span>
           </p>
         </div>
+        <div class="config-type">
+          <ul v-for="item in configTypes" :class="{selected: configType == item}" @click="configType = item">{{ item }}</ul>
+        </div>
+      </div>
+      <div class="config-info">
+        <div class="tab-1" v-show="configType == '基础信息' ">
+          <ul></ul>
+          <ul></ul>
+          <ul></ul>
+          <ul></ul>
+        </div>
       </div>
     </div>
 
@@ -62,6 +73,8 @@
             {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
           ]
         },
+        configType: '基础信息',
+        configTypes: ['基础信息', '主机监控', '安全组', '快照管理', '操作日志']
       }
     },
     created() {
@@ -98,8 +111,8 @@
         })
       },
       linkHost() {
-        localStorage.setItem('link-companyid', this.hostInfo.companyid)
-        localStorage.setItem('link-vmid', this.hostInfo.computerid)
+        localStorage.setItem('link-companyid', this.hostInfo.companyId)
+        localStorage.setItem('link-vmid', this.hostInfo.computerId)
         localStorage.setItem('link-zoneid', this.hostInfo.zoneid)
         localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
         window.open('/ruicloud/link')
@@ -134,7 +147,7 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .host-config {
-    padding: 20px;
+    padding: 20px 20px 0;
     margin-top: 18px;
     background: rgba(246, 250, 253, 1);
     border-radius: 2px;
@@ -179,6 +192,38 @@
         &.title {
           font-size: 18px;
         }
+      }
+    }
+    .config-type {
+      display: flex;
+      > ul {
+        font-family: MicrosoftYaHei;
+        color: rgba(102, 102, 102, 1);
+        line-height: 20px;
+        font-size: 14px;
+        padding: 10px;
+        cursor: pointer;
+        &.selected {
+          background: #FFF;
+          color: #2A99F2;
+        }
+      }
+    }
+  }
+
+  .config-info {
+    background: #FFF;
+    padding: 20px;
+    min-height: 660px;
+    .tab-1 {
+      display: flex;
+      justify-content: space-between;
+      > ul {
+        height: 280px;
+        width: 280px;
+        background:rgba(255,255,255,1);
+        border-radius:4px;
+        border:1px dashed rgba(153,153,153,1);
       }
     }
   }
