@@ -3,7 +3,9 @@
     <div id="wrapper">
       <span>个人中心 / 费用中心 / 提现</span>
 	  <div class="content" v-if="selectedTabSec == 'content'">
-		 <Icon class="icon1" type="chevron-left"></Icon>
+		  <div style="float: left;" @click="backpage">
+			  <Icon class="icon1" type="chevron-left" ></Icon>
+		  </div>
 		 <span class="returnmoney">申请提现</span>
 		 <div class="withdrawal">
 			 <div class="withdrawalpo">
@@ -24,19 +26,21 @@
 		 </div>
 		 <p style="margin-left: 20px;margin-top: 20px;float: left;">
 			 <span class="spanall">可提现金额</span>
-			 <span class="spanall" style="margin-left: 15px;">57.00 元</span>
+			 <span class="spanall" style="margin-left: 15px;">{{moneyall}} 元</span>
 		 </p>
 		 <div style="margin-left: 20px;margin-top: 150px;">
 			 <span class="spanall" style="margin-left: -15px;float: left;margin-top: 5px;">本次提现金额</span>
 			 <RadioGroup vertical v-model="vertical" style="margin-left: 15px;margin-top: -3px;">
-			    <Radio label="l1"><span class="spanall">57.00 元（可提现金额）</span></Radio>
-				<Radio label="l2">其他金额<span style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);margin-left: 20px;">50</span><span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-left: 40px;">元</span></Radio>
+			    <Radio label="l1"><span class="spanall">{{moneyall}} 元（可提现金额）</span></Radio>
+				<Radio label="l2">其他金额<Input v-model="Otheramount" size="small" placeholder="请输入金额" style="margin-left: 10px;width: 80px;height: 28px;"></Input><span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-left: 10px;">元</span></Radio>
 			 </RadioGroup>
 		 </div>
-		 <Button type="primary" style="margin-left: 125px;margin-top: 20px;" @click="changeTab('content1')" :class="{selected:selectedTabSec == 'content'}">下一步</Button>
+		 <Button type="primary" style="margin-left: 125px;margin-top: 20px;" @click="Firststep" :class="{selected:selectedTabSec == 'content'}">下一步</Button>
 	  </div>
 	  <div class="content1" v-if="selectedTabSec == 'content1'">
-		  <Icon class="icon1" type="chevron-left"></Icon>
+		  <div style="float: left;" @click="changeTab('content')">
+		  	<Icon class="icon1" type="chevron-left" ></Icon>
+		  </div>
 		  <span class="returnmoney">申请提现</span>
 		  <div class="withdrawal">
 		  			 <div class="withdrawalpo">
@@ -53,9 +57,9 @@
 		  			 </div>
 		  </div>
 		  <div class="box1">
-		  			 <span style="margin-left: 10px;"><span>本次提现</span><span style="color: #FF624B;"> &nbsp;50.00&nbsp;</span>元。线上提现金额将按照后进先出的原则退回您的原线上充值账户（微信、支付宝），提现申请提交后不可撤回。</span>
+		  			 <span style="margin-left: 10px;"><span>本次提现</span><span style="color: #FF624B;"> &nbsp;{{Actualamount}}&nbsp;</span>元。线上提现金额将按照后进先出的原则退回您的原线上充值账户（微信、支付宝），提现申请提交后不可撤回。</span>
 		  </div>
-		  <Table :columns="columns1" :data="data1" style="float: left;margin-top: 20px;width:1159px;"></Table>
+		  <Table :columns="Cashconfirmation" :data="Cashconfirmationdata" style="float: left;margin-top: 20px;width:1159px;"></Table>
 		  <Button type="primary" @click="showModal.cashverification = true" style="margin-top: 20px;float: left;" >确认提现信息</Button>
 	  </div>
 	   <!-- 提现验证弹窗 -->
@@ -96,7 +100,9 @@
 	    </p>
 	  </Modal>
 	  <div class="content2" v-if="selectedTabSec == 'content2'">
-	  		  <Icon class="icon1" type="chevron-left"></Icon>
+	  		  <div style="float: left;" @click="changeTab('content1')">
+	  		  	<Icon class="icon1" type="chevron-left" ></Icon>
+	  		  </div>
 	  		  <span class="returnmoney">申请提现</span>
 	  		  <div class="withdrawal">
 	  		  			 <div class="withdrawalpo">
@@ -124,6 +130,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+	import axios from 'axios'
   export default{
 	  props: {
 	    selectedTab: {
@@ -155,6 +162,9 @@
             };
       return {
 		  vertical: 'l1',
+		  moneyall:0,
+		  Otheramount:'',
+		  Actualamount:0,
 		  selectedTabSec: this.selectedTab,
 		  // 企业认证时的图形验证码
 		  imgSrc: 'user/getKaptchaImage.do',
@@ -175,26 +185,35 @@
                         { validator: validatePassCheck, trigger: 'blur' }
                     ]
                 },
-		  columns1: [
+		  Cashconfirmation: [
                     {
                         title: '提现金额（元）',
-                        key: 'name'
+                        key: 'money'
                     },
                     {
                         title: '到账账户',
-                        key: 'age'
+                        key: 'type',
+						render: (h, params) => {
+							// 1为银行卡提现，0为线上体现
+							let text = ''
+							text = params.row.type == 1 ? '银行卡' : "原支付途径"
+							return h('div', [
+								h('span', {}, text)
+							]);
+						}
                     }
                 ],
-                data1: [
+                Cashconfirmationdata: [
                     {
-                        name: '50.00',
-                        age: '原支付途径'
+                        money:'0',
+                        type: '0'
                     }
                 ]
       }
     },
     created(){
-		
+		this.money()
+		//this.moneyconfirm()
     },
     methods: {
 		changeTab (name) {
@@ -211,14 +230,45 @@
 			//})
 			this.showModal.cashverification = false
 			this.changeTab('content2')
+		},
+		backpage() {
+			this.$router.history.go(-1)
+		},
+		money(){
+			this.moneyall=sessionStorage.getItem('balance')
+			this.Actualamount=sessionStorage.getItem('money')
+		},
+		moneyconfirm(){
+			this.Cashconfirmationdata[0].money=this.Actualamount
+			this.Cashconfirmationdata[0].type=sessionStorage.getItem('type')
+		},
+		Firststep(){
+			if(this.vertical=='l1'){
+				sessionStorage.setItem('money', this.moneyall)
+			}
+			else if(this.vertical=='l2'){
+				sessionStorage.setItem('money', this.Otheramount)
+			}
+			this.changeTab('content1')
+			this.money()
+			this.moneyconfirm()
 		}
     },
     computed: {
 		
     },
     watch: {
-		
-    }
+		Otheramount: function(val){
+			var a=parseInt(sessionStorage.getItem('balance'))
+			if(val<0)
+			{
+				this.Otheramount=0
+			}
+			else if(val>a){
+				this.Otheramount=this.moneyall
+			}
+		}
+	}
   }
 </script>
 <style rel="stylesheet/less" lang="less" scoped>
