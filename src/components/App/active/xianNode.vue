@@ -10,7 +10,7 @@
               <i>2折</i>
               特惠，100%资源可用、100%性能可用！
             </p>
-            <span>立即参与</span>
+            <span @click="roll(500)">立即参与</span>
           </div>
           <img src="../../../assets/img/active/xianNode/xian-node-banner.png" alt>
         </div>
@@ -18,13 +18,13 @@
     </div>
     <div class="product">
       <div class="wrap">
-        <p class="reminder">
+        <p class="reminder" v-if="reminderShow">
           <span>温馨提示：</span>依照国家政策规定，
-          <span>注册</span>并
-          <span>实名认证</span>
+          <span @click="$LR({type: 'register'})" class="pointer">注册</span>并
+          <span class="pointer" @click="showAuthModal()">实名认证</span>
           后才可购买使用云产品，请提前完成认证以确保可顺利参与活动。若已完成请先
-          <span>登录</span>
-          <span class="fr">x</span>
+          <span @click="$LR({type: 'login'})" class="pointer">登录</span>
+          <span class="fr pointer" @click="reminderShow=false">x</span>
         </p>
         <div class="top">
           <div class="item-headline"></div>
@@ -50,7 +50,7 @@
                 <span>请选择系统</span> 
                 <Select v-model="item.selectedSystem" style="width: 190px;text-align:center">
                   <Option value="windows">windows</option>
-                  <Option value="centos">centos</option>
+                  <Option value="linux">centos</option>
                 </Select>
               </div>
               <div>
@@ -70,7 +70,7 @@
                   <span><i style="font-size:20px;font-style: normal;">￥</i>{{item.discountCost}}</span>
                   <p>原件：{{item.originCost}}</p>
                 </div>
-                <i class="btn">立即购买</i>
+                <i class="btn" @click="getDiskcountMv(item,index1)">立即购买</i>
               </div>
             </div>
           </div>
@@ -93,14 +93,158 @@
         </div>
       </div>
     </div>
+    <!-- 登陆注册弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.notLoginModal=false" v-if="showModal.notLoginModal">
+        <div class="all-modal modal1" @click.stop="showModal.notLoginModal=true">
+          <div class="header">
+            <i @click.stop="showModal.notLoginModal=false"></i>
+          </div>
+          <div class="body">
+            <span style="padding: 45px 0 36px 0;display:block"> 您还没有登录，请登录后参与活动！</span>
+            <button @click.stop="$LR({type: 'login'}),showModal.notLoginModal=false" style="margin-bottom: 18px;" class="modal-btn"><span>立即登录</span></button>
+            <p>还没有账号？<span @click.stop="$LR({type: 'register'}),showModal.notLoginModal=false">去注册 →</span></p>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <!-- 实名认证失败提示 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.authErrorModal=false" v-if="showModal.authErrorModal">
+        <div class="all-modal modal1" @click.stop="showModal.authErrorModal=true">
+          <div class="header">
+            <i @click.stop="showModal.authErrorModal=false"></i>
+          </div>
+          <div class="body">
+            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/error-icon.png" style="vertical-align: middle;"> 很遗憾！您未通过快速实名认证审核！</p>
+            <p> 您也可以通过<span class="red" @click="$router.push('userCenter')"> 上传身份证照片</span>的方式行实名认证</p>
+            <button @click.stop="showModal.authErrorModal=false;showModal.authModal=true" style="margin-top: 35px;" class="modal-btn"><span>再次尝试</span></button>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <!-- 没有实名认证提示 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.notAuthModal=false" v-if="showModal.notAuthModal">
+        <div class="all-modal modal1" @click.stop="showModal.notAuthModal=true">
+          <div class="header">
+            <i @click.stop="showModal.notAuthModal=false"></i>
+          </div>
+          <div class="body">
+            <span style="padding: 45px 0 36px 0;display:block">  您还没有登录，请登录后再进行实名认证操作！</span>
+            <button @click.stop="$LR({type: 'login'}),showModal.notAuthModal=false" style="margin-bottom: 18px;" class="modal-btn"><span>立即登录</span></button>
+            <p>还没有账号？<span @click.stop="$LR({type: 'register'}),showModal.notAuthModal=false">去注册 →</span></p>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <!-- 实名认证成功提示 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.authSucModal=false" v-if="showModal.authSucModal">
+        <div class="all-modal modal1" @click.stop="showModal.authSucModal=true">
+          <div class="header">
+            <i @click.stop="showModal.authSucModal=false"></i>
+          </div>
+          <div class="body">
+            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/success-icon.png" style="vertical-align: middle;">恭喜您！已通过实名认证</p>
+            <p> 您可前往<span class="red" @click="$router.push('userCenter')"> 个人中心</span>查看您的认证信息</p>
+            <button @click.stop="showModal.authSucModal=false" style="margin-top: 35px;" class="modal-btn"><span>返回活动</span></button>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <!-- 活动规则弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal">
+        <div class="all-modal modal3" @click="showModal.luckDrawRuleModal=true">
+          <div class="header"><i @click.stop="showModal.luckDrawRuleModal=false"></i></div>
+          <div class="body">
+            <h3>1、活动时间：2019年1月28日-2019年3月1日;</h3>
+            <h3>2、本次西安新节点上线活动仅限新用户参加，每位用户仅限购买3台活动产品;</h3>
+            <h3>3、本次活动产品仅限于西安区云服务器，其他地区产品不参与此活动;</h3>
+            <h3>4、本次活动产品均为2折特惠价格，不能使用任何优惠券以及现金券;</h3>
+            <h3>5、参与本次活动购买的云服务器不享有7天无理由退款服务;</h3>
+            <h3>6、根据国家相关规定，用户实名认证之后才可以购买使用云服务器;</h3>
+            <h3>7、此活动最终解释权由新睿云所有。</h3>
+          </div>
+          <button @click="showModal.luckDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
+        </div>
+      </div>
+    </transition>
+    <!-- 请填写认证信息弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.authModal=false" v-if="showModal.authModal">
+        <div class="all-modal modal2" @click.stop="showModal.authModal=true" style="height:510px;">
+          <div class="header"><i @click.stop="showModal.authModal=false"></i></div>
+          <div class="body xiannode-form">
+            <Form ref="authForm" :model="authFormValidate" :rules="authFormRuleValidate" :label-width="110" class="auth-form-validate">
+              <FormItem label="真实姓名" prop="name">
+                <Input v-model="authFormValidate.name" placeholder=" 请输入您的真实姓名" size="large"></Input>
+              </FormItem>
+              <FormItem label="身份证号" prop="id">
+                <Input v-model="authFormValidate.id" placeholder=" 请输入您的身份证号" size="large">></Input>
+              </FormItem>
+              <FormItem label="图形验证码" prop="pictureCode">
+                <div style="display: flex">
+                  <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:224px;">
+                         style="width:192px;margin-right: 10px"></Input>
+                  <img :src="imgSrc" style="height:33px;"
+                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                </div>
+              </FormItem>
+              <FormItem label="手机号码" prop="tel">
+                <Input v-model="authFormValidate.tel" placeholder=" 请输入您的手机号码" style="width:192px;" size="large">></Input>
+                <Button type="text" @click="getVerificationCode" class="vailcode-btn" :class="{disabled:authFormValidate.sendCodeText!='获取验证码'}" style="width:109px;"
+                          :disabled="authFormValidate.sendCodeText!='获取验证码'">
+                    {{authFormValidate.sendCodeText}}
+                  </Button>
+              </FormItem>
+              <FormItem label="验证码" prop="vailCode">
+                <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" size="large">></Input>
+              </FormItem>
+            </Form>
+            <button @click.stop="authAndGetPrize" style="width:305px;height:50px;font-size:20px;margin-left:110px" class="vailcode-btn auth-btn">确认信息并提交</button>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import axios from '@/util/axiosInterceptor'
+import $ from 'jquery'
 export default {
   data () {
+    const validaRegisteredPhone = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('电话号码不能为空'));
+        }
+        if (!(/^1(3|4|5|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
+          callback(new Error('请输入正确的电话号码'));
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredID = (rule, value, callback) => {
+        if (!reg.IDCardVail(value)) {
+          callback(new Error('请输入正确的身份证号码'));
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredName = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('联系人不能为空'));
+        }
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+          callback(new Error('输入姓名不能包含特殊字符、空格或是纯数字'));
+        } else {
+          callback()
+        }
+      }
     return {
+      reminderShow: true,
       zoneList: [],
       selectedZone: '',
       productData: [
@@ -158,9 +302,46 @@ export default {
         {
           img: require('../../../assets/img/active/xianNode/advantage-icon-4.png'),
           title: '服务完善',
-          desc: '7*24小时在线客服，80秒客户 问题快速响应，7天无理由退款 十二年运营商级技术团队为您 保驾护航'
+          desc: '7*24小时在线客服，80秒客户 问题快速响应，十二年运营商级技术团队为您 保驾护航'
         }
-      ]
+      ],
+      showModal: {
+        notLoginModal: false,
+        luckDrawRuleModal: false,
+        authModal: false,
+        authErrorModal: false,
+        authSucModal: false,
+        notAuthModal: false,
+      },
+      authFormValidate: {
+          name: '',
+          id: '',
+          pictureCode: '',
+          tel: '',
+          vailCode: '',
+          sendCodeText: '获取验证码'
+        },
+        authFormRuleValidate: {
+          name: [
+            {required: true, message: '请输入姓名'},
+            {validator: validaRegisteredName}
+          ],
+          id: [
+            {required: true, message: '请输入身份证号'},
+            {validator: validaRegisteredID}
+          ],
+          pictureCode: [
+            {required: true, message: '请输入图片验证码'}
+          ],
+          tel: [
+            {required: true, message: '请输入以该身份证开户的手机号码'},
+            {validator: validaRegisteredPhone}
+          ],
+          vailCode: [
+            {required: true, message: '请输入验证码'}
+          ]
+        },
+        imgSrc: 'https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do',
     }
   },
   created () {
@@ -173,8 +354,25 @@ export default {
 
   },
   methods: {
+    showAuthModal() {
+      if (this.$store.state.userInfo) {
+        this.showModal.authModal = true
+      } else {
+        this.showModal.notAuthModal = true
+      }
+    },
+    roll(val) {
+        $('html, body').animate({scrollTop: val}, 300)
+      },
+    init() {
+        axios.get('user/GetUserInfo.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+          }
+        })
+      },
     // 云服务器获取区域
-    getHostZoneList() {
+    getHostZoneList () {
       let url = 'activity/getTemActInfoById.do'
       axios.get(url, {
         params: {
@@ -200,6 +398,7 @@ export default {
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
+          this.productData[index].vmConfigId = res.data.result
           axios.get('activity/getOriginalPrice.do', {
             params: {
               zoneId: this.selectedZone,
@@ -214,7 +413,118 @@ export default {
           })
         }
       })
-    }
+    },
+    //   云主机生成订单
+    getDiskcountMv (item, index) {
+      if (this.$store.state.userInfo) {
+        axios.get('information/getDiskcountMv.do', {
+          params: {
+            vmConfigId: item.vmConfigId,
+            osType: item.selectedSystem,
+            defzoneid: this.selectedZone
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success('创建订单成功')
+            this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      } else {
+        this.showModal.notLoginModal = true;
+      }
+    },
+      //领奖时认证验证码
+      getVerificationCode() {
+        if (!this.authFormValidate.pictureCode) {
+          this.$Message.info('请输入图形验证码')
+          return
+        }
+        this.$refs.authForm.validateField('tel', val => {
+          if (!val) {
+            axios.get('user/code.do', {
+              params: {
+                aim: this.authFormValidate.tel,
+                isemail: 0,
+                vailCode: this.authFormValidate.pictureCode
+              }
+            }).then(res => {
+              if (res.data.status == 1 && res.status == 200) {
+                this.$Message.success(res.data.message)
+                var countdown = 60
+                this.authFormValidate.sendCodeText = `重新发送(${countdown}S)`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.authFormValidate.sendCodeText = `重新发送(${countdown}S)`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.authFormValidate.sendCodeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$Message.info(res.data.message)
+              }
+            })
+          }
+        })
+      },
+      sendCode() {
+        this.$refs.sendCode.validate(validate => {
+          if (validate) {
+            axios.get('user/code.do', {
+              params: {
+                aim: this.quicklyAuthForm.phone,
+                isemail: 0,
+                vailCode: this.quicklyAuthForm.pictureCode
+              }
+            }).then(response => {
+              // 发送成功，进入倒计时
+              if (response.status == 200 && response.data.status == 1) {
+                var countdown = 60
+                this.quicklyAuthForm.sendCodeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.quicklyAuthForm.sendCodeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.quicklyAuthForm.sendCodeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$Message.error(response.data.message)
+              }
+            })
+          }
+        })
+      },
+      // 快速认证
+      authAndGetPrize() {
+        this.$refs.authForm.validate((valid) => {
+          if (valid) {
+            this.showModal.authGetPrizeModal = false
+            axios.post('user/personalAttest.do', {
+              cardID: this.authFormValidate.id,
+              name: this.authFormValidate.name,
+              phone: this.authFormValidate.tel,
+              phoneCode: this.authFormValidate.vailCode,
+              type: '0'
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.showModal.authSucModal = true
+                this.init()
+              } else {
+                // this.$message.info({
+                //   content: response.data.message
+                // })
+                this.showModal.authErrorModal = true
+              }
+            })
+          }
+        })
+      },
   },
   computed: {
 
@@ -249,12 +559,12 @@ export default {
   color: #ff3000;
 }
 .banner {
-  background: linear-gradient(
-    0deg,
-    rgba(255, 231, 210, 1),
-    rgba(255, 220, 188, 1)
-  );
-  // background: url('../../../assets/img/active/xianNode/banner-text.png') center no-repeat;
+  // background: linear-gradient(
+  //   0deg,
+  //   rgba(255, 231, 210, 1),
+  //   rgba(255, 220, 188, 1)
+  // );
+  background: url(../../../assets/img/active/xianNode/banner-bg.png) center no-repeat;
   .container {
     height: 400px;
     .left {
@@ -275,12 +585,12 @@ export default {
         height: 50px;
         font-size: 22px;
         color: rgba(255, 48, 0, 1);
-        line-height: 50px;
+        line-height: 44px;
         text-align: center;
         cursor: pointer;
-        border: solid 1px rgba(255, 48, 0, 1);
-        & :hover {
-          background: red;
+        border:2px solid rgba(255,48,0,1);
+        &:hover {
+          background:#FFD1B2;
         }
       }
     }
@@ -347,8 +657,6 @@ export default {
           }
         }
         .time-change {
-          // display: flex;
-          // justify-content: space-between;
           margin-top: 20px;
           li {
             width: 80px;
@@ -387,7 +695,7 @@ export default {
             font-weight: 500;
             font-size: 20px;
             color: rgba(255, 48, 0, 1);
-            line-height: 38px;
+            line-height: 34px;
             cursor: pointer;
             &:hover {
               background: #fc291a;
@@ -437,4 +745,155 @@ export default {
     }
   }
 }
+.modal-btn {
+  width:170px;
+  height:50px;
+  border:1px solid rgba(255,48,0,1);
+  font-size:20px;
+  font-family:PingFangSC-Regular;
+  color:rgba(255,48,0,1);
+  line-height:45px;
+  background: none;
+  cursor: pointer;
+  &:hover {
+    background:rgba(255,231,215,1);
+  }
+}
+.vailcode-btn {
+border:1px solid rgba(255,48,0,1);
+color:rgba(255,48,0,1);
+border-radius: 0;
+background: none;
+}
+// 弹窗公共样式
+  .overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(55, 55, 55, 0.3);
+    // background-color: rgba(255, 255, 255, 0.3);
+    height: 100%;
+    z-index: 1000;
+    .all-modal {
+      position: relative;
+      margin: 0 auto;
+      top: 15%;
+      background: rgba(255, 255, 255, 1);
+      text-align: center;
+      font-size: 16px;
+      &.lottery {
+        top: 100px;
+      }
+      > .header {
+        height: 70px;
+        font-size: 24px;
+        font-family: MicrosoftYaHei;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 1);
+        position: relative;
+        > i {
+          color: rgba(255, 255, 255, 1);
+          cursor: pointer;
+          position: absolute;
+          right: 10px;
+          top: 0px;
+          transform: rotate(45deg);
+          &:before {
+            content: '';
+            display: inline-block;
+            height: 16px;
+            width: 2px;
+            background: #ff3000;
+            transform: translateX(9px);
+          }
+          &:after {
+            content: '';
+            display: inline-block;
+            height: 2px;
+            width: 16px;
+            background: #ff3000;
+            transform: translateY(-7px);
+          }
+        }
+      }
+    }
+  }
+  .modal1 {
+    width: 600px;
+    height: 300px;
+    > .header {
+      background: url("../../../assets/img/active/xianNode/modal-bg-reminder.png");
+    }
+    .body {
+      p {
+        > span {
+          color: #FF3000;
+          cursor: pointer;
+          &:hover {
+            border-bottom: 1px solid #FF3000;
+            padding-bottom: 1px;
+          }
+        }
+      }
+    }
+  }
+
+ .modal2 {
+    width: 700px;
+    height: 300px;
+    > .header {
+      background: url("../../../assets/img/active/xianNode/modal-bg-auth.png");
+    }
+    .auth-btn {
+      cursor: pointer;
+      &:hover{
+        background:rgba(255,231,215,1);
+      }
+    }
+    .disabled {
+      border:1px solid rgba(192,192,192,1);
+      color:#666666;
+      }
+  }
+
+  .modal3 {
+    width: 700px;
+    height: 457px;
+    > .header {
+      background: url("../../../assets/img/active/xianNode/modal-bg-rule.png");
+    }
+    > .body {
+      margin: 0 auto;
+      padding: 30px 0 34px 0;
+      width: 554px;
+      text-align: left;
+      h3 {
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: rgba(34, 34, 34, 1);
+        line-height: 30px;
+      }
+    }
+  }
+  .auth-form-validate, .receive-good-validate {
+    padding-top: 48px;
+    margin: 0 auto;
+    width: 415px;
+    .ivu-form-item {
+      margin-bottom: 22px;
+    }
+  }
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .3s;
+  }
+
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+  .pointer {
+    cursor: pointer;
+  }
 </style>

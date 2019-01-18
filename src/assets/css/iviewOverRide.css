@@ -354,7 +354,9 @@ div.modal-header-border {
 .social-share .icon-qq {
   margin-right: 50px;
 }
-
+.xiannode-form .ivu-form .ivu-form-item-label {
+  font-size: 16px;
+}
 /*  免费领取主机弹窗样式 */
 .fr-Modal .ivu-modal-header {
   padding: 0;
