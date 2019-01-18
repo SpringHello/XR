@@ -5,9 +5,15 @@
       <div class="content">
         <span>订单确认</span>
         <button style="float:right" class="button" @click="$router.push('buy')">返回</button>
-        <div class="order_text">
-          <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
-          <p style="margin-top:10px;">请牢记您所设置的密码，如遗忘可登录云服务器控制台重置密码。<span style="color:#2A99F2;cursor:pointer;">查看</span></p>
+        <div class="order_text" >
+          <div v-if="routerName == '新建云主机'">
+            <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
+            <p style="margin-top:10px;">请牢记您所设置的密码，如遗忘可登录云服务器控制台重置密码。<span style="color:#2A99F2;cursor:pointer;">查看</span></p>
+          </div>
+         <div v-else>
+            <p>云服务器购买成功后，数据盘默认是未挂载的情况，需要自行格式化硬盘后，挂载分区后才能在云服务器内看到。<span>查看windows如何格式化、Linux如何格式化</span></p>
+            <p style="margin-top:10px;">云服务器购买成功后，额外的系统盘默认为未分区状态，需要自行扩容文件系统之后查看。<span style="color:#2A99F2;cursor:pointer;">查看如何扩容windows文件系统、扩容Linux文件系统</span></p>
+          </div>
         </div>
         <div class="selectMark">
           <img src="../../assets/img/host/h-icon10.png"/>
@@ -48,37 +54,11 @@
               </Checkbox>
                <span style="float:right;">已经抵扣：<strong style="color:#FF624B;font-size:24px;">{{deductionPrice}}</strong>元</span>
             </div>
-            <!-- <div>
-              <div>
-                <Checkbox v-model="couponInfo.isRecommend" @on-change="changeCheckbox">
-                    <p style="font-weight: 700;margin-left: 10px;display:inline-block;">兑换优惠券</p>
-                  </Checkbox>
-                 <span style="float:right;">已经抵扣：<strong style="color:#FF624B;font-size:24px;">150</strong>元</span>
-              </div>
-              <div style="display:inline-block;padding:10px 0 0 25px;" v-if="couponInfo.isRecommend">
-                <Input v-model="couponInfo.Recommend" style="width:300px;"></Input>
-                <Button type="primary">确认</Button>
-              </div>
-            </div> -->
-        
-       
+     
          <div style="border-top:1px solid #E9E9E9;padding:20px 0;margin-top:20px;">
            <span style="color:#2d8cf0;cursor:pointer;">全民普惠，3折减单，最高减免7000元！</span>
            <span style="float:right;">实际支付：<strong style="color:#FF624B;font-size:24px;">{{couponInfo.totalCost}}</strong>元</span>
          </div>
-          <!-- <p style="text-align: right;font-size:14px;color:rgba(102,102,102,1);line-height:19px;margin-bottom: 20px;">
-            原价：<span :class="{cross:couponInfo.originCost!=couponInfo.totalCost}">{{couponInfo.originCost}}元</span><span
-            style="font-size:18px;color:rgba(0,0,0,0.65);margin-left: 20px;">总计支付：{{couponInfo.totalCost}}元</span>
-          </p>
-          <p style="text-align: right;color: #F85E1D" v-if="spentCost<31117">当前已支付订单金额累计{{ spentCost }}元，再消费{{ otherSpentCost }}元{{ spentCostNode }}</p>
-          <p style="text-align: right;color: #F85E1D" v-else> 当前已支付订单金额累计{{ spentCost }}元，{{ spentCostNode }}</p>
-          <div style="text-align: right;margin: 10px 0;">
-            <ul>
-              <li v-for="(item,index) in showFree"
-                  style="font-size: 12px;color:rgba(102,102,102,1);" :key="item.index">{{item}}
-              </li>
-            </ul>
-          </div> -->
         </div>
         <div style="text-align:right;margin-top:40px;">
           <Button @click="$router.push({path:'overview'})" style="margin-right:20px;">取消订单</Button>
@@ -130,7 +110,6 @@
           },
           {
             title: '资源',
-            // type: 'expand',
             render: (h, params) => {
               var arr = []
               for (var index in params.row['资源']) {
@@ -145,8 +124,6 @@
                     padding: '10px'
                   }
                 }, parr)
-                // h('div',{},params.row),
-                // h('div',{},params.row.)
                 )
               }
               return h('div', {

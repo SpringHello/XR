@@ -96,10 +96,14 @@
                   <FormItem prop='email'>
                     <x-Input   :icon='url.icon1' v-model="dataFroms.email"  placeholder='请输入邮箱' ></x-Input>
                   </FormItem>
-                   <FormItem prop='vCode' style="text-align:right;">
+                   <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large'  placeholder='请输入验证码' style="width:258px;"></Input>
                     <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
                   </FormItem>
+                   <FormItem prop='code'>
+                      <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
+                      </x-Input>
+                   </FormItem>
                 </Form>
               <div class="v_email" @click="getVerificationCode('1')">
                 前往邮箱
@@ -138,10 +142,10 @@
               <div v-if="absc">
                 <Form  :model="dataFroms" :rules="dataFromsValidate" >
                   <FormItem prop='name'>
-                    <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.name"  placeholder='请输入您的姓名' ></x-Input>
+                    <x-Input ref="xinput" :icon='url.icon1' v-model="dataFroms.name"  placeholder='请输入您的姓名' ></x-Input>
                   </FormItem>
                   <FormItem prop='idCard'>
-                    <x-Input ref="xinput" :icon='url.iconIdCard' v-model="formValidate.idCard"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
+                    <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.idCard"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
                   </FormItem>
                 </Form>
                 <Button type="primary" @click="absc = !absc" style="float:right;">下一步</Button>
@@ -167,11 +171,12 @@
                         <Button type="primary">上传图片</Button>
                     </Upload>
                 </div>
-                <div style="width:150px;height:110px;display:inline-block;vertical-align:top;">
-                   
+                <div class="up_photo">
+                    <img src="../../assets/img/usercenter/card-person.png">
+                    <p>手持身份证人像照片</p>
                 </div>
                   <p style="margin:10px 0 20px 0;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
-                  <Button type="primary" style="float:right;" @click="absc = !absc">下一步</Button>
+                  <Button type="primary" style="float:right;" @click="index = 4,verPage =''">下一步</Button>
               </div>
                
             </div>
@@ -180,18 +185,46 @@
              <div class="verification"  v-if="verPage == 'enterprise'">
               <div v-if="absc">
                 <Form  :model="dataFroms" :rules="dataFromsValidate" >
-                  <FormItem prop='name'>
-                    <x-Input ref="xinput" :icon='url.icon1' v-model="formValidate.name"  placeholder='请输入您的公司名称' ></x-Input>
+                  <FormItem prop='company'>
+                    <x-Input ref="xinput" :icon='url.icon1' v-model="dataFroms.company"  placeholder='请输入您的公司名称' ></x-Input>
                   </FormItem>
                   <FormItem prop='idCard'>
-                    <x-Input ref="xinput" :icon='url.iconIdCard' v-model="formValidate.idCard"  style="margin-top:20px;" placeholder='请输入您的营业执照号码' ></x-Input>
+                    <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.idCard"  style="margin-top:20px;" placeholder='请输入您的营业执照号码' ></x-Input>
                   </FormItem>
                 </Form>
                 <Button type="primary" @click="absc = !absc" style="float:right;">下一步</Button>
               </div>
               <!-- 上传身份证照片 -->
-              <div v-else>
-                <div style="display: inline-block;vertical-align:middle;">
+              <div v-else style="width:500px;">
+                <div style="display: inline-block;">
+                  <div style="display: inline-block;vertical-align:middle;">
+                    <Upload
+                        ref="upload"
+                        :show-upload-list="false"
+                        :on-success="handleSuccess"
+                        :format="['jpg','jpeg','png']"
+                        :max-size="4096"
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        :before-upload="handleBeforeUpload"
+                        type="drag"
+                        action=""
+                        style="display: inline-block;">
+                        <div style="width:150px;height:110px;background:#F6FAFD;line-height:110px;margin-left:21px;">
+                            <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
+                        </div>
+                        <Button type="primary">上传图片</Button>
+                    </Upload>
+                  </div>
+                  <div class="up_photo">
+                    <img src="../../assets/img/usercenter/card-person.png">
+                    <p>法人身份证正面照片</p>
+                  </div>
+                    <p style="margin:10px 0 20px 0;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
+                    
+                </div>
+                <div style="display: inline-block;margn-left:22px;">
+                  <div style="display: inline-block;vertical-align:middle;">
                     <Upload
                         ref="upload"
                         :show-upload-list="false"
@@ -209,12 +242,13 @@
                         </div>
                         <Button type="primary">上传图片</Button>
                     </Upload>
+                  </div>
+                  <div class="up_photo">
+                    <img src="../../assets/img/usercenter/card-person.png">
+                    <p>经办人手持身份证照片</p>
+                  </div>
+                  <Button type="primary" style="float:right;" @click="index = 4,verPage =''">下一步</Button>
                 </div>
-                <div style="width:150px;height:110px;display:inline-block;vertical-align:top;">
-                   
-                </div>
-                  <p style="margin:10px 0 20px 0;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
-                  <Button type="primary" style="float:right;" @click="absc = !absc">下一步</Button>
               </div>
             </div>
 
@@ -272,6 +306,7 @@ import regExp from "../../util/regExp";
 import axios from "@/util/axiosInterceptor";
 import throttle from "throttle-debounce/throttle";
 import popk from "../../myView/input/main";
+let val = '/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/'; //营业执照格式
 const vailAucct = (rule, value, callback) => {
   let reg = /^1[3|5|8|9|6|7]\d{9}$/;
   if (value == "") {
@@ -410,25 +445,33 @@ export default {
       
       dataFromsValidate:{
         email:[
-          {required:true,message:'请输入邮箱',trigger:'blur'},
-          {type: 'email',message:'邮箱格式不正确',trigger:'blur'}
+          {required:true,message:'请输入邮箱',trigger: 'blur'},
+          {type: 'email',message:'邮箱格式不正确',trigger: 'blur'}
         ],
         phone:[
-          {required:true,validator: vailAucct,trigger:'blur'}
+          {required:true,validator: vailAucct,trigger: 'blur'}
         ],
         newPaw:[
           {
-            required: true, message:'请输入新密码', trigger:'blur'
+            required: true, message:'请输入新密码', trigger: 'blur'
           }
         ],
         oldPaw:[
           {
-            required: true, message:'请输入新密码', trigger:'blur'
+            required: true, message:'请输入新密码', trigger: 'blur'
           }
         ],
         vCode:[
-          {required:true, message:'请输入图形验证码',trigger:'blur'}
-        ]
+          {required:true, message:'请输入图形验证码',trigger: 'blur'}
+        ],
+        name:[
+          {required:true, message:'请输入姓名', trigger: 'blur'}
+        ],
+        idCard:[
+          {required:true,message:'请输入身份证号码', trigger: 'blur'}
+        ],
+        company:[{required:true, message: '请输入公司名称', trigger: 'blur'}],
+        license:[{required:true, message: '请输入营业执照号码', trigger: 'blur'}]
       },
 
       isemail: "1",
@@ -450,7 +493,8 @@ export default {
         code: "",
         name:'',
         idCard:'',
-        vCode:''
+        vCode:'',
+        company:''
       },
 
       //账号是否可用
@@ -672,7 +716,7 @@ export default {
       })
     },
 
-    //获取验证码
+    //获取邮箱验证码
     getVerificationCode(code) {
       this.$on("test", msg => {
         console.log(msg);
@@ -1031,4 +1075,7 @@ export default {
   }
 
 }
+  .up_photo{
+    width:150px;height:110px;display:inline-block;vertical-align:top;margin-left:21px;
+  }
 </style>
