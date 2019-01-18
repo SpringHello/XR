@@ -399,7 +399,9 @@
               captchaObj.appendTo("#captchaBox_password"); //将验证按钮插入到宿主页面中captchaBox元素内
               captchaObj.onReady(() => {
               }).onSuccess(() => {
-                this.loginForm.errorMsg = ''
+                if (this.loginForm.errorMsg !== 'notGetVerificationCode') {
+                  this.loginForm.errorMsg = ''
+                }
                 var result = captchaObj.getValidate()
                 let url = 'user/silpJudge.do'
                 let params = {
@@ -438,7 +440,9 @@
               captchaObj.appendTo("#captchaBox_code"); //将验证按钮插入到宿主页面中captchaBox元素内
               captchaObj.onReady(() => {
               }).onSuccess(() => {
-                this.loginForm.errorMsg = ''
+                if (this.loginForm.errorMsg !== 'notGetVerificationCode') {
+                  this.loginForm.errorMsg = ''
+                }
                 var result = captchaObj.getValidate()
                 let url = 'user/silpJudge.do'
                 let params = {
