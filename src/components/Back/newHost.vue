@@ -430,30 +430,39 @@
             render: (h, params) => {
               let text_1 = params.row.companyname ? params.row.companyname : '----'
               let text_2 = params.row.computername ? params.row.computername : '----'
-              return h('ul', {}, [
-                h('li', {
-                  style: {
-                    cursor: 'pointer',
-                    color: '#2A99F2'
-                  },
-                  on: {
-                    click: () => {
-                      alert('跳转管理页面')
+              if (params.row.status == 1) {
+                return h('ul', {}, [
+                  h('li', {
+                    style: {
+                      cursor: 'pointer',
+                      color: '#2A99F2'
+                    },
+                    on: {
+                      click: () => {
+                        sessionStorage.setItem('manageId', params.row.computerid)
+                        this.$router.push('newHostManage')
+                      }
                     }
-                  }
-                }, text_1 + ' / '),
-                h('li', {
-                  style: {
-                    cursor: 'pointer',
-                    color: '#2A99F2'
-                  },
-                  on: {
-                    click: () => {
-                      alert('跳转管理页面')
+                  }, text_1 + ' / '),
+                  h('li', {
+                    style: {
+                      cursor: 'pointer',
+                      color: '#2A99F2'
+                    },
+                    on: {
+                      click: () => {
+                        sessionStorage.setItem('manageId', params.row.computerid)
+                        this.$router.push('newHostManage')
+                      }
                     }
-                  }
-                }, text_2)
-              ])
+                  }, text_2)
+                ])
+              } else {
+                return h('ul', {}, [
+                  h('li', {}, text_1 + ' / '),
+                  h('li', {}, text_2)
+                ])
+              }
             }
           },
           {
@@ -824,7 +833,8 @@
                     },
                     on: {
                       click: () => {
-                        alert('续费')
+                        this.hostCurrentSelected = params.row
+                        this.renewHost(this.hostCurrentSelected)
                       }
                     }
                   }, '续费'), h('span', {
@@ -862,7 +872,8 @@
                         },
                         on: {
                           click: () => {
-                            alert('管理')
+                            sessionStorage.setItem('manageId', params.row.computerid)
+                            this.$router.push('newHostManage')
                           }
                         }
                       }, '管理'),
@@ -987,7 +998,8 @@
                         },
                         on: {
                           click: () => {
-                            alert('管理')
+                            sessionStorage.setItem('manageId', params.row.computerid)
+                            this.$router.push('newHostManage')
                           }
                         }
                       }, '管理'),

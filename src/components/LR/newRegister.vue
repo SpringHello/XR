@@ -791,7 +791,9 @@
               captchaObj.appendTo("#captchaBox_code"); //将验证按钮插入到宿主页面中captchaBox元素内
               captchaObj.onReady(() => {
               }).onSuccess(() => {
-                this.registerForm.errorMsg = ''
+                if (this.registerForm.errorMsg !== 'notGetVerificationCode') {
+                  this.registerForm.errorMsg = ''
+                }
                 var result = captchaObj.getValidate()
                 let url = 'user/silpJudge.do'
                 let params = {
