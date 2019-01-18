@@ -276,7 +276,7 @@
             </CheckboxGroup>
           </FormItem>
           <div class="renewal-upgrade">
-            <p>如果现在配置内容不支持使用，可进行<span @click="renewalUpgrade">主机升级</span><span style="color:#333;cursor:not-allowed">主机升级</span>
+            <p>如果现在配置内容不支持使用，可进行<span style="color:#333;cursor:not-allowed">主机升级</span>
             </p>
           </div>
         </Form>
