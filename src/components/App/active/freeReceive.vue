@@ -741,10 +741,10 @@
           this.$LR({type: 'register'})
           return
         }
-        if(!this.$store.state.authInfo&&this.$store.state.authInfo.checkstatus!=0){
-          this.showModal.authentication = true;
-          return;
-        } 
+        // if(!this.$store.state.authInfo&&this.$store.state.authInfo.checkstatus!=0){
+        //   this.showModal.authentication = true;
+        //   return;
+        // } 
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
           if (response.status == 200 && response.data.status == '1') {
             this.balance = Number(response.data.data.remainder)
