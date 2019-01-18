@@ -297,6 +297,48 @@
         <Button type="primary" @click="getHost_ok">确认</Button>
       </div>
     </Modal>
+
+    <!-- 实名认证 -->
+    <Modal v-model="showModal.authentication" width="640" :scrollable="true">
+        <Form :model="quicklyAuthForm" :label-width="100" ref="quicklyAuth"
+                :rules="quicklyAuthFormValidate"
+                style="width:450px;margin-top:20px;" >
+            <FormItem label="真实姓名" prop="name" style="width: 100%">
+              <Input v-model="quicklyAuthForm.name" placeholder="请输入姓名"></Input>
+            </FormItem>
+            <FormItem label="身份证号" prop="IDCard" style="width: 100%">
+              <Input v-model="quicklyAuthForm.IDCard" placeholder="请输入身份证号"></Input>
+            </FormItem>
+            <Form :model="quicklyAuthForm" :rules="quicklyAuthFormValidate" ref="sendCode"
+                  :label-width="100">
+              <FormItem label="图形验证码" prop="pictureCode">
+                <div style="display: flex">
+                  <Input v-model="quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
+                         style="width:250px;margin-right: 10px"></Input>
+                  <img :src="imgSrc" style="height:33px;"
+                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                </div>
+              </FormItem>
+              <FormItem label="手机号码" prop="phone" style="width: 100%">
+                  <Input v-model="quicklyAuthForm.phone" placeholder="请输入以该身份证开户的手机号码"></Input>
+              </FormItem>
+            </Form>
+            <FormItem label="验证码" prop="validateCode" style="width: 100%">
+              <div style="display: flex;justify-content: space-between">
+                <Input v-model="quicklyAuthForm.validateCode" placeholder="请输入验证码" style="width:260px;margin-right: 10px"></Input>
+                <Button type="primary" @click="sendCode" 
+                            :disabled="quicklyAuthForm.sendCodeText!='获取验证码'">
+                      {{quicklyAuthForm.sendCodeText}}
+                </Button>
+              </div>
+            </FormItem>
+            <FormItem>
+              <div style="float:right">
+                <Button type="primary" @click="quicklyAuth">确认提交</Button>
+              </div>
+            </FormItem>
+          </Form>
+    </Modal>
   </div>
 </template>
 
@@ -354,7 +396,8 @@
           payDefeatedModal: false,
           paySuccessModal: false,
           weChatRechargeModal: false,
-          orderConfirmationModal: false
+          orderConfirmationModal: false,
+          authentication:false
         },
         flowGroup: [
           {
@@ -698,6 +741,10 @@
           this.$LR({type: 'register'})
           return
         }
+        if(!this.$store.state.authInfo&&this.$store.state.authInfo.checkstatus!=0){
+          this.showModal.authentication = true;
+          return;
+        } 
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
           if (response.status == 200 && response.data.status == '1') {
             this.balance = Number(response.data.data.remainder)
