@@ -17,8 +17,8 @@
 						<div class="font">
 							<span>可<span style="color: #FF624B;">银行卡</span>提现金额</span>
 							<div class="money">
-								<span>23</span>
-								<span>.00元</span>
+								<span>{{Bankmoney}}</span>
+								<span>.{{Bankdecimalmoney}}元</span>
 							</div>
 							<Button type="primary" style="margin-top: 17px;" @click="showModal.cardfirmation = true">申请银行卡提现</Button>
 						</div>
@@ -45,8 +45,11 @@
 						</Col>
 					</Row>
 				</div>
-				<Table border :columns="columns5" :data="data5" style="margin-top: 10px;"></Table>
+				<Table border :columns="withdrawal" :data="withdrawaldataFilter" style="margin-top: 10px;"></Table>
+				<!-- :total="ordertotal" -->
+				
 			</div>
+			<Page :total="pageall" :page-size="pageNum" @on-change="changePage"  style="float: right;margin-right: 30px;"></Page>
 			<!-- 线上提现弹窗 -->
 			<Modal v-model="showModal.Cashconfirmation" :scrollable="true" :closable="false" :width="390">
 			  <p slot="header" class="modal-header-border">
@@ -151,7 +154,6 @@
 			    </div>
 			  </div>
 			  <p slot="footer" class="modal-footer-s">
-			    <Button @click="showModal.Paymentdetails = false">取消</Button>
 			    <Button type="primary" @click="showModal.Paymentdetails = false">确定</Button>
 			  </p>
 			</Modal>
@@ -160,6 +162,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+	import axios from 'axios'
   export default{
     data(){
 			const validateCompanyName = (rule, value, callback) => {
@@ -225,12 +228,17 @@
       return {
 				ordertime: '',
 				//线上提现金额整数
-				Onlinemoney:'',
+				Onlinemoney:0,
 				//线上提现金额小数
-				Onlinedecimalmoney:'',
+				Onlinedecimalmoney:0,
+				//银行卡提现金额整数
+				Bankmoney:0,
+				//银行卡提现金额小数
+				Bankdecimalmoney:0,
 				bank_account: '',
 				disabled: true,
 				isActive:false,
+				order_dateRange: ['', ''],
 				formAppreciationDate: {
 				  companyName: '',
 				  taxpayerID: '',
@@ -238,6 +246,18 @@
 				  registeredPhone: '',
 				  depositBank: '',
 				  bankAccount: ''
+				},
+				cardneed: {
+					//银行开户名
+					Accountname:'',
+					//开户银行名称
+					Bankname:'',
+					//银行所在地
+					Banklocation:'',
+					//开户支行名称
+					Bankchname:'',
+					//银行预留电话
+					Bankphone:'',
 				},
 				ruleValidate: {
 				  companyName: [
@@ -261,18 +281,6 @@
 				  bankAccount: [
 				    {required: true, validator: validaBankAccount, trigger: 'blur'}
 				  ]
-				},
-				cardneed: {
-					//银行开户名
-					Accountname:'',
-					//开户银行名称
-					Bankname:'',
-					//银行所在地
-					Banklocation:'',
-					//开户支行名称
-					Bankchname:'',
-					//银行预留电话
-					Bankphone:'',
 				},
 				showModal: {
 					// 线上提现弹窗
@@ -313,60 +321,119 @@
 				    }
 				  ]
 				},
-				columns5: [
+				withdrawal: [
                     {
                         title: '申请提现时间',
-                        key: 'time',
+                        key: 'createDate',
                         sortable: true
                     },
                     {
                         title: '提现金额（元）',
-                        key: 'money'
+                        key: 'transactionamount'
                     },
                     {
                         title: '到账账户',
-                        key: 'account'
+                        key: 'accounts'
                     },
                     {
                         title: '状态',
-                        key: 'status'
+                        key: 'type',
+												render: (h, params) => {
+													// 4提现中 5已提现 
+													var text = ''
+													switch (params.row.type) {
+														case 4:
+															text = '提现中'
+															break;
+														case 5:
+															text = '已提现'
+															break;
+														default:
+															break;
+													}
+													if (params.row.type == 5) {
+														return h('span', {
+															style: {
+																
+															}
+														}, text)
+													}
+													else if(params.row.type == 4){
+													return h('div', [
+															 h('span', {
+																style: {
+																	
+																}
+															}, text),
+															h('span', {
+																style: {
+																	color: '#2d8cf0',
+																	cursor: 'pointer',
+																	marginLeft:'10px'
+																},
+																on: {
+																	click: () => {
+																		this.showModal.Paymentdetails=true
+																	}
+																}
+															}, "查看详情")
+														]);
+													}
+												}
                     }
                 ],
-                data5: [
-                    {
-                        time: '2018-12-12',
-                        money: '500.00',
-                        account: '2324335',
-                        status: '成功'
-                    },
-                    {
-                        time: '2018-12-13',
-                        money: '75.00',
-                        account: '100',
-                        status: '成功'
-                    }
-                ]
+                withdrawaldata: [],
+								withdrawaldataFilter:[],
+								//总条数
+								pageall:0,
+								// 每页条数
+								pageNum: 10,
+								// 第几页
+								currentPage: 1
       }
     },
     created(){
 			this.money()
+			this.Recordlist()
     },
     methods: {
+			money(){
+				axios.get('user/selectValidRefundAmount.do', {
+					
+				}).then(response => {
+					if (response.status == 200 && response.data.status == 1) {
+						var ary = response.data.moneyOnLine
+						this.Onlinemoney = ary.split(".")[0]
+						this.Onlinedecimalmoney=ary.split(".")[1]
+						var ary1 = response.data.moneyBank
+						this.Bankmoney = ary1.split(".")[0]
+						this.Bankdecimalmoney=ary1.split(".")[1]
+					}
+				})
+			},
 			order_dataChange(ordertime) {
 			  this.order_dateRange = ordertime
-			  this.init()
-			  this.searchOrderByType()
+				this.Recordlist()
 			},
-			init() {
-			  
+			Recordlist() {
+			  axios.get('user/refundInfo.do', {
+					params:{
+						startDate:this.order_dateRange[0],
+						endDate: this.order_dateRange[1],
+						page: this.currentPage,
+						pageSize: this.pageNum
+					}
+				}).then(response => {
+			  	if (response.status == 200 && response.data.status == 1) {
+			  		this.withdrawaldata=response.data.result.data
+						this.withdrawaldataFilter =JSON.parse(JSON.stringify(this.withdrawaldata))
+						this.pageall=response.data.result.total
+			  	}
+			  })
 			},
-			searchOrderByType() {
-			  
-			},
-			money(){
-				var ary = sessionStorage.getItem('cashWithdrawalAmount')
-				this.Onlinemoney = ary.split(".")[0]
-				this.Onlinedecimalmoney=ary.split(".")[1]
+			changePage(val) {
+				this.currentPage = val
+				this.Recordlist()
 			},
 			conversion() {
 			  this.formAppreciationDate.bankAccount = this.formAppreciationDate.bankAccount.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
@@ -546,22 +613,6 @@
 			font-family:ArialMT;
 			color:rgba(255,98,75,1);
 			font-size: 14px;
-		}
-		.bankcol{
-			width: 380px;
-			line-height:38px;
-			margin-top: 5px;
-		}
-		.bankspan{
-			width:100px;
-			height:20px;
-			font-size:14px;
-			font-family:MicrosoftYaHei;
-			color:rgba(51,51,51,1);
-		}
-		.bankinput{
-			float: right;
-			width: 280px;
 		}
 		.bottom{
 			margin-top: -20px;
