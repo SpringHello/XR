@@ -65,7 +65,7 @@
           <div class="footer" style="padding-top: 0">
             <button @click="nextStep = false" style="margin-right: 10px">上一步</button>
             <button @click="showModal.logistics = true" v-if="curtainStatus">查看物流</button>
-            <button v-else @click="applyCurtain(1)">提交初审并申请幕布</button>
+            <button v-else @click="showModal.applyHint = true">提交初审并申请幕布</button>
           </div>
         </div>
       </div>
@@ -398,11 +398,12 @@
         }
       },
       next() {
-        if (this.curtainStatus === true) {
-          this.nextStep = true
-        } else {
-          this.showModal.applyHint = true
-        }
+        /*        if (this.curtainStatus === true) {
+
+                } else {
+                  this.showModal.applyHint = true
+                }*/
+        this.nextStep = true
       },
       applyHint_ok() {
         this.showModal.applyHint = false
@@ -432,6 +433,7 @@
           if (res.data.status == 1) {
             this.$Message.success('资金冻结成功')
             this.nextStep = true
+            this.applyCurtain(1)
           } else {
             this.$message.info({
               content: res.data.message
@@ -808,7 +810,7 @@
       }
     }
     .rule {
-      >p{
+      > p {
         font-size: 14px;
         font-family: MicrosoftYaHei;
         color: #666666;
