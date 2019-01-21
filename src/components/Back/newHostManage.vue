@@ -25,10 +25,51 @@
       </div>
       <div class="config-info">
         <div class="tab-1" v-show="configType == '基础信息' ">
-          <ul></ul>
-          <ul></ul>
-          <ul></ul>
-          <ul></ul>
+          <div>
+            <p>主机信息<span> [设置]</span></p>
+            <ul>
+              <li><span class="one">镜像系统</span><span class="two">{{ hostInfo.template}}</span><span class="three"> [修改]</span></li>
+              <li><span class="one">系统盘容量</span><span class="two">{{ hostInfo.rootDiskSize}}G</span><span class="three"> [扩容]</span></li>
+              <li><span class="one">数据盘容量</span><span class="two">40G</span><span class="three"> [挂载</span><span class="three"> / 卸载]</span></li>
+              <li><span class="one">关联弹性伸缩</span><span class="three"> test</span></li>
+              <li><span class="one">登录密码</span><span class="three"> [发送密码]</span><span class="three"> [修改密码]</span></li>
+              <li><span class="one">主机状态</span><span class="two"> {{ hostInfo.computerStatus? '开机': '关机' }}</span></li>
+            </ul>
+          </div>
+          <div>
+            <p>网络信息<span> [设置]</span></p>
+            <ul>
+              <li><span class="four">所属VPC</span><span class="three">{{ hostInfo.vpc}}</span></li>
+              <li><span class="four">所属子网</span><span class="three">test</span></li>
+              <li><span class="four">内网IP</span><span class="two">{{ hostInfo.privateIp}}</span></li>
+              <li><span class="four">外网IP</span><span class="two">{{ hostInfo.publicIp? hostInfo.publicIp : '----'}}</span>
+                <span class="three" v-if="hostInfo.publicIp"> [解绑IP]</span>
+                <span class="three" v-else> [绑定IP]</span></li>
+              <li><span class="four">带宽</span><span class="two">{{ hostInfo.bandwith?hostInfo.bandwith: '0'}}M</span>
+                <span class="three" v-if="hostInfo.bandwith"> [扩容]</span></li>
+              <li><span class="four">负载均衡</span><span class="two">test</span></li>
+              <li><span class="four">NAT网关</span><span class="two">test</span></li>
+            </ul>
+          </div>
+          <div>
+            <p>安全信息<span> [设置]</span></p>
+            <ul>
+              <li><span class="four">安全组</span><span class="three"> test</span></li>
+              <li><span class="four">开放端口</span><span class="two"> 8080、8088</span></li>
+            </ul>
+          </div>
+          <div>
+            <p>资费信息<span> [设置]</span></p>
+            <ul>
+              <li><span class="four">计费类型</span><span
+                class="two"> {{ hostInfo.case_type == 1 ? '包年' : hostInfo.case_type == 2 ? '包月' : hostInfo.case_type == 3 ? '实时' : '七天'}}</span></li>
+              <li><span class="four">自动续费</span>
+                <i-switch size="small" style="position: relative;top: -2px;" v-model="isAutoRenew"></i-switch>
+              </li>
+              <li><span class="four">创建时间</span><span class="two"> 2017-2-24 08:23</span></li>
+              <li><span class="four">到期时间</span><span class="two"> 2017-2-24 08:23</span></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -74,7 +115,8 @@
           ]
         },
         configType: '基础信息',
-        configTypes: ['基础信息', '主机监控', '安全组', '快照管理', '操作日志']
+        configTypes: ['基础信息', '主机监控', '安全组', '快照管理', '操作日志'],
+        isAutoRenew: false
       }
     },
     created() {
@@ -91,6 +133,7 @@
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
             this.hostInfo = res.data.result
+            this.isAutoRenew = Boolean(this.hostInfo.isAutoRenw)
           }
         })
       },
@@ -218,12 +261,48 @@
     .tab-1 {
       display: flex;
       justify-content: space-between;
-      > ul {
+      > div {
         height: 280px;
         width: 280px;
-        background:rgba(255,255,255,1);
-        border-radius:4px;
-        border:1px dashed rgba(153,153,153,1);
+        background: rgba(255, 255, 255, 1);
+        border-radius: 4px;
+        padding: 20px;
+        border: 1px dashed rgba(153, 153, 153, 1);
+        > p {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(51, 51, 51, 1);
+          > span {
+            color: rgba(42, 153, 242, 1);
+            cursor: pointer;
+          }
+        }
+        > ul {
+          margin-top: 20px;
+          > li {
+            line-height: 28px;
+            span {
+              font-size: 14px;
+              font-family: MicrosoftYaHei;
+              color: rgba(102, 102, 102, 1);
+              &.one {
+                display: inline-block;
+                width: 90px;
+              }
+              &.two {
+                color: rgba(51, 51, 51, 1);
+              }
+              &.three {
+                cursor: pointer;
+                color: #2A99F2;
+              }
+              &.four {
+                display: inline-block;
+                width: 80px;
+              }
+            }
+          }
+        }
       }
     }
   }
