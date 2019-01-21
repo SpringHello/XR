@@ -8,11 +8,11 @@
         <div class="order_text" >
           <div v-if="routerName == '新建云主机'">
             <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
-            <p style="margin-top:10px;">请牢记您所设置的密码，如遗忘可登录云服务器控制台重置密码。<span style="color:#2A99F2;cursor:pointer;">查看</span></p>
+            <p style="margin-top:10px;">请牢记您所设置的密码，如遗忘可登录云服务器控制台重置密码。<a class="blue_font" href="https://zschj.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/l3OwHRSfs" target="_blank">查看</a></p>
+            <p>云服务器购买成功后，数据盘默认是未挂载的情况，需要自行格式化硬盘后，挂载分区后才能在云服务器内看到。<a class="blue_font" href="https://zschj.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/14u6nDwUP8" target="_blank">查看windows如何格式化、Linux如何格式化</a></p>
           </div>
          <div v-else>
-            <p>云服务器购买成功后，数据盘默认是未挂载的情况，需要自行格式化硬盘后，挂载分区后才能在云服务器内看到。<span>查看windows如何格式化、Linux如何格式化</span></p>
-            <p style="margin-top:10px;">云服务器购买成功后，额外的系统盘默认为未分区状态，需要自行扩容文件系统之后查看。<span style="color:#2A99F2;cursor:pointer;">查看如何扩容windows文件系统、扩容Linux文件系统</span></p>
+            <p style="margin-top:10px;">云服务器购买成功后，额外的系统盘默认为未分区状态，需要自行扩容文件系统之后查看。<a class="blue_font" href="https://zschj.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/14u6nDwUP8" target="_blank">查看如何扩容windows文件系统、扩容Linux文件系统</a></p>
           </div>
         </div>
         <div class="selectMark">
@@ -696,5 +696,8 @@
       font-family: MicrosoftYaHei;
       color: rgba(102, 102, 102, 1);
     }
+  }
+  .blue_font{
+    color:#2A99F2;cursor:pointer;
   }
 </style>

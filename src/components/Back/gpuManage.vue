@@ -58,6 +58,7 @@
             </div>
           </div>
         </div>
+        
         <div class="tabs">
           <Tabs type="card" :animated="false">
             <TabPane style="background: #FFFFFF;" label="监控">

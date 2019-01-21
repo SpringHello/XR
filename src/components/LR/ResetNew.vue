@@ -92,7 +92,7 @@
             <!-- 邮箱验证方式 -->
             <div class="verification" v-if="verPage == 'email'">
               <p class="ver_p">我们会发送一封验证邮件到您的邮箱，请注意查收</p>
-                <Form  :model="dataFroms" :rules="dataFromsValidate" >
+                <Form ref="dataEmail"  :model="dataFroms" :rules="dataFromsValidate" >
                   <FormItem prop='email'>
                     <x-Input   :icon='url.icon1' v-model="dataFroms.email"  placeholder='请输入邮箱' ></x-Input>
                   </FormItem>
@@ -102,11 +102,18 @@
                   </FormItem>
                    <FormItem prop='code'>
                       <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
+                         <div slot="code">
+                          <div class="ver_yan">
+                              <span @click="sendCode(1)" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
+                              <span v-else style="color:#666666;">{{count}}</span>
+                          </div>
+                          <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE;cursor:pointer;" @click="sendCode(1)">重新获取</span>或<span  style="color:#4A97EE;cursor:pointer;" @click="getVoiceCode">接收语音验证</span></p>
+                        </div>
                       </x-Input>
                    </FormItem>
                 </Form>
-              <div class="v_email" @click="getVerificationCode('1')">
-                前往邮箱
+              <div class="v_email" @click="getVerificationCode()">
+               下一步
               </div>
             </div>
 
@@ -126,10 +133,10 @@
                       <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
                         <div slot="code">
                           <div class="ver_yan">
-                              <span @click="sendCode" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
+                              <span @click="sendCode(0)" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
                               <span v-else style="color:#666666;">{{count}}</span>
                           </div>
-                          <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE;cursor:pointer;" @click="sendCode">重新获取</span>或<span  style="color:#4A97EE;cursor:pointer;" @click="getVoiceCode">接收语音验证</span></p>
+                          <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE;cursor:pointer;" @click="sendCode(0)">重新获取</span>或<span  style="color:#4A97EE;cursor:pointer;" @click="getVoiceCode">接收语音验证</span></p>
                         </div>
                       </x-Input>
                    </FormItem>
@@ -217,7 +224,7 @@
                     </Upload>
                   </div>
                   <div class="up_photo">
-                    <img src="../../assets/img/usercenter/card-person.png">
+                    <img src="../../assets/img/usercenter/card-font.png">
                     <p>法人身份证正面照片</p>
                   </div>
                     <p style="margin:10px 0 20px 0;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
@@ -267,10 +274,10 @@
                   <x-Input   :icon='url.iconLock' v-model="dataFroms.newPaw"  placeholder='请设置新密码' choice='eye'></x-Input>
                 </FormItem>
                 <FormItem prop='oldPaw'>
-                  <x-Input  :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请确认新密码' choice='eye'></x-Input>
+                  <x-Input @blur="verificationPaw" :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请确认新密码' choice='eye'></x-Input>
                 </FormItem>
                </Form>
-               <Button type="primary" style="margin-top:21px;float:right;">确认</Button>
+               <Button type="primary" style="margin-top:21px;float:right;" @click="submit">确认</Button>
             </div>
 
             <!-- 完成 -->
@@ -323,43 +330,6 @@ export default {
     return {
        
       imgSrc: "https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do",
-      form: {
-        // 是否明文显示密码
-        showPassword: false,
-        loginname: "",
-        // 图形验证码
-        code: "",
-        password: "",
-        confirmPassword: "",
-        vailCode: "",
-        loginnamePlaceholder: "登录邮箱/手机号",
-        passwordPlaceholder: "请输入新密码",
-        confirmPasswordPlaceholder: "请确认新密码",
-        vailCodePlaceholder: "请输入验证码",
-        codePlaceholder: "请输入图片验证码"
-      },
-      vailForm: {
-        loginname: {
-          message: "",
-          warning: false
-        },
-        password: {
-          message: "",
-          warning: false
-        },
-        confirmPassword: {
-          message: "",
-          warning: false
-        },
-        vailCode: {
-          message: "",
-          warning: false
-        },
-        code: {
-          message: "",
-          warning: false
-        }
-      },
 
       //步骤集合
       stepList: [
@@ -526,49 +496,14 @@ export default {
     });
   },
   methods: {
-    focus(field) {
-      if (
-        field == "vailCode" &&
-        this.vailForm.loginname.message == "验证码错误"
-      ) {
-        this.vailForm.loginname.message = "";
-        this.vailForm.loginname.warning = false;
-      }
-      if (
-        (field == "loginname" || field == "password") &&
-        this.vailForm.loginname.message == "用户名/密码 错误"
-      ) {
-        this.vailForm.loginname.message = "";
-        this.vailForm.loginname.warning = false;
-      }
-
-      var text = this.form[field];
-      this.form[`${field}Placeholder`] = "";
-      if (text == "") {
-        this.vailForm[field].message = messageMap[field].placeholder;
-        return;
-      }
-      var isLegal =
-        field == "loginname"
-          ? regExp.emailVail(text)
-          : field == "password" ? regExp.registerPasswordVail(text) : true;
-
-      if (!isLegal) {
-        this.vailForm[field].message = messageMap[field].errorMessage;
-        this.vailForm[field].warning = true;
-      } else {
-        this.vailForm[field].message = messageMap[field].placeholder;
-        this.vailForm[field].warning = false;
-      }
-    },
-    sendCode: throttle(5000, function() {
+    sendCode: throttle(5000, function(val) {
       this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
       this.$refs.dataPhone.validate((valid) => {
         if(valid){
           axios.get("user/code.do", {
           params: {
             aim: this.dataFroms.phone,
-            isemail: 0,
+            isemail: val,
             vailCode: this.dataFroms.vCode
           }
           }).then(response => {
@@ -592,6 +527,9 @@ export default {
             } else {
               this.vCodeMessage = response.data.message;
             }
+          }).catch(err =>{
+            if(err)
+            this.$Message.error('网络错误,请重试');
           });
           }
         })
@@ -601,9 +539,9 @@ export default {
       axios
         .get("user/findPassword.do", {
           params: {
-            username: this.form.loginname,
-            password: this.form.password,
-            code: this.form.vailCode
+            username: this.dataFroms.phone,
+            password: this.dataFroms.oldPaw,
+            code: this.dataFroms.code
           }
         })
         .then(response => {
@@ -620,6 +558,22 @@ export default {
         });
     },
 
+    // 
+    getUserInfo(){
+      let info ='';
+      axios.get('user/GetUserInfo',{
+        params:{
+
+        }
+      }).then(res =>{
+        if(res.status == 200 && res.data.status == 1){
+          info = res.data.result.emailauth
+        }else{
+        
+        }
+         return info;
+      })
+    },
 
     //跳转相应验证
     jump(index,name) {
@@ -633,26 +587,36 @@ export default {
              return;
           }
       }
-
-      this.index = 3; 
+     
       if(name == 'individual' && index == 2){
         this.verPage = "card";
+        this.index = 3; 
         return;
       }else if(name == 'individual' && index == 3){
         this.verPage = 'enterprise';
+        this.index = 3; 
         return
       }
 
       if(name == 'ok' && index == 2){
+        this.index = 3; 
          this.verPage = 'people';
          return;
       }
 
       if (index == 0) {
-        this.verPage = "email";
+        if(this.getUserInfo() == 0){
+           this.verPage = "email";
+            this.index = 3; 
+        }else{
+          this.$Message.error('您的账号没有绑定邮箱');
+          return;
+        }
       } else if (index == 1) {
         this.verPage = "phone";
+        this.index = 3; 
       } else if (index == 2) {
+        this.index = 3; 
         this.verPage = "card";
       }
     },
@@ -685,7 +649,7 @@ export default {
     handleFormatError() {
       this.$Message.error("上传文件只能为jpg,png格式");
     },
-
+    // 短信验证码
     voiceCode(){
       this.$refs.dataPhone.validate((valid)=>{
         if(valid){
@@ -716,22 +680,47 @@ export default {
       })
     },
 
+    verificationPaw(){
+      if(this.dataFroms.newPaw !== this.dataFroms.oldPaw){
+        this.errorMessage = '两次输入的密码不一致'
+      }
+    },
+
     //获取邮箱验证码
-    getVerificationCode(code) {
-      this.$on("test", msg => {
-        console.log(msg);
-      });
-      return;
-      axios
-        .get("user/code.do", {
+    getVerificationCode() {
+       this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
+      this.$refs.dataEmail.validate((valid) => {
+        if(valid){
+          axios.get("user/code.do", {
           params: {
-            aim: code == "1" ? "" : this.account,
-            isemail: code,
-            vailCode: ""
+            aim: this.dataFroms.email,
+            isemail: 1,
+            vailCode: this.dataFroms.vCode
           }
-        }).then(res => {
-          
-        });
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+               this.timeBoo = false;
+                this.timeP = false;
+                let char = setInterval(()=>{
+                  if(this.count != 0){
+                    this.count --;
+                  }else{
+                    clearInterval(char);
+                    this.count = 60;
+                    this.timeBoo = true;
+                    this.timeP = true;
+                  }
+                  },1000);
+                this.$Message.success({
+                  content: response.data.message,
+                  duration: 5
+                });
+            } else {
+              this.vCodeMessage = response.data.message;
+            }
+          });
+          }
+        })
     },
 
     // 获取语音验证码
