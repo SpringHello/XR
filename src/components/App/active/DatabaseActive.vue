@@ -650,7 +650,7 @@
           this.$LR({type: 'register'})
           return
         }
-        if (!this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0){
+        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)){
           this.showModal.authentication = true
           return
         }
