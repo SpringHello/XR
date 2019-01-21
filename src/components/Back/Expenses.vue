@@ -447,6 +447,10 @@
             </Form>
           </div>
           <div v-show="authModifyPhoneStep == 1">
+            <div v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0">
+              <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+                提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过4MB。
+              </p>
               <div class="upload-img">
                 <div class="content">
                   <div class="left">
@@ -474,9 +478,66 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0">
               <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
                 提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过4MB。
               </p>
+              <div class="upload-img">
+                <div class="content">
+                  <div class="left">
+                    <Upload
+                      multiple
+                      type="drag"
+                      :show-upload-list="false"
+                      :with-credentials="true"
+                      action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+                      :format="['jpg','jpeg','png','gif']"
+                      :max-size="4096"
+                      :on-format-error="handleFormatError"
+                      :on-exceeded-size="handleMaxSize"
+                      :on-success="legalPersonIDFront1">
+                      <div class="icon-wrap" v-if="uploadImgDispaly1==''">
+                          <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+                      </div>
+                      <img v-else :src="uploadImgDispaly1">
+                      <p>上传图片</p>
+                    </Upload>
+                  </div>
+                  <div class="right">
+                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+                    <p>法人身份证正面照片</p>
+                  </div>
+                </div>
+              </div>
+              <div class="upload-img">
+                <div class="content">
+                  <div class="left">
+                    <Upload
+                      multiple
+                      type="drag"
+                      :show-upload-list="false"
+                      :with-credentials="true"
+                      action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+                      :format="['jpg','jpeg','png','gif']"
+                      :max-size="4096"
+                      :on-format-error="handleFormatError"
+                      :on-exceeded-size="handleMaxSize"
+                      :on-success="legalPersonIDFront2">
+                      <div class="icon-wrap" v-if="uploadImgDispaly2==''">
+                          <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+                      </div>
+                      <img v-else :src="uploadImgDispaly2">
+                      <p>上传图片</p>
+                    </Upload>
+                  </div>
+                  <div class="right">
+                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+                    <p>经办人手持身份证人像照片</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div v-show="authModifyPhoneStep == 2">
           <Form :model="authModifyPhoneFormThere" :rules="authModifyPhoneThereRuleValidate" ref="authModifyPhoneFormThere">
@@ -486,7 +547,7 @@
               <FormItem label="图形验证码" style="width: 100%;" prop="pictureCode">
                 <Input v-model="authModifyPhoneFormThere.pictureCode" placeholder="请输入随机验证码"
                        style="width:240px;margin-right:20px"></Input>
-                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+                <img :src="imgSrc" @click="imgSrc=`https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`"
                      style="height:32px;vertical-align: middle">
               </FormItem>
               <Form-item label="短信验证码" prop="newVerificationCode" style="width: 100%">
@@ -783,7 +844,9 @@
       }
       return {
         uploadImgDispaly: '',
-        authModifyPhoneStep: 0,
+        uploadImgDispaly1: '',
+        uploadImgDispaly2: '',
+        authModifyPhoneStep: 2,
         authModifyPhoneFormOne: {
           ID: '',
           personHint: 0,
@@ -2372,19 +2435,36 @@
       bindingMobilePhoneStepTwo(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
-            if (this.authModifyPhoneFormOne.ID == '500227199209095726') {
-              this.authModifyPhoneStep = 1
-              console.log('验证成功')
-            } else {
-              this.authModifyPhoneFormOne.hint = 1
+            if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+              axios.post('user/isIdCardAndNameSame.do', {
+                type: '0',
+                name: this.$store.state.userInfo.realname,
+                idCard: this.authModifyPhoneFormOne.ID,
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 1
+                } else {
+                  this.$Message.error(response.data.message)
+                }
+              })
+            } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
+              axios.post('user/isIdCardAndNameSame.do', {
+                type: '1',
+                name: this.$store.state.authInfo.name,
+                businessLicense: this.authModifyPhoneFormOne.businessLicense,
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 1
+                } else {
+                  this.$Message.error(response.data.message)
+                }
+              })
             }
-          } else {
-            this.authModifyPhoneFormOne.hint = 0
           }
         })
-        // this.authModifyPhoneStep = 1
       },
-      uploadIDImg() {
+      uploadIDImg () {
+      if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
         if (this.uploadImgDispaly == '') {
           this.$Message.info({
             content: '请上传手持身份证人像照片',
@@ -2392,18 +2472,32 @@
           })
         } else {
           this.authModifyPhoneStep = 2
-          // /user/newPhoneByIdCard.do   
-          // post请求    
-          // 参数IDCard 身份证 
-          // authType认证类型(0是个人 1是企业)  
-          // newPhone新手机号  
-          // (个人认证 personIdCardHandUrl 个人认证手持照片)    
-          //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
         }
-      },
+      } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
+        if (this.uploadImgDispaly1 == '' || this.uploadImgDispaly2 == '') {
+          this.$Message.info({
+            content: '请上传手持身份证人像照片',
+            duration: 2
+          })
+        } else {
+          this.authModifyPhoneStep = 2
+          
+        }
+      }
+    },
       legalPersonIDFront(response) {
         if (response.status == 1) {
           this.uploadImgDispaly = response.result
+        }
+      },
+      legalPersonIDFront1(response) {
+        if (response.status == 1) {
+          this.uploadImgDispaly1 = response.result
+        }
+      },
+      legalPersonIDFront2(response) {
+        if (response.status == 1) {
+          this.uploadImgDispaly2 = response.result
         }
       },
       handleFormatError() {
@@ -2451,21 +2545,41 @@
       bindMobilePhone(name) {
         this.$refs[name].validate((vail) => {
           if (vail) {
-            var url = 'user/updatePhone.do'
-            this.$http.get(url, {
-              params: {
-                code: this.authModifyPhoneFormThere.newVerificationCode,
-                phone: this.authModifyPhoneFormThere.newPhone
-              }
-            }).then((response) => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.authModifyPhoneStep = 3
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
-            })
+            // /user/newPhoneByIdCard.do   
+          // post请求    
+          // 参数IDCard 身份证 
+          // authType认证类型(0是个人 1是企业)  
+          // newPhone新手机号  
+          // (个人认证 personIdCardHandUrl 个人认证手持照片)    
+          //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
+          if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+              axios.post('user/newPhoneByIdCard.do', {
+                IDCard: this.authModifyPhoneFormOne.ID,
+                authType: '0',
+                newPhone: this.authModifyPhoneFormThere.newPhone,
+                personIdCardHandUrl: this.uploadImgDispaly
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 3
+                } else {
+                  this.$Message.error(response.data.message)
+                }
+              })
+            } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
+              axios.post('user/isIdCardAndNameSame.do', {
+                businessLicense: this.authModifyPhoneFormOne.businessLicense,
+                authType: '1',
+                newPhone: this.authModifyPhoneFormThere.newPhone,
+                agentIdCardHandUrl: this.uploadImgDispaly1,
+                legalIdCardFrontUrl: this.uploadImgDispaly2
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 3
+                } else {
+                  this.$Message.error(response.data.message)
+                }
+              })
+            }
           }
         })
       },
