@@ -60,29 +60,29 @@
 		  			 <span style="margin-left: 10px;"><span>本次提现</span><span style="color: #FF624B;"> &nbsp;{{Actualamount}}&nbsp;</span>元。线上提现金额将按照后进先出的原则退回您的原线上充值账户（微信、支付宝），提现申请提交后不可撤回。</span>
 		  </div>
 		  <Table :columns="Cashconfirmation" :data="Cashconfirmationdata" style="float: left;margin-top: 20px;width:1159px;"></Table>
-		  <Button type="primary" @click="showModal.cashverification = true" style="margin-top: 20px;float: left;" >确认提现信息</Button>
+		  <Button type="primary" @click="userInfo" style="margin-top: 20px;float: left;" >确认提现信息</Button>
 	  </div>
 	   <!-- 提现验证弹窗 -->
-	  <Modal v-model="showModal.cashverification" :scrollable="true" :closable="false" :width="520">
+	  <Modal v-model="showModal.cashverification" :scrollable="true" :closable="true" :width="520">
 	    <p slot="header" class="modal-header-border">
 	      <span class="universal-modal-title">提现验证</span>
 	    </p>
 	    <div class="modal-content-s" >
 	      <div>
-	        <p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:24px;">为保障您的资金安全，我们将向您的实名认证手机号码 <span style="color: #FF624B">15213119015</span> 发送一条验证短信，请收到验证信息之后将验证码填入下方。
+	        <p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:24px;">为保障您的资金安全，我们将向您的实名认证手机号码 <span style="color: #FF624B">{{userphone}}</span> 发送一条验证短信，请收到验证信息之后将验证码填入下方。
 	        </p>
 	      </div>
 	    </div>
 		<div class="modal-content-s">
-			<Form ref="formCustom" label-position="left" :model="formCustom" :rules="ruleCustom" style="width: 400px;">
-				<FormItem prop="passwd" >
-					<Input type="password" v-model="formCustom.passwd" style="width: 75%;"></Input>
+			<Form ref="cashverification" label-position="left" :model="formCustom" :rules="ruleCustom" style="width: 500px;">
+				<FormItem prop="Verificationcode" >
+					<Input v-model="formCustom.Verificationcode" placeholder="请输入随机验证码" style="width: 300px;"></Input>
 					<img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
 					     style="height:32px;vertical-align: middle;margin-left: 10px;">
 				</FormItem>
-				<FormItem prop="passwdCheck" >
-					<Input type="password" v-model="formCustom.passwdCheck" style="width: 75%;"></Input>
-					<Button type="primary"  @click="" style="float: right;">获取验证码
+				<FormItem prop="messagecode">
+					<Input v-model="formCustom.messagecode" placeholder="请输入收到的验证码" style="width: 300px;"></Input>
+					<Button type="primary"  @click="getPhoneCode" :disabled="formCustom.newCodeText !='获取验证码' " style="margin-left: 10px;">{{formCustom.newCodeText}}
 					</Button>
 				</FormItem>
 			</Form>
@@ -90,13 +90,13 @@
 		<div class="modal-content-s divall">
 			<div style="width: 100%;">
 				<p class="pall" style="float: left;">没有收到验证码？</p><br />
-				<p class="pall" >1、网络通讯异常可能会造成短信丢失，请<a href="#" class="colora" >重新获取</a>或<a class="colora" href="#">获取语音验证码</a>。</p>
+				<p class="pall" >1、网络通讯异常可能会造成短信丢失，请<Button class="spanaa" @click="getPhoneCode" :disabled="Regaindisabled" >重新获取</Button>或<Button class="spanaa">获取语音验证码</Button>。</p>
 				<p class="pall" >2、如果手机已丢失或停机，请<a href="#" class="colora">通过身份证号码验证</a>或<a href="#" class="colora">提交工单</a>更改手机号。</p>
 			</div>
 		</div>
 	    <p slot="footer" class="modal-footer-s">
 	      <Button @click="showModal.cashverification = false">取消</Button>
-	      <Button type="primary" @click="ffff" :class="{selected:selectedTabSec == 'content1'}">确定</Button>
+	      <Button type="primary" :disabled="disabled" @click="Callpresentation" :class="{selected:selectedTabSec == 'content1'}">确定</Button>
 	    </p>
 	  </Modal>
 	  <div class="content2" v-if="selectedTabSec == 'content2'">
@@ -121,7 +121,7 @@
 			  <img src="../../assets/img/back/成功-2.png" style="float: left;margin-left: 380px;margin-top: 80px;"/>	
 			  <div style="float: left;margin-top: 85px;margin-left: 15px;">
 				  <span style="font-size:24px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);">提现申请提交成功</span><br />
-				  <span style="margin-top: 10px;float: left;font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);">预计 <span>2019-01-20 22：22</span> 前到账（遇公众假期顺延）</span><br />
+				  <span style="margin-top: 10px;float: left;font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);">预计 <span>{{successtime}}</span> 前到账（遇公众假期顺延）</span><br />
 				  <Button type="primary" style="float: left;margin-top: 20px;" @click="$router.push('/ruicloud/cashwithdrawal')">我知道了</Button>
 			  </div>
 	  </div>
@@ -131,6 +131,7 @@
 
 <script type="text/ecmascript-6">
 	import axios from 'axios'
+	import $store from '../../vuex'
   export default{
 	  props: {
 	    selectedTab: {
@@ -139,32 +140,15 @@
 	    }
 	  },
     data(){
-		//验证码和短信验证
-		const validatePass = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入您的图形验证码'));
-                } else {
-                    if (this.formCustom.passwdCheck !== '') {
-                        // 对第二个密码框单独验证
-                        this.$refs.formCustom.validateField('passwdCheck');
-                    }
-                    callback();
-                }
-            };
-		const validatePassCheck = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入您的短信验证码'));
-                } else if (value !== 1) {
-                    callback(new Error('The two input passwords do not match!'));
-                } else {
-                    callback();
-                }
-            };
       return {
 		  vertical: 'l1',
 		  moneyall:0,
 		  Otheramount:'',
 		  Actualamount:0,
+		  //用户电话号码
+		  userphone:'',
+		  Regaindisabled:false,
+		  successtime:'',
 		  selectedTabSec: this.selectedTab,
 		  // 企业认证时的图形验证码
 		  imgSrc: 'user/getKaptchaImage.do',
@@ -174,15 +158,18 @@
 		  },
 		  //验证码和短信验证
 		  formCustom: {
-                    passwd: '',
-                    passwdCheck: ''
+					//图片随机码
+                    Verificationcode: '',
+					//短信验证码
+                    messagecode: '',
+					newCodeText: '获取验证码'
                 },
                 ruleCustom: {
-                    passwd: [
-                        { validator: validatePass, trigger: 'blur' }
+                    Verificationcode: [
+                        {required: true, message: '请输入图形验证码', trigger: 'blur'}
                     ],
-                    passwdCheck: [
-                        { validator: validatePassCheck, trigger: 'blur' }
+                    messagecode: [
+						{required: true, message: '请输入收到的验证码', trigger: 'blur'},
                     ]
                 },
 		  Cashconfirmation: [
@@ -220,16 +207,37 @@
 		  this.selectedTabSec = name
 		  this.$emit('changeTabSec', name)
 		},
-		ffff(){
-			//this.$refs[name].validate((valid) => {
-			    //if (valid) {
-			      //  this.$Message.success('Success!');
-			   // } else {
-			    //    this.$Message.error('Fail!');
-			   // }
-			//})
-			this.showModal.cashverification = false
-			this.changeTab('content2')
+		Callpresentation(){
+			var typed=sessionStorage.getItem('type')
+			var payeeName=sessionStorage.getItem('payeeName')
+			var payeeAccountType='银行卡'
+			var payeeAccount=sessionStorage.getItem('payeeAccount')
+			var bankAccInfor=sessionStorage.getItem('bankAccInfor')
+			var bankAddress=sessionStorage.getItem('bankAddress')
+			var bankBranch=sessionStorage.getItem('bankBranch')
+			var reservedPhone=sessionStorage.getItem('reservedPhone')
+			axios.post('user/balanceWithdrawal.do', {
+				balance:this.Actualamount,
+				smsCode:this.formCustom.messagecode,
+				username:this.userphone,
+				type:typed,
+				payeeName:payeeName,
+				payeeAccountType:payeeAccountType,
+				payeeAccount:payeeAccount,
+				bankAccInfor:bankAccInfor,
+				bankAddress:bankAddress,
+				bankBranch:bankBranch,
+				reservedPhone:reservedPhone
+			}).then(response => {
+				if (response.status == 200 && response.data.status == 1) {
+					this.successtime=response.data.date
+					this.showModal.cashverification = false
+					this.changeTab('content2')
+				}
+				else{
+					this.$Message.info(response.data.msg)
+				}
+			})
 		},
 		backpage() {
 			this.$router.history.go(-1)
@@ -252,10 +260,59 @@
 			this.changeTab('content1')
 			this.money()
 			this.moneyconfirm()
+		},
+		userInfo() {
+		  this.showModal.cashverification = true
+		  axios.get('user/GetUserInfo.do').then(response => {
+		    if (response.status == 200 && response.data.status == 1) {
+			  this.userphone=response.data.result.phone
+		    }
+		  })
+		},
+		//短信验证码
+		getPhoneCode() {
+		  this.$refs.cashverification.validateField('Verificationcode', (text) => {
+		    if (text == '') {
+		      axios.get('user/code.do', {
+		        params: {
+		          aim: this.userphone,
+		          isemail: 0,
+		          vailCode: this.formCustom.Verificationcode
+		        }
+		      }).then(response => {
+		        // 发送成功，进入倒计时
+		        if (response.status == 200 && response.data.status == 1) {
+		          var countdown = 60
+		          this.formCustom.newCodeText = `${countdown}S`
+		          var Interval = setInterval(() => {
+		            countdown--
+		            this.formCustom.newCodeText = `${countdown}S`
+		            if (countdown == 0) {
+		              clearInterval(Interval)
+		              this.formCustom.newCodeText = '获取验证码'
+		            }
+		          }, 1000)
+		        } else {
+		          this.$message.info({
+		            content: response.data.message
+		          })
+		          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+				  this.formCustom.Verificationcode=''
+		        }
+		      })
+		    }
+		  })
 		}
     },
     computed: {
-		
+		disabled(){
+			if(this.formCustom.Verificationcode =='' || this.formCustom.messagecode == ''){
+				return true
+			}
+			else{
+				return false
+			}
+		}
     },
     watch: {
 		Otheramount: function(val){
@@ -345,6 +402,17 @@
 		text-decoration: underline;
 		font-size:12px;
 		font-family:MicrosoftYaHei;
+	}
+	.spanaa{
+		color: #2A99F2;
+		text-decoration: underline;
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		cursor: pointer;
+		border: none;
+		padding: 0;
+		background: white;
+		margin-top: -3px;
 	}
 	.spanall{
 		font-size:14px;
