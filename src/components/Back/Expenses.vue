@@ -413,20 +413,37 @@
             <Step title="完成"></Step>
           </Steps>
           <div v-show="authModifyPhoneStep == 0">
-            <Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">          
-              <Form-item label="真实姓名" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
-                <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.userInfo.realname}}</span>
-              </Form-item>
-              <FormItem label="注册身份证号码" style="width: 100%;" prop="ID">
-                <Input v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码"
-                      style="width:240px;"></Input>
-              </FormItem>
-              <p style="color:#FF0000;margin-top:-20px;" v-show="authModifyPhoneFormOne.hint">
-                <Icon type="ios-close"></Icon>
-                身份证号码输入有误，验证失败，请尝试
-                <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push(work)">提交工单</span> 或
-                <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
-              </p>
+            <Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">
+              <div v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0">
+                <Form-item label="真实姓名" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
+                  <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.userInfo.realname}}</span>
+                </Form-item>
+                <FormItem label="注册身份证号码" style="width: 100%;" prop="ID">
+                  <Input v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码"
+                        style="width:240px;"></Input>
+                </FormItem>
+                <p style="color:#FF0000;margin-top:-20px;" v-show="authModifyPhoneFormOne.personHint">
+                  <Icon type="ios-close"></Icon>
+                  身份证号码输入有误，验证失败，请尝试
+                  <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+                  <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+                </p>
+              </div>        
+              <div v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0">
+                <Form-item label="公司名称" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
+                  <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.authInfo.name}}</span>
+                </Form-item>
+                <FormItem label="公司营业执照号码" style="width: 100%;" prop="businessLicense">
+                  <Input v-model="authModifyPhoneFormOne.businessLicense" placeholder="请输入公司营业执照号码"
+                        style="width:240px;"></Input>
+                </FormItem>
+                <p style="color:#FF0000;margin-top:-20px;" v-show="authModifyPhoneFormOne.companyHint">
+                  <Icon type="ios-close"></Icon>
+                  公司营业执照号码输入有误，验证失败，请尝试
+                  <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+                  <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+                </p>
+              </div>
             </Form>
           </div>
           <div v-show="authModifyPhoneStep == 1">
@@ -769,12 +786,17 @@
         authModifyPhoneStep: 0,
         authModifyPhoneFormOne: {
           ID: '',
-          hint: 0
+          personHint: 0,
+          companyHint: 0,
+          businessLicense: ''
         },
         authModifyPhoneOneRuleValidate: {
           ID: [
             {required: true, message: '请输入身份证号码', trigger: 'blur'},
             {validator: validaRegisteredID, trigger: 'blur'}
+          ],
+          businessLicense: [
+            {required: true, message: '请输入公司营业执照号码', trigger: 'blur'},
           ]
         },
         authModifyPhoneFormThere: {
@@ -1512,7 +1534,7 @@
           refundHint: false,
           unfreezeToBalanceHint: false,
           // 修改手机号码（身份证方式）
-          modifyPhoneID: false
+          modifyPhoneID: true
         },
         // 提现
         withdrawForm: {
@@ -2370,6 +2392,13 @@
           })
         } else {
           this.authModifyPhoneStep = 2
+          // /user/newPhoneByIdCard.do   
+          // post请求    
+          // 参数IDCard 身份证 
+          // authType认证类型(0是个人 1是企业)  
+          // newPhone新手机号  
+          // (个人认证 personIdCardHandUrl 个人认证手持照片)    
+          //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
         }
       },
       legalPersonIDFront(response) {
@@ -2661,7 +2690,11 @@
           type,
           number
         }
-      }
+      },
+      authInfo() {
+        return this.$store.state.authInfo ? this.$store.state.authInfo : null
+        // return null
+      },
     },
     watch: {
       dateRange() {
