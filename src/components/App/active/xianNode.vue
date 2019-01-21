@@ -187,7 +187,7 @@
               <FormItem label="图形验证码" prop="pictureCode">
                 <div style="display: flex">
                   <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:224px;">
-                         style="width:192px;margin-right: 10px"></Input>
+                         </Input>
                   <img :src="imgSrc" style="height:33px;"
                        @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                 </div>
@@ -341,7 +341,7 @@ export default {
             {required: true, message: '请输入验证码'}
           ]
         },
-        imgSrc: 'https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do',
+        imgSrc: 'user/getKaptchaImage.do',
     }
   },
   created () {
@@ -559,11 +559,6 @@ export default {
   color: #ff3000;
 }
 .banner {
-  // background: linear-gradient(
-  //   0deg,
-  //   rgba(255, 231, 210, 1),
-  //   rgba(255, 220, 188, 1)
-  // );
   background: url(../../../assets/img/active/xianNode/banner-bg.png) center no-repeat;
   .container {
     height: 400px;

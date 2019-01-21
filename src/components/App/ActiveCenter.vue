@@ -2,6 +2,24 @@
   <div class="active-center">
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
+        <my-carousel-item class="carousel-item">
+          <div class="xian-active" @click="push('/ruicloud/xianNode')">
+            <div class="wrap">
+              <div class="container flex-vertical-center">
+                <div class="left">
+                  <img src="../../assets/img/active/xianNode/banner-text.png" alt>
+                  <p>
+                    新节点云服务器
+                    <i>2折</i>
+                    特惠，100%资源可用、100%性能可用！
+                  </p>
+                  <span @click="$router.push('xianNode')">立即参与</span>
+                </div>
+                <img src="../../assets/img/active/xianNode/xian-node-banner.png" alt>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
           <my-carousel-item class="carousel-item">
           <div @click="push('wonderfulDay')"
                style="cursor: pointer;">
@@ -147,6 +165,14 @@
       return {
         active: [],
         activedata: [
+          {
+            imgPath: require('../../assets/img/activecenter/bg-card-6.png'),
+            time: '2019.1.28-2019.03.01',
+            activeObj: '仅限新用户',
+            url: 'xianNode',
+            isStart: true,
+            weight: '1',
+          },
           {
              imgPath: require('../../assets/img/activecenter/dan.png'),
             name: '双旦同庆，钜惠上云',
@@ -564,4 +590,37 @@
     justify-content: center;
     align-items: center;
   }
+  .xian-active {
+  background: url(../../assets/img/active/xianNode/banner-bg.png) center no-repeat;
+  .container {
+    height: 400px;
+    .left {
+      p {
+        margin-top: 20px;
+        font-size: 20px;
+        color: #222222;
+        font-weight: bold;
+        i {
+          font-size: 28px;
+          color: #ff3000;
+        }
+      }
+      span {
+        margin-top: 52px;
+        display: inline-block;
+        width: 170px;
+        height: 50px;
+        font-size: 22px;
+        color: rgba(255, 48, 0, 1);
+        line-height: 44px;
+        text-align: center;
+        cursor: pointer;
+        border:2px solid rgba(255,48,0,1);
+        &:hover {
+          background:#FFD1B2;
+        }
+      }
+    }
+  }
+}
 </style>

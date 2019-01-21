@@ -181,6 +181,11 @@ div.modal-header-border {
 .fr {
   float: right;
 }
+.flex-vertical-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .ivu-form-item-label {
   display: inline-block;
 }
