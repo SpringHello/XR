@@ -67,7 +67,7 @@
 			  </div>
 			  <p slot="footer" class="modal-footer-s">
 			    <Button @click="showModal.Cashconfirmation = false">取消</Button>
-			    <Button type="primary" @click="$router.push('/ruicloud/cashprocess')">确认</Button>
+			    <Button type="primary" @click="onlinefor">确认</Button>
 			  </p>
 			</Modal>
 			<!-- 银行卡提现弹窗 -->
@@ -77,31 +77,11 @@
 			  </p>
 				<div class="modal-content-s">
 						<div class="cardt" >
-							<span class="cardspan1">本次提现金额</span>
-							<span class="cardspan2"><span class="cardspan3">23</span>.00元</span>
+							<span class="cardspan1">本次可提现金额</span>
+							<span class="cardspan2"><span class="cardspan3">{{Bankmoney}}</span>.{{Bankdecimalmoney}}元</span>
 						</div>
 				</div>
 				<div class="" style="margin-top: 20px;margin-left: 10px;">
-						<!-- <div class="bankcol">
-							<span class="bankspan">银行开户名</span>
-							<Input class="bankinput" v-model="cardneed.Accountname" placeholder="请输入银行开户名" ></Input>
-						</div>
-						<div class="bankcol">
-							<span class="bankspan">开户银行名称</span>
-							<Input class="bankinput" v-model="cardneed.Bankname" placeholder="请输入开户银行名称" ></Input>
-						</div>
-						<div class="bankcol">
-							<span class="bankspan">银行所在地</span>
-							<Input class="bankinput" v-model="cardneed.Banklocation" placeholder="请输入银行所在地" ></Input>
-						</div>
-						<div class="bankcol">
-							<span class="bankspan">开户支行名称</span>
-							<Input class="bankinput" v-model="cardneed.Bankchname" placeholder="请输入开户支行名称"></Input>
-						</div>
-						<div class="bankcol">
-							<span class="bankspan">银行预留电话</span>
-							<Input class="bankinput" v-model="cardneed.Bankphone" placeholder="请输入银行预留电话"></Input>
-						</div> -->
 						<Form ref="formAppreciationDate" :model="formAppreciationDate" :rules="ruleValidate"
 						      :label-width="100" label-position="left">
 						  <Form-item label="银行开户名" prop="companyName" style="height: 30px;">
@@ -132,13 +112,12 @@
 						    <Input :maxlength="20" v-model="formAppreciationDate.registeredPhone" placeholder="请输入银行预留电话"
 						           style="width: 300px"></Input>
 						  </Form-item>
-						  
-						  
 						</Form>
 					</div>
 			  <p slot="footer" class="modal-footer-s">
 			    <Button @click="showModal.cardfirmation = false">取消</Button>
-			    <Button type="primary" @click="$router.push('/ruicloud/cashprocess')">确定</Button>
+			    <Button type="primary" @click="carddetermination('formAppreciationDate')">确定</Button>
+					<!-- $router.push('/ruicloud/cashprocess') -->
 			  </p>
 			</Modal>
 			<!-- 打款详情弹窗 -->
@@ -227,6 +206,9 @@
 			}
       return {
 				ordertime: '',
+				//小数点前后金额
+				comOnlinemoney:0,
+				comBankemoney:0,
 				//线上提现金额整数
 				Onlinemoney:0,
 				//线上提现金额小数
@@ -408,6 +390,8 @@
 						var ary1 = response.data.moneyBank
 						this.Bankmoney = ary1.split(".")[0]
 						this.Bankdecimalmoney=ary1.split(".")[1]
+						this.comOnlinemoney= response.data.moneyOnLine
+						this.comBankemoney= response.data.moneyBank
 					}
 				})
 			},
@@ -439,6 +423,26 @@
 			  this.formAppreciationDate.bankAccount = this.formAppreciationDate.bankAccount.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
 			  this.bank_account = this.formAppreciationDate.bankAccount
 			},
+			carddetermination(name){
+				  this.$refs[name].validate((valid) => {
+						if (valid) {
+								sessionStorage.setItem('payeeName', this.formAppreciationDate.companyName)
+								sessionStorage.setItem('bankAccInfor', this.formAppreciationDate.depositBank)
+								sessionStorage.setItem('payeeAccount', this.formAppreciationDate.bankAccount)
+								sessionStorage.setItem('bankAddress', this.formAppreciationDate.registeredAddress)
+								sessionStorage.setItem('bankBranch', this.formAppreciationDate.taxpayerID)
+								sessionStorage.setItem('reservedPhone', this.formAppreciationDate.registeredPhone)
+								sessionStorage.setItem('balance', this.comBankemoney)
+								sessionStorage.setItem('type', 1)
+								this.$router.push('/ruicloud/cashprocess')
+						}
+					})
+			},
+			onlinefor(){
+				sessionStorage.setItem('balance', this.comOnlinemoney)
+				sessionStorage.setItem('type', 0)
+				this.$router.push('/ruicloud/cashprocess')
+			}
     },
     computed: {
 		
