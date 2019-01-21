@@ -389,12 +389,16 @@
             this.$refs.lists.style.top = 0
             this.$refs.lists.style.left = '50%'
             this.$refs.lists.style.marginLeft = '220px'
-            this.$refs.list.style.maxHeight = (clientHeight - 290) + 'px'
+            if (this.billListCost != 0) {
+              this.$refs.list.style.maxHeight = (clientHeight - 290) + 'px'
+            }
           } else {
             this.$refs.lists.style.position = 'absolute'
             this.$refs.lists.style.top = 0
             this.$refs.lists.style.right = 0
-            this.$refs.list.style.maxHeight = (clientHeight - 290 - 182) + 'px'
+            if (this.billListCost != 0) {
+              this.$refs.list.style.maxHeight = (clientHeight - 290 - 182) + 'px'
+            }
           }
         }
       }
