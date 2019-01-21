@@ -422,7 +422,7 @@
                   <Input v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码"
                         style="width:240px;"></Input>
                 </FormItem>
-                <p style="color:#FF0000;margin-top:-20px;" v-show="authModifyPhoneFormOne.personHint">
+                <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.personHint">
                   <Icon type="ios-close"></Icon>
                   身份证号码输入有误，验证失败，请尝试
                   <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
@@ -437,7 +437,7 @@
                   <Input v-model="authModifyPhoneFormOne.businessLicense" placeholder="请输入公司营业执照号码"
                         style="width:240px;"></Input>
                 </FormItem>
-                <p style="color:#FF0000;margin-top:-20px;" v-show="authModifyPhoneFormOne.companyHint">
+                <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.companyHint">
                   <Icon type="ios-close"></Icon>
                   公司营业执照号码输入有误，验证失败，请尝试
                   <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
@@ -449,9 +449,9 @@
           <div v-show="authModifyPhoneStep == 1">
             <div v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0">
               <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
-                提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过4MB。
+                提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
               </p>
-              <div class="upload-img">
+              <div class="upload-img" style="margin-top:10px">
                 <div class="content">
                   <div class="left">
                     <Upload
@@ -481,9 +481,9 @@
             </div>
             <div v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0">
               <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
-                提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过4MB。
+                提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
               </p>
-              <div class="upload-img">
+              <div class="upload-img" style="margin-top:10px">
                 <div class="content">
                   <div class="left">
                     <Upload
@@ -510,7 +510,7 @@
                   </div>
                 </div>
               </div>
-              <div class="upload-img">
+              <div class="upload-img" style="margin-top:10px">
                 <div class="content">
                   <div class="left">
                     <Upload
@@ -532,8 +532,8 @@
                     </Upload>
                   </div>
                   <div class="right">
-                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
-                    <p>经办人手持身份证人像照片</p>
+                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto">
+                    <p style="width:168px">经办人手持身份证人像照片</p>
                   </div>
                 </div>
               </div>
@@ -846,7 +846,7 @@
         uploadImgDispaly: '',
         uploadImgDispaly1: '',
         uploadImgDispaly2: '',
-        authModifyPhoneStep: 2,
+        authModifyPhoneStep: 0,
         authModifyPhoneFormOne: {
           ID: '',
           personHint: 0,
@@ -2434,6 +2434,7 @@
       },
       bindingMobilePhoneStepTwo(name) {
         this.$refs[name].validate((valid) => {
+          console.log(valid)
           if (valid) {
             if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
               axios.post('user/isIdCardAndNameSame.do', {
@@ -2444,7 +2445,7 @@
                 if (response.status == 200 && response.data.status == 1) {
                   this.authModifyPhoneStep = 1
                 } else {
-                  this.$Message.error(response.data.message)
+                  this.authModifyPhoneFormOne.personHint = 1
                 }
               })
             } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
@@ -2456,10 +2457,13 @@
                 if (response.status == 200 && response.data.status == 1) {
                   this.authModifyPhoneStep = 1
                 } else {
-                  this.$Message.error(response.data.message)
+                  this.authModifyPhoneFormOne.companyHint = 1
                 }
               })
             }
+          } else {
+            this.authModifyPhoneFormOne.personHint = 0
+            this.authModifyPhoneFormOne.companyHint = 0
           }
         })
       },
@@ -2566,7 +2570,7 @@
                 }
               })
             } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
-              axios.post('user/isIdCardAndNameSame.do', {
+              axios.post('user/newPhoneByIdCard.do', {
                 businessLicense: this.authModifyPhoneFormOne.businessLicense,
                 authType: '1',
                 newPhone: this.authModifyPhoneFormThere.newPhone,
@@ -2819,6 +2823,9 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .red {
+    color:#FF624B
+  }
   .background {
     background-color: #f5f5f5;
     width: 100%;
