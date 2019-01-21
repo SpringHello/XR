@@ -459,7 +459,7 @@
                       type="drag"
                       :show-upload-list="false"
                       :with-credentials="true"
-                      action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+                      action="file/upFile.do"
                       :format="['jpg','jpeg','png','gif']"
                       :max-size="4096"
                       :on-format-error="handleFormatError"
@@ -491,7 +491,7 @@
                       type="drag"
                       :show-upload-list="false"
                       :with-credentials="true"
-                      action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+                      action="file/upFile.do"
                       :format="['jpg','jpeg','png','gif']"
                       :max-size="4096"
                       :on-format-error="handleFormatError"
@@ -518,7 +518,7 @@
                       type="drag"
                       :show-upload-list="false"
                       :with-credentials="true"
-                      action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+                      action="file/upFile.do"
                       :format="['jpg','jpeg','png','gif']"
                       :max-size="4096"
                       :on-format-error="handleFormatError"
@@ -547,7 +547,7 @@
               <FormItem label="图形验证码" style="width: 100%;" prop="pictureCode">
                 <Input v-model="authModifyPhoneFormThere.pictureCode" placeholder="请输入随机验证码"
                        style="width:240px;margin-right:20px"></Input>
-                <img :src="imgSrc" @click="imgSrc=`https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`"
+                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
                      style="height:32px;vertical-align: middle">
               </FormItem>
               <Form-item label="短信验证码" prop="newVerificationCode" style="width: 100%">
