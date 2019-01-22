@@ -30,9 +30,13 @@
             <ul>
               <li><span class="one">镜像系统</span><span class="two">{{ hostInfo.template}}</span><span class="three" @click="modifyMirror"> [修改]</span></li>
               <li><span class="one">系统盘容量</span><span class="two">{{ hostInfo.rootDiskSize}}G</span><span class="three" @click="hostUpgrade"> [扩容]</span></li>
-              <li><span class="one">数据盘容量</span><span class="two">40G</span><span class="three" @click="diskMount"> [挂载</span><span class="three"> / 卸载]</span></li>
+              <li><span class="one">数据盘容量</span><span class="two">{{ hostInfo.diskSize}}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three"> / 卸载]</span>
+              </li>
               <li><span class="one">关联弹性伸缩</span><span :class="{three:hostInfo.telescopic}"> {{ hostInfo.telescopic ? hostInfo.telescopic : '----'}}</span></li>
-              <li><span class="one">登录密码</span><span class="three"> [发送密码]</span><span class="three"> [修改密码]</span></li>
+              <li><span class="one">登录密码</span>
+                <span class="three" v-if="codePlaceholder == '发送密码'" @click="showModal.lookPassword = true"> [{{codePlaceholder}}]</span>
+                <span class="one" v-else> [{{codePlaceholder}}]</span>
+                <span class="three"> [修改密码]</span></li>
               <li><span class="one">主机状态</span><span class="two"> {{ hostInfo.computerStatus? '开机': '关机' }}</span></li>
             </ul>
           </div>
@@ -141,8 +145,7 @@
         <Form :model="diskMountForm" :rules="mountRuleValidate" ref="mountDisk">
           <Form-item label="可挂载磁盘列表" prop="mountDisk">
             <Select v-model="diskMountForm.mountDisk" placeholder="请选择">
-              <Option v-for="(item,index) in diskMountForm.diskList" :key="index" :value="item.computerid">{{ item.computername
-                }}
+              <Option v-for="(item,index) in diskMountForm.diskList" :key="index" :value="item.diskid">{{ item.diskname}}
               </Option>
             </Select>
           </Form-item>
@@ -158,7 +161,37 @@
         <Button type="primary" @click="mountDisk_ok">确认挂载</Button>
       </div>
     </Modal>
-
+    <!-- 查看密码弹窗 -->
+    <Modal width="550" v-model="showModal.lookPassword" :scrollable="true" class="lookPassword">
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">查看登录密码</span>
+      </div>
+      <div>
+        <div class="universal-modal-content-flex">
+          <Form :model="lookPasswordForm" ref="lookPasswordForm" :rules="lookPasswordFormRule" @submit.native.prevent>
+            <FormItem label="请输入控制台登录密码" prop="input">
+              <Input v-model="lookPasswordForm.input" placeholder="请输入控制台登录密码" type="password"></Input>
+            </FormItem>
+            <!--<input type="text" hidden>-->
+          </Form>
+        </div>
+        <div style="display:flex;">
+          <p style=" font-size: 14px;line-height: 22px;">密码接收渠道</p>
+          <Checkbox v-model="lookPasswordForm.isemailalarmSec" size="large"
+                    style="margin-left: 20px;font-size: 12px;">邮箱
+          </Checkbox>
+          <Checkbox v-model="lookPasswordForm.issmsalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">
+            短信
+          </Checkbox>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.lookPassword=false">取消</Button>
+        <Button type="primary" @click="sendPassword('lookPasswordForm')"
+                :disabled="!(lookPasswordForm.isemailalarmSec || lookPasswordForm.issmsalarmSec)">确定
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -181,7 +214,8 @@
           rename: false,
           mirrorModify: false,
           reload: false,
-          mountDisk: false
+          mountDisk: false,
+          lookPassword: false
         },
         renameForm: {
           hostName: ''
@@ -218,6 +252,21 @@
         mountRuleValidate: {
           mountDisk: [
             {required: true, message: '请选择挂载的磁盘', trigger: 'change'}
+          ]
+        },
+        codePlaceholder: '发送密码',
+        lookPasswordForm: {
+          input: '',
+          isletterSec: false,
+          isemailalarmSec: false,
+          issmsalarmSec: true,
+          isLetterSec: 0,
+          isEmailAlarmSec: 0,
+          isSmsAlarmSec: 1,
+        },
+        lookPasswordFormRule: {
+          input: [
+            {required: true, message: '密码不能为空', trigger: 'blur'}
           ]
         },
       }
@@ -291,6 +340,10 @@
           }
         })
       },
+      modifyMirror() {
+        this.getMirrorList()
+        this.showModal.mirrorModify = true
+      },
       getMirrorList() {
         let url = 'information/getTemplateAndTemplateFunction.do'
         this.$http.get(url, {
@@ -302,10 +355,6 @@
             this.$Message.info(res.data.message)
           }
         })
-      },
-      modifyMirror() {
-        this.getMirrorList()
-        this.showModal.mirrorModify = true
       },
       resetSystem() {
         this.$refs.mirrorModifyForm.validate((valid) => {
@@ -337,14 +386,92 @@
         })
       },
       diskMount() {
+        this.getDiskList()
         this.showModal.mountDisk = true
       },
-      mountDisk_ok(){
-        this.$refs.mountDisk.validate((valid) => {
-          if (valid) {
+      getDiskList() {
+        let url = 'Disk/listDisk.do'
+        this.$http.get(url, {
+          params: {
+            isCanAttach: '1'
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.diskMountForm.diskList = res.data.result
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
           }
         })
-      }
+      },
+      mountDisk_ok() {
+        this.$refs.mountDisk.validate((valid) => {
+          if (valid) {
+            this.$Message.info('磁盘正在挂载，请稍候。。。')
+            this.showModal.mountDisk = false
+            this.$http.get('Disk/attachVolume.do', {
+              params: {
+                diskId: this.diskMountForm.mountDisk,
+                VMId: this.computerId
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.info({
+                  content: response.data.message,
+                })
+                this.getHostInfo()
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      diskUnload() {
+      },
+      getDiskListByComputerId() {
+      },
+      diskUnload_ok() {
+      },
+      sendPassword(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showModal.lookPassword = false
+            this.codePlaceholder = '发送密码（60s）'
+            let countdown = 60
+            let inter = setInterval(() => {
+              countdown--
+              this.codePlaceholder = '发送密码（' + countdown + 's）'
+              if (countdown == 0) {
+                clearInterval(inter)
+                this.codePlaceholder = '发送密码'
+              }
+            }, 1000)
+            this.lookPasswordForm.isLetterSec = this.lookPasswordForm.isletterSec == false ? 0 : 1
+            this.lookPasswordForm.isSmsAlarmSec = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
+            this.lookPasswordForm.isEmailAlarmSec = this.lookPasswordForm.isemailalarmSec == false ? 0 : 1
+            this.$http.post('log/sendVMPassword.do', {
+              VMId: this.computerInfo.computerId,
+              password: this.lookPasswordForm.input,
+              letter: this.lookPasswordForm.isLetterSec,
+              meail: this.lookPasswordForm.isEmailAlarmSec,
+              phone: this.lookPasswordForm.isSmsAlarmSec
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+              this.lookPasswordForm.input = ''
+            })
+          }
+        })
+      },
     },
     computed: {
       auth() {
