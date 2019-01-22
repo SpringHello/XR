@@ -2771,7 +2771,7 @@
           margin-top: 20px;
           font-size: 20px;
           color: #222222;
-          font-weight: bold;
+          font-weight: 500;
           i {
             font-size: 28px;
             color: #ff3000;

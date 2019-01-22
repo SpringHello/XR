@@ -29,9 +29,7 @@
         <div class="top">
           <div class="item-headline"></div>
           <p>
-            新睿云西安节点正式上线，新节点云服务器
-            <span>2折</span>
-            优惠，仅限新用户
+            新睿云西安节点正式上线，新节点云服务器折扣优惠，仅限新用户
             <span class="rule" @click="showModal.luckDrawRuleModal=true">活动规则</span>
           </p>
         </div>
@@ -53,7 +51,7 @@
                   <Option value="linux">centos</option>
                 </Select>
               </div>
-              <div>
+              <div class="zone-select">
                 <span>请选择区域</span>
                 <Select v-model="selectedZone" style="width: 190px;text-align:center" disabled>
                   <Option v-for="(item2,index) in zoneList" :key="index" :value="item2.value">{{item2.name}}</option>
@@ -153,6 +151,20 @@
         </div>
       </div>
     </transition>
+    <!-- 新用户提示 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.newCoustom=false" v-if="showModal.newCoustom">
+        <div class="all-modal modal1" @click.stop="showModal.newCoustom=true" style="height:280px;">
+          <div class="header">
+            <i @click.stop="showModal.newCoustom=false"></i>
+          </div>
+          <div class="body" style="padding-top:72px;">
+            <p>很抱歉！您不是新用户，不符合参与本次活动的条件！</p>
+            <p style="color:#FF3000;margin-top:10px;cursor:pointer" @click="$router.push('activecenter')">去看看其他优惠活动吧 →</p>
+          </div>
+        </div>
+      </div>
+    </transition>
     <!-- 活动规则弹窗 -->
     <transition name="fade">
       <div class="overlay" @click="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal">
@@ -177,7 +189,7 @@
         <div class="all-modal modal2" @click.stop="showModal.authModal=true" style="height:586px;">
           <div class="header"><i @click.stop="showModal.authModal=false"></i></div>
           <div class="body xiannode-form">
-            <p class="reminder">
+            <p class="reminder" v-if="authHintShow">
               <span>温馨提示：</span>
               您还不是实名认证用户，请填写以下认证信息，完成认证后可继续购买活动产品！
             </p>
@@ -248,6 +260,7 @@ export default {
         }
       }
     return {
+      authHintShow: false,
       reminderShow: true,
       zoneList: [],
       selectedZone: '',
@@ -316,6 +329,7 @@ export default {
         authErrorModal: false,
         authSucModal: false,
         notAuthModal: false,
+        newCoustom: false
       },
       authFormValidate: {
           name: '',
@@ -359,6 +373,7 @@ export default {
   },
   methods: {
     showAuthModal() {
+      this.authHintShow = false
       if (this.$store.state.userInfo) {
         this.showModal.authModal = true
       } else {
@@ -420,28 +435,45 @@ export default {
     },
     //   云主机生成订单
     getDiskcountMv (item, index) {
-      if (this.$store.state.userInfo) {
-        axios.get('information/getDiskcountMv.do', {
-          params: {
-            vmConfigId: item.vmConfigId,
-            osType: item.selectedSystem,
-            defzoneid: this.selectedZone
-          }
-        }).then(res => {
-          if (res.status == 200 && res.data.status == 1) {
-            this.$Message.success('创建订单成功')
-            this.$router.push('order')
-          } else {
-            this.$message.info({
-              content: res.data.message
-            })
-          }
-        })
+      if (!this.$store.state.userInfo) {
+        this.showModal.notLoginModal = true
       } else {
-        this.showModal.notLoginModal = true;
-      }
-    },
-      //领奖时认证验证码
+          // 判断是否为新用户
+          axios.get('activity/jdugeTeam.do').then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              if (response.data.result.flag) {
+                if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)){
+                  this.authHintShow = true
+                  this.showModal.authModal = true
+                  return
+                }
+                axios.get('information/getDiskcountMv.do', {
+                  params: {
+                    vmConfigId: item.vmConfigId,
+                    osType: item.selectedSystem,
+                    defzoneid: this.selectedZone
+                  }
+                }).then(res => {
+                  if (res.status == 200 && res.data.status == 1) {
+                    this.$Message.success('创建订单成功')
+                    this.$router.push('order')
+                  } else {
+                    this.$message.info({
+                      content: res.data.message
+                    })
+                  }
+                })
+              } else {
+                this.showModal.newCoustom = true
+              }
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
+        }
+      },
       getVerificationCode() {
         if (!this.authFormValidate.pictureCode) {
           this.$Message.info('请输入图形验证码')
@@ -633,6 +665,9 @@ export default {
       .rule {
         cursor: pointer;
         font-size: 16px;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }
@@ -640,7 +675,7 @@ export default {
     margin-top: 32px;
     .box {
       width: 340px;
-      height: 362px;
+      height: 363px;
       background: url(../../../assets/img/active/xianNode/item-bg-1.png) center  no-repeat;
        &:hover {
          box-shadow: 0px 4px 6px rgba(255, 48, 0, .2);
