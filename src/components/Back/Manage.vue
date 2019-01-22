@@ -211,7 +211,6 @@
                         {{item.templatename}}
                       </Option>
                     </OptionGroup>-->
-                    </Select>
                   </Form-item>
                   <Form-item label="账号密码">
                     <Input v-model="reloadForm.password" placeholder="请输入平台账号密码" type="password"></Input>
