@@ -966,7 +966,7 @@
             <p>1、检查您的邮箱垃圾箱。</p>
             <p>2、如果邮箱仍收不到验证码，请<span @click="bindingMobilePhoneForm.verificationMode = 'phone'">更换验证方式</span></p>
           </div> -->
-          <div v-if="bindingMobilePhoneForm.verificationMode == 'phone'&&bindingMobilePhoneForm.step ==0" class="voice-vail"> 
+          <div v-if="bindingMobilePhoneForm.step ==0" class="voice-vail"> 
             <p>没有收到验证码？</p>
             <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码'}"  @click="getBindingMobilePhoneCode('againCode')">重新获取</span>或<span class="blue code" :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码'}"  @click.prevent="getBindingMobilePhoneCode('voice')">接收语音验证码</span>。</p>
             <p v-if="$store.state.authInfo">2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue" @click="showModal.modifyPhoneID = true;showModal.bindingMobilePhone=false">通过身份证号码验证</span>更改手机号。</p>
@@ -1541,13 +1541,6 @@
           modifyPhoneID: false
         },
         modifyVailType: [
-          // {
-          //   type: 'email',
-          //   img: require('../../assets/img/usercenter/email_vail_icon.png'),
-          //   title: '邮箱验证',
-          //   desc: '您需要使用注册邮箱进行身份验证',
-          //   exist: 0
-          // },
           {
             type: 'phone',
             img: require('../../assets/img/usercenter/pho_vail_icon.png'),
@@ -2435,9 +2428,7 @@
       this.setOccupationalInfo()
       this.getResourceAllocation()
       this.modifyVailType.forEach(item => {
-        if (item.type == 'email'){
-          item.exist = this.$store.state.userInfo.loginname ? 1: 0
-        } else if (item.type == 'auth') {
+        if (item.type == 'auth') {
           item.exist = this.$store.state.authInfo ? 1: 0
         }
       })
@@ -2511,10 +2502,14 @@
       },
       selectedVailType_ok() {
         this.showModal.ModifyTelVail = false
-        this.showModal.bindingMobilePhone = true
         this.bindingMobilePhoneForm.pictureCode = ''
         this.bindingMobilePhoneForm.verificationCode = ''
         this.bindingMobilePhoneForm.newVerificationCode = ''
+        if (this.selectedVailIndex == 0) {
+          this.showModal.bindingMobilePhone = true
+        } else {
+          this.showModal.modifyPhoneID = true
+        }
       },
       getPhone() {
         if ($store.state.authInfo.companyid) {
@@ -3716,6 +3711,13 @@
             }
           }
         })
+      },
+      modifyPhoneIDcancel() {
+        this.showModal.modifyPhoneID = false
+        this.authModifyPhoneStep = 0
+        this.$refs['authModifyPhoneFormOne'].resetFields()
+        this.$refs['authModifyPhoneFormThere'].resetFields()
+        this.uploadImgDispaly = ''
       },
       uploadIDImg () {
       if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
