@@ -19,7 +19,7 @@
     <div class="product">
       <div class="wrap">
         <p class="reminder" v-if="reminderShow">
-          <span>温馨提示：</span>依照国家政策规定，
+          <i style="font-style:normal;color:#FF3000">温馨提示：</i>依照国家政策规定，
           <span @click="$LR({type: 'register'})" class="pointer">注册</span>并
           <span class="pointer" @click="showAuthModal()">实名认证</span>
           后才可购买使用云产品，请提前完成认证以确保可顺利参与活动。若已完成请先
@@ -32,7 +32,7 @@
             新睿云西安节点正式上线，新节点云服务器
             <span>2折</span>
             优惠，仅限新用户
-            <span class="rule">活动规则</span>
+            <span class="rule" @click="showModal.luckDrawRuleModal=true">活动规则</span>
           </p>
         </div>
         <div class="main flex">
@@ -174,9 +174,13 @@
     <!-- 请填写认证信息弹窗 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.authModal=false" v-if="showModal.authModal">
-        <div class="all-modal modal2" @click.stop="showModal.authModal=true" style="height:510px;">
+        <div class="all-modal modal2" @click.stop="showModal.authModal=true" style="height:586px;">
           <div class="header"><i @click.stop="showModal.authModal=false"></i></div>
           <div class="body xiannode-form">
+            <p class="reminder">
+              <span>温馨提示：</span>
+              您还不是实名认证用户，请填写以下认证信息，完成认证后可继续购买活动产品！
+            </p>
             <Form ref="authForm" :model="authFormValidate" :rules="authFormRuleValidate" :label-width="110" class="auth-form-validate">
               <FormItem label="真实姓名" prop="name">
                 <Input v-model="authFormValidate.name" placeholder=" 请输入您的真实姓名" size="large"></Input>
@@ -203,7 +207,7 @@
                 <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" size="large">></Input>
               </FormItem>
             </Form>
-            <button @click.stop="authAndGetPrize" style="width:305px;height:50px;font-size:20px;margin-left:110px" class="vailcode-btn auth-btn">确认信息并提交</button>
+            <button @click.stop="authAndGetPrize" style="width:305px;height:50px;font-size:20px;margin-left:110px;margin-top:20px;" class="vailcode-btn auth-btn">确认信息并提交</button>
           </div>
         </div>
       </div>
@@ -541,6 +545,8 @@ export default {
 <style rel="stylesheet/less" lang="less" scoped>
 #xian-node {
   font-family: PingFangSC-Regular;
+  background:rgba(247,247,247,1);
+  height: 100%;
 }
 .wrap {
   margin: 0 auto;
@@ -559,7 +565,7 @@ export default {
   color: #ff3000;
 }
 .banner {
-  background: url(../../../assets/img/active/xianNode/banner-bg.png) center no-repeat;
+  background:url(../../../assets/img/active/xianNode/xian-banner-bg.png) center no-repeat,linear-gradient(to bottom, #ffdcbc, #ffe7d2);
   .container {
     height: 400px;
     .left {
@@ -567,7 +573,7 @@ export default {
         margin-top: 20px;
         font-size: 20px;
         color: #222222;
-        font-weight: bold;
+        font-weight: 500;
         i {
           font-size: 28px;
           color: #ff3000;
@@ -592,14 +598,19 @@ export default {
   }
 }
 .product {
+  padding-top: 10px;
+  padding-bottom: 46px; 
+  background: #fff;
   .reminder {
-    margin-top: 10px;
     padding: 12px;
     height: 40px;
     font-size: 14px;
     border: solid 1px #ff3000;
     span {
       color: #ff3000;
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
   .top {
@@ -630,8 +641,10 @@ export default {
     .box {
       width: 340px;
       height: 362px;
-      background: url(../../../assets/img/active/xianNode/item-bg-1.png) center
-        no-repeat;
+      background: url(../../../assets/img/active/xianNode/item-bg-1.png) center  no-repeat;
+       &:hover {
+         box-shadow: 0px 4px 6px rgba(255, 48, 0, .2);
+       }
       .head {
         padding: 24px;
         li {
@@ -703,7 +716,8 @@ export default {
   }
 }
 .advantage {
-  margin: 100px 0 86px 0;
+  background:rgba(247,247,247,1);
+  padding: 52px 0 86px 0;
   text-align: center;
   .top {
     text-align: center;
@@ -841,6 +855,18 @@ background: none;
     > .header {
       background: url("../../../assets/img/active/xianNode/modal-bg-auth.png");
     }
+    .reminder {
+      margin: 0 auto;
+      margin-top: 10px;
+      border: solid 1px #ff3000;
+      width: 666px;
+      height: 40px;
+      padding-top: 12px;
+      font-size: 14px;
+      span {
+        color: #ff3000;
+      }
+    }
     .auth-btn {
       cursor: pointer;
       &:hover{
@@ -874,7 +900,7 @@ background: none;
     }
   }
   .auth-form-validate, .receive-good-validate {
-    padding-top: 48px;
+    padding-top: 26px;
     margin: 0 auto;
     width: 415px;
     .ivu-form-item {

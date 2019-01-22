@@ -2763,7 +2763,7 @@
   }
 
   .xian-active {
-    background: url(../../assets/img/active/xianNode/banner-bg.png) center no-repeat;
+    background:url(../../assets/img/active/xianNode/xian-banner-bg.png) center no-repeat,linear-gradient(to bottom, #ffdcbc, #ffe7d2);
     .container {
       height: 400px;
       .left {
