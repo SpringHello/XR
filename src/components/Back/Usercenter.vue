@@ -202,7 +202,7 @@
                   </FormItem>
                   <FormItem>
                     <p class="noauth-voice">收不到验证码？请<span :class="{notallow:notAuth.cardAuthForm.sendCodeText !='获取验证码'}" @click="sendCodePersonal('againCode')">重新获取</span>或<span :class="{notallow:notAuth.cardAuthForm.sendCodeText !='获取验证码'}" @click="sendCodePersonal('voice')">接收语音验证码</span></p>
-                  </FormItem>  
+                  </FormItem>
                   <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">请上传实名认证图片
                     上传文件支持jpg/png/gif/pdf，单个文件最大不超过4MB。</p>
                   <div class="IDCard">
@@ -337,7 +337,7 @@
                   </FormItem>
                   <FormItem>
                     <p class="noauth-voice">收不到验证码？请<span :class="{notallow:notAuth.quicklyAuthForm.sendCodeText!='获取验证码'}" @click="sendCode('againCode')">重新获取</span>或<span :class="{notallow:notAuth.quicklyAuthForm.sendCodeText!='获取验证码'}" @click="sendCode('voice')">接收语音验证码</span></p>
-                  </FormItem>  
+                  </FormItem>
                   <FormItem>
                     <div style="float:right">
                       <Button style="margin-right:10px" @click="reset">重置表单</Button>
@@ -545,7 +545,7 @@
                   </FormItem>
                   <FormItem>
                     <p class="noauth-voice">收不到验证码？请<span :class="{notallow:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}" @click="sendCompanyCode('againCode')">重新获取</span>或<span :class="{notallow:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}" @click="sendCompanyCode('voice')">接收语音验证码</span></p>
-                  </FormItem> 
+                  </FormItem>
                   <FormItem label="身份证号码" prop="agentManID">
                     <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码"
                            style="width: 300px;"></Input>
@@ -855,10 +855,9 @@
     </Modal>
     <!--修改密码-->
     <Modal width="550" v-model="showModal.modifyPassword" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        重置账户密码
-      </div>
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">重置账户密码</span>
+      </p>
       <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <Form :model="resetPasswordForm" label-position="top" :rules="resetPasswordruleValidate" style="width: 300px;"
               ref="resetPassword">
@@ -959,14 +958,14 @@
             <p>没有收到验证码？</p>
             <p>1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
             <p> 2、如果手机已丢失或停机，请<span @click="bindingMobilePhoneForm.verificationMode = 'email'">更换验证方式</span></p>
-            
+
           </div>
           <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'email'&&bindingMobilePhoneForm.step ==0">
             <p>没有收到验证码？</p>
             <p>1、检查您的邮箱垃圾箱。</p>
             <p>2、如果邮箱仍收不到验证码，请<span @click="bindingMobilePhoneForm.verificationMode = 'phone'">更换验证方式</span></p>
           </div> -->
-          <div v-if="bindingMobilePhoneForm.step ==0" class="voice-vail"> 
+          <div v-if="bindingMobilePhoneForm.step ==0" class="voice-vail">
             <p>没有收到验证码？</p>
             <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码'}"  @click="getBindingMobilePhoneCode('againCode')">重新获取</span>或<span class="blue code" :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码'}"  @click.prevent="getBindingMobilePhoneCode('voice')">接收语音验证码</span>。</p>
             <p v-if="$store.state.authInfo">2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue" @click="showModal.modifyPhoneID = true;showModal.bindingMobilePhone=false">通过身份证号码验证</span>更改手机号。</p>
@@ -1053,10 +1052,9 @@
 
     <!--添加联系人-->
     <Modal width="550" v-model="showModal.addLinkman" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 21px;font-weight: 600;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        添加联系人
-      </div>
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">添加联系人</span>
+      </p>
       <div style="border-bottom: 1px solid #D8D8D8;">
         <p style="font-family: Microsoft YaHei;font-size: 14px;color: #666666;">提示：系统将自动发送验证信息到所填手机号和邮箱，通过验证后方可接收消息。</p>
         <Form ref="addLinkmanForm" :model="addLinkmanForm" label-position="top" :rules="addLinkmanFormValidate"
@@ -1079,10 +1077,9 @@
     </Modal>
     <!-- 修改联系人 -->
     <Modal width="550" v-model="showModal.updateLinkman" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 21px;font-weight: 600;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        修改联系人
-      </div>
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">修改联系人</span>
+      </p>
       <div style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p style="font-family: Microsoft YaHei;font-size: 14px;color: #666666;">提示：系统将自动发送验证信息到所填手机号和邮箱，通过验证后方可接收消息。</p>
         <Form ref="updateLinkmanForm" :model="updateLinkmanForm" label-position="top" :rules="ruleValidate"
@@ -1106,10 +1103,9 @@
 
     <!--密钥手机验证-->
     <Modal width="550" v-model="showModal.keyPhoneVal" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        提示
-      </div>
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">提示</span>
+      </p>
       <div class="keyPhoneVal" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p>为保障您的账户安全，请进行手机验证：</p>
         <p>手机号码： <span>{{keyForm.phone}}</span></p>
@@ -1125,7 +1121,7 @@
                   :disabled="keycodePlaceholder!='获取验证码'">{{keycodePlaceholder}}
           </Button>
         </p>
-        <div class="voice-vail"> 
+        <div class="voice-vail">
           <p>没有收到验证码？</p>
           <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:keycodePlaceholder!='获取验证码'}"  @click="keysendCode('againCode')">重新获取</span>或<span class="blue code" :class="{notallow:keycodePlaceholder!='获取验证码'}"  @click.prevent="keysendCode('voice')">接收语音验证码</span>。</p>
           <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue" @click="showModal.modifyPhoneID = true;showModal.keyPhoneVal=false">通过身份证号码验证</span>更改手机号。</p>
@@ -1167,7 +1163,7 @@
                   <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
                   <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
                 </p>
-              </div>        
+              </div>
               <div v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0">
                 <Form-item label="公司名称" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
                   <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.authInfo.name}}</span>
@@ -3545,7 +3541,7 @@
       keysendCode(codeType) {
         if (this.keyForm.imgCode == '') {
           this.$Message.info('图像验证码不能为空')
-          return false  
+          return false
         }
         var url = ''
         if (codeType == 'code' || codeType == 'againCode' && this.keycodePlaceholder == '获取验证码') {
@@ -3674,12 +3670,12 @@
       bindMobilePhone(name) {
         this.$refs[name].validate((vail) => {
           if (vail) {
-            // /user/newPhoneByIdCard.do   
-          // post请求    
-          // 参数IDCard 身份证 
-          // authType认证类型(0是个人 1是企业)  
-          // newPhone新手机号  
-          // (个人认证 personIdCardHandUrl 个人认证手持照片)    
+            // /user/newPhoneByIdCard.do
+          // post请求
+          // 参数IDCard 身份证
+          // authType认证类型(0是个人 1是企业)
+          // newPhone新手机号
+          // (个人认证 personIdCardHandUrl 个人认证手持照片)
           //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
           if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
               axios.post('user/newPhoneByIdCard.do', {
