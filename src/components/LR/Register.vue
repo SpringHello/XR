@@ -70,7 +70,7 @@
                 </div>
               </div>
               <div v-show="registerForm.onStep === 1">
-                <div id="captchaBox_code" style="height: 40px"></div>
+                <div id="captchaBox_registerCode" style="height: 40px"></div>
                 <div class="errorMsg">
                   <div v-if="registerForm.errorMsg === 'notSlidingCodeValidation'">
                     <i></i>
@@ -796,7 +796,7 @@
               product: 'float'
             }, captchaObj => {
               this.codeCaptchaObj = captchaObj
-              captchaObj.appendTo("#captchaBox_code"); //将验证按钮插入到宿主页面中captchaBox元素内
+              captchaObj.appendTo("#captchaBox_registerCode"); //将验证按钮插入到宿主页面中captchaBox元素内
               captchaObj.onReady(() => {
               }).onSuccess(() => {
                 if (this.registerForm.errorMsg !== 'notGetVerificationCode') {
