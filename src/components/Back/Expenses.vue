@@ -20,7 +20,7 @@
                 <span>余额</span>
                 <button @click="torecharge">充值</button>
 								<!-- $router.push('/ruicloud/cashwithdrawal') -->
-								<button @click="$router.push('/ruicloud/cashwithdrawal')" style="margin-right: 10px;">提现</button>
+								<!--<button @click="$router.push('/ruicloud/cashwithdrawal')" style="margin-right: 10px;">提现</button>-->
                 <div>
                   <ul style="width: 50%">
                     <li>可用余额</li>
@@ -385,13 +385,13 @@
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
                  @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-          </Form-item>    
+          </Form-item>
           <Form-item label="短信/邮箱验证码" prop="phoneCode">
             <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
             <Button type="primary" @click="getCode('code')">{{codePlaceholder}}</Button>
           </Form-item>
         </Form>
-        <div v-if="unfreezeTo=='account'" class="voice-vail"> 
+        <div v-if="unfreezeTo=='account'" class="voice-vail">
           <p>没有收到验证码？</p>
           <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:codePlaceholder!='发送验证码'}"  @click="getCode('againCode')">重新获取</span>或<span class="blue code" :class="{notallow:codePlaceholder!='发送验证码'}"  @click.prevent="getCode('voice')">接收语音验证码</span>。</p>
           <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue" @click="showModal.modifyPhoneID = true;showModal.unfreeze=false">通过身份证号码验证</span>更改手机号。</p>
@@ -477,7 +477,7 @@
                   <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
                   <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
                 </p>
-              </div>        
+              </div>
               <div v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0">
                 <Form-item label="公司名称" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
                   <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.authInfo.name}}</span>
@@ -1996,9 +1996,7 @@
                       }).then(res => {
                         if (res.status == 200 && res.data.status == 1) {
                           this.showModal.unfreeze = true
-                        } else {
-                          /*   this.thawingCondition = params.row.thawCondition
-                             this.showModal.notUnfreeze = true*/
+                        } else if (res.status == 200 && res.data.status == 2){
                           let url = 'user/judgeRenewalFee.do'
                           axios.get(url, {
                             params: {
@@ -2014,6 +2012,9 @@
                               this.$message.info({content: res.data.message})
                             }
                           })
+                        } else {
+                          this.thawingCondition = params.row.thawCondition
+                          this.showModal.notUnfreeze = true
                         }
                       })
                     }
@@ -2773,7 +2774,7 @@
           })
         } else {
           this.authModifyPhoneStep = 2
-          
+
         }
       }
     },
@@ -2837,12 +2838,12 @@
       bindMobilePhone(name) {
         this.$refs[name].validate((vail) => {
           if (vail) {
-            // /user/newPhoneByIdCard.do   
-          // post请求    
-          // 参数IDCard 身份证 
-          // authType认证类型(0是个人 1是企业)  
-          // newPhone新手机号  
-          // (个人认证 personIdCardHandUrl 个人认证手持照片)    
+            // /user/newPhoneByIdCard.do
+          // post请求
+          // 参数IDCard 身份证
+          // authType认证类型(0是个人 1是企业)
+          // newPhone新手机号
+          // (个人认证 personIdCardHandUrl 个人认证手持照片)
           //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
           if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
               axios.post('user/newPhoneByIdCard.do', {
