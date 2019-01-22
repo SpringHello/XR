@@ -82,7 +82,7 @@
 				</FormItem>
 				<FormItem prop="messagecode">
 					<Input v-model="formCustom.messagecode" placeholder="请输入收到的验证码" style="width: 300px;"></Input>
-					<Button type="primary"  @click="getPhoneCode" :disabled="formCustom.newCodeText !='获取验证码' " style="margin-left: 10px;">{{formCustom.newCodeText}}
+					<Button type="primary"  @click="getPhoneCode('code')" :disabled="formCustom.newCodeText !='获取验证码' " style="margin-left: 10px;">{{formCustom.newCodeText}}
 					</Button>
 				</FormItem>
 			</Form>
@@ -90,7 +90,7 @@
 		<div class="modal-content-s divall">
 			<div style="width: 100%;">
 				<p class="pall" style="float: left;">没有收到验证码？</p><br />
-				<p class="pall" >1、网络通讯异常可能会造成短信丢失，请<Button class="spanaa" @click="getPhoneCode" :disabled="Regaindisabled" >重新获取</Button>或<Button class="spanaa">获取语音验证码</Button>。</p>
+				<p class="pall" >1、网络通讯异常可能会造成短信丢失，请<Button class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click="getPhoneCode('againCode')" >重新获取</Button>或<Button class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click.prevent="getPhoneCode('voice')">获取语音验证码</Button>。</p>
 				<p class="pall" >2、如果手机已丢失或停机，请<Button class="spanaa">通过身份证号码验证</Button>或<Button class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</Button>更改手机号。</p>
 			</div>
 		</div>
@@ -151,7 +151,6 @@
 		  Actualamount:0,
 		  //用户电话号码
 		  userphone:'',
-		  Regaindisabled:false,
 		  successtime:'',
 		  selectedTabSec: this.selectedTab,
 		  // 企业认证时的图形验证码
@@ -166,7 +165,8 @@
                     Verificationcode: '',
 					//短信验证码
                     messagecode: '',
-					newCodeText: '获取验证码'
+					newCodeText: '获取验证码',
+					codeText: '获取验证码',
                 },
                 ruleCustom: {
                     Verificationcode: [
@@ -239,7 +239,8 @@
 					this.changeTab('content2')
 				}
 				else{
-					this.$Message.info(response.data.msg)
+					this.$Message.info(response.data.message)
+					this.showModal.cashverification = false
 				}
 			})
 		},
@@ -299,16 +300,25 @@
 		  })
 		},
 		//短信验证码
-		getPhoneCode() {
+		getPhoneCode(codeType) {
 		  this.$refs.cashverification.validateField('Verificationcode', (text) => {
 		    if (text == '') {
-		      axios.get('user/code.do', {
-		        params: {
-		          aim: this.userphone,
-		          isemail: 0,
-		          vailCode: this.formCustom.Verificationcode
-		        }
-		      }).then(response => {
+				var url = ''
+				if (codeType == 'code' || codeType == 'againCode' && this.formCustom.newCodeText == '获取验证码') {
+				  url = 'user/code.do'
+				}
+				else if (codeType == 'voice' && this.formCustom.newCodeText == '获取验证码'){
+				  url = 'user/voiceCode.do'
+				} else {
+				  return false
+				}
+			  axios.get(url, {
+			    params: {
+			      aim: this.userphone,
+			      isemail: 0,
+			      vailCode: this.formCustom.Verificationcode
+			    }
+			  }).then(response => {
 		        // 发送成功，进入倒计时
 		        if (response.status == 200 && response.data.status == 1) {
 		          var countdown = 60
@@ -316,11 +326,9 @@
 		          var Interval = setInterval(() => {
 		            countdown--
 		            this.formCustom.newCodeText = `${countdown}S`
-					this.Regaindisabled=true
 		            if (countdown == 0) {
 		              clearInterval(Interval)
 		              this.formCustom.newCodeText = '获取验证码'
-					  this.Regaindisabled=false
 		            }
 		          }, 1000)
 		        } else {
