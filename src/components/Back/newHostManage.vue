@@ -30,12 +30,12 @@
             <ul>
               <li><span class="one">镜像系统</span><span class="two">{{ hostInfo.template}}</span><span class="three" @click="modifyMirror"> [修改]</span></li>
               <li><span class="one">系统盘容量</span><span class="two">{{ hostInfo.rootDiskSize}}G</span><span class="three" @click="hostUpgrade"> [扩容]</span></li>
-              <li><span class="one">数据盘容量</span><span class="two">{{ hostInfo.diskSize}}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three"> / 卸载]</span>
+              <li><span class="one">数据盘容量</span><span class="two">{{ hostInfo.diskSize}}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three" @click="diskUnload"> / 卸载]</span>
               </li>
-              <li><span class="one">关联弹性伸缩</span><span :class="{three:hostInfo.telescopic}"> {{ hostInfo.telescopic ? hostInfo.telescopic : '----'}}</span></li>
+              <li><span class="one">关联弹性伸缩</span><span class="two"> {{ hostInfo.telescopic ? hostInfo.telescopic : '----'}}</span></li>
               <li><span class="one">登录密码</span>
                 <span class="three" v-if="codePlaceholder == '发送密码'" @click="showModal.lookPassword = true"> [{{codePlaceholder}}]</span>
-                <span class="one" v-else> [{{codePlaceholder}}]</span>
+                <span class="two" v-else> [{{codePlaceholder}}]</span>
                 <span class="three"> [修改密码]</span></li>
               <li><span class="one">主机状态</span><span class="two"> {{ hostInfo.computerStatus? '开机': '关机' }}</span></li>
             </ul>
@@ -161,6 +161,31 @@
         <Button type="primary" @click="mountDisk_ok">确认挂载</Button>
       </div>
     </Modal>
+    <!-- 卸载硬盘模态框 -->
+    <Modal v-model="showModal.unloadDisk" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">卸载云硬盘</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="diskUnloadForm" :rules="unloadRuleValidate" ref="unloadDisk">
+          <Form-item label="可挂载磁盘列表" prop="unloadDisk">
+            <Select v-model="diskUnloadForm.unloadDisk" placeholder="请选择">
+              <Option v-for="(item,index) in diskUnloadForm.diskList" :key="index" :value="item.diskid">{{ item.diskname}}
+              </Option>
+            </Select>
+          </Form-item>
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 45%;"
+                @click="$router.push('buy/bdisk')">
+              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
+              购买磁盘
+            </span>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.unloadDisk = false">取消</Button>
+        <Button type="primary" @click="diskUnload_ok">确认卸载</Button>
+      </div>
+    </Modal>
     <!-- 查看密码弹窗 -->
     <Modal width="550" v-model="showModal.lookPassword" :scrollable="true" class="lookPassword">
       <div slot="header" class="modal-header-border">
@@ -215,6 +240,7 @@
           mirrorModify: false,
           reload: false,
           mountDisk: false,
+          unloadDisk: false,
           lookPassword: false
         },
         renameForm: {
@@ -252,6 +278,15 @@
         mountRuleValidate: {
           mountDisk: [
             {required: true, message: '请选择挂载的磁盘', trigger: 'change'}
+          ]
+        },
+        diskUnloadForm: {
+          unloadDisk: '',
+          diskList: []
+        },
+        unloadRuleValidate: {
+          unloadDisk: [
+            {required: true, message: '请选择卸载的磁盘', trigger: 'change'}
           ]
         },
         codePlaceholder: '发送密码',
@@ -431,30 +466,59 @@
         })
       },
       diskUnload() {
+        this.getDiskListByComputerId()
+        this.showModal.unloadDisk = true
       },
       getDiskListByComputerId() {
+        let url = 'Disk/listDisk.do'
+        this.$http.get(url, {
+          params: {
+            VMId: this.computerId
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.diskUnloadForm.diskList = res.data.result
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       },
       diskUnload_ok() {
+        this.$refs.unloadDisk.validate((valid) => {
+          if (valid) {
+            this.$Message.info('磁盘正在卸载，请稍候。。。')
+            this.showModal.unloadDisk = false
+            this.$http.get('Disk/detachVolume.do', {
+              params: {
+                diskId: this.diskUnloadForm.unloadDisk,
+                VMId: this.computerId
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.info({
+                  content: response.data.message,
+                })
+                this.getHostInfo()
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
       },
       sendPassword(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.lookPassword = false
-            this.codePlaceholder = '发送密码（60s）'
-            let countdown = 60
-            let inter = setInterval(() => {
-              countdown--
-              this.codePlaceholder = '发送密码（' + countdown + 's）'
-              if (countdown == 0) {
-                clearInterval(inter)
-                this.codePlaceholder = '发送密码'
-              }
-            }, 1000)
             this.lookPasswordForm.isLetterSec = this.lookPasswordForm.isletterSec == false ? 0 : 1
             this.lookPasswordForm.isSmsAlarmSec = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
             this.lookPasswordForm.isEmailAlarmSec = this.lookPasswordForm.isemailalarmSec == false ? 0 : 1
             this.$http.post('log/sendVMPassword.do', {
-              VMId: this.computerInfo.computerId,
+              VMId: this.computerId,
               password: this.lookPasswordForm.input,
               letter: this.lookPasswordForm.isLetterSec,
               meail: this.lookPasswordForm.isEmailAlarmSec,
@@ -462,6 +526,16 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
+                this.codePlaceholder = '(60s)'
+                let countdown = 60
+                let inter = setInterval(() => {
+                  countdown--
+                  this.codePlaceholder = '(' + countdown + 's)'
+                  if (countdown == 0) {
+                    clearInterval(inter)
+                    this.codePlaceholder = '发送密码'
+                  }
+                }, 1000)
               } else {
                 this.$message.info({
                   content: response.data.message
