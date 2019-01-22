@@ -580,9 +580,8 @@
     </Modal>
     <!--选择两种认证方式-->
     <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" :styles="{top:'172px'}">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        选择认证方式
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title"> 选择认证方式</span>
       </div>
       <div style="display: flex">
         <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
@@ -628,10 +627,12 @@
 
     <!-- 绑定ip时，没有公网ip提示 -->
     <Modal v-model="showModal.publicIPHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">您还未拥有公网IP，请先创建公网IP。</p>
         </div>
       </div>

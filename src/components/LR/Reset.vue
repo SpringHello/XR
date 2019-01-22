@@ -102,8 +102,8 @@
       placeholder: '请输入图片验证码'
     }
   }
-  export default {
 
+  export default {
     data() {
       return {
         imgSrc: 'user/getKaptchaImage.do',

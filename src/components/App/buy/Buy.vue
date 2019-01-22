@@ -7,15 +7,23 @@
         </Select>
         <router-link :to="`/ruicloud/${docPath}`" target="_blank">查看产品详情</router-link>
       </div>
-      <div id="body">
+      <div id="body" ref="bo">
         <router-view/>
-        <div id="list">
-          <div ref="list"
-               style="padding:30px 30px 0 30px;background-color: #ffffff;max-height: 1050px;overflow-y: auto">
-            <p
-              style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #D9D9D9; padding-bottom: 30px;">
+        <div id="list" ref="lists">
+          <div v-if="billListCost == 0" class="no-goods" >
+            <p style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #EDEDED; padding-bottom: 30px;">
               价格预算清单</p>
-            <div v-for="(prod,index) in cart" ref="detailed" style="padding-top: 20px">
+            <div style="height:310px">
+              <img src="../../../assets/img/buy/no-goods.png" alt="">
+              <p>还没有任何内容加入清单哦</p>
+            </div>
+          </div>
+          <div v-else ref="list"
+               style="padding:30px 30px 0 30px;background-color: #ffffff;overflow-y: auto">
+            <p
+              style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #EDEDED; padding-bottom: 30px;">
+              价格预算清单</p>
+            <div  v-for="(prod,index) in cart" ref="detailed" :key="index" style="padding-top: 20px">
               <div style="display: flex;justify-content: space-between;">
                 <h2 style="width:110px;text-align: center;font-size: 18px;color: #333333;line-height: 32px;">
                   {{prod.typeName}}</h2>
@@ -25,7 +33,7 @@
               </div>
               <div style="padding-top:20px">
                 <!--公共展示区-->
-                <div class="public">
+                <div class="public" v-if="prod.type!='Pssl'">
                   <p class="item"><span class="hidden">$</span><span class="title">区域</span><span
                     class="hidden">#</span>{{prod.zone.zonename}}
                   </p>
@@ -143,15 +151,42 @@
                     class="hidden">#</span>{{prod.downLoad}}
                   </p>
                 </div>
+                <!--ssl证书清单字段-->
+                <!-- <div v-if="prod.type=='Pssl'">
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">证书类型</span><span
+                    class="hidden">#</span>{{prod.certTypeId}}
+                  </p>
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">申请年限</span><span
+                    class="hidden">#</span>{{prod.year}}年
+                  </p>
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">域名数量</span><span
+                    class="hidden">#</span>{{prod.domianLeagth}}
+                  </p>
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">主域名</span><span
+                    class="hidden">#</span>{{prod.mainDomain}}
+                  </p>
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">绑定域名</span>
+                    <span class="hidden">#</span>{{prod.mainDomain}}
+                  </p>
+                  <p class="item" v-for="(item,index) in prod.certallDomain.split(',')" :key="index">
+                    <span class="hidden">$</span><span class="title" v-if="index==0">绑定域名</span><span class="title" v-else></span>
+                    <span class="hidden">#</span>{{item}}
+                  </p>
+                </div> -->
                 <!--底部价格公共区域-->
-                <div style="border-bottom:1px solid #ccc;padding-bottom: 20px">
+                <div style="border-bottom:1px solid #EDEDED;padding-bottom: 20px;">
                   <p class="item" style="margin-top: 10px">
                     <span class="hidden">$</span>
                     <span class="title" style="vertical-align: middle">价格</span>
                     <span class="hidden">#</span>
                     <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{(prod.cost * prod.count).toFixed(2)}}元</span>
                   </p>
-                  <p class="item" style="margin-top: 10px" v-if="prod.type!='Pobj'">
+                  <p class="item" style="margin-top: 10px" v-if="!(prod.type=='Pssl'||prod.type=='Pobj')">
                     <span class="title" style="vertical-align: middle">购买数量</span>
                   <ul style="display: inline-block;font-size: 14px;user-select: none">
                     <span class="numberAdd" v-if="prod.count == 1">-</span>
@@ -163,13 +198,12 @@
                           @click="prod.count += 1" v-else>+</span>
                   </ul>
                   </p>
-
                 </div>
               </div>
             </div>
           </div>
-          <div
-            style="padding:30px 40px;box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);background-color: #ffffff;width:380px;"
+          <div v-if="billListCost != 0"
+            style="padding:30px 40px;box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);background-color: #fff;width:380px;height:290px;overflow:hidden"
             ref="buyDiv">
             <p
               style="font-size: 14px;margin:10px 0px;vertical-align:middle;color: #666666;line-height: 25px;text-align: center">
@@ -266,10 +300,15 @@
         // 产品类型及选中类型
         product: {
           currentProduct: this.$route.name,
-          productList: [{label: '云主机', value: 'bhost'}, {label: '云硬盘', value: 'bdisk'}, {
-            label: '公网IP',
-            value: 'bip'
-          }, {label: '数据库', value: 'bdata'}, {label: '对象存储', value: 'bobj'}, {label: 'GPU服务器', value: 'bgpu'}]
+          productList: [
+            {label: '云主机', value: 'bhost'},
+            {label: '云硬盘', value: 'bdisk'},
+            {label: '公网IP', value: 'bip'},
+            {label: '数据库', value: 'bdata'},
+            {label: '对象存储', value: 'bobj'},
+            {label: 'GPU服务器', value: 'bgpu'},
+            {label: 'SSL证书', value: 'bssl'}
+          ]
         },
         // 当前可以创建的剩余资源数
         remainCount: {},
@@ -304,12 +343,62 @@
         cart,
         // 区域核心内存配置详细信息
         info: [],
-        scrollFun: () => {
-          if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246) {
-            this.$refs.buyDiv.style.position = 'fixed'
-            this.$refs.buyDiv.style.bottom = 0
+        // scrollFun: () => {
+        //   if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246) {
+        //     this.$refs.buyDiv.style.position = 'fixed'
+        //     this.$refs.buyDiv.style.bottom = 0
+        //   } else {
+        //     this.$refs.buyDiv.style.position = 'unset'
+        //   }
+        // },
+        // scrollList: () => {
+        //   var allWidth = window.screen.width
+        //   // 获取div距顶部距离
+        //   var top = this.$refs.lists.offsetTop
+        //   //获取屏幕高度
+        //   var windowTop = window.innerHeight
+        //   //屏幕卷去的高度
+        //   var scrollTops = document.documentElement.scrollTop || document.body.scrollTop
+        //   if (top >= scrollTops && top < (scrollTops + windowTop)) {
+        //     this.$refs.lists.style.position = 'unset'
+        //   } else {
+        //     this.$refs.lists.style.position = 'fixed'
+        //     this.$refs.lists.style.top = 0
+        //     if (allWidth > 1670 && allWidth <= 1920) {
+        //       this.$refs.lists.style.right = (allWidth - 1570) + 'px'
+        //     } else if (allWidth > 1920 &&allWidth <= 3000) {
+        //       this.$refs.lists.style.right = '200px'
+        //     } else if (allWidth > 3000) {
+        //       this.$refs.lists.style.right = '400px'
+        //     }else {
+        //       this.$refs.lists.style.right = '80px'
+        //     }
+        //     if (scrollTops < 1200) {
+        //       this.$refs.list.style.maxHeight = (1300 - scrollTops) + 'px'
+        //     } else {
+        //       this.$refs.list.style.maxHeight = 100 + 'px'
+        //     }
+        //   }
+        // },
+        scrollList1: () => {
+          var clientHeight = document.documentElement.clientHeight
+          //屏幕卷去的高度
+          var scrollTops = document.documentElement.scrollTop || document.body.scrollTop
+          if (scrollTops > 180) {
+            this.$refs.lists.style.position = 'fixed'
+            this.$refs.lists.style.top = 0
+            this.$refs.lists.style.left = '50%'
+            this.$refs.lists.style.marginLeft = '220px'
+            if (this.billListCost != 0) {
+              this.$refs.list.style.maxHeight = (clientHeight - 290) + 'px'
+            }
           } else {
-            this.$refs.buyDiv.style.position = 'unset'
+            this.$refs.lists.style.position = 'absolute'
+            this.$refs.lists.style.top = 0
+            this.$refs.lists.style.right = 0
+            if (this.billListCost != 0) {
+              this.$refs.list.style.maxHeight = (clientHeight - 290 - 182) + 'px'
+            }
           }
         }
       }
@@ -323,7 +412,11 @@
       scrollTo(0, 0)
     },
     mounted() {
-      window.addEventListener('scroll', this.scrollFun)
+      // window.addEventListener('scroll', this.scrollFun)
+      // window.addEventListener('scroll', this.scrollList)
+      // this.scrollList()
+      window.addEventListener('scroll', this.scrollList1)
+      this.scrollList1()
     },
     methods: {
       submit() {
@@ -361,6 +454,7 @@
         // 批次号
         var countOrder = uuid.v4()
         // 创建的主机数量  创建的磁盘数量 创建的公网IP数量
+        
         for (var prod of this.cart) {
           if (prod.type == 'Pecs') {
             var params = {
@@ -503,6 +597,7 @@
             }
             PromiseList.push(axios.get('gpuserver/createGpuServer.do', {params}))
           } else if (prod.type == 'Pobj') {
+            // 对象存储
             let params = {
               flowPackage: prod.save,
               capacity: prod.downLoad,
@@ -512,7 +607,27 @@
               countOrder
             }
             PromiseList.push(axios.post('ruiradosPrice/createOrder.do', params))
-          }
+          } 
+          // else if (prod.type == 'Pssl') {
+          //   // ssl证书
+          //   let params = {
+          //         sslName: prod.sslName,
+          //         ownUserIdCardNumber: prod.ownUserIdCardNumber,
+          //         ownUserEmail: prod.ownUserEmail,
+          //         ownUserName: prod.ownUserName,
+          //         certallDomain: prod.certallDomain,
+          //         ownUserPhone: prod.ownUserPhone,
+          //         orgPhone: prod.orgPhone,
+          //         certValidateType: prod.certValidateType,
+          //         certExpTime: prod.certExpTime,
+          //         orgName: prod.orgName,
+          //         orgType: prod.orgType,
+          //         certTypeId: prod.certTypeId,
+          //         orgEmail: prod.orgEmail,
+          //         countOrder
+          //       }
+          //   PromiseList.push(axios.post('domain/createSSLOrder.do', params))
+          // }
         }
         sessionStorage.removeItem('cart')
         Promise.all(PromiseList).then(responseList => {
@@ -520,7 +635,7 @@
             return item.status == 200 && item.data.status == 1
           })) {
             this.$router.push({
-              path: '/ruicloud/order', query: {
+              path: '/ruicloud/orderNew', query: {
                 countOrder
               }
             })
@@ -543,6 +658,7 @@
       },
       change(value) {
         this.$router.push(`/ruicloud/buy/${value}`)
+        sessionStorage.setItem('routerName',value);
       },
       // 导出清单
       exportXLSX() {
@@ -611,7 +727,8 @@
       }
     },
     destroyed() {
-      window.removeEventListener('scroll', this.scrollFun)
+      // window.removeEventListener('scroll', this.scrollFun)
+      window.removeEventListener('scroll', this.scrollList1)
     }
   }
 </script>
@@ -630,8 +747,7 @@
         }
       }
       #body {
-        display: flex;
-        justify-content: space-between;
+        position: relative;
         > div {
           width: 800px;
           background-color: #ffffff;
@@ -755,6 +871,9 @@
         #list {
           width: 380px;
           background-color: #f7f7f7;
+          position: absolute;
+          top: 0;
+          right: 0;
           .item {
             font-size: 14px;
             color: #666666;
@@ -934,5 +1053,18 @@
     border: 1px solid #D9D9D9;
     padding: 4px 8px;
     margin-left: -5px;
+  }
+  .no-goods {
+    background: #fff;
+    padding: 30px 30px 0px;
+    > div {
+      text-align: center;
+      padding: 60px 0;
+      p {
+        margin-top: 20px;
+        font-size:14px;
+        color:rgba(102,102,102,1);
+      }
+    }
   }
 </style>

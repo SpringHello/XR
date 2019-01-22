@@ -37,19 +37,13 @@ Vue.prototype.$message = message
 Vue.prototype.$LR = LR
 Vue.config.productionTip = false
 
-const errorHandler = (error, vm)=>{
-  console.error('抛出全局异常');
-  console.error(error);
-}
 
-Vue.config.errorHandler = errorHandler;
-Vue.prototype.$throw = (error)=> errorHandler(error,this);
-
-//axios.defaults.withCredentials = true
+ axios.defaults.withCredentials = true
 
 // axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
  axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 // axios.defaults.baseURL = 'https://www.xrcloud.net/ruicloud/'
+
 
 // window.eventBus = new Vue();
 
@@ -59,6 +53,14 @@ Vue.prototype.$http = axios.create({
   params: {}
 })
 
+/* 抛出全局异常*/
+const errorHandler = (error, vm)=>{
+  console.error('抛出全局异常')
+  console.error(error)
+}
+
+Vue.config.errorHandler = errorHandler
+Vue.prototype.$throw = (error)=> errorHandler(error,this)
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {

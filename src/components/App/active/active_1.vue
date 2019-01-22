@@ -34,7 +34,20 @@
         <div class="cash-get">
           <div class="container">
             <div class="left">
+<<<<<<< HEAD
+              <p :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.text}}</p>
+              <p :class="{notGet: item.time ===0 && item.ticket === 0}"><span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.h1 }}{{ item.h2}}</span>:<span
+                :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.m1 }}{{ item.m2 }}</span>:<span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.s1 }}{{ item.s2 }}</span>
+              </p>
+            </div>
+            <div class="right">
+              <p><span>￥</span>38<span>现金券</span></p>
+           <!--   <button v-if="item.time !== 0">立即领取</button>-->
+              <button @click="getTicket">立即领取</button>
+             <!-- <button v-if="item.time === 0 && item.ticket === 0">本场结束</button>-->
+=======
               <p>此现金券需前往<span @click="$router.push('expenses')" style="color:#FF6028">个人中心</span>使用</p>
+>>>>>>> master
             </div>
           <div class="right" @click="getTicket"></div>
         </div>

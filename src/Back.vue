@@ -38,7 +38,7 @@
             <li>
               <Dropdown @on-click="go">
                 <a href="javascript:void(0)" style="position:relative">
-                  {{userInfo.realname}}
+                  {{userInfo?userInfo.realname:''}}
                   <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
                   <Icon type="arrow-down-b"></Icon>
                 </a>
@@ -151,7 +151,7 @@
               <span>售前咨询</span>
               <div class="info-wrapper">
                 <div v-for="(qq,index) of xiaoshouInfo" :key="index">
-              <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
+                <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
@@ -284,7 +284,8 @@
             type: 'security',
             subItem: [
               {subName: '防火墙', type: 'firewall'},
-              {subName: '云监控', type: 'CloudMonitor'}
+              {subName: '云监控', type: 'CloudMonitor'},
+              {subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
             ]
           },
           {
@@ -342,6 +343,7 @@
       // QQ客服在线情况
       this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
         this.QQInfo = response.data.kefu
+        this.$store.commit('setQQInfo', response.data.kefu[0])
         this.xiaoshouInfo = response.data.xiaoshou
         this.yunweiInfo = response.data.yunwei
       })
@@ -418,9 +420,9 @@
 
       // 进入三级路由，记录二级路由入口
       push(pType, sType) {
-        this.pageInfo.static = true
-        this.pageInfo.selectItem = pType
-        this.pageInfo.sType = sType
+        this.pageInfo.static = true;
+        this.pageInfo.selectItem = pType;
+        this.pageInfo.sType = sType;
         if (sType.indexOf('http') > -1) {
           window.open(sType, '_blank');
           // axios.get('user/showUserAcessAll.do').then(response => {

@@ -32,10 +32,12 @@
 
     <!-- 数据库重启提示框 -->
     <Modal v-model="showModal.restart" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">重启数据库</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>重启数据库</strong>
           <p class="lh24">您正在重启数据库，请谨慎操作</p>
         </div>
       </div>
@@ -47,10 +49,12 @@
 
     <!-- 修改端口提示框 -->
     <Modal v-model="showModal.beforePortModify" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">修改端口</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>修改端口</strong>
           <p class="lh24">修改端口会导致数据库重启，请谨慎操作，是否确认修改端口？</p>
         </div>
       </div>
@@ -224,10 +228,12 @@
     </Modal>
     <!-- 绑定ip时，没有公网ip提示 -->
     <Modal v-model="showModal.publicIPHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">您还未拥有剩余公网IP，请先创建公网IP。</p>
         </div>
       </div>

@@ -21,13 +21,13 @@
             </div>
           </div>
         </my-carousel-item>
-      <my-carousel-item class="carousel-item">
+        <my-carousel-item class="carousel-item">
           <div class="dan-banner" @click="push('/ruicloud/wonderfulDay')">
             <div class="wraps">
               <img src="../../assets/img/home/dan_banner.png">
               <div class="w_button">
                 <span>立即参与</span>
-               </div>
+              </div>
             </div>
           </div>
         </my-carousel-item>
@@ -141,13 +141,22 @@
             </div>
           </div>
         </my-carousel-item>
-        <!-- <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/AnniversaryActive')"
-               style="cursor: pointer;background: #F56B23;">
-            <div class="anniversary-active">
+        <my-carousel-item class="carousel-item">
+          <div @click="push('active_1')"
+               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+            <div class="head-banner">
+              <div>
+                <div>
+                  <p>
+                    <img style="padding-top: 0" src="../../assets/img/home/home-banner3.png">
+                  </p>
+                  <button style="margin-top: 120px">立即领取</button>
+                </div>
+                <img src="../../assets/img/home/home-banner4.png">
+              </div>
             </div>
           </div>
-        </my-carousel-item> -->
+        </my-carousel-item>
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
@@ -424,7 +433,7 @@
               <dd v-html="showNews.abstracts">
               </dd>
               <dd>
-                <a  :href='`https://news.xrcloud.net/essay/${showNews.code}.html`' target="_blank" class="news-btn">
+                <a :href='`https://news.xrcloud.net/essay/${showNews.code}.html`' target="_blank" class="news-btn">
                   查看详情
                 </a>
               </dd>
@@ -445,14 +454,14 @@
             <dd>
               <ul>
                 <li v-for="(secitem,i) in item.artile" :key="i">
-                    <a :href="`https://news.xrcloud.net/essay/${secitem.code}.html`" target="_blank">
-                    <div class="alink">
-                      <div class="title">{{secitem.title}}</div>
-                      <i v-if="secitem.isHot">HOT</i>
-                      <i v-if="secitem.isNew" style="background:#4B97EE">NEW</i>
-                    </div>
-                    <div class="blink">{{secitem.createtime.split(' ')[0]}}</div>
-                  </a>
+                  <a :href="`https://news.xrcloud.net/essay/${secitem.code}.html`" target="_blank">
+                      <div class="alink">
+                        <div class="title">{{secitem.title}}</div>
+                        <i v-if="secitem.isHot">HOT</i>
+                        <i v-if="secitem.isNew" style="background:#4B97EE">NEW</i>
+                      </div>
+                      <div class="blink">{{secitem.createtime.split(' ')[0]}}</div>
+                    </a>
                 </li>
               </ul>
             </dd>
@@ -560,7 +569,7 @@
           paySuccessModal: false,
           weChatRechargeModal: false,
           orderConfirmationModal: false,
-          welcome:false
+          welcome: false
         },
         // 标记当前场景信息
         index1: '',
@@ -1154,9 +1163,9 @@
       }
     },
     mounted() {
-      if(!sessionStorage.getItem('welcome')){
+      if (!sessionStorage.getItem('welcome')) {
         this.showModal.welcome = true
-        sessionStorage.setItem('welcome','1')
+        sessionStorage.setItem('welcome', '1')
       }
       this.menuselected(0)
       // echarts.registerMap('china', china)
@@ -2752,42 +2761,45 @@
       }
     }
   }
+
   .xian-active {
-  background: url(../../assets/img/active/xianNode/banner-bg.png) center no-repeat;
-  .container {
-    height: 400px;
-    .left {
-      p {
-        margin-top: 20px;
-        font-size: 20px;
-        color: #222222;
-        font-weight: bold;
-        i {
-          font-size: 28px;
-          color: #ff3000;
+    background: url(../../assets/img/active/xianNode/banner-bg.png) center no-repeat;
+    .container {
+      height: 400px;
+      .left {
+        p {
+          margin-top: 20px;
+          font-size: 20px;
+          color: #222222;
+          font-weight: bold;
+          i {
+            font-size: 28px;
+            color: #ff3000;
+          }
         }
-      }
-      span {
-        margin-top: 52px;
-        display: inline-block;
-        width: 170px;
-        height: 50px;
-        font-size: 22px;
-        color: rgba(255, 48, 0, 1);
-        line-height: 44px;
-        text-align: center;
-        cursor: pointer;
-        border:2px solid rgba(255,48,0,1);
-        &:hover {
-          background:#FFD1B2;
+        span {
+          margin-top: 52px;
+          display: inline-block;
+          width: 170px;
+          height: 50px;
+          font-size: 22px;
+          color: rgba(255, 48, 0, 1);
+          line-height: 44px;
+          text-align: center;
+          cursor: pointer;
+          border: 2px solid rgba(255, 48, 0, 1);
+          &:hover {
+            background: #FFD1B2;
+          }
         }
       }
     }
   }
-}
-  p,span{
-      font-family: 'Microsoft YaHei';
-    }
+
+  p, span {
+    font-family: 'Microsoft YaHei';
+  }
+
   // 移入移出动画
   .fade-enter, .fade-leave-to {
     opacity: 0;
@@ -2915,19 +2927,20 @@
       }
     }
   }
-  .dan-banner{
+
+  .dan-banner {
     height: 400px;
-    background:#ff624b ;
-    .wraps{
+    background: #ff624b;
+    .wraps {
       width: 1903px;
       height: 400px;
       margin: 0 auto;
-    img{
-      width: 100%;
-      height: 100%;
-      max-width: auto;
-      max-height: auto;
-    }
+      img {
+        width: 100%;
+        height: 100%;
+        max-width: auto;
+        max-height: auto;
+      }
     }
 
   }
@@ -3114,7 +3127,7 @@
     }
   }
 
- .overlay {
+  .overlay {
     position: fixed;
     top: 0;
     bottom: 0;
@@ -3167,7 +3180,7 @@
         }
       }
     }
-      .welcome {
+    .welcome {
       cursor: pointer;
       margin: 0 auto;
       top: 20%;
@@ -3212,7 +3225,7 @@
     }
   }
 
-    @keyframes slidein_1 {
+  @keyframes slidein_1 {
     from {
       transform: scale(0.2);
     }
@@ -3250,30 +3263,33 @@
       transform: scale(1);
     }
   }
-    .fade-enter-active, .fade-leave-active {
+
+  .fade-enter-active, .fade-leave-active {
     transition: opacity .2s;
   }
 
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
   }
-   .w_button{
-       position: relative;
-      top: -162px;
-      left: 21%;
-        color: rgba(26, 42, 210, 1);
-        font-weight: 500;
-        font-size: 13px;
-        width: 140px;
-        line-height: 43px;
-        letter-spacing:3px;
-        text-align: center;
-        height: 43px;
-        background: rgb(255, 222, 42);
-        // box-shadow: 0px 2px 2px 1px rgb(136, 20, 17);
-        cursor: pointer;
-      }
-      .w_button:hover{
-        box-shadow: 0px 2px 2px 1px #881411;
-      }
+
+  .w_button {
+    position: relative;
+    top: -162px;
+    left: 21%;
+    color: rgba(26, 42, 210, 1);
+    font-weight: 500;
+    font-size: 13px;
+    width: 140px;
+    line-height: 43px;
+    letter-spacing: 3px;
+    text-align: center;
+    height: 43px;
+    background: rgb(255, 222, 42);
+    // box-shadow: 0px 2px 2px 1px rgb(136, 20, 17);
+    cursor: pointer;
+  }
+
+  .w_button:hover {
+    box-shadow: 0px 2px 2px 1px #881411;
+  }
 </style>
