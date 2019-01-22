@@ -1818,7 +1818,7 @@
           refundLastHint: false,
           freezeToRenewAffirm: false,
           // 修改手机号码（身份证方式）
-          modifyPhoneID: true
+          modifyPhoneID: false
         },
         // 提现
         withdrawForm: {

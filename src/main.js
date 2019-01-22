@@ -45,7 +45,7 @@ const errorHandler = (error, vm)=>{
 Vue.config.errorHandler = errorHandler;
 Vue.prototype.$throw = (error)=> errorHandler(error,this);
 
-//axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 
 // axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
  axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
