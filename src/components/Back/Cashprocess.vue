@@ -31,8 +31,8 @@
 		 <div style="margin-left: 20px;margin-top: 150px;">
 			 <span class="spanall" style="margin-left: -15px;float: left;margin-top: 5px;">本次提现金额</span>
 			 <RadioGroup vertical v-model="vertical" style="margin-left: 15px;margin-top: -3px;">
-			    <Radio label="l1"><span class="spanall">{{moneyall}} 元（可提现金额）</span></Radio>
-				<Radio label="l2">其他金额<Input v-model="Otheramount" size="small" placeholder="请输入金额" style="margin-left: 10px;width: 80px;height: 28px;"></Input><span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-left: 10px;">元</span></Radio>
+			    <Radio label="l1"><span class="spanall">{{moneysure}} 元（本次可提现金额）</span></Radio>
+				<Radio label="l2">其他金额<InputNumber :max="moneysure" :min="1" v-model="Otheramount" @on-change="Otheramountg" style="margin-left: 10px;width: 80px;height: 28px;"></InputNumber><span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-left: 10px;">元</span></Radio>
 			 </RadioGroup>
 		 </div>
 		 <Button type="primary" style="margin-left: 125px;margin-top: 20px;" @click="Firststep" :class="{selected:selectedTabSec == 'content'}">下一步</Button>
@@ -91,7 +91,7 @@
 			<div style="width: 100%;">
 				<p class="pall" style="float: left;">没有收到验证码？</p><br />
 				<p class="pall" >1、网络通讯异常可能会造成短信丢失，请<Button class="spanaa" @click="getPhoneCode" :disabled="Regaindisabled" >重新获取</Button>或<Button class="spanaa">获取语音验证码</Button>。</p>
-				<p class="pall" >2、如果手机已丢失或停机，请<a href="#" class="colora">通过身份证号码验证</a>或<a href="#" class="colora">提交工单</a>更改手机号。</p>
+				<p class="pall" >2、如果手机已丢失或停机，请<Button class="spanaa">通过身份证号码验证</Button>或<Button class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</Button>更改手机号。</p>
 			</div>
 		</div>
 	    <p slot="footer" class="modal-footer-s">
@@ -142,8 +142,12 @@
     data(){
       return {
 		  vertical: 'l1',
+		  //总金额
 		  moneyall:0,
-		  Otheramount:'',
+		  //本次可提现总金额
+		  moneysure:0,
+		  //提现可输入金额
+		  Otheramount:1,
 		  Actualamount:0,
 		  //用户电话号码
 		  userphone:'',
@@ -243,7 +247,8 @@
 			this.$router.history.go(-1)
 		},
 		money(){
-			this.moneyall=sessionStorage.getItem('balance')
+			this.moneyall=parseInt(sessionStorage.getItem('balance'))
+			this.moneysure=this.moneyall
 			this.Actualamount=sessionStorage.getItem('money')
 		},
 		moneyconfirm(){
@@ -251,15 +256,39 @@
 			this.Cashconfirmationdata[0].type=sessionStorage.getItem('type')
 		},
 		Firststep(){
+			var Lastmoney=0
 			if(this.vertical=='l1'){
-				sessionStorage.setItem('money', this.moneyall)
+				Lastmoney=this.moneysure
 			}
 			else if(this.vertical=='l2'){
-				sessionStorage.setItem('money', this.Otheramount)
+				Lastmoney=this.Otheramount
 			}
-			this.changeTab('content1')
-			this.money()
-			this.moneyconfirm()
+			axios.get('user/judgeWithdrawalContidion.do', {
+				params: {
+					balance:Lastmoney
+				}
+			}).then(response => {
+				if (response.status == 200 && response.data.status == 1) {
+					sessionStorage.setItem('money', Lastmoney)
+					this.changeTab('content1')
+					this.money()
+					this.moneyconfirm()
+				}
+				else{
+					//this.$Message.info(response.data.message)
+					//this.$router.push('/ruicloud/cashwithdrawal',3000)
+					sessionStorage.setItem('money', Lastmoney)
+					this.changeTab('content1')
+					this.money()
+					this.moneyconfirm()
+				}
+			})
+			//if(this.vertical=='l1'){
+				//sessionStorage.setItem('money', this.moneyall)
+			//}
+			//else if(this.vertical=='l2'){
+				//sessionStorage.setItem('money', this.Otheramount)
+			//}
 		},
 		userInfo() {
 		  this.showModal.cashverification = true
@@ -287,9 +316,11 @@
 		          var Interval = setInterval(() => {
 		            countdown--
 		            this.formCustom.newCodeText = `${countdown}S`
+					this.Regaindisabled=true
 		            if (countdown == 0) {
 		              clearInterval(Interval)
 		              this.formCustom.newCodeText = '获取验证码'
+					  this.Regaindisabled=false
 		            }
 		          }, 1000)
 		        } else {
@@ -302,7 +333,12 @@
 		      })
 		    }
 		  })
-		}
+		},
+		Otheramountg(){
+			if(this.Otheramount>this.moneysure){
+				this.Otheramount=this.moneysure
+			}
+		},
     },
     computed: {
 		disabled(){
@@ -315,14 +351,13 @@
 		}
     },
     watch: {
-		Otheramount: function(val){
-			var a=parseInt(sessionStorage.getItem('balance'))
-			if(val<0)
-			{
-				this.Otheramount=0
+		
+		moneysure:function(val){
+			if(val>2000.00){
+				this.moneysure=2000.00
 			}
-			else if(val>a){
-				this.Otheramount=this.moneyall
+			else if(val<0){
+				this.moneysure=0
 			}
 		}
 	}
