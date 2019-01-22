@@ -312,7 +312,7 @@ export default {
       showModal: {
         notLoginModal: false,
         luckDrawRuleModal: false,
-        authModal: true,
+        authModal: false,
         authErrorModal: false,
         authSucModal: false,
         notAuthModal: false,
@@ -565,7 +565,7 @@ export default {
   color: #ff3000;
 }
 .banner {
-  background:url(../../../assets/img/active/xianNode/banner-bg.png) center no-repeat,linear-gradient(to bottom, #ffdcbc, #ffe7d2);
+  background:url(../../../assets/img/active/xianNode/xian-banner-bg.png) center no-repeat,linear-gradient(to bottom, #ffdcbc, #ffe7d2);
   .container {
     height: 400px;
     .left {
