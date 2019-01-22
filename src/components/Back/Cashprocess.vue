@@ -1,0 +1,438 @@
+<template>
+  <div id="background">
+    <div id="wrapper">
+      <span>个人中心 / 费用中心 / 提现</span>
+	  <div class="content" v-if="selectedTabSec == 'content'">
+		  <div style="float: left;" @click="backpage">
+			  <Icon class="icon1" type="chevron-left" ></Icon>
+		  </div>
+		 <span class="returnmoney">申请提现</span>
+		 <div class="withdrawal">
+			 <div class="withdrawalpo">
+				 <p class="withp">选择提现金额</p>
+				 <img src="../../assets/img/back/Rectangle 2.png" />
+			 </div>
+			 <div class="withdrawalpo"  style="margin-left: -17px;">
+				 <p class="withp">确认提现信息</p>
+				 <img src="../../assets/img/back/Rectangle 21.png"/>
+			 </div>
+			 <div class="withdrawalpo" style="margin-left: -17px;">
+			 	<p class="withp">申请提现成功</p>
+			 	<img src="../../assets/img/back/Rectangle 21.png"/>	
+			 </div>
+		 </div>
+		 <div class="box1">
+			 <span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。如需帮助，可查看 <a href="#" class="colora">自助提现常见问题</a></span>
+		 </div>
+		 <p style="margin-left: 20px;margin-top: 20px;float: left;">
+			 <span class="spanall">可提现金额</span>
+			 <span class="spanall" style="margin-left: 15px;">{{moneyall}} 元</span>
+		 </p>
+		 <div style="margin-left: 20px;margin-top: 150px;">
+			 <span class="spanall" style="margin-left: -15px;float: left;margin-top: 5px;">本次提现金额</span>
+			 <RadioGroup vertical v-model="vertical" style="margin-left: 15px;margin-top: -3px;">
+			    <Radio label="l1"><span class="spanall">{{moneyall}} 元（可提现金额）</span></Radio>
+				<Radio label="l2">其他金额<Input v-model="Otheramount" size="small" placeholder="请输入金额" style="margin-left: 10px;width: 80px;height: 28px;"></Input><span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-left: 10px;">元</span></Radio>
+			 </RadioGroup>
+		 </div>
+		 <Button type="primary" style="margin-left: 125px;margin-top: 20px;" @click="Firststep" :class="{selected:selectedTabSec == 'content'}">下一步</Button>
+	  </div>
+	  <div class="content1" v-if="selectedTabSec == 'content1'">
+		  <div style="float: left;" @click="changeTab('content')">
+		  	<Icon class="icon1" type="chevron-left" ></Icon>
+		  </div>
+		  <span class="returnmoney">申请提现</span>
+		  <div class="withdrawal">
+		  			 <div class="withdrawalpo">
+		  				 <p class="withp">选择提现金额</p>
+		  				 <img src="../../assets/img/back/Rectangle 2.png" />
+		  			 </div>
+		  			 <div class="withdrawalpo"  style="margin-left: -17px;">
+		  				 <p class="withp">确认提现信息</p>
+		  				 <img src="../../assets/img/back/Rectangle 22.png"/>
+		  			 </div>
+		  			 <div class="withdrawalpo" style="margin-left: -17px;">
+		  			 	<p class="withp">申请提现成功</p>
+		  			 	<img src="../../assets/img/back/Rectangle 21.png"/>	
+		  			 </div>
+		  </div>
+		  <div class="box1">
+		  			 <span style="margin-left: 10px;"><span>本次提现</span><span style="color: #FF624B;"> &nbsp;{{Actualamount}}&nbsp;</span>元。线上提现金额将按照后进先出的原则退回您的原线上充值账户（微信、支付宝），提现申请提交后不可撤回。</span>
+		  </div>
+		  <Table :columns="Cashconfirmation" :data="Cashconfirmationdata" style="float: left;margin-top: 20px;width:1159px;"></Table>
+		  <Button type="primary" @click="userInfo" style="margin-top: 20px;float: left;" >确认提现信息</Button>
+	  </div>
+	   <!-- 提现验证弹窗 -->
+	  <Modal v-model="showModal.cashverification" :scrollable="true" :closable="true" :width="520">
+	    <p slot="header" class="modal-header-border">
+	      <span class="universal-modal-title">提现验证</span>
+	    </p>
+	    <div class="modal-content-s" >
+	      <div>
+	        <p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:24px;">为保障您的资金安全，我们将向您的实名认证手机号码 <span style="color: #FF624B">{{userphone}}</span> 发送一条验证短信，请收到验证信息之后将验证码填入下方。
+	        </p>
+	      </div>
+	    </div>
+		<div class="modal-content-s">
+			<Form ref="cashverification" label-position="left" :model="formCustom" :rules="ruleCustom" style="width: 500px;">
+				<FormItem prop="Verificationcode" >
+					<Input v-model="formCustom.Verificationcode" placeholder="请输入随机验证码" style="width: 300px;"></Input>
+					<img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+					     style="height:32px;vertical-align: middle;margin-left: 10px;">
+				</FormItem>
+				<FormItem prop="messagecode">
+					<Input v-model="formCustom.messagecode" placeholder="请输入收到的验证码" style="width: 300px;"></Input>
+					<Button type="primary"  @click="getPhoneCode" :disabled="formCustom.newCodeText !='获取验证码' " style="margin-left: 10px;">{{formCustom.newCodeText}}
+					</Button>
+				</FormItem>
+			</Form>
+		</div>
+		<div class="modal-content-s divall">
+			<div style="width: 100%;">
+				<p class="pall" style="float: left;">没有收到验证码？</p><br />
+				<p class="pall" >1、网络通讯异常可能会造成短信丢失，请<Button class="spanaa" @click="getPhoneCode" :disabled="Regaindisabled" >重新获取</Button>或<Button class="spanaa">获取语音验证码</Button>。</p>
+				<p class="pall" >2、如果手机已丢失或停机，请<a href="#" class="colora">通过身份证号码验证</a>或<a href="#" class="colora">提交工单</a>更改手机号。</p>
+			</div>
+		</div>
+	    <p slot="footer" class="modal-footer-s">
+	      <Button @click="showModal.cashverification = false">取消</Button>
+	      <Button type="primary" :disabled="disabled" @click="Callpresentation" :class="{selected:selectedTabSec == 'content1'}">确定</Button>
+	    </p>
+	  </Modal>
+	  <div class="content2" v-if="selectedTabSec == 'content2'">
+	  		  <div style="float: left;" @click="changeTab('content1')">
+	  		  	<Icon class="icon1" type="chevron-left" ></Icon>
+	  		  </div>
+	  		  <span class="returnmoney">申请提现</span>
+	  		  <div class="withdrawal">
+	  		  			 <div class="withdrawalpo">
+	  		  				 <p class="withp">选择提现金额</p>
+	  		  				 <img src="../../assets/img/back/Rectangle 2.png" />
+	  		  			 </div>
+	  		  			 <div class="withdrawalpo"  style="margin-left: -17px;">
+	  		  				 <p class="withp">确认提现信息</p>
+	  		  				 <img src="../../assets/img/back/Rectangle 22.png"/>
+	  		  			 </div>
+	  		  			 <div class="withdrawalpo" style="margin-left: -17px;">
+	  		  			 	<p class="withp">申请提现成功</p>
+	  		  			 	<img src="../../assets/img/back/Rectangle 22.png"/>	
+	  		  			 </div>
+	  		  </div>
+			  <img src="../../assets/img/back/成功-2.png" style="float: left;margin-left: 380px;margin-top: 80px;"/>	
+			  <div style="float: left;margin-top: 85px;margin-left: 15px;">
+				  <span style="font-size:24px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);">提现申请提交成功</span><br />
+				  <span style="margin-top: 10px;float: left;font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);">预计 <span>{{successtime}}</span> 前到账（遇公众假期顺延）</span><br />
+				  <Button type="primary" style="float: left;margin-top: 20px;" @click="$router.push('/ruicloud/cashwithdrawal')">我知道了</Button>
+			  </div>
+	  </div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+	import axios from 'axios'
+	import $store from '../../vuex'
+  export default{
+	  props: {
+	    selectedTab: {
+	      type: String,
+	      default: 'content'
+	    }
+	  },
+    data(){
+      return {
+		  vertical: 'l1',
+		  moneyall:0,
+		  Otheramount:'',
+		  Actualamount:0,
+		  //用户电话号码
+		  userphone:'',
+		  Regaindisabled:false,
+		  successtime:'',
+		  selectedTabSec: this.selectedTab,
+		  // 企业认证时的图形验证码
+		  imgSrc: 'user/getKaptchaImage.do',
+		  showModal: {
+		  	// 提现验证弹窗
+		  	cashverification:false
+		  },
+		  //验证码和短信验证
+		  formCustom: {
+					//图片随机码
+                    Verificationcode: '',
+					//短信验证码
+                    messagecode: '',
+					newCodeText: '获取验证码'
+                },
+                ruleCustom: {
+                    Verificationcode: [
+                        {required: true, message: '请输入图形验证码', trigger: 'blur'}
+                    ],
+                    messagecode: [
+						{required: true, message: '请输入收到的验证码', trigger: 'blur'},
+                    ]
+                },
+		  Cashconfirmation: [
+                    {
+                        title: '提现金额（元）',
+                        key: 'money'
+                    },
+                    {
+                        title: '到账账户',
+                        key: 'type',
+						render: (h, params) => {
+							// 1为银行卡提现，0为线上体现
+							let text = ''
+							text = params.row.type == 1 ? '银行卡' : "原支付途径"
+							return h('div', [
+								h('span', {}, text)
+							]);
+						}
+                    }
+                ],
+                Cashconfirmationdata: [
+                    {
+                        money:'0',
+                        type: '0'
+                    }
+                ]
+      }
+    },
+    created(){
+		this.money()
+		//this.moneyconfirm()
+    },
+    methods: {
+		changeTab (name) {
+		  this.selectedTabSec = name
+		  this.$emit('changeTabSec', name)
+		},
+		Callpresentation(){
+			var typed=sessionStorage.getItem('type')
+			var payeeName=sessionStorage.getItem('payeeName')
+			var payeeAccountType='银行卡'
+			var payeeAccount=sessionStorage.getItem('payeeAccount')
+			var bankAccInfor=sessionStorage.getItem('bankAccInfor')
+			var bankAddress=sessionStorage.getItem('bankAddress')
+			var bankBranch=sessionStorage.getItem('bankBranch')
+			var reservedPhone=sessionStorage.getItem('reservedPhone')
+			axios.post('user/balanceWithdrawal.do', {
+				balance:this.Actualamount,
+				smsCode:this.formCustom.messagecode,
+				username:this.userphone,
+				type:typed,
+				payeeName:payeeName,
+				payeeAccountType:payeeAccountType,
+				payeeAccount:payeeAccount,
+				bankAccInfor:bankAccInfor,
+				bankAddress:bankAddress,
+				bankBranch:bankBranch,
+				reservedPhone:reservedPhone
+			}).then(response => {
+				if (response.status == 200 && response.data.status == 1) {
+					this.successtime=response.data.date
+					this.showModal.cashverification = false
+					this.changeTab('content2')
+				}
+				else{
+					this.$Message.info(response.data.msg)
+				}
+			})
+		},
+		backpage() {
+			this.$router.history.go(-1)
+		},
+		money(){
+			this.moneyall=sessionStorage.getItem('balance')
+			this.Actualamount=sessionStorage.getItem('money')
+		},
+		moneyconfirm(){
+			this.Cashconfirmationdata[0].money=this.Actualamount
+			this.Cashconfirmationdata[0].type=sessionStorage.getItem('type')
+		},
+		Firststep(){
+			if(this.vertical=='l1'){
+				sessionStorage.setItem('money', this.moneyall)
+			}
+			else if(this.vertical=='l2'){
+				sessionStorage.setItem('money', this.Otheramount)
+			}
+			this.changeTab('content1')
+			this.money()
+			this.moneyconfirm()
+		},
+		userInfo() {
+		  this.showModal.cashverification = true
+		  axios.get('user/GetUserInfo.do').then(response => {
+		    if (response.status == 200 && response.data.status == 1) {
+			  this.userphone=response.data.result.phone
+		    }
+		  })
+		},
+		//短信验证码
+		getPhoneCode() {
+		  this.$refs.cashverification.validateField('Verificationcode', (text) => {
+		    if (text == '') {
+		      axios.get('user/code.do', {
+		        params: {
+		          aim: this.userphone,
+		          isemail: 0,
+		          vailCode: this.formCustom.Verificationcode
+		        }
+		      }).then(response => {
+		        // 发送成功，进入倒计时
+		        if (response.status == 200 && response.data.status == 1) {
+		          var countdown = 60
+		          this.formCustom.newCodeText = `${countdown}S`
+		          var Interval = setInterval(() => {
+		            countdown--
+		            this.formCustom.newCodeText = `${countdown}S`
+		            if (countdown == 0) {
+		              clearInterval(Interval)
+		              this.formCustom.newCodeText = '获取验证码'
+		            }
+		          }, 1000)
+		        } else {
+		          this.$message.info({
+		            content: response.data.message
+		          })
+		          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+				  this.formCustom.Verificationcode=''
+		        }
+		      })
+		    }
+		  })
+		}
+    },
+    computed: {
+		disabled(){
+			if(this.formCustom.Verificationcode =='' || this.formCustom.messagecode == ''){
+				return true
+			}
+			else{
+				return false
+			}
+		}
+    },
+    watch: {
+		Otheramount: function(val){
+			var a=parseInt(sessionStorage.getItem('balance'))
+			if(val<0)
+			{
+				this.Otheramount=0
+			}
+			else if(val>a){
+				this.Otheramount=this.moneyall
+			}
+		}
+	}
+  }
+</script>
+<style rel="stylesheet/less" lang="less" scoped>
+		.background {
+			background-color: #f5f5f5;
+			width: 100%;
+			@diff: 101px;
+			min-height: calc(~"100% - @{diff}");
+		}
+    .wrapper {
+      width: 1200px;
+      margin: 0px auto;
+		}
+    .wrapper span {
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: rgba(17, 17, 17, 0.43);
+      line-height: 22px;
+      padding: 11px 0px;
+      display: block;
+    }
+	.content{
+		background-color: white;
+		padding: 20px;
+	}
+	.icon1{
+		background:rgba(247,249,250,1);
+		border-radius:2px;
+		border:1px solid rgba(198,207,216,1);
+		width:25px;
+		height:25px;
+		text-align: center;
+		line-height: 25px;
+	}
+	.icon1:hover{
+		color: rgba(42,153,242,1);
+		border: 1px solid rgba(42,153,242,1);
+		cursor: pointer;
+	}
+	.returnmoney{
+		font-size:18px;
+		font-family:MicrosoftYaHei;
+		color:rgba(51,51,51,1);
+		line-height:24px;
+		margin-left: 7px;
+	}
+	.withdrawal{
+		margin-top: 20px;
+	}
+	.withdrawalpo{
+		position: relative;
+		float: left;
+	}
+	.withp{
+		position: absolute;
+		left: 150px;
+		top: 6px;
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		color:rgba(255,255,255,1);
+	}
+	.box1{
+		width:1160px;
+		height:32px;
+		background:rgba(239,247,254,1);
+		border-radius:4px;
+		border:1px solid rgba(42,153,242,1);
+		float: left;
+		line-height: 32px;
+		margin-top: 20px;
+	}
+	.colora{
+		color: #2A99F2;
+		text-decoration: underline;
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+	}
+	.spanaa{
+		color: #2A99F2;
+		text-decoration: underline;
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		cursor: pointer;
+		border: none;
+		padding: 0;
+		background: white;
+		margin-top: -3px;
+	}
+	.spanall{
+		font-size:14px;
+		font-family:MicrosoftYaHei;
+		color:rgba(102,102,102,1);
+		line-height:20px;
+	}
+	.divall{
+		background:rgba(239,247,254,1);
+		border-radius:2px;
+		border:1px solid rgba(42,153,242,1);
+		width:460px;
+		height:85px;
+		margin-top: 10px;
+		margin-left: 10px;
+	}
+	.pall{
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		color:rgba(102,102,102,1);
+		line-height:20px;
+	}
+</style>

@@ -206,7 +206,7 @@
           count: 1
         }
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
-        window.scrollTo(0, 170)
+        // window.scrollTo(0, 182)
       },
       buyIP() {
         if (this.userInfo == null) {
@@ -225,7 +225,7 @@
         }
         axios.get('network/createPublicIp.do', {params}).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$router.push('/ruicloud/order')
+              this.$router.push('/ruicloud/orderNew')
             } else {
               this.$message.info({
                 content: response.data.message

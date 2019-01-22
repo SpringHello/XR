@@ -94,10 +94,12 @@
     </div>
     <!-- 支付状态模态框 -->
     <Modal v-model="showModal.paymentCofirm" :scrollable="true" :closable="true" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">确认支付</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>确认支付</strong>
           <p class="lh24">请您在新打开的页面进行支付，支付完成前请不要关闭此窗口。</p>
         </div>
       </div>

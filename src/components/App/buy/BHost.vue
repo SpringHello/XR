@@ -1000,6 +1000,7 @@
           prod.network = this.network
           prod.cost = this.totalCost
         }
+        
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
       },
       // 购买主机
@@ -1072,7 +1073,7 @@
         axios.get('information/deployVirtualMachine.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({
-              path: '/ruicloud/order'
+              path: '/ruicloud/orderNew'
             })
           } else {
             this.$message.info({

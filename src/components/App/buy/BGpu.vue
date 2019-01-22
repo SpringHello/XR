@@ -1007,7 +1007,7 @@
         prod.VMName = this.dbName
         prod.gpuSelection = this.gpuSelection
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
-        window.scrollTo(0, 170)
+        // window.scrollTo(0, 182)
       },
       buyData() {
         if (this.userInfo == null) {
@@ -1062,7 +1062,7 @@
         }
         axios.get('gpuserver/createGpuServer.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('/ruicloud/order')
+            this.$router.push('/ruicloud/orderNew')
           } else {
             this.$message.info({
               content: response.data.message

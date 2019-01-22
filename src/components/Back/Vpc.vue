@@ -422,10 +422,12 @@
     </Modal>
     <!-- 只有一个vpc时创建互联-->
     <Modal v-model="showModal.createInterconnectByOne" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">VPC互通网关旨在连接两个不同的VPC，使两个VPC通过互通网关实现互联。您当前VPC不足两个，不能创建VPC互通网关。</p>
         </div>
       </div>

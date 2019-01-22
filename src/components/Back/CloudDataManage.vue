@@ -291,10 +291,12 @@
       </Modal>
       <!-- 回滚确认弹窗 -->
       <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
+        <p slot="header" class="modal-header-border">
+          <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+          <span class="universal-modal-title">主机回滚</span>
+        </p>
         <div class="modal-content-s">
-          <Icon type="android-alert" class="yellow f24 mr10"></Icon>
           <div>
-            <strong>主机回滚</strong>
             <p class="lh24">是否确定回滚主机</p>
             <p class="lh24">提示：您正使用<span class="bluetext">{{snapsName}}</span>回滚<span
               class="bluetext">{{hostName}}</span>至<span
@@ -308,10 +310,12 @@
       </Modal>
       <!-- 删除快照弹窗 -->
       <Modal v-model="showModal.delsnaps" :scrollable="true" :closable="false" :width="390">
+        <p slot="header" class="modal-header-border">
+          <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+          <span class="universal-modal-title">删除快照</span>
+        </p>
         <div class="modal-content-s">
-          <Icon type="android-alert" class="yellow f24 mr10"></Icon>
           <div>
-            <strong>删除快照</strong>
             <p class="lh24">确定要删除选中的快照吗？</p>
           </div>
         </div>

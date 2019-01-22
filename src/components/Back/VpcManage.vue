@@ -220,10 +220,12 @@
     </Modal>
     <!--主机离开子网modal-->
     <Modal v-model="showModal.leaveNetwork" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">离开网络</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>离开网络</strong>
           <p class="lh24">是否将确认将主机离开该网络</p>
         </div>
       </div>

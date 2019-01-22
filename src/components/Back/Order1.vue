@@ -225,7 +225,7 @@
                 return h('span', '--')
               }
             }
-          },
+          }
         ],
         orderData: [],
         showFree: [],
@@ -292,18 +292,18 @@
             data.cost = item.cost
             data.discountedorders = item.discountedorders
             data.overTime = item.overTime
-            if(data['订单状态']){
-            this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
-            this.couponInfo.cost += data['订单状态'] == 1 ? 0:item.cost
-            this.couponInfo.totalCost += data['订单状态'] == 1 ? 0:item.cost
-              data._checked = data['订单状态'] == 1 ?false:true
-              data._disabled= data['订单状态'] == 1 ?true:false
-            }else{
-              data._checked = true
-            this.couponInfo.originCost += item.originalcost
-            this.couponInfo.cost += item.cost
-            this.couponInfo.totalCost += item.cost
-            } 
+             if(data['订单状态']){
+              this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
+              this.couponInfo.cost += data['订单状态'] == 1 ? 0:item.cost
+              this.couponInfo.totalCost += data['订单状态'] == 1 ? 0:item.cost
+                data._checked = data['订单状态'] == 1 ?false:true
+                data._disabled= data['订单状态'] == 1 ?true:false
+              }else{
+                data._checked = true
+              this.couponInfo.originCost += item.originalcost
+              this.couponInfo.cost += item.cost
+              this.couponInfo.totalCost += item.cost
+              }
             return data
           })
           this.canUseTicket = this.orderData.every(item => {
