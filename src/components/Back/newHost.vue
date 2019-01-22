@@ -1032,8 +1032,28 @@
                                 }
                                 break
                               case 'hostUpgrade':
-                                sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
-                                this.$router.push('newUpgrade')
+                                this.$http.get('network/VMIsHaveSnapshot.do', {
+                                  params: {
+                                    VMId: this.hostCurrentSelected.computerid
+                                  }
+                                }).then(response => {
+                                  if (response.status == 200 && response.data.status == 1) {
+                                    if (!response.data.result) {
+                                      this.$Modal.confirm({
+                                        title: '提示',
+                                        content: '您的主机有快照，无法升级，请删除快照再试',
+                                        scrollable: true,
+                                        okText: '删除快照',
+                                        onOk: () => {
+                                          this.$router.push('snapshot')
+                                        }
+                                      })
+                                    } else {
+                                      sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
+                                      this.$router.push('newUpgrade')
+                                    }
+                                  }
+                                })
                                 break
                               case 'hostRenew':
                                 this.renewHost(this.hostCurrentSelected)
@@ -1285,8 +1305,28 @@
             break
           case 'upgrade':
             if (this.hostCurrentSelected.status == 1 && this.hostCurrentSelected.computerstate == 0) {
-              sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
-              this.$router.push('newUpgrade')
+              this.$http.get('network/VMIsHaveSnapshot.do', {
+                params: {
+                  VMId: this.hostCurrentSelected.computerid
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  if (!response.data.result) {
+                    this.$Modal.confirm({
+                      title: '提示',
+                      content: '您的主机有快照，无法升级，请删除快照再试',
+                      scrollable: true,
+                      okText: '删除快照',
+                      onOk: () => {
+                        this.$router.push('snapshot')
+                      }
+                    })
+                  } else {
+                    sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
+                    this.$router.push('newUpgrade')
+                  }
+                }
+              })
             }
             break
         }
