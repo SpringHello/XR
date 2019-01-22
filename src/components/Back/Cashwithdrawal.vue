@@ -71,7 +71,7 @@
 			  </p>
 			</Modal>
 			<!-- 银行卡提现弹窗 -->
-			<Modal v-model="showModal.cardfirmation" :scrollable="true" :closable="false" :width="500">
+			<Modal v-model="showModal.cardfirmation" :scrollable="true" :closable="true" :width="500">
 			  <p slot="header" class="modal-header-border">
 			    <span class="universal-modal-title">银行卡提现</span>
 			  </p>
@@ -148,8 +148,8 @@
 			  if (!value) {
 			    return callback(new Error('银行开户名不能为空'))
 			  }
-			  if ((/^[ ]+$/.test(value))) {
-			    callback(new Error('银行开户名不能为空格'))
+			  if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+			    callback(new Error('银行开户名不能包含特殊字符、空格或是纯数字'))
 			  } else {
 			    callback()
 			  }
@@ -158,21 +158,15 @@
 			  if (!value) {
 			    return callback(new Error('开户支行名称不能为空'))
 			  }
-			  if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
-			    callback(new Error('开户支行名称不能包含特殊字符、空格或是纯数字'));
-			  } else {
 			    callback()
-			  }
+			  
 			}
 			const validaRegisteredAddress = (rule, value, callback) => {
 			  if (!value) {
 			    return callback(new Error('银行所在地不能为空'))
 			  }
-			  if (/^[0-9a-zA-Z]+$/.test(value)) {
-			    callback(new Error('银行所在地不能包含纯数字或纯英文'))
-			  } else {
 			    callback()
-			  }
+			  
 			}
 			const validaRegisteredPhone = (rule, value, callback) => {
 			  if (!value) {
@@ -188,18 +182,15 @@
 			  if (!value) {
 			    return callback(new Error('开户银行名称不能为空'))
 			  }
-			  if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
-			    callback(new Error('开户银行名称不能包含特殊字符、空格或是纯数字'));
-			  } else {
 			    callback()
-			  }
+			  
 			}
 			const validaBankAccount = (rule, value, callback) => {
 			  if (!value) {
 			    return callback(new Error('银行账户不能为空'))
 			  }
 			  if (!(/^[1-9]\d{7,27}$/.test(value.replace(/\s/g, '')))) {
-			    callback(new Error('请输入正确的银行账户'))
+			    callback(new Error('银行账户只能为数字'))
 			  } else {
 			    callback()
 			  }
