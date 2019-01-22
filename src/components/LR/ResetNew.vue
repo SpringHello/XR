@@ -126,7 +126,7 @@
                    </FormItem>
                   <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large' placeholder='请输入验证码' style="width:258px;"></Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -147,7 +147,7 @@
             <!-- 身份证验证方式 -->
             <div class="verification"  v-if="verPage == 'card'">
               <div v-if="absc">
-                <Form  :model="dataFroms" :rules="dataFromsValidate" >
+                <Form ref='dataInfo' :model="dataFroms" :rules="dataFromsValidate" >
                   <FormItem prop='name'>
                     <x-Input ref="xinput" :icon='url.icon1' v-model="dataFroms.name"  placeholder='请输入您的姓名' ></x-Input>
                   </FormItem>
@@ -155,7 +155,7 @@
                     <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.idCard"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
                   </FormItem>
                 </Form>
-                <Button type="primary" @click="absc = !absc" style="float:right;">下一步</Button>
+                <Button type="primary" @click="cardNext" style="float:right;">下一步</Button>
               </div>
               <!-- 上传身份证照片 -->
               <div v-else>
@@ -169,8 +169,9 @@
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleBeforeUpload"
+                        :data='flieList'
                         type="drag"
-                        action=""
+                        action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
                         style="display: inline-block;">
                         <div style="width:150px;height:110px;background:#F6FAFD;line-height:110px;">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -199,7 +200,7 @@
                     <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.idCard"  style="margin-top:20px;" placeholder='请输入您的营业执照号码' ></x-Input>
                   </FormItem>
                 </Form>
-                <Button type="primary" @click="absc = !absc" style="float:right;">下一步</Button>
+                <Button type="primary" @click="cardNext" style="float:right;">下一步</Button>
               </div>
               <!-- 上传身份证照片 -->
               <div v-else style="width:500px;">
@@ -214,8 +215,9 @@
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleBeforeUpload"
+                         :data='flieList'
                         type="drag"
-                        action=""
+                        action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
                         style="display: inline-block;">
                         <div style="width:150px;height:110px;background:#F6FAFD;line-height:110px;margin-left:21px;">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -241,8 +243,9 @@
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleBeforeUpload"
+                        :data='flieList'
                         type="drag"
-                        action=""
+                        action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
                         style="display: inline-block;">
                         <div style="width:150px;height:110px;background:#F6FAFD;line-height:110px;">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -275,9 +278,31 @@
                 </FormItem>
                 <FormItem prop='oldPaw'>
                   <x-Input @blur="verificationPaw" :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请确认新密码' choice='eye'></x-Input>
+                  <p class="ivu-form-item-error-tip" v-if="errorMessage != ''">{{errorMessage}}</p>
                 </FormItem>
                </Form>
                <Button type="primary" style="margin-top:21px;float:right;" @click="submit">确认</Button>
+            </div>
+
+              <!-- 重置手机号 -->
+             <div class="verification" v-if="verPage == 'phone' && index == 4">
+               <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" >
+                   <FormItem prop='phone' >
+                     <x-Input  :icon='url.iconPhone'  v-model="dataFroms.phone"  placeholder='请输入手机号' choice='select'></x-Input>
+                   </FormItem>
+                   <FormItem prop='code'>
+                      <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
+                        <div slot="code">
+                          <div class="ver_yan">
+                              <span @click="sendCode(0)" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
+                              <span v-else style="color:#666666;">{{count}}</span>
+                          </div>
+                          <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE;cursor:pointer;" @click="sendCode(0)">重新获取</span>或<span  style="color:#4A97EE;cursor:pointer;" @click="getVoiceCode">接收语音验证</span></p>
+                        </div>
+                      </x-Input>
+                   </FormItem>
+               </Form>
+               <Button type="primary" @click="voiceCode" style="float:right;margin-top:12px;">下一步</Button>
             </div>
 
             <!-- 完成 -->
@@ -313,6 +338,7 @@ import regExp from "../../util/regExp";
 import axios from "@/util/axiosInterceptor";
 import throttle from "throttle-debounce/throttle";
 import popk from "../../myView/input/main";
+import md5 from 'md5'
 let val = '/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/'; //营业执照格式
 const vailAucct = (rule, value, callback) => {
   let reg = /^1[3|5|8|9|6|7]\d{9}$/;
@@ -329,7 +355,7 @@ export default {
   data() {
     return {
        
-      imgSrc: "https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do",
+      imgSrc: "https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do",
 
       //步骤集合
       stepList: [
@@ -422,14 +448,10 @@ export default {
           {required:true,validator: vailAucct,trigger: 'blur'}
         ],
         newPaw:[
-          {
-            required: true, message:'请输入新密码', trigger: 'blur'
-          }
+          {required: true, message:'请输入新密码', trigger: 'blur'}
         ],
         oldPaw:[
-          {
-            required: true, message:'请输入新密码', trigger: 'blur'
-          }
+          {required: true, message:'请输入新密码', trigger: 'blur'}
         ],
         vCode:[
           {required:true, message:'请输入图形验证码',trigger: 'blur'}
@@ -444,9 +466,6 @@ export default {
         license:[{required:true, message: '请输入营业执照号码', trigger: 'blur'}]
       },
 
-      isemail: "1",
-      type: "1",
-      codePlaceholder: "发送验证码",
 
       // 步骤
       index: 1,
@@ -484,7 +503,8 @@ export default {
       timeP:false,
       // 重置账号
       resetAccount:false,
-      vCodeMessage:''
+      vCodeMessage:'',
+      flieList:{}
     };
   },
   components: {
@@ -497,7 +517,7 @@ export default {
   },
   methods: {
     sendCode: throttle(5000, function(val) {
-      this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
+      this.imgSrc = `https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
       this.$refs.dataPhone.validate((valid) => {
         if(valid){
           axios.get("user/code.do", {
@@ -540,8 +560,7 @@ export default {
         .get("user/findPassword.do", {
           params: {
             username: this.dataFroms.phone,
-            password: this.dataFroms.oldPaw,
-            code: this.dataFroms.code
+            password: this.dataFroms.oldPaw
           }
         })
         .then(response => {
@@ -549,10 +568,9 @@ export default {
           if (response.status == 200 && response.statusText == "OK") {
             if (response.data.status == 1) {
               this.$Message.success(response.data.message);
-              this.$router.push({ path: "login" });
+              this.index = 5;
             } else {
-              this.vailForm.loginname.message = response.data.message;
-              this.vailForm.loginname.warning = true;
+             
             }
           }
         });
@@ -561,13 +579,22 @@ export default {
     // 
     getUserInfo(){
       let info ='';
-      axios.get('user/GetUserInfo',{
+      axios.get('user/isHaveEamilOrAuthByPhone.do',{
         params:{
-
+          phone:this.formValidate.account
         }
       }).then(res =>{
         if(res.status == 200 && res.data.status == 1){
-          info = res.data.result.emailauth
+          if(res.data.personAuthFlag && res.data.companyAuthFlag){
+             info = 'company';
+          }else if(res.data.personAuthFlag){
+            info = 'person'
+          }else if(res.data.companyAuthFlag){
+            info = 'company'
+          }else{
+            info = '';
+            this.$Message.info('您还没有实名认证');
+          }
         }else{
         
         }
@@ -577,25 +604,32 @@ export default {
 
     //跳转相应验证
     jump(index,name) {
-      if(name =='pople'){
+      if(name =='pople'){  // 账号不能用
           if(index == 2){
-            this.accountIsDis = '3';
-            return;
+            // let user = this.getUserInfo();
+            // if( user == 'person'){
+            //   this.verPage = "card";
+            //    this.index = 3; 
+            //    return;
+            // }else if(user == 'company'){
+            //   this.verPage = 'enterprise';
+            //   this.index = 3;
+            // }else{
+              this.accountIsDis = 3;
+              return;
+            // }
           }else if(index == 3){
             this.index = 3;
-            this.verPage = "people";
+            this.verPage = "people"; // 人工
              return;
           }
       }
-     
       if(name == 'individual' && index == 2){
-        this.verPage = "card";
-        this.index = 3; 
-        return;
+          this.verPage = "card";
+          this.index = 3; 
       }else if(name == 'individual' && index == 3){
-        this.verPage = 'enterprise';
-        this.index = 3; 
-        return
+           this.verPage = 'enterprise';
+              this.index = 3;
       }
 
       if(name == 'ok' && index == 2){
@@ -604,14 +638,9 @@ export default {
          return;
       }
 
-      if (index == 0) {
-        if(this.getUserInfo() == 0){
-           this.verPage = "email";
-            this.index = 3; 
-        }else{
-          this.$Message.error('您的账号没有绑定邮箱');
-          return;
-        }
+      if (index == 0) { 
+          this.verPage = "email";
+          this.index = 3; 
       } else if (index == 1) {
         this.verPage = "phone";
         this.index = 3; 
@@ -649,6 +678,37 @@ export default {
     handleFormatError() {
       this.$Message.error("上传文件只能为jpg,png格式");
     },
+
+    // 上传成功
+    handleSuccess(){
+
+    },
+
+    handleBeforeUpload(file){
+      function appendMD5(params, type) {
+        if (params === undefined) {
+          return undefined
+        }
+        var str = '', count = 0
+        for (let i in params) {
+          str += i.substr(0, 1) + params[i]
+          count++
+        }
+        str += count
+        if (str !== '') {
+          if (type != 'post') {
+            str = encodeURI(str)
+          }
+          str = md5(str)
+
+          var mac = str.substr(0, count) + count + str.substr(count)
+          return   mac.toUpperCase()
+        }
+      }
+      this.flieList.mac = appendMD5(file.name, 'post');
+      console.log(this.flieList.mac);
+    },
+
     // 短信验证码
     voiceCode(){
       this.$refs.dataPhone.validate((valid)=>{
@@ -688,7 +748,7 @@ export default {
 
     //获取邮箱验证码
     getVerificationCode() {
-       this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
+       this.imgSrc = `https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
       this.$refs.dataEmail.validate((valid) => {
         if(valid){
           axios.get("user/code.do", {
@@ -725,7 +785,7 @@ export default {
 
     // 获取语音验证码
     getVoiceCode(){
-      this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
+      this.imgSrc = `https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
       axios.get('user/voiceCode.do',{
         params:{
           aim:this.dataFroms.phone,
@@ -747,18 +807,32 @@ export default {
             },1000);
         }
       })
+    },
+
+    // 身份
+    validateInfo(){
+      axios.post('user/newPhoneByIdCard.do',{
+        IDCard:this.dataFroms.idCard,
+        authType:'0',
+        personIdCardHandUrl:''
+      }).then(res =>{
+        if(res.status == 200 && res.data.status == 1){
+
+        }
+      })
+    },
+
+    // 
+    cardNext(){
+      this.$refs.dataInfo.validate((valid)=>{
+        if(valid){
+          this.absc = !this.absc;
+        }
+      })
     }
   },
   computed: {
-    disabled() {
-      return !(
-        this.form.loginname &&
-        this.form.password &&
-        this.form.vailCode &&
-        this.vailForm.loginname.warning == false &&
-        this.vailForm.password.warning == false
-      );
-    }
+
   },
   watch: {
     index() {
@@ -1066,5 +1140,9 @@ export default {
 }
   .up_photo{
     width:150px;height:110px;display:inline-block;vertical-align:top;margin-left:21px;
+    img{
+      width: inherit;
+      height: inherit;
+    }
   }
 </style>
