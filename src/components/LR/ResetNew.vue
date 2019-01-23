@@ -118,7 +118,7 @@
             </div>
 
             <!-- 手机验证方式 -->
-            <div class="verification" v-if="verPage == 'phone' && index == 3">
+            <div class="verification" v-if="index == 3 && verPage == 'phone'">
               <p class="ver_p">请输入有效手机号码用于接收验证码</p>
                <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" >
                    <FormItem prop='phone' >
@@ -159,7 +159,10 @@
               </div>
               <!-- 上传身份证照片 -->
               <div v-else>
-                <div style="display: inline-block;vertical-align:middle;">
+                <div class="up_content">
+                    <div class="up_propress" v-for="item in uploadList" :key="item.id" v-if="item.showProgress">
+                       <Progress  v-if="item.showProgress" :percent="item.percentage" hide-info style="line-height:110px;"></Progress>
+                    </div>
                     <Upload
                         ref="upload"
                         :show-upload-list="false"
@@ -173,10 +176,13 @@
                         type="drag"
                         action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
                         style="display: inline-block;">
-                        <div style="width:150px;height:110px;background:#F6FAFD;line-height:110px;">
+                        <div class="up_button" v-if="fileUrl.imgUrl ==''">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
                         </div>
-                        <Button type="primary">上传图片</Button>
+                        <div class="up_button" v-else>
+                          <img :src="fileUrl.imgUrl">
+                        </div>
+                        <Button type="primary" style="margin-top:20px;">上传图片</Button>
                     </Upload>
                 </div>
                 <div class="up_photo">
@@ -184,56 +190,64 @@
                     <p>手持身份证人像照片</p>
                 </div>
                   <p style="margin:10px 0 20px 0;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
-                  <Button type="primary" style="float:right;" @click="index = 4,verPage =''">下一步</Button>
+                  <Button type="primary" style="float:right;" @click="index = 4,verPage ='phone'">下一步</Button>
               </div>
                
             </div>
 
               <!-- 企业验证 -->
-             <div class="verification"  v-if="verPage == 'enterprise'">
-              <div v-if="absc">
-                <Form  :model="dataFroms" :rules="dataFromsValidate" >
+             <div   v-if="verPage == 'enterprise'">
+              <div v-if="absc" class="verification">
+                <Form  ref="dataInfo" :model="dataFroms" :rules="dataFromsValidate" >
                   <FormItem prop='company'>
                     <x-Input ref="xinput" :icon='url.icon1' v-model="dataFroms.company"  placeholder='请输入您的公司名称' ></x-Input>
                   </FormItem>
-                  <FormItem prop='idCard'>
-                    <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.idCard"  style="margin-top:20px;" placeholder='请输入您的营业执照号码' ></x-Input>
+                  <FormItem prop='business'>
+                    <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.business "  style="margin-top:20px;" placeholder='请输入您的营业执照号码' ></x-Input>
                   </FormItem>
                 </Form>
                 <Button type="primary" @click="cardNext" style="float:right;">下一步</Button>
               </div>
               <!-- 上传身份证照片 -->
-              <div v-else style="width:500px;">
-                <div style="display: inline-block;">
-                  <div style="display: inline-block;vertical-align:middle;">
+              <div v-else  class="up_company">
+                <div style="width:401px;display: inline-block;">
+                  <div class="up_content">
+                    <div class="up_propress" v-for="item in uploadList" :key="item.id" v-if="item.showProgress">
+                       <Progress  v-if="item.showProgress" :percent="item.percentage" hide-info style="line-height:110px;"></Progress>
+                    </div>
                     <Upload
                         ref="upload"
                         :show-upload-list="false"
-                        :on-success="handleSuccess"
+                        :on-success="legalSuccess"
                         :format="['jpg','jpeg','png']"
                         :max-size="4096"
                         :on-format-error="handleFormatError"
                         :on-exceeded-size="handleMaxSize"
                         :before-upload="handleBeforeUpload"
-                         :data='flieList'
+                        :data='flieList'
                         type="drag"
                         action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
                         style="display: inline-block;">
-                        <div style="width:150px;height:110px;background:#F6FAFD;line-height:110px;margin-left:21px;">
+                        <div class="up_button" v-if="fileUrl.legalUrl ==''">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
                         </div>
-                        <Button type="primary">上传图片</Button>
+                        <div class="up_button" v-else>
+                          <img :src="fileUrl.legalUrl">
+                        </div>
+                        <Button type="primary" style="margin-top:20px;">上传图片</Button>
                     </Upload>
                   </div>
                   <div class="up_photo">
                     <img src="../../assets/img/usercenter/card-font.png">
                     <p>法人身份证正面照片</p>
                   </div>
-                    <p style="margin:10px 0 20px 0;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
-                    
+                    <p style="margin:50px 0 20px 0;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
                 </div>
-                <div style="display: inline-block;margn-left:22px;">
-                  <div style="display: inline-block;vertical-align:middle;">
+                <div style="display: inline-block;width:401px;margn-left:22px;vertical-align:top;">
+                  <div class="up_content">
+                    <div class="up_propress" v-for="item in uploadList" :key="item.id" v-if="item.showProgress">
+                       <Progress  v-if="item.showProgress" :percent="item.percentage" hide-info style="line-height:110px;"></Progress>
+                    </div>
                     <Upload
                         ref="upload"
                         :show-upload-list="false"
@@ -247,18 +261,21 @@
                         type="drag"
                         action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
                         style="display: inline-block;">
-                        <div style="width:150px;height:110px;background:#F6FAFD;line-height:110px;">
+                        <div class="up_button" v-if="fileUrl.imgUrl == ''">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
                         </div>
-                        <Button type="primary">上传图片</Button>
+                        <div class="up_button" v-else>
+                          <img :src="fileUrl.imgUrl">
+                        </div>
+                        <Button type="primary" style="margin-top:20px;">上传图片</Button>
                     </Upload>
                   </div>
                   <div class="up_photo">
                     <img src="../../assets/img/usercenter/card-person.png">
                     <p>经办人手持身份证照片</p>
                   </div>
-                  <Button type="primary" style="float:right;" @click="index = 4,verPage =''">下一步</Button>
                 </div>
+                <Button type="primary" style="float:right;" @click="index = 4,verPage ='phone'">下一步</Button>
               </div>
             </div>
 
@@ -271,25 +288,29 @@
             </div>
 
             <!-- 设置新密码 -->
-            <div class="verification" v-if="index == 4">
+            <div class="verification" v-if="index == 4 && verPage == ''">
                <Form  :model="dataFroms" :rules="dataFromsValidate" >
                 <FormItem prop='newPaw'>
                   <x-Input   :icon='url.iconLock' v-model="dataFroms.newPaw"  placeholder='请设置新密码' choice='eye'></x-Input>
                 </FormItem>
                 <FormItem prop='oldPaw'>
                   <x-Input @blur="verificationPaw" :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请确认新密码' choice='eye'></x-Input>
-                  <p class="ivu-form-item-error-tip" v-if="errorMessage != ''">{{errorMessage}}</p>
                 </FormItem>
                </Form>
                <Button type="primary" style="margin-top:21px;float:right;" @click="submit">确认</Button>
             </div>
 
               <!-- 重置手机号 -->
-             <div class="verification" v-if="verPage == 'phone' && index == 4">
+             <div class="verification" v-if="index == 4 && verPage == 'phone'">
                <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" >
                    <FormItem prop='phone' >
                      <x-Input  :icon='url.iconPhone'  v-model="dataFroms.phone"  placeholder='请输入手机号' choice='select'></x-Input>
                    </FormItem>
+                   <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
+                    <Input  v-model="dataFroms.vCode" size='large' placeholder='请输入验证码' style="width:258px;"></Input>
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
+                  </FormItem>
                    <FormItem prop='code'>
                       <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
                         <div slot="code">
@@ -302,7 +323,7 @@
                       </x-Input>
                    </FormItem>
                </Form>
-               <Button type="primary" @click="voiceCode" style="float:right;margin-top:12px;">下一步</Button>
+               <Button type="primary" @click="validateInfo" style="float:right;margin-top:12px;">确定</Button>
             </div>
 
             <!-- 完成 -->
@@ -351,8 +372,30 @@ const vailAucct = (rule, value, callback) => {
   }
 };
 
+const IDCardValid = (rule, value, callback) =>{
+  let reg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+  if(value == ''){
+    return callback(new Error('请输入身份证号码'));
+  }else if(!reg.test(value)){
+    return callback(new Error('您输入身份证格式不正确'));
+  }else{
+    callback();
+  }
+}
+
+
+
 export default {
   data() {
+    const passwordValid = (rule,value, callback)=>{
+      if(value == ''){
+        return callback(new Error('请输入确认密码'));
+      }else if(value != this.dataFroms.newPaw){
+        return callback(new Error('您的密码两次输入不一致，请重新输入'));
+      }else{
+        callback()
+      }
+    }
     return {
        
       imgSrc: "https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do",
@@ -451,7 +494,7 @@ export default {
           {required: true, message:'请输入新密码', trigger: 'blur'}
         ],
         oldPaw:[
-          {required: true, message:'请输入新密码', trigger: 'blur'}
+          {required: true, validator:passwordValid, trigger: 'blur'}
         ],
         vCode:[
           {required:true, message:'请输入图形验证码',trigger: 'blur'}
@@ -460,10 +503,11 @@ export default {
           {required:true, message:'请输入姓名', trigger: 'blur'}
         ],
         idCard:[
-          {required:true,message:'请输入身份证号码', trigger: 'blur'}
+          {required:true,validator:IDCardValid, trigger: 'blur'}
         ],
         company:[{required:true, message: '请输入公司名称', trigger: 'blur'}],
-        license:[{required:true, message: '请输入营业执照号码', trigger: 'blur'}]
+        license:[{required:true, message: '请输入营业执照号码', trigger: 'blur'}],
+        business:[{required:true, message: '请输入营业执照', trigger:"blur"}]
       },
 
 
@@ -483,7 +527,8 @@ export default {
         name:'',
         idCard:'',
         vCode:'',
-        company:''
+        company:'',
+        business:''
       },
 
       //账号是否可用
@@ -504,7 +549,12 @@ export default {
       // 重置账号
       resetAccount:false,
       vCodeMessage:'',
-      flieList:{}
+      flieList:{},
+      fileUrl:{
+        imgUrl:'',
+        legalUrl:''
+      },
+      uploadList:[]
     };
   },
   components: {
@@ -514,6 +564,9 @@ export default {
     axios.get("network/getQQCustomerServiceStatus.do", {}).then(response => {
       this.QQInfo = response.data.kefu[0].qqnumber;
     });
+  },
+  mounted(){
+  
   },
   methods: {
     sendCode: throttle(5000, function(val) {
@@ -595,8 +648,6 @@ export default {
             info = '';
             this.$Message.info('您还没有实名认证');
           }
-        }else{
-        
         }
          return info;
       })
@@ -661,7 +712,7 @@ export default {
         }
       } else if(val == 'no'){
         this.accountIsDis = '9';
-        // this.index = 2;
+        this.stepList[3].value = '设置新手机号';
         this.resetAccount = true
       }else if(val == 'go'){
          this.index = 2;
@@ -680,11 +731,22 @@ export default {
     },
 
     // 上传成功
-    handleSuccess(){
+    handleSuccess(res){
+      if(res.status == 1){
+        this.fileUrl.imgUrl = res.result;
+      }
+    },
 
+    // 法人身份证上传成功
+    legalSuccess(res){
+      if(res.status == 1){
+        this.fileUrl.legalUrl = res.result;
+      }
     },
 
     handleBeforeUpload(file){
+      this.uploadList = this.$refs.upload.fileList;
+      console.log( this.$refs.upload);
       function appendMD5(params, type) {
         if (params === undefined) {
           return undefined
@@ -706,7 +768,6 @@ export default {
         }
       }
       this.flieList.mac = appendMD5(file.name, 'post');
-      console.log(this.flieList.mac);
     },
 
     // 短信验证码
@@ -814,11 +875,23 @@ export default {
       axios.post('user/newPhoneByIdCard.do',{
         IDCard:this.dataFroms.idCard,
         authType:'0',
-        personIdCardHandUrl:''
+        personIdCardHandUrl:this.fileUrl.imgUrl
       }).then(res =>{
         if(res.status == 200 && res.data.status == 1){
-
+          this.$Message.success({
+            content: res.data.message,
+            duration: 5
+          });
+          this.index = 5;
+        }else{
+          this.$Message.error({
+            content: res.data.message,
+            duration: 5
+          })
         }
+      }).catch(err =>{
+        if(err)
+        this.$Message.error('网络错误，请稍后重试');
       })
     },
 
@@ -847,11 +920,9 @@ export default {
     },
     'dataFroms.vCode':{
         handler(){
-          if(this.dataFroms.vCode == ''){
             this.vCodeMessage ='';
           }
-        }
-    }
+    },
   }
 };
 </script>
@@ -1144,5 +1215,39 @@ export default {
       width: inherit;
       height: inherit;
     }
+    p{
+      margin-top:26px;
+      color: #666666;
+      font-size: 14px;text-align: center;
+    }
+  }
+  .up_button{
+    width:150px;height:110px;background:#F6FAFD;line-height:110px;
+    text-align: center;
+    img{
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      vertical-align: middle;
+      text-align: center;
+    }
+  }
+  .up_company{
+    margin: 0 auto;
+    width: 871px;
+    margin-top:41px;
+  }
+  .up_propress{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(255,255,255,0.8); 
+    z-index: 999;
+    width: 150px;
+    height: 112px;
+  }
+  .up_content{
+    display: inline-block;vertical-align:middle;position: relative;
   }
 </style>
