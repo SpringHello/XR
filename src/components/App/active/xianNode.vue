@@ -200,15 +200,15 @@
               <FormItem label="真实姓名" prop="name">
                 <Input v-model="authFormValidate.name" placeholder=" 请输入您的真实姓名" size="large"></Input>
               </FormItem>
-              <FormItem label="身份证号" prop="id">
-                <Input v-model="authFormValidate.id" placeholder=" 请输入您的身份证号" size="large">></Input>
+              <FormItem label="身份证号" prop="personId">
+                <Input v-model="authFormValidate.personId" placeholder=" 请输入您的身份证号" size="large">></Input>
               </FormItem>
               <FormItem label="图形验证码" prop="pictureCode">
                 <div style="display: flex">
                   <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:224px;">
                          </Input>
                   <img :src="imgSrc" style="height:33px;"
-                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                       @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
                 </div>
               </FormItem>
               <FormItem label="手机号码" prop="tel">
@@ -233,6 +233,7 @@
 <script type="text/ecmascript-6">
 import axios from '@/util/axiosInterceptor'
 import $ from 'jquery'
+import reg from '../../../util/regExp'
 export default {
   data () {
     const validaRegisteredPhone = (rule, value, callback) => {
@@ -336,7 +337,7 @@ export default {
       },
       authFormValidate: {
           name: '',
-          id: '',
+          personId: '',
           pictureCode: '',
           tel: '',
           vailCode: '',
@@ -347,7 +348,7 @@ export default {
             {required: true, message: '请输入姓名'},
             {validator: validaRegisteredName}
           ],
-          id: [
+          personId: [
             {required: true, message: '请输入身份证号'},
             {validator: validaRegisteredID}
           ],
@@ -543,9 +544,9 @@ export default {
       authAndGetPrize() {
         this.$refs.authForm.validate((valid) => {
           if (valid) {
-            this.showModal.authGetPrizeModal = false
+            this.showModal.authModal = false
             axios.post('user/personalAttest.do', {
-              cardID: this.authFormValidate.id,
+              cardID: this.authFormValidate.personId,
               name: this.authFormValidate.name,
               phone: this.authFormValidate.tel,
               phoneCode: this.authFormValidate.vailCode,
