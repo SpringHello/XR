@@ -20,7 +20,7 @@ const BObj = () => import('@/components/App/buy/BObj')
 
 const Buy = () =>import('@/components/App/buy/Buy')
 const BHost = () =>import('@/components/App/buy/BHost')
-const BIP = () =>import('@/components/App/buy/BIP')  
+const BIP = () =>import('@/components/App/buy/BIP')
 const BDisk = () =>import('@/components/App/buy/BDisk')
 const BData = () =>import('@/components/App/buy/BData')
 const BGpu = () =>import('@/components/App/buy/BGpu')
@@ -112,9 +112,9 @@ const Pelastic = () => import('@/components/App/product/Pelastic.vue')
 // import Register from '@/components/LR/Register'
 // import Reset from '@/components/LR/Reset'
 const Login = () =>import('@/components/LR/Login')
-const NewLogin = () =>import('@/components/LR/newLogin')
+//const NewLogin = () =>import('@/components/LR/newLogin')
 const Register = () =>import('@/components/LR/Register')
-const NewRegister = () =>import('@/components/LR/newRegister')
+//const NewRegister = () =>import('@/components/LR/newRegister')
 const Reset = () =>import('@/components/LR/Reset')
 const RegisterSuccess = () =>import('@/components/LR/RegisterSuccess')
 const ResetNew = () =>import('@/components/LR/ResetNew')
@@ -132,6 +132,8 @@ const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
 const Host = () =>import('@/components/Back/Host')
 const NewHost = () =>import('@/components/Back/newHost')
+const NewHostManage = () =>import('@/components/Back/newHostManage')
+const NewUpgrade = () =>import('@/components/Back/newUpgrade')
 const GPU = () =>import('@/components/Back/GPU')
 const GpuList = () =>import('@/components/Back/GpuList')
 const Mirror = () =>import('@/components/Back/Mirror')
@@ -417,6 +419,8 @@ var router = new Router({
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
         {path: 'newHost', name: 'newHost', component: NewHost},
+        {path: 'newHostManage', name: 'newHostManage', component: NewHostManage},
+        {path: 'newUpgrade', name: 'newUpgrade', component: NewUpgrade},
         {path: 'gpu', name: 'gpu', component: GPU},
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
@@ -468,9 +472,9 @@ var router = new Router({
       component: LR,
       children: [
         {path: 'login', name: 'login', component: Login},
-        {path: 'newLogin', name: 'newLogin', component: NewLogin},
+        //{path: 'newLogin', name: 'newLogin', component: NewLogin},
         {path: 'register', name: 'register', component: Register},
-        {path: 'newRegister', name: 'newRegister', component: NewRegister},
+        //{path: 'newRegister', name: 'newRegister', component: NewRegister},
         {path: 'reset', name: 'reset', component: Reset},
         {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess},
         {path: 'resetNew',name:'resetNew',component:ResetNew}

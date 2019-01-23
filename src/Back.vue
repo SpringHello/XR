@@ -38,7 +38,7 @@
             <li>
               <Dropdown @on-click="go">
                 <a href="javascript:void(0)" style="position:relative">
-                  {{userInfo.realname}}
+                  {{userInfo?userInfo.realname:''}}
                   <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
                   <Icon type="arrow-down-b"></Icon>
                 </a>
