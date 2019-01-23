@@ -746,7 +746,6 @@ export default {
 
     handleBeforeUpload(file){
       this.uploadList = this.$refs.upload.fileList;
-      console.log( this.$refs.upload);
       function appendMD5(params, type) {
         if (params === undefined) {
           return undefined

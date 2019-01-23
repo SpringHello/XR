@@ -28,17 +28,9 @@ Vue.config.productionTip = false
 
 // axios.defaults.baseURL = '/ruicloud'
 
-<<<<<<< HEAD
 
 axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
   // axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
-=======
- axios.defaults.withCredentials = true
-
- axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
-//axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
-//axios.defaults.baseURL = 'https://www.xrcloud.net/ruicloud/'
->>>>>>> 6c0debbac814b54eea3363e2d56e41495ca13732
 
 axios.defaults.withCredentials = true
 // window.eventBus = new Vue();
