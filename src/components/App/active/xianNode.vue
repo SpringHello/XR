@@ -6,9 +6,9 @@
           <div class="left">
             <img src="../../../assets/img/active/xianNode/banner-text.png" alt>
             <p>
-              新节点云服务器
-              <i>2折</i>
-              特惠，100%资源可用、100%性能可用！
+               新节点云服务器
+              <i>折扣特惠</i>，
+              100%资源可用、100%性能可用！
             </p>
             <span @click="roll(500)">立即参与</span>
           </div>
@@ -20,18 +20,19 @@
       <div class="wrap">
         <p class="reminder" v-if="reminderShow">
           <i style="font-style:normal;color:#FF3000">温馨提示：</i>依照国家政策规定，
-          <span @click="$LR({type: 'register'})" class="pointer">注册</span>并
+          <span @click="$LR({type: 'register'})" class="pointer" v-if="!userInfo">注册</span>
+          <span class="disabled" v-else>注册</span>
+          并
           <span class="pointer" @click="showAuthModal()">实名认证</span>
           后才可购买使用云产品，请提前完成认证以确保可顺利参与活动。若已完成请先
-          <span @click="$LR({type: 'login'})" class="pointer">登录</span>
+          <span @click="$LR({type: 'login'})" class="pointer" v-if="!userInfo">登录</span>
+          <span class="disabled" v-else>登录</span>
           <span class="fr pointer" @click="reminderShow=false">x</span>
         </p>
         <div class="top">
           <div class="item-headline"></div>
           <p>
-            新睿云西安节点正式上线，新节点云服务器
-            <span>2折</span>
-            优惠，仅限新用户
+            新睿云西安节点正式上线，新节点云服务器折扣优惠，仅限新用户
             <span class="rule" @click="showModal.luckDrawRuleModal=true">活动规则</span>
           </p>
         </div>
@@ -53,7 +54,7 @@
                   <Option value="linux">centos</option>
                 </Select>
               </div>
-              <div>
+              <div class="zone-select">
                 <span>请选择区域</span>
                 <Select v-model="selectedZone" style="width: 190px;text-align:center" disabled>
                   <Option v-for="(item2,index) in zoneList" :key="index" :value="item2.value">{{item2.name}}</option>
@@ -153,6 +154,20 @@
         </div>
       </div>
     </transition>
+    <!-- 新用户提示 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.newCoustom=false" v-if="showModal.newCoustom">
+        <div class="all-modal modal1" @click.stop="showModal.newCoustom=true" style="height:280px;">
+          <div class="header">
+            <i @click.stop="showModal.newCoustom=false"></i>
+          </div>
+          <div class="body" style="padding-top:72px;">
+            <p>很抱歉！您不是新用户，不符合参与本次活动的条件！</p>
+            <p style="color:#FF3000;margin-top:10px;cursor:pointer" @click="$router.push('activecenter')">去看看其他优惠活动吧 →</p>
+          </div>
+        </div>
+      </div>
+    </transition>
     <!-- 活动规则弹窗 -->
     <transition name="fade">
       <div class="overlay" @click="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal">
@@ -162,7 +177,7 @@
             <h3>1、活动时间：2019年1月28日-2019年3月1日;</h3>
             <h3>2、本次西安新节点上线活动仅限新用户参加，每位用户仅限购买3台活动产品;</h3>
             <h3>3、本次活动产品仅限于西安区云服务器，其他地区产品不参与此活动;</h3>
-            <h3>4、本次活动产品均为2折特惠价格，不能使用任何优惠券以及现金券;</h3>
+            <h3>4、本次活动产品均为折扣特惠价格，不能使用任何优惠券以及现金券;</h3>
             <h3>5、参与本次活动购买的云服务器不享有7天无理由退款服务;</h3>
             <h3>6、根据国家相关规定，用户实名认证之后才可以购买使用云服务器;</h3>
             <h3>7、此活动最终解释权由新睿云所有。</h3>
@@ -177,7 +192,7 @@
         <div class="all-modal modal2" @click.stop="showModal.authModal=true" style="height:586px;">
           <div class="header"><i @click.stop="showModal.authModal=false"></i></div>
           <div class="body xiannode-form">
-            <p class="reminder">
+            <p class="reminder" v-if="authHintShow">
               <span>温馨提示：</span>
               您还不是实名认证用户，请填写以下认证信息，完成认证后可继续购买活动产品！
             </p>
@@ -248,6 +263,7 @@ export default {
         }
       }
     return {
+      authHintShow: false,
       reminderShow: true,
       zoneList: [],
       selectedZone: '',
@@ -316,6 +332,7 @@ export default {
         authErrorModal: false,
         authSucModal: false,
         notAuthModal: false,
+        newCoustom: false
       },
       authFormValidate: {
           name: '',
@@ -359,6 +376,7 @@ export default {
   },
   methods: {
     showAuthModal() {
+      this.authHintShow = false
       if (this.$store.state.userInfo) {
         this.showModal.authModal = true
       } else {
@@ -420,28 +438,45 @@ export default {
     },
     //   云主机生成订单
     getDiskcountMv (item, index) {
-      if (this.$store.state.userInfo) {
-        axios.get('information/getDiskcountMv.do', {
-          params: {
-            vmConfigId: item.vmConfigId,
-            osType: item.selectedSystem,
-            defzoneid: this.selectedZone
-          }
-        }).then(res => {
-          if (res.status == 200 && res.data.status == 1) {
-            this.$Message.success('创建订单成功')
-            this.$router.push('order')
-          } else {
-            this.$message.info({
-              content: res.data.message
-            })
-          }
-        })
+      if (!this.$store.state.userInfo) {
+        this.showModal.notLoginModal = true
       } else {
-        this.showModal.notLoginModal = true;
-      }
-    },
-      //领奖时认证验证码
+          // 判断是否为新用户
+          axios.get('activity/jdugeTeam.do').then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              if (response.data.result.flag) {
+                if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)){
+                  this.authHintShow = true
+                  this.showModal.authModal = true
+                  return
+                }
+                axios.get('information/getDiskcountMv.do', {
+                  params: {
+                    vmConfigId: item.vmConfigId,
+                    osType: item.selectedSystem,
+                    defzoneid: this.selectedZone
+                  }
+                }).then(res => {
+                  if (res.status == 200 && res.data.status == 1) {
+                    this.$Message.success('创建订单成功')
+                    this.$router.push('order')
+                  } else {
+                    this.$message.info({
+                      content: res.data.message
+                    })
+                  }
+                })
+              } else {
+                this.showModal.newCoustom = true
+              }
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
+        }
+      },
       getVerificationCode() {
         if (!this.authFormValidate.pictureCode) {
           this.$Message.info('请输入图形验证码')
@@ -531,7 +566,9 @@ export default {
       },
   },
   computed: {
-
+    userInfo() {
+      return this.$store.state.userInfo
+    }
   },
   watch: {
 
@@ -575,8 +612,9 @@ export default {
         color: #222222;
         font-weight: 500;
         i {
-          font-size: 28px;
+          font-size: 24px;
           color: #ff3000;
+          font-style: normal;
         }
       }
       span {
@@ -608,9 +646,15 @@ export default {
     border: solid 1px #ff3000;
     span {
       color: #ff3000;
+    }
+    .pointer {
+      cursor: pointer;
       &:hover {
         text-decoration: underline;
       }
+    }
+    .disabled {
+      cursor: not-allowed;
     }
   }
   .top {
@@ -633,6 +677,9 @@ export default {
       .rule {
         cursor: pointer;
         font-size: 16px;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }
@@ -640,7 +687,7 @@ export default {
     margin-top: 32px;
     .box {
       width: 340px;
-      height: 362px;
+      height: 363px;
       background: url(../../../assets/img/active/xianNode/item-bg-1.png) center  no-repeat;
        &:hover {
          box-shadow: 0px 4px 6px rgba(255, 48, 0, .2);
@@ -733,7 +780,7 @@ export default {
     margin-top: 34px;
   }
   .box {
-    width: 190px;
+    width: 192px;
     .img-wrap {
       height: 102px;
       display: flex;

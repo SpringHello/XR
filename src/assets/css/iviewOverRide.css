@@ -412,6 +412,12 @@ div.modal-header-border {
 .xiannode-form .ivu-form .ivu-form-item-label {
   font-size: 16px;
 }
+#xian-node .zone-select .ivu-select-arrow {
+  display: none;
+}
+.xian-input .ivu-input{
+  text-align: center;
+ }
 /*  免费领取主机弹窗样式 */
 .fr-Modal .ivu-modal-header {
   padding: 0;
@@ -453,9 +459,7 @@ div.modal-header-border {
 .fr-select .ivu-select-arrow {
   color: #FF881C;
 }
-.xian-input .ivu-input{
-  text-align: center;
- }
+
 
 /* 自定义监控下拉框 */
 .cm-select.ivu-select-single .ivu-select-selection {
