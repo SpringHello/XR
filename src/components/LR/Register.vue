@@ -1077,6 +1077,10 @@
           this.registerForm.errorMsg = 'notConfirmPassword'
           return
         }
+        if (!this.registerForm.agreeStatus) {
+          this.$Message.info('请确认阅读并勾选用户使用协议')
+          return
+        }
         let params = {}
         if (this.registerForm.registerType === 'phone') {
           params = {
