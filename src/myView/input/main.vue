@@ -217,7 +217,8 @@ export default {
             }
             if(this.choice == 'eye'){
                 this.isSelect = 'eye';
-                this.style='height: 44px;padding-left: 48px;padding-right:70px;'
+                this.style='height: 44px;padding-left: 48px;padding-right:70px;';
+                this.type = 'password';
                 //  return;
             }
          },

@@ -534,6 +534,8 @@
               localStorage.setItem('authToken', res.data.message)
               if (this.from.indexOf('/ruicloud/smlj') == 0) {
                 this.$router.push({path: this.from})
+              } else if (this.from.indexOf('/ruicloud/ActiveCenter') == 0) {
+                this.$router.push({path: this.from})
               } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
                 this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
               } else {
@@ -561,10 +563,10 @@
             this.loginForm.errorMsg = 'verificationCodeMistake'
             return
           }
-          /*      if (!this.passwordCaptchaObjStatus) {
-                  this.loginForm.errorMsg = 'notSlidingCodeValidation'
-                  return
-                }*/
+          if (!this.passwordCaptchaObjStatus) {
+            this.loginForm.errorMsg = 'notSlidingCodeValidation'
+            return
+          }
           let url = 'user/loginByCode.do', params = {
             username: this.loginForm.loginName,
             code: this.loginForm.verificationCode
@@ -573,6 +575,8 @@
             if (res.data.status === 1 && res.status === 200) {
               localStorage.setItem('authToken', res.data.message)
               if (this.from.indexOf('/ruicloud/smlj') == 0) {
+                this.$router.push({path: this.from})
+              } else if (this.from.indexOf('/ruicloud/ActiveCenter') == 0) {
                 this.$router.push({path: this.from})
               } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
                 this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
@@ -618,6 +622,7 @@
           if (response.status === 200 && response.data.status === 1) {
             this.loginForm.errorMsg = 'notRegister'
           } else {
+            this.loginForm.verificationCodeText = '发送中'
             let url = 'user/code.do'
             let params = {}
             if (this.regExpObj.phone.test(this.loginForm.loginName)) {
@@ -657,6 +662,7 @@
                 }, 1000)
               } else {
                 this.$Message.info(res.data.message)
+                this.loginForm.verificationCodeText = '发送验证码'
               }
             })
           }

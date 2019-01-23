@@ -910,6 +910,7 @@
           params
         }).then(response => {
           if (response.status === 200 && response.data.status === 1) {
+            this.registerForm.verificationCodeText = '发送中'
             let url = 'user/code.do'
             let params = {}
             if (this.registerForm.registerType === 'phone') {
@@ -946,6 +947,7 @@
                     }
                   }, 1000)
                 } else {
+                  this.registerForm.verificationCodeText = '发送验证码'
                   this.$Message.info(res.data.message)
                 }
               }
@@ -1073,6 +1075,10 @@
         }
         if (this.registerForm.password !== this.registerForm.passwordAffirm) {
           this.registerForm.errorMsg = 'notConfirmPassword'
+          return
+        }
+        if (!this.registerForm.agreeStatus) {
+          this.$Message.info('请确认阅读并勾选用户使用协议')
           return
         }
         let params = {}
