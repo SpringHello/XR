@@ -9,9 +9,9 @@
                 <div class="left">
                   <img src="../../assets/img/active/xianNode/banner-text.png" alt>
                   <p>
-                    新节点云服务器
-                    <i>2折</i>
-                    特惠，100%资源可用、100%性能可用！
+                     新节点云服务器
+                    <i>折扣特惠</i>，
+                    100%资源可用、100%性能可用！
                   </p>
                   <span @click="$router.push('xianNode')">立即参与</span>
                 </div>
@@ -601,8 +601,9 @@
         color: #222222;
         font-weight: 500;
         i {
-          font-size: 28px;
+          font-size: 24px;
           color: #ff3000;
+          font-style: normal;
         }
       }
       span {
