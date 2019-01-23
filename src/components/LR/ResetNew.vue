@@ -98,7 +98,7 @@
                   </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large'  placeholder='请输入验证码' style="width:258px;"></Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                   </FormItem>
                    <FormItem prop='code'>
                       <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
@@ -126,7 +126,7 @@
                    </FormItem>
                   <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large' placeholder='请输入验证码' style="width:258px;"></Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -307,7 +307,7 @@
                    </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large' placeholder='请输入验证码' style="width:258px;"></Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -397,7 +397,7 @@ export default {
     }
     return {
        
-      imgSrc: "https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do",
+      imgSrc: "user/getKaptchaImage.do",
 
       //步骤集合
       stepList: [
@@ -554,7 +554,8 @@ export default {
         legalUrl:''
       },
       uploadList:[],
-      legalList:[]
+      legalList:[],
+      // 区分是个人还是
     };
   },
   components: {
@@ -570,7 +571,7 @@ export default {
   },
   methods: {
     sendCode: throttle(5000, function(val) {
-      this.imgSrc = `https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
+      this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
       this.$refs.dataPhone.validate((valid) => {
         if(valid){
           axios.get("user/code.do", {
@@ -834,7 +835,7 @@ export default {
 
     //获取邮箱验证码
     getVerificationCode() {
-       this.imgSrc = `https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
+       this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
       this.$refs.dataEmail.validate((valid) => {
         if(valid){
           axios.get("user/code.do", {
@@ -871,7 +872,7 @@ export default {
 
     // 获取语音验证码
     getVoiceCode(){
-      this.imgSrc = `https://kaifa.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
+      this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
       axios.get('user/voiceCode.do',{
         params:{
           aim:this.dataFroms.phone,
@@ -897,10 +898,21 @@ export default {
 
     // 身份
     validateInfo(){
+     let name = this.getUserInfo();
+      let params = {
+         IDCard:this.dataFroms.idCard,
+          authType:'0',
+          personIdCardHandUrl:this.fileUrl.imgUrl,
+      }
+      let paramsOne ={
+         businessLicense:this.dataFroms.business,
+          authType:'1',
+          agentIdCardHandUrl:this.fileUrl.imgUrl,
+          legalIdCardFrontUrl:this.fileUrl.legalUrl,
+      }
+      let data = name == 'person'?params:paramsOne;
       axios.post('user/newPhoneByIdCard.do',{
-        IDCard:this.dataFroms.idCard,
-        authType:'0',
-        personIdCardHandUrl:this.fileUrl.imgUrl
+        data
       }).then(res =>{
         if(res.status == 200 && res.data.status == 1){
           this.$Message.success({
