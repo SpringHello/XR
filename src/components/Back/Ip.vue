@@ -1452,7 +1452,7 @@
           this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
             params: {
               brandwith: this.adjustForm.brand,
-              publicIpId: this.select ? this.select.id : ''
+              publicIpId: this.select[0] ? this.select[0].id : ''
             }
           }).then(response => {
             if (response.status == 200) {
