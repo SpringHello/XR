@@ -174,10 +174,7 @@
             weight: '1',
           },
           {
-             imgPath: require('../../assets/img/activecenter/dan.png'),
-            name: '双旦同庆，钜惠上云',
-            desc: '高配云产品 限时2.7折; 更有首购好礼',
-            secDesc: '免费产品体验等内容',
+            imgPath: require('../../assets/img/activecenter/dan.png'),
             time: '2018.12.24-2019.01.30',
             activeObj: '新老用户',
             url: 'wonderfulDay',
