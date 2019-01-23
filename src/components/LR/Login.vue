@@ -618,6 +618,7 @@
           if (response.status === 200 && response.data.status === 1) {
             this.loginForm.errorMsg = 'notRegister'
           } else {
+            this.loginForm.verificationCodeText = '发送中'
             let url = 'user/code.do'
             let params = {}
             if (this.regExpObj.phone.test(this.loginForm.loginName)) {
@@ -657,6 +658,7 @@
                 }, 1000)
               } else {
                 this.$Message.info(res.data.message)
+                this.loginForm.verificationCodeText = '发送验证码'
               }
             })
           }
