@@ -1994,6 +1994,7 @@
                   },
                   on: {
                     click: () => {
+                      this.showModal.freezeParticulars = false
                       this.unfreezeId = params.row.id
                       this.$http.get('user/jdugeThawCondition.do', {
                         params: {
