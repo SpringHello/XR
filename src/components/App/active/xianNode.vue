@@ -6,9 +6,7 @@
           <div class="left">
             <img src="../../../assets/img/active/xianNode/banner-text.png" alt>
             <p>
-              新节点云服务器
-              <i>2折</i>
-              特惠，100%资源可用、100%性能可用！
+              新节点云服务器折扣特惠，100%资源可用、100%性能可用！
             </p>
             <span @click="roll(500)">立即参与</span>
           </div>
@@ -20,10 +18,13 @@
       <div class="wrap">
         <p class="reminder" v-if="reminderShow">
           <i style="font-style:normal;color:#FF3000">温馨提示：</i>依照国家政策规定，
-          <span @click="$LR({type: 'register'})" class="pointer">注册</span>并
+          <span @click="$LR({type: 'register'})" class="pointer" v-if="!userInfo">注册</span>
+          <span class="disabled" v-else>注册</span>
+          并
           <span class="pointer" @click="showAuthModal()">实名认证</span>
           后才可购买使用云产品，请提前完成认证以确保可顺利参与活动。若已完成请先
-          <span @click="$LR({type: 'login'})" class="pointer">登录</span>
+          <span @click="$LR({type: 'login'})" class="pointer" v-if="!userInfo">登录</span>
+          <span class="disabled" v-else>登录</span>
           <span class="fr pointer" @click="reminderShow=false">x</span>
         </p>
         <div class="top">
@@ -563,7 +564,9 @@ export default {
       },
   },
   computed: {
-
+    userInfo() {
+      return this.$store.state.userInfo
+    }
   },
   watch: {
 
@@ -640,9 +643,15 @@ export default {
     border: solid 1px #ff3000;
     span {
       color: #ff3000;
+    }
+    .pointer {
+      cursor: pointer;
       &:hover {
         text-decoration: underline;
       }
+    }
+    .disabled {
+      cursor: not-allowed;
     }
   }
   .top {
@@ -768,7 +777,7 @@ export default {
     margin-top: 34px;
   }
   .box {
-    width: 190px;
+    width: 192px;
     .img-wrap {
       height: 102px;
       display: flex;
