@@ -2025,8 +2025,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.timingRefresh(this.hostCurrentSelected.id)
             this.hostSelection = []
-          }
-          else if (response.status == 200 && response.data.status == 2) {
+          } else {
             this.$message.info({
               content: response.data.message
             })
