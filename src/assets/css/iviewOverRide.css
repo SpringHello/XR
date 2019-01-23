@@ -509,9 +509,6 @@ div.modal-header-border {
   border-bottom: none;
   border-radius: 6px 6px 0px 0px;
 }
-.ivu-modal-close .ivu-icon-ios-close-empty{
-  color: #fff;
-}
 
 .my_table .ivu-table th{
   background-color: #F6FAFD;
