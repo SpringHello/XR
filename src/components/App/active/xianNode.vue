@@ -171,7 +171,7 @@
     <!-- 活动规则弹窗 -->
     <transition name="fade">
       <div class="overlay" @click="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal">
-        <div class="all-modal modal3" @click="showModal.luckDrawRuleModal=true">
+        <div class="all-modal modal3" @click.stop="showModal.luckDrawRuleModal=true">
           <div class="header"><i @click.stop="showModal.luckDrawRuleModal=false"></i></div>
           <div class="body">
             <h3>1、活动时间：2019年1月28日-2019年3月1日;</h3>
