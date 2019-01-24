@@ -1,5 +1,5 @@
 <template>
-    <div  :class="wrapClasses" style=" height: 46px;border-radius:4px;">
+    <div  :class="wrapClasses" style=" height: 46px;border-radius:4px;width:363px;">
       <img class="ver_img" :src="icon" style="width:16px;height:18px;">
         <div class="ver_select" v-if="isSelect == 'select'">
             <div @click="isShow = !isShow" class="verNumber" :class="[isShow ?'verNumber':'verNumbers']">
@@ -338,7 +338,7 @@ export default {
         height: 28px;
         line-height: 28px;
         margin-top: 8px;
-        padding: 0 20px 0 17px;
+        padding: 0 3% 0 3%;
         border-left: 1px solid  #C8C8C8;
         color: #4A97EE;
         position: absolute;
