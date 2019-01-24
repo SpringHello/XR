@@ -244,7 +244,7 @@ export default {
   },
   methods: {
     getPrice () {
-      axios.get('domain/getSSLPrice.do', {}).then(Response => {
+      axios.get('domain/getAllPrice.do', {}).then(Response => {
 
       })
     },
