@@ -2,7 +2,7 @@
 	<div id="background">
 		<div id="wrapper">
 			<span>个人中心 / 费用中心 / 提现</span>
-			<div class="content">
+			<div class="content" style="min-height: 655px;">
 				<span>自助线上提现</span>
 				<div class="remindbox">
 					<div class="remindbox-left">
@@ -14,7 +14,7 @@
 							</div>
 							<Button type="primary" style="margin-top: 17px;" @click="showModal.Cashconfirmation = true">申请线上提现</Button>
 						</div>
-						<div class="font">
+						<div class="font" style="margin-left: 10px;">
 							<span>可<span style="color: #FF624B;">银行卡</span>提现金额</span>
 							<div class="money">
 								<span>{{Bankmoney}}</span>
@@ -25,7 +25,7 @@
 					</div>
 					<div class="remindbox-right">
 						<div class="right">
-							<span><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。如需帮助，可查看
+							<span style="line-height: 21px;"><span style="line-height: 21px;">申请线上提现后您的款项将在</span><span style="color: #FF624B;line-height: 21px;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。如需帮助，可查看
 								<a href="#" style="color: #2A99F2;text-decoration: underline;">自助提现常见问题</a></span>
 							<div class="following">
 								<span>以下几种现金充值金额不支持自助线上提现：</span><br />
@@ -48,9 +48,9 @@
 				</div>
 				<Table border :columns="withdrawal" :data="withdrawaldataFilter" style="margin-top: 10px;"></Table>
 				<!-- :total="ordertotal" -->
-
+				<Page :total="pageall" :page-size="pageNum" @on-change="changePage" style="float: right;margin-right: 30px;margin-top: 20px;"></Page>
 			</div>
-			<Page :total="pageall" :page-size="pageNum" @on-change="changePage" style="float: right;margin-right: 30px;"></Page>
+			
 			<!-- 线上提现弹窗 -->
 			<Modal v-model="showModal.Cashconfirmation" :scrollable="true" :closable="false" :width="390">
 				<p slot="header" class="modal-header-border">
@@ -509,13 +509,13 @@
 	}
 
 	.remindbox-left {
-		width: 24%;
+		width: 29%;
 		height: 100%;
 		float: left;
 	}
 
 	.font {
-		width: 102px;
+		width: 150px;
 		height: auto;
 		float: left;
 		margin-left: 20px;
@@ -549,7 +549,7 @@
 	}
 
 	.remindbox-right {
-		width: 76%;
+		width: 71%;
 		height: 100%;
 		float: left;
 	}
