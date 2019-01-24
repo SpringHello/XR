@@ -626,7 +626,7 @@ export default {
               this.$Message.success(response.data.message);
               this.index = 5;
             } else {
-             
+             this.$Message.error(response.data.message);
             }
           }
         });
