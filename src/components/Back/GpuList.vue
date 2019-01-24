@@ -26,7 +26,10 @@
             <Button type="primary" :disabled='disabledList.deleteDisabled' style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">删除</Button>
             <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">更多操作</Button>
           </div>
-          <p style="font-size:14px;margin:10px 0;">共{{selectLength.total}}项|   已选择<span style="color:#FF624B;">{{selectLength.selection}}</span>项</p>
+           <div class="selectMark">
+            <img src="../../assets/img/host/h-icon10.png"/>
+            <span>共 {{ selectLength.total}} 项 | 已选择 <span style="color:#FF624B;">{{ selectLength.selection }} </span>项</span>
+          </div>
           <Table :columns="hostList" :data="hostData"  @on-select-change="selectIndex"></Table>
         </div>
       </div>
@@ -438,8 +441,13 @@
               align: 'center'
             },
             {
-              title:'用户名称/唯一名称',
               width:109,
+               renderHeader: (h, params) => {
+                return h('ul', {}, [
+                  h('li', {}, '用户名称 / '),
+                  h('li', {}, '唯一名称')
+                ])
+              },
               render:(h,params)=> {
                 //创建中
                 if (params.row.status == 2 && params.row.computerstate == undefined) {
@@ -586,7 +594,12 @@
               }
             },
             {
-              title:'创建时间/到期时间',
+             renderHeader: (h, params) => {
+              return h('ul', {}, [
+                h('li', {}, '创建时间 / '),
+                h('li', {}, '到期时间')
+              ])
+            },
               render:(h,params)=>{
                 return h('div',[
                   h('p',{style:{marginBottom:'5px'}},params.row.createtime+'/'),
@@ -1393,6 +1406,18 @@
         display: inline-block;
         vertical-align: middle;
       }
+    }
+  }
+   .selectMark {
+     margin: 10px 0;
+    > img {
+      position: relative;
+      top: 4px;
+    }
+    > span {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(102, 102, 102, 1);
     }
   }
 </style>
