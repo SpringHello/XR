@@ -35,7 +35,7 @@
                     <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span
                       @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
                     <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span
-                      @click="showModal.ModifyTelVail = true,selectedVailIndex = 0,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
+                      @click="telModify_btn()">修改</span></li>
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
                     <li v-if="!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
@@ -1300,7 +1300,7 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="modifyPhoneIDcancel()">取消</Button>
+        <Button type="ghost" @click="showModal.modifyPhoneID = false">取消</Button>
         <Button type="primary" v-if="authModifyPhoneStep == 0" @click="bindingMobilePhoneStepTwo('authModifyPhoneFormOne')">下一步</Button>
         <Button type="primary" v-if="authModifyPhoneStep == 1" @click="uploadIDImg()">下一步</Button>
         <Button type="primary" v-if="authModifyPhoneStep == 2" @click="bindMobilePhone('authModifyPhoneFormThere')">下一步</Button>
@@ -2639,6 +2639,14 @@
           }
         })
       },
+      // 修改手机弹窗出现前，清空数据
+      telModify_btn() {
+        this.showModal.ModifyTelVail = true
+        this.selectedVailIndex = 0
+        this.bindingMobilePhoneForm.step = 0
+        this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+        this.modifyPhoneIDcancel()
+      },
       // 重置表单
       reset() {
         this.notAuth.quicklyAuthForm.name = ''
@@ -3046,20 +3054,6 @@
       getBindingMobilePhoneCode(codeType) {
         this.$refs.bindingMobilePhone.validateField('pictureCode', (text) => {
           if (text == '') {
-            // let params = {}
-            // if (this.bindingMobilePhoneForm.verificationMode == 'phone') {
-            //   params = {
-            //     aim: this.userInfo.phone,
-            //     isemail: 0,
-            //     vailCode: this.bindingMobilePhoneForm.pictureCode
-            //   }
-            // } else {
-            //   params = {
-            //     aim: this.userInfo.loginname ? this.userInfo.loginname : '',
-            //     isemail: 1,
-            //     vailCode: this.bindingMobilePhoneForm.pictureCode
-            //   }
-            // }
             var url = ''
             if (codeType == 'code' || codeType == 'againCode' && this.bindingMobilePhoneForm.codeText == '获取验证码') {
               url = 'user/code.do'
@@ -3618,7 +3612,6 @@
       },
       bindingMobilePhoneStepTwo(name) {
         this.$refs[name].validate((valid) => {
-          console.log(valid)
           if (valid) {
             if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
               axios.post('user/isIdCardAndNameSame.do', {
@@ -3709,7 +3702,6 @@
         })
       },
       modifyPhoneIDcancel() {
-        this.showModal.modifyPhoneID = false
         this.authModifyPhoneStep = 0
         this.$refs['authModifyPhoneFormOne'].resetFields()
         this.$refs['authModifyPhoneFormThere'].resetFields()
@@ -3849,6 +3841,17 @@
           this.getResourceAllocation()
         },
         deep: true
+      },
+      // 正则判断blur时,val为空的情况
+      'authModifyPhoneFormOne.ID': {
+        handler() {
+          this.authModifyPhoneFormOne.personHint = false
+        }
+      },
+      'authModifyPhoneFormOne.businessLicense': {
+        handler() {
+          this.authModifyPhoneFormOne.companyHint = false
+        }
       }
     }
   }

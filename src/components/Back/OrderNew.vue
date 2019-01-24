@@ -1,72 +1,46 @@
 <template>
   <div class="background">
     <div class="wrapper">
-      <span>首页 / {{routerName}} / 订单确认</span>
+      <span>首页 / 新建云主机 / 订单确认</span>
       <div class="content">
         <span>订单确认</span>
-        <button style="float:right" class="button" @click="$router.push('buy')">返回</button>
-        <div class="order_text" >
-          <div v-if="routerName == '新建云主机'">
-            <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
-            <p style="margin-top:10px;">请牢记您所设置的密码，如遗忘可登录云服务器控制台重置密码。<a class="blue_font" href="https://www.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/kmKQJcCNq" target="_blank" >查看</a></p>
-            <p style="margin-top:10px;">云服务器购买成功后，数据盘默认是未挂载的情况，需要自行格式化硬盘后，挂载分区后才能在云服务器内看到。<a class="blue_font" href="https://zschj.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/14u6nDwUP8" target="_blank">查看windows如何格式化、Linux如何格式化</a></p>
-            <p style="margin-top:10px;">创建完成后，须到主机设置里进行扩容才能使用，详细操作请参照 <a class="blue_font" href="https://zschj.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/14u6nDwUP8" target="_blank">数据盘扩容文档</a></p>
-          </div>
-         <div v-else>
-            <p style="margin-top:10px;">云服务器购买成功后，额外的系统盘默认为未分区状态，需要自行扩容文件系统之后查看。<a class="blue_font" href="https://zschj.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/14u6nDwUP8" target="_blank">查看如何扩容windows文件系统、扩容Linux文件系统</a></p>
-          </div>
+        <div style="margin-top:10px;" class="order">
+          <Table :columns="orderColumns" :data="orderData" @on-selection-change="onSelectionChange"></Table>
         </div>
-        <div class="selectMark">
-          <img src="../../assets/img/host/h-icon10.png"/>
-          <span>共 {{ selectLength.total}} 项 | 已选择 <span style="color:#FF624B;">{{ selectLength.selection }} </span>项</span>
-        </div>
-        <div style="margin-top:20px;" class="order">
-          <Table class="my_table" :columns="orderColumns" :data="orderData" @on-selection-change="onSelectionChange"></Table>
-        </div>
-        <div style="margin-top:10px;background:#F6FAFD;" class="coupon">
-            <div>
-              <div>
-                <Checkbox  v-model="couponInfo.isUse" @on-change="changeCheckbox">
-                  <p style="font-weight: 700;margin-left: 10px;display:inline-block">使用优惠券（该产品有<span style="color:#30BA78;">{{couponInfo.couponList.length}}张</span>优惠券）</p>
-                </Checkbox>
-                <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券</span>
-              </div>
-              <RadioGroup v-model="couponInfo.selectTicket" @on-change="radioChange" type="button" class="coupon_radio"  v-if="couponInfo.isUse">
-                <Radio v-for="item in couponInfo.couponList" :label="item.operatorid" :key="item.operatorid"
-                     style="display:block;margin:20px 0px;height:88px;margin-right:10px;">
-                  <div class="ticketInfo">
-                    <div style="margin-right:36px;line-height:58px;">
-                      <span style="width:100px;" v-if="item.tickettype == 0">满<strong>{{item.startmoney}}</strong>减<strong>{{item.money}}</strong></span>
-                      <span  style="width:100px;" v-else><strong>{{item.money*10}}</strong>折</span>
-                    </div>
-                    <div>
-                    <p>适用产品：{{item.ticketdescript}}</p>
-                    <p style="margin:10px 0;">使用条件：{{item.remark}}</p>
-                    <p>过期时间：{{item.endtime}}</p>
-                    </div>
-                  </div>
-                </Radio>
+        <div style="margin-top:10px;" class="coupon">
+          <Checkbox v-model="couponInfo.isUse" @on-change="changeCheckbox">
+            <span style="font-weight: 700;margin-left: 10px;">使用优惠券（该产品有{{couponInfo.couponList.length}}张优惠券）</span>
+          </Checkbox>
+          <div style="margin:20px 0px;border-bottom: 1px solid rgb(233,233,233);">
+            <RadioGroup v-model="couponInfo.selectTicket" @on-change="radioChange">
+              <Radio v-for="(item,index) in couponInfo.couponList" :label="item.operatorid" :key="item.operatorid"
+                     style="display:block;margin:20px 0px;">
+                <div class="ticketInfo">
+                  <span style="width:100px;">{{item.money}}{{item.tickettype==1?'折':'元'}}</span><span>适用产品：{{item.ticketdescript}}</span><span>过期时间：{{item.endtime}}</span><span
+                  style="display: block;margin-left:100px;">使用条件：{{item.remark}}</span>
+                </div>
+              </Radio>
             </RadioGroup>
-             
-            </div>
-            <div style="margin:22px 0;">
-              <Checkbox v-model="couponInfo.isCash" @on-change="changeCashbox">
-                <p  style="font-weight: 700;margin-left: 10px;display:inline-block;">使用现金券<span style="color:#FF624B;font-size:18px;">{{couponInfo.cash}}</span>元</p>
-              </Checkbox>
-               <span style="float:right;">已经抵扣：<strong style="color:#FF624B;font-size:24px;">{{deductionPrice}}</strong>元</span>
-            </div>
-     
-         <div style="border-top:1px solid #E9E9E9;padding:20px 0;margin-top:20px;">
-           <!-- <span style="color:#2d8cf0;cursor:pointer;">全民普惠，3折减单，最高减免7000元！</span> -->
-           <span style="float:right;">实际支付：<strong style="color:#FF624B;font-size:24px;">{{couponInfo.totalCost}}</strong>元</span>
-         </div>
-        </div>
-        <div style="text-align:right;margin-top:40px;">
-          <Button @click="$router.push({path:'overview'})" style="margin-right:20px;">取消订单</Button>
-          <Button type="primary"  @click="pay">提交订单</Button>
-        </div>
-       
+            <!--<span style="display: block;color:#2d8cf0;cursor:pointer;margin-bottom: 20px;"> + 获取优惠券</span>-->
+            <!--<router-link :to="{ path: 'dynamic', query: { id: '14' }}">全民普惠，3折减单，最高减免7000元！</router-link>-->
+            <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券（优先使用现金券，点击支付即可）</span>
+          </div>
+          <p style="color: #2B99F2">{{spentCost}}</p>
+          <p style="text-align: right;font-size:14px;color:rgba(102,102,102,1);line-height:19px;margin-bottom: 20px;">
+            原价：<span :class="{cross:couponInfo.originCost!=couponInfo.totalCost}">{{couponInfo.originCost}}元</span><span
+            style="font-size:18px;color:rgba(0,0,0,0.65);margin-left: 20px;">总计支付：{{couponInfo.totalCost}}元</span>
+          </p>
+          <p style="text-align: right;color: #F85E1D">{{ spentCostNode }}</p>
+          <div style="text-align: right;margin: 10px 0;">
+            <ul>
+              <li v-for="(item,index) in showFree"
+                  style="font-size: 12px;color:rgba(102,102,102,1);" :key="item.index">{{item}}
+              </li>
+            </ul>
+          </div>
+          <Button type="primary" style="float:right" @click="pay">支付</Button>
           <div style="clear: both"></div>
+        </div>
       </div>
     </div>
 
@@ -99,33 +73,55 @@
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
   import store from '@/vuex'
+
   export default {
     data() {
-      let that = this
       return {
         orderColumns: [
           {
             type: 'selection',
             width: 60,
-            align: 'center',
+            align: 'center'
           },
           {
             title: '资源',
             render: (h, params) => {
+              var type = ''
               var arr = []
+              switch (params.row['订单类型']) {
+                case 'host':
+                  type = '云主机'
+                  break
+                case 'vpc':
+                  type = 'vpc'
+                  break
+                case 'disk':
+                  type = '云硬盘'
+                  break
+                case 'publicIp':
+                  type = '弹性IP'
+                  break
+                case 'continue':
+                  type = '续费'
+                  break
+                case 'upconfig':
+                  type = '升级'
+                  break
+                case 'nat' :
+                  type = 'NAT网关'
+                  break
+              }
               for (var index in params.row['资源']) {
                 let parr = []
                 for (var key in params.row['资源'][index]) {
-                  parr.push(h('p', {style: {marginBottom: '10px',lineHeight:'1.2'}}, `${key}  :  ${params.row['资源'][index][key]}`))
+                  parr.push(h('p', {style: {lineHeight: '1.5'}}, `${key}:${params.row['资源'][index][key]}`))
                 }
-                arr.push(
-                 h('div', {
+                arr.push(h('div', {
                   style: {
                     borderBottom: index == params.row['资源'].length - 1 ? 'none' : '1px solid rgb(233, 234, 236)',
                     padding: '10px'
                   }
-                }, parr)
-                )
+                }, parr))
               }
               return h('div', {
                 style: {
@@ -133,9 +129,9 @@
                 }
               }, arr)
             },
-            width: 216
+            width: 300
           },
-           {
+          {
             title:'状态',
             width:150,
             render:(h,params)=>{
@@ -243,44 +239,23 @@
           // 优惠价
           cost: 0,
           // 最后总计支付
-          totalCost: 0,
-          // 选中的现金券
-          isCash:false,
-          cash:'',
-
-          isRecommend:false,
-          Recommend:''
+          totalCost: 0
         },
-
-        selectDiscount:[],
-        
         canUseTicket: true,
         showModal: {
           exchangeCard: false
         },
         exchangeCardCode: '',
         exchangeCardCodeError: false,
-        spentCost: 0,
-        spentCostNode: 50,
-        // 订单选择数量
-        selectLength:{
-          total:0,
-          selection:0
-        },
-        // 订单类型
-        goodType:null
+        spentCost: '',
+        spentCostNode: ''
       }
     },
     beforeRouteEnter(to, from, next) {
       let params = {}
-     let order = to.query.countOrder == undefined ?'':to.query.countOrder;
-      let orderS = sessionStorage.getItem('countOrder') == 'undefined'?null:sessionStorage.getItem('countOrder')
       if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
-        params.countOrder = order || orderS
-        sessionStorage.setItem('countOrder', order + '')
-      }
-      if (to.query.countOrder) {
-        params.countOrder = to.query.countOrder
+        params.countOrder = to.query.countOrder || sessionStorage.getItem('countOrder')
+        // sessionStorage.setItem('countOrder', to.query.countOrder + '')
       }
       axios.get('user/searchOrderByBuy.do', {
         params
@@ -291,11 +266,7 @@
       })
     },
     created() {
-      this.getSpentCost();
-      this.getWalletsBalance();
-    },
-    mounted(){
-      sessionStorage.setItem('routername',this.routerName);
+      this.getSpentCost()
     },
     methods: {
       getSpentCost() {
@@ -306,15 +277,14 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            this.spentCost = parseInt(res.data.result)
+            this.spentCost = res.data.info1
+            this.spentCostNode = res.data.info2
           }
         })
       },
       // 设置order列表
       setOrder(response) {
         if (response.status == 200 && response.data.status == 1) {
-          this.selectLength.total = response.data.result.data.length;
-          this.goodType = response.data.result.data[0].goodstype;
           this.orderData = response.data.result.data.map(item => {
             var data = JSON.parse(item.display)
             data.orderId = item.ordernumber
@@ -322,7 +292,7 @@
             data.cost = item.cost
             data.discountedorders = item.discountedorders
             data.overTime = item.overTime
-           if(data['订单状态']){
+             if(data['订单状态']){
               this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
               this.couponInfo.cost += data['订单状态'] == 1 ? 0:item.cost
               this.couponInfo.totalCost += data['订单状态'] == 1 ? 0:item.cost
@@ -336,11 +306,6 @@
               }
             return data
           })
-         for(let i =0;i<this.orderData.length;i++){
-             if(this.orderData[i]._checked == true){
-               this.selectLength.selection ++ ;
-             }
-         }
           this.canUseTicket = this.orderData.every(item => {
             return item.discountedorders != 1
           })
@@ -355,7 +320,8 @@
               ticketType: '',
               isuse: 0,
               orderNumber: orderNumber + '',
-              totalCost: this.couponInfo.cost
+              totalCost: this.couponInfo.cost,
+              notOverTime: '1'
             }
           }).then(response => {
             this.couponInfo.couponList = response.data.result
@@ -364,7 +330,6 @@
       },
       // 选中项变化
       onSelectionChange(selection) {
-        this.selectLength.selection = selection.length;
         this.couponInfo.selectTicket = ''
         this.canUseTicket = selection.every(item => {
           return item.discountedorders != 1
@@ -381,7 +346,7 @@
             this.couponInfo.couponList.forEach(item => {
               if (item.operatorid == this.couponInfo.selectTicket) {
                 if (item.tickettype == 1) {
-                  this.couponInfo.totalCost = (cost * item.money ).toFixed(2)
+                  this.couponInfo.totalCost = (cost * item.money / 10).toFixed(2)
                 } else if (item.tickettype == 0) {
                   this.couponInfo.totalCost = (cost - item.money).toFixed(2)
                 }
@@ -401,7 +366,8 @@
             ticketType: '',
             isuse: 0,
             orderNumber: orderNumber + '',
-            totalCost: cost
+            totalCost: cost,
+            notOverTime: '1'
           }
         }).then(response => {
           this.couponInfo.couponList = response.data.result
@@ -409,24 +375,9 @@
       },
       // 是否使用优惠券开关
       changeCheckbox(bol) {
-        if(this.couponInfo.isCash){
-           this.couponInfo.isCash = !this.couponInfo.isUse;
-        }
-       
         if (!bol) {
           this.couponInfo.selectTicket = ''
         }
-      },
-      changeCashbox(bol){
-         if(this.couponInfo.isUse){
-          this.couponInfo.isUse = !this.couponInfo.isCash;
-        }
-         
-         this.couponInfo.totalCost = this.couponInfo.totalCost - (bol?this.couponInfo.cash:0);
-         if(!bol){
-         }else{
-            this.couponInfo.selectTicket = '';
-         }
       },
       radioChange() {
         if (!this.canUseTicket) {
@@ -442,8 +393,8 @@
             order += item.orderId + ','
           }
         })
-        if (order == '') {
-          this.$message.info('请选择需要支付的订单')
+        if (this.couponInfo.totalCost == 0) {
+          this.$Message.info('请选择需要支付的订单')
           return
         }
         axios.get('information/zfconfirm.do', {
@@ -456,7 +407,7 @@
           if (response.status == 200 && response.data.status == 1) {
             sessionStorage.setItem('overtime', this.orderData[0].overTime)
             this.$router.push({
-              name: 'payNew',
+              name: 'result',
               params: response.data.result
             })
           } else {
@@ -464,6 +415,7 @@
               content: response.data.message
             })
           }
+
         })
       },
       // 兑换优惠券
@@ -483,110 +435,9 @@
             this.exchangeCardCodeError = true
           }
         })
-      },
-      getWalletsBalance(){
-        this.$http.post('device/DescribeWalletsBalance.do',{}).then(res =>{
-          if (res.status == 200 && res.data.status == '1') {
-            this.couponInfo.cash = res.data.data.voucher
-          }
-        })
-      }
-      
-    },
-    computed: {
-      otherSpentCost() {
-        let cost = this.spentCost
-        if (cost < 1117) {
-          this.spentCostNode = '可领取50元苏宁卡/京东E卡！'
-          return 1117 - cost
-        } else if (1117 <= cost && cost < 6117) {
-          this.spentCostNode = '可领取350元+50元苏宁卡/京东E卡！'
-          return 6117 - cost
-        } else if (6117 <= cost && cost < 11117) {
-          this.spentCostNode = '可领取1000元+350元+50元苏宁卡/京东E卡！'
-          return 11117 - cost
-        } else if (11117 <= cost && cost < 31117) {
-          this.spentCostNode = '可领取3100元+ 1000元+ 350元 + 50元苏宁卡/京东E卡！'
-          return 31117 - cost
-        } else {
-          return 0
-          this.spentCostNode = '可领取3100元+ 1000元+ 350元 + 50元苏宁卡/京东E卡！'
-        }
-      },
-      deductionPrice(){
-        if(this.couponInfo.isUse){
-          let money = 0;
-          if (this.couponInfo.selectTicket != '') {
-            this.couponInfo.couponList.forEach(item => {
-              if (item.operatorid == this.couponInfo.selectTicket) {
-                if (item.tickettype == 1) {
-                   money = this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2)
-                } else if (item.tickettype == 0) {
-                  money = item.money.toFixed(2);
-                }
-              }
-            })
-            return money;
-          }
-        }
-        if(this.couponInfo.isCash){
-           if(this.couponInfo.totalCost > this.couponInfo.cash){
-              return  this.couponInfo.cash;
-            }
-            if(this.couponInfo.totalCost < this.couponInfo.cash){
-              return this.couponInfo.cash - this.couponInfo.totalCost;
-            }
-        }
-        return 0.0;
-      },
-      routerName(){
-        if(this.goodType == 0){
-          return '新建云主机'
-        }else if(this.goodType == 1){
-          return '新建云硬盘'
-        }else if(this.goodType == 2){
-          return '新建公网IP'
-        }else if(this.goodType == 3){
-          return '新建云硬盘'
-        }else if(this.goodType == 4){
-          return '续费'
-        }else if(this.goodType == 5){
-          return '主机升级'
-        }else if(this.goodType == 6){
-          return '公网带宽升级'
-        }else if(this.goodType == 8){
-          return '公网IP计费更改'
-        }else if(this.goodType == 9){
-          return '磁盘升级'
-        }else if(this.goodType == 10){
-          return '新建NAT网关'
-        }else if(this.goodType == 11){
-          return '新建数据库'
-        }else if(this.goodType == 12){
-          return '数据库扩容'
-        }else if(this.goodType == 13){
-          return '数据库升级'
-        }else if(this.goodType == 14){
-          return '短信包订单'
-        }else if(this.goodType == 15){
-          return '新建GPU云服务器'
-        }else if(this.goodType == 16){
-          return 'GPU升级'
-        }else if(this.goodType == 17){
-          return '新建对象存储流量和容量包'
-        }else if(this.goodType == 18){
-          return '域名转入'
-        }else if(this.goodType == 19){
-          return '域名购买'
-        }else if(this.goodType == 20){
-          return '系统盘扩容'
-        }else if(this.goodType == 21){
-          return '域名续费'
-        }else if(this.goodType == 22){
-          return 'SSL证书购买'
-        }
       }
     },
+    computed: {},
     watch: {
       'couponInfo.selectTicket': {
         handler: function () {
@@ -594,7 +445,7 @@
             this.couponInfo.couponList.forEach(item => {
               if (item.operatorid == this.couponInfo.selectTicket) {
                 if (item.tickettype == 1) {
-                  this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
+                  this.couponInfo.totalCost = (this.couponInfo.cost * item.money / 10).toFixed(2)
                 } else if (item.tickettype == 0) {
                   this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
                 }
@@ -614,7 +465,6 @@
 <style rel="stylesheet/less" lang="less" scoped>
 
   .background {
-    font-family: 'MicrosoftYaHei';
     background-color: #f5f5f5;
     width: 100%;
     @diff: 101px;
@@ -632,7 +482,6 @@
         display: block;
       }
       .content {
-        font-family: 'MicrosoftYaHei';
         background-color: white;
         padding: 20px;
         & > span {
@@ -641,25 +490,12 @@
           color: rgba(17, 17, 17, 0.75);
           font-weight: bold;
         }
-        .order_text{
-          font-family: 'MicrosoftYaHei';
-          margin-top:20px;
-          padding: 10px 0 10px 20px;
-          background: rgb(255,248,230);
-          border: 1px solid rgb(255, 233, 183);
-          border-radius: 4px;
-          p{
-            color:#666666;
-            font-size:14px;
-          }
-        }
         .coupon {
           border: 1px solid #dddee1;
           padding: 18px;
           .ticketInfo {
-            position: relative;
-            top:-17px;
-            display: flex;
+            display: inline-block;
+            font-size: 14px;
             color: rgba(102, 102, 102, 1);
             line-height: 19px;
             vertical-align: middle;
@@ -667,72 +503,13 @@
               display: inline-block;
               width: 250px;
               line-height: 19px;
-              strong{
-                font-size: 18px;
-                color:#FF624B;
-              }
             }
           }
           .cross {
             text-decoration: line-through red;
           }
-          .coupon_radio{
-            display: flex;
-            overflow: auto;
-          }
-          .coupon_radio::-webkit-scrollbar{
-            width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
-            height: 5px;
-          }
-          .coupon_radio::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-            border-radius: 10px;
-            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-            background:rgba(216,216,216,0.5);
-          }
-          .coupon_radio::-webkit-scrollbar-track {/*滚动条里面轨道*/
-            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-            border-radius: 10px;
-            background:rgba(216,216,216,0.5);
-          }
         }
       }
     }
-  }
-  .ivu-radio-group-button .ivu-radio-wrapper{
-    border: 1px solid #e9e9e9;
-    border-radius: 4px;
-  }
-  .ivu-radio-group-button .ivu-radio-wrapper-checked{
-    border: 1px solid #2d8cf0;
-  }
-  .button{
-    border: 1px solid #2A99F2;
-    color: #2A99F2;
-    background: #FFFFFF;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    width: 58px;
-    height: 30px;
-    cursor: pointer;
-  }
-  .button:hover{
-    background: #2A99F2;
-    color: #FFFFFF;
-  }
-   .selectMark {
-    margin: 10px 0;
-    > img {
-      position: relative;
-      top: 4px;
-    }
-    > span {
-      font-size: 14px;
-      font-family: MicrosoftYaHei;
-      color: rgba(102, 102, 102, 1);
-    }
-  }
-  .blue_font{
-    color:#2A99F2;cursor:pointer;
   }
 </style>

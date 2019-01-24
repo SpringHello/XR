@@ -1073,7 +1073,7 @@
         axios.get('information/deployVirtualMachine.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({
-              path: '/ruicloud/orderNew'
+              path: '/ruicloud/order'
             })
           } else {
             this.$message.info({

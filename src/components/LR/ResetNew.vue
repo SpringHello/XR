@@ -153,6 +153,7 @@
                   </FormItem>
                   <FormItem prop='idCard'>
                     <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.idCard"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
+                    <p v-if="errorCard" class="ivu-form-item-error-tip">您输入的身份证号码有误，验证失败</p>
                   </FormItem>
                 </Form>
                 <Button type="primary" @click="cardNext" style="float:right;">下一步</Button>
@@ -174,7 +175,7 @@
                         :before-upload="handleBeforeUpload"
                         :data='flieList'
                         type="drag"
-                        action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+                        action="file/upFile.do"
                         style="display: inline-block;">
                         <div class="up_button" v-if="fileUrl.imgUrl ==''">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -203,6 +204,7 @@
                   </FormItem>
                   <FormItem prop='business'>
                     <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.business "  style="margin-top:20px;" placeholder='请输入您的营业执照号码' ></x-Input>
+                    <p v-if="errorCard" class="ivu-form-item-error-tip">您输入的公司营业执照号码输入有误，验证失败</p>
                   </FormItem>
                 </Form>
                 <Button type="primary" @click="cardNext" style="float:right;">下一步</Button>
@@ -225,7 +227,7 @@
                         :before-upload="legalBeforeUpload"
                         :data='flieList'
                         type="drag"
-                        action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+                        action="file/upFile.do"
                         style="display: inline-block;">
                         <div class="up_button" v-if="fileUrl.legalUrl ==''">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -258,7 +260,7 @@
                         :before-upload="handleBeforeUpload"
                         :data='flieList'
                         type="drag"
-                        action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+                        action="file/upFile.do"
                         style="display: inline-block;">
                         <div class="up_button" v-if="fileUrl.imgUrl == ''">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -667,7 +669,7 @@ export default {
               this.verPage = 'enterprise';
               this.index = 3;
             }else{
-              this.accountIsDis = 3;
+            //  this.accountIsDis = 3;
               return;
             }
           }else if(index == 3){
@@ -681,7 +683,7 @@ export default {
       //     this.index = 3; 
       // }else if(name == 'individual' && index == 3){
       //      this.verPage = 'enterprise';
-      //         this.index = 3;
+      //       this.index = 3;
       // }
 
       if(name == 'ok' && index == 2){
@@ -936,7 +938,28 @@ export default {
     cardNext(){
       this.$refs.dataInfo.validate((valid)=>{
         if(valid){
-          this.absc = !this.absc;
+           let name = this.getUserInfo();
+            let params = {
+                type:'0',
+                name:this.dataFroms.name,
+                idCard:this.fileUrl.imgUrl,
+            }
+            let paramsOne ={
+              businessLicense:this.dataFroms.business,
+                type:'1',
+                name:this.dataFroms.company,
+                businessLicense:this.dataFroms.business,
+            }
+            let data = name == 'person'?params:paramsOne;
+            axios.post('user/isIdCardAndNameSame.do',
+              data
+            ).then(res =>{
+              if(res.status == 200 && res.data.status ==1){
+                this.absc = !this.absc;
+              }else{
+                this.errorCard = true;
+              }
+            })
         }
       })
     },
@@ -971,7 +994,8 @@ export default {
         this.verPage ='phone';
      }
       }
-    }
+    },
+
   },
   computed: {
 
@@ -990,8 +1014,18 @@ export default {
     'dataFroms.vCode':{
         handler(){
             this.vCodeMessage ='';
-          }
+        }
     },
+    'dataFroms.business':{
+      handler(){
+        this.errorCard = false;
+      }
+    },
+    'dataFroms.idCard':{
+      handler(){
+        this.errorCard = false;
+      }
+    }
   }
 };
 </script>

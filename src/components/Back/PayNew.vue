@@ -68,7 +68,7 @@
         </Tabs>
         </div>
         <div style="margin-top:20px;text-align:right;" v-if="currentTab=='otherPay'">
-          <Button @click="$router.push({path:'orderNew'})" style="margin-right:10px;">取消支付</Button>
+          <Button @click="$router.push({path:'order'})" style="margin-right:10px;">取消支付</Button>
           <Button type="primary" @click="pay" :disabled="payText!='确认支付'">{{payText}}</Button>
         </div>
       </div>
