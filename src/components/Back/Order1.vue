@@ -115,7 +115,7 @@
                 for (var key in params.row['资源'][index]) {
                   if(key == '存储'){
                     let dis = params.row['资源'][index][key];
-                     this.isNotBuyDisk = dis.substring(dis.indexOf(','),dis.length) == '无数据盘' ? true :false;
+                     this.isNotBuyDisk = dis.substring(dis.indexOf(',')+1,dis.length) != '无数据盘' ? true :false;
                   } else if(key =='配置(新)'){
                      this.isNotBuyDisk = true;
                   }

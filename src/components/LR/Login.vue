@@ -532,8 +532,8 @@
           axios.get(url, {params}).then(res => {
             if (res.data.status === 1 && res.status === 200) {
               localStorage.setItem('authToken', res.data.message)
-              if (this.from.indexOf('/ruicloud/smlj') == 0) {
-                this.$router.push({path: this.from})
+              if (this.from.indexOf('/ruicloud/Register') == 0 || this.from.indexOf('/ruicloud/register') == 0) {
+                this.$router.push('overview')
               } else if (this.from.indexOf('/ruicloud/ActiveCenter') == 0) {
                 this.$router.push({path: this.from})
               } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
@@ -574,8 +574,8 @@
           axios.get(url, {params}).then(res => {
             if (res.data.status === 1 && res.status === 200) {
               localStorage.setItem('authToken', res.data.message)
-              if (this.from.indexOf('/ruicloud/smlj') == 0) {
-                this.$router.push({path: this.from})
+              if (this.from.indexOf('/ruicloud/Register') == 0|| this.from.indexOf('/ruicloud/register') == 0) {
+                this.$router.push('overview')
               } else if (this.from.indexOf('/ruicloud/ActiveCenter') == 0) {
                 this.$router.push({path: this.from})
               } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
