@@ -32,7 +32,7 @@
         <div class="top">
           <div class="item-headline"></div>
           <p>
-            新睿云西安节点正式上线，新节点云服务器折扣优惠，仅限新用户
+            新睿云西安节点正式上线，新节点云服务器折扣优惠，每位用户仅可参与一次活动最多可购3台云服务器，仅限新用户
             <span class="rule" @click="showModal.luckDrawRuleModal=true">活动规则</span>
           </p>
         </div>
@@ -61,6 +61,12 @@
                 </Select>
               </div>
               <div>
+                <span>请选择购买数量</span>
+                <ul class="time-change flex">
+                  <li v-for="(item3,index) in hostCount" :key="index" @click="item.selectedCount=item3" :class="{selected:item.selectedCount==item3}">{{item3}}台</li>
+                </ul>
+              </div>
+              <div>
                 <span>请选择时长</span>
                 <ul class="time-change flex">
                   <li v-for="(item1,index) in timeYear" :key="index" @click="getVMConfigId(item,index1,item1)" :class="{selected:item.selectedYear==item1}">{{item1}}年</li>
@@ -68,10 +74,10 @@
               </div>
               <div class="flex-vertical-center price">
                 <div>
-                  <span><i style="font-size:20px;font-style: normal;">￥</i>{{item.discountCost}}</span>
-                  <p>原件：{{item.originCost}}</p>
+                  <span><i style="font-size:20px;font-style: normal;">￥</i>{{(item.discountCost*item.selectedCount).toFixed(2)}}</span>
+                  <p>原件：{{(item.originCost*item.selectedCount).toFixed(2)}}</p>
                 </div>
-                <i class="btn" @click="getDiskcountMv(item,index1)">立即购买</i>
+                <i class="btn" @click="getDiskcountMv(item,item.selectedCount)">立即购买</i>
               </div>
             </div>
           </div>
@@ -174,12 +180,12 @@
         <div class="all-modal modal3" @click.stop="showModal.luckDrawRuleModal=true">
           <div class="header"><i @click.stop="showModal.luckDrawRuleModal=false"></i></div>
           <div class="body">
-            <h3>1、活动时间：2019年1月28日-2019年3月1日;</h3>
-            <h3>2、本次西安新节点上线活动仅限新用户参加，每位用户仅限购买3台活动产品;</h3>
-            <h3>3、本次活动产品仅限于西安区云服务器，其他地区产品不参与此活动;</h3>
-            <h3>4、本次活动产品均为折扣特惠价格，不能使用任何优惠券以及现金券;</h3>
-            <h3>5、参与本次活动购买的云服务器不享有7天无理由退款服务;</h3>
-            <h3>6、根据国家相关规定，用户实名认证之后才可以购买使用云服务器;</h3>
+            <h3>1、活动时间：2019年1月28日-2019年3月1日； 活动对象：仅限新用户；</h3>
+            <h3>2、本次活动中，每位用户仅可参与一次活动，最多可购买3台云服务器；</h3>
+            <h3>3、本次活动产品仅限于西北一区云服务器，其他地区产品不参与此活动；</h3>
+            <h3>4、本次活动产品均为折扣特惠价格，不能使用任何优惠券以及现金券；</h3>
+            <h3>5、参与本次活动购买的云服务器不享有7天无理由退款服务；</h3>
+            <h3>6、根据国家相关规定，用户实名认证之后才可以购买使用云服务器；</h3>
             <h3>7、此活动最终解释权由新睿云所有。</h3>
           </div>
           <button @click="showModal.luckDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
@@ -276,6 +282,7 @@ export default {
           systemSize: '40',
           selectedSystem: 'windows',
           selectedYear: 1,
+          selectedCount: 1,
           bgSrc: require('../../../assets/img/active/xianNode/item-bg-1.png'),
           discountCost: '224.93',
           originCost: '1124.64'
@@ -287,6 +294,7 @@ export default {
           systemSize: '40',
           selectedSystem: 'windows',
           selectedYear: 1,
+          selectedCount: 1,
           bgSrc: require('../../../assets/img/active/xianNode/item-bg-2.png'),
           discountCost: '224.93',
           originCost: '1124.64'
@@ -298,12 +306,14 @@ export default {
           systemSize: '40',
           selectedSystem: 'windows',
           selectedYear: 1,
+          selectedCount: 1,
           bgSrc: require('../../../assets/img/active/xianNode/item-bg-3.png'),
           discountCost: '224.93',
           originCost: '1124.64'
         }
       ],
       timeYear: [1, 2, 3],
+      hostCount: [1, 2, 3],
       advantageData: [
         {
           img: require('../../../assets/img/active/xianNode/advantage-icon-1.png'),
@@ -438,7 +448,7 @@ export default {
       })
     },
     //   云主机生成订单
-    getDiskcountMv (item, index) {
+    getDiskcountMv (item, hostCount) {
       if (!this.$store.state.userInfo) {
         this.showModal.notLoginModal = true
       } else {
@@ -455,7 +465,8 @@ export default {
                   params: {
                     vmConfigId: item.vmConfigId,
                     osType: item.selectedSystem,
-                    defzoneid: this.selectedZone
+                    defzoneid: this.selectedZone,
+                    counts: hostCount
                   }
                 }).then(res => {
                   if (res.status == 200 && res.data.status == 1) {
@@ -638,7 +649,7 @@ export default {
 }
 .product {
   padding-top: 10px;
-  padding-bottom: 46px; 
+  padding-bottom: 64px; 
   background: #fff;
   .reminder {
     padding: 12px;
@@ -688,7 +699,7 @@ export default {
     margin-top: 32px;
     .box {
       width: 340px;
-      height: 363px;
+      height: 427px;
       background: url(../../../assets/img/active/xianNode/item-bg-1.png) center  no-repeat;
        &:hover {
          box-shadow: 0px 4px 6px rgba(255, 48, 0, .2);
@@ -713,7 +724,7 @@ export default {
           }
         }
         .time-change {
-          margin-top: 20px;
+          margin-top: 10px;
           li {
             width: 80px;
             height: 30px;
