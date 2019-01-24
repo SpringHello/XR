@@ -5,12 +5,12 @@
       <div class="content">
         <span>订单确认</span>
         <button style="float:right" class="button" @click="$router.push('buy')">返回</button>
-        <div class="order_text" >
-          <div v-if="routerName == '新建云主机' || routerName =='续费' || routerName == '新建云硬盘' || routername == '磁盘升级' || routername == '新建GPU云服务器' || routername == '系统盘扩容'">
+        <div class="order_text" v-if="routerName == '新建云主机' || routerName =='续费' || routerName == '新建云硬盘' || routerName == '磁盘升级' || routerName == '新建GPU云服务器' || routerName == '系统盘扩容'">
+          <div >
             <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
             <p style="margin-top:10px;">请牢记您所设置的密码，如遗忘可登录云服务器控制台重置密码。<a class="blue_font" href="https://www.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/kmKQJcCNq" target="_blank" >查看</a></p>
             <p style="margin-top:10px;" v-if="isNotBuyDisk || routerName == '新建云硬盘'">云服务器购买成功后，数据盘默认是未挂载的情况，需要自行格式化硬盘后，挂载分区后才能在云服务器内看到。<a class="blue_font" href="https://www.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/l3OwHRSfs" target="_blank">查看windows如何格式化、</a><a class="blue_font" href="https://www.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/l3YdhChS2" target="_blank">Linux如何格式化</a></p>
-            <p style="margin-top:10px;" v-if="routername == '系统盘扩容'">若您购买了额外的系统盘，默认为未分区状态，需要自行扩容文件系统之后使用。<a class="blue_font" href="https://www.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/14u6nDwUP8" target="_blank">查看如何扩容windows文件系统、</a><a class="blue_font" href="https://www.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/14u6nDwUP8" target="_blank">扩容Linux文件系统</a></p>
+            <p style="margin-top:10px;" v-if="routerName == '系统盘扩容'">若您购买了额外的系统盘，默认为未分区状态，需要自行扩容文件系统之后使用。<a class="blue_font" href="https://www.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/14u6nDwUP8" target="_blank">查看如何扩容windows文件系统、</a><a class="blue_font" href="https://www.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/14u6nDwUP8" target="_blank">扩容Linux文件系统</a></p>
           </div>
         </div>
         <div class="selectMark">

@@ -88,7 +88,7 @@
       },
       // 进入购买的产品页
       revertOrder(){
-        let name = sessionStorage.getItem('routerName');
+        let name = sessionStorage.getItem('routername');
         let router ='';
         if(name == '0' || name == '5' ||name == '4' || name == '20'){
          router ='host';
