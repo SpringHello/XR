@@ -189,7 +189,7 @@
     <!-- 请填写认证信息弹窗 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.authModal=false" v-if="showModal.authModal">
-        <div class="all-modal modal2" @click.stop="showModal.authModal=true" style="height:586px;">
+        <div class="all-modal modal2" @click.stop="showModal.authModal=true">
           <div class="header"><i @click.stop="showModal.authModal=false"></i></div>
           <div class="body xiannode-form">
             <p class="reminder" v-if="authHintShow">
@@ -201,28 +201,28 @@
                 <Input v-model="authFormValidate.name" placeholder=" 请输入您的真实姓名" size="large"></Input>
               </FormItem>
               <FormItem label="身份证号" prop="personId">
-                <Input v-model="authFormValidate.personId" placeholder=" 请输入您的身份证号" size="large">></Input>
+                <Input v-model="authFormValidate.personId" placeholder=" 请输入您的身份证号" size="large"></Input>
               </FormItem>
               <FormItem label="图形验证码" prop="pictureCode">
                 <div style="display: flex">
                   <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:224px;">
                          </Input>
                   <img :src="imgSrc" style="height:33px;"
-                       @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                 </div>
               </FormItem>
               <FormItem label="手机号码" prop="tel">
-                <Input v-model="authFormValidate.tel" placeholder=" 请输入您的手机号码" style="width:192px;" size="large">></Input>
+                <Input v-model="authFormValidate.tel" placeholder=" 请输入您的手机号码" size="large"></Input>
+              </FormItem>
+              <FormItem label="验证码" prop="vailCode">
+                <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" style="width:192px;"  size="large"></Input>
                 <Button type="text" @click="getVerificationCode" class="vailcode-btn" :class="{disabled:authFormValidate.sendCodeText!='获取验证码'}" style="width:109px;"
                           :disabled="authFormValidate.sendCodeText!='获取验证码'">
                     {{authFormValidate.sendCodeText}}
                   </Button>
               </FormItem>
-              <FormItem label="验证码" prop="vailCode">
-                <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" size="large">></Input>
-              </FormItem>
             </Form>
-            <button @click.stop="authAndGetPrize" style="width:305px;height:50px;font-size:20px;margin-left:110px;margin-top:20px;" class="vailcode-btn auth-btn">确认信息并提交</button>
+            <button @click.stop="authAndGetPrize" style="width:305px;height:50px;font-size:20px;margin-left:110px;margin-top:20px;margin-bottom:76px;" class="vailcode-btn auth-btn">确认信息并提交</button>
           </div>
         </div>
       </div>
@@ -899,7 +899,6 @@ background: none;
 
  .modal2 {
     width: 700px;
-    height: 300px;
     > .header {
       background: url("../../../assets/img/active/xianNode/modal-bg-auth.png");
     }
@@ -919,6 +918,9 @@ background: none;
       cursor: pointer;
       &:hover{
         background:rgba(255,231,215,1);
+      }
+      &:focus{
+        outline: none;
       }
     }
     .disabled {

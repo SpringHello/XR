@@ -57,7 +57,7 @@
             </div>
      
          <div style="border-top:1px solid #E9E9E9;padding:20px 0;margin-top:20px;">
-           <span style="color:#2d8cf0;cursor:pointer;">全民普惠，3折减单，最高减免7000元！</span>
+           <!-- <span style="color:#2d8cf0;cursor:pointer;">全民普惠，3折减单，最高减免7000元！</span> -->
            <span style="float:right;">实际支付：<strong style="color:#FF624B;font-size:24px;">{{couponInfo.totalCost}}</strong>元</span>
          </div>
         </div>
@@ -293,6 +293,9 @@
     created() {
       this.getSpentCost();
       this.getWalletsBalance();
+    },
+    mounted(){
+      sessionStorage.setItem('routername',this.routerName);
     },
     methods: {
       getSpentCost() {

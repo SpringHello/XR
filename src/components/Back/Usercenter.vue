@@ -1142,10 +1142,10 @@
       <div class="universal-modal-content-flex">
         <div>
           <Steps :current="authModifyPhoneStep" size="small">
-            <Step title="验证身份"></Step>
-            <Step title="手持身份证照"></Step>
-            <Step title="设置新手机号码"></Step>
-            <Step title="完成"></Step>
+            <Step title="验证身份" style="width:25%"></Step>
+            <Step title="手持身份证照" style="width:30%"></Step>
+            <Step title="设置新手机号码" style="width:32%"></Step>
+            <Step title="完成" style="width:13%"></Step>
           </Steps>
           <div v-show="authModifyPhoneStep == 0">
             <Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">
