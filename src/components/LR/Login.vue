@@ -563,7 +563,7 @@
             this.loginForm.errorMsg = 'verificationCodeMistake'
             return
           }
-          if (!this.passwordCaptchaObjStatus) {
+          if (!this.codeCaptchaObjStatus) {
             this.loginForm.errorMsg = 'notSlidingCodeValidation'
             return
           }
