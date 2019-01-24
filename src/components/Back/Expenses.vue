@@ -397,7 +397,7 @@
                                                                                                                                                   :class="{notallow:codePlaceholder!='发送验证码'}"
                                                                                                                                                   @click.prevent="getCode('voice')">接收语音验证码</span>。
             </p>
-            <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue" @click="showModal.modifyPhoneID = true;showModal.unfreeze=false">通过身份证号码验证</span>更改手机号。
+            <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue" @click="showModal.modifyPhoneID = true;showModal.unfreeze=false;modifyPhoneIDcancel()">通过身份证号码验证</span>更改手机号。
             </p>
           </div>
           <div style="clear: both"></div>
@@ -618,7 +618,7 @@
       </div>
   </div>
   <div slot="footer" class="modal-footer-border">
-    <Button type="ghost" @click="modifyPhoneIDcancel()">取消</Button>
+    <Button type="ghost" @click="showModal.modifyPhoneID = false">取消</Button>
     <Button type="primary" v-if="authModifyPhoneStep == 0" @click="bindingMobilePhoneStepTwo('authModifyPhoneFormOne')">下一步</Button>
     <Button type="primary" v-if="authModifyPhoneStep == 1" @click="uploadIDImg()">下一步</Button>
     <Button type="primary" v-if="authModifyPhoneStep == 2" @click="bindMobilePhone('authModifyPhoneFormThere')">下一步</Button>
@@ -2923,7 +2923,6 @@
         })
       },
       modifyPhoneIDcancel() {
-        this.showModal.modifyPhoneID = false
         this.authModifyPhoneStep = 0
         this.$refs['authModifyPhoneFormOne'].resetFields()
         this.$refs['authModifyPhoneFormThere'].resetFields()
