@@ -667,7 +667,7 @@ export default {
               this.verPage = 'enterprise';
               this.index = 3;
             }else{
-              this.accountIsDis = 3;
+             
               return;
             }
           }else if(index == 3){
@@ -936,7 +936,26 @@ export default {
     cardNext(){
       this.$refs.dataInfo.validate((valid)=>{
         if(valid){
-          this.absc = !this.absc;
+           let name = this.getUserInfo();
+            let params = {
+                type:'0',
+                name:this.dataFroms.name,
+                idCard:this.fileUrl.imgUrl,
+            }
+            let paramsOne ={
+              businessLicense:this.dataFroms.business,
+                type:'1',
+                name:this.dataFroms.company,
+                businessLicense:this.dataFroms.business,
+            }
+            let data = name == 'person'?params:paramsOne;
+            axios.post('user/isIdCardAndNameSame.do',
+              data
+            ).then(res =>{
+              if(res.status == 200 && res.data.status ==1){
+                this.absc = !this.absc;
+              }
+            })
         }
       })
     },
@@ -971,7 +990,8 @@ export default {
         this.verPage ='phone';
      }
       }
-    }
+    },
+
   },
   computed: {
 
@@ -990,7 +1010,7 @@ export default {
     'dataFroms.vCode':{
         handler(){
             this.vCodeMessage ='';
-          }
+        }
     },
   }
 };

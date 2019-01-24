@@ -22,7 +22,7 @@
                 </div>
                 <div v-if="payResult=='fail'" >
                   <button class="ghost button" @click="kf">联系客服</button>
-                  <button class="primary button" @click="push('orderNew')">返回订单</button>
+                  <button class="primary button" @click="push('order')">返回订单</button>
                 </div>
               </div>
             </div>
@@ -90,21 +90,33 @@
       revertOrder(){
         let name = sessionStorage.getItem('routerName');
         let router ='';
-        if(name == 'bhost'){
-          router = 'host';
-        }else if(name == 'bgpu'){
-          router = 'gouList';
-        }else if(name == 'bip'){
+        if(name == '0' || name == '5' ||name == '4' || name == '20'){
+         router ='host';
+        }else if(name == '1' || name == '9'){
+          router ='disk';
+        }else if(name == '2' || name == '6' || name == '8'){
           router = 'ip';
-        }else if(name == 'bdisk'){
-          router = 'disk';
-        }else if(name == 'bdata'){
-          router = 'cloudDataBase';
-        }else if(name == 'bobj'){
+        }else if(name == '3'){
+          router = 'vpc';
+        }else if(name == '10'){
+          router = 'vpc';
+        }else if(name == '11' || name == '12' || name == '13'){
+          router = 'cloudDatabase';
+        }else if(name == 14){
+          return '短信包订单'
+        }else if(name == '15' || name == '16'){
+         router = 'gpuList';
+        }else if(name == '17'){
           window.location.href = 'https://testoss-console.xrcloud.net/ruirados/objectStorage';
           return;
-        }else if(name == 'bssl'){
-          window.location.href = 'https://test-domain.xrcloud.net/xrdomain/domainSSL';
+        }else if(name == '18'){
+          window.location.href = 'https://test-domain.xrcloud.net/xrdomain/domainTransfer';
+          return;
+        }else if(name == '19' || name == '21'){
+          window.location.href = 'https://test-domain.xrcloud.net/xrdomain/domainGroup';
+          return;
+        }else if(name == '22'){
+          window.location.href ='https://test-domain.xrcloud.net/xrdomain/domainSSL';
           return;
         }
         this.$router.push(router)

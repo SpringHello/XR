@@ -261,7 +261,7 @@
         }
         axios.get('Disk/createVolume.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('/ruicloud/orderNew')
+            this.$router.push('/ruicloud/order')
           } else {
             this.$message.info({
               content: response.data.message
