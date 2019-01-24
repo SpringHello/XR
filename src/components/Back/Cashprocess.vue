@@ -2,7 +2,7 @@
   <div id="background">
     <div id="wrapper">
       <span>个人中心 / 费用中心 / 提现</span>
-	  <div class="content" v-if="selectedTabSec == 'content'">
+	  <div class="content" v-if="selectedTabSec == 'content'" style="min-height: 665px;">
 		  <div style="float: left;" @click="backpage">
 			  <Icon class="icon1" type="chevron-left" ></Icon>
 		  </div>
@@ -37,7 +37,7 @@
 		 </div>
 		 <Button type="primary" style="margin-left: 125px;margin-top: 20px;" @click="Firststep" :class="{selected:selectedTabSec == 'content'}">下一步</Button>
 	  </div>
-	  <div class="content1" v-if="selectedTabSec == 'content1'">
+	  <div class="content1" v-if="selectedTabSec == 'content1'" style="min-height: 665px;">
 		  <div style="float: left;" @click="changeTab('content')">
 		  	<Icon class="icon1" type="chevron-left" ></Icon>
 		  </div>
@@ -272,7 +272,7 @@
 	      <Button type="primary" v-if="authModifyPhoneStep == 3" @click="showModal.modifyPhoneID=false">完成</Button>
 	    </div>
 	  </Modal>
-	  <div class="content2" v-if="selectedTabSec == 'content2'">
+	  <div class="content2" v-if="selectedTabSec == 'content2'" style="min-height: 665px;">
 	  		  <div style="float: left;" @click="changeTab('content1')">
 	  		  	<Icon class="icon1" type="chevron-left" ></Icon>
 	  		  </div>
