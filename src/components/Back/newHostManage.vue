@@ -55,7 +55,7 @@
                 <span :class="{three: bindForm.unbindText == '解绑IP'}" v-if="hostInfo.publicIp" @click="unbindIp"> [{{ bindForm.unbindText}}]</span>
                 <span :class="{three: bindForm.bindIpText == '绑定IP' }" v-else @click="bindIP"> [{{ bindForm.bindIpText }}]</span></li>
               <li><span class="four">带宽</span><span class="two">{{ hostInfo.bandwith?hostInfo.bandwith: '0'}}M</span>
-                <span class="three" v-if="hostInfo.bandwith"> [扩容]</span></li>
+                <span class="three" v-if="hostInfo.bandwith" @click="adjustIP"> [扩容]</span></li>
               <li><span class="four">负载均衡</span><span class="two">{{(hostInfo.loadbalance + '') ? hostInfo.loadbalance + '' : '----'}}</span></li>
               <li><span class="four">NAT网关</span><span class="two">{{ hostInfo.netGateway? hostInfo.netGateway : '----'}}</span></li>
             </ul>
@@ -74,7 +74,7 @@
               <li><span class="four">计费类型</span><span
                 class="two"> {{ hostInfo.case_type == 1 ? '包年' : hostInfo.case_type == 2 ? '包月' : hostInfo.case_type == 3 ? '实时' : '七天'}}</span></li>
               <li><span class="four">自动续费</span>
-                <i-switch size="small" style="position: relative;top: -2px;" v-model="isAutoRenew" @click="changAutoRenew"></i-switch>
+                <i-switch size="small" style="position: relative;top: -2px;" v-model="isAutoRenew" @on-change="changAutoRenew"></i-switch>
               </li>
               <li><span class="four">创建时间</span><span class="two"> {{ hostInfo.createTime}}</span></li>
               <li><span class="four">到期时间</span><span class="two"> {{ hostInfo.endTime}}</span></li>
@@ -317,7 +317,7 @@
         <Form :model="adjustForm" label-position="left">
           <Form-item label="带宽" style="width: 80%">
             <div style="width:300px;display: inline-block;vertical-align: middle;margin-left: 11px">
-              <Slider v-model='adjustForm.brand' show-input :min='1'></Slider>
+              <Slider v-model='adjustForm.brand' show-input :min='adjustForm.minBrand'></Slider>
             </div>
             <span>Mbps</span>
           </Form-item>
@@ -329,7 +329,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.adjust = false">取消</Button>
-        <Button type="primary" @click="adjustOK" :disabled="adjustForm.minBrand==adjustForm.brand">确定
+        <Button type="primary" @click="adjustOK" :disabled="adjustForm.brand == adjustForm.minBrand">确定
         </Button>
       </div>
     </Modal>
@@ -843,12 +843,17 @@
           }
         })
       },
+      adjustIP() {
+        this.adjustForm.brand = parseInt(this.hostInfo.bandwith)
+        this.adjustForm.minBrand = parseInt(this.hostInfo.bandwith)
+        this.showModal.adjust = true
+      },
       adjustOK() {
         this.showModal.adjust = false
         this.$http.get('continue/UpPublicBnadwith.do', {
           params: {
             bandwith: this.adjustForm.brand,
-            publicIpId: this.hostInfo.id
+            publicIpId: this.hostInfo.publicId
           }
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -865,7 +870,7 @@
         this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
           params: {
             brandwith: this.adjustForm.brand,
-            publicIpId: this.hostInfo.id
+            publicIpId: this.hostInfo.publicId
           }
         }).then(response => {
           if (response.status == 200) {
@@ -876,7 +881,22 @@
         })
       }),
       changAutoRenew() {
-
+        let url = 'information/setAutoRenew.do'
+        this.$http.get(url, {
+          params: {
+            type: 'host',
+            id: this.hostInfo.id,
+            flag: this.isAutoRenew ? '1' : '0'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.$Message.info(res.data.message)
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       }
     },
     computed: {
