@@ -635,7 +635,7 @@
             return item.status == 200 && item.data.status == 1
           })) {
             this.$router.push({
-              path: '/ruicloud/orderNew', query: {
+              path: '/ruicloud/order', query: {
                 countOrder
               }
             })

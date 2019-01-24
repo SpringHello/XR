@@ -1468,6 +1468,14 @@
           {
             value: 'notpay',
             label: '未支付订单'
+          },
+          {
+            value: 'refund',
+            label: '已退款订单'
+          },
+          {
+            value: 'refunding',
+            label: '退款中订单'
           }
         ],
         columns_order: [
@@ -2244,6 +2252,38 @@
             this.timeType = '1'
             this.searchOrderByType()
             break
+          case 'refund':
+            this.init()
+            //this.order_type = '1'
+            this.timeTypeList = [
+              {
+                label: '订单创建时间',
+                value: '1'
+              },
+              {
+                label: '订单结束时间',
+                value: '2'
+              }
+            ]
+            this.timeType = '1'
+            this.searchOrderByType()
+            break
+          case 'refunding':
+            this.init()
+            //this.order_type = '1'
+            this.timeTypeList = [
+              {
+                label: '订单创建时间',
+                value: '1'
+              },
+              {
+                label: '订单结束时间',
+                value: '2'
+              }
+            ]
+            this.timeType = '1'
+            this.searchOrderByType()
+            break
         }
       },
       searchOrderByType() {
@@ -2251,7 +2291,7 @@
         var params = {
           pageSize: this.pageSize,
           page: this.order_currentPage,
-          paymentStatus: this.order_type == 'pay' ? '1' : this.order_type == 'notpay' ? '0' : '',
+          paymentStatus: this.order_type == 'pay' ? '1' : this.order_type == 'notpay' ? '0' : this.order_type == 'refund'? '4' : this.order_type == 'refunding'? '3' :'',
         }
         switch (this.timeType) {
           case '':
