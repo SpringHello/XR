@@ -539,7 +539,7 @@
               } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
                 this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
               } else {
-                this.$router.push({path: 'overview'})
+                this.$router.push({path: this.from})
               }
             } else if (res.data.status === 0 && res.data.message === '账户或密码错误，请重新输入') {
               if (this.loginForm.passwordErrorNum < 4) {
@@ -581,7 +581,7 @@
               } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
                 this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
               } else {
-                this.$router.push({path: 'overview'})
+                this.$router.push({path: this.from})
               }
             } else if (res.data.status === 0 && res.data.message === '账户或密码错误，请重新输入') {
               if (this.loginForm.verificationCodeNum < 4) {
