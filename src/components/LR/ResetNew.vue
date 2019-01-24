@@ -818,6 +818,7 @@ export default {
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.index = 4;
+            this.verPage == '';
           }else{
             this.$Message.error({
                   content: res.data.message,
