@@ -788,7 +788,7 @@
     </div>
     <div slot="footer" class="modal-footer-border">
       <Button type="ghost" @click="showModal.refundNextHint = false">取消</Button>
-      <Button type="primary" @click="refund_ok">确认</Button>
+      <Button type="primary" @click="refund_ok" :disabled="returnMoneyDisabled">确认</Button>
     </div>
   </Modal>
   <!-- 退款最终确认提示 -->
@@ -2055,7 +2055,8 @@
         freezeToRenewAffirmText: '(10S)',
         freezeToRenewAffirmTimer: null,
         renewalFeeTime: '',
-        freezeEndTime: ''
+        freezeEndTime: '',
+        returnMoneyDisabled: false
       }
     },
     created() {
@@ -3069,6 +3070,7 @@
         this.showModal.refundBeforeHint = true
       },
       orderRefund() {
+        this.refundBeforeHintDisabled = true
         let orderNumber = this.orderNumber.map(item => {
           return item.ordernumber
         })
@@ -3095,6 +3097,7 @@
       },
       refund_ok() {
         if (this.refundTo == 'account') {
+          this.returnMoneyDisabled = true
           let orderNumber = this.orderNumber.map(item => {
             return item.ordernumber
           })
@@ -3107,6 +3110,7 @@
             if (res.status == 200 && res.data.status == 1) {
               this.showModal.refundNextHint = false
               this.showModal.refundHint = false
+              this.returnMoneyDisabled = false
               this.searchOrderByType()
               this.init()
               this.$Message.success('您提交的产品退款已通过，金额将在3-5个工作日退回，请注意查收')
@@ -3140,6 +3144,7 @@
         let orderNumber = this.orderNumber.map(item => {
           return item.ordernumber
         })
+        this.refundLastHintDisabled = true
         let url = 'user/returnMoneyOrder.do'
         let params = {}
         if (this.refundLastTo == 'account') {
@@ -3160,6 +3165,7 @@
             this.showModal.refundLastHint = false
             this.searchOrderByType()
             this.init()
+            this.refundLastHintDisabled = false
             this.$Message.success('您提交的产品退款已通过，金额将在3-5个工作日退回，请注意查收')
           } else {
             this.$message.info({

@@ -34,26 +34,25 @@
               <dd>
                 <ul v-for="(secItem,index) in item.list" :key="index">
                   <li @click="jumpTo(item.name)">{{secItem.name}}</li>
-                  <li v-for="(innerItem,index) in secItem.config" :key="index">
-                    <p>
-                      保护
-                      <span>{{innerItem.num}}</span>
-                      <i v-if="innerItem.text"></i>
-                      {{innerItem.text ? '个通配符域名的同级所有子域名' :'个域名'}}
+                  <li v-for="(innerItem,index) in secItem.price" :key="index" >
+                      <p v-if="index!=2">
+                      保护<span>{{innerItem.num}}</span>个域名
+                    </p>
+                      <p v-else>
+                      保护<span>1</span>个通配符域名的同级所有子域名
                     </p>
                     <p>
-                      ¥
-                      <span>{{innerItem.price}}</span>元/年
+                      ¥<span>{{innerItem.price}}</span>元/年
                     </p>
                     <Button @click="toBuy(item.name)">立即购买</Button>
                   </li>
-                  <li v-if="item.name == 'EV'">
+                  <!-- <li v-if="item.name == 'EV'">
                     <p style="color:#999999;font-size:12px;">不支持通配符</p>
                     <p
                       style="color:#2A99F2;font-size:12px;cursor:pointer;"
                       @click="$router.push('buy')"
                     >前往购买页面查看更多 →</p>
-                  </li>
+                  </li> -->
                 </ul>
               </dd>
             </dl>
@@ -244,8 +243,11 @@ export default {
   },
   methods: {
     getPrice () {
-      axios.get('domain/getSSLPrice.do', {}).then(Response => {
-
+      axios.get('domain/getAllPrice.do', {}).then(response => {
+        if (response.data.status == 1 && response.status == 200) {
+          this.certificate[0].list = response.data.data.ov
+          this.certificate[1].list = response.data.data.dv
+        }
       })
     },
     jumpTo(detailTab) {
