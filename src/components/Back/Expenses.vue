@@ -3113,7 +3113,7 @@
               this.returnMoneyDisabled = false
               this.searchOrderByType()
               this.init()
-              this.$Message.success('您提交的产品退款已通过，金额将在3-5个工作日退回，请注意查收')
+              this.$Message.success(res.data.message)
             } else {
               this.$message.info({
                 content: res.data.message
@@ -3166,7 +3166,7 @@
             this.searchOrderByType()
             this.init()
             this.refundLastHintDisabled = false
-            this.$Message.success('您提交的产品退款已通过，金额将在3-5个工作日退回，请注意查收')
+            this.$Message.success(res.data.message)
           } else {
             this.$message.info({
               content: res.data.message
