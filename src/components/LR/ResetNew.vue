@@ -154,7 +154,7 @@
                   </FormItem>
                   <FormItem prop='idCard'>
                     <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.idCard"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
-                    <p v-if="errorCard" class="ivu-form-item-error-tip">您输入的身份证号码有误，验证失败</p>
+                    <p v-if="errorCard != ''" class="ivu-form-item-error-tip">{{errorCard}}</p>
                   </FormItem>
                 </Form>
                 <Button type="primary" @click="cardNext" style="float:right;">下一步</Button>
@@ -205,7 +205,7 @@
                   </FormItem>
                   <FormItem prop='business'>
                     <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.business "  style="margin-top:20px;" placeholder='请输入您的营业执照号码' ></x-Input>
-                    <p v-if="errorCard" class="ivu-form-item-error-tip">您输入的公司营业执照号码输入有误，验证失败</p>
+                    <p v-if="errorCard != ''" class="ivu-form-item-error-tip">{{errorCard}}</p>
                   </FormItem>
                 </Form>
                 <Button type="primary" @click="cardNext" style="float:right;">下一步</Button>
@@ -560,7 +560,7 @@ export default {
       legalList:[],
       // 区分是个人还是
       userInfo:'',
-      errorCard:false
+      errorCard:''
     };
   },
   components: {
@@ -948,7 +948,7 @@ export default {
             let params = {
                 type:'0',
                 name:this.dataFroms.name,
-                idCard:this.fileUrl.imgUrl,
+                idCard:this.dataFroms.idCard,
             }
             let paramsOne ={
               businessLicense:this.dataFroms.business,
@@ -963,7 +963,7 @@ export default {
               if(res.status == 200 && res.data.status ==1){
                 this.absc = !this.absc;
               }else{
-                this.errorCard = true;
+                this.errorCard = res.data.message;
               }
             })
         }
@@ -1024,12 +1024,12 @@ export default {
     },
     'dataFroms.business':{
       handler(){
-        this.errorCard = false;
+        this.errorCard = '';
       }
     },
     'dataFroms.idCard':{
       handler(){
-        this.errorCard = false;
+        this.errorCard = '';
       }
     }
   }
