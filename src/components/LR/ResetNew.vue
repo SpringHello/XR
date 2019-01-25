@@ -948,7 +948,7 @@ export default {
             let params = {
                 type:'0',
                 name:this.dataFroms.name,
-                idCard:this.fileUrl.imgUrl,
+                idCard:this.dataFroms.idCard,
             }
             let paramsOne ={
               businessLicense:this.dataFroms.business,
