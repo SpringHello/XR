@@ -33,9 +33,9 @@
         <Table highlight-row stripe :columns="balColumns" :data="balData" @radio-change="selectBalance"></Table>
         <!--创建负载均衡模态框-->
         <Modal v-model="creatbalancemodal.showBalanceName" :scrollable="true" width="550">
-          <p slot="header"
-             style="font-size: 16px;color: rgba(17,17,17,0.75);line-height: 23.42px;border-bottom: 1px solid #D8D8D8;padding-bottom: 40px;">
-            <b>创建负载均衡</b></p>
+          <p slot="header" class="modal-header-border">
+            <span class="universal-modal-title">创建负载均衡</span>
+          </p>
           <Steps :current="creatbalancemodal.current" size="small" style="margin:15px;">
             <Step title="创建负载均衡" style="opacity:0.7"></Step>
             <Step title="配置转发规则"></Step>

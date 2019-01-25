@@ -4,9 +4,11 @@
 import modal from './src/modal.vue'
 import Vue from 'vue'
 import router from '../../router'
+
 function message(options) {
 
 }
+
 // 名称与路径的Map
 var namePathMap = {
   'NAT网关': 'vpc',
@@ -57,7 +59,7 @@ function getInstance(options) {
       okText: '确定'
     },
     render: (h) => {
-      /*var contentArray = options.content.split(/\<a\>(.+?)\<\/a\>/)
+      var contentArray = options.content.split(/\<a\>(.+?)\<\/a\>/)
       var result = []
       for (let i = 0; i < contentArray.length; i++) {
         if (i % 2 == 0) {
@@ -72,7 +74,7 @@ function getInstance(options) {
             }
           }, contentArray[i]))
         }
-      }*/
+      }
       return h(modal, {
         props: options
       })
@@ -81,10 +83,10 @@ function getInstance(options) {
   modalInstance.$mount()
   document.body.appendChild(modalInstance.$el)
   return {
-    show () {
+    show() {
       modalInstance.$children[0].visible = true
     },
-    remove () {
+    remove() {
       modal.visible = false
     }
   }
