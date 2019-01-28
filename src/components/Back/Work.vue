@@ -17,31 +17,34 @@
 
               <div class="new-order">
                 <div class="form">
-                  <Form :model="formItem" :label-width="71">
-                    <Form-item label="工单标题" required>
+                  <Form ref="workForm" :model="formItem" :label-width="71" :rules="formItemRules">
+                    <Form-item label="工单标题" prop="title">
                       <Input :maxlength="20" v-model="formItem.title" placeholder="请以1-20个字简单描述一下问题"></Input>
                     </Form-item>
-                    <Form-item label="问题类型" required>
+                    <Form-item label="问题类型" prop="type">
                       <Select v-model="formItem.type" placeholder="产品功能咨询" @on-change="clear">
                         <Option v-for="(item,index) in Object.keys(orderType)" :value="item" :key="index">{{item}}</Option>
                       </Select>
                     </Form-item>
-                    <Form-item label="产品" required>
+                    <Form-item label="产品" prop="product">
                       <Select v-model="formItem.product" placeholder="产品功能咨询">
                         <Option v-for="item in orderType[formItem.type]" :value="item.id" :key="item.id">
                           {{item.description}}
                         </Option>
                       </Select>
                     </Form-item>
-                    <Form-item label="提现金额" required v-if="formItem.product=='19'">
+                    <Form-item label="提现金额" prop="cost" v-if="formItem.product=='19'">
                       <InputNumber :max="formItem.remainder" :min="10" v-model="formItem.cost"
                                    style="width:300px"></InputNumber>
                     </Form-item>
-                    <Form-item label="问题描述" required>
+                    <Form-item label="问题描述" prop="description">
                       <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 5,maxRows: 7}"
                              placeholder="请输入..."></Input>
                     </Form-item>
-                    <span class="submit" :class="{disabled:disabled}" @click="submit">提交工单</span>
+                    <FormItem label="手机号码" prop="phoneNumber">
+                      <Input v-model="formItem.phoneNumber" placeholder="请输入手机号码"></Input>
+                    </FormItem>
+                    <span class="submit" @click="submit('workForm')">提交工单</span>
                   </Form>
                 </div>
 
@@ -228,6 +231,14 @@
 
   export default {
     data() {
+      const validPhoneNumber = (rule, value, callback) => {
+        let reg = /^1[3|5|7|8|9|6|7]\d{9}$/;
+        if (!reg.test(this.formItem.phoneNumber)) {
+          return callback(new Error("请输入正确的手机号码"));
+        } else {
+          callback();
+        }
+      };
       return {
         formItem: {
           title: '',
@@ -235,7 +246,29 @@
           product: null,
           description: '',
           remainder: 0,
-          cost: 10
+          cost: 10,
+          phoneNumber: ''
+        },
+        formItemRules: {
+          title: [
+            {required: true, message: "请输入工单标题", trigger: "blur"}
+          ],
+          type: [
+            {required: true, message: "请选择问题类型", trigger: "change"}
+          ],
+          product: [
+            {required: true, message: "请选择产品", trigger: "change"}
+          ],
+          description: [
+            {required: true, message: "请输入问题描述", trigger: "blur"}
+          ],
+          cost: [
+            {required: true, message: "请输入提现金额", trigger: "blur"}
+          ],
+          phoneNumber: [
+            {required: true, message: "请输入手机号码", trigger: "blur"},
+            {validator: validPhoneNumber, tirgger: "blur"}
+          ],
         },
         tableName: '发起工单',
         orderList: [],
@@ -273,45 +306,45 @@
       this.$http.post('device/DescribeWalletsBalance.do').then(response => {
         this.formItem.remainder = Number(response.data.data.remainder)
       })
-     /* if (this.$route.query.logData) {
-        this.formItem.type = '产品故障'
-        switch (this.$route.query.logData.operatetarget) {
-          case '主机':
-            this.formItem.product = '19'
-            break
-          case '快照':
-            this.formItem.product = '20'
-            break
-          case '子网':
-            this.formItem.product = '29'
-            break
-          case 'VPC':
-            this.formItem.product = '29'
-            break
-          case '公网':
-            this.formItem.product = '29'
-            break
-          case '镜像':
-            this.formItem.product = '27'
-            break
-          case '负载均衡':
-            this.formItem.product = '28'
-            break
-          case '防火墙':
-            this.formItem.product = '30'
-            break
-          case '硬盘':
-            this.formItem.product = '31'
-            break
-          case'云数据库':
-            this.formItem.product = '33'
-            break;
-          case'GPU服务器':
-            this.formItem.product = '34'
-            break;
-        }
-        this.formItem.description = this.$route.query.logData.operatedes + '失败'
-      }*/
+      /* if (this.$route.query.logData) {
+         this.formItem.type = '产品故障'
+         switch (this.$route.query.logData.operatetarget) {
+           case '主机':
+             this.formItem.product = '19'
+             break
+           case '快照':
+             this.formItem.product = '20'
+             break
+           case '子网':
+             this.formItem.product = '29'
+             break
+           case 'VPC':
+             this.formItem.product = '29'
+             break
+           case '公网':
+             this.formItem.product = '29'
+             break
+           case '镜像':
+             this.formItem.product = '27'
+             break
+           case '负载均衡':
+             this.formItem.product = '28'
+             break
+           case '防火墙':
+             this.formItem.product = '30'
+             break
+           case '硬盘':
+             this.formItem.product = '31'
+             break
+           case'云数据库':
+             this.formItem.product = '33'
+             break;
+           case'GPU服务器':
+             this.formItem.product = '34'
+             break;
+         }
+         this.formItem.description = this.$route.query.logData.operatedes + '失败'
+       }*/
     },
     methods: {
       urge() {
@@ -367,50 +400,46 @@
       clear(value) {
         this.formItem.product = ''
       },
-      submit() {
-        if (this.disabled) {
-          this.$Message.warning({
-            content: '请输入必填项',
-            top: 150,
-            duration: 2,
-            closable: true
-          })
-          return
-        }
-        var url = 'order/createOrder.do'
-        let params = {
-          title: this.formItem.title,
-          content: this.formItem.description,
-          gid: this.orderType[this.formItem.type][0].gid,
-          cid: this.formItem.product
-        }
-        // 32代表提现，需要多设置一个参数
-        if (params.cid == '19') {
-          params.userRefund = this.formItem.cost
-        }
-        this.$http.get(url, {
-          params
-        }).then(response => {
-          this.loading = false
-          if (response.status == 200 && response.data.status == 1) {
-            this.getOrders('operating')
-            this.formItem.title = ''
-            this.formItem.type = ''
-            this.formItem.description = ''
-            this.formItem.product = null
-            this.$Message.success({
-              content: response.data.message,
-              top: 150,
-              duration: 2,
-              closable: true
-            })
-            this.tableName = '处理中的工单'
-          } else {
-            this.$Message.warning({
-              content: response.data.message,
-              top: 150,
-              duration: 2,
-              closable: true
+      submit(name) {
+        this.$refs[name].validate(valid => {
+          if (valid) {
+            var url = 'order/createOrder.do'
+            let params = {
+              title: this.formItem.title,
+              content: this.formItem.description,
+              gid: this.orderType[this.formItem.type][0].gid,
+              cid: this.formItem.product,
+              phone: this.formItem.phoneNumber
+            }
+            // 32代表提现，需要多设置一个参数
+            if (params.cid == '19') {
+              params.userRefund = this.formItem.cost
+            }
+            this.$http.get(url, {
+              params
+            }).then(response => {
+              this.loading = false
+              if (response.status == 200 && response.data.status == 1) {
+                this.getOrders('operating')
+                this.formItem.title = ''
+                this.formItem.type = ''
+                this.formItem.description = ''
+                this.formItem.product = null
+                this.$Message.success({
+                  content: response.data.message,
+                  top: 150,
+                  duration: 2,
+                  closable: true
+                })
+                this.tableName = '处理中的工单'
+              } else {
+                this.$Message.warning({
+                  content: response.data.message,
+                  top: 150,
+                  duration: 2,
+                  closable: true
+                })
+              }
             })
           }
         })

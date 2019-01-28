@@ -182,7 +182,8 @@
                         <span>到期时间/有效期:{{item.endtime}}</span>
                         <span>公网地址:{{item.publicip}}</span>
                         <span>内网地址:{{item.privateip}}</span>
-                        <span>关机中</span>
+                        <span v-if="item.restore==1">重装中</span>
+                        <span v-else>关机中</span>
                       </div>
                       <div class="foot">
                         <span>{{item.createtime}}</span>
@@ -316,7 +317,8 @@
                         <span>到期时间/有效期:{{item.endtime}}</span>
                         <span>公网地址:{{item.publicip}}</span>
                         <span>内网地址:{{item.privateip}}</span>
-                        <span>开机中</span>
+                        <span v-if="item.restore==1">重装中</span>
+                        <span v-else>开机中</span>
                       </div>
                       <div class="foot">
                         <span>{{item.createtime}}</span>

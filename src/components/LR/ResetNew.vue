@@ -646,7 +646,7 @@ export default {
             if(res.status == 200 && res.data.status == 1){
               if(val == 'personal'){
                 if(res.data.emailFlag){
-                 this.userInfo = 'emailFlag';
+                 this.userInfo = res.data.emailFlag;
                  return;
                 }
                 return;
@@ -669,6 +669,8 @@ export default {
             }else{
               this.$Message.error('网络错误，请重试或者联系客服');
             }
+      }).catch(err =>{
+
       })
 
     },
@@ -702,7 +704,7 @@ export default {
       }
 
       if (index == 0) { 
-        if(this.userInfo == 'emailFlag'){
+        if(this.userInfo){
           this.verPage = "email";
           this.index = 3; 
         }else{
@@ -931,9 +933,9 @@ export default {
           legalIdCardFrontUrl:this.fileUrl.legalUrl,
       }
       let data = this.userInfo == 'person'?params:paramsOne;
-      axios.post('user/newPhoneByIdCard.do',{
+      axios.post('user/newPhoneByIdCard.do',
         data
-      }).then(res =>{
+      ).then(res =>{
         if(res.status == 200 && res.data.status == 1){
           this.$Message.success({
             content: res.data.message,
