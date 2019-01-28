@@ -20,7 +20,7 @@
           </p>
         </div>
         <div class="config-type">
-          <ul v-for="item in configTypes" :class="{selected: configType == item}" @click="configType = item">{{ item }}</ul>
+          <ul v-for="item in configTypes" :class="{selected: configType == item}" @click="changeTabs(item)">{{ item }}</ul>
         </div>
       </div>
       <div class="config-info">
@@ -79,6 +79,25 @@
               <li><span class="four">创建时间</span><span class="two"> {{ hostInfo.createTime}}</span></li>
               <li><span class="four">到期时间</span><span class="two"> {{ hostInfo.endTime}}</span></li>
             </ul>
+          </div>
+        </div>
+        <div class="tab-5" v-show="configType == '操作日志'">
+          <div class="title">
+            <RadioGroup v-model="tab5.timeHorizon" type="button" @on-change="logToggle">
+              <Radio label="近一天"></Radio>
+              <Radio label="近一周"></Radio>
+              <Radio label="近一月"></Radio>
+            </RadioGroup>
+            <Input v-model="tab5.searchName" style="width: 40%">
+            <span slot="prepend">操作名称</span>
+            <Button slot="append" icon="ios-search"></Button>
+            </Input>
+          </div>
+          <Table :columns="tab5.logColumns" :data="tab5.logData"></Table>
+          <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+              <Page :total="tab5.logPages" :current="tab5.currentPage" :page-size="tab5.pageSize" @on-change="changeLogPage"></Page>
+            </div>
           </div>
         </div>
       </div>
@@ -480,6 +499,49 @@
           cost: '0',
           caseType: 0
         },
+
+        tab5: {
+          timeHorizon: '近一天',
+          searchName: '',
+          logColumns: [
+            {
+              title: '操作',
+              key: 'name'
+            },
+            {
+              title: '操作结果',
+              key: 'name',
+              filters: [
+                {
+                  label: '成功',
+                  value: 1
+                },
+                {
+                  label: '失败',
+                  value: 2
+                }
+              ],
+              filterMultiple: false,
+              filterMethod(value, row) {
+                if (value === 1) {
+                  return row.age > 25;
+                } else if (value === 2) {
+                  return row.age < 25;
+                }
+              }
+            },
+            {
+              title: '创建时间',
+              key: 'name',
+              sortable: true
+            }
+          ],
+          logData: [],
+          logPages: 0,
+          currentPage: 1,
+          pageSize: 10,
+          logTime: this.getCurrentDate() + ',' + this.getTomorrow()
+        }
       }
     },
     created() {
@@ -487,6 +549,17 @@
       this.getHostInfo()
     },
     methods: {
+      changeTabs(item) {
+        this.configType = item
+        switch (item) {
+          case '基础信息':
+            this.getHostInfo()
+            break
+          case '操作日志':
+            this.getHostLog()
+            break
+        }
+      },
       getHostInfo() {
         let url = 'information/listVMByComputerId.do'
         this.$http.get(url, {
@@ -897,7 +970,57 @@
             })
           }
         })
-      }
+      },
+      changeLogPage(page) {
+        this.tab5.currentPage = page
+        this.getHostLog()
+      },
+      getHostLog() {
+        this.$http.get('log/queryLog.do', {
+          params: {
+            pageSize: this.tab5.pageSize,
+            currentPage: this.tab5.currentPage,
+            target: 'host',
+            queryTime: this.tab5.logTime,
+            targetId: this.hostInfo.id
+          }
+        }).then(response => {
+          this.tab5.logPages = response.data.total
+          this.tab5.logData = response.data.tableData
+        })
+      },
+      logToggle() {
+        switch (this.tab5.timeHorizon) {
+          case '近一天':
+            this.tab5.logTime = this.getCurrentDate() + ',' + this.getTomorrow()
+            break
+          case '近一周':
+            this.tab5.logTime = this.logNearlySevenDays() + ',' + this.getTomorrow()
+            break
+          case '近一月':
+            this.tab5.logTime = this.logNearlyThirtyDays() + ',' + this.getTomorrow()
+            break
+        }
+        this.getHostLog()
+      },
+      getTomorrow() {
+        var day = new Date()
+        day.setTime(day.getTime() + 24 * 60 * 60 * 1000)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      logNearlySevenDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 6)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      logNearlyThirtyDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 29)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
+      },
     },
     computed: {
       auth() {
@@ -1037,6 +1160,13 @@
             }
           }
         }
+      }
+    }
+    .tab-5 {
+      .title {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
       }
     }
   }
