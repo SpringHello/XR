@@ -6,8 +6,10 @@
 				<span>自助线上提现</span>
 				<div class="remindbox">
 					<div class="remindbox-left">
-						<div class="font">
-							<span>可<span style="color: #FF624B;">线上</span>提现金额</span>
+						<div class="font" style="margin-left: 20px;">
+							<div class="fontleft">
+								<span>可<span style="color: #FF624B;">线上</span>提现金额</span>
+							</div>
 							<div class="money">
 								<span>{{Onlinemoney}}</span>
 								<span>.{{Onlinedecimalmoney}}元</span>
@@ -15,7 +17,9 @@
 							<Button type="primary" style="margin-top: 17px;" @click="showModal.Cashconfirmation = true">申请线上提现</Button>
 						</div>
 						<div class="font" style="margin-left: 10px;">
-							<span>可<span style="color: #FF624B;">银行卡</span>提现金额</span>
+							<div class="fontleft">
+								<span>可<span style="color: #FF624B;">银行卡</span>提现金额</span>
+							</div>
 							<div class="money">
 								<span>{{Bankmoney}}</span>
 								<span>.{{Bankdecimalmoney}}元</span>
@@ -516,9 +520,7 @@
 
 	.font {
 		width: 150px;
-		height: auto;
 		float: left;
-		margin-left: 20px;
 		margin-top: 30px;
 	}
 
@@ -531,6 +533,7 @@
 	.money {
 		float: left;
 		margin-top: 17px;
+		width: 100%;
 	}
 
 	.money span:nth-of-type(1) {
