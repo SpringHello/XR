@@ -533,7 +533,7 @@
             if (res.data.status === 1 && res.status === 200) {
               localStorage.setItem('authToken', res.data.message)
               console.log(this.from)
-              if (this.from.indexOf('/ruicloud/Register') == 0 || this.from.indexOf('/ruicloud/register') == 0 || this.from == '/') {
+              if (this.from.indexOf('/ruicloud/Register') == 0 || this.from.indexOf('/ruicloud/register') == 0 || this.from.indexOf('/ruicloud/resetNew') == 0 || this.from == '/') {
                 this.$router.push('overview')
               } else if (this.from.indexOf('/ruicloud/ActiveCenter') == 0) {
                 this.$router.push({path: this.from})
@@ -575,10 +575,8 @@
           axios.get(url, {params}).then(res => {
             if (res.data.status === 1 && res.status === 200) {
               localStorage.setItem('authToken', res.data.message)
-              if (this.from.indexOf('/ruicloud/Register') == 0|| this.from.indexOf('/ruicloud/register'|| this.from == '/') == 0) {
+              if (this.from.indexOf('/ruicloud/Register') == 0 || this.from.indexOf('/ruicloud/register') == 0 || this.from.indexOf('/ruicloud/resetNew') == 0 || this.from == '/') {
                 this.$router.push('overview')
-              } else if (this.from.indexOf('/ruicloud/ActiveCenter') == 0) {
-                this.$router.push({path: this.from})
               } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
                 this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
               } else {
