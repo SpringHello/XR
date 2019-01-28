@@ -81,6 +81,19 @@
             </ul>
           </div>
         </div>
+        <div class="tab-4" v-show="configType == '快照管理'">
+          <Button type="primary" :disabled="delSnapshootDisabled" @click="showModal.delsnaps = true">删除快照</Button>
+          <div class="selectMark">
+            <img src="../../assets/img/host/h-icon10.png"/>
+            <span>共 {{ tab4.pageSize}} 项 | 已选择 <span style="color:#FF624B;">{{ tab4.snapshootSelection.length }} </span>项</span>
+          </div>
+          <Table :columns="tab4.snapshootColumns" :data="tab4.snapshootData" @on-selection-change="snapshootSelectionChange"></Table>
+          <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+              <Page :total="tab4.snapshootPages" :current="tab4.currentPage" :page-size="tab4.pageSize" @on-change="changeSnapshootPage"></Page>
+            </div>
+          </div>
+        </div>
         <div class="tab-5" v-show="configType == '操作日志'">
           <div class="title">
             <RadioGroup v-model="tab5.timeHorizon" type="button" @on-change="logToggle">
@@ -88,9 +101,9 @@
               <Radio label="近一周"></Radio>
               <Radio label="近一月"></Radio>
             </RadioGroup>
-            <Input v-model="tab5.searchName" style="width: 40%">
+            <Input v-model="tab5.searchName" style="width: 40%" placeholder="请输入搜索的关键字">
             <span slot="prepend">操作名称</span>
-            <Button slot="append" icon="ios-search"></Button>
+            <Button slot="append" icon="ios-search" @click="getHostLog"></Button>
             </Input>
           </div>
           <Table :columns="tab5.logColumns" :data="tab5.logData"></Table>
@@ -352,6 +365,40 @@
         </Button>
       </div>
     </Modal>
+    <!-- 回滚弹窗 -->
+    <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">主机回滚</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">是否确定回滚主机</p>
+          <p class="lh24">提示：您正使用<span class="bluetext">{{tab4.snapsName}}</span>回滚<span class="bluetext">{{tab4.hostName}}</span>至<span
+            class="bluetext">{{tab4.hostCreatetime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.rollback=false">取消</Button>
+        <Button type="primary" @click="rollbackSubmit">确定</Button>
+      </p>
+    </Modal>
+    <!-- 删除快照弹窗 -->
+    <Modal v-model="showModal.delsnaps" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">删除快照</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">确定要删除选中的快照吗？</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.delsnaps=false">取消</Button>
+        <Button type="primary" @click="delsnapsSubm">确定</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -398,7 +445,9 @@
           publicIPHint: false,
           bindIP: false,
           unbindIP: false,
-          adjust: false
+          adjust: false,
+          rollback: false,
+          delsnaps: false
         },
         renameForm: {
           hostName: ''
@@ -500,17 +549,121 @@
           caseType: 0
         },
 
+        tab4: {
+          snapshootColumns: [
+            {
+              type: 'selection',
+              width: 60,
+              align: 'center'
+            },
+            {
+              title: '快照名称',
+              key: 'snapshotname',
+            },
+            {
+              title: '状态',
+              key: 'status',
+              render: (h, params) => {
+                switch (params.row.status) {
+                  case 1:
+                    return h('span', {}, '正常')
+                  case -1:
+                    return h('span', {}, '异常')
+                  case 2:
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block',
+                        marginRight: '10px'
+                      }
+                    }), h('span', {}, '创建中')])
+                  case 3:
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block',
+                        marginRight: '10px'
+                      }
+                    }), h('span', {}, '删除中')])
+                }
+              }
+            },
+            {
+              title: '快照策略',
+              key: 'createway',
+              render: (h, params) => {
+                const row = params.row
+                const text = row.createway === 'hand' ? '手动备份' : row.createway
+                return h('span', {}, text)
+              }
+            },
+            {
+              title: '快照间隔',
+              key: 'intervals',
+              render: (h, params) => {
+                const row = params.row
+                const text = row.intervals === 'hand' ? '手动' : row.intervals === 'day' ? '每天' : row.intervals === 'week' ? '每周' : row.intervals === 'month' ? '每月' : ''
+                return h('span', {}, text)
+              }
+            },
+            {
+              title: '创建时间',
+              key: 'addtime',
+            },
+            {
+              title: '操作',
+              key: 'action',
+              width: 100,
+              render: (h, params) => {
+                if (params.row.status !== 1) {
+                  return h('span', {
+                    style: {
+                      cursor: 'not-allowed'
+                    },
+                  }, '回滚')
+                } else {
+                  return h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.showModal.rollback = true
+                        this.tab4.cursnapshot = params.row
+                        this.tab4.snapsName = params.row.snapshotname
+                        this.tab4.hostName = params.row.name
+                        this.tab4.hostCreatetime = params.row.addtime
+                      }
+                    }
+                  }, '回滚')
+                }
+              }
+            }
+          ],
+          snapshootData: [],
+          snapshootPages: 0,
+          currentPage: 1,
+          pageSize: 10,
+          snapshootSelection: [],
+          cursnapshot: null,
+          snapsName: '',
+          hostName: '',
+          hostCreatetime: ''
+        },
+
         tab5: {
           timeHorizon: '近一天',
           searchName: '',
           logColumns: [
             {
               title: '操作',
-              key: 'name'
+              key: 'operatedes'
             },
             {
               title: '操作结果',
-              key: 'name',
+              render: (h, params) => {
+                let text = params.row.operatestatus == 1 ? '成功' : '失败'
+                return h('span', {}, text)
+              },
               filters: [
                 {
                   label: '成功',
@@ -524,15 +677,15 @@
               filterMultiple: false,
               filterMethod(value, row) {
                 if (value === 1) {
-                  return row.age > 25;
+                  return row.operatestatus == 1
                 } else if (value === 2) {
-                  return row.age < 25;
+                  return row.operatestatus != 1
                 }
               }
             },
             {
               title: '创建时间',
-              key: 'name',
+              key: 'operatortime',
               sortable: true
             }
           ],
@@ -554,6 +707,9 @@
         switch (item) {
           case '基础信息':
             this.getHostInfo()
+            break
+          case '快照管理':
+            this.getHostSnapshoot()
             break
           case '操作日志':
             this.getHostLog()
@@ -971,6 +1127,72 @@
           }
         })
       },
+
+      getHostSnapshoot() {
+        this.$http.get('Snapshot/listVMSnapshot.do', {
+          params: {
+            resourceType: 1,
+            resourceId: this.computerId
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.tab4.snapshootData = response.data.result
+          }
+        })
+      },
+      snapshootSelectionChange(selected) {
+        this.tab4.snapshootSelection = selected
+      },
+      changeSnapshootPage(page) {
+        this.tab4.currentPage = page
+        this.getHostSnapshoot()
+      },
+      rollbackSubmit() {
+        this.showModal.rollback = false
+        let URL = 'Snapshot/revertToVMSnapshot.do'
+        this.$http.get(URL, {
+          params: {
+            snapshotId: this.tab4.cursnapshot.snapshotid,
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success({
+              content: response.data.message,
+              duration: 5
+            })
+          } else {
+            this.$message.info({
+              content: response.data.message,
+            })
+          }
+        })
+      },
+      // 确定删除快照
+      delsnapsSubm() {
+        this.showModal.delsnaps = false
+        this.tab4.snapshootData.forEach(item => {
+          if (item.snapshotid == this.tab4.snapsSelection.snapshotid) {
+            item.status = 3
+          }
+        })
+        let ids = this.tab4.snapshootData.map(item => {
+          return item.id
+        })
+        var URL = 'Snapshot/deleteVMSnapshot.do'
+        this.$http.get(URL, {
+          params: {
+            ids: ids + ''
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.getHostSnapshoot()
+          } else {
+            this.$message.info({
+              content: response.data.message,
+            })
+          }
+        })
+      },
       changeLogPage(page) {
         this.tab5.currentPage = page
         this.getHostLog()
@@ -982,7 +1204,8 @@
             currentPage: this.tab5.currentPage,
             target: 'host',
             queryTime: this.tab5.logTime,
-            targetId: this.hostInfo.id
+            targetId: this.hostInfo.id,
+            message: this.tab5.searchName
           }
         }).then(response => {
           this.tab5.logPages = response.data.total
@@ -1001,6 +1224,7 @@
             this.tab5.logTime = this.logNearlyThirtyDays() + ',' + this.getTomorrow()
             break
         }
+        this.tab5.currentPage = 1
         this.getHostLog()
       },
       getTomorrow() {
@@ -1025,6 +1249,9 @@
     computed: {
       auth() {
         return this.$store.state.authInfo != null
+      },
+      delSnapshootDisabled() {
+        return this.tab4.snapshootSelection.length === 0
       }
     },
     watch: {
@@ -1159,6 +1386,20 @@
               }
             }
           }
+        }
+      }
+    }
+    .tab-4 {
+      .selectMark {
+        margin: 20px 0;
+        > img {
+          position: relative;
+          top: 4px;
+        }
+        > span {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(102, 102, 102, 1);
         }
       }
     }
