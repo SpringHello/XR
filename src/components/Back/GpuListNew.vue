@@ -535,6 +535,7 @@
             },
             {
               title:'状态/监控(全部)',
+              width:138,
               render:(h,params) => {
                 return h('div',[
                   h('img',{}),
@@ -608,8 +609,39 @@
             },
             {
               title:'计费类型(全部)',
+              width:138,
               render:(h,params) =>{
                 return h('span',{},params.row.caseType == 1 ?'包年':params.row.caseType == 2 ? '包月' : params.row.caseType == 3 ? '实时' :'7天')
+              },
+              filters: [
+                {
+                  label: '包年',
+                  value: 1
+                },
+                {
+                  label: '包月',
+                  value: 2
+                },
+                {
+                  label: '实时',
+                  value: 3
+                },
+                {
+                  label: '7天',
+                  value: 4
+                }
+              ],
+              filterMultiple: false,
+              filterMethod (value, row) {
+                if (value === 1) {
+                  return row.caseType === 1;
+                } else if (value === 2) {
+                  return row.caseType === 2;
+                }else if(value === 3){
+                  return row.caseType === 3
+                }else if(value === 4){
+                  return row.caseType === 4
+                }
               }
             },
             {
@@ -1266,9 +1298,9 @@
         if (this.$store.state.authInfo == null) {
           this.showModal.selectAuthType = true
         }
-        this.intervalInstance = setInterval(() => {
-          this.getGpuServerList()
-        }, 5 * 1000)
+        // this.intervalInstance = setInterval(() => {
+        //   this.getGpuServerList()
+        // }, 5 * 1000)
       },
       computed:{
         auth() {
