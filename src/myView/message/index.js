@@ -56,7 +56,7 @@ function getInstance(options) {
       onCancel: '',
       okText: '确定'
     },
-    render: (h) => {
+/*    render: (h) => {
       var contentArray = options.content.split(/\<a\>(.+?)\<\/a\>/)
       var result = []
       for (let i = 0; i < contentArray.length; i++) {
@@ -76,7 +76,7 @@ function getInstance(options) {
       return h(modal, {
         props: options
       })
-    }
+    }*/
   })
   modalInstance.$mount()
   document.body.appendChild(modalInstance.$el)
