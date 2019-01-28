@@ -250,8 +250,34 @@ export default {
   data () {
     // 域名正则批量判断
     const validateDomain = (rule, value, callback) => {
+      // let regM = /^\*\.[a-zA-Z0-9\u4e00-\u9fa5][-a-zA-Z0-9\u4e00-\u9fa5]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/
+      // let regN = 
+      // let ovLength = (value.split('*')).length-1
       var flag = this.domainReg(value)
       var domainRepeat = this.domainRepeat(value)
+      // var domainList = []
+      // domainList = value.split('\n').filter(item => {
+      //   return item != ''
+      // })
+      // // ov超真pro,支持一个通配符域名，并且不能有其他域名
+      // // dv超快pre,支持多个通配符域名，可以有其他域名
+      // if (this.formValidateOne.selectedType == '1') {
+      //   // 通配符域名的情况
+      //   if(value.indexOf('*') != -1 && domainList.length >1) {
+      //     if(!regM.test(regM)) {
+      //       callback(new Error('请输入正确的域名格式'));
+      //     }
+      //     callback(new Error('该证书只支持一个通配域名，且不能包含其他域名'));
+      //   } else {
+
+      //   }
+      //   if(regM.test(value)&&ovLength>1) {
+      //     callback(new Error('该证书只支持一个通配域名，且不能包含其他域名'));
+      //   } else if(regM.test(value))
+      // } else if(this.formValidateOne.selectedType == '2') {
+
+      // }
+      
       if (flag && domainRepeat) {
         callback(new Error('存在重复的域名'));
       } else if (flag) {
