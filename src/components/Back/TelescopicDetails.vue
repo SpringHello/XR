@@ -108,9 +108,8 @@
     </div>
 
     <!--新建告警策略-->
-    <modal title="新建告警策略" width="550" :mask-closable="false" v-model="alarmStrategy.newAddStrategy">
-      <hr color="#D8D8D8" size="1">
-      <br>
+    <Modal title="新建告警策略" width="550" :mask-closable="false" v-model="alarmStrategy.newAddStrategy">
+     
       <Form :model="alarmStrategy" ref="alarmStrategy" :rules="alarmStrategyValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="alarmStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
@@ -174,12 +173,11 @@
         <Button type="ghost" @click="alarmStrategy.newAddStrategy = false">取消</Button>
         <Button type="primary" @click="createAlarmStrategy">完成配置</Button>
       </div>
-    </modal>
+    </Modal>
 
     <!--修改告警策略-->
-    <modal title="修改告警策略" width="550" :mask-closable="false" v-model="updateStrategy.newAddStrategy">
-      <hr color="#D8D8D8" size="1">
-      <br>
+    <Modal title="修改告警策略" width="550" :mask-closable="false" v-model="updateStrategy.newAddStrategy">
+    
       <Form :model="updateStrategy" ref="updateStrategy" :rules="updateStrategyValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="updateStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
@@ -243,12 +241,10 @@
         <Button type="ghost" @click="updateStrategy.newAddStrategy = false">取消</Button>
         <Button type="primary" @click="updateAlarmStrategy">修改配置</Button>
       </div>
-    </modal>
+    </Modal>
 
     <!--新建定时任务-->
-    <modal title="新建定时任务" width="550" :mask-closable="false" v-model="task">
-      <hr color="#D8D8D8" size="1">
-      <br>
+    <Modal title="新建定时任务" width="550" :mask-closable="false" v-model="task">
       <Form :model="timedTask" ref="timedTask" :rules="timedTaskValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="timedTask.name" placeholder="请输入名称" style="width: 240px;"></Input>
@@ -331,12 +327,10 @@
         <Button type="ghost" @click="task = false">取消</Button>
         <Button type="primary" @click="createTask">完成配置</Button>
       </div>
-    </modal>
+    </Modal>
 
     <!--修改定时任务-->
-    <modal title="修改定时任务" width="550" :mask-closable="false" v-model="updateTask">
-      <hr color="#D8D8D8" size="1">
-      <br>
+    <Modal title="修改定时任务" width="550" :mask-closable="false" v-model="updateTask">
       <Form :model="updateTimedTask" ref="updateTimedTask" :rules="updateTaskTimedTaskValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="updateTimedTask.name" placeholder="请输入名称" style="width: 240px;"></Input>
@@ -419,12 +413,11 @@
         <Button type="ghost" @click="updateTask = false">取消</Button>
         <Button type="primary" @click="updateTaskFunction">完成修改</Button>
       </div>
-    </modal>
+    </Modal>
 
     <!--移入云主机-->
     <modal title="移入云主机" width="550" :mask-closable="false" v-model="moveCloudHost">
-      <hr color="#D8D8D8" size="1">
-      <br>
+    
       <p>您正为<span style="color:#2A99F2;">{{details.stretchname}}</span>移入云主机</p>
       <div>
         <div class="move_box">
@@ -471,8 +464,7 @@
 
     <!--修改伸缩组-->
     <modal title="修改伸缩组" v-model="updateTelescopic" width="550" :mask-closable="false">
-      <hr color="#D8D8D8" size="1">
-      <br>
+     
       <Form ref="updateTelescopicList" :model="updateTelescopicList" :rules="updateRuleValidate" style="width: 519px"  label-position="top" inline>
         <FormItem label="名称" prop="stretchname">
           <Input v-model="updateTelescopicList.stretchname" style="width: 240px" placeholder="请输入名称"></Input>
