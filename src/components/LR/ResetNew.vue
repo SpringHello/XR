@@ -637,24 +637,34 @@ export default {
     },
 
     // 
-    getUserInfo(){
+    getUserInfo(val){
       axios.get('user/isHaveEamilOrAuthByPhone.do',{
             params:{
               phone:this.formValidate.account
             }
       }).then(res =>{
-        var info;
             if(res.status == 200 && res.data.status == 1){
-              if(res.data.personAuthFlag  && res.data.companyAuthFlag ){
-                this.userInfo = 'company';
+              if(val == 'personal'){
+                if(res.data.emailFlag){
+                 this.userInfo = 'emailFlag';
+                 return;
+                }
                 return;
-              }else if(res.data.personAuthFlag){
-                 this.userInfo = 'person';
-              }else if(res.data.companyAuthFlag){
-                this.userInfo = 'company';
               }else{
-                this.userInfo = '';
-                this.$Message.info('您还没有实名认证');
+                if(res.data.personAuthFlag  && res.data.companyAuthFlag ){
+                  this.userInfo = 'company';
+                    return;
+                  }else if(res.data.personAuthFlag){
+                    this.userInfo = 'person';
+                  }else if(res.data.companyAuthFlag){
+                    this.userInfo = 'company';
+                  }else{
+                    this.userInfo = '';
+                    this.$Message.info({
+                      content:'您还没有实名认证',
+                      duration:5
+                    });
+                  }
               }
             }else{
               this.$Message.error('网络错误，请重试或者联系客服');
@@ -676,7 +686,6 @@ export default {
               this.index = 3;
               return;
             }else{
-            //  this.accountIsDis = 3;
               return;
             }
           }else if(index == 3){
@@ -685,14 +694,7 @@ export default {
              return;
           }
       }
-      // if(name == 'individual' && index == 2){
-      //     this.verPage = "card";
-      //     this.index = 3; 
-      // }else if(name == 'individual' && index == 3){
-      //      this.verPage = 'enterprise';
-      //       this.index = 3;
-      // }
-
+ 
       if(name == 'ok' && index == 2){
         this.index = 3; 
          this.verPage = 'people';
@@ -700,8 +702,15 @@ export default {
       }
 
       if (index == 0) { 
+        if(this.userInfo == 'emailFlag'){
           this.verPage = "email";
           this.index = 3; 
+        }else{
+          this.$Message.info({
+            content:'您的账号还没有绑定邮箱',
+            duration:5
+          })
+        }
       } else if (index == 1) {
         this.verPage = "phone";
         this.index = 3; 
@@ -711,18 +720,20 @@ export default {
       if (val == "yes") {
         if (regExp.phoneVail(this.formValidate.account)) {
            this.accountIsDis = '1';
+           this.getUserInfo('personal');
           this.formValidate.account = this.formValidate.account.replace(
             this.formValidate.account.substring(3, 7),
             "****"
           );
           this.index = 2;
+          
         }
       } else if(val == 'no'){
         this.accountIsDis = '9';
         this.stepList[3].value = '设置新手机号';
         this.resetAccount = true
       }else if(val == 'go'){
-        this.getUserInfo();
+        this.getUserInfo('reset');
          this.index = 2;
          this.accountIsDis = '2';
       }
