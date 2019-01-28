@@ -291,7 +291,7 @@
 	  		  			 	<img src="../../assets/img/back/Rectangle 22.png"/>	
 	  		  			 </div>
 	  		  </div>
-			  <img src="../../assets/img/back/成功-2.png" style="float: left;margin-left: 380px;margin-top: 80px;"/>	
+			  <img src="../../assets/img/back/success.png" style="float: left;margin-left: 380px;margin-top: 80px;"/>	
 			  <div style="float: left;margin-top: 85px;margin-left: 15px;">
 				  <span style="font-size:24px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);">提现申请提交成功</span><br />
 				  <span style="margin-top: 10px;float: left;font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);">预计 <span>{{successtime}}</span> 前到账（遇公众假期顺延）</span><br />
