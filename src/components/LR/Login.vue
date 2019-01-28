@@ -542,7 +542,7 @@
               } else {
                 this.$router.push({path: this.from})
               }
-            } else if (res.data.status === 0 && res.data.message === '账户或密码错误，请重新输入') {
+            } else if (res.data.status === 2) {
               if (this.loginForm.passwordErrorNum < 4) {
                 this.loginForm.passwordErrorNum += 1
                 this.loginForm.errorMsg = 'passwordMistake'
@@ -582,7 +582,7 @@
               } else {
                 this.$router.push({path: this.from})
               }
-            } else if (res.data.status === 0 && res.data.message === '账户或密码错误，请重新输入') {
+            } else if (res.data.status === 0) {
               if (this.loginForm.verificationCodeNum < 4) {
                 this.loginForm.verificationCodeNum += 1
                 this.loginForm.errorMsg = 'verificationCodeMistake'
