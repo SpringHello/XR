@@ -481,16 +481,12 @@
       },
       changeToVailCodeLogin() {
         this.passwordCaptchaObj.reset()
-        if (this.loginForm.errorMsg === 'formatError') {
-          this.loginForm.errorMsg = ''
-        }
+        this.loginForm.errorMsg = ''
         this.loginForm.loginType = 'vailCode'
       },
       changeToPasswordLogin() {
         this.codeCaptchaObj.reset()
-        if (this.loginForm.errorMsg === 'formatError') {
-          this.loginForm.errorMsg = ''
-        }
+        this.loginForm.errorMsg = ''
         this.loginForm.loginType = 'password'
       },
       /* 校验手机号是否注册 */
@@ -542,7 +538,7 @@
               } else {
                 this.$router.push({path: this.from})
               }
-            } else if (res.data.status === 0 && res.data.message === '账户或密码错误，请重新输入') {
+            } else if (res.data.status === 2) {
               if (this.loginForm.passwordErrorNum < 4) {
                 this.loginForm.passwordErrorNum += 1
                 this.loginForm.errorMsg = 'passwordMistake'
@@ -582,7 +578,7 @@
               } else {
                 this.$router.push({path: this.from})
               }
-            } else if (res.data.status === 0 && res.data.message === '账户或密码错误，请重新输入') {
+            } else if (res.data.status === 0) {
               if (this.loginForm.verificationCodeNum < 4) {
                 this.loginForm.verificationCodeNum += 1
                 this.loginForm.errorMsg = 'verificationCodeMistake'
