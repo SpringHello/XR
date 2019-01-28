@@ -32,7 +32,7 @@
 			 <span class="spanall" style="margin-left: -15px;float: left;margin-top: 5px;">本次提现金额</span>
 			 <RadioGroup vertical v-model="vertical" style="margin-left: 15px;margin-top: -3px;">
 			    <Radio label="l1"><span class="spanall">{{moneysure}} 元（本次可提现金额）</span></Radio>
-				<Radio label="l2">其他金额<InputNumber :max="moneysure" :min="1" v-model="Otheramount" @on-change="Otheramountg" style="margin-left: 10px;width: 80px;height: 28px;"></InputNumber><span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-left: 10px;">元</span></Radio>
+				<Radio label="l2">其他金额<InputNumber :disabled="disabled11" :max="moneysure" :min="1" v-model="Otheramount" @on-change="Otheramountg" style="margin-left: 10px;width: 80px;height: 28px;"></InputNumber><span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-left: 10px;">元</span></Radio>
 			 </RadioGroup>
 		 </div>
 		 <Button type="primary" style="margin-left: 125px;margin-top: 20px;" @click="Firststep" :class="{selected:selectedTabSec == 'content'}">下一步</Button>
@@ -347,6 +347,7 @@
 		  uploadImgDispaly1: '',
 		  uploadImgDispaly2: '',
 		  authModifyPhoneStep: 0,
+		  disabled11:true,
 		  authModifyPhoneFormThere: {
 		    verificationCode: '',
 		    pictureCode: '',
@@ -753,6 +754,14 @@
 		}
     },
     watch: {
+		'vertical':function(val){
+			if(this.vertical=='l2'){
+				this.disabled11 = false
+			}
+			else{
+				this.disabled11 = true
+			}
+		},
 		
 		moneysure:function(val){
 			if(val>2000.00){
@@ -785,6 +794,14 @@
       display: block;
     }
 	.content{
+		background-color: white;
+		padding: 20px;
+	}
+	.content1{
+		background-color: white;
+		padding: 20px;
+	}
+	.content2{
 		background-color: white;
 		padding: 20px;
 	}
