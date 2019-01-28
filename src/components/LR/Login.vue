@@ -481,16 +481,12 @@
       },
       changeToVailCodeLogin() {
         this.passwordCaptchaObj.reset()
-        if (this.loginForm.errorMsg === 'formatError') {
-          this.loginForm.errorMsg = ''
-        }
+        this.loginForm.errorMsg = ''
         this.loginForm.loginType = 'vailCode'
       },
       changeToPasswordLogin() {
         this.codeCaptchaObj.reset()
-        if (this.loginForm.errorMsg === 'formatError') {
-          this.loginForm.errorMsg = ''
-        }
+        this.loginForm.errorMsg = ''
         this.loginForm.loginType = 'password'
       },
       /* 校验手机号是否注册 */
