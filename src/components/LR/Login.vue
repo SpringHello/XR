@@ -481,16 +481,12 @@
       },
       changeToVailCodeLogin() {
         this.passwordCaptchaObj.reset()
-        if (this.loginForm.errorMsg === 'formatError') {
-          this.loginForm.errorMsg = ''
-        }
+        this.loginForm.errorMsg = ''
         this.loginForm.loginType = 'vailCode'
       },
       changeToPasswordLogin() {
         this.codeCaptchaObj.reset()
-        if (this.loginForm.errorMsg === 'formatError') {
-          this.loginForm.errorMsg = ''
-        }
+        this.loginForm.errorMsg = ''
         this.loginForm.loginType = 'password'
       },
       /* 校验手机号是否注册 */
@@ -532,7 +528,8 @@
           axios.get(url, {params}).then(res => {
             if (res.data.status === 1 && res.status === 200) {
               localStorage.setItem('authToken', res.data.message)
-              if (this.from.indexOf('/ruicloud/Register') == 0 || this.from.indexOf('/ruicloud/register') == 0) {
+              console.log(this.from)
+              if (this.from.indexOf('/ruicloud/Register') == 0 || this.from.indexOf('/ruicloud/register') == 0 || this.from.indexOf('/ruicloud/resetNew') == 0 || this.from == '/') {
                 this.$router.push('overview')
               } else if (this.from.indexOf('/ruicloud/ActiveCenter') == 0) {
                 this.$router.push({path: this.from})
@@ -541,7 +538,7 @@
               } else {
                 this.$router.push({path: this.from})
               }
-            } else if (res.data.status === 0 && res.data.message === '账户或密码错误，请重新输入') {
+            } else if (res.data.status === 2) {
               if (this.loginForm.passwordErrorNum < 4) {
                 this.loginForm.passwordErrorNum += 1
                 this.loginForm.errorMsg = 'passwordMistake'
@@ -574,16 +571,14 @@
           axios.get(url, {params}).then(res => {
             if (res.data.status === 1 && res.status === 200) {
               localStorage.setItem('authToken', res.data.message)
-              if (this.from.indexOf('/ruicloud/Register') == 0|| this.from.indexOf('/ruicloud/register') == 0) {
+              if (this.from.indexOf('/ruicloud/Register') == 0 || this.from.indexOf('/ruicloud/register') == 0 || this.from.indexOf('/ruicloud/resetNew') == 0 || this.from == '/') {
                 this.$router.push('overview')
-              } else if (this.from.indexOf('/ruicloud/ActiveCenter') == 0) {
-                this.$router.push({path: this.from})
               } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
                 this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
               } else {
                 this.$router.push({path: this.from})
               }
-            } else if (res.data.status === 0 && res.data.message === '账户或密码错误，请重新输入') {
+            } else if (res.data.status === 0) {
               if (this.loginForm.verificationCodeNum < 4) {
                 this.loginForm.verificationCodeNum += 1
                 this.loginForm.errorMsg = 'verificationCodeMistake'

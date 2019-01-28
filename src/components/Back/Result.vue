@@ -209,7 +209,7 @@
         if (this.orderInfo.isUseVoucher == 1 && Number(this.orderInfo.voucher) < Number(this.orderInfo.money) && bol.indexOf('account') == -1) {
           this.accountPay.push('account')
           this.$message.info({
-            content: '默认情况下优先使用账户余额'
+            content: '当前订单默认余额和现金券组合支付'
           })
         }
       },

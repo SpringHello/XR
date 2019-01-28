@@ -26,7 +26,7 @@ import carousel from './myView/carousel'
 import carouselItem from './myView/carouselItem'
 // 引入滑块组件
 import slider from './myView/slider'
-// 引入错误提示框组件
+// 引入提示框组件
 import message from './myView/message'
 import md5 from 'md5'
 // 引入复制粘贴组件

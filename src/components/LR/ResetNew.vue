@@ -92,13 +92,14 @@
             <!-- 邮箱验证方式 -->
             <div class="verification" v-if="verPage == 'email'">
               <p class="ver_p">我们会发送一封验证邮件到您的邮箱，请注意查收</p>
-                <Form ref="dataEmail"  :model="dataFroms" :rules="dataFromsValidate" >
+                <Form ref="dataPhone"  :model="dataFroms" :rules="dataFromsValidate" >
                   <FormItem prop='email'>
                     <x-Input   :icon='url.icon1' v-model="dataFroms.email"  placeholder='请输入邮箱' ></x-Input>
                   </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large'  placeholder='请输入验证码' style="width:258px;"></Input>
                     <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
                       <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
@@ -112,7 +113,7 @@
                       </x-Input>
                    </FormItem>
                 </Form>
-              <div class="v_email" @click="getVerificationCode()">
+              <div class="v_email" @click="voiceCode(1)">
                下一步
               </div>
             </div>
@@ -141,7 +142,7 @@
                       </x-Input>
                    </FormItem>
                </Form>
-               <Button type="primary" @click="voiceCode" style="float:right;margin-top:12px;">下一步</Button>
+               <Button type="primary" @click="voiceCode(0)" style="float:right;margin-top:12px;">下一步</Button>
             </div>
 
             <!-- 身份证验证方式 -->
@@ -153,7 +154,7 @@
                   </FormItem>
                   <FormItem prop='idCard'>
                     <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.idCard"  style="margin-top:20px;" placeholder='请输入您的身份证账号' ></x-Input>
-                    <p v-if="errorCard" class="ivu-form-item-error-tip">您输入的身份证号码有误，验证失败</p>
+                    <p v-if="errorCard != ''" class="ivu-form-item-error-tip">{{errorCard}}</p>
                   </FormItem>
                 </Form>
                 <Button type="primary" @click="cardNext" style="float:right;">下一步</Button>
@@ -204,7 +205,7 @@
                   </FormItem>
                   <FormItem prop='business'>
                     <x-Input ref="xinput" :icon='url.iconIdCard' v-model="dataFroms.business "  style="margin-top:20px;" placeholder='请输入您的营业执照号码' ></x-Input>
-                    <p v-if="errorCard" class="ivu-form-item-error-tip">您输入的公司营业执照号码输入有误，验证失败</p>
+                    <p v-if="errorCard != ''" class="ivu-form-item-error-tip">{{errorCard}}</p>
                   </FormItem>
                 </Form>
                 <Button type="primary" @click="cardNext" style="float:right;">下一步</Button>
@@ -328,7 +329,7 @@
             </div>
 
             <!-- 完成 -->
-            <div class="verification" v-if="index == 5">
+            <div class="verification" v-if="index == 5 && verPage=='submit'">
               <div v-if="resetAccount" style="text-align:center;">
                 <div>
                   <img src="../../assets/img/updatePaw/shape.png">
@@ -558,6 +559,8 @@ export default {
       uploadList:[],
       legalList:[],
       // 区分是个人还是
+      userInfo:'',
+      errorCard:''
     };
   },
   components: {
@@ -578,7 +581,7 @@ export default {
         if(valid){
           axios.get("user/code.do", {
           params: {
-            aim: this.dataFroms.phone,
+            aim: val == 1 ? this.dataFroms.email: this.dataFroms.phone,
             isemail: val,
             vailCode: this.dataFroms.vCode
           }
@@ -615,7 +618,7 @@ export default {
       axios
         .get("user/findPassword.do", {
           params: {
-            username: this.dataFroms.phone,
+            username: this.dataFroms.phone != '' ?this.dataFroms.phone : this.dataFroms.email,
             password: this.dataFroms.oldPaw
           }
         })
@@ -625,6 +628,7 @@ export default {
             if (response.data.status == 1) {
               this.$Message.success(response.data.message);
               this.index = 5;
+              this.verPage = 'submit';
             } else {
              this.$Message.error(response.data.message);
             }
@@ -633,43 +637,55 @@ export default {
     },
 
     // 
-    getUserInfo(){
-      let info ='';
+    getUserInfo(val){
       axios.get('user/isHaveEamilOrAuthByPhone.do',{
-        params:{
-          phone:this.formValidate.account
-        }
+            params:{
+              phone:this.formValidate.account
+            }
       }).then(res =>{
-        if(res.status == 200 && res.data.status == 1){
-          if(res.data.personAuthFlag && res.data.companyAuthFlag){
-             info = 'company';
-          }else if(res.data.personAuthFlag){
-            info = 'person'
-          }else if(res.data.companyAuthFlag){
-            info = 'company'
-          }else{
-            info = '';
-            this.$Message.info('您还没有实名认证');
-          }
-        }
-         return info;
+            if(res.status == 200 && res.data.status == 1){
+              if(val == 'personal'){
+                if(res.data.emailFlag){
+                 this.userInfo = 'emailFlag';
+                 return;
+                }
+                return;
+              }else{
+                if(res.data.personAuthFlag  && res.data.companyAuthFlag ){
+                  this.userInfo = 'company';
+                    return;
+                  }else if(res.data.personAuthFlag){
+                    this.userInfo = 'person';
+                  }else if(res.data.companyAuthFlag){
+                    this.userInfo = 'company';
+                  }else{
+                    this.userInfo = '';
+                    this.$Message.info({
+                      content:'您还没有实名认证',
+                      duration:5
+                    });
+                  }
+              }
+            }else{
+              this.$Message.error('网络错误，请重试或者联系客服');
+            }
       })
+
     },
 
     //跳转相应验证
     jump(index,name) {
       if(name =='pople'){  // 账号不能用
           if(index == 2){
-            let user = this.getUserInfo();
-            if( user == 'person'){
+            if( this.userInfo == 'person'){
               this.verPage = "card";
                this.index = 3; 
                return;
-            }else if(user == 'company'){
+            }else if(this.userInfo == 'company'){
               this.verPage = 'enterprise';
               this.index = 3;
+              return;
             }else{
-            //  this.accountIsDis = 3;
               return;
             }
           }else if(index == 3){
@@ -678,14 +694,7 @@ export default {
              return;
           }
       }
-      // if(name == 'individual' && index == 2){
-      //     this.verPage = "card";
-      //     this.index = 3; 
-      // }else if(name == 'individual' && index == 3){
-      //      this.verPage = 'enterprise';
-      //       this.index = 3;
-      // }
-
+ 
       if(name == 'ok' && index == 2){
         this.index = 3; 
          this.verPage = 'people';
@@ -693,35 +702,44 @@ export default {
       }
 
       if (index == 0) { 
+        if(this.userInfo == 'emailFlag'){
           this.verPage = "email";
           this.index = 3; 
+        }else{
+          this.$Message.info({
+            content:'您的账号还没有绑定邮箱',
+            duration:5
+          })
+        }
       } else if (index == 1) {
         this.verPage = "phone";
         this.index = 3; 
-      } else if (index == 2) {
-        this.index = 3; 
-        this.verPage = "card";
       }
     },
     next(val) {
       if (val == "yes") {
         if (regExp.phoneVail(this.formValidate.account)) {
            this.accountIsDis = '1';
+           this.getUserInfo('personal');
           this.formValidate.account = this.formValidate.account.replace(
             this.formValidate.account.substring(3, 7),
             "****"
           );
           this.index = 2;
+          
         }
       } else if(val == 'no'){
         this.accountIsDis = '9';
         this.stepList[3].value = '设置新手机号';
         this.resetAccount = true
       }else if(val == 'go'){
+        this.getUserInfo('reset');
          this.index = 2;
          this.accountIsDis = '2';
       }
     },
+
+
 
     //上传照片最大限制
     handleMaxSize() {
@@ -799,7 +817,7 @@ export default {
     },
 
     // 短信验证码
-    voiceCode(){
+    voiceCode(val){
       this.$refs.dataPhone.validate((valid)=>{
         if(valid){
         if(this.dataFroms.code == ''){
@@ -811,14 +829,14 @@ export default {
       }
         axios.get('user/judgeCode.do',{
           params:{
-            aim:this.dataFroms.phone,
-            isemail: '0',
+            aim:val == 1?this.dataFroms.email:this.dataFroms.phone,
+            isemail: val,
             code: this.dataFroms.code
           }
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.index = 4;
-            this.verPage == '';
+            this.verPage = '';
           }else{
             this.$Message.error({
                   content: res.data.message,
@@ -839,7 +857,7 @@ export default {
     //获取邮箱验证码
     getVerificationCode() {
        this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
-      this.$refs.dataEmail.validate((valid) => {
+      this.$refs.dataPhone.validate((valid) => {
         if(valid){
           axios.get("user/code.do", {
           params: {
@@ -901,7 +919,6 @@ export default {
 
     // 身份
     validateInfo(){
-     let name = this.getUserInfo();
       let params = {
          IDCard:this.dataFroms.idCard,
           authType:'0',
@@ -913,7 +930,7 @@ export default {
           agentIdCardHandUrl:this.fileUrl.imgUrl,
           legalIdCardFrontUrl:this.fileUrl.legalUrl,
       }
-      let data = name == 'person'?params:paramsOne;
+      let data = this.userInfo == 'person'?params:paramsOne;
       axios.post('user/newPhoneByIdCard.do',{
         data
       }).then(res =>{
@@ -939,11 +956,10 @@ export default {
     cardNext(){
       this.$refs.dataInfo.validate((valid)=>{
         if(valid){
-           let name = this.getUserInfo();
             let params = {
                 type:'0',
                 name:this.dataFroms.name,
-                idCard:this.fileUrl.imgUrl,
+                idCard:this.dataFroms.idCard,
             }
             let paramsOne ={
               businessLicense:this.dataFroms.business,
@@ -951,14 +967,14 @@ export default {
                 name:this.dataFroms.company,
                 businessLicense:this.dataFroms.business,
             }
-            let data = name == 'person'?params:paramsOne;
+            let data = this.userInfo == 'person'?params:paramsOne;
             axios.post('user/isIdCardAndNameSame.do',
               data
             ).then(res =>{
               if(res.status == 200 && res.data.status ==1){
                 this.absc = !this.absc;
               }else{
-                this.errorCard = true;
+                this.errorCard = res.data.message;
               }
             })
         }
@@ -1019,12 +1035,12 @@ export default {
     },
     'dataFroms.business':{
       handler(){
-        this.errorCard = false;
+        this.errorCard = '';
       }
     },
     'dataFroms.idCard':{
       handler(){
-        this.errorCard = false;
+        this.errorCard = '';
       }
     }
   }
