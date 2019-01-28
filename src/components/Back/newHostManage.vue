@@ -26,7 +26,7 @@
       <div class="config-info">
         <div class="tab-1" v-show="configType == '基础信息' ">
           <div>
-            <p>主机信息<span> [设置]</span></p>
+            <p>主机信息<!--<span>[设置]</span>--></p>
             <ul>
               <li><span class="one">镜像系统</span><span class="two">{{ hostInfo.template}}</span><span class="three" @click="modifyMirror"> [修改]</span></li>
               <li><span class="one">系统盘容量</span><span class="two">{{ hostInfo.rootDiskSize}}G</span><span class="three" @click="hostUpgrade"> [扩容]</span></li>
@@ -42,7 +42,7 @@
             </ul>
           </div>
           <div>
-            <p>网络信息<span> [设置]</span></p>
+            <p>网络信息<!--<span> [设置]</span>--></p>
             <ul>
               <li><span class="four">所属VPC</span>
                 <span class="three" v-if="hostInfo.vpc" @click="toOther('vpc')">{{ hostInfo.vpc}}</span>
@@ -61,7 +61,7 @@
             </ul>
           </div>
           <div>
-            <p>安全信息<span> [设置]</span></p>
+            <p>安全信息<!--<span> [设置]</span>--></p>
             <ul>
               <li><span class="four">安全组</span><span :class="{three: hostInfo.firewall}" @click="toOther('firewall')"> {{ hostInfo.firewall ? hostInfo.firewall: '----'}}</span>
               </li>
@@ -69,7 +69,7 @@
             </ul>
           </div>
           <div>
-            <p>资费信息<span> [设置]</span></p>
+            <p>资费信息<!--<span> [设置]</span>--></p>
             <ul>
               <li><span class="four">计费类型</span><span
                 class="two"> {{ hostInfo.case_type == 1 ? '包年' : hostInfo.case_type == 2 ? '包月' : hostInfo.case_type == 3 ? '实时' : '七天'}}</span></li>
@@ -475,7 +475,7 @@
           input: ''
         },
         configType: '基础信息',
-        configTypes: ['基础信息', '主机监控', '安全组', '快照管理', '操作日志'],
+        configTypes: ['基础信息', '主机监控', /*'安全组',*/ '快照管理', '操作日志'],
         isAutoRenew: false,
         diskMountForm: {
           mountDisk: '',
@@ -1171,13 +1171,16 @@
       delsnapsSubm() {
         this.showModal.delsnaps = false
         this.tab4.snapshootData.forEach(item => {
-          if (item.snapshotid == this.tab4.snapsSelection.snapshotid) {
-            item.status = 3
-          }
+          this.tab4.snapshootSelection.forEach(item1 => {
+            if (item.snapshotid == item1.snapshotid) {
+              item.status = 3
+            }
+          })
         })
-        let ids = this.tab4.snapshootData.map(item => {
+        let ids = this.tab4.snapshootSelection.map(item => {
           return item.id
         })
+        this.tab4.snapshootSelection = []
         var URL = 'Snapshot/deleteVMSnapshot.do'
         this.$http.get(URL, {
           params: {
@@ -1185,6 +1188,7 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
             this.getHostSnapshoot()
           } else {
             this.$message.info({
@@ -1391,7 +1395,7 @@
     }
     .tab-4 {
       .selectMark {
-        margin: 20px 0;
+        margin: 10px 0;
         > img {
           position: relative;
           top: 4px;
