@@ -250,14 +250,39 @@ export default {
   data () {
     // 域名正则批量判断
     const validateDomain = (rule, value, callback) => {
+      // this.priceReg = false
       var flag = this.domainReg(value)
+      var flagM = this.domainRegM(value)
       var domainRepeat = this.domainRepeat(value)
-      if (flag && domainRepeat) {
-        callback(new Error('存在重复的域名'));
-      } else if (flag) {
-        callback()
-      } else {
-        callback(new Error('请输入正确的域名格式'));
+      var domainLength = this.domainLength(value)
+      // ov超真pro,支持一个通配符域名，并且不能有其他域名1
+      // dv超快pre,支持多个通配符域名，可以有其他域名2
+      if (this.formValidateOne.selectedType == '1') {
+        if (value.indexOf('*') != -1) {
+          if (domainLength > 1) {
+            callback(new Error('该证书只支持一个通配域名，且不能包含其他域名'));
+          } else if (flagM) {
+            callback()
+          } else {
+            callback(new Error('请输入正确的域名格式'));
+          }
+        } else {
+          if (flag && domainRepeat) {
+            callback(new Error('存在重复的域名'));
+          } else if (flag) {
+            callback()
+          } else {
+            callback(new Error('请输入正确的域名格式'));
+          }
+        }
+      } else if (this.formValidateOne.selectedType == '2') {
+        if (flagM && domainRepeat) {
+          callback(new Error('存在重复的域名'));
+        } else if (flagM) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的域名格式'));
+        }
       }
     }
     const validaRegisteredID = (rule, value, callback) => {
@@ -275,6 +300,7 @@ export default {
       }
     }
     return {
+      priceReg: false,
       domainList: [],
       step: 0,
       formValidateOne: {
@@ -386,6 +412,16 @@ export default {
         }
       })
     },
+    domainLength (string) {
+      if (string) {
+        this.domainList = string.split('\n').filter(item => {
+          return item != ''
+        })
+        return this.domainList.length
+      } else {
+        return false
+      }
+    },
     domainReg (string) {
       if (string) {
         let reg = /^[a-zA-Z0-9\u4e00-\u9fa5][-a-zA-Z0-9\u4e00-\u9fa5]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/
@@ -394,6 +430,21 @@ export default {
         })
         let flag = this.domainList.every(item => {
           return reg.test(item)
+        })
+        return flag
+      } else {
+        return false
+      }
+    },
+    domainRegM (string) {
+      if (string) {
+        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5][-a-zA-Z0-9\u4e00-\u9fa5]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/
+        let regM = /^\*\.[a-zA-Z0-9\u4e00-\u9fa5][-a-zA-Z0-9\u4e00-\u9fa5]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/
+        this.domainList = string.split('\n').filter(item => {
+          return item != ''
+        })
+        let flag = this.domainList.every(item => {
+          return regM.test(item) || reg.test(item)
         })
         return flag
       } else {
@@ -415,9 +466,8 @@ export default {
       }
     },
     price () {
-      let flag = this.domainReg(this.formValidateOne.domain)
-      // console.log(flag)
-      if (flag) {
+      let flagM = this.domainRegM(this.formValidateOne.domain)
+      if (flagM) {
         axios.post('domain/getSSLPriceFromType.do', {
           certTypeId: this.formValidateOne.selectedType,
           certallDomain: this.domainList.join(),
@@ -549,7 +599,7 @@ export default {
     },
     'formValidateOne.domain': debounce(1000, function () {
       this.price()
-    }),
+    })
   },
   beforeRouteLeave (from, to, next) {
     if (sessionStorage.getItem('defaultType')) {

@@ -713,6 +713,7 @@
           bdata: 'PdataBase',
           bgpu: 'Pgpu',
           bobj: 'PobjStorage',
+          bssl: 'ssl'
         }
         return map[this.product.currentProduct]
       }
