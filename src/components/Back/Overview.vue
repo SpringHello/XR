@@ -229,7 +229,7 @@
       var adver = axios.get('user/getAdvertisement.do')
       var Announcement = axios.get('user/getAnnouncement.do', {
         params: {
-          listAll: 3
+          listAll: 0
         }
       })
       var source = axios.get('user/userSourceManager.do', {
@@ -336,8 +336,8 @@
       // 跳转到相应的页面
       togo(url, pane) {
         if (url == 'objectStorage') {
-          window.open('https://testoss-console.xrcloud.net/ruirados/objectStorage');
-          //window.open('https://oss-console.xrcloud.net/ruirados/objectStorage');
+          //window.open('https://testoss-console.xrcloud.net/ruirados/objectStorage');
+          window.open('https://oss-console.xrcloud.net/ruirados/objectStorage');
         } else {
           this.$router.push(url)
         }

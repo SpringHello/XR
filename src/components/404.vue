@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>404 no page find</h1>
+    <h1>404 no page find！</h1>
   </div>
 </template>
 

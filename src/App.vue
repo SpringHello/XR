@@ -1,13 +1,13 @@
 <template>
   <div id="front">
-    <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
+    <!-- <div class="app-hint" ref="hint" @click="$router.push('/ruicloud/AnniversaryActive')">
       <div class="center">
         <div class="countdown" v-if="hintShow">
           <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
         </div>
       </div>
       <img v-if="hintShow" @click="closeHeadHint" src="./assets/img/app/hint-icon1.png"/>
-    </div>
+    </div> -->
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -16,20 +16,23 @@
         </router-link>
         <div class="operate">
           <ul @mouseleave="ME(-1)">
-            <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
+            <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
-                                                                        v-if="item.title=='活动中心'"></sup></span>
+                  <a v-if="item.title=='资讯'"  :href="item.path" target="_blank"><span>{{item.title}}</span>
+                  </a>
+                  <router-link v-else :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
+                                                                               v-if="item.title=='活动中心'"></sup></span>
                   </router-link>
                 </div>
                 <div class="menu-dropdown-list">
                   <div class="content-dropdown">
                     <div class="content" ref="content" style="height:0px;">
-                      <div v-if="item.content" class="column">
+                      <div v-if="item.content" class="column" :class="{info:index1 == 4}" style="padding:21px 0;">
                         <div v-for="(prod,index) in item.content" :key="index">
                           <div>
-                            <h2>{{prod.prod}}</h2>
+                            <h2 v-if="index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
+                            <h2 v-else>{{prod.prod}}</h2>
                             <div v-for="(i,index) in prod.prodItem" style="line-height: normal" :key="index">
                               <router-link :to="i.path" v-if="i.path==''">{{i.title}}</router-link>
                               <router-link :to="i.path" v-else>{{i.title}}</router-link>
@@ -60,45 +63,45 @@
         <div class="operate">
           <!-- 尚未登录 -->
           <ul v-if="!userInfo" @mouseleave="ME(-1)">
-            <li @mouseenter="ME(4,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
                 </div>
               </div>
             </li>
-            <li @mouseenter="ME(4,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/entrance.htm"><span>备案</span></router-link>
                 </div>
               </div>
             </li>
-            <li @mouseenter="ME(4,$event)">
-              <div class="menu-dropdown">
-                <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/register"><span>注册</span></router-link>
-                </div>
-              </div>
-            </li>
-            <li @mouseenter="ME(5,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/login"><span>登录</span></router-link>
                 </div>
               </div>
             </li>
+            <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
+              <div class="menu-dropdown">
+                <div class="menu-dropdown-rels">
+                  <router-link to="/ruicloud/register"><span>注册</span></router-link>
+                </div>
+              </div>
+            </li>
           </ul>
           <!-- 已登录 -->
           <ul v-else @mouseleave="ME(-1)">
-            <li @mouseenter="ME(4,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
                 </div>
               </div>
             </li>
-            <li @mouseenter="ME(4,$event)">
+            <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link to="/ruicloud/entrance"><span>备案</span></router-link>
@@ -108,7 +111,7 @@
             <li @mouseenter="ME(5,$event)">
               <Dropdown @on-click="go">
                 <a href="javascript:void(0)" style="position:relative">
-                  {{userInfo.realname}}
+                  {{ userInfo?userInfo.realname:''}}
                   <!--<sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>-->
                   <Icon type="arrow-down-b"></Icon>
                 </a>
@@ -302,7 +305,7 @@
         <span class="phone"></span>
       </Poptip>
       <div>
-        <BackTop :bottom="161" :right="50" :duration="0" :height="1600" style="position: unset">
+        <BackTop :bottom="161" :right="50" :duration="300" :height="1000" style="position: unset">
           <span class="topLink"></span>
         </BackTop>
       </div>
@@ -425,7 +428,7 @@
                   {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost.htm'},
                   {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss.htm'},
                   {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/ruicloud/Pgpu.htm'},
-                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/ruicloud/Pelastic.htm'},
+                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/ruicloud/Pelastic'},
                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
                 ]
               },
@@ -479,7 +482,12 @@
                 prod: '云安全',
                 prodItem: [
                   {title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall.htm'},
-                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos.htm'}
+                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos.htm'},
+                  {
+                    title: 'SSL证书',
+                    desc: '网站可信身份认证与安全数据传输',
+                    path: '/ruicloud/ssl'
+                  },
                 ],
                 subProd: [
                   {
@@ -495,11 +503,29 @@
           },
           {
             title: '文档',
-            path: '/ruicloud/document'
+            path: '/ruicloud/document',
           },
           {
             title: '资讯',
-            path: '/ruicloud/article/1'
+            path: 'https://news.xrcloud.net',
+            content: [
+              {
+                prod: '云服务',
+                path: 'https://news.xrcloud.net/yunfuwu'
+              },
+              {
+                prod: '云咨询',
+                path: 'https://news.xrcloud.net/yunzixun'
+              },
+              {
+                prod: '云技术',
+                path: 'https://news.xrcloud.net/yunjishu'
+              },
+              {
+                prod: '云安全',
+                path: 'https://news.xrcloud.net/yunanquan'
+              }
+            ]
           },
           {
             title: '关于我们',
@@ -526,7 +552,7 @@
               {subTitle: '镜像服务', url: '/ruicloud/Phost.htm'},
               {subTitle: 'ESC快照', url: '/ruicloud/Pecss.htm'},
               {subTitle: 'GPU服务器', url: '/ruicloud/Pgpu.htm'},
-              {subTitle: '弹性伸缩', url: '/ruicloud/Pelastic.htm'},
+              {subTitle: '弹性伸缩', url: '/ruicloud/Pelastic'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
             ]
           },
@@ -594,12 +620,13 @@
         xiaoshouInfo: [],  // QQ销售在线情况
         yunweiInfo: [],  // QQ运维在线情况,
         /* 倒计时参数 */
-        day: '--',
-        hour: '--',
-        minute: '--',
-        second: '--',
+        day: '00',
+        hour: '00',
+        minute: '00',
+        second: '00',
         hintShow: false,
-        timer: null
+        timer: null,
+        UUID: ''
       }
     },
 
@@ -607,6 +634,10 @@
       if (to.query.from) {
         // 流量来源记录
         localStorage.setItem('comefrom', to.query.from)
+      }
+      if (to.query.sellCode) {
+        // 销售来源渠道
+        localStorage.setItem('sellCode', to.query.sellCode)
       }
       window.UUID = uuid.v4()
       let params = {
@@ -637,11 +668,11 @@
         })
     },
     mounted() {
-      this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
-      if (sessionStorage.getItem('hintShow') == 'true') {
-        this.$refs.hint.style.height = '80px'
-      }
-      this.setTime()
+      // this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
+      // if (sessionStorage.getItem('hintShow') == 'true') {
+      //   this.$refs.hint.style.height = '80px'
+      // }
+      //this.setTime()
       if (document.readyState === 'complete') { //当页面加载状态为完全结束时进入
         let params = {
           batchNumber: window.UUID,
@@ -654,9 +685,9 @@
       }
     },
     created() {
-      if (sessionStorage.getItem('hintShow') == null) {
-        sessionStorage.setItem('hintShow', 'true')
-      }
+      // if (sessionStorage.getItem('hintShow') == null) {
+      //   sessionStorage.setItem('hintShow', 'true')
+      // }
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
@@ -676,15 +707,6 @@
       this.$http.get('article/friendshipLink.do').then(response => {
         this.links = response.data.result
       })
-      /*this.$http.get('user/getEventNum.do', {
-       params: {
-       isRead: '0'
-       }
-       }).then(response => {
-       if (response.status == 200 && response.data.status == 1) {
-       this.$store.commit('setMsg', Number.parseInt(response.data.number))
-       }
-       })*/
     },
     methods: {
       /* li mouseenter事件 重新设置line样式 */
@@ -764,6 +786,9 @@
         }
         return i;
       },
+      openInfo(href) {
+        window.open(href)
+      }
     },
     computed: mapState({
       userInfo: state => state.userInfo
@@ -774,7 +799,7 @@
         var content = this.$refs.content
         for (var i in content) {
           if (i == this.currentItem) {
-            content[i].style.height = `${content[i].firstChild.clientHeight}px`
+            content[i].style.height = `${content[i].firstChild.clientHeight+25}px`
           } else {
             content[i].style.height = '0px'
           }
@@ -813,9 +838,9 @@
           top: 45%;
           > p {
             font-family: MicrosoftYaHei;
-            font-size:24px;
-            font-weight:500;
-            color:rgba(255,45,0,1);
+            font-size: 24px;
+            font-weight: 500;
+            color: rgba(255, 45, 0, 1);
             > span {
               font-size: 14px;
               margin: 0 8px;
@@ -903,6 +928,19 @@
                     }
                   }
                 }
+                 .menu-dropdown-rels {
+                  a {
+                    color: #fff;
+                    transition: all .3s;
+                    cursor: pointer;
+                    display: block;
+                    line-height: 70px;
+                    span {
+                      padding: 0px 25px;
+                      line-height: 70px;
+                    }
+                  }
+                }
                 .menu-dropdown-list {
                   position: absolute;
                   width: 100%;
@@ -928,18 +966,27 @@
                         padding: 26px 0px;
                         justify-content: space-between;
                         text-align: left;
+                        &.info {
+                          padding: 10px 0;
+                          height: 50px;
+                          width: 400px;
+                          margin: 0 auto;
+                        }
+                        .info:hover{
+                          color: #2A99F2;
+                        }
                         > div {
                           width: 15%;
-                          &:last-of-type {
-                            > div {
-                              height: 155px;
-                            }
-                          }
-                          &:nth-last-child(2) {
-                            > div {
-                              height: 155px;
-                            }
-                          }
+                          // &:last-of-type {
+                          //   > div {
+                          //     height: 155px;
+                          //   }
+                          // }
+                          // &:nth-last-child(2) {
+                          //   > div {
+                          //     height: 155px;
+                          //   }
+                          // }
 
                         }
                         h2 {
@@ -949,6 +996,11 @@
                           font-weight: normal;
                           border-bottom: 1px solid rgba(255, 255, 255, 0.35);
                           padding-bottom: 10px;
+                          &.info {
+                            border: none;
+                            cursor: pointer;
+                            font-size: 14px;
+                          }
                         }
                         a {
                           margin-top: 10px;
@@ -1307,4 +1359,5 @@
     border-radius: 50%;
     background-color: rgb(237, 63, 20, 0.5);
   }
+
 </style>

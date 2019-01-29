@@ -6,7 +6,7 @@
         <button class="btn" v-show="btns=='templated'" @click="btns='untemplate'">新建模板</button>
         <button class="btn" v-show="btns=='untemplate'" @click="clickTemp">选择已有模板
         </button>
-        <button class="back" @click="$router.go(-1)">返回</button>
+        <button class="back" @click="$router.go(-1)" v-show="btns=='untemplate'">返回</button>
       </div>
     </div>
 
@@ -102,7 +102,7 @@
             </p>
           </FormItem>
           <FormItem>
-            <Button style="margin-right: 10px">取消</Button>
+            <Button style="margin-right: 10px" @click.native="btns='untemplate'">取消</Button>
             <Button type="primary" @click="payTemplate">立即支付</Button>
           </FormItem>
         </Form>

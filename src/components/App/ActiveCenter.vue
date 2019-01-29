@@ -3,14 +3,37 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/anniversaryActive')"
-               style="cursor: pointer;background: #F56B23;">
-            <div class="anniversary-active">
+          <div class="xian-active" @click="push('/ruicloud/xianNode')">
+            <div class="wrap">
+              <div class="container flex-vertical-center">
+                <div class="left">
+                  <img src="../../assets/img/active/xianNode/banner-text.png" alt>
+                  <p>
+                     新节点云服务器
+                    <i>折扣特惠</i>，
+                    100%资源可用、100%性能可用！
+                  </p>
+                  <span @click="$router.push('xianNode')">立即参与</span>
+                </div>
+                <img src="../../assets/img/active/xianNode/xian-node-banner.png" alt>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+          <my-carousel-item class="carousel-item">
+          <div @click="push('wonderfulDay')"
+               style="cursor: pointer;">
+            <div class="dan-receive">
+              <div class="wrap">
+               <div class="w_button">
+                <span>立即参与</span>
+                </div>
+              </div>
             </div>
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('fractive')"
+          <div @click="push('frActive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
 
@@ -59,6 +82,13 @@
             </div>
           </div>
         </my-carousel-item>
+       <!-- <my-carousel-item class="carousel-item">
+          <div @click="push('/ruicloud/anniversaryActive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="anniversary-active">
+            </div>
+          </div>
+        </my-carousel-item>-->
       </my-carousel>
     </div>
     <div class="center-active box-g">
@@ -80,7 +110,7 @@
                   <p v-if="item.secDesc">{{item.secDesc}}</p>
                 </div>
                 <img :src="item.textImg" alt="" v-else>
-                
+
               </div>
               <div class="box-bottom">
                 <div>
@@ -136,13 +166,18 @@
         active: [],
         activedata: [
           {
-            imgPath: require('../../assets/img/activecenter/bg-card-5.png'),
-            name: '周年庆典，钜惠来袭',
-            desc: '爆款高配云产品 限时特惠',
-            secDesc: '不止1.7折，更有百万豪礼，等您来拿！',
-            time: '2018.11.17-2018.12.16',
+            imgPath: require('../../assets/img/activecenter/bg-card-6.png'),
+            time: '2019.1.28-2019.03.01',
+            activeObj: '仅限新用户',
+            url: 'xianNode',
+            isStart: true,
+            weight: '1',
+          },
+          {
+            imgPath: require('../../assets/img/activecenter/dan.png'),
+            time: '2018.12.24-2019.01.30',
             activeObj: '新老用户',
-            url: 'anniversaryActive',
+            url: 'wonderfulDay',
             isStart: true,
             weight: '1',
           },
@@ -152,7 +187,7 @@
             desc: '交押金最长可用一年 押金闪退',
             time: '2018.08.03开始',
             activeObj: '云主机 新注册用户',
-            url: 'fractive',
+            url: 'frActive',
             isStart: true,
             weight: '1'
           },
@@ -169,7 +204,7 @@
             imgPath: require('../../assets/img/activecenter/bg-card-3.png'),
             name: '对象存储 重磅上线',
             desc: '安全稳定高效的云端存储服务 免费试用50G',
-            time: ' 即将上线',
+            time: ' 2018年8月1日',
             activeObj: '对象存储 新老用户',
             url: 'objStorageActive',
             isStart: true,
@@ -252,9 +287,32 @@
             cursor: pointer;
             background: #FEEDE0 url("../../assets/img/active/anniversary/aa-banner22.png") center no-repeat;
           }
+          .dan-receive{
+            height: 400px;
+            background: rgb(249, 118, 89) url("../../assets/img/active/doubleDenier/dan_banner.png") center no-repeat;
+            .w_button{
+              position: relative;
+              top: 217px;
+              left: 37px;
+              color: rgba(26, 42, 210, 1);
+              font-weight: 500;
+              font-size: 13px;
+              width: 140px;
+              line-height: 43px;
+              letter-spacing:3px;
+              text-align: center;
+              height: 43px;
+              background: rgb(255, 222, 42);
+              // box-shadow: 0px 2px 2px 1px rgb(136, 20, 17);
+              cursor: pointer;
+            }
+            .w_button:hover{
+              box-shadow: 0px 2px 2px 1px #881411;
+            }
+          }
           .free-receive {
             height: 400px;
-            background: #f56b23 url("../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
+            background:  url("../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
           }
           .obj-storage {
             background: linear-gradient(
@@ -529,4 +587,38 @@
     justify-content: center;
     align-items: center;
   }
+  .xian-active {
+  background:url(../../assets/img/active/xianNode/xian-banner-bg.png) center no-repeat,linear-gradient(to bottom, #ffdcbc, #ffe7d2);
+  .container {
+    height: 400px;
+    .left {
+      p {
+        margin-top: 20px;
+        font-size: 20px;
+        color: #222222;
+        font-weight: 500;
+        i {
+          font-size: 24px;
+          color: #ff3000;
+          font-style: normal;
+        }
+      }
+      span {
+        margin-top: 52px;
+        display: inline-block;
+        width: 170px;
+        height: 50px;
+        font-size: 22px;
+        color: rgba(255, 48, 0, 1);
+        line-height: 44px;
+        text-align: center;
+        cursor: pointer;
+        border:2px solid rgba(255,48,0,1);
+        &:hover {
+          background:#FFD1B2;
+        }
+      }
+    }
+  }
+}
 </style>

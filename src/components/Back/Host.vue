@@ -33,7 +33,7 @@
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
               <Dropdown-item name="ratesChange" :disabled="status=='欠费'||status=='异常'">资费变更</Dropdown-item>
               <!-- 续费 -->
-              <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费
+              <Dropdown-item name="renewal" v-if="status=='异常'" :disabled=true>主机续费
                 <!--<span
                   style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>-->
               </Dropdown-item>
@@ -182,7 +182,8 @@
                         <span>到期时间/有效期:{{item.endtime}}</span>
                         <span>公网地址:{{item.publicip}}</span>
                         <span>内网地址:{{item.privateip}}</span>
-                        <span>关机中</span>
+                        <span v-if="item.restore==1">重装中</span>
+                        <span v-else>关机中</span>
                       </div>
                       <div class="foot">
                         <span>{{item.createtime}}</span>
@@ -316,7 +317,8 @@
                         <span>到期时间/有效期:{{item.endtime}}</span>
                         <span>公网地址:{{item.publicip}}</span>
                         <span>内网地址:{{item.privateip}}</span>
-                        <span>开机中</span>
+                        <span v-if="item.restore==1">重装中</span>
+                        <span v-else>开机中</span>
                       </div>
                       <div class="foot">
                         <span>{{item.createtime}}</span>
@@ -580,9 +582,8 @@
     </Modal>
     <!--选择两种认证方式-->
     <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" :styles="{top:'172px'}">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        选择认证方式
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title"> 选择认证方式</span>
       </div>
       <div style="display: flex">
         <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
@@ -628,10 +629,12 @@
 
     <!-- 绑定ip时，没有公网ip提示 -->
     <Modal v-model="showModal.publicIPHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">您还未拥有公网IP，请先创建公网IP。</p>
         </div>
       </div>
@@ -781,6 +784,7 @@
       }
     },
     created() {
+      this.toggleZone(this.$store.state.zone.zoneid)
       // 用户未认证，弹出认证提示框
       if (this.$store.state.authInfo == null) {
         this.showModal.selectAuthType = true
@@ -799,7 +803,16 @@
       }, 5 * 1000)
     },
     methods: {
-
+      toggleZone(zoneId) {
+        // 切换默认区域
+        axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+        })
+        for (var zone of this.$store.state.zoneList) {
+          if (zone.zoneid == zoneId) {
+            $store.commit('setZone', zone);
+          }
+        }
+      },
       publicIPHint_ok() {
         this.$router.push('/ruicloud/buy/bip')
       },

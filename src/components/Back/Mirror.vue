@@ -101,10 +101,12 @@
 
     <!-- 删除镜像弹窗 -->
     <Modal v-model="showModal.delmirror" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">删除镜像</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>删除镜像</strong>
           <p class="lh24">确定要删除选中的镜像吗？</p>
         </div>
       </div>

@@ -94,10 +94,12 @@
     </div>
     <!-- 支付状态模态框 -->
     <Modal v-model="showModal.paymentCofirm" :scrollable="true" :closable="true" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">确认支付</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>确认支付</strong>
           <p class="lh24">请您在新打开的页面进行支付，支付完成前请不要关闭此窗口。</p>
         </div>
       </div>
@@ -207,7 +209,7 @@
         if (this.orderInfo.isUseVoucher == 1 && Number(this.orderInfo.voucher) < Number(this.orderInfo.money) && bol.indexOf('account') == -1) {
           this.accountPay.push('account')
           this.$message.info({
-            content: '默认情况下优先使用账户余额'
+            content: '当前订单默认余额和现金券组合支付'
           })
         }
       },

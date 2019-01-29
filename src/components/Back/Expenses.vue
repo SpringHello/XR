@@ -19,7 +19,8 @@
               <div class="item">
                 <span>余额</span>
                 <button @click="torecharge">充值</button>
-                <!--<button @click="showModal.withdraw = true" style="margin-right: 10px;">提现</button>-->
+                <!-- $router.push('/ruicloud/cashwithdrawal') -->
+                <!--<button @click="$router.push('/ruicloud/cashwithdrawal')" style="margin-right: 10px;">提现</button>-->
                 <div>
                   <ul style="width: 50%">
                     <li>可用余额</li>
@@ -111,7 +112,7 @@
                                placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
-              <Button type="primary" style="margin-left: 120px" @click="orderRefund" :disabled="refundDisabled">退款</Button>
+              <Button type="primary" style="margin-left: 120px" @click="orderRefundBefore" :disabled="refundDisabled">退款</Button>
               <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
@@ -359,6 +360,9 @@
             <span>解冻到余额<span style="color: #FF1E39;margin-left: 15px">{{ unfreezeToBalanceHintText }}</span></span>
           </Radio>
         </RadioGroup>
+        <div v-if="unfreezeTo=='account'" style="border-top:1px dashed rgba(151,151,151,1);padding: 20px 0 10px;">
+          <p style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,57,42,1);">*优先退回到原支付账户，原支付账户不可用时则退回到下方填写的账户。</p>
+        </div>
         <Form v-if="unfreezeTo=='account'" :model="withdrawForm" :rules="withdrawValidate" ref="unfreeze">
           <Form-item label="收款人姓名" prop="payeeName">
             <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
@@ -376,7 +380,7 @@
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
           <p style="line-height: 20px;font-size: 14px;">
-            为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+            为保障您的资金安全，我们将向您的实名认证手机号码（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
           <Form-item label="图片验证码">
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
@@ -384,144 +388,440 @@
           </Form-item>
           <Form-item label="短信/邮箱验证码" prop="phoneCode">
             <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
-            <Button type="primary" @click="getCode">{{codePlaceholder}}</Button>
+            <Button type="primary" @click="getCode('code')">{{codePlaceholder}}</Button>
           </Form-item>
         </Form>
-        <div style="clear: both"></div>
+        <div v-if="unfreezeTo=='account'" class="voice-vail">
+            <p>没有收到验证码？</p>
+            <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:codePlaceholder!='发送验证码'}" @click="getCode('againCode')">重新获取</span>或<span class="blue code"
+                                                                                                                                                  :class="{notallow:codePlaceholder!='发送验证码'}"
+                                                                                                                                                  @click.prevent="getCode('voice')">接收语音验证码</span>。
+            </p>
+            <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue" @click="showModal.modifyPhoneID = true;showModal.unfreeze=false;modifyPhoneIDcancel()">通过身份证号码验证</span>更改手机号。
+            </p>
+          </div>
+          <div style="clear: both"></div>
+        </div>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="ghost" @click="showModal.unfreeze = false">取消</Button>
+          <Button type="primary" @click="unfreeze_ok">确认</Button>
+        </div>
+    </Modal>
+    <!--押金转续费-->
+    <Modal v-model="showModal.freezeToRenew" :scrollable="true" :closable="false" :width="550">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">申请解冻</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p style="font-size:14px;color:rgba(102,102,102,1);">解冻条件未达成，可以押金转续费</p>
+        <RadioGroup v-model="freezeToRenew">
+          <Radio label="account" style="margin:20px 0px" disabled>
+            <span>解冻到充值账户（需3-5个工作日）</span>
+          </Radio>
+          <Radio label="yue" style="display: block;margin-bottom:20px" disabled>
+            <span>解冻到余额</span>
+          </Radio>
+          <Radio label="freezeToRenew" style="display: block;margin-bottom:20px">
+            <span>押金转为续费<span style="color: #FF1E39;margin-left: 15px">*资源彻底删除后可以选择解冻到余额或充值帐户</span></span>
+          </Radio>
+        </RadioGroup>
+        <Table :columns="freezeOrderColumns" :data="freezeOrderData" style="margin-top: 20px"></Table>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="showModal.unfreeze = false">取消</Button>
-        <Button type="primary" @click="unfreeze_ok">确认</Button>
+        <Button type="ghost" @click="showModal.freezeToRenew = false">取消</Button>
+        <Button type="primary" @click="freezeToRenewNext">下一步</Button>
       </div>
     </Modal>
 
-    <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
+    <!-- 押金转续费确认 -->
+
+    <Modal v-model="showModal.freezeToRenewAffirm" crollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>申请解冻</strong>
-          <p class="lh24">解冻条件:{{thawingCondition}}未达成，请确认上述内容都已彻底删除，包括回收站也已清除资源。详情可咨询客服。
+          <p class="lh24" style="margin-bottom: 20px">当前免费剩余时长到期日为<span style="color: #2A99F2">{{ freezeEndTime}}</span>，转为续费之后资源到期时间为<span style="color: #2A99F2">{{ renewalFeeTime}}</span>，您是否确认将押金转为续费？
           </p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.notUnfreeze = false">取消</Button>
-        <Button type="primary" @click="showModal.notUnfreeze = false">确定</Button>
+        <Button @click="showModal.freezeToRenewAffirm = false">取消</Button>
+        <Button type="primary" :disabled="freezeToRenewAffirmDisabled" @click="freezeToRenew_ok">确定{{ freezeToRenewAffirmText}}</Button>
       </p>
     </Modal>
-    <!-- 优惠券兑换modal -->
-    <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true">
+    <!-- 修改手机号码(身份证验证) -->
+    <Modal v-model="showModal.modifyPhoneID" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">兑换优惠券</span>
+        <span class="universal-modal-title">修改手机号码</span>
       </p>
+      <div class="universal-modal-content-flex">
+        <div>
+          <Steps :current="authModifyPhoneStep" size="small">
+            <Step title="验证身份" style="width:25%"></Step>
+            <Step title="手持身份证照" style="width:30%"></Step>
+            <Step title="设置新手机号码" style="width:32%"></Step>
+            <Step title="完成" style="width:13%"></Step>
+          </Steps>
+          <div v-show="authModifyPhoneStep == 0">
+            <Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">
+              <div v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0">
+                <Form-item label="真实姓名" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
+                  <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.userInfo.realname}}</span>
+                </Form-item>
+                <FormItem label="注册身份证号码" style="width: 100%;" prop="ID">
+                  <Input v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码"
+                         style="width:240px;"></Input>
+                </FormItem>
+                <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.personHint">
+                  <Icon type="ios-close"></Icon>
+                  身份证号码输入有误，验证失败，请尝试
+                  <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+                  <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+                </p>
+              </div>
+          <div v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0">
+            <Form-item label="公司名称" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
+              <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.authInfo.name}}</span>
+            </Form-item>
+            <FormItem label="公司营业执照号码" style="width: 100%;" prop="businessLicense">
+              <Input v-model="authModifyPhoneFormOne.businessLicense" placeholder="请输入公司营业执照号码"
+                     style="width:240px;"></Input>
+            </FormItem>
+            <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.companyHint">
+              <Icon type="ios-close"></Icon>
+              公司营业执照号码输入有误，验证失败，请尝试
+              <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+              <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+            </p>
+          </div>
+          </Form>
+        </div>
+        <div v-show="authModifyPhoneStep == 1">
+          <div v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0">
+            <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+              提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
+            </p>
+            <div class="upload-img" style="margin-top:10px">
+              <div class="content">
+                <div class="left">
+                  <Upload
+                    multiple
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do"
+                    :format="['jpg','jpeg','png','gif']"
+                    :max-size="4096"
+                    :on-format-error="handleFormatError"
+                    :on-exceeded-size="handleMaxSize"
+                    :on-success="legalPersonIDFront">
+                    <div class="icon-wrap" v-if="uploadImgDispaly==''">
+                      <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+                    </div>
+                    <img v-else :src="uploadImgDispaly">
+                    <p>上传图片</p>
+                  </Upload>
+                </div>
+                <div class="right">
+                  <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+                  <p>手持身份证人像照片</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0">
+            <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+              提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
+            </p>
+            <div class="upload-img" style="margin-top:10px">
+              <div class="content">
+                <div class="left">
+                  <Upload
+                    multiple
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do"
+                    :format="['jpg','jpeg','png','gif']"
+                    :max-size="4096"
+                    :on-format-error="handleFormatError"
+                    :on-exceeded-size="handleMaxSize"
+                    :on-success="legalPersonIDFront1">
+                    <div class="icon-wrap" v-if="uploadImgDispaly1==''">
+                      <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+                    </div>
+                    <img v-else :src="uploadImgDispaly1">
+                    <p>上传图片</p>
+                  </Upload>
+                </div>
+                <div class="right">
+                  <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+                  <p>法人身份证正面照片</p>
+                </div>
+              </div>
+            </div>
+            <div class="upload-img" style="margin-top:10px">
+              <div class="content">
+                <div class="left">
+                  <Upload
+                    multiple
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do"
+                    :format="['jpg','jpeg','png','gif']"
+                    :max-size="4096"
+                    :on-format-error="handleFormatError"
+                    :on-exceeded-size="handleMaxSize"
+                    :on-success="legalPersonIDFront2">
+                    <div class="icon-wrap" v-if="uploadImgDispaly2==''">
+                      <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+                    </div>
+                    <img v-else :src="uploadImgDispaly2">
+                    <p>上传图片</p>
+                  </Upload>
+                </div>
+                <div class="right">
+                  <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto">
+                  <p style="width:168px">经办人手持身份证人像照片</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-show="authModifyPhoneStep == 2">
+          <Form :model="authModifyPhoneFormThere" :rules="authModifyPhoneThereRuleValidate" ref="authModifyPhoneFormThere">
+            <FormItem label="绑定新手机" prop="newPhone" style="width: 100%">
+              <Input v-model="authModifyPhoneFormThere.newPhone" placeholder="请输入新手机号码" style="width:240px"></Input>
+            </FormItem>
+            <FormItem label="图形验证码" style="width: 100%;" prop="pictureCode">
+              <Input v-model="authModifyPhoneFormThere.pictureCode" placeholder="请输入随机验证码"
+                     style="width:240px;margin-right:20px"></Input>
+              <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+                   style="height:32px;vertical-align: middle">
+            </FormItem>
+            <Form-item label="短信验证码" prop="newVerificationCode" style="width: 100%">
+              <Input v-model="authModifyPhoneFormThere.newVerificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
+              <Button type="primary" :disabled="authModifyPhoneFormThere.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode('authModifyPhoneFormThere')">{{
+                authModifyPhoneFormThere.newCodeText}}
+              </Button>
+            </Form-item>
+          </Form>
+        </div>
+        <div v-show="authModifyPhoneStep == 3" style="text-align:center">
+          <Icon type="checkmark-circled" style="font-size:54px;color:#3EBB62;margin:20px 0;"></Icon>
+          <p style="font-size:14px;color:#666;margin-bottom:10px;">您的更改申请提交成功</p>
+          <span style="font-size:12px;color:#666">我们会在24小时内将审核结果发送至您的新手机号：{{authModifyPhoneFormThere.newPhone}}</span>
+        </div>
+      </div>
+  </div>
+  <div slot="footer" class="modal-footer-border">
+    <Button type="ghost" @click="showModal.modifyPhoneID = false">取消</Button>
+    <Button type="primary" v-if="authModifyPhoneStep == 0" @click="bindingMobilePhoneStepTwo('authModifyPhoneFormOne')">下一步</Button>
+    <Button type="primary" v-if="authModifyPhoneStep == 1" @click="uploadIDImg()">下一步</Button>
+    <Button type="primary" v-if="authModifyPhoneStep == 2" @click="bindMobilePhone('authModifyPhoneFormThere')">下一步</Button>
+    <Button type="primary" v-if="authModifyPhoneStep == 3" @click="showModal.modifyPhoneID=false">完成</Button>
+  </div>
+  </Modal>
+  <!-- 弹窗 -->
+  <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
+    <p slot="header" class="modal-header-border">
+      <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+      <span class="universal-modal-title">申请解冻</span>
+    </p>
+    <div class="modal-content-s">
       <div>
-        <div style="background-color: #E6F3FC;padding:10px;margin-bottom: 20px">
-          <p style="line-height: 20px;">1、每张折扣券只能兑换一次，只能使用一次，但是可以领取不同价位区间的不同折扣券。</p>
-          <p style="line-height: 20px;">2、每次下单只能使用一张折扣券，折扣券可以和其他优惠券叠加使用。</p>
-          <p style="line-height: 20px;">3、若在产品试用期间发生退费，只可退还实际支付部分。</p>
-          <p style="line-height: 20px;">4、活动最终解释权归新睿云所有</p>
-        </div>
-        <div>
-          <p style="font-size:14px;color:rgba(51,51,51,1);line-height:14px;margin-bottom: 10px">优惠券兑换码</p>
-          <Input v-model="exchangeCardCode" placeholder="请输入兑换码" style="width: 250px"/>
-          <p v-if="exchangeCardCodeError" style="margin-top: 6px;color:#FF001F">{{ exchangeCardMessage }}</p>
-        </div>
+        <p class="lh24">解冻条件:{{thawingCondition}}未达成，请确认上述内容都已彻底删除，包括回收站也已清除资源。详情可咨询客服。
+        </p>
       </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="exchange">兑换</Button>
+    </div>
+    <p slot="footer" class="modal-footer-s">
+      <Button @click="showModal.notUnfreeze = false">取消</Button>
+      <Button type="primary" @click="showModal.notUnfreeze = false">确定</Button>
+    </p>
+  </Modal>
+  <!-- 优惠券兑换modal -->
+  <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true">
+    <p slot="header" class="modal-header-border">
+      <span class="universal-modal-title">兑换优惠券</span>
+    </p>
+    <div>
+      <div style="background-color: #E6F3FC;padding:10px;margin-bottom: 20px">
+        <p style="line-height: 20px;">1、每张折扣券只能兑换一次，只能使用一次，但是可以领取不同价位区间的不同折扣券。</p>
+        <p style="line-height: 20px;">2、每次下单只能使用一张折扣券，折扣券可以和其他优惠券叠加使用。</p>
+        <p style="line-height: 20px;">3、若在产品试用期间发生退费，只可退还实际支付部分。</p>
+        <p style="line-height: 20px;">4、活动最终解释权归新睿云所有</p>
       </div>
-    </Modal>
+      <div>
+        <p style="font-size:14px;color:rgba(51,51,51,1);line-height:14px;margin-bottom: 10px">优惠券兑换码</p>
+        <Input v-model="exchangeCardCode" placeholder="请输入兑换码" style="width: 250px"/>
+        <p v-if="exchangeCardCodeError" style="margin-top: 6px;color:#FF001F">{{ exchangeCardMessage }}</p>
+      </div>
+    </div>
+    <div slot="footer" class="modal-footer-border">
+      <Button type="primary" @click="exchange">兑换</Button>
+    </div>
+  </Modal>
 
-    <!-- 提现模态框 -->
-    <Modal v-model="showModal.withdraw" width="550" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">提现</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <Form :model="withdrawForm" :rules="withdrawValidate" ref="withdraw">
-          <Form-item label="可提现金额" style="width:100%;">
-            <InputNumber :max="balance" :min="10" v-model="withdrawForm.money"
-                         style="width:45%"></InputNumber>
-          </Form-item>
-          <Form-item label="收款人姓名" prop="payeeName">
-            <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
-          </Form-item>
-          <Form-item label="收款人账户类型" prop="accountType">
-            <Select v-model="withdrawForm.accountType" placeholder="请选择">
-              <Option v-for="item in withdrawForm.accountList" :key="item.type" :value="item.type">{{ item.name }}
-              </Option>
-            </Select>
-          </Form-item>
-          <Form-item label="开户行信息" v-if="withdrawForm.accountType=='银行卡'" prop="bankName">
-            <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
-          </Form-item>
-          <Form-item label="收款人账户" prop="account" v-if="withdrawForm.accountType != '微信'">
-            <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
-          </Form-item>
-          <p style="line-height: 20px;font-size: 14px;">
-            为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
-          <Form-item label="图片验证码">
-            <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
-            <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
-                 @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-          </Form-item>
-          <Form-item label="短信/邮箱验证码" prop="phoneCode">
-            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
-            <Button type="primary" @click="getCode">{{codePlaceholder}}</Button>
-          </Form-item>
-        </Form>
-        <div style="clear: both"></div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="showModal.withdraw = false">取消</Button>
-        <Button type="primary" @click="withdraw">确认</Button>
-      </div>
-    </Modal>
+  <!-- 提现模态框 -->
+  <Modal v-model="showModal.withdraw" width="550" :scrollable="true">
+    <p slot="header" class="modal-header-border">
+      <span class="universal-modal-title">提现</span>
+    </p>
+    <div class="universal-modal-content-flex">
+      <Form :model="withdrawForm" :rules="withdrawValidate" ref="withdraw">
+        <Form-item label="可提现金额" style="width:100%;">
+          <InputNumber :max="balance" :min="10" v-model="withdrawForm.money"
+                       style="width:45%"></InputNumber>
+        </Form-item>
+        <Form-item label="收款人姓名" prop="payeeName">
+          <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
+        </Form-item>
+        <Form-item label="收款人账户类型" prop="accountType">
+          <Select v-model="withdrawForm.accountType" placeholder="请选择">
+            <Option v-for="item in withdrawForm.accountList" :key="item.type" :value="item.type">{{ item.name }}
+            </Option>
+          </Select>
+        </Form-item>
+        <Form-item label="开户行信息" v-if="withdrawForm.accountType=='银行卡'" prop="bankName">
+          <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
+        </Form-item>
+        <Form-item label="收款人账户" prop="account" v-if="withdrawForm.accountType != '微信'">
+          <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
+        </Form-item>
+        <p style="line-height: 20px;font-size: 14px;">
+          为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+        <Form-item label="图片验证码">
+          <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
+          <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
+               @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+        </Form-item>
+        <Form-item label="短信/邮箱验证码" prop="phoneCode">
+          <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
+          <Button type="primary" @click="getCode('codeGetCash')">{{codePlaceholder}}</Button>
+        </Form-item>
+      </Form>
+      <div style="clear: both"></div>
+    </div>
+    <div slot="footer" class="modal-footer-border">
+      <Button type="ghost" @click="showModal.withdraw = false">取消</Button>
+      <Button type="primary" @click="withdraw">确认</Button>
+    </div>
+  </Modal>
 
-    <!-- 解冻到余额提示 -->
-    <Modal v-model="showModal.unfreezeToBalanceHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>提示</strong>
-          <p class="lh24" style="margin-bottom: 20px">选择“解冻到余额”后，将无法进行提现操作，请您谨慎操作！
-          </p>
-          <RadioGroup v-model="unfreezeToHint" vertical>
-            <Radio label="account">
-              <span>解冻到充值账户（需3-5个工作日）</span>
-            </Radio>
-            <Radio label="yue">
-              <span>解冻到余额</span>
-            </Radio>
-          </RadioGroup>
-        </div>
+  <!-- 解冻到余额提示 -->
+  <Modal v-model="showModal.unfreezeToBalanceHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+    <p slot="header" class="modal-header-border">
+      <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+      <span class="universal-modal-title">提示信息</span>
+    </p>
+    <div class="modal-content-s">
+      <div>
+        <p class="lh24" style="margin-bottom: 20px">选择“解冻到余额”后，将无法进行提现操作，请您谨慎操作！
+        </p>
+        <RadioGroup v-model="unfreezeToHint" vertical>
+          <Radio label="account">
+            <span>解冻到充值账户（需3-5个工作日）</span>
+          </Radio>
+          <Radio label="yue">
+            <span>解冻到余额</span>
+          </Radio>
+        </RadioGroup>
       </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.unfreezeToBalanceHint = false,showModal.unfreeze = true,unfreezeTo = 'account'">取消</Button>
-        <Button type="primary" :disabled="unfreezeToBalanceDisabled" @click="unfreezeToBalance">确定{{ unfreezeToBalanceText}}</Button>
-      </p>
-    </Modal>
-
-    <!-- 退款提示框 -->
-    <Modal v-model="showModal.refundHint" :scrollable="true" :closable="false" :width="640">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">退款详情</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <Table :columns="refundParticularsColumns" :data="refundParticularsData"></Table>
-        <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;margin-top: 10px">订单总额：¥{{ refundOrderPrice}}</p>
-        <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">退款金额：<span style="font-size: 24px;color: #2A99F2">¥{{ refundPrice}}</span></p>
+    </div>
+    <p slot="footer" class="modal-footer-s">
+      <Button @click="showModal.unfreezeToBalanceHint = false,showModal.unfreeze = true,unfreezeTo = 'account'">取消</Button>
+      <Button type="primary" :disabled="unfreezeToBalanceDisabled" @click="unfreezeToBalance">确定{{ unfreezeToBalanceText}}</Button>
+    </p>
+  </Modal>
+  <!-- 退款第一次提示-->
+  <Modal v-model="showModal.refundBeforeHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+    <p slot="header" class="modal-header-border">
+      <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+      <span class="universal-modal-title">提示信息</span>
+    </p>
+    <div class="modal-content-s">
+      <div>
+        <p class="lh24" style="margin-bottom: 20px">请注意，订单退款会直接删除与之相关的资源，请您确认已完成对订单资源的数据备份。再次提示，订单退款之后相关资源会被直接删除，请谨慎操作。
+        </p>
       </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="showModal.refundHint = false">取消</Button>
-        <Button type="primary" @click="refund_ok">退款</Button>
+    </div>
+    <p slot="footer" class="modal-footer-s">
+      <Button @click="showModal.refundBeforeHint = false">取消退款</Button>
+      <Button type="primary" @click="orderRefund" :disabled="refundBeforeHintDisabled">确定退款{{ refundBeforeHintText}}</Button>
+    </p>
+  </Modal>
+  <!-- 退款订单详情提示框 -->
+  <Modal v-model="showModal.refundHint" :scrollable="true" :closable="false" :width="640">
+    <p slot="header" class="modal-header-border">
+      <span class="universal-modal-title">退款详情</span>
+    </p>
+    <div class="universal-modal-content-flex">
+      <Table :columns="refundParticularsColumns" :data="refundParticularsData"></Table>
+      <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;margin-top: 10px">订单总额：¥{{ refundOrderPrice}}</p>
+      <p v-if="refundOrderTicket" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">使用优惠券金额：¥{{ refundOrderTicket}}</p>
+      <p v-if="refundOrderVoucher" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">使用代金券金额：¥{{ refundOrderVoucher}}</p>
+      <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:36px;">退款金额：<span style="font-size: 24px;color: #2A99F2">¥{{ refundPrice}}</span></p>
+    </div>
+    <div slot="footer" class="modal-footer-border">
+      <Button type="ghost" @click="showModal.refundHint = false">取消</Button>
+      <Button type="primary" @click="showModal.refundNextHint = true,showModal.refundHint = false">下一步</Button>
+    </div>
+  </Modal>
+  <!-- 退款下一步提示 -->
+  <Modal v-model="showModal.refundNextHint" :scrollable="true" :closable="false" :width="550">
+    <p slot="header" class="modal-header-border">
+      <span class="universal-modal-title">退款渠道</span>
+    </p>
+    <div class="universal-modal-content-flex">
+      <p style="font-size:14px;color:rgba(102,102,102,1);">请选择退款渠道</p>
+      <RadioGroup v-model="refundTo">
+        <Radio label="account" style="margin:20px 0px">
+          <span>退款到充值账户（需3-5个工作日）</span>
+        </Radio>
+        <Radio label="yue" style="display: block;margin-bottom:20px">
+          <span>退款到余额<span style="color: #FF1E39;margin-left: 15px">选择“退款到余额”后，将无法进行提现操作，请您谨慎操作！</span></span>
+        </Radio>
+      </RadioGroup>
+    </div>
+    <div slot="footer" class="modal-footer-border">
+      <Button type="ghost" @click="showModal.refundNextHint = false">取消</Button>
+      <Button type="primary" @click="refund_ok" :disabled="returnMoneyDisabled">确认</Button>
+    </div>
+  </Modal>
+  <!-- 退款最终确认提示 -->
+  <Modal v-model="showModal.refundLastHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+    <p slot="header" class="modal-header-border">
+      <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+      <span class="universal-modal-title">提示信息</span>
+    </p>
+    <div class="modal-content-s">
+      <div>
+        <p class="lh24" style="margin-bottom: 20px">选择“退款到余额”后，将无法进行提现操作，请您谨慎操作！
+        </p>
+        <RadioGroup v-model="refundLastTo" vertical>
+          <Radio label="account">
+            <span>退款到充值账户（需3-5个工作日）</span>
+          </Radio>
+          <Radio label="yue">
+            <span>退款到余额</span>
+          </Radio>
+        </RadioGroup>
       </div>
-    </Modal>
+    </div>
+    <p slot="footer" class="modal-footer-s">
+      <Button @click="showModal.refundLastHint = false,showModal.refundNextHint = true,refundTo = 'account'">取消</Button>
+      <Button type="primary" :disabled="refundLastHintDisabled" @click="refundLsat_ok">确定{{ refundLastHintText}}</Button>
+    </p>
+  </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import reg from '../../util/regExp'
 
   export default {
     data() {
@@ -622,10 +922,17 @@
       }
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('注册电话不能为空'))
+          return callback(new Error('电话号码不能为空'))
         }
         if (!(/^1(3|4|5|7|8)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
           callback(new Error('请输入正确的电话号码'))
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredID = (rule, value, callback) => {
+        if (!reg.IDCardVail(value)) {
+          callback(new Error('请输入正确的身份证号码'));
         } else {
           callback()
         }
@@ -658,6 +965,47 @@
          this.init()*/
       }
       return {
+        uploadImgDispaly: '',
+        uploadImgDispaly1: '',
+        uploadImgDispaly2: '',
+        authModifyPhoneStep: 0,
+        authModifyPhoneFormOne: {
+          ID: '',
+          personHint: 0,
+          companyHint: 0,
+          businessLicense: ''
+        },
+        authModifyPhoneOneRuleValidate: {
+          ID: [
+            {required: true, message: '请输入身份证号码', trigger: 'blur'},
+            {validator: validaRegisteredID, trigger: 'blur'}
+          ],
+          businessLicense: [
+            {required: true, message: '请输入公司营业执照号码', trigger: 'blur'},
+          ]
+        },
+        authModifyPhoneFormThere: {
+          verificationCode: '',
+          pictureCode: '',
+          newCodeText: '获取验证码',
+          newPhone: '',
+          newVerificationCode: ''
+        },
+        authModifyPhoneThereRuleValidate: {
+          verificationCode: [
+            {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+          ],
+          pictureCode: [
+            {required: true, message: '请输入图形验证码', trigger: 'blur'},
+          ],
+          newPhone: [
+            {required: true, message: '请输入新手机号码', trigger: 'blur'},
+            {validator: validaRegisteredPhone, trigger: 'blur'}
+          ],
+          newVerificationCode: [
+            {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+          ],
+        },
         refundParticularsColumns: [
           {
             title: '产品',
@@ -673,6 +1021,8 @@
         refundParticularsData: [],
         refundPrice: '',
         refundOrderPrice: '',
+        refundOrderTicket: '',
+        refundOrderVoucher: '',
         payLoading: false,
         cardVolumeColumns: [
           {
@@ -737,7 +1087,7 @@
           {
             title: '操作',
             render: (h, obj) => {
-              if (obj.row.maketicketover != 1) {
+              if (obj.row.maketicketover == 0) {
                 // 现金券
                 if (obj.row.tickettype == '2') {
                   return h('div', {}, [
@@ -777,7 +1127,8 @@
                       style: {
                         color: '#2d8cf0',
                         cursor: 'pointer',
-                        marginLeft: '5px'
+                        marginLeft: '5px',
+                        display: 'none'
                       },
                       on: {
                         click: () => {
@@ -792,9 +1143,7 @@
                               }).then(response => {
                                 if (response.status == 200 && response.data.status == 1) {
                                   this.searchCard()
-                                  this.$message.info({
-                                    content: '现金券删除成功'
-                                  })
+                                  this.$Message.success('优惠券删除成功')
                                 } else {
                                   this.$message.info({
                                     content: response.data.message
@@ -818,7 +1167,8 @@
                       style: {
                         color: '#2d8cf0',
                         cursor: 'pointer',
-                        marginLeft: '5px'
+                        marginLeft: '5px',
+                        display: 'none'
                       },
                       on: {
                         click: () => {
@@ -848,8 +1198,8 @@
                   ])
                 }
               } else {
-                /*return h('span',{},'--')*/
-                return  h('span', {
+                return h('span', {}, '--')
+                /*return h('span', {
                   style: {
                     color: '#2d8cf0',
                     cursor: 'pointer'
@@ -878,7 +1228,7 @@
                       })
                     }
                   }
-                }, '删除')
+                }, '删除')*/
               }
             }
           }
@@ -1118,6 +1468,14 @@
           {
             value: 'notpay',
             label: '未支付订单'
+          },
+          {
+            value: 'refund',
+            label: '已退款订单'
+          },
+          {
+            value: 'refunding',
+            label: '退款中订单'
           }
         ],
         columns_order: [
@@ -1460,13 +1818,20 @@
           clipCoupons: false,
           freezeParticulars: false,
           unfreeze: false,
+          freezeToRenew: false,
           notUnfreeze: false,
           // 兑换码模态框
           exchangeCard: false,
           // 提现模态框
           withdraw: false,
+          refundBeforeHint: false,
           refundHint: false,
-          unfreezeToBalanceHint: false
+          unfreezeToBalanceHint: false,
+          refundNextHint: false,
+          refundLastHint: false,
+          freezeToRenewAffirm: false,
+          // 修改手机号码（身份证方式）
+          modifyPhoneID: false
         },
         // 提现
         withdrawForm: {
@@ -1527,6 +1892,34 @@
         imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
         /*发送验证码button innerText*/
         codePlaceholder: '发送验证码',
+        freezeToRenew: 'freezeToRenew',
+        freezeOrderColumns: [
+          {
+            title: '名称/ID',
+            key: '名称/ID'
+          },
+          {
+            title: '资源',
+            width: 200,
+            render: (h, params) => {
+              let obj = JSON.parse(params.row['资源'])
+              let arr = []
+              for (let key in obj) {
+                arr.push(h('li', {}, key + ': ' + obj[key]))
+              }
+              return h('ul', {}, arr)
+            }
+          },
+          {
+            title: '计费类型',
+            key: '计费类型'
+          },
+          {
+            title: '续费时长',
+            key: '续费时长'
+          }
+        ],
+        freezeOrderData: [],
         /*解冻到余额/账户  默认解冻到余额*/
         unfreezeTo: 'account',
         unfreezeToHint: 'account',
@@ -1608,6 +2001,7 @@
                   },
                   on: {
                     click: () => {
+                      this.showModal.freezeParticulars = false
                       this.unfreezeId = params.row.id
                       this.$http.get('user/jdugeThawCondition.do', {
                         params: {
@@ -1616,6 +2010,22 @@
                       }).then(res => {
                         if (res.status == 200 && res.data.status == 1) {
                           this.showModal.unfreeze = true
+                        } else if (res.status == 200 && res.data.status == 2) {
+                          let url = 'user/judgeRenewalFee.do'
+                          axios.get(url, {
+                            params: {
+                              id: params.row.id
+                            }
+                          }).then(res => {
+                            if (res.status == 200 && res.data.status == 1) {
+                              this.freezeOrderData = res.data.result
+                              this.freezeEndTime = res.data.endTime
+                              this.renewalFeeTime = res.data.renewalFeeTime
+                              this.showModal.freezeToRenew = true
+                            } else {
+                              this.$message.info({content: res.data.message})
+                            }
+                          })
                         } else {
                           this.thawingCondition = params.row.thawCondition
                           this.showModal.notUnfreeze = true
@@ -1632,7 +2042,21 @@
         ],
         freezeParticularsData: [],
         unfreezeId: '',
-        exchangeCardMessage: ''
+        exchangeCardMessage: '',
+        refundTo: 'account',
+        refundBeforeHintText: '(10S)',
+        refundBeforeHintDisabled: true,
+        refundBeforeHintTimer: null,
+        refundLastHintDisabled: true,
+        refundLastHintText: '(10S)',
+        refundLastHintTimer: null,
+        refundLastTo: 'account',
+        freezeToRenewAffirmDisabled: true,
+        freezeToRenewAffirmText: '(10S)',
+        freezeToRenewAffirmTimer: null,
+        renewalFeeTime: '',
+        freezeEndTime: '',
+        returnMoneyDisabled: false
       }
     },
     created() {
@@ -1646,6 +2070,16 @@
       }
     },
     methods: {
+      //Cashforwithdrawa(){
+      //axios.get('user/selectValidRefundAmount.do', {
+      //}).then(response => {
+      //if (response.status == 200 && response.data.status == 1) {
+      //sessionStorage.setItem('moneyBank', response.data.moneyBank)
+      //sessionStorage.setItem('moneyOnLine', response.data.moneyOnLine)
+      //this.$router.push('/ruicloud/cashwithdrawal')
+      //}
+      //})
+      //},
       selectChange(item, index) {
         if (item.startmoney > this.totalCost) {
           this.activeIndex = null
@@ -1819,6 +2253,38 @@
             this.timeType = '1'
             this.searchOrderByType()
             break
+          case 'refund':
+            this.init()
+            //this.order_type = '1'
+            this.timeTypeList = [
+              {
+                label: '订单创建时间',
+                value: '1'
+              },
+              {
+                label: '订单结束时间',
+                value: '2'
+              }
+            ]
+            this.timeType = '1'
+            this.searchOrderByType()
+            break
+          case 'refunding':
+            this.init()
+            //this.order_type = '1'
+            this.timeTypeList = [
+              {
+                label: '订单创建时间',
+                value: '1'
+              },
+              {
+                label: '订单结束时间',
+                value: '2'
+              }
+            ]
+            this.timeType = '1'
+            this.searchOrderByType()
+            break
         }
       },
       searchOrderByType() {
@@ -1826,7 +2292,7 @@
         var params = {
           pageSize: this.pageSize,
           page: this.order_currentPage,
-          paymentStatus: this.order_type == 'pay' ? '1' : this.order_type == 'notpay' ? '0' : '',
+          paymentStatus: this.order_type == 'pay' ? '1' : this.order_type == 'notpay' ? '0' : this.order_type == 'refund'? '4' : this.order_type == 'refunding'? '3' :'',
         }
         switch (this.timeType) {
           case '':
@@ -2143,6 +2609,7 @@
                 ticketType: this.card_type,
                 orderNumber: orderNumber + '',
                 isuse: 0,
+                notOverTime: '1',
                 totalCost: this.totalCost
               }
             }).then(response => {
@@ -2301,6 +2768,167 @@
           this.showModal.unfreeze = false
         }
       },
+      bindingMobilePhoneStepTwo(name) {
+        this.$refs[name].validate((valid) => {
+          console.log(valid)
+          if (valid) {
+            if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+              axios.post('user/isIdCardAndNameSame.do', {
+                type: '0',
+                name: this.$store.state.userInfo.realname,
+                idCard: this.authModifyPhoneFormOne.ID,
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 1
+                } else {
+                  this.authModifyPhoneFormOne.personHint = 1
+                }
+              })
+            } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
+              axios.post('user/isIdCardAndNameSame.do', {
+                type: '1',
+                name: this.$store.state.authInfo.name,
+                businessLicense: this.authModifyPhoneFormOne.businessLicense,
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 1
+                } else {
+                  this.authModifyPhoneFormOne.companyHint = 1
+                }
+              })
+            }
+          } else {
+            this.authModifyPhoneFormOne.personHint = 0
+            this.authModifyPhoneFormOne.companyHint = 0
+          }
+        })
+      },
+      uploadIDImg() {
+        if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+          if (this.uploadImgDispaly == '') {
+            this.$Message.info({
+              content: '请上传手持身份证人像照片',
+              duration: 2
+            })
+          } else {
+            this.authModifyPhoneStep = 2
+          }
+        } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
+          if (this.uploadImgDispaly1 == '' || this.uploadImgDispaly2 == '') {
+            this.$Message.info({
+              content: '请上传手持身份证人像照片',
+              duration: 2
+            })
+          } else {
+            this.authModifyPhoneStep = 2
+          }
+        }
+      },
+      legalPersonIDFront(response) {
+        if (response.status == 1) {
+          this.uploadImgDispaly = response.result
+        }
+      },
+      legalPersonIDFront1(response) {
+        if (response.status == 1) {
+          this.uploadImgDispaly1 = response.result
+        }
+      },
+      legalPersonIDFront2(response) {
+        if (response.status == 1) {
+          this.uploadImgDispaly2 = response.result
+        }
+      },
+      handleFormatError() {
+        this.$Message.info({
+          content: '仅支持jpg,jpeg,png,gif格式的文件上传'
+        })
+      },
+      handleMaxSize() {
+        this.$Message.info({
+          content: '上传的文件过大'
+        })
+      },
+      getBindingNewMobilePhoneCode(name) {
+        this.$refs[name].validateField('newPhone', (text) => {
+          if (text == '') {
+            axios.get('user/code.do', {
+              params: {
+                aim: this.authModifyPhoneFormThere.newPhone,
+                isemail: 0,
+                vailCode: this.authModifyPhoneFormThere.pictureCode
+              }
+            }).then(response => {
+              // 发送成功，进入倒计时
+              if (response.status == 200 && response.data.status == 1) {
+                var countdown = 60
+                this.authModifyPhoneFormThere.newCodeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.authModifyPhoneFormThere.newCodeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.authModifyPhoneFormThere.newCodeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      // 绑定手机
+      bindMobilePhone(name) {
+        this.$refs[name].validate((vail) => {
+          if (vail) {
+            // /user/newPhoneByIdCard.do
+            // post请求
+            // 参数IDCard 身份证
+            // authType认证类型(0是个人 1是企业)
+            // newPhone新手机号
+            // (个人认证 personIdCardHandUrl 个人认证手持照片)
+
+            //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
+            if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+              axios.post('user/newPhoneByIdCard.do', {
+                IDCard: this.authModifyPhoneFormOne.ID,
+                authType: '0',
+                newPhone: this.authModifyPhoneFormThere.newPhone,
+                personIdCardHandUrl: this.uploadImgDispaly
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 3
+                } else {
+                  this.$Message.error(response.data.message)
+                }
+              })
+            } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
+              axios.post('user/newPhoneByIdCard.do', {
+                businessLicense: this.authModifyPhoneFormOne.businessLicense,
+                authType: '1',
+                newPhone: this.authModifyPhoneFormThere.newPhone,
+                agentIdCardHandUrl: this.uploadImgDispaly1,
+                legalIdCardFrontUrl: this.uploadImgDispaly2
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 3
+                } else {
+                  this.$Message.error(response.data.message)
+                }
+              })
+            }
+          }
+        })
+      },
+      modifyPhoneIDcancel() {
+        this.authModifyPhoneStep = 0
+        this.$refs['authModifyPhoneFormOne'].resetFields()
+        this.$refs['authModifyPhoneFormThere'].resetFields()
+        this.uploadImgDispaly = ''
+      },
       unfreezeToBalance() {
         if (this.unfreezeToHint == 'yue') {
           let url = 'user/getRremainderThaw.do'
@@ -2373,7 +3001,7 @@
         })
       },
       // 提现前发送验证码
-      getCode() {
+      getCode(codeType) {
         if (this.codePlaceholder != '发送验证码') {
           return
         }
@@ -2384,11 +3012,18 @@
           })
           return
         }
+        var url = ''
+        if (codeType == 'code' || codeType == 'codeGetCash' || codeType == 'againCode') {
+          url = 'user/code.do'
+        } else if (codeType == 'voice') {
+          url = 'user/voiceCode.do'
+        } else {
+          return false
+        }
         this.codePlaceholder = '验证码发送中'
-        this.$http.get('user/code.do', {
+        this.$http.get(url, {
           params: {
             aim: this.withdrawConfirm.number,
-            type: '0',
             isemail: this.withdrawConfirm.type == 'phone' ? '0' : '1',
             vailCode: this.withdrawForm.code,
           }
@@ -2416,7 +3051,26 @@
           }
         })
       },
+      orderRefundBefore() {
+        window.clearInterval(this.refundBeforeHintTimer)
+        this.refundBeforeHintDisabled = true
+        this.refundBeforeHintText = '(10S)'
+        let i = 10
+        this.refundBeforeHintTimer = setInterval(() => {
+          i -= 1
+          if (i == 0) {
+            window.clearInterval(this.refundBeforeHintTimer)
+            this.refundBeforeHintDisabled = false
+            this.refundBeforeHintText = ''
+          } else {
+            this.refundBeforeHintText = '(0' + i + 'S)'
+            this.refundBeforeHintDisabled = true
+          }
+        }, 1000)
+        this.showModal.refundBeforeHint = true
+      },
       orderRefund() {
+        this.refundBeforeHintDisabled = true
         let orderNumber = this.orderNumber.map(item => {
           return item.ordernumber
         })
@@ -2427,10 +3081,13 @@
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
+            this.showModal.refundBeforeHint = false
             this.showModal.refundHint = true
             this.refundParticularsData = res.data.result
             this.refundPrice = res.data.cost
             this.refundOrderPrice = res.data.orderCost
+            this.refundOrderVoucher = res.data.voucherCost ? res.data.voucherCost : 0
+            this.refundOrderTicket = res.data.tickCost ? res.data.tickCost : 0
           } else {
             this.$message.info({
               content: res.data.message
@@ -2439,20 +3096,120 @@
         })
       },
       refund_ok() {
+        if (this.refundTo == 'account') {
+          this.returnMoneyDisabled = true
+          let orderNumber = this.orderNumber.map(item => {
+            return item.ordernumber
+          })
+          let url = 'user/returnMoneyOrder.do'
+          this.$http.get(url, {
+            params: {
+              orderNumber: orderNumber + ''
+            }
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.showModal.refundNextHint = false
+              this.showModal.refundHint = false
+              this.returnMoneyDisabled = false
+              this.searchOrderByType()
+              this.init()
+              this.$Message.success(res.data.message)
+            } else {
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
+        } else {
+          window.clearInterval(this.refundLastHintTimer)
+          this.refundLastHintDisabled = true
+          this.refundLastHintText = '(10S)'
+          let i = 10
+          this.refundLastHintTimer = setInterval(() => {
+            i -= 1
+            if (i == 0) {
+              window.clearInterval(this.refundLastHintTimer)
+              this.refundLastHintDisabled = false
+              this.refundLastHintText = ''
+            } else {
+              this.refundLastHintText = '(0' + i + 'S)'
+              this.refundLastHintDisabled = true
+            }
+          }, 1000)
+          this.showModal.refundNextHint = false
+          this.showModal.refundLastHint = true
+        }
+      },
+      refundLsat_ok() {
         let orderNumber = this.orderNumber.map(item => {
           return item.ordernumber
         })
+        this.refundLastHintDisabled = true
         let url = 'user/returnMoneyOrder.do'
-        this.$http.get(url, {
-          params: {
+        let params = {}
+        if (this.refundLastTo == 'account') {
+          params = {
             orderNumber: orderNumber + ''
           }
+        } else {
+          params = {
+            orderNumber: orderNumber + '',
+            backRemainder: '1'
+          }
+        }
+        this.$http.get(url, {
+          params
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
             this.showModal.refundHint = false
+            this.showModal.refundLastHint = false
             this.searchOrderByType()
             this.init()
-            this.$Message.success('您提交的产品退款已通过，金额将在3-5个工作日退回，请注意查收')
+            this.refundLastHintDisabled = false
+            this.$Message.success(res.data.message)
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      freezeToRenewNext() {
+        window.clearInterval(this.freezeToRenewAffirmTimer)
+        this.freezeToRenewAffirmDisabled = true
+        this.freezeToRenewAffirmText = '(10S)'
+        let i = 10
+        this.freezeToRenewAffirmTimer = setInterval(() => {
+          i -= 1
+          if (i == 0) {
+            window.clearInterval(this.freezeToRenewAffirmTimer)
+            this.freezeToRenewAffirmDisabled = false
+            this.freezeToRenewAffirmText = ''
+          } else {
+            this.freezeToRenewAffirmText = '(0' + i + 'S)'
+            this.freezeToRenewAffirmDisabled = true
+          }
+        }, 1000)
+        this.showModal.freezeToRenew = false
+        this.showModal.freezeToRenewAffirm = true
+      },
+      // 押金转续费
+      freezeToRenew_ok() {
+        let url = 'user/depositRenewal.do'
+        axios.get(url, {
+          params: {
+            id: this.unfreezeId
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.showModal.freezeParticulars = false
+            this.showModal.freezeToRenewAffirm = false
+            this.getBalance()
+            this.showMoneyByMonth()
+            this.search()
+            this.getTicketNumber()
+            this.init()
           } else {
             this.$message.info({
               content: res.data.message
@@ -2508,7 +3265,11 @@
           type,
           number
         }
-      }
+      },
+      authInfo() {
+        return this.$store.state.authInfo ? this.$store.state.authInfo : null
+        // return null
+      },
     },
     watch: {
       dateRange() {
@@ -2519,6 +3280,10 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .red {
+    color: #FF624B
+  }
+
   .background {
     background-color: #f5f5f5;
     width: 100%;

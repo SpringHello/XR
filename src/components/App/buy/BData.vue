@@ -683,7 +683,7 @@
         prod.cost = this.totalDataCost
         prod.VMName = this.dbName
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
-        window.scrollTo(0, 170)
+        // window.scrollTo(0, 182)
       },
       buyData() {
         if (this.userInfo == null) {
@@ -1093,7 +1093,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;

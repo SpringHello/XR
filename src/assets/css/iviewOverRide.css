@@ -51,6 +51,47 @@
   font-size: 14px;
 }
 
+/* form表单样式,错误提示不换行 */
+.universal-form-tips-line .ivu-form-item-content {
+  display: flex;
+}
+.universal-form-tips-line .ivu-form-item {
+  margin-bottom: 0;
+}
+.universal-form-tips-line .ivu-form-item-error-tip {
+  position:relative;
+  margin-left: 10px;
+  font-size: 14px;
+  line-height: 36px;
+  padding: 0;
+}
+.universal-form-tips-line .domain-textarea .ivu-form-item-error-tip {
+  position: absolute;
+  line-height: 1;
+  padding-top: 6px;
+  margin-left: 0;
+}
+/* .universal-form-tips-line .ivu-form-item-error-tip:before {
+  content: '';
+  margin-right: 0px;
+} */
+.universal-form-tips-line .ivu-form .ivu-form-item-label {
+  font-size: 14px;
+  color: #333;
+}
+.bssl .step-one .ivu-form .ivu-form-item-label {
+  width: 100px;
+  text-align: left;
+}
+.bssl .step-two .ivu-form .ivu-form-item-label {
+  width: 90px;
+  text-align: left;
+}
+.universal-form-tips-line .ivu-form-item-required .ivu-form-item-label:before {
+  content: '';
+  margin-right: 0px;
+}
+
 /* 通用弹窗底部文字提示 */
 .modal-text-hint-bottom {
   color: rgb(153, 153, 153);
@@ -110,13 +151,11 @@
 /* 增加modal头部底部的border */
 p.modal-header-border {
   padding-bottom: 40px;
-  border-bottom: solid 1px #D8D8D8;
   font-weight: 700
 }
 
 div.modal-header-border {
   padding-bottom: 20px;
-  border-bottom: solid 1px #D8D8D8;
   font-weight: 700
 }
 
@@ -134,48 +173,69 @@ div.modal-header-border {
   font-size: 12px;
 }
 
-/* 公共样式库 */
+/* 公共样式 */
+
 .btnnormal {
   border: #2a99f2 solid 1px;
   color: #2a99f2
 }
-
+/* 字体大小 */
 .f24 {
   font-size: 24px;
 }
-
 .f16 {
   font-size: 16px;
 }
-
+/* 字体样式 */
+.fsn {
+  font-style: normal;
+}
+/* 字体颜色 */
 .bluetext {
   color: #2d8cf0;
 }
-
-.mr10 {
-  margin-right: 10px;
-}
-
 .orange {
-  color: #F56A00
+  color: #FF392A;
 }
-
 .yellow {
   color: #FFBF00;
 }
-
+/* margin */
 .mt10 {
   margin-top: 10px;
 }
-
+.mb10 {
+  margin-bottom: 10px;
+}
 .mb20 {
   margin-bottom: 20px;
 }
-
+.mb30 {
+  margin-bottom: 30px;
+}
+.ml10 {
+  margin-left: 10px;
+}
+.mr10 {
+  margin-right: 10px;
+}
+/* 行高 */
 .lh24 {
   line-height: 24px;
 }
-
+/* 浮动 */
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+/* 公共样式结束 */
+.flex-vertical-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .ivu-form-item-label {
   display: inline-block;
 }
@@ -349,7 +409,15 @@ div.modal-header-border {
 .social-share .icon-qq {
   margin-right: 50px;
 }
-
+.xiannode-form .ivu-form .ivu-form-item-label {
+  font-size: 16px;
+}
+#xian-node .zone-select .ivu-select-arrow {
+  display: none;
+}
+.xian-input .ivu-input{
+  text-align: center;
+ }
 /*  免费领取主机弹窗样式 */
 .fr-Modal .ivu-modal-header {
   padding: 0;
@@ -392,6 +460,7 @@ div.modal-header-border {
   color: #FF881C;
 }
 
+
 /* 自定义监控下拉框 */
 .cm-select.ivu-select-single .ivu-select-selection {
   height: 28px;
@@ -427,4 +496,26 @@ div.modal-header-border {
 
 .ivu-select-disabled .ivu-select-selection {
   color: black;
+}
+
+/* 登录页面select */
+.login-select .ivu-select-selection {
+  border: none;
+  box-shadow: none;
+}
+/* 所有弹窗样式更改 */
+.ivu-modal-header{
+  background: #333333;
+  border-bottom: none;
+  border-radius: 6px 6px 0px 0px;
+}
+
+.my_table .ivu-table th{
+  background-color: #F6FAFD;
+}
+.my_table .ivu-table{
+box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
+}
+.my_table .ivu-table td, .ivu-table th{
+  border: none
 }

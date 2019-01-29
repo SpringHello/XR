@@ -15,7 +15,7 @@
               <div style="position:relative;width:100%">
                 <h1 style="margin-bottom:9px;font-size: 24px;color:#111111;font-weight: normal;">{{title}}</h1>
                 <p style="font-size: 14px;color: #292626;line-height: 22px;">{{message}} <span style="cursor: pointer;color: #377dff;margin-left: 10px"
-                                                                                               @click="$router.push('AnniversaryActive')">再次购买</span></p>
+                                                                                               @click="$router.push('wonderfulDay')">再次购买</span></p>
                 <p v-if="firstMessage" style="font-size: 14px;color: #3DBD7D;line-height: 22px;"> {{ firstMessage }}</p>
                 <div v-if="payResult=='success'" style="position:absolute;left:0px;bottom:-60px;">
                   <button class="ghost button" @click="push('expenses')">查看订单</button>
@@ -35,6 +35,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
   export default {
     data() {
       var payResult = sessionStorage.getItem('payResult')
@@ -56,6 +57,7 @@
       }
     },
     created() {
+      this.toggleZone(this.$store.state.zone.zoneid)
       if (this.payResult == undefined) {
         this.$router.replace('overview')
       }
@@ -66,6 +68,16 @@
       })
     },
     methods: {
+      toggleZone(zoneId) {
+        // 切换默认区域
+        axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+        })
+        for (var zone of this.$store.state.zoneList) {
+          if (zone.zoneid == zoneId) {
+            $store.commit('setZone', zone);
+          }
+        }
+      },
       push(path) {
         /*暂时不知道作用，vuex中已经删除setSelect方法*/
         //this.$store.commit("setSelect", path)

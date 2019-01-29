@@ -64,8 +64,8 @@
                 <div class="cf-footer">
                   <p><span>押金：</span>¥{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <!--<Button type="primary" v-if="scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" :disabled="true">敬请期待</Button>-->
-                  <Button type="primary" @click="getHost(currentIndex,index1)">免费使用</Button>
+                  <Button type="primary" v-if="(scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算')&& cfg.gpuSize == 2" :disabled="true">已售罄</Button>
+                  <Button type="primary" v-else @click="getHost(currentIndex,index1)">免费使用</Button>
                 </div>
               </div>
             </div>
@@ -209,11 +209,11 @@
         <div class="pay-wap">
           <p>选择支付方式</p>
           <RadioGroup v-model="payWay" vertical @on-change="payWayChange">
-            <Radio label="balancePay">
+            <!-- <Radio label="balancePay">
               <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 40px">余额支付</span>
               <span style="color:rgba(102,102,102,1);font-size: 14px">账户余额：</span>
               <span style="color:#D0021B;font-size: 14px">¥{{ balance }}</span>
-            </Radio>
+            </Radio> -->
             <Radio label="otherPay" class="pw-img" :disabled="balance >= cashPledge">
               <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
               <img src="../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null">
@@ -221,18 +221,19 @@
             </Radio>
           </RadioGroup>
         </div>
-        <p class="p1">注：没有实名认证的用户领取主机成功后，需要进行实名认证才可以使用。您可以点击实名认证 现在进行认证，也可以在领取主机之后点击个人中心-个人认证进行实名认证。</p>
-        <div class="attestationForm">
-          <p>实名认证</p>
-          <div class="click_icon icons" :class="{hide_icon:!attestationShow}" @click="attestationShow = !attestationShow"></div>
-        </div>
-        <div v-show="attestationShow">
-          <div v-if="authInfo&&authInfo.checkstatus==0" class="modal-p">
-            <p><img src="../../assets/img/sceneInfo/si-success.png"/><span>恭喜您，实名认证成功！</span></p>
-          </div>
-          <Form :model="quicklyAuthForm" :label-width="100" ref="quicklyAuth"
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="getHost_ok">确认</Button>
+      </div>
+    </Modal>
+    <!-- 购买前实名认证 -->
+    <Modal v-model="showModal.authentication" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">实名认证</span>
+      </p>
+        <Form :model="quicklyAuthForm" :label-width="100" ref="quicklyAuth"
                 :rules="quicklyAuthFormValidate"
-                style="width:450px;margin-top:20px;" v-else>
+                style="width:450px;margin-top:20px;" >
             <FormItem label="真实姓名" prop="name" style="width: 100%">
               <Input v-model="quicklyAuthForm.name" placeholder="请输入姓名"></Input>
             </FormItem>
@@ -250,29 +251,49 @@
                 </div>
               </FormItem>
               <FormItem label="手机号码" prop="phone" style="width: 100%">
-                <div style="display: flex;justify-content: space-between">
-                  <Input v-model="quicklyAuthForm.phone" placeholder="请输入以该身份证开户的手机号码"
-                         style="width:260px;margin-right: 10px"></Input>
-                  <Button type="primary" @click="sendCode" style="width:92px"
-                          :disabled="quicklyAuthForm.sendCodeText!='获取验证码'">
-                    {{quicklyAuthForm.sendCodeText}}
-                  </Button>
-                </div>
+                  <Input v-model="quicklyAuthForm.phone" placeholder="请输入以该身份证开户的手机号码"></Input>
               </FormItem>
             </Form>
             <FormItem label="验证码" prop="validateCode" style="width: 100%">
-              <Input v-model="quicklyAuthForm.validateCode" placeholder="请输入验证码"></Input>
-            </FormItem>
-            <FormItem>
-              <div style="float:right">
-                <Button type="primary" @click="quicklyAuth">确认提交</Button>
+              <div style="display: flex;justify-content: space-between">
+                <Input v-model="quicklyAuthForm.validateCode" placeholder="请输入验证码" style="width:260px;margin-right: 10px"></Input>
+                <Button type="primary" @click="sendCode" 
+                            :disabled="quicklyAuthForm.sendCodeText!='获取验证码'">
+                      {{quicklyAuthForm.sendCodeText}}
+                </Button>
               </div>
             </FormItem>
           </Form>
-        </div>
+          <div slot="footer" class="modal-footer-border">
+            <Button type="primary" @click="quicklyAuth">提交</Button>
+          </div>
+    </Modal>
+    <!-- 实名认证成功 -->
+    <Modal v-model="showModal.authenticationSuccess" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">实名认证</span>
+      </p>
+      <div style="text-align:center;padding:40px 0;">
+         <img src="../../assets/img/payresult/paySuccess.png"
+            style="width:36px;vertical-align:middle;margin-right:10px;">
+          <span style="font-size:14px;line-height:36px">恭喜您，实名认证成功！</span> 
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="getHost_ok">确认</Button>
+        <Button type="primary" @click="showModal.authenticationSuccess=false">确认</Button>
+      </div>
+    </Modal>
+    <!-- 实名认证失败 -->
+    <Modal v-model="showModal.authenticationError" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">实名认证</span>
+      </p>
+      <div style="text-align:center;padding:40px 0;">
+         <img src="../../assets/img/payresult/payFail.png"
+            style="width:36px;vertical-align:middle;margin-right:10px;">
+          <span style="font-size:14px;line-height:36px">抱歉，实名认证失败，原因：{{authErrorText}}</span> 
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="showModal.authenticationError=false">确认</Button>
       </div>
     </Modal>
   </div>
@@ -328,6 +349,7 @@
         }
       }
       return {
+        authErrorText: '',
         showModal: {
           rechargeHint: false,
           inConformityModal: false,
@@ -335,12 +357,15 @@
           payDefeatedModal: false,
           paySuccessModal: false,
           weChatRechargeModal: false,
-          orderConfirmationModal: false
+          orderConfirmationModal: false,
+          authentication: false,
+          authenticationSuccess: false,
+          authenticationError: false
         },
         currentSceneGroup: [
           {
             currentScene: '云电脑',
-            disc: ' 云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的高性能PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
+            disc: ' 云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
             configGroup: [
               {
                 title: '一个月',
@@ -1080,7 +1105,7 @@
           },
           {
             currentScene: '游戏服务',
-            disc: '新睿云游戏应用能够帮助您实现任意设备的游戏体验: 在任意 PC、Mac、平板电脑、智能手机以及电视上的高画质、低延迟的多设备游戏体验；点击即玩的便捷: 任何时候都可以在云端访问一系列游戏和保存游戏。 在任何地点、任意设备上均可开始新游戏或继续之前的游戏进度；减少麻烦: 没有新硬件、没有复杂的设置、没有游戏光盘、没有数字下载、没有游戏安装、没有游戏补丁。',
+            disc: '借助新睿云游戏服务革新您的开发平台，您能够以更快的速度完成大型3D游戏的开发测试工作。凭借超高的运算速度与传输速度，加速您的大规模图形演算与视频处理能力；搭配新睿云云主机、对象存储与云数据库使用，完成从生产研发到部署测试的全流程工作。并且，新睿云游戏服务提供按需付费方式，以小时级为单位来获取工业级GPU计算服务能力。',
             configGroup: [
               {
                 title: '初创型业务网站（3天）',
@@ -1851,10 +1876,9 @@
           },
         ],
         orderData: [],
-        payWay: 'balancePay',
+        payWay: 'otherPay',
         otherPayWay: '',
         balance: '0.0',
-        attestationShow: false,
         // 快速认证表单
         quicklyAuthForm: {
           name: '',
@@ -2083,6 +2107,10 @@
           this.$LR({type: 'register'})
           return
         }
+        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)){
+          this.showModal.authentication = true
+          return
+        }
         if (!(this.scene == '游戏服务' || this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
           this.$http.post('device/DescribeWalletsBalance.do').then(response => {
             if (response.status == 200 && response.data.status == '1') {
@@ -2094,7 +2122,7 @@
               this.showModal.rechargeHint = true
             } else {
               this.$message.info({
-                content: '平台开小差了，请稍候再试'
+                content: response.data.message
               })
             }
           })
@@ -2118,7 +2146,7 @@
                   this.showModal.rechargeHint = true
                 } else {
                   this.$message.info({
-                    content: '平台开小差了，请稍候再试'
+                    content: response.data.message
                   })
                 }
               })
@@ -2417,10 +2445,10 @@
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
                 var countdown = 60
-                this.quicklyAuthForm.sendCodeText = `${countdown}S`
+                this.quicklyAuthForm.sendCodeText = `重新发送(${countdown})S`
                 var Interval = setInterval(() => {
                   countdown--
-                  this.quicklyAuthForm.sendCodeText = `${countdown}S`
+                  this.quicklyAuthForm.sendCodeText = `重新发送(${countdown})S`
                   if (countdown == 0) {
                     clearInterval(Interval)
                     this.quicklyAuthForm.sendCodeText = '获取验证码'
@@ -2451,11 +2479,12 @@
               type: '0'
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.showModal.authentication = false
+                this.showModal.authenticationSuccess = true
                 this.init()
               } else {
-                this.$message.info({
-                  content: response.data.message
-                })
+                this.showModal.authenticationError = true
+                this.authErrorText = response.data.message
               }
             })
           }

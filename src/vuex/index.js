@@ -30,7 +30,8 @@ const store = new Vuex.Store({
       vpc: 'VPC',
       vpn: 'remote'
     },
-    accessKey: null
+    accessKey: null,
+    qq: {}
   },
   getters: {},
 
@@ -46,10 +47,6 @@ const store = new Vuex.Store({
         if (zone.isdefault == 1) {
           state.zone = zone
         }
-        if (zone.gpuserver == 1) {
-          state.gpuZone = zone
-          break
-        }
       }
     },
     setMsg(state, Msg) {
@@ -63,7 +60,10 @@ const store = new Vuex.Store({
     },
     setKey(state, key) {
       state.accessKey = key;
-    }
+    },
+    setQQInfo(state, qq) {
+      state.qq = qq
+    },
   },
   actions: {
     /* 获取用户信息 */

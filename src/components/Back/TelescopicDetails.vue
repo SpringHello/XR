@@ -108,9 +108,8 @@
     </div>
 
     <!--新建告警策略-->
-    <modal title="新建告警策略" width="550" :mask-closable="false" v-model="alarmStrategy.newAddStrategy">
-      <hr color="#D8D8D8" size="1">
-      <br>
+    <Modal title="新建告警策略" width="550" :mask-closable="false" v-model="alarmStrategy.newAddStrategy">
+     
       <Form :model="alarmStrategy" ref="alarmStrategy" :rules="alarmStrategyValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="alarmStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
@@ -119,23 +118,23 @@
       <div>
         <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="https://www.xrcloud.net/ruicloud/documentInfo/wHfINiD0y/wI2GZzD6x" style="color: #2A99F2;" >查看详细统计规则</a></p>
         <div>
-          <Select @on-change="cpuSelect" v-model="alarmStrategy.cpuValue" style="width:123px">
+          <Select @on-change="cpuSelect" v-model="alarmStrategy.cpuValue" style="width:123px" transfer>
             <Option v-for="item in alarmStrategy.cpuList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          <Select v-model="alarmStrategy.value" style="width:92px">
+          <Select v-model="alarmStrategy.value" style="width:92px" transfer>
             <Option v-for="item in alarmStrategy.valueList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          <Select v-model="alarmStrategy.time" style="width:92px">
+          <Select v-model="alarmStrategy.time" style="width:92px" transfer>
             <Option v-for="item in alarmStrategy.timeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          <Select v-model="alarmStrategy.symbol" style="width:76px">
+          <Select v-model="alarmStrategy.symbol" style="width:76px" transfer>
             <Option v-for="item in alarmStrategy.symbolList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          <Select v-model="alarmStrategy.percentage" style="width:69px">
+          <Select v-model="alarmStrategy.percentage" style="width:69px" transfer>
             <Option v-for="item in alarmStrategy.percentageList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <span class="box_black">{{alarmStrategy.spanValue}}</span>
-          <Select v-model="alarmStrategy.count" style="width:95px;margin-top: 5px;">
+          <Select v-model="alarmStrategy.count" style="width:95px;margin-top: 5px;" transfer>
             <Option v-for="item in alarmStrategy.countList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
@@ -143,11 +142,11 @@
       <div style="margin: 20px 0;">
         <p style="margin-bottom: 12px">伸缩组活动</p>
         <div>
-          <Select @on-change="theIsdisabled" v-model="alarmStrategy.isAdd" style="width:100px">
+          <Select @on-change="theIsdisabled" v-model="alarmStrategy.isAdd" style="width:100px" transfer>
             <Option v-for="item in alarmStrategy.isAddList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <InputNumber style="width: 70px"  :min="1" v-model="alarmStrategy.addcount"></InputNumber>
-          <Select v-model="alarmStrategy.company" style="width:76px">
+          <Select v-model="alarmStrategy.company" style="width:76px" transfer>
             <Option value="台">台</Option>
             <Option value="%" :disabled="alarmStrategy.disabled">%</Option>
           </Select>
@@ -162,7 +161,7 @@
       </div>
       <div>
           <FormItem label="告警通知" prop="contacts">
-            <Select v-model="alarmStrategy.contacts" style="width:240px"  placeholder="选择联系人" >
+            <Select v-model="alarmStrategy.contacts" style="width:240px"  placeholder="选择联系人" transfer>
               <Option v-for="item in alarmStrategy.contactsList" :value="item.id" :key="item.id">{{ item.username }}</Option>
             </Select>
           </FormItem>
@@ -174,12 +173,11 @@
         <Button type="ghost" @click="alarmStrategy.newAddStrategy = false">取消</Button>
         <Button type="primary" @click="createAlarmStrategy">完成配置</Button>
       </div>
-    </modal>
+    </Modal>
 
     <!--修改告警策略-->
-    <modal title="修改告警策略" width="550" :mask-closable="false" v-model="updateStrategy.newAddStrategy">
-      <hr color="#D8D8D8" size="1">
-      <br>
+    <Modal title="修改告警策略" width="550" :mask-closable="false" v-model="updateStrategy.newAddStrategy">
+    
       <Form :model="updateStrategy" ref="updateStrategy" :rules="updateStrategyValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="updateStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
@@ -188,23 +186,23 @@
       <div>
         <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="https://www.xrcloud.net/ruicloud/documentInfo/wHfINiD0y/wI2GZzD6x" style="color: #2A99F2;">查看详细统计规则</a></p>
         <div>
-          <Select @on-change="cpuSelect" v-model="updateStrategy.cpuValue" style="width:123px">
+          <Select @on-change="cpuSelect" v-model="updateStrategy.cpuValue" style="width:123px" transfer>
             <Option v-for="item in updateStrategy.cpuList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          <Select v-model="updateStrategy.value" style="width:92px">
+          <Select v-model="updateStrategy.value" style="width:92px" transfer>
             <Option v-for="item in updateStrategy.valueList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          <Select v-model="updateStrategy.time" style="width:92px">
+          <Select v-model="updateStrategy.time" style="width:92px" transfer>
             <Option v-for="item in updateStrategy.timeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          <Select v-model="updateStrategy.symbol" style="width:76px">
+          <Select v-model="updateStrategy.symbol" style="width:76px" transfer>
             <Option v-for="item in updateStrategy.symbolList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          <Select v-model="updateStrategy.percentage" style="width:69px">
+          <Select v-model="updateStrategy.percentage" style="width:69px" transfer>
             <Option v-for="item in updateStrategy.percentageList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <span class="box_black">{{updateStrategy.spanValue}}</span>
-          <Select v-model="updateStrategy.count" style="width:95px;margin-top: 5px;">
+          <Select v-model="updateStrategy.count" style="width:95px;margin-top: 5px;" transfer>
             <Option v-for="item in updateStrategy.countList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
@@ -212,11 +210,11 @@
       <div style="margin: 20px 0;">
         <p style="margin-bottom: 12px">伸缩组活动</p>
         <div>
-          <Select @on-change="theIsdisabled" v-model="updateStrategy.isAdd" style="width:100px">
+          <Select @on-change="theIsdisabled" v-model="updateStrategy.isAdd" style="width:100px" transfer>
             <Option v-for="item in updateStrategy.isAddList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <InputNumber style="width: 70px"  :min="1" v-model="updateStrategy.addcount"></InputNumber>
-          <Select v-model="updateStrategy.company" style="width:76px">
+          <Select v-model="updateStrategy.company" style="width:76px" transfer>
             <Option value="台">台</Option>
             <Option value="%" :disabled="updateStrategy.disabled">%</Option>
           </Select>
@@ -231,7 +229,7 @@
       </div>
       <div>
           <FormItem label="告警通知" prop="contacts">
-            <Select v-model="updateStrategy.contacts" style="width:240px"  placeholder="选择联系人">
+            <Select v-model="updateStrategy.contacts" style="width:240px"  placeholder="选择联系人" transfer>
               <Option v-for="item in updateStrategy.contactsList" :value="item.id" :key="item.id">{{ item.username }}</Option>
             </Select>
           </FormItem>
@@ -243,12 +241,10 @@
         <Button type="ghost" @click="updateStrategy.newAddStrategy = false">取消</Button>
         <Button type="primary" @click="updateAlarmStrategy">修改配置</Button>
       </div>
-    </modal>
+    </Modal>
 
     <!--新建定时任务-->
-    <modal title="新建定时任务" width="550" :mask-closable="false" v-model="task">
-      <hr color="#D8D8D8" size="1">
-      <br>
+    <Modal title="新建定时任务" width="550" :mask-closable="false" v-model="task">
       <Form :model="timedTask" ref="timedTask" :rules="timedTaskValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="timedTask.name" placeholder="请输入名称" style="width: 240px;"></Input>
@@ -259,21 +255,21 @@
         <p>开始执行时间</p>
         <div>
           <DatePicker type="date" :options="options3"   v-model="timedTask.startTime" placeholder="选择时间" style="width:123px"></DatePicker>
-          <Select v-model="timedTask.hour" style="width:92px" >
+          <Select v-model="timedTask.hour" style="width:92px" transfer>
             <Option v-for="item in timedTask.hourList" :value="item.value" :key="item.value" :disabled='item.dis'>{{ item.label }}</Option>
           </Select>
           <span>:</span>
-          <Select v-model="timedTask.minute" style="width:92px" >
+          <Select v-model="timedTask.minute" style="width:92px" transfer>
             <Option v-for="item in timedTask.minuteList" :value="item.value" :key="item.value" >{{ item.label }}</Option>
           </Select>
-          <Select v-model="timedTask.repeat" style="width:95px">
+          <Select v-model="timedTask.repeat" style="width:95px" transfer>
             <Option v-for="item in timedTask.repeatList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
         <!--重复选择-->
         <div v-if="timedTask.repeat == '1'" style="margin-top: 20px;">
           <p>重复设置</p>
-          <Select v-model="timedTask.date" style="width:123px" @on-change='repeatSetting'>
+          <Select v-model="timedTask.date" style="width:123px" @on-change='repeatSetting' transfer>
             <Option v-for="item in timedTask.dateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <!--天-->
@@ -302,11 +298,11 @@
           <div style="margin-top: 20px;">
             <p>结束执行时间</p>
             <DatePicker type="date" :options="options3"  v-model="timedTask.endTime"  placeholder="选择时间" style="width:123px"></DatePicker>
-            <Select v-model="timedTask.endHour" style="width:92px"  >
+            <Select v-model="timedTask.endHour" style="width:92px"  transfer>
               <Option v-for="item in timedTask.endHourList" :value="item.value" :key="item.value" :disabled='item.dis'>{{ item.label }}</Option>
             </Select>
             <span>:</span>
-            <Select v-model="timedTask.endMinute" style="width:92px">
+            <Select v-model="timedTask.endMinute" style="width:92px" transfer>
               <Option v-for="item in timedTask.endMinuteList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </div>
@@ -331,12 +327,10 @@
         <Button type="ghost" @click="task = false">取消</Button>
         <Button type="primary" @click="createTask">完成配置</Button>
       </div>
-    </modal>
+    </Modal>
 
     <!--修改定时任务-->
-    <modal title="修改定时任务" width="550" :mask-closable="false" v-model="updateTask">
-      <hr color="#D8D8D8" size="1">
-      <br>
+    <Modal title="修改定时任务" width="550" :mask-closable="false" v-model="updateTask">
       <Form :model="updateTimedTask" ref="updateTimedTask" :rules="updateTaskTimedTaskValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="updateTimedTask.name" placeholder="请输入名称" style="width: 240px;"></Input>
@@ -347,21 +341,21 @@
         <p>开始执行时间</p>
         <div>
           <DatePicker type="date" :options="options3"  v-model="updateTimedTask.startTime" placeholder="Select date" style="width:123px"></DatePicker>
-          <Select v-model="updateTimedTask.hour" style="width:92px">
+          <Select v-model="updateTimedTask.hour" style="width:92px" transfer>
             <Option v-for="item in updateTimedTask.hourList" :value="item.value" :key="item.value" :disabled='item.dis'>{{ item.label }}</Option>
           </Select>
           <span>:</span>
-          <Select v-model="updateTimedTask.minute" style="width:92px">
+          <Select v-model="updateTimedTask.minute" style="width:92px" transfer>
             <Option v-for="item in updateTimedTask.minuteList" :value="item.value" :key="item.value" >{{ item.label }}</Option>
           </Select>
-          <Select v-model="updateTimedTask.repeat" style="width:95px">
+          <Select v-model="updateTimedTask.repeat" style="width:95px" transfer>
             <Option v-for="item in updateTimedTask.repeatList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
         <!--重复选择-->
         <div v-if="updateTimedTask.repeat == '1'" style="margin-top: 20px;">
           <p>重复设置</p>
-          <Select v-model="updateTimedTask.date" style="width:123px" @on-change='repeatSetting'>
+          <Select v-model="updateTimedTask.date" style="width:123px" @on-change='repeatSetting' transfer>
             <Option v-for="item in updateTimedTask.dateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <!--天-->
@@ -390,11 +384,11 @@
           <div style="margin-top: 20px;">
             <p>结束执行时间</p>
             <DatePicker type="date" :options="options3"  v-model="updateTimedTask.endTime"  placeholder="Select date" style="width:123px"></DatePicker>
-            <Select v-model="updateTimedTask.endHour" style="width:92px" >
+            <Select v-model="updateTimedTask.endHour" style="width:92px" transfer>
               <Option v-for="item in updateTimedTask.endHourList" :value="item.value" :key="item.value" :disabled='item.dis'>{{ item.label }}</Option>
             </Select>
             <span>:</span>
-            <Select v-model="updateTimedTask.endMinute" style="width:92px">
+            <Select v-model="updateTimedTask.endMinute" style="width:92px" transfer>
               <Option v-for="item in updateTimedTask.endMinuteList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </div>
@@ -419,12 +413,11 @@
         <Button type="ghost" @click="updateTask = false">取消</Button>
         <Button type="primary" @click="updateTaskFunction">完成修改</Button>
       </div>
-    </modal>
+    </Modal>
 
     <!--移入云主机-->
     <modal title="移入云主机" width="550" :mask-closable="false" v-model="moveCloudHost">
-      <hr color="#D8D8D8" size="1">
-      <br>
+    
       <p>您正为<span style="color:#2A99F2;">{{details.stretchname}}</span>移入云主机</p>
       <div>
         <div class="move_box">
@@ -471,8 +464,7 @@
 
     <!--修改伸缩组-->
     <modal title="修改伸缩组" v-model="updateTelescopic" width="550" :mask-closable="false">
-      <hr color="#D8D8D8" size="1">
-      <br>
+     
       <Form ref="updateTelescopicList" :model="updateTelescopicList" :rules="updateRuleValidate" style="width: 519px"  label-position="top" inline>
         <FormItem label="名称" prop="stretchname">
           <Input v-model="updateTelescopicList.stretchname" style="width: 240px" placeholder="请输入名称"></Input>
@@ -483,7 +475,7 @@
             <p slot="content" style="white-space:normal;">启动配置是自动创建云服务器的模版。</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
-          <Select v-model="updateTelescopicList.ownershipbootconfiguration" style="width:240px" placeholder="请选择启动配置" disabled>
+          <Select v-model="updateTelescopicList.ownershipbootconfiguration" style="width:240px" placeholder="请选择启动配置" disabled >
             <Option v-for="item in updateTeleList.configureList" :value="item.id" :key="item.id">{{ item.startupconfigname}}</Option>
           </Select>
           <p style="color: #2A99F2;cursor: pointer;margin-top: 11px;" @click="$router.push({path:'newAddElastic'})">新建启动配置</p>
@@ -533,7 +525,7 @@
             <p slot="content" style="white-space:normal;">当伸缩组要减少实例且有多重选择时，将根据移出策略来选择移出的主机</p>
             <Icon type="ios-help-outline"></Icon>
           </Tooltip>
-          <Select v-model="updateTelescopicList.removestrategy" style="width:240px">
+          <Select v-model="updateTelescopicList.removestrategy" style="width:240px" transfer>
             <Option v-for="item in updateTeleList.removePolicyList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
@@ -2057,7 +2049,7 @@
               alarmName:this.alarmStrategy.cpuValue,
               countcircle:this.alarmStrategy.time,
               valueType:this.alarmStrategy.symbol,
-              value:this.alarmStrategy.percentage.toString(),
+              value:this.alarmStrategy.percentage <10 ?this.alarmStrategy.percentage.substring(1,2) :this.alarmStrategy.percentage.toString(),
               continuecircle:this.alarmStrategy.count,
               addCount:this.alarmStrategy.addcount.toString(),
               total:this.alarmStrategy.value,
@@ -2461,13 +2453,14 @@
           }
       },
 
+      //判断是否有定时任务
       dateDisate(taskData){
         if(taskData.length != 0){
           for(let i = 0;i<taskData.length; i++){
-            let year = taskData[taskData.length-1].starttime.substring(taskData[taskData.length-1].starttime.indexOf(' '),taskData[taskData.length-1].starttime.length);
-          }
-         let time =  taskData[taskData.length-1].starttime.substring(taskData[taskData.length-1].starttime.indexOf(' '),taskData[taskData.length-1].starttime.length);
-          if(taskData.some(item=> item.starttime === this.timedTask.startTime)){
+            let year = taskData[i].starttime.substring(taskData[i].starttime.indexOf(' '),taskData[i].starttime.length);
+            
+          if( year == this.timedTask.startTime){
+      
             for(let i = 0;i<this.timedTask.hourList.length;i++){
               
                   if(i<index || i==index){
@@ -2479,7 +2472,8 @@
                     this.timedTask.hourList[i].dis = false;
                   }
             }
-          }
+          } 
+        }
         }
       },
 
@@ -2505,7 +2499,7 @@
         this.minuteListCount();
     },
 
-      //获取策略百分比量
+    //获取策略百分比量
     percentageF(){
         for(let i =1;i<101;i++){
           if(i<10){
@@ -2561,6 +2555,7 @@
           if(res.status == 200 && res.data.status == 1){
             this.moveCloudHost = false;
             this.$Message.success('加入云主机成功');
+            this.getDetails();
             this.selectHost();
           }else{
             this.moveCloudHost = false;
@@ -3005,5 +3000,8 @@
       top: -35px;
       left: 75px;
     }
+  }
+  .ivu-modal .ivu-select-dropdown{
+    position:none;
   }
 </style>

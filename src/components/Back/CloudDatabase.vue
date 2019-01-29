@@ -32,10 +32,12 @@
 
     <!-- 数据库重启提示框 -->
     <Modal v-model="showModal.restart" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">重启数据库</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>重启数据库</strong>
           <p class="lh24">您正在重启数据库，请谨慎操作</p>
         </div>
       </div>
@@ -47,10 +49,12 @@
 
     <!-- 修改端口提示框 -->
     <Modal v-model="showModal.beforePortModify" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">修改端口</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>修改端口</strong>
           <p class="lh24">修改端口会导致数据库重启，请谨慎操作，是否确认修改端口？</p>
         </div>
       </div>
@@ -224,10 +228,12 @@
     </Modal>
     <!-- 绑定ip时，没有公网ip提示 -->
     <Modal v-model="showModal.publicIPHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>提示</strong>
           <p class="lh24">您还未拥有剩余公网IP，请先创建公网IP。</p>
         </div>
       </div>
@@ -491,7 +497,7 @@
             title: '操作',
             render: (h, params) => {
               if (params.row.status == 1) {
-                var isShow = params.row.caseType == '3' ? 'inline-block' : 'none'
+                var isShow = params.row.caseType != '3' ? 'inline-block' : 'none'
                 return h('div', {}, [h('span', {
                   style: {
                     color: '#2A99F2',
@@ -729,18 +735,202 @@
                     })
                   ])])
               } else {
-                var isShow1 = params.row.caseType == 3 ? 'inline-block' : 'none'
+                var isShow1 = params.row.caseType != 3 ? 'inline-block' : 'none'
                 return h('div', {}, [h('span', {
                   style: {
                     marginRight: '5px',
-                    cursor: 'not-allowed',
+                    cursor:params.row.caseType == 3 ? 'not-allowed':'pointer',
+                    color:params.row.caseType == 3 ?'':'#2A99F2',
                     display: isShow1
                   },
-                }, '删除'), h('span', {
-                  style: {
-                    cursor: 'not-allowed'
+                  on: {
+                    click: () => {
+                      this.$message.confirm({
+                        title: '删除数据库',
+                        content: `数据库删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
+                        onOk: () => {
+                          this.dataBaseData.forEach(item => {
+                            if (item.computerid == params.row.computerid) {
+                              item.dbStatus = '5'
+                            }
+                          })
+                          this.$http.get('information/deleteVM.do', {
+                            params: {
+                              id: params.row.id
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1) {
+                              this.$Message.success(response.data.message)
+                              this.dataBaseData = this.dataBaseData.filter(database => {
+                                return database.id != params.row.id
+                              })
+                            } else {
+                              this.$message.info({
+                                content: response.data.message
+                              })
+                            }
+                          })
+                        }
+                      })
+                    }
+                  } 
+                }, '删除'), h('Dropdown', {
+                  props: {
+                    trigger: 'click'
                   }
-                }, '更多操作'), h('div', [h('span', {
+                }, [h('a', {
+                  attrs: {
+                    href: 'javascript:void(0)'
+                  }
+                }, [
+                  h('span', {
+                    style: {
+                      marginRight: '5px'
+                    }
+                  }, '更多操作'),
+                  h('Icon', {
+                    props: {
+                      type: 'ios-arrow-down'
+                    }
+                  })
+                ]), h('DropdownMenu', {
+                  slot: 'list'
+                }, [
+                  h('DropdownItem', {
+                    props:{
+                      disabled:true
+                    },
+                    nativeOn: {
+                      click: () => {
+                        this.dilatationForm.databaseSize = params.row.disksize
+                        this.dilatationForm.minDatabaseSize = params.row.disksize
+                        this.current = params.row
+                        this.showModal.dilatation = true
+                      }
+                    }
+                  }, '数据库扩容'),
+                  h('DropdownItem', {
+                    props:{
+                      disabled:true
+                    },
+                    nativeOn: {
+                      click: () => {
+                        this.$message.confirm({
+                          title: '提示',
+                          content: '数据库升级会重启，是否确认升级数据库？',
+                          onOk: () => {
+                            localStorage.setItem('serviceoffername', params.row.serviceoffername)
+                            localStorage.setItem('virtualMachineid', params.row.computerid)
+                            sessionStorage.setItem('databaseName', params.row.computername)
+                            sessionStorage.setItem('endtime', params.row.endtime)
+                            this.$router.push('dataBaseUpgrade')
+                          }
+                        })
+                      }
+                    }
+                  }, '数据库升级'),
+                  h('DropdownItem', {
+                    props:{
+                      disabled:true
+                    },
+                    nativeOn: {
+                      click: () => {
+                        this.current = params.row
+                        this.dilatationForm.minDatabaseSize = params.row.diskSize
+                        this.showModal.restart = true
+                      }
+                    }
+                  }, '重启数据库'),
+                  h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        this.current = params.row
+                        this.renewalInfo = {
+                          computername: params.row.computername,
+                          templatename: params.row.templatename,
+                          serviceoffername: params.row.serviceoffername,
+                          endtime: params.row.endtime
+                        }
+                        if (params.row.caseType == 3) {
+                          //this.$Message.info('请选择包年包月的云数据库进行续费')
+                          this.showModal.renewal = true
+                        } else {
+                          this.showModal.renewal = true
+                        }
+                      }
+                    }
+                  }, '数据库续费'),
+                  h('DropdownItem', {
+                    props:{
+                      disabled:true
+                    },
+                    nativeOn: {
+                      click: () => {
+                        if (params.row.dbStatus == '1') {
+                          this.$Message.info('数据库已处于开启状态')
+                        } else {
+                          this.dataBaseData.forEach(item => {
+                            if (item.computerid == params.row.computerid) {
+                              item.dbStatus = '2'
+                            }
+                          })
+                          let url = 'database/startDB.do'
+                          this.$http.get(url, {
+                            params: {
+                              DBId: params.row.computerid
+                            }
+                          }).then(res => {
+                            if (res.status == 200 && res.data.status == 1) {
+                              this.$Message.success(res.data.message)
+                              this.listDatabase()
+                            } else {
+                              this.$message.info({
+                                content: res.data.message
+                              })
+                              this.listDatabase()
+                            }
+                          })
+                        }
+                      }
+                    }
+                  }, '开启数据库'),
+                  h('DropdownItem', {
+                    props:{
+                      disabled:true
+                    },
+                    nativeOn: {
+                      click: () => {
+                        if (params.row.dbStatus == '0') {
+                          this.$Message.info('数据库已处于关闭状态')
+                        } else {
+                          this.dataBaseData.forEach(item => {
+                            if (item.computerid == params.row.computerid) {
+                              item.dbStatus = '3'
+                            }
+                          })
+                          let url = 'database/stopDB.do'
+                          this.$http.get(url, {
+                            params: {
+                              DBId: params.row.computerid
+                            }
+                          }).then(res => {
+                            if (res.status == 200 && res.data.status == 1) {
+                              this.$Message.success(res.data.message)
+                              this.listDatabase()
+                            } else {
+                              this.$message.info({
+                                content: res.data.message
+                              })
+                              this.listDatabase()
+                            }
+                          })
+                        }
+                      }
+                    }
+                  }, '关闭数据库')
+                ])
+                ]),
+                 h('div', [h('span', {
                   style: {
                     marginRight: '5px',
                     cursor: 'not-allowed'
@@ -755,8 +945,8 @@
                     style: {
                       verticalAlign: 'text-top'
                     }
-                  })
-                ])])
+                  })])
+                ])
               }
             }
           },

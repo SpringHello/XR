@@ -1923,9 +1923,9 @@
           })
           return
         }
-        for (var prod of this.cart) {
+/*        for (var prod of this.cart) {
           console.log(prod)
-        }
+        }*/
         if (this.userInfo == null) {
           this.showModal.login = true
           return
@@ -2716,7 +2716,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: MicrosoftYaHei;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;

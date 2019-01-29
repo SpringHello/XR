@@ -70,7 +70,8 @@
 // 模态框title样式
 .universal-modal-title {
   font-size: 16px;
-  color: rgba(17, 17, 17, 0.75);
+  color: #fff;
+  font-weight: normal;
   line-height: 23.42px;
 }
 
@@ -622,7 +623,7 @@
   box-shadow: 0px 2px 19px -8px rgba(55, 125, 255, 0.67);
   border-radius: 4px;
   font-size: 18px;
-  font-family: PingFangSC-Medium;
+  font-family: MicrosoftYaHei;
   color: rgba(255, 255, 255, 1);
   line-height: 50px;
   margin-top: 32px;
@@ -646,7 +647,7 @@
     background: rgba(255, 231, 119, 1);
     box-shadow: 0px 2px 21px -6px rgba(253, 236, 155, 1);
     font-size: 18px;
-    font-family: PingFangSC-Medium;
+    font-family: MicrosoftYaHei;
     color: rgba(51, 51, 51, 1);
     line-height: 25px;
   }
@@ -665,7 +666,7 @@
       height: 100%;
       > li {
         font-size: 14px;
-        font-family: PingFangSC-Medium;
+        font-family: MicrosoftYaHei;
         color: rgba(102, 102, 102, 1);
         line-height: 28px;
       }
@@ -736,4 +737,81 @@
 }
 .ivu-tooltip-inner{
   max-width: none;
+}
+// 底部语音验证样式
+.voice-vail {
+  background:rgba(247,247,247,1);
+  padding: 10px 20px;
+  color: #666;
+  font-size: 14px;
+  p {
+    line-height: 20px;
+    a {
+      text-decoration: underline;
+    }
+  }
+  .blue {
+    color: #2A99F2;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .notallow {
+    cursor: not-allowed;
+  }
+}
+// 底部语音验证样式（没有实名认证）
+.noauth-voice {
+  color:#F10C0C;
+  span {
+    color:#4A97EE;
+    cursor:pointer
+  }
+  .notallow {
+    cursor: not-allowed;
+  }
+}
+// 上传证件图片的公用样式
+.upload-img {
+  margin-top: 20px;
+  width:350px;
+  height:178px;
+  border-radius:4px;
+  border:1px solid rgba(216,216,216,1);
+  background: #fff;
+  padding: 16px;
+  font-size: 14px;
+  color:rgba(0,0,0,0.43);
+  .content {
+    height: 146px;
+    background:rgba(247,247,247,1);
+    border-radius:4px;
+    padding: 16px 20px 0 20px;
+    display: flex;
+    justify-content: space-between;
+    > div {
+      p {
+        margin-top: 20px;
+      }
+    }
+    .left {
+      .icon-wrap {
+        width:110px;
+        height:80px;
+        background:rgba(255,255,255,1);
+        border-radius:4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      img {
+        width:110px;
+        height:80px;
+        display: block;
+      }
+      p {
+        color: #4A90E2;
+        text-decoration: underline;
+      }
+    }
+  }
 }

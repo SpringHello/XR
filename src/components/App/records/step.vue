@@ -89,7 +89,7 @@
   // 定义h2公用样式
   .h2() {
     font-size: 24px;
-    font-family: PingFangSC-Medium;
+    font-family: MicrosoftYaHei;
     color: rgba(51, 51, 51, 1);
     line-height: 24px;
     font-weight: normal;
@@ -106,7 +106,7 @@
       }
       > p {
         font-size: 14px;
-        font-family: PingFangSC-Medium;
+        font-family: MicrosoftYaHei;
         color: rgba(102, 102, 102, 1);
         line-height: 14px;
         margin-top: 10px;
@@ -124,7 +124,7 @@
           z-index: 0;
           p {
             font-size: 18px;
-            font-family: PingFangSC-Medium;
+            font-family: MicrosoftYaHei;
             color: rgba(153, 153, 153, 1);
             line-height: 25px;
             margin-top: 20px;

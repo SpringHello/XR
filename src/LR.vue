@@ -102,6 +102,7 @@
       background: #F4F4F4;
       font-size: 14px;
       line-height: 60px;
+      z-index: 3;
       span, a {
         margin-right: 40px;
       }

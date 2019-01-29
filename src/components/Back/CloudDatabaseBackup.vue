@@ -19,13 +19,14 @@
           <Tabs type="card" :animated="false" v-model="tabPane">
             <Tab-pane label="数据库备份" name="Snapshot">
               <Button type="primary" @click="createBackup_btn">制作备份</Button>
+              <!-- 删除备份北京目前没有提供接口 -->
               <!-- <Button type="primary" @click="deleteBackup" style="margin-left: 10px">删除备份</Button> -->
               <Table style="margin-top:10px;" :columns="backupColumns" :data="backupData"></Table>
             </Tab-pane>
             <Tab-pane label="云数据库备份策略" name="Strategy">
-              <Button type="primary" @click="showModal.newStrategy = true">创建备份策略</Button>
+              <Button type="primary" @click="createStrategy()">创建备份策略</Button>
               <Button type="primary" @click="deleteStrategy" style="margin:0 10px;">删除策略</Button>
-              <Table style="margin-top:10px;" :columns="strategyColumns" :data="strategyData"></Table>
+              <Table style="margin-top:10px;" :columns="strategyColumns" :data="strategyData" @radio-change="strategySelection"></Table>
             </Tab-pane>
           </Tabs>
         </div>
@@ -33,10 +34,12 @@
     </div>
     <!-- 还原弹窗 -->
     <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">数据库还原</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>数据库还原</strong>
           <p class="lh24">是否确定还原数据库</p>
           <p class="lh24">提示：您正使用<span class="bluetext">{{rollbackData.databaseName}}</span>还原<span class="bluetext">{{rollbackData.vmName}}</span>至<span
             class="bluetext">{{rollbackData.createTime}}</span>，当您确认操作之后，此<span class="bluetext">{{rollbackData.createTime}}</span>之后的数据库内的数据将丢失。</p>
@@ -66,8 +69,8 @@
               <span style="cursor:pointer;" @click="$router.push('buy/bdata')">购买数据库</span>
             </span>
           </FormItem>
-          <FormItem label="备份名称" prop="name">
-            <Input v-model="createSnapsForm.name" placeholder="请输入备份名称"></Input>
+          <FormItem label="数据库名称" prop="name">
+            <Input v-model="createSnapsForm.name" placeholder="请输入数据库名称"></Input>
           </FormItem>
         </Form>
         <p class="mb20">备份时间为：{{new Date().format('yyyy-MM-dd hh:mm:ss')}}</p>
@@ -79,10 +82,12 @@
     </Modal>
     <!-- 删除备份弹窗 -->
     <Modal v-model="showModal.deleteSnapshot" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">删除备份</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>删除备份</strong>
           <p class="lh24">确定要删除选中的备份吗？</p>
         </div>
       </div>
@@ -97,11 +102,11 @@
         <span class="universal-modal-title">创建备份策略</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="newStrategyForm" :rules="newStrategyRuleValidate" ref="newStrategy">
-          <Form-item label="自动备份策略名称" prop="backupsName">
+        <Form :model="newStrategyForm" :rules="newStrategyRuleValidate" ref="newStrategyForm">
+          <Form-item label="自动备份策略名称" prop="strategyName">
             <Input v-model="newStrategyForm.strategyName" placeholder="请输入"></Input>
           </Form-item>
-          <Form-item label="自动备份保留个数" prop="keepNumber">
+          <Form-item label="自动备份保留个数">
             <InputNumber :max="8" :min="1" v-model="newStrategyForm.keepNumber" style="width: 229px" :precision="0"></InputNumber>
           </Form-item>
           <Form-item label="自动备份间隔">
@@ -122,11 +127,16 @@
           </Form-item>
           <Form-item label="备份策略应用数据库">
             <Select v-model="newStrategyForm.strategyForDatabase" filterable multiple style="width: 229px">
-              <Option v-for="item in newStrategyForm.applyDatabaseGroup" :value="item.diskid" :key="item.diskid">{{ item.diskname
-                }}                 
+              <Option v-for="item in newStrategyForm.applyDatabaseGroup" :value="item.computerid" :key="item.computerid">{{ item.computername }}
                 </Option>
             </Select>
           </Form-item>
+          <!-- <Form-item label="是否保存内存信息">
+            <RadioGroup v-model="newStrategyForm.memory">
+              <Radio label="1">保存</Radio>
+              <Radio label="0">不保存</Radio>
+            </RadioGroup>
+          </Form-item> -->
           <div>
             <p style="font-family: Microsoft YaHei;font-size: 12px;color: #999999;line-height: 15px">
               提示：云数据库数据服务为每个数据库提供<span style="color: #2A99F2;">8</span>个备份额度，当某个数据库的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。您当前总共可设置3个备份策略。
@@ -137,15 +147,17 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.newStrategy = false">取消</Button>
-        <Button type="primary" @click="newStrategy_ok">确定创建</Button>
+        <Button type="primary" @click="newStrategy_ok('newStrategyForm')">确定创建</Button>
       </div>
     </Modal>
     <!-- 删除备份策略弹窗 -->
     <Modal v-model="showModal.deleteStrategy" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">删除备份策略</span>
+      </p>
       <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>删除备份策略</strong>
           <p class="lh24">确定要删除选中的备份策略吗？</p>
         </div>
       </div>
@@ -167,7 +179,7 @@
             <ul>
               <li v-for="(item, index) in databaseForStrategy" :key="index">
                 <span>{{item.diskname}}</span><span
-                v-if="item.bankupstrategyname">({{ item.bankupstrategyname}})</span><i
+                v-if="item.computername">({{ item.computername}})</span><i
                 @click="addDatabase(index,item)" class="bluetext" style="cursor: pointer">+ 添加</i></li>
             </ul>
           </div>
@@ -209,6 +221,8 @@
         }
       }
       return {
+        strategyName: '',
+        strategyId: '',
         databaseList: [],
         tabPane: 'Snapshot',
         //备份表头
@@ -318,6 +332,7 @@
             {required: true, message: '请选择数据库', trigger: 'change'}
           ]
         },
+        strategySelectionItem: null,
         strategyColumns: [
           {
             type: 'radio',
@@ -330,7 +345,10 @@
           },
           {
             title: '状态',
-            key: 'memorymessage',
+            key: 'status',
+            render: (h, params) => {
+              return h('span', {}, '可用')
+            }
           },
           {
             title: '自动备份保留个数',
@@ -426,7 +444,7 @@
             }
           }
         ],
-        strategyData: [{}],
+        strategyData: [],
         // 新建备份表单
         newStrategyForm: {
           // 备份名称
@@ -531,20 +549,21 @@
           timeValue: ['00:00'],
           // 策略应用磁盘
           strategyForDatabase: [],
-          // 策略应用磁盘列表
-          applyDatabaseGroup: []
+          // 策略应用数据库列表
+          applyDatabaseGroup: [],
+          memory: 1,
         },
         // 新建备份策略表单验证规则
         newStrategyRuleValidate: {
           strategyName: [
             {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
           ],
-          timeType: [
-            {required: true, message: '请选择自动备份时间间隔', trigger: 'change'}
-          ],
-          timeValue: [
-            {required: true, message: '请选择自动备份时间', trigger: 'change'}
-          ]
+          // timeType: [
+          //   {required: true, message: '请选择自动备份时间间隔', trigger: 'change'}
+          // ],
+          // timeValue: [
+          //   {required: true, message: '请选择自动备份时间', trigger: 'change'}
+          // ]
         },
         // 获取数据库列表，显示穿梭框左面
         databaseForStrategy: [],
@@ -569,6 +588,16 @@
     created() {
       this.getMonthConfigDate()
       this.getWeekTimeData()
+      this.strategyList()
+      axios.get('database/listDB.do', {
+        params: {
+          zoneId: $store.state.zone.zoneid
+        }
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.newStrategyForm.applyDatabaseGroup = response.data.result
+        }
+      })
     },
     methods: {
       setDataBasesBackup(response) {
@@ -576,6 +605,9 @@
           this.backupData = response.data.result
         }
       },
+      // deleteBackup() {
+      //   this.showModal.delete = true
+      // },
       rollback_ok() {
         this.showModal.rollback = false
         this.$http.get('database/BDRestore.do', {
@@ -592,10 +624,42 @@
             }
         })
       },
-      deleteBackup() {
-        this.showModal.delete = true
+      strategyList() {
+        axios.get('database/listDbBackUpStrategy.do', {
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.strategyData = response.data.result
+          }
+        })
+      },
+      strategySelection(selection) {
+        this.strategySelectionItem = selection
+      },
+      deleteStrategy() {
+        if (this.strategySelectionItem == null) {
+          this.$Message.warning('请选择一个快照策略')
+          return
+        }
+        this.showModal.deleteStrategy = true
       },
       deleteBackup_ok() {
+        axios.get('database/deleteDbBackUpStrategy.do', {
+          params: {
+            zoneId: $store.state.zone.zoneid,
+            id: this.strategySelectionItem.id
+          }
+        }).then(response => {
+          this.showModal.deleteStrategy = false
+          if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message)
+              this.strategyList()
+            } else {
+              this.$Message.error(response.data.message)
+            }
+        })
       },
       createBackup_btn() {
         axios.get('database/listDB.do', {
@@ -614,8 +678,6 @@
         this.showModal.newSnapshot = false
       },
       NewSnaps_ok(name) {
-        // console.log('aimee')
-        // console.log(this.createSnapsForm)
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.newSnapshot = false
@@ -635,18 +697,100 @@
           }
         })
       },
-      newStrategy_ok() {
-
+      createStrategy() {
+        this.newStrategyForm.strategyName = ''
+        this.newStrategyForm.keepNumber = 1
+        this.newStrategyForm.timeType = 'day'
+        this.newStrategyForm.strategyForDatabase = []
+        this.newStrategyForm.timeValue = ['00:00']
+        this.showModal.newStrategy = true
       },
-      deleteStrategy() {
-        this.showModal.deleteStrategy = true
+      newStrategy_ok(name) {
+        this.$refs['newStrategyForm'].validate((valid) => {
+          if (valid) {
+            this.showModal.newStrategy = false
+            this.$http.get('database/createDBBackUpStrategy.do', {
+              params: {
+                strategyName: this.newStrategyForm.strategyName,
+                keepCount: this.newStrategyForm.keepNumber,
+                keepInterval: this.newStrategyForm.timeType,
+                autoBackUpTime: this.newStrategyForm.timeValue.join(),
+                VMIds: this.newStrategyForm.strategyForDatabase.join(),
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+                this.strategyList()
+              } else {
+                this.$Message.error(response.data.message)
+              }
+            })
+          }
+        })
       },
-      addOrRemoveDatabase() {
+      addOrRemoveDatabase(data) {
+        var leftData = []
+        this.databaselist = []
+        this.resourceDatabase = []
+        this.$http.get(`database/listDB.do`)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.databaselist = response.data.result
+              this.databaselist.forEach((item) => {
+                if (item.status === 1 && item.dbBackstrategyId != data.id) {
+                  leftData.push(item)
+                }
+              })
+            }
+          })
+        this.databaseForStrategy = leftData
+        data.resourceBean.forEach(item => {
+          this.resourceDatabase.push(item)
+        })
+        this.strategyName = data.strategyname
+        this.strategyId = data.id
         this.showModal.addOrRemoveDatabase = true
       },
-      addDatabase() {},
-      deleteDatabase() {},
-      updateDatabaseIntoStrategy() {},
+      /* 添加数据库到备份策略 */
+      addDatabase(index, data) {
+        this.databaseForStrategy.splice(index, 1)
+        var resource = {
+          resourcesName: data.computername,
+          resourcesId: data.computerid
+        }
+        this.resourceDatabase.push(resource)
+      },
+      /* 删除应用该备份策略的数据库 */
+      deleteDatabase(index, data) {
+        this.resourceDatabase.splice(index, 1)
+        data.computername = data.resourcesName
+        this.databaseForStrategy.push(data)
+      },
+      updateDatabaseIntoStrategy() {
+        var vmids = this.resourceDatabase.map(item => {
+          return item.resourcesId
+        })
+        var snapsURL = 'database/updateDbIntoBackUpStrategy.do'
+        axios.get(snapsURL, {
+          params: {
+            zoneId: $store.state.zone.zoneid,
+            backUpStrategyId: this.strategyId,
+            VMIds: vmids.join(',')
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success({
+              content: response.data.message,
+              duration: 2
+              })
+            this.showModal.addOrRemoveDatabase = false
+            this.strategyList()
+          } else {
+            this.$Message.error(response.data.message)
+            this.showModal.addOrRemoveDatabase = false
+          }
+        })
+      },
       /* 切换备份时间间隔时给准确时间点赋值 */
       changeType(value) {
         switch (value) {

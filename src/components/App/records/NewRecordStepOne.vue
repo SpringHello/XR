@@ -404,32 +404,27 @@
         let reg1 = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
         let reg2 = /^((14)|(15)[0-9]{7})|(G|S|D[0-9]{8})|((P.)|(S.)[0-9]{7})$/
         let reg3 = /^[\u4E00-\u9FA5]{1}\\d{7}$/
-        let regNum = /^\d+$/
-          if (this.mainUnitInformation.legalPersonCertificateType == '身份证') {
-            if (!reg1.test(value)) {
-              return callback(new Error("请输入正确的证件号码"));
-            } else {
-              callback();
-            }
-          } else if (this.mainUnitInformation.legalPersonCertificateType == '护照') {
-            if (!reg2.test(value)) {
-              return callback(new Error("请输入正确的证件号码"));
-            } else {
-              callback();
-            }
-          } else if (this.mainUnitInformation.legalPersonCertificateType == '军官证') {
-            if (!reg3.test(value)) {
-              return callback(new Error("请输入正确的证件号码"));
-            } else {
-              callback();
-            }
+        if (this.mainUnitInformation.legalPersonCertificateType == '身份证') {
+          if (!reg1.test(value)) {
+            return callback(new Error("请输入正确的证件号码"));
           } else {
-            if (!regNum.test(value)) {
-              return callback(new Error("请输入正确的证件号码"));
-            } else {
-              callback();
-            }
+            callback();
           }
+        } else if (this.mainUnitInformation.legalPersonCertificateType == '护照') {
+          if (!reg2.test(value)) {
+            return callback(new Error("请输入正确的证件号码"));
+          } else {
+            callback();
+          }
+        } else if (this.mainUnitInformation.legalPersonCertificateType == '军官证') {
+          if (!reg3.test(value)) {
+            return callback(new Error("请输入正确的证件号码"));
+          } else {
+            callback();
+          }
+        } else {
+          callback();
+        }
       };
       return {
         administationRuleList: administationRule,
@@ -667,11 +662,11 @@
       }
     },
     computed: {},
-    watch:{
-      'mainUnitInformation.unitProperties' (value){
-        if(value == '个人'){
+    watch: {
+      'mainUnitInformation.unitProperties'(value) {
+        if (value == '个人') {
           this.isPersonage = true
-        } else{
+        } else {
           this.isPersonage = false
         }
       }
@@ -775,7 +770,7 @@
   // 定义h2公用样式
   .h2() {
     font-size: 24px;
-    font-family: PingFangSC-Medium;
+    font-family: MicrosoftYaHei;
     color: rgba(51, 51, 51, 1);
     line-height: 24px;
     font-weight: normal;

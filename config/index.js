@@ -11,11 +11,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      /*"/api": {
-       target: "http://localhost:8082",
+      "/api": {
+       target: "http://192.168.3.170:8082",
        changeOrigin: true,
        pathRewrite: {"^/api": ""}
-       }*/
+       }
     },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
@@ -43,8 +43,7 @@ module.exports = {
     // If you have problems debugging vue-files in devtools,
     // set this to false - it *may* help
     // https://vue-loader.vuejs.org/en/options.html#cachebusting
-    cacheBusting: true,
-
+    cacheBusting: true, 
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
     // (https://github.com/webpack/css-loader#sourcemaps)
