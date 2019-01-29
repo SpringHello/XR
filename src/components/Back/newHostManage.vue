@@ -81,6 +81,25 @@
             </ul>
           </div>
         </div>
+        <div class="tab-2" v-show="configType == '主机监控'">
+          <div class="item" v-for="(item,index) in tab2.monitoringList">
+            <div class="item-title">
+              <span>{{ item.title}}</span>
+              <span>{{  tab2.currentData }}</span>
+            </div>
+            <div class="item-type">
+              <Radio-group v-model="item.type" type="button">
+                <Radio label="近一天"></Radio>
+                <Radio label="最近7天"></Radio>
+                <Radio label="最近30天"></Radio>
+              </Radio-group>
+              <Radio-group v-model="item.showType" type="button" style="float:right">
+                <Radio label="折线"></Radio>
+                <Radio label="柱状图"></Radio>
+              </Radio-group>
+            </div>
+          </div>
+        </div>
         <div class="tab-4" v-show="configType == '快照管理'">
           <Button type="primary" :disabled="delSnapshootDisabled" @click="showModal.delsnaps = true">删除快照</Button>
           <div class="selectMark">
@@ -403,6 +422,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import line from '@/echarts/hostManage/line'
+  import bar from '@/echarts/hostManage/bar'
   import regExp from '../../util/regExp'
   import {debounce} from 'throttle-debounce'
 
@@ -547,6 +568,27 @@
           brand: 0,
           cost: '0',
           caseType: 0
+        },
+
+        tab2: {
+          monitoringList: [
+            {
+              title: 'CPU使用率',
+              type: '近一天',
+              showType: '折线'
+            },
+            {
+              title: '内存使用率',
+              type: '近一天',
+              showType: '折线'
+            },
+            {
+              title: '磁盘使用率',
+              type: '近一天',
+              showType: '折线'
+            }
+          ],
+          currentData: this.getCurrentDate()
         },
 
         tab4: {
@@ -1390,6 +1432,36 @@
               }
             }
           }
+        }
+      }
+    }
+    .tab-2 {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      .item {
+        border-radius: 4px;
+        padding: 20px;
+        border: 1px dashed rgba(153, 153, 153, 1);
+        width: 570px;
+        height: 405px;
+        margin-bottom: 20px;
+        .item-title {
+          border-bottom: 1px solid rgba(233, 233, 233, 1);
+          padding-bottom: 10px;
+          > span {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(51, 51, 51, 1);
+            line-height: 20px;
+          }
+          span:nth-child(2) {
+            float: right;
+            color: rgba(153, 153, 153, 1);
+          }
+        }
+        .item-type{
+          margin-top: 18px;
         }
       }
     }
