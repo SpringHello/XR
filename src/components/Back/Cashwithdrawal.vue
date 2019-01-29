@@ -137,6 +137,23 @@
 					<Button type="primary" @click="showModal.Paymentdetails = false">确定</Button>
 				</p>
 			</Modal>
+			<!-- 提现失败弹窗 -->
+			<Modal v-model="showModal.withdrawalfailure" :scrollable="true" :closable="false" :width="390">
+				<p slot="header" class="modal-header-border">
+					<Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+					<span class="universal-modal-title">线上提现</span>
+				</p>
+				<div class="modal-content-s">
+					<div>
+						<p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">
+							{{Failedtext}}
+						</p>
+					</div>
+				</div>
+				<p slot="footer" class="modal-footer-s">
+					<Button type="primary" @click="showModal.withdrawalfailure = false">确定</Button>
+				</p>
+			</Modal>
 		</div>
 	</div>
 </template>
@@ -199,6 +216,7 @@
 			}
 			return {
 				ordertime: '',
+				Failedtext:'',
 				//小数点前后金额
 				comOnlinemoney: 0,
 				comBankemoney: 0,
@@ -277,7 +295,8 @@
 					// 打款详情弹窗
 					Paymentdetails: false,
 					// 银行卡提现弹窗
-					cardfirmation: false
+					cardfirmation: false,
+					withdrawalfailure: false
 				},
 				options: {
 					shortcuts: [{
@@ -326,7 +345,7 @@
 						title: '状态',
 						key: 'type',
 						render: (h, params) => {
-							// 4提现中 5已提现 
+							// 4提现中 5已提现 7余额提现失败
 							var text = ''
 							switch (params.row.type) {
 								case 4:
@@ -334,6 +353,9 @@
 									break;
 								case 5:
 									text = '已提现'
+									break;
+								case 7:
+									text = '提现失败'
 									break;
 								default:
 									break;
@@ -344,7 +366,28 @@
 
 									}
 								}, text)
-							} else if (params.row.type == 4) {
+							}else if(params.row.type == 7){
+								return h('div', [
+									h('span', {
+										style: {
+								
+										}
+									}, text),
+									h('span', {
+										style: {
+											color: '#2d8cf0',
+											cursor: 'pointer',
+											marginLeft: '10px'
+										},
+										on: {
+											click: () => {
+												this.showModal.withdrawalfailure = true
+												this.Failedtext = params.row.withdrawfailreason
+											}
+										}
+									}, "查看详情")
+								]);
+							}else if (params.row.type == 4) {
 								return h('div', [
 									h('span', {
 										style: {
