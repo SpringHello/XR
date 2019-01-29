@@ -250,6 +250,7 @@ export default {
   data () {
     // 域名正则批量判断
     const validateDomain = (rule, value, callback) => {
+      // this.priceReg = false
       var flag = this.domainReg(value)
       var flagM = this.domainRegM(value)
       var domainRepeat = this.domainRepeat(value)
@@ -275,9 +276,9 @@ export default {
           }
         }
       } else if (this.formValidateOne.selectedType == '2') {
-        if ((flag || flagM) && domainRepeat) {
+        if (flagM && domainRepeat) {
           callback(new Error('存在重复的域名'));
-        } else if (flag || flagM) {
+        } else if (flagM) {
           callback()
         } else {
           callback(new Error('请输入正确的域名格式'));
@@ -299,6 +300,7 @@ export default {
       }
     }
     return {
+      priceReg: false,
       domainList: [],
       step: 0,
       formValidateOne: {
@@ -464,9 +466,8 @@ export default {
       }
     },
     price () {
-      let flag = this.domainReg(this.formValidateOne.domain)
-      // console.log(flag)
-      if (flag) {
+      let flagM = this.domainRegM(this.formValidateOne.domain)
+      if (flagM) {
         axios.post('domain/getSSLPriceFromType.do', {
           certTypeId: this.formValidateOne.selectedType,
           certallDomain: this.domainList.join(),
@@ -598,7 +599,7 @@ export default {
     },
     'formValidateOne.domain': debounce(1000, function () {
       this.price()
-    }),
+    })
   },
   beforeRouteLeave (from, to, next) {
     if (sessionStorage.getItem('defaultType')) {
