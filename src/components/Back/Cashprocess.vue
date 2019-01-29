@@ -233,7 +233,7 @@
 										<p style="width: 110px;text-align: center;">上传图片</p>
 	                </div>
 	                <div class="right">
-	                  <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto">
+	                  <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto;">
 	                  <p style="width:168px">经办人手持身份证人像照片</p>
 	                </div>
 	              </div>
