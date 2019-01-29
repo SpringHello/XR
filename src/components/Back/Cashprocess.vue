@@ -107,11 +107,11 @@
 	    <div class="universal-modal-content-flex">
 	      <div>
 	        <Steps :current="authModifyPhoneStep" size="small">
-	          <Step title="验证身份"></Step>
-	          <Step title="手持身份证照"></Step>
-	          <Step title="设置新手机号码"></Step>
-	          <Step title="完成"></Step>
-	        </Steps>
+					<Step title="验证身份" style="width:25%"></Step>
+					<Step title="手持身份证照" style="width:30%"></Step>
+					<Step title="设置新手机号码" style="width:32%"></Step>
+					<Step title="完成" style="width:13%"></Step>
+					</Steps>
 	        <div v-show="authModifyPhoneStep == 0">
 	          <Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">
 	            <div v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0">
@@ -152,7 +152,7 @@
 	              提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
 	            </p>
 	            <div class="upload-img" style="margin-top:10px">
-	              <div class="content">
+	              <div class="content" style="background: #D8D8D8;">
 	                <div class="left">
 	                  <Upload
 	                    multiple
@@ -164,13 +164,14 @@
 	                    :max-size="4096"
 	                    :on-format-error="handleFormatError"
 	                    :on-exceeded-size="handleMaxSize"
-	                    :on-success="legalPersonIDFront11">
-	                    <div class="icon-wrap" v-if="uploadImgDispaly==''">
+	                    :on-success="legalPersonIDFront11" style="background: #D8D8D8;">
+	                    <div class="icon-wrap" v-if="uploadImgDispaly==''" style="background: #FFFFFF;">
 	                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
 	                    </div>
 	                    <img v-else :src="uploadImgDispaly">
-	                    <p>上传图片</p>
+	                    
 	                  </Upload>
+										<p style="width: 110px;text-align: center;">上传图片</p>
 	                </div>
 	                <div class="right">
 	                  <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
@@ -184,7 +185,7 @@
 	              提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
 	            </p>
 	            <div class="upload-img" style="margin-top:10px">
-	              <div class="content">
+	              <div class="content" style="background: #D8D8D8;">
 	                <div class="left">
 	                  <Upload
 	                    multiple
@@ -197,7 +198,7 @@
 	                    :on-format-error="handleFormatError"
 	                    :on-exceeded-size="handleMaxSize"
 	                    :on-success="legalPersonIDFront12">
-	                    <div class="icon-wrap" v-if="uploadImgDispaly1==''">
+	                    <div class="icon-wrap" v-if="uploadImgDispaly1==''" style="background: #FFFFFF;">
 	                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
 	                    </div>
 	                    <img v-else :src="uploadImgDispaly1">
@@ -211,7 +212,7 @@
 	              </div>
 	            </div>
 	            <div class="upload-img" style="margin-top:10px">
-	              <div class="content">
+	              <div class="content" style="background: #D8D8D8;">
 	                <div class="left">
 	                  <Upload
 	                    multiple
@@ -224,7 +225,7 @@
 	                    :on-format-error="handleFormatError"
 	                    :on-exceeded-size="handleMaxSize"
 	                    :on-success="legalPersonIDFront13">
-	                    <div class="icon-wrap" v-if="uploadImgDispaly2==''">
+	                    <div class="icon-wrap" v-if="uploadImgDispaly2==''" style="background: #FFFFFF;">
 	                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
 	                    </div>
 	                    <img v-else :src="uploadImgDispaly2">
