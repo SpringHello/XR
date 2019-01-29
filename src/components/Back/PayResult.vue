@@ -35,6 +35,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
   export default {
     data() {
       var payResult = sessionStorage.getItem('payResult')
@@ -56,6 +57,7 @@
       }
     },
     created() {
+      this.toggleZone(this.$store.state.zone.zoneid)
       if (this.payResult == undefined) {
         this.$router.replace('overview')
       }
@@ -66,6 +68,16 @@
       })
     },
     methods: {
+      toggleZone(zoneId) {
+        // 切换默认区域
+        axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+        })
+        for (var zone of this.$store.state.zoneList) {
+          if (zone.zoneid == zoneId) {
+            $store.commit('setZone', zone);
+          }
+        }
+      },
       push(path) {
         /*暂时不知道作用，vuex中已经删除setSelect方法*/
         //this.$store.commit("setSelect", path)
