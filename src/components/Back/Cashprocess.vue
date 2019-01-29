@@ -202,8 +202,8 @@
 	                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
 	                    </div>
 	                    <img v-else :src="uploadImgDispaly1">
-	                    <p>上传图片</p>
 	                  </Upload>
+										<p style="width: 110px;text-align: center;">上传图片</p>
 	                </div>
 	                <div class="right">
 	                  <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
@@ -229,8 +229,8 @@
 	                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
 	                    </div>
 	                    <img v-else :src="uploadImgDispaly2">
-	                    <p>上传图片</p>
 	                  </Upload>
+										<p style="width: 110px;text-align: center;">上传图片</p>
 	                </div>
 	                <div class="right">
 	                  <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto">
