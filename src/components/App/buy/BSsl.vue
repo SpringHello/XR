@@ -61,8 +61,8 @@
                 v-for="(item,index) in timeValue"
                 :key="index"
                 class="type-btn"
-                :class="{typeselected: formValidateOne.yearSelected == index}"
-                @click="formValidateOne.yearSelected =index"
+                :class="{typeselected: formValidateOne.yearSelected == item}"
+                @click="formValidateOne.yearSelected =item"
               >{{item}}年</span>
             </div>
           </div>
@@ -285,6 +285,20 @@ export default {
         }
       }
     }
+    const validateDigit = (rule, value, callback) => {
+      if (!/^\d*$/.test(value)) {
+        return callback(new Error("请输入数字"))
+      } else {
+        callback()
+      }
+    }
+    const validChinese = (rule, value, callback) => {
+      if (!/^[\u4e00-\u9fa5]+$/.test(value)) {
+        return callback(new Error("请输入中文"))
+      } else {
+        callback()
+      }
+    }
     const validaRegisteredID = (rule, value, callback) => {
       if (!reg.IDCardVail(value)) {
         callback(new Error('请输入正确的身份证号码'));
@@ -299,6 +313,13 @@ export default {
         callback()
       }
     }
+    const validaUnitPhone = (rule, value, callback) => {
+      if (/^\d{3}-\d{8}$/.test(value) || reg.phoneVail(value)) {
+        callback()
+      } else {
+        callback(new Error('电话号码格式不正确'))
+      }
+    }
     return {
       priceReg: false,
       domainList: [],
@@ -308,7 +329,7 @@ export default {
         domain: '',
         vailType: '2',
         selectedType: '1',
-        yearSelected: 0,
+        yearSelected: 1,
         bankName: '',
         bankAccountNum: '',
         bankNum: '',
@@ -319,13 +340,19 @@ export default {
         ],
         domain: [
           { required: true, message: '请输入域名', trigger: 'blur' },
+          { required: true, validator: validateDomain, trigger: 'change' },
           { required: true, validator: validateDomain, trigger: 'blur' },
         ],
         bankName: [
-          { required: true, message: '请输入单位开户行', trigger: 'blur' }
+          { required: true, message: '请输入单位开户行', trigger: 'blur' },
+          { required: true, validator: validChinese, trigger: 'blur' }
         ],
         bankAccountNum: [
-          { required: true, message: '请输入单位银联账号', trigger: 'blur' }
+          { required: true, message: '请输入单位银联账号', trigger: 'blur' },
+          { required: true, validator: validateDigit, trigger: 'blur' }
+        ],
+        bankNum: [
+          { required: false, validator: validateDigit, trigger: 'blur' },
         ]
       },
       vailTypeList: [
@@ -362,7 +389,7 @@ export default {
         ],
         unitTel: [
           { required: true, message: '请输入电话号码', trigger: 'blur' },
-          { required: true, validator: validaPhone, trigger: 'blur' }
+          { required: true, validator: validaUnitPhone, trigger: 'blur' }
         ],
         manName: [
           { required: true, message: '请输入姓名', trigger: 'blur' }
@@ -471,7 +498,7 @@ export default {
         axios.post('domain/getSSLPriceFromType.do', {
           certTypeId: this.formValidateOne.selectedType,
           certallDomain: this.domainList.join(),
-          certExpTime: (this.formValidateOne.yearSelected + 1) * 12
+          certExpTime: this.formValidateOne.yearSelected * 12
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.cost = response.data.data.sslCost
@@ -479,6 +506,8 @@ export default {
             this.cost = '--'
           }
         })
+      } else {
+        this.cost = '--'
       }
     },
     phoneReg (val) {
@@ -504,7 +533,7 @@ export default {
             ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
             orgPhone: this.phoneReg(this.formValidateTwo.unitTel),
             certValidateType: this.formValidateOne.vailType,
-            certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+            certExpTime: this.formValidateOne.yearSelected * 12,
             orgName: this.formValidateTwo.unitName,
             orgType: this.formValidateTwo.unitType,
             certTypeId: this.formValidateOne.selectedType,
@@ -516,7 +545,7 @@ export default {
             ownUserName: this.formValidateTwo.manName,
             certallDomain: this.domainList.join(),
             ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
-            certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+            certExpTime: this.formValidateOne.yearSelected * 12,
             certTypeId: this.formValidateOne.selectedType,
           }
           params = this.formValidateOne.selectedType == '1' ? params1 : params2
@@ -548,7 +577,7 @@ export default {
     //     type: 'Pssl',
     //     cost: this.cost,
     //     count: 1,
-    //     year: this.formValidateOne.yearSelected + 1,
+    //     year: this.formValidateOne.yearSelected,
     //     domianLeagth: this.domainList.length,
     //     mainDomain: this.domainList[0],
     //     // 创建订单需要的参数
@@ -560,7 +589,7 @@ export default {
     //     ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
     //     orgPhone: this.phoneReg(this.formValidateTwo.unitTel),
     //     certValidateType: this.formValidateOne.vailType,
-    //     certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+    //     certExpTime: this.formValidateOne.yearSelected * 12,
     //     orgName: this.formValidateTwo.unitName,
     //     orgType: this.formValidateTwo.unitType,
     //     certTypeId: this.formValidateOne.selectedType,
@@ -571,7 +600,7 @@ export default {
     //     type: 'Pssl',
     //     cost: this.cost,
     //     count: 1,
-    //     year: this.formValidateOne.yearSelected + 1,
+    //     year: this.formValidateOne.yearSelected,
     //     domianLeagth: this.domainList.length,
     //     mainDomain: this.domainList[0],
     //     // 创建订单需要的参数
@@ -580,7 +609,7 @@ export default {
     //     ownUserName: this.formValidateTwo.manName,
     //     certallDomain: this.domainList.join(),
     //     ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
-    //     certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+    //     certExpTime: this.formValidateOne.yearSelected* 12,
     //     certTypeId: this.formValidateOne.selectedType,
     //   }
     //   prod = this.formValidateOne.selectedType == '1' ? params1 : params2
@@ -595,6 +624,9 @@ export default {
   },
   watch: {
     'formValidateOne.selectedType': function () {
+      this.price()
+    },
+    'formValidateOne.yearSelected': function () {
       this.price()
     },
     'formValidateOne.domain': debounce(1000, function () {
