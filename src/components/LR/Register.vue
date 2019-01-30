@@ -54,7 +54,7 @@
               <div class="errorMsg">
                 <div v-if="registerForm.errorMsg === 'isRegister'">
                   <i></i>
-                  <p>此号码已经注册，请<span @click="formType = 'login'">登录</span></p>
+                  <p>此号码已经注册，请<span @click="$router.push('Login')">登录</span></p>
                 </div>
                 <div v-if="registerForm.errorMsg === 'formatPhoneError'">
                   <i></i>
