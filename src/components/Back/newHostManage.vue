@@ -98,6 +98,7 @@
                 <Radio label="柱状图"></Radio>
               </Radio-group>
             </div>
+            <chart :options="item.chart" style="width:100%;height:80%;"></chart>
           </div>
         </div>
         <div class="tab-4" v-show="configType == '快照管理'">
@@ -575,17 +576,20 @@
             {
               title: 'CPU使用率',
               type: '近一天',
-              showType: '折线'
+              showType: '折线',
+              chart: null
             },
             {
               title: '内存使用率',
               type: '近一天',
-              showType: '折线'
+              showType: '折线',
+              chart: null
             },
             {
               title: '磁盘使用率',
               type: '近一天',
-              showType: '折线'
+              showType: '折线',
+              chart: null
             }
           ],
           currentData: this.getCurrentDate()
@@ -749,6 +753,9 @@
         switch (item) {
           case '基础信息':
             this.getHostInfo()
+            break
+          case '主机监控':
+            this.getComputerMonitor()
             break
           case '快照管理':
             this.getHostSnapshoot()
@@ -1170,6 +1177,44 @@
         })
       },
 
+      getComputerMonitor() {
+        this.$http.get('alarm/getVmAlarmByHour.do', {
+          params: {
+            vmname: this.hostInfo.instanceName,
+            type: 'core'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            let cpuBrokenLine = JSON.parse(JSON.stringify(line))
+            let memoryBrokenLine = JSON.parse(JSON.stringify(line))
+            let diskBrokenLine = JSON.parse(JSON.stringify(line))
+            cpuBrokenLine.xAxis.data = response.data.result.xaxis
+            memoryBrokenLine.xAxis.data = response.data.result.xaxis
+            diskBrokenLine.xAxis.data = response.data.result.xaxis
+            cpuBrokenLine.series.push({
+              name: 'CPU使用率（%）',
+              type: 'line',
+              data: response.data.result.cpuUse,
+              barWidth: '15%'
+            })
+            this.tab2.monitoringList[0].chart = cpuBrokenLine
+            memoryBrokenLine.series.push({
+              name: '内存使用率（%）',
+              type: 'line',
+              data: response.data.result.memoryUse,
+              barWidth: '15%'
+            })
+            this.tab2.monitoringList[1].chart = memoryBrokenLine
+            diskBrokenLine.series.push({
+              name: '磁盘使用率（%）',
+              type: 'line',
+              data: response.data.result.diskUse,
+              barWidth: '15%'
+            })
+            this.tab2.monitoringList[2].chart = diskBrokenLine
+          }
+        })
+      },
       getHostSnapshoot() {
         this.$http.get('Snapshot/listVMSnapshot.do', {
           params: {
@@ -1460,7 +1505,7 @@
             color: rgba(153, 153, 153, 1);
           }
         }
-        .item-type{
+        .item-type {
           margin-top: 18px;
         }
       }
