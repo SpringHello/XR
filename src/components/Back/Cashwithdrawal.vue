@@ -29,15 +29,16 @@
 					</div>
 					<div class="remindbox-right">
 						<div class="right">
-							<span style="line-height: 21px;"><span style="line-height: 21px;">申请线上提现后您的款项将在</span><span style="color: #FF624B;line-height: 21px;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。如需帮助，可查看
+							<span style="line-height: 21px;margin-top: 5px;"><span style="line-height: 21px;">申请线上提现后您的款项将在</span><span style="color: #FF624B;line-height: 21px;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看
 								<a href="#" style="color: #2A99F2;text-decoration: underline;">自助提现常见问题</a></span>
 							<div class="following">
-								<span>以下几种现金充值金额不支持自助线上提现：</span><br />
-								<span>1、被暂时冻结的现金充值金额</span>
-								<span>2、通过微信充值时间超过1年或通过支付宝充值时间超过3个月的现金充值金额</span>
-								<span>3、通过线下打款进账的现金充值金额提现方式请 <a href="#" style="color: #2A99F2;text-decoration: underline;">点击这里查看</a></span>
-								<span>4、单次提现金额上限2000元，7天内最多提现4次</span>
-							</div>
+								<span style="margin-top: 10px;">可提现金额通常情况下等于用户可用余额，当用户存在以下操作的时候可提现金额会与用户可用余额有差异：</span><br />
+								<span>1、充值返奖励金或送现金券的时候，该充值金额不能进行提现；</span>
+								<span>2、已开发票金额不能提现；</span>
+								<span>3、当您的账户存在流水异常或其他异常状态的时候；</span>
+								<span>4、通过线下打款进账的现金充值金额提现方式请 <a href="#" style="color: #2A99F2;text-decoration: underline;">点击这里查看</a></span>
+								<span>5、单次提现金额上限2000元，7天内最多提现4次</span>
+							</div> 
 						</div>
 					</div>
 				</div>
@@ -549,7 +550,7 @@
 
 	.remindbox {
 		margin-top: 20px;
-		height: 172px;
+		height: 186px;
 		background: rgba(239, 247, 254, 1);
 		border-radius: 4px;
 		border: 1px solid rgba(42, 153, 242, 1);
@@ -613,7 +614,7 @@
 	}
 
 	.following {
-		width: 418px;
+		width: 600px;
 		height: 100px;
 	}
 
@@ -626,6 +627,7 @@
 	}
 
 	.following span:nth-of-type(2) {
+		width: 100%;
 		font-size: 12px;
 		font-family: MicrosoftYaHei;
 		color: #666666;
@@ -633,6 +635,7 @@
 	}
 
 	.following span:nth-of-type(3) {
+		width: 100%;
 		font-size: 12px;
 		font-family: MicrosoftYaHei;
 		color: #666666;
@@ -640,6 +643,14 @@
 	}
 
 	.following span:nth-of-type(4) {
+		width: 100%;
+		font-size: 12px;
+		font-family: MicrosoftYaHei;
+		color: #666666;
+		line-height: 20px;
+	}
+	.following span:nth-of-type(6) {
+		width: 100%;
 		font-size: 12px;
 		font-family: MicrosoftYaHei;
 		color: #666666;
@@ -647,6 +658,7 @@
 	}
 
 	.following span:nth-of-type(5) {
+		width: 100%;
 		font-size: 12px;
 		font-family: MicrosoftYaHei;
 		color: #666666;
