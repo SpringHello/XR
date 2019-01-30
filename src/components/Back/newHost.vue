@@ -86,7 +86,33 @@
         </div>
       </div>
     </div>
-
+    <!-- 监控信息 -->
+    <div class="monitor" ref="monitor">
+      <div class="title">
+        <span>{{ monitorName }}云主机监控图表</span>
+        <div @click="closeMonitor">
+          <Icon type="close" style="font-size: 18px;cursor: pointer"></Icon>
+        </div>
+      </div>
+      <div class="item" v-for="(item,index) in monitoringList">
+        <div class="item-title">
+          <span>{{ item.title}}</span>
+          <span>{{  currentData }}</span>
+        </div>
+        <div class="item-type">
+          <Radio-group v-model="item.type" type="button" @on-change="changeMonitorDate(index)">
+            <Radio label="近一天"></Radio>
+            <Radio label="最近7天"></Radio>
+            <Radio label="最近30天"></Radio>
+          </Radio-group>
+          <Radio-group v-model="item.showType" type="button" @on-change="changeMonitorShowType(index)" style="float:right">
+            <Radio label="折线"></Radio>
+            <Radio label="柱状图"></Radio>
+          </Radio-group>
+        </div>
+        <chart :options="item.chart" style="width:100%;height:80%;"></chart>
+      </div>
+    </div>
     <!--选择两种认证方式-->
     <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" :styles="{top:'172px'}">
       <div slot="header" class="modal-header-border">
@@ -395,6 +421,8 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   import axios from 'axios'
+  import line from '@/echarts/hostManage/line'
+  import bar from '@/echarts/hostManage/bar'
   import regExp from '../../util/regExp'
 
   export default {
@@ -553,7 +581,17 @@
                   if (params.row.computerstate == 1) {
                     return h('div', {
                       style: {
-                        display: 'flex'
+                        display: 'flex',
+                        cursor: 'pointer',
+                      },
+                      on: {
+                        click: () => {
+                          if (this.$refs.monitor.style.width != '600px') {
+                            this.showMonitor(params.row.instancename)
+                          } else {
+                            this.closeMonitor()
+                          }
+                        }
                       }
                     }, [
                       h('img', {
@@ -568,7 +606,17 @@
                   } else {
                     return h('div', {
                       style: {
-                        display: 'flex'
+                        display: 'flex',
+                        cursor: 'pointer',
+                      },
+                      on: {
+                        click: () => {
+                          if (this.$refs.monitor.style.width != '600px') {
+                            this.showMonitor(params.row.instancename)
+                          } else {
+                            this.closeMonitor()
+                          }
+                        }
                       }
                     }, [
                       h('img', {
@@ -1238,6 +1286,22 @@
             {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
           ],
         },
+        monitorName: '',
+        monitoringList: [
+          {
+            title: 'CPU使用率',
+            type: '近一天',
+            showType: '折线',
+            chart: null
+          },
+          {
+            title: '内存使用率',
+            type: '近一天',
+            showType: '折线',
+            chart: null
+          }
+        ],
+        currentData: this.getCurrentDate()
       }
     },
     created() {
@@ -1948,7 +2012,7 @@
             id: this.RenewForm.id,
           }
         }).then(response => {
-          this.getData()
+          this.getHostList()
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success('主机续费成功')
           } else {
@@ -2039,6 +2103,107 @@
         localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
         window.open('/ruicloud/link')
       },
+      showMonitor(name) {
+        this.monitorName = name
+        this.monitoringList.forEach(item => {
+          item.type = '近一天'
+          item.showType = '折线'
+        })
+        this.getComputerMonitor()
+        this.$refs.monitor.style.width = '600px'
+        this.$refs.monitor.style.opacity = '1'
+      },
+      closeMonitor() {
+        this.$refs.monitor.style.width = '0px'
+        this.$refs.monitor.style.opacity = '0'
+      },
+      getComputerMonitor() {
+        this.$http.get('alarm/getVmAlarmByHour.do', {
+          params: {
+            vmname: this.monitorName,
+            type: 'core'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            // 用的以前接口数据格式，只有挨个赋值
+            let cpuBrokenLine = JSON.parse(JSON.stringify(line))
+            let memoryBrokenLine = JSON.parse(JSON.stringify(line))
+            cpuBrokenLine.xAxis.data = response.data.result.xaxis
+            memoryBrokenLine.xAxis.data = response.data.result.xaxis
+            cpuBrokenLine.series.push({
+              name: 'CPU使用率（%）',
+              type: 'line',
+              data: response.data.result.cpuUse,
+              barWidth: '15%'
+            })
+            this.monitoringList[0].chart = cpuBrokenLine
+            memoryBrokenLine.series.push({
+              name: '内存使用率（%）',
+              type: 'line',
+              data: response.data.result.memoryUse,
+              barWidth: '15%'
+            })
+            this.monitoringList[1].chart = memoryBrokenLine
+          }
+        })
+      },
+      changeMonitorDate(index) {
+        let url = this.monitoringList[index].type == '近一天' ? 'alarm/getVmAlarmByHour.do' : 'alarm/getVmAlarmByDay.do'
+        let dateType = this.monitoringList[index].type == '最近7天' ? 'week' : 'month'
+        this.$http.get(url, {
+          params: {
+            vmname: this.monitorName,
+            type: 'core',
+            datetype: dateType
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            let broken = this.monitoringList[index].type == 'line' ? JSON.parse(JSON.stringify(line)) : JSON.parse(JSON.stringify(bar))
+            let type = this.monitoringList[index].showType == '折线' ? 'line' : 'bar'
+            let name = index == 0 ? 'CPU使用率（%）' : '内存使用率（%）'
+            let data = index == 0 ? res.data.result.cpuUse : res.data.result.memoryUse
+            broken.series.push({
+              name: name,
+              type: type,
+              data: data,
+              barWidth: '15%'
+            })
+            broken.xAxis.data = res.data.result.xaxis
+            this.monitoringList[index].chart = broken
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      changeMonitorShowType(index) {
+        let broken = {}
+        if (this.monitoringList[index].showType == '折线') {
+          broken = JSON.parse(JSON.stringify(line))
+          broken.series.push({
+            name: this.monitoringList[index].chart.series[0].name,
+            type: 'line',
+            data: this.monitoringList[index].chart.series[0].data,
+            barWidth: '15%'
+          })
+          broken.xAxis.data = this.monitoringList[index].chart.xAxis.data
+          this.monitoringList[index].chart = broken
+        } else {
+          broken = JSON.parse(JSON.stringify(bar))
+          broken.series.push({
+            name: this.monitoringList[index].chart.series[0].name,
+            type: 'bar',
+            data: this.monitoringList[index].chart.series[0].data,
+            barWidth: '15%'
+          })
+          broken.xAxis.data = this.monitoringList[index].chart.xAxis.data
+          this.monitoringList[index].chart = broken
+        }
+      },
+      getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
+      }
     },
     computed: {
       auth() {
@@ -2314,6 +2479,56 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .monitor {
+    position: fixed;
+    right: 0;
+    top: 56px;
+    width: 0;
+    opacity: 0;
+    transition: all .5s;
+    @diff: 102px;
+    min-height: calc(~"100% - @{diff}");
+    background: rgba(255, 255, 255, 1);
+    box-shadow: -5px 0px 14px -7px rgba(148, 148, 148, 0.4);
+    border-radius: 2px;
+    padding: 20px;
+    z-index: 3;
+    .title {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      > span {
+        font-size: 18px;
+        font-family: MicrosoftYaHei;
+        color: rgba(51, 51, 51, 1);
+      }
+    }
+    .item {
+      border-radius: 4px;
+      padding: 20px;
+      border: 1px dashed rgba(153, 153, 153, 1);
+      width: 570px;
+      height: 405px;
+      margin-bottom: 20px;
+      .item-title {
+        border-bottom: 1px solid rgba(233, 233, 233, 1);
+        padding-bottom: 10px;
+        > span {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(51, 51, 51, 1);
+          line-height: 20px;
+        }
+        span:nth-child(2) {
+          float: right;
+          color: rgba(153, 153, 153, 1);
+        }
+      }
+      .item-type {
+        margin-top: 18px;
+      }
+    }
+  }
 
   .selectAuthType {
     width: 50%;

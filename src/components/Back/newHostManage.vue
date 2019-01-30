@@ -88,12 +88,12 @@
               <span>{{  tab2.currentData }}</span>
             </div>
             <div class="item-type">
-              <Radio-group v-model="item.type" type="button">
+              <Radio-group v-model="item.type" type="button" @on-change="changeMonitorDate(index)">
                 <Radio label="近一天"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
               </Radio-group>
-              <Radio-group v-model="item.showType" type="button" style="float:right">
+              <Radio-group v-model="item.showType" type="button" @on-change="changeMonitorShowType(index)" style="float:right">
                 <Radio label="折线"></Radio>
                 <Radio label="柱状图"></Radio>
               </Radio-group>
@@ -1185,6 +1185,7 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            // 用的以前接口数据格式，只有挨个赋值
             let cpuBrokenLine = JSON.parse(JSON.stringify(line))
             let memoryBrokenLine = JSON.parse(JSON.stringify(line))
             let diskBrokenLine = JSON.parse(JSON.stringify(line))
@@ -1214,6 +1215,60 @@
             this.tab2.monitoringList[2].chart = diskBrokenLine
           }
         })
+      },
+      changeMonitorDate(index) {
+        let url = this.tab2.monitoringList[index].type == '近一天' ? 'alarm/getVmAlarmByHour.do' : 'alarm/getVmAlarmByDay.do'
+        let dateType = this.tab2.monitoringList[index].type == '最近7天' ? 'week' : 'month'
+        this.$http.get(url, {
+          params: {
+            vmname: this.hostInfo.instanceName,
+            type: 'core',
+            datetype: dateType
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            let broken = this.tab2.monitoringList[index].type == 'line' ? JSON.parse(JSON.stringify(line)) : JSON.parse(JSON.stringify(bar))
+            let type = this.tab2.monitoringList[index].showType == '折线' ? 'line' : 'bar'
+            let name = index == 0 ? 'CPU使用率（%）' : index == 1 ? '内存使用率（%）' : '磁盘使用率（%）'
+            let data = index == 0 ? res.data.result.cpuUse : index == 1 ? res.data.result.memoryUse : res.data.result.diskUse
+            broken.series.push({
+              name: name,
+              type: type,
+              data: data,
+              barWidth: '15%'
+            })
+            broken.xAxis.data = res.data.result.xaxis
+            this.tab2.monitoringList[index].chart = broken
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      changeMonitorShowType(index) {
+        let broken = {}
+        if (this.tab2.monitoringList[index].showType == '折线') {
+          broken = JSON.parse(JSON.stringify(line))
+          broken.series.push({
+            name: this.tab2.monitoringList[index].chart.series[0].name,
+            type: 'line',
+            data: this.tab2.monitoringList[index].chart.series[0].data,
+            barWidth: '15%'
+          })
+          broken.xAxis.data = this.tab2.monitoringList[index].chart.xAxis.data
+          this.tab2.monitoringList[index].chart = broken
+        } else {
+          broken = JSON.parse(JSON.stringify(bar))
+          broken.series.push({
+            name: this.tab2.monitoringList[index].chart.series[0].name,
+            type: 'bar',
+            data: this.tab2.monitoringList[index].chart.series[0].data,
+            barWidth: '15%'
+          })
+          broken.xAxis.data = this.tab2.monitoringList[index].chart.xAxis.data
+          this.tab2.monitoringList[index].chart = broken
+        }
       },
       getHostSnapshoot() {
         this.$http.get('Snapshot/listVMSnapshot.do', {
