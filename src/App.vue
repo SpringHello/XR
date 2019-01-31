@@ -506,7 +506,7 @@
             path: '/ruicloud/document',
           },
           {
-            title: '资讯',
+            title: '新闻动态',
             path: 'https://news.xrcloud.net',
             content: [
               {
