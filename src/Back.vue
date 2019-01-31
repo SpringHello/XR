@@ -285,7 +285,7 @@
             subItem: [
               {subName: '防火墙', type: 'firewall'},
               {subName: '云监控', type: 'CloudMonitor'},
-              {subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
+              //{subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
             ]
           },
           {

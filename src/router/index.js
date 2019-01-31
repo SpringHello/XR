@@ -112,9 +112,9 @@ const Pelastic = () => import('@/components/App/product/Pelastic.vue')
 // import Login from '@/components/LR/Login'
 // import Register from '@/components/LR/Register'
 // import Reset from '@/components/LR/Reset'
-const Login = () =>import('@/components/LR/Login')
+const Login = () =>import('@/components/LR/oldLogin')
 //const NewLogin = () =>import('@/components/LR/newLogin')
-const Register = () =>import('@/components/LR/Register')
+const Register = () =>import('@/components/LR/oldRegister')
 //const NewRegister = () =>import('@/components/LR/newRegister')
 const Reset = () =>import('@/components/LR/Reset')
 const RegisterSuccess = () =>import('@/components/LR/RegisterSuccess')
