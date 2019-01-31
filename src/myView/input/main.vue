@@ -15,7 +15,7 @@
         </div>
         <input :value='account'  :style="style"
         :id="elementId"
-        :autocomplete="autocomplete"
+        autocomplete="new-password"
         :spellcheck="spellcheck" 
         :disabled="disabled"
         :readonly="readonly"
@@ -46,7 +46,7 @@ export default {
     props:{
         icon:{
             type:String,
-            default:require('../../assets/img/updatePaw/paw_zhanghao.png')
+            default:''
         },
         value:{
             type:String,
@@ -89,7 +89,7 @@ export default {
     data(){
         return{
             account:this.value,
-            style:'height: 44px;padding-left: 48px;',
+            style:'height: 44px;padding-left:48px;',
             prefixCls: prefixCls,
             isSelect:'',
             telList:telList,
@@ -223,6 +223,14 @@ export default {
             }
          },
         immediate:true
+      },
+      icon:{
+          handler(){
+            if(this.icon == ''){
+              this.style = 'height:44px;padding-left:10px;'
+            }
+          },
+          immediate:true
       }
     }
 }

@@ -59,7 +59,7 @@
          </div>
         </div>
         <div style="text-align:right;margin-top:40px;">
-          <Button @click="$router.push({path:'overview'})" style="margin-right:20px;">取消订单</Button>
+          <Button @click="$router.push({path:'overview'})" style="margin-right:10px;">取消订单</Button>
           <Button type="primary"  @click="pay">提交订单</Button>
         </div>
        
@@ -125,7 +125,7 @@
                  h('div', {
                   style: {
                     borderBottom: index == params.row['资源'].length - 1 ? 'none' : '1px solid rgb(233, 234, 236)',
-                    padding: '10px'
+                    padding: '10px 10px 10px 0'
                   }
                 }, parr)
                 )
@@ -617,7 +617,7 @@
 <style rel="stylesheet/less" lang="less" scoped>
 
   .background {
-    font-family: 'MicrosoftYaHei';
+    font-family: 'MicrosoftYaHei','PingFangSC-Regular';
     background-color: #f5f5f5;
     width: 100%;
     @diff: 101px;
@@ -627,7 +627,7 @@
       width: 1200px;
       margin: 0px auto;
       & > span {
-        font-family: PingFangSC-Regular;
+        font-family: 'PingFangSC-Regular';
         font-size: 12px;
         color: rgba(17, 17, 17, 0.43);
         line-height: 22px;
