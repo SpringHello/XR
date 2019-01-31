@@ -700,7 +700,6 @@ export default {
     statusList(index){
       if(!this.resetAccount){
         for(let key in this.dataFroms){
-          console.log(this.dataFroms[key]);
           if(this.dataFroms[key] ==''){
             this.$Message.info({
               content:'请完成当前的步骤',
