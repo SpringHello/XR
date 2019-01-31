@@ -61,8 +61,8 @@
                 v-for="(item,index) in timeValue"
                 :key="index"
                 class="type-btn"
-                :class="{typeselected: formValidateOne.yearSelected == index}"
-                @click="formValidateOne.yearSelected =index"
+                :class="{typeselected: formValidateOne.yearSelected == item}"
+                @click="formValidateOne.yearSelected =item"
               >{{item}}年</span>
             </div>
           </div>
@@ -250,14 +250,53 @@ export default {
   data () {
     // 域名正则批量判断
     const validateDomain = (rule, value, callback) => {
+      // this.priceReg = false
       var flag = this.domainReg(value)
+      var flagM = this.domainRegM(value)
       var domainRepeat = this.domainRepeat(value)
-      if (flag && domainRepeat) {
-        callback(new Error('存在重复的域名'));
-      } else if (flag) {
-        callback()
+      var domainLength = this.domainLength(value)
+      // ov超真pro,支持一个通配符域名，并且不能有其他域名1
+      // dv超快pre,支持多个通配符域名，可以有其他域名2
+      if (this.formValidateOne.selectedType == '1') {
+        if (value.indexOf('*') != -1) {
+          if (domainLength > 1) {
+            callback(new Error('该证书只支持一个通配域名，且不能包含其他域名'));
+          } else if (flagM) {
+            callback()
+          } else {
+            callback(new Error('请输入正确的域名格式'));
+          }
+        } else {
+          if (flag && domainRepeat) {
+            callback(new Error('存在重复的域名'));
+          } else if (flag) {
+            callback()
+          } else {
+            callback(new Error('请输入正确的域名格式'));
+          }
+        }
+      } else if (this.formValidateOne.selectedType == '2') {
+        if (flagM && domainRepeat) {
+          callback(new Error('存在重复的域名'));
+        } else if (flagM) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的域名格式'));
+        }
+      }
+    }
+    const validateDigit = (rule, value, callback) => {
+      if (!/^\d*$/.test(value)) {
+        return callback(new Error("请输入数字"))
       } else {
-        callback(new Error('请输入正确的域名格式'));
+        callback()
+      }
+    }
+    const validChinese = (rule, value, callback) => {
+      if (!/^[\u4e00-\u9fa5]+$/.test(value)) {
+        return callback(new Error("请输入中文"))
+      } else {
+        callback()
       }
     }
     const validaRegisteredID = (rule, value, callback) => {
@@ -274,7 +313,15 @@ export default {
         callback()
       }
     }
+    const validaUnitPhone = (rule, value, callback) => {
+      if (/^\d{3}-\d{8}$/.test(value) || reg.phoneVail(value)) {
+        callback()
+      } else {
+        callback(new Error('电话号码格式不正确'))
+      }
+    }
     return {
+      priceReg: false,
       domainList: [],
       step: 0,
       formValidateOne: {
@@ -282,7 +329,7 @@ export default {
         domain: '',
         vailType: '2',
         selectedType: '1',
-        yearSelected: 0,
+        yearSelected: 1,
         bankName: '',
         bankAccountNum: '',
         bankNum: '',
@@ -293,13 +340,19 @@ export default {
         ],
         domain: [
           { required: true, message: '请输入域名', trigger: 'blur' },
+          { required: true, validator: validateDomain, trigger: 'change' },
           { required: true, validator: validateDomain, trigger: 'blur' },
         ],
         bankName: [
-          { required: true, message: '请输入单位开户行', trigger: 'blur' }
+          { required: true, message: '请输入单位开户行', trigger: 'blur' },
+          { required: true, validator: validChinese, trigger: 'blur' }
         ],
         bankAccountNum: [
-          { required: true, message: '请输入单位银联账号', trigger: 'blur' }
+          { required: true, message: '请输入单位银联账号', trigger: 'blur' },
+          { required: true, validator: validateDigit, trigger: 'blur' }
+        ],
+        bankNum: [
+          { required: false, validator: validateDigit, trigger: 'blur' },
         ]
       },
       vailTypeList: [
@@ -336,7 +389,7 @@ export default {
         ],
         unitTel: [
           { required: true, message: '请输入电话号码', trigger: 'blur' },
-          { required: true, validator: validaPhone, trigger: 'blur' }
+          { required: true, validator: validaUnitPhone, trigger: 'blur' }
         ],
         manName: [
           { required: true, message: '请输入姓名', trigger: 'blur' }
@@ -386,6 +439,16 @@ export default {
         }
       })
     },
+    domainLength (string) {
+      if (string) {
+        this.domainList = string.split('\n').filter(item => {
+          return item != ''
+        })
+        return this.domainList.length
+      } else {
+        return false
+      }
+    },
     domainReg (string) {
       if (string) {
         let reg = /^[a-zA-Z0-9\u4e00-\u9fa5][-a-zA-Z0-9\u4e00-\u9fa5]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/
@@ -394,6 +457,21 @@ export default {
         })
         let flag = this.domainList.every(item => {
           return reg.test(item)
+        })
+        return flag
+      } else {
+        return false
+      }
+    },
+    domainRegM (string) {
+      if (string) {
+        let reg = /^[a-zA-Z0-9\u4e00-\u9fa5][-a-zA-Z0-9\u4e00-\u9fa5]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/
+        let regM = /^\*\.[a-zA-Z0-9\u4e00-\u9fa5][-a-zA-Z0-9\u4e00-\u9fa5]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/
+        this.domainList = string.split('\n').filter(item => {
+          return item != ''
+        })
+        let flag = this.domainList.every(item => {
+          return regM.test(item) || reg.test(item)
         })
         return flag
       } else {
@@ -415,13 +493,12 @@ export default {
       }
     },
     price () {
-      let flag = this.domainReg(this.formValidateOne.domain)
-      // console.log(flag)
-      if (flag) {
+      let flagM = this.domainRegM(this.formValidateOne.domain)
+      if (flagM) {
         axios.post('domain/getSSLPriceFromType.do', {
           certTypeId: this.formValidateOne.selectedType,
           certallDomain: this.domainList.join(),
-          certExpTime: (this.formValidateOne.yearSelected + 1) * 12
+          certExpTime: this.formValidateOne.yearSelected * 12
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.cost = response.data.data.sslCost
@@ -429,6 +506,8 @@ export default {
             this.cost = '--'
           }
         })
+      } else {
+        this.cost = '--'
       }
     },
     phoneReg (val) {
@@ -454,7 +533,7 @@ export default {
             ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
             orgPhone: this.phoneReg(this.formValidateTwo.unitTel),
             certValidateType: this.formValidateOne.vailType,
-            certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+            certExpTime: this.formValidateOne.yearSelected * 12,
             orgName: this.formValidateTwo.unitName,
             orgType: this.formValidateTwo.unitType,
             certTypeId: this.formValidateOne.selectedType,
@@ -466,7 +545,7 @@ export default {
             ownUserName: this.formValidateTwo.manName,
             certallDomain: this.domainList.join(),
             ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
-            certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+            certExpTime: this.formValidateOne.yearSelected * 12,
             certTypeId: this.formValidateOne.selectedType,
           }
           params = this.formValidateOne.selectedType == '1' ? params1 : params2
@@ -498,7 +577,7 @@ export default {
     //     type: 'Pssl',
     //     cost: this.cost,
     //     count: 1,
-    //     year: this.formValidateOne.yearSelected + 1,
+    //     year: this.formValidateOne.yearSelected,
     //     domianLeagth: this.domainList.length,
     //     mainDomain: this.domainList[0],
     //     // 创建订单需要的参数
@@ -510,7 +589,7 @@ export default {
     //     ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
     //     orgPhone: this.phoneReg(this.formValidateTwo.unitTel),
     //     certValidateType: this.formValidateOne.vailType,
-    //     certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+    //     certExpTime: this.formValidateOne.yearSelected * 12,
     //     orgName: this.formValidateTwo.unitName,
     //     orgType: this.formValidateTwo.unitType,
     //     certTypeId: this.formValidateOne.selectedType,
@@ -521,7 +600,7 @@ export default {
     //     type: 'Pssl',
     //     cost: this.cost,
     //     count: 1,
-    //     year: this.formValidateOne.yearSelected + 1,
+    //     year: this.formValidateOne.yearSelected,
     //     domianLeagth: this.domainList.length,
     //     mainDomain: this.domainList[0],
     //     // 创建订单需要的参数
@@ -530,7 +609,7 @@ export default {
     //     ownUserName: this.formValidateTwo.manName,
     //     certallDomain: this.domainList.join(),
     //     ownUserPhone: this.phoneReg(this.formValidateTwo.contactsTel),
-    //     certExpTime: (this.formValidateOne.yearSelected + 1) * 12,
+    //     certExpTime: this.formValidateOne.yearSelected* 12,
     //     certTypeId: this.formValidateOne.selectedType,
     //   }
     //   prod = this.formValidateOne.selectedType == '1' ? params1 : params2
@@ -547,9 +626,12 @@ export default {
     'formValidateOne.selectedType': function () {
       this.price()
     },
+    'formValidateOne.yearSelected': function () {
+      this.price()
+    },
     'formValidateOne.domain': debounce(1000, function () {
       this.price()
-    }),
+    })
   },
   beforeRouteLeave (from, to, next) {
     if (sessionStorage.getItem('defaultType')) {

@@ -10,7 +10,7 @@
       <div id="body" ref="bo">
         <router-view/>
         <div id="list" ref="lists">
-          <div v-if="billListCost == 0" class="no-goods" >
+          <div v-show="billListCost == 0" class="no-goods">
             <p style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #EDEDED; padding-bottom: 30px;">
               价格预算清单</p>
             <div style="height:310px">
@@ -18,12 +18,12 @@
               <p>还没有任何内容加入清单哦</p>
             </div>
           </div>
-          <div v-else ref="list"
+          <div v-show="billListCost != 0" ref="list"
                style="padding:30px 30px 0 30px;background-color: #ffffff;overflow-y: auto">
             <p
               style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #EDEDED; padding-bottom: 30px;">
               价格预算清单</p>
-            <div  v-for="(prod,index) in cart" ref="detailed" :key="index" style="padding-top: 20px">
+            <div v-for="(prod,index) in cart" ref="detailed" :key="index" style="padding-top: 20px">
               <div style="display: flex;justify-content: space-between;">
                 <h2 style="width:110px;text-align: center;font-size: 18px;color: #333333;line-height: 32px;">
                   {{prod.typeName}}</h2>
@@ -203,8 +203,8 @@
             </div>
           </div>
           <div v-if="billListCost != 0"
-            style="padding:30px 40px;box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);background-color: #fff;width:380px;height:290px;overflow:hidden"
-            ref="buyDiv">
+               style="padding:30px 40px;box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);background-color: #fff;width:380px;height:290px;overflow:hidden"
+               ref="buyDiv">
             <p
               style="font-size: 14px;margin:10px 0px;vertical-align:middle;color: #666666;line-height: 25px;text-align: center">
               总计：<span class="hidden">#</span><span
@@ -307,7 +307,7 @@
             {label: '数据库', value: 'bdata'},
             {label: '对象存储', value: 'bobj'},
             {label: 'GPU服务器', value: 'bgpu'},
-            {label: 'SSL证书', value: 'bssl'}
+            //{label: 'SSL证书', value: 'bssl'}
           ]
         },
         // 当前可以创建的剩余资源数
@@ -400,6 +400,11 @@
               this.$refs.list.style.maxHeight = (clientHeight - 290 - 182) + 'px'
             }
           }
+          if (scrollTops < 1200) {
+            this.$refs.list.style.maxHeight = (1300 - scrollTops) + 'px'
+          } else {
+            this.$refs.list.style.maxHeight = 100 + 'px'
+          }
         }
       }
     },
@@ -454,7 +459,7 @@
         // 批次号
         var countOrder = uuid.v4()
         // 创建的主机数量  创建的磁盘数量 创建的公网IP数量
-        
+
         for (var prod of this.cart) {
           if (prod.type == 'Pecs') {
             var params = {
@@ -607,7 +612,7 @@
               countOrder
             }
             PromiseList.push(axios.post('ruiradosPrice/createOrder.do', params))
-          } 
+          }
           // else if (prod.type == 'Pssl') {
           //   // ssl证书
           //   let params = {
@@ -713,6 +718,7 @@
           bdata: 'PdataBase',
           bgpu: 'Pgpu',
           bobj: 'PobjStorage',
+          bssl: 'ssl'
         }
         return map[this.product.currentProduct]
       }
@@ -1053,6 +1059,7 @@
     padding: 4px 8px;
     margin-left: -5px;
   }
+
   .no-goods {
     background: #fff;
     padding: 30px 30px 0px;
@@ -1061,8 +1068,8 @@
       padding: 60px 0;
       p {
         margin-top: 20px;
-        font-size:14px;
-        color:rgba(102,102,102,1);
+        font-size: 14px;
+        color: rgba(102, 102, 102, 1);
       }
     }
   }
