@@ -75,7 +75,6 @@
             <div class="statistical" v-show="buyLists.length!=0">
               <div>
                 <p>已加入域名 <span>{{addNum}}</span> 个</p>
-                <p>优惠金额：¥00.00</p>
               </div>
               <h1>应付金额：<span>¥{{payMoney.toFixed(2)}}</span></h1>
               <button @click="nowBuy">立即购买</button>
