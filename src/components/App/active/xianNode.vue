@@ -123,8 +123,8 @@
             <i @click.stop="showModal.authErrorModal=false"></i>
           </div>
           <div class="body">
-            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/error-icon.png" style="vertical-align: middle;"> 很遗憾！您未通过快速实名认证审核！</p>
-            <p> 您也可以通过<span class="red" @click="$router.push('userCenter')"> 上传身份证照片</span>的方式行实名认证</p>
+            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/error-icon.png" style="vertical-align: middle;"> {{authError}}</p>
+            <p> 您也可以通过<span class="red" @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
             <button @click.stop="showModal.authErrorModal=false;showModal.authModal=true" style="margin-top: 35px;" class="modal-btn"><span>再次尝试</span></button>
           </div>
         </div>
@@ -270,6 +270,7 @@ export default {
         }
       }
     return {
+      authError: '',
       authHintShow: false,
       reminderShow: true,
       zoneList: [],
@@ -386,9 +387,14 @@ export default {
 
   },
   methods: {
+    toAuth() {
+      sessionStorage.setItem('pane', 'certification')
+      this.$router.push('userCenter')
+    },
     showAuthModal() {
       this.authHintShow = false
       if (this.$store.state.userInfo) {
+        this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
         this.showModal.authModal = true
       } else {
         this.showModal.notAuthModal = true
@@ -458,6 +464,7 @@ export default {
               if (response.data.result.flag) {
                 if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)){
                   this.authHintShow = true
+                  this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
                   this.showModal.authModal = true
                   return
                 }
@@ -570,6 +577,7 @@ export default {
                 // this.$message.info({
                 //   content: response.data.message
                 // })
+                this.authError = response.data.message
                 this.showModal.authErrorModal = true
               }
             })
