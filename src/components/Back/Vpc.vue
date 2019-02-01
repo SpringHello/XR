@@ -37,7 +37,7 @@
                 <div class="content">
                   <div class="item-wrap">
                     <div class="item item1">
-                      <p>名称：<span style="float:unset">{{item.status==2?'创建中':item.status==3?'删除中':item.vpcname}}</span>
+                      <p>名称：<span style="float:unset">{{item.status==2?'创建中':item.status==3?'清理重启中':item.vpcname}}</span>
                         <Spin size="small" v-if="item.status!=1" style="display: inline-block"></Spin>
                       </p>
                       <p>网段：<span>{{item.cidr}}</span></p>
