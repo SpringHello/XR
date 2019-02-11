@@ -17,19 +17,27 @@
 							<Button type="primary" style="margin-top: 17px;" @click="showModal.Cashconfirmation = true">申请线上提现</Button>
 						</div>
 						<div class="font" style="margin-left: 10px;">
-							<div class="fontleft">
-								<span>可<span style="color: #FF624B;">银行卡</span>提现金额</span>
-							</div>
-							<div class="money">
-								<span>{{Bankmoney}}</span>
-								<span>.{{Bankdecimalmoney}}元</span>
-							</div>
-							<Button type="primary" style="margin-top: 17px;" @click="showModal.cardfirmation = true">申请银行卡提现</Button>
+							<Tooltip placement="top">
+								<div slot="content" style="width:260px;height:44px;font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);">
+									<p style="line-height:22px;">通过微信充值时间超过1年或通过支付宝充值时间</p>
+									<p style="line-height:22px;">超过3个月的现金充值金额只能通过银行卡提现。</p>
+								</div>
+								<div class="fontleft">
+									<span>可<span style="color: #FF624B;">银行卡</span>提现金额</span>
+									<Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;cursor: pointer;"></Icon>
+								</div>
+								<div class="money">
+									<span>{{Bankmoney}}</span>
+									<span>.{{Bankdecimalmoney}}元</span>
+								</div>
+								<Button type="primary" style="margin-top: 17px;" @click="showModal.cardfirmation = true">申请银行卡提现</Button>
+							</Tooltip>
 						</div>
 					</div>
 					<div class="remindbox-right">
 						<div class="right">
-							<span style="line-height: 21px;margin-top: 5px;"><span style="line-height: 21px;">申请线上提现后您的款项将在</span><span style="color: #FF624B;line-height: 21px;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看
+							<span style="line-height: 21px;margin-top: 5px;"><span style="line-height: 21px;">申请线上提现后您的款项将在</span><span
+								 style="color: #FF624B;line-height: 21px;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看
 								<a href="#" style="color: #2A99F2;text-decoration: underline;">自助提现常见问题</a></span>
 							<div class="following">
 								<span style="margin-top: 10px;">可提现金额通常情况下等于用户可用余额，当用户存在以下操作的时候可提现金额会与用户可用余额有差异：</span><br />
@@ -38,7 +46,7 @@
 								<span>3、当您的账户存在流水异常或其他异常状态的时候；</span>
 								<span>4、通过线下打款进账的现金充值金额提现方式请 <a href="#" style="color: #2A99F2;text-decoration: underline;">点击这里查看</a></span>
 								<span>5、单次提现金额上限2000元，7天内最多提现4次</span>
-							</div> 
+							</div>
 						</div>
 					</div>
 				</div>
@@ -55,7 +63,7 @@
 				<!-- :total="ordertotal" -->
 				<Page :total="pageall" :page-size="pageNum" @on-change="changePage" style="float: right;margin-right: 30px;margin-top: 20px;"></Page>
 			</div>
-			
+
 			<!-- 线上提现弹窗 -->
 			<Modal v-model="showModal.Cashconfirmation" :scrollable="true" :closable="false" :width="390">
 				<p slot="header" class="modal-header-border">
@@ -65,7 +73,7 @@
 				<div class="modal-content-s" style="width: 101%;">
 					<div>
 						<p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">您正在申请线上提现，申请后您的款项将在<span
-							 style="color: #FF624B">5个工作日</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。
+							 style="color: #FF624B">5个工作日</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。
 						</p>
 						<!-- @click="$router.push('/ruicloud/cashwithdrawal')" -->
 						<p class="lh24" style="margin-top: 10px;">若您的线下汇款（对公转账）金额需要提现，请点击查看 <a href="#" style="color: #2A99F2; text-decoration: underline;">线下汇款提现方式</a>。
@@ -97,7 +105,8 @@
 						<Form-item label="开户银行名称" prop="depositBank" style="height: 30px;">
 							<Input :maxlength="32" v-model="formAppreciationDate.depositBank" placeholder="请输入开户银行名称" style="width: 300px"></Input>
 						</Form-item>
-						<Tooltip :content="bank_account" placement="bottom" :disabled="disabled" :class="{'active' : isTrue}" @on-popper-hide="setdisable" @on-popper-show="setdisableshow">
+						<Tooltip :content="bank_account" placement="bottom" :disabled="disabled" :class="{'active' : isTrue}"
+						 @on-popper-hide="setdisable" @on-popper-show="setdisableshow">
 							<Form-item label="银行账户" prop="bankAccount" style="height: 30px;">
 								<Input :maxlength="32" v-model="formAppreciationDate.bankAccount" placeholder="请输入银行账户" style="width: 300px"
 								 v-on:input="conversion"></Input>
@@ -130,7 +139,7 @@
 				<div class="modal-content-s">
 					<div>
 						<p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">审核已通过，正在打款中。您的款项将在
-							<span style="color: #FF624B">5个工作日</span> 内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。请您耐心等待。
+							<span style="color: #FF624B">5个工作日</span> 内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。请您耐心等待。
 						</p>
 					</div>
 				</div>
@@ -217,7 +226,7 @@
 			}
 			return {
 				ordertime: '',
-				Failedtext:'',
+				Failedtext: '',
 				//小数点前后金额
 				comOnlinemoney: 0,
 				comBankemoney: 0,
@@ -367,11 +376,11 @@
 
 									}
 								}, text)
-							}else if(params.row.type == 7){
+							} else if (params.row.type == 7) {
 								return h('div', [
 									h('span', {
 										style: {
-								
+
 										}
 									}, text),
 									h('span', {
@@ -388,7 +397,7 @@
 										}
 									}, "查看详情")
 								]);
-							}else if (params.row.type == 4) {
+							} else if (params.row.type == 4) {
 								return h('div', [
 									h('span', {
 										style: {
@@ -492,11 +501,11 @@
 				sessionStorage.setItem('type', 0)
 				this.$router.push('/ruicloud/cashprocess')
 			},
-			setdisable(){
-				this.isTrue=false
+			setdisable() {
+				this.isTrue = false
 			},
-			setdisableshow(){
-				this.isTrue=true
+			setdisableshow() {
+				this.isTrue = true
 			}
 		},
 		computed: {
@@ -506,10 +515,10 @@
 			'formAppreciationDate.bankAccount': function(val) {
 				if (val == null) {
 					this.disabled = true
-					this.isTrue=false
+					this.isTrue = false
 				} else {
 					this.disabled = false
-					this.isTrue=true
+					this.isTrue = true
 				}
 			}
 		}
@@ -649,6 +658,7 @@
 		color: #666666;
 		line-height: 20px;
 	}
+
 	.following span:nth-of-type(6) {
 		width: 100%;
 		font-size: 12px;
@@ -714,4 +724,5 @@
 	.active {
 		height: 100px;
 	}
+	
 </style>

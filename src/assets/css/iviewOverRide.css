@@ -367,6 +367,21 @@ div.modal-header-border {
   white-space: normal !important;
 }
 
+/* 提现银行卡样式修改 */
+.font .ivu-tooltip-inner{
+		background:rgba(255,255,255,1);
+		box-shadow:0px 1px 4px 0px rgba(0,0,0,0.2);
+		border-radius:2px;
+	}
+	
+.font .ivu-tooltip-popper{
+	margin-left: 63px;
+}
+
+.font .ivu-tooltip-arrow{
+	background: white;
+}
+
 .smlj-bag .ivu-modal-content {
   background: url('../../assets/img/active/smlj/modal-bg.png');
 }

@@ -22,7 +22,7 @@
 			 </div>
 		 </div>
 		 <div class="box1">
-			 <span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。如需帮助，可查看 <a href="#" class="colora">自助提现常见问题</a></span>
+			 <span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看 <a href="#" class="colora">自助提现常见问题</a></span>
 		 </div>
 		 <p style="margin-left: 20px;margin-top: 20px;float: left;">
 			 <span class="spanall">可提现金额</span>
@@ -152,7 +152,7 @@
 	              提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
 	            </p>
 	            <div class="upload-img" style="margin-top:10px">
-	              <div class="content" style="background: #D8D8D8;">
+	              <div class="content" style="background:rgba(247,247,247,1);">
 	                <div class="left">
 	                  <Upload
 	                    multiple
@@ -185,7 +185,7 @@
 	              提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
 	            </p>
 	            <div class="upload-img" style="margin-top:10px">
-	              <div class="content" style="background: #D8D8D8;">
+	              <div class="content" style="background:rgba(247,247,247,1);">
 	                <div class="left">
 	                  <Upload
 	                    multiple
@@ -212,7 +212,7 @@
 	              </div>
 	            </div>
 	            <div class="upload-img" style="margin-top:10px">
-	              <div class="content" style="background: #D8D8D8;">
+	              <div class="content" style="background:rgba(247,247,247,1);">
 	                <div class="left">
 	                  <Upload
 	                    multiple
@@ -414,24 +414,35 @@
 		  Cashconfirmation: [
                     {
                         title: '提现金额（元）',
-                        key: 'money'
+                        key: 'money',
+												width:510
                     },
+										{
+										    title: '预计到账金额（元）',
+										    key: 'Actualmoney',
+												width:510
+										},
                     {
                         title: '到账账户',
                         key: 'type',
-						render: (h, params) => {
-							// 1为银行卡提现，0为线上体现
-							let text = ''
-							text = params.row.type == 1 ? '银行卡' : "原支付途径"
-							return h('div', [
-								h('span', {}, text)
-							]);
-						}
+												render: (h, params) => {
+													// 1为银行卡提现，0为线上体现
+													let text = ''
+													text = params.row.type == 1 ? '银行卡' : "原支付途径"
+													return h('div', [
+														h('span', {
+															style: {
+																											
+															}
+														}, text)
+													]);
+												}
                     }
                 ],
                 Cashconfirmationdata: [
                     {
                         money:'0',
+												Actualmoney:'0',
                         type: '0'
                     }
                 ]
