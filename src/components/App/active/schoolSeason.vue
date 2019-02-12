@@ -33,7 +33,17 @@
             <div>14:00~20:00</div>
           </div>
           <div class="box">
-
+            <p class="tc">本场秒杀倒计时</p>
+            <div class="count-down">
+              <span>2</span>
+              <i>时</i>
+              <span>5</span>
+              <span>9</span>
+              <i>分</i>
+              <span>5</span>
+              <span>9</span>
+              <i>秒</i>
+            </div>
           </div>
         </div>
       </div>
@@ -823,7 +833,26 @@ section {
     }
     .box {
       height:627px;
-      background:url(../../../assets/img/active/schoolSeason/seckill_bg.png) center no-repeat,
+      background:url(../../../assets/img/active/schoolSeason/seckill_bg.png) center no-repeat;
+      .count-down {
+        text-align: center;
+        font-size:14px;
+        font-family:AppleSystemUIFont;
+        color:rgba(65,6,12,1);
+        span {
+          display: inline-block;
+          width: 71px;
+          height: 71px;
+          line-height: 71px;
+          background:url(../../../assets/img/active/schoolSeason/seckill_text_bg.png) center no-repeat;
+          font-size:36px;
+          font-family:Arial-BoldMT;
+          color:rgba(255,246,232,1);
+        }
+        i {
+          font-style: normal;
+        }
+      }
     }
   }
 }
