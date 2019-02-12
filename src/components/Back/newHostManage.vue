@@ -10,7 +10,7 @@
       </Alert>
       <div class="host-config">
         <div class="config-top">
-          <p class="title"><img @click="$router.push('newHost')" src="../../assets/img/host/h-icon9.png" alt="back to hostList"/> 名称：{{ hostInfo.computerName}}
+          <p class="title"><img @click="$router.push('host')" src="../../assets/img/host/h-icon9.png" alt="back to hostList"/> 名称：{{ hostInfo.computerName}}
             <img class="last" @click="renameForm.hostName = '',showModal.rename = true" src="../../assets/img/host/h-icon11.png" alt="modification computerName"/>
             <button @click="$router.go(0)">刷新</button>
             <button style="margin-right: 10px" @click="linkHost" v-if="hostInfo.computerStatus == 1">连接主机</button>
@@ -824,7 +824,7 @@
               })
             } else {
               sessionStorage.setItem('upgradeId', this.computerId)
-              this.$router.push('newUpgrade')
+              this.$router.push('upgrade')
             }
           }
         })

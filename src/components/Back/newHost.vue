@@ -144,6 +144,23 @@
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：400-050-5565</p>
       </div>
     </Modal>
+    <!-- 删除主机弹窗 -->
+    <Modal v-model="showModal.delHost" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">删除主机</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">主机删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.delHost = false">取消</Button>
+        <Button type="primary" @click="delHostOk">确认删除</Button>
+      </p>
+    </Modal>
     <!-- 加入负载均衡弹窗 -->
     <Modal v-model="showModal.balance" width="590" :scrollable="true">
       <div slot="header" class="modal-header-border">
@@ -210,7 +227,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
-        <Button type="primary" @click="bindipSubmit('bindForm')">确定
+        <Button type="primary" @click="bindIpSubmit('bindForm')">确定
         </Button>
       </div>
     </Modal>
@@ -316,7 +333,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.renewal = false">取消</Button>
-        <Button type="primary" @click="renewalok" :disabled="cost=='--'">确认续费</Button>
+        <Button type="primary" @click="renewalOk" :disabled="cost=='--'">确认续费</Button>
       </div>
     </Modal>
     <!-- 实时续费 -->
@@ -439,7 +456,8 @@
           Renew: false,
           backup: false,
           mirror: false,
-          unbindIP: false
+          unbindIP: false,
+          delHost: false
         },
         hostListColumns: [
           {
@@ -468,7 +486,7 @@
                     on: {
                       click: () => {
                         sessionStorage.setItem('manageId', params.row.computerid)
-                        this.$router.push('newHostManage')
+                        this.$router.push('manage')
                       }
                     }
                   }, text_1 + ' / '),
@@ -480,7 +498,7 @@
                     on: {
                       click: () => {
                         sessionStorage.setItem('manageId', params.row.computerid)
-                        this.$router.push('newHostManage')
+                        this.$router.push('manage')
                       }
                     }
                   }, text_2)
@@ -867,7 +885,7 @@
                     },
                     on: {
                       click: () => {
-                        alert('删除')
+                        this.hostDelete(2)
                       }
                     }
                   }, '删除')])
@@ -892,7 +910,7 @@
                     },
                     on: {
                       click: () => {
-                        alert('删除')
+                        this.hostDelete(2)
                       }
                     }
                   }, '删除')])
@@ -921,7 +939,7 @@
                         on: {
                           click: () => {
                             sessionStorage.setItem('manageId', params.row.computerid)
-                            this.$router.push('newHostManage')
+                            this.$router.push('manage')
                           }
                         }
                       }, '管理'),
@@ -976,6 +994,7 @@
                                 this.hostRestart(2)
                                 break
                               case 'deleteHost':
+                                this.hostDelete(2)
                                 break
                             }
                           }
@@ -1047,7 +1066,7 @@
                         on: {
                           click: () => {
                             sessionStorage.setItem('manageId', params.row.computerid)
-                            this.$router.push('newHostManage')
+                            this.$router.push('manage')
                           }
                         }
                       }, '管理'),
@@ -1098,7 +1117,7 @@
                                       })
                                     } else {
                                       sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
-                                      this.$router.push('newUpgrade')
+                                      this.$router.push('upgrade')
                                     }
                                   }
                                 })
@@ -1128,6 +1147,7 @@
                                 this.hostStart(2)
                                 break
                               case 'deleteHost':
+                                this.hostDelete(2)
                                 break
                             }
                           }
@@ -1208,6 +1228,7 @@
         hostSelection: [],
         hostCurrentSelected: null,
 
+        hostDelWay: 1, // 1：点击按钮删除主机 2： 点击更多操作删除；原因是参数传的不同
         listLoadBalanceRole: [],
         loadBalanceForm: {
           loadbalanceroleid: ''
@@ -1387,7 +1408,7 @@
                     })
                   } else {
                     sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
-                    this.$router.push('newUpgrade')
+                    this.$router.push('upgrade')
                   }
                 }
               })
@@ -1585,11 +1606,61 @@
           }
         })
       },
-      hostDelete() {
-        if (this.hostSelection.length > 5) {
-          this.$Message.info('删除主机至多选择 5 项')
-          return
+      hostDelete(val) {
+        this.hostDelWay = val
+        if (val === 1) {
+          if (this.hostSelection.length > 5) {
+            this.$Message.info('删除主机至多选择 5 项')
+            return
+          }
+          this.showModal.delHost = true
+        } else {
+          this.showModal.delHost = true
         }
+      },
+      delHostOk() {
+        let params = {}
+        if (this.hostDelWay === 1) {
+          this.hostListData.forEach(host => {
+            this.selectHostIds.forEach(item => {
+              if (host.id == item) {
+                host.status = -2
+              }
+            })
+          })
+          params = {
+            id: this.selectHostIds + ''
+          }
+        } else {
+          this.hostListData.forEach(host => {
+            if (host.id == this.hostCurrentSelected.id) {
+              host.status = -2
+            }
+          })
+          params = {
+            id: this.hostCurrentSelected.id,
+          }
+        }
+        let url = 'information/deleteVM.do'
+        this.$http.get(url, {
+          params: params
+        }).then(res => {
+          this.showModal.delHost = false
+          if (res.status === 200 && res.data.status === 1) {
+            this.$Message.success(res.data.message)
+            if (this.hostDelWay === 1) {
+              this.timingRefresh(this.selectHostIds + '')
+            } else {
+              this.timingRefresh(this.hostCurrentSelected.id)
+            }
+            this.hostSelection = []
+          } else {
+            this.getHostList()
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       },
       //加入负载均衡
       joinBalance() {
@@ -1751,7 +1822,7 @@
           })
         }
       },
-      bindipSubmit(name) {
+      bindIpSubmit(name) {
         this.$refs[name].validate((valid) => {
             if (valid) {
               this.hostListData.forEach(host => {
@@ -1913,7 +1984,7 @@
         }
       },
       // 包年/月主机续费
-      renewalok() {
+      renewalOk() {
         var selectIp = ''
         var selectDisk = ''
         for (var i = 0; i < this.bindRenewalVal.length; i++) {
@@ -2262,7 +2333,15 @@
         }
       },
       deleteDisabled() {
-        return this.hostSelection.length === 0
+        let len = this.hostSelection.length
+        if (len === 0) {
+          return true
+        } else {
+          // 只有开机状态的主机才能关机
+          return this.hostSelection.some(host => {
+            return host.status == -2
+          })
+        }
       },
       joinLoadBalanceDisabled() {
         let len = this.hostSelection.length
