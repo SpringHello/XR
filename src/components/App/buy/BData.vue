@@ -648,6 +648,12 @@
       }),
       // 数据库加入购物车
       addDataCart() {
+        if (this.zone.zoneid == '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
+          this.$message.info({
+            content: '请选择一个区域'
+          })
+          return
+        }
         if (this.$parent.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
@@ -690,6 +696,12 @@
           this.$LR({type: 'login'})
           return
         }
+        if (this.zone.zoneid == '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
+          this.$message.info({
+            content: '请选择一个地区'
+          })
+          return
+        }
         if (this.system.systemName == undefined) {
           this.$message.info({
             content: '请选择一个镜像'
@@ -728,7 +740,7 @@
         }
         axios.get('database/createDB.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('/ruicloud/orderNew')
+            this.$router.push('/ruicloud/order')
           } else {
             this.$message.info({
               content: response.data.message
@@ -882,6 +894,7 @@
           color: #666666;
           cursor: pointer;
           margin-right: 10px;
+          margin-bottom: 10px;
           padding: 6px 15px;
           display: inline-block;
         }

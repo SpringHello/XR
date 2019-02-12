@@ -64,6 +64,7 @@ const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 
 const AnniversaryActive = () => import('@/components/App/active/anniversaryActive')
 //const AnniversaryActiveBefore = () => import('@/components/App/active/AnniversaryActiveBefore')
+const xianNode = () => import('@/components/App/active/xianNode')
 
 //域名页面路由
 const Domainname = () =>import('@/components/App/Domain/Domainname')
@@ -131,11 +132,12 @@ const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
 const Host = () =>import('@/components/Back/Host')
-const NewHost = () =>import('@/components/Back/newHost')
-const NewHostManage = () =>import('@/components/Back/newHostManage')
-const NewUpgrade = () =>import('@/components/Back/newUpgrade')
+//const NewHost = () =>import('@/components/Back/newHost')
+//const NewHostManage = () =>import('@/components/Back/newHostManage')
+//const NewUpgrade = () =>import('@/components/Back/newUpgrade')
 const GPU = () =>import('@/components/Back/GPU')
 const GpuList = () =>import('@/components/Back/GpuList')
+const GpuListNew = () =>import('@/components/Back/GpuListNew')
 const Mirror = () =>import('@/components/Back/Mirror')
 const SSHSecretKey = () =>import('@/components/Back/SSHSecretKey')
 const Snapshot = () =>import('@/components/Back/Snapshot')
@@ -159,7 +161,7 @@ const Vpn = () =>import('@/components/Back/Vpn')
 const Ip = () =>import('@/components/Back/Ip')
 const Order = () =>import('@/components/Back/Order')
 const Order1 = () =>import('@/components/Back/Order1')
-const OrderNew = () =>import('@/components/Back/OrderNew')
+// const OrderNew = () =>import('@/components/Back/OrderNew')
 const PayResult = () =>import('@/components/Back/PayResult')
 const Result = () =>import('@/components/Back/Result')
 const ResultNew = () => import('@/components/Back/ResultNew')
@@ -339,6 +341,7 @@ var router = new Router({
         {path: 'dbActive', name: 'dbActive', component: DBActive},
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
+        {path: 'xianNode', name: 'xianNode', component: xianNode},
 
         {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},
         {path: 'SceneInfo/:type', name: 'SceneInfo', component: SceneInfo},
@@ -418,9 +421,9 @@ var router = new Router({
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
-        {path: 'newHost', name: 'newHost', component: NewHost},
-        {path: 'newHostManage', name: 'newHostManage', component: NewHostManage},
-        {path: 'newUpgrade', name: 'newUpgrade', component: NewUpgrade},
+        //{path: 'newHost', name: 'newHost', component: NewHost},
+        //{path: 'newHostManage', name: 'newHostManage', component: NewHostManage},
+        //{path: 'newUpgrade', name: 'newUpgrade', component: NewUpgrade},
         {path: 'gpu', name: 'gpu', component: GPU},
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
@@ -428,7 +431,7 @@ var router = new Router({
         {path: 'vpn', name: 'vpn', component: Vpn},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
-        {path: 'orderNew', name: 'orderNew', component: OrderNew},
+        // {path: 'orderNew', name: 'orderNew', component: OrderNew},
         {path: 'order', name: 'order', component: Order1},
         {path: 'payResult', name: 'payResult', component: PayResult},
         {path: 'result', name: 'result', component: Result},
@@ -457,6 +460,7 @@ var router = new Router({
         {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase},
         {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade},
         {path: 'GpuList', name: 'GpuList', component: GpuList},
+        {path: 'GpuListNew', name: 'GpuListNew', component: GpuListNew},
         {path: 'gpuManage', name: 'gpuManage', component: gpuManage},
         {path: 'gpuUpLevel', name: 'gpuUpLevel', component: gpuUpLevel},
         // 域名系统 =====================

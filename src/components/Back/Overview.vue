@@ -229,7 +229,7 @@
       var adver = axios.get('user/getAdvertisement.do')
       var Announcement = axios.get('user/getAnnouncement.do', {
         params: {
-          listAll: 3
+          listAll: 0
         }
       })
       var source = axios.get('user/userSourceManager.do', {

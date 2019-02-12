@@ -15,7 +15,7 @@
     <iframe :src="linkURL" style="width:100%;height:100%" name="ifr"></iframe>
 
     <Modal v-model="linkPassword" width="360" :scrollable="true">
-      <p slot="header">
+      <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">远程连接密码</span>
       </p>
       <div>

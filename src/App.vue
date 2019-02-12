@@ -19,7 +19,7 @@
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a v-if="item.title=='资讯'" :href="item.path" target="_blank"><span>{{item.title}}</span>
+                  <a v-if="item.title=='资讯'"  :href="item.path" target="_blank"><span>{{item.title}}</span>
                   </a>
                   <router-link v-else :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
                                                                                v-if="item.title=='活动中心'"></sup></span>
@@ -28,7 +28,7 @@
                 <div class="menu-dropdown-list">
                   <div class="content-dropdown">
                     <div class="content" ref="content" style="height:0px;">
-                      <div v-if="item.content" class="column" :class="{info:index1 == 4}">
+                      <div v-if="item.content" class="column" :class="{info:index1 == 4}" style="padding:21px 0;">
                         <div v-for="(prod,index) in item.content" :key="index">
                           <div>
                             <h2 v-if="index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
@@ -84,9 +84,9 @@
                 </div>
               </div>
             </li>
-            <li @mouseenter="ME(1,$event)">
+            <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
-                <div class="menu-dropdown-rel">
+                <div class="menu-dropdown-rels">
                   <router-link to="/ruicloud/register"><span>注册</span></router-link>
                 </div>
               </div>
@@ -506,24 +506,24 @@
             path: '/ruicloud/document',
           },
           {
-            title: '资讯',
-            path: 'https://news.xrcloud.net/homePage/1.html',
+            title: '新闻动态',
+            path: '',
             content: [
               {
                 prod: '云服务',
-                path: 'https://news.xrcloud.net/yunfuwu/article/1.html'
+                path: 'https://news.xrcloud.net/yunfuwu'
               },
               {
                 prod: '云咨询',
-                path: 'https://news.xrcloud.net/yunzixun/article/1.html'
+                path: 'https://news.xrcloud.net/yunzixun'
               },
               {
                 prod: '云技术',
-                path: 'https://news.xrcloud.net/yunjishu/article/1.html'
+                path: 'https://news.xrcloud.net/yunjishu'
               },
               {
                 prod: '云安全',
-                path: 'https://news.xrcloud.net/yunanquan/article/1.html'
+                path: 'https://news.xrcloud.net/yunanquan'
               }
             ]
           },
@@ -634,6 +634,10 @@
       if (to.query.from) {
         // 流量来源记录
         localStorage.setItem('comefrom', to.query.from)
+      }
+      if (to.query.sellCode) {
+        // 销售来源渠道
+        localStorage.setItem('sellCode', to.query.sellCode)
       }
       window.UUID = uuid.v4()
       let params = {
@@ -795,7 +799,7 @@
         var content = this.$refs.content
         for (var i in content) {
           if (i == this.currentItem) {
-            content[i].style.height = `${content[i].firstChild.clientHeight}px`
+            content[i].style.height = `${content[i].firstChild.clientHeight+25}px`
           } else {
             content[i].style.height = '0px'
           }
@@ -924,6 +928,19 @@
                     }
                   }
                 }
+                 .menu-dropdown-rels {
+                  a {
+                    color: #fff;
+                    transition: all .3s;
+                    cursor: pointer;
+                    display: block;
+                    line-height: 70px;
+                    span {
+                      padding: 0px 25px;
+                      line-height: 70px;
+                    }
+                  }
+                }
                 .menu-dropdown-list {
                   position: absolute;
                   width: 100%;
@@ -954,6 +971,9 @@
                           height: 50px;
                           width: 400px;
                           margin: 0 auto;
+                        }
+                        .info:hover{
+                          color: #2A99F2;
                         }
                         > div {
                           width: 15%;
@@ -1339,4 +1359,5 @@
     border-radius: 50%;
     background-color: rgb(237, 63, 20, 0.5);
   }
+
 </style>

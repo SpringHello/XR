@@ -1,8 +1,8 @@
 <template>
-    <div  :class="wrapClasses" style=" height: 46px;border-radius:4px;">
+    <div  :class="wrapClasses" style=" height: 46px;border-radius:4px;width:363px;">
       <img class="ver_img" :src="icon" style="width:16px;height:18px;">
         <div class="ver_select" v-if="isSelect == 'select'">
-            <div @click="isShow = !isShow" class="verNumber" :class="[isShow ?'verNumber':'verNumbers']">
+            <div @click="isShow = !isShow" class="verNumber" :class="[isShow ?'':'verNumbers']">
                <span>+{{selectValue}}</span> 
             </div>
              <transition name="fade">
@@ -15,7 +15,7 @@
         </div>
         <input :value='account'  :style="style"
         :id="elementId"
-        :autocomplete="autocomplete"
+        autocomplete="new-password"
         :spellcheck="spellcheck" 
         :disabled="disabled"
         :readonly="readonly"
@@ -46,7 +46,7 @@ export default {
     props:{
         icon:{
             type:String,
-            default:require('../../assets/img/updatePaw/paw_zhanghao.png')
+            default:''
         },
         value:{
             type:String,
@@ -89,7 +89,7 @@ export default {
     data(){
         return{
             account:this.value,
-            style:'height: 44px;padding-left: 48px;',
+            style:'height: 44px;padding-left:48px;',
             prefixCls: prefixCls,
             isSelect:'',
             telList:telList,
@@ -223,6 +223,14 @@ export default {
             }
          },
         immediate:true
+      },
+      icon:{
+          handler(){
+            if(this.icon == ''){
+              this.style = 'height:44px;padding-left:10px;'
+            }
+          },
+          immediate:true
       }
     }
 }
@@ -338,7 +346,7 @@ export default {
         height: 28px;
         line-height: 28px;
         margin-top: 8px;
-        padding: 0 20px 0 17px;
+        padding: 0 3% 0 3%;
         border-left: 1px solid  #C8C8C8;
         color: #4A97EE;
         position: absolute;
