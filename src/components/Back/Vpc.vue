@@ -37,7 +37,7 @@
                 <div class="content">
                   <div class="item-wrap">
                     <div class="item item1">
-                      <p>名称：<span style="float:unset">{{item.status==2?'创建中':item.status==3?'删除中':item.vpcname}}</span>
+                      <p>名称：<span style="float:unset">{{item.status==2?'创建中':item.status==3?'清理重启中':item.status==4? '删除中': item.vpcname}}</span>
                         <Spin size="small" v-if="item.status!=1" style="display: inline-block"></Spin>
                       </p>
                       <p>网段：<span>{{item.cidr}}</span></p>
@@ -979,13 +979,14 @@
       // 确认变更资费
       ratesChange_ok() {
         let url = 'continue/changeMoney.do'
-        this.$http.get(url, {
-          params: {
-            id: this.select.id,
-            timeType: this.ratesChangeType,
-            timeValue: this.ratesChangeTime,
-            type: 4
-          }
+        let list = [{
+          type: 4,
+          id: this.select.id
+        }]
+        this.$http.post(url, {
+          timeType: this.ratesChangeType,
+          timeValue: this.ratesChangeTime,
+          list: JSON.stringify(list)
         }).then(response => {
           if (response.data.status == 1) {
             this.$router.push({path: 'order'})
@@ -1202,10 +1203,10 @@
           onOk: () => {
             this.netData.forEach(item => {
               if (item.id == select[0].id) {
-                this.$set(item, 'status', 3)
+                this.$set(item, 'status', 4)
               }
             })
-            //select[0]._select = 3 // 3代表删除中
+            //select[0]._select = 4 // 4代表删除中
             this.$http.get('network/deleteVpc.do', {
               params: {
                 id: select[0].id
@@ -1464,7 +1465,7 @@
       },
       buyIP() {
         sessionStorage.setItem('pane', 'Peip')
-        this.$router.push('buy')
+        this.$router.push('buy/bip')
       }
     },
     computed: mapState({

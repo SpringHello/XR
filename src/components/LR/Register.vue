@@ -69,19 +69,19 @@
                   <p>您输入的密码不符合格式要求，请重新输入</p>
                 </div>
               </div>
-              <div v-show="registerForm.onStep === 1">
-                <div id="captchaBox_registerCode" style="height: 40px"></div>
-                <div class="errorMsg">
-                  <div v-if="registerForm.errorMsg === 'notSlidingCodeValidation'">
-                    <i></i>
-                    <p>您还没有通过验证</p>
-                  </div>
-                </div>
-              </div>
+              <!--              <div v-show="registerForm.onStep === 1">
+                              <div id="captchaBox_registerCode" style="height: 40px"></div>
+                              <div class="errorMsg">
+                                <div v-if="registerForm.errorMsg === 'notSlidingCodeValidation'">
+                                  <i></i>
+                                  <p>您还没有通过验证</p>
+                                </div>
+                              </div>
+                            </div>-->
               <div class="import" v-if="registerForm.onStep === 1" :class="{error: registerForm.errorMsg === 'verificationCodeMistake'}">
                 <img src="../../assets/img/login/lr-icon4.png"/>
                 <input class="verification" v-model="registerForm.verificationCode" type="text" @input="registerForm.errorMsg=''" placeHolder="请输入收到的验证码"/>
-                <a @click="sendRegisterVailCode" :class="{disabled:registerForm.verificationCodeText !== '发送验证码' }">{{registerForm.verificationCodeText}}</a>
+                <a @click="sendRegisterVailCodeCheck" :class="{disabled:registerForm.verificationCodeText !== '发送验证码' }">{{registerForm.verificationCodeText}}</a>
               </div>
               <div class="import" v-if="registerForm.onStep === 2" :class="{error: registerForm.errorMsg === 'notConfirmPassword'}">
                 <img src="../../assets/img/login/lr-icon2.png"/>
@@ -99,7 +99,7 @@
                 </div>
                 <div v-if="registerForm.errorMsg === 'notGetVerificationCode'&&registerForm.registerType==='phone'">
                   <i></i>
-                  <p>收不到验证码？请选择<span @click="changeToEmailRegister">邮箱注册</span>或<span @click="getLoginVoiceCode">接收语音验证码</span></p>
+                  <p>收不到验证码？请选择<span @click="changeToEmailRegister">邮箱注册</span>或<span @click="getRegisterVoiceCodeCheck">接收语音验证码</span></p>
                 </div>
                 <div v-if="registerForm.errorMsg === 'notGetVerificationCode'&&registerForm.registerType==='email'">
                   <i></i>
@@ -740,6 +740,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import areaTel from '../../options/area_tel'
+  import throttle from 'throttle-debounce/throttle'
   import gt from '../../util/gt'
 
   export default {
@@ -776,32 +777,29 @@
       }
     },
     created() {
-      this.gtInitCode()
     },
     mounted() {
     },
     methods: {
-      /* 滑动验证初始化*/
-      gtInitCode() {
+      /* 滑动验证初始化 -- 发送验证码*/
+      gtInitCode: throttle(2000, function () {
+        let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
           if (res.status == 200) {
+            // 绑定到按钮
             initGeetest({
               // 以下配置参数来自服务端 SDK
               gt: res.data.gt,
               challenge: res.data.challenge,
               offline: !res.data.success,
               new_captcha: true,
-              width: '100%',
-              product: 'float'
-            }, captchaObj => {
-              this.codeCaptchaObj = captchaObj
-              captchaObj.appendTo("#captchaBox_registerCode"); //将验证按钮插入到宿主页面中captchaBox元素内
-              captchaObj.onReady(() => {
-              }).onSuccess(() => {
-                if (this.registerForm.errorMsg !== 'notGetVerificationCode') {
-                  this.registerForm.errorMsg = ''
-                }
+              product: 'bind',
+            }, function (captchaObj) {
+              captchaObj.onReady(function () {
+                captchaObj.verify()
+              }).onSuccess(function () {
+                _self.registerForm.errorMsg = ''
                 var result = captchaObj.getValidate()
                 let url = 'user/silpJudge.do'
                 let params = {
@@ -813,15 +811,54 @@
                   if (response.data.status != '1') {
                     captchaObj.reset(); // 调用该接口进行重置
                   } else {
-                    this.codeCaptchaObjStatus = true
+                    _self.sendRegisterVailCode()
                   }
                 })
-              }).onError(() => {
+              }).onError(function () {
               })
             })
           }
         })
-      },
+      }),
+      /* 滑动验证初始化 -- 发送语音验证码 */
+      gtInitVoice: throttle(2000, function () {
+        let _self = this
+        let url = 'user/silpInitialization.do'
+        axios.get(url, {params: {}}).then(res => {
+          if (res.status == 200) {
+            // 绑定到按钮
+            initGeetest({
+              // 以下配置参数来自服务端 SDK
+              gt: res.data.gt,
+              challenge: res.data.challenge,
+              offline: !res.data.success,
+              new_captcha: true,
+              product: 'bind',
+            }, function (captchaObj) {
+              captchaObj.onReady(function () {
+                captchaObj.verify()
+              }).onSuccess(function () {
+                _self.registerForm.errorMsg = ''
+                var result = captchaObj.getValidate()
+                let url = 'user/silpJudge.do'
+                let params = {
+                  geetest_challenge: result.geetest_challenge,
+                  geetest_validate: result.geetest_validate,
+                  geetest_seccode: result.geetest_seccode
+                }
+                axios.get(url, {params: params}).then(response => {
+                  if (response.data.status != '1') {
+                    captchaObj.reset(); // 调用该接口进行重置
+                  } else {
+                    _self.getRegisterVoiceCode()
+                  }
+                })
+              }).onError(function () {
+              })
+            })
+          }
+        })
+      }),
       /* 切换banner */
       change(activeIndex) {
         this.activeBanner = activeIndex + 1
@@ -834,15 +871,11 @@
         this.registerForm.registerType = 'email'
         this.registerForm.errorMsg = ''
         this.registerForm.onStep = 1
-        this.codeCaptchaObj.reset()
-        this.codeCaptchaObjStatus = false
       },
       changeToPhoneRegister() {
         this.registerForm.registerType = 'phone'
         this.registerForm.errorMsg = ''
         this.registerForm.onStep = 1
-        this.codeCaptchaObj.reset()
-        this.codeCaptchaObjStatus = false
       },
       /* 校验手机号是否注册 */
       verifyIsRegister() {
@@ -880,92 +913,91 @@
           }
         }
       },
-      sendRegisterVailCode() {
-        let params = {}
+      sendRegisterVailCodeCheck() {
         if (this.registerForm.registerType === 'phone') {
           if (!this.registerForm.loginPhone || !this.regExpObj.phone.test(this.registerForm.loginPhone)) {
             this.registerForm.errorMsg = 'formatPhoneError'
             return
-          }
-          params = {
-            username: this.registerForm.loginPhone
           }
         } else {
           if (!this.registerForm.loginEmail || !this.regExpObj.email.test(this.registerForm.loginEmail)) {
             this.registerForm.errorMsg = 'formatEmailError'
             return
           }
-          params = {
-            username: this.registerForm.loginEmail
-          }
-        }
-        if (!this.codeCaptchaObjStatus) {
-          this.registerForm.errorMsg = 'notSlidingCodeValidation'
-          return
         }
         if (this.registerForm.verificationCodeText !== '发送验证码') {
           return
+        }
+        let params = {}
+        if (this.registerForm.registerType === 'phone') {
+          params = {
+            username: this.registerForm.loginPhone
+          }
+        } else {
+          params = {
+            username: this.registerForm.loginEmail
+          }
         }
         axios.get('user/isRegister.do', {
           params
         }).then(response => {
           if (response.status === 200 && response.data.status === 1) {
-            this.registerForm.verificationCodeText = '发送中'
-            let url = 'user/code.do'
-            let params = {}
-            if (this.registerForm.registerType === 'phone') {
-              params = {
-                aim: this.registerForm.loginPhone,
-                isemail: 0
-              }
-            } else {
-              params = {
-                aim: this.registerForm.loginEmail,
-                isemail: 1
-              }
-            }
-            axios.get(url, {params: params}).then(res => {
-                if (res.data.status === 1 && res.status === 200) {
-                  this.registerForm.errorMsg = ''
-                  let i = 60
-                  this.registerForm.verificationCodeText = '60S'
-                  this.registerForm.verificationCodeTimer = setInterval(() => {
-                    i -= 1
-                    if (i < 10) {
-                      this.registerForm.verificationCodeText = '0' + i + 'S'
-                    } else {
-                      this.registerForm.verificationCodeText = i + 'S'
-                    }
-                    if (i === 0) {
-                      this.registerForm.verificationCodeText = '发送验证码'
-                      if (!this.registerForm.verificationCode) {
-                        this.registerForm.errorMsg = 'notGetVerificationCode'
-                      }
-                      this.codeCaptchaObjStatus = false
-                      this.codeCaptchaObj.reset()
-                      window.clearInterval(this.registerForm.verificationCodeTimer)
-                    }
-                  }, 1000)
-                } else {
-                  this.registerForm.verificationCodeText = '发送验证码'
-                  this.$Message.info(res.data.message)
-                }
-              }
-            )
+            this.gtInitCode()
           } else {
             this.registerForm.errorMsg = 'isRegister'
           }
         })
       },
-      getLoginVoiceCode() {
+      sendRegisterVailCode() {
+        this.registerForm.verificationCodeText = '发送中'
+        let url = 'user/code.do'
+        let params = {}
+        if (this.registerForm.registerType === 'phone') {
+          params = {
+            aim: this.registerForm.loginPhone,
+            isemail: 0
+          }
+        } else {
+          params = {
+            aim: this.registerForm.loginEmail,
+            isemail: 1
+          }
+        }
+        axios.get(url, {params: params}).then(res => {
+            if (res.data.status === 1 && res.status === 200) {
+              this.registerForm.errorMsg = ''
+              let i = 60
+              this.registerForm.verificationCodeText = '60S'
+              this.registerForm.verificationCodeTimer = setInterval(() => {
+                i -= 1
+                if (i < 10) {
+                  this.registerForm.verificationCodeText = '0' + i + 'S'
+                } else {
+                  this.registerForm.verificationCodeText = i + 'S'
+                }
+                if (i === 0) {
+                  this.registerForm.verificationCodeText = '发送验证码'
+                  if (!this.registerForm.verificationCode) {
+                    this.registerForm.errorMsg = 'notGetVerificationCode'
+                  }
+                  window.clearInterval(this.registerForm.verificationCodeTimer)
+                }
+              }, 1000)
+            } else {
+              this.registerForm.verificationCodeText = '发送验证码'
+              this.$Message.info(res.data.message)
+            }
+          }
+        )
+      },
+      getRegisterVoiceCodeCheck() {
         if (!this.regExpObj.phone.test(this.registerForm.loginPhone)) {
           this.registerForm.errorMsg = 'formatPhoneError'
           return
         }
-        if (!this.codeCaptchaObjStatus) {
-          this.$Message.info('您还没有通过验证')
-          return
-        }
+        this.gtInitVoice()
+      },
+      getRegisterVoiceCode() {
         let url = 'user/voiceCode.do'
         axios.get(url, {
           params: {
@@ -988,8 +1020,6 @@
                 if (!this.registerForm.verificationCode) {
                   this.registerForm.errorMsg = 'notGetVerificationCode'
                 }
-                this.codeCaptchaObjStatus = false
-                this.codeCaptchaObj.reset()
                 window.clearInterval(this.registerForm.verificationCodeTimer)
               }
             }, 1000)

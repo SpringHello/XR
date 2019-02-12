@@ -538,6 +538,78 @@ var info = [
       }
     ],
   },
+  {
+    zoneId: '3f3b1961-c693-489f-b6fc-c3ddc19d5c18',
+    zoneName: '西北一区',
+    kernelList: [
+      {
+        label: '1核',
+        value: 1,
+        RAMList: [
+          { label: '1G', value: 1 },
+          { label: '2G', value: 2 },
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 }
+        ]
+      },
+      {
+        label: '2核',
+        value: 2,
+        RAMList: [
+          { label: '2G', value: 2 },
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 },
+          { label: '16G', value: 16 }
+        ]
+      },
+      {
+        label: '4核',
+        value: 4,
+        RAMList: [
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 },
+          { label: '16G', value: 16 },
+          { label: '32G', value: 32 }
+        ]
+      },
+      {
+        label: '8核',
+        value: 8,
+        RAMList: [
+          { label: '8G', value: 8 },
+          { label: '16G', value: 16 },
+          { label: '32G', value: 32 },
+          { label: '64G', value: 64 }
+        ]
+      },
+      {
+        label: '16核',
+        value: 16,
+        RAMList: [
+          { label: '16G', value: 16 },
+          { label: '32G', value: 32 },
+          { label: '64G', value: 64 },
+          { label: '128G', value: 128 }
+        ]
+      },
+      {
+        label: '32核',
+        value: 32,
+        RAMList: [
+          { label: '64G', value: 64 },
+          { label: '128G', value: 128 }
+        ]
+      },
+      {
+        label: '64核',
+        value: 64,
+        RAMList: [
+          { label: '128G', value: 128 },
+          { label: '256G', value: 256 },
+        ]
+      }
+    ],
+  },
 ]
 import $store from '@/vuex'
 export default {
