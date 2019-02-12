@@ -4,6 +4,24 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
+          <div class="xian-active" @click="push('/ruicloud/xianNode')">
+            <div class="wrap">
+              <div class="container flex-vertical-center">
+                <div class="left">
+                  <img src="../../assets/img/active/xianNode/banner-text.png" alt>
+                  <p>
+                    新节点云服务器
+                    <i>折扣特惠</i>，
+                    100%资源可用、100%性能可用！
+                  </p>
+                  <span @click="$router.push('xianNode')">立即参与</span>
+                </div>
+                <img src="../../assets/img/active/xianNode/xian-node-banner.png" alt>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div class="dan-banner" @click="push('/ruicloud/wonderfulDay')">
             <div class="wraps">
               <img src="../../assets/img/home/dan_banner.png">
@@ -415,9 +433,9 @@
               <dd v-html="showNews.abstracts">
               </dd>
               <dd>
-                <router-link to="news.xrcloud.net" target="_blank" class="news-btn">
+                <a :href='`https://news.xrcloud.net/essay/${showNews.code}.html`' target="_blank" class="news-btn">
                   查看详情
-                </router-link>
+                </a>
               </dd>
             </dl>
           </div>
@@ -437,13 +455,13 @@
               <ul>
                 <li v-for="(secitem,i) in item.artile" :key="i">
                   <a :href="`https://news.xrcloud.net/essay/${secitem.code}.html`" target="_blank">
-                    <div class="alink">
-                      <div class="title">{{secitem.title}}</div>
-                      <i v-if="secitem.isHot">HOT</i>
-                      <i v-if="secitem.isNew" style="background:#4B97EE">NEW</i>
-                    </div>
-                    <div class="blink">{{secitem.createtime.split(' ')[0]}}</div>
-                  </a>
+                      <div class="alink">
+                        <div class="title">{{secitem.title}}</div>
+                        <i v-if="secitem.isHot">HOT</i>
+                        <i v-if="secitem.isNew" style="background:#4B97EE">NEW</i>
+                      </div>
+                      <div class="blink">{{secitem.createtime.split(' ')[0]}}</div>
+                    </a>
                 </li>
               </ul>
             </dd>
@@ -1145,10 +1163,10 @@
       }
     },
     mounted() {
-      if (!sessionStorage.getItem('welcome')) {
+/*      if (!sessionStorage.getItem('welcome')) {
         this.showModal.welcome = true
         sessionStorage.setItem('welcome', '1')
-      }
+      }*/
       this.menuselected(0)
       // echarts.registerMap('china', china)
       // this.myChart = echarts.init(document.getElementById('echarts'))
@@ -2739,6 +2757,41 @@
         }
         p:nth-child(3) {
           font-weight: 700;
+        }
+      }
+    }
+  }
+
+  .xian-active {
+    background:url(../../assets/img/active/xianNode/xian-banner-bg.png) center no-repeat,linear-gradient(to bottom, #ffdcbc, #ffe7d2);
+    .container {
+      height: 400px;
+      .left {
+        p {
+          margin-top: 20px;
+          font-size: 20px;
+          color: #222222;
+          font-weight: 500;
+          i {
+            font-size: 24px;
+            color: #ff3000;
+            font-style: normal;
+          }
+        }
+        span {
+          margin-top: 52px;
+          display: inline-block;
+          width: 170px;
+          height: 50px;
+          font-size: 22px;
+          color: rgba(255, 48, 0, 1);
+          line-height: 44px;
+          text-align: center;
+          cursor: pointer;
+          border: 2px solid rgba(255, 48, 0, 1);
+          &:hover {
+            background: #FFD1B2;
+          }
         }
       }
     }

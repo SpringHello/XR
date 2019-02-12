@@ -230,71 +230,99 @@
         <Table :columns="orderColumns" :data="orderData" style="margin-top: 30px"></Table>
         <div class="pay-wap">
           <p>选择支付方式</p>
+          <!--          <RadioGroup v-model="payWay" vertical @on-change="payWayChange">
+                       <Radio label="balancePay">
+                        <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 40px">余额支付</span>
+                        <span style="color:rgba(102,102,102,1);font-size: 14px">账户余额：</span>
+                        <span style="color:#D0021B;font-size: 14px">¥{{ balance }}</span>
+                      </Radio>
+                      <Radio label="otherPay" class="pw-img" :disabled="balance >= cashPledge">
+                        <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
+                        <img src="../../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null">
+                        <img src="../../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null">
+                      </Radio>
+                    </RadioGroup>-->
           <RadioGroup v-model="payWay" vertical @on-change="payWayChange">
-            <Radio label="balancePay">
-              <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 40px">余额支付</span>
-              <span style="color:rgba(102,102,102,1);font-size: 14px">账户余额：</span>
-              <span style="color:#D0021B;font-size: 14px">¥{{ balance }}</span>
-            </Radio>
-            <Radio label="otherPay" class="pw-img" :disabled="balance >= cashPledge">
+            <Radio label="otherPay" class="pw-img">
               <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
-              <img src="../../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null">
-              <img src="../../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null">
+              <img src="../../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="otherPayWay = 'zfb'">
+              <img src="../../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="otherPayWay = 'wx'">
             </Radio>
           </RadioGroup>
-        </div>
-        <p class="p1">注：没有实名认证的用户领取主机成功后，需要进行实名认证才可以使用。您可以点击实名认证 现在进行认证，也可以在领取主机之后点击个人中心-个人认证进行实名认证。</p>
-        <div class="attestationForm">
-          <p>实名认证</p>
-          <div class="click_icon icons" :class="{hide_icon:!attestationShow}" @click="attestationShow = !attestationShow"></div>
-        </div>
-        <div v-show="attestationShow">
-          <div v-if="authInfo&&authInfo.checkstatus==0" class="modal-p">
-            <p><img src="../../../assets/img/sceneInfo/si-success.png"/><span>恭喜您，实名认证成功！</span></p>
-          </div>
-          <Form :model="quicklyAuthForm" :label-width="100" ref="quicklyAuth"
-                :rules="quicklyAuthFormValidate"
-                style="width:450px;margin-top:20px;" v-else>
-            <FormItem label="真实姓名" prop="name" style="width: 100%">
-              <Input v-model="quicklyAuthForm.name" placeholder="请输入姓名"></Input>
-            </FormItem>
-            <FormItem label="身份证号" prop="IDCard" style="width: 100%">
-              <Input v-model="quicklyAuthForm.IDCard" placeholder="请输入身份证号"></Input>
-            </FormItem>
-            <Form :model="quicklyAuthForm" :rules="quicklyAuthFormValidate" ref="sendCode"
-                  :label-width="100">
-              <FormItem label="图形验证码" prop="pictureCode">
-                <div style="display: flex">
-                  <Input v-model="quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
-                         style="width:250px;margin-right: 10px"></Input>
-                  <img :src="imgSrc" style="height:33px;"
-                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-                </div>
-              </FormItem>
-              <FormItem label="手机号码" prop="phone" style="width: 100%">
-                <div style="display: flex;justify-content: space-between">
-                  <Input v-model="quicklyAuthForm.phone" placeholder="请输入以该身份证开户的手机号码"
-                         style="width:260px;margin-right: 10px"></Input>
-                  <Button type="primary" @click="sendCode" style="width:92px"
-                          :disabled="quicklyAuthForm.sendCodeText!='获取验证码'">
-                    {{quicklyAuthForm.sendCodeText}}
-                  </Button>
-                </div>
-              </FormItem>
-            </Form>
-            <FormItem label="验证码" prop="validateCode" style="width: 100%">
-              <Input v-model="quicklyAuthForm.validateCode" placeholder="请输入验证码"></Input>
-            </FormItem>
-            <FormItem>
-              <div style="float:right">
-                <Button type="primary" @click="quicklyAuth">确认提交</Button>
-              </div>
-            </FormItem>
-          </Form>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="getHost_ok">确认</Button>
+      </div>
+    </Modal>
+    <!-- 购买前实名认证 -->
+    <Modal v-model="showModal.authentication" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">实名认证</span>
+      </p>
+      <Form :model="quicklyAuthForm" :label-width="100" ref="quicklyAuth"
+            :rules="quicklyAuthFormValidate"
+            style="width:450px;margin-top:20px;">
+        <FormItem label="真实姓名" prop="name" style="width: 100%">
+          <Input v-model="quicklyAuthForm.name" placeholder="请输入姓名"></Input>
+        </FormItem>
+        <FormItem label="身份证号" prop="IDCard" style="width: 100%">
+          <Input v-model="quicklyAuthForm.IDCard" placeholder="请输入身份证号"></Input>
+        </FormItem>
+        <Form :model="quicklyAuthForm" :rules="quicklyAuthFormValidate" ref="sendCode"
+              :label-width="100">
+          <FormItem label="图形验证码" prop="pictureCode">
+            <div style="display: flex">
+              <Input v-model="quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
+                     style="width:250px;margin-right: 10px"></Input>
+              <img :src="imgSrc" style="height:33px;"
+                   @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            </div>
+          </FormItem>
+          <FormItem label="手机号码" prop="phone" style="width: 100%">
+            <Input v-model="quicklyAuthForm.phone" placeholder="请输入以该身份证开户的手机号码"></Input>
+          </FormItem>
+        </Form>
+        <FormItem label="验证码" prop="validateCode" style="width: 100%">
+          <div style="display: flex;justify-content: space-between">
+            <Input v-model="quicklyAuthForm.validateCode" placeholder="请输入验证码" style="width:260px;margin-right: 10px"></Input>
+            <Button type="primary" @click="sendCode"
+                    :disabled="quicklyAuthForm.sendCodeText!='获取验证码'">
+              {{quicklyAuthForm.sendCodeText}}
+            </Button>
+          </div>
+        </FormItem>
+      </Form>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="quicklyAuth">提交</Button>
+      </div>
+    </Modal>
+    <!-- 实名认证成功 -->
+    <Modal v-model="showModal.authenticationSuccess" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">实名认证</span>
+      </p>
+      <div style="text-align:center;padding:40px 0;">
+        <img src="../../../assets/img/payresult/paySuccess.png"
+             style="width:36px;vertical-align:middle;margin-right:10px;">
+        <span style="font-size:14px;line-height:36px">恭喜您，实名认证成功！</span>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="showModal.authenticationSuccess=false">确认</Button>
+      </div>
+    </Modal>
+    <!-- 实名认证失败 -->
+    <Modal v-model="showModal.authenticationError" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">实名认证</span>
+      </p>
+      <div style="text-align:center;padding:40px 0;">
+        <img src="../../../assets/img/payresult/payFail.png"
+             style="width:36px;vertical-align:middle;margin-right:10px;">
+        <span style="font-size:14px;line-height:36px">抱歉，实名认证失败，原因：{{authErrorText}}</span>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="showModal.authenticationError=false">确认</Button>
       </div>
     </Modal>
   </div>
@@ -339,6 +367,7 @@
         }
       }
       return {
+        authErrorText: '',
         flag: false,
         fr_scrollTop: 0,
         serialNum: '',
@@ -354,7 +383,10 @@
           payDefeatedModal: false,
           paySuccessModal: false,
           weChatRechargeModal: false,
-          orderConfirmationModal: false
+          orderConfirmationModal: false,
+          authentication: false,
+          authenticationSuccess: false,
+          authenticationError: false
         },
         flowGroup: [
           {
@@ -547,10 +579,9 @@
           },
         ],
         orderData: [],
-        payWay: 'balancePay',
+        payWay: 'otherPay',
         otherPayWay: '',
         balance: '0.0',
-        attestationShow: false,
         // 快速认证表单
         quicklyAuthForm: {
           name: '',
@@ -696,6 +727,10 @@
         }
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'register'})
+          return
+        }
+        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+          this.showModal.authentication = true
           return
         }
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
@@ -879,10 +914,10 @@
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
                 var countdown = 60
-                this.quicklyAuthForm.sendCodeText = `${countdown}S`
+                this.quicklyAuthForm.sendCodeText = `重新发送(${countdown})S`
                 var Interval = setInterval(() => {
                   countdown--
-                  this.quicklyAuthForm.sendCodeText = `${countdown}S`
+                  this.quicklyAuthForm.sendCodeText = `重新发送(${countdown})S`
                   if (countdown == 0) {
                     clearInterval(Interval)
                     this.quicklyAuthForm.sendCodeText = '获取验证码'
@@ -913,11 +948,12 @@
               type: '0'
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.showModal.authentication = false
+                this.showModal.authenticationSuccess = true
                 this.init()
               } else {
-                this.$message.info({
-                  content: response.data.message
-                })
+                this.showModal.authenticationError = true
+                this.authErrorText = response.data.message
               }
             })
           }

@@ -306,6 +306,38 @@
         <Button type="primary" @click="renewOk" :disabled="renewalTime==''">确认续费</Button>
       </div>
     </Modal>
+    <Modal v-model="showModal.deleteIP" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">释放IP</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">您正将<span> {{ publicipOnDelete}} </span>移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.deleteIP = false">取消</Button>
+        <Button type="primary" @click="deleteIP_ok">确认</Button>
+      </p>
+    </Modal>
+    <Modal v-model="showModal.unbindResources" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">解绑资源</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">您确认解绑该IP下资源?
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.unbindResources = false">取消</Button>
+        <Button type="primary" @click="unbindResources_ok">确认</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -376,7 +408,9 @@
           bindIPForDatabase: false,
           charges: false,
           adjust: false,
-          bindIPForGpu: false
+          bindIPForGpu: false,
+          deleteIP: false,
+          unbindResources: false
         },
         chargesForm: {
           timeType: '',
@@ -707,7 +741,8 @@
                     },
                     on: {
                       click: () => {
-                        this.unbundle(object.row)
+                        this.unbundleResource = object.row
+                        this.showModal.unbindResources = true
                       }
                     }
                   }, '解绑资源')
@@ -801,7 +836,8 @@
           endTime: ''
         },
         hide: '',
-        intervalInstance: null
+        intervalInstance: null,
+        unbundleResource: {}
       }
     },
     beforeRouteLeave(to, from, next) {
@@ -824,33 +860,32 @@
       // 释放弹性IP
       resetIP() {
         if (this.select.length !== 0) {
-          let ids = this.select.map(item => {
-            return item.id
-          })
-          this.$message.confirm({
-            content: '您正将“' + this.select[0].publicip + '”等IP移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
-            onOk: () => {
-              this.$http.get('network/delPublic.do', {
-                params: {
-                  ids: ids + ''
-                }
-              }).then(response => {
-                if (response.status == 200 || response.data.status == 1) {
-                  this.refresh()
-                  this.$Message.success(response.data.message)
-                } else {
-                  this.$message.info({
-                    content: response.data.message
-                  })
-                }
-              })
-            }
-          })
+          this.showModal.deleteIP = true
         } else {
           this.$Message.info({
             content: '请先选择需要释放的弹性IP'
           })
         }
+      },
+      deleteIP_ok() {
+        this.showModal.deleteIP = false
+        let ids = this.select.map(item => {
+          return item.id
+        })
+        this.$http.get('network/delPublic.do', {
+          params: {
+            ids: ids + ''
+          }
+        }).then(response => {
+          if (response.status == 200 || response.data.status == 1) {
+            this.refresh()
+            this.$Message.success(response.data.message)
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
       },
       refresh() {
         // 获取ip数据
@@ -1200,74 +1235,55 @@
         })
         this.$refs.bindForNATFormValidate.resetFields();
       },
-      // 解绑资源
-      unbundle(row) {
-        this.$Modal.confirm({
-          render: (h) => {
-            return h('p', {
-              class: 'modal-content-s'
-            }, [h('i', {
-              class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-              style: {
-                color: '#f90'
-              }
-            }), '确认解绑该IP下资源?'])
-          },
-          title: '解绑资源',
-          scrollable: true,
-          okText: '确定解绑',
-          cancelText: '取消',
-          'onOk': () => {
-            var url = ''
-            var params = {}
-            switch (row.usetype) {
-              case 4 :
-                url = 'network/unboundElasticIP.do'
-                params = {
-                  publicIp: row.publicip,
-                  natGatewayId: row.natgatewayid
-                }
-                break
-              case 3 :
-                url = 'network/natGatewayUnboundTargetIP.do'
-                params = {
-                  publicIp: row.publicip,
-                  natGatewayId: row.natgatewayid
-                }
-                break
-              case 1 :
-                url = 'network/disableStaticNat.do'
-                params = {
-                  VMId: row.computerid,
-                }
-                break
+      unbindResources_ok(){
+        this.showModal.unbindResources = false
+        var url = ''
+        var params = {}
+        switch (this.unbundleResource.usetype) {
+          case 4 :
+            url = 'network/unboundElasticIP.do'
+            params = {
+              publicIp: this.unbundleResource.publicip,
+              natGatewayId: this.unbundleResource.natgatewayid
             }
-            this.operatingId = row.id
-            this.operatingId = row.id
-            this.ipData.forEach(item => {
-              if (item.id === this.operatingId) {
-                // 4代表解绑中
-                item.status = 4
-              }
-              this.select.forEach(ip => {
-                if (item.id === ip.id) {
-                  item._checked = true
-                }
-              })
+            break
+          case 3 :
+            url = 'network/natGatewayUnboundTargetIP.do'
+            params = {
+              publicIp: this.unbundleResource.publicip,
+              natGatewayId: this.unbundleResource.natgatewayid
+            }
+            break
+          case 1 :
+            url = 'network/disableStaticNat.do'
+            params = {
+              VMId: this.unbundleResource.computerid,
+            }
+            break
+        }
+        this.operatingId = this.unbundleResource.id
+        this.ipData.forEach(item => {
+          if (item.id === this.operatingId) {
+            // 4代表解绑中
+            item.status = 4
+          }
+          this.select.forEach(ip => {
+            if (item.id === ip.id) {
+              item._checked = true
+            }
+          })
+        })
+        this.$http.get(url, {params}).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success({
+              content: response.data.message
             })
-            this.$http.get(url, {params}).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success({
-                  content: response.data.message
-                })
-                this.timingRefresh(row.publicipid)
-              } else {
-                this.$message.info({
-                  content: response.data.message,
-                  'onOk': () => {
-                    this.refresh()
-                  }
-                })
+            this.timingRefresh(this.unbundleResource.publicipid)
+          } else {
+            this.$message.info({
+              content: response.data.message,
+              'onOk': () => {
+                this.refresh()
               }
             })
           }
@@ -1769,6 +1785,16 @@
     computed: {
       auth() {
         return this.$store.state.authInfo != null
+      },
+      publicipOnDelete() {
+        if (this.select.length !== 0) {
+          let ips = this.select.map(item => {
+            return item.publicip
+          })
+          return ips + ''
+        } else {
+          return ''
+        }
       }
     }
   }
