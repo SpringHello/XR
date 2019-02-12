@@ -135,7 +135,7 @@
               <FormItem label="所属区域" prop="country">
                 <Select v-model="infoTempFormValidate.country" style="width:170px" @on-change="changeCountry"
                         placeholder="请选择国家">
-                  <Option v-for="item in countryList" :value="item.Name" :key="item.Code">{{ item.Name }}</Option>
+                  <Option v-for="item in countryList" :value="item.Code" :key="item.Code">{{ item.Name }}</Option>
                 </Select>
               </FormItem>
               <FormItem prop="province" :label-width="10">
@@ -554,7 +554,7 @@
         axios.post('domain/createTemple.do', {
           token: sessionStorage.getItem('tokenId'),
           companyEn: this.infoTempFormValidate.enRegistrantOrganization,
-          countryEn: 'CA',
+          countryEn: this.infoTempFormValidate.country,
           stateEn: this.infoTempFormValidate.enProvince,
           cityEn: this.infoTempFormValidate.enCity,
           addressEn: this.infoTempFormValidate.enAddress,
