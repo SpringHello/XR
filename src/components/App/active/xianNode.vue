@@ -384,9 +384,6 @@
     },
     created() {
       this.getHostZoneList()
-      this.getVMConfigId(this.productData[0], 0, 1)
-      this.getVMConfigId(this.productData[1], 1, 1)
-      this.getVMConfigId(this.productData[2], 2, 1)
     },
     mounted() {
 
@@ -426,6 +423,9 @@
           if (res.data.status == 1 && res.status == 200) {
             this.selectedZone = res.data.result.optionalArea[0].value
             this.zoneList = res.data.result.optionalArea
+            this.getVMConfigId(this.productData[0], 0, 1)
+            this.getVMConfigId(this.productData[1], 1, 1)
+            this.getVMConfigId(this.productData[2], 2, 1)
           }
         })
       },
