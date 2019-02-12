@@ -478,7 +478,7 @@
         this.provinceList = ''
         this.cityList = ''
         area.forEach(item => {
-          if (item.Name == val) {
+          if (item.Code == val) {
             this.provinceList = item.State
           }
         })
