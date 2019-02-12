@@ -231,7 +231,11 @@ div.modal-header-border {
   float: right;
 }
 /* 公共样式结束 */
-
+.flex-vertical-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .ivu-form-item-label {
   display: inline-block;
 }
@@ -373,7 +377,7 @@ div.modal-header-border {
 		box-shadow:0px 1px 4px 0px rgba(0,0,0,0.2);
 		border-radius:2px;
 	}
-	
+
 .font .ivu-tooltip-popper{
 	margin-left: 63px;
 }
@@ -437,7 +441,15 @@ div.modal-header-border {
 .social-share .icon-qq {
   margin-right: 50px;
 }
-
+.xiannode-form .ivu-form .ivu-form-item-label {
+  font-size: 16px;
+}
+#xian-node .zone-select .ivu-select-arrow {
+  display: none;
+}
+.xian-input .ivu-input{
+  text-align: center;
+ }
 /*  免费领取主机弹窗样式 */
 .fr-Modal .ivu-modal-header {
   padding: 0;
@@ -479,6 +491,7 @@ div.modal-header-border {
 .fr-select .ivu-select-arrow {
   color: #FF881C;
 }
+
 
 /* 自定义监控下拉框 */
 .cm-select.ivu-select-single .ivu-select-selection {
@@ -526,10 +539,9 @@ div.modal-header-border {
 .ivu-modal-header{
   background: #333333;
   border-bottom: none;
-	border-radius: 6px 6px 0px 0px;
 }
 .ivu-modal-close .ivu-icon-ios-close-empty{
-  color: #fff;
+  border-radius: 6px 6px 0px 0px;
 }
 
 .my_table .ivu-table th{
