@@ -59,7 +59,31 @@
 		  <div class="box1">
 		  			 <span style="margin-left: 10px;"><span>本次提现</span><span style="color: #FF624B;"> &nbsp;{{Actualamount}}&nbsp;</span>元。线上提现金额将按照后进先出的原则退回您的原线上充值账户（微信、支付宝），提现申请提交后不可撤回。</span>
 		  </div>
-		  <Table :columns="Cashconfirmation" :data="Cashconfirmationdata" style="float: left;margin-top: 20px;width:1159px;"></Table>
+		  <!-- <Table :columns="Cashconfirmation" :data="Cashconfirmationdata" style="float: left;margin-top: 20px;width:1159px;"></Table> -->
+			<div class="cont-center" style="height: auto;float: left;margin-top: 20px;width:1159px;">
+				<table style="width: 100%;float: left;background:rgba(247,247,247,1);border-radius:4px 4px 0px 0px;border:1px solid rgba(233,233,233,1);">
+					<tr style="font-size:12px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(51,51,51,1);line-height:30px;">
+						<th style="width:510px;text-align:left;">提现金额（元）</th>
+						<th style="width:510px;text-align:left;" >预计到账金额（元）
+						<div class="thdd" style="position: relative;width: 20px;float: right;margin-right: 382px;">
+							<Tooltip placement="top">
+								<div slot="content" style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);">
+											<p style="line-height:22px;">银行扣除相应金额的手续费时会导致到账金额和</p>
+											<p style="line-height:22px;">提现金额不一致。</p>
+								</div>
+								<Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;cursor: pointer;"></Icon>
+							</Tooltip>
+						</div>
+						</th>
+						<th style="text-align:left;">到账账户</th>
+					</tr>
+					<tr style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:30px;">
+						<td style="width:510px;text-align:left;">{{Cashconfirmationdata.money}}</td>
+						<td style="width:510px;text-align:left;">1</td>
+						<td style="text-align:left;">{{Cashconfirmationdata.type == 1 ? '银行卡' : "原支付途径"}}</td>
+					</tr>
+				</table>
+			</div>
 		  <Button type="primary" @click="userInfo" style="margin-top: 20px;float: left;" >确认提现信息</Button>
 	  </div>
 	   <!-- 提现验证弹窗 -->
@@ -411,41 +435,13 @@
 						{required: true, message: '请输入收到的验证码', trigger: 'blur'},
                     ]
                 },
-		  Cashconfirmation: [
-                    {
-                        title: '提现金额（元）',
-                        key: 'money',
-												width:510
-                    },
-										{
-										    title: '预计到账金额（元）',
-										    key: 'Actualmoney',
-												width:510
-										},
-                    {
-                        title: '到账账户',
-                        key: 'type',
-												render: (h, params) => {
-													// 1为银行卡提现，0为线上体现
-													let text = ''
-													text = params.row.type == 1 ? '银行卡' : "原支付途径"
-													return h('div', [
-														h('span', {
-															style: {
-																											
-															}
-														}, text)
-													]);
-												}
-                    }
-                ],
-                Cashconfirmationdata: [
+                Cashconfirmationdata: 
                     {
                         money:'0',
 												Actualmoney:'0',
                         type: '0'
                     }
-                ]
+                
       }
     },
     created(){
@@ -499,8 +495,8 @@
 			this.Actualamount=sessionStorage.getItem('money')
 		},
 		moneyconfirm(){
-			this.Cashconfirmationdata[0].money=this.Actualamount
-			this.Cashconfirmationdata[0].type=sessionStorage.getItem('type')
+			this.Cashconfirmationdata.money=this.Actualamount
+			this.Cashconfirmationdata.type=sessionStorage.getItem('type')
 		},
 		Firststep(){
 			var Lastmoney=0
