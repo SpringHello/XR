@@ -6,7 +6,7 @@
           <div class="left">
             <img src="../../../assets/img/active/xianNode/banner-text.png" alt>
             <p>
-               新节点云服务器
+              新节点云服务器
               <i>折扣特惠</i>，
               100%资源可用、100%性能可用！
             </p>
@@ -23,7 +23,8 @@
           <span @click="$LR({type: 'register'})" class="pointer" v-if="!userInfo">注册</span>
           <span class="disabled" v-else>注册</span>
           并
-          <span class="pointer" @click="showAuthModal()">实名认证</span>
+          <span class="pointer" v-if="!authInfo" @click="showAuthModal()">实名认证</span>
+          <span class="disabled" v-else>实名认证</span>
           后才可购买使用云产品，请提前完成认证以确保可顺利参与活动。若已完成请先
           <span @click="$LR({type: 'login'})" class="pointer" v-if="!userInfo">登录</span>
           <span class="disabled" v-else>登录</span>
@@ -48,7 +49,7 @@
             </div>
             <div class="content">
               <div>
-                <span>请选择系统</span> 
+                <span>请选择系统</span>
                 <Select v-model="item.selectedSystem" style="width: 190px;text-align:center">
                   <Option value="windows">windows</option>
                   <Option value="linux">centos</option>
@@ -124,8 +125,9 @@
           </div>
           <div class="body">
             <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/error-icon.png" style="vertical-align: middle;"> {{authError}}</p>
-            <p> 您也可以通过<span class="red" @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
-            <button @click.stop="showModal.authErrorModal=false;showModal.authModal=true" style="margin-top: 35px;" class="modal-btn"><span>再次尝试</span></button>
+            <p v-if="authError != '当前用户已认证，不能重复认证'"> 您也可以通过<span class="red" @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
+            <button v-if="authError != '当前用户已认证，不能重复认证'" @click.stop="showModal.authErrorModal=false;showModal.authModal=true" style="margin-top: 35px;" class="modal-btn"><span>再次尝试</span>
+            </button>
           </div>
         </div>
       </div>
@@ -180,7 +182,7 @@
         <div class="all-modal modal3" @click.stop="showModal.luckDrawRuleModal=true">
           <div class="header"><i @click.stop="showModal.luckDrawRuleModal=false"></i></div>
           <div class="body">
-            <h3>1、活动时间：2019年1月28日-2019年3月1日； 活动对象：仅限新用户；</h3>
+            <h3>1、活动时间：2019年1月31日-2019年3月1日； 活动对象：仅限新用户；</h3>
             <h3>2、本次活动中，每位用户仅可参与一次活动，最多可购买3台云服务器；</h3>
             <h3>3、本次活动产品仅限于西北一区云服务器，其他地区产品不参与此活动；</h3>
             <h3>4、本次活动产品均为折扣特惠价格，不能使用任何优惠券以及现金券；</h3>
@@ -188,7 +190,7 @@
             <h3>6、根据国家相关规定，用户实名认证之后才可以购买使用云服务器；</h3>
             <h3>7、此活动最终解释权由新睿云所有。</h3>
           </div>
-          <button @click="showModal.luckDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
+          <button @click.stop="showModal.luckDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
         </div>
       </div>
     </transition>
@@ -212,7 +214,7 @@
               <FormItem label="图形验证码" prop="pictureCode">
                 <div style="display: flex">
                   <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:224px;">
-                         </Input>
+                  </Input>
                   <img :src="imgSrc" style="height:33px;"
                        @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                 </div>
@@ -221,14 +223,16 @@
                 <Input v-model="authFormValidate.tel" placeholder=" 请输入您的手机号码" size="large"></Input>
               </FormItem>
               <FormItem label="验证码" prop="vailCode">
-                <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" style="width:192px;"  size="large"></Input>
+                <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" style="width:192px;" size="large"></Input>
                 <Button type="text" @click="getVerificationCode" class="vailcode-btn" :class="{disabled:authFormValidate.sendCodeText!='获取验证码'}" style="width:109px;"
-                          :disabled="authFormValidate.sendCodeText!='获取验证码'">
-                    {{authFormValidate.sendCodeText}}
-                  </Button>
+                        :disabled="authFormValidate.sendCodeText!='获取验证码'">
+                  {{authFormValidate.sendCodeText}}
+                </Button>
               </FormItem>
             </Form>
-            <button @click.stop="authAndGetPrize" style="width:305px;height:50px;font-size:20px;margin-left:110px;margin-top:20px;margin-bottom:76px;" class="vailcode-btn auth-btn">确认信息并提交</button>
+            <button @click.stop="authAndGetPrize" style="width:305px;height:50px;font-size:20px;margin-left:110px;margin-top:20px;margin-bottom:76px;"
+                    class="vailcode-btn auth-btn">确认信息并提交
+            </button>
           </div>
         </div>
       </div>
@@ -237,12 +241,13 @@
 </template>
 
 <script type="text/ecmascript-6">
-import axios from '@/util/axiosInterceptor'
-import $ from 'jquery'
-import reg from '../../../util/regExp'
-export default {
-  data () {
-    const validaRegisteredPhone = (rule, value, callback) => {
+  import axios from '@/util/axiosInterceptor'
+  import $ from 'jquery'
+  import reg from '../../../util/regExp'
+
+  export default {
+    data() {
+      const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('电话号码不能为空'));
         }
@@ -269,84 +274,84 @@ export default {
           callback()
         }
       }
-    return {
-      authError: '',
-      authHintShow: false,
-      reminderShow: true,
-      zoneList: [],
-      selectedZone: '',
-      productData: [
-        {
-          host: '1',
-          size: '1',
-          bandwidth: '1',
-          systemSize: '40',
-          selectedSystem: 'windows',
-          selectedYear: 1,
-          selectedCount: 1,
-          bgSrc: require('../../../assets/img/active/xianNode/item-bg-1.png'),
-          discountCost: '224.93',
-          originCost: '1124.64'
+      return {
+        authError: '',
+        authHintShow: false,
+        reminderShow: true,
+        zoneList: [],
+        selectedZone: '',
+        productData: [
+          {
+            host: '1',
+            size: '1',
+            bandwidth: '1',
+            systemSize: '40',
+            selectedSystem: 'windows',
+            selectedYear: 1,
+            selectedCount: 1,
+            bgSrc: require('../../../assets/img/active/xianNode/item-bg-1.png'),
+            discountCost: '145.72',
+            originCost: '857.20'
+          },
+          {
+            host: '1',
+            size: '2',
+            bandwidth: '1',
+            systemSize: '40',
+            selectedSystem: 'windows',
+            selectedYear: 1,
+            selectedCount: 1,
+            bgSrc: require('../../../assets/img/active/xianNode/item-bg-2.png'),
+            discountCost: '243.44',
+            originCost: '1217.20'
+          },
+          {
+            host: '2',
+            size: '4',
+            bandwidth: '1',
+            systemSize: '40',
+            selectedSystem: 'windows',
+            selectedYear: 1,
+            selectedCount: 1,
+            bgSrc: require('../../../assets/img/active/xianNode/item-bg-3.png'),
+            discountCost: '373.44',
+            originCost: '1867.19'
+          }
+        ],
+        timeYear: [1, 2, 3],
+        hostCount: [1, 2, 3],
+        advantageData: [
+          {
+            img: require('../../../assets/img/active/xianNode/advantage-icon-1.png'),
+            title: '安全稳定',
+            desc: '40G超大流量免费防护，高性 能DDoS硬件，秒级防护，专业 漏洞检测，流量清洗，用户10 0%网络隔离'
+          },
+          {
+            img: require('../../../assets/img/active/xianNode/advantage-icon-2.png'),
+            title: '性价比高',
+            desc: '0基础设施建设投入，企业级 云产品便捷采购，0门槛上云， 专家团队免费在线咨询，享受 云网超顶级硬件与超大带宽'
+          },
+          {
+            img: require('../../../assets/img/active/xianNode/advantage-icon-3.png'),
+            title: '数据持久',
+            desc: '全场景光纤网络数据存储，超 低延迟高吞吐，最高20万级IO PS，SDN网络诊断技术，快速 屏蔽网络故障'
+          },
+          {
+            img: require('../../../assets/img/active/xianNode/advantage-icon-4.png'),
+            title: '服务完善',
+            desc: '7*24小时在线客服，80秒客户 问题快速响应，十二年运营商级技术团队为您 保驾护航'
+          }
+        ],
+        showModal: {
+          notLoginModal: false,
+          luckDrawRuleModal: false,
+          authModal: false,
+          authErrorModal: false,
+          authSucModal: false,
+          notAuthModal: false,
+          newCoustom: false
         },
-        {
-          host: '1',
-          size: '2',
-          bandwidth: '1',
-          systemSize: '40',
-          selectedSystem: 'windows',
-          selectedYear: 1,
-          selectedCount: 1,
-          bgSrc: require('../../../assets/img/active/xianNode/item-bg-2.png'),
-          discountCost: '224.93',
-          originCost: '1124.64'
-        },
-        {
-          host: '2',
-          size: '4',
-          bandwidth: '1',
-          systemSize: '40',
-          selectedSystem: 'windows',
-          selectedYear: 1,
-          selectedCount: 1,
-          bgSrc: require('../../../assets/img/active/xianNode/item-bg-3.png'),
-          discountCost: '224.93',
-          originCost: '1124.64'
-        }
-      ],
-      timeYear: [1, 2, 3],
-      hostCount: [1, 2, 3],
-      advantageData: [
-        {
-          img: require('../../../assets/img/active/xianNode/advantage-icon-1.png'),
-          title: '安全稳定',
-          desc: '40G超大流量免费防护，高性 能DDoS硬件，秒级防护，专业 漏洞检测，流量清洗，用户10 0%网络隔离'
-        },
-        {
-          img: require('../../../assets/img/active/xianNode/advantage-icon-2.png'),
-          title: '性价比高',
-          desc: '0基础设施建设投入，企业级 云产品便捷采购，0门槛上云， 专家团队免费在线咨询，享受 云网超顶级硬件与超大带宽'
-        },
-        {
-          img: require('../../../assets/img/active/xianNode/advantage-icon-3.png'),
-          title: '数据持久',
-          desc: '全场景光纤网络数据存储，超 低延迟高吞吐，最高20万级IO PS，SDN网络诊断技术，快速 屏蔽网络故障'
-        },
-        {
-          img: require('../../../assets/img/active/xianNode/advantage-icon-4.png'),
-          title: '服务完善',
-          desc: '7*24小时在线客服，80秒客户 问题快速响应，十二年运营商级技术团队为您 保驾护航'
-        }
-      ],
-      showModal: {
-        notLoginModal: false,
-        luckDrawRuleModal: false,
-        authModal: false,
-        authErrorModal: false,
-        authSucModal: false,
-        notAuthModal: false,
-        newCoustom: false
-      },
-      authFormValidate: {
+        authFormValidate: {
           name: '',
           personId: '',
           pictureCode: '',
@@ -375,94 +380,94 @@ export default {
           ]
         },
         imgSrc: 'user/getKaptchaImage.do',
-    }
-  },
-  created () {
-    this.getHostZoneList()
-    this.getVMConfigId(this.productData[0], 0, 1)
-    this.getVMConfigId(this.productData[1], 1, 1)
-    this.getVMConfigId(this.productData[2], 2, 1)
-  },
-  mounted () {
-
-  },
-  methods: {
-    toAuth() {
-      sessionStorage.setItem('pane', 'certification')
-      this.$router.push('userCenter')
-    },
-    showAuthModal() {
-      this.authHintShow = false
-      if (this.$store.state.userInfo) {
-        this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-        this.showModal.authModal = true
-      } else {
-        this.showModal.notAuthModal = true
       }
     },
-    roll(val) {
+    created() {
+      this.getHostZoneList()
+      this.getVMConfigId(this.productData[0], 0, 1)
+      this.getVMConfigId(this.productData[1], 1, 1)
+      this.getVMConfigId(this.productData[2], 2, 1)
+    },
+    mounted() {
+
+    },
+    methods: {
+      toAuth() {
+        sessionStorage.setItem('pane', 'certification')
+        this.$router.push('userCenter')
+      },
+      showAuthModal() {
+        this.authHintShow = false
+        if (this.$store.state.userInfo) {
+          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.showModal.authModal = true
+        } else {
+          this.showModal.notAuthModal = true
+        }
+      },
+      roll(val) {
         $('html, body').animate({scrollTop: val}, 300)
       },
-    init() {
+      init() {
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
           }
         })
       },
-    // 云服务器获取区域
-    getHostZoneList () {
-      let url = 'activity/getTemActInfoById.do'
-      axios.get(url, {
-        params: {
-          activityNum: '36'
-        }
-      }).then(res => {
-        if (res.data.status == 1 && res.status == 200) {
-          this.selectedZone = res.data.result.optionalArea[0].value
-          this.zoneList = res.data.result.optionalArea
-        }
-      })
-    },
-    //  获取配置ID
-    getVMConfigId (item, index, year) {
-      this.productData[index].selectedYear = year
-      axios.get('activity/getVMConfigId.do', {
-        params: {
-          activityNum: '36',
-          month: year * 12 + '',
-          cpu: item.host + '',
-          mem: item.size + '',
-          bandwith: item.bandwidth + '',
-        }
-      }).then(res => {
-        if (res.status == 200 && res.data.status == 1) {
-          this.productData[index].vmConfigId = res.data.result
-          axios.get('activity/getOriginalPrice.do', {
-            params: {
-              zoneId: this.selectedZone,
-              vmConfigId: res.data.result + '',
-              month: year * 12 + ''
-            }
-          }).then(res => {
-            if (res.status == 200 && res.data.status == 1) {
-              this.productData[index].originCost = res.data.result.originalPrice;
-              this.productData[index].discountCost = res.data.result.cost;
-            }
-          })
-        }
-      })
-    },
-    //   云主机生成订单
-    getDiskcountMv (item, hostCount) {
-      if (!this.$store.state.userInfo) {
-        this.showModal.notLoginModal = true
-      } else {
+      // 云服务器获取区域
+      getHostZoneList() {
+        let url = 'activity/getTemActInfoById.do'
+        axios.get(url, {
+          params: {
+            activityNum: '36'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.selectedZone = res.data.result.optionalArea[0].value
+            this.zoneList = res.data.result.optionalArea
+          }
+        })
+      },
+      //  获取配置ID
+      getVMConfigId(item, index, year) {
+        this.productData[index].selectedYear = year
+        axios.get('activity/getVMConfigId.do', {
+          params: {
+            activityNum: '36',
+            month: year * 12 + '',
+            cpu: item.host + '',
+            mem: item.size + '',
+            bandwith: item.bandwidth + '',
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.productData[index].vmConfigId = res.data.result
+            axios.get('activity/getOriginalPrice.do', {
+              params: {
+                zoneId: this.selectedZone,
+                vmConfigId: res.data.result + '',
+                month: year * 12 + ''
+              }
+            }).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+                this.productData[index].originCost = res.data.result.originalPrice;
+                this.productData[index].discountCost = res.data.result.cost;
+              }
+            })
+          }
+        })
+      },
+      //   云主机生成订单
+      getDiskcountMv(item, hostCount) {
+        if (!this.$store.state.userInfo) {
+          this.showModal.notLoginModal = true
+        } else {
           // 判断是否为新用户
           axios.get('activity/jdugeTeam.do').then(response => {
             if (response.status == 200 && response.data.status == 1) {
               if (response.data.result.flag) {
-                if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)){
+                if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
                   this.authHintShow = true
                   this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
                   this.showModal.authModal = true
@@ -584,264 +589,270 @@ export default {
           }
         })
       },
-  },
-  computed: {
-    userInfo() {
-      return this.$store.state.userInfo
-    }
-  },
-  watch: {
-
-  },
-  components: {
-
+    },
+    computed: {
+      userInfo() {
+        return this.$store.state.userInfo
+      },
+      authInfo() {
+        return this.$store.state.authInfo ? this.$store.state.authInfo : null
+        // return null
+      },
+    },
+    watch: {},
+    components: {}
   }
-}
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-#xian-node {
-  font-family: PingFangSC-Regular;
-  background:rgba(247,247,247,1);
-  height: 100%;
-}
-.wrap {
-  margin: 0 auto;
-  width: 1200px;
-}
-.flex-vertical-center {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.flex {
-  display: flex;
-  justify-content: space-between;
-}
-.red {
-  color: #ff3000;
-}
-.banner {
-  background:url(../../../assets/img/active/xianNode/xian-banner-bg.png) center no-repeat,linear-gradient(to bottom, #ffdcbc, #ffe7d2);
-  .container {
-    height: 400px;
-    .left {
-      p {
-        margin-top: 20px;
-        font-size: 20px;
-        color: #222222;
-        font-weight: 500;
-        i {
-          font-size: 24px;
-          color: #ff3000;
-          font-style: normal;
+  #xian-node {
+    font-family: PingFangSC-Regular;
+    background: rgba(247, 247, 247, 1);
+    height: 100%;
+  }
+
+  .wrap {
+    margin: 0 auto;
+    width: 1200px;
+  }
+
+  .flex-vertical-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .flex {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .red {
+    color: #ff3000;
+  }
+
+  .banner {
+    background: url(../../../assets/img/active/xianNode/xian-banner-bg.png) center no-repeat, linear-gradient(to bottom, #ffdcbc, #ffe7d2);
+    .container {
+      height: 400px;
+      .left {
+        p {
+          margin-top: 20px;
+          font-size: 20px;
+          color: #222222;
+          font-weight: 500;
+          i {
+            font-size: 24px;
+            color: #ff3000;
+            font-style: normal;
+          }
         }
-      }
-      span {
-        margin-top: 52px;
-        display: inline-block;
-        width: 170px;
-        height: 50px;
-        font-size: 22px;
-        color: rgba(255, 48, 0, 1);
-        line-height: 44px;
-        text-align: center;
-        cursor: pointer;
-        border:2px solid rgba(255,48,0,1);
-        &:hover {
-          background:#FFD1B2;
+        span {
+          margin-top: 52px;
+          display: inline-block;
+          width: 170px;
+          height: 50px;
+          font-size: 22px;
+          color: rgba(255, 48, 0, 1);
+          line-height: 44px;
+          text-align: center;
+          cursor: pointer;
+          border: 2px solid rgba(255, 48, 0, 1);
+          &:hover {
+            background: #FFD1B2;
+          }
         }
       }
     }
   }
-}
-.product {
-  padding-top: 10px;
-  padding-bottom: 64px; 
-  background: #fff;
-  .reminder {
-    padding: 12px;
-    height: 40px;
-    font-size: 14px;
-    border: solid 1px #ff3000;
-    span {
-      color: #ff3000;
-    }
-    .pointer {
-      cursor: pointer;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-    .disabled {
-      cursor: not-allowed;
-    }
-  }
-  .top {
-    margin-top: 50px;
-    text-align: center;
-    .item-headline {
-      height: 44px;
-      background: url(../../../assets/img/active/xianNode/headline-bg-1.png)
-          center no-repeat,
-        url(../../../assets/img/active/xianNode/headline-text-1.png) center
-          no-repeat;
-    }
-    p {
-      margin-top: 16px;
-      font-size: 16px;
+
+  .product {
+    padding-top: 10px;
+    padding-bottom: 64px;
+    background: #fff;
+    .reminder {
+      padding: 12px;
+      height: 40px;
+      font-size: 14px;
+      border: solid 1px #ff3000;
       span {
         color: #ff3000;
-        font-size: 20px;
       }
-      .rule {
+      .pointer {
         cursor: pointer;
-        font-size: 16px;
         &:hover {
           text-decoration: underline;
         }
       }
+      .disabled {
+        cursor: not-allowed;
+      }
     }
-  }
-  .main {
-    margin-top: 32px;
-    .box {
-      width: 340px;
-      height: 427px;
-      background: url(../../../assets/img/active/xianNode/item-bg-1.png) center  no-repeat;
-       &:hover {
-         box-shadow: 0px 4px 6px rgba(255, 48, 0, .2);
-       }
-      .head {
-        padding: 24px;
-        li {
-          font-size: 20px;
-          font-family: PingFangSC-Medium;
-          font-weight: 600;
+    .top {
+      margin-top: 50px;
+      text-align: center;
+      .item-headline {
+        height: 44px;
+        background: url(../../../assets/img/active/xianNode/headline-bg-1.png) center no-repeat,
+        url(../../../assets/img/active/xianNode/headline-text-1.png) center no-repeat;
+      }
+      p {
+        margin-top: 16px;
+        font-size: 16px;
+        span {
           color: #ff3000;
+          font-size: 20px;
+        }
+        .rule {
+          cursor: pointer;
+          font-size: 16px;
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
-      .content {
-        padding: 26px;
-        > div {
-          margin-bottom: 20px;
-          span {
-            margin-right: 22px;
-            font-size: 14px;
-            color: rgba(34, 34, 34, 1);
-          }
+    }
+    .main {
+      margin-top: 32px;
+      .box {
+        width: 340px;
+        height: 427px;
+        background: url(../../../assets/img/active/xianNode/item-bg-1.png) center no-repeat;
+        &:hover {
+          box-shadow: 0px 4px 6px rgba(255, 48, 0, .2);
         }
-        .time-change {
-          margin-top: 10px;
+        .head {
+          padding: 24px;
           li {
-            width: 80px;
-            height: 30px;
-            font-size: 14px;
-            color: rgba(157, 157, 157, 1);
-            line-height: 28px;
-            border: solid 1px rgba(157, 157, 157, 1);
-            text-align: center;
-            cursor: pointer;
-          }
-          .selected {
+            font-size: 20px;
+            font-family: PingFangSC-Medium;
+            font-weight: 600;
             color: #ff3000;
-            border-color: #ff3000;
           }
         }
-        .price {
+        .content {
+          padding: 26px;
           > div {
+            margin-bottom: 20px;
             span {
-              font-size: 22px;
-              color: rgba(255, 53, 8, 1);
-            }
-            p {
+              margin-right: 22px;
               font-size: 14px;
-              text-decoration: line-through;
               color: rgba(34, 34, 34, 1);
             }
           }
-          .btn {
-            font-style: normal;
-            width: 140px;
-            height: 40px;
-            border: #ff3000 solid 1px;
-            text-align: center;
-            font-family: PingFangSC-Medium;
-            font-weight: 500;
-            font-size: 20px;
-            color: rgba(255, 48, 0, 1);
-            line-height: 34px;
-            cursor: pointer;
-            &:hover {
-              background: #fc291a;
-              color: #fff;
+          .time-change {
+            margin-top: 10px;
+            li {
+              width: 80px;
+              height: 30px;
+              font-size: 14px;
+              color: rgba(157, 157, 157, 1);
+              line-height: 28px;
+              border: solid 1px rgba(157, 157, 157, 1);
+              text-align: center;
+              cursor: pointer;
+            }
+            .selected {
+              color: #ff3000;
+              border-color: #ff3000;
+            }
+          }
+          .price {
+            > div {
+              span {
+                font-size: 22px;
+                color: rgba(255, 53, 8, 1);
+              }
+              p {
+                font-size: 14px;
+                text-decoration: line-through;
+                color: rgba(34, 34, 34, 1);
+              }
+            }
+            .btn {
+              font-style: normal;
+              width: 140px;
+              height: 40px;
+              border: #ff3000 solid 1px;
+              text-align: center;
+              font-family: PingFangSC-Medium;
+              font-weight: 500;
+              font-size: 20px;
+              color: rgba(255, 48, 0, 1);
+              line-height: 34px;
+              cursor: pointer;
+              &:hover {
+                background: #fc291a;
+                color: #fff;
+              }
             }
           }
         }
       }
     }
   }
-}
-.advantage {
-  background:rgba(247,247,247,1);
-  padding: 52px 0 86px 0;
-  text-align: center;
-  .top {
+
+  .advantage {
+    background: rgba(247, 247, 247, 1);
+    padding: 52px 0 86px 0;
     text-align: center;
-    .item-headline {
-      height: 44px;
-      background: url(../../../assets/img/active/xianNode/headline-bg-2.png)
-          center no-repeat,
-        url(../../../assets/img/active/xianNode/headline-text-2.png) center
-          no-repeat;
+    .top {
+      text-align: center;
+      .item-headline {
+        height: 44px;
+        background: url(../../../assets/img/active/xianNode/headline-bg-2.png) center no-repeat,
+        url(../../../assets/img/active/xianNode/headline-text-2.png) center no-repeat;
+      }
+    }
+    .main {
+      margin-top: 34px;
+    }
+    .box {
+      width: 192px;
+      .img-wrap {
+        height: 102px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      h3 {
+        font-size: 20px;
+        font-family: PingFangSC-Medium;
+        color: rgba(255, 48, 0, 1);
+        line-height: 49px;
+      }
+      p {
+        font-size: 14px;
+        color: rgba(34, 34, 34, 1);
+        line-height: 26px;
+        text-align: left;
+      }
     }
   }
-  .main {
-    margin-top: 34px;
-  }
-  .box {
-    width: 192px;
-    .img-wrap {
-      height: 102px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    h3 {
-      font-size: 20px;
-      font-family: PingFangSC-Medium;
-      color: rgba(255, 48, 0, 1);
-      line-height: 49px;
-    }
-    p {
-      font-size: 14px;
-      color: rgba(34, 34, 34, 1);
-      line-height: 26px;
-      text-align: left;
+
+  .modal-btn {
+    width: 170px;
+    height: 50px;
+    border: 1px solid rgba(255, 48, 0, 1);
+    font-size: 20px;
+    font-family: PingFangSC-Regular;
+    color: rgba(255, 48, 0, 1);
+    line-height: 45px;
+    background: none;
+    cursor: pointer;
+    &:hover {
+      background: rgba(255, 231, 215, 1);
     }
   }
-}
-.modal-btn {
-  width:170px;
-  height:50px;
-  border:1px solid rgba(255,48,0,1);
-  font-size:20px;
-  font-family:PingFangSC-Regular;
-  color:rgba(255,48,0,1);
-  line-height:45px;
-  background: none;
-  cursor: pointer;
-  &:hover {
-    background:rgba(255,231,215,1);
+
+  .vailcode-btn {
+    border: 1px solid rgba(255, 48, 0, 1);
+    color: rgba(255, 48, 0, 1);
+    border-radius: 0;
+    background: none;
   }
-}
-.vailcode-btn {
-border:1px solid rgba(255,48,0,1);
-color:rgba(255,48,0,1);
-border-radius: 0;
-background: none;
-}
-// 弹窗公共样式
+
+  // 弹窗公共样式
   .overlay {
     position: fixed;
     top: 0;
@@ -896,6 +907,7 @@ background: none;
       }
     }
   }
+
   .modal1 {
     width: 600px;
     height: 300px;
@@ -916,7 +928,7 @@ background: none;
     }
   }
 
- .modal2 {
+  .modal2 {
     width: 700px;
     > .header {
       background: url("../../../assets/img/active/xianNode/modal-bg-auth.png");
@@ -935,17 +947,17 @@ background: none;
     }
     .auth-btn {
       cursor: pointer;
-      &:hover{
-        background:rgba(255,231,215,1);
+      &:hover {
+        background: rgba(255, 231, 215, 1);
       }
-      &:focus{
+      &:focus {
         outline: none;
       }
     }
     .disabled {
-      border:1px solid rgba(192,192,192,1);
-      color:#666666;
-      }
+      border: 1px solid rgba(192, 192, 192, 1);
+      color: #666666;
+    }
   }
 
   .modal3 {
@@ -968,6 +980,7 @@ background: none;
       }
     }
   }
+
   .auth-form-validate, .receive-good-validate {
     padding-top: 26px;
     margin: 0 auto;
@@ -976,6 +989,7 @@ background: none;
       margin-bottom: 22px;
     }
   }
+
   .fade-enter-active, .fade-leave-active {
     transition: opacity .3s;
   }
@@ -983,6 +997,7 @@ background: none;
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
   }
+
   .pointer {
     cursor: pointer;
   }

@@ -1163,10 +1163,10 @@
       }
     },
     mounted() {
-      if (!sessionStorage.getItem('welcome')) {
+/*      if (!sessionStorage.getItem('welcome')) {
         this.showModal.welcome = true
         sessionStorage.setItem('welcome', '1')
-      }
+      }*/
       this.menuselected(0)
       // echarts.registerMap('china', china)
       // this.myChart = echarts.init(document.getElementById('echarts'))
