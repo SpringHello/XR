@@ -168,7 +168,7 @@
         // 不允许使用现金券余额，但是点击了使用
         if (this.orderInfo.isUseVoucher == 0 && bol.indexOf('voucher') > -1) {
           this.accountPay.splice(bol.indexOf('voucher'), 1)
-          this.$Modal.info({
+          this.$message.info({
             title:'提示',
             content: '当前订单不满足使用现金券要求'
           })
@@ -176,7 +176,7 @@
         // 必须使用现金券，但点击了取消使用
         if (this.orderInfo.isUseVoucher == 1 && bol.indexOf('voucher') == -1) {
           this.accountPay.push('voucher')
-          this.$Modal.info({
+          this.$message.info({
             title:'提示',
             content: '默认情况下优先使用现金券'
           })
@@ -184,7 +184,7 @@
         // 现金券已足够支付，不应再点击账户余额
         if (this.orderInfo.isUseVoucher == 1 && Number(this.orderInfo.voucher) >= Number(this.orderInfo.money) && bol.indexOf('account') > -1) {
           this.accountPay.splice(bol.indexOf('account'), 1)
-          this.$Modal.info({
+          this.$message.info({
             title:'提示',
             content: '现金券余额已足够支付本订单'
           })
@@ -192,7 +192,7 @@
         // 现金券不足够支付，必须使用余额
         if (this.orderInfo.isUseVoucher == 1 && Number(this.orderInfo.voucher) < Number(this.orderInfo.money) && bol.indexOf('account') == -1) {
           this.accountPay.push('account')
-          this.$Modal.info({
+          this.$message.info({
             title:'提示',
             content: '默认情况下优先使用账户余额'
           })
@@ -204,13 +204,13 @@
 
         if (this.accountPay.indexOf('voucher') > -1 && Number(this.orderInfo.voucher) >= Number(this.orderInfo.money)) {
           this.otherPay = ''
-          this.$Modal.info({
+          this.$message.info({
             title:'提示',
             content: '现金券余额已足够支付本订单'
           })
         } else if (this.accountPay.indexOf('account') > -1 && Number(this.orderInfo.remainder) >= Number(this.orderInfo.money)) {
           this.otherPay = ''
-          this.$Modal.info({
+          this.$message.info({
             title:'提示',
             content: '账户余额已足够支付本订单'
           })
@@ -222,7 +222,7 @@
         let cost = 0
         if (this.otherPay == '') {
           if (this.accountPay.length == 0) {
-            this.$Modal.info({
+            this.$message.info({
               title:'提示',
               content: '请选择支付方式'
             })
@@ -230,14 +230,14 @@
           } else if (this.accountPay.length == 1) {
             // 选中余额支付
             if (this.accountPay[0] == 'account' && Number(this.orderInfo.remainder) < Number(this.orderInfo.money)) {
-              this.$Modal.info({
+              this.$message.info({
                  title:'提示',
                 content: '账户余额不足'
               })
               return
             } else if (this.accountPay[0] == 'voucher' && Number(this.orderInfo.voucher) < Number(this.orderInfo.money)) {
               // 选中现金券
-              this.$Modal.info({
+              this.$message.info({
                 title:'提示',
                 content: '账户余额不足'
               })
@@ -246,7 +246,7 @@
             cost += Number(this.orderInfo.remainder)
           } else if (this.accountPay.length == 2 && Number(this.orderInfo.remainder) + Number(this.orderInfo.voucher) < Number(this.orderInfo.money)) {
             cost += Number(this.orderInfo.remainder) + Number(this.orderInfo.voucher)
-            this.$Modal.info({
+            this.$message.info({
               title:'提示',
               content: '账户余额不足'
             })
@@ -323,7 +323,7 @@
             window.open(`zfb/alipayapi.do?serialNum=${this.zfbNum}`)
             this.showModal.paymentCofirm = true
           } else {
-            this.$Modal.info({
+            this.$message.info({
               title:'提示',
               content: '支付遇到问题，请稍候再试'
             })
