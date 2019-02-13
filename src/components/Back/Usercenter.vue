@@ -23,11 +23,12 @@
                 </div>
                 <div class="pi-base-info">
                   <ul>
-                    <li><span>用户名称</span><span style="display: inline">{{(authInfo&&authInfo.name)? authInfo.name:userInfo.realname}}</span>
+                    <li><span>用户名称</span><span @click="showModal.Cancellationaccount = true" style="display: inline;cursor: pointer;">{{(authInfo&&authInfo.name)? authInfo.name:userInfo.realname}}</span>
                       <span v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
-                            style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
+                            style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li><!-- <span
+                      @click="showModal.Cancellationaccount = true" style="cursor: pointer;color: #2a99f2;margin-left: 145px;">修改</span> -->
                     <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span
                       @click="modifyEmail">去绑定</span></li>
                     <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span
@@ -731,6 +732,39 @@
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：400-050-5565</p>
       </div>
     </Modal>
+		
+		<!--修改用户名-->
+		<Modal v-model="showModal.Modifyname" :scrollable="true" :closable="true" :width="500">
+			<p slot="header" class="modal-header-border">
+				<span class="universal-modal-title">修改用户名</span>
+			</p>
+			<div class="" style="margin-top: 10px;font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);">
+				重命名
+				<Input v-model="Modifynamevalue" placeholder="请输入..." style="width: 300px;margin-left: 5px;"></Input>
+			</div>
+			<p slot="footer" class="modal-footer-s">
+				<Button @click="showModal.Modifyname = false">取消</Button>
+				<Button type="primary" @click="">确定</Button>
+				<!-- $router.push('/ruicloud/cashprocess') -->
+			</p>
+		</Modal>
+		
+		<!--注销账号弹窗-->
+		<Modal v-model="showModal.Cancellationaccount" :scrollable="true" :closable="false" :width="380">
+			<p slot="header" class="modal-header-border">
+				<Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+				<span class="universal-modal-title">注销账号</span>
+			</p>
+			<div class="modal-content-s" style="padding: 0;">
+				<div style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">
+					您正注销用户名为“{{(authInfo&&authInfo.name)? authInfo.name:userInfo.realname}}”的账号，<span style="color: #FF624B;">提交账号注销申请为不可逆操作。</span>若非本人操作，请点击取消。
+				</div>
+			</div>
+			<p slot="footer" class="modal-footer-s">
+				<Button @click="showModal.Cancellationaccount = false">取消</Button>
+				<Button type="primary" @click="">注销</Button>
+			</p>
+		</Modal>
 
     <!-- 更换头像 -->
     <Modal v-model="showModal.setHeadPhoto" width="550" :scrollable="true">
@@ -1502,6 +1536,7 @@
         uploadImgDispaly1: '',
         uploadImgDispaly2: '',
         authModifyPhoneStep: 0,
+				Modifynamevalue:'',
         authModifyPhoneFormOne: {
           ID: '',
           personHint: 0,
@@ -1554,7 +1589,9 @@
           modifyOtherInfo: false,
           cancelCheckCreatedHostHint: false,
           cancelCheckOtherHint: false,
-          modifyPhoneID: false
+          modifyPhoneID: false,
+					Modifyname:false,
+					Cancellationaccount:false
         },
         modifyVailType: [
           {
