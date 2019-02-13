@@ -10,7 +10,7 @@
                 <li v-for="(item,indexs) in stepList" :key="indexs" class="process_text" :class="item.style">
                   <div class="process_pace" v-if="item.failOrSuccess == false">{{indexs+1}}</div>
                   <div class="process_ok" v-else></div>
-                  <span @click="statusList(index)" style="cursor:pointer;">{{item.value}}</span>
+                  <span>{{item.value}}</span>
                   <span class="line" :class="{lineselected: item.failOrSuccess}"></span>
                 </li>
               </ul>
@@ -98,7 +98,7 @@
                   </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large'  placeholder='请输入验证码' style="width:258px;"></Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                      <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -126,7 +126,7 @@
                    </FormItem>
                   <FormItem prop='vCode' style="margin-bottom:0px;">
                     <x-Input  v-model="dataFroms.vCode" placeholder='请输入验证码' style="width:258px;"></x-Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -147,7 +147,7 @@
             <!-- 身份证验证方式 -->
             <div class="verification_poto"  v-if="verPage == 'card'">
               <div v-if="absc">
-                <Form ref='dataInfo' :model="dataFroms" :rules="dataFromsValidate" >
+                <Form ref='dataInfo' :model="dataFroms" :rules="dataFromsValidate">
                   <FormItem prop='name'>
                     <x-Input ref="xinput" :icon='url.icon1' v-model="dataFroms.name"  placeholder='请输入您的姓名' ></x-Input>
                   </FormItem>
@@ -176,7 +176,7 @@
                           :before-upload="handleBeforeUpload"
                           :data='flieList'
                           type="drag"
-                          action="https://zschj.xrcloud.net/ruicloud/file/upFile.do"
+                          action="file/upFile.do"
                           style="display: inline-block;">
                           <div class="up_button" v-if="fileUrl.imgUrl ==''">
                               <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -314,7 +314,7 @@
                    </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;">
                     <x-Input  v-model="dataFroms.vCode" placeholder='请输入验证码' style="width:258px;"></x-Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -343,7 +343,7 @@
                   </div>
                 </div>
               </div>
-              <div v-else-if="index == 5 && verPage == 'account'">
+              <div v-else>
                 <div class="reset_acc">
                   <img src="../../assets/img/updatePaw/lr_reset.png">
                   <p style="font-size:18px;margin-top:20px;">您的更改申请提交成功</p>
@@ -406,7 +406,7 @@ export default {
     }
     return {
        
-      imgSrc: "https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do",
+      imgSrc: "user/getKaptchaImage.do",
 
       //步骤集合
       stepList: [
@@ -518,7 +518,7 @@ export default {
         ],
         company:[{required:true, message: '请输入公司名称', trigger: 'blur'}],
         license:[{required:true, message: '请输入营业执照号码', trigger: 'blur'}],
-        business:[{required:true, message: '请输入营业执照', trigger:"blur"}]
+        business:[{required:true, message: '请输入营业执照', trigger:"blur"}],
       },
 
 
@@ -615,7 +615,7 @@ export default {
                   duration: 5
                 });
             } else {
-              this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
               this.vCodeMessage = response.data.message;
             }
           }).catch(err =>{
@@ -636,13 +636,14 @@ export default {
             }
           })
           .then(response => {
-            this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
             if (response.status == 200 && response.statusText == "OK") {
               if (response.data.status == 1) {
                 this.$Message.success(response.data.message);
                 this.index = 5;
+                this.resetAccount = true;
                 this.verPage = 'submit';
               } else {
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
               this.$Message.error(response.data.message);
               }
             }
@@ -698,25 +699,26 @@ export default {
     },
 
     statusList(index){
+      let arry = ['formValidate','','dataPhone','dataEmail','dataPaw','dataInfo'];
       if(!this.resetAccount){
-        for(let key in this.dataFroms){
-          if(this.dataFroms[key] ==''){
-            this.$Message.info({
-              content:'请完成当前的步骤',
-              duration:5
-            })
-            this.index = index == 1 ? index : index -1;
-            return;
-          }else{
-            this.index = index;
-          }
+        if(this.stepList[index].failOrSuccess){
+         this.index = index+1;
         }
+        if(arry[index-1] != '')
+        this.$refs[arry[index-1]].validate((vaild)=>{
+          if(vaild){
+            this.index = index +1;
+          }
+        })
         // this.accountIsDis = '1,2,3,4,8,9'
       }
       // namme == 'pople':{
       //   index == 2;
-
       // }
+    },
+
+    stateNull(){
+        
     },
 
     //跳转相应验证
@@ -779,9 +781,13 @@ export default {
         this.stepList[3].value = '设置新手机号';
         this.resetAccount = true
       }else if(val == 'go'){
+        this.$refs.formValidate.validate((valid) =>{
+          if(valid){
         this.getUserInfo('reset');
          this.index = 2;
          this.accountIsDis = '2';
+       }
+        })
       }
     },
 
@@ -885,6 +891,7 @@ export default {
             this.index = 4;
             this.verPage = '';
           }else{
+            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
             this.$Message.error({
                   content: res.data.message,
                   duration: 5
@@ -925,7 +932,7 @@ export default {
                   duration: 5
                 });
             } else {
-              this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
               this.vCodeMessage = response.data.message;
             }
           });
@@ -960,14 +967,14 @@ export default {
                 }
             },1000);
         }else{
-          this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
+          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
         }
       })
       }
       })
     },
 
-    // 身份
+    // 重置手机账号提交
     validateInfo(){
       let params = {
          IDCard:this.dataFroms.idCard,
@@ -992,7 +999,8 @@ export default {
             duration: 5
           });
           this.index = 5;
-          this.verPage = 'account';
+          this.resetAccount = false;
+          this.verPage = 'submit';
         }else{
           this.$Message.error({
             content: res.data.message,
@@ -1351,7 +1359,6 @@ export default {
           .ver_arrow::before{
             content: '';
             background: @color;
-           
           }
         }
       }
