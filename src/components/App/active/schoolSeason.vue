@@ -44,6 +44,45 @@
               <span>9</span>
               <i>秒</i>
             </div>
+            <!-- <div class="w_host">
+              <div v-for="(item,index) in allObjcet.cloudHost" :key="index">
+                <div class="host_title">
+                <p style="font-size:24px;">云服务器</p>
+                <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">{{item.cpu}}核</span>CPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
+                </div>
+                <div class="host_content">
+                <div>
+                    <span>请选择宽带</span>
+                    <Select v-model="item.bandwidth" style="width:200px;" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
+                    <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                    </Select>
+                </div>
+                <div style="margin:10px 0;">
+                    <span>请选择区域</span>
+                    <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                    <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                    </Select>
+                </div>
+                <div >
+                    <span>请选择系统</span>
+                    <Select v-model="item.system" style="width:200px" class="fr-select" >
+                    <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                    </Select>
+                </div>
+                <div style="margin:10px 0;">
+                    <span>请选择时长</span>
+                    <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
+                    <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                    </Select>
+                </div>
+                <div style="text-align:left;margin:26px 0 22px 0;">
+                    <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
+                    <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
+                </div>
+                <div class="host_button" @click="getDiskcountMv('cloudHost',index)">立即抢购</div>
+                </div>
+              </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -851,6 +890,64 @@ section {
         }
         i {
           font-style: normal;
+        }
+      }
+      .w_host{
+        display: flex;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        flex-wrap:wrap;
+        margin-top: 29px;
+        .host_title{
+          padding: 35px 0 31px 11px;
+          text-align: left;
+          background: url('../../../assets/img/active/doubleDenier/cloud_back.png') no-repeat;
+          width: 309px;
+          height: 130px;
+          p{
+            color: #FFFFFF;
+          }
+        }
+        .gpu_title{
+          padding: 35px 0 31px 11px;
+          text-align: left;
+          background: url('../../../assets/img/active/doubleDenier/gpu_bg.png') no-repeat;
+          width: 309px;
+          height: 130px;
+          p{
+            color: #FFFFFF;
+          }
+        }
+        .gpu_title2{
+          padding: 35px 0 31px 11px;
+          text-align: left;
+          background: url('../../../assets/img/active/doubleDenier/gpu_ba.png') no-repeat;
+          width: 309px;
+          height: 130px;
+          p{
+            color: #FFFFFF;
+          }
+        }
+        .host_content{
+          width: 309px;
+          background: #ffffff;
+          padding: 26px 13px 12px 15px;
+          border: 1px solid #FF5A2E;
+            border-bottom-right-radius: 6px;
+            border-bottom-left-radius: 6px;
+          .host_button{
+            padding: 2px 0;
+            background: #FF5A2E;
+            color:#ffffff;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.2s linear;
+          }
+          .host_button:hover{
+              background-color:#FF3508;
+          }
         }
       }
     }
