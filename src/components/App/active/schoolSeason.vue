@@ -1,5 +1,5 @@
 <template>
-  <div id="xian-node">
+  <div id="schoolseason">
     <div class="banner">
       <div class="wrap">
         <div class="container flex-vertical-center">
@@ -33,7 +33,7 @@
             <div>14:00~20:00</div>
           </div>
           <div class="box">
-            <p class="tc">本场秒杀倒计时</p>
+            <p>本场秒杀倒计时</p>
             <div class="count-down">
               <span>2</span>
               <i>时</i>
@@ -44,45 +44,54 @@
               <span>9</span>
               <i>秒</i>
             </div>
-            <!-- <div class="w_host">
+            <div class="w_host">
               <div v-for="(item,index) in allObjcet.cloudHost" :key="index">
                 <div class="host_title">
-                <p style="font-size:24px;">云服务器</p>
-                <p style="font-size:14px;margin-top:21px;"><span style="font-size:20px">{{item.cpu}}核</span>CPU | <span style="font-size:20px">{{item.memory}}G</span>内存  ｜  <span style="font-size:20px">{{item.rootDisk}}G</span>系统盘</p>
+                  <div class="rectangle">
+                    1折
+                    
+                  </div>
+                  <p style="font-size:18px;font-weight:bold;font-family:MicrosoftYaHei-Bold;">云服务器</p>
+                  <p class="config-text" ><span>{{item.cpu}}</span>核 + <span >{{item.memory}}G</span>  +  <span>{{item.rootDisk}}G</span>SSD系统盘</p>
                 </div>
                 <div class="host_content">
-                <div>
+                <!-- <div>
                     <span>请选择宽带</span>
                     <Select v-model="item.bandwidth" style="width:200px;" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
                     <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                     </Select>
-                </div>
+                </div> -->
                 <div style="margin:10px 0;">
-                    <span>请选择区域</span>
-                    <Select v-model="item.zoneId" style="width:200px" class="fr-select">
+                    <span class="label-title">选择区域：</span>
+                    <Select v-model="item.zoneId" style="width:240px" class="fr-select">
                     <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                     </Select>
+                    <!-- <Cascader :data="hostZoneList" v-model="item.zoneId"></Cascader> -->
                 </div>
                 <div >
-                    <span>请选择系统</span>
-                    <Select v-model="item.system" style="width:200px" class="fr-select" >
+                    <span class="label-title">选择系统：</span>
+                    <Select v-model="item.system" style="width:240px" class="fr-select" >
                     <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                     </Select>
                 </div>
-                <div style="margin:10px 0;">
+                <!-- <div style="margin:10px 0;">
                     <span>请选择时长</span>
                     <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
                     <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
                     </Select>
-                </div>
-                <div style="text-align:left;margin:26px 0 22px 0;">
-                    <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
-                    <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
+                </div> -->
+                <div style="text-align:left;margin:20px 0;">
+                    <span style="color:#E1212A;font-size:14px;">￥<span style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/年</span>
+                    <span style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{item.originalPrice}}元</span>
                 </div>
                 <div class="host_button" @click="getDiskcountMv('cloudHost',index)">立即抢购</div>
+                <div class="progress">
+                  <Progress class="schoolseason-progress" :percent="25" hide-info/>
+                  <span>已抢购50%</span>
+                </div>
                 </div>
               </div>
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
@@ -421,6 +430,348 @@ export default {
       reminderShow: true,
       zoneList: [],
       selectedZone: '',
+      // hostZoneList:[],
+      hostZoneList: [{
+                    value: 'beijing',
+                    label: '北京',
+                    children: [
+                        {
+                            value: 'gugong',
+                            label: '故宫'
+                        },
+                        {
+                            value: 'tiantan',
+                            label: '天坛'
+                        },
+                        {
+                            value: 'wangfujing',
+                            label: '王府井'
+                        }
+                    ]
+                }, {
+                    value: 'jiangsu',
+                    label: '江苏',
+                    children: [
+                        {
+                            value: 'nanjing',
+                            label: '南京',
+                            children: [
+                                {
+                                    value: 'fuzimiao',
+                                    label: '夫子庙',
+                                }
+                            ]
+                        },
+                        {
+                            value: 'suzhou',
+                            label: '苏州',
+                            children: [
+                                {
+                                    value: 'zhuozhengyuan',
+                                    label: '拙政园',
+                                },
+                                {
+                                    value: 'shizilin',
+                                    label: '狮子林',
+                                }
+                            ]
+                        }
+                    ],
+                }],
+      hostTwo:{
+          //带宽
+          bandwidthList:[
+            {
+              name: '2M',
+              value: '2'
+            }, {
+              name: '5M',
+              value: '5'
+            }, {
+              name: '10M',
+              value: '10'
+            }
+          ],
+
+          //系统
+          systemList: [
+            {
+              name: 'Centos',
+              value: 'linux'
+            }, {
+              name: 'Windows',
+              value: 'windows'
+            }],
+
+          //时长
+          durationList:[
+            {
+              name:'6月',
+              value:'6'
+            },
+            {
+              name:'1年',
+              value:'12'
+            },
+            {
+              name:'2年',
+              value:'24'
+            }
+          ],
+          gpuDay:[
+            {
+              name:'7天',
+              value:'7'
+            }
+          ],
+          gpuMoth:[
+            {
+              name:'1月',
+              value:'1'
+            },
+            {
+              name:'3月',
+              value:'3'
+            }
+          ],
+          databaseTypeList: [
+            {
+              name: 'Mysql 单实例',
+              value: 'mysql'
+            }, {
+              name: 'Redis分布式缓存服务',
+              value: 'redis'
+            }, {
+              name: 'PostgreSQL 单实例',
+              value: 'postgresql'
+            }, {
+              name: 'MongoDB 单实例',
+              value: 'mongo'
+            }
+        ],
+        },
+      allObjcet:{
+          cloudHost:[
+            {
+              cpu: '2',
+              memory: '4',
+              rootDisk: '40',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'linux',
+              duration: '6',
+              originalPrice: '1300.32',
+              currentPrice: '351.09',
+              vmConfigId: '50',
+              type:'0',
+              activityNum:'27'
+            },
+            {
+              cpu: '4',
+              memory: '8',
+              rootDisk: '40',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'linux',
+              duration: '6',
+              originalPrice: '2662.32',
+              currentPrice: '718.83',
+              vmConfigId: '65',
+              type:'0',
+              activityNum:'27'
+            },
+            {
+              cpu: '8',
+              memory: '16',
+              rootDisk: '40',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'linux',
+              duration: '6',
+              originalPrice: '4324.32',
+              currentPrice: '1167.57',
+              vmConfigId: '80',
+              type:'0',
+              activityNum:'27'
+            }
+          ],
+          gpuHost:[
+            {
+              cpu: '16',
+              memory: '128',
+              rootDisk: '128',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'linux',
+              duration: '7',
+              originalPrice: '2442.34',
+              currentPrice: '659.43',
+              vmConfigId: '101',
+              type:'1',
+              serverType:'P100',
+              activityNum:'30'
+            },
+            {
+              cpu: '16',
+              memory: '120',
+              rootDisk: '128',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'linux',
+              duration: '7',
+              originalPrice: '1729.03',
+              currentPrice: '466.84',
+              vmConfigId: '116',
+              type:'1',
+              serverType:'P40',
+              activityNum:'30'
+            },
+            {
+              cpu: '16',
+              memory: '64',
+              rootDisk: '128',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'linux',
+              duration: '7',
+              originalPrice: '1471.1',
+              currentPrice: '397.2',
+              vmConfigId: '50',
+              type:'1',
+              serverType:'P40',
+              activityNum:'30'
+            }
+          ],
+          gpuHostMoth:[
+            {
+              cpu: '16',
+              memory: '128',
+              rootDisk: '128',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'linux',
+              duration: '1',
+              originalPrice: '9141.7',
+              currentPrice: '7313.36',
+              vmConfigId: '50',
+              type:'0',
+              serverType:'P100',
+              activityNum:'30'
+            },
+            {
+              cpu: '16',
+              memory: '120',
+              rootDisk: '128',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'linux',
+              duration: '1',
+              originalPrice: '6424.31',
+              currentPrice: '5139.45',
+              vmConfigId: '50',
+              type:'0',
+              serverType:'P40',
+              activityNum:'30'
+            },
+            {
+              cpu: '16',
+              memory: '64',
+              rootDisk: '128',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'linux',
+              duration: '1',
+              originalPrice: '5441.7',
+              currentPrice: '4353.36',
+              vmConfigId: '50',
+              type:'0',
+              serverType:'P40',
+              activityNum:'30'
+            }
+          ],
+          objectHost:[
+            {
+              storage:'50',
+              flow:'50',
+              zoneId: '',
+              duration: '6',
+              originalPrice: '174',
+              currentPrice: '46.98',
+              vmConfigId: '50',
+              type:'0',
+              serviceType:'oss',
+              activityNum:'28'
+            },
+            {
+              storage:'100',
+              flow:'100',
+              zoneId: '',
+              duration: '6',
+              originalPrice: '348',
+              currentPrice: '93.96',
+              vmConfigId: '50',
+              type:'0',
+              serviceType:'oss',
+              activityNum:'28'
+            },
+            {
+              storage:'300',
+              flow:'300',
+              zoneId: '',
+              duration: '6',
+              originalPrice: '1044',
+              currentPrice: '281.88',
+              vmConfigId: '50',
+              type:'0',
+              serviceType:'oss',
+              activityNum:'28'
+            }
+          ],
+          cloudData:[
+            {
+              cpu: '2',
+              memory: '4',
+              rootDisk: '40',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'mysql',
+              duration: '6',
+              originalPrice: '1963.92',
+              currentPrice: '530.26',
+              vmConfigId: '50',
+              type:'0',
+              activityNum:'29'
+            },
+            {
+              cpu: '4',
+              memory: '8',
+              rootDisk: '40',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'mysql',
+              duration: '6',
+              originalPrice: '3462.12',
+              currentPrice: '934.77',
+              vmConfigId: '50',
+              type:'0',
+              activityNum:'29'
+            },
+            {
+              cpu: '8',
+              memory: '16',
+              rootDisk: '40',
+              bandwidth: '2',
+              zoneId: '',
+              system: 'mysql',
+              duration: '6',
+              originalPrice: '5290.32',
+              currentPrice: '1428.39',
+              vmConfigId: '50',
+              type:'0',
+              activityNum:'29'
+            }
+          ],
+        },
       productData: [
         {
           host: '1',
@@ -746,7 +1097,7 @@ export default {
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-#xian-node {
+#schoolseason {
   font-family: MicrosoftYaHei;
   color: #4B3C3D;
   background:rgba(247,247,247,1);
@@ -778,7 +1129,7 @@ section {
       font-size:24px;
       font-weight:bold;
       color:rgba(255,255,255,1);
-      padding-top: 9px;
+      padding-top: 7px;
       line-height:56px;
     }
     p {
@@ -871,8 +1222,17 @@ section {
       }
     }
     .box {
+      padding: 20px 40px;
       height:627px;
       background:url(../../../assets/img/active/schoolSeason/seckill_bg.png) center no-repeat;
+      >p {
+        margin: 20px 0;
+        text-align: center;
+        font-size:18px;
+        font-weight:bold;
+        color:rgba(225,33,42,1);
+        line-height:24px;
+      }
       .count-down {
         text-align: center;
         font-size:14px;
@@ -893,18 +1253,46 @@ section {
         }
       }
       .w_host{
+        font-family:MicrosoftYaHei;
         display: flex;
         -webkit-box-pack: justify;
         -ms-flex-pack: justify;
         justify-content: space-between;
         flex-wrap:wrap;
         margin-top: 29px;
+        >div {
+          background:rgba(255,255,255,1);
+          border-radius:4px;
+        }
         .host_title{
-          padding: 35px 0 31px 11px;
+          padding: 20px;
           text-align: left;
-          background: url('../../../assets/img/active/doubleDenier/cloud_back.png') no-repeat;
-          width: 309px;
-          height: 130px;
+          background: url('../../../assets/img/active/schoolSeason/seckill_item_bg_1.png') no-repeat;
+          width:360px;
+          height:94px;
+          position: relative;
+          .rectangle {
+            width:43px;
+            height:22px;
+            position: absolute;
+            top: 17px;
+            right: 0;
+            background: url(../../../assets/img/active/schoolSeason/rectangle.png);
+            font-size:14px;
+            color:rgba(255,78,69,1);
+            line-height:22px;
+            text-align: center;
+            padding-left: 4px;
+          }
+          .config-text {
+            font-size:12px;
+            margin-top:12px;
+            span {
+              font-family:Arial-BoldMT;
+              font-size:18px;
+              font-weight:bold;
+            }
+          }
           p{
             color: #FFFFFF;
           }
@@ -930,23 +1318,39 @@ section {
           }
         }
         .host_content{
-          width: 309px;
+          width:360px;
+          height:296px;
           background: #ffffff;
-          padding: 26px 13px 12px 15px;
-          border: 1px solid #FF5A2E;
-            border-bottom-right-radius: 6px;
-            border-bottom-left-radius: 6px;
+          padding: 20px;
+          padding-top: 10px;
+          .label-title {
+            font-size:14px;
+            color:rgba(65,6,12,1);
+          }
           .host_button{
-            padding: 2px 0;
-            background: #FF5A2E;
+            width:320px;
+            height:40px;
+            background:rgba(255,98,75,1);
+            border-radius:2px;
             color:#ffffff;
-            font-size: 20px;
+            font-size:18px;
+            line-height:38px;
             cursor: pointer;
-            border-radius: 3px;
+            text-align: center;
             transition: background-color 0.2s linear;
           }
           .host_button:hover{
               background-color:#FF3508;
+          }
+          .progress {
+            .schoolseason-progress {
+              margin-top: 36px;
+              margin-bottom: 8px;
+            }
+            span {
+              font-size:14px;
+              color:rgba(154,127,130,1);
+            }
           }
         }
       }
@@ -1172,7 +1576,7 @@ section {
   padding-bottom: 40px;
   .headline {
     div {
-      background:url(../../../assets/img/active/schoolSeason/schoolsenson_headline_2.png) center no-repeat,
+      background:url(../../../assets/img/active/schoolSeason/schoolsenson_headline_4.png) center no-repeat,
     }
   }
   .main {
