@@ -35,6 +35,7 @@
 
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import $store from '@/vuex'
   export default {
     data() {
       var payResult = sessionStorage.getItem('payResult')

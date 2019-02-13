@@ -38,15 +38,15 @@
                 <p>请输入正确的手机号码或者邮箱地址</p>
               </div>
             </div>
-            <div v-show="loginForm.loginType === 'vailCode'">
-              <div id="captchaBox_code"></div>
-              <div class="errorMsg">
-                <div v-if="loginForm.errorMsg === 'notSlidingCodeValidation'">
-                  <i></i>
-                  <p>您还没有通过验证</p>
-                </div>
-              </div>
-            </div>
+            <!--            <div v-show="loginForm.loginType === 'vailCode'">
+                          <div id="captchaBox_code"></div>
+                          <div class="errorMsg">
+                            <div v-if="loginForm.errorMsg === 'notSlidingCodeValidation'">
+                              <i></i>
+                              <p>您还没有通过验证</p>
+                            </div>
+                          </div>
+                        </div>-->
             <div class="import" :class="{error: loginForm.errorMsg === 'passwordMistake'}" v-if="loginForm.loginType === 'password'">
               <img src="../../assets/img/login/lr-icon2.png"/>
               <input v-model="loginForm.password" ref="loginPasInput" @input="loginForm.errorMsg=''" type="password" placeHolder="请输入密码"/>
@@ -55,7 +55,7 @@
             <div class="import" :class="{error: loginForm.errorMsg === 'verificationCodeMistake'}" v-if="loginForm.loginType === 'vailCode'">
               <img src="../../assets/img/login/lr-icon4.png"/>
               <input class="verification" v-model="loginForm.verificationCode" @input="loginForm.errorMsg=''" type="text" placeHolder="请输入收到的验证码"/>
-              <a @click="sendLoginVailCode" :class="{disabled:loginForm.verificationCodeText !== '发送验证码' }">{{ loginForm.verificationCodeText}}</a>
+              <a @click="sendLoginVailCodeCheck" :class="{disabled:loginForm.verificationCodeText !== '发送验证码' }">{{ loginForm.verificationCodeText}}</a>
             </div>
             <div class="errorMsg">
               <div v-if="loginForm.errorMsg === 'passwordMistake'">
@@ -76,22 +76,22 @@
               </div>
               <div v-if="loginForm.errorMsg === 'notGetVerificationCode'&&loginNameIsPhone">
                 <i></i>
-                <p>收不到验证码？请<span @click="loginForm.loginType='password',loginForm.errorMsg=''">更换登录方式</span>或<span @click="getLoginVoiceCode">接收语音验证码</span></p>
+                <p>收不到验证码？请<span @click="loginForm.loginType='password',loginForm.errorMsg=''">更换登录方式</span>或<span @click="getLoginVoicecodeCheck">接收语音验证码</span></p>
               </div>
               <div v-if="loginForm.errorMsg === 'notGetVerificationCode'&&!loginNameIsPhone">
                 <i></i>
                 <p>收不到验证码？请<span @click="loginForm.loginType='password',loginForm.errorMsg=''">更换登录方式</span></p>
               </div>
             </div>
-            <div v-show="loginForm.loginType === 'password'">
-              <div id="captchaBox_password"></div>
-              <div class="errorMsg">
-                <div v-if="loginForm.errorMsg === 'notSlidingValidation'">
-                  <i></i>
-                  <p>您还没有通过验证</p>
-                </div>
-              </div>
-            </div>
+            <!--            <div v-show="loginForm.loginType === 'password'">
+                                      <div id="captchaBox_password"></div>
+                                      <div class="errorMsg">
+                                        <div v-if="loginForm.errorMsg === 'notSlidingValidation'">
+                                          <i></i>
+                                          <p>您还没有通过验证</p>
+                                        </div>
+                                      </div>
+                        </div>-->
             <button @click="toLogin" :class="{notAllow:loginDisabled}" :disabled="loginDisabled">登录</button>
             <div class="footer">
               <span v-show="loginForm.loginType === 'password'" @click="changeToVailCodeLogin">验证码登录</span>
@@ -343,6 +343,7 @@
 </style>
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import throttle from 'throttle-debounce/throttle'
   import gt from '../../util/gt'
 
   export default {
@@ -381,35 +382,64 @@
       }
     },
     created() {
-      this.gtInitPassword()
-      this.gtInitCode()
     },
     mounted() {
     },
     methods: {
       /* 滑动验证初始化--密码登录*/
-      gtInitPassword() {
+      gtInitPassword: throttle(2000, function () {
+        let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {
           params: {}
         }).then(res => {
           if (res.status == 200) {
+            // 图形验证码未绑定到按钮版本
+            /*       initGeetest({
+                     // 以下配置参数来自服务端 SDK
+                     gt: res.data.gt,
+                     challenge: res.data.challenge,
+                     offline: !res.data.success,
+                     new_captcha: true,
+                     product: 'bind'
+                   }, captchaObj => {
+                     this.passwordCaptchaObj = captchaObj
+                     //captchaObj.appendTo("#captchaBox_password"); //将验证按钮插入到宿主页面中captchaBox元素内
+                     captchaObj.onReady(() => {
+                     }).onSuccess(() => {
+                       if (this.loginForm.errorMsg !== 'notGetVerificationCode') {
+                         this.loginForm.errorMsg = ''
+                       }
+                       var result = captchaObj.getValidate()
+                       let url = 'user/silpJudge.do'
+                       let params = {
+                         geetest_challenge: result.geetest_challenge,
+                         geetest_validate: result.geetest_validate,
+                         geetest_seccode: result.geetest_seccode
+                       }
+                       axios.get(url, {params: params}).then(response => {
+                         if (response.data.status != '1') {
+                           captchaObj.reset(); // 调用该接口进行重置
+                         } else {
+                           this.passwordCaptchaObjStatus = true
+                         }
+                       })
+                     }).onError(() => {
+                     })
+                   })*/
+            // 绑定到按钮
             initGeetest({
               // 以下配置参数来自服务端 SDK
               gt: res.data.gt,
               challenge: res.data.challenge,
               offline: !res.data.success,
               new_captcha: true,
-              width: '100%',
-              product: 'float'
-            }, captchaObj => {
-              this.passwordCaptchaObj = captchaObj
-              captchaObj.appendTo("#captchaBox_password"); //将验证按钮插入到宿主页面中captchaBox元素内
-              captchaObj.onReady(() => {
-              }).onSuccess(() => {
-                if (this.loginForm.errorMsg !== 'notGetVerificationCode') {
-                  this.loginForm.errorMsg = ''
-                }
+              product: 'bind',
+            }, function (captchaObj) {
+              captchaObj.onReady(function () {
+                captchaObj.verify()
+              }).onSuccess(function () {
+                _self.loginForm.errorMsg = ''
                 var result = captchaObj.getValidate()
                 let url = 'user/silpJudge.do'
                 let params = {
@@ -421,36 +451,68 @@
                   if (response.data.status != '1') {
                     captchaObj.reset(); // 调用该接口进行重置
                   } else {
-                    this.passwordCaptchaObjStatus = true
+                    _self.loginByPassword()
                   }
                 })
-              }).onError(() => {
+              }).onError(function () {
               })
             })
           }
         })
-      },
-      /* 滑动验证初始化-- 验证码登录*/
-      gtInitCode() {
+      }),
+      /* 滑动验证初始化-- 发送验证码*/
+      gtInitCode: throttle(2000, function () {
+        let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
           if (res.status == 200) {
+            // 图形验证码未绑定到按钮版本
+            /*           initGeetest({
+                         // 以下配置参数来自服务端 SDK
+                         gt: res.data.gt,
+                         challenge: res.data.challenge,
+                         offline: !res.data.success,
+                         new_captcha: true,
+                         width: '100%',
+                         product: 'float'
+                       }, captchaObj => {
+                         this.codeCaptchaObj = captchaObj
+                         captchaObj.appendTo("#captchaBox_code"); //将验证按钮插入到宿主页面中captchaBox元素内
+                         captchaObj.onReady(() => {
+                         }).onSuccess(() => {
+                           if (this.loginForm.errorMsg !== 'notGetVerificationCode') {
+                             this.loginForm.errorMsg = ''
+                           }
+                           var result = captchaObj.getValidate()
+                           let url = 'user/silpJudge.do'
+                           let params = {
+                             geetest_challenge: result.geetest_challenge,
+                             geetest_validate: result.geetest_validate,
+                             geetest_seccode: result.geetest_seccode
+                           }
+                           axios.get(url, {params: params}).then(response => {
+                             if (response.data.status != '1') {
+                               captchaObj.reset(); // 调用该接口进行重置
+                             } else {
+                               this.codeCaptchaObjStatus = true
+                             }
+                           })
+                         }).onError(() => {
+                         })
+                       })*/
+            // 绑定到按钮
             initGeetest({
               // 以下配置参数来自服务端 SDK
               gt: res.data.gt,
               challenge: res.data.challenge,
               offline: !res.data.success,
               new_captcha: true,
-              width: '100%',
-              product: 'float'
-            }, captchaObj => {
-              this.codeCaptchaObj = captchaObj
-              captchaObj.appendTo("#captchaBox_code"); //将验证按钮插入到宿主页面中captchaBox元素内
-              captchaObj.onReady(() => {
-              }).onSuccess(() => {
-                if (this.loginForm.errorMsg !== 'notGetVerificationCode') {
-                  this.loginForm.errorMsg = ''
-                }
+              product: 'bind',
+            }, function (captchaObj) {
+              captchaObj.onReady(function () {
+                captchaObj.verify()
+              }).onSuccess(function () {
+                _self.loginForm.errorMsg = ''
                 var result = captchaObj.getValidate()
                 let url = 'user/silpJudge.do'
                 let params = {
@@ -462,15 +524,54 @@
                   if (response.data.status != '1') {
                     captchaObj.reset(); // 调用该接口进行重置
                   } else {
-                    this.codeCaptchaObjStatus = true
+                    _self.sendLoginVailCode()
                   }
                 })
-              }).onError(() => {
+              }).onError(function () {
               })
             })
           }
         })
-      },
+      }),
+      /* 滑动验证初始化 -- 发送语音验证码*/
+      gtInitVoice: throttle(2000, function () {
+        let _self = this
+        let url = 'user/silpInitialization.do'
+        axios.get(url, {params: {}}).then(res => {
+          if (res.status == 200) {
+            // 绑定到按钮
+            initGeetest({
+              // 以下配置参数来自服务端 SDK
+              gt: res.data.gt,
+              challenge: res.data.challenge,
+              offline: !res.data.success,
+              new_captcha: true,
+              product: 'bind',
+            }, function (captchaObj) {
+              captchaObj.onReady(function () {
+                captchaObj.verify()
+              }).onSuccess(function () {
+                _self.loginForm.errorMsg = ''
+                var result = captchaObj.getValidate()
+                let url = 'user/silpJudge.do'
+                let params = {
+                  geetest_challenge: result.geetest_challenge,
+                  geetest_validate: result.geetest_validate,
+                  geetest_seccode: result.geetest_seccode
+                }
+                axios.get(url, {params: params}).then(response => {
+                  if (response.data.status != '1') {
+                    captchaObj.reset(); // 调用该接口进行重置
+                  } else {
+                    _self.getLoginVoiceCode()
+                  }
+                })
+              }).onError(function () {
+              })
+            })
+          }
+        })
+      }),
       /* 切换banner */
       change(activeIndex) {
         this.activeBanner = activeIndex + 1
@@ -480,12 +581,10 @@
         this.$refs[name].type === 'password' ? this.$refs[name].type = 'text' : this.$refs[name].type = 'password'
       },
       changeToVailCodeLogin() {
-        this.passwordCaptchaObj.reset()
         this.loginForm.errorMsg = ''
         this.loginForm.loginType = 'vailCode'
       },
       changeToPasswordLogin() {
-        this.codeCaptchaObj.reset()
         this.loginForm.errorMsg = ''
         this.loginForm.loginType = 'password'
       },
@@ -517,93 +616,78 @@
             this.loginForm.errorMsg = 'passwordMistake'
             return
           }
-          if (!this.passwordCaptchaObjStatus) {
-            this.loginForm.errorMsg = 'notSlidingValidation'
-            return
-          }
-          let url = 'user/login.do', params = {
-            username: this.loginForm.loginName,
-            password: this.loginForm.password,
-          }
-          axios.get(url, {params}).then(res => {
-            if (res.data.status === 1 && res.status === 200) {
-              localStorage.setItem('authToken', res.data.message)
-              console.log(this.from)
-              if (this.from.indexOf('/ruicloud/Register') == 0 || this.from.indexOf('/ruicloud/register') == 0 || this.from.indexOf('/ruicloud/resetNew') == 0 || this.from == '/') {
-                this.$router.push('overview')
-              } else if (this.from.indexOf('/ruicloud/ActiveCenter') == 0) {
-                this.$router.push({path: this.from})
-              } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
-                this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
-              } else {
-                this.$router.push({path: this.from})
-              }
-            } else if (res.data.status === 2) {
-              if (this.loginForm.passwordErrorNum < 4) {
-                this.loginForm.passwordErrorNum += 1
-                this.loginForm.errorMsg = 'passwordMistake'
-                this.passwordCaptchaObjStatus = false
-                this.passwordCaptchaObj.reset()
-              } else {
-                this.loginForm.errorMsg = 'passwordMistakeTanto'
-              }
-            } else {
-              this.$message.info({
-                content: res.data.message
-              })
-              this.passwordCaptchaObjStatus = false
-              this.passwordCaptchaObj.reset()
-            }
-          })
+          this.gtInitPassword()
         } else {
           if (!this.loginForm.verificationCode) {
             this.loginForm.errorMsg = 'verificationCodeMistake'
             return
           }
-          if (!this.codeCaptchaObjStatus) {
-            this.loginForm.errorMsg = 'notSlidingCodeValidation'
-            return
-          }
-          let url = 'user/loginByCode.do', params = {
-            username: this.loginForm.loginName,
-            code: this.loginForm.verificationCode
-          }
-          axios.get(url, {params}).then(res => {
-            if (res.data.status === 1 && res.status === 200) {
-              localStorage.setItem('authToken', res.data.message)
-              if (this.from.indexOf('/ruicloud/Register') == 0 || this.from.indexOf('/ruicloud/register') == 0 || this.from.indexOf('/ruicloud/resetNew') == 0 || this.from == '/') {
-                this.$router.push('overview')
-              } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
-                this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
-              } else {
-                this.$router.push({path: this.from})
-              }
-            } else if (res.data.status === 0) {
-              if (this.loginForm.verificationCodeNum < 4) {
-                this.loginForm.verificationCodeNum += 1
-                this.loginForm.errorMsg = 'verificationCodeMistake'
-                this.codeCaptchaObjStatus = false
-                this.codeCaptchaObj.reset()
-              } else {
-                this.loginForm.errorMsg = 'verificationCodeMistakeTanto'
-              }
-            } else {
-              this.codeCaptchaObjStatus = false
-              this.codeCaptchaObj.reset()
-              this.$message.info({
-                content: res.data.message
-              })
-            }
-          })
+          this.loginByCode()
         }
       },
-      sendLoginVailCode() {
+      loginByPassword() {
+        let url = 'user/login.do', params = {
+          username: this.loginForm.loginName,
+          password: this.loginForm.password,
+        }
+        axios.get(url, {params}).then(res => {
+          if (res.data.status === 1 && res.status === 200) {
+            localStorage.setItem('authToken', res.data.message)
+            if (this.from.indexOf('/ruicloud/Register') == 0 || this.from.indexOf('/ruicloud/register') == 0 || this.from.indexOf('/ruicloud/resetNew') == 0 || this.from == '/') {
+              this.$router.push('overview')
+            } else if (this.from.indexOf('/ruicloud/ActiveCenter') == 0) {
+              this.$router.push({path: this.from})
+            } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
+              this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
+            } else {
+              this.$router.push({path: this.from})
+            }
+          } else if (res.data.status === 2) {
+            if (this.loginForm.passwordErrorNum < 4) {
+              this.loginForm.passwordErrorNum += 1
+              this.loginForm.errorMsg = 'passwordMistake'
+            } else {
+              this.loginForm.errorMsg = 'passwordMistakeTanto'
+            }
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      loginByCode() {
+        let url = 'user/loginByCode.do', params = {
+          username: this.loginForm.loginName,
+          code: this.loginForm.verificationCode
+        }
+        axios.get(url, {params}).then(res => {
+          if (res.data.status === 1 && res.status === 200) {
+            localStorage.setItem('authToken', res.data.message)
+            if (this.from.indexOf('/ruicloud/Register') == 0 || this.from.indexOf('/ruicloud/register') == 0 || this.from.indexOf('/ruicloud/resetNew') == 0 || this.from == '/') {
+              this.$router.push('overview')
+            } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
+              this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
+            } else {
+              this.$router.push({path: this.from})
+            }
+          } else if (res.data.status === 0) {
+            if (this.loginForm.verificationCodeNum < 4) {
+              this.loginForm.verificationCodeNum += 1
+              this.loginForm.errorMsg = 'verificationCodeMistake'
+            } else {
+              this.loginForm.errorMsg = 'verificationCodeMistakeTanto'
+            }
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      sendLoginVailCodeCheck() {
         if (!this.loginForm.loginName || !(this.regExpObj.phone.test(this.loginForm.loginName) || this.regExpObj.email.test(this.loginForm.loginName))) {
           this.loginForm.errorMsg = 'formatError'
-          return
-        }
-        if (!this.codeCaptchaObjStatus) {
-          this.loginForm.errorMsg = 'notSlidingCodeValidation'
           return
         }
         if (this.loginForm.verificationCodeText !== '发送验证码') {
@@ -617,61 +701,61 @@
           if (response.status === 200 && response.data.status === 1) {
             this.loginForm.errorMsg = 'notRegister'
           } else {
-            this.loginForm.verificationCodeText = '发送中'
-            let url = 'user/code.do'
-            let params = {}
-            if (this.regExpObj.phone.test(this.loginForm.loginName)) {
-              params = {
-                aim: this.loginForm.loginName,
-                isemail: 0
-              }
-            } else {
-              params = {
-                aim: this.loginForm.loginName,
-                isemail: 1
-              }
-            }
-            axios.get(url, {
-              params: params
-            }).then(res => {
-              if (res.status === 200 && res.data.status === 1) {
-                this.loginForm.errorMsg = ''
-                let i = 60
-                this.loginForm.verificationCodeText = '60S'
-                this.loginForm.verificationCodeTimer = setInterval(() => {
-                  i -= 1
-                  if (i < 10) {
-                    this.loginForm.verificationCodeText = '0' + i + 'S'
-                  } else {
-                    this.loginForm.verificationCodeText = i + 'S'
-                  }
-                  if (i === 0) {
-                    this.loginForm.verificationCodeText = '发送验证码'
-                    if (!this.loginForm.verificationCode) {
-                      this.loginForm.errorMsg = 'notGetVerificationCode'
-                    }
-                    this.codeCaptchaObjStatus = false
-                    this.codeCaptchaObj.reset()
-                    window.clearInterval(this.loginForm.verificationCodeTimer)
-                  }
-                }, 1000)
-              } else {
-                this.$Message.info(res.data.message)
-                this.loginForm.verificationCodeText = '发送验证码'
-              }
-            })
+            this.gtInitCode()
           }
         })
       },
-      getLoginVoiceCode() {
+      sendLoginVailCode() {
+        this.loginForm.verificationCodeText = '发送中'
+        let url = 'user/code.do'
+        let params = {}
+        if (this.regExpObj.phone.test(this.loginForm.loginName)) {
+          params = {
+            aim: this.loginForm.loginName,
+            isemail: 0
+          }
+        } else {
+          params = {
+            aim: this.loginForm.loginName,
+            isemail: 1
+          }
+        }
+        axios.get(url, {
+          params: params
+        }).then(res => {
+          if (res.status === 200 && res.data.status === 1) {
+            this.loginForm.errorMsg = ''
+            let i = 60
+            this.loginForm.verificationCodeText = '60S'
+            this.loginForm.verificationCodeTimer = setInterval(() => {
+              i -= 1
+              if (i < 10) {
+                this.loginForm.verificationCodeText = '0' + i + 'S'
+              } else {
+                this.loginForm.verificationCodeText = i + 'S'
+              }
+              if (i === 0) {
+                this.loginForm.verificationCodeText = '发送验证码'
+                if (!this.loginForm.verificationCode) {
+                  this.loginForm.errorMsg = 'notGetVerificationCode'
+                }
+                window.clearInterval(this.loginForm.verificationCodeTimer)
+              }
+            }, 1000)
+          } else {
+            this.$Message.info(res.data.message)
+            this.loginForm.verificationCodeText = '发送验证码'
+          }
+        })
+      },
+      getLoginVoicecodeCheck() {
         if (!this.regExpObj.phone.test(this.loginForm.loginName)) {
           this.loginForm.errorMsg = 'formatError'
           return
         }
-        if (!this.codeCaptchaObjStatus) {
-          this.$Message.info('您还没有通过验证')
-          return
-        }
+        this.gtInitVoice()
+      },
+      getLoginVoiceCode() {
         let url = 'user/voiceCode.do'
         axios.get(url, {
           params: {
@@ -694,8 +778,6 @@
                 if (!this.loginForm.verificationCode) {
                   this.loginForm.errorMsg = 'notGetVerificationCode'
                 }
-                this.codeCaptchaObjStatus = false
-                this.codeCaptchaObj.reset()
                 window.clearInterval(this.loginForm.verificationCodeTimer)
               }
             }, 1000)

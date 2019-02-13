@@ -29,11 +29,11 @@
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
                     <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span
-                      @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
+                      @click="modifyEmail">去绑定</span></li>
                     <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span
-                      @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
+                      @click="modifyEmail">修改</span></li>
                     <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span
-                      @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
+                      @click="modifyTelphone">去绑定</span></li>
                     <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span
                       @click="telModify_btn()">修改</span></li>
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
@@ -911,7 +911,7 @@
     <!-- 绑定手机 -->
     <Modal v-model="showModal.bindingMobilePhone" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">修改手机号码</span>
+        <span class="universal-modal-title">设置手机号码</span>
       </p>
       <div class="universal-modal-content-flex">
         <div>
@@ -1000,7 +1000,7 @@
     <!-- 绑定邮箱 -->
     <Modal v-model="showModal.bindingEmail" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">绑定邮箱</span>
+        <span class="universal-modal-title">设置邮箱</span>
       </p>
       <div class="universal-modal-content-flex">
         <div>
@@ -2659,6 +2659,16 @@
           }
         })
       },
+      modifyTelphone(){
+        if(this.getBindingMobilePhoneDisabled){
+          this.bindingMobilePhoneForm.verificationMode = 'email'
+        } else{
+          this.bindingMobilePhoneForm.verificationMode = 'phone'
+        }
+        this.showModal.bindingMobilePhone = true
+        this.bindingMobilePhoneForm.step=0
+        this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
+      },
       // 修改手机弹窗出现前，清空数据
       telModify_btn() {
         this.showModal.ModifyTelVail = true
@@ -2666,6 +2676,17 @@
         this.bindingMobilePhoneForm.step = 0
         this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
         this.modifyPhoneIDcancel()
+      },
+      // 设置邮箱
+      modifyEmail(){
+        if(this.getBindingEmailDisabled){
+          this.bindingEmailForm.verificationMode = 'email'
+        } else{
+          this.bindingEmailForm.verificationMode = 'phone'
+        }
+        this.showModal.bindingEmail = true
+        this.bindingEmailForm.step=0
+        this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
       },
       // 重置表单
       reset() {

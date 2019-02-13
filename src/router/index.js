@@ -65,7 +65,7 @@ const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 const AnniversaryActive = () => import('@/components/App/active/anniversaryActive')
 //const AnniversaryActiveBefore = () => import('@/components/App/active/AnniversaryActiveBefore')
 const xianNode = () => import('@/components/App/active/xianNode')
-
+const schoolSeason = () => import('@/components/App/active/schoolSeason')
 //域名页面路由
 const Domainname = () =>import('@/components/App/Domain/Domainname')
 const DomainResult = () =>import('@/components/App/Domain/DomainResult')
@@ -112,9 +112,9 @@ const Pelastic = () => import('@/components/App/product/Pelastic.vue')
 // import Login from '@/components/LR/Login'
 // import Register from '@/components/LR/Register'
 // import Reset from '@/components/LR/Reset'
-const Login = () =>import('@/components/LR/oldLogin')
+const Login = () =>import('@/components/LR/Login')
 //const NewLogin = () =>import('@/components/LR/newLogin')
-const Register = () =>import('@/components/LR/oldRegister')
+const Register = () =>import('@/components/LR/Register')
 //const NewRegister = () =>import('@/components/LR/newRegister')
 const Reset = () =>import('@/components/LR/Reset')
 const RegisterSuccess = () =>import('@/components/LR/RegisterSuccess')
@@ -342,6 +342,7 @@ var router = new Router({
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
         {path: 'xianNode', name: 'xianNode', component: xianNode},
+        {path: 'schoolSeason', name: 'schoolSeason', component: schoolSeason},
 
         {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},
         {path: 'SceneInfo/:type', name: 'SceneInfo', component: SceneInfo},

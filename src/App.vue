@@ -507,7 +507,7 @@
           },
           {
             title: '新闻动态',
-            path: 'https://news.xrcloud.net',
+            path: '',
             content: [
               {
                 prod: '云服务',
