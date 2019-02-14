@@ -977,7 +977,7 @@ export default {
     // 重置手机账号提交
     validateInfo(){
       let params = {
-         IDCard:this.dataFroms.idCard,
+         IdCard:this.dataFroms.idCard,
           authType:'0',
           personIdCardHandUrl:this.fileUrl.imgUrl,
           newPhone:this.dataFroms.phone
