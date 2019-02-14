@@ -45,49 +45,37 @@
               <i>秒</i>
             </div>
             <div class="w_host">
-              <div v-for="(item,index) in allObjcet.cloudHost" :key="index">
+              <div v-for="(item,index) in discountProduct" :key="index">
                 <div class="host_title">
                   <div class="rectangle">
-                    1折
-                    
+                    {{item.discount}}折
                   </div>
-                  <p style="font-size:18px;font-weight:bold;font-family:MicrosoftYaHei-Bold;">云服务器</p>
-                  <p class="config-text" ><span>{{item.cpu}}</span>核 + <span >{{item.memory}}G</span>  +  <span>{{item.rootDisk}}G</span>SSD系统盘</p>
+                  <p style="font-size:18px;font-weight:bold;font-family:MicrosoftYaHei-Bold;">{{item.servicetype == 'host' ? '云服务器' : 'GPU云服务器'}}</p>
+                  <p class="config-text" ><span>{{item.cpu}}</span>核 + <span >{{item.memory}}G</span>  +  <span><span>{{item.cpu}}M</span>带宽 + {{item.rootDisk}}G</span>SSD系统盘</p>
                 </div>
                 <div class="host_content">
-                <!-- <div>
-                    <span>请选择宽带</span>
-                    <Select v-model="item.bandwidth" style="width:200px;" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
-                    <Option v-for="item in hostTwo.bandwidthList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                </div> -->
                 <div style="margin:10px 0;">
                     <span class="label-title">选择区域：</span>
-                    <Select v-model="item.zoneId" style="width:240px" class="fr-select">
-                    <Option v-for="item in hostZoneList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                    <Select v-model="item.zoneId" style="width:240px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-if="item.servicetype == 'host'">
+                      <Option v-for="(item,index) in hostZoneList" :value="item.value" :key="index">{{ item.name }}</Option>
                     </Select>
-                    <!-- <Cascader :data="hostZoneList" v-model="item.zoneId"></Cascader> -->
+                    <Select v-model="item.zoneId" style="width:240px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-else>
+                      <Option v-for="(item,index) in gpuZoneList" :value="item.value" :key="index">{{ item.name }}</Option>
+                    </Select>
                 </div>
                 <div >
                     <span class="label-title">选择系统：</span>
-                    <Select v-model="item.system" style="width:240px" class="fr-select" >
-                    <Option v-for="item in hostTwo.systemList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
+                    <Cascader :data="hostSystemList" v-model="item.system" style="width:240px;display: inline-block;" class="schoolseason-select"></Cascader>
                 </div>
-                <!-- <div style="margin:10px 0;">
-                    <span>请选择时长</span>
-                    <Select v-model="item.duration" style="width:200px" class="fr-select" @on-change='getVMConfigId("cloudHost",index)'>
-                    <Option v-for="item in hostTwo.durationList" :value="item.value" :key="item.value">{{ item.name }}</Option>
-                    </Select>
-                </div> -->
                 <div style="text-align:left;margin:20px 0;">
                     <span style="color:#E1212A;font-size:14px;">￥<span style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/年</span>
                     <span style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{item.originalPrice}}元</span>
                 </div>
-                <div class="host_button" @click="getDiskcountMv('cloudHost',index)">立即抢购</div>
+                <div class="host_button" @click="getDiskcountMv(item)" v-if="item.num!='100'">立即抢购</div>
+                <div class="host_button" style="background:rgba(229,194,194,1);cursor:not-allowed" v-else>已抢完</div>
                 <div class="progress">
-                  <Progress class="schoolseason-progress" :percent="25" hide-info/>
-                  <span>已抢购50%</span>
+                  <Progress class="schoolseason-progress" :percent="item.num" hide-info/>
+                  <span>已抢购{{item.num}}%</span>
                 </div>
                 </div>
               </div>
@@ -152,14 +140,14 @@
               <div class="item-select">
                 <p>带宽选择</p> 
                 <!-- <Select v-model="item.selectedSystem"> -->
-                <Select v-model="selectedSystem">
+                <Select>
                   <Option value="windows">windows</option>
                   <Option value="linux">centos</option>
                 </Select>
               </div>
               <div class="item-select">
                 <p>系统选择</p> 
-                <Select v-model="selectedSystem">
+                <Select>
                   <Option value="windows">windows</option>
                   <Option value="linux">centos</option>
                 </Select>
@@ -429,55 +417,102 @@ export default {
       authHintShow: false,
       reminderShow: true,
       zoneList: [],
-      selectedZone: '',
-      // hostZoneList:[],
-      hostZoneList: [{
-                    value: 'beijing',
-                    label: '北京',
+      defaultZone: '',
+      hostZoneList: [
+        // {name: "华中二区", value: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc"},
+        // {name: "华中二区11", value: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc12"},
+      ],
+      gpuZoneList: [],
+      hostSystemList: [{
+                    value: 'window',
+                    label: 'Windows',
                     children: [
-                        {
-                            value: 'gugong',
-                            label: '故宫'
-                        },
-                        {
-                            value: 'tiantan',
-                            label: '天坛'
-                        },
-                        {
-                            value: 'wangfujing',
-                            label: '王府井'
-                        }
                     ]
                 }, {
-                    value: 'jiangsu',
-                    label: '江苏',
+                    value: 'centos',
+                    label: 'Centos',
                     children: [
-                        {
-                            value: 'nanjing',
-                            label: '南京',
-                            children: [
-                                {
-                                    value: 'fuzimiao',
-                                    label: '夫子庙',
-                                }
-                            ]
-                        },
-                        {
-                            value: 'suzhou',
-                            label: '苏州',
-                            children: [
-                                {
-                                    value: 'zhuozhengyuan',
-                                    label: '拙政园',
-                                },
-                                {
-                                    value: 'shizilin',
-                                    label: '狮子林',
-                                }
-                            ]
-                        }
+                    ],
+                },
+                {
+                    value: 'debian',
+                    label: 'Debian',
+                    children: [
+                    ],
+                },
+                {
+                    value: 'ubuntu',
+                    label: 'Ubuntu',
+                    children: [
                     ],
                 }],
+      discountProduct: [
+        // "id": 407,
+        // "cpu": 1,
+        // "mem": 2,
+        // "disksize": 40,
+        // "servicetype": "host",
+        // "days": 360,
+        // "disktype": "ssd",
+        // "bandwith": 1,
+        // "activitynum": 37,
+        // "discount": 0.1,
+        // "maxgetnum": 1,
+        // "ismonth": 1,
+        // "foldonfold": 0，
+        {
+          cpu: '1',
+          mem: '2',
+          disksize: '40',
+          bandwith: '1',
+          zoneId: '',
+          system: [],
+          duration: '6',
+          originalPrice: '1300.32',
+          currentPrice: '351.09',
+          id: '407',
+          type:'0',
+          activityNum:'27',
+          servicetype: 'host',
+          num: 50,
+          discount: '1'
+        },
+        {
+          cpu: '2',
+          mem: '4',
+          disksize: '40',
+          bandwith: '2',
+          zoneId: '',
+          system: [],
+          duration: '6',
+          originalPrice: '1300.32',
+          currentPrice: '351.09',
+          id: '408',
+          type:'0',
+          activityNum:'27',
+          servicetype: 'host',
+          num: 0,
+          discount: '1'
+        },
+        {
+          cpu: '8',
+          mem: '64',
+          disksize: '128',
+          bandwith: '10',
+          gpu: '100',
+          zoneId: '',
+          system: [],
+          duration: '6',
+          originalPrice: '1300.32',
+          currentPrice: '351.09',
+          id: '409',
+          type:'0',
+          activityNum:'27',
+          servicetype: 'gpu',
+          num: 100,
+          discount: '2'
+        }
+      ],
       hostTwo:{
           //带宽
           bandwidthList:[
@@ -550,266 +585,6 @@ export default {
             }
         ],
         },
-      allObjcet:{
-          cloudHost:[
-            {
-              cpu: '2',
-              memory: '4',
-              rootDisk: '40',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'linux',
-              duration: '6',
-              originalPrice: '1300.32',
-              currentPrice: '351.09',
-              vmConfigId: '50',
-              type:'0',
-              activityNum:'27'
-            },
-            {
-              cpu: '4',
-              memory: '8',
-              rootDisk: '40',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'linux',
-              duration: '6',
-              originalPrice: '2662.32',
-              currentPrice: '718.83',
-              vmConfigId: '65',
-              type:'0',
-              activityNum:'27'
-            },
-            {
-              cpu: '8',
-              memory: '16',
-              rootDisk: '40',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'linux',
-              duration: '6',
-              originalPrice: '4324.32',
-              currentPrice: '1167.57',
-              vmConfigId: '80',
-              type:'0',
-              activityNum:'27'
-            }
-          ],
-          gpuHost:[
-            {
-              cpu: '16',
-              memory: '128',
-              rootDisk: '128',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'linux',
-              duration: '7',
-              originalPrice: '2442.34',
-              currentPrice: '659.43',
-              vmConfigId: '101',
-              type:'1',
-              serverType:'P100',
-              activityNum:'30'
-            },
-            {
-              cpu: '16',
-              memory: '120',
-              rootDisk: '128',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'linux',
-              duration: '7',
-              originalPrice: '1729.03',
-              currentPrice: '466.84',
-              vmConfigId: '116',
-              type:'1',
-              serverType:'P40',
-              activityNum:'30'
-            },
-            {
-              cpu: '16',
-              memory: '64',
-              rootDisk: '128',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'linux',
-              duration: '7',
-              originalPrice: '1471.1',
-              currentPrice: '397.2',
-              vmConfigId: '50',
-              type:'1',
-              serverType:'P40',
-              activityNum:'30'
-            }
-          ],
-          gpuHostMoth:[
-            {
-              cpu: '16',
-              memory: '128',
-              rootDisk: '128',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'linux',
-              duration: '1',
-              originalPrice: '9141.7',
-              currentPrice: '7313.36',
-              vmConfigId: '50',
-              type:'0',
-              serverType:'P100',
-              activityNum:'30'
-            },
-            {
-              cpu: '16',
-              memory: '120',
-              rootDisk: '128',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'linux',
-              duration: '1',
-              originalPrice: '6424.31',
-              currentPrice: '5139.45',
-              vmConfigId: '50',
-              type:'0',
-              serverType:'P40',
-              activityNum:'30'
-            },
-            {
-              cpu: '16',
-              memory: '64',
-              rootDisk: '128',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'linux',
-              duration: '1',
-              originalPrice: '5441.7',
-              currentPrice: '4353.36',
-              vmConfigId: '50',
-              type:'0',
-              serverType:'P40',
-              activityNum:'30'
-            }
-          ],
-          objectHost:[
-            {
-              storage:'50',
-              flow:'50',
-              zoneId: '',
-              duration: '6',
-              originalPrice: '174',
-              currentPrice: '46.98',
-              vmConfigId: '50',
-              type:'0',
-              serviceType:'oss',
-              activityNum:'28'
-            },
-            {
-              storage:'100',
-              flow:'100',
-              zoneId: '',
-              duration: '6',
-              originalPrice: '348',
-              currentPrice: '93.96',
-              vmConfigId: '50',
-              type:'0',
-              serviceType:'oss',
-              activityNum:'28'
-            },
-            {
-              storage:'300',
-              flow:'300',
-              zoneId: '',
-              duration: '6',
-              originalPrice: '1044',
-              currentPrice: '281.88',
-              vmConfigId: '50',
-              type:'0',
-              serviceType:'oss',
-              activityNum:'28'
-            }
-          ],
-          cloudData:[
-            {
-              cpu: '2',
-              memory: '4',
-              rootDisk: '40',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'mysql',
-              duration: '6',
-              originalPrice: '1963.92',
-              currentPrice: '530.26',
-              vmConfigId: '50',
-              type:'0',
-              activityNum:'29'
-            },
-            {
-              cpu: '4',
-              memory: '8',
-              rootDisk: '40',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'mysql',
-              duration: '6',
-              originalPrice: '3462.12',
-              currentPrice: '934.77',
-              vmConfigId: '50',
-              type:'0',
-              activityNum:'29'
-            },
-            {
-              cpu: '8',
-              memory: '16',
-              rootDisk: '40',
-              bandwidth: '2',
-              zoneId: '',
-              system: 'mysql',
-              duration: '6',
-              originalPrice: '5290.32',
-              currentPrice: '1428.39',
-              vmConfigId: '50',
-              type:'0',
-              activityNum:'29'
-            }
-          ],
-        },
-      productData: [
-        {
-          host: '1',
-          size: '1',
-          bandwidth: '1',
-          systemSize: '40',
-          selectedSystem: 'windows',
-          selectedYear: 1,
-          selectedCount: 1,
-          // bgSrc: require('../../../assets/img/active/schoolSeason/item-bg-1.png'),
-          discountCost: '224.93',
-          originCost: '1124.64'
-        },
-        {
-          host: '1',
-          size: '2',
-          bandwidth: '1',
-          systemSize: '40',
-          selectedSystem: 'windows',
-          selectedYear: 1,
-          selectedCount: 1,
-          // bgSrc: require('../../../assets/img/active/schoolSeason/item-bg-2.png'),
-          discountCost: '224.93',
-          originCost: '1124.64'
-        },
-        {
-          host: '2',
-          size: '4',
-          bandwidth: '1',
-          systemSize: '40',
-          selectedSystem: 'windows',
-          selectedYear: 1,
-          selectedCount: 1,
-          // bgSrc: require('../../../assets/img/active/schoolSeason/item-bg-3.png'),
-          discountCost: '224.93',
-          originCost: '1124.64'
-        }
-      ],
       timeYear: [1, 2, 3],
       hostCount: [1, 2, 3],
       advantageData: [
@@ -876,9 +651,7 @@ export default {
   },
   created () {
     this.getHostZoneList()
-    this.getVMConfigId(this.productData[0], 0, 1)
-    this.getVMConfigId(this.productData[1], 1, 1)
-    this.getVMConfigId(this.productData[2], 2, 1)
+    
   },
   mounted () {
 
@@ -912,82 +685,89 @@ export default {
       let url = 'activity/getTemActInfoById.do'
       axios.get(url, {
         params: {
-          activityNum: '36'
+          activityNum: '37'
         }
       }).then(res => {
         if (res.data.status == 1 && res.status == 200) {
-          this.selectedZone = res.data.result.optionalArea[0].value
-          this.zoneList = res.data.result.optionalArea
+          this.hostZoneList = res.data.result.optionalArea
+          this.defaultZone = res.data.result.optionalArea[0].value
+          // 默认选择区域
+          this.discountProduct.forEach((item, index) => {
+            // console.log(index)
+            if (index == 2) {
+              item.zoneId = res.data.result.unoptionalRegion[0].value
+            } else {
+              item.zoneId = res.data.result.optionalArea[0].value
+            }
+          })
+          this.gpuZoneList = res.data.result.unoptionalRegion
         }
       })
     },
-    //  获取配置ID
-    getVMConfigId (item, index, year) {
-      this.productData[index].selectedYear = year
-      axios.get('activity/getVMConfigId.do', {
+    // 根据区域获得不同系统
+    changeZoneHost(item, index) {
+      axios.get('information/listTemplates.do', {
         params: {
-          activityNum: '36',
-          month: year * 12 + '',
-          cpu: item.host + '',
-          mem: item.size + '',
-          bandwith: item.bandwidth + '',
+          zoneId: item.zoneId,
+          user: 0
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
-          this.productData[index].vmConfigId = res.data.result
-          axios.get('activity/getOriginalPrice.do', {
-            params: {
-              zoneId: this.selectedZone,
-              vmConfigId: res.data.result + '',
-              month: year * 12 + ''
-            }
-          }).then(res => {
-            if (res.status == 200 && res.data.status == 1) {
-              this.productData[index].originCost = res.data.result.originalPrice;
-              this.productData[index].discountCost = res.data.result.cost;
+        var x
+        for (x in res.data.result) {
+          this.hostSystemList.forEach(item => {
+            if (item.value == x) {
+              item.children = res.data.result[x]
             }
           })
+        }
+        this.hostSystemList.forEach(item => {
+          item.children.forEach(item => {
+             item.value = item.systemtemplateid
+             item.label = item.templatedescript
+          })
+        })
+        }
+        // 设置默认系统
+        this.discountProduct.forEach(item4 => {
+          item4.system = ['window', res.data.result.window[0].systemtemplateid] 
+        })
+        this.getVMConfigId(item, index)
+      })
+    },
+    // 获取原价
+    getVMConfigId(item, index) {
+      axios.get('activity/getOriginalPrice.do', {
+        params: {
+          zoneId: item.zoneId,
+          vmConfigId: item.id,
+          month: 12
+        }
+      }).then(res => {
+        if (res.status == 200 && res.data.status == 1) {
+          this.discountProduct[index].currentPrice = res.data.result.cost;
+          this.discountProduct[index].originalPrice = res.data.result.originalPrice;
         }
       })
     },
     //   云主机生成订单
-    getDiskcountMv (item, hostCount) {
+    getDiskcountMv (item) {
       if (!this.$store.state.userInfo) {
         this.showModal.notLoginModal = true
       } else {
-          // 判断是否为新用户
-          axios.get('activity/jdugeTeam.do').then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              if (response.data.result.flag) {
-                if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)){
-                  this.authHintShow = true
-                  this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-                  this.showModal.authModal = true
-                  return
-                }
-                axios.get('information/getDiskcountMv.do', {
-                  params: {
-                    vmConfigId: item.vmConfigId,
-                    osType: item.selectedSystem,
-                    defzoneid: this.selectedZone,
-                    counts: hostCount
-                  }
-                }).then(res => {
-                  if (res.status == 200 && res.data.status == 1) {
-                    this.$Message.success('创建订单成功')
-                    this.$router.push('order')
-                  } else {
-                    this.$message.info({
-                      content: res.data.message
-                    })
-                  }
-                })
-              } else {
-                this.showModal.newCoustom = true
-              }
+          axios.get('information/getDiskcountMv.do', {
+            params: {
+              vmConfigId: item.id,
+              osType: item.system[1],
+              defzoneid: item.zoneId,
+            }
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.$Message.success('创建订单成功')
+              this.$router.push('order')
             } else {
               this.$message.info({
-                content: response.data.message
+                content: res.data.message
               })
             }
           })
