@@ -24,7 +24,7 @@ const BIP = () =>import('@/components/App/buy/BIP')
 const BDisk = () =>import('@/components/App/buy/BDisk')
 const BData = () =>import('@/components/App/buy/BData')
 const BGpu = () =>import('@/components/App/buy/BGpu')
-const BSsl = () =>import('@/components/App/buy/BSsl')
+//const BSsl = () =>import('@/components/App/buy/BSsl')
 const Ecs = () =>import('@/components/App/product/ECS')
 const Document = () =>import('@/components/App/Document')
 const Document1 = () =>import('@/components/App/Document1')
@@ -39,7 +39,7 @@ const Dynamic = () =>import('@/components/App/Dynamic')
 const SceneInfo = () =>import('@/components/App/SceneInfo')
 const SceneList = () =>import('@/components/App/SceneList')
 // const ProductBulletin = () => import('@/components/App/ProductBulletin')
-const Ssl = () =>import('@/components/App/Ssl')
+//const Ssl = () =>import('@/components/App/Ssl')
 
 // 前台活动页面路由
 //const Active = () => import('@/components/App/active/active')
@@ -65,7 +65,7 @@ const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 const AnniversaryActive = () => import('@/components/App/active/anniversaryActive')
 //const AnniversaryActiveBefore = () => import('@/components/App/active/AnniversaryActiveBefore')
 const xianNode = () => import('@/components/App/active/xianNode')
-const schoolSeason = () => import('@/components/App/active/schoolSeason')
+//const schoolSeason = () => import('@/components/App/active/schoolSeason')
 //域名页面路由
 const Domainname = () =>import('@/components/App/Domain/Domainname')
 const DomainResult = () =>import('@/components/App/Domain/DomainResult')
@@ -233,7 +233,7 @@ var router = new Router({
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
         {path: 'Record', name: 'Record', component: Record},
         //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
-        {path: 'ssl', name: 'ssl', component: Ssl},
+        //{path: 'ssl', name: 'ssl', component: Ssl},
         {
           path: 'entrance',
           name: 'entrance',
@@ -322,7 +322,7 @@ var router = new Router({
             {path: 'bdata', name: 'bdata', component: BData},
             {path: 'bobj', name: 'bobj', component: BObj},
             {path: 'bgpu', name: 'bgpu', component: BGpu},
-            {path: 'bssl', name: 'bssl', component: BSsl}
+            //{path: 'bssl', name: 'bssl', component: BSsl}
           ]
         },
 
@@ -342,7 +342,7 @@ var router = new Router({
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
         {path: 'xianNode', name: 'xianNode', component: xianNode},
-        {path: 'schoolSeason', name: 'schoolSeason', component: schoolSeason},
+        //{path: 'schoolSeason', name: 'schoolSeason', component: schoolSeason},
 
         {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},
         {path: 'SceneInfo/:type', name: 'SceneInfo', component: SceneInfo},
