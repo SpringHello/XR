@@ -15,7 +15,7 @@
         </div>
         <input :value='account'  :style="style"
         :id="elementId"
-        autocomplete="new-password"
+         autocomplete="new-password"
         :spellcheck="spellcheck" 
         :disabled="disabled"
         :readonly="readonly"
@@ -208,11 +208,13 @@ export default {
             if(this.choice == 'select'){
             this.isSelect = 'select';
             this.style = 'height: 44px;padding-left: 96px;';
+            this.type = '';
             // return;
             }
             if(this.choice == 'validate'){
                 this.isSelect = 'validate';
                 this.style='height: 44px;padding-left: 48px;padding-right:98px;'
+               this.type = '';
                 // return;
             }
             if(this.choice == 'eye'){
@@ -220,6 +222,16 @@ export default {
                 this.style='height: 44px;padding-left: 48px;padding-right:70px;';
                 this.type = 'password';
                 //  return;
+            }
+            if(this.choice ==''){
+                this.isSelect = '';
+                this.style='height: 44px;padding-left:48px;',
+                this.type = '';
+            }
+            if(this.icon == ''){
+                this.isSelect = '';
+                this.style='height: 44px;padding-left:48px;',
+                this.type = '';
             }
          },
         immediate:true
@@ -231,6 +243,14 @@ export default {
             }
           },
           immediate:true
+      },
+      isEye:{
+        handler(){
+            if(this.icon == ''){
+            this.eyes =  this.isEye ?require('../../assets/img/login/lr-icon3.png') :require('../../assets/img/updatePaw/paw_closeEye.png')
+            }
+         },
+         immediate:true
       }
     }
 }

@@ -22,16 +22,6 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="dan-banner" @click="push('/ruicloud/wonderfulDay')">
-            <div class="wraps">
-              <img src="../../assets/img/home/dan_banner.png">
-              <div class="w_button">
-                <span>立即参与</span>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
           <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
