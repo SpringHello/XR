@@ -697,6 +697,7 @@ export default {
                     this.formValidate.account.substring(3, 7),
                     "****"
                     );
+                  this.verificationList[1].prohibit = true;
                 }
                 if(res.data.emailFlag){
                  this.userInfo = res.data.emailFlag;
@@ -707,6 +708,7 @@ export default {
                     );
                   this.index = 2;
                   this.accountIsDis = '1';
+                  this.verificationList[0].prohibit = true;
                  return;
                 }else{
                   this.verificationList[0].prohibit = false;
