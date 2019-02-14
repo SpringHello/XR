@@ -433,6 +433,7 @@
         <Button type="primary" @click="unbind">确认解绑</Button>
       </p>
     </Modal>
+    <!-- 批量重置密码框-->
   </div>
 </template>
 
