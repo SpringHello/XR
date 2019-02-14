@@ -673,7 +673,7 @@
 		      //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
 		      if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
 		          axios.post('user/newPhoneByIdCard.do', {
-		            IDCard: this.authModifyPhoneFormOne.ID,
+		            IdCard: this.authModifyPhoneFormOne.ID,
 		            authType: '0',
 		            newPhone: this.authModifyPhoneFormThere.newPhone,
 		            personIdCardHandUrl: this.uploadImgDispaly

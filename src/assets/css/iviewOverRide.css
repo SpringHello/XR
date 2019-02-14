@@ -443,11 +443,10 @@ div.modal-header-border {
   text-align: center;
 }
 
-.fr-select .ivu-select-selection {
+.fr-select .ivu-select-selection{
   border: 1px solid #FF881C;
   box-shadow: 0 0 0 2px rgba(253, 140, 115, .2);
 }
-
 .fr-select .ivu-select-item-selected:hover {
   background: #FF881C;
 }
@@ -459,7 +458,10 @@ div.modal-header-border {
 .fr-select .ivu-select-arrow {
   color: #FF881C;
 }
-
+.schoolseason-select .ivu-select-selection,.schoolseason-select .ivu-cascader-rel .ivu-input {
+  border: 1px solid #E5C2C2;
+  box-shadow: none;
+}
 
 /* 自定义监控下拉框 */
 .cm-select.ivu-select-single .ivu-select-selection {
