@@ -98,7 +98,7 @@
                   </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large'  placeholder='请输入验证码' style="width:258px;"></Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
                      <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -126,7 +126,7 @@
                    </FormItem>
                   <FormItem prop='vCode' style="margin-bottom:0px;">
                     <x-Input  v-model="dataFroms.vCode" placeholder='请输入验证码' style="width:258px;"></x-Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -176,7 +176,7 @@
                           :before-upload="handleBeforeUpload"
                           :data='flieList'
                           type="drag"
-                          action="file/upFile.do"
+                          action="https://zschj.xrcloud.net/ruicloud/file/upFile.do"
                           style="display: inline-block;">
                           <div class="up_button" v-if="fileUrl.imgUrl ==''">
                               <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -229,7 +229,7 @@
                         :before-upload="legalBeforeUpload"
                         :data='flieList'
                         type="drag"
-                        action="file/upFile.do"
+                        action="https://zschj.xrcloud.net/ruicloud/file/upFile.do"
                         style="display: inline-block;">
                         <div class="up_button" v-if="fileUrl.legalUrl ==''">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -261,7 +261,7 @@
                         :before-upload="handleBeforeUpload"
                         :data='flieList'
                         type="drag"
-                        action="file/upFile.do"
+                        action="https://zschj.xrcloud.net/ruicloud/file/upFile.do"
                         style="display: inline-block;">
                         <div class="up_button" v-if="fileUrl.imgUrl == ''">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -297,10 +297,10 @@
             <div class="verification" v-if="index == 4 && verPage == ''">
                <Form ref="dataPaw" :model="dataFroms" :rules="dataFromsValidate" >
                 <FormItem prop='newPaw'>
-                  <x-Input   :icon='url.iconLock' autocomplete='off' v-model="dataFroms.newPaw"  placeholder='请设置新密码' choice='eye'></x-Input>
+                  <x-Input   :icon='url.iconLock'   v-model="dataFroms.newPaw"  placeholder='请设置新密码' choice='eye'></x-Input>
                 </FormItem>
                 <FormItem prop='oldPaw'>
-                  <x-Input  autocomplete='off' :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请确认新密码' choice='eye'></x-Input>
+                  <x-Input   :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请确认新密码' choice='eye'></x-Input>
                 </FormItem>
                </Form>
                <Button type="primary" style="margin-top:21px;float:right;" @click="submit">确认</Button>
@@ -314,7 +314,7 @@
                    </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;">
                     <x-Input  v-model="dataFroms.vCode" placeholder='请输入验证码' style="width:258px;"></x-Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -391,22 +391,36 @@ const IDCardValid = (rule, value, callback) =>{
   }
 }
 
+const newPawValid =(rule, value, callback) =>{
+  let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
+  if(value == ''){
+    return callback(new Error('请输入新密码'));
+  }else if(!reg.test(value)){
+    return callback(new Error('密码长度不小于8位，必须包含至少一个大写字母一个小写字母和一个数字'))
+  }else{
+    callback();
+  }
+}
+
 
 
 export default {
   data() {
     const passwordValid = (rule,value, callback)=>{
+      let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
       if(value == ''){
         return callback(new Error('请输入确认密码'));
       }else if(value != this.dataFroms.newPaw){
         return callback(new Error('您的密码两次输入不一致，请重新输入'));
+      }else if(!reg.test(value)){
+        return callback(new Error('密码长度不小于8位，必须包含至少一个大写字母一个小写字母和一个数字'))
       }else{
-        callback()
+        callback();
       }
     }
     return {
        
-      imgSrc: "user/getKaptchaImage.do",
+      imgSrc: "https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do",
 
       //步骤集合
       stepList: [
@@ -502,7 +516,7 @@ export default {
           {required:true,validator: vailAucct,trigger: 'blur'}
         ],
         newPaw:[
-          {required: true, message:'请输入新密码', trigger: 'blur'}
+          {required: true, validator:newPawValid, trigger: 'blur'}
         ],
         oldPaw:[
           {required: true, validator:passwordValid, trigger: 'blur'}
@@ -615,7 +629,7 @@ export default {
                   duration: 5
                 });
             } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
               this.vCodeMessage = response.data.message;
             }
           }).catch(err =>{
@@ -643,7 +657,7 @@ export default {
                 this.resetAccount = true;
                 this.verPage = 'submit';
               } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
               this.$Message.error(response.data.message);
               }
             }
@@ -665,10 +679,18 @@ export default {
                   this.verificationList[1].prohibit = false;
                 }else{
                   this.dataFroms.phone = res.data.phone;
+                  this.index = 2;
+                  this.accountIsDis = '1';
+                  this.formValidate.account = this.formValidate.account.replace(
+                    this.formValidate.account.substring(3, 7),
+                    "****"
+                    );
                 }
                 if(res.data.emailFlag){
                  this.userInfo = res.data.emailFlag;
                  this.dataFroms.email = res.data.email;
+                  this.index = 2;
+                  this.accountIsDis = '1';
                  return;
                 }else{
                   this.verificationList[0].prohibit = false;
@@ -676,11 +698,17 @@ export default {
               }else{
                 if(res.data.personAuthFlag  && res.data.companyAuthFlag ){
                   this.userInfo = 'company';
+                  this.index = 2;
+                  this.accountIsDis = '2';
                     return;
                   }else if(res.data.personAuthFlag){
                     this.userInfo = 'person';
+                    this.index = 2;
+                    this.accountIsDis = '2';
                   }else if(res.data.companyAuthFlag){
                     this.userInfo = 'company';
+                    this.index = 2;
+                    this.accountIsDis = '2';
                   }else{
                     this.userInfo = '';
                     this.$Message.info({
@@ -690,36 +718,12 @@ export default {
                   }
               }
             }else{
-              this.$Message.error('网络错误，请重试或者联系客服');
+              this.$Message.error(res.data.message);
+              return;
             }
-      }).catch(err =>{
-
       })
-
     },
 
-    statusList(index){
-      let arry = ['formValidate','','dataPhone','dataEmail','dataPaw','dataInfo'];
-      if(!this.resetAccount){
-        if(this.stepList[index].failOrSuccess){
-         this.index = index+1;
-        }
-        if(arry[index-1] != '')
-        this.$refs[arry[index-1]].validate((vaild)=>{
-          if(vaild){
-            this.index = index +1;
-          }
-        })
-        // this.accountIsDis = '1,2,3,4,8,9'
-      }
-      // namme == 'pople':{
-      //   index == 2;
-      // }
-    },
-
-    stateNull(){
-        
-    },
 
     //跳转相应验证
     jump(index,name) {
@@ -767,13 +771,7 @@ export default {
       if (val == "yes") {
         this.$refs.formValidate.validate((valid) =>{
           if(valid){
-            this.accountIsDis = '1';
             this.getUserInfo('personal');
-            this.formValidate.account = this.formValidate.account.replace(
-            this.formValidate.account.substring(3, 7),
-            "****"
-            );
-            this.index = 2;
           }
         })
       } else if(val == 'no'){
@@ -783,10 +781,8 @@ export default {
       }else if(val == 'go'){
         this.$refs.formValidate.validate((valid) =>{
           if(valid){
-        this.getUserInfo('reset');
-         this.index = 2;
-         this.accountIsDis = '2';
-       }
+            this.getUserInfo('reset');
+          }
         })
       }
     },
@@ -891,7 +887,7 @@ export default {
             this.index = 4;
             this.verPage = '';
           }else{
-            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+            this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
             this.$Message.error({
                   content: res.data.message,
                   duration: 5
@@ -932,7 +928,7 @@ export default {
                   duration: 5
                 });
             } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
               this.vCodeMessage = response.data.message;
             }
           });
@@ -967,7 +963,7 @@ export default {
                 }
             },1000);
         }else{
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+          this.imgSrc = `https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`;
         }
       })
       }
@@ -977,7 +973,7 @@ export default {
     // 重置手机账号提交
     validateInfo(){
       let params = {
-         IDCard:this.dataFroms.idCard,
+          IdCard:this.dataFroms.idCard,
           authType:'0',
           personIdCardHandUrl:this.fileUrl.imgUrl,
           newPhone:this.dataFroms.phone

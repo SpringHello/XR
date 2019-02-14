@@ -20,18 +20,7 @@
             </div>
           </div>
         </my-carousel-item>
-          <my-carousel-item class="carousel-item">
-          <div @click="push('wonderfulDay')"
-               style="cursor: pointer;">
-            <div class="dan-receive">
-              <div class="wrap">
-               <div class="w_button">
-                <span>立即参与</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
+        
         <my-carousel-item class="carousel-item">
           <div @click="push('frActive')"
                style="cursor: pointer;background: #F56B23;">
@@ -173,14 +162,7 @@
             isStart: true,
             weight: '1',
           },
-          {
-            imgPath: require('../../assets/img/activecenter/dan.png'),
-            time: '2018.12.24-2019.01.30',
-            activeObj: '新老用户',
-            url: 'wonderfulDay',
-            isStart: true,
-            weight: '1',
-          },
+      
           {
             imgPath: require('../../assets/img/activecenter/bg-card-2.png'),
             name: '免费云主机 不限量领取',
