@@ -77,7 +77,7 @@
         </div>
         <div class="selectMark">
           <img src="../../assets/img/host/h-icon10.png"/>
-          <span>共 {{ pageSize}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
+          <span>共 {{ hostPages}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
         </div>
         <Table :columns="hostListColumns" :data="hostListData" @on-selection-change="hostSelectionChange"></Table>
         <div style="margin: 10px;overflow: hidden">
@@ -552,17 +552,27 @@
               let icon_2 = require('../../assets/img/host/h-icon2.png')
               let icon_3 = require('../../assets/img/host/h-icon3.png')
               let icon_4 = require('../../assets/img/host/h-icon4.png')
+              let icon_5 = require('../../assets/img/host/h-icon5.png')
               let styleInfo = {
                 marginLeft: '5px',
                 lineHeight: '16px'
               }
               switch (params.row.status) {
                 case -2:
-                  return h('div', {}, [h('Spin', {
+                  return h('div', {
                     style: {
-                      display: 'inline-block'
+                      display: 'flex'
                     }
-                  }), h('span', {style: styleInfo}, '销毁中')])
+                  }, [
+                    h('img', {
+                      attrs: {
+                        src: icon_5
+                      }
+                    }, ''),
+                    h('span', {
+                      style: styleInfo
+                    }, '删除至回收站')
+                  ])
                   break
                 case -1:
                   return h('div', {
@@ -1234,7 +1244,26 @@
                   }
                   break
                 default:
-                  return h('span', {}, '----')
+                  return h('div', {}, [
+                    h('p', {
+                      style: {
+                        lineHeight: '20px',
+                        cursor: 'not-allowed'
+                      },
+                    }, '连接'),
+                    h('p', {
+                      style: {
+                        lineHeight: '30px',
+                        cursor: 'not-allowed'
+                      }
+                    }, '管理'),
+                    h('p', {
+                      style: {
+                        lineHeight: '23px',
+                        cursor: 'not-allowed'
+                      }
+                    }, '更多操作'),
+                  ])
                   break
               }
             }
@@ -1455,6 +1484,11 @@
           if (res.data.status == 1 && res.status == 200) {
             this.hostListData = res.data.result.data
             this.hostPages = res.data.result.total
+            this.hostListData.forEach(host => {
+              if (host.status == 2 || host.status == -2) {
+                host._disabled = true
+              }
+            })
           }
         })
       },
@@ -1506,6 +1540,7 @@
                 host.bindip = 0
                 host.status = 2
                 host.computerstate = 1
+                host._disabled = true
               }
             })
           })
@@ -1519,6 +1554,7 @@
               host.bindip = 0
               host.status = 2
               host.computerstate = 1
+              host._disabled = true
             }
           })
           params = {
@@ -1553,6 +1589,7 @@
                 host.status = 2
                 host.computerstate = 0
                 host.bindip = 0
+                host._disabled = true
               }
             })
           })
@@ -1565,6 +1602,7 @@
               host.status = 2
               host.bindip = 0
               host.computerstate = 0
+              host._disabled = true
             }
           })
           params = {
@@ -1597,6 +1635,7 @@
               if (host.id == item) {
                 host.status = 2
                 host.restart = 1
+                host._disabled = true
               }
             })
           })
@@ -1608,6 +1647,7 @@
             if (host.id == this.hostCurrentSelected.id) {
               host.status = 2
               host.restart = 1
+              host._disabled = true
             }
           })
           params = {
@@ -1653,6 +1693,7 @@
             this.selectHostIds.forEach(item => {
               if (host.id == item) {
                 host.status = -2
+                host._disabled = true
               }
             })
           })
@@ -1663,6 +1704,7 @@
           this.hostListData.forEach(host => {
             if (host.id == this.hostCurrentSelected.id) {
               host.status = -2
+              host._disabled = true
             }
           })
           params = {
@@ -1775,7 +1817,7 @@
               okText: '调整子网',
               content: '您选择的主机的子网的网络服务方案为普通网络，不支持负载均衡。若您需要将该主机加入负载均衡可将该主机移入子网服务方案为：公网/私网负载均衡网络的子网之后在进行加入负载均衡操作',
               onOk: () => {
-                sessionStorage.setItem('vpcId', item.vpcid)
+                sessionStorage.setItem('vpcId', this.hostCurrentSelected.vpcid)
                 this.$router.push('vpcManage')
               }
             })
@@ -1860,6 +1902,7 @@
                 if (host.id == this.hostCurrentSelected.id) {
                   host.status = 2
                   host.bindip = 1
+                  host._disabled = true
                 }
               })
               this.showModal.bindIP = false
@@ -1895,6 +1938,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
+                this.hostSelection = []
                 this.getHostList()
               }
             })
@@ -2176,6 +2220,7 @@
           if (host.id == this.hostCurrentSelected.id) {
             host.status = 2
             host.bindip = 2
+            host._disabled = true
           }
         })
         this.showModal.unbindIP = false
