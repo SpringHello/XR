@@ -51,6 +51,7 @@
               <Icon type="arrow-down-b"></Icon>
             </Button>
             <Dropdown-menu slot="list">
+              <Dropdown-item name="resetPassword" :disabled="resetPasswordDisabled">重置密码</Dropdown-item>
               <Dropdown-item name="joinLoadBalance" :disabled="joinLoadBalanceDisabled">加入负载均衡</Dropdown-item>
               <Dropdown-item name="bindingIP" :disabled="bindingIPDisabled">绑定IP</Dropdown-item>
               <Dropdown-item name="rename" :disabled="renameDisabled">重命名</Dropdown-item>
@@ -76,7 +77,7 @@
         </div>
         <div class="selectMark">
           <img src="../../assets/img/host/h-icon10.png"/>
-          <span>共 {{ pageSize}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
+          <span>共 {{ hostPages}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
         </div>
         <Table :columns="hostListColumns" :data="hostListData" @on-selection-change="hostSelectionChange"></Table>
         <div style="margin: 10px;overflow: hidden">
@@ -432,6 +433,7 @@
         <Button type="primary" @click="unbind">确认解绑</Button>
       </p>
     </Modal>
+    <!-- 批量重置密码框-->
   </div>
 </template>
 
@@ -551,17 +553,27 @@
               let icon_2 = require('../../assets/img/host/h-icon2.png')
               let icon_3 = require('../../assets/img/host/h-icon3.png')
               let icon_4 = require('../../assets/img/host/h-icon4.png')
+              let icon_5 = require('../../assets/img/host/h-icon5.png')
               let styleInfo = {
                 marginLeft: '5px',
                 lineHeight: '16px'
               }
               switch (params.row.status) {
                 case -2:
-                  return h('div', {}, [h('Spin', {
+                  return h('div', {
                     style: {
-                      display: 'inline-block'
+                      display: 'flex'
                     }
-                  }), h('span', {style: styleInfo}, '销毁中')])
+                  }, [
+                    h('img', {
+                      attrs: {
+                        src: icon_5
+                      }
+                    }, ''),
+                    h('span', {
+                      style: styleInfo
+                    }, '删除至回收站')
+                  ])
                   break
                 case -1:
                   return h('div', {
@@ -954,6 +966,9 @@
                           'on-click': (type) => {
                             this.hostCurrentSelected = params.row
                             switch (type) {
+                              case 'resetPassword':
+                                this.hostResetPassword(2)
+                                break
                               case 'joinLoadBalance':
                                 this.joinBalance()
                                 break
@@ -999,11 +1014,17 @@
                             }
                           }
                         }
-                      }, [h('a', {}, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
-                        attrs: {
-                          name: 'joinLoadBalance'
-                        }
-                      }, '加入负载均衡'),
+                      }, [h('a', {}, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'resetPassword'
+                          }
+                        }, '重置密码'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'joinLoadBalance'
+                          }
+                        }, '加入负载均衡'),
                         h('DropdownItem', {
                           attrs: {
                             name: 'bindingIP'
@@ -1081,6 +1102,9 @@
                           'on-click': (type) => {
                             this.hostCurrentSelected = params.row
                             switch (type) {
+                              case 'resetPassword':
+                                this.hostResetPassword(2)
+                                break
                               case 'joinLoadBalance':
                                 this.joinBalance()
                                 break
@@ -1156,11 +1180,17 @@
                         style: {
                           marginBottom: '5px'
                         }
-                      }, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
-                        attrs: {
-                          name: 'joinLoadBalance'
-                        }
-                      }, '加入负载均衡'),
+                      }, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'resetPassword'
+                          }
+                        }, '重置密码'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'joinLoadBalance'
+                          }
+                        }, '加入负载均衡'),
                         h('DropdownItem', {
                           attrs: {
                             name: 'bindingIP'
@@ -1215,7 +1245,26 @@
                   }
                   break
                 default:
-                  return h('span', {}, '----')
+                  return h('div', {}, [
+                    h('p', {
+                      style: {
+                        lineHeight: '20px',
+                        cursor: 'not-allowed'
+                      },
+                    }, '连接'),
+                    h('p', {
+                      style: {
+                        lineHeight: '30px',
+                        cursor: 'not-allowed'
+                      }
+                    }, '管理'),
+                    h('p', {
+                      style: {
+                        lineHeight: '23px',
+                        cursor: 'not-allowed'
+                      }
+                    }, '更多操作'),
+                  ])
                   break
               }
             }
@@ -1345,75 +1394,83 @@
         }
       },
       hideEvent(name) {
-        if (this.hostSelection.length !== 1) {
-          return false
-        }
-        this.hostCurrentSelected = this.hostSelection[0]
-        switch (name) {
-          case 'joinLoadBalance':
-            this.joinBalance()
-            break
-          case 'bindingIP':
-            this.bindIP()
-            break
-          case 'rename':
-            this.renameForm.hostName = ''
-            this.showModal.rename = true
-            break
-          case 'ratesChange':
-            if (this.hostCurrentSelected.caseType == 3) {
-              this.ratesChange()
-            }
-            break
-          case 'renewal':
-            this.renewHost(this.hostCurrentSelected)
-            break
-          case 'backup':
-            this.backupForm.backupName = ''
-            this.backupForm.description = ''
-            this.currentHostname = this.hostCurrentSelected.computername
-            this.showModal.backup = true
-            break
-          case 'mirror':
-            if (this.hostCurrentSelected.status == 1 && this.hostCurrentSelected.computerstate == 0) {
-              this.mirrorForm.mirrorName = ''
-              this.mirrorForm.description = ''
-              this.showModal.mirror = true
-            }
-            break
-          case 'unbindIP':
-            if (this.hostCurrentSelected.publicip) {
-              this.showModal.unbindIP = true
-            } else {
-              this.$Message.warning('该主机没有绑定公网IP')
-            }
-            break
-          case 'upgrade':
-            if (this.hostCurrentSelected.status == 1 && this.hostCurrentSelected.computerstate == 0) {
-              this.$http.get('network/VMIsHaveSnapshot.do', {
-                params: {
-                  VMId: this.hostCurrentSelected.computerid
-                }
-              }).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  if (!response.data.result) {
-                    this.$Modal.confirm({
-                      title: '提示',
-                      content: '您的主机有快照，无法升级，请删除快照再试',
-                      scrollable: true,
-                      okText: '删除快照',
-                      onOk: () => {
-                        this.$router.push('snapshot')
-                      }
-                    })
-                  } else {
-                    sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
-                    this.$router.push('upgrade')
+        if (name !== 'resetPassword') {
+          if (this.hostSelection.length !== 1) {
+            return false
+          }
+          this.hostCurrentSelected = this.hostSelection[0]
+          switch (name) {
+            case 'joinLoadBalance':
+              this.joinBalance()
+              break
+            case 'bindingIP':
+              this.bindIP()
+              break
+            case 'rename':
+              this.renameForm.hostName = ''
+              this.showModal.rename = true
+              break
+            case 'ratesChange':
+              if (this.hostCurrentSelected.caseType == 3) {
+                this.ratesChange()
+              }
+              break
+            case 'renewal':
+              this.renewHost(this.hostCurrentSelected)
+              break
+            case 'backup':
+              this.backupForm.backupName = ''
+              this.backupForm.description = ''
+              this.currentHostname = this.hostCurrentSelected.computername
+              this.showModal.backup = true
+              break
+            case 'mirror':
+              if (this.hostCurrentSelected.status == 1 && this.hostCurrentSelected.computerstate == 0) {
+                this.mirrorForm.mirrorName = ''
+                this.mirrorForm.description = ''
+                this.showModal.mirror = true
+              }
+              break
+            case 'unbindIP':
+              if (this.hostCurrentSelected.publicip) {
+                this.showModal.unbindIP = true
+              } else {
+                this.$Message.warning('该主机没有绑定公网IP')
+              }
+              break
+            case 'upgrade':
+              if (this.hostCurrentSelected.status == 1 && this.hostCurrentSelected.computerstate == 0) {
+                this.$http.get('network/VMIsHaveSnapshot.do', {
+                  params: {
+                    VMId: this.hostCurrentSelected.computerid
                   }
-                }
-              })
-            }
-            break
+                }).then(response => {
+                  if (response.status == 200 && response.data.status == 1) {
+                    if (!response.data.result) {
+                      this.$Modal.confirm({
+                        title: '提示',
+                        content: '您的主机有快照，无法升级，请删除快照再试',
+                        scrollable: true,
+                        okText: '删除快照',
+                        onOk: () => {
+                          this.$router.push('snapshot')
+                        }
+                      })
+                    } else {
+                      sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
+                      this.$router.push('upgrade')
+                    }
+                  }
+                })
+              }
+              break
+          }
+        } else {
+          if (this.hostSelection.length > 5) {
+            this.$Message.info('重置密码至多选择 5 项')
+            return false
+          }
+          this.hostResetPassword(1)
         }
       },
       getHostList() {
@@ -1428,6 +1485,11 @@
           if (res.data.status == 1 && res.status == 200) {
             this.hostListData = res.data.result.data
             this.hostPages = res.data.result.total
+            this.hostListData.forEach(host => {
+              if (host.status == 2 || host.status == -2) {
+                host._disabled = true
+              }
+            })
           }
         })
       },
@@ -1469,6 +1531,7 @@
           })
         }, 3000)
       },
+      // 通过val来区分是批量选择的还是单个列表里操作的
       hostShutdown(val) {
         let params = {}
         if (val == 1) {
@@ -1478,6 +1541,7 @@
                 host.bindip = 0
                 host.status = 2
                 host.computerstate = 1
+                host._disabled = true
               }
             })
           })
@@ -1491,6 +1555,7 @@
               host.bindip = 0
               host.status = 2
               host.computerstate = 1
+              host._disabled = true
             }
           })
           params = {
@@ -1525,6 +1590,7 @@
                 host.status = 2
                 host.computerstate = 0
                 host.bindip = 0
+                host._disabled = true
               }
             })
           })
@@ -1537,6 +1603,7 @@
               host.status = 2
               host.bindip = 0
               host.computerstate = 0
+              host._disabled = true
             }
           })
           params = {
@@ -1569,6 +1636,7 @@
               if (host.id == item) {
                 host.status = 2
                 host.restart = 1
+                host._disabled = true
               }
             })
           })
@@ -1580,6 +1648,7 @@
             if (host.id == this.hostCurrentSelected.id) {
               host.status = 2
               host.restart = 1
+              host._disabled = true
             }
           })
           params = {
@@ -1625,6 +1694,7 @@
             this.selectHostIds.forEach(item => {
               if (host.id == item) {
                 host.status = -2
+                host._disabled = true
               }
             })
           })
@@ -1635,6 +1705,7 @@
           this.hostListData.forEach(host => {
             if (host.id == this.hostCurrentSelected.id) {
               host.status = -2
+              host._disabled = true
             }
           })
           params = {
@@ -1661,6 +1732,9 @@
             })
           }
         })
+      },
+      hostResetPassword(val) {
+
       },
       //加入负载均衡
       joinBalance() {
@@ -1744,7 +1818,7 @@
               okText: '调整子网',
               content: '您选择的主机的子网的网络服务方案为普通网络，不支持负载均衡。若您需要将该主机加入负载均衡可将该主机移入子网服务方案为：公网/私网负载均衡网络的子网之后在进行加入负载均衡操作',
               onOk: () => {
-                sessionStorage.setItem('vpcId', item.vpcid)
+                sessionStorage.setItem('vpcId', this.hostCurrentSelected.vpcid)
                 this.$router.push('vpcManage')
               }
             })
@@ -1829,6 +1903,7 @@
                 if (host.id == this.hostCurrentSelected.id) {
                   host.status = 2
                   host.bindip = 1
+                  host._disabled = true
                 }
               })
               this.showModal.bindIP = false
@@ -1864,6 +1939,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
+                this.hostSelection = []
                 this.getHostList()
               }
             })
@@ -2145,6 +2221,7 @@
           if (host.id == this.hostCurrentSelected.id) {
             host.status = 2
             host.bindip = 2
+            host._disabled = true
           }
         })
         this.showModal.unbindIP = false
@@ -2326,7 +2403,7 @@
         if (len === 0) {
           return true
         } else {
-          // 只有开机状态的主机才能关机
+          // 只有开机状态的主机才能重启
           return !this.hostSelection.every(host => {
             return host.status == 1 && host.computerstate == 1
           })
@@ -2337,9 +2414,20 @@
         if (len === 0) {
           return true
         } else {
-          // 只有开机状态的主机才能关机
+          // 过渡状态主机不能再次删除
           return this.hostSelection.some(host => {
-            return host.status == -2
+            return host.status == -2 || host.status == 2
+          })
+        }
+      },
+      resetPasswordDisabled() {
+        let len = this.hostSelection.length
+        if (len === 0) {
+          return true
+        } else {
+          // 开启关闭主机才能重置密码
+          return this.hostSelection.some(host => {
+            return host.status != 1
           })
         }
       },
