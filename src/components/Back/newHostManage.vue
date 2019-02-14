@@ -282,15 +282,15 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="modifyPasswordForm" ref="modifyPassword" :rules="modifyPasswordFormRule">
-          <FormItem label="当前密码" prop="oldPassword" style="width: 80%;">
+          <FormItem label="当前密码" prop="oldPassword" style="width: 80%;margin-bottom: 0">
             <Input type="password" :type="modifyPasswordForm.oldPasswordInput" v-model="modifyPasswordForm.oldPassword"></Input>
             <img class="modal-img" @click="changeLoginPasType(1)" src="../../assets/img/login/lr-icon3.png"/>
           </FormItem>
-          <FormItem label="新的密码" prop="newPassword" style="width: 80%;">
+          <FormItem label="新的密码" prop="newPassword" style="width: 80%;margin-bottom: 0">
             <Input type="password" :type="modifyPasswordForm.newPasswordInput" v-model="modifyPasswordForm.newPassword"></Input>
             <img class="modal-img" @click="changeLoginPasType(2)" src="../../assets/img/login/lr-icon3.png"/>
           </FormItem>
-          <FormItem label="确认密码" prop="confirmPassword" style="width: 80%;">
+          <FormItem label="确认密码" prop="confirmPassword" style="width: 80%;margin-bottom: 10px">
             <Input type="password" :type="modifyPasswordForm.confirmPasswordInput" v-model="modifyPasswordForm.confirmPassword"></Input>
             <img class="modal-img" @click="changeLoginPasType(3)" src="../../assets/img/login/lr-icon3.png"/>
           </FormItem>
