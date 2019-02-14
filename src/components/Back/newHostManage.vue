@@ -121,7 +121,7 @@
               <Radio label="近一周"></Radio>
               <Radio label="近一月"></Radio>
             </RadioGroup>
-            <Input v-model="tab5.searchName" style="width: 40%" placeholder="请输入搜索的关键字">
+            <Input v-model="tab5.searchName" style="width: 25%" placeholder="请输入搜索的关键字">
             <span slot="prepend">操作名称</span>
             <Button slot="append" icon="ios-search" @click="getHostLog"></Button>
             </Input>
