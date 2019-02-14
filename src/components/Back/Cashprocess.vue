@@ -22,7 +22,7 @@
 			 </div>
 		 </div>
 		 <div class="box1">
-			 <span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看 <a href="#" class="colora">自助提现常见问题</a></span>
+			 <span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看 <a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxZtv8QU.html" class="colora">自助提现常见问题</a></span>
 		 </div>
 		 <p style="margin-left: 20px;margin-top: 20px;float: left;">
 			 <span class="spanall">可提现金额</span>
@@ -63,7 +63,7 @@
 			<div class="cont-center" style="height: auto;float: left;margin-top: 20px;width:1159px;">
 				<table style="width: 100%;float: left;background:rgba(247,247,247,1);border-radius:4px 4px 0px 0px;border:1px solid rgba(233,233,233,1);">
 					<tr style="font-size:12px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(51,51,51,1);line-height:30px;">
-						<th style="width:510px;text-align:left;">提现金额（元）</th>
+						<th style="width:510px;text-align:left;margin-left: 10px;float: left;">提现金额（元）</th>
 						<th style="width:510px;text-align:left;" >预计到账金额（元）
 						<div class="thdd" style="position: relative;width: 20px;float: right;margin-right: 382px;">
 							<Tooltip placement="top">
@@ -78,8 +78,8 @@
 						<th style="text-align:left;">到账账户</th>
 					</tr>
 					<tr style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:30px;">
-						<td style="width:510px;text-align:left;">{{Cashconfirmationdata.money}}</td>
-						<td style="width:510px;text-align:left;">1</td>
+						<td style="width:510px;text-align:left;margin-left: 10px;float: left;">{{Cashconfirmationdata.money}}</td>
+						<td style="width:510px;text-align:left;">{{Cashconfirmationdata.Actualmoney}}</td>
 						<td style="text-align:left;">{{Cashconfirmationdata.type == 1 ? '银行卡' : "原支付途径"}}</td>
 					</tr>
 				</table>
@@ -496,6 +496,7 @@
 		},
 		moneyconfirm(){
 			this.Cashconfirmationdata.money=this.Actualamount
+			this.Cashconfirmationdata.Actualmoney=sessionStorage.getItem('Acmoney')
 			this.Cashconfirmationdata.type=sessionStorage.getItem('type')
 		},
 		Firststep(){
@@ -506,6 +507,21 @@
 			else if(this.vertical=='l2'){
 				Lastmoney=this.Otheramount
 			}
+			
+			axios.get('user/getDisk.do', {
+				params: {
+					money:Lastmoney
+				}
+			}).then(response => {
+				if (response.status == 200 && response.data.status == 1) {
+					sessionStorage.setItem('Acmoney', response.data.remain)
+				}
+				else{
+					this.$Message.info(response.data.message)
+					//this.$router.push('/ruicloud/cashwithdrawal',3000)
+				}
+			})
+			
 			axios.get('user/judgeWithdrawalContidion.do', {
 				params: {
 					balance:Lastmoney

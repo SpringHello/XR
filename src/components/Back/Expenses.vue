@@ -20,7 +20,7 @@
                 <span>余额</span>
                 <button @click="torecharge">充值</button>
                 <!-- $router.push('/ruicloud/cashwithdrawal') -->
-                <!--<button @click="$router.push('/ruicloud/cashwithdrawal')" style="margin-right: 10px;">提现</button>-->
+                <button @click="$router.push('/ruicloud/cashwithdrawal')" style="margin-right: 10px;">提现</button>
                 <div>
                   <ul style="width: 50%">
                     <li>可用余额</li>
