@@ -755,15 +755,53 @@
 				<Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
 				<span class="universal-modal-title">注销账号</span>
 			</p>
-			<div class="modal-content-s" style="padding: 0;">
+			<div class="modal-content-s" style="padding: 0;width: 101%;">
 				<div style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">
 					您正注销用户名为“{{(authInfo&&authInfo.name)? authInfo.name:userInfo.realname}}”的账号，<span style="color: #FF624B;">提交账号注销申请为不可逆操作。</span>若非本人操作，请点击取消。
 				</div>
 			</div>
 			<p slot="footer" class="modal-footer-s">
 				<Button @click="showModal.Cancellationaccount = false">取消</Button>
-				<Button type="primary" @click="">注销</Button>
+				<Button type="primary" @click="userInfoQ">注销</Button>
 			</p>
+		</Modal>
+		<!-- 身份验证弹窗 -->
+		<Modal v-model="showModal.cashverification" :scrollable="true" :closable="true" :width="520">
+		  <p slot="header" class="modal-header-border">
+		    <span class="universal-modal-title">身份验证</span>
+		  </p>
+		  <div class="modal-content-s" >
+		    <div>
+		      <p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:24px;">为保障您的账户安全，我们将向您的实名认证手机号码 <span style="color: #FF624B">{{userphone}}</span> 发送一条验证短信，请收到验证信息之后将验证码填入下方。
+		      </p>
+		    </div>
+		  </div>
+		<div class="modal-content-s">
+			<Form ref="cashverification" label-position="left" :model="formCustom" :rules="ruleCustom" style="width: 500px;">
+				<FormItem prop="Verificationcode" >
+					<Input v-model="formCustom.Verificationcode" placeholder="请输入随机验证码" style="width: 300px;"></Input>
+					<img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+					     style="height:32px;vertical-align: middle;margin-left: 10px;">
+				</FormItem>
+				<FormItem prop="messagecode">
+					<Input v-model="formCustom.messagecode" placeholder="请输入收到的验证码" style="width: 300px;"></Input>
+					<Button type="primary"  @click="getPhoneCode('code')" :disabled="formCustom.newCodeText !='获取验证码' " style="margin-left: 10px;">{{formCustom.newCodeText}}
+					</Button>
+				</FormItem>
+			</Form>
+		</div>
+		<div class="modal-content-s divall">
+			<div style="width: 91%;margin-left: 4%;margin-top: 10px;font-size: 14px;margin-bottom: 20px;">
+				<p style="float: left;line-height:24px;">没有收到验证码？</p><br />
+				<p style="line-height:24px;">1、网络异常可能会造成短信丢失，请<Button class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click="getPhoneCode('againCode')" >重新获取</Button>或<Button class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click.prevent="getPhoneCode('voice')">接收语音验证码</Button>。</p>
+				<p v-if="authInfo&&authInfo.checkstatus==0" style="line-height:24px;">2、如果手机已丢失或停机，请<Button class="spanaa" @click="showModal.modifyPhoneID = true;showModal.cashverification=false">通过身份证号码验证</Button>或<Button class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</Button>更改手机号。</p>
+				<p v-if="!authInfo||authInfo&&authInfo.checkstatus!=0" style="line-height:24px;">2、如果手机已丢失或停机，请<Button class="spanaa" @click="showModal.modifyPhoneID = true;showModal.cashverification=false">提交工单</Button>或<a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`" class="spanaa" style="font-size: 13px;">联系客服</a>更改手机号。</p>
+			</div>
+		</div>
+		  <p slot="footer" class="modal-footer-s">
+		    <Button @click="showModal.cashverification = false">取消</Button>
+		    <Button type="primary" :disabled="disabled" @click="Callpresentation">确定</Button>
+		  </p>
 		</Modal>
 
     <!-- 更换头像 -->
@@ -1537,6 +1575,8 @@
         uploadImgDispaly2: '',
         authModifyPhoneStep: 0,
 				Modifynamevalue:'',
+				//用户电话号码
+				userphone:'',
         authModifyPhoneFormOne: {
           ID: '',
           personHint: 0,
@@ -1591,8 +1631,26 @@
           cancelCheckOtherHint: false,
           modifyPhoneID: false,
 					Modifyname:false,
-					Cancellationaccount:false
+					Cancellationaccount:false,
+					cashverification:false
         },
+				//验证码和短信验证
+				formCustom: {
+					  //图片随机码
+					  Verificationcode: '',
+						//短信验证码
+				    messagecode: '',
+						newCodeText: '获取验证码',
+						codeText: '获取验证码',
+				 },
+				ruleCustom: {
+						Verificationcode: [
+								{required: true, message: '请输入图形验证码', trigger: 'blur'}
+						],
+				     messagecode: [
+							 {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+				     ]
+				},
         modifyVailType: [
           {
             type: 'phone',
@@ -3837,6 +3895,61 @@
           }
         })
       },
+			//短信验证码
+			getPhoneCode(codeType) {
+			  this.$refs.cashverification.validateField('Verificationcode', (text) => {
+			    if (text == '') {
+					var url = ''
+					if (codeType == 'code' || codeType == 'againCode' && this.formCustom.newCodeText == '获取验证码') {
+					  url = 'user/code.do'
+					}
+					else if (codeType == 'voice' && this.formCustom.newCodeText == '获取验证码'){
+					  url = 'user/voiceCode.do'
+					} else {
+					  return false
+					}
+				  axios.get(url, {
+				    params: {
+				      aim: this.userphone,
+				      isemail: 0,
+				      vailCode: this.formCustom.Verificationcode
+				    }
+				  }).then(response => {
+			        // 发送成功，进入倒计时
+			        if (response.status == 200 && response.data.status == 1) {
+			          var countdown = 60
+			          this.formCustom.newCodeText = `${countdown}S`
+			          var Interval = setInterval(() => {
+			            countdown--
+			            this.formCustom.newCodeText = `${countdown}S`
+			            if (countdown == 0) {
+			              clearInterval(Interval)
+			              this.formCustom.newCodeText = '获取验证码'
+			            }
+			          }, 1000)
+			        } else {
+			          this.$message.info({
+			            content: response.data.message
+			          })
+			          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+								this.formCustom.Verificationcode=''
+			        }
+			      })
+			    }
+			  })
+			},
+			Callpresentation(){
+				alert("这是测试方法！")
+			},
+			userInfoQ() {
+				this.showModal.Cancellationaccount = false
+				this.showModal.cashverification=true
+			  axios.get('user/GetUserInfo.do').then(response => {
+			    if (response.status == 200 && response.data.status == 1) {
+				  this.userphone=response.data.result.phone
+			    }
+			  })
+			}
     },
     computed: {
       userInfo() {
@@ -3912,6 +4025,14 @@
           }
         }
       },
+			disabled(){
+				if(this.formCustom.Verificationcode =='' || this.formCustom.messagecode == ''){
+					return true
+				}
+				else{
+					return false
+				}
+			}
     },
     watch: {
       '$store.state.zone': {
@@ -4476,4 +4597,30 @@
       background: rgba(233, 233, 233, 1);
     }
   }
+	
+	.pall{
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		color:rgba(102,102,102,1);
+		line-height:20px;
+	}
+	.spanaa{
+		color: #2A99F2;
+		text-decoration: underline;
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		cursor: pointer;
+		border: none;
+		padding: 0;
+		background: white;
+		margin-top: -3px;
+	}
+	.divall{
+		background:rgba(246,250,253,1);
+		border-radius:4px;
+		border:1px solid rgba(225,225,225,1);
+		width:460px;
+		height:auto;
+		margin-top: 10px;
+	}
 </style>

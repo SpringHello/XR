@@ -3,7 +3,7 @@
 		<div id="wrapper">
 			<span>个人中心 / 费用中心 / 提现</span>
 			<div class="content" style="min-height: 655px;">
-				<span>自助线上提现</span>
+				<span>自助提现</span>
 				<div class="remindbox">
 					<div class="remindbox-left">
 						<div class="font" style="margin-left: 20px;">
@@ -16,7 +16,8 @@
 							</div>
 							<Button type="primary" style="margin-top: 17px;" @click="showModal.Cashconfirmation = true">申请线上提现</Button>
 						</div>
-						<div class="font" style="margin-left: 10px;">
+						<span style="width:2px;height:126px;background:rgba(233,233,233,1);float: left;margin-top: 20px;"></span>
+						<div class="font" style="margin-left: 18px;width: 142px;">
 							<Tooltip placement="top">
 								<div slot="content" style="width:260px;height:44px;font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);">
 									<p style="line-height:22px;">通过微信充值时间超过1年或通过支付宝充值时间</p>
@@ -33,6 +34,7 @@
 								<Button type="primary" style="margin-top: 17px;" @click="showModal.cardfirmation = true">申请银行卡提现</Button>
 							</Tooltip>
 						</div>
+						<span style="width:2px;height:126px;background: rgba(233,233,233,1);float: left;margin-top: 20px;"></span>
 					</div>
 					<div class="remindbox-right">
 						<div class="right">
@@ -572,7 +574,7 @@
 	}
 
 	.font {
-		width: 150px;
+		width: 122px;
 		float: left;
 		margin-top: 30px;
 	}

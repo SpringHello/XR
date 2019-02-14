@@ -112,10 +112,10 @@
 			</Form>
 		</div>
 		<div class="modal-content-s divall">
-			<div style="width: 100%;">
-				<p class="pall" style="float: left;">没有收到验证码？</p><br />
-				<p class="pall" >1、网络通讯异常可能会造成短信丢失，请<Button class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click="getPhoneCode('againCode')" >重新获取</Button>或<Button class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click.prevent="getPhoneCode('voice')">获取语音验证码</Button>。</p>
-				<p class="pall" >2、如果手机已丢失或停机，请<Button class="spanaa" @click="showModal.modifyPhoneID = true;showModal.cashverification=false">通过身份证号码验证</Button>或<Button class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</Button>更改手机号。</p>
+			<div style="width: 91%;margin-left: 4%;margin-top: 10px;font-size: 14px;margin-bottom: 20px;">
+				<p style="float: left;line-height:24px;">没有收到验证码？</p><br />
+				<p style="line-height:24px;">1、网络异常可能会造成短信丢失，请<Button class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click="getPhoneCode('againCode')" >重新获取</Button>或<Button class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click.prevent="getPhoneCode('voice')">接收语音验证码</Button>。</p>
+				<p style="line-height:24px;">2、如果手机已丢失或停机，请<Button class="spanaa" @click="showModal.modifyPhoneID = true;showModal.cashverification=false">通过身份证号码验证</Button>或<Button class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</Button>更改手机号。</p>
 			</div>
 		</div>
 	    <p slot="footer" class="modal-footer-s">
@@ -500,7 +500,15 @@
 			this.Cashconfirmationdata.type=sessionStorage.getItem('type')
 		},
 		Firststep(){
+			var type=''
 			var Lastmoney=0
+			var typecard=sessionStorage.getItem('type')
+			if(typecard==0){
+				type='online'
+			}
+			else if(typecard==1){
+				type='card'
+			}
 			if(this.vertical=='l1'){
 				Lastmoney=this.moneysure
 			}
@@ -508,13 +516,30 @@
 				Lastmoney=this.Otheramount
 			}
 			
-			axios.get('user/getDisk.do', {
+			axios.get('user/getdisk.do', {
 				params: {
-					money:Lastmoney
+					money:Lastmoney,
+					type: type
 				}
 			}).then(response => {
 				if (response.status == 200 && response.data.status == 1) {
 					sessionStorage.setItem('Acmoney', response.data.remain)
+					axios.get('user/judgeWithdrawalContidion.do', {
+						params: {
+							balance:Lastmoney
+						}
+					}).then(response => {
+						if (response.status == 200 && response.data.status == 1) {
+							sessionStorage.setItem('money', Lastmoney)
+							this.changeTab('content1')
+							this.money()
+							this.moneyconfirm()
+						}
+						else{
+							this.$Message.info(response.data.message)
+							//this.$router.push('/ruicloud/cashwithdrawal',3000)
+						}
+					})
 				}
 				else{
 					this.$Message.info(response.data.message)
@@ -522,22 +547,7 @@
 				}
 			})
 			
-			axios.get('user/judgeWithdrawalContidion.do', {
-				params: {
-					balance:Lastmoney
-				}
-			}).then(response => {
-				if (response.status == 200 && response.data.status == 1) {
-					sessionStorage.setItem('money', Lastmoney)
-					this.changeTab('content1')
-					this.money()
-					this.moneyconfirm()
-				}
-				else{
-					this.$Message.info(response.data.message)
-					//this.$router.push('/ruicloud/cashwithdrawal',3000)
-				}
-			})
+			
 			//if(this.vertical=='l1'){
 				//sessionStorage.setItem('money', this.moneyall)
 			//}
@@ -898,14 +908,14 @@
 		color:rgba(102,102,102,1);
 		line-height:20px;
 	}
+	
 	.divall{
-		background:rgba(239,247,254,1);
-		border-radius:2px;
-		border:1px solid rgba(42,153,242,1);
+		background:rgba(246,250,253,1);
+		border-radius:4px;
+		border:1px solid rgba(225,225,225,1);
 		width:460px;
-		height:85px;
+		height:auto;
 		margin-top: 10px;
-		margin-left: 10px;
 	}
 	.pall{
 		font-size:12px;
