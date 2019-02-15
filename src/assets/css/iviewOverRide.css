@@ -462,6 +462,9 @@ div.modal-header-border {
   border: 1px solid #E5C2C2;
   box-shadow: none;
 }
+#schoolseason .host-count .ivu-input {
+    text-align: center;
+}
 
 /* 自定义监控下拉框 */
 .cm-select.ivu-select-single .ivu-select-selection {

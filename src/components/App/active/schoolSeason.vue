@@ -1,5 +1,5 @@
 <template>
-  <div id="schoolseason">
+ <div id="schoolseason">
     <div class="banner">
       <div class="wrap">
         <div class="container flex-vertical-center">
@@ -51,7 +51,7 @@
                     {{item.discount}}折
                   </div>
                   <p style="font-size:18px;font-weight:bold;font-family:MicrosoftYaHei-Bold;">{{item.servicetype == 'host' ? '云服务器' : 'GPU云服务器'}}</p>
-                  <p class="config-text" ><span>{{item.cpu}}</span>核 + <span >{{item.memory}}G</span>  +  <span><span>{{item.cpu}}M</span>带宽 + {{item.rootDisk}}G</span>SSD系统盘</p>
+                  <p class="config-text" ><span>{{item.cpu}}</span>核+<span>{{item.mem}}G</span>+<span>{{item.cpu}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘<span v-if="item.gpu" style="font-size:12px;font-weight:normal;">+<span>{{item.gpu}}</span>显卡</span></p>
                 </div>
                 <div class="host_content">
                 <div style="margin:10px 0;">
@@ -65,17 +65,17 @@
                 </div>
                 <div >
                     <span class="label-title">选择系统：</span>
-                    <Cascader :data="hostSystemList" v-model="item.system" style="width:240px;display: inline-block;" class="schoolseason-select"></Cascader>
+                    <Cascader :data="item.hostSystemList" v-model="item.system" style="width:240px;display: inline-block;" class="schoolseason-select"></Cascader>
                 </div>
                 <div style="text-align:left;margin:20px 0;">
                     <span style="color:#E1212A;font-size:14px;">￥<span style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/年</span>
                     <span style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{item.originalPrice}}元</span>
                 </div>
-                <div class="host_button" @click="getDiskcountMv(item)" v-if="item.num!='100'">立即抢购</div>
+                <div class="host_button" @click="getDiskcountMv(item,index)" v-if="item.num!='100'">立即抢购</div>
                 <div class="host_button" style="background:rgba(229,194,194,1);cursor:not-allowed" v-else>已抢完</div>
                 <div class="progress">
                   <Progress class="schoolseason-progress" :percent="item.num" hide-info/>
-                  <span>已抢购{{item.num}}%</span>
+                  <span>已抢购{{item.num.toFixed(2)}}%</span>
                 </div>
                 </div>
               </div>
@@ -106,79 +106,69 @@
                 <div class="item-config">
                   <p style="margin-bottom: 10px;">区域选择</p>
                   <ul class="flex" style="justify-content: flex-start">
-                    <!-- <li v-for="(item3,index) in hostCount" :key="index" @click="item.selectedCount=item3" :class="{selected:item.selectedCount==item3}">{{item3}}台</li> -->
-                    <li v-for="(item3,index) in hostCount" :key="index" >{{item3}}台</li>
+                    <li v-for="(item3,index) in hostZoneListHot" :key="index" @click="hotProductHot.zoneId=item3.value" :class="{selected:hotProductHot.zoneId==item3.value}">{{item3.name}}</li>
                   </ul>
                 </div>
                 <div class="item-config">
                   <p style="margin-bottom: 20px;">配置选择</p>
                   <div>
                     <span class="sec-title">基础入门级云服务器</span>
-                    <ul class="flex" style="justify-content: flex-start">
-                      <!-- <li v-for="(item3,index) in hostCount" :key="index" @click="item.selectedCount=item3" :class="{selected:item.selectedCount==item3}">{{item3}}台</li> -->
-                      <li v-for="(item3,index) in hostCount" :key="index" class="selected">{{item3}}台</li>
+                    <ul class="flex" style="justify-content: flex-start;">
+                      <li v-for="(item3,index) in hostConfigListHot.basic" :key="index" @click="hotProductHot.cpuMemory=item3" :class="{selected:hotProductHot.cpuMemory.cpu==item3.cpu&&hotProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
                   <div>
                     <span class="sec-title">标准进阶型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
-                      <!-- <li v-for="(item3,index) in hostCount" :key="index" @click="item.selectedCount=item3" :class="{selected:item.selectedCount==item3}">{{item3}}台</li> -->
-                      <li v-for="(item3,index) in hostCount" :key="index" >{{item3}}台</li>
+                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hotProductHot.cpuMemory=item3" :class="{selected:hotProductHot.cpuMemory.cpu==item3.cpu&&hotProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
                   <div>
                     <span class="sec-title">企业高配型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
-                      <!-- <li v-for="(item3,index) in hostCount" :key="index" @click="item.selectedCount=item3" :class="{selected:item.selectedCount==item3}">{{item3}}台</li> -->
-                      <li v-for="(item3,index) in hostCount" :key="index" >{{item3}}台</li>
+                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hotProductHot.cpuMemory=item3" :class="{selected:hotProductHot.cpuMemory.cpu==item3.cpu&&hotProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
+                  <p style="font-size:12px;color:rgba(154,127,130,1);margin-top:-10px;">*以上配置皆包含40G SSD系统盘</p>
                 </div>
               </div>
             </div>
             <div class="right">
               <div class="item-select">
                 <p>带宽选择</p> 
-                <!-- <Select v-model="item.selectedSystem"> -->
-                <Select>
-                  <Option value="windows">windows</option>
-                  <Option value="linux">centos</option>
+                <Select v-model="hotProductHot.bandwith">
+                  <Option v-for="(item3,index) in hostbandwithListHot" :value="item3" :key="index">{{item3}}M</option>
                 </Select>
               </div>
               <div class="item-select">
                 <p>系统选择</p> 
-                <Select>
-                  <Option value="windows">windows</option>
-                  <Option value="linux">centos</option>
-                </Select>
+                <Cascader :data="hostSystemListHot" v-model="hotProductHot.system" style="width:240px;display: inline-block;" class="schoolseason-select"></Cascader>
               </div>
               <div class="item-config">
                 <p style="margin-bottom: 10px;">数据盘</p>
                 <ul class="flex" style="justify-content: flex-start">
-                  <!-- <li v-for="(item3,index) in hostCount" :key="index" @click="item.selectedCount=item3" :class="{selected:item.selectedCount==item3}">{{item3}}台</li> -->
-                  <li v-for="(item3,index) in hostCount" :key="index" >{{item3}}台</li>
+                  <li v-for="(item3,index) in hostDisksizeListHot" :key="index" @click="hotProductHot.disksize=item3" :class="{selected:hotProductHot.disksize==item3}">{{item3}}G</li>
                 </ul>
               </div>
               <div class="item-config">
                 <p style="margin-bottom: 10px;">购买时长</p>
                 <ul class="flex" style="justify-content: flex-start">
-                  <!-- <li v-for="(item3,index) in hostCount" :key="index" @click="item.selectedCount=item3" :class="{selected:item.selectedCount==item3}">{{item3}}台</li> -->
-                  <li v-for="(item3,index) in hostCount" :key="index" class="selected">{{item3}}月
-                    <span>{{item3}}.5折</span>
+                  <li v-for="(item3,index) in hostTimeListHot" :key="index" @click="hotProductHot.timeTimetype=item3" :class="{selected:hotProductHot.timeTimetype.value==item3.value}">{{item3.value}}月
+                    <i>{{item3.discount}}折</i>
                   </li>
                 </ul>
               </div>
               <div class="item-select">
                 <p>购买数量</p> 
-                <Button>-</Button>
-                <Input type="text" style="width:60px;">1</Input>
-                <Button>+</Button>
+                <Button @click="hotProductHot.count--" :disabled="hotProductHot.count<=1">-</Button>
+                <Input type="text" style="width:60px;" class="host-count" v-model="hotProductHot.count"></Input>
+                <Button @click="hotProductHot.count++">+</Button>
               </div>
               <div class="cash">
                 <p>
-                  <span>￥</span>1396.09
+                  <span>￥</span>{{getPriceHostHot}}
                 </p>
-                <Button>立即支付</Button>
+                <Button @click="productBuy_host()">立即支付</Button>
               </div>
             </div>
           </div>
@@ -376,8 +366,7 @@
         </div>
       </div>
     </transition>
-  </div>
-</template>
+  </div></template>
 
 <script type="text/ecmascript-6">
 import axios from '@/util/axiosInterceptor'
@@ -386,80 +375,41 @@ import reg from '../../../util/regExp'
 export default {
   data () {
     const validaRegisteredPhone = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('电话号码不能为空'));
-        }
-        if (!(/^1(3|4|5|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
-          callback(new Error('请输入正确的电话号码'));
-        } else {
-          callback()
-        }
+      if (!value) {
+        return callback(new Error('电话号码不能为空'));
       }
-      const validaRegisteredID = (rule, value, callback) => {
-        if (!reg.IDCardVail(value)) {
-          callback(new Error('请输入正确的身份证号码'));
-        } else {
-          callback()
-        }
+      if (!(/^1(3|4|5|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
+        callback(new Error('请输入正确的电话号码'));
+      } else {
+        callback()
       }
-      const validaRegisteredName = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('联系人不能为空'));
-        }
-        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
-          callback(new Error('输入姓名不能包含特殊字符、空格或是纯数字'));
-        } else {
-          callback()
-        }
+    }
+    const validaRegisteredID = (rule, value, callback) => {
+      if (!reg.IDCardVail(value)) {
+        callback(new Error('请输入正确的身份证号码'));
+      } else {
+        callback()
       }
+    }
+    const validaRegisteredName = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('联系人不能为空'));
+      }
+      if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+        callback(new Error('输入姓名不能包含特殊字符、空格或是纯数字'));
+      } else {
+        callback()
+      }
+    }
     return {
       authError: '',
       authHintShow: false,
       reminderShow: true,
       zoneList: [],
       defaultZone: '',
-      hostZoneList: [
-        // {name: "华中二区", value: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc"},
-        // {name: "华中二区11", value: "ac7d0827-a47e-452b-a1fb-67f5a45d0ebc12"},
-      ],
+      hostZoneList: [],
       gpuZoneList: [],
-      hostSystemList: [{
-                    value: 'window',
-                    label: 'Windows',
-                    children: [
-                    ]
-                }, {
-                    value: 'centos',
-                    label: 'Centos',
-                    children: [
-                    ],
-                },
-                {
-                    value: 'debian',
-                    label: 'Debian',
-                    children: [
-                    ],
-                },
-                {
-                    value: 'ubuntu',
-                    label: 'Ubuntu',
-                    children: [
-                    ],
-                }],
       discountProduct: [
-        // "id": 407,
-        // "cpu": 1,
-        // "mem": 2,
-        // "disksize": 40,
-        // "servicetype": "host",
-        // "days": 360,
-        // "disktype": "ssd",
-        // "bandwith": 1,
-        // "activitynum": 37,
-        // "discount": 0.1,
-        // "maxgetnum": 1,
-        // "ismonth": 1,
-        // "foldonfold": 0，
         {
           cpu: '1',
           mem: '2',
@@ -470,12 +420,35 @@ export default {
           duration: '6',
           originalPrice: '1300.32',
           currentPrice: '351.09',
-          id: '407',
-          type:'0',
-          activityNum:'27',
+          id: '40',
+          type: '0',
+          activityNum: '27',
           servicetype: 'host',
-          num: 50,
-          discount: '1'
+          num: 0.5 * 100,
+          discount: '1',
+          hostSystemList: [{
+            value: 'window',
+            label: 'Windows',
+            children: [
+            ]
+          }, {
+            value: 'centos',
+            label: 'Centos',
+            children: [
+            ],
+          },
+          {
+            value: 'debian',
+            label: 'Debian',
+            children: [
+            ],
+          },
+          {
+            value: 'ubuntu',
+            label: 'Ubuntu',
+            children: [
+            ],
+          }],
         },
         {
           cpu: '2',
@@ -487,12 +460,35 @@ export default {
           duration: '6',
           originalPrice: '1300.32',
           currentPrice: '351.09',
-          id: '408',
-          type:'0',
-          activityNum:'27',
+          id: '40',
+          type: '0',
+          activityNum: '27',
           servicetype: 'host',
-          num: 0,
-          discount: '1'
+          num: 1 * 10,
+          discount: '1',
+          hostSystemList: [{
+          value: 'window',
+          label: 'Windows',
+          children: [
+          ]
+        }, {
+          value: 'centos',
+          label: 'Centos',
+          children: [
+          ],
+        },
+        {
+          value: 'debian',
+          label: 'Debian',
+          children: [
+          ],
+        },
+        {
+          value: 'ubuntu',
+          label: 'Ubuntu',
+          children: [
+          ],
+        }],
         },
         {
           cpu: '8',
@@ -505,86 +501,184 @@ export default {
           duration: '6',
           originalPrice: '1300.32',
           currentPrice: '351.09',
-          id: '409',
-          type:'0',
-          activityNum:'27',
+          id: '40',
+          type: '0',
+          activityNum: '27',
           servicetype: 'gpu',
-          num: 100,
-          discount: '2'
+          num: 10,
+          discount: '2',
+          hostSystemList: [{
+            value: 'window',
+            label: 'Windows',
+            children: [
+            ]
+          }, {
+            value: 'centos',
+            label: 'Centos',
+            children: [
+            ],
+          },
+          {
+            value: 'debian',
+            label: 'Debian',
+            children: [
+            ],
+          },
+          {
+            value: 'ubuntu',
+            label: 'Ubuntu',
+            children: [
+            ],
+          }],
         }
       ],
-      hostTwo:{
-          //带宽
-          bandwidthList:[
-            {
-              name: '2M',
-              value: '2'
-            }, {
-              name: '5M',
-              value: '5'
-            }, {
-              name: '10M',
-              value: '10'
-            }
-          ],
-
-          //系统
-          systemList: [
-            {
-              name: 'Centos',
-              value: 'linux'
-            }, {
-              name: 'Windows',
-              value: 'windows'
-            }],
-
-          //时长
-          durationList:[
-            {
-              name:'6月',
-              value:'6'
-            },
-            {
-              name:'1年',
-              value:'12'
-            },
-            {
-              name:'2年',
-              value:'24'
-            }
-          ],
-          gpuDay:[
-            {
-              name:'7天',
-              value:'7'
-            }
-          ],
-          gpuMoth:[
-            {
-              name:'1月',
-              value:'1'
-            },
-            {
-              name:'3月',
-              value:'3'
-            }
-          ],
-          databaseTypeList: [
-            {
-              name: 'Mysql 单实例',
-              value: 'mysql'
-            }, {
-              name: 'Redis分布式缓存服务',
-              value: 'redis'
-            }, {
-              name: 'PostgreSQL 单实例',
-              value: 'postgresql'
-            }, {
-              name: 'MongoDB 单实例',
-              value: 'mongo'
-            }
-        ],
+      // 热门云主机打折
+      hotProductHot: {
+          // cpu: '1',
+          // mem: '2',
+          // disksize: '40',
+          // bandwith: '1',
+          // zoneId: '',
+          // system: [],
+          // duration: '6',
+          // originalPrice: '1300.32',
+          // currentPrice: '351.09',
+          // id: '40',
+          // type: '0',
+          // activityNum: '27',
+          // servicetype: 'host',
+          // num: 0.5 * 100,
+          // discount: '1'
+          zoneId: '',
+          cpuMemory: {cpu: '1', memory: '1'},
+          bandwith: 1,
+          system: [],
+          disksize: 20,
+          timeTimetype: {type: 'month', value: '6', discount: '4'},
+          count: '1',
         },
+      hostZoneListHot: [],
+      hostConfigListHot: {
+        basic: [
+          {cpu: '1', memory: '1'},
+          {cpu: '1', memory: '2'},
+          {cpu: '2', memory: '4'},
+        ],
+        standard: [
+          {cpu: '4', memory: '8'},
+          {cpu: '8', memory: '16'},
+          {cpu: '16', memory: '32'},
+        ],
+        highEnd: [
+          {cpu: '32', memory: '64'},
+          {cpu: '64', memory: '128'},
+          {cpu: '64', memory: '256'}
+        ]
+      },
+      hostbandwithListHot: [1, 2, 5, 10, 20],
+      hostSystemListHot: [{
+          value: 'window',
+          label: 'Windows',
+          children: [
+          ]
+        }, {
+          value: 'centos',
+          label: 'Centos',
+          children: [
+          ],
+        },
+        {
+          value: 'debian',
+          label: 'Debian',
+          children: [
+          ],
+        },
+        {
+          value: 'ubuntu',
+          label: 'Ubuntu',
+          children: [
+          ],
+        }],
+      hostDisksizeListHot: [20, 50, 100, 500],
+      hostTimeListHot: [
+        {type: 'month', value: '6', discount: '4'},
+        {type: 'year', value: '1', discount: '3'},
+        {type: 'year', value: '2', discount: '2.5'},
+        {type: 'year', value: '3', discount: '2'},
+      ],
+      // 热门gpu打折
+      hostTwo: {
+        //带宽
+        bandwidthList: [
+          {
+            name: '2M',
+            value: '2'
+          }, {
+            name: '5M',
+            value: '5'
+          }, {
+            name: '10M',
+            value: '10'
+          }
+        ],
+
+        //系统
+        systemList: [
+          {
+            name: 'Centos',
+            value: 'linux'
+          }, {
+            name: 'Windows',
+            value: 'windows'
+          }],
+
+        //时长
+        durationList: [
+          {
+            name: '6月',
+            value: '6'
+          },
+          {
+            name: '1年',
+            value: '12'
+          },
+          {
+            name: '2年',
+            value: '24'
+          }
+        ],
+        gpuDay: [
+          {
+            name: '7天',
+            value: '7'
+          }
+        ],
+        gpuMoth: [
+          {
+            name: '1月',
+            value: '1'
+          },
+          {
+            name: '3月',
+            value: '3'
+          }
+        ],
+        databaseTypeList: [
+          {
+            name: 'Mysql 单实例',
+            value: 'mysql'
+          }, {
+            name: 'Redis分布式缓存服务',
+            value: 'redis'
+          }, {
+            name: 'PostgreSQL 单实例',
+            value: 'postgresql'
+          }, {
+            name: 'MongoDB 单实例',
+            value: 'mongo'
+          }
+        ],
+      },
       timeYear: [1, 2, 3],
       hostCount: [1, 2, 3],
       advantageData: [
@@ -619,49 +713,49 @@ export default {
         newCoustom: false
       },
       authFormValidate: {
-          name: '',
-          personId: '',
-          pictureCode: '',
-          tel: '',
-          vailCode: '',
-          sendCodeText: '获取验证码'
-        },
-        authFormRuleValidate: {
-          name: [
-            {required: true, message: '请输入姓名'},
-            {validator: validaRegisteredName}
-          ],
-          personId: [
-            {required: true, message: '请输入身份证号'},
-            {validator: validaRegisteredID}
-          ],
-          pictureCode: [
-            {required: true, message: '请输入图片验证码'}
-          ],
-          tel: [
-            {required: true, message: '请输入以该身份证开户的手机号码'},
-            {validator: validaRegisteredPhone}
-          ],
-          vailCode: [
-            {required: true, message: '请输入验证码'}
-          ]
-        },
-        imgSrc: 'user/getKaptchaImage.do',
+        name: '',
+        personId: '',
+        pictureCode: '',
+        tel: '',
+        vailCode: '',
+        sendCodeText: '获取验证码'
+      },
+      authFormRuleValidate: {
+        name: [
+          { required: true, message: '请输入姓名' },
+          { validator: validaRegisteredName }
+        ],
+        personId: [
+          { required: true, message: '请输入身份证号' },
+          { validator: validaRegisteredID }
+        ],
+        pictureCode: [
+          { required: true, message: '请输入图片验证码' }
+        ],
+        tel: [
+          { required: true, message: '请输入以该身份证开户的手机号码' },
+          { validator: validaRegisteredPhone }
+        ],
+        vailCode: [
+          { required: true, message: '请输入验证码' }
+        ]
+      },
+      imgSrc: 'user/getKaptchaImage.do',
     }
   },
   created () {
     this.getHostZoneList()
-    
+    this.getHostZoneList1()
   },
   mounted () {
 
   },
   methods: {
-    toAuth() {
+    toAuth () {
       sessionStorage.setItem('pane', 'certification')
       this.$router.push('userCenter')
     },
-    showAuthModal() {
+    showAuthModal () {
       this.authHintShow = false
       if (this.$store.state.userInfo) {
         this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
@@ -670,16 +764,16 @@ export default {
         this.showModal.notAuthModal = true
       }
     },
-    roll(val) {
-        $('html, body').animate({scrollTop: val}, 300)
-      },
-    init() {
-        axios.get('user/GetUserInfo.do').then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
-          }
-        })
-      },
+    roll (val) {
+      $('html, body').animate({ scrollTop: val }, 300)
+    },
+    init () {
+      axios.get('user/GetUserInfo.do').then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.$store.commit('setAuthInfo', { authInfo: response.data.authInfo, userInfo: response.data.result })
+        }
+      })
+    },
     // 云服务器获取区域
     getHostZoneList () {
       let url = 'activity/getTemActInfoById.do'
@@ -691,6 +785,7 @@ export default {
         if (res.data.status == 1 && res.status == 200) {
           this.hostZoneList = res.data.result.optionalArea
           this.defaultZone = res.data.result.optionalArea[0].value
+
           // 默认选择区域
           this.discountProduct.forEach((item, index) => {
             // console.log(index)
@@ -701,11 +796,17 @@ export default {
             }
           })
           this.gpuZoneList = res.data.result.unoptionalRegion
+          // 赋值配置id,初始化价格和抢购数量
+          this.discountProduct.forEach((item, index) => {
+            item.id = res.data.result.freevmconfigs[index].id
+            this.getVMConfigId(item, index)
+            this.getSubsection(index)
+          })
         }
       })
     },
     // 根据区域获得不同系统
-    changeZoneHost(item, index) {
+    changeZoneHost (item, index) {
       axios.get('information/listTemplates.do', {
         params: {
           zoneId: item.zoneId,
@@ -713,30 +814,48 @@ export default {
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
-        var x
-        for (x in res.data.result) {
-          this.hostSystemList.forEach(item => {
-            if (item.value == x) {
-              item.children = res.data.result[x]
-            }
+          var x
+          for (x in res.data.result) {
+            this.discountProduct[index].hostSystemList.forEach(item => {
+              if (item.value == x) {
+                item.children = res.data.result[x]
+              }
+            })
+          }
+          this.discountProduct[index].hostSystemList.forEach(item => {
+            item.children.forEach(item => {
+              item.value = item.systemtemplateid
+              item.label = item.templatedescript
+            })
+          })
+          // 设置默认系统
+          this.discountProduct.forEach(item => {
+            item.system = ['window', res.data.result.window[0].systemtemplateid]
           })
         }
-        this.hostSystemList.forEach(item => {
-          item.children.forEach(item => {
-             item.value = item.systemtemplateid
-             item.label = item.templatedescript
-          })
-        })
-        }
-        // 设置默认系统
-        this.discountProduct.forEach(item4 => {
-          item4.system = ['window', res.data.result.window[0].systemtemplateid] 
-        })
-        this.getVMConfigId(item, index)
       })
     },
+    // 系统编辑成级联选择组件需要的数据
+    cascaderSystemM(responseData, obj, selectobj) {
+      var x
+      for (x in responseData) {
+        obj.forEach(item => {
+          if (item.value == x) {
+            item.children = responseData[x]
+          }
+        })
+      }
+      obj.forEach(item => {
+        item.children.forEach(item => {
+          item.value = item.systemtemplateid
+          item.label = item.templatedescript
+        })
+      })
+      selectobj = ['window', responseData.window[0].systemtemplateid]
+      return selectobj
+    },
     // 获取原价
-    getVMConfigId(item, index) {
+    getVMConfigId (item, index) {
       axios.get('activity/getOriginalPrice.do', {
         params: {
           zoneId: item.zoneId,
@@ -750,125 +869,236 @@ export default {
         }
       })
     },
-    //   云主机生成订单
-    getDiskcountMv (item) {
+    // 获取抢购剩余数量
+    getSubsection (index) {
+      axios.get('activity/getSubsection.do', {
+        params: {
+          activityNum: '37',
+        }
+      }).then(res => {
+        if (res.status == 200 && res.data.status == 1) {
+          // console.log(res.data.result[index].name)
+          if (res.data.result[index].total) {
+            this.discountProduct[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
+          }
+        }
+      })
+    },
+    //  秒杀活动云主机和GPU生成订单
+    getDiskcountMv (item, index) {
       if (!this.$store.state.userInfo) {
         this.showModal.notLoginModal = true
       } else {
-          axios.get('information/getDiskcountMv.do', {
+        // axios.get('activity/getSubsection.do', {
+        //   params: {
+        //     activityNum: '37',
+        //   }
+        // }).then(res => {
+        //   if (res.status == 200 && res.data.status == 1) {
+        //     this.discountProduct[index].num = res.data.result.c1m2
+        //   }
+        // })
+        var url = index != 2 ? 'information/getDiskcountMv.do' : 'activity/getDiskcountGPU.do'
+        axios.get(url, {
+          params: {
+            vmConfigId: item.id,
+            osType: item.system[1],
+            defzoneid: item.zoneId,
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success('创建订单成功')
+            this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      }
+    },
+    getHostZoneList1 () {
+      let url = 'activity/getTemActInfoById.do'
+      axios.get(url, {
+        params: {
+          activityNum: '38'
+        }
+      }).then(res => {
+        if (res.data.status == 1 && res.status == 200) {
+          this.hostZoneListHot = res.data.result.optionalArea
+          this.hotProductHot.zoneId = res.data.result.optionalArea[0].value
+        }
+      })
+    },
+    // 云主机打折获取系统
+    setTemplate(zoneId) {
+      axios.get('information/listTemplates.do', {
+        params: {
+          zoneId: zoneId,
+          user: 0
+        }
+      }).then(res => {
+        if (res.status == 200 && res.data.status == 1) {
+          var obj = this.cascaderSystemM(res.data.result, this.hostSystemListHot, this.hotProductHot.system)
+          this.hotProductHot.system = obj
+        }
+      })
+    },
+    // 云主机打折提交订单
+    productBuy_host(item) {
+        if (this.$store.state.userInfo == null) {
+          this.$LR({type: 'login'})
+          return
+        }
+        var params = {
+          zoneId: item.zone,
+          timeType: 'current',
+          timeValue: '1',
+          templateId: item.system,
+          isAutoRenew: '0',
+          count: '1',
+          cpuNum: '1',
+          memory: '1',
+          bandWidth: '1',
+          rootDiskType: 'sas',
+          networkId: 'no',
+          vpcId: 'no'
+        }
+        this.$http.get('information/deployVirtualMachine.do', {params}).then((response) => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+    getVerificationCode () {
+      if (!this.authFormValidate.pictureCode) {
+        this.$Message.info('请输入图形验证码')
+        return
+      }
+      this.$refs.authForm.validateField('tel', val => {
+        if (!val) {
+          axios.get('user/code.do', {
             params: {
-              vmConfigId: item.id,
-              osType: item.system[1],
-              defzoneid: item.zoneId,
+              aim: this.authFormValidate.tel,
+              isemail: 0,
+              vailCode: this.authFormValidate.pictureCode
             }
           }).then(res => {
-            if (res.status == 200 && res.data.status == 1) {
-              this.$Message.success('创建订单成功')
-              this.$router.push('order')
+            if (res.data.status == 1 && res.status == 200) {
+              this.$Message.success(res.data.message)
+              var countdown = 60
+              this.authFormValidate.sendCodeText = `重新发送(${countdown}S)`
+              var Interval = setInterval(() => {
+                countdown--
+                this.authFormValidate.sendCodeText = `重新发送(${countdown}S)`
+                if (countdown == 0) {
+                  clearInterval(Interval)
+                  this.authFormValidate.sendCodeText = '获取验证码'
+                }
+              }, 1000)
             } else {
-              this.$message.info({
-                content: res.data.message
-              })
+              this.$Message.info(res.data.message)
             }
           })
         }
-      },
-      getVerificationCode() {
-        if (!this.authFormValidate.pictureCode) {
-          this.$Message.info('请输入图形验证码')
-          return
-        }
-        this.$refs.authForm.validateField('tel', val => {
-          if (!val) {
-            axios.get('user/code.do', {
-              params: {
-                aim: this.authFormValidate.tel,
-                isemail: 0,
-                vailCode: this.authFormValidate.pictureCode
-              }
-            }).then(res => {
-              if (res.data.status == 1 && res.status == 200) {
-                this.$Message.success(res.data.message)
-                var countdown = 60
-                this.authFormValidate.sendCodeText = `重新发送(${countdown}S)`
-                var Interval = setInterval(() => {
-                  countdown--
-                  this.authFormValidate.sendCodeText = `重新发送(${countdown}S)`
-                  if (countdown == 0) {
-                    clearInterval(Interval)
-                    this.authFormValidate.sendCodeText = '获取验证码'
-                  }
-                }, 1000)
-              } else {
-                this.$Message.info(res.data.message)
-              }
-            })
-          }
-        })
-      },
-      sendCode() {
-        this.$refs.sendCode.validate(validate => {
-          if (validate) {
-            axios.get('user/code.do', {
-              params: {
-                aim: this.quicklyAuthForm.phone,
-                isemail: 0,
-                vailCode: this.quicklyAuthForm.pictureCode
-              }
-            }).then(response => {
-              // 发送成功，进入倒计时
-              if (response.status == 200 && response.data.status == 1) {
-                var countdown = 60
+      })
+    },
+    sendCode () {
+      this.$refs.sendCode.validate(validate => {
+        if (validate) {
+          axios.get('user/code.do', {
+            params: {
+              aim: this.quicklyAuthForm.phone,
+              isemail: 0,
+              vailCode: this.quicklyAuthForm.pictureCode
+            }
+          }).then(response => {
+            // 发送成功，进入倒计时
+            if (response.status == 200 && response.data.status == 1) {
+              var countdown = 60
+              this.quicklyAuthForm.sendCodeText = `${countdown}S`
+              var Interval = setInterval(() => {
+                countdown--
                 this.quicklyAuthForm.sendCodeText = `${countdown}S`
-                var Interval = setInterval(() => {
-                  countdown--
-                  this.quicklyAuthForm.sendCodeText = `${countdown}S`
-                  if (countdown == 0) {
-                    clearInterval(Interval)
-                    this.quicklyAuthForm.sendCodeText = '获取验证码'
-                  }
-                }, 1000)
-              } else {
-                this.$Message.error(response.data.message)
-              }
-            })
-          }
-        })
-      },
-      // 快速认证
-      authAndGetPrize() {
-        this.$refs.authForm.validate((valid) => {
-          if (valid) {
-            this.showModal.authModal = false
-            axios.post('user/personalAttest.do', {
-              cardID: this.authFormValidate.personId,
-              name: this.authFormValidate.name,
-              phone: this.authFormValidate.tel,
-              phoneCode: this.authFormValidate.vailCode,
-              type: '0'
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.showModal.authSucModal = true
-                this.init()
-              } else {
-                // this.$message.info({
-                //   content: response.data.message
-                // })
-                this.authError = response.data.message
-                this.showModal.authErrorModal = true
-              }
-            })
-          }
-        })
-      },
-  },
-  computed: {
-    userInfo() {
-      return this.$store.state.userInfo
+                if (countdown == 0) {
+                  clearInterval(Interval)
+                  this.quicklyAuthForm.sendCodeText = '获取验证码'
+                }
+              }, 1000)
+            } else {
+              this.$Message.error(response.data.message)
+            }
+          })
+        }
+      })
+    },
+    // 快速认证
+    authAndGetPrize () {
+      this.$refs.authForm.validate((valid) => {
+        if (valid) {
+          this.showModal.authModal = false
+          axios.post('user/personalAttest.do', {
+            cardID: this.authFormValidate.personId,
+            name: this.authFormValidate.name,
+            phone: this.authFormValidate.tel,
+            phoneCode: this.authFormValidate.vailCode,
+            type: '0'
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.showModal.authSucModal = true
+              this.init()
+            } else {
+              // this.$message.info({
+              //   content: response.data.message
+              // })
+              this.authError = response.data.message
+              this.showModal.authErrorModal = true
+            }
+          })
+        }
+      })
+    },
+    getprice() {
+      axios.get('activity/getOriginalPrice.do', {
+        params: {
+          zoneId: this.hotProductHot.zoneId,
+          activityNum: '38',
+          type: this.hotProductHot.timeTimetype.type,
+          month: this.hotProductHot.timeTimetype.type == 'month' ? this.hotProductHot.timeTimetype.value : this.hotProductHot.timeTimetype.value*12,
+          cpu: this.hotProductHot.cpuMemory.cpu,
+          mem: this.hotProductHot.cpuMemory.memory,
+          bandwith: this.hotProductHot.bandwith,
+          diskSize: this.hotProductHot.disksize,
+        }
+      }).then(res => {
+        if (res.status == 200 && res.data.status == 1) {
+          // this.hotProductHot.price = res.data.result.cost
+          // console.log(res.data.result.cost)
+          return res.data.result.cost
+        }
+      })
     }
   },
+  computed: {
+    userInfo () {
+      return this.$store.state.userInfo
+    },
+    getPriceHostHot() {
+      console.log(this.getprice())
+      return this.getprice()
+    },
+  },
   watch: {
-
+    'hotProductHot.zoneId': {
+        handler() {
+          this.setTemplate(this.hotProductHot.zoneId)
+        },
+        deep: true
+      },
   },
   components: {
 
@@ -879,8 +1109,8 @@ export default {
 <style rel="stylesheet/less" lang="less" scoped>
 #schoolseason {
   font-family: MicrosoftYaHei;
-  color: #4B3C3D;
-  background:rgba(247,247,247,1);
+  color: #4b3c3d;
+  background: rgba(247, 247, 247, 1);
   height: 100%;
 }
 .wrap {
@@ -904,19 +1134,19 @@ section {
   .headline {
     // margin-top: 50px;
     text-align: center;
-    >div {
+    > div {
       height: 64px;
-      font-size:24px;
-      font-weight:bold;
-      color:rgba(255,255,255,1);
+      font-size: 24px;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 1);
       padding-top: 7px;
-      line-height:56px;
+      line-height: 56px;
     }
     p {
       margin-top: 10px;
       font-size: 18px;
       span {
-        color: #FF624B;
+        color: #ff624b;
       }
       .rule {
         cursor: pointer;
@@ -930,16 +1160,17 @@ section {
     margin-top: 40px;
   }
 }
- 
+
 .banner {
-  background:url(../../../assets/img/active/schoolSeason/schoolseason_banner_bg.png) center no-repeat;
-  color:rgba(51,51,51,1);
+  background: url(../../../assets/img/active/schoolSeason/schoolseason_banner_bg.png)
+    center no-repeat;
+  color: rgba(51, 51, 51, 1);
   .container {
     height: 400px;
     .left {
       h1 {
-        font-size:48px;
-        line-height:64px;
+        font-size: 48px;
+        line-height: 64px;
         font-weight: normal;
       }
       p {
@@ -947,53 +1178,55 @@ section {
         font-size: 24px;
         font-weight: 500;
         i {
-          color: #FF624B;
+          color: #ff624b;
           font-style: normal;
         }
       }
       span {
         margin-top: 40px;
         display: inline-block;
-        width:164px;
-        height:44px;
-        border-radius:4px;
-        border:1px solid rgba(51,51,51,1);
-        font-size:16px;
+        width: 164px;
+        height: 44px;
+        border-radius: 4px;
+        border: 1px solid rgba(51, 51, 51, 1);
+        font-size: 16px;
         line-height: 42px;
         text-align: center;
         cursor: pointer;
         &:hover {
-          background:#FFD1B2;
+          background: #ffd1b2;
         }
       }
     }
   }
 }
 .product-seckill {
-  background:url(../../../assets/img/active/schoolSeason/schoolsenson_item_bg.png) center no-repeat;
+  background: url(../../../assets/img/active/schoolSeason/schoolsenson_item_bg.png)
+    center no-repeat;
   .headline {
     div {
-      background:url(../../../assets/img/active/schoolSeason/schoolsenson_headline_1.png) center no-repeat,
+      background: url(../../../assets/img/active/schoolSeason/schoolsenson_headline_1.png)
+        center no-repeat;
     }
   }
   .main {
     .tabs {
-      >div {
-        width:400px;
+      > div {
+        width: 400px;
         height: 60px;
-        background:rgba(254,162,145,1);
-        border-radius:24px 24px 0px 0px;
-        font-size:18px;
+        background: rgba(254, 162, 145, 1);
+        border-radius: 24px 24px 0px 0px;
+        font-size: 18px;
         color: #fff;
         text-align: center;
         line-height: 60px;
         cursor: not-allowed;
       }
       .started {
-        background:rgba(225,33,42,1);
+        background: rgba(225, 33, 42, 1);
         position: relative;
         &:after {
-          content: url('../../../assets/img/active/schoolSeason/seckill_killing_icon.png');
+          content: url("../../../assets/img/active/schoolSeason/seckill_killing_icon.png");
           display: block;
           position: absolute;
           top: -31px;
@@ -1003,124 +1236,129 @@ section {
     }
     .box {
       padding: 20px 40px;
-      height:627px;
-      background:url(../../../assets/img/active/schoolSeason/seckill_bg.png) center no-repeat;
-      >p {
+      height: 627px;
+      background: url(../../../assets/img/active/schoolSeason/seckill_bg.png)
+        center no-repeat;
+      > p {
         margin: 20px 0;
         text-align: center;
-        font-size:18px;
-        font-weight:bold;
-        color:rgba(225,33,42,1);
-        line-height:24px;
+        font-size: 18px;
+        font-weight: bold;
+        color: rgba(225, 33, 42, 1);
+        line-height: 24px;
       }
       .count-down {
         text-align: center;
-        font-size:14px;
-        font-family:AppleSystemUIFont;
-        color:rgba(65,6,12,1);
+        font-size: 14px;
+        font-family: AppleSystemUIFont;
+        color: rgba(65, 6, 12, 1);
         span {
           display: inline-block;
           width: 71px;
           height: 71px;
           line-height: 71px;
-          background:url(../../../assets/img/active/schoolSeason/seckill_text_bg.png) center no-repeat;
-          font-size:36px;
-          font-family:Arial-BoldMT;
-          color:rgba(255,246,232,1);
+          background: url(../../../assets/img/active/schoolSeason/seckill_text_bg.png)
+            center no-repeat;
+          font-size: 36px;
+          font-family: Arial-BoldMT;
+          color: rgba(255, 246, 232, 1);
         }
         i {
           font-style: normal;
         }
       }
-      .w_host{
-        font-family:MicrosoftYaHei;
+      .w_host {
+        font-family: MicrosoftYaHei;
         display: flex;
         -webkit-box-pack: justify;
         -ms-flex-pack: justify;
         justify-content: space-between;
-        flex-wrap:wrap;
+        flex-wrap: wrap;
         margin-top: 29px;
-        >div {
-          background:rgba(255,255,255,1);
-          border-radius:4px;
+        > div {
+          background: rgba(255, 255, 255, 1);
+          border-radius: 4px;
         }
-        .host_title{
+        .host_title {
           padding: 20px;
+          padding-right: 0;
           text-align: left;
-          background: url('../../../assets/img/active/schoolSeason/seckill_item_bg_1.png') no-repeat;
-          width:360px;
-          height:94px;
+          background: url("../../../assets/img/active/schoolSeason/seckill_item_bg_1.png")
+            no-repeat;
+          width: 360px;
+          height: 94px;
           position: relative;
           .rectangle {
-            width:43px;
-            height:22px;
+            width: 43px;
+            height: 22px;
             position: absolute;
             top: 17px;
             right: 0;
             background: url(../../../assets/img/active/schoolSeason/rectangle.png);
-            font-size:14px;
-            color:rgba(255,78,69,1);
-            line-height:22px;
+            font-size: 14px;
+            color: rgba(255, 78, 69, 1);
+            line-height: 22px;
             text-align: center;
             padding-left: 4px;
           }
           .config-text {
-            font-size:12px;
-            margin-top:12px;
+            font-size: 12px;
+            margin-top: 12px;
             span {
-              font-family:Arial-BoldMT;
-              font-size:18px;
-              font-weight:bold;
+              font-size: 18px;
+              font-weight: bold;
             }
           }
-          p{
-            color: #FFFFFF;
+          p {
+            color: #ffffff;
           }
         }
-        .gpu_title{
+        .gpu_title {
           padding: 35px 0 31px 11px;
           text-align: left;
-          background: url('../../../assets/img/active/doubleDenier/gpu_bg.png') no-repeat;
+          background: url("../../../assets/img/active/doubleDenier/gpu_bg.png")
+            no-repeat;
           width: 309px;
           height: 130px;
-          p{
-            color: #FFFFFF;
+          p {
+            color: #ffffff;
           }
         }
-        .gpu_title2{
+        .gpu_title2 {
           padding: 35px 0 31px 11px;
           text-align: left;
-          background: url('../../../assets/img/active/doubleDenier/gpu_ba.png') no-repeat;
+          background: url("../../../assets/img/active/doubleDenier/gpu_ba.png")
+            no-repeat;
           width: 309px;
           height: 130px;
-          p{
-            color: #FFFFFF;
+          p {
+            color: #ffffff;
           }
         }
-        .host_content{
-          width:360px;
-          height:296px;
+        .host_content {
+          width: 360px;
+          height: 296px;
           background: #ffffff;
           padding: 20px;
           padding-top: 10px;
           .label-title {
-            font-size:14px;
-            color:rgba(65,6,12,1);
+            font-size: 14px;
+            color: rgba(65, 6, 12, 1);
           }
-          .host_button{
-            width:320px;
-            height:40px;
-            background:rgba(255,98,75,1);
-            border-radius:2px;
-            color:#ffffff;
-            font-size:18px;
-            line-height:38px;
+          .host_button {
+            width: 320px;
+            height: 40px;
+            background: rgba(255, 98, 75, 1);
+            border-radius: 2px;
+            color: #ffffff;
+            font-size: 18px;
+            line-height: 38px;
             cursor: pointer;
             text-align: center;
             transition: background-color 0.2s linear;
           }
-          .host_button:hover{
-              background-color:#FF3508;
+          .host_button:hover {
+            background-color: #ff3508;
           }
           .progress {
             .schoolseason-progress {
@@ -1128,8 +1366,8 @@ section {
               margin-bottom: 8px;
             }
             span {
-              font-size:14px;
-              color:rgba(154,127,130,1);
+              font-size: 14px;
+              color: rgba(154, 127, 130, 1);
             }
           }
         }
@@ -1138,36 +1376,38 @@ section {
   }
 }
 .product-hot {
-  background:rgba(247,247,247,1);
+  background: rgba(247, 247, 247, 1);
   // padding: 52px 0 86px 0;
   .headline {
     div {
-      background:url(../../../assets/img/active/schoolSeason/schoolsenson_headline_2.png) center no-repeat,
+      background: url(../../../assets/img/active/schoolSeason/schoolsenson_headline_2.png)
+        center no-repeat;
     }
   }
   .main {
-    width:1200px;
-    height:1498px;
-    background:rgba(255,255,255,1);
-    border-radius:20px;
-    border:4px solid rgba(222,185,116,1);
-    >div {
-      width:1120px;
+    width: 1200px;
+    height: 1498px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 20px;
+    border: 4px solid rgba(222, 185, 116, 1);
+    > div {
+      width: 1120px;
       margin: 0 auto;
       margin-top: 40px;
-      background:rgba(255,255,255,1);
-      box-shadow:0px 6px 20px -6px rgba(130,77,12,0.49);
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0px 6px 20px -6px rgba(130, 77, 12, 0.49);
       .config {
-        padding-left: 20px; 
+        padding-left: 20px;
       }
       .right {
         padding: 30px 20px;
-        background:rgba(254,251,244,1);
-        width:478px;
+        background: rgba(254, 251, 244, 1);
+        width: 478px;
         // height:558px;
-        .item-config,.item-select {
+        .item-config,
+        .item-select {
           p {
-            font-size:14px;
+            font-size: 14px;
             margin-top: 10px;
             margin-bottom: 10px;
             line-height: 18px;
@@ -1177,21 +1417,21 @@ section {
           }
           button {
             padding: 0;
-            width:30px;
-            height:30px;
+            width: 30px;
+            height: 30px;
             line-height: 28px;
-            font-size:22px;
-            color:rgba(154,127,130,1);
+            font-size: 22px;
+            color: rgba(154, 127, 130, 1);
             &:hover {
-              border-color: #E5C2C2; 
+              border-color: #e5c2c2;
             }
           }
         }
         .cash {
           margin-top: 40px;
           p {
-            color:rgba(248,67,46,1);
-            font-size:24px;
+            color: rgba(248, 67, 46, 1);
+            font-size: 24px;
             font-weight: bold;
             span {
               font-size: 14px;
@@ -1201,12 +1441,12 @@ section {
           button {
             padding: 0;
             margin-top: 20px;
-            width:438px;
-            height:40px;
-            background:rgba(255,98,75,1);
-            border-radius:2px;
-            font-size:18px;
-            color:rgba(255,255,255,1);
+            width: 438px;
+            height: 40px;
+            background: rgba(255, 98, 75, 1);
+            border-radius: 2px;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 1);
             border: none;
             &:hover {
               border: none;
@@ -1217,52 +1457,53 @@ section {
       .item-config {
         p {
           margin-top: 20px;
-          font-size:18px;
-          color:rgba(65,6,12,1);
-          line-height:24px;
+          font-size: 18px;
+          color: rgba(65, 6, 12, 1);
+          line-height: 24px;
         }
         .sec-title {
-          font-size:14px;
-          color:rgba(154,127,130,1);
-          line-height:19px;
+          font-size: 14px;
+          color: rgba(154, 127, 130, 1);
+          line-height: 19px;
         }
         ul {
           margin-top: 10px;
           margin-bottom: 20px;
           li {
             position: relative;
-            width:102px;
-            height:35px;
-            background:rgba(255,255,255,1);
-            border-radius:2px;
-            border:1px solid rgba(229,194,194,1);
+            width: 102px;
+            height: 35px;
+            background: rgba(255, 255, 255, 1);
+            border-radius: 2px;
+            border: 1px solid rgba(229, 194, 194, 1);
             margin-right: 10px;
-            font-size:14px;
-            color:rgba(75,60,61,1);
-            line-height:33px;
+            font-size: 14px;
+            color: rgba(75, 60, 61, 1);
+            line-height: 33px;
             color: rgba(157, 157, 157, 1);
             text-align: center;
             cursor: pointer;
             &.selected {
-              background:rgba(225,33,42,1);
+              background: rgba(225, 33, 42, 1);
               color: #fff;
-              span {
-                color:rgba(255,98,75,1);
+              i {
+                color: rgba(255, 98, 75, 1);
                 background: #fff;
               }
             }
-            span {
+            i {
               display: inline-block;
               position: absolute;
               top: 1px;
               right: 1px;
-              background:rgba(225,33,42,1);
-              border-radius:8px;
+              background: rgba(225, 33, 42, 1);
+              border-radius: 8px;
               color: #fff;
               padding: 0 4px;
               font-size: 12px;
               height: 16px;
               line-height: 16px;
+              font-style: normal;
             }
           }
           .selected {
@@ -1272,41 +1513,41 @@ section {
         }
       }
     }
-    .host { 
-      height:558px;
+    .host {
+      height: 558px;
       .left {
         width: 642px;
         .top {
           height: 123px;
           padding: 40px 20px;
           color: #fff;
-          background: url('../../../assets/img/active/schoolSeason/hot_item_bg_1.png');
+          background: url("../../../assets/img/active/schoolSeason/hot_item_bg_1.png");
           font-size: 18px;
           p {
-            margin-bottom: 10px;;
-            font-size:22px;
-            font-weight:bold;
+            margin-bottom: 10px;
+            font-size: 22px;
+            font-weight: bold;
           }
         }
-        
       }
-      
     }
   }
 }
 .product-member {
-  background:url(../../../assets/img/active/schoolSeason/schoolsenson_item_bg.png) center no-repeat;
+  background: url(../../../assets/img/active/schoolSeason/schoolsenson_item_bg.png)
+    center no-repeat;
   .headline {
     div {
-      background:url(../../../assets/img/active/schoolSeason/schoolsenson_headline_3.png) center no-repeat,
+      background: url(../../../assets/img/active/schoolSeason/schoolsenson_headline_3.png)
+        center no-repeat;
     }
   }
   .main {
-    width:1200px;
-    height:499px;
-    background:rgba(255,255,255,1);
-    border-radius:20px;
-    border:4px solid rgba(225,33,42,1);
+    width: 1200px;
+    height: 499px;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 20px;
+    border: 4px solid rgba(225, 33, 42, 1);
     padding: 34px 29px;
     text-align: center;
     .container {
@@ -1315,40 +1556,41 @@ section {
           margin: 4px 0 0 10px;
           span {
             margin: 0 10px;
-            font-size:18px;
-            color:rgba(206,170,106,1);
-            line-height:24px;
+            font-size: 18px;
+            color: rgba(206, 170, 106, 1);
+            line-height: 24px;
           }
           i {
             display: inline-block;
             height: 12px;
             width: 12px;
             transform: rotate(45deg);
-            background:#DBC090;
+            background: #dbc090;
           }
         }
         p {
           width: 360px;
           margin: 0 auto;
           text-align: center;
-          font-size:14px;
-          color:rgba(154,127,130,1);
-          line-height:24px;
+          font-size: 14px;
+          color: rgba(154, 127, 130, 1);
+          line-height: 24px;
           span {
-            color: #FF624B;
+            color: #ff624b;
           }
         }
       }
     }
     .recharge-btn {
       display: inline-block;
-      width:216px;
-      height:50px;
+      width: 216px;
+      height: 50px;
       line-height: 50px;
-      font-size:18px;
-      font-weight:bold;
-      color:rgba(255,255,255,1);
-      background:url(../../../assets/img/active/schoolSeason/recharge_btn.png) center no-repeat,
+      font-size: 18px;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 1);
+      background: url(../../../assets/img/active/schoolSeason/recharge_btn.png)
+        center no-repeat;
     }
   }
 }
@@ -1356,7 +1598,8 @@ section {
   padding-bottom: 40px;
   .headline {
     div {
-      background:url(../../../assets/img/active/schoolSeason/schoolsenson_headline_4.png) center no-repeat,
+      background: url(../../../assets/img/active/schoolSeason/schoolsenson_headline_4.png)
+        center no-repeat;
     }
   }
   .main {
@@ -1364,246 +1607,256 @@ section {
       margin: 0 auto;
       width: 580px;
       height: 164px;
-      background:url(../../../assets/img/active/schoolSeason/coupon_38.png) center no-repeat;
+      background: url(../../../assets/img/active/schoolSeason/coupon_38.png)
+        center no-repeat;
       .left {
         width: 342px;
         padding-left: 30px;
-        padding-top: 14px; 
+        padding-top: 14px;
         .text {
           height: 109px;
-          div:nth-of-type(1){
-            color:rgba(225,33,42,1);
-            font-size:110px;
-            font-family:Arial-BoldMT;
-            font-weight:bold;
+          div:nth-of-type(1) {
+            color: rgba(225, 33, 42, 1);
+            font-size: 110px;
+            font-family: Arial-BoldMT;
+            font-weight: bold;
             span {
-              font-size:26px;
-              font-weight:normal;
+              font-size: 26px;
+              font-weight: normal;
             }
           }
-          div:nth-of-type(2){
+          div:nth-of-type(2) {
             width: 149px;
             p {
-              font-size:20px;
-              font-family:MicrosoftYaHei-Bold;
-              font-weight:bold;
-              color:rgba(225,33,42,1);
-              line-height:20px;
-              letter-spacing:1px;
+              font-size: 20px;
+              font-family: MicrosoftYaHei-Bold;
+              font-weight: bold;
+              color: rgba(225, 33, 42, 1);
+              line-height: 20px;
+              letter-spacing: 1px;
               margin-bottom: 10px;
             }
             span {
-              font-size:14px;
-              color:rgba(225,33,42,1);
-              line-height:19px;
+              font-size: 14px;
+              color: rgba(225, 33, 42, 1);
+              line-height: 19px;
             }
           }
         }
-        >p {
-          font-size:14px;
-          color:rgba(154,127,130,1);
-          line-height:19px;
-          letter-spacing:1px;
+        > p {
+          font-size: 14px;
+          color: rgba(154, 127, 130, 1);
+          line-height: 19px;
+          letter-spacing: 1px;
           span {
-            color: #FF624B;
+            color: #ff624b;
           }
         }
       }
       .right {
         width: 238px;
         margin-top: 50px;
-        font-size:36px;
-        color:rgba(255,255,255,1);
+        font-size: 36px;
+        color: rgba(255, 255, 255, 1);
         text-align: center;
       }
     }
   }
 }
 .register {
-  height:188px;
-  background:url(../../../assets/img/active/schoolSeason/register_cloud_bg.png) center bottom no-repeat,linear-gradient(90deg,rgba(254,171,124,1) 0%,rgba(255,97,75,1) 100%);;
-  color: #FFF;
+  height: 188px;
+  background: url(../../../assets/img/active/schoolSeason/register_cloud_bg.png)
+      center bottom no-repeat,
+    linear-gradient(90deg, rgba(254, 171, 124, 1) 0%, rgba(255, 97, 75, 1) 100%);
+  color: #fff;
   text-align: center;
   p {
-    font-size:24px;
-    font-weight:500;
+    font-size: 24px;
+    font-weight: 500;
     padding: 40px 0;
   }
   button {
-    width:173px;
-    height:46px;
-    font-size:18px;
-    font-weight:400;
-    background:none;
-    color: #FFF;
+    width: 173px;
+    height: 46px;
+    font-size: 18px;
+    font-weight: 400;
+    background: none;
+    color: #fff;
     &:focus {
-      border:none;
+      border: none;
     }
   }
 }
 .modal-btn {
-  width:170px;
-  height:50px;
-  border:1px solid rgba(255,48,0,1);
-  font-size:20px;
-  font-family:PingFangSC-Regular;
-  color:rgba(255,48,0,1);
-  line-height:45px;
+  width: 170px;
+  height: 50px;
+  border: 1px solid rgba(255, 48, 0, 1);
+  font-size: 20px;
+  font-family: PingFangSC-Regular;
+  color: rgba(255, 48, 0, 1);
+  line-height: 45px;
   background: none;
   cursor: pointer;
   &:hover {
-    background:rgba(255,231,215,1);
+    background: rgba(255, 231, 215, 1);
   }
 }
 .vailcode-btn {
-border:1px solid rgba(255,48,0,1);
-color:rgba(255,48,0,1);
-border-radius: 0;
-background: none;
+  border: 1px solid rgba(255, 48, 0, 1);
+  color: rgba(255, 48, 0, 1);
+  border-radius: 0;
+  background: none;
 }
 // 弹窗公共样式
-  .overlay {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(55, 55, 55, 0.3);
-    // background-color: rgba(255, 255, 255, 0.3);
-    height: 100%;
-    z-index: 1000;
-    .all-modal {
-      position: relative;
-      margin: 0 auto;
-      top: 15%;
-      background: rgba(255, 255, 255, 1);
-      text-align: center;
-      font-size: 16px;
-      &.lottery {
-        top: 100px;
-      }
-      > .header {
-        height: 70px;
-        font-size: 24px;
-        font-family: MicrosoftYaHei;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 1);
-        position: relative;
-        > i {
-          color: rgba(255, 255, 255, 1);
-          cursor: pointer;
-          position: absolute;
-          right: 10px;
-          top: 0px;
-          transform: rotate(45deg);
-          &:before {
-            content: '';
-            display: inline-block;
-            height: 16px;
-            width: 2px;
-            background: #ff3000;
-            transform: translateX(9px);
-          }
-          &:after {
-            content: '';
-            display: inline-block;
-            height: 2px;
-            width: 16px;
-            background: #ff3000;
-            transform: translateY(-7px);
-          }
-        }
-      }
-    }
-  }
-  .modal1 {
-    width: 600px;
-    height: 300px;
-    > .header {
-      // background: url("../../../assets/img/active/schoolSeason/modal-bg-reminder.png");
-    }
-    .body {
-      p {
-        > span {
-          color: #FF3000;
-          cursor: pointer;
-          &:hover {
-            border-bottom: 1px solid #FF3000;
-            padding-bottom: 1px;
-          }
-        }
-      }
-    }
-  }
-
- .modal2 {
-    width: 700px;
-    > .header {
-      // background: url("../../../assets/img/active/schoolSeason/modal-bg-auth.png");
-    }
-    .reminder {
-      margin: 0 auto;
-      margin-top: 10px;
-      border: solid 1px #ff3000;
-      width: 666px;
-      height: 40px;
-      padding-top: 12px;
-      font-size: 14px;
-      span {
-        color: #ff3000;
-      }
-    }
-    .auth-btn {
-      cursor: pointer;
-      &:hover{
-        background:rgba(255,231,215,1);
-      }
-      &:focus{
-        outline: none;
-      }
-    }
-    .disabled {
-      border:1px solid rgba(192,192,192,1);
-      color:#666666;
-      }
-  }
-
-  .modal3 {
-    width: 700px;
-    height: 457px;
-    > .header {
-      // background: url("../../../assets/img/active/schoolSeason/modal-bg-rule.png");
-    }
-    > .body {
-      margin: 0 auto;
-      padding: 30px 0 34px 0;
-      width: 554px;
-      text-align: left;
-      h3 {
-        font-size: 16px;
-        font-family: MicrosoftYaHei;
-        font-weight: 400;
-        color: rgba(34, 34, 34, 1);
-        line-height: 30px;
-      }
-    }
-  }
-  .auth-form-validate, .receive-good-validate {
-    padding-top: 26px;
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(55, 55, 55, 0.3);
+  // background-color: rgba(255, 255, 255, 0.3);
+  height: 100%;
+  z-index: 1000;
+  .all-modal {
+    position: relative;
     margin: 0 auto;
-    width: 415px;
-    .ivu-form-item {
-      margin-bottom: 22px;
+    top: 15%;
+    background: rgba(255, 255, 255, 1);
+    text-align: center;
+    font-size: 16px;
+    &.lottery {
+      top: 100px;
+    }
+    > .header {
+      height: 70px;
+      font-size: 24px;
+      font-family: MicrosoftYaHei;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 1);
+      position: relative;
+      > i {
+        color: rgba(255, 255, 255, 1);
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        top: 0px;
+        transform: rotate(45deg);
+        &:before {
+          content: "";
+          display: inline-block;
+          height: 16px;
+          width: 2px;
+          background: #ff3000;
+          transform: translateX(9px);
+        }
+        &:after {
+          content: "";
+          display: inline-block;
+          height: 2px;
+          width: 16px;
+          background: #ff3000;
+          transform: translateY(-7px);
+        }
+      }
     }
   }
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .3s;
+}
+.modal1 {
+  width: 600px;
+  height: 300px;
+  > .header {
+    // background: url("../../../assets/img/active/schoolSeason/modal-bg-reminder.png");
   }
+  .body {
+    p {
+      > span {
+        color: #ff3000;
+        cursor: pointer;
+        &:hover {
+          border-bottom: 1px solid #ff3000;
+          padding-bottom: 1px;
+        }
+      }
+    }
+  }
+}
 
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
+.modal2 {
+  width: 700px;
+  > .header {
+    // background: url("../../../assets/img/active/schoolSeason/modal-bg-auth.png");
   }
-  .pointer {
+  .reminder {
+    margin: 0 auto;
+    margin-top: 10px;
+    border: solid 1px #ff3000;
+    width: 666px;
+    height: 40px;
+    padding-top: 12px;
+    font-size: 14px;
+    span {
+      color: #ff3000;
+    }
+  }
+  .auth-btn {
     cursor: pointer;
+    &:hover {
+      background: rgba(255, 231, 215, 1);
+    }
+    &:focus {
+      outline: none;
+    }
   }
+  .disabled {
+    border: 1px solid rgba(192, 192, 192, 1);
+    color: #666666;
+  }
+}
+
+.modal3 {
+  width: 700px;
+  height: 457px;
+  > .header {
+    // background: url("../../../assets/img/active/schoolSeason/modal-bg-rule.png");
+  }
+  > .body {
+    margin: 0 auto;
+    padding: 30px 0 34px 0;
+    width: 554px;
+    text-align: left;
+    h3 {
+      font-size: 16px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: rgba(34, 34, 34, 1);
+      line-height: 30px;
+    }
+  }
+}
+.auth-form-validate,
+.receive-good-validate {
+  padding-top: 26px;
+  margin: 0 auto;
+  width: 415px;
+  .ivu-form-item {
+    margin-bottom: 22px;
+  }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+.pointer {
+  cursor: pointer;
+}
+.host-count {
+  .ivu-input {
+    text-align: center;
+  }
+}
 </style>
