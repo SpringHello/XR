@@ -514,7 +514,7 @@
                 path: 'https://news.xrcloud.net/yunfuwu'
               },
               {
-                prod: '云咨询',
+                prod: '云资讯',
                 path: 'https://news.xrcloud.net/yunzixun'
               },
               {

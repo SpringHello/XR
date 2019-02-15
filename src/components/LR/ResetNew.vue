@@ -26,7 +26,8 @@
               </Form>
                 
               <div style="float:right;margin-top:-10px;">
-                 <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;cursor:pointer;text-align: center;" @click="next('no')">现账号无法使用</p>
+                 <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;cursor:pointer;text-align: right;" @click="next('no')">现账号无法使用</p>
+                 <div class="v_top" @click="$router.push('login')">返回</div>
                  <Button type="primary" class="ive_button" style="width:110px" @click="next('yes')">下一步</Button>
               </div>
             </div>
@@ -59,6 +60,7 @@
                 </FormItem>
               </Form>
               <div style="float:right;">
+                <div class="v_top" @click="$router.push('login')">返回</div>
                  <Button type="primary" class="ive_button"  @click="next('go')">下一步</Button>
               </div>
             </div>
@@ -304,7 +306,7 @@
                    :href="`tencent://message/?uin=${QQInfo}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:#2A99F2">人工客服</a>获取帮助。</p>
               <div style="float:right;margin-top:20px;">
-                  <div class="v_top" @click="index = 2">上一步</div>
+                  <div class="v_top" @click="index = 2,verPage =''">上一步</div>
                 </div>
             </div>
 
@@ -697,6 +699,7 @@ export default {
                     this.formValidate.account.substring(3, 7),
                     "****"
                     );
+                  this.verificationList[1].prohibit = true;
                 }
                 if(res.data.emailFlag){
                  this.userInfo = res.data.emailFlag;
@@ -707,6 +710,7 @@ export default {
                     );
                   this.index = 2;
                   this.accountIsDis = '1';
+                  this.verificationList[0].prohibit = true;
                  return;
                 }else{
                   this.verificationList[0].prohibit = false;
