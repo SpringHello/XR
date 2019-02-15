@@ -304,7 +304,7 @@
                    :href="`tencent://message/?uin=${QQInfo}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:#2A99F2">人工客服</a>获取帮助。</p>
               <div style="float:right;margin-top:20px;">
-                  <div class="v_top" @click="index = 2">上一步</div>
+                  <div class="v_top" @click="index = 2,verPage =''">上一步</div>
                 </div>
             </div>
 
