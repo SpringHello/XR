@@ -6,7 +6,7 @@
             <div style="display:inline-block;position:relative;top: 91px;left: 102px;">
             <img src="../../../assets/img/active/doubleDenier/dbFont.png">
             <p class="pt_white" style="margin-top:0;">免费新体验，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
-            <div class="w_button" @click="loginInfo">
+            <div class="w_button">
                 <span>登录即可抽奖</span>
             </div>
             </div>
@@ -35,7 +35,7 @@
             <p class="w_pFont">活动首购 好礼相送</p>
             <p style="color:#222222;font-size:16px;margin-bottom:40px;font-family: 'Microsoft YaHei'">首购享好礼，在此活动中购买任意产品即可领取 “京东E卡（30元）”一张！</p>
             <img src="../../../assets/img/active/doubleDenier/JDE.png">
-            <span @click="getJDCARD">点击领取</span>
+            <span >点击领取</span>
         </div>
         <div class="w_draw" ref="draw">
             <div style="position: relative;top:54px;" @click="showModal.LotteryModal=true">
@@ -91,7 +91,7 @@
                           <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
                           <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                       </div>
-                      <div class="host_button" @click="getDiskcountMv('cloudHost',index)">立即抢购</div>
+                      <div class="host_button"  style="cursor:not-allowed;background:#bbbec4;">已售罄</div>
                       </div>
                   </div>
                   </div>
@@ -138,7 +138,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="getDiskcountGPU('gpuHost',index)"  :style="index==0?'cursor:not-allowed;background:#bbbec4;':''">{{index==0?'已售罄':'立即抢购'}}</div>
+                    <div class="host_button"  style="cursor:not-allowed;background:#bbbec4;">已售罄</div>
                     </div>
                 </div>
                 </div>
@@ -181,7 +181,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button"  :style="index==0?'cursor:not-allowed;background:#bbbec4;':''" @click="getDiskcountGPU('gpuHostMoth',index)">{{index==0?'已售罄':'立即抢购'}}</div>
+                   <div class="host_button"  style="cursor:not-allowed;background:#bbbec4;">已售罄</div>
                     </div>
                 </div>
                 </div>
@@ -219,7 +219,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="getDickCountOSS('objectHost',index)">立即抢购</div>
+                     <div class="host_button"  style="cursor:not-allowed;background:#bbbec4;">已售罄</div>
                     </div>
                 </div>
                 </div>
@@ -264,7 +264,7 @@
                         <span style="color:#FF3508;font-size:28px;">￥{{ item.currentPrice}}</span>
                         <span style="text-decoration:line-through;color:#666666;font-size:14px;">原价：{{item.originalPrice}}元</span>
                     </div>
-                    <div class="host_button" @click="getDeductionsDatabase('cloudData',index)">立即抢购</div>
+                    <div class="host_button"  style="cursor:not-allowed;background:#bbbec4;">已售罄</div>
                     </div>
                 </div>
                 </div>
@@ -459,8 +459,11 @@
             <div id="rotary-table">
               <div class="award" v-for="(award,index) in awards" :class="['award'+index,{'active': index==current}]" :style="{'background-image': 'url(' + award.imgUrl + ')' }">
               </div>
-              <div @mousedown="startLotteryMouseDown" @mouseup="startLotteryMouseUp" id="start-btn" @click.stop="start" :class="{'notAllow': lotteryDisabled,'onClick': mouseDown}">
+              <!-- <div @mousedown="startLotteryMouseDown" @mouseup="startLotteryMouseUp" id="start-btn" @click.stop="start" :class="{'notAllow': lotteryDisabled,'onClick': mouseDown}">
                 (剩余抽奖次数
+                {{lotteryNumber }}次)
+              </div> -->
+              <div id="start-btn" @click="start" :class="{'notAllow': lotteryDisabled}">(剩余抽奖次数
                 {{lotteryNumber }}次)
               </div>
             </div>
@@ -469,8 +472,8 @@
                 style="cursor: pointer;color: #FF3000;font-size:14px;position: absolute;right:0;top:25%" @click.stop="showModal.LotteryModal=false,winningRecordShow = true">我的奖品</span>
               </h3>
               <div class="win-list">
-                <ul class="win-content" :style="{top}">
-                  <li v-for="item in winList"> {{ item}}</li>
+                <ul class="win-content" >
+                  <!-- <li v-for="item in winList"> {{ item}}</li> -->
                 </ul>
               </div>
             </div>
@@ -929,10 +932,10 @@
 
       this.getAwardList();
       this.getOtherWinningInfo();
-       this.getHostZoneList();
-        this.getObjStorageZoneList();
-        this.getDatabaseZoneList();
-        this.getGPUZoneList();
+      //  this.getHostZoneList();
+      //   this.getObjStorageZoneList();
+      //   this.getDatabaseZoneList();
+      //   this.getGPUZoneList();
           for(let key in this.allObjcet){
           for(let i =0;i<this.allObjcet[key].length;i++){
             this.getVMConfigId(key,i);
@@ -1044,18 +1047,18 @@
         }).then(res => {
             if(res.status == 200 && res.data.status == 1){
                 this.allObjcet[key][index].vmConfigId =  res.data.result;
-                    axios.get('activity/getOriginalPrice.do',{
-                        params:{
-                            zoneId:this.allObjcet[key][index].zoneId,
-                            vmConfigId :this.allObjcet[key][index].vmConfigId,
-                            month:key == 'gpuHost'?'':this.allObjcet[key][index].duration
-                        }
-                    }).then(res =>{
-                        if(res.status == 200 && res.data.status == 1){
-                              this.allObjcet[key][index].originalPrice = res.data.result.originalPrice;
-                              this.allObjcet[key][index].currentPrice = res.data.result.cost;
-                        }
-                })
+                //     axios.get('activity/getOriginalPrice.do',{
+                //         params:{
+                //             zoneId:this.allObjcet[key][index].zoneId,
+                //             vmConfigId :this.allObjcet[key][index].vmConfigId,
+                //             month:key == 'gpuHost'?'':this.allObjcet[key][index].duration
+                //         }
+                //     }).then(res =>{
+                //         if(res.status == 200 && res.data.status == 1){
+                //               this.allObjcet[key][index].originalPrice = res.data.result.originalPrice;
+                //               this.allObjcet[key][index].currentPrice = res.data.result.cost;
+                //         }
+                // })
             }
         })
       },
@@ -1249,6 +1252,10 @@
         this.getPersonalWinningInfo()
       },
       start: throttle(500, function () {
+          this.$message.info({
+          content: '此活动已结束，先去看看其他活动吧！'
+        })
+        return false
         if (!this.$store.state.userInfo) {
           this.showModal.LotteryModal = false
           this.showModal.notLoginModal = true
@@ -1472,7 +1479,7 @@
       background: url('../../../assets/img/active/doubleDenier/double.png');
       background-repeat:no-repeat; background-size:100% 100%;-moz-background-size:100% 100%;
       .w_button{
-        color: rgba(26, 42, 210, 1);
+        color: #bbbec4;
         font-weight: 500;
         font-size: 13px;
         width: 140px;
@@ -1482,7 +1489,7 @@
         height: 43px;
         background: rgb(255, 222, 42);
         // box-shadow: 0px 2px 2px 1px rgb(136, 20, 17);
-        cursor: pointer;
+        cursor: not-allowed;
       }
       .w_button:hover{
         box-shadow: 0px 2px 2px 1px #881411;
@@ -1514,11 +1521,9 @@
       padding-top: 45px ;
       position: relative;
       span{
-          position: absolute;bottom: 85px; right: 48.6%;color: #FF3000;font-size: 15px;cursor: pointer;
+          position: absolute;bottom: 85px; right: 48.6%;color:rgb(187, 190, 196);font-size: 15px;cursor: not-allowed;
       }
-      span:hover{
-          text-decoration: underline;
-      }
+     
     }
     .w_draw{
       display: inline-block;
@@ -2001,7 +2006,7 @@
       left: 217px;
       width: 170px;
       height: 94px;
-      background: url("../../../assets/img/active/anniversary/aa-banner13.png") center no-repeat;
+      background: url("../../../assets/img/active/anniversary/aa-banner26.png") center no-repeat;
       text-align: center;
       cursor: pointer;
       font-size: 14px;

@@ -307,7 +307,7 @@
             {label: '数据库', value: 'bdata'},
             {label: '对象存储', value: 'bobj'},
             {label: 'GPU服务器', value: 'bgpu'},
-            {label: 'SSL证书', value: 'bssl'}
+            //{label: 'SSL证书', value: 'bssl'}
           ]
         },
         // 当前可以创建的剩余资源数

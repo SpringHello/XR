@@ -208,19 +208,12 @@
         <Table :columns="orderColumns" :data="orderData" style="margin-top: 30px"></Table>
         <div class="pay-wap">
           <p>选择支付方式</p>
-<!--          <RadioGroup v-model="payWay" vertical @on-change="payWayChange">
-             <Radio label="balancePay">
+          <RadioGroup v-model="payWay" vertical @on-change="payWayChange">
+            <!-- <Radio label="balancePay">
               <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 40px">余额支付</span>
               <span style="color:rgba(102,102,102,1);font-size: 14px">账户余额：</span>
               <span style="color:#D0021B;font-size: 14px">¥{{ balance }}</span>
-            </Radio>
-            <Radio label="otherPay" class="pw-img" :disabled="balance >= cashPledge">
-              <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
-              <img src="../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null">
-              <img src="../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null">
-            </Radio>
-          </RadioGroup>-->
-          <RadioGroup v-model="payWay" vertical @on-change="payWayChange">
+            </Radio> -->
             <Radio label="otherPay" class="pw-img">
               <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
               <img src="../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="otherPayWay = 'zfb'">

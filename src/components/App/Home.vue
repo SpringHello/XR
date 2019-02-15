@@ -22,16 +22,6 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="dan-banner" @click="push('/ruicloud/wonderfulDay')">
-            <div class="wraps">
-              <img src="../../assets/img/home/dan_banner.png">
-              <div class="w_button">
-                <span>立即参与</span>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
           <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
@@ -137,22 +127,6 @@
                 <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
                 <p>万兆光纤极速体验，助力区域企业云上发展</p>
                 <Button>了解详情</Button>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('active_1')"
-               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
-            <div class="head-banner">
-              <div>
-                <div>
-                  <p>
-                    <img style="padding-top: 0" src="../../assets/img/home/home-banner3.png">
-                  </p>
-                  <button style="margin-top: 120px">立即领取</button>
-                </div>
-                <img src="../../assets/img/home/home-banner4.png">
               </div>
             </div>
           </div>

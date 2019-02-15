@@ -343,7 +343,7 @@
 </style>
 <script type="text/ecmascript-6">
   import axios from 'axios'
-  import throttle from 'throttle-debounce/throttle'
+  import debounce from 'throttle-debounce/debounce'
   import gt from '../../util/gt'
 
   export default {
@@ -387,7 +387,7 @@
     },
     methods: {
       /* 滑动验证初始化--密码登录*/
-      gtInitPassword: throttle(2000, function () {
+      gtInitPassword: debounce(500, function () {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {
@@ -461,7 +461,7 @@
         })
       }),
       /* 滑动验证初始化-- 发送验证码*/
-      gtInitCode: throttle(2000, function () {
+      gtInitCode: debounce(500, function () {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
@@ -534,7 +534,7 @@
         })
       }),
       /* 滑动验证初始化 -- 发送语音验证码*/
-      gtInitVoice: throttle(2000, function () {
+      gtInitVoice: debounce(500, function () {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
