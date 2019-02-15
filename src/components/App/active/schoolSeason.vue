@@ -153,7 +153,7 @@
               <div class="item-config">
                 <p style="margin-bottom: 10px;">购买时长</p>
                 <ul class="flex" style="justify-content: flex-start">
-                  <li v-for="(item3,index) in hostTimeListHot" :key="index" @click="hotProductHot.timeTimetype=item3" :class="{selected:hotProductHot.timeTimetype.value==item3.value}">{{item3.value}}月
+                  <li v-for="(item3,index) in hostTimeListHot" :key="index" @click="hotProductHot.timeTimetype=item3" :class="{selected:hotProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'年'}}</span>
                     <i>{{item3.discount}}折</i>
                   </li>
                 </ul>
@@ -161,14 +161,14 @@
               <div class="item-select">
                 <p>购买数量</p> 
                 <Button @click="hotProductHot.count--" :disabled="hotProductHot.count<=1">-</Button>
-                <Input type="text" style="width:60px;" class="host-count" v-model="hotProductHot.count"></Input>
-                <Button @click="hotProductHot.count++">+</Button>
+                <Input type="text" style="width:60px;" class="host-count" v-model="hotProductHot.count" readonly></Input>
+                <Button @click="hotProductHot.count++" :disabled="hotProductHot.count>=7">+</Button>
               </div>
               <div class="cash">
                 <p>
-                  <span>￥</span>{{getPriceHostHot}}
+                  <span>￥</span>{{(hotProductHot.price*hotProductHot.count).toFixed(2)}}<span>{{PriceHostHot}}</span>
                 </p>
-                <Button @click="productBuy_host()">立即支付</Button>
+                <Button @click="productBuy_host(hotProductHot)">立即支付</Button>
               </div>
             </div>
           </div>
@@ -556,6 +556,7 @@ export default {
           disksize: 20,
           timeTimetype: {type: 'month', value: '6', discount: '4'},
           count: '1',
+          price: ''
         },
       hostZoneListHot: [],
       hostConfigListHot: {
@@ -950,20 +951,28 @@ export default {
           this.$LR({type: 'login'})
           return
         }
+        // zoneId: this.hotProductHot.zoneId,
+        //   activityNum: '38',
+        //   type: this.hotProductHot.timeTimetype.type,
+        //   month: this.hotProductHot.timeTimetype.type == 'month' ? this.hotProductHot.timeTimetype.value : this.hotProductHot.timeTimetype.value*12,
+        //   cpu: this.hotProductHot.cpuMemory.cpu,
+        //   mem: this.hotProductHot.cpuMemory.memory,
+        //   bandwith: this.hotProductHot.bandwith,
+        //   diskSize: this.hotProductHot.disksize,
         var params = {
-          zoneId: item.zone,
-          timeType: 'current',
-          timeValue: '1',
-          templateId: item.system,
-          isAutoRenew: '0',
-          count: '1',
-          cpuNum: '1',
-          memory: '1',
-          bandWidth: '1',
-          rootDiskType: 'sas',
-          networkId: 'no',
-          vpcId: 'no'
-        }
+              zoneId: this.hotProductHot.zoneId,
+              timeType: this.hotProductHot.timeTimetype.type,
+              timeValue: this.hotProductHot.timeTimetype.type == 'month' ? this.hotProductHot.timeTimetype.value : this.hotProductHot.timeTimetype.value*12,
+              templateId: this.hotProductHot.system,
+              isAutoRenew: 1,
+              count: this.hotProductHot.count,
+              cpuNum: this.hotProductHot.cpuMemory.cpu,
+              memory: this.hotProductHot.cpuMemory.memory,
+              bandWidth: this.hotProductHot.bandwith,
+              rootDiskType: 'sas',
+              networkId: 'no',
+              vpcId: 'no',
+          }
         this.$http.get('information/deployVirtualMachine.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
@@ -1061,8 +1070,13 @@ export default {
           })
         }
       })
+    }
+  },
+  computed: {
+    userInfo () {
+      return this.$store.state.userInfo
     },
-    getprice() {
+    PriceHostHot() {
       axios.get('activity/getOriginalPrice.do', {
         params: {
           zoneId: this.hotProductHot.zoneId,
@@ -1076,20 +1090,9 @@ export default {
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
-          // this.hotProductHot.price = res.data.result.cost
-          // console.log(res.data.result.cost)
-          return res.data.result.cost
+          this.hotProductHot.price = res.data.result.cost
         }
       })
-    }
-  },
-  computed: {
-    userInfo () {
-      return this.$store.state.userInfo
-    },
-    getPriceHostHot() {
-      console.log(this.getprice())
-      return this.getprice()
     },
   },
   watch: {
