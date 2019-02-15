@@ -26,7 +26,8 @@
               </Form>
                 
               <div style="float:right;margin-top:-10px;">
-                 <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;cursor:pointer;text-align: center;" @click="next('no')">现账号无法使用</p>
+                 <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;cursor:pointer;text-align: right;" @click="next('no')">现账号无法使用</p>
+                 <div class="v_top" @click="$router.push('login')">返回</div>
                  <Button type="primary" class="ive_button" style="width:110px" @click="next('yes')">下一步</Button>
               </div>
             </div>
@@ -59,6 +60,7 @@
                 </FormItem>
               </Form>
               <div style="float:right;">
+                <div class="v_top" @click="$router.push('login')">返回</div>
                  <Button type="primary" class="ive_button"  @click="next('go')">下一步</Button>
               </div>
             </div>
