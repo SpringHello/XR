@@ -115,7 +115,8 @@
 			<div style="width: 91%;margin-left: 4%;margin-top: 10px;font-size: 14px;margin-bottom: 20px;">
 				<p style="float: left;line-height:24px;">没有收到验证码？</p><br />
 				<p style="line-height:24px;">1、网络异常可能会造成短信丢失，请<span class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click="getPhoneCode('againCode')" >重新获取</span>或<span class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click.prevent="getPhoneCode('voice')">接收语音验证码</span>。</p>
-				<p style="line-height:24px;">2、如果手机已丢失或停机，请<span class="spanaa" @click="showModal.modifyPhoneID = true;showModal.cashverification=false">通过身份证号码验证</span>或<span class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</span>更改手机号。</p>
+				<p v-if="authInfo&&authInfo.checkstatus==0" style="line-height:24px;">2、如果手机已丢失或停机，请<span class="spanaa" @click="showModal.modifyPhoneID = true;showModal.cashverification=false">通过身份证号码验证</span>或<span class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</span>更改手机号。</p>
+				<p v-if="!authInfo||authInfo&&authInfo.checkstatus!=0" style="line-height:24px;">2、如果手机已丢失或停机，请<span class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</span>或<a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`" class="spanaa" style="font-size: 13px;">联系客服</a>更改手机号。</p>
 			</div>
 		</div>
 	    <p slot="footer" class="modal-footer-s">
