@@ -782,7 +782,7 @@
     },
     methods: {
       /* 滑动验证初始化 -- 发送验证码*/
-      gtInitCode: throttle(2000, function () {
+      gtInitCode: throttle(3000, function () {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
@@ -821,7 +821,7 @@
         })
       }),
       /* 滑动验证初始化 -- 发送语音验证码 */
-      gtInitVoice: throttle(2000, function () {
+      gtInitVoice: throttle(3000, function () {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {

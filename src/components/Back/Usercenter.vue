@@ -1396,6 +1396,7 @@
   import axios from '../../util/axiosInterceptor'
   import reg from '../../util/regExp'
   import $store from '../../vuex'
+  import throttle from 'throttle-debounce/debounce'
 
   export default {
     data() {
@@ -2659,15 +2660,15 @@
           }
         })
       },
-      modifyTelphone(){
-        if(this.getBindingMobilePhoneDisabled){
+      modifyTelphone() {
+        if (this.getBindingMobilePhoneDisabled) {
           this.bindingMobilePhoneForm.verificationMode = 'email'
-        } else{
+        } else {
           this.bindingMobilePhoneForm.verificationMode = 'phone'
         }
         this.showModal.bindingMobilePhone = true
-        this.bindingMobilePhoneForm.step=0
-        this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
+        this.bindingMobilePhoneForm.step = 0
+        this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
       },
       // 修改手机弹窗出现前，清空数据
       telModify_btn() {
@@ -2678,15 +2679,15 @@
         this.modifyPhoneIDcancel()
       },
       // 设置邮箱
-      modifyEmail(){
-        if(this.getBindingEmailDisabled){
+      modifyEmail() {
+        if (this.getBindingEmailDisabled) {
           this.bindingEmailForm.verificationMode = 'email'
-        } else{
+        } else {
           this.bindingEmailForm.verificationMode = 'phone'
         }
         this.showModal.bindingEmail = true
-        this.bindingEmailForm.step=0
-        this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
+        this.bindingEmailForm.step = 0
+        this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
       },
       // 重置表单
       reset() {
@@ -2782,7 +2783,7 @@
       },
       // 个人认证
       // 身份证照片认证
-      personalAttest() {
+      personalAttest: throttle(2000, function () {
         this.$refs.cardAuth.validate(validate => {
           if (validate) {
             if (!this.notAuth.cardAuthForm.IDCardFront || !this.notAuth.cardAuthForm.IDCardBack || !this.notAuth.cardAuthForm.IDCardPerson) {
@@ -2810,10 +2811,9 @@
             })
           }
         })
-
-      },
+      }),
       // 快速认证
-      quicklyAuth() {
+      quicklyAuth:throttle(2000, function () {
         var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
           return Promise.resolve(validate)
         })
@@ -2840,9 +2840,9 @@
             })
           }
         })
-      },
+      }),
       // 企业认证
-      enterpriseAttest() {
+      enterpriseAttest:throttle(2000, function () {
         this.$refs.companyAuth.validate(validate => {
           if (validate) {
             if (this.notAuth.companyAuthForm.combine == '') {
@@ -2907,7 +2907,7 @@
             })
           }
         })
-      },
+      }),
       /* 企业认证发送验证码 */
       sendCompanyCode(codeType) {
         var regPhone = false
