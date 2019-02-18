@@ -3563,13 +3563,13 @@
               this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.keyWeight = response.data.data.weight
             } else {
-              this.$Message.info(response.data.msg)
+              this.$Message.info(response.data.message)
             }
           })
         } else {
           this.$Modal.confirm({
             title: '提示',
-            content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有认证,请您到<span style="color: #2A99F2;">用户中心</span>去进行认证</p>',
+            content: '尊敬的用户您好，系统检测到您当前没有认证,请您到<span style="color: #2A99F2;">用户中心</span>去进行认证</p>',
           });
         }
       },
