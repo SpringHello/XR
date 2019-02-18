@@ -292,13 +292,8 @@
             mainName: '域名服务',
             type: 'domain',
             subItem: [
-<<<<<<< HEAD
-              //  {subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
-              //  {subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-=======
               //{subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
               //{subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
->>>>>>> e15caef0cd00fc453870b6588f86b3173067fd4b
               {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
               {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
               {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
