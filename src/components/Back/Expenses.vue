@@ -2357,10 +2357,9 @@
                       overtime = overTime
                     }
                   })
-                  console.log(this.toStr(overtime))
                   sessionStorage.setItem('overtime', this.toStr(overtime))
                   this.$router.push({
-                    name: 'result',
+                    name: 'payNew',
                     params: response.data.result
                   })
                 } else if (response.status == 200 && response.data.status == 2) {

@@ -415,7 +415,6 @@
         if(this.couponInfo.isCash){
            this.couponInfo.isCash = !this.couponInfo.isUse;
         }
-       
         if (!bol) {
           this.couponInfo.selectTicket = ''
         }

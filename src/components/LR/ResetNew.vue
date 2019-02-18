@@ -19,7 +19,7 @@
             <!-- 输入账号 -->
             <div class="verification" v-if="index == 1 && accountIsDis=='8'" :class="style">
                <p class="ver_p" >请输入您的账号</p>
-              <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" >
+              <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" @submit.native.prevent>
                 <FormItem prop="account">
                   <x-Input   :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入注册时用的邮箱或者手机号'  style="width:365px;"></x-Input>
                 </FormItem>
@@ -54,7 +54,7 @@
 
             <div class="verification" v-if="index == 1 && accountIsDis =='9'" :class="style">
                <p class="ver_p" >请输入您的账号</p>
-              <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" >
+              <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" @submit.native.prevent>
                 <FormItem prop="account">
                   <x-Input   :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入注册时用的邮箱或者手机号' ></x-Input>
                 </FormItem>
@@ -87,14 +87,14 @@
             <!-- 邮箱验证方式 -->
             <div class="verification" v-if="verPage == 'email'">
               <p class="ver_p">我们会发送一封验证邮件到您的邮箱，请注意查收</p>
-                <Form ref="dataPhone"  :model="dataFroms" :rules="dataFromsValidate" >
+                <Form ref="dataPhone"  :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                   <FormItem prop='email'>
                     <x-Input   :icon='url.icon1' v-model="dataFroms.email"  placeholder='请输入邮箱' choice='' :disabled='true'></x-Input>
                   </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large'  placeholder='请输入验证码' style="width:258px;"></Input>
                     <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
+                    <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
                       <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;height:44px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
@@ -116,7 +116,7 @@
             <!-- 手机验证方式 -->
             <div class="verification" v-if="index == 3 && verPage == 'phone'">
               <p class="ver_p">请输入有效手机号码用于接收验证码</p>
-               <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" >
+               <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                    <FormItem prop='phone' >
                      <x-Input  :icon='url.iconPhone'  v-model="dataFroms.phone"  placeholder='请输入手机号' choice='select' :disabled='true'></x-Input>
                    </FormItem>
@@ -146,7 +146,7 @@
             <!-- 身份证验证方式 -->
             <div class="verification_poto"  v-if="verPage == 'card'">
               <div v-if="absc">
-                <Form ref='dataInfo' :model="dataFroms" :rules="dataFromsValidate">
+                <Form ref='dataInfo' :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                   <FormItem prop='name'>
                     <x-Input ref="xinput" :icon='url.icon1' v-model="dataFroms.name"  placeholder='请输入您的姓名' ></x-Input>
                   </FormItem>
@@ -180,6 +180,7 @@
                           type="drag"
                           action="file/upFile.do"
                           class="up_load"
+                           style="background-color:#fff;"
                          >
                           <div class="up_button" v-if="fileUrl.imgUrl ==''">
                               <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -206,7 +207,7 @@
               <!-- 企业验证 -->
              <div   v-if="verPage == 'enterprise'">
               <div v-if="absc" class="verification">
-                <Form  ref="dataInfo" :model="dataFroms" :rules="dataFromsValidate" >
+                <Form  ref="dataInfo" :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                   <FormItem prop='company'>
                     <x-Input ref="xinput" :icon='url.icon1' v-model="dataFroms.company"  placeholder='请输入您的公司名称' ></x-Input>
                   </FormItem>
@@ -240,6 +241,7 @@
                         type="drag"
                         class="up_load"
                         action="file/upFile.do"
+                        style="background-color:#fff;"
                         >
                         <div class="up_button" v-if="fileUrl.legalUrl ==''">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
@@ -312,7 +314,7 @@
 
             <!-- 设置新密码 -->
             <div class="verification" v-if="index == 4 && verPage == ''">
-               <Form ref="dataPaw" :model="dataFroms" :rules="dataFromsValidate" >
+               <Form ref="dataPaw" :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                 <FormItem prop='newPaw'>
                   <x-Input   :icon='url.iconLock'   v-model="dataFroms.newPaw"  placeholder='请设置新密码' choice='eye'></x-Input>
                 </FormItem>
@@ -329,7 +331,7 @@
 
               <!-- 重置手机号 -->
              <div class="verification" v-if="index == 4 && verPage == 'cphone'">
-               <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" >
+               <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                    <FormItem prop='phone' >
                      <x-Input  :icon='url.iconPhone'  v-model="dataFroms.phone"  placeholder='请输入手机号' choice='select'></x-Input>
                    </FormItem>
@@ -730,6 +732,8 @@ export default {
                     this.index = 2;
                     this.accountIsDis = '2';
                   }else{
+                    this.index = 2;
+                    this.accountIsDis = '2';
                     this.userInfo = '';
                     this.$Message.info({
                       content:'您还没有实名认证',
@@ -998,7 +1002,8 @@ export default {
           IdCard:this.dataFroms.idCard,
           authType:'0',
           personIdCardHandUrl:this.fileUrl.imgUrl,
-          newPhone:this.dataFroms.phone
+          newPhone:this.dataFroms.phone,
+          oldPhone:this.formValidate.account
       }
       let paramsOne ={
          businessLicense:this.dataFroms.business,
@@ -1006,6 +1011,7 @@ export default {
           agentIdCardHandUrl:this.fileUrl.imgUrl,
           newPhone:this.dataFroms.phone,
           legalIdCardFrontUrl:this.fileUrl.legalUrl,
+          oldPhone:this.formValidate.account
       }
       let data = this.userInfo == 'person'?params:paramsOne;
       axios.post('user/newPhoneByIdCard.do',
@@ -1113,7 +1119,8 @@ export default {
         this.index = 3;
         this.verPage = 'phone';
       }
-    }
+    },
+
   },
   computed: {
 
@@ -1475,15 +1482,14 @@ export default {
   }
   .up_content{
     display: inline-block;vertical-align:middle;position: relative;
-   
   }
   .up_border{
     border:1px dashed #999999;padding:40px;border-radius:4px;
   }
   .verification_poto{
-        width: 408px;
-        margin: 0 auto;
-        margin-top: 39px;
+    width: 408px;
+    margin: 0 auto;
+    margin-top: 39px;
   }
   .up_coPhoto{
     display: inline-block;width:407px;margin-left:22px;vertical-align:top;border:1px dashed #999999;padding:40px;border-radius:4px;
@@ -1491,9 +1497,8 @@ export default {
   .up_load{
     display: inline-block;
   }
-  .up_load .ivu-upload-drag{
-    background-color: #ffffff;
-  }
+
+ 
   .v_top{
     border: 1px solid #2a99f2;
     color: #2A99F2;
