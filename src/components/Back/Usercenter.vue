@@ -706,7 +706,10 @@
     </div>
     <!--选择两种认证方式-->
     <Modal v-model="showModal.selectAuthType" width="550" :scrollable="true" style="top:172px">
-      <div style="display: flex;margin-top: 20px;">
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title"> 选择认证方式</span>
+      </div>
+      <div style="display: flex;">
         <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
           <h2>个人用户</h2>
           <p><i></i>可以使用新睿云所有资源</p>
@@ -732,7 +735,7 @@
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：400-050-5565</p>
       </div>
     </Modal>
-		
+
 		<!--修改用户名-->
 		<Modal v-model="showModal.Modifyname" :scrollable="true" :closable="true" :width="500">
 			<p slot="header" class="modal-header-border">
@@ -748,7 +751,7 @@
 				<!-- $router.push('/ruicloud/cashprocess') -->
 			</p>
 		</Modal>
-		
+
 		<!--注销账号弹窗-->
 		<Modal v-model="showModal.Cancellationaccount" :scrollable="true" :closable="false" :width="380">
 			<p slot="header" class="modal-header-border">
@@ -4597,7 +4600,7 @@
       background: rgba(233, 233, 233, 1);
     }
   }
-	
+
 	.pall{
 		font-size:12px;
 		font-family:MicrosoftYaHei;

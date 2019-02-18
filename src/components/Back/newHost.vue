@@ -434,6 +434,32 @@
       </p>
     </Modal>
     <!-- 批量重置密码框-->
+    <Modal v-model="showModal.resetPassword" width="700" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">重置密码</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p class="resetModal-title">您已选 <span>{{ resetPasswordHostData.length }} 台主机</span></p>
+        <ul class="resetModal-table">
+          <li>No.</li>
+          <li>用户名</li>
+          <li>主机名</li>
+          <li>当前密码</li>
+        </ul>
+        <ul class="resetModal-table data" v-for="(item,index) in resetPasswordHostData">
+          <li>{{ index + 1 }}</li>
+          <li>{{ item.companyname}}</li>
+          <li @click="toManage(item)">{{ item.computername}}</li>
+          <li v-if="item.changePassword">不是默认密码</li>
+          <li v-else>默认密码</li>
+        </ul>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.resetPassword = false">取消</Button>
+        <Button type="primary">确定
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -459,7 +485,8 @@
           backup: false,
           mirror: false,
           unbindIP: false,
-          delHost: false
+          delHost: false,
+          resetPassword: false
         },
         hostListColumns: [
           {
@@ -883,7 +910,8 @@
                     style: {
                       cursor: 'pointer',
                       color: '#2A99F2',
-                      marginRight: '10px'
+                      marginRight: '10px',
+                      lineHeight: '74px'
                     },
                     on: {
                       click: () => {
@@ -897,6 +925,7 @@
                     },
                     on: {
                       click: () => {
+                        this.hostCurrentSelected = params.row
                         this.hostDelete(2)
                       }
                     }
@@ -907,7 +936,8 @@
                     style: {
                       cursor: 'pointer',
                       color: '#2A99F2',
-                      marginRight: '10px'
+                      marginRight: '10px',
+                      lineHeight: '74px'
                     },
                     on: {
                       click: () => {
@@ -922,6 +952,7 @@
                     },
                     on: {
                       click: () => {
+                        this.hostCurrentSelected = params.row
                         this.hostDelete(2)
                       }
                     }
@@ -1278,6 +1309,8 @@
         hostCurrentSelected: null,
 
         hostDelWay: 1, // 1：点击按钮删除主机 2： 点击更多操作删除；原因是参数传的不同
+        resetPasswordWay: 1, // 1：点击顶部更多操作重置 2： 点击行内更多操作重置；原因是参数传的不同,
+        resetPasswordHostData: [],
         listLoadBalanceRole: [],
         loadBalanceForm: {
           loadbalanceroleid: ''
@@ -1734,7 +1767,19 @@
         })
       },
       hostResetPassword(val) {
-
+        this.resetPasswordWay = val
+        if (val === 1) {
+          this.resetPasswordHostData = this.hostSelection
+          this.showModal.resetPassword = true
+        } else {
+          this.resetPasswordHostData = []
+          this.resetPasswordHostData[0] = this.hostCurrentSelected
+          this.showModal.resetPassword = true
+        }
+      },
+      toManage(item) {
+        sessionStorage.setItem('manageId', item.computerid)
+        this.$router.push('manage')
       },
       //加入负载均衡
       joinBalance() {
@@ -2351,7 +2396,11 @@
       },
       getCurrentDate() {
         return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
-      }
+      },
+      push(type) {
+        sessionStorage.setItem('pane', type)
+        this.$router.push('/ruicloud/usercenter')
+      },
     },
     computed: {
       auth() {
@@ -2769,6 +2818,45 @@
     width: 100%;
     font-size: 14px;
     span {
+      color: #2A99F2;
+      cursor: pointer;
+    }
+  }
+
+  .resetModal-title {
+    font-size: 12px;
+    font-family: MicrosoftYaHei;
+    color: rgba(102, 102, 102, 1);
+    > span {
+      font-weight: bold;
+      color: #333333;
+    }
+  }
+
+  .resetModal-table {
+    margin-top: 14px;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    height: 40px;
+    background: rgba(246, 250, 253, 1);
+    box-shadow: 0px 1px 1px 0px rgba(204, 204, 204, 0.5);
+    > li {
+      width: 30%;
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: rgba(51, 51, 51, 1);
+      padding-left: 20px;
+    }
+    li:nth-child(1) {
+      width: 10%;
+    }
+  }
+
+  .data {
+    background: #FFF;
+    margin-top: 0;
+    li:nth-child(3) {
       color: #2A99F2;
       cursor: pointer;
     }
