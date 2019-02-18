@@ -35,13 +35,13 @@
           <div class="box">
             <p>本场秒杀倒计时</p>
             <div class="count-down">
-              <span>2</span>
+              <span>{{h}}</span>
               <i>时</i>
-              <span>5</span>
-              <span>9</span>
+              <span>{{m1}}</span>
+              <span>{{m2}}</span>
               <i>分</i>
-              <span>5</span>
-              <span>9</span>
+              <span>{{s1}}</span>
+              <span>{{s2}}</span>
               <i>秒</i>
             </div>
             <div class="w_host">
@@ -501,6 +501,11 @@ export default {
       }
     }
     return {
+      h: '--',
+      m1: '--',
+      m2: '--',
+      s1: '--',
+      s2: '--',
       authError: '',
       authHintShow: false,
       reminderShow: true,
@@ -925,6 +930,7 @@ export default {
     this.getHostZoneListHot()
     this.getGpuZoneListHot()
     this.getobjZoneListHot()
+    this.countTime()
   },
   mounted () {
 
@@ -952,6 +958,27 @@ export default {
           this.$store.commit('setAuthInfo', { authInfo: response.data.authInfo, userInfo: response.data.result })
         }
       })
+    },
+    countTime() {
+        //获取当前时间
+        var date = new Date();
+        var now = date.getTime();
+        //设置截止时间
+        // console.log(date.getHours())
+        var endDate = new Date("2019-02-21 23:23:23");
+        var end = endDate.getTime();
+        //时间差
+        var leftTime = end-now;
+        //定义变量 d,h,m,s保存倒计时的时间
+        if (leftTime>=0) {
+            this.h = Math.floor(leftTime/1000/60/60%24);
+            this.m1 = Math.floor(leftTime/1000/60%60/10)
+            this.m2 = Math.floor(leftTime/1000/60%60%10)
+            this.s1 = Math.floor(leftTime/1000%60/10)
+            this.s2 = Math.floor(leftTime/1000%60%10)
+        }
+        //递归每秒调用countTime方法，显示动态时间效果
+        setTimeout(this.countTime,1000);
     },
     // 云服务器获取区域
     getHostZoneList () {
