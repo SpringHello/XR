@@ -24,7 +24,7 @@
           </div>
           <p>
             爆品秒杀 先到先得 低至一折
-            <span class="rule" @click="showModal.luckDrawRuleModal=true">活动规则</span>
+            <span class="rule" @click="showModal.spikeDrawRuleModal=true">活动规则</span>
           </p>
         </div>
         <div class="main">
@@ -239,30 +239,33 @@
         <div class="all-modal modal1" @click.stop="showModal.notLoginModal=true">
           <div class="header">
             <i @click.stop="showModal.notLoginModal=false"></i>
+            <span style="color:#FF624B;font-size:18px;line-height:55px;">温馨提示</span>
           </div>
           <div class="body">
-            <span style="padding: 45px 0 36px 0;display:block"> 您还没有登录，请登录后参与活动！</span>
-            <button @click.stop="$LR({type: 'login'}),showModal.notLoginModal=false" style="margin-bottom: 18px;" class="modal-btn"><span>立即登录</span></button>
-            <p>还没有账号？<span @click.stop="$LR({type: 'register'}),showModal.notLoginModal=false">去注册 →</span></p>
+            <span style="padding: 31px 0px 26px;display:block;font-size:14px;">您还没有登录，请您登录/注册后再来购买吧</span>
+          </div>
+          <div slot="footer">
+            <Button @click.stop="$LR({type: 'register'}),showModal.notLoginModal=false" class="modal-register">注册</Button>
+            <Button @click.stop="$LR({type: 'login'}),showModal.notLoginModal=false"  class="modal-btn1"><span>登录</span></Button>
           </div>
         </div>
       </div>
     </transition>
     <!-- 实名认证失败提示 -->
-    <!-- <transition name="fade">
+    <transition name="fade">
       <div class="overlay" @click.stop="showModal.authErrorModal=false" v-if="showModal.authErrorModal">
         <div class="all-modal modal1" @click.stop="showModal.authErrorModal=true">
           <div class="header">
             <i @click.stop="showModal.authErrorModal=false"></i>
           </div>
           <div class="body">
-            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/schoolSeason/error-icon.png" style="vertical-align: middle;"> {{authError}}</p>
+            <p>很遗憾！您未通过快速实名认证审核！</p>
             <p> 您也可以通过<span class="red" @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
             <button @click.stop="showModal.authErrorModal=false;showModal.authModal=true" style="margin-top: 35px;" class="modal-btn"><span>再次尝试</span></button>
           </div>
         </div>
       </div>
-    </transition> -->
+    </transition>
     <!-- 没有实名认证提示 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.notAuthModal=false" v-if="showModal.notAuthModal">
@@ -302,7 +305,7 @@
           </div>
           <div class="body" style="padding-top:72px;">
             <p>很抱歉！您不是新用户，不符合参与本次活动的条件！</p>
-            <p style="color:#FF3000;margin-top:10px;cursor:pointer" @click="$router.push('activecenter')">去看看其他优惠活动吧 →</p>
+            <p style="color:#FF3000;margin-top:10px;cursor:pointer" @click="$router.push('activecenter')">去看看其他活动吧</p>
           </div>
         </div>
       </div>
@@ -311,20 +314,44 @@
     <transition name="fade">
       <div class="overlay" @click="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal">
         <div class="all-modal modal3" @click.stop="showModal.luckDrawRuleModal=true">
-          <div class="header"><i @click.stop="showModal.luckDrawRuleModal=false"></i></div>
-          <div class="body">
-            <h3>1、活动时间：2019年1月28日-2019年3月1日； 活动对象：仅限新用户；</h3>
-            <h3>2、本次活动中，每位用户仅可参与一次活动，最多可购买3台云服务器；</h3>
-            <h3>3、本次活动产品仅限于西北一区云服务器，其他地区产品不参与此活动；</h3>
-            <h3>4、本次活动产品均为折扣特惠价格，不能使用任何优惠券以及现金券；</h3>
-            <h3>5、参与本次活动购买的云服务器不享有7天无理由退款服务；</h3>
-            <h3>6、根据国家相关规定，用户实名认证之后才可以购买使用云服务器；</h3>
-            <h3>7、此活动最终解释权由新睿云所有。</h3>
+          <div class="header">
+            <span>活动规则</span>
+            <i @click.stop="showModal.luckDrawRuleModal=false"></i>
           </div>
-          <button @click="showModal.luckDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
+          <div class="body">
+            <h3>1、活动时间：2019年2月21日-2019年3月31日</h3>
+            <h3>2、活动对象：平台已完成实名认证的新老用户</h3>
+            <h3>3、数量限制：云服务器产品每个用户限购7台，GPU云服务器限购2台，对象存储产品限购5款。</h3>
+            <h3>4、活动产品不可使用任何优惠券和现金券。</h3>
+            <h3>5、参与此活动购买的云产品不享有7天无理由退款。</h3>
+            <h3>6、活动最终解释权为新睿云所有。</h3>
+          </div>
+          <button @click.stop="showModal.luckDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
         </div>
       </div>
     </transition>
+
+    <!-- 秒杀活动规则 -->
+    <transition name="fade">
+      <div class="overlay" @click="showModal.spikeDrawRuleModal=false" v-if="showModal.spikeDrawRuleModal">
+        <div class="all-modal modal4" @click.stop="showModal.spikeDrawRuleModal=true">
+          <div class="header">
+            <span>秒杀活动规则</span>
+            <i @click.stop="showModal.spikeDrawRuleModal=false"></i>
+          </div>
+          <div class="body">
+            <h3>1、活动时间：2019.2.21-2019.03.31</h3>
+            <h3>2、活动对象：没有使用过平台任何产品（域名产品除外）且完成实名认证的用户。</h3>
+            <h3>3、数量限制：秒杀产品每天数量有限，每天9点和14点开始秒杀，每款每个用户只限购买一台。</h3>
+            <h3>4、秒杀产品不可使用任何优惠券和现金券。</h3>
+            <h3>5、参与此活动购买的云产品不享有7天无理由退款。</h3>
+            <h3>6、活动最终解释权为新睿云所有。</h3>
+          </div>
+          <button @click.stop="showModal.spikeDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
+        </div>
+      </div>
+    </transition>
+
     <!-- 请填写认证信息弹窗 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.authModal=false" v-if="showModal.authModal">
@@ -332,8 +359,7 @@
           <div class="header"><i @click.stop="showModal.authModal=false"></i></div>
           <div class="body xiannode-form">
             <p class="reminder" v-if="authHintShow">
-              <span>温馨提示：</span>
-              您还不是实名认证用户，请填写以下认证信息，完成认证后可继续购买活动产品！
+             根据国家规定，使用公共互联网需进行 
             </p>
             <Form ref="authForm" :model="authFormValidate" :rules="authFormRuleValidate" :label-width="110" class="auth-form-validate">
               <FormItem label="真实姓名" prop="name">
@@ -366,7 +392,26 @@
         </div>
       </div>
     </transition>
-  </div></template>
+
+    <transition name="fade" v-for="(item,index) in activityList" :key="index">
+      <div class="overlay" @click.stop="item.isShow=false" v-if="item.isShow">
+        <div class="all-modal modal1" @click.stop="item.isShow=true">
+          <div class="header">
+            <i @click.stop="item.isShow=false"></i>
+            <span style="color:#FF624B;font-size:18px;line-height:55px;">{{item.title}}</span>
+          </div>
+          <div class="body">
+            <p style="padding: 13px 0px 26px 0px">{{item.content}}<span class="color:#FF624B;">{{item.content1}}</span>{{item.content2}}</p>
+          </div>
+          <div slot="footer">
+            <button @click.stop="item.isShow=false" class="modal-btn"><span>{{item.button}}</span></button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+  </div>
+  </template>
 
 <script type="text/ecmascript-6">
 import axios from '@/util/axiosInterceptor'
@@ -402,6 +447,52 @@ export default {
       }
     }
     return {
+      // 活动弹窗列表
+      activityList:[
+        {
+          title:'抱歉',
+          content:'您不符合参与秒杀活动的条件，去看看',
+          content1:'其它活动',
+          button:'查看其它活动',
+          isShow:'false'
+        },
+        {
+          title:'温馨提示',
+          content:'您已经参与过秒杀活动啦，去看看 ',
+          button:'查看其它活动',
+          isShow:'false'
+        },
+        {
+          title:'温馨提示',
+          content:'每个用户只能购买 ',
+          content1:'7台',
+          content2:'云服务器哦，去选购其它产品吧',
+          button:'确定',
+          isShow:'false'
+        },
+         {
+          title:'温馨提示',
+          content:'每个用户只能购买 ',
+          content1:'2台',
+          content2:'GPU云服务器哦，去选购其它产品吧',
+          button:'确定',
+          isShow:'false'
+        },
+        {
+          title:'温馨提示',
+          content:'每个用户只能购买 ',
+          content1:'5个',
+          content2:'GPU对象存储包，去选购其它产品吧',
+          button:'确定',
+          isShow:'false'
+        },
+        {
+          title:'温馨提示',
+          content:'当前资源不足，去选购其他产品吧',
+          button:'确定',
+          isShow:'false'
+        },
+      ],
       authError: '',
       authHintShow: false,
       reminderShow: true,
@@ -710,7 +801,8 @@ export default {
         authErrorModal: false,
         authSucModal: false,
         notAuthModal: false,
-        newCoustom: false
+        newCoustom: false,
+        spikeDrawRuleModal:false
       },
       authFormValidate: {
         name: '',
@@ -1688,18 +1780,30 @@ section {
   }
 }
 .modal-btn {
-  width: 170px;
-  height: 50px;
-  border: 1px solid rgba(255, 48, 0, 1);
-  font-size: 20px;
+  width: 134px;
+  height: 36px;
+  border: 1px solid #FF624B;
+  font-size: 14px;
   font-family: PingFangSC-Regular;
-  color: rgba(255, 48, 0, 1);
-  line-height: 45px;
-  background: none;
+  color: #fff;
+  background: #FF624B;
+  border-radius: 4px;
   cursor: pointer;
   &:hover {
-    background: rgba(255, 231, 215, 1);
+    background: rgb(253, 116, 95);
   }
+}
+.modal-btn1{
+  background: #FF624B;
+  color: #fff;
+  border: 1px solid #FF624B;
+}
+.modal-btn1:hover{
+   background: rgb(253, 116, 95);
+}
+.modal-register{
+  color: #FF624B;
+  border: 1px solid #FF624B;
 }
 .vailcode-btn {
   border: 1px solid rgba(255, 48, 0, 1);
@@ -1718,6 +1822,7 @@ section {
   // background-color: rgba(255, 255, 255, 0.3);
   height: 100%;
   z-index: 1000;
+  
   .all-modal {
     position: relative;
     margin: 0 auto;
@@ -1725,6 +1830,7 @@ section {
     background: rgba(255, 255, 255, 1);
     text-align: center;
     font-size: 16px;
+    border-radius: 4px;
     &.lottery {
       top: 100px;
     }
@@ -1739,8 +1845,8 @@ section {
         color: rgba(255, 255, 255, 1);
         cursor: pointer;
         position: absolute;
-        right: 10px;
-        top: 0px;
+        right: 13px;
+        top: 2px;
         transform: rotate(45deg);
         &:before {
           content: "";
@@ -1763,12 +1869,14 @@ section {
   }
 }
 .modal1 {
-  width: 600px;
-  height: 300px;
+  width: 380px;
+  height: 180px;
   > .header {
+    
     // background: url("../../../assets/img/active/schoolSeason/modal-bg-reminder.png");
   }
   .body {
+    color:#4B3C3D;
     p {
       > span {
         color: #ff3000;
@@ -1815,22 +1923,50 @@ section {
 }
 
 .modal3 {
-  width: 700px;
-  height: 457px;
+  width: 500px;
+  height: 380px;
   > .header {
     // background: url("../../../assets/img/active/schoolSeason/modal-bg-rule.png");
+    span{
+      color:#FF624B;
+      font-size: 18px;
+      line-height: 55px;
+    }
   }
   > .body {
+    color:#4B3C3D;
     margin: 0 auto;
-    padding: 30px 0 34px 0;
-    width: 554px;
+    padding: 30px 20px 34px 20px;
     text-align: left;
     h3 {
-      font-size: 16px;
+      font-size: 14px;
       font-family: MicrosoftYaHei;
       font-weight: 400;
-      color: rgba(34, 34, 34, 1);
-      line-height: 30px;
+      line-height: 27px;
+    }
+  }
+}
+.modal4{
+  width: 500px;
+  height: 408px;
+  > .header {
+    // background: url("../../../assets/img/active/schoolSeason/modal-bg-rule.png");
+    span{
+      color:#FF624B;
+      font-size: 18px;
+      line-height: 55px;
+    }
+  }
+  > .body {
+    color:#4B3C3D;
+    margin: 0 auto;
+    padding: 30px 20px 34px 20px;
+    text-align: left;
+    h3 {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      line-height: 27px;
     }
   }
 }

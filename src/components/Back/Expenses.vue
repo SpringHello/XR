@@ -816,6 +816,44 @@
       <Button type="primary" :disabled="refundLastHintDisabled" @click="refundLsat_ok">确定{{ refundLastHintText}}</Button>
     </p>
   </Modal>
+
+  <transition name="fade">
+      <div class="overlay" @click="showModal.vipRuleModal=false" v-if="showModal.vipRuleModal">
+        <div class="all-modal modal4" @click.stop="showModal.vipRuleModal=true">
+          <div class="header">
+            <span>会员制规则</span>
+            <i @click.stop="showModal.vipRuleModal=false"></i>
+          </div>
+          <div class="body">
+            <h3><span style="font-wight:400">1、会员级别</span>新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
+            <nav>
+              <ul class="nav_list">
+                <li class="nav_item" v-for="(item,index) in vipRule" :key="index">
+                  <div>
+                    {{item.title}}
+                  </div>
+                  <div>
+                    {{item.trOne}}
+                  </div>
+                  <div>
+                    {{item.trTwo}}
+                  </div>
+                  <div>
+                    {{item.trThree}}
+                  </div>
+                </li>
+              </ul>
+            </nav>
+            <h3>2、活动对象：没有使用过平台任何产品（域名产品除外）且完成实名认证的用户。</h3>
+            <h3>3、数量限制：秒杀产品每天数量有限，每天9点和14点开始秒杀，每款每个用户只限购买一台。</h3>
+            <h3>4、秒杀产品不可使用任何优惠券和现金券。</h3>
+            <h3>5、参与此活动购买的云产品不享有7天无理由退款。</h3>
+            <h3>6、活动最终解释权为新睿云所有。</h3>
+          </div>
+          <button @click.stop="showModal.vipRuleModal=false" class="modal-btn"><span>我知道了</span></button>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -965,6 +1003,32 @@
          this.init()*/
       }
       return {
+        vipRule:[
+          {
+            title:'类目',
+            trOne:'一次性充值金额',
+            trTwo:'上年度累计消费',
+            trThree:'可享平台折扣'
+          },
+          {
+            title:'白银会员',
+            trOne:'≥1万元且 <5万元',
+            trTwo:'≥5万元且 <10万元',
+            trThree:'6.5折'
+          },
+          {
+            title:'黄金会员',
+            trOne:'≥5万元且 ＜15万元',
+            trTwo:'≥10万元且 ＜30万元',
+            trThree:'5折'
+          },
+          {
+            title:'铂金会员',
+            trOne:'≥15万元',
+            trTwo:'≥30万元',
+            trThree:'3折'
+          },
+        ],
         uploadImgDispaly: '',
         uploadImgDispaly1: '',
         uploadImgDispaly2: '',
@@ -1831,7 +1895,8 @@
           refundLastHint: false,
           freezeToRenewAffirm: false,
           // 修改手机号码（身份证方式）
-          modifyPhoneID: false
+          modifyPhoneID: false,
+          vipRuleModal:false
         },
         // 提现
         withdrawForm: {
@@ -3504,4 +3569,99 @@
       cursor: not-allowed;
     }
   }
+
+  .overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(55, 55, 55, 0.3);
+  // background-color: rgba(255, 255, 255, 0.3);
+  height: 100%;
+  z-index: 1000;
+  
+  .all-modal {
+    position: relative;
+    margin: 0 auto;
+    top: 15%;
+    background: rgba(255, 255, 255, 1);
+    text-align: center;
+    font-size: 16px;
+    border-radius: 4px;
+    &.lottery {
+      top: 100px;
+    }
+    > .header {
+      height: 70px;
+      font-size: 24px;
+      font-family: MicrosoftYaHei;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 1);
+      position: relative;
+      > i {
+        color: rgba(255, 255, 255, 1);
+        cursor: pointer;
+        position: absolute;
+        right: 13px;
+        top: 2px;
+        transform: rotate(45deg);
+        &:before {
+          content: "";
+          display: inline-block;
+          height: 16px;
+          width: 2px;
+          background: #ff3000;
+          transform: translateX(9px);
+        }
+        &:after {
+          content: "";
+          display: inline-block;
+          height: 2px;
+          width: 16px;
+          background: #ff3000;
+          transform: translateY(-7px);
+        }
+      }
+    }
+  }
+}
+.modal4{
+  width: 500px;
+  height: 408px;
+  > .header {
+    // background: url("../../../assets/img/active/schoolSeason/modal-bg-rule.png");
+    span{
+      color:#FF624B;
+      font-size: 18px;
+      line-height: 55px;
+    }
+  }
+  > .body {
+    color:#4B3C3D;
+    margin: 0 auto;
+    padding: 30px 20px 34px 20px;
+    text-align: left;
+    h3 {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      line-height: 27px;
+    }
+  }
+}
+.nav_list{
+  padding: 0;
+  margin: 0;
+  .nav_item{
+    list-style: none;
+    div{
+      height: 60px;
+      line-height: 60px;
+      background: #FFF1E0;
+      border-right: 1px solid #D4C6B5;
+      border-bottom: 1px solid #D4C6B5;
+    }
+  }
+}
 </style>
