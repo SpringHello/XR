@@ -448,16 +448,37 @@
         </ul>
         <ul class="resetModal-table data" v-for="(item,index) in resetPasswordHostData">
           <li>{{ index + 1 }}</li>
-          <li>{{ item.companyname}}</li>
-          <li @click="toManage(item)">{{ item.computername}}</li>
-          <li v-if="item.changePassword">不是默认密码</li>
+          <li>{{ item.computername}}</li>
+          <li @click="toManage(item)">{{ item.instancename}}</li>
+          <li v-if="item.changepassword">
+            <input :class="{error: false}" v-model="item.currentPassword" type="text" placeHolder="请输入当前密码" :maxlength="32"></input>
+            <p v-if="false">您输入的密码有误</p>
+          </li>
           <li v-else>默认密码</li>
         </ul>
+        <div>
+          <div class="resetModal-import">
+            <span>新密码</span>
+            <input v-model="resetPasswordForm.password" type="password" placeHolder="请输入新密码" ref="passwordInput"/>
+            <img src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInput')"/>
+          </div>
+          <div class="resetModal-hint">
+            <p v-show="false">提醒：密码必须是8-32个包含数字和大小写字母的字符</p>
+            <p v-show="false">注意：您的密码已经符合设置密码规则，但密码需要具备一定的强度，建议您设置12位以上，至少包括4项（：，-（）；）的特殊字符，每种字符大于等于2位</p>
+          </div>
+          <div class="resetModal-import">
+            <span>确认密码</span>
+            <input type="password" v-model="resetPasswordForm.passwordAffirm" placeHolder="请确认新密码" ref="passwordInputAffirm"/>
+            <img src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInputAffirm')"/>
+          </div>
+          <div class="resetModal-hint">
+            <p v-show="false">提醒：两次输入的密码不一致</p>
+          </div>
+        </div>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.resetPassword = false">取消</Button>
-        <Button type="primary">确定
-        </Button>
+        <Button type="primary">下一步</Button>
       </div>
     </Modal>
   </div>
@@ -503,8 +524,8 @@
               ])
             },
             render: (h, params) => {
-              let text_1 = params.row.companyname ? params.row.companyname : '----'
-              let text_2 = params.row.computername ? params.row.computername : '----'
+              let text_1 = params.row.computername ? params.row.computername : '----'
+              let text_2 = params.row.instancename ? params.row.instancename : '----'
               if (params.row.status == 1) {
                 return h('ul', {}, [
                   h('li', {
@@ -1311,6 +1332,12 @@
         hostDelWay: 1, // 1：点击按钮删除主机 2： 点击更多操作删除；原因是参数传的不同
         resetPasswordWay: 1, // 1：点击顶部更多操作重置 2： 点击行内更多操作重置；原因是参数传的不同,
         resetPasswordHostData: [],
+        resetPasswordForm: {
+          password: '',
+          passwordAffirm: '',
+          agreeRule: true,
+          hintGrade: 0,
+        },
         listLoadBalanceRole: [],
         loadBalanceForm: {
           loadbalanceroleid: ''
@@ -1768,6 +1795,9 @@
       },
       hostResetPassword(val) {
         this.resetPasswordWay = val
+        this.resetPasswordForm.password = ''
+        this.resetPasswordForm.hintGrade = 0
+        this.resetPasswordForm.passwordAffirm = ''
         if (val === 1) {
           this.resetPasswordHostData = this.hostSelection
           this.showModal.resetPassword = true
@@ -1780,6 +1810,9 @@
       toManage(item) {
         sessionStorage.setItem('manageId', item.computerid)
         this.$router.push('manage')
+      },
+      changeResetPasswordType(name) {
+        this.$refs[name].type === 'password' ? this.$refs[name].type = 'text' : this.$refs[name].type = 'password'
       },
       //加入负载均衡
       joinBalance() {
@@ -2856,9 +2889,63 @@
   .data {
     background: #FFF;
     margin-top: 0;
+    height: 60px;
+    > li {
+      > input {
+        height: 30px;
+        border: 1px solid rgba(225, 225, 225, 1);
+        border-radius: 4px;
+        padding-left: 5px;
+        outline: none;
+        &.error {
+          border: 1px solid #FF0000;
+          color: #FF0000;
+        }
+      }
+      > p {
+        color: #FF0000;
+        margin-top: 5px
+      }
+    }
     li:nth-child(3) {
       color: #2A99F2;
       cursor: pointer;
+    }
+  }
+
+  .resetModal-import {
+    margin-top: 20px;
+    position: relative;
+    > span {
+      display: inline-block;
+      width: 80px;
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(51, 51, 51, 1);
+    }
+    > img {
+      cursor: pointer;
+      position: absolute;
+      left: 54%;
+      top: 30%;
+    }
+    > input {
+      height: 30px;
+      width: 300px;
+      padding-left: 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(225, 225, 225, 1);
+    }
+  }
+
+  .resetModal-hint {
+    margin-top: 5px;
+    > p {
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: rgba(255, 0, 0, 1);
+      line-height: 16px;
+      padding-left: 82px;
     }
   }
 </style>

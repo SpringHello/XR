@@ -13,7 +13,7 @@
           <p class="title"><img @click="$router.push('host')" src="../../assets/img/host/h-icon9.png" alt="back to hostList"/> 名称：{{ hostInfo.computerName}}
             <img class="last" @click="renameForm.hostName = '',showModal.rename = true" src="../../assets/img/host/h-icon11.png" alt="modification computerName"/>
             <button @click="$router.go(0)">刷新</button>
-            <button style="margin-right: 10px" @click="linkHost" v-if="hostInfo.computerStatus == 1">连接主机</button>
+            <button style="margin-right: 10px;background: #2A99F2;color: #FFF" @click="linkHost" v-if="hostInfo.computerStatus == 1">连接主机</button>
           </p>
           <p>{{ hostInfo.cpuNum }}核CPU，{{ hostInfo.memory}}G内存，{{ hostInfo.rootDiskSize}}G硬盘，{{ hostInfo.bandwith}}M带宽 | {{ hostInfo.zoneName}} <span
             @click="hostUpgrade">[升级]</span>
@@ -166,7 +166,7 @@
             <Cascader :data="osOptions" v-model="mirrorModifyForm.system"></Cascader>
           </Form-item>
           <Form-item label="控制台密码" style="width: 70%" prop="consolePassword">
-            <Input v-model="mirrorModifyForm.consolePassword" placeholder="请输入控制台登录密码"></Input>
+            <Input v-model="mirrorModifyForm.consolePassword" type="password" placeholder="请输入控制台登录密码"></Input>
           </Form-item>
         </Form>
       </div>
@@ -1421,7 +1421,6 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .host-config {
     padding: 20px 20px 0;
-    margin-top: 18px;
     background: rgba(246, 250, 253, 1);
     border-radius: 2px;
     .config-top {
