@@ -24,7 +24,7 @@
           </div>
           <p>
             爆品秒杀 先到先得 低至一折
-            <span class="rule" @click="showModal.luckDrawRuleModal=true">活动规则</span>
+            <span class="rule" @click="showModal.spikeDrawRuleModal=true">活动规则</span>
           </p>
         </div>
         <div class="main">
@@ -35,13 +35,13 @@
           <div class="box">
             <p>本场秒杀倒计时</p>
             <div class="count-down">
-              <span>{{h}}</span>
+              <span>2</span>
               <i>时</i>
-              <span>{{m1}}</span>
-              <span>{{m2}}</span>
+              <span>5</span>
+              <span>9</span>
               <i>分</i>
-              <span>{{s1}}</span>
-              <span>{{s2}}</span>
+              <span>5</span>
+              <span>9</span>
               <i>秒</i>
             </div>
             <div class="w_host">
@@ -96,7 +96,7 @@
           </p>
         </div>
         <div class="main">
-          <div class="box-top-a host flex">
+          <div class="host flex">
             <div class="left">
               <div class="top">
                 <p>云服务器特惠</p>
@@ -106,7 +106,7 @@
                 <div class="item-config">
                   <p style="margin-bottom: 10px;">区域选择</p>
                   <ul class="flex" style="justify-content: flex-start">
-                    <li v-for="(item3,index) in hostZoneListHot" :key="index" @click="hostProductHot.zoneId=item3.value" :class="{selected:hostProductHot.zoneId==item3.value}">{{item3.name}}</li>
+                    <li v-for="(item3,index) in hostZoneListHot" :key="index" @click="hotProductHot.zoneId=item3.value" :class="{selected:hotProductHot.zoneId==item3.value}">{{item3.name}}</li>
                   </ul>
                 </div>
                 <div class="item-config">
@@ -114,19 +114,19 @@
                   <div>
                     <span class="sec-title">基础入门级云服务器</span>
                     <ul class="flex" style="justify-content: flex-start;">
-                      <li v-for="(item3,index) in hostConfigListHot.basic" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpu==item3.cpu&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
+                      <li v-for="(item3,index) in hostConfigListHot.basic" :key="index" @click="hotProductHot.cpuMemory=item3" :class="{selected:hotProductHot.cpuMemory.cpu==item3.cpu&&hotProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
                   <div>
                     <span class="sec-title">标准进阶型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpu==item3.cpu&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
+                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hotProductHot.cpuMemory=item3" :class="{selected:hotProductHot.cpuMemory.cpu==item3.cpu&&hotProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
                   <div>
                     <span class="sec-title">企业高配型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpu==item3.cpu&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
+                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hotProductHot.cpuMemory=item3" :class="{selected:hotProductHot.cpuMemory.cpu==item3.cpu&&hotProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
                   <p style="font-size:12px;color:rgba(154,127,130,1);margin-top:-10px;">*以上配置皆包含40G SSD系统盘</p>
@@ -136,138 +136,39 @@
             <div class="right">
               <div class="item-select">
                 <p>带宽选择</p> 
-                <Select v-model="hostProductHot.bandwith">
+                <Select v-model="hotProductHot.bandwith">
                   <Option v-for="(item3,index) in hostbandwithListHot" :value="item3" :key="index">{{item3}}M</option>
                 </Select>
               </div>
               <div class="item-select">
                 <p>系统选择</p> 
-                <Cascader :data="hostSystemListHot" v-model="hostProductHot.system" class="schoolseason-select"></Cascader>
+                <Cascader :data="hostSystemListHot" v-model="hotProductHot.system" style="width:240px;display: inline-block;" class="schoolseason-select"></Cascader>
               </div>
               <div class="item-config">
                 <p style="margin-bottom: 10px;">数据盘</p>
                 <ul class="flex" style="justify-content: flex-start">
-                  <li v-for="(item3,index) in hostDisksizeListHot" :key="index" @click="hostProductHot.disksize=item3" :class="{selected:hostProductHot.disksize==item3}">{{item3}}G</li>
+                  <li v-for="(item3,index) in hostDisksizeListHot" :key="index" @click="hotProductHot.disksize=item3" :class="{selected:hotProductHot.disksize==item3}">{{item3}}G</li>
                 </ul>
               </div>
               <div class="item-config">
                 <p style="margin-bottom: 10px;">购买时长</p>
                 <ul class="flex" style="justify-content: flex-start">
-                  <li v-for="(item3,index) in hostTimeListHot" :key="index" @click="hostProductHot.timeTimetype=item3" :class="{selected:hostProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'年'}}</span>
+                  <li v-for="(item3,index) in hostTimeListHot" :key="index" @click="hotProductHot.timeTimetype=item3" :class="{selected:hotProductHot.timeTimetype.value==item3.value}">{{item3.value}}月
                     <i>{{item3.discount}}折</i>
                   </li>
                 </ul>
               </div>
               <div class="item-select">
                 <p>购买数量</p> 
-                <Button @click="hostProductHot.count--" :disabled="hostProductHot.count<=1">-</Button>
-                <Input type="text" style="width:60px;" class="host-count" v-model="hostProductHot.count" readonly></Input>
-                <Button @click="hostProductHot.count++" :disabled="hostProductHot.count>=7">+</Button>
+                <Button @click="hotProductHot.count--" :disabled="hotProductHot.count<=1">-</Button>
+                <Input type="text" style="width:60px;" class="host-count" v-model="hotProductHot.count"></Input>
+                <Button @click="hotProductHot.count++">+</Button>
               </div>
               <div class="cash">
                 <p>
-                  <span>￥</span>{{(hostProductHot.price*hostProductHot.count).toFixed(2)}}<span>{{PriceHostHot}}</span>
+                  <span>￥</span>{{getPriceHostHot}}
                 </p>
                 <Button @click="productBuy_host()">立即支付</Button>
-              </div>
-            </div>
-          </div>
-          <div class="box-top-a gpu flex">
-            <div class="left">
-              <div class="top">
-                <p>P100 GPU高效云服务器</p>
-                <span>超高计算能力，行业最低，低至3折</span>
-              </div>
-              <div class="config">
-                <div class="item-config">
-                  <p style="margin-bottom: 10px;">区域选择</p>
-                  <ul class="flex" style="justify-content: flex-start">
-                    <li v-for="(item3,index) in gpuZoneListHot" :key="index" @click="gpuProductHot.zoneId=item3.value" :class="{selected:gpuProductHot.zoneId==item3.value}">{{item3.name}}</li>
-                  </ul>
-                </div>
-                <div class="item-config">
-                  <p style="margin-bottom: 20px;">配置选择</p>
-                  <div>
-                    <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;width: 500px;margin-bottom:10px;">
-                      <li style="width:140px;margin-bottom:10px;" v-for="(item3,index) in gpuConfigListHot" :key="index" @click="gpuProductHot.cpuMemory=item3" :class="{selected:gpuProductHot.cpuMemory.cpunum==item3.cpunum&&gpuProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
-                      <span>{{item3.gpusize}}*P100</span></li>
-                    </ul>
-                  </div>
-                  <p style="font-size:12px;color:rgba(154,127,130,1);margin-top:-10px;">*以上配置皆包含128G SSD系统盘</p>
-                </div>
-              </div>
-            </div>
-            <div class="right">
-              <div class="item-select">
-                <p>带宽选择</p> 
-                <Select v-model="gpuProductHot.bandwith">
-                  <Option v-for="(item3,index) in gpubandwithListHot" :value="item3" :key="index">{{item3}}M</option>
-                </Select>
-              </div>
-              <div class="item-select">
-                <p>系统选择</p> 
-                <Cascader :data="gpuSystemListHot" v-model="gpuProductHot.system" class="schoolseason-select"></Cascader>
-              </div>
-              <div class="item-config">
-                <p style="margin-bottom: 10px;">购买时长</p>
-                <ul class="flex" style="justify-content: flex-start">
-                  <li v-for="(item3,index) in gpuTimeListHot" :key="index" @click="gpuProductHot.timeTimetype=item3" :class="{selected:gpuProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'天'}}</span>
-                    <i>{{item3.discount}}折</i>
-                  </li>
-                </ul>
-              </div>
-              <div class="item-select">
-                <p>购买数量</p> 
-                <Button @click="gpuProductHot.count--" :disabled="gpuProductHot.count<=1">-</Button>
-                <Input type="text" style="width:60px;" class="host-count" v-model="gpuProductHot.count" readonly></Input>
-                <Button @click="gpuProductHot.count++" :disabled="gpuProductHot.count>=2">+</Button>
-              </div>
-              <div class="cash" style="margin-top:20px;">
-                <p>
-                  <span>￥</span>{{(gpuProductHot.price*gpuProductHot.count).toFixed(2)}}<span>{{PriceGpuHot}}</span>
-                </p>
-                <Button @click="productBuy_gpu()">立即支付</Button>
-              </div>
-            </div>
-          </div>
-          <div class="box-top-a obj flex">
-            <div class="left">
-              <div class="top">
-                <p>对象存储</p>
-                <span>超大存储和流量，低至3折</span>
-              </div>
-              <div class="config">
-                <div class="item-config">
-                  <p style="margin-bottom: 10px;">区域选择</p>
-                  <ul class="flex" style="justify-content: flex-start">
-                    <li v-for="(item3,index) in objZoneListHot" :key="index" @click="objProductHot.zoneId=item3.value" :class="{selected:objProductHot.zoneId==item3.value}">{{item3.name}}</li>
-                  </ul>
-                </div>
-                <div class="item-config">
-                  <p style="margin-bottom: 20px;">配置选择</p>
-                  <div>
-                    <ul class="flex" style="justify-content: flex-start;">
-                      <li style="width:187px;height:54px;" v-for="(item3,index) in objConfigListHot" :key="index" @click="objProductHot.cpuMemory=item3" :class="{selected:objProductHot.cpuMemory.label==item3.label}"><span>{{item3.label}}<span>{{item3.unit}}</span>存储</span> + <span>{{item3.label}}<span>{{item3.unit}}</span>内外网</span>
-                      <span style="display:block;">下行流量</span></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="right">
-              <div class="item-config">
-                <p style="margin-bottom: 10px;">购买时长</p>
-                <ul class="flex" style="justify-content: flex-start">
-                  <li v-for="(item3,index) in objTimeListHot" :key="index" @click="objProductHot.timeTimetype=item3" :class="{selected:objProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'年'}}</span>
-                    <i>{{item3.discount}}折</i>
-                  </li>
-                </ul>
-              </div>
-              <div class="cash">
-                <p>
-                  <span>￥</span>{{objProductHot.price}}<span>{{PriceobjHot}}</span>
-                </p>
-                <Button @click="productBuy_obj()">立即支付</Button>
               </div>
             </div>
           </div>
@@ -321,16 +222,16 @@
                   <span>全线产品均可使用</span>
                 </div>
               </div>
-              <p>此现金券需前往<span @click="$router.push('expenses')">个人中心</span>使用</p>
+              <p>此现金券需前往<span>个人中心</span>使用</p>
             </div>
-            <div class="right" style="cursor:pointer" @click="getTicket()">立即领取</div>
+            <div class="right">立即领取</div>
           </div>
         </div>
       </div>
     </section>
     <div class="register">
       <p>为您提供出众的上云实践机会和全面的尊贵服务</p>
-      <Button @click.stop="$LR({type: 'register'})">立即注册</Button>
+      <Button>立即注册</Button>
     </div>
     <!-- 登陆注册弹窗 -->
     <transition name="fade">
@@ -338,30 +239,33 @@
         <div class="all-modal modal1" @click.stop="showModal.notLoginModal=true">
           <div class="header">
             <i @click.stop="showModal.notLoginModal=false"></i>
+            <span style="color:#FF624B;font-size:18px;line-height:55px;">温馨提示</span>
           </div>
           <div class="body">
-            <span style="padding: 45px 0 36px 0;display:block"> 您还没有登录，请登录后参与活动！</span>
-            <button @click.stop="$LR({type: 'login'}),showModal.notLoginModal=false" style="margin-bottom: 18px;" class="modal-btn"><span>立即登录</span></button>
-            <p>还没有账号？<span @click.stop="$LR({type: 'register'}),showModal.notLoginModal=false">去注册 →</span></p>
+            <span style="padding: 31px 0px 26px;display:block;font-size:14px;">您还没有登录，请您登录/注册后再来购买吧</span>
+          </div>
+          <div slot="footer">
+            <Button @click.stop="$LR({type: 'register'}),showModal.notLoginModal=false" class="modal-register">注册</Button>
+            <Button @click.stop="$LR({type: 'login'}),showModal.notLoginModal=false"  class="modal-btn1"><span>登录</span></Button>
           </div>
         </div>
       </div>
     </transition>
     <!-- 实名认证失败提示 -->
-    <!-- <transition name="fade">
+    <transition name="fade">
       <div class="overlay" @click.stop="showModal.authErrorModal=false" v-if="showModal.authErrorModal">
         <div class="all-modal modal1" @click.stop="showModal.authErrorModal=true">
           <div class="header">
             <i @click.stop="showModal.authErrorModal=false"></i>
           </div>
           <div class="body">
-            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/schoolSeason/error-icon.png" style="vertical-align: middle;"> {{authError}}</p>
+            <p>很遗憾！您未通过快速实名认证审核！</p>
             <p> 您也可以通过<span class="red" @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
             <button @click.stop="showModal.authErrorModal=false;showModal.authModal=true" style="margin-top: 35px;" class="modal-btn"><span>再次尝试</span></button>
           </div>
         </div>
       </div>
-    </transition> -->
+    </transition>
     <!-- 没有实名认证提示 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.notAuthModal=false" v-if="showModal.notAuthModal">
@@ -401,7 +305,7 @@
           </div>
           <div class="body" style="padding-top:72px;">
             <p>很抱歉！您不是新用户，不符合参与本次活动的条件！</p>
-            <p style="color:#FF3000;margin-top:10px;cursor:pointer" @click="$router.push('activecenter')">去看看其他优惠活动吧 →</p>
+            <p style="color:#FF3000;margin-top:10px;cursor:pointer" @click="$router.push('activecenter')">去看看其他活动吧</p>
           </div>
         </div>
       </div>
@@ -410,20 +314,44 @@
     <transition name="fade">
       <div class="overlay" @click="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal">
         <div class="all-modal modal3" @click.stop="showModal.luckDrawRuleModal=true">
-          <div class="header"><i @click.stop="showModal.luckDrawRuleModal=false"></i></div>
-          <div class="body">
-            <h3>1、活动时间：2019年1月28日-2019年3月1日； 活动对象：仅限新用户；</h3>
-            <h3>2、本次活动中，每位用户仅可参与一次活动，最多可购买3台云服务器；</h3>
-            <h3>3、本次活动产品仅限于西北一区云服务器，其他地区产品不参与此活动；</h3>
-            <h3>4、本次活动产品均为折扣特惠价格，不能使用任何优惠券以及现金券；</h3>
-            <h3>5、参与本次活动购买的云服务器不享有7天无理由退款服务；</h3>
-            <h3>6、根据国家相关规定，用户实名认证之后才可以购买使用云服务器；</h3>
-            <h3>7、此活动最终解释权由新睿云所有。</h3>
+          <div class="header">
+            <span>活动规则</span>
+            <i @click.stop="showModal.luckDrawRuleModal=false"></i>
           </div>
-          <button @click="showModal.luckDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
+          <div class="body">
+            <h3>1、活动时间：2019年2月21日-2019年3月31日</h3>
+            <h3>2、活动对象：平台已完成实名认证的新老用户</h3>
+            <h3>3、数量限制：云服务器产品每个用户限购7台，GPU云服务器限购2台，对象存储产品限购5款。</h3>
+            <h3>4、活动产品不可使用任何优惠券和现金券。</h3>
+            <h3>5、参与此活动购买的云产品不享有7天无理由退款。</h3>
+            <h3>6、活动最终解释权为新睿云所有。</h3>
+          </div>
+          <button @click.stop="showModal.luckDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
         </div>
       </div>
     </transition>
+
+    <!-- 秒杀活动规则 -->
+    <transition name="fade">
+      <div class="overlay" @click="showModal.spikeDrawRuleModal=false" v-if="showModal.spikeDrawRuleModal">
+        <div class="all-modal modal4" @click.stop="showModal.spikeDrawRuleModal=true">
+          <div class="header">
+            <span>秒杀活动规则</span>
+            <i @click.stop="showModal.spikeDrawRuleModal=false"></i>
+          </div>
+          <div class="body">
+            <h3>1、活动时间：2019.2.21-2019.03.31</h3>
+            <h3>2、活动对象：没有使用过平台任何产品（域名产品除外）且完成实名认证的用户。</h3>
+            <h3>3、数量限制：秒杀产品每天数量有限，每天9点和14点开始秒杀，每款每个用户只限购买一台。</h3>
+            <h3>4、秒杀产品不可使用任何优惠券和现金券。</h3>
+            <h3>5、参与此活动购买的云产品不享有7天无理由退款。</h3>
+            <h3>6、活动最终解释权为新睿云所有。</h3>
+          </div>
+          <button @click.stop="showModal.spikeDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
+        </div>
+      </div>
+    </transition>
+
     <!-- 请填写认证信息弹窗 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.authModal=false" v-if="showModal.authModal">
@@ -431,8 +359,7 @@
           <div class="header"><i @click.stop="showModal.authModal=false"></i></div>
           <div class="body xiannode-form">
             <p class="reminder" v-if="authHintShow">
-              <span>温馨提示：</span>
-              您还不是实名认证用户，请填写以下认证信息，完成认证后可继续购买活动产品！
+             根据国家规定，使用公共互联网需进行 
             </p>
             <Form ref="authForm" :model="authFormValidate" :rules="authFormRuleValidate" :label-width="110" class="auth-form-validate">
               <FormItem label="真实姓名" prop="name">
@@ -465,7 +392,26 @@
         </div>
       </div>
     </transition>
-  </div></template>
+
+    <transition name="fade" v-for="(item,index) in activityList" :key="index">
+      <div class="overlay" @click.stop="item.isShow=false" v-if="item.isShow">
+        <div class="all-modal modal1" @click.stop="item.isShow=true">
+          <div class="header">
+            <i @click.stop="item.isShow=false"></i>
+            <span style="color:#FF624B;font-size:18px;line-height:55px;">{{item.title}}</span>
+          </div>
+          <div class="body">
+            <p style="padding: 13px 0px 26px 0px">{{item.content}}<span class="color:#FF624B;">{{item.content1}}</span>{{item.content2}}</p>
+          </div>
+          <div slot="footer">
+            <button @click.stop="item.isShow=false" class="modal-btn"><span>{{item.button}}</span></button>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+  </div>
+  </template>
 
 <script type="text/ecmascript-6">
 import axios from '@/util/axiosInterceptor'
@@ -501,11 +447,52 @@ export default {
       }
     }
     return {
-      h: '--',
-      m1: '--',
-      m2: '--',
-      s1: '--',
-      s2: '--',
+      // 活动弹窗列表
+      activityList:[
+        {
+          title:'抱歉',
+          content:'您不符合参与秒杀活动的条件，去看看',
+          content1:'其它活动',
+          button:'查看其它活动',
+          isShow:'false'
+        },
+        {
+          title:'温馨提示',
+          content:'您已经参与过秒杀活动啦，去看看 ',
+          button:'查看其它活动',
+          isShow:'false'
+        },
+        {
+          title:'温馨提示',
+          content:'每个用户只能购买 ',
+          content1:'7台',
+          content2:'云服务器哦，去选购其它产品吧',
+          button:'确定',
+          isShow:'false'
+        },
+         {
+          title:'温馨提示',
+          content:'每个用户只能购买 ',
+          content1:'2台',
+          content2:'GPU云服务器哦，去选购其它产品吧',
+          button:'确定',
+          isShow:'false'
+        },
+        {
+          title:'温馨提示',
+          content:'每个用户只能购买 ',
+          content1:'5个',
+          content2:'GPU对象存储包，去选购其它产品吧',
+          button:'确定',
+          isShow:'false'
+        },
+        {
+          title:'温馨提示',
+          content:'当前资源不足，去选购其他产品吧',
+          button:'确定',
+          isShow:'false'
+        },
+      ],
       authError: '',
       authHintShow: false,
       reminderShow: true,
@@ -637,7 +624,22 @@ export default {
         }
       ],
       // 热门云主机打折
-      hostProductHot: {
+      hotProductHot: {
+          // cpu: '1',
+          // mem: '2',
+          // disksize: '40',
+          // bandwith: '1',
+          // zoneId: '',
+          // system: [],
+          // duration: '6',
+          // originalPrice: '1300.32',
+          // currentPrice: '351.09',
+          // id: '40',
+          // type: '0',
+          // activityNum: '27',
+          // servicetype: 'host',
+          // num: 0.5 * 100,
+          // discount: '1'
           zoneId: '',
           cpuMemory: {cpu: '1', memory: '1'},
           bandwith: 1,
@@ -645,7 +647,6 @@ export default {
           disksize: 20,
           timeTimetype: {type: 'month', value: '6', discount: '4'},
           count: '1',
-          price: ''
         },
       hostZoneListHot: [],
       hostConfigListHot: {
@@ -697,98 +698,6 @@ export default {
         {type: 'year', value: '3', discount: '2'},
       ],
       // 热门gpu打折
-      gpuProductHot: {
-        zoneId: '',
-        cpuMemory: {cpunum: '8', memory: '64'},
-        bandwith: 5,
-        system: [],
-        disksize: 20,
-        timeTimetype: {type: 'day', value: '7', discount: '4'},
-        count: '1',
-        price: '',
-        // servicetype: '',
-        // gpusize: ''
-      },
-      gpuZoneListHot: [],
-      gpuConfigListHot: [],
-      gpubandwithListHot: [5, 10, 20, 30, 50],
-      gpuSystemListHot: [{
-          value: 'window',
-          label: 'Windows',
-          children: [
-          ]
-        }, {
-          value: 'centos',
-          label: 'Centos',
-          children: [
-          ],
-        },
-        {
-          value: 'debian',
-          label: 'Debian',
-          children: [
-          ],
-        },
-        {
-          value: 'ubuntu',
-          label: 'Ubuntu',
-          children: [
-          ],
-        }],
-      gpuDisksizeListHot: [20, 50, 100, 500],
-      gpuTimeListHot: [
-        {type: 'day', value: '7', discount: '4'},
-        {type: 'month', value: '1', discount: '4'},
-        {type: 'month', value: '3', discount: '3'},
-      ],
-      // 热门对象存储打折
-      objProductHot: {
-          zoneId: '',
-          cpuMemory: {label: '100', unit: 'G', value: '100'},
-          bandwith: 1,
-          system: [],
-          disksize: 20,
-          timeTimetype: {type: 'month', value: '3', discount: '5'},
-          count: '1',
-          price: ''
-        },
-      objZoneListHot: [],
-      objConfigListHot: [
-        {label: '100', unit: 'G', value: '100'},
-        {label: '500', unit: 'G', value: '500'},
-        {label: '1', unit: 'TB', value: '1024'},
-      ],
-      objbandwithListHot: [1, 2, 5, 10, 20],
-      objSystemListHot: [{
-          value: 'window',
-          label: 'Windows',
-          children: [
-          ]
-        }, {
-          value: 'centos',
-          label: 'Centos',
-          children: [
-          ],
-        },
-        {
-          value: 'debian',
-          label: 'Debian',
-          children: [
-          ],
-        },
-        {
-          value: 'ubuntu',
-          label: 'Ubuntu',
-          children: [
-          ],
-        }],
-      objDisksizeListHot: [20, 50, 100, 500],
-      objTimeListHot: [
-        {type: 'month', value: '3', discount: '5'},
-        {type: 'month', value: '6', discount: '4'},
-        {type: 'year', value: '1', discount: '3.5'},
-        {type: 'year', value: '2', discount: '3'},
-      ],
       hostTwo: {
         //带宽
         bandwidthList: [
@@ -892,7 +801,8 @@ export default {
         authErrorModal: false,
         authSucModal: false,
         notAuthModal: false,
-        newCoustom: false
+        newCoustom: false,
+        spikeDrawRuleModal:false
       },
       authFormValidate: {
         name: '',
@@ -927,10 +837,7 @@ export default {
   },
   created () {
     this.getHostZoneList()
-    this.getHostZoneListHot()
-    this.getGpuZoneListHot()
-    this.getobjZoneListHot()
-    this.countTime()
+    this.getHostZoneList1()
   },
   mounted () {
 
@@ -958,27 +865,6 @@ export default {
           this.$store.commit('setAuthInfo', { authInfo: response.data.authInfo, userInfo: response.data.result })
         }
       })
-    },
-    countTime() {
-        //获取当前时间
-        var date = new Date();
-        var now = date.getTime();
-        //设置截止时间
-        // console.log(date.getHours())
-        var endDate = new Date("2019-02-21 23:23:23");
-        var end = endDate.getTime();
-        //时间差
-        var leftTime = end-now;
-        //定义变量 d,h,m,s保存倒计时的时间
-        if (leftTime>=0) {
-            this.h = Math.floor(leftTime/1000/60/60%24);
-            this.m1 = Math.floor(leftTime/1000/60%60/10)
-            this.m2 = Math.floor(leftTime/1000/60%60%10)
-            this.s1 = Math.floor(leftTime/1000%60/10)
-            this.s2 = Math.floor(leftTime/1000%60%10)
-        }
-        //递归每秒调用countTime方法，显示动态时间效果
-        setTimeout(this.countTime,1000);
     },
     // 云服务器获取区域
     getHostZoneList () {
@@ -1123,7 +1009,7 @@ export default {
         })
       }
     },
-    getHostZoneListHot () {
+    getHostZoneList1 () {
       let url = 'activity/getTemActInfoById.do'
       axios.get(url, {
         params: {
@@ -1132,12 +1018,12 @@ export default {
       }).then(res => {
         if (res.data.status == 1 && res.status == 200) {
           this.hostZoneListHot = res.data.result.optionalArea
-          this.hostProductHot.zoneId = res.data.result.optionalArea[0].value
+          this.hotProductHot.zoneId = res.data.result.optionalArea[0].value
         }
       })
     },
     // 云主机打折获取系统
-    setTemplateHost(zoneId) {
+    setTemplate(zoneId) {
       axios.get('information/listTemplates.do', {
         params: {
           zoneId: zoneId,
@@ -1145,168 +1031,32 @@ export default {
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
-          var obj = this.cascaderSystemM(res.data.result, this.hostSystemListHot, this.hostProductHot.system)
-          this.hostProductHot.system = obj
-        }
-      })
-    },
-    // 获取GPU配置类型
-    listHostServiceoffers(zoneId) {
-      axios.get('information/getServiceoffers.do', {
-        params: {
-          zoneId: zoneId,
-        }
-      }).then(res => {
-        if (res.status == 200 && res.data.status == 1) {
-          console.log(res.data.info)
-          // this.gpuConfigListHot = res.data.result.filter(item => {
-          //   return item.gpu == '100'
-          // })
+          var obj = this.cascaderSystemM(res.data.result, this.hostSystemListHot, this.hotProductHot.system)
+          this.hotProductHot.system = obj
         }
       })
     },
     // 云主机打折提交订单
-    productBuy_host() {
+    productBuy_host(item) {
         if (this.$store.state.userInfo == null) {
           this.$LR({type: 'login'})
           return
         }
         var params = {
-              zoneId: this.hostProductHot.zoneId,
-              timeType: this.hostProductHot.timeTimetype.type,
-              timeValue: this.hostProductHot.timeTimetype.type == 'month' ? this.hostProductHot.timeTimetype.value : this.hostProductHot.timeTimetype.value*12,
-              templateId: this.hostProductHot.system[1],
-              isAutoRenew: 1,
-              count: this.hostProductHot.count,
-              cpuNum: this.hostProductHot.cpuMemory.cpu,
-              memory: this.hostProductHot.cpuMemory.memory,
-              bandWidth: this.hostProductHot.bandwith,
-              rootDiskType: 'ssd',
-              rootDiskSize: '40',
-              diskType: 'ssd',
-              diskSize: this.hostProductHot.disksize,
-              networkId: 'no',
-              vpcId: 'no',
-              discountForActivity: '38'
-          }
-        axios.get('information/deployVirtualMachine.do', {params}).then((response) => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      },
-       getGpuZoneListHot () {
-        let url = 'activity/getTemActInfoById.do'
-        axios.get(url, {
-          params: {
-            activityNum: '39'
-          }
-        }).then(res => {
-          if (res.data.status == 1 && res.status == 200) {
-            this.gpuZoneListHot = res.data.result.optionalArea
-            this.gpuProductHot.zoneId = res.data.result.optionalArea[0].value
-          }
-        })
-      },
-    // gpu打折获取系统
-    setTemplateGpu(zoneId) {
-      axios.get('information/listTemplates.do', {
-        params: {
-          zoneId: zoneId,
-          user: 0
+          zoneId: item.zone,
+          timeType: 'current',
+          timeValue: '1',
+          templateId: item.system,
+          isAutoRenew: '0',
+          count: '1',
+          cpuNum: '1',
+          memory: '1',
+          bandWidth: '1',
+          rootDiskType: 'sas',
+          networkId: 'no',
+          vpcId: 'no'
         }
-      }).then(res => {
-        if (res.status == 200 && res.data.status == 1) {
-          var obj = this.cascaderSystemM(res.data.result, this.gpuSystemListHot, this.gpuProductHot.system)
-          this.gpuProductHot.system = obj
-        }
-      })
-    },
-    // 获取GPU配置类型
-    listGpuServerOffer(zoneId) {
-      axios.get('gpuserver/listGpuServerOffer.do', {
-        params: {
-          zoneId: zoneId,
-        }
-      }).then(res => {
-        if (res.status == 200 && res.data.status == 1) {
-          this.gpuConfigListHot = res.data.result.filter(item => {
-            return item.gpu == '100'
-          })
-        }
-      })
-    },
-    // gpu打折提交订单
-    productBuy_gpu() {
-        if (this.$store.state.userInfo == null) {
-          this.$LR({type: 'login'})
-          return
-        }
-        var params = {
-              zoneId: this.gpuProductHot.zoneId,
-              timeType: this.gpuProductHot.timeTimetype.type,
-              timeValue: this.gpuProductHot.timeTimetype.type == 'month' ? this.gpuProductHot.timeTimetype.value : this.gpuProductHot.timeTimetype.value,
-              templateId: this.gpuProductHot.system[1],
-              isAutoRenew: 1,
-              count: this.gpuProductHot.count,
-              cpuNum: this.gpuProductHot.cpuMemory.cpunum,
-              memory: this.gpuProductHot.cpuMemory.memory,
-              bandWidth: this.gpuProductHot.bandwith,
-              rootDiskType: 'ssd',
-              rootDiskSize: '40',
-              diskType: 'ssd',
-              diskSize: this.gpuProductHot.disksize,
-              networkId: 'no',
-              vpcId: 'no',
-              discountForActivity: '39',
-              gpusize: this.gpuProductHot.cpuMemory.gpusize,
-              serviceType: this.gpuProductHot.cpuMemory.servicetype
-          }
-        axios.get('gpuserver/createGpuServer.do', {params}).then((response) => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      },
-    getobjZoneListHot () {
-      let url = 'activity/getTemActInfoById.do'
-      axios.get(url, {
-        params: {
-          activityNum: '40'
-        }
-      }).then(res => {
-        if (res.data.status == 1 && res.status == 200) {
-          this.objZoneListHot = res.data.result.optionalArea
-          this.objProductHot.zoneId = res.data.result.optionalArea[0].value
-          // console.log(this.objZoneListHot)
-        }
-      })
-    },
-    // obj打折提交订单
-    productBuy_obj() {
-      console.log(this.objProductHot.zoneId)
-        if (this.$store.state.userInfo == null) {
-          this.$LR({type: 'login'})
-          return
-        }
-        var params = {
-              zoneId: this.objProductHot.zoneId,
-              activityNum: '40',
-              cost: this.objProductHot.price + '',
-              timeType: this.objProductHot.timeTimetype.type,
-              timeValue: this.objProductHot.timeTimetype.type == 'month' ? this.objProductHot.timeTimetype.value : this.objProductHot.timeTimetype.value * 12,
-              capacity: this.objProductHot.cpuMemory.value,
-              flowPackage: this.objProductHot.cpuMemory.value,
-           }
-        axios.post('ruiradosPrice/createOrder.do', params).then((response) => {
+        this.$http.get('information/deployVirtualMachine.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
@@ -1404,98 +1154,43 @@ export default {
         }
       })
     },
-    getTicket() {
-      if (this.$store.state.userInfo == null) {
-          this.$LR({type: 'login'})
-          return
+    getprice() {
+      axios.get('activity/getOriginalPrice.do', {
+        params: {
+          zoneId: this.hotProductHot.zoneId,
+          activityNum: '38',
+          type: this.hotProductHot.timeTimetype.type,
+          month: this.hotProductHot.timeTimetype.type == 'month' ? this.hotProductHot.timeTimetype.value : this.hotProductHot.timeTimetype.value*12,
+          cpu: this.hotProductHot.cpuMemory.cpu,
+          mem: this.hotProductHot.cpuMemory.memory,
+          bandwith: this.hotProductHot.bandwith,
+          diskSize: this.hotProductHot.disksize,
         }
-        var url = `ticket/takeTicket.do`
-        axios.get(url).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$message.info({
-              content: '卡券领取成功，请前往费用中心-我的卡券充值后使用。'
-            })
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
+      }).then(res => {
+        if (res.status == 200 && res.data.status == 1) {
+          // this.hotProductHot.price = res.data.result.cost
+          // console.log(res.data.result.cost)
+          return res.data.result.cost
+        }
+      })
     }
   },
   computed: {
     userInfo () {
       return this.$store.state.userInfo
     },
-    PriceHostHot() {
-      axios.get('activity/getOriginalPrice.do', {
-        params: {
-          zoneId: this.hostProductHot.zoneId,
-          activityNum: '38',
-          type: this.hostProductHot.timeTimetype.type,
-          month: this.hostProductHot.timeTimetype.type == 'month' ? this.hostProductHot.timeTimetype.value : this.hostProductHot.timeTimetype.value*12,
-          cpu: this.hostProductHot.cpuMemory.cpu,
-          mem: this.hostProductHot.cpuMemory.memory,
-          bandwith: this.hostProductHot.bandwith,
-          diskSize: this.hostProductHot.disksize,
-        }
-      }).then(res => {
-        if (res.status == 200 && res.data.status == 1) {
-          this.hostProductHot.price = res.data.result.cost
-        }
-      })
-    },
-    PriceGpuHot() {
-      axios.get('activity/getOriginalPrice.do', {
-        params: {
-          zoneId: this.gpuProductHot.zoneId,
-          activityNum: '39',
-          type: this.gpuProductHot.timeTimetype.type,
-          month: this.gpuProductHot.timeTimetype.type == 'month' ? this.gpuProductHot.timeTimetype.value : this.gpuProductHot.timeTimetype.value,
-          cpu: this.gpuProductHot.cpuMemory.cpunum,
-          mem: this.gpuProductHot.cpuMemory.memory,
-          bandwith: this.gpuProductHot.bandwith,
-          diskSize: this.gpuProductHot.disksize,
-        }
-      }).then(res => {
-        if (res.status == 200 && res.data.status == 1) {
-          this.gpuProductHot.price = res.data.result.cost
-        }
-      })
-    },
-    PriceobjHot() {
-      axios.get('activity/getOriginalPrice.do', {
-        params: {
-          zoneId: this.objProductHot.zoneId,
-          activityNum: '40',
-          type: this.objProductHot.timeTimetype.type,
-          month: this.objProductHot.timeTimetype.type == 'month' ? this.objProductHot.timeTimetype.value : this.objProductHot.timeTimetype.value * 12,
-          capacitys: this.objProductHot.cpuMemory.value,
-          flowPackages: this.objProductHot.cpuMemory.value,
-        }
-      }).then(res => {
-        if (res.status == 200 && res.data.status == 1) {
-          this.objProductHot.price = res.data.result.cost
-          // console.log(this.objProductHot.price)
-        }
-      })
+    getPriceHostHot() {
+      console.log(this.getprice())
+      return this.getprice()
     },
   },
   watch: {
-    'hostProductHot.zoneId': {
-      handler() {
-        this.setTemplateHost(this.hostProductHot.zoneId)
-        this.listHostServiceoffers(this.hostProductHot.zoneId)
+    'hotProductHot.zoneId': {
+        handler() {
+          this.setTemplate(this.hotProductHot.zoneId)
+        },
+        deep: true
       },
-      deep: true
-    },
-    'gpuProductHot.zoneId': {
-      handler() {
-        this.listGpuServerOffer(this.gpuProductHot.zoneId)
-        this.setTemplateGpu(this.gpuProductHot.zoneId)
-      },
-      deep: true
-    },
   },
   components: {
 
@@ -1783,7 +1478,7 @@ section {
   }
   .main {
     width: 1200px;
-    height: 1529px;
+    height: 1498px;
     background: rgba(255, 255, 255, 1);
     border-radius: 20px;
     border: 4px solid rgba(222, 185, 116, 1);
@@ -1910,7 +1605,7 @@ section {
         }
       }
     }
-    .box-top-a {
+    .host {
       height: 558px;
       .left {
         width: 642px;
@@ -1918,6 +1613,7 @@ section {
           height: 123px;
           padding: 40px 20px;
           color: #fff;
+          background: url("../../../assets/img/active/schoolSeason/hot_item_bg_1.png");
           font-size: 18px;
           p {
             margin-bottom: 10px;
@@ -1925,23 +1621,6 @@ section {
             font-weight: bold;
           }
         }
-      }
-    }
-    .host {
-      .top {
-        background: url("../../../assets/img/active/schoolSeason/hot_item_bg_1.png");
-      }
-    }
-    .gpu {
-      height: 440px;
-      .top {
-        background: url("../../../assets/img/active/schoolSeason/hot_item_bg_2.png");
-      }
-    }
-    .obj {
-      height: 371px;
-      .top {
-        background: url("../../../assets/img/active/schoolSeason/hot_item_bg_3.png");
       }
     }
   }
@@ -2095,24 +1774,36 @@ section {
     font-weight: 400;
     background: none;
     color: #fff;
-    // &:focus {
-    //   border: none;
-    // }
+    &:focus {
+      border: none;
+    }
   }
 }
 .modal-btn {
-  width: 170px;
-  height: 50px;
-  border: 1px solid rgba(255, 48, 0, 1);
-  font-size: 20px;
+  width: 134px;
+  height: 36px;
+  border: 1px solid #FF624B;
+  font-size: 14px;
   font-family: PingFangSC-Regular;
-  color: rgba(255, 48, 0, 1);
-  line-height: 45px;
-  background: none;
+  color: #fff;
+  background: #FF624B;
+  border-radius: 4px;
   cursor: pointer;
   &:hover {
-    background: rgba(255, 231, 215, 1);
+    background: rgb(253, 116, 95);
   }
+}
+.modal-btn1{
+  background: #FF624B;
+  color: #fff;
+  border: 1px solid #FF624B;
+}
+.modal-btn1:hover{
+   background: rgb(253, 116, 95);
+}
+.modal-register{
+  color: #FF624B;
+  border: 1px solid #FF624B;
 }
 .vailcode-btn {
   border: 1px solid rgba(255, 48, 0, 1);
@@ -2131,6 +1822,7 @@ section {
   // background-color: rgba(255, 255, 255, 0.3);
   height: 100%;
   z-index: 1000;
+  
   .all-modal {
     position: relative;
     margin: 0 auto;
@@ -2138,6 +1830,7 @@ section {
     background: rgba(255, 255, 255, 1);
     text-align: center;
     font-size: 16px;
+    border-radius: 4px;
     &.lottery {
       top: 100px;
     }
@@ -2152,8 +1845,8 @@ section {
         color: rgba(255, 255, 255, 1);
         cursor: pointer;
         position: absolute;
-        right: 10px;
-        top: 0px;
+        right: 13px;
+        top: 2px;
         transform: rotate(45deg);
         &:before {
           content: "";
@@ -2176,12 +1869,14 @@ section {
   }
 }
 .modal1 {
-  width: 600px;
-  height: 300px;
+  width: 380px;
+  height: 180px;
   > .header {
+    
     // background: url("../../../assets/img/active/schoolSeason/modal-bg-reminder.png");
   }
   .body {
+    color:#4B3C3D;
     p {
       > span {
         color: #ff3000;
@@ -2228,22 +1923,50 @@ section {
 }
 
 .modal3 {
-  width: 700px;
-  height: 457px;
+  width: 500px;
+  height: 380px;
   > .header {
     // background: url("../../../assets/img/active/schoolSeason/modal-bg-rule.png");
+    span{
+      color:#FF624B;
+      font-size: 18px;
+      line-height: 55px;
+    }
   }
   > .body {
+    color:#4B3C3D;
     margin: 0 auto;
-    padding: 30px 0 34px 0;
-    width: 554px;
+    padding: 30px 20px 34px 20px;
     text-align: left;
     h3 {
-      font-size: 16px;
+      font-size: 14px;
       font-family: MicrosoftYaHei;
       font-weight: 400;
-      color: rgba(34, 34, 34, 1);
-      line-height: 30px;
+      line-height: 27px;
+    }
+  }
+}
+.modal4{
+  width: 500px;
+  height: 408px;
+  > .header {
+    // background: url("../../../assets/img/active/schoolSeason/modal-bg-rule.png");
+    span{
+      color:#FF624B;
+      font-size: 18px;
+      line-height: 55px;
+    }
+  }
+  > .body {
+    color:#4B3C3D;
+    margin: 0 auto;
+    padding: 30px 20px 34px 20px;
+    text-align: left;
+    h3 {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      line-height: 27px;
     }
   }
 }
