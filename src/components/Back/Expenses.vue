@@ -20,7 +20,7 @@
                 <span>余额</span>
                 <button @click="torecharge">充值</button>
                 <!-- $router.push('/ruicloud/cashwithdrawal') -->
-                <button @click="$router.push('/ruicloud/cashwithdrawal')" style="margin-right: 10px;border:1px solid rgba(43,153,242,1);background: white;color:rgba(43,153,242,1);border-radius:2px;width:54px;height:28px;">提现</button>
+                <button @click="Cashwithdrawal" style="margin-right: 10px;border:1px solid rgba(43,153,242,1);background: white;color:rgba(43,153,242,1);border-radius:2px;width:54px;height:28px;">提现</button>
                 <div>
                   <ul style="width: 50%">
                     <li>可用余额</li>
@@ -815,6 +815,23 @@
       <Button @click="showModal.refundLastHint = false,showModal.refundNextHint = true,refundTo = 'account'">取消</Button>
       <Button type="primary" :disabled="refundLastHintDisabled" @click="refundLsat_ok">确定{{ refundLastHintText}}</Button>
     </p>
+  </Modal>
+  <!-- 未实名弹窗 -->
+  <Modal v-model="showModal.nonrealName" :scrollable="true" :closable="true" :width="390">
+  	<p slot="header" class="modal-header-border">
+  		<Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+  		<span class="universal-modal-title">实名验证</span>
+  	</p>
+  	<div class="modal-content-s">
+  		<div>
+  			<p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">您尚未实名认证，为保障您的资金安全，提现之前需要您通过实名认证。
+  			</p>
+  		</div>
+  	</div>
+  	<p slot="footer" class="modal-footer-s">
+  		<Button @click="showModal.nonrealName = false">取消</Button>
+  		<Button type="primary" @click="goreal">去实名</Button>
+  	</p>
   </Modal>
   </div>
 </template>
@@ -1831,7 +1848,8 @@
           refundLastHint: false,
           freezeToRenewAffirm: false,
           // 修改手机号码（身份证方式）
-          modifyPhoneID: false
+          modifyPhoneID: false,
+		  nonrealName:false
         },
         // 提现
         withdrawForm: {
@@ -3216,7 +3234,19 @@
             })
           }
         })
-      }
+      },
+	  Cashwithdrawal(){
+		  if(this.authInfo&&this.authInfo.checkstatus==0){
+			  this.$router.push('/ruicloud/cashwithdrawal')
+		  }
+		  else{
+			  this.showModal.nonrealName=true
+		  }
+	  },
+	  goreal(){
+		  sessionStorage.setItem('pane', 'nonrealname')
+		  this.$router.push('/ruicloud/Usercenter')
+	  }
     },
     computed: {
       payDisabled() {

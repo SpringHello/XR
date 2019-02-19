@@ -63,7 +63,7 @@
 				</div>
 				<Table border :columns="withdrawal" :data="withdrawaldataFilter" style="margin-top: 10px;"></Table>
 				<!-- :total="ordertotal" -->
-				<Page :total="pageall" :page-size="pageNum" @on-change="changePage" style="float: right;margin-right: 30px;margin-top: 20px;"></Page>
+				<Page :total="pageall" :page-size="pageNum" @on-change="changePage" style="margin-top: 20px;margin-left: 990px;"></Page>
 			</div>
 
 			<!-- 线上提现弹窗 -->
@@ -484,24 +484,34 @@
 				this.bank_account = this.formAppreciationDate.bankAccount
 			},
 			carddetermination(name) {
-				this.$refs[name].validate((valid) => {
-					if (valid) {
-						sessionStorage.setItem('payeeName', this.formAppreciationDate.companyName)
-						sessionStorage.setItem('bankAccInfor', this.formAppreciationDate.depositBank)
-						sessionStorage.setItem('payeeAccount', this.formAppreciationDate.bankAccount)
-						sessionStorage.setItem('bankAddress', this.formAppreciationDate.registeredAddress)
-						sessionStorage.setItem('bankBranch', this.formAppreciationDate.taxpayerID)
-						sessionStorage.setItem('reservedPhone', this.formAppreciationDate.registeredPhone)
-						sessionStorage.setItem('balance', this.comBankemoney)
-						sessionStorage.setItem('type', 1)
-						this.$router.push('/ruicloud/cashprocess')
-					}
-				})
+				if(this.comBankemoney<=0){
+					this.$Message.info("您当前的金额不能提现！")
+				}
+				else{
+					this.$refs[name].validate((valid) => {
+						if (valid) {
+							sessionStorage.setItem('payeeName', this.formAppreciationDate.companyName)
+							sessionStorage.setItem('bankAccInfor', this.formAppreciationDate.depositBank)
+							sessionStorage.setItem('payeeAccount', this.formAppreciationDate.bankAccount)
+							sessionStorage.setItem('bankAddress', this.formAppreciationDate.registeredAddress)
+							sessionStorage.setItem('bankBranch', this.formAppreciationDate.taxpayerID)
+							sessionStorage.setItem('reservedPhone', this.formAppreciationDate.registeredPhone)
+							sessionStorage.setItem('balance', this.comBankemoney)
+							sessionStorage.setItem('type', 1)
+							this.$router.push('/ruicloud/cashprocess')
+						}
+					})
+				}
 			},
 			onlinefor() {
-				sessionStorage.setItem('balance', this.comOnlinemoney)
-				sessionStorage.setItem('type', 0)
-				this.$router.push('/ruicloud/cashprocess')
+				if(this.comOnlinemoney<=0){
+					this.$Message.info("您当前的金额不能提现！")
+				}
+				else{
+					sessionStorage.setItem('balance', this.comOnlinemoney)
+					sessionStorage.setItem('type', 0)
+					this.$router.push('/ruicloud/cashprocess')
+				}
 			},
 			setdisable() {
 				this.isTrue = false

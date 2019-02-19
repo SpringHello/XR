@@ -32,7 +32,7 @@
 			 <span class="spanall" style="margin-left: -15px;float: left;margin-top: 5px;">本次提现金额</span>
 			 <RadioGroup vertical v-model="vertical" style="margin-left: 15px;margin-top: -3px;">
 			    <Radio label="l1"><span class="spanall">{{moneysure}} 元（本次可提现金额）</span></Radio>
-				<Radio label="l2">其他金额<InputNumber :disabled="disabled11" :max="moneysure" :min="1" v-model="Otheramount" @on-change="Otheramountg" style="margin-left: 10px;width: 80px;height: 28px;"></InputNumber><span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-left: 10px;">元</span></Radio>
+				<Radio label="l2" :disabled="disabled12">其他金额<InputNumber :disabled="disabled11" :max="moneysure" :min="1" v-model="Otheramount" @on-change="Otheramountg" style="margin-left: 10px;width: 80px;height: 28px;"></InputNumber><span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-left: 10px;">元</span></Radio>
 			 </RadioGroup>
 		 </div>
 		 <Button type="primary" style="margin-left: 125px;margin-top: 20px;" @click="Firststep" :class="{selected:selectedTabSec == 'content'}">下一步</Button>
@@ -114,8 +114,9 @@
 		<div class="modal-content-s divall">
 			<div style="width: 91%;margin-left: 4%;margin-top: 10px;font-size: 14px;margin-bottom: 20px;">
 				<p style="float: left;line-height:24px;">没有收到验证码？</p><br />
-				<p style="line-height:24px;">1、网络异常可能会造成短信丢失，请<Button class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click="getPhoneCode('againCode')" >重新获取</Button>或<Button class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click.prevent="getPhoneCode('voice')">接收语音验证码</Button>。</p>
-				<p style="line-height:24px;">2、如果手机已丢失或停机，请<Button class="spanaa" @click="showModal.modifyPhoneID = true;showModal.cashverification=false">通过身份证号码验证</Button>或<Button class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</Button>更改手机号。</p>
+				<p style="line-height:24px;">1、网络异常可能会造成短信丢失，请<span class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click="getPhoneCode('againCode')" >重新获取</span>或<span class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click.prevent="getPhoneCode('voice')">接收语音验证码</span>。</p>
+				<p v-if="authInfo&&authInfo.checkstatus==0" style="line-height:24px;">2、如果手机已丢失或停机，请<span class="spanaa" @click="showModal.modifyPhoneID = true;showModal.cashverification=false">通过身份证号码验证</span>或<span class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</span>更改手机号。</p>
+				<p v-if="!authInfo||authInfo&&authInfo.checkstatus!=0" style="line-height:24px;">2、如果手机已丢失或停机，请<span class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</span>或<a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`" class="spanaa" style="font-size: 13px;">联系客服</a>更改手机号。</p>
 			</div>
 		</div>
 	    <p slot="footer" class="modal-footer-s">
@@ -193,9 +194,9 @@
 	                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
 	                    </div>
 	                    <img v-else :src="uploadImgDispaly">
-	                    
+	                    <p style="width: 110px;text-align: center;">上传图片</p>
 	                  </Upload>
-										<p style="width: 110px;text-align: center;">上传图片</p>
+										
 	                </div>
 	                <div class="right">
 	                  <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
@@ -373,6 +374,7 @@
 		  uploadImgDispaly2: '',
 		  authModifyPhoneStep: 0,
 		  disabled11:true,
+			disabled12:false,
 		  authModifyPhoneFormThere: {
 		    verificationCode: '',
 		    pictureCode: '',
@@ -482,7 +484,6 @@
 				}
 				else{
 					this.$Message.info(response.data.message)
-					this.showModal.cashverification = false
 				}
 			})
 		},
@@ -490,7 +491,7 @@
 			this.$router.history.go(-1)
 		},
 		money(){
-			this.moneyall=parseInt(sessionStorage.getItem('balance'))
+			this.moneyall=parseFloat(sessionStorage.getItem('balance'))
 			this.moneysure=this.moneyall
 			this.Actualamount=sessionStorage.getItem('money')
 		},
@@ -516,7 +517,7 @@
 				Lastmoney=this.Otheramount
 			}
 			
-			axios.get('user/getdisk.do', {
+			axios.get('user/getDisk.do', {
 				params: {
 					money:Lastmoney,
 					type: type
@@ -546,14 +547,6 @@
 					//this.$router.push('/ruicloud/cashwithdrawal',3000)
 				}
 			})
-			
-			
-			//if(this.vertical=='l1'){
-				//sessionStorage.setItem('money', this.moneyall)
-			//}
-			//else if(this.vertical=='l2'){
-				//sessionStorage.setItem('money', this.Otheramount)
-			//}
 		},
 		userInfo() {
 		  this.showModal.cashverification = true
@@ -708,7 +701,7 @@
 		      //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
 		      if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
 		          axios.post('user/newPhoneByIdCard.do', {
-		            IDCard: this.authModifyPhoneFormOne.ID,
+		            idCard: this.authModifyPhoneFormOne.ID,
 		            authType: '0',
 		            newPhone: this.authModifyPhoneFormThere.newPhone,
 		            personIdCardHandUrl: this.uploadImgDispaly
@@ -803,6 +796,9 @@
 			}
 			else if(val<0){
 				this.moneysure=0
+			}
+			else if(val<1){
+				this.disabled12 = true
 			}
 		}
 	}
