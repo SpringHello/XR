@@ -2,7 +2,7 @@
 	<div id="background">
 		<div id="wrapper">
 			<span>个人中心 / 用户中心 / 注销账号</span>
-			<div class="content" v-if="selectedTabSec == 'content'" style="min-height: 665px;">
+			<div class="content0" v-if="selectedTabSec == 'content0'">
 				<div style="float: left;" @click="backpage">
 					<Icon class="icon1" type="chevron-left"></Icon>
 				</div>
@@ -70,20 +70,20 @@
 					<p>您正在尝试注销自己的新睿云帐号。请确保账号下无有效业务，在账号注销期间不要进行任何操作，以免注销失败。 </p>
 					<p>注销后，您将无法再使用任何阿里云服务，并且您的帐号和数据也将会丢失。</p>
 				</div>
-				<Form ref="formInline" :model="formInline" :rules="ruleInline" inline>
+				<Form ref="formInline" :model="formInline" :rules="ruleInline" inline style="float: left;">
 					<FormItem prop="user">
-						<Input v-model="formInline.user" type="textarea" :autosize="{minRows: 5,maxRows: 5}" :rows="5" placeholder="请填写注销的理由，我们收到您的意见会多加改正，以便在未来给您带来更好的使用体验"
+						<Input v-model="formInline.user" type="textarea" :autosize="{minRows: 5,maxRows: 5}" :rows="5" :placeholder="formInline.userplace"
 				 style="width:618px;margin-top: 10px;"></Input>
 					</FormItem>
 				 </Form>
-				<p style="margin-top: 10px;">
+				<p style="">
 					<Checkbox v-model="single" style="color:#666666;line-height:16px;">已了解<span style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号空****将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
 				</p>
 				<Button style="margin-left: 939px;margin-top: 40px;">取消注销</Button>
 				<Button type="primary" :disabled="Cancellationdisabled" @click="handleSubmit('formInline')" style="margin-left: 10px;margin-top: 40px;">确定注销</Button>
 			</div>
-			<div class="content1" v-if="selectedTabSec == 'content1'" style="min-height: 665px;">
-				<div style="float: left;" @click="changeTab('content')">
+			<div class="content1" v-if="selectedTabSec == 'content1'">
+				<div style="float: left;" @click="changeTab('content0')">
 					<Icon class="icon1" type="chevron-left"></Icon>
 				</div>
 				<span class="returnmoney">注销账号</span>
@@ -118,6 +118,149 @@
 						<p class="withpw" style="left: 125px;">注销完成</p>
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
+				</div>
+				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0" style="float: left;">
+					<div>
+					  <Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">
+					    <div v-if="$store.state.authInfo&&$store.state.authInfo.authtype==0&&$store.state.authInfo.checkstatus==0">
+					      <Form-item style="width: 100%;margin-top: 20px;margin-bottom:0px;">
+							<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">真实姓名</p>
+					        <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(0,0,0,0.43);margin-top: 10px;">{{ $store.state.userInfo.realname}}</p>
+					      </Form-item>
+					      <FormItem style="width: 100%;margin-top: 20px;" prop="ID">
+							<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">注册身份证号码</p>
+					        <Input v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码"
+					              style="width:240px;margin-top: 10px;"></Input>
+					      </FormItem>
+					      <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.personHint">
+					        <Icon type="ios-close"></Icon>
+					        身份证号码输入有误，验证失败，请尝试
+					        <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+					        <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+					      </p>
+					    </div>        
+					    <div v-if="$store.state.authInfo&&$store.state.authInfo.authtype!=0&&$store.state.authInfo.checkstatus==0">
+					      <Form-item label="公司名称" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
+					        <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.authInfo.name}}</span>
+					      </Form-item>
+					      <FormItem label="公司营业执照号码" style="width: 100%;" prop="businessLicense">
+					        <Input v-model="authModifyPhoneFormOne.businessLicense" placeholder="请输入公司营业执照号码"
+					              style="width:240px;"></Input>
+					      </FormItem>
+					      <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.companyHint">
+					        <Icon type="ios-close"></Icon>
+					        公司营业执照号码输入有误，验证失败，请尝试
+					        <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+					        <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+					      </p>
+					    </div>
+					  </Form>
+					</div>
+					<div>
+					  <div v-if="$store.state.authInfo&&$store.state.authInfo.authtype==0&&$store.state.authInfo.checkstatus==0">
+						<p style="font-size:14px;color:color:#495060;;margin-top:10px;">
+						  请上传手持身份证人像照片
+						</p>
+					    <div class="upload-img" style="margin-top:10px">
+					      <div class="content" style="background:rgba(247,247,247,1);">
+					        <div class="left">
+					          <Upload
+					            multiple
+					            type="drag"
+					            :show-upload-list="false"
+					            :with-credentials="true"
+					            action="file/upFile.do"
+					            :format="['jpg','jpeg','png','gif']"
+					            :max-size="4096"
+					            :on-format-error="handleFormatError"
+					            :on-exceeded-size="handleMaxSize"
+					            :on-success="legalPersonIDFront11" style="background: #D8D8D8;">
+					            <div class="icon-wrap" v-if="uploadImgDispaly==''" style="background: #FFFFFF;">
+					                <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+					            </div>
+					            <img v-else :src="uploadImgDispaly">
+					            <p style="width: 110px;text-align: center;">上传图片</p>
+					          </Upload>
+										
+					        </div>
+					        <div class="right">
+					          <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+					          <p>手持身份证人像照片</p>
+					        </div>
+					      </div>
+					    </div>
+						<p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+						  提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
+						</p>
+					  </div>
+					  <div v-if="$store.state.authInfo&&$store.state.authInfo.authtype!=0&&$store.state.authInfo.checkstatus==0">
+					    <p style="font-size:14px;color:color:#495060;;margin-top:10px;">
+					      请上传手持身份证人像照片
+					    </p>
+					    <div class="upload-img" style="margin-top:10px">
+					      <div class="content" style="background:rgba(247,247,247,1);">
+					        <div class="left">
+					          <Upload
+					            multiple
+					            type="drag"
+					            :show-upload-list="false"
+					            :with-credentials="true"
+					            action="file/upFile.do"
+					            :format="['jpg','jpeg','png','gif']"
+					            :max-size="4096"
+					            :on-format-error="handleFormatError"
+					            :on-exceeded-size="handleMaxSize"
+					            :on-success="legalPersonIDFront12">
+					            <div class="icon-wrap" v-if="uploadImgDispaly1==''" style="background: #FFFFFF;">
+					                <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+					            </div>
+					            <img v-else :src="uploadImgDispaly1">
+					          </Upload>
+										<p style="width: 110px;text-align: center;">上传图片</p>
+					        </div>
+					        <div class="right">
+					          <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+					          <p>法人身份证正面照片</p>
+					        </div>
+					      </div>
+					    </div>
+					    <div class="upload-img" style="margin-top:10px">
+					      <div class="content" style="background:rgba(247,247,247,1);">
+					        <div class="left">
+					          <Upload
+					            multiple
+					            type="drag"
+					            :show-upload-list="false"
+					            :with-credentials="true"
+					            action="file/upFile.do"
+					            :format="['jpg','jpeg','png','gif']"
+					            :max-size="4096"
+					            :on-format-error="handleFormatError"
+					            :on-exceeded-size="handleMaxSize"
+					            :on-success="legalPersonIDFront13">
+					            <div class="icon-wrap" v-if="uploadImgDispaly2==''" style="background: #FFFFFF;">
+					                <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+					            </div>
+					            <img v-else :src="uploadImgDispaly2">
+					          </Upload>
+										<p style="width: 110px;text-align: center;">上传图片</p>
+					        </div>
+					        <div class="right">
+					          <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto;">
+					          <p style="width:168px">经办人手持身份证人像照片</p>
+					        </div>
+					      </div>
+					    </div>
+						<p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+						  提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
+						</p>
+					  </div>
+					</div>
+					<Button style="margin-left: 939px;margin-top: 40px;">取消注销</Button>
+					<Button type="primary" @click="changeTab('content2')" style="margin-left: 10px;margin-top: 40px;">提交信息</Button>
+				</div>
+				<div v-if="$store.state.authInfo == null">
+					<Button type="primary" @click="changeTab('content2')" style="margin-left: 10px;margin-top: 40px;">未实名第二步</Button>
 				</div>
 			</div>
 			<div class="content2" v-if="selectedTabSec == 'content2'" style="min-height: 665px;">
@@ -157,13 +300,19 @@
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
 				</div>
+				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0">
+					<Button type="primary" @click="changeTab('content3')" style="margin-left: 10px;margin-top: 40px;">实名第三步</Button>
+				</div>
+				<div v-if="$store.state.authInfo == null">
+					<Button type="primary" @click="changeTab('content0')" style="margin-left: 10px;margin-top: 40px;">未实名第三步 回第一步</Button>
+				</div>
 			</div>
-			<div class="content3" v-if="selectedTabSec == 'content3'" style="min-height: 665px;">
+			<div class="content3" v-if="selectedTabSec == 'content3'&&$store.state.authInfo&&$store.state.authInfo.checkstatus==0" style="min-height: 665px;">
 				<div style="float: left;" @click="changeTab('content2')">
 					<Icon class="icon1" type="chevron-left"></Icon>
 				</div>
 				<span class="returnmoney">注销账号</span>
-				<div class="withdrawal" v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0">
+				<div class="withdrawal">
 					<div class="withdrawalpo">
 						<p class="withpw">协议与反馈</p>
 						<img src="../../assets/img/back/noname1.png" />
@@ -181,7 +330,27 @@
 						<img src="../../assets/img/back/noname3.png" />
 					</div>
 				</div>
+				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0">
+					<Button type="primary" @click="changeTab('content0')" style="margin-left: 10px;margin-top: 40px;">未实名第四步 回第一步</Button>
+				</div>
 			</div>
+			<!-- 注销账号确认弹窗 -->
+			<Modal v-model="showModal.Cancellation" :scrollable="true" :closable="false" :width="380">
+				<p slot="header" class="modal-header-border">
+					<Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+					<span class="universal-modal-title">注销账号</span>
+				</p>
+				<div class="modal-content-s" style="width: 101%;padding: 0;">
+					<div>
+						<p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">确认后，系统将执行注销前检查，通过后自动进入账号注销进程，您无法自行终止。在此期间，请不要使用此账号进行任何操作，以免造成注销失败。
+						</p>
+					</div>
+				</div>
+				<p slot="footer" class="modal-footer-s">
+					<Button @click="showModal.Cancellation = false">取消</Button>
+					<Button type="primary" @click="test">确定</Button>
+				</p>
+			</Modal>
 		</div>
 	</div>
 </template>
@@ -194,22 +363,50 @@
 		props: {
 			selectedTab: {
 				type: String,
-				default: 'content'
+				default: 'content0'
 			}
 		},
 		data() {
-
+			const validaRegisteredID = (rule, value, callback) => {
+			  if (!reg.IDCardVail(value)) {
+			    callback(new Error('请输入正确的身份证号码'));
+			  } else {
+			    callback()
+			  }
+			}
 			return {
 				selectedTabSec: this.selectedTab,
 				single: false,
+				uploadImgDispaly: '',
+				uploadImgDispaly1: '',
+				uploadImgDispaly2: '',
+				showModal:{
+					Cancellation:false
+				},
 				formInline: {
-                    user: ''
+                    user: '',
+					userplace:'请填写注销的理由，我们收到您的意见会多加改正，以便在未来给您带来更好的使用体验'
                 },
                 ruleInline: {
                     user: [
                         { required: true, message: '请填写注销的理由，我们收到您的意见会多加改正，以便在未来给您带来更好的使用体验。', trigger: 'blur' }
                     ]
-                }
+                },
+				authModifyPhoneFormOne: {
+				  ID: '',
+				  personHint: 0,
+				  companyHint: 0,
+				  businessLicense: ''
+				},
+				authModifyPhoneOneRuleValidate: {
+				  ID: [
+				    {required: true, message: '请输入身份证号码', trigger: 'blur'},
+				    {validator: validaRegisteredID, trigger: 'blur'}
+				  ],
+				  businessLicense: [
+				    {required: true, message: '请输入公司营业执照号码', trigger: 'blur'},
+				  ]
+				}
 			}
 		},
 		created() {
@@ -229,12 +426,43 @@
 			handleSubmit(name) {
                 this.$refs.formInline.validateField('user',(text) => {
                     if (text == '') {
-                        alert("2")
+                        this.showModal.Cancellation=true
                     } else {
-                        alert("1")
+                       this.formInline.userplace=''
                     }
                 })
-            }
+            },
+			test(){
+				this.showModal.Cancellation = false
+				//this.single = false
+				//this.formInline.user = ''
+				this.changeTab('content1')
+			},
+			handleFormatError() {
+			  this.$Message.info({
+			    content: '仅支持jpg,jpeg,png,gif格式的文件上传'
+			  })
+			},
+			handleMaxSize() {
+			  this.$Message.info({
+				content: '上传的文件过大'
+			  })
+			},
+			legalPersonIDFront11(response) {
+			  if (response.status == 1) {
+			    this.uploadImgDispaly = response.result
+			  }
+			},
+			legalPersonIDFront12(response) {
+			  if (response.status == 1) {
+			    this.uploadImgDispaly1 = response.result
+			  }
+			},
+			legalPersonIDFront13(response) {
+			  if (response.status == 1) {
+			    this.uploadImgDispaly2 = response.result
+			  }
+			}
 			
 		},
 		computed: {
@@ -274,7 +502,7 @@
 		display: block;
 	}
 
-	.content {
+	.content0 {
 		width: 1200px;
 		height: 983px;
 		background-color: white;
@@ -282,11 +510,17 @@
 	}
 
 	.content1 {
+		width: 1200px;
+		height: 983px;
 		background-color: white;
 		padding: 20px;
 	}
 
 	.content2 {
+		background-color: white;
+		padding: 20px;
+	}
+	.content3 {
 		background-color: white;
 		padding: 20px;
 	}
