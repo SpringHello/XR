@@ -224,7 +224,13 @@
             }
           },
           {
-            title: '优惠价',
+            title:'优惠价',
+            render(h, obj) {
+             return  h('span',{},obj.row.优惠价 != undefined ? obj.row.优惠价: '--')
+            }
+          },
+          {
+            title: '会员优惠价',
             render(h, obj) {
               if (obj.row.originalcost > obj.row.cost) {
                 return h('span', {}, obj.row.cost)

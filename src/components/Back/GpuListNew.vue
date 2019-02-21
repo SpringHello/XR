@@ -1081,9 +1081,10 @@
 
       // 选中主机
       selectIndex(selecion){
-         this.selectLength.selection = selection.length;
+        this.selectLength.selection = selection.length;
         for(let i = 0;i<selecion.length;i++){
           this.uuid += selecion.computerid+','
+          this.uuid = this.uuid.substring(0,this.uuid.length-1);
             if(selecion[i].row.computerstate != '1' && selecion[i].row.status !='1'){ //开机状态
                 this.disabledList.openDisbled = true;
             }else if(selecion[i].computerstate != '0' && selecion[i].row.status !='1'){ // 关机状态
