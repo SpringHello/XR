@@ -4,10 +4,16 @@
       <span id="title">总览</span>
       <div id="head-info">
         <div style="width:346px">
-          <span class="universal-mini" style="font-size: 14px">欢迎您：</span>
-          <p style="font-size: 18px;color: #333333;margin-top: 15px;position: relative">{{userInfo.realname}}
-            <i :class="auth" class="auth-icon" style="margin-left: 10px;"></i>
-          </p>
+          <div class="user-info">
+            <img src="../../assets/img/usercenter/uc-img3.png"/>
+            <div class="portrait">
+              <img :src="userInfo.headportrait" alt="head-img">
+            </div>
+            <div style="position: relative">
+              <p style="font-size: 18px;color: #333333;">{{userInfo.realname}}</p>
+              <i :class="auth" class="auth-icon"></i>
+            </div>
+          </div>
           <div style="display: flex;margin-top:25px">
             <span style="margin-right:20px;">
               <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
@@ -408,14 +414,32 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .user-info {
+    display: flex;
+    position: relative;
+    >img{
+      position: absolute;
+      bottom: 0;
+    }
+    .portrait {
+      margin-right: 20px;
+      > img {
+        margin-right: 18px;
+        height: 50px;
+        width: 50px;
+        border-radius: 39px;
+      }
+    }
+  }
+
+
   /* 未认证class icon */
   .auth-icon {
     width: 67px;
     height: 18px;
     display: inline-block;
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 0;
     background-repeat: no-repeat;
   }
 

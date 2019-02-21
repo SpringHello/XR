@@ -28,6 +28,7 @@
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
+                    <li><span>会员信息</span><span><img src="../../assets/img/usercenter/uc-img3.png"/></span><span @click="$router.push('memberInfo')">查看</span></li>
                     <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span
                       @click="modifyEmail">去绑定</span></li>
                     <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span
@@ -3945,6 +3946,9 @@
               color: rgba(102, 102, 102, 1);
               line-height: 14px;
               display: inline-block;
+              >img{
+                vertical-align: bottom;
+              }
             }
             span:nth-child(1) {
               width: 60px;

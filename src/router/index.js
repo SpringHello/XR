@@ -127,6 +127,7 @@ const ResetNew = () =>import('@/components/LR/ResetNew')
 const Overview = () =>import('@/components/Back/Overview')
 const Work = () =>import('@/components/Back/Work')
 const Recharge = () =>import('@/components/Back/Recharge.vue')
+const RechargeResult = () =>import('@/components/Back/RechargeResult.vue')
 const Balance = () =>import('@/components/Back/Balance')
 const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
@@ -168,6 +169,7 @@ const ResultNew = () => import('@/components/Back/ResultNew')
 const PayNew = () =>import('@/components/Back/PayNew')
 const Expenses = () =>import('@/components/Back/Expenses')
 const UserCenter = () =>import('@/components/Back/UserCenter')
+const MemberInfo = () =>import('@/components/Back/MemberInfo')
 const UserInfo = ()=>import('@/components/Back/UserInfo')
 const MsgCenter = () =>import('@/components/Back/MsgCenter')
 const OperationLog = () =>import('@/components/Back/OperationLog')
@@ -410,6 +412,7 @@ var router = new Router({
         {path: 'work', name: 'work', component: Work},
         {path: 'renew', name: 'renew', component: Renew},
         {path: 'recharge', name: 'recharge', component: Recharge},
+        {path: 'rechargeResult', name: 'rechargeResult', component: RechargeResult},
         {path: 'balance', name: 'balance', component: Balance},
         {path: 'balanceParticulars', name: 'balanceParticulars', component: BalanceParticulars},
         {path: 'disk', name: 'disk', component: Disk},
@@ -442,6 +445,7 @@ var router = new Router({
 				{path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
 				{path: 'cashprocess', name: 'cashprocess', component: Cashprocess},
         {path: 'userCenter', name: 'userCenter', component: UserCenter},
+        {path: 'memberInfo', name: 'memberInfo', component: MemberInfo},
         {path: 'userInfo', name: 'userInfo', component: UserInfo},
         {path: 'operationLog', name: 'operationLog', component: OperationLog},
         {path: 'msgCenter', name: 'msgCenter', component: MsgCenter},
