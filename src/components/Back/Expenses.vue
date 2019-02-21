@@ -827,7 +827,7 @@
             <i @click.stop="showModal.vipRuleModal=false"></i>
           </div>
           <div class="body">
-            <div class="body_hide" ref="vip">
+            <div class="body_hide" ref="vip" @scroll="vipRuleScroll">
               <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
               <nav>
                 <ul class="nav_list">
@@ -2194,10 +2194,7 @@
         this.search()
         this.getTicketNumber()
       }
-    },
-    mounted(){
-      
-    },     
+    },    
     methods: {
       //Cashforwithdrawa(){
       //axios.get('user/selectValidRefundAmount.do', {
@@ -3444,9 +3441,8 @@
         }
       },
 
-      getVipRule(){
+      getVipRule(e){
         this.showModal.vipRuleModal  = true;
-        this.$refs.vip.addEventListener();
         this.vipCount = 10;
         let interval =  setInterval(() => {
           this.vipCount -- ;
@@ -3458,6 +3454,11 @@
           }
         },1000)
         
+      },
+      vipRuleScroll(e){
+        if(e.srcElement.scrollTop == 1130 && this.vipCount == 0){
+          this.disabledButton  = false;
+        }
       },
       userInfoUpdate() {
         axios.get('user/GetUserInfo.do').then(response => {
