@@ -29,20 +29,22 @@
         </div>
         <div class="main">
           <div class="tabs  flex" style="justify-content: center">
-            <div class="started">9:00~12:00</div>
-            <div>14:00~20:00</div>
+            <div :class="[h != 0 && h < 3 ?'started':'']">9:00~12:00</div>
+            <div :class="[h != 0 && h >3 ?'started':'']">14:00~20:00</div>
           </div>
           <div class="box">
-            <p>本场秒杀倒计时</p>
-            <div class="count-down">
-              <span>2</span>
-              <i>时</i>
-              <span>5</span>
-              <span>9</span>
-              <i>分</i>
-              <span>5</span>
-              <span>9</span>
-              <i>秒</i>
+            <div class="box_time" v-if="h !=0">
+              <p>本场秒杀倒计时</p>
+              <div class="count-down">
+                <span>{{h}}</span>
+                <i>时</i>
+                <span>{{m.substring(0,1)}}</span>
+                <span>{{m.substring(1,2)}}</span>
+                <i>分</i>
+                <span>{{s.substring(0,1)}}</span>
+                <span>{{s.substring(1,2)}}</span>
+                <i>秒</i>
+              </div>
             </div>
             <div class="w_host">
               <div v-for="(item,index) in discountProduct" :key="index">
@@ -84,6 +86,7 @@
         </div>
       </div>
     </section>
+
     <section class="product-hot">
       <div class="wrap">
         <div class="headline">
@@ -172,9 +175,130 @@
               </div>
             </div>
           </div>
+
+          <!-- GPU -->
+          <div class="host flex">
+            <div class="left">
+              <div class="top">
+                <p>P100 GPU高效云服务器</p>
+                <span>超高计算能力，行业最低，低至3折</span>
+              </div>
+              <div class="config">
+                <div class="item-config">
+                  <p style="margin-bottom: 10px;">区域选择</p>
+                  <ul class="flex" style="justify-content: flex-start">
+                    <li v-for="(item3,index) in hostZoneListHot" :key="index" @click="hotProductHot.zoneId=item3.value" :class="{selected:hotProductHot.zoneId==item3.value}">{{item3.name}}</li>
+                  </ul>
+                </div>
+                <div class="item-config">
+                  <p style="margin-bottom: 20px;">配置选择</p>
+                  <div>
+                    <span class="sec-title">基础入门级云服务器</span>
+                    <ul class="flex" style="justify-content: flex-start;">
+                      <li v-for="(item3,index) in hostConfigListHot.basic" :key="index" @click="hotProductHot.cpuMemory=item3" :class="{selected:hotProductHot.cpuMemory.cpu==item3.cpu&&hotProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
+                    </ul>
+                  </div>
+                  <div>
+                    <span class="sec-title">标准进阶型云服务器</span>
+                    <ul class="flex" style="justify-content: flex-start">
+                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hotProductHot.cpuMemory=item3" :class="{selected:hotProductHot.cpuMemory.cpu==item3.cpu&&hotProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
+                    </ul>
+                  </div>
+                  <div>
+                    <span class="sec-title">企业高配型云服务器</span>
+                    <ul class="flex" style="justify-content: flex-start">
+                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hotProductHot.cpuMemory=item3" :class="{selected:hotProductHot.cpuMemory.cpu==item3.cpu&&hotProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
+                    </ul>
+                  </div>
+                  <p style="font-size:12px;color:rgba(154,127,130,1);margin-top:-10px;">*以上配置皆包含40G SSD系统盘</p>
+                </div>
+              </div>
+            </div>
+            <div class="right">
+              <div class="item-select">
+                <p>带宽选择</p> 
+                <Select v-model="hotProductHot.bandwith">
+                  <Option v-for="(item3,index) in hostbandwithListHot" :value="item3" :key="index">{{item3}}M</option>
+                </Select>
+              </div>
+              <div class="item-select">
+                <p>系统选择</p> 
+                <Cascader :data="hostSystemListHot" v-model="hotProductHot.system" style="width:240px;display: inline-block;" class="schoolseason-select"></Cascader>
+              </div>
+              <div class="item-config">
+                <p style="margin-bottom: 10px;">数据盘</p>
+                <ul class="flex" style="justify-content: flex-start">
+                  <li v-for="(item3,index) in hostDisksizeListHot" :key="index" @click="hotProductHot.disksize=item3" :class="{selected:hotProductHot.disksize==item3}">{{item3}}G</li>
+                </ul>
+              </div>
+              <div class="item-config">
+                <p style="margin-bottom: 10px;">购买时长</p>
+                <ul class="flex" style="justify-content: flex-start">
+                  <li v-for="(item3,index) in hostTimeListHot" :key="index" @click="hotProductHot.timeTimetype=item3" :class="{selected:hotProductHot.timeTimetype.value==item3.value}">{{item3.value}}月
+                    <i>{{item3.discount}}折</i>
+                  </li>
+                </ul>
+              </div>
+              <div class="item-select">
+                <p>购买数量</p> 
+                <Button @click="hotProductHot.count--" :disabled="hotProductHot.count<=1">-</Button>
+                <Input type="text" style="width:60px;" class="host-count" v-model="hotProductHot.count"></Input>
+                <Button @click="hotProductHot.count++">+</Button>
+              </div>
+              <div class="cash">
+                <p>
+                  <span>￥</span>{{getPriceHostHot}}
+                </p>
+                <Button @click="productBuy_host()">立即支付</Button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 对象存储 -->
+          <div class="host flex">
+            <div class="left">
+              <div class="top">
+                <p>对象存储</p>
+                <span>超大存储和流量，低至3折</span>
+              </div>
+              <div class="config">
+                <div class="item-config">
+                  <p style="margin-bottom: 10px;">区域选择</p>
+                  <ul class="flex" style="justify-content: flex-start">
+                    <li v-for="(item3,index) in hostZoneListHot" :key="index" @click="hotProductHot.zoneId=item3.value" :class="{selected:hotProductHot.zoneId==item3.value}">{{item3.name}}</li>
+                  </ul>
+                </div>
+                <div class="item-config">
+                  <p style="margin-bottom: 20px;">配置选择</p>
+                  <div>
+                    <ul class="flex" style="justify-content: flex-start;">
+                      <li v-for="(item3,index) in hostConfigListHot.basic" :key="index" @click="hotProductHot.cpuMemory=item3" :class="{selected:hotProductHot.cpuMemory.cpu==item3.cpu&&hotProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="right">
+              <div class="item-config">
+                <p style="margin-bottom: 10px;">购买时长</p>
+                <ul class="flex" style="justify-content: flex-start">
+                  <li v-for="(item3,index) in hostTimeListHot" :key="index" @click="hotProductHot.timeTimetype=item3" :class="{selected:hotProductHot.timeTimetype.value==item3.value}">{{item3.value}}月
+                    <i>{{item3.discount}}折</i>
+                  </li>
+                </ul>
+              </div>
+              <div class="cash">
+                <p>
+                  <span>￥</span>{{getPriceHostHot}}
+                </p>
+                <Button @click="productBuy_host()">立即支付</Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+    
     <section class="product-member">
       <div class="wrap">
         <div class="headline">
@@ -393,8 +517,9 @@
       </div>
     </transition>
 
+    <!-- 提示弹窗 -->
     <transition name="fade" v-for="(item,index) in activityList" :key="index">
-      <div class="overlay" @click.stop="item.isShow=false" v-if="item.isShow">
+      <div class="overlay" @click.stop="item.isShow=false" v-if="item.isShow == true">
         <div class="all-modal modal1" @click.stop="item.isShow=true">
           <div class="header">
             <i @click.stop="item.isShow=false"></i>
@@ -833,6 +958,9 @@ export default {
         ]
       },
       imgSrc: 'user/getKaptchaImage.do',
+      h:'',
+      m:'',
+      s:''
     }
   },
   created () {
@@ -840,7 +968,7 @@ export default {
     this.getHostZoneList1()
   },
   mounted () {
-
+    this.getActivityTime();
   },
   methods: {
     toAuth () {
@@ -1173,6 +1301,38 @@ export default {
           return res.data.result.cost
         }
       })
+    },
+
+    // 活动倒计时
+    getActivityTime(){
+      let date = new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()+'.'+new Date().getHours().toString()+':'+new Date().getMinutes().toString();
+      let time =  Number(new Date());
+      let cc = 20 - new Date().getHours();
+      let min =  Number(new Date()) + cc * 60 * 60 * 1000;
+       var dao =   min - time; 
+      if(new Date().getHours() >= 14 && new Date().getHours() < 21){  
+        let char =  setInterval(()=>{
+          if(dao != 0){
+            dao  -= 1000 ;
+            this.h =  parseInt(dao / 60 / 60 /1000);
+            this.m = parseInt(dao / 1000 /60 %60) > 9 ? parseInt(dao / 1000 /60 %60)+'' : "0"+parseInt(dao / 1000 /60 %60);
+            this.s = dao /1000 % 60 > 9 ? (dao /1000 % 60)+'' : "0"+dao /1000 % 60;
+          }else{
+            clearInterval(char);
+          }
+        },1000)
+      }else if(new Date().getHours() >= 9 && new Date().getHours() < 13){
+        let char =  setInterval(()=>{
+          if(dao != 0){
+            dao  -= 1000 ;
+            this.h =  parseInt(dao / 60 / 60 /1000);
+            this.m = parseInt(dao / 1000 /60 %60) > 9 ? parseInt(dao / 1000 /60 %60)+'' : "0"+parseInt(dao / 1000 /60 %60);
+            this.s = dao /1000 % 60 > 9 ? (dao /1000 % 60)+'' : "0"+dao /1000 % 60;
+          }else{
+            clearInterval(char);
+          }
+        },1000)
+      }
     }
   },
   computed: {
@@ -1331,7 +1491,8 @@ section {
       height: 627px;
       background: url(../../../assets/img/active/schoolSeason/seckill_bg.png)
         center no-repeat;
-      > p {
+      .box_time{
+        > p {
         margin: 20px 0;
         text-align: center;
         font-size: 18px;
@@ -1359,6 +1520,8 @@ section {
           font-style: normal;
         }
       }
+      }
+      
       .w_host {
         font-family: MicrosoftYaHei;
         display: flex;
@@ -1494,7 +1657,7 @@ section {
       .right {
         padding: 30px 20px;
         background: rgba(254, 251, 244, 1);
-        width: 478px;
+        // width: 478px;
         // height:558px;
         .item-config,
         .item-select {
@@ -1606,7 +1769,6 @@ section {
       }
     }
     .host {
-      height: 558px;
       .left {
         width: 642px;
         .top {
