@@ -28,11 +28,11 @@
 						<img src="../../assets/img/back/noname1.png" />
 					</div>
 					<div class="withdrawalpo" style="margin-left:-12px;">
-						<p class="withpw">实名信息填写</p>
+						<p class="withpw">账号信息检测</p>
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
 					<div class="withdrawalpo" style="margin-left: -12px;">
-						<p class="withpw">账号信息检测</p>
+						<p class="withpw">实名信息填写</p>
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
 					<div class="withdrawalpo" style="margin-left: -12px;">
@@ -71,13 +71,13 @@
 					<p>注销后，您将无法再使用任何阿里云服务，并且您的帐号和数据也将会丢失。</p>
 				</div>
 				<Form ref="formInline" :model="formInline" :rules="ruleInline" inline style="float: left;">
-					<FormItem prop="user">
-						<Input v-model="formInline.user" type="textarea" :autosize="{minRows: 5,maxRows: 5}" :rows="5" :placeholder="formInline.userplace"
+					<FormItem prop="cancellation">
+						<Input v-model="formInline.cancellation" type="textarea" :autosize="{minRows: 5,maxRows: 5}" :rows="5" :placeholder="formInline.cancellationplace"
 				 style="width:618px;margin-top: 10px;"></Input>
 					</FormItem>
 				 </Form>
 				<p style="">
-					<Checkbox v-model="single" style="color:#666666;line-height:16px;">已了解<span style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号空****将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
+					<Checkbox v-model="cancellationCheck" style="color:#666666;line-height:16px;">已了解<span style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号空****将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
 				</p>
 				<Button style="margin-left: 939px;margin-top: 40px;">取消注销</Button>
 				<Button type="primary" :disabled="Cancellationdisabled" @click="handleSubmit('formInline')" style="margin-left: 10px;margin-top: 40px;">确定注销</Button>
@@ -107,11 +107,11 @@
 						<img src="../../assets/img/back/noname1.png" />
 					</div>
 					<div class="withdrawalpo" style="margin-left:-12px;">
-						<p class="withpw">实名信息填写</p>
+						<p class="withpw">账号信息检测</p>
 						<img src="../../assets/img/back/noname3.png" />
 					</div>
 					<div class="withdrawalpo" style="margin-left: -12px;">
-						<p class="withpw">账号信息检测</p>
+						<p class="withpw">实名信息填写</p>
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
 					<div class="withdrawalpo" style="margin-left: -12px;">
@@ -120,6 +120,52 @@
 					</div>
 				</div>
 				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0" style="float: left;">
+					<p style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">正在检测您的账号，请稍等…</p>
+					<Button type="primary" @click="changeTab('content2')" style="margin-top: 20px;">实名第二步</Button>
+				</div>
+				<div v-if="$store.state.authInfo == null">
+					<Button type="primary" @click="changeTab('content2')" style="margin-left: 10px;margin-top: 40px;">未实名第二步</Button>
+				</div>
+			</div>
+			<div class="content2" v-if="selectedTabSec == 'content2'" style="min-height: 665px;">
+				<div style="float: left;" @click="changeTab('content1')">
+					<Icon class="icon1" type="chevron-left"></Icon>
+				</div>
+				<span class="returnmoney">注销账号</span>
+				<div class="withdrawal" v-if="$store.state.authInfo == null">
+					<div class="withdrawalpo">
+						<p class="withp">协议与反馈</p>
+						<img src="../../assets/img/back/Rectangle 2.png" />
+					</div>
+					<div class="withdrawalpo" style="margin-left: -17px;">
+						<p class="withp">账号信息检测与注销</p>
+						<img src="../../assets/img/back/Rectangle 22.png" />
+					</div>
+					<div class="withdrawalpo" style="margin-left: -17px;">
+						<p class="withp" style="left: 175px;">注销完成</p>
+						<img src="../../assets/img/back/Rectangle 22.png" />
+					</div>
+				</div>
+				<div class="withdrawal" v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0">
+					<div class="withdrawalpo">
+						<p class="withpw">协议与反馈</p>
+						<img src="../../assets/img/back/noname1.png" />
+					</div>
+					<div class="withdrawalpo" style="margin-left:-12px;">
+						<p class="withpw">账号信息检测</p>
+						<img src="../../assets/img/back/noname3.png" />
+					</div>
+					<div class="withdrawalpo" style="margin-left: -12px;">
+						<p class="withpw">实名信息填写</p>
+						<img src="../../assets/img/back/noname3.png" />
+					</div>
+					<div class="withdrawalpo" style="margin-left: -12px;">
+						<p class="withpw" style="left: 125px;">注销完成</p>
+						<img src="../../assets/img/back/noname2.png" />
+					</div>
+				</div>
+				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0" style="float: left;width: 100%;">
+					<div v-if="checkStatus==0"> 
 					<div>
 					  <Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">
 					    <div v-if="$store.state.authInfo&&$store.state.authInfo.authtype==0&&$store.state.authInfo.checkstatus==0">
@@ -257,81 +303,18 @@
 					  </div>
 					</div>
 					<Button style="margin-left: 939px;margin-top: 40px;">取消注销</Button>
-					<Button type="primary" @click="changeTab('content2')" style="margin-left: 10px;margin-top: 40px;">提交信息</Button>
-				</div>
-				<div v-if="$store.state.authInfo == null">
-					<Button type="primary" @click="changeTab('content2')" style="margin-left: 10px;margin-top: 40px;">未实名第二步</Button>
-				</div>
-			</div>
-			<div class="content2" v-if="selectedTabSec == 'content2'" style="min-height: 665px;">
-				<div style="float: left;" @click="changeTab('content1')">
-					<Icon class="icon1" type="chevron-left"></Icon>
-				</div>
-				<span class="returnmoney">注销账号</span>
-				<div class="withdrawal" v-if="$store.state.authInfo == null">
-					<div class="withdrawalpo">
-						<p class="withp">协议与反馈</p>
-						<img src="../../assets/img/back/Rectangle 2.png" />
-					</div>
-					<div class="withdrawalpo" style="margin-left: -17px;">
-						<p class="withp">账号信息检测与注销</p>
-						<img src="../../assets/img/back/Rectangle 22.png" />
-					</div>
-					<div class="withdrawalpo" style="margin-left: -17px;">
-						<p class="withp" style="left: 175px;">注销完成</p>
-						<img src="../../assets/img/back/Rectangle 22.png" />
-					</div>
-				</div>
-				<div class="withdrawal" v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0">
-					<div class="withdrawalpo">
-						<p class="withpw">协议与反馈</p>
-						<img src="../../assets/img/back/noname1.png" />
-					</div>
-					<div class="withdrawalpo" style="margin-left:-12px;">
-						<p class="withpw">实名信息填写</p>
-						<img src="../../assets/img/back/noname3.png" />
-					</div>
-					<div class="withdrawalpo" style="margin-left: -12px;">
-						<p class="withpw">账号信息检测</p>
-						<img src="../../assets/img/back/noname3.png" />
-					</div>
-					<div class="withdrawalpo" style="margin-left: -12px;">
-						<p class="withpw" style="left: 125px;">注销完成</p>
-						<img src="../../assets/img/back/noname2.png" />
-					</div>
-				</div>
-				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0">
-					<Button type="primary" @click="changeTab('content3')" style="margin-left: 10px;margin-top: 40px;">实名第三步</Button>
+					<Button type="primary" @click="" style="margin-left: 10px;margin-top: 40px;">提交信息</Button>
+				  </div>
+				  <div v-if="checkStatus==1" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
+					  <img src="../../assets/img/back/susses.png" />
+					  <p style="font-size:18px;color:rgba(48,186,120,1);line-height:24px;margin-top: 15px;">提交成功</p> 
+					  <p style="font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;">您的信息已提交成功，我们会在24小时内审核完毕</p>
+					  <p style="font-size:14px;color:rgba(51,51,51,1);line-height:24px;">请耐心等待</p>
+					  <Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
+				  </div>
 				</div>
 				<div v-if="$store.state.authInfo == null">
 					<Button type="primary" @click="changeTab('content0')" style="margin-left: 10px;margin-top: 40px;">未实名第三步 回第一步</Button>
-				</div>
-			</div>
-			<div class="content3" v-if="selectedTabSec == 'content3'&&$store.state.authInfo&&$store.state.authInfo.checkstatus==0" style="min-height: 665px;">
-				<div style="float: left;" @click="changeTab('content2')">
-					<Icon class="icon1" type="chevron-left"></Icon>
-				</div>
-				<span class="returnmoney">注销账号</span>
-				<div class="withdrawal">
-					<div class="withdrawalpo">
-						<p class="withpw">协议与反馈</p>
-						<img src="../../assets/img/back/noname1.png" />
-					</div>
-					<div class="withdrawalpo" style="margin-left:-12px;">
-						<p class="withpw">实名信息填写</p>
-						<img src="../../assets/img/back/noname3.png" />
-					</div>
-					<div class="withdrawalpo" style="margin-left: -12px;">
-						<p class="withpw">账号信息检测</p>
-						<img src="../../assets/img/back/noname3.png" />
-					</div>
-					<div class="withdrawalpo" style="margin-left: -12px;">
-						<p class="withpw" style="left: 125px;">注销完成</p>
-						<img src="../../assets/img/back/noname3.png" />
-					</div>
-				</div>
-				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0">
-					<Button type="primary" @click="changeTab('content0')" style="margin-left: 10px;margin-top: 40px;">未实名第四步 回第一步</Button>
 				</div>
 			</div>
 			<!-- 注销账号确认弹窗 -->
@@ -376,7 +359,8 @@
 			}
 			return {
 				selectedTabSec: this.selectedTab,
-				single: false,
+				cancellationCheck: false,
+				checkStatus:'',
 				uploadImgDispaly: '',
 				uploadImgDispaly1: '',
 				uploadImgDispaly2: '',
@@ -384,11 +368,11 @@
 					Cancellation:false
 				},
 				formInline: {
-                    user: '',
-					userplace:'请填写注销的理由，我们收到您的意见会多加改正，以便在未来给您带来更好的使用体验'
+                    cancellation: '',
+					cancellationplace:'请填写注销的理由，我们收到您的意见会多加改正，以便在未来给您带来更好的使用体验'
                 },
                 ruleInline: {
-                    user: [
+                    cancellation: [
                         { required: true, message: '请填写注销的理由，我们收到您的意见会多加改正，以便在未来给您带来更好的使用体验。', trigger: 'blur' }
                     ]
                 },
@@ -410,7 +394,7 @@
 			}
 		},
 		created() {
-
+			this.loggedOffState()
 		},
 		methods: {
 			changeTab(name) {
@@ -424,18 +408,19 @@
 				this.$router.history.go(0)
 			},
 			handleSubmit(name) {
-                this.$refs.formInline.validateField('user',(text) => {
+                this.$refs.formInline.validateField('cancellation',(text) => {
                     if (text == '') {
                         this.showModal.Cancellation=true
                     } else {
-                       this.formInline.userplace=''
+                       this.formInline.cancellationplace=''
                     }
                 })
             },
 			test(){
+				
 				this.showModal.Cancellation = false
-				//this.single = false
-				//this.formInline.user = ''
+				//this.cancellationCheck = false
+				//this.formInline.cancellation = ''
 				this.changeTab('content1')
 			},
 			handleFormatError() {
@@ -462,17 +447,37 @@
 			  if (response.status == 1) {
 			    this.uploadImgDispaly2 = response.result
 			  }
+			},
+			loggedOffState(){
+				axios.get('user/listClearAccountApplyFor.do', {
+					params: {
+						
+					}
+				}).then(response => {
+					if (response.status == 200 && response.data.status == 1) {
+						//response.data.checkstatus
+						this.checkStatus=0
+						console.log(this.checkStatus)
+					}
+					else{
+						//this.$Message.info(response.data.message)
+					}
+				})
 			}
 			
 		},
 		computed: {
 			Cancellationdisabled(){
-				if(this.single == false){
+				if(this.cancellationCheck == false){
 					return true
 				}
 				else{
 					return false
 				}
+			},
+			authInfo() {
+			  return $store.state.authInfo ? $store.state.authInfo : null
+			  // return null
 			}
 		},
 		watch: {
@@ -517,10 +522,8 @@
 	}
 
 	.content2 {
-		background-color: white;
-		padding: 20px;
-	}
-	.content3 {
+		width: 1200px;
+		height: 983px;
 		background-color: white;
 		padding: 20px;
 	}
