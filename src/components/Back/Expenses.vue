@@ -24,7 +24,7 @@
                 <div>
                   <ul style="width: 50%">
                     <li>可用余额</li>
-                    <li style="color: #2A99F2;cursor: pointer" @clcik="showModal.cashCoupon  = true">¥{{ balance }}</li>
+                    <li style="color: #2A99F2;cursor: pointer" @click="getVipList">¥{{ balance }}</li>
                   </ul>
                   <ul style="width: 30%">
                     <li>冻结押金
@@ -818,15 +818,16 @@
       </p>
     </Modal>
 
+    <!-- 会员规则弹窗 -->
     <transition name="fade">
-      <div class="overlay" @click="showModal.vipRuleModal=false" v-if="showModal.vipRuleModal">
+      <div class="overlay" @click="showModal.vipRuleModal=false" v-if="showModal.vipRuleModal == true">
         <div class="all-modal modal4" @click.stop="showModal.vipRuleModal=true">
           <div class="header">
             <span>会员制规则</span>
             <i @click.stop="showModal.vipRuleModal=false"></i>
           </div>
           <div class="body">
-            <h3><span style="font-wight:400">1、会员级别</span>新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
+            <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
             <nav>
               <ul class="nav_list">
                 <li class="nav_item" v-for="(item,index) in vipRule" :key="index">
@@ -845,13 +846,26 @@
                 </li>
               </ul>
             </nav>
-            <h3>2、活动对象：没有使用过平台任何产品（域名产品除外）且完成实名认证的用户。</h3>
-            <h3>3、数量限制：秒杀产品每天数量有限，每天9点和14点开始秒杀，每款每个用户只限购买一台。</h3>
-            <h3>4、秒杀产品不可使用任何优惠券和现金券。</h3>
-            <h3>5、参与此活动购买的云产品不享有7天无理由退款。</h3>
-            <h3>6、活动最终解释权为新睿云所有。</h3>
+            <div class="word_style">
+              <h3>通过一次性充值（24小时内累计充值金额）或者上个自然年度（每年1月1日至12月31日）累计消费的金额判定不同的会员级别，会员级别不同消费时可享受相应的折扣优惠。</h3>
+              <h3><span>2、会员折扣范围：</span>1. 包括平台自有云产品（域名、SSL证书等第三方平台产品除外），参与活动产品购买时可享受折上折（押金活动除外）。 </h3>
+              <h3><span>3、会员权益有效期</span>：充值或者上个自然年度累计消费达到一定金额即可立即成为会员，会员有效期从会员权益生效之日起至第三年的1月17日。比如2009年7月31日充值1万元或者2009年1月1日至7月31日期间累计消费达到5万元则成为白银会员，有效期至2011年1月17日。 </h3>
+              <h3><span>4、会员其他福利</span>：会员还可享受平台新品免费试用、问题优先解决、免费技术咨询、生日和节日礼品、平台产品不定时赠送等福利。 </h3>
+              <h3><span>5、会员退货退款</span>：累计消费成为会员的客户，因为消费不涉及会员级别的更改，享受平台正常的退货退款流程。 </h3>
+              <h3 style="color:#FF624B;">
+                充值成为会员的用户，会员充值一定金额后，对应会员级别的最低充值额度（如白银会员1万元、黄金会员5万元、铂金会员15万元）经会员同意后单独放入特定账户，优先消费，不可自动提取，以保证会员资格。若强制要求提现此部分金额，则意味会员主动取消会员资格。则之前购买产品均按折扣之前的价格扣除对应金额后方可提现。不足部分平台保留追补权利。 </h3>
+              <h3><span>会员权益发生改变的情形</span></h3>
+              <h3><span>会员保级</span>：会员达到会员有效期后，若有效期内达到任何会员条件，比如充值一定金额或者上一自然年度累计消费达到一定金额，则会员权益相应保留并延期。 </h3>
+              <h3><span>会员升级</span>：某一级别的会员在会员有效期内通过充值或者累计消费后达到更高级别后，以最高级别为准，且会员有效期相应延长。如累计消费达到白银会员后，一次性充值5万元则升级成为黄金会员，会员有效期从成为黄金会员那日开始计算，至第三年的1月17日。 </h3>
+              <h3><span>会员降级</span>：会员达到会员有效期后，若有效期内未达到本级别会员条件，则会员权益重新计算。比如充值会员有效期内没有会员级别的充值行为，则有效期后会员权益失效。若有效期内，若会员资格费用发生提现吗，则会员权益立时失效。 </h3>
+              <h3>
+                比如客户一次性充值2.5万元，则1万元会员资格费用放到现金券账户（不可自动提现），剩余1.5万元放到可提现余额中（可随时提现），若客户要提现5000元，则优先提现1.5万元账户部分，直至此部分金额为0，不影响会员资格。若客户消费了5000元，则优先消费会员资格费用。现金券账户余额还剩下5000元（不考虑其他现金券金额）。若要提现此部分现金券余额，则会员资格会受到影响。客户需提交工单，且要回冲会员折扣费用，实际客户购买产品5000元/0.65=7692.31元
+                则用户可提现金额不是现金券余额5000元，而是10000元-7692.31元=2307.69，则用户可实际提现2307.69元。 若用户消费了6500元，则6500元/0.65=10000元，则可提现金额为0.若客户消费大于6500元，则可提现金额依然为0，不足部分平台保留追补权利。</h3>
+              <h3>若累计消费达到会员级别，则会员后续消费发生退货退款不影响会员资格。直到会员有效期时，会在第三年的1月1日-1月17日计算上一年度的累计消费，重新定义会员级别。若没有达到会员级别，且没有充值达到一定金额，则会员级别降级为相应级别。</h3>
+              <h3>比如客户2009年1月1日至7月31日期间累计消费达到5万元，则自动成为白银会员；在2011年1月1日-1月17日期间，会重新计算2010年1月-12月31日期间的消费累计金额，如没达到1万元，则2011年1月17日降级为非会员用户。</h3>
+            </div>
           </div>
-          <button @click.stop="showModal.vipRuleModal=false" class="modal-btn"><span>我知道了</span></button>
+          <button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" class="modal-btn"><span>我已阅读并同意</span></button>
         </div>
       </div>
     </transition>
@@ -862,9 +876,27 @@
         <span class="universal-modal-title">转入现金券</span>
       </p>
       <div class="universal-modal-content-flex">
+        <p class="cash-coupon-p">帐户余额：<span> ¥{{ balance }}</span></p>
+        <p class="cash-coupon-p">选择会员类型：</p>
+        <div class="vipList">
+          <ul v-for="(item,index) in cashCouponForm.vipList" :key="index" :class="{selected: item.vipid == cashCouponForm.vipId,notallowed: index < cashCouponForm.vipLevel }"
+              @click="changeVipGrade(item)">
+            <li>{{ item.title }}</li>
+            <li><img :src="item.url"/></li>
+            <li>{{ item.descriptStart}}<span>{{ item.discount * 10}}</span>{{item.descriptEnd}}</li>
+            <li>{{ item.descript2}}</li>
+          </ul>
+        </div>
+        <p class="cash-coupon-p">还需转入：<span>¥{{cashCouponForm.upVipCost }}</span></p>
+        <p class="cash-coupon-p">剩余余额：<span>¥{{ remainingBalance}}</span></p>
+        <div class="beVip">
+          <p>您已满足成为{{ cashCouponForm.vipGrade}}资格！</p>
+          <Checkbox v-model="cashCouponForm.agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+            style="cursor: pointer;color:#4A97EE" @click="showModal.vipRuleModal  = true">《会员制规则》</span></span></Checkbox>
+        </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary">确认</Button>
+        <Button type="primary" :disabled="chargeDisabled">确认</Button>
       </div>
     </Modal>
   </div>
@@ -1042,6 +1074,14 @@
             trThree: '3折'
           },
         ],
+        cashCouponForm: {
+          agreeStatus: true,
+          vipList: [],
+          vipId: '',
+          vipGrade: '',
+          vipLevel: 0,
+          upVipCost: 0
+        },
         uploadImgDispaly: '',
         uploadImgDispaly1: '',
         uploadImgDispaly2: '',
@@ -2139,6 +2179,7 @@
       }
     },
     created() {
+      this.getUserVipLevel()
       if (this.name == 'orderManage') {
         this.changeOrder()
       } else {
@@ -3294,6 +3335,67 @@
             })
           }
         })
+      },
+      getVipList() {
+        if (this.cashCouponForm.vipLevel > 2) {
+          this.$message.info({
+            content: '尊敬的白金会员，您的会员等级已达到最高等级'
+          })
+        } else {
+          let url = 'uservip/listVip.do'
+          this.$http.get(url, {params: {}}).then(res => {
+            if (res.data.status == 1 && res.status == 200) {
+              this.cashCouponForm.vipList = res.data.result
+              this.cashCouponForm.vipId = this.cashCouponForm.vipList[this.cashCouponForm.vipLevel].vipid
+              this.upVipCost()
+              this.showModal.cashCoupon = true
+            }
+          })
+        }
+      },
+      changeVipGrade(item) {
+        this.cashCouponForm.vipId = item.vipid
+      },
+      upVipCost() {
+        let url = 'uservip/upVipCost.do'
+        this.$http.get(url, {
+          params: {
+            viplevel: this.cashCouponForm.vipId
+          }
+        }).then(res => {
+          if (res.data.status == 200 && res.status == 200) {
+            this.cashCouponForm.upVipCost = res.data.result
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      upVip() {
+        let url = 'uservip/upVip.do'
+        this.$http.get(url, {
+          params: {}
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      getUserVipLevel() {
+        if (this.userInfo && this.userInfo.vipname == '白银会员') {
+          this.cashCouponForm.vipLevel = 1
+        } else if (this.userInfo && this.userInfo.vipname == '黄金会员') {
+          this.cashCouponForm.vipLevel = 2
+        } else if (this.userInfo && this.userInfo.vipname == '铂金会员') {
+          this.cashCouponForm.vipLevel = 3
+        } else {
+          this.cashCouponForm.vipLevel = 0
+        }
       }
     },
     computed: {
@@ -3346,13 +3448,22 @@
       },
       authInfo() {
         return this.$store.state.authInfo ? this.$store.state.authInfo : null
-        // return null
       },
+      userInfo() {
+        return this.$store.state.userInfo ? this.$store.state.userInfo : null
+      },
+      chargeDisabled() {
+        return this.cashCouponForm.agreeStatus == false && this.cashCouponForm.upVipCost <= this.balance
+      },
+      remainingBalance() {
+        let cost = parseInt(this.balance - this.cashCouponForm.upVipCost)
+        return cost >= 0 ? cost : 0
+      }
     },
     watch: {
       dateRange() {
         this.search()
-      }
+      },
     }
   }
 </script>
@@ -3590,10 +3701,11 @@
     bottom: 0;
     left: 0;
     right: 0;
+    overflow: auto;
     background-color: rgba(55, 55, 55, 0.3);
     // background-color: rgba(255, 255, 255, 0.3);
     height: 100%;
-    z-index: 1000;
+    z-index: 9999;
 
     .all-modal {
       position: relative;
@@ -3643,7 +3755,6 @@
 
   .modal4 {
     width: 500px;
-    height: 408px;
     > .header {
       // background: url("../../../assets/img/active/schoolSeason/modal-bg-rule.png");
       span {
@@ -3669,15 +3780,132 @@
   .nav_list {
     padding: 0;
     margin: 0;
+    width: 460px;
+    display: flex;
+    .nav_item:first-child {
+      width: 147px;
+      line-height: 28px;
+    }
+    .nav_item:last-child {
+      > div {
+        border-right: none;
+      }
+    }
     .nav_item {
       list-style: none;
-      div {
-        height: 60px;
-        line-height: 60px;
+      width: 103px;
+      div:first-child {
+        padding: 20px;
         background: #FFF1E0;
+      }
+      div:last-child {
+        padding: 20px;
+      }
+      div {
+        text-align: center;
+        height: 60px;
+        padding: 10px 15px 0 19px;
+        background: #fff;
         border-right: 1px solid #D4C6B5;
         border-bottom: 1px solid #D4C6B5;
+        color: #333333;
+        font-size: 14px;
       }
+    }
+  }
+
+  .vipList {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    ul {
+      width: 170px;
+      height: 120px;
+      text-align: center;
+      background: rgba(247, 247, 247, 1);
+      border-radius: 4px;
+      border: 1px solid rgba(217, 217, 217, 1);
+      padding-top: 10px;
+      cursor: pointer;
+      &.selected {
+        background: #FFF;
+        border: 1px solid rgba(42, 153, 242, 1);
+      }
+      &.notallowed {
+        cursor: not-allowed;
+      }
+      > li {
+        font-size: 10px;
+        font-family: MicrosoftYaHei;
+        color: rgba(102, 102, 102, 1);
+        line-height: 16px;
+        span {
+          color: #2A99F2;
+        }
+      }
+      li:nth-child(1) {
+        font-size: 12px;
+        font-family: MicrosoftYaHei-Bold;
+        font-weight: bold;
+        color: rgba(102, 102, 102, 1);
+      }
+      li:nth-child(2) {
+        margin: 10px;
+      }
+    }
+  }
+
+  .cash-coupon-p {
+    font-size: 16px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(102, 102, 102, 1);
+    margin-bottom: 20px;
+    > span {
+      font-size: 24px;
+      font-weight: 600;
+      color: rgba(51, 51, 51, 1);
+    }
+  }
+
+  .beVip {
+    > button {
+      font-size: 16px;
+      margin-top: 10px;
+      float: right;
+    }
+    p {
+      font-size: 16px;
+      font-family: MicrosoftYaHei-Bold;
+      font-weight: bold;
+      color: rgba(42, 153, 242, 1);
+      margin-bottom: 10px;
+    }
+  }
+
+  .modal-btn {
+    width: 134px;
+    height: 36px;
+    margin-bottom: 30px;
+    border: 1px solid #FF624B;
+    font-size: 14px;
+    font-family: PingFangSC-Regular;
+    color: #fff;
+    background: #FF624B;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+      background: rgb(253, 116, 95);
+    }
+  }
+
+  .word_style {
+    border-bottom: 1px solid #E9E9E9;
+    padding-bottom: 20px;
+    span {
+      color: #4B3C3D;
+      font-size: 14px;
+      font-weight: bold;
     }
   }
 </style>

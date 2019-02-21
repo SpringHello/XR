@@ -5,7 +5,7 @@
       <div id="head-info">
         <div style="width:346px">
           <div class="user-info">
-            <img src="../../assets/img/usercenter/uc-img3.png"/>
+            <img v-if="vipGrade" :src="vipGrade" alt="vipGrade"/>
             <div class="portrait">
               <img :src="userInfo.headportrait" alt="head-img">
             </div>
@@ -221,7 +221,8 @@
           '#houtaiicon-yunanquan1',
           '#houtaiicon-yunyunwei1',
           '#houtaiicon-yunyunwei1'
-        ]
+        ],
+        vipGrade: ''
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -254,6 +255,7 @@
       })
     },
     created() {
+      this.getUserVipGrade()
     },
     methods: {
       // 设置数据
@@ -363,6 +365,17 @@
       },
       goDynamic(type, id) {
         this.$router.push({path: 'dynamic', query: {type, id}})
+      },
+      getUserVipGrade() {
+        if (this.userInfo && this.userInfo.vipname == '白银会员') {
+          this.vipGrade = require('../../assets/img/usercenter/uc-img3.png')
+        } else if (this.userInfo && this.userInfo.vipname == '黄金会员') {
+          this.vipGrade = require('../../assets/img/usercenter/uc-img4.png')
+        } else if (this.userInfo && this.userInfo.vipname == '铂金会员') {
+          this.vipGrade = require('../../assets/img/usercenter/uc-img5.png')
+        } else {
+          this.vipGrade = ''
+        }
       }
     },
     computed: {
@@ -417,7 +430,7 @@
   .user-info {
     display: flex;
     position: relative;
-    >img{
+    > img {
       position: absolute;
       bottom: 0;
     }
@@ -431,7 +444,6 @@
       }
     }
   }
-
 
   /* 未认证class icon */
   .auth-icon {
