@@ -29,20 +29,21 @@
         </div>
         <div class="main">
           <div class="tabs  flex" style="justify-content: center">
-            <div :class="[h != 0 && h < 3 ?'started':'']">9:00~12:00</div>
-            <div :class="[h != 0 && h >3 ?'started':'']">14:00~20:00</div>
+            <div :class="{started: hour >=9&&hour<12}">9:00~12:00</div>
+            <div :class="{started: hour >=14&&hour<20}">14:00~20:00</div>
           </div>
-          <div class="box">
-            <div class="box_time" v-if="h !=0">
+          <!-- <div class="box"></div> -->
+          <div class="box" :class="[hour >=9&&hour<12 || hour >=14&&hour<20?'box_bg_long':'box_bg_short']">
+            <div class="box_time" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
               <p>本场秒杀倒计时</p>
               <div class="count-down">
                 <span>{{h}}</span>
                 <i>时</i>
-                <span>{{m.substring(0,1)}}</span>
-                <span>{{m.substring(1,2)}}</span>
+                <span>{{m1}}</span>
+                <span>{{m2}}</span>
                 <i>分</i>
-                <span>{{s.substring(0,1)}}</span>
-                <span>{{s.substring(1,2)}}</span>
+                <span>{{s1}}</span>
+                <span>{{s2}}</span>
                 <i>秒</i>
               </div>
             </div>
@@ -549,11 +550,12 @@ export default {
       }
     }
     return {
-      // h: '--',
-      // m1: '--',
-      // m2: '--',
-      // s1: '--',
-      // s2: '--',
+      hour: '',
+      h: '--',
+      m1: '--',
+      m2: '--',
+      s1: '--',
+      s2: '--',
       // 活动弹窗列表
       activityList:[
         {
@@ -1018,9 +1020,7 @@ export default {
         ]
       },
       imgSrc: 'user/getKaptchaImage.do',
-      h: '',
-      m: '',
-      s: ''
+      
     }
   },
   created () {
@@ -1028,12 +1028,53 @@ export default {
     this.getHostZoneListHot()
     this.getGpuZoneListHot()
     this.getobjZoneListHot()
-    this.countTime()
+    this.setTime()
   },
   mounted () {
-    this.getActivityTime();
   },
   methods: {
+    setTime() {
+        axios.get('network/getTime.do').then(res => {
+          if (res.data.status == 1) {
+            let startTime = res.data.result
+            let now = new Date(startTime)
+            let endTime = ''
+            let limitTime = ''
+            this.hour = now.getHours()
+            if (this.hour >=9&&this.hour<12) {
+              endTime = now.setHours(12, 0, 0, 0)
+            } else if(this.hour >=14&&this.hour<20) {
+              endTime = now.setHours(20, 0, 0, 0)
+            }
+            limitTime = endTime - startTime
+            if (limitTime > 0) {
+              this.setLimit(limitTime)
+              this.timer = setInterval(() => {
+                this.setLimit(limitTime)
+                limitTime -= 1000
+                if (limitTime <= 0) {
+                  window.clearInterval(this.timer)
+                  this.hour = 0
+                }
+              }, 1000);
+            } else {
+              this.hour = 0
+              this.h = 0
+              this.m1 = 0
+              this.m2 = 0
+              this.s1 = 0
+              this.s2 = 0
+            }
+          }
+        })
+      },
+    setLimit(leftTime) {
+      this.h = Math.floor(leftTime/1000/60/60%24)
+      this.m1 = Math.floor(leftTime/1000/60%60/10)
+      this.m2 = Math.floor(leftTime/1000/60%60%10)
+      this.s1 = Math.floor(leftTime/1000%60/10)
+      this.s2 = Math.floor(leftTime/1000%60%10)
+    },
     toAuth () {
       sessionStorage.setItem('pane', 'certification')
       this.$router.push('userCenter')
@@ -1057,27 +1098,6 @@ export default {
         }
       })
     },
-    // countTime() {
-    //     //获取当前时间
-    //     var date = new Date();
-    //     var now = date.getTime();
-    //     //设置截止时间
-    //     // console.log(date.getHours())
-    //     var endDate = new Date("2019-02-21 23:23:23");
-    //     var end = endDate.getTime();
-    //     //时间差
-    //     var leftTime = end-now;
-    //     //定义变量 d,h,m,s保存倒计时的时间
-    //     if (leftTime>=0) {
-    //         this.h = Math.floor(leftTime/1000/60/60%24);
-    //         this.m1 = Math.floor(leftTime/1000/60%60/10)
-    //         this.m2 = Math.floor(leftTime/1000/60%60%10)
-    //         this.s1 = Math.floor(leftTime/1000%60/10)
-    //         this.s2 = Math.floor(leftTime/1000%60%10)
-    //     }
-    //     //递归每秒调用countTime方法，显示动态时间效果
-    //     setTimeout(this.countTime,1000);
-    // },
     // 云服务器获取区域
     getHostZoneList () {
       let url = 'activity/getTemActInfoById.do'
@@ -1256,7 +1276,6 @@ export default {
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
-          console.log(res.data.info)
           // this.gpuConfigListHot = res.data.result.filter(item => {
           //   return item.gpu == '100'
           // })
@@ -1390,7 +1409,6 @@ export default {
     },
     // obj打折提交订单
     productBuy_obj() {
-      console.log(this.objProductHot.zoneId)
         if (this.$store.state.userInfo == null) {
           this.$LR({type: 'login'})
           return
@@ -1516,71 +1534,10 @@ export default {
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
-          // this.hotProductHot.price = res.data.result.cost
-          // console.log(res.data.result.cost)
           return res.data.result.cost
         }
       })
     },
-
-    // 活动倒计时
-    getActivityTime(){
-      let date = new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()+'.'+new Date().getHours().toString()+':'+new Date().getMinutes().toString();
-      let time =  Number(new Date());
-      let cc = 20 - new Date().getHours();
-      let min =  Number(new Date()) + cc * 60 * 60 * 1000;
-       var dao =   min - time; 
-      if(new Date().getHours() >= 14 && new Date().getHours() < 21){  
-        let char =  setInterval(()=>{
-          if(dao != 0){
-            dao  -= 1000 ;
-            this.h =  parseInt(dao / 60 / 60 /1000);
-            this.m = parseInt(dao / 1000 /60 %60) > 9 ? parseInt(dao / 1000 /60 %60)+'' : "0"+parseInt(dao / 1000 /60 %60);
-            this.s = dao /1000 % 60 > 9 ? (dao /1000 % 60)+'' : "0"+dao /1000 % 60;
-          }else{
-            clearInterval(char);
-          }
-        },1000)
-      }else if(new Date().getHours() >= 9 && new Date().getHours() < 13){
-        let char =  setInterval(()=>{
-          if(dao != 0){
-            dao  -= 1000 ;
-            this.h =  parseInt(dao / 60 / 60 /1000);
-            this.m = parseInt(dao / 1000 /60 %60) > 9 ? parseInt(dao / 1000 /60 %60)+'' : "0"+parseInt(dao / 1000 /60 %60);
-            this.s = dao /1000 % 60 > 9 ? (dao /1000 % 60)+'' : "0"+dao /1000 % 60;
-          }else{
-            clearInterval(char);
-          }
-        },1000)
-      }
-    }
-  },
-  computed: {
-    userInfo () {
-      return this.$store.state.userInfo
-    },
-    getPriceHostHot() {
-      console.log(this.getprice())
-      return this.getprice()
-    },
-    getTicket() {
-      if (this.$store.state.userInfo == null) {
-          this.$LR({type: 'login'})
-          return
-        }
-        var url = `ticket/takeTicket.do`
-        axios.get(url).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$message.info({
-              content: '卡券领取成功，请前往费用中心-我的卡券充值后使用。'
-            })
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-    }
   },
   computed: {
     userInfo () {
@@ -1776,7 +1733,6 @@ section {
         color: #fff;
         text-align: center;
         line-height: 60px;
-        cursor: not-allowed;
       }
       .started {
         background: rgba(225, 33, 42, 1);
@@ -1790,11 +1746,18 @@ section {
         }
       }
     }
-    .box {
-      padding: 20px 40px;
+    .box_bg_long {
       height: 627px;
       background: url(../../../assets/img/active/schoolSeason/seckill_bg.png)
-        center no-repeat;
+        center top no-repeat;
+    }
+    .box_bg_short {
+      height: 470px;
+      background: url(../../../assets/img/active/schoolSeason/seckill_bg_short.png)
+        center top no-repeat;
+    }
+    .box {
+      padding: 20px 40px;
         .box_time{
           > p {
             margin: 20px 0;
