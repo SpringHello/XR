@@ -871,16 +871,18 @@
     </transition>
 
     <!-- 余额转入现金券 -->
-    <Modal v-model="showModal.cashCoupon" :scrollable="true" :closable="false" :width="640">
+    <Modal v-model="showModal.cashCoupon" :scrollable="true" :width="640">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">转入现金券</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p class="cash-coupon-p">帐户余额：<span> ¥{{ balance }}</span></p>
+        <p class="cash-coupon-p">帐户余额：<span> ¥{{ balance }}</span>
+          <span style="font-size:16px;font-family:MicrosoftYaHei;font-weight:400;color:rgba(255,57,42,1);margin-left: 20px" v-show="balance<cashCouponForm.upVipCost">当前余额不足
+            <span style="text-decoration: underline;cursor: pointer" @click="$router.push('recharge')">请充值</span></span></p>
         <p class="cash-coupon-p">选择会员类型：</p>
         <div class="vipList">
           <ul v-for="(item,index) in cashCouponForm.vipList" :key="index" :class="{selected: item.vipid == cashCouponForm.vipId,notallowed: index < cashCouponForm.vipLevel }"
-              @click="changeVipGrade(item)">
+              @click="changeVipGrade(item,index)">
             <li>{{ item.title }}</li>
             <li><img :src="item.url"/></li>
             <li>{{ item.descriptStart}}<span>{{ item.discount * 10}}</span>{{item.descriptEnd}}</li>
@@ -896,7 +898,7 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" :disabled="chargeDisabled">确认</Button>
+        <Button type="primary" :disabled="chargeDisabled" @click="upVip">确认</Button>
       </div>
     </Modal>
   </div>
@@ -3339,7 +3341,7 @@
       getVipList() {
         if (this.cashCouponForm.vipLevel > 2) {
           this.$message.info({
-            content: '尊敬的白金会员，您的会员等级已达到最高等级'
+            content: '您已经是铂金会员，无需进行升级。'
           })
         } else {
           let url = 'uservip/listVip.do'
@@ -3348,13 +3350,39 @@
               this.cashCouponForm.vipList = res.data.result
               this.cashCouponForm.vipId = this.cashCouponForm.vipList[this.cashCouponForm.vipLevel].vipid
               this.upVipCost()
+              switch (this.cashCouponForm.vipLevel) {
+                case 0:
+                  this.cashCouponForm.vipGrade = '白银会员'
+                  break
+                case 1:
+                  this.cashCouponForm.vipGrade = '黄金会员'
+                  break
+                case 2:
+                  this.cashCouponForm.vipGrade = '铂金会员'
+                  break
+              }
               this.showModal.cashCoupon = true
             }
           })
         }
       },
-      changeVipGrade(item) {
+      changeVipGrade(item, index) {
+        if (this.cashCouponForm.vipLevel > index) {
+          return
+        }
+        switch (index) {
+          case 0:
+            this.cashCouponForm.vipGrade = '白银会员'
+            break
+          case 1:
+            this.cashCouponForm.vipGrade = '黄金会员'
+            break
+          case 2:
+            this.cashCouponForm.vipGrade = '铂金会员'
+            break
+        }
         this.cashCouponForm.vipId = item.vipid
+        this.upVipCost()
       },
       upVipCost() {
         let url = 'uservip/upVipCost.do'
@@ -3363,7 +3391,7 @@
             viplevel: this.cashCouponForm.vipId
           }
         }).then(res => {
-          if (res.data.status == 200 && res.status == 200) {
+          if (res.data.status == 1 && res.status == 200) {
             this.cashCouponForm.upVipCost = res.data.result
           } else {
             this.$message.info({
@@ -3375,11 +3403,20 @@
       upVip() {
         let url = 'uservip/upVip.do'
         this.$http.get(url, {
-          params: {}
+          params: {
+            viplevel: this.cashCouponForm.vipId
+          }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-
+            this.userInfoUpdate()
+            this.getBalance()
+            this.showMoneyByMonth()
+            this.search()
+            this.getUserVipLevel()
+            this.showModal.cashCoupon = false
+            this.$Message.success(res.data.message)
           } else {
+            this.showModal.cashCoupon = false
             this.$message.info({
               content: res.data.message
             })
@@ -3396,7 +3433,14 @@
         } else {
           this.cashCouponForm.vipLevel = 0
         }
-      }
+      },
+      userInfoUpdate() {
+        axios.get('user/GetUserInfo.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+          }
+        })
+      },
     },
     computed: {
       payDisabled() {
@@ -3453,7 +3497,7 @@
         return this.$store.state.userInfo ? this.$store.state.userInfo : null
       },
       chargeDisabled() {
-        return this.cashCouponForm.agreeStatus == false && this.cashCouponForm.upVipCost <= this.balance
+        return this.cashCouponForm.agreeStatus == false || this.cashCouponForm.upVipCost > this.balance
       },
       remainingBalance() {
         let cost = parseInt(this.balance - this.cashCouponForm.upVipCost)
@@ -3463,7 +3507,7 @@
     watch: {
       dateRange() {
         this.search()
-      },
+      }
     }
   }
 </script>
@@ -3482,7 +3526,7 @@
       width: 1200px;
       margin: 0px auto;
       & > span {
-        font-family: PingFangSC-Regular;
+        font-family: MicrosoftYaHei;
         font-size: 12px;
         color: rgba(17, 17, 17, 0.43);
         line-height: 22px;
@@ -3879,7 +3923,7 @@
       font-family: MicrosoftYaHei-Bold;
       font-weight: bold;
       color: rgba(42, 153, 242, 1);
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
   }
 
