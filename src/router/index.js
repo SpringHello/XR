@@ -127,6 +127,7 @@ const ResetNew = () =>import('@/components/LR/ResetNew')
 const Overview = () =>import('@/components/Back/Overview')
 const Work = () =>import('@/components/Back/Work')
 const Recharge = () =>import('@/components/Back/Recharge.vue')
+const RechargeResult = () =>import('@/components/Back/RechargeResult.vue')
 const Balance = () =>import('@/components/Back/Balance')
 const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
@@ -411,6 +412,7 @@ var router = new Router({
         {path: 'work', name: 'work', component: Work},
         {path: 'renew', name: 'renew', component: Renew},
         {path: 'recharge', name: 'recharge', component: Recharge},
+        {path: 'rechargeResult', name: 'rechargeResult', component: RechargeResult},
         {path: 'balance', name: 'balance', component: Balance},
         {path: 'balanceParticulars', name: 'balanceParticulars', component: BalanceParticulars},
         {path: 'disk', name: 'disk', component: Disk},

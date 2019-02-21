@@ -294,7 +294,7 @@
       </div>
     </Modal>
     <!-- 实时续费 -->
-    <Modal v-model="showModal.Renew" width="550" :scrollable="true">
+    <Modal v-model="showModal.Renew" width="590" :scrollable="true">
       <div slot="header" class="modal-header-border">
         <span class="universal-modal-title">续费主机</span>
       </div>
@@ -313,7 +313,7 @@
       </div>
     </Modal>
     <!-- 制作快照弹窗 -->
-    <Modal v-model="showModal.backup" width="550" :scrollable="true" class="create-snas-modal">
+    <Modal v-model="showModal.backup" width="590" :scrollable="true" class="create-snas-modal">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">制作快照</span>
       </p>

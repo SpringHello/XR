@@ -18,13 +18,7 @@
             <InputNumber v-model="input" :min="10" :step="10" placeholder="请输入金额"
                          style="width: 75px;height:32px;margin-left: 40px;font-size: 14px;" :precision="0"></InputNumber>
             <span class="s4">元</span>
-            <Button type="ghost" style="margin-left: 40px;font-size: 14px;height: 32px;width: 75px;"
-                    @click="input = 200">200元
-            </Button>
-            <Button type="ghost" class="but" @click="input = 500">500元</Button>
-            <Button type="ghost" class="but" @click="input = 1000">1000元</Button>
-            <Button type="ghost" class="but" @click="input = 2000">2000元</Button>
-            <Button type="ghost" class="but" @click="input = 5000">5000元</Button>
+            <Button v-for="(item,index) in rechargeData" :key="index" type="ghost" class="but" @click="input = item">{{ item }}元</Button>
           </div>
           <div class="pay">
             <Tabs type="card" :animated="false">
@@ -41,9 +35,14 @@
                     </Radio>
                   </Radio-group>
                 </div>
-                <Button type="primary" @click="recharge"
-                        style=" font-size: 16px; margin-top: 20px;float: right">确认充值
-                </Button>
+                <div class="pay-right">
+                  <div v-if="input >= 10000">
+                    <p>您已满足成为{{ memberGrade}}资格！</p>
+                    <Checkbox v-model="agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+                      style="cursor: pointer;color:#4A97EE">《会员制规则》</span></span></Checkbox>
+                  </div>
+                  <Button type="primary" @click="recharge" :disabled="chargeDisabled">确认充值</Button>
+                </div>
               </Tab-pane>
               <Tab-pane label="线下支付">
                 <p class="p">公司名称：北京允睿讯通科技有限公司</p>
@@ -61,10 +60,7 @@
           </div>
         </div>
       </div>
-      <Modal
-        :scrollable=false
-        v-model="showModal.rechargeForm"
-        title="确认充值">
+      <Modal :scrollable=false v-model="showModal.rechargeForm" title="确认充值">
         <div>
           <p style="font-size: 14px">您当前充值为首次充值，建议充值额度至少为100元以参加
             <span style="cursor: pointer;color: #2A99F2" @click="understand">（首冲100立享全平台产品7折优惠）</span>活动。</p>
@@ -74,23 +70,41 @@
           <Button type="primary" @click="rechargeOk">继续充值</Button>
         </div>
       </Modal>
+      <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390">
+        <p slot="header" class="modal-header-border">
+          <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+          <span class="universal-modal-title">提示</span>
+        </p>
+        <div class="modal-content-s">
+          <div>
+            <p class="lh24">您是否已经完成支付</p>
+          </div>
+        </div>
+        <p slot="footer" class="modal-footer-s">
+          <Button @click="showModal.rechargeHint = false">支付遇到问题</Button>
+          <Button type="primary" @click="isPay">支付完成</Button>
+        </p>
+      </Modal>
     </div>
   </div>
 </template>
 <script type="text/ecmascript-6">
   export default {
-    data () {
+    data() {
       return {
         balance: 0,
         input: 10,
+        rechargeData: [200, 500, 1000, 2000, 5000, 10000, 50000, 150000],
         zf: 'zfb',
         showModal: {
-          rechargeForm: false
+          rechargeForm: false,
+          rechargeHint: false
         },
-        isFirstCz: false
+        isFirstCz: false,
+        agreeStatus: true
       }
     },
-    created(){
+    created() {
       this.$http.post('device/DescribeWalletsBalance.do').then(response => {
         this.balance = response.data.data.remainder
         if (this.balance < 500) {
@@ -107,9 +121,13 @@
           this.isFirstCz = true
         }
       })
+      if (sessionStorage.getItem('rechargeMoney')) {
+        this.input = parseInt(sessionStorage.getItem('rechargeMoney'))
+        sessionStorage.removeItem('rechargeMoney')
+      }
     },
     methods: {
-      recharge(){
+      recharge() {
         if (this.isFirstCz && this.input < 100) {
           this.showModal.rechargeForm = true
           return
@@ -117,10 +135,11 @@
           this.rechargeOk()
         }
       },
-      rechargeOk(){
+      rechargeOk() {
         switch (this.zf) {
           case 'zfb':
             window.open(`zfb/alipayapi.do?total_fee=${this.input}`)
+            this.showModal.rechargeHint = true
             break
           case 'wx':
             this.$router.push({
@@ -132,6 +151,23 @@
       },
       understand() {
         this.$router.push('active')
+      },
+      isPay() {
+        this.$router.push('rechargeResult')
+      }
+    },
+    computed: {
+      memberGrade() {
+        if (this.input >= 10000 && this.input < 50000) {
+          return '白银会员'
+        } else if (this.input >= 50000 && this.input < 150000) {
+          return '黄金会员'
+        } else if (this.input >= 150000) {
+          return '铂金会员'
+        }
+      },
+      chargeDisabled() {
+        return this.input >= 10000 && this.agreeStatus == false
       }
     }
   }
@@ -200,8 +236,6 @@
             .but {
               margin-left: 20px;
               font-size: 14px;
-              height: 32px;
-              width: 75px;
             }
             .s3 {
               font-family: Microsoft Yahei, 微软雅黑;
@@ -240,6 +274,21 @@
               color: rgba(0, 0, 0, 0.75);
               letter-spacing: 0;
               line-height: 25px;
+            }
+            .pay-right {
+              float: right;
+              > button {
+                font-size: 16px;
+                margin-top: 10px;
+                float: right;
+              }
+              p {
+                font-size: 16px;
+                font-family: MicrosoftYaHei-Bold;
+                font-weight: bold;
+                color: rgba(42, 153, 242, 1);
+                margin-bottom: 10px;
+              }
             }
           }
         }

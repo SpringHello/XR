@@ -38,9 +38,9 @@
           </div>
           <div class="content-right">
             <ul>
-              <li><img src="../../assets/img/usercenter/uc-img3.png"/><span>可享受6.5折优惠</span></li>
-              <li><img src="../../assets/img/usercenter/uc-img4.png"/><span>可享受5折优惠</span></li>
-              <li><img src="../../assets/img/usercenter/uc-img5.png"/><span>可享受3折优惠</span></li>
+              <li><img src="../../assets/img/usercenter/uc-img3.png"/><span>可享受6.5折优惠</span><span @click="toRecharge(10000)">充值</span></li>
+              <li><img src="../../assets/img/usercenter/uc-img4.png"/><span>可享受5折优惠</span><span @click="toRecharge(50000)">充值</span></li>
+              <li><img src="../../assets/img/usercenter/uc-img5.png"/><span>可享受3折优惠</span><span @click="toRecharge(150000)">充值</span></li>
             </ul>
           </div>
         </div>
@@ -127,7 +127,12 @@
     },
     created() {
     },
-    methods: {},
+    methods: {
+      toRecharge(val) {
+        sessionStorage.setItem('rechargeMoney', val + '')
+        this.$router.push('recharge')
+      }
+    },
     computed: {
       userInfo() {
         return this.$store.state.userInfo
@@ -241,10 +246,14 @@
       }
       .content-right {
         width: 50%;
-        padding: 4px 100px;
+        padding: 0 100px;
         > ul {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 100%;
           li {
-            img{
+            img {
               vertical-align: text-bottom;
             }
             span {
@@ -255,6 +264,16 @@
               font-family: MicrosoftYaHei;
               color: rgba(102, 102, 102, 1);
               line-height: 24px;
+            }
+            span:nth-child(3) {
+              display: inline;
+              margin-left: 0;
+              background: rgba(42, 153, 242, 1);
+              border-radius: 2px;
+              border: 1px solid rgba(56, 125, 255, 1);
+              color: #FFF;
+              padding: 4px 10px;
+              cursor: pointer;
             }
           }
         }
