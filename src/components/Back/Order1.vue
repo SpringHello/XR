@@ -4,7 +4,7 @@
       <span>首页 / {{routerName}} / 订单确认</span>
       <div class="content">
         <span>订单确认</span>
-        <button style="float:right" class="button" @click="$router.push('buy')">返回</button>
+        <button style="float:right" class="button" @click="revertOrder">返回</button>
         <div class="order_text" v-if="routerName == '新建云主机' || routerName =='续费' || routerName == '新建云硬盘' || routerName == '磁盘升级' || routerName == '新建GPU云服务器' || routerName == '系统盘扩容'">
           <div >
             <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
@@ -492,6 +492,40 @@
             this.couponInfo.cash = res.data.data.voucher
           }
         })
+      },
+      revertOrder(){
+        let name = sessionStorage.getItem('routername');
+        let router ='';
+        if(name == '0' || name == '5' ||name == '4' || name == '20'){
+         router ='host';
+        }else if(name == '1' || name == '9'){
+          router ='disk';
+        }else if(name == '2' || name == '6' || name == '8'){
+          router = 'ip';
+        }else if(name == '3'){
+          router = 'vpc';
+        }else if(name == '10'){
+          router = 'vpc';
+        }else if(name == '11' || name == '12' || name == '13'){
+          router = 'cloudDatabase';
+        }else if(name == 14){
+          return '短信包订单'
+        }else if(name == '15' || name == '16'){
+         router = 'gpuList';
+        }else if(name == '17'){
+          window.location.href = 'https://oss-console.xrcloud.net/ruirados/objectStorage';
+          return;
+        }else if(name == '18'){
+          window.location.href = 'https://domain.xrcloud.net/xrdomain/domainTransfer';
+          return;
+        }else if(name == '19' || name == '21'){
+          window.location.href = 'https://domain.xrcloud.net/xrdomain/domainGroup';
+          return;
+        }else if(name == '22'){
+          window.location.href ='https://domain.xrcloud.net/xrdomain/domainSSL';
+          return;
+        }
+        this.$router.push(router)
       }
       
     },
