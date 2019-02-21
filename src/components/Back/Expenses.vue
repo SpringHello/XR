@@ -24,7 +24,7 @@
                 <div>
                   <ul style="width: 50%">
                     <li>可用余额</li>
-                    <li style="color: #2A99F2;cursor: pointer" @clcik="showModal.cashCoupon  = true">¥{{ balance }}</li>
+                    <li style="color: #2A99F2;cursor: pointer" @click="getVipList">¥{{ balance }}</li>
                   </ul>
                   <ul style="width: 30%">
                     <li>冻结押金
@@ -862,9 +862,27 @@
         <span class="universal-modal-title">转入现金券</span>
       </p>
       <div class="universal-modal-content-flex">
+        <p class="cash-coupon-p">帐户余额：<span> ¥{{ balance }}</span></p>
+        <p class="cash-coupon-p">选择会员类型：</p>
+        <div class="vipList">
+          <ul v-for="(item,index) in cashCouponForm.vipList" :key="index" :class="{selected: item.vipid == cashCouponForm.vipId,notallowed: index < cashCouponForm.vipLevel }"
+              @click="changeVipGrade(item)">
+            <li>{{ item.title }}</li>
+            <li><img :src="item.url"/></li>
+            <li>{{ item.descriptStart}}<span>{{ item.discount * 10}}</span>{{item.descriptEnd}}</li>
+            <li>{{ item.descript2}}</li>
+          </ul>
+        </div>
+        <p class="cash-coupon-p">还需转入：<span>¥{{cashCouponForm.upVipCost }}</span></p>
+        <p class="cash-coupon-p">剩余余额：<span>¥{{ remainingBalance}}</span></p>
+        <div class="beVip">
+          <p>您已满足成为{{ cashCouponForm.vipGrade}}资格！</p>
+          <Checkbox v-model="cashCouponForm.agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+            style="cursor: pointer;color:#4A97EE">《会员制规则》</span></span></Checkbox>
+        </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary">确认</Button>
+        <Button type="primary" :disabled="chargeDisabled">确认</Button>
       </div>
     </Modal>
   </div>
@@ -1042,6 +1060,14 @@
             trThree: '3折'
           },
         ],
+        cashCouponForm: {
+          agreeStatus: true,
+          vipList: [],
+          vipId: '',
+          vipGrade: '',
+          vipLevel: 0,
+          upVipCost: 0
+        },
         uploadImgDispaly: '',
         uploadImgDispaly1: '',
         uploadImgDispaly2: '',
@@ -2139,6 +2165,7 @@
       }
     },
     created() {
+      this.getUserVipLevel()
       if (this.name == 'orderManage') {
         this.changeOrder()
       } else {
@@ -3294,6 +3321,67 @@
             })
           }
         })
+      },
+      getVipList() {
+        if (this.cashCouponForm.vipLevel > 2) {
+          this.$message.info({
+            content: '尊敬的白金会员，您的会员等级已达到最高等级'
+          })
+        } else {
+          let url = 'uservip/listVip.do'
+          this.$http.get(url, {params: {}}).then(res => {
+            if (res.data.status == 1 && res.status == 200) {
+              this.cashCouponForm.vipList = res.data.result
+              this.cashCouponForm.vipId = this.cashCouponForm.vipList[this.cashCouponForm.vipLevel].vipid
+              this.upVipCost()
+              this.showModal.cashCoupon = true
+            }
+          })
+        }
+      },
+      changeVipGrade(item) {
+        this.cashCouponForm.vipId = item.vipid
+      },
+      upVipCost() {
+        let url = 'uservip/upVipCost.do'
+        this.$http.get(url, {
+          params: {
+            viplevel: this.cashCouponForm.vipId
+          }
+        }).then(res => {
+          if (res.data.status == 200 && res.status == 200) {
+            this.cashCouponForm.upVipCost = res.data.result
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      upVip() {
+        let url = 'uservip/upVip.do'
+        this.$http.get(url, {
+          params: {}
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      getUserVipLevel() {
+        if (this.userInfo && this.userInfo.vipname == '白银会员') {
+          this.cashCouponForm.vipLevel = 1
+        } else if (this.userInfo && this.userInfo.vipname == '黄金会员') {
+          this.cashCouponForm.vipLevel = 2
+        } else if (this.userInfo && this.userInfo.vipname == '铂金会员') {
+          this.cashCouponForm.vipLevel = 3
+        } else {
+          this.cashCouponForm.vipLevel = 0
+        }
       }
     },
     computed: {
@@ -3346,13 +3434,22 @@
       },
       authInfo() {
         return this.$store.state.authInfo ? this.$store.state.authInfo : null
-        // return null
       },
+      userInfo() {
+        return this.$store.state.userInfo ? this.$store.state.userInfo : null
+      },
+      chargeDisabled() {
+        return this.cashCouponForm.agreeStatus == false && this.cashCouponForm.upVipCost <= this.balance
+      },
+      remainingBalance() {
+        let cost = parseInt(this.balance - this.cashCouponForm.upVipCost)
+        return cost >= 0 ? cost : 0
+      }
     },
     watch: {
       dateRange() {
         this.search()
-      }
+      },
     }
   }
 </script>
@@ -3678,6 +3775,75 @@
         border-right: 1px solid #D4C6B5;
         border-bottom: 1px solid #D4C6B5;
       }
+    }
+  }
+
+  .vipList {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    ul {
+      width: 170px;
+      height: 120px;
+      text-align: center;
+      background: rgba(247, 247, 247, 1);
+      border-radius: 4px;
+      border: 1px solid rgba(217, 217, 217, 1);
+      padding-top: 10px;
+      cursor: pointer;
+      &.selected {
+        background: #FFF;
+        border: 1px solid rgba(42, 153, 242, 1);
+      }
+      &.notallowed {
+        cursor: not-allowed;
+      }
+      > li {
+        font-size: 10px;
+        font-family: MicrosoftYaHei;
+        color: rgba(102, 102, 102, 1);
+        line-height: 16px;
+        span {
+          color: #2A99F2;
+        }
+      }
+      li:nth-child(1) {
+        font-size: 12px;
+        font-family: MicrosoftYaHei-Bold;
+        font-weight: bold;
+        color: rgba(102, 102, 102, 1);
+      }
+      li:nth-child(2) {
+        margin: 10px;
+      }
+    }
+  }
+
+  .cash-coupon-p {
+    font-size: 16px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(102, 102, 102, 1);
+    margin-bottom: 20px;
+    > span {
+      font-size: 24px;
+      font-weight: 600;
+      color: rgba(51, 51, 51, 1);
+    }
+  }
+
+  .beVip {
+    > button {
+      font-size: 16px;
+      margin-top: 10px;
+      float: right;
+    }
+    p {
+      font-size: 16px;
+      font-family: MicrosoftYaHei-Bold;
+      font-weight: bold;
+      color: rgba(42, 153, 242, 1);
+      margin-bottom: 10px;
     }
   }
 </style>
