@@ -451,8 +451,9 @@
           <li>{{ item.computername}}</li>
           <li @click="toManage(item)">{{ item.instancename}}</li>
           <li v-if="item.changepassword">
-            <input :class="{error: false}" v-model="item.currentPassword" type="text" placeHolder="请输入当前密码" :maxlength="32"></input>
-            <p v-if="false">您输入的密码有误</p>
+            <input :class="{error: item.errorMsg}" v-model="item.currentPassword" type="text" placeHolder="请输入当前密码" :maxlength="32"></input>
+            <p v-if="item.errorMsg == 'passwordMistake'">您输入的密码有误</p>
+            <p v-if="item.errorMsg == 'passwordIsEmpty'">请输入主机密码</p>
           </li>
           <li v-else>默认密码</li>
         </ul>
@@ -478,7 +479,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.resetPassword = false">取消</Button>
-        <Button type="primary">下一步</Button>
+        <Button type="primary" @click="resetPasswordNext">下一步</Button>
       </div>
     </Modal>
   </div>
@@ -1799,6 +1800,9 @@
         this.resetPasswordForm.hintGrade = 0
         this.resetPasswordForm.passwordAffirm = ''
         if (val === 1) {
+          if (this.hostSelection.length === 0) {
+            return false
+          }
           this.resetPasswordHostData = this.hostSelection
           this.showModal.resetPassword = true
         } else {
@@ -1813,6 +1817,19 @@
       },
       changeResetPasswordType(name) {
         this.$refs[name].type === 'password' ? this.$refs[name].type = 'text' : this.$refs[name].type = 'password'
+      },
+      resetPasswordNext() {
+        let flag = true
+        this.resetPasswordHostData.forEach((item,index) => {
+          if (item.changepassword && !item.currentPassword) {
+            item.errorMsg = 'passwordIsEmpty'
+            this.resetPasswordHostData.splice(index,1,item)
+            flag = false
+          }
+        })
+        if (flag) {
+          console.log(this.resetPasswordHostData)
+        }
       },
       //加入负载均衡
       joinBalance() {
