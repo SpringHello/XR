@@ -119,9 +119,22 @@
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
 				</div>
-				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0" style="float: left;">
-					<p style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">正在检测您的账号，请稍等…</p>
-					<Button type="primary" @click="changeTab('content2')" style="margin-top: 20px;">实名第二步</Button>
+				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0" style="float: left;width: 100%;">
+					<div v-if="tttt==1" class="ProgressCancel">
+						<p v-if="cancelpercent<100" style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">正在检测您的账号，请稍等…</p>
+						<p v-if="cancelpercent==100" style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">检测完毕，请继续完成下一步实名认证，我们会在 <span style="color: #FF624B;">24小时内</span>  审核完成，并将审核结果发送至您号码为 <span style="color: #FF624B;">136****7656</span>  的手机上，请注意查收。</p>
+						 <Progress :percent="cancelpercent" status="active" style="width: 600px;height: 30px;margin-top: 20px;"></Progress><br /><!-- changeTab('content2') -->
+						<Button type="primary" v-if="cancelpercent==100" @click="ggggggg" style="margin-top: 40px;">下一步</Button>
+					</div>
+					<div v-if="tttt==2" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
+				  	  <img src="../../assets/img/back/false.png" />
+					  <p style="font-size:18px;color:rgba(255,0,0,1);line-height:24px;margin-top: 15px;">检测失败</p>
+					  <div>
+					  <p style="font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;">抱歉，检测到您的账号下还有未删除的资源，请删</p>
+					  <p style="font-size:14px;color:rgba(51,51,51,1);line-height:24px;">除资源后再进行注销。</p></div>
+					  <Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
+					  <Button type="primary" @click="" style="margin-left: 10px;margin-top: 40px;">返回控制台</Button>
+				  </div>
 				</div>
 				<div v-if="$store.state.authInfo == null">
 					<Button type="primary" @click="changeTab('content2')" style="margin-left: 10px;margin-top: 40px;">未实名第二步</Button>
@@ -361,9 +374,11 @@
 				selectedTabSec: this.selectedTab,
 				cancellationCheck: false,
 				checkStatus:'',
+				tttt:1,
 				uploadImgDispaly: '',
 				uploadImgDispaly1: '',
 				uploadImgDispaly2: '',
+				cancelpercent: 0,
 				showModal:{
 					Cancellation:false
 				},
@@ -417,11 +432,21 @@
                 })
             },
 			test(){
-				
 				this.showModal.Cancellation = false
 				//this.cancellationCheck = false
 				//this.formInline.cancellation = ''
 				this.changeTab('content1')
+				var Interval = setInterval(() => {
+				  this.cancelpercent++
+				  if (this.cancelpercent == 100) {
+					  clearInterval(Interval)
+					  return false;
+				  }
+				}, 100)
+			},
+			ggggggg(){
+				//this.cancelpercent=100
+				this.changeTab('content2')
 			},
 			handleFormatError() {
 			  this.$Message.info({
@@ -456,7 +481,10 @@
 				}).then(response => {
 					if (response.status == 200 && response.data.status == 1) {
 						//response.data.checkstatus
-						this.checkStatus=0
+						this.checkStatus=3
+						if(this.checkStatus==3){
+							this.checkStatus=0
+						}
 						console.log(this.checkStatus)
 					}
 					else{
@@ -481,7 +509,7 @@
 			}
 		},
 		watch: {
-
+			
 		}
 	}
 </script>

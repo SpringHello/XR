@@ -35,6 +35,24 @@
   padding-top: 0
 }
 
+/* 注销流程进度条样式调整 */
+.ProgressCancel .ivu-progress-success .ivu-progress-bg{
+		background: #2A99F2;
+	}
+.ProgressCancel .ivu-progress-bg{
+		min-height: 30px;
+		background: #2A99F2;
+	}
+.ProgressCancel .ivu-progress-success .ivu-progress-text{
+	color: #2A99F2;
+}
+.ProgressCancel .ivu-icon{
+	font-size: 30px;
+}
+.ProgressCancel .ivu-progress-text-inner{
+	font-size: 18px;
+}
+
 /* 每行两列form表单样式 */
 .universal-modal-content-flex form {
   display: flex;
