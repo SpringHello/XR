@@ -32,7 +32,6 @@
             <div :class="{started: hour >=9&&hour<12}">9:00~12:00</div>
             <div :class="{started: hour >=14&&hour<20}">14:00~20:00</div>
           </div>
-          <!-- <div class="box"></div> -->
           <div class="box" :class="[hour >=9&&hour<12 || hour >=14&&hour<20?'box_bg_long':'box_bg_short']">
             <div class="box_time" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
               <p>本场秒杀倒计时</p>
@@ -54,7 +53,7 @@
                     {{item.discount}}折
                   </div>
                   <p style="font-size:18px;font-weight:bold;font-family:MicrosoftYaHei-Bold;">{{item.servicetype == 'host' ? '云服务器' : 'GPU云服务器'}}</p>
-                  <p class="config-text" ><span>{{item.cpu}}</span>核+<span>{{item.mem}}G</span>+<span>{{item.cpu}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘<span v-if="item.gpu" style="font-size:12px;font-weight:normal;">+<span>{{item.gpu}}</span>显卡</span></p>
+                  <p class="config-text" ><span>{{item.cpunum}}</span>核+<span>{{item.mem}}G</span>+<span>{{item.cpunum}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘<span v-if="item.gpu" style="font-size:12px;font-weight:normal;">+<span>{{item.gpu}}</span>显卡</span></p>
                 </div>
                 <div class="host_content">
                 <div style="margin:10px 0;">
@@ -74,11 +73,12 @@
                     <span style="color:#E1212A;font-size:14px;">￥<span style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/年</span>
                     <span style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{item.originalPrice}}元</span>
                 </div>
-                <div class="host_button" @click="getDiskcountMv(item,index)" v-if="item.num!='100'">立即抢购</div>
-                <div class="host_button" style="background:rgba(229,194,194,1);cursor:not-allowed" v-else>已抢完</div>
+                <button class="host_button host_button_not"  v-if="!(hour >=9&&hour<12||hour >=14&&hour<20)">暂未开始</button>
+                <button class="host_button" :disabled="item.num=='100'" :class="{host_button_not:item.num=='100'}" @click="getDiskcountMv(item,index)" v-else>{{item.num!='100'?'立即抢购':'已抢完'}}</button>
                 <div class="progress">
                   <Progress class="schoolseason-progress" :percent="item.num" hide-info/>
-                  <span>已抢购{{item.num.toFixed(2)}}%</span>
+                  <span v-if="hour >=9&&hour<12||hour >=14&&hour<20">已抢购{{item.num.toFixed(2)}}%</span>
+                  <span v-else>已抢购0%</span>
                 </div>
                 </div>
               </div>
@@ -117,19 +117,19 @@
                   <div>
                     <span class="sec-title">基础入门级云服务器</span>
                     <ul class="flex" style="justify-content: flex-start;">
-                      <li v-for="(item3,index) in hostConfigListHot.basic" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpu==item3.cpu&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
+                      <li v-for="(item3,index) in hostConfigListHot.basic"  :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
                   <div>
                     <span class="sec-title">标准进阶型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpu==item3.cpu&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
+                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
-                  <div>
+                  <div v-if="hostConfigListHot.highEnd">
                     <span class="sec-title">企业高配型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpu==item3.cpu&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpu}}核</span><span>{{item3.memory}}G</span></li>
+                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
                   <p style="font-size:12px;color:rgba(154,127,130,1);margin-top:-10px;">*以上配置皆包含40G SSD系统盘</p>
@@ -175,7 +175,7 @@
               </div>
             </div>
           </div>
-          <div class="box-top-a gpu flex">
+          <div class="box-top-a gpu flex">       
             <div class="left">
               <div class="top">
                 <p>P100 GPU高效云服务器</p>
@@ -290,10 +290,19 @@
         </div>
         <div class="main">
           <div class="container flex">
-            <div class="item">
-              <img src="../../../assets/img/active/schoolSeason/member_item_bg_1.png" alt="">
-              <h3><i></i><span>白银会员</span><i></i></h3>
-              <p>一次性充值<span>1万</span>或者一个自然年度内累计<span>5万元</span>可享受平台<span>6.5折</span></p>
+            <div class="item" v-for="(item,index) in memberData" :key="index">
+              <div :style="{background:'url('+item.img+')'}" :class="item.class">
+                <p>{{item.title}}</p>
+                <p><span>{{item.discount}}</span>折</p>
+                <span class="font-10px">{{item.time}}</span>
+                <img :src="item.icon" alt="">
+              </div>
+              <h3><i></i><span>{{item.title}}</span><i></i></h3>
+              <p class="des">24小时内充值
+                <span>{{item.money1}}</span>
+                或者一个自然年度内累计消费
+                <span>{{item.money2}}</span>
+                可享受平台<span>{{item.discount}}折</span></p>
             </div>
           </div>
           <div>
@@ -624,7 +633,7 @@ export default {
           type: '0',
           activityNum: '27',
           servicetype: 'host',
-          num: 0.5 * 100,
+          num: 0,
           discount: '1',
           hostSystemList: [{
             value: 'window',
@@ -664,7 +673,7 @@ export default {
           type: '0',
           activityNum: '27',
           servicetype: 'host',
-          num: 1 * 10,
+          num: 0,
           discount: '1',
           hostSystemList: [{
           value: 'window',
@@ -705,7 +714,7 @@ export default {
           type: '0',
           activityNum: '27',
           servicetype: 'gpu',
-          num: 10,
+          num: 0,
           discount: '2',
           hostSystemList: [{
             value: 'window',
@@ -735,7 +744,7 @@ export default {
       // 热门云主机打折
       hostProductHot: {
           zoneId: '',
-          cpuMemory: {cpu: '1', memory: '1'},
+          cpuMemory: {cpunum: '1', memory: '1'},
           bandwith: 1,
           system: [],
           disksize: 20,
@@ -744,23 +753,7 @@ export default {
           price: ''
         },
       hostZoneListHot: [],
-      hostConfigListHot: {
-        basic: [
-          {cpu: '1', memory: '1'},
-          {cpu: '1', memory: '2'},
-          {cpu: '2', memory: '4'},
-        ],
-        standard: [
-          {cpu: '4', memory: '8'},
-          {cpu: '8', memory: '16'},
-          {cpu: '16', memory: '32'},
-        ],
-        highEnd: [
-          {cpu: '32', memory: '64'},
-          {cpu: '64', memory: '128'},
-          {cpu: '64', memory: '256'}
-        ]
-      },
+      hostConfigListHot: {},
       hostbandwithListHot: [1, 2, 5, 10, 20],
       hostSystemListHot: [{
           value: 'window',
@@ -885,101 +878,37 @@ export default {
         {type: 'year', value: '1', discount: '3.5'},
         {type: 'year', value: '2', discount: '3'},
       ],
-      hostTwo: {
-        //带宽
-        bandwidthList: [
-          {
-            name: '2M',
-            value: '2'
-          }, {
-            name: '5M',
-            value: '5'
-          }, {
-            name: '10M',
-            value: '10'
-          }
-        ],
-
-        //系统
-        systemList: [
-          {
-            name: 'Centos',
-            value: 'linux'
-          }, {
-            name: 'Windows',
-            value: 'windows'
-          }],
-
-        //时长
-        durationList: [
-          {
-            name: '6月',
-            value: '6'
-          },
-          {
-            name: '1年',
-            value: '12'
-          },
-          {
-            name: '2年',
-            value: '24'
-          }
-        ],
-        gpuDay: [
-          {
-            name: '7天',
-            value: '7'
-          }
-        ],
-        gpuMoth: [
-          {
-            name: '1月',
-            value: '1'
-          },
-          {
-            name: '3月',
-            value: '3'
-          }
-        ],
-        databaseTypeList: [
-          {
-            name: 'Mysql 单实例',
-            value: 'mysql'
-          }, {
-            name: 'Redis分布式缓存服务',
-            value: 'redis'
-          }, {
-            name: 'PostgreSQL 单实例',
-            value: 'postgresql'
-          }, {
-            name: 'MongoDB 单实例',
-            value: 'mongo'
-          }
-        ],
-      },
-      timeYear: [1, 2, 3],
-      hostCount: [1, 2, 3],
-      advantageData: [
+      memberData: [
         {
-          // img: require('../../../assets/img/active/schoolSeason/advantage-icon-1.png'),
-          title: '安全稳定',
-          desc: '40G超大流量免费防护，高性 能DDoS硬件，秒级防护，专业 漏洞检测，流量清洗，用户10 0%网络隔离'
+          img: require('../../../assets/img/active/schoolSeason/member_1.png'),
+          icon: require('../../../assets/img/active/schoolSeason/member_icon_1.png'),
+          title: '白银会员',
+          time: '有效期：从会员权益生效之日起至第三年的1月17日。',
+          discount: '6.5',
+          money1: '1万及以上',
+          money2: '≥5万元且<10万元',
+          class: 'gray'
         },
         {
-          // img: require('../../../assets/img/active/schoolSeason/advantage-icon-2.png'),
-          title: '性价比高',
-          desc: '0基础设施建设投入，企业级 云产品便捷采购，0门槛上云， 专家团队免费在线咨询，享受 云网超顶级硬件与超大带宽'
+          img: require('../../../assets/img/active/schoolSeason/member_2.png'),
+          icon: require('../../../assets/img/active/schoolSeason/member_icon_2.png'),
+          title: '黄金会员',
+          time: '有效期：从会员权益生效之日起至第三年的1月17日。',
+          discount: '5.0',
+          money1: '5万及以上',
+          money2: '≥10万元且＜30万元',
+          class: 'orange'
         },
         {
-          // img: require('../../../assets/img/active/schoolSeason/advantage-icon-3.png'),
-          title: '数据持久',
-          desc: '全场景光纤网络数据存储，超 低延迟高吞吐，最高20万级IO PS，SDN网络诊断技术，快速 屏蔽网络故障'
+          img: require('../../../assets/img/active/schoolSeason/member_3.png'),
+          icon: require('../../../assets/img/active/schoolSeason/member_icon_3.png'),
+          title: '铂金会员',
+          time: '有效期：从会员权益生效之日起至第三年的1月17日。',
+          discount: '3.0',
+          money1: '15万',
+          money2: '≥30万元',
+          class: 'white'
         },
-        {
-          // img: require('../../../assets/img/active/schoolSeason/advantage-icon-4.png'),
-          title: '服务完善',
-          desc: '7*24小时在线客服，80秒客户 问题快速响应，十二年运营商级技术团队为您 保驾护航'
-        }
       ],
       showModal: {
         notLoginModal: false,
@@ -1201,10 +1130,7 @@ export default {
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
-          // console.log(res.data.result[index].name)
-          if (res.data.result[index].total) {
             this.discountProduct[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
-          }
         }
       })
     },
@@ -1213,30 +1139,32 @@ export default {
       if (!this.$store.state.userInfo) {
         this.showModal.notLoginModal = true
       } else {
-        // axios.get('activity/getSubsection.do', {
-        //   params: {
-        //     activityNum: '37',
-        //   }
-        // }).then(res => {
-        //   if (res.status == 200 && res.data.status == 1) {
-        //     this.discountProduct[index].num = res.data.result.c1m2
-        //   }
-        // })
-        var url = index != 2 ? 'information/getDiskcountMv.do' : 'activity/getDiskcountGPU.do'
-        axios.get(url, {
+        axios.get('activity/getSubsection.do', {
           params: {
-            vmConfigId: item.id,
-            osType: item.system[1],
-            defzoneid: item.zoneId,
+            activityNum: '37',
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            this.$Message.success('创建订单成功')
-            this.$router.push('order')
-          } else {
-            this.$message.info({
-              content: res.data.message
-            })
+              this.discountProduct[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
+              if (this.discountProduct[index].num != 100) {
+                var url = index != 2 ? 'information/getDiskcountMv.do' : 'activity/getDiskcountGPU.do'
+                axios.get(url, {
+                  params: {
+                    vmConfigId: item.id,
+                    osType: item.system[1],
+                    defzoneid: item.zoneId,
+                  }
+                }).then(res => {
+                  if (res.status == 200 && res.data.status == 1) {
+                    this.$Message.success('创建订单成功')
+                    this.$router.push('order')
+                  } else {
+                    this.$message.info({
+                      content: res.data.message
+                    })
+                  }
+                })
+              }
           }
         })
       }
@@ -1268,17 +1196,28 @@ export default {
         }
       })
     },
-    // 获取GPU配置类型
+    // 获取host配置类型
     listHostServiceoffers(zoneId) {
-      axios.get('information/getServiceoffers.do', {
+      axios.get('information/getServiceoffersByZoneId.do', {
         params: {
           zoneId: zoneId,
+          type: 'host'
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
           // this.gpuConfigListHot = res.data.result.filter(item => {
           //   return item.gpu == '100'
           // })
+          this.hostConfigListHot.basic = res.data.info.filter(item => {
+            return item.cpunum == 1 || item.cpunum == 2
+          })
+          this.hostConfigListHot.standard = res.data.info.filter(item => {
+            return item.cpunum == 4 || item.cpunum == 8 || item.cpunum == 16
+          })
+          this.hostConfigListHot.highEnd = res.data.info.filter(item => {
+            return item.cpunum == 32 || item.cpunum == 64
+          })
+          console.log(this.hostConfigListHot.highEnd)
         }
       })
     },
@@ -1295,7 +1234,7 @@ export default {
               templateId: this.hostProductHot.system[1],
               isAutoRenew: 1,
               count: this.hostProductHot.count,
-              cpuNum: this.hostProductHot.cpuMemory.cpu,
+              cpuNum: this.hostProductHot.cpuMemory.cpunum,
               memory: this.hostProductHot.cpuMemory.memory,
               bandWidth: this.hostProductHot.bandwith,
               rootDiskType: 'ssd',
@@ -1520,24 +1459,24 @@ export default {
         }
       })
     },
-    getprice() {
-      axios.get('activity/getOriginalPrice.do', {
-        params: {
-          zoneId: this.hotProductHot.zoneId,
-          activityNum: '38',
-          type: this.hotProductHot.timeTimetype.type,
-          month: this.hotProductHot.timeTimetype.type == 'month' ? this.hotProductHot.timeTimetype.value : this.hotProductHot.timeTimetype.value*12,
-          cpu: this.hotProductHot.cpuMemory.cpu,
-          mem: this.hotProductHot.cpuMemory.memory,
-          bandwith: this.hotProductHot.bandwith,
-          diskSize: this.hotProductHot.disksize,
-        }
-      }).then(res => {
-        if (res.status == 200 && res.data.status == 1) {
-          return res.data.result.cost
-        }
-      })
-    },
+    // getprice() {
+    //   axios.get('activity/getOriginalPrice.do', {
+    //     params: {
+    //       zoneId: this.hotProductHot.zoneId,
+    //       activityNum: '38',
+    //       type: this.hotProductHot.timeTimetype.type,
+    //       month: this.hotProductHot.timeTimetype.type == 'month' ? this.hotProductHot.timeTimetype.value : this.hotProductHot.timeTimetype.value*12,
+    //       cpu: this.hotProductHot.cpuMemory.cpu,
+    //       mem: this.hotProductHot.cpuMemory.memory,
+    //       bandwith: this.hotProductHot.bandwith,
+    //       diskSize: this.hotProductHot.disksize,
+    //     }
+    //   }).then(res => {
+    //     if (res.status == 200 && res.data.status == 1) {
+    //       return res.data.result.cost
+    //     }
+    //   })
+    // },
   },
   computed: {
     userInfo () {
@@ -1550,7 +1489,7 @@ export default {
           activityNum: '38',
           type: this.hostProductHot.timeTimetype.type,
           month: this.hostProductHot.timeTimetype.type == 'month' ? this.hostProductHot.timeTimetype.value : this.hostProductHot.timeTimetype.value*12,
-          cpu: this.hostProductHot.cpuMemory.cpu,
+          cpu: this.hostProductHot.cpuMemory.cpunum,
           mem: this.hostProductHot.cpuMemory.memory,
           bandwith: this.hostProductHot.bandwith,
           diskSize: this.hostProductHot.disksize,
@@ -1870,6 +1809,7 @@ section {
             width: 320px;
             height: 40px;
             background: rgba(255, 98, 75, 1);
+            border: none;
             border-radius: 2px;
             color: #ffffff;
             font-size: 18px;
@@ -1877,9 +1817,13 @@ section {
             cursor: pointer;
             text-align: center;
             transition: background-color 0.2s linear;
+            &:focus {
+              outline: none;
+            }
           }
-          .host_button:hover {
-            background-color: #ff3508;
+          .host_button_not {
+            background:rgba(229,194,194,1);
+            cursor:not-allowed
           }
           .progress {
             .schoolseason-progress {
@@ -2085,12 +2029,44 @@ section {
     background: rgba(255, 255, 255, 1);
     border-radius: 20px;
     border: 4px solid rgba(225, 33, 42, 1);
-    padding: 34px 29px;
+    padding: 34px 27px;
     text-align: center;
     .container {
+      margin-bottom: 40px;
       .item {
+        div {
+          width: 382px;
+          height: 249px;
+          padding: 33px 0px 41px 39px;
+          text-align: left;
+          &.gray {
+            color:rgba(102,102,102,1);
+          }
+          &.orange {
+            color: #B27700;
+          }
+          &.white {
+            color: rgba(255,255,255,1);
+          }
+          p {
+            font-size:22px;
+            span {
+              display: inline-block;
+              width:125px;
+              height:116px;
+              line-height:116px;
+              font-size:88px;
+            }
+          }
+          .font-10px {
+            margin-left: -20px;
+            display: inline-block;
+            transform: scale(0.84);
+            font-size: 12px;
+          }
+        }
         h3 {
-          margin: 4px 0 0 10px;
+          margin: 4px 0 10px 10px;
           span {
             margin: 0 10px;
             font-size: 18px;
@@ -2105,7 +2081,7 @@ section {
             background: #dbc090;
           }
         }
-        p {
+        .des {
           width: 360px;
           margin: 0 auto;
           text-align: center;
