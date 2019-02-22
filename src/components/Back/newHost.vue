@@ -434,6 +434,62 @@
       </p>
     </Modal>
     <!-- 批量重置密码框-->
+    <Modal v-model="showModal.resetPassword" width="700" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">重置密码</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p class="resetModal-title">您已选 <span>{{ resetPasswordHostData.length }} 台主机</span></p>
+        <ul class="resetModal-table">
+          <li>No.</li>
+          <li>用户名</li>
+          <li>主机名</li>
+          <li>当前密码</li>
+        </ul>
+        <ul class="resetModal-table data" v-for="(item,index) in resetPasswordHostData">
+          <li>{{ index + 1 }}</li>
+          <li>{{ item.computername}}</li>
+          <li @click="toManage(item)">{{ item.instancename}}</li>
+          <li v-if="item.changepassword">
+            <input :class="{error: item.errorMsg}" v-model="item.currentPassword" @input="item.errorMsg = ''" type="text" placeHolder="请输入当前密码" :maxlength="32"></input>
+            <p v-if="item.errorMsg == 'passwordMistake'">您输入的密码有误</p>
+            <p v-if="item.errorMsg == 'passwordIsEmpty'">请输入主机密码</p>
+          </li>
+          <li v-else>默认密码</li>
+        </ul>
+        <div v-if="resetPasswordForm.hintGrade == 0">
+          <div class="resetModal-import">
+            <span>新密码</span>
+            <input v-model="resetPasswordForm.password" type="password" @input="verifyPassword" placeHolder="请输入新密码" ref="passwordInput"/>
+            <img src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInput')"/>
+          </div>
+          <div class="resetModal-hint">
+            <p v-show="resetPasswordForm.errorMsg=='passwordUndercapacity'">您输入的密码强度不足</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordHint'">提醒：密码必须是8-32个包含数字和大小写字母的字符</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordHintTwo'">注意：您的密码已经符合设置密码规则，但密码需要具备一定的强度，建议您设置12位以上，至少包括4项（：，-（）；）的特殊字符，每种字符大于等于2位</p>
+          </div>
+          <div class="resetModal-import">
+            <span>确认密码</span>
+            <input type="password" v-model="resetPasswordForm.passwordAffirm" placeHolder="请确认新密码" ref="passwordInputAffirm"/>
+            <img src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInputAffirm')"/>
+          </div>
+          <div class="resetModal-hint">
+            <p v-show="resetPasswordForm.errorMsg=='passwordAffirm'">提醒：两次输入的密码不一致</p>
+          </div>
+        </div>
+        <div v-else class="resetModal-p">
+          <p>1、为了避免数据丢失，重置密码需要在<span>关机</span>状态下操作，实例将关机中断您的业务，请仔细确认</p>
+          <p>2、强制关机可能会导致数据丢失或文件损坏，您也可以主动关机后进行重置密码</p>
+          <p style="margin-bottom: 20px">3、强制关机可能需要您等待较长时间，请耐心等待</p>
+          <Checkbox v-model="resetPasswordForm.agreeRule"><span style="margin-left: 10px;font-size: 14px">同意强制关机</span></Checkbox>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.resetPassword = false">取消</Button>
+        <Button type="primary" @click="resetPasswordNext" v-if="resetPasswordForm.hintGrade == 0">下一步</Button>
+        <Button type="primary" v-else :disabled="!resetPasswordForm.agreeRule" @click="resetPasswordOk">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -447,6 +503,9 @@
   export default {
     data() {
       return {
+        regExpObj: {
+          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,32}$/
+        },
         showModal: {
           selectAuthType: false,
           balance: false,
@@ -459,7 +518,8 @@
           backup: false,
           mirror: false,
           unbindIP: false,
-          delHost: false
+          delHost: false,
+          resetPassword: false
         },
         hostListColumns: [
           {
@@ -476,8 +536,8 @@
               ])
             },
             render: (h, params) => {
-              let text_1 = params.row.companyname ? params.row.companyname : '----'
-              let text_2 = params.row.computername ? params.row.computername : '----'
+              let text_1 = params.row.computername ? params.row.computername : '----'
+              let text_2 = params.row.instancename ? params.row.instancename : '----'
               if (params.row.status == 1) {
                 return h('ul', {}, [
                   h('li', {
@@ -883,7 +943,8 @@
                     style: {
                       cursor: 'pointer',
                       color: '#2A99F2',
-                      marginRight: '10px'
+                      marginRight: '10px',
+                      lineHeight: '74px'
                     },
                     on: {
                       click: () => {
@@ -897,6 +958,7 @@
                     },
                     on: {
                       click: () => {
+                        this.hostCurrentSelected = params.row
                         this.hostDelete(2)
                       }
                     }
@@ -907,7 +969,8 @@
                     style: {
                       cursor: 'pointer',
                       color: '#2A99F2',
-                      marginRight: '10px'
+                      marginRight: '10px',
+                      lineHeight: '74px'
                     },
                     on: {
                       click: () => {
@@ -922,6 +985,7 @@
                     },
                     on: {
                       click: () => {
+                        this.hostCurrentSelected = params.row
                         this.hostDelete(2)
                       }
                     }
@@ -1278,6 +1342,15 @@
         hostCurrentSelected: null,
 
         hostDelWay: 1, // 1：点击按钮删除主机 2： 点击更多操作删除；原因是参数传的不同
+        resetPasswordWay: 1, // 1：点击顶部更多操作重置 2： 点击行内更多操作重置；原因是参数传的不同,
+        resetPasswordHostData: [],
+        resetPasswordForm: {
+          password: '',
+          passwordAffirm: '',
+          agreeRule: true,
+          hintGrade: 0,
+          errorMsg: 'passwordHint'
+        },
         listLoadBalanceRole: [],
         loadBalanceForm: {
           loadbalanceroleid: ''
@@ -1734,7 +1807,90 @@
         })
       },
       hostResetPassword(val) {
+        this.resetPasswordWay = val
+        this.resetPasswordForm.password = ''
+        this.resetPasswordForm.hintGrade = 0
+        this.resetPasswordForm.passwordAffirm = ''
+        if (val === 1) {
+          if (this.hostSelection.length === 0) {
+            return false
+          }
+          this.resetPasswordHostData = this.hostSelection
+          this.showModal.resetPassword = true
+        } else {
+          this.resetPasswordHostData = []
+          this.resetPasswordHostData[0] = this.hostCurrentSelected
+          this.showModal.resetPassword = true
+        }
+      },
+      toManage(item) {
+        sessionStorage.setItem('manageId', item.computerid)
+        this.$router.push('manage')
+      },
+      changeResetPasswordType(name) {
+        this.$refs[name].type === 'password' ? this.$refs[name].type = 'text' : this.$refs[name].type = 'password'
+      },
+      verifyPassword() {
+        if (this.regExpObj.password.test(this.resetPasswordForm.password)) {
+          this.resetPasswordForm.errorMsg = 'passwordHintTwo'
+        }
+      },
+      resetPasswordNext() {
+        let flag = true
+        this.resetPasswordForm.errorMsg = ''
+        this.resetPasswordHostData.forEach((item, index) => {
+          if (item.changepassword && !item.currentPassword) {
+            item.errorMsg = 'passwordIsEmpty'
+            this.resetPasswordHostData.splice(index, 1, item)
+            flag = false
+          }
+        })
+        if (!this.resetPasswordForm.password) {
+          this.resetPasswordForm.errorMsg = 'passwordUndercapacity'
+          return false
+        }
+        if (this.resetPasswordForm.password !== this.resetPasswordForm.passwordAffirm) {
+          this.resetPasswordForm.errorMsg = 'passwordAffirm'
+          return false
+        }
+        if (flag) {
+          this.resetPasswordForm.hintGrade = 1
+        }
+      },
+      resetPasswordOk() {
+        let flag = true
+        this.resetPasswordForm.errorMsg = ''
+        this.resetPasswordHostData.forEach((item, index) => {
+          if (item.changepassword && !item.currentPassword) {
+            item.errorMsg = 'passwordIsEmpty'
+            this.resetPasswordHostData.splice(index, 1, item)
+            flag = false
+          }
+        })
+        if (flag) {
+          let url = 'information/resetPasswordForVirtualMachineBatch.do'
+          let list = []
+          this.resetPasswordHostData.forEach((item, index) => {
+            if (item.changepassword && !item.currentPassword) {
 
+            }
+          })
+          let params = {
+            password: this.resetPasswordForm.password,
+            list: JSON.stringify(list)
+          }
+          this.$http.post(url, params).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.$Message.success(res.data.message)
+              this.showModal.resetPassword = false
+              this.getHostList()
+            } else {
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
+        }
       },
       //加入负载均衡
       joinBalance() {
@@ -2351,7 +2507,11 @@
       },
       getCurrentDate() {
         return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
-      }
+      },
+      push(type) {
+        sessionStorage.setItem('pane', type)
+        this.$router.push('/ruicloud/usercenter')
+      },
     },
     computed: {
       auth() {
@@ -2771,6 +2931,112 @@
     span {
       color: #2A99F2;
       cursor: pointer;
+    }
+  }
+
+  .resetModal-title {
+    font-size: 12px;
+    font-family: MicrosoftYaHei;
+    color: rgba(102, 102, 102, 1);
+    > span {
+      font-weight: bold;
+      color: #333333;
+    }
+  }
+
+  .resetModal-table {
+    margin-top: 14px;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    height: 40px;
+    background: rgba(246, 250, 253, 1);
+    box-shadow: 0px 1px 1px 0px rgba(204, 204, 204, 0.5);
+    > li {
+      width: 30%;
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: rgba(51, 51, 51, 1);
+      padding-left: 20px;
+    }
+    li:nth-child(1) {
+      width: 10%;
+    }
+  }
+
+  .data {
+    background: #FFF;
+    margin-top: 0;
+    height: 60px;
+    > li {
+      > input {
+        height: 30px;
+        border: 1px solid rgba(225, 225, 225, 1);
+        border-radius: 4px;
+        padding-left: 5px;
+        outline: none;
+        &.error {
+          border: 1px solid #FF0000;
+          color: #FF0000;
+        }
+      }
+      > p {
+        color: #FF0000;
+        margin-top: 5px
+      }
+    }
+    li:nth-child(3) {
+      color: #2A99F2;
+      cursor: pointer;
+    }
+  }
+
+  .resetModal-import {
+    margin-top: 20px;
+    position: relative;
+    > span {
+      display: inline-block;
+      width: 80px;
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(51, 51, 51, 1);
+    }
+    > img {
+      cursor: pointer;
+      position: absolute;
+      left: 54%;
+      top: 30%;
+    }
+    > input {
+      height: 30px;
+      width: 300px;
+      padding-left: 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(225, 225, 225, 1);
+    }
+  }
+
+  .resetModal-hint {
+    margin-top: 5px;
+    > p {
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: rgba(255, 0, 0, 1);
+      line-height: 16px;
+      padding-left: 82px;
+    }
+  }
+
+  .resetModal-p {
+    margin-top: 20px;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(102, 102, 102, 1);
+      line-height: 20px;
+      span {
+        color: #FF0000;
+      }
     }
   }
 </style>

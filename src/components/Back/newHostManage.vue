@@ -13,7 +13,7 @@
           <p class="title"><img @click="$router.push('host')" src="../../assets/img/host/h-icon9.png" alt="back to hostList"/> 名称：{{ hostInfo.computerName}}
             <img class="last" @click="renameForm.hostName = '',showModal.rename = true" src="../../assets/img/host/h-icon11.png" alt="modification computerName"/>
             <button @click="$router.go(0)">刷新</button>
-            <button style="margin-right: 10px" @click="linkHost" v-if="hostInfo.computerStatus == 1">连接主机</button>
+            <button style="margin-right: 10px;background: #2A99F2;color: #FFF" @click="linkHost" v-if="hostInfo.computerStatus == 1">连接主机</button>
           </p>
           <p>{{ hostInfo.cpuNum }}核CPU，{{ hostInfo.memory}}G内存，{{ hostInfo.rootDiskSize}}G硬盘，{{ hostInfo.bandwith}}M带宽 | {{ hostInfo.zoneName}} <span
             @click="hostUpgrade">[升级]</span>
@@ -166,7 +166,7 @@
             <Cascader :data="osOptions" v-model="mirrorModifyForm.system"></Cascader>
           </Form-item>
           <Form-item label="控制台密码" style="width: 70%" prop="consolePassword">
-            <Input v-model="mirrorModifyForm.consolePassword" placeholder="请输入控制台登录密码"></Input>
+            <Input v-model="mirrorModifyForm.consolePassword" type="password" placeholder="请输入控制台登录密码"></Input>
           </Form-item>
         </Form>
       </div>
@@ -282,11 +282,11 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="modifyPasswordForm" ref="modifyPassword" :rules="modifyPasswordFormRule">
-          <FormItem label="当前密码" prop="oldPassword" style="width: 80%;margin-bottom: 0">
+          <FormItem label="当前密码" prop="oldPassword" style="width: 80%;margin-bottom: 10px">
             <Input type="password" :type="modifyPasswordForm.oldPasswordInput" v-model="modifyPasswordForm.oldPassword"></Input>
             <img class="modal-img" @click="changeLoginPasType(1)" src="../../assets/img/login/lr-icon3.png"/>
           </FormItem>
-          <FormItem label="新的密码" prop="newPassword" style="width: 80%;margin-bottom: 0">
+          <FormItem label="新的密码" prop="newPassword" style="width: 80%;margin-bottom: 10px">
             <Input type="password" :type="modifyPasswordForm.newPasswordInput" v-model="modifyPasswordForm.newPassword"></Input>
             <img class="modal-img" @click="changeLoginPasType(2)" src="../../assets/img/login/lr-icon3.png"/>
           </FormItem>
@@ -1421,7 +1421,6 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .host-config {
     padding: 20px 20px 0;
-    margin-top: 18px;
     background: rgba(246, 250, 253, 1);
     border-radius: 2px;
     .config-top {
