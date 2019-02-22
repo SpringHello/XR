@@ -451,21 +451,22 @@
           <li>{{ item.computername}}</li>
           <li @click="toManage(item)">{{ item.instancename}}</li>
           <li v-if="item.changepassword">
-            <input :class="{error: item.errorMsg}" v-model="item.currentPassword" type="text" placeHolder="请输入当前密码" :maxlength="32"></input>
+            <input :class="{error: item.errorMsg}" v-model="item.currentPassword" @input="item.errorMsg = ''" type="text" placeHolder="请输入当前密码" :maxlength="32"></input>
             <p v-if="item.errorMsg == 'passwordMistake'">您输入的密码有误</p>
             <p v-if="item.errorMsg == 'passwordIsEmpty'">请输入主机密码</p>
           </li>
           <li v-else>默认密码</li>
         </ul>
-        <div>
+        <div v-if="resetPasswordForm.hintGrade == 0">
           <div class="resetModal-import">
             <span>新密码</span>
-            <input v-model="resetPasswordForm.password" type="password" placeHolder="请输入新密码" ref="passwordInput"/>
+            <input v-model="resetPasswordForm.password" type="password" @input="verifyPassword" placeHolder="请输入新密码" ref="passwordInput"/>
             <img src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInput')"/>
           </div>
           <div class="resetModal-hint">
-            <p v-show="false">提醒：密码必须是8-32个包含数字和大小写字母的字符</p>
-            <p v-show="false">注意：您的密码已经符合设置密码规则，但密码需要具备一定的强度，建议您设置12位以上，至少包括4项（：，-（）；）的特殊字符，每种字符大于等于2位</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordUndercapacity'">您输入的密码强度不足</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordHint'">提醒：密码必须是8-32个包含数字和大小写字母的字符</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordHintTwo'">注意：您的密码已经符合设置密码规则，但密码需要具备一定的强度，建议您设置12位以上，至少包括4项（：，-（）；）的特殊字符，每种字符大于等于2位</p>
           </div>
           <div class="resetModal-import">
             <span>确认密码</span>
@@ -473,13 +474,20 @@
             <img src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInputAffirm')"/>
           </div>
           <div class="resetModal-hint">
-            <p v-show="false">提醒：两次输入的密码不一致</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordAffirm'">提醒：两次输入的密码不一致</p>
           </div>
+        </div>
+        <div v-else class="resetModal-p">
+          <p>1、为了避免数据丢失，重置密码需要在<span>关机</span>状态下操作，实例将关机中断您的业务，请仔细确认</p>
+          <p>2、强制关机可能会导致数据丢失或文件损坏，您也可以主动关机后进行重置密码</p>
+          <p style="margin-bottom: 20px">3、强制关机可能需要您等待较长时间，请耐心等待</p>
+          <Checkbox v-model="resetPasswordForm.agreeRule"><span style="margin-left: 10px;font-size: 14px">同意强制关机</span></Checkbox>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.resetPassword = false">取消</Button>
-        <Button type="primary" @click="resetPasswordNext">下一步</Button>
+        <Button type="primary" @click="resetPasswordNext" v-if="resetPasswordForm.hintGrade == 0">下一步</Button>
+        <Button type="primary" v-else :disabled="!resetPasswordForm.agreeRule" @click="resetPasswordOk">确定</Button>
       </div>
     </Modal>
   </div>
@@ -495,6 +503,9 @@
   export default {
     data() {
       return {
+        regExpObj: {
+          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,32}$/
+        },
         showModal: {
           selectAuthType: false,
           balance: false,
@@ -1338,6 +1349,7 @@
           passwordAffirm: '',
           agreeRule: true,
           hintGrade: 0,
+          errorMsg: 'passwordHint'
         },
         listLoadBalanceRole: [],
         loadBalanceForm: {
@@ -1818,17 +1830,66 @@
       changeResetPasswordType(name) {
         this.$refs[name].type === 'password' ? this.$refs[name].type = 'text' : this.$refs[name].type = 'password'
       },
+      verifyPassword() {
+        if (this.regExpObj.password.test(this.resetPasswordForm.password)) {
+          this.resetPasswordForm.errorMsg = 'passwordHintTwo'
+        }
+      },
       resetPasswordNext() {
         let flag = true
-        this.resetPasswordHostData.forEach((item,index) => {
+        this.resetPasswordForm.errorMsg = ''
+        this.resetPasswordHostData.forEach((item, index) => {
           if (item.changepassword && !item.currentPassword) {
             item.errorMsg = 'passwordIsEmpty'
-            this.resetPasswordHostData.splice(index,1,item)
+            this.resetPasswordHostData.splice(index, 1, item)
+            flag = false
+          }
+        })
+        if (!this.resetPasswordForm.password) {
+          this.resetPasswordForm.errorMsg = 'passwordUndercapacity'
+          return false
+        }
+        if (this.resetPasswordForm.password !== this.resetPasswordForm.passwordAffirm) {
+          this.resetPasswordForm.errorMsg = 'passwordAffirm'
+          return false
+        }
+        if (flag) {
+          this.resetPasswordForm.hintGrade = 1
+        }
+      },
+      resetPasswordOk() {
+        let flag = true
+        this.resetPasswordForm.errorMsg = ''
+        this.resetPasswordHostData.forEach((item, index) => {
+          if (item.changepassword && !item.currentPassword) {
+            item.errorMsg = 'passwordIsEmpty'
+            this.resetPasswordHostData.splice(index, 1, item)
             flag = false
           }
         })
         if (flag) {
-          console.log(this.resetPasswordHostData)
+          let url = 'information/resetPasswordForVirtualMachineBatch.do'
+          let list = []
+          this.resetPasswordHostData.forEach((item, index) => {
+            if (item.changepassword && !item.currentPassword) {
+
+            }
+          })
+          let params = {
+            password: this.resetPasswordForm.password,
+            list: JSON.stringify(list)
+          }
+          this.$http.post(url, params).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.$Message.success(res.data.message)
+              this.showModal.resetPassword = false
+              this.getHostList()
+            } else {
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
         }
       },
       //加入负载均衡
@@ -2963,6 +3024,19 @@
       color: rgba(255, 0, 0, 1);
       line-height: 16px;
       padding-left: 82px;
+    }
+  }
+
+  .resetModal-p {
+    margin-top: 20px;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(102, 102, 102, 1);
+      line-height: 20px;
+      span {
+        color: #FF0000;
+      }
     }
   }
 </style>
