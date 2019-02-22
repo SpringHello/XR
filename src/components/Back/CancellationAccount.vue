@@ -120,11 +120,11 @@
 					</div>
 				</div>
 				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0" style="float: left;width: 100%;">
-					<div v-if="tttt==1" class="ProgressCancel">
-						<p v-if="cancelpercent<100" style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">正在检测您的账号，请稍等…</p>
-						<p v-if="cancelpercent==100" style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">检测完毕，请继续完成下一步实名认证，我们会在 <span style="color: #FF624B;">24小时内</span>  审核完成，并将审核结果发送至您号码为 <span style="color: #FF624B;">136****7656</span>  的手机上，请注意查收。</p>
+					<div v-if="tttt==1||tttt==0" class="ProgressCancel">
+						<p v-if="tttt==0" style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">正在检测您的账号，请稍等…</p>
+						<p v-if="tttt==1" style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">检测完毕，请继续完成下一步实名认证，我们会在 <span style="color: #FF624B;">24小时内</span>  审核完成，并将审核结果发送至您号码为 <span style="color: #FF624B;">136****7656</span>  的手机上，请注意查收。</p>
 						 <Progress :percent="cancelpercent" status="active" style="width: 600px;height: 30px;margin-top: 20px;"></Progress><br /><!-- changeTab('content2') -->
-						<Button type="primary" v-if="cancelpercent==100" @click="ggggggg" style="margin-top: 40px;">下一步</Button>
+						<Button type="primary" v-if="tttt==1" @click="ggggggg" style="margin-top: 40px;">下一步</Button>
 					</div>
 					<div v-if="tttt==2" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
 				  	  <img src="../../assets/img/back/false.png" />
@@ -374,7 +374,7 @@
 				selectedTabSec: this.selectedTab,
 				cancellationCheck: false,
 				checkStatus:'',
-				tttt:1,
+				tttt:0,
 				uploadImgDispaly: '',
 				uploadImgDispaly1: '',
 				uploadImgDispaly2: '',
@@ -440,7 +440,22 @@
 				  this.cancelpercent++
 				  if (this.cancelpercent == 100) {
 					  clearInterval(Interval)
+					  axios.get('user/detectionAccount.do', {
+					  	params: {
+					  		
+					  	}
+					  }).then(response => {
+					  	if (response.status == 200 && response.data.status == 1) {
+					  		console.log(response.data)
+							this.tttt=response.data.status
+					  	}
+					  	else{
+							this.tttt=response.data.status
+					  		//this.$Message.info(response.data.message)
+					  	}
+					  })
 					  return false;
+					  
 				  }
 				}, 100)
 			},
@@ -484,6 +499,7 @@
 						this.checkStatus=3
 						if(this.checkStatus==3){
 							this.checkStatus=0
+							this.changeTab('content0')
 						}
 						console.log(this.checkStatus)
 					}
