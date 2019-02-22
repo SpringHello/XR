@@ -820,14 +820,14 @@
 
     <!-- 会员规则弹窗 -->
     <transition name="fade" >
-      <div class="overlay" @click="showModal.vipRuleModal=false" v-if="showModal.vipRuleModal">
+      <div class="overlay"  v-if="showModal.vipRuleModal">
         <div class="all-modal modal4" @click.stop="showModal.vipRuleModal=true">
           <div class="header">
             <span>会员制规则</span>
             <i @click.stop="showModal.vipRuleModal=false"></i>
           </div>
           <div class="body">
-            <div class="body_hide" ref="vip" @scroll="vipRuleScroll">
+            <div class="body_hide" @scroll="vipRuleScroll">
               <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
               <nav>
                 <ul class="nav_list">
@@ -2182,6 +2182,7 @@
         freezeEndTime: '',
         returnMoneyDisabled: false,
         vipCount:10, // vip规则计时
+        vipScroll:0
       }
     },
     created() {
@@ -3343,8 +3344,6 @@
         })
       },
       getVipList() {
-        this.getVipRule();
-        
         if (this.cashCouponForm.vipLevel > 2) {
           this.$message.info({
             content: '您已经是铂金会员，无需进行升级。'
@@ -3441,22 +3440,24 @@
         }
       },
 
-      getVipRule(e){
+      getVipRule(){
         this.showModal.vipRuleModal  = true;
         this.vipCount = 10;
         let interval =  setInterval(() => {
-          this.vipCount -- ;
-          if(this.vipCount == 0){
+          this.vipCount --;
+          if(this.vipScroll >1128 && this.vipCount == 0){
             this.disabledButton  = false;
+            clearInterval(interval);
+          }else if(this.vipCount == 0){
             clearInterval(interval);
           }else{
             this.disabledButton  = true;
           }
         },1000)
-        
       },
       vipRuleScroll(e){
-        if(e.srcElement.scrollTop == 1130 && this.vipCount == 0){
+        this.vipScroll = e.srcElement.scrollTop;
+        if(e.srcElement.scrollTop > 1128 && this.vipCount == 0){
           this.disabledButton  = false;
         }
       },
@@ -3533,7 +3534,7 @@
     watch: {
       dateRange() {
         this.search()
-      }
+      },
     }
   }
 </script>
@@ -3789,7 +3790,6 @@
         top: 100px;
       }
       > .header {
-        height: 70px;
         font-size: 24px;
         font-family: MicrosoftYaHei;
         font-weight: 600;
@@ -3826,7 +3826,7 @@
   .modal4 {
     width: 500px;
     > .header {
-      // background: url("../../../assets/img/active/schoolSeason/modal-bg-rule.png");
+      background: url("../../assets/img/usercenter/icon_vip.png");
       span {
         color: #FF624B;
         font-size: 18px;
@@ -3837,7 +3837,7 @@
       color: #4B3C3D;
       margin: 0 auto;
       padding: 0 8px 0 20px;
-      margin-bottom:30px;
+      margin:20px 0 30px 0;
       text-align: left;
       .body_hide{
         overflow:auto;
