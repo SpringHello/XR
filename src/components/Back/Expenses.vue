@@ -824,7 +824,7 @@
         <div class="all-modal modal4" @click.stop="showModal.vipRuleModal=true">
           <div class="header">
             <span>会员制规则</span>
-            <i @click.stop="showModal.vipRuleModal=false"></i>
+            <!-- <i @click.stop="showModal.vipRuleModal=false"></i> -->
           </div>
           <div class="body">
             <div class="body_hide" @scroll="vipRuleScroll">

@@ -149,60 +149,61 @@ const DiskParticulars = () =>import('@/components/Back/DiskParticulars')
 
 //弹性伸缩
 const Elastic = () => import('@/components/Back/Elastic')
-const ElasticDetails = () => import ('@/components/Back/ElasticDetails')
+const ElasticDetails = () => import('@/components/Back/ElasticDetails')
 const newAddElastic = () => import('@/components/Back/newAddElastic')
 const TelescopicDetails = () => import('@/components/Back/TelescopicDetails')
 
 //const ObjectStorage = () => import('@/components/Back/ObjectStorage')
-const CloudMonitor = () =>import('@/components/Back/CloudMonitor')
-const CloudMonitorCreateStrategy = () =>import('@/components/Back/CloudMonitorCreateStrategy')
-const Vpc = () =>import('@/components/Back/Vpc')
-const VpcManage = () =>import('@/components/Back/VpcManage')
-const Vpn = () =>import('@/components/Back/Vpn')
-const Ip = () =>import('@/components/Back/Ip')
-const Order = () =>import('@/components/Back/Order')
-const Order1 = () =>import('@/components/Back/Order1')
+const CloudMonitor = () => import('@/components/Back/CloudMonitor')
+const CloudMonitorCreateStrategy = () => import('@/components/Back/CloudMonitorCreateStrategy')
+const Vpc = () => import('@/components/Back/Vpc')
+const VpcManage = () => import('@/components/Back/VpcManage')
+const Vpn = () => import('@/components/Back/Vpn')
+const Ip = () => import('@/components/Back/Ip')
+const Order = () => import('@/components/Back/Order')
+const Order1 = () => import('@/components/Back/Order1')
 // const OrderNew = () =>import('@/components/Back/OrderNew')
-const PayResult = () =>import('@/components/Back/PayResult')
-const Result = () =>import('@/components/Back/Result')
+const PayResult = () => import('@/components/Back/PayResult')
+const Result = () => import('@/components/Back/Result')
 const ResultNew = () => import('@/components/Back/ResultNew')
-const PayNew = () =>import('@/components/Back/PayNew')
-const Expenses = () =>import('@/components/Back/Expenses')
-const UserCenter = () =>import('@/components/Back/UserCenter')
-const MemberInfo = () =>import('@/components/Back/MemberInfo')
-const UserInfo = ()=>import('@/components/Back/UserInfo')
-const MsgCenter = () =>import('@/components/Back/MsgCenter')
-const OperationLog = () =>import('@/components/Back/OperationLog')
-const Manage = () =>import('@/components/Back/Manage')
-const Upgrade = () =>import('@/components/Back/Upgrade')
-const FirewallManage = () =>import('@/components/Back/FirewallManage')
-const NATManage = () =>import('@/components/Back/NATManage')
-const Recycle = () =>import('@/components/Back/Recycle')
-const Wxpay = () =>import('@/components/Back/Wxpay')
-const WorkOrder = () =>import('@/components/Back/WorkOrder')
-const gpuManage = () =>import('@/components/Back/gpuManage')
-const gpuUpLevel = () =>import('@/components/Back/gpuUpLevel')
-const Cashwithdrawal = () =>import('@/components/Back/Cashwithdrawal')
-const Cashprocess = () =>import('@/components/Back/Cashprocess')
+const PayNew = () => import('@/components/Back/PayNew')
+const Expenses = () => import('@/components/Back/Expenses')
+const UserCenter = () => import('@/components/Back/UserCenter')
+const MemberInfo = () => import('@/components/Back/MemberInfo')
+const UserInfo = () => import('@/components/Back/UserInfo')
+const MsgCenter = () => import('@/components/Back/MsgCenter')
+const OperationLog = () => import('@/components/Back/OperationLog')
+const Manage = () => import('@/components/Back/Manage')
+const Upgrade = () => import('@/components/Back/Upgrade')
+const FirewallManage = () => import('@/components/Back/FirewallManage')
+const NATManage = () => import('@/components/Back/NATManage')
+const Recycle = () => import('@/components/Back/Recycle')
+const Wxpay = () => import('@/components/Back/Wxpay')
+const WorkOrder = () => import('@/components/Back/WorkOrder')
+const gpuManage = () => import('@/components/Back/gpuManage')
+const GpuManageNew = () => import('@/components/Back/GpuManageNew')
+const gpuUpLevel = () => import('@/components/Back/gpuUpLevel')
+const Cashwithdrawal = () => import('@/components/Back/Cashwithdrawal')
+const Cashprocess = () => import('@/components/Back/Cashprocess')
 
 // 域名系统 ==============================
 
-const Link = () =>import('@/components/Link')
-const BRecords = () =>import('@/components/Back/Records')
-const RecordDetails = () =>import('@/components/Back/RecordDetails')
-const CompletedFilingDetails = () =>import('@/components/Back/CompletedFilingDetails')
-const SpaceDetails = () =>import('@/components/Back/SpaceDetails')
+const Link = () => import('@/components/Link')
+const BRecords = () => import('@/components/Back/Records')
+const RecordDetails = () => import('@/components/Back/RecordDetails')
+const CompletedFilingDetails = () => import('@/components/Back/CompletedFilingDetails')
+const SpaceDetails = () => import('@/components/Back/SpaceDetails')
 
 
-const CloudDatabaseBackup = () =>import('@/components/Back/CloudDatabaseBackup')
-const CloudDatabase = () =>import('@/components/Back/CloudDatabase')
-const CloudDataManage = () =>import('@/components/Back/CloudDataManage')
-const dataBaseUpgrade = () =>import('@/components/Back/dataBaseUpgrade')
+const CloudDatabaseBackup = () => import('@/components/Back/CloudDatabaseBackup')
+const CloudDatabase = () => import('@/components/Back/CloudDatabase')
+const CloudDataManage = () => import('@/components/Back/CloudDataManage')
+const dataBaseUpgrade = () => import('@/components/Back/dataBaseUpgrade')
 // 帮助文档路由
-const documentInfo = () =>import('@/components/App/DocumentInfo')
-const hotQuestion = () =>import('@/components/App/HotQuestion')
+const documentInfo = () => import('@/components/App/DocumentInfo')
+const hotQuestion = () => import('@/components/App/HotQuestion')
 // 404
-const notFindPage = () =>import('@/components/404')
+const notFindPage = () => import('@/components/404')
 
 Vue.use(Router)
 
@@ -467,12 +468,13 @@ var router = new Router({
         {path: 'GpuList', name: 'GpuList', component: GpuList},
         {path: 'GpuListNew', name: 'GpuListNew', component: GpuListNew},
         {path: 'gpuManage', name: 'gpuManage', component: gpuManage},
+        {path: 'GpuManageNew', name: 'GpuManageNew', component: GpuManageNew},
         {path: 'gpuUpLevel', name: 'gpuUpLevel', component: gpuUpLevel},
         // 域名系统 =====================
-        {path: 'Elastic', name: 'Elastic', component:Elastic},
-        {path: 'ElasticDetails', name: 'ElasticDetails', component:ElasticDetails},
-        {path: 'newAddElastic', name: 'newAddElastic', component:newAddElastic},
-        {path: 'TelescopicDetails',name: 'TelescopicDetails',component:TelescopicDetails}
+        {path: 'Elastic', name: 'Elastic', component: Elastic},
+        {path: 'ElasticDetails', name: 'ElasticDetails', component: ElasticDetails},
+        {path: 'newAddElastic', name: 'newAddElastic', component: newAddElastic},
+        {path: 'TelescopicDetails', name: 'TelescopicDetails', component: TelescopicDetails}
       ]
     },
     {
@@ -486,7 +488,7 @@ var router = new Router({
         //{path: 'newRegister', name: 'newRegister', component: NewRegister},
         {path: 'reset', name: 'reset', component: Reset},
         {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess},
-        {path: 'resetNew',name:'resetNew',component:ResetNew}
+        {path: 'resetNew', name: 'resetNew', component: ResetNew}
       ]
     },
     {path: '/ruicloud/link', name: 'link', component: Link},
