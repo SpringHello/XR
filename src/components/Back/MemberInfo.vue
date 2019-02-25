@@ -44,7 +44,7 @@
             </ul>
           </div>
         </div>
-        <p class="hint" v-show="memberInfo.vipName !== '铂金会员'">再累计消费<span>{{ expenditure }}</span>元或截止<span>{{ memberInfo.vipTotalRechargeLastTime}}</span>前再充值<span>{{ rechargeMoney }}</span>元可升级为{{
+        <p class="hint" v-if="memberInfo.vipName !== '铂金会员'">再累计消费<span>{{ expenditure }}</span>元或截止<span>{{ memberInfo.vipTotalRechargeLastTime}}</span>前再充值<span>{{ rechargeMoney }}</span>元可升级为{{
           memberInfo.nextVipName}}</p>
         <div class="member-rule">
           <h5>会员制规则</h5>
@@ -313,7 +313,7 @@
       font-size: 12px;
       font-family: MicrosoftYaHei;
       color: rgba(102, 102, 102, 1);
-      margin: 10px 0 40px 98px;
+      margin: 10px 0 0 98px;
       span {
         color: #2A99F2;
       }
@@ -326,7 +326,7 @@
         font-family: MicrosoftYaHei;
         color: rgba(51, 51, 51, 1);
         font-weight: normal;
-        margin-bottom: 10px;
+        margin: 40px 0 0 10px;
       }
       > p {
         font-size: 12px;

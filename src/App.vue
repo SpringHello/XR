@@ -510,20 +510,32 @@
             path: '',
             content: [
               {
-                prod: '云服务',
-                path: 'https://news.xrcloud.net/yunfuwu'
+                prod: '香港云服务器 ',
+                path: 'https://news.xrcloud.net/xianggangyunfuwuqi'
               },
               {
-                prod: '云资讯',
-                path: 'https://news.xrcloud.net/yunzixun'
+                prod: '虚拟主机',
+                path: 'https://news.xrcloud.net/xunizhuji'
               },
               {
-                prod: '云技术',
-                path: 'https://news.xrcloud.net/yunjishu'
+                prod: '云服务器',
+                path: 'https://news.xrcloud.net/yunfuwuqi'
+              },
+              {
+                prod: '服务器虚拟化',
+                path: 'https://news.xrcloud.net/fuwuqixunihua'
+              },
+              {
+                prod: '云计算',
+                path: 'https://news.xrcloud.net/yunjisuan'
               },
               {
                 prod: '云安全',
                 path: 'https://news.xrcloud.net/yunanquan'
+              },
+              {
+                prod: '域名交流',
+                path: 'https://news.xrcloud.net/yumingjiaoliu'
               }
             ]
           },
@@ -969,14 +981,14 @@
                         &.info {
                           padding: 10px 0;
                           height: 50px;
-                          width: 400px;
+                          width: 800px;
                           margin: 0 auto;
                         }
                         .info:hover{
                           color: #2A99F2;
                         }
                         > div {
-                          width: 15%;
+                          //width: 15%;
                           // &:last-of-type {
                           //   > div {
                           //     height: 155px;
