@@ -1690,7 +1690,7 @@ export default {
             type: '0'
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$Message.info('response.data.message')
+              this.$Message.info(response.data.message)
               this.init()
             } else {
               // this.$message.info({
