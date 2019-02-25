@@ -659,7 +659,15 @@
           }
         },
         deep: true
-      }
+      },
+      'couponInfo.isUse':{
+        handler:function(){
+          if(this.couponInfo.isUse){
+              this.couponInfo.totalCost = this.couponInfo.cost;
+            }
+          },
+           deep: true
+        }
     }
   }
 </script>
