@@ -3,6 +3,24 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
+          <div class="ss-active" @click="push('/ruicloud/schoolSeason')">
+            <div class="wrap">
+              <div class="container flex-vertical-center">
+                <div class="left">
+                  <h1>云产品新春采购季</h1>
+                  <p>
+                    抵至
+                    <i>1折</i>
+                    更有会员折上折
+                  </p>
+                  <span @click="push('/ruicloud/schoolSeason')">立即购买</span>
+                </div>
+                <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div class="xian-active" @click="push('/ruicloud/xianNode')">
             <div class="wrap">
               <div class="container flex-vertical-center">
@@ -20,7 +38,6 @@
             </div>
           </div>
         </my-carousel-item>
-        
         <my-carousel-item class="carousel-item">
           <div @click="push('frActive')"
                style="cursor: pointer;background: #F56B23;">
@@ -155,6 +172,14 @@
         active: [],
         activedata: [
           {
+            imgPath: require('../../assets/img/activecenter/bg-card-kaixue.png'),
+            time: '长期有效',
+            activeObj: '新老用户皆可参与',
+            url: 'schoolSeason',
+            isStart: true,
+            weight: '1',
+          },
+          {
             imgPath: require('../../assets/img/activecenter/bg-card-6.png'),
             time: '2019.1.28-2019.03.01',
             activeObj: '仅限新用户',
@@ -162,7 +187,6 @@
             isStart: true,
             weight: '1',
           },
-      
           {
             imgPath: require('../../assets/img/activecenter/bg-card-2.png'),
             name: '免费云主机 不限量领取',
@@ -568,6 +592,45 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .ss-active {
+    background: url(../../assets/img/active/schoolSeason/schoolseason_banner_bg.png)
+      center no-repeat;
+    color: rgba(51, 51, 51, 1);
+    .container {
+      height: 400px;
+      .left {
+        h1 {
+          font-size: 48px;
+          line-height: 64px;
+          font-weight: normal;
+        }
+        p {
+          margin-top: 20px;
+          font-size: 24px;
+          font-weight: 500;
+          i {
+            color: #ff624b;
+            font-style: normal;
+          }
+        }
+        span {
+          margin-top: 40px;
+          display: inline-block;
+          width: 164px;
+          height: 44px;
+          border-radius: 4px;
+          border: 1px solid rgba(51, 51, 51, 1);
+          font-size: 16px;
+          line-height: 42px;
+          text-align: center;
+          cursor: pointer;
+          &:hover {
+            background: #ffd1b2;
+          }
+        }
+      }
+    }
   }
   .xian-active {
   background:url(../../assets/img/active/xianNode/xian-banner-bg.png) center no-repeat,linear-gradient(to bottom, #ffdcbc, #ffe7d2);

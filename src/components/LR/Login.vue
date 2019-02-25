@@ -5,6 +5,10 @@
         <div class="banner">
           <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
+              <div @click="$router.push('schoolSeason')" class="cc-active">
+              </div>
+            </my-carousel-item>
+            <my-carousel-item class="carousel-item">
               <div @click="$router.push('xianNode')" class="xian-active">
               </div>
             </my-carousel-item>
@@ -195,6 +199,10 @@
           color: rgba(255, 255, 255, 1);
           padding: 7px 29px;
         }
+      }
+      .cc-active {
+        height: 100%;
+        background: #FFF url("../../assets/img/login/cc-banner.png") no-repeat;
       }
       .xian-active {
         height: 100%;
