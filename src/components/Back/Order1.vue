@@ -380,11 +380,11 @@
         })
         let originCost = 0, cost = 0
         selection.forEach((item) => {
-          cost += item.cost
-          originCost += item.originalcost
+          cost += item.cost;
+          originCost += item.originalcost;
         })
-        this.couponInfo.cost = cost
-        this.couponInfo.originCost = originCost
+        this.couponInfo.cost = cost;
+        this.couponInfo.originCost = originCost;
         if (cost != 0) {
           if (this.couponInfo.selectTicket != '') {
             this.couponInfo.couponList.forEach(item => {
@@ -579,7 +579,7 @@
               return this.couponInfo.cash - this.couponInfo.totalCost;
             }
         }
-        return 0.0;
+        return 0;
       },
       routerName(){
         if(this.goodType == 0){
