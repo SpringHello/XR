@@ -24,7 +24,7 @@
           </div>
           <p>
             爆品秒杀 先到先得 低至一折
-           <span class="rule" @click="showModal.spikeDrawRuleModal=true">活动规则</span>
+           <span class="rule" @click="showModal.rule1=true">活动规则</span>
           </p>
         </div>
         <div class="main">
@@ -73,8 +73,8 @@
                     <span style="color:#E1212A;font-size:14px;">￥<span style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/年</span>
                     <span style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{item.originalPrice}}元</span>
                 </div>
-                <button class="host_button host_button_not"  v-if="!(hour >=9&&hour<12||hour >=14&&hour<20)">暂未开始</button>
-                <button class="host_button" :disabled="item.num=='100'" :class="{host_button_not:item.num=='100'}" @click="getDiskcountMv(item,index)" v-else>{{item.num!='100'?'立即抢购':'已抢完'}}</button>
+                <Button class="host_button host_button_not"  v-if="!(hour >=9&&hour<12||hour >=14&&hour<20)">暂未开始</Button>
+                <Button class="host_button" :disabled="item.num=='100'" :class="{host_button_not:item.num=='100'}" @click="getDiskcountMv(item,index)" v-else>{{item.num!='100'?'立即抢购':'已抢完'}}</Button>
                 <div class="progress">
                   <Progress class="schoolseason-progress" :percent="item.num" hide-info/>
                   <span v-if="hour >=9&&hour<12||hour >=14&&hour<20">已抢购{{item.num.toFixed(2)}}%</span>
@@ -95,7 +95,7 @@
           </div>
           <p>
             云服务器、GPU云服务器等产品新春特惠，助力用户轻松上云
-            <span class="rule" @click="showModal.luckDrawRuleModal=true">活动规则</span>
+            <span class="rule" @click="showModal.rule2=true">活动规则</span>
           </p>
         </div>
         <div class="main">
@@ -126,7 +126,7 @@
                       <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
-                  <div v-if="hostConfigListHot.highEnd">
+                  <div v-if="hostConfigListHot.highEnd !=[]">
                     <span class="sec-title">企业高配型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
                       <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
@@ -285,7 +285,7 @@
           </div>
           <p>
             新睿云重磅推出会员制，成为会员可享相应折扣
-            <span class="rule" @click="showModal.luckDrawRuleModal=true">活动规则</span>
+            <span class="rule" @click="getVipRule">活动规则</span>
           </p>
         </div>
         <div class="main" style="background:none;" v-if="this.userInfo && this.userInfo.vipname">
@@ -307,7 +307,7 @@
             </div>
           </div>
           <div>
-            <span class="recharge-btn" style="cursor:pointer;margin-right:40px;" @click="$router.push('usercenter')">查看会员权益</span>
+            <span class="recharge-btn" style="cursor:pointer;margin-right:40px;" @click="$router.push('memberInfo')">查看会员权益</span>
             <span class="recharge-btn" @click="$router.push('recharge')" style="cursor:pointer">立即充值</span>
           </div>
         </div>
@@ -370,17 +370,82 @@
     <!-- 登陆注册弹窗 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.notLoginModal=false" v-if="showModal.notLoginModal">
-        <div class="all-modal modal1" @click.stop="showModal.notLoginModal=true">
+        <div class="all-modal regular-modal" @click.stop="showModal.notLoginModal=true">
           <div class="header">
             <i @click.stop="showModal.notLoginModal=false"></i>
-            <span style="color:#FF624B;font-size:18px;line-height:55px;">温馨提示</span>
+            <span>温馨提示</span>
           </div>
           <div class="body">
-            <span style="padding: 31px 0px 26px;display:block;font-size:14px;">您还没有登录，请您登录/注册后再来购买吧</span>
+            <p>您还没有登录，请您登录/注册后再来购买吧</p>
           </div>
-          <div slot="footer">
-            <Button @click.stop="$LR({type: 'register'}),showModal.notLoginModal=false" class="modal-register">注册</Button>
-            <Button @click.stop="$LR({type: 'login'}),showModal.notLoginModal=false"  class="modal-btn1"><span>登录</span></Button>
+          <div class="footer">
+            <Button @click.stop="$LR({type: 'register'}),showModal.notLoginModal=false" class="regular-btn" style="width:66px;background:none;color:#FF624B;margin-right:10px;border:1px solid rgba(255,98,75,1);">注册</Button>
+            <Button @click.stop="$LR({type: 'login'}),showModal.notLoginModal=false" class="regular-btn" style="width:66px;" ><span>登录</span></Button>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <!-- 弹窗提示(后端返回数据) -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.regular=false" v-if="showModal.regular">
+        <div class="all-modal regular-modal" @click.stop="showModal.regular=true">
+          <div class="header">
+            <i @click.stop="showModal.regular=false"></i>
+            <span >温馨提示</span>
+          </div>
+          <div class="body">
+            <p v-html="posText"></p>
+          </div>
+          <div class="footer">
+            <Button @click.stop="showModal.regular=false" class="regular-btn">确定</Button>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <!-- 实名认证弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.authModal=false" v-if="showModal.authModal">
+        <div class="all-modal auth-modal" @click.stop="showModal.authModal=true">
+          <div class="header">
+            <i @click.stop="showModal.authModal=false"></i>
+            <span>实名认证</span>
+          </div>
+          <div class="body">
+            <p class="reminder">
+             根据国家规定，使用公共互联网需进行 <span>实名认证</span>
+            </p>
+            <Form ref="authForm" :model="authFormValidate" :rules="authFormRuleValidate" :label-width="0" class="ss-anth-modal">
+              <FormItem prop="name">
+                <span class="label">真实姓名</span>
+                <Input v-model="authFormValidate.name" placeholder=" 请输入您的真实姓名" size="large" style="width:300px;"></Input>
+              </FormItem>
+              <FormItem prop="personId">
+                <span class="label">身份证号</span>
+                <Input v-model="authFormValidate.personId" placeholder=" 请输入您的身份证号" size="large" style="width:300px;"></Input>
+              </FormItem>
+              <FormItem prop="pictureCode">
+                <span class="label">图形验证码</span>
+                  <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:200px;">
+                         </Input>
+                  <img :src="imgSrc" style="height:33px;"
+                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+              </FormItem>
+              <FormItem prop="tel">
+                <span class="label">手机号码</span>
+                <Input v-model="authFormValidate.tel" placeholder=" 请输入您的手机号码" style="width:200px;" size="large"></Input>
+              </FormItem>
+              <FormItem prop="vailCode">
+                <span class="label">验证码</span>
+                <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" style="width:200px;"  size="large"></Input>
+                <Button type="text" @click="getVerificationCode" class="regular-btn" :class="{disabled:authFormValidate.sendCodeText!='获取验证码'}" style="width:109px;"
+                          :disabled="authFormValidate.sendCodeText!='获取验证码'">
+                    {{authFormValidate.sendCodeText}}
+                  </Button>
+              </FormItem>
+            </Form>
+            <div class="footer">
+              <Button @click.stop="qucklyAuth" class="regular-btn" style="width:134px;">确认信息并提交</Button>
+            </div>
           </div>
         </div>
       </div>
@@ -388,90 +453,28 @@
     <!-- 实名认证失败提示 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.authErrorModal=false" v-if="showModal.authErrorModal">
-        <div class="all-modal modal1" @click.stop="showModal.authErrorModal=true">
+        <div class="all-modal regular-modal" @click.stop="showModal.authErrorModal=true">
           <div class="header">
             <i @click.stop="showModal.authErrorModal=false"></i>
+            <span>温馨提示</span>
           </div>
           <div class="body">
             <p>很遗憾！您未通过快速实名认证审核！</p>
-            <p> 您也可以通过<span class="red" @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
-            <button @click.stop="showModal.authErrorModal=false;showModal.authModal=true" style="margin-top: 35px;" class="modal-btn"><span>再次尝试</span></button>
+            <p> 您也可以通过<span style="color:#FF624B;text-decoration:underline;cursor:pointer"  @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
           </div>
-        </div>
-      </div>
-    </transition>
-    <!-- 没有实名认证提示 -->
-    <transition name="fade">
-      <div class="overlay" @click.stop="showModal.notAuthModal=false" v-if="showModal.notAuthModal">
-        <div class="all-modal modal1" @click.stop="showModal.notAuthModal=true">
-          <div class="header">
-            <i @click.stop="showModal.notAuthModal=false"></i>
-          </div>
-          <div class="body">
-            <span style="padding: 45px 0 36px 0;display:block">  您还没有登录，请登录后再进行实名认证操作！</span>
-            <button @click.stop="$LR({type: 'login'}),showModal.notAuthModal=false" style="margin-bottom: 18px;" class="modal-btn"><span>立即登录</span></button>
-            <p>还没有账号？<span @click.stop="$LR({type: 'register'}),showModal.notAuthModal=false">去注册 →</span></p>
-          </div>
-        </div>
-      </div>
-    </transition>
-    <!-- 实名认证成功提示 -->
-    <!-- <transition name="fade">
-      <div class="overlay" @click.stop="showModal.authSucModal=false" v-if="showModal.authSucModal">
-        <div class="all-modal modal1" @click.stop="showModal.authSucModal=true">
-          <div class="header">
-            <i @click.stop="showModal.authSucModal=false"></i>
-          </div>
-          <div class="body">
-            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/schoolSeason/success-icon.png" style="vertical-align: middle;">恭喜您！已通过实名认证</p>
-            <p> 您可前往<span class="red" @click="$router.push('userCenter')"> 个人中心</span>查看您的认证信息</p>
-            <button @click.stop="showModal.authSucModal=false" style="margin-top: 35px;" class="modal-btn"><span>返回活动</span></button>
-          </div>
-        </div>
-      </div>
-    </transition> -->
-    <!-- 新用户提示 -->
-    <transition name="fade">
-      <div class="overlay" @click.stop="showModal.newCoustom=false" v-if="showModal.newCoustom">
-        <div class="all-modal modal1" @click.stop="showModal.newCoustom=true" style="height:280px;">
-          <div class="header">
-            <i @click.stop="showModal.newCoustom=false"></i>
-          </div>
-          <div class="body" style="padding-top:72px;">
-            <p>很抱歉！您不是新用户，不符合参与本次活动的条件！</p>
-            <p style="color:#FF3000;margin-top:10px;cursor:pointer" @click="$router.push('activecenter')">去看看其他活动吧</p>
+          <div class="footer">
+            <Button @click.stop="showModal.authErrorModal=false" class="regular-btn"><span>确定</span></Button>
           </div>
         </div>
       </div>
     </transition>
     <!-- 活动规则弹窗 -->
     <transition name="fade">
-      <div class="overlay" @click="showModal.luckDrawRuleModal=false" v-if="showModal.luckDrawRuleModal">
-        <div class="all-modal modal3" @click.stop="showModal.luckDrawRuleModal=true">
-          <div class="header">
-            <span>活动规则</span>
-            <i @click.stop="showModal.luckDrawRuleModal=false"></i>
-          </div>
-          <div class="body">
-            <h3>1、活动时间：2019年2月21日-2019年3月31日</h3>
-            <h3>2、活动对象：平台已完成实名认证的新老用户</h3>
-            <h3>3、数量限制：云服务器产品每个用户限购7台，GPU云服务器限购2台，对象存储产品限购5款。</h3>
-            <h3>4、活动产品不可使用任何优惠券和现金券。</h3>
-            <h3>5、参与此活动购买的云产品不享有7天无理由退款。</h3>
-            <h3>6、活动最终解释权为新睿云所有。</h3>
-          </div>
-          <button @click.stop="showModal.luckDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
-        </div>
-      </div>
-    </transition>
-
-    <!-- 秒杀活动规则 -->
-    <transition name="fade">
-      <div class="overlay" @click="showModal.spikeDrawRuleModal=false" v-if="showModal.spikeDrawRuleModal">
-        <div class="all-modal modal4" @click.stop="showModal.spikeDrawRuleModal=true">
+      <div class="overlay" @click="showModal.rule1=false" v-if="showModal.rule1">
+        <div class="all-modal activity-rule" @click.stop="showModal.rule1=true">
           <div class="header">
             <span>秒杀活动规则</span>
-            <i @click.stop="showModal.spikeDrawRuleModal=false"></i>
+            <i @click.stop="showModal.rule1=false"></i>
           </div>
           <div class="body">
             <h3>1、活动时间：2019.2.21-2019.03.31</h3>
@@ -481,77 +484,47 @@
             <h3>5、参与此活动购买的云产品不享有7天无理由退款。</h3>
             <h3>6、活动最终解释权为新睿云所有。</h3>
           </div>
-          <button @click.stop="showModal.spikeDrawRuleModal=false" class="modal-btn"><span>我知道了</span></button>
-        </div>
-      </div>
-    </transition>
-
-    <!-- 请填写认证信息弹窗 -->
-    <transition name="fade">
-      <div class="overlay" @click.stop="showModal.authModal=false" v-if="showModal.authModal">
-        <div class="all-modal modal2" @click.stop="showModal.authModal=true">
-          <div class="header"><i @click.stop="showModal.authModal=false"></i></div>
-          <div class="body xiannode-form">
-            <p class="reminder" v-if="authHintShow">
-             根据国家规定，使用公共互联网需进行 
-            </p>
-            <Form ref="authForm" :model="authFormValidate" :rules="authFormRuleValidate" :label-width="110" class="auth-form-validate">
-              <FormItem label="真实姓名" prop="name">
-                <Input v-model="authFormValidate.name" placeholder=" 请输入您的真实姓名" size="large"></Input>
-              </FormItem>
-              <FormItem label="身份证号" prop="personId">
-                <Input v-model="authFormValidate.personId" placeholder=" 请输入您的身份证号" size="large"></Input>
-              </FormItem>
-              <FormItem label="图形验证码" prop="pictureCode">
-                <div style="display: flex">
-                  <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:224px;">
-                         </Input>
-                  <img :src="imgSrc" style="height:33px;"
-                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-                </div>
-              </FormItem>
-              <FormItem label="手机号码" prop="tel">
-                <Input v-model="authFormValidate.tel" placeholder=" 请输入您的手机号码" size="large"></Input>
-              </FormItem>
-              <FormItem label="验证码" prop="vailCode">
-                <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" style="width:192px;"  size="large"></Input>
-                <Button type="text" @click="getVerificationCode" class="vailcode-btn" :class="{disabled:authFormValidate.sendCodeText!='获取验证码'}" style="width:109px;"
-                          :disabled="authFormValidate.sendCodeText!='获取验证码'">
-                    {{authFormValidate.sendCodeText}}
-                  </Button>
-              </FormItem>
-            </Form>
-            <button @click.stop="authAndGetPrize" style="width:305px;height:50px;font-size:20px;margin-left:110px;margin-top:20px;margin-bottom:76px;" class="vailcode-btn auth-btn">确认信息并提交</button>
+          <div class="footer">
+            <div class="wraper">
+              <Button @click.stop="showModal.rule1=false" class="regular-btn"><span>我知道了</span></Button>
+            </div>
           </div>
         </div>
       </div>
     </transition>
-
-    <!-- 提示弹窗 -->
-    <transition name="fade" v-for="(item,index) in activityList" :key="index">
-      <div class="overlay" @click.stop="item.isShow=false" v-if="item.isShow == true">
-        <div class="all-modal modal1" @click.stop="item.isShow=true">
+    <!-- 秒杀活动规则 -->
+    <transition name="fade">
+      <div class="overlay" @click="showModal.rule2=false" v-if="showModal.rule2">
+        <div class="all-modal activity-rule" @click.stop="showModal.rule2=true">
           <div class="header">
-            <i @click.stop="item.isShow=false"></i>
-            <span style="color:#FF624B;font-size:18px;line-height:55px;">{{item.title}}</span>
+            <span>活动规则</span>
+            <i @click.stop="showModal.rule2=false"></i>
           </div>
           <div class="body">
-            <p style="padding: 13px 0px 26px 0px">{{item.content}}<span class="color:#FF624B;">{{item.content1}}</span>{{item.content2}}</p>
+            <h3>1、活动时间：2019.2.21-2019.03.31</h3>
+            <h3>2、活动对象：平台已完成实名认证的新老用户</h3>
+            <h3>3、数量限制：云服务器产品每个用户限购7台，GPU云服务器限购2台，对象存储产品限购5款。</h3>
+            <h3>4、活动产品不可使用任何优惠券和现金券。</h3>
+            <h3>5、参与此活动购买的云产品不享有7天无理由退款。</h3>
+            <h3>6、活动最终解释权为新睿云所有。</h3>
           </div>
-          <div slot="footer">
-            <button @click.stop="item.isShow=false" class="modal-btn"><span>{{item.button}}</span></button>
+          <div class="footer">
+            <div class="wraper">
+              <Button @click.stop="showModal.rule2=false" class="regular-btn"><span>我知道了</span></Button>
+            </div>
           </div>
         </div>
       </div>
     </transition>
-    <!-- 会员规则弹窗 -->
+
+    
     <!-- 会员规则弹窗 -->
     <transition name="fade" >
-      <div class="overlay"  v-if="showModal.vipRuleModal">
+      <div class="overlay" style="z-index:2000" v-if="showModal.vipRuleModal">
         <div class="all-modal modal5" @click.stop="showModal.vipRuleModal=true">
           <div class="header">
             <span>会员制规则</span>
-            <i @click.stop="showModal.vipRuleModal=false"></i>
+            <!-- <i @click.stop="showModal.vipRuleModal=false"></i> -->
           </div>
           <div class="body">
             <div class="body_hide" @scroll="vipRuleScroll">
@@ -594,7 +567,7 @@
               </div>
             </div>
           </div>
-          <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'><span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+          <Button style="margin-bottom:30px" @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'regular-btn']" :disabled='disabledButton'><span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
         </div>
       </div>
     </transition>
@@ -606,7 +579,7 @@
       <div class="universal-modal-content-flex">
         <p class="cash-coupon-p">帐户余额：<span> ¥{{ balance }}</span>
         <p class="cash-coupon-p">选择会员类型：</p>
-        <div class="vipList">
+        <div class="vip-list">
           <ul v-for="(item,index) in cashCouponForm.vipList" :key="index" :class="{selected: item.vipid == cashCouponForm.vipId,notallowed: index < cashCouponForm.vipLevel }"
               @click="changeVipGrade(item,index)">
             <li>{{ item.title }}</li>
@@ -615,12 +588,9 @@
             <li>{{ item.descript2}}</li>
           </ul>
         </div>
-        <!-- <p class="cash-coupon-p">还需转入：<span>¥{{cashCouponForm.upVipCost }}</span></p>
-        <p class="cash-coupon-p">剩余余额：<span>¥{{ remainingBalance}}</span></p> -->
         <div class="beVip">
-          <!-- <p>您已满足成为{{ cashCouponForm.vipGrade}}资格！</p> -->
           <Checkbox v-model="cashCouponForm.agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
-            style="cursor: pointer;color:#4A97EE" @click="showModal.cashCoupon=false;showModal.vipRuleModal  = true">《会员制规则》</span></span></Checkbox>
+            style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox>
         </div>
         <div style="margin-top: 20px;">
           <Radio-group v-model="zf">
@@ -636,10 +606,24 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <!-- <Button type="primary" :disabled="chargeDisabled" @click="upVip">确认</Button> -->
         <Button type="primary" @click="recharge" :disabled="chargeDisabled">确认充值</Button>
       </div>
     </Modal>
+    <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390">
+        <p slot="header" class="modal-header-border">
+          <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+          <span class="universal-modal-title">提示</span>
+        </p>
+        <div class="modal-content-s">
+          <div>
+            <p class="lh24">您是否已经完成支付</p>
+          </div>
+        </div>
+        <p slot="footer" class="modal-footer-s">
+          <Button @click="showModal.rechargeHint = false">支付遇到问题</Button>
+          <Button type="primary" @click="isPay">支付完成</Button>
+        </p>
+      </Modal>
   </div>
   </template>
 
@@ -677,11 +661,15 @@ export default {
       }
     }
     return {
+      posText: '',
+      disabledButton: true,
+      vipCount:10, // vip规则计时
+      vipScroll:0,
       input: 10000,
       zf: 'zfb',
       balance: 0,
       cashCouponForm: {
-        agreeStatus: true,
+        agreeStatus: false,
         vipList: [],
         vipId: '',
         vipGrade: '',
@@ -693,52 +681,6 @@ export default {
       m2: '--',
       s1: '--',
       s2: '--',
-      // 活动弹窗列表
-      activityList:[
-        {
-          title:'抱歉',
-          content:'您不符合参与秒杀活动的条件，去看看',
-          content1:'其它活动',
-          button:'查看其它活动',
-          isShow:'false'
-        },
-        {
-          title:'温馨提示',
-          content:'您已经参与过秒杀活动啦，去看看 ',
-          button:'查看其它活动',
-          isShow:'false'
-        },
-        {
-          title:'温馨提示',
-          content:'每个用户只能购买 ',
-          content1:'7台',
-          content2:'云服务器哦，去选购其它产品吧',
-          button:'确定',
-          isShow:'false'
-        },
-         {
-          title:'温馨提示',
-          content:'每个用户只能购买 ',
-          content1:'2台',
-          content2:'GPU云服务器哦，去选购其它产品吧',
-          button:'确定',
-          isShow:'false'
-        },
-        {
-          title:'温馨提示',
-          content:'每个用户只能购买 ',
-          content1:'5个',
-          content2:'GPU对象存储包，去选购其它产品吧',
-          button:'确定',
-          isShow:'false'
-        },
-        {
-          title:'温馨提示',
-          content:'当前资源不足，去选购其他产品吧',
-          button:'确定',
-          isShow:'false'
-        },
-      ],
       vipRule: [
           {
             title: '类目',
@@ -774,8 +716,8 @@ export default {
       gpuZoneList: [],
       discountProduct: [
         {
-          cpu: '1',
-          mem: '2',
+          cpunum: '1',
+          memory: '2',
           disksize: '40',
           bandwith: '1',
           zoneId: '',
@@ -814,8 +756,8 @@ export default {
           }],
         },
         {
-          cpu: '2',
-          mem: '4',
+          cpunum: '2',
+          memory: '4',
           disksize: '40',
           bandwith: '2',
           zoneId: '',
@@ -854,8 +796,8 @@ export default {
         }],
         },
         {
-          cpu: '8',
-          mem: '64',
+          cpunum: '8',
+          memory: '64',
           disksize: '128',
           bandwith: '10',
           gpu: '100',
@@ -1071,16 +1013,15 @@ export default {
         },
       ],
       showModal: {
+        regular: false,
         notLoginModal: false,
-        luckDrawRuleModal: false,
         authModal: false,
         authErrorModal: false,
-        authSucModal: false,
-        notAuthModal: false,
-        newCoustom: false,
-        spikeDrawRuleModal: false,
+        rule1: false,
+        rule2: false,
         vipRuleModal: false,
-        cashCoupon: false
+        cashCoupon: false,
+        rechargeHint: false
       },
       authFormValidate: {
         name: '',
@@ -1135,6 +1076,29 @@ export default {
       }
     },
     rechargeOk() {
+      let url = 'uservip/upVip.do'
+        this.$http.get(url, {
+          params: {
+            viplevel: this.cashCouponForm.vipId
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            // this.userInfoUpdate()
+            // this.getBalance()
+            // this.showMoneyByMonth()
+            // this.search()
+            // this.getUserVipLevel()
+            // this.showModal.cashCoupon = false
+            // this.$Message.success(res.data.message)
+            console.log(res.data.message)
+          } else {
+            console.log(res.data.message)
+            // this.showModal.cashCoupon = false
+            // this.$message.info({
+            //   content: res.data.message
+            // })
+          }
+        })
       switch (this.zf) {
         case 'zfb':
           window.open(`zfb/alipayapi.do?total_fee=${this.input}`)
@@ -1170,6 +1134,10 @@ export default {
         })
       },
     getVipList() {
+      if (this.$store.state.userInfo == null) {
+          this.$LR({type: 'login'})
+          return
+        }
         if (this.cashCouponForm.vipLevel > 2) {
           this.$message.info({
             content: '您已经是铂金会员，无需进行升级。'
@@ -1179,7 +1147,7 @@ export default {
           this.$http.get(url, {params: {}}).then(res => {
             if (res.data.status == 1 && res.status == 200) {
               this.cashCouponForm.vipList = res.data.result
-              console.log(res.data.result)
+              // console.log(res.data.result)
               this.cashCouponForm.vipId = this.cashCouponForm.vipList[this.cashCouponForm.vipLevel].vipid
               switch (this.cashCouponForm.vipLevel) {
                 case 0:
@@ -1197,7 +1165,11 @@ export default {
           })
         }
       },
+      isPay() {
+        this.$router.push('rechargeResult')
+      },
       changeVipGrade(item, index) {
+        // console.log(item)
         this.input = item.money
         if (this.cashCouponForm.vipLevel > index) {
           return
@@ -1215,30 +1187,6 @@ export default {
         }
         this.cashCouponForm.vipId = item.vipid
       },
-      // upVip() {
-      //   let url = 'uservip/upVip.do'
-      //   this.$http.get(url, {
-      //     params: {
-      //       viplevel: this.cashCouponForm.vipId
-      //     }
-      //   }).then(res => {
-      //     if (res.data.status == 1 && res.status == 200) {
-      //       this.userInfoUpdate()
-      //       this.getBalance()
-      //       this.showMoneyByMonth()
-      //       this.search()
-      //       this.getUserVipLevel()
-      //       this.showModal.cashCoupon = false
-      //       this.$Message.success(res.data.message)
-      //     } else {
-      //       this.showModal.cashCoupon = false
-      //       this.$message.info({
-      //         content: res.data.message
-      //       })
-      //     }
-      //   })
-      // },
-      
     setTime() {
         axios.get('network/getTime.do').then(res => {
           if (res.data.status == 1) {
@@ -1284,15 +1232,6 @@ export default {
     toAuth () {
       sessionStorage.setItem('pane', 'certification')
       this.$router.push('userCenter')
-    },
-    showAuthModal () {
-      this.authHintShow = false
-      if (this.$store.state.userInfo) {
-        this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-        this.showModal.authModal = true
-      } else {
-        this.showModal.notAuthModal = true
-      }
     },
     roll (val) {
       $('html, body').animate({ scrollTop: val }, 300)
@@ -1416,6 +1355,11 @@ export default {
       if (!this.$store.state.userInfo) {
         this.showModal.notLoginModal = true
       } else {
+        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+            this.showModal.authModal = true
+            return
+          }
         axios.get('activity/getSubsection.do', {
           params: {
             activityNum: '37',
@@ -1436,9 +1380,11 @@ export default {
                     this.$Message.success('创建订单成功')
                     this.$router.push('order')
                   } else {
-                    this.$message.info({
-                      content: res.data.message
-                    })
+                    // this.$message.info({
+                    //   content: res.data.message
+                    // })
+                    this.posText = res.data.message
+                    this.showModal.regular = true
                   }
                 })
               }
@@ -1494,7 +1440,7 @@ export default {
           this.hostConfigListHot.highEnd = res.data.info.filter(item => {
             return item.cpunum == 32 || item.cpunum == 64
           })
-          console.log(this.hostConfigListHot.highEnd)
+          // console.log(this.hostConfigListHot.highEnd)
         }
       })
     },
@@ -1504,6 +1450,11 @@ export default {
           this.$LR({type: 'login'})
           return
         }
+        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+            this.showModal.authModal = true
+            return
+          }
         var params = {
               zoneId: this.hostProductHot.zoneId,
               timeType: this.hostProductHot.timeTimetype.type,
@@ -1526,9 +1477,11 @@ export default {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$message.info({
-              content: response.data.message
-            })
+            // this.$message.info({
+            //   content: response.data.message
+            // })
+            this.posText = response.data.message
+            this.showModal.regular = true
           }
         })
       },
@@ -1579,6 +1532,11 @@ export default {
           this.$LR({type: 'login'})
           return
         }
+        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+            this.showModal.authModal = true
+            return
+          }
         var params = {
               zoneId: this.gpuProductHot.zoneId,
               timeType: this.gpuProductHot.timeTimetype.type,
@@ -1603,9 +1561,11 @@ export default {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$message.info({
-              content: response.data.message
-            })
+            // this.$message.info({
+            //   content: response.data.message
+            // })
+            this.posText = response.data.message
+            this.showModal.regular = true
           }
         })
       },
@@ -1629,6 +1589,11 @@ export default {
           this.$LR({type: 'login'})
           return
         }
+        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+            this.showModal.authModal = true
+            return
+          }
         var params = {
               zoneId: this.objProductHot.zoneId,
               activityNum: '40',
@@ -1642,9 +1607,11 @@ export default {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$message.info({
-              content: response.data.message
-            })
+            // this.$message.info({
+            //   content: response.data.message
+            // })
+            this.posText = response.data.message
+            this.showModal.regular = true
           }
         })
       },
@@ -1711,7 +1678,7 @@ export default {
       })
     },
     // 快速认证
-    authAndGetPrize () {
+    qucklyAuth () {
       this.$refs.authForm.validate((valid) => {
         if (valid) {
           this.showModal.authModal = false
@@ -1723,28 +1690,44 @@ export default {
             type: '0'
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.showModal.authSucModal = true
+              this.$Message.info('response.data.message')
               this.init()
             } else {
               // this.$message.info({
               //   content: response.data.message
               // })
-              this.authError = response.data.message
               this.showModal.authErrorModal = true
             }
           })
         }
       })
     },
+    getVipRule(){
+      this.showModal.vipRuleModal  = true;
+      this.vipCount = 10;
+      let interval =  setInterval(() => {
+        this.vipCount --;
+        if(this.vipScroll >1128 && this.vipCount == 0){
+          this.disabledButton  = false;
+          clearInterval(interval);
+        }else if(this.vipCount == 0){
+          clearInterval(interval);
+        }else{
+          this.disabledButton  = true;
+        }
+      },1000)
+    },
+    vipRuleScroll(e){
+      this.vipScroll = e.srcElement.scrollTop;
+      if(e.srcElement.scrollTop > 1128 && this.vipCount == 0){
+        this.disabledButton  = false;
+      }
+    },
   },
   computed: {
     chargeDisabled() {
         return this.cashCouponForm.agreeStatus == false || this.cashCouponForm.upVipCost > this.balance
       },
-    // remainingBalance() {
-    //   let cost = parseInt(this.balance - this.cashCouponForm.upVipCost)
-    //   return cost >= 0 ? cost : 0
-    // },
     userInfo () {
       return this.$store.state.userInfo
     },
@@ -1868,7 +1851,6 @@ export default {
 section {
   padding: 52px 0 60px 0;
   .headline {
-    // margin-top: 50px;
     text-align: center;
     > div {
       height: 64px;
@@ -2097,7 +2079,6 @@ section {
             border-radius: 2px;
             color: #ffffff;
             font-size: 18px;
-            line-height: 38px;
             cursor: pointer;
             text-align: center;
             transition: background-color 0.2s linear;
@@ -2484,20 +2465,7 @@ section {
     // }
   }
 }
-.modal-btn {
-  width: 134px;
-  height: 36px;
-  border: 1px solid #FF624B;
-  font-size: 14px;
-  font-family: PingFangSC-Regular;
-  color: #fff;
-  background: #FF624B;
-  border-radius: 4px;
-  cursor: pointer;
-  &:hover {
-    background: rgb(253, 116, 95);
-  }
-}
+
 .modal-btn1{
   background: #FF624B;
   color: #fff;
@@ -2524,7 +2492,6 @@ section {
   left: 0;
   right: 0;
   background-color: rgba(55, 55, 55, 0.3);
-  // background-color: rgba(255, 255, 255, 0.3);
   height: 100%;
   z-index: 1000;
   .all-modal {
@@ -2532,25 +2499,23 @@ section {
     margin: 0 auto;
     top: 15%;
     background: rgba(255, 255, 255, 1);
-    text-align: center;
-    font-size: 16px;
+    box-shadow:0px 2px 8px 0px rgba(0,0,0,0.2);
     border-radius: 4px;
-    &.lottery {
-      top: 100px;
-    }
-    > .header {
-      height: 70px;
-      font-size: 24px;
+    text-align: center;
+    font-size: 14px;
+    .header {
+      height: 64px;
+      line-height:60px;
+      font-size: 18px;
       font-family: MicrosoftYaHei;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 1);
+      color: #FF624B;
       position: relative;
       > i {
         color: rgba(255, 255, 255, 1);
         cursor: pointer;
         position: absolute;
         right: 13px;
-        top: 2px;
+        top: -6px;
         transform: rotate(45deg);
         &:before {
           content: "";
@@ -2572,65 +2537,81 @@ section {
     }
   }
 }
-.modal1 {
+.regular-btn {
+  width:120px;
+  height:36px;
+  background:rgba(255,98,75,1);
+  border:none; 
+  border-radius:4px;
+  font-size: 14px;
+  text-align: center;
+  color: #fff;
+  &:hover {
+    background: rgb(253, 116, 95);
+  }
+}
+.regular-modal {
   width: 380px;
-  height: 180px;
-  > .header {
-    
-    // background: url("../../../assets/img/active/schoolSeason/modal-bg-reminder.png");
+  .header {
+    background: url("../../../assets/img/active/schoolSeason/header_bg_short.png") no-repeat;
   }
   .body {
-    color:#4B3C3D;
+    margin: 20px 0;
     p {
-      > span {
-        color: #ff3000;
-        cursor: pointer;
-        &:hover {
-          border-bottom: 1px solid #ff3000;
-          padding-bottom: 1px;
-        }
+      line-height:20px;
+    }
+  }
+  .footer {
+    padding-bottom: 20px;
+  }
+}
+.auth-modal {
+  font-family:MicrosoftYaHei;
+  width: 500px;
+  > .header {
+    background: url("../../../assets/img/usercenter/icon_vip.png") no-repeat;
+  }
+  .body {
+      padding: 20px;
+      text-align: left;
+      font-size: 14px;
+     .reminder {
+      font-weight: bold;
+      margin-bottom: 10px;
+      span {
+        color: #FF624B;
       }
     }
+    .label {
+      display: inline-block;
+      width: 74px;
+      font-size: 14px;
+    }
   }
+  .footer {
+    border-top:1px solid rgba(233,233,233,1);
+    padding-top: 20px;
+    text-align: center; 
+  }
+  // .auth-btn {
+  //   cursor: pointer;
+  //   &:hover {
+  //     background: rgba(255, 231, 215, 1);
+  //   }
+  //   &:focus {
+  //     outline: none;
+  //   }
+  // }
+  // .disabled {
+  //   border: 1px solid rgba(192, 192, 192, 1);
+  //   color: #666666;
+  // }
 }
 
-.modal2 {
-  width: 700px;
-  > .header {
-    // background: url("../../../assets/img/active/schoolSeason/modal-bg-auth.png");
-  }
-  .reminder {
-    margin: 0 auto;
-    margin-top: 10px;
-    border: solid 1px #ff3000;
-    width: 666px;
-    height: 40px;
-    padding-top: 12px;
-    font-size: 14px;
-    span {
-      color: #ff3000;
-    }
-  }
-  .auth-btn {
-    cursor: pointer;
-    &:hover {
-      background: rgba(255, 231, 215, 1);
-    }
-    &:focus {
-      outline: none;
-    }
-  }
-  .disabled {
-    border: 1px solid rgba(192, 192, 192, 1);
-    color: #666666;
-  }
-}
-
-.modal3 {
+.activity-rule {
   width: 500px;
-  height: 380px;
   > .header {
-    // background: url("../../../assets/img/active/schoolSeason/modal-bg-rule.png");
+    background: url("../../../assets/img/usercenter/icon_vip.png") no-repeat;
     span{
       color:#FF624B;
       font-size: 18px;
@@ -2649,28 +2630,12 @@ section {
       line-height: 27px;
     }
   }
-}
-.modal4{
-  width: 500px;
-  height: 408px;
-  > .header {
-    // background: url("../../../assets/img/active/schoolSeason/modal-bg-rule.png");
-    span{
-      color:#FF624B;
-      font-size: 18px;
-      line-height: 55px;
-    }
-  }
-  > .body {
-    color:#4B3C3D;
-    margin: 0 auto;
-    padding: 30px 20px 34px 20px;
-    text-align: left;
-    h3 {
-      font-size: 14px;
-      font-family: MicrosoftYaHei;
-      font-weight: 400;
-      line-height: 27px;
+  .footer {
+    padding: 0 20px;
+    .wraper {
+      padding: 20px 0;
+      border-top:1px solid rgba(233,233,233,1);
+      text-align: center; 
     }
   }
 }
@@ -2715,17 +2680,43 @@ section {
           background:#fff;
         }
     }
-    
   }
-.auth-form-validate,
-.receive-good-validate {
-  padding-top: 26px;
-  margin: 0 auto;
-  width: 415px;
-  .ivu-form-item {
-    margin-bottom: 22px;
+   .nav_list {
+    padding: 0;
+    margin: 0;
+    width: 460px;
+    display: flex;
+    .nav_item:first-child {
+      width: 147px;
+      line-height: 28px;
+    }
+    .nav_item:last-child {
+      > div {
+        border-right: none;
+      }
+    }
+    .nav_item {
+      list-style: none;
+      width: 104px;
+      div:first-child {
+        padding: 20px;
+        background: #FFF1E0;
+      }
+      div:last-child {
+        padding: 20px;
+      }
+      div {
+        text-align: center;
+        height: 60px;
+        padding: 10px 15px 0 19px;
+        background: #fff;
+        border-right: 1px solid #D4C6B5;
+        border-bottom: 1px solid #D4C6B5;
+        color: #333333;
+        font-size: 14px;
+      }
+    }
   }
-}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s;
@@ -2742,7 +2733,7 @@ section {
     text-align: center;
   }
 }
-.vipList {
+.vip-list {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
@@ -2797,6 +2788,27 @@ section {
       font-size: 24px;
       font-weight: 600;
       color: #2A99F2;
+    }
+  }
+  .modal-btnDisbled{
+    height: 36px;
+    margin-bottom: 30px;
+    color: #bbbec4;
+    background-color: #f7f7f7;
+    border-color: #dddee1;
+    font-size: 14px;
+    font-family: PingFangSC-Regular;
+    border-radius: 4px;
+    cursor: not-allowed;
+  }
+
+  .word_style {
+    border-bottom: 1px solid #E9E9E9;
+    padding-bottom: 20px;
+    span {
+      color: #4B3C3D;
+      font-size: 14px;
+      font-weight: bold;
     }
   }
 </style>
