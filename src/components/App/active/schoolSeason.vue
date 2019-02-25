@@ -288,10 +288,33 @@
             <span class="rule" @click="showModal.luckDrawRuleModal=true">活动规则</span>
           </p>
         </div>
-        <div class="main">
-          <div class="container flex">
+        <div class="main" style="background:none;" v-if="this.userInfo && this.userInfo.vipname">
+          <h3 style="font-size:32px;color:#FF392A;margin-bottom:30px;">恭喜您已成为{{userInfo.vipname}}！</h3>
+          <div class="container flex" style="justify-content: center;">
             <div class="item" v-for="(item,index) in memberData" :key="index">
-              <div :style="{background:'url('+item.img+')'}" :class="item.class">
+              <div :style="{background:'url('+item.img+')'}" :class="item.class" v-if="userInfo.vipname==item.title" style="padding:0;padding-top:33px;">
+                <div class="flex" style="justify-content: flex-start;align-items: center;margin-left: 60px;">
+                  <div>
+                    <img :src="item.imgDiamonds" alt="" style="margin-right:14px;">
+                  </div>
+                  <div>
+                    <p style="font-size:24px;">{{item.title}}</p>
+                    <p style="font-size:12px;line-height: 24px;">{{item.time1}}</p>
+                  </div>
+                </div>
+                <p style="text-align: center;"><span>{{item.discount}}</span>折</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <span class="recharge-btn" style="cursor:pointer;margin-right:40px;" @click="$router.push('usercenter')">查看会员权益</span>
+            <span class="recharge-btn" @click="$router.push('recharge')" style="cursor:pointer">立即充值</span>
+          </div>
+        </div>
+         <div class="main" v-else>
+          <div class="container flex" >
+            <div class="item" v-for="(item,index) in memberData" :key="index">
+              <div :style="{background:'url('+item.img+')'}" :class="item.class" >
                 <p>{{item.title}}</p>
                 <p><span>{{item.discount}}</span>折</p>
                 <span class="font-10px">{{item.time}}</span>
@@ -306,7 +329,7 @@
             </div>
           </div>
           <div>
-            <span class="recharge-btn">立即充值</span>
+            <span class="recharge-btn" @click="getVipList()" style="cursor:pointer">立即充值</span>
           </div>
         </div>
       </div>
@@ -521,7 +544,102 @@
         </div>
       </div>
     </transition>
-
+    <!-- 会员规则弹窗 -->
+    <!-- 会员规则弹窗 -->
+    <transition name="fade" >
+      <div class="overlay"  v-if="showModal.vipRuleModal">
+        <div class="all-modal modal5" @click.stop="showModal.vipRuleModal=true">
+          <div class="header">
+            <span>会员制规则</span>
+            <i @click.stop="showModal.vipRuleModal=false"></i>
+          </div>
+          <div class="body">
+            <div class="body_hide" @scroll="vipRuleScroll">
+              <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
+              <nav>
+                <ul class="nav_list">
+                  <li class="nav_item" v-for="(item,index) in vipRule" :key="index">
+                    <div>
+                      {{item.title}}
+                    </div>
+                    <div>
+                      {{item.trOne}}
+                    </div>
+                    <div>
+                      {{item.trTwo}}
+                    </div>
+                    <div>
+                      {{item.trThree}}
+                    </div>
+                  </li>
+                </ul>
+              </nav>
+              <div class="word_style">
+                <h3>通过一次性充值（24小时内累计充值金额）或者上个自然年度（每年1月1日至12月31日）累计消费的金额判定不同的会员级别，会员级别不同消费时可享受相应的折扣优惠。</h3>
+                <h3><span>2、会员折扣范围：</span>1. 包括平台自有云产品（域名、SSL证书等第三方平台产品除外），参与活动产品购买时可享受折上折（押金活动除外）。 </h3>
+                <h3><span>3、会员权益有效期</span>：充值或者上个自然年度累计消费达到一定金额即可立即成为会员，会员有效期从会员权益生效之日起至第三年的1月17日。比如2009年7月31日充值1万元或者2009年1月1日至7月31日期间累计消费达到5万元则成为白银会员，有效期至2011年1月17日。 </h3>
+                <h3><span>4、会员其他福利</span>：会员还可享受平台新品免费试用、问题优先解决、免费技术咨询、生日和节日礼品、平台产品不定时赠送等福利。 </h3>
+                <h3><span>5、会员退货退款</span>：累计消费成为会员的客户，因为消费不涉及会员级别的更改，享受平台正常的退货退款流程。 </h3>
+                <h3 style="color:#FF624B;">
+                  充值成为会员的用户，会员充值一定金额后，对应会员级别的最低充值额度（如白银会员1万元、黄金会员5万元、铂金会员15万元）经会员同意后单独放入特定账户，优先消费，不可自动提取，以保证会员资格。若强制要求提现此部分金额，则意味会员主动取消会员资格。则之前购买产品均按折扣之前的价格扣除对应金额后方可提现。不足部分平台保留追补权利。 </h3>
+                <h3><span>会员权益发生改变的情形</span></h3>
+                <h3><span>会员保级</span>：会员达到会员有效期后，若有效期内达到任何会员条件，比如充值一定金额或者上一自然年度累计消费达到一定金额，则会员权益相应保留并延期。 </h3>
+                <h3><span>会员升级</span>：某一级别的会员在会员有效期内通过充值或者累计消费后达到更高级别后，以最高级别为准，且会员有效期相应延长。如累计消费达到白银会员后，一次性充值5万元则升级成为黄金会员，会员有效期从成为黄金会员那日开始计算，至第三年的1月17日。 </h3>
+                <h3><span>会员降级</span>：会员达到会员有效期后，若有效期内未达到本级别会员条件，则会员权益重新计算。比如充值会员有效期内没有会员级别的充值行为，则有效期后会员权益失效。若有效期内，若会员资格费用发生提现吗，则会员权益立时失效。 </h3>
+                <h3>
+                  比如客户一次性充值2.5万元，则1万元会员资格费用放到现金券账户（不可自动提现），剩余1.5万元放到可提现余额中（可随时提现），若客户要提现5000元，则优先提现1.5万元账户部分，直至此部分金额为0，不影响会员资格。若客户消费了5000元，则优先消费会员资格费用。现金券账户余额还剩下5000元（不考虑其他现金券金额）。若要提现此部分现金券余额，则会员资格会受到影响。客户需提交工单，且要回冲会员折扣费用，实际客户购买产品5000元/0.65=7692.31元
+                  则用户可提现金额不是现金券余额5000元，而是10000元-7692.31元=2307.69，则用户可实际提现2307.69元。 若用户消费了6500元，则6500元/0.65=10000元，则可提现金额为0.若客户消费大于6500元，则可提现金额依然为0，不足部分平台保留追补权利。</h3>
+                <h3>若累计消费达到会员级别，则会员后续消费发生退货退款不影响会员资格。直到会员有效期时，会在第三年的1月1日-1月17日计算上一年度的累计消费，重新定义会员级别。若没有达到会员级别，且没有充值达到一定金额，则会员级别降级为相应级别。</h3>
+                <h3>比如客户2009年1月1日至7月31日期间累计消费达到5万元，则自动成为白银会员；在2011年1月1日-1月17日期间，会重新计算2010年1月-12月31日期间的消费累计金额，如没达到1万元，则2011年1月17日降级为非会员用户。</h3>
+              </div>
+            </div>
+          </div>
+          <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'><span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+        </div>
+      </div>
+    </transition>
+    <!-- 余额转入现金券 -->
+    <Modal v-model="showModal.cashCoupon" :scrollable="true" :width="640">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">充值</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p class="cash-coupon-p">帐户余额：<span> ¥{{ balance }}</span>
+        <p class="cash-coupon-p">选择会员类型：</p>
+        <div class="vipList">
+          <ul v-for="(item,index) in cashCouponForm.vipList" :key="index" :class="{selected: item.vipid == cashCouponForm.vipId,notallowed: index < cashCouponForm.vipLevel }"
+              @click="changeVipGrade(item,index)">
+            <li>{{ item.title }}</li>
+            <li class="cash-coupon-p"><span>{{item.money}}</span>元</li>
+            <li><img :src="item.url"/>{{ item.descriptStart}}<span>{{ item.discount * 10}}</span>{{item.descriptEnd}}</li>
+            <li>{{ item.descript2}}</li>
+          </ul>
+        </div>
+        <!-- <p class="cash-coupon-p">还需转入：<span>¥{{cashCouponForm.upVipCost }}</span></p>
+        <p class="cash-coupon-p">剩余余额：<span>¥{{ remainingBalance}}</span></p> -->
+        <div class="beVip">
+          <!-- <p>您已满足成为{{ cashCouponForm.vipGrade}}资格！</p> -->
+          <Checkbox v-model="cashCouponForm.agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+            style="cursor: pointer;color:#4A97EE" @click="showModal.cashCoupon=false;showModal.vipRuleModal  = true">《会员制规则》</span></span></Checkbox>
+        </div>
+        <div style="margin-top: 20px;">
+          <Radio-group v-model="zf">
+            <Radio label="zfb" style="margin-right: 40px;">
+              <img src="../../../assets/img/recharge/pay-icon-ali.png"
+                    style="width: 104px;height: 40px;vertical-align: middle">
+            </Radio>
+            <Radio label="wx">
+              <img src="../../../assets/img/recharge/pay-icon-wx.png"
+                    style="width: 122px;height: 40px;vertical-align: middle">
+            </Radio>
+          </Radio-group>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <!-- <Button type="primary" :disabled="chargeDisabled" @click="upVip">确认</Button> -->
+        <Button type="primary" @click="recharge" :disabled="chargeDisabled">确认充值</Button>
+      </div>
+    </Modal>
   </div>
   </template>
 
@@ -559,6 +677,16 @@ export default {
       }
     }
     return {
+      input: 10000,
+      zf: 'zfb',
+      balance: 0,
+      cashCouponForm: {
+        agreeStatus: true,
+        vipList: [],
+        vipId: '',
+        vipGrade: '',
+        vipLevel: 0,
+      },
       hour: '',
       h: '--',
       m1: '--',
@@ -611,6 +739,32 @@ export default {
           isShow:'false'
         },
       ],
+      vipRule: [
+          {
+            title: '类目',
+            trOne: '一次性充值金额',
+            trTwo: '上年度累计消费',
+            trThree: '可享平台折扣'
+          },
+          {
+            title: '白银会员',
+            trOne: '≥1万元且 <5万元',
+            trTwo: '≥5万元且 <10万元',
+            trThree: '6.5折'
+          },
+          {
+            title: '黄金会员',
+            trOne: '≥5万元且 ＜15万元',
+            trTwo: '≥10万元且 ＜30万元',
+            trThree: '5折'
+          },
+          {
+            title: '铂金会员',
+            trOne: '≥15万元',
+            trTwo: '≥30万元',
+            trThree: '3折'
+          },
+        ],
       authError: '',
       authHintShow: false,
       reminderShow: true,
@@ -887,7 +1041,9 @@ export default {
           discount: '6.5',
           money1: '1万及以上',
           money2: '≥5万元且<10万元',
-          class: 'gray'
+          class: 'gray',
+          imgDiamonds: require('../../../assets/img/active/schoolSeason/diamonds_1.png'),
+          time1: '有效期至2021-01-17 23:59:59'
         },
         {
           img: require('../../../assets/img/active/schoolSeason/member_2.png'),
@@ -897,7 +1053,9 @@ export default {
           discount: '5.0',
           money1: '5万及以上',
           money2: '≥10万元且＜30万元',
-          class: 'orange'
+          class: 'orange',
+          imgDiamonds: require('../../../assets/img/active/schoolSeason/diamonds_2.png'),
+          time1: '有效期至2021-01-17 23:59:59'
         },
         {
           img: require('../../../assets/img/active/schoolSeason/member_3.png'),
@@ -907,7 +1065,9 @@ export default {
           discount: '3.0',
           money1: '15万',
           money2: '≥30万元',
-          class: 'white'
+          class: 'white',
+          imgDiamonds: require('../../../assets/img/active/schoolSeason/diamonds_3.png'),
+          time1: '有效期至2021-01-17 23:59:59'
         },
       ],
       showModal: {
@@ -918,7 +1078,9 @@ export default {
         authSucModal: false,
         notAuthModal: false,
         newCoustom: false,
-        spikeDrawRuleModal: false
+        spikeDrawRuleModal: false,
+        vipRuleModal: false,
+        cashCoupon: false
       },
       authFormValidate: {
         name: '',
@@ -958,10 +1120,125 @@ export default {
     this.getGpuZoneListHot()
     this.getobjZoneListHot()
     this.setTime()
+    this.getUserVipLevel()
+    this.getBalance()
   },
   mounted () {
   },
   methods: {
+    recharge() {
+      if (this.isFirstCz && this.input < 100) {
+        this.showModal.rechargeForm = true
+        return
+      } else {
+        this.rechargeOk()
+      }
+    },
+    rechargeOk() {
+      switch (this.zf) {
+        case 'zfb':
+          window.open(`zfb/alipayapi.do?total_fee=${this.input}`)
+          this.showModal.rechargeHint = true
+          break
+        case 'wx':
+          this.$router.push({
+            name: 'wxpay'
+          })
+          sessionStorage.setItem('total_fee', this.input)
+          break
+      }
+    },
+    getUserVipLevel() {
+        if (this.userInfo && this.userInfo.vipname == '白银会员') {
+          this.cashCouponForm.vipLevel = 1
+        } else if (this.userInfo && this.userInfo.vipname == '黄金会员') {
+          this.cashCouponForm.vipLevel = 2
+        } else if (this.userInfo && this.userInfo.vipname == '铂金会员') {
+          this.cashCouponForm.vipLevel = 3
+        } else {
+          this.cashCouponForm.vipLevel = 0
+        }
+      },
+    getBalance() {
+        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            this.balance = Number(response.data.data.remainder)
+            // this.voucher = response.data.data.voucher
+            // this.freezeDeposit = response.data.data.frozenMoney
+            // this.withdrawForm.money = this.balance
+          }
+        })
+      },
+    getVipList() {
+        if (this.cashCouponForm.vipLevel > 2) {
+          this.$message.info({
+            content: '您已经是铂金会员，无需进行升级。'
+          })
+        } else {
+          let url = 'uservip/listVip.do'
+          this.$http.get(url, {params: {}}).then(res => {
+            if (res.data.status == 1 && res.status == 200) {
+              this.cashCouponForm.vipList = res.data.result
+              console.log(res.data.result)
+              this.cashCouponForm.vipId = this.cashCouponForm.vipList[this.cashCouponForm.vipLevel].vipid
+              switch (this.cashCouponForm.vipLevel) {
+                case 0:
+                  this.cashCouponForm.vipGrade = '白银会员'
+                  break
+                case 1:
+                  this.cashCouponForm.vipGrade = '黄金会员'
+                  break
+                case 2:
+                  this.cashCouponForm.vipGrade = '铂金会员'
+                  break
+              }
+              this.showModal.cashCoupon = true
+            }
+          })
+        }
+      },
+      changeVipGrade(item, index) {
+        this.input = item.money
+        if (this.cashCouponForm.vipLevel > index) {
+          return
+        }
+        switch (index) {
+          case 0:
+            this.cashCouponForm.vipGrade = '白银会员'
+            break
+          case 1:
+            this.cashCouponForm.vipGrade = '黄金会员'
+            break
+          case 2:
+            this.cashCouponForm.vipGrade = '铂金会员'
+            break
+        }
+        this.cashCouponForm.vipId = item.vipid
+      },
+      // upVip() {
+      //   let url = 'uservip/upVip.do'
+      //   this.$http.get(url, {
+      //     params: {
+      //       viplevel: this.cashCouponForm.vipId
+      //     }
+      //   }).then(res => {
+      //     if (res.data.status == 1 && res.status == 200) {
+      //       this.userInfoUpdate()
+      //       this.getBalance()
+      //       this.showMoneyByMonth()
+      //       this.search()
+      //       this.getUserVipLevel()
+      //       this.showModal.cashCoupon = false
+      //       this.$Message.success(res.data.message)
+      //     } else {
+      //       this.showModal.cashCoupon = false
+      //       this.$message.info({
+      //         content: res.data.message
+      //       })
+      //     }
+      //   })
+      // },
+      
     setTime() {
         axios.get('network/getTime.do').then(res => {
           if (res.data.status == 1) {
@@ -1459,26 +1736,15 @@ export default {
         }
       })
     },
-    // getprice() {
-    //   axios.get('activity/getOriginalPrice.do', {
-    //     params: {
-    //       zoneId: this.hotProductHot.zoneId,
-    //       activityNum: '38',
-    //       type: this.hotProductHot.timeTimetype.type,
-    //       month: this.hotProductHot.timeTimetype.type == 'month' ? this.hotProductHot.timeTimetype.value : this.hotProductHot.timeTimetype.value*12,
-    //       cpu: this.hotProductHot.cpuMemory.cpu,
-    //       mem: this.hotProductHot.cpuMemory.memory,
-    //       bandwith: this.hotProductHot.bandwith,
-    //       diskSize: this.hotProductHot.disksize,
-    //     }
-    //   }).then(res => {
-    //     if (res.status == 200 && res.data.status == 1) {
-    //       return res.data.result.cost
-    //     }
-    //   })
-    // },
   },
   computed: {
+    chargeDisabled() {
+        return this.cashCouponForm.agreeStatus == false || this.cashCouponForm.upVipCost > this.balance
+      },
+    // remainingBalance() {
+    //   let cost = parseInt(this.balance - this.cashCouponForm.upVipCost)
+    //   return cost >= 0 ? cost : 0
+    // },
     userInfo () {
       return this.$store.state.userInfo
     },
@@ -1535,6 +1801,24 @@ export default {
         }
       })
     },
+    getTicket() {
+        if (this.$store.state.userInfo == null) {
+          this.$LR({type: 'login'})
+          return
+        }
+        var url = `ticket/takeTicket.do`
+        axios.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$message.info({
+              content: '卡券领取成功，请前往费用中心-我的卡券充值后使用。'
+            })
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
   },
   watch: {
     'hostProductHot.zoneId': {
@@ -2034,7 +2318,7 @@ section {
     .container {
       margin-bottom: 40px;
       .item {
-        div {
+        >div {
           width: 382px;
           height: 249px;
           padding: 33px 0px 41px 39px;
@@ -2390,6 +2674,49 @@ section {
     }
   }
 }
+.modal5 {
+    width: 500px;
+    > .header {
+      background: url("../../../assets/img/usercenter/icon_vip.png") no-repeat;
+      span {
+        color: #FF624B;
+        font-size: 18px;
+        line-height: 55px;
+      }
+    }
+    > .body {
+      color: #4B3C3D;
+      margin: 0 auto;
+      padding: 0 8px 0 20px;
+      margin:20px 0 30px 0;
+      text-align: left;
+      .body_hide{
+        overflow:auto;
+       height: 500px;
+        h3 {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          font-weight: 400;
+          line-height: 27px;
+        }
+      }
+      .body_hide::-webkit-scrollbar{
+          width: 8px;     /*高宽分别对应横竖滚动条的尺寸*/
+          height: 1px;
+        }
+        .body_hide::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+          border-radius: 10px;
+          -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+          background:#E6E6E6;
+        }
+        .body_hide::-webkit-scrollbar-track {/*滚动条里面轨道*/
+          -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+          border-radius: 10px;
+          background:#fff;
+        }
+    }
+    
+  }
 .auth-form-validate,
 .receive-good-validate {
   padding-top: 26px;
@@ -2415,4 +2742,61 @@ section {
     text-align: center;
   }
 }
+.vipList {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    ul {
+      width: 170px;
+      height: 120px;
+      text-align: center;
+      background: rgba(247, 247, 247, 1);
+      border-radius: 4px;
+      border: 1px solid rgba(217, 217, 217, 1);
+      padding-top: 10px;
+      cursor: pointer;
+      &.selected {
+        background: #FFF;
+        border: 1px solid rgba(42, 153, 242, 1);
+      }
+      &.notallowed {
+        cursor: not-allowed;
+      }
+      > li {
+        font-size: 10px;
+        font-family: MicrosoftYaHei;
+        color: rgba(102, 102, 102, 1);
+        line-height: 16px;
+        img {
+          height: 12px;
+          width: auto;
+          padding: 0 5px;
+        }
+        span {
+          color: #2A99F2;
+        }
+      }
+      li:nth-child(1) {
+        font-size: 12px;
+        font-family: MicrosoftYaHei-Bold;
+        font-weight: bold;
+        color: rgba(102, 102, 102, 1);
+      }
+      li:nth-child(2) {
+        margin: 10px;
+      }
+    }
+  }
+.cash-coupon-p {
+    font-size: 16px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(102, 102, 102, 1);
+    margin-bottom: 20px;
+    > span {
+      font-size: 24px;
+      font-weight: 600;
+      color: #2A99F2;
+    }
+  }
 </style>
