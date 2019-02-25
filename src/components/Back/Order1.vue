@@ -429,8 +429,6 @@
          if(this.couponInfo.isUse){
           this.couponInfo.isUse = !this.couponInfo.isCash;
         }
-         
-         this.couponInfo.totalCost = this.couponInfo.totalCost - (bol?this.couponInfo.cash:0);
          if(!bol){
          }else{
             this.couponInfo.selectTicket = '';
@@ -649,6 +647,19 @@
         },
         deep: true
       },
+      'couponInfo.isCash':{
+        handler:function(){
+          if(this.couponInfo.isCash){
+            if(this.couponInfo.cash > this.couponInfo.totalCost){
+              this.couponInfo.totalCost = 0;
+            }
+            if(this.couponInfo.cash < this.couponInfo.totalCost){
+              this.couponInfo.totalCost = this.couponInfo.totalCost - this.couponInfo.cash;
+            }
+          }
+        },
+        deep: true
+      }
     }
   }
 </script>
