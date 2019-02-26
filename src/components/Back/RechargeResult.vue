@@ -34,7 +34,8 @@
     data() {
       return {
         kfURL: '',
-        payStatus: '支付成功'
+        payStatus: '',
+        msg: '',
       }
     },
     created() {
@@ -42,6 +43,16 @@
         this.kfURL = response.data.result
         sessionStorage.setItem('kf', response.data.result)
       })
+      if(sessionStorage.getItem('rechargeSuccessMsg')){
+        this.payStatus = '支付成功'
+        this.msg = sessionStorage.getItem('rechargeSuccessMsg')
+        sessionStorage.removeItem('rechargeSuccessMsg')
+      }
+      if(sessionStorage.getItem('rechargeErrorMsg')){
+        this.payStatus = '支付失败'
+        this.msg = sessionStorage.getItem('rechargeErrorMsg')
+        sessionStorage.removeItem('rechargeErrorMsg')
+      }
     },
     methods: {
       kf() {
