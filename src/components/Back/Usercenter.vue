@@ -25,10 +25,13 @@
                   <ul>
                     <li><span>用户名称</span><span style="display: inline">{{(authInfo&&authInfo.name)? authInfo.name:userInfo.realname}}</span>
                       <span v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"
-                            style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
+                            style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid rgba(42,153,242,1);margin-left: 20px;font-size: 10px;">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
-                            style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
-                    <li><span>会员信息</span><span v-if="vipGrade"><img v-if="vipGrade" :src="vipGrade" alt="vipGrade"/></span><span v-else>尚未开通会员</span><span
+                            style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid #14B278;margin-left: 20px;font-size: 10px;color: #14B278">企业认证</span>
+                      <span v-if="authInfo&&authInfo.authtype == 1 && authInfo.checkstatus == 2"
+                            style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid #14B278;margin-left: 20px;font-size: 10px;color: #14B278">企业认证中</span>
+                    </li>
+                    <li><span>会员信息</span><span v-if="vipGrade"><img v-if="vipGrade" :src="vipGrade" alt="vipGrade" height="22" width="74"/></span><span v-else>尚未开通会员</span><span
                       @click="$router.push('memberInfo')">查看</span></li>
                     <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span
                       @click="modifyEmail">去绑定</span></li>
@@ -4090,11 +4093,11 @@
         }
         span:nth-child(3) {
           font-size: 12px;
-          font-family: MicrosoftYaHei;
-          color: rgba(255, 255, 255, 1);
-          padding: 8px;
-          background: #14B278;
-          border-radius: 4px;
+          background: rgba(255, 255, 255, 1);
+          border-radius: 10px;
+          color: #14B278;
+          padding: 4px 8px;
+          border: 1px solid #14B278;
           margin-left: 20px;
         }
       }
@@ -4116,11 +4119,11 @@
         }
         span:nth-child(2) {
           font-size: 12px;
-          font-family: MicrosoftYaHei;
-          color: rgba(255, 255, 255, 1);
-          padding: 8px;
-          background: rgba(42, 153, 242, 1);
-          border-radius: 4px;
+          background: rgba(255, 255, 255, 1);
+          border-radius: 10px;
+          color: rgba(42, 153, 242, 1);
+          padding: 4px 8px;
+          border: 1px solid rgba(42, 153, 242, 1);
         }
       }
     }

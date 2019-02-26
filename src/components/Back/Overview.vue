@@ -5,13 +5,13 @@
       <div id="head-info">
         <div style="width:346px">
           <div class="user-info">
-            <img v-if="vipGrade" :src="vipGrade" alt="vipGrade"/>
+            <img v-if="vipGrade" :src="vipGrade" alt="vipGrade" height="22" width="74"/>
             <div class="portrait">
               <img :src="userInfo.headportrait" alt="head-img">
             </div>
             <div style="position: relative">
-              <p style="font-size: 18px;color: #333333;">{{userInfo.realname}}</p>
-              <i :class="auth" class="auth-icon"></i>
+              <p style="font-size: 18px;color: #333333;margin-bottom: 17px;font-weight:400;">{{userInfo.realname}}</p>
+              <span :class="auth" class="auth-icon">{{ authText}}</span>
             </div>
           </div>
           <div style="display: flex;margin-top:25px">
@@ -413,6 +413,17 @@
           // 企业认证中
           'company-authing': this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2
         }
+      },
+      authText() {
+        if (this.userInfo.personalauth == 1 && this.userInfo.companyauth == 1 && this.authInfo.checkstatus == undefined) {
+          return '未认证'
+        } else if (this.userInfo.personalauth == 0 && this.userInfo.companyauth == 1 && this.authInfo.authtype != 1) {
+          return '个人认证'
+        } else if (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 0) {
+          return '企业认证'
+        } else if (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2) {
+          return '企业认证中'
+        }
       }
     },
     watch: {
@@ -437,7 +448,7 @@
     .portrait {
       margin-right: 20px;
       > img {
-        margin-right: 18px;
+        margin: 0 18px 0 15px;
         height: 50px;
         width: 50px;
         border-radius: 39px;
@@ -447,31 +458,35 @@
 
   /* 未认证class icon */
   .auth-icon {
-    width: 67px;
+    width: 56px;
     height: 18px;
-    display: inline-block;
-    position: absolute;
-    bottom: 0;
-    background-repeat: no-repeat;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 10px;
+    border: 1px solid rgba(42, 153, 242, 1);
+    color: rgba(42, 153, 242, 1);
+    font-size: 10px;
+    padding: 2px 4px;
   }
 
   .not-auth {
-    background-image: url(../../assets/img/overview/authenticate-icon-1.png);
+
   }
 
   /* 个人认证class icon */
   .personal-icon {
-    background-image: url(../../assets/img/overview/authenticate-icon-4.png);
+
   }
 
-  /* 企业认证class icon */
+  /* 企业认证中class icon */
   .company-authing {
-    background-image: url(../../assets/img/overview/authenticate-icon-5.png);
+    border: 1px solid #14B278;
+    color: #14B278;
   }
 
   /* 企业认证class icon */
   .company-icon {
-    background-image: url(../../assets/img/overview/authenticate-icon-7.png);
+    border: 1px solid #14B278;
+    color: #14B278;
   }
 
   #overview {

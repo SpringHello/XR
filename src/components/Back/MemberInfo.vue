@@ -38,9 +38,9 @@
           </div>
           <div class="content-right">
             <ul>
-              <li><img src="../../assets/img/usercenter/uc-img3.png"/><span>可享受6.5折优惠</span><span @click="toRecharge(10000)">充值</span></li>
-              <li><img src="../../assets/img/usercenter/uc-img4.png"/><span>可享受5折优惠</span><span @click="toRecharge(50000)">充值</span></li>
-              <li><img src="../../assets/img/usercenter/uc-img5.png"/><span>可享受3折优惠</span><span @click="toRecharge(150000)">充值</span></li>
+              <li><img src="../../assets/img/usercenter/uc-img3.png" height="19" width="69" alt="vipImg"/><span>可享受6.5折优惠</span><span @click="toRecharge(10000)">充值</span></li>
+              <li><img src="../../assets/img/usercenter/uc-img4.png" height="19" width="69" alt="vipImg"/><span>可享受5折优惠</span><span @click="toRecharge(50000)">充值</span></li>
+              <li><img src="../../assets/img/usercenter/uc-img5.png" height="19" width="69" alt="vipImg"/><span>可享受3折优惠</span><span @click="toRecharge(150000)">充值</span></li>
             </ul>
           </div>
         </div>
@@ -86,7 +86,9 @@
               let img = params.row.grade == '白银会员' ? require('../../assets/img/usercenter/uc-img3.png') : params.row.grade == '黄金会员' ? require('../../assets/img/usercenter/uc-img4.png') : require('../../assets/img/usercenter/uc-img5.png')
               return h('img', {
                 attrs: {
-                  src: img
+                  src: img,
+                  width: '69',
+                  height: '19'
                 }
               },)
             }
