@@ -2806,6 +2806,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
+                this.getPhone()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2835,6 +2836,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
+                this.getPhone()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2901,6 +2903,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
+                this.getPhone()
                 this.currentTab = ''
               } else {
                 this.$message.info({
