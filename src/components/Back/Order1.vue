@@ -60,7 +60,9 @@
         </div>
         <div style="text-align:right;margin-top:40px;">
           <Button @click="$router.push({path:'overview'})" style="margin-right:10px;">取消订单</Button>
-          <Button type="primary"  @click="pay">提交订单</Button>
+           <Button type="primary"  @click="payCash" v-if="isButtonCash">确认购买</Button>
+          <Button type="primary"  @click="pay" v-else>提交订单</Button>
+         
         </div>
        
           <div style="clear: both"></div>
@@ -232,11 +234,11 @@
           {
             title: '会员优惠价',
             render(h, obj) {
-              if (obj.row.originalcost > obj.row.cost) {
+              // if (obj.row.originalcost > obj.row.cost) {
                 return h('span', {}, obj.row.cost)
-              } else {
-                return h('span', '--')
-              }
+              // } else {
+                // return h('span', '--')
+              // }
             }
           }
         ],
@@ -279,7 +281,12 @@
         // 订单类型
         goodType:null,
         // 接收是否购买数据盘
-        isNotBuyDisk:false
+        isNotBuyDisk:false,
+        // 现金券余额是否充足
+        isButtonCash:false,
+        orderInfo:{
+          orderId:''
+        }
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -287,11 +294,13 @@
      let order = to.query.countOrder == undefined ?'':to.query.countOrder;
       let orderS = sessionStorage.getItem('countOrder') == 'undefined'?null:sessionStorage.getItem('countOrder')
       if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
-        params.countOrder = order || orderS
+        params.countOrder = order || orderS;
+        this.orderInfo.orderId = order || orderS;
         sessionStorage.setItem('countOrder', order + '')
       }
       if (to.query.countOrder) {
-        params.countOrder = to.query.countOrder
+        params.countOrder = to.query.countOrder;
+        this.orderInfo.orderId = to.query.countOrder;
       }
       axios.get('user/searchOrderByBuy.do', {
         params
@@ -325,7 +334,8 @@
           this.goodType = response.data.result.data[0].goodstype;
           sessionStorage.setItem('routername',response.data.result.data[0].goodstype);
           this.orderData = response.data.result.data.map(item => {
-            var data = JSON.parse(item.display)
+            var data = JSON.parse(item.display);
+            this.orderInfo.orderId +=item.ordernumber+',';
             data.orderId = item.ordernumber
             data.originalcost = item.originalcost
             data.cost = item.cost
@@ -374,14 +384,16 @@
       // 选中项变化
       onSelectionChange(selection) {
         this.selectLength.selection = selection.length;
-        this.couponInfo.selectTicket = ''
+        this.couponInfo.selectTicket = '';
         this.canUseTicket = selection.every(item => {
           return item.discountedorders != 1
         })
-        let originCost = 0, cost = 0
+        let originCost = 0, cost = 0;
+        this.orderInfo.orderId = '';
         selection.forEach((item) => {
           cost += item.cost;
           originCost += item.originalcost;
+          this.orderInfo.orderId += item.orderId+',';
         })
         this.couponInfo.cost = cost;
         this.couponInfo.originCost = originCost;
@@ -390,17 +402,19 @@
             this.couponInfo.couponList.forEach(item => {
               if (item.operatorid == this.couponInfo.selectTicket) {
                 if (item.tickettype == 1) {
-                  this.couponInfo.totalCost = (cost * item.money ).toFixed(2)
+                  this.couponInfo.totalCost = Number((cost * item.money ).toFixed(2));
                 } else if (item.tickettype == 0) {
-                  this.couponInfo.totalCost = (cost - item.money).toFixed(2)
+                  this.couponInfo.totalCost = Number((cost - item.money).toFixed(2));
                 }
               }
             })
-          } else {
-            this.couponInfo.totalCost = cost.toFixed(2)
+          } else if(this.couponInfo.isCash){
+            this.couponInfo.totalCost =  this.couponInfo.cost-this.couponInfo.cost;
+          }else{
+             this.couponInfo.totalCost = Number(cost.toFixed(2));
           }
         } else {
-          this.couponInfo.totalCost = 0
+          this.couponInfo.totalCost = 0;
         }
         let orderNumber = this.orderData.map(item => {
           return item.orderId
@@ -530,6 +544,34 @@
           return;
         }
         this.$router.push(router)
+      },
+
+      // 现金券余额充足支付
+      payCash(){
+        if(this.selectLength.selection == 0){
+          this.$Modal.info({
+            content:'请先选择一个订单'
+          })
+          return;
+        }
+        axios.get('information/payOrder.do',{
+          params: {
+              order:  this.orderInfo.orderId.substring(0, this.orderInfo.orderId.length-1),
+              ticket: ''
+            }
+        }).then(res =>{
+          if(res.status ==200 && res.data.status == 1){
+            if (res.data.giftNumMessage) {
+                sessionStorage.setItem('firstMsg', res.data.giftNumMessage)
+              } else {
+                sessionStorage.setItem('firstMsg', '')
+              }
+            } else {
+              sessionStorage.setItem('payResult', 'fail');
+              sessionStorage.setItem('errMsg', res.data.message);
+            }
+            this.$router.push('resultNew')
+        })
       }
       
     },
@@ -573,8 +615,8 @@
            if(this.couponInfo.totalCost > this.couponInfo.cash){
               return  this.couponInfo.cash;
             }
-            if(this.couponInfo.totalCost < this.couponInfo.cash){
-              return this.couponInfo.cash - this.couponInfo.totalCost;
+            if(this.couponInfo.totalCost < this.couponInfo.cash || this.couponInfo.totalCost == this.couponInfo.cash){
+              return  this.couponInfo.cost;
             }
         }
         return 0;
@@ -642,7 +684,7 @@
             })
             this.couponInfo.isUse = true
           } else {
-            this.couponInfo.totalCost = this.couponInfo.cost.toFixed(2)
+            this.couponInfo.totalCost = this.couponInfo.cost.toFixed(2);
           }
         },
         deep: true
@@ -650,12 +692,17 @@
       'couponInfo.isCash':{
         handler:function(){
           if(this.couponInfo.isCash){
-            if(this.couponInfo.cash > this.couponInfo.totalCost){
-              this.couponInfo.totalCost = 0;
+            if(this.couponInfo.cash > this.couponInfo.totalCost || this.couponInfo.cash == this.couponInfo.totalCost){
+              this.couponInfo.totalCost =  this.couponInfo.cost-this.couponInfo.cost;
+              this.isButtonCash = true;
+              return;
             }
             if(this.couponInfo.cash < this.couponInfo.totalCost){
               this.couponInfo.totalCost = this.couponInfo.totalCost - this.couponInfo.cash;
+              return;
             }
+          }else{
+              this.couponInfo.totalCost = this.couponInfo.cost;
           }
         },
         deep: true

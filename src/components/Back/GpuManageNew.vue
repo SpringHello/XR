@@ -20,10 +20,10 @@
               </router-link>
             </div>
           </div>
-          <div>
-              <p>{{gpuDetail.cpuNum}}CPU ,{{gpuDetail.memory}}G内存 ,{{gpuDetail.bandwith}}M宽带 | {{gpuDetail.zoneName}}</p>
+          <div class="host-details">
+              <p>{{gpuDetail.cpuNum}}CPU ,{{gpuDetail.memory}}G内存 ,{{gpuDetail.bandwith}}M宽带 | {{gpuDetail.zoneName}}<span>[升级]</span></p>
           </div>
-          <div style="display: flex;margin-top: 20px;">
+          <!-- <div style="display: flex;margin-top: 20px;">
             <div class="host_box">
               <i v-if="gpuDetail.cpuNum">{{gpuDetail.cpuNum}}CPU , </i>
               <i v-if="gpuDetail.memory">{{gpuDetail.memory}}G内存 , </i>
@@ -37,7 +37,7 @@
             <div class="host_box">
               <p>所属VPC：<span>{{gpuDetail.vpc}}</span></p>
               <p>绑定公网：<span>{{gpuDetail.publicIp}}</span></p>
-              <!-- <div>所属负载均衡：
+              <div>所属负载均衡：
                 <Tooltip placement="top-start" v-if="gpuDetail.loadbalance.length>0">
                   <span class="bluetext one-row-text" style="width:100px;">{{gpuDetail.loadbalance.join('|')}}</span>
                   <div slot="content" v-for="(item,index) in gpuDetail.loadbalance" :key="index">
@@ -54,14 +54,14 @@
                   </div>
                 </Tooltip>
                 <span class="bluetext" style="width:0px;" v-else>{{gpuDetail.disk.join('|')}}</span>
-              </div> -->
+              </div>
             </div> 
             <div class="host_box">
               <p>计费类型：{{gpuDetail.case_type == 1 ?'包年计费':gpuDetail.case_type == 2 ? '包月计费' : gpuDetail.case_type == 3 ? '实时计费' :''}}</p>
               <p>创建于：{{gpuDetail.createTime}}</p>
               <p>自动续费：<span>{{gpuDetail.isAutoRenw == 1 ? '开' : '关'}}</span></p>
             </div>
-          </div>
+          </div> -->
         </div>
         
         <div class="tabs">
@@ -200,7 +200,7 @@
             <!--修改密码-->
             <TabPane label="修改密码">
               <div class="tab_box">
-                <label>重置密码</label>
+                <label>修改密码</label>
                 <Form ref="resetPasswordForm" :model="resetPasswordForm" label-position="left" :label-width="100"
                       style="margin-top:20px;"
                       :rules="resetRuleValidate">
@@ -830,7 +830,7 @@
                   content: response.data.message
                 })
               }
-              this.resetPasswordForm.buttonMessage = '确认重置'
+              this.resetPasswordForm.buttonMessage = '确认修改'
               this.resetPasswordForm.oldPassword = ''
               this.resetPasswordForm.newPassword = ''
               this.resetPasswordForm.confirmPassword = ''
@@ -1078,7 +1078,7 @@
         }
       },
 
-        setMonitoring() {
+      setMonitoring() {
         this.showWindow.warningSetting = true;
         this.$http.get('information/alarmConfig.do', {
           params: {
@@ -1102,7 +1102,7 @@
         })
       },
        // 告警策略配置确定
-       setMonitoringOk() {
+      setMonitoringOk() {
         this.$http.get('information/upalarmConfig.do', {
           params: {
             instancename: sessionStorage.getItem('instancename'),
@@ -1167,9 +1167,14 @@
 
 <style lang="less" rel="stylesheet/less" scoped>
   .head{
-  background:#F6FAFD;
-    height: 237px;
+     background:#F6FAFD;
+    height: 137px;
     padding: 20px;
+    .host-details{
+      margin-top: 17px;
+      font-size: 14px;
+      color: #333;
+    }
   }
   .tabs{
     padding: 0 0 20px 20px;
@@ -1346,13 +1351,14 @@
     white-space: nowrap;
   }
   .host-name{
-      display: flex;
+      display: inline-block;
       img{
           vertical-align: middle;
       }
       span{
           vertical-align: middle;
           font-size: 18px;
+          margin: 0 10px 0 5px;
       }
   }
 </style>

@@ -141,7 +141,7 @@
     },
     created() {
       this.overTime = sessionStorage.getItem('overtime')
-      this.orderInfo = this.$route.params
+      this.orderInfo = this.$route.params;
       if (this.orderInfo.isUseVoucher == 1) {
         this.accountPay.push('voucher')
       }
