@@ -28,7 +28,8 @@
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
                             style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
-                    <li><span>会员信息</span><span v-if="vipGrade"><img v-if="vipGrade" :src="vipGrade" alt="vipGrade" /></span><span v-else>尚未开通会员</span><span @click="$router.push('memberInfo')">查看</span></li>
+                    <li><span>会员信息</span><span v-if="vipGrade"><img v-if="vipGrade" :src="vipGrade" alt="vipGrade"/></span><span v-else>尚未开通会员</span><span
+                      @click="$router.push('memberInfo')">查看</span></li>
                     <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span
                       @click="modifyEmail">去绑定</span></li>
                     <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span
@@ -2817,7 +2818,7 @@
         })
       }),
       // 快速认证
-      quicklyAuth:throttle(2000, function () {
+      quicklyAuth: throttle(2000, function () {
         var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
           return Promise.resolve(validate)
         })
@@ -2847,7 +2848,7 @@
         })
       }),
       // 企业认证
-      enterpriseAttest:throttle(2000, function () {
+      enterpriseAttest: throttle(2000, function () {
         this.$refs.companyAuth.validate(validate => {
           if (validate) {
             if (this.notAuth.companyAuthForm.combine == '') {
@@ -3109,12 +3110,22 @@
             } else {
               return false
             }
-            axios.get(url, {
-              params: {
+            let params = {}
+            if (this.bindingMobilePhoneForm.verificationMode == 'phone') {
+              params = {
                 aim: this.userInfo.phone,
                 isemail: 0,
                 vailCode: this.bindingMobilePhoneForm.pictureCode
               }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                vailCode: this.bindingMobilePhoneForm.pictureCode
+              }
+            }
+            axios.get(url, {
+              params: params
             }).then(response => {
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
@@ -3962,7 +3973,7 @@
               color: rgba(102, 102, 102, 1);
               line-height: 14px;
               display: inline-block;
-              >img{
+              > img {
                 vertical-align: bottom;
               }
             }
