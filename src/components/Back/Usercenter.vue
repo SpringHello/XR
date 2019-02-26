@@ -25,10 +25,14 @@
                   <ul>
                     <li><span>用户名称</span><span style="display: inline">{{(authInfo&&authInfo.name)? authInfo.name:userInfo.realname}}</span>
                       <span v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"
-                            style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
+                            style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid rgba(42,153,242,1);margin-left: 20px;font-size: 10px;">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
-                            style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
-                    <li><span>会员信息</span><span v-if="vipGrade"><img v-if="vipGrade" :src="vipGrade" alt="vipGrade" /></span><span v-else>尚未开通会员</span><span @click="$router.push('memberInfo')">查看</span></li>
+                            style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid #14B278;margin-left: 20px;font-size: 10px;color: #14B278">企业认证</span>
+                      <span v-if="authInfo&&authInfo.authtype == 1 && authInfo.checkstatus == 2"
+                            style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid #14B278;margin-left: 20px;font-size: 10px;color: #14B278">企业认证中</span>
+                    </li>
+                    <li><span>会员信息</span><span v-if="vipGrade"><img v-if="vipGrade" :src="vipGrade" alt="vipGrade" height="22" width="74"/></span><span v-else>尚未开通会员</span><span
+                      @click="$router.push('memberInfo')">查看</span></li>
                     <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span
                       @click="modifyEmail">去绑定</span></li>
                     <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span
@@ -2806,6 +2810,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
+                this.getPhone()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2816,7 +2821,7 @@
         })
       }),
       // 快速认证
-      quicklyAuth:throttle(2000, function () {
+      quicklyAuth: throttle(2000, function () {
         var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
           return Promise.resolve(validate)
         })
@@ -2835,6 +2840,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
+                this.getPhone()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2845,7 +2851,7 @@
         })
       }),
       // 企业认证
-      enterpriseAttest:throttle(2000, function () {
+      enterpriseAttest: throttle(2000, function () {
         this.$refs.companyAuth.validate(validate => {
           if (validate) {
             if (this.notAuth.companyAuthForm.combine == '') {
@@ -2901,6 +2907,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
+                this.getPhone()
                 this.currentTab = ''
               } else {
                 this.$message.info({
@@ -3106,12 +3113,22 @@
             } else {
               return false
             }
-            axios.get(url, {
-              params: {
+            let params = {}
+            if (this.bindingMobilePhoneForm.verificationMode == 'phone') {
+              params = {
                 aim: this.userInfo.phone,
                 isemail: 0,
                 vailCode: this.bindingMobilePhoneForm.pictureCode
               }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                vailCode: this.bindingMobilePhoneForm.pictureCode
+              }
+            }
+            axios.get(url, {
+              params: params
             }).then(response => {
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
@@ -3959,7 +3976,7 @@
               color: rgba(102, 102, 102, 1);
               line-height: 14px;
               display: inline-block;
-              >img{
+              > img {
                 vertical-align: bottom;
               }
             }
@@ -4076,11 +4093,11 @@
         }
         span:nth-child(3) {
           font-size: 12px;
-          font-family: MicrosoftYaHei;
-          color: rgba(255, 255, 255, 1);
-          padding: 8px;
-          background: #14B278;
-          border-radius: 4px;
+          background: rgba(255, 255, 255, 1);
+          border-radius: 10px;
+          color: #14B278;
+          padding: 4px 8px;
+          border: 1px solid #14B278;
           margin-left: 20px;
         }
       }
@@ -4102,11 +4119,11 @@
         }
         span:nth-child(2) {
           font-size: 12px;
-          font-family: MicrosoftYaHei;
-          color: rgba(255, 255, 255, 1);
-          padding: 8px;
-          background: rgba(42, 153, 242, 1);
-          border-radius: 4px;
+          background: rgba(255, 255, 255, 1);
+          border-radius: 10px;
+          color: rgba(42, 153, 242, 1);
+          padding: 4px 8px;
+          border: 1px solid rgba(42, 153, 242, 1);
         }
       }
     }

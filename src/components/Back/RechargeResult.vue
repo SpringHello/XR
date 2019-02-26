@@ -14,13 +14,21 @@
         </div>
         <div class="pay-text">
           <h3>{{ payStatus }}</h3>
-          <div class="pay-info">
-            <img width="32" height="32" src="../../assets/img/payresult/paySuccess.png"/>
-            <p>您已充值成功，余额为：xx元。 </p>
-            <p>距离到达下一会员等级还需充值XX元。</p>
+          <div class="pay-info" v-if="payStatus == '支付成功'">
+            <img width="32" height="32" src="../../assets/img/payresult/paySuccess.png" alt="paySuccess"/>
+            <p>{{ msg}}</p>
+            <p style="color: #2A99F2">{{vipMsg}}</p>
             <div style="margin-top: 20px">
-              <Button type="ghost" style="margin-right: 10px">成为会员</Button>
-              <Button type="primary">进入控制台</Button>
+              <Button type="ghost" style="margin-right: 10px" @click="beVip">成为会员</Button>
+              <Button type="primary" @click="$router.push('overview')">进入控制台</Button>
+            </div>
+          </div>
+          <div class="pay-info" v-else>
+            <img width="32" height="32" src="../../assets/img/payresult/payFail.png" alt="payFail"/>
+            <p style="width: 190px">{{msg}}</p>
+            <div style="margin-top: 20px">
+              <Button type="ghost" style="margin-right: 10px" @click="kf()">联系客服</Button>
+              <Button type="primary" @click="$router.push('recharge')">返回</Button>
             </div>
           </div>
         </div>
@@ -33,20 +41,33 @@
   export default {
     data() {
       return {
-        kfURL: '',
-        payStatus: '支付成功'
+        payStatus: '',
+        msg: '',
+        vipMsg:''
       }
     },
     created() {
-      this.$http.get('user/getKfAdd.do').then(response => {
-        this.kfURL = response.data.result
-        sessionStorage.setItem('kf', response.data.result)
-      })
+      if (sessionStorage.getItem('rechargeSuccessMsg')) {
+        this.payStatus = '支付成功'
+        this.msg = sessionStorage.getItem('rechargeSuccessMsg')
+        this.vipMsg = sessionStorage.getItem('vipMsg')
+        sessionStorage.removeItem('rechargeSuccessMsg')
+        sessionStorage.removeItem('vipMsg')
+      }
+      if (sessionStorage.getItem('rechargeErrorMsg')) {
+        this.payStatus = '支付失败'
+        this.msg = sessionStorage.getItem('rechargeErrorMsg')
+        sessionStorage.removeItem('rechargeErrorMsg')
+      }
     },
     methods: {
       kf() {
-        window.open(this.kfURL)
+        window.open('tencent://message/?uin=1014172393&amp;Site=www.cloudsoar.com&amp;Menu=yes', '_blank')
       },
+      beVip(){
+        sessionStorage.setItem('beVip','1')
+        this.$router.push('expenses')
+      }
     },
     computed: {
       auth() {

@@ -20,31 +20,32 @@
               <img :src="userInfo.headportrait">
             </div>
             <div class="member-info">
-              <p>我的会员等级：大众会员</p>
-              <p>有效期至2020-2-14 09:38:37</p>
+              <p>我的会员等级：{{ memberInfo.vipName? memberInfo.vipName: '尚未成为会员'}}</p>
+              <p>有效期至{{ memberInfo.vipEndTime ? memberInfo.vipEndTime : '----'}}</p>
               <div>
                 <div class="progress">
-                  <div class="fill"></div>
+                  <div class="fill" ref="countCost"></div>
                 </div>
-                <span>42000/50000</span>
+                <span>{{ memberInfo.countCost}}/{{ memberInfo.vipNeedCountCost}}</span>
               </div>
               <div>
                 <div class="progress">
-                  <div class="fill"></div>
+                  <div class="fill" ref="alreadyRecharge"></div>
                 </div>
-                <span>100/10000</span>
+                <span>{{ memberInfo.alreadyRecharge}}/{{ memberInfo.vipTotalRecharge}}</span>
               </div>
             </div>
           </div>
           <div class="content-right">
             <ul>
-              <li><img src="../../assets/img/usercenter/uc-img3.png"/><span>可享受6.5折优惠</span><span @click="toRecharge(10000)">充值</span></li>
-              <li><img src="../../assets/img/usercenter/uc-img4.png"/><span>可享受5折优惠</span><span @click="toRecharge(50000)">充值</span></li>
-              <li><img src="../../assets/img/usercenter/uc-img5.png"/><span>可享受3折优惠</span><span @click="toRecharge(150000)">充值</span></li>
+              <li><img src="../../assets/img/usercenter/uc-img3.png" height="19" width="69" alt="vipImg"/><span>可享受6.5折优惠</span><span @click="toRecharge(10000)">充值</span></li>
+              <li><img src="../../assets/img/usercenter/uc-img4.png" height="19" width="69" alt="vipImg"/><span>可享受5折优惠</span><span @click="toRecharge(50000)">充值</span></li>
+              <li><img src="../../assets/img/usercenter/uc-img5.png" height="19" width="69" alt="vipImg"/><span>可享受3折优惠</span><span @click="toRecharge(150000)">充值</span></li>
             </ul>
           </div>
         </div>
-        <p class="hint">再累计消费<span>800</span>元或截止<span>2-15 09:38:37</span>前再充值<span>99000</span>元可升级为白银会员</p>
+        <p class="hint" v-if="memberInfo.vipName !== '铂金会员'">再累计消费<span>{{ expenditure }}</span>元或截止<span>{{ memberInfo.vipTotalRechargeLastTime}}</span>前再转入现金券额度<span>{{ rechargeMoney }}</span>元可升级为{{
+          memberInfo.nextVipName}}</p>
         <div class="member-rule">
           <h5>会员制规则</h5>
           <p>1.会员级别：<span>新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</span></p>
@@ -85,7 +86,9 @@
               let img = params.row.grade == '白银会员' ? require('../../assets/img/usercenter/uc-img3.png') : params.row.grade == '黄金会员' ? require('../../assets/img/usercenter/uc-img4.png') : require('../../assets/img/usercenter/uc-img5.png')
               return h('img', {
                 attrs: {
-                  src: img
+                  src: img,
+                  width: '69',
+                  height: '19'
                 }
               },)
             }
@@ -122,15 +125,38 @@
             cumulative: '≥30万元',
             discount: '3折'
           },
-        ]
+        ],
+        memberInfo: {
+          alreadyRecharge: 0,
+          countCost: 0,
+          nextVipName: '',
+          vipEndTime: '',
+          vipName: '',
+          vipNeedCountCost: '',
+          vipTotalRecharge: '',
+          vipTotalRechargeLastTime: ''
+        }
       }
     },
     created() {
+      this.getMemberInfo()
     },
     methods: {
       toRecharge(val) {
         sessionStorage.setItem('rechargeMoney', val + '')
         this.$router.push('recharge')
+      },
+      getMemberInfo() {
+        let url = 'uservip/listUserVipInfo.do'
+        this.$http.get(url, {params: {}}).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.memberInfo = res.data.result
+            let countCost = 200 * (this.memberInfo.countCost / this.memberInfo.vipNeedCountCost) // 计算已消费的比列显示进度条
+            let alreadyRecharge = 200 * (this.memberInfo.alreadyRecharge / this.memberInfo.vipTotalRecharge)
+            this.$refs.countCost.style.width = countCost + 'px'
+            this.$refs.alreadyRecharge.style.width = alreadyRecharge + 'px'
+          }
+        })
       }
     },
     computed: {
@@ -142,6 +168,12 @@
       },
       auth() {
         return this.$store.state.authInfo != null
+      },
+      expenditure() {
+        return this.memberInfo.vipNeedCountCost - this.memberInfo.countCost
+      },
+      rechargeMoney() {
+        return this.memberInfo.vipTotalRecharge - this.memberInfo.alreadyRecharge
       }
     },
     watch: {},
@@ -229,7 +261,7 @@
               border-radius: 8px;
               border: 1px solid rgba(217, 217, 217, 1);
               .fill {
-                width: 170px;
+                width: 0;
                 height: 10px;
                 background: linear-gradient(97deg, rgba(24, 112, 253, 1) 0%, rgba(138, 221, 253, 1) 100%);
                 border-radius: 8px;
@@ -283,7 +315,7 @@
       font-size: 12px;
       font-family: MicrosoftYaHei;
       color: rgba(102, 102, 102, 1);
-      margin: 10px 0 40px 98px;
+      margin: 10px 0 0 98px;
       span {
         color: #2A99F2;
       }
@@ -296,7 +328,7 @@
         font-family: MicrosoftYaHei;
         color: rgba(51, 51, 51, 1);
         font-weight: normal;
-        margin-bottom: 10px;
+        margin: 40px 0 0 10px;
       }
       > p {
         font-size: 12px;

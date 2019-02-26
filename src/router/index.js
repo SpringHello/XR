@@ -39,7 +39,7 @@ const Dynamic = () =>import('@/components/App/Dynamic')
 const SceneInfo = () =>import('@/components/App/SceneInfo')
 const SceneList = () =>import('@/components/App/SceneList')
 // const ProductBulletin = () => import('@/components/App/ProductBulletin')
-//const Ssl = () =>import('@/components/App/Ssl')
+const Ssl = () =>import('@/components/App/Ssl')
 
 // 前台活动页面路由
 //const Active = () => import('@/components/App/active/active')
@@ -236,7 +236,7 @@ var router = new Router({
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
         {path: 'Record', name: 'Record', component: Record},
         //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
-        //{path: 'ssl', name: 'ssl', component: Ssl},
+        {path: 'ssl', name: 'ssl', component: Ssl},
         {
           path: 'entrance',
           name: 'entrance',

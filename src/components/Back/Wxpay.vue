@@ -33,12 +33,13 @@
 
 <script type="text/ecmascript-6">
   import VueQArt from 'vue-qart'
-  export default{
+
+  export default {
     components: {
       VueQArt
     },
     name: 'app',
-    data(){
+    data() {
       let orders = sessionStorage.getItem('wx-orders')
       let ticket = sessionStorage.getItem('wx-ticket')
       sessionStorage.removeItem('wx-orders')
@@ -63,7 +64,7 @@
 
       }
     },
-    created(){
+    created() {
       this.loading = true
       this.loadingMessage = '正在生成二维码，请稍后...'
       let params = {
@@ -91,13 +92,13 @@
       })
     },
     methods: {
-      select(){
+      select() {
         this.$router.push('recharge');
       },
-      payError(){
+      payError() {
         this.$router.push('recharge');
       },
-      paySuccess(){
+      paySuccess() {
         this.loading = true
         this.loadingMessage = '正在支付，请稍后...'
         this.$http.get('user/payStatus.do', {
@@ -107,16 +108,13 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.loading = false
-            this.$router.push('expenses')
-            this.$Message.success({
-              content: '支付成功',
-              duration: 3
-            });
+            this.$router.push('rechargeResult')
+            sessionStorage.setItem('rechargeSuccessMsg',response.data.message)
+            sessionStorage.setItem('vipMsg',response.data.vipMessage)
           } else {
             this.loading = false;
-            this.$message.info({
-              content: '支付失败'
-            })
+            sessionStorage.setItem('rechargeErrorMsg',response.data.message)
+            this.$router.push('rechargeResult')
           }
         })
       }
