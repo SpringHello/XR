@@ -621,9 +621,37 @@
         </div>
         <p slot="footer" class="modal-footer-s">
           <Button @click="showModal.rechargeHint = false">支付遇到问题</Button>
-          <Button type="primary" @click="isPay">支付完成</Button>
+          <Button type="primary" @click="rechargeOk()">支付完成</Button>
         </p>
       </Modal>
+      <!-- 微信支付弹窗 -->
+    <Modal v-model="showModal.weChatRechargeModal" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">微信支付/充值</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-p">
+          <Steps :current="1">
+            <Step title="订单确认"></Step>
+            <Step title="支付"></Step>
+            <Step title="支付成功"></Step>
+          </Steps>
+          <div class="payInfo">
+            <div id="code">
+              <vue-q-art :config="config" v-if="config.value!=''"></vue-q-art>
+            </div>
+            <div class="pay-p">
+              <p>应付金额(元)：<span>{{input}}</span></p>
+              <p>请使用微信扫一扫，扫描二维码支付</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button @click="isPay">已完成支付</Button>
+        <Button type="primary" @click="showModal.weChatRechargeModal = false,showModal.cashCoupon = true">更换支付方式</Button>
+      </div>
+    </Modal>
   </div>
   </template>
 
@@ -631,7 +659,11 @@
 import axios from '@/util/axiosInterceptor'
 import $ from 'jquery'
 import reg from '../../../util/regExp'
+import VueQArt from 'vue-qart'
 export default {
+  components: {
+      VueQArt
+    },
   data () {
     const validaRegisteredPhone = (rule, value, callback) => {
       if (!value) {
@@ -661,10 +693,17 @@ export default {
       }
     }
     return {
+      serialNum: '',
+      config: {
+        value: '',
+        imagePath: require('../../../assets/img/pay/payBackground.png'),
+        filter: 'black',
+        size: 500
+      },
       posText: '',
       disabledButton: true,
-      vipCount:10, // vip规则计时
-      vipScroll:0,
+      vipCount: 10, // vip规则计时
+      vipScroll: 0,
       input: 10000,
       zf: 'zfb',
       balance: 0,
@@ -1021,7 +1060,8 @@ export default {
         rule2: false,
         vipRuleModal: false,
         cashCoupon: false,
-        rechargeHint: false
+        rechargeHint: false,
+        weChatRechargeModal: false
       },
       authFormValidate: {
         name: '',
@@ -1052,7 +1092,6 @@ export default {
         ]
       },
       imgSrc: 'user/getKaptchaImage.do',
-      
     }
   },
   created () {
@@ -1068,14 +1107,33 @@ export default {
   },
   methods: {
     recharge() {
-      if (this.isFirstCz && this.input < 100) {
-        this.showModal.rechargeForm = true
-        return
-      } else {
-        this.rechargeOk()
+      this.showModal.cashCoupon = false
+      switch (this.zf) {
+        case 'zfb':
+          window.open(`zfb/alipayapi.do?total_fee=${this.input}`)
+          this.showModal.rechargeHint = true
+          break
+        case 'wx':
+        axios.get('wx/wxpayapi.do', {
+          params: {
+            total_fee: this.input
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.serialNum = response.data.result.serialNum
+            this.config.value = response.data.result.codeUrl
+            this.showModal.weChatRechargeModal = true
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+        break
       }
     },
     rechargeOk() {
+      this.showModal.rechargeHint = false
       let url = 'uservip/upVip.do'
         this.$http.get(url, {
           params: {
@@ -1083,34 +1141,15 @@ export default {
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            // this.userInfoUpdate()
-            // this.getBalance()
-            // this.showMoneyByMonth()
-            // this.search()
-            // this.getUserVipLevel()
-            // this.showModal.cashCoupon = false
-            // this.$Message.success(res.data.message)
-            console.log(res.data.message)
+            this.$message.info({
+                content: res.data.message
+              })
           } else {
-            console.log(res.data.message)
-            // this.showModal.cashCoupon = false
-            // this.$message.info({
-            //   content: res.data.message
-            // })
+            this.$message.info({
+              content: res.data.message
+            })
           }
         })
-      switch (this.zf) {
-        case 'zfb':
-          window.open(`zfb/alipayapi.do?total_fee=${this.input}`)
-          this.showModal.rechargeHint = true
-          break
-        case 'wx':
-          this.$router.push({
-            name: 'wxpay'
-          })
-          sessionStorage.setItem('total_fee', this.input)
-          break
-      }
     },
     getUserVipLevel() {
         if (this.userInfo && this.userInfo.vipname == '白银会员') {
@@ -1166,7 +1205,22 @@ export default {
         }
       },
       isPay() {
-        this.$router.push('rechargeResult')
+        axios.get('user/payStatus.do', {
+          params: {
+            serialNum: this.serialNum
+          }
+        }).then(response => {
+          this.showModal.weChatRechargeModal = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.$message.info({
+              content: response.data.message
+            })
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
       },
       changeVipGrade(item, index) {
         // console.log(item)
@@ -1819,9 +1873,6 @@ export default {
       deep: true
     },
   },
-  components: {
-
-  }
 }
 </script>
 
@@ -2809,6 +2860,44 @@ section {
       color: #4B3C3D;
       font-size: 14px;
       font-weight: bold;
+    }
+  }
+  .modal-p {
+    > div {
+      margin-left: 60px;
+    }
+    > p {
+      span {
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 1);
+        line-height: 22px;
+        margin-left: 10px;
+        position: relative;
+        bottom: 18px;
+      }
+      margin: 50px 0;
+      text-align: center;
+    }
+    .payInfo {
+      margin-top: 50px;
+      display: flex;
+      .pay-p {
+        p {
+          font-size: 16px;
+          font-family: MicrosoftYaHei;
+          font-weight: 400;
+          color: rgba(51, 51, 51, 1);
+          line-height: 22px;
+          margin: 30px 40px;
+          span {
+            font-size: 36px;
+            font-weight: 600;
+            color: rgba(208, 2, 27, 1);
+          }
+        }
+      }
     }
   }
 </style>
