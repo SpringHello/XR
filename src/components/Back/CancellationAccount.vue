@@ -72,10 +72,10 @@
 				</div>
 				<Form ref="formInline" :model="formInline" :rules="ruleInline" inline style="float: left;">
 					<FormItem prop="cancellation">
-						<Input v-model="formInline.cancellation" type="textarea" :autosize="{minRows: 5,maxRows: 5}" :rows="5" :placeholder="formInline.cancellationplace"
-				 style="width:618px;margin-top: 10px;"></Input>
+						<Input v-model="formInline.cancellation" @on-blur='MonitorInput' type="textarea" :autosize="{minRows: 5,maxRows: 5}"
+						 :rows="5" :placeholder="formInline.cancellationplace" style="width:618px;margin-top: 10px;"></Input>
 					</FormItem>
-				 </Form>
+				</Form>
 				<p style="">
 					<Checkbox v-model="cancellationCheck" style="color:#666666;line-height:16px;">已了解<span style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号空****将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
 				</p>
@@ -122,22 +122,27 @@
 				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0" style="float: left;width: 100%;">
 					<div v-if="testingStatus==1||testingStatus==0" class="ProgressCancel">
 						<p v-if="testingStatus==0" style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">正在检测您的账号，请稍等…</p>
-						<p v-if="testingStatus==1" style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">检测完毕，请继续完成下一步实名认证，我们会在 <span style="color: #FF624B;">24小时内</span>  审核完成，并将审核结果发送至您号码为 <span style="color: #FF624B;">{{ $store.state.userInfo.phone}}</span>  的手机上，请注意查收。</p>
-						 <Progress :percent="cancelpercent" status="active" style="width: 600px;height: 30px;margin-top: 20px;"></Progress><br /><!-- changeTab('content2') -->
+						<p v-if="testingStatus==1" style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">检测完毕，请继续完成下一步实名认证，我们会在
+							<span style="color: #FF624B;">24小时内</span> 审核完成，并将审核结果发送至您号码为 <span style="color: #FF624B;">{{ $store.state.userInfo.phone}}</span>
+							的手机上，请注意查收。</p>
+						<Progress :percent="cancelpercent" status="active" style="width: 600px;height: 30px;margin-top: 20px;"></Progress><br /><!-- changeTab('content2') -->
 						<Button type="primary" v-if="testingStatus==1" @click="changeTab('content2')" style="margin-top: 40px;">下一步</Button>
 					</div>
 					<div v-if="testingStatus==2" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
-				  	  <img src="../../assets/img/back/false.png" />
-					  <p style="font-size:18px;color:rgba(255,0,0,1);line-height:24px;margin-top: 15px;">检测失败</p>
-					  <div style="width:320px;font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;margin-left: 420px;min-height: 22px;max-height:45px;">
-					  {{failurePrompt}}
-					  </div>
-					  <Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
-					  <Button type="primary" @click="$router.push('/ruicloud/overview')" style="margin-left: 10px;margin-top: 40px;">返回控制台</Button>
-				  </div>
+						<img src="../../assets/img/back/false.png" />
+						<p style="font-size:18px;color:rgba(255,0,0,1);line-height:24px;margin-top: 15px;">检测失败</p>
+						<div style="width:320px;font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;margin-left: 420px;min-height: 22px;max-height:45px;">
+							{{failurePrompt}}
+						</div>
+						<Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
+						<Button type="primary" @click="$router.push('/ruicloud/overview')" style="margin-left: 10px;margin-top: 40px;">返回控制台</Button>
+					</div>
 				</div>
-				<div v-if="$store.state.authInfo == null">
-					<Button type="primary" @click="changeTab('content2')" style="margin-left: 10px;margin-top: 40px;">未实名第二步</Button>
+				<div v-if="$store.state.authInfo == null" style="float: left;width: 100%;">
+					<div v-if="testingStatus==0" class="ProgressCancel">
+						<p style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">正在检测您的账号，请稍等…</p>
+						<Progress :percent="cancelpercent" status="active" style="width: 600px;height: 30px;margin-top: 20px;"></Progress>
+					</div>
 				</div>
 			</div>
 			<div class="content2" v-if="selectedTabSec == 'content2'" style="min-height: 665px;">
@@ -178,160 +183,149 @@
 					</div>
 				</div>
 				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0" style="float: left;width: 100%;">
-					<div v-if="checkStatus==0"> 
-					<div>
-					  <Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">
-					    <div v-if="$store.state.authInfo&&$store.state.authInfo.authtype==0&&$store.state.authInfo.checkstatus==0">
-					      <Form-item style="width: 100%;margin-top: 20px;margin-bottom:0px;">
-							<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">真实姓名</p>
-					        <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(0,0,0,0.43);margin-top: 10px;">{{ $store.state.userInfo.realname}}</p>
-					      </Form-item>
-					      <FormItem style="width: 100%;margin-top: 20px;" prop="ID">
-							<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">注册身份证号码</p>
-					        <Input v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码"
-					              style="width:240px;margin-top: 10px;"></Input>
-					      </FormItem>
-					      <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.personHint">
-					        <Icon type="ios-close"></Icon>
-					        身份证号码输入有误，验证失败，请尝试
-					        <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
-					        <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
-					      </p>
-					    </div>   
-					    <div v-if="$store.state.authInfo&&$store.state.authInfo.authtype!=0&&$store.state.authInfo.checkstatus==0">
-					      <Form-item style="width: 100%;margin-top: 20px;margin-bottom:0px;">
-					      	<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">真实姓名</p>
-					        <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(0,0,0,0.43);margin-top: 10px;">{{ $store.state.userInfo.realname}}</p>
-					      </Form-item>
-						  <FormItem style="width: 100%;margin-top: 20px;" prop="businessLicense">
-						  	<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">营业执照号码</p>
-						    <Input v-model="authModifyPhoneFormOne.businessLicense" placeholder="请输入营业执照号"
-						          style="width:240px;margin-top: 10px;"></Input>
-						  </FormItem>
-					      <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.companyHint">
-					        <Icon type="ios-close"></Icon>
-					        公司营业执照号码输入有误，验证失败，请尝试
-					        <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
-					        <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
-					      </p>
-					    </div>
-					  </Form>
+					<div v-if="checkStatus==0">
+						<div>
+							<Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">
+								<div v-if="$store.state.authInfo&&$store.state.authInfo.authtype==0&&$store.state.authInfo.checkstatus==0">
+									<Form-item style="width: 100%;margin-top: 20px;margin-bottom:0px;">
+										<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">真实姓名</p>
+										<p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(0,0,0,0.43);margin-top: 10px;">{{ $store.state.userInfo.realname}}</p>
+									</Form-item>
+									<FormItem style="width: 100%;margin-top: 20px;" prop="ID">
+										<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">注册身份证号码</p>
+										<Input v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码" style="width:240px;margin-top: 10px;"></Input>
+									</FormItem>
+									<p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.personHint">
+										<Icon type="ios-close"></Icon>
+										身份证号码输入有误，验证失败，请尝试
+										<span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+										<a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+									</p>
+								</div>
+								<div v-if="$store.state.authInfo&&$store.state.authInfo.authtype!=0&&$store.state.authInfo.checkstatus==0">
+									<Form-item style="width: 100%;margin-top: 20px;margin-bottom:0px;">
+										<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">真实姓名</p>
+										<p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(0,0,0,0.43);margin-top: 10px;">{{ $store.state.userInfo.realname}}</p>
+									</Form-item>
+									<FormItem style="width: 100%;margin-top: 20px;" prop="businessLicense">
+										<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">营业执照号码</p>
+										<Input v-model="authModifyPhoneFormOne.businessLicense" placeholder="请输入营业执照号" style="width:240px;margin-top: 10px;"></Input>
+									</FormItem>
+									<p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.companyHint">
+										<Icon type="ios-close"></Icon>
+										公司营业执照号码输入有误，验证失败，请尝试
+										<span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+										<a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+									</p>
+								</div>
+							</Form>
+						</div>
+						<div>
+							<div v-if="$store.state.authInfo&&$store.state.authInfo.authtype==0&&$store.state.authInfo.checkstatus==0">
+								<p style="font-size:14px;color:color:#495060;;margin-top:20px;">
+									请上传手持身份证人像照片
+								</p>
+								<div class="upload-img" style="margin-top:10px">
+									<div class="content" style="background:rgba(247,247,247,1);">
+										<div class="left">
+											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+											 :format="['jpg','pdf','png','gif']" :max-size="4096" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize"
+											 :on-success="legalPersonIDFront11" style="background: #D8D8D8;">
+												<div class="icon-wrap" v-if="uploadImgDispaly==''" style="background: #FFFFFF;">
+													<Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+												</div>
+												<img v-else :src="uploadImgDispaly">
+												<p style="width: 110px;text-align: center;">上传图片</p>
+											</Upload>
+
+										</div>
+										<div class="right">
+											<img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+											<p>手持身份证人像照片</p>
+										</div>
+									</div>
+								</div>
+								<p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+									提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过<span class="red">4MB</span>。
+								</p>
+							</div>
+							<div v-if="$store.state.authInfo&&$store.state.authInfo.authtype!=0&&$store.state.authInfo.checkstatus==0">
+								<p style="font-size:14px;color:color:#495060;;margin-top:20px;">
+									请根据提示上传相关图片进行验证
+								</p>
+								<div class="upload-img" style="margin-top:10px">
+									<div class="content" style="background:rgba(247,247,247,1);">
+										<div class="left">
+											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+											 :format="['jpg','pdf','png','gif']" :max-size="4096" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize"
+											 :on-success="legalPersonIDFront12">
+												<div class="icon-wrap" v-if="uploadImgDispaly1==''" style="background: #FFFFFF;">
+													<Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+												</div>
+												<img v-else :src="uploadImgDispaly1">
+												<p style="width: 110px;text-align: center;">上传图片</p>
+											</Upload>
+
+										</div>
+										<div class="right">
+											<img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+											<p>法人身份证正面照片</p>
+										</div>
+									</div>
+								</div>
+								<div class="upload-img" style="margin-top:10px">
+									<div class="content" style="background:rgba(247,247,247,1);">
+										<div class="left">
+											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+											 :format="['jpg','pdf','png','gif']" :max-size="4096" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize"
+											 :on-success="legalPersonIDFront13">
+												<div class="icon-wrap" v-if="uploadImgDispaly2==''" style="background: #FFFFFF;">
+													<Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+												</div>
+												<img v-else :src="uploadImgDispaly2">
+												<p style="width: 110px;text-align: center;">上传图片</p>
+											</Upload>
+
+										</div>
+										<div class="right">
+											<img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto;">
+											<p style="width:168px">经办人手持身份证人像照片</p>
+										</div>
+									</div>
+								</div>
+								<p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+									提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过<span class="red">4MB</span>。
+								</p>
+							</div>
+						</div>
+						<Button @click="$router.push('/ruicloud/usercenter')" style="margin-left: 939px;margin-top: 40px;">取消注销</Button>
+						<Button type="primary" @click="SubInformation" style="margin-left: 10px;margin-top: 40px;">提交信息</Button>
 					</div>
-					<div>
-					  <div v-if="$store.state.authInfo&&$store.state.authInfo.authtype==0&&$store.state.authInfo.checkstatus==0">
-						<p style="font-size:14px;color:color:#495060;;margin-top:20px;">
-						  请上传手持身份证人像照片
-						</p>
-					    <div class="upload-img" style="margin-top:10px">
-					      <div class="content" style="background:rgba(247,247,247,1);">
-					        <div class="left">
-					          <Upload
-					            multiple
-					            type="drag"
-					            :show-upload-list="false"
-					            :with-credentials="true"
-					            action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
-					            :format="['jpg','pdf','png','gif']"
-					            :max-size="4096"
-					            :on-format-error="handleFormatError"
-					            :on-exceeded-size="handleMaxSize"
-					            :on-success="legalPersonIDFront11" style="background: #D8D8D8;">
-					            <div class="icon-wrap" v-if="uploadImgDispaly==''" style="background: #FFFFFF;">
-					                <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
-					            </div>
-					            <img v-else :src="uploadImgDispaly">
-					            <p style="width: 110px;text-align: center;">上传图片</p>
-					          </Upload>
-										
-					        </div>
-					        <div class="right">
-					          <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
-					          <p>手持身份证人像照片</p>
-					        </div>
-					      </div>
-					    </div>
-						<p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
-						  提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过<span class="red">4MB</span>。
-						</p>
-					  </div>
-					  <div v-if="$store.state.authInfo&&$store.state.authInfo.authtype!=0&&$store.state.authInfo.checkstatus==0">
-					    <p style="font-size:14px;color:color:#495060;;margin-top:20px;">
-					      请根据提示上传相关图片进行验证
-					    </p>
-					    <div class="upload-img" style="margin-top:10px">
-					      <div class="content" style="background:rgba(247,247,247,1);">
-					        <div class="left">
-					          <Upload
-					            multiple
-					            type="drag"
-					            :show-upload-list="false"
-					            :with-credentials="true"
-					            action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
-					            :format="['jpg','pdf','png','gif']"
-					            :max-size="4096"
-					            :on-format-error="handleFormatError"
-					            :on-exceeded-size="handleMaxSize"
-					            :on-success="legalPersonIDFront12">
-					            <div class="icon-wrap" v-if="uploadImgDispaly1==''" style="background: #FFFFFF;">
-					                <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
-					            </div>
-					            <img v-else :src="uploadImgDispaly1">
-								<p style="width: 110px;text-align: center;">上传图片</p>
-					          </Upload>
-										
-					        </div>
-					        <div class="right">
-					          <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
-					          <p>法人身份证正面照片</p>
-					        </div>
-					      </div>
-					    </div>
-					    <div class="upload-img" style="margin-top:10px">
-					      <div class="content" style="background:rgba(247,247,247,1);">
-					        <div class="left">
-					          <Upload
-					            multiple
-					            type="drag"
-					            :show-upload-list="false"
-					            :with-credentials="true"
-					            action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
-					            :format="['jpg','pdf','png','gif']"
-					            :max-size="4096"
-					            :on-format-error="handleFormatError"
-					            :on-exceeded-size="handleMaxSize"
-					            :on-success="legalPersonIDFront13">
-					            <div class="icon-wrap" v-if="uploadImgDispaly2==''" style="background: #FFFFFF;">
-					                <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
-					            </div>
-					            <img v-else :src="uploadImgDispaly2">
-								<p style="width: 110px;text-align: center;">上传图片</p>
-					          </Upload>
-										
-					        </div>
-					        <div class="right">
-					          <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto;">
-					          <p style="width:168px">经办人手持身份证人像照片</p>
-					        </div>
-					      </div>
-					    </div>
-						<p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
-						  提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过<span class="red">4MB</span>。
-						</p>
-					  </div>
+					<div v-if="checkStatus==1" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
+						<img src="../../assets/img/back/susses.png" />
+						<p style="font-size:18px;color:rgba(48,186,120,1);line-height:24px;margin-top: 15px;">提交成功</p>
+						<p style="font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;">您的信息已提交成功，我们会在24小时内审核完毕</p>
+						<p style="font-size:14px;color:rgba(51,51,51,1);line-height:24px;">请耐心等待</p>
+						<Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
 					</div>
-					<Button @click="$router.push('/ruicloud/usercenter')" style="margin-left: 939px;margin-top: 40px;">取消注销</Button>
-					<Button type="primary" @click="SubInformation" style="margin-left: 10px;margin-top: 40px;">提交信息</Button>
-				  </div>
-				  <div v-if="checkStatus==1" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
-					  <img src="../../assets/img/back/susses.png" />
-					  <p style="font-size:18px;color:rgba(48,186,120,1);line-height:24px;margin-top: 15px;">提交成功</p> 
-					  <p style="font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;">您的信息已提交成功，我们会在24小时内审核完毕</p>
-					  <p style="font-size:14px;color:rgba(51,51,51,1);line-height:24px;">请耐心等待</p>
-					  <Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
-				  </div>
 				</div>
-				<div v-if="$store.state.authInfo == null">
-					<Button type="primary" @click="changeTab('content0')" style="margin-left: 10px;margin-top: 40px;">未实名第三步 回第一步</Button>
+				<div v-if="$store.state.authInfo == null" style="float: left;width: 100%;">
+					<div v-if="testingStatus==1" class="ProgressCancel">
+						<p style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">检测完毕，我们会在 
+							<span style="color: #FF624B;">24小时内</span>  审核完成，并将审核结果发送至您号码为 <span style="color: #FF624B;">{{ $store.state.userInfo.phone}}</span>
+							 的手机上，请注意查收。</p>
+						<Progress :percent="cancelpercent" status="active" style="width: 600px;height: 30px;margin-top: 20px;"></Progress><br /><!-- changeTab('content2') -->
+						<Button type="primary" @click="$router.push('/ruicloud/index')" style="margin-top: 40px;">返回官网</Button>
+					</div>
+					<div v-if="testingStatus==2" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
+						<img src="../../assets/img/back/false.png" />
+						<p style="font-size:18px;color:rgba(255,0,0,1);line-height:24px;margin-top: 15px;">检测失败</p>
+						<div style="width:320px;font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;margin-left: 420px;min-height: 22px;max-height:45px;">
+							{{failurePrompt}}
+						</div>
+						<Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
+						<Button type="primary" @click="$router.push('/ruicloud/overview')" style="margin-left: 10px;margin-top: 40px;">返回控制台</Button>
+					</div>
 				</div>
 			</div>
 			<!-- 注销账号确认弹窗 -->
@@ -368,48 +362,58 @@
 		},
 		data() {
 			const validaRegisteredID = (rule, value, callback) => {
-			  if (!reg.IDCardVail(value)) {
-			    callback(new Error('请输入正确的身份证号码'));
-			  } else {
-			    callback()
-			  }
+				if (!reg.IDCardVail(value)) {
+					callback(new Error('请输入正确的身份证号码'));
+				} else {
+					callback()
+				}
 			}
 			return {
 				selectedTabSec: this.selectedTab,
 				cancellationCheck: false,
-				checkStatus:'',
-				testingStatus:0,
+				checkStatus: '',
+				testingStatus: 0,
 				uploadImgDispaly: '',
 				uploadImgDispaly1: '',
 				uploadImgDispaly2: '',
 				cancelpercent: 0,
-				failurePrompt:'',
-				showModal:{
-					Cancellation:false
+				failurePrompt: '',
+				showModal: {
+					Cancellation: false
 				},
 				formInline: {
-                    cancellation: '',
-					cancellationplace:'请填写注销的理由，我们收到您的意见会多加改正，以便在未来给您带来更好的使用体验'
-                },
-                ruleInline: {
-                    cancellation: [
-                        { required: true, message: '请填写注销的理由，我们收到您的意见会多加改正，以便在未来给您带来更好的使用体验。', trigger: 'blur' }
-                    ]
-                },
+					cancellation: '',
+					cancellationplace: '请填写注销的理由，我们收到您的意见会多加改正，以便在未来给您带来更好的使用体验'
+				},
+				ruleInline: {
+					cancellation: [{
+						required: true,
+						message: '请填写注销的理由，我们收到您的意见会多加改正，以便在未来给您带来更好的使用体验。',
+						trigger: 'blur'
+					}]
+				},
 				authModifyPhoneFormOne: {
-				  ID: '',
-				  personHint: 0,
-				  companyHint: 0,
-				  businessLicense: ''
+					ID: '',
+					personHint: 0,
+					companyHint: 0,
+					businessLicense: ''
 				},
 				authModifyPhoneOneRuleValidate: {
-				  ID: [
-				    {required: true, message: '请输入身份证号码', trigger: 'blur'},
-				    {validator: validaRegisteredID, trigger: 'blur'}
-				  ],
-				  businessLicense: [
-				    {required: true, message: '请输入公司营业执照号码', trigger: 'blur'},
-				  ]
+					ID: [{
+							required: true,
+							message: '请输入身份证号码',
+							trigger: 'blur'
+						},
+						{
+							validator: validaRegisteredID,
+							trigger: 'blur'
+						}
+					],
+					businessLicense: [{
+						required: true,
+						message: '请输入公司营业执照号码',
+						trigger: 'blur'
+					}, ]
 				}
 			}
 		},
@@ -428,159 +432,203 @@
 				this.$router.history.go(0)
 			},
 			handleSubmit(name) {
-                this.$refs.formInline.validateField('cancellation',(text) => {
-                    if (text == '') {
-                        this.showModal.Cancellation=true
-                    } else {
-                       this.formInline.cancellationplace=''
-                    }
-                })
-            },
-			startTesting(){
+				this.$refs.formInline.validateField('cancellation', (text) => {
+					if (text == '') {
+						this.showModal.Cancellation = true
+					} else {
+						this.formInline.cancellationplace = ''
+					}
+				})
+			},
+			startTesting() {
 				this.showModal.Cancellation = false
 				//this.cancellationCheck = false
 				//this.formInline.cancellation = ''
 				this.changeTab('content1')
-				var Interval = setInterval(() => {
-				  this.cancelpercent++
-				  if (this.cancelpercent == 100) {
-					  clearInterval(Interval)
-					  axios.get('user/detectionAccount.do', {
-					  	params: {
-					  		
-					  	}
-					  }).then(response => {
-					  	if (response.status == 200 && response.data.status == 1) {
-							this.testingStatus=response.data.status
-					  	}
-					  	else{
-							this.testingStatus=1
-							this.failurePrompt=response.data.message
-					  		//this.$Message.info(response.data.message)
-					  	}
-					  })
-					  return false;
-					  
-				  }
-				}, 100)
+				if(this.$store.state.authInfo&&this.$store.state.authInfo.checkstatus==0){
+					var Interval = setInterval(() => {
+						this.cancelpercent++
+						if (this.cancelpercent == 100) {
+							clearInterval(Interval)
+							axios.get('user/detectionAccount.do', {
+								params: {
+					
+								}
+							}).then(response => {
+								if (response.status == 200 && response.data.status == 1) {
+									this.testingStatus = response.data.status
+								} else {
+									this.testingStatus = response.data.status
+									this.failurePrompt = response.data.message
+									//this.$Message.info(response.data.message)
+								}
+							})
+							return false;
+					
+						}
+					}, 100)
+				}
+				else if(this.$store.state.authInfo == null){
+					var Interval = setInterval(() => {
+						this.cancelpercent++
+						if (this.cancelpercent == 100) {
+							clearInterval(Interval)
+							axios.get('user/detectionAccount.do', {
+								params: {
+					
+								}
+							}).then(response => {
+								if (response.status == 200 && response.data.status == 1) {
+									this.testingStatus = response.data.status
+									if(this.testingStatus==1){
+										this.changeTab('content2')
+										axios.post('user/clearAccountApplyFor.do', {
+											authType: '2',
+											cancellationDesc: this.formInline.cancellation
+										}).then(response => {
+											if (response.status == 200 && response.data.status == 1) {
+												console.log("这是未实名认证成功信息")
+											} else {
+												this.$Message.error(response.data.message)
+											}
+										})
+									}
+								} else {
+									this.changeTab('content2')
+									this.testingStatus = response.data.status
+									this.failurePrompt = response.data.message
+									//this.$Message.info(response.data.message)
+								}
+							})
+							return false;
+					
+						}
+					}, 100)
+				}
+				
 			},
 			handleFormatError() {
-			  this.$Message.info({
-			    content: '仅支持jpg,jpeg,png,gif格式的文件上传'
-			  })
+				this.$Message.info({
+					content: '仅支持jpg,jpeg,png,gif格式的文件上传'
+				})
 			},
 			handleMaxSize() {
-			  this.$Message.info({
-				content: '上传的文件过大'
-			  })
+				this.$Message.info({
+					content: '上传的文件过大'
+				})
 			},
 			legalPersonIDFront11(response) {
-			  if (response.status == 1) {
-			    this.uploadImgDispaly = response.result
-			  }
+				if (response.status == 1) {
+					this.uploadImgDispaly = response.result
+				}
 			},
 			legalPersonIDFront12(response) {
-			  if (response.status == 1) {
-			    this.uploadImgDispaly1 = response.result
-			  }
+				if (response.status == 1) {
+					this.uploadImgDispaly1 = response.result
+				}
 			},
 			legalPersonIDFront13(response) {
-			  if (response.status == 1) {
-			    this.uploadImgDispaly2 = response.result
-			  }
+				if (response.status == 1) {
+					this.uploadImgDispaly2 = response.result
+				}
 			},
-			loggedOffState(){
+			loggedOffState() {
 				axios.get('user/listClearAccountApplyFor.do', {
 					params: {
-						
+
 					}
 				}).then(response => {
 					if (response.status == 200 && response.data.status == 1) {
 						//response.data.checkstatus
-						this.checkStatus=0
-						if(this.checkStatus==-1){
-							this.checkStatus=0
+						this.checkStatus = response.data.checkstatus
+						if (this.checkStatus == -1) {
+							this.checkStatus = 0
 							this.changeTab('content0')
 						}
-					}
-					else{
+					} else {
 						//this.$Message.info(response.data.message)
 					}
 				})
 			},
-			SubInformation () {
-			  if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
-			    if (this.uploadImgDispaly == '') {
-			      this.$Message.info({
-			        content: '请上传手持身份证人像照片',
-			        duration: 2
-			      })
-			    } else {
-			      this.$refs.authModifyPhoneFormOne.validateField((vail) => {
-			        if (vail) {
-			            axios.post('user/clearAccountApplyFor.do', {
-						  authType: '0',
-						  cancellationDesc:this.formInline.cancellation,
-						  IdCard:this.authModifyPhoneFormOne.ID,
-						  personIdCardHandUrl:this.uploadImgDispaly
-			            }).then(response => {
-			              if (response.status == 200 && response.data.status == 1) {
-			                console.log("这是个人认证成功信息")
-							this.loggedOffState()
-			              } else {
-			                this.$Message.error(response.data.message)
-			              }
-			            })
-			          
-			        }
-			      })
-			    }
-			  } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
-			    if (this.uploadImgDispaly1 == '' || this.uploadImgDispaly2 == '') {
-			      this.$Message.info({
-			        content: '请上传手持身份证人像照片',
-			        duration: 2
-			      })
-			    } else {
-			     this.$refs.authModifyPhoneFormOne.validateField((vail) => {
-			       if (vail) {
-			          axios.post('user/clearAccountApplyFor.do', {
-			            authType: '1',
-			            cancellationDesc:this.formInline.cancellation,
-			            businessLicense:this.authModifyPhoneFormOne.businessLicense,
-						legalIdCardFrontUrl:this.uploadImgDispaly1,
-			            agentIdCardHandUrl:this.uploadImgDispaly2
-			          }).then(response => {
-			            if (response.status == 200 && response.data.status == 1) {
-			              console.log("这是企业认证成功信息")
-						  this.loggedOffState()
-			            } else {
-			              this.$Message.error(response.data.message)
-			            }
-			          })
-			       }
-			     })
-			    }
-			  }
+			SubInformation() {
+				if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+					if (this.uploadImgDispaly == '') {
+						this.$Message.info({
+							content: '请上传手持身份证人像照片',
+							duration: 2
+						})
+					} else {
+						this.$refs.authModifyPhoneFormOne.validate(validate => {
+							if (validate) {
+								axios.post('user/clearAccountApplyFor.do', {
+									authType: '0',
+									cancellationDesc: this.formInline.cancellation,
+									IdCard: this.authModifyPhoneFormOne.ID,
+									personIdCardHandUrl: this.uploadImgDispaly
+								}).then(response => {
+									if (response.status == 200 && response.data.status == 1) {
+										console.log("这是个人认证成功信息")
+										this.loggedOffState()
+									} else {
+										this.$Message.error(response.data.message)
+									}
+								})
+
+							}
+						})
+					}
+				} else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
+					if (this.uploadImgDispaly1 == '' || this.uploadImgDispaly2 == '') {
+						this.$Message.info({
+							content: '请上传手持身份证人像照片',
+							duration: 2
+						})
+					} else {
+						this.$refs.authModifyPhoneFormOne.validate(validate => {
+							if (validate) {
+								axios.post('user/clearAccountApplyFor.do', {
+									authType: '1',
+									cancellationDesc: this.formInline.cancellation,
+									businessLicense: this.authModifyPhoneFormOne.businessLicense,
+									legalIdCardFrontUrl: this.uploadImgDispaly1,
+									agentIdCardHandUrl: this.uploadImgDispaly2
+								}).then(response => {
+									if (response.status == 200 && response.data.status == 1) {
+										console.log("这是企业认证成功信息")
+										this.loggedOffState()
+									} else {
+										this.$Message.error(response.data.message)
+									}
+								})
+							}
+						})
+					}
+				}
+			},
+			MonitorInput() {
+				if (this.formInline.cancellation == '') {
+					this.formInline.cancellationplace = ''
+				} else {
+
+				}
 			}
-			
+
 		},
 		computed: {
-			Cancellationdisabled(){
-				if(this.cancellationCheck == false){
+			Cancellationdisabled() {
+				if (this.cancellationCheck == false) {
 					return true
-				}
-				else{
+				} else {
 					return false
 				}
 			},
 			authInfo() {
-			  return $store.state.authInfo ? $store.state.authInfo : null
-			  // return null
+				return $store.state.authInfo ? $store.state.authInfo : null
+				// return null
 			}
 		},
 		watch: {
-			
+
 		}
 	}
 </script>
