@@ -819,8 +819,8 @@
     </Modal>
 
     <!-- 会员规则弹窗 -->
-    <transition name="fade" >
-      <div class="overlay"  v-if="showModal.vipRuleModal">
+    <transition name="fade">
+      <div class="overlay" v-if="showModal.vipRuleModal">
         <div class="all-modal modal4" @click.stop="showModal.vipRuleModal=true">
           <div class="header">
             <span>会员制规则</span>
@@ -867,7 +867,8 @@
               </div>
             </div>
           </div>
-          <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'><span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+          <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
+            <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
         </div>
       </div>
     </transition>
@@ -1078,7 +1079,7 @@
             trThree: '3折'
           },
         ],
-        disabledButton:true,
+        disabledButton: true,
         cashCouponForm: {
           agreeStatus: true,
           vipList: [],
@@ -2181,8 +2182,8 @@
         renewalFeeTime: '',
         freezeEndTime: '',
         returnMoneyDisabled: false,
-        vipCount:10, // vip规则计时
-        vipScroll:0
+        vipCount: 10, // vip规则计时
+        vipScroll: 0
       }
     },
     created() {
@@ -2195,7 +2196,11 @@
         this.search()
         this.getTicketNumber()
       }
-    },    
+      if (sessionStorage.getItem('beVip')) {
+        this.getVipList()
+        sessionStorage.removeItem('beVip')
+      }
+    },
     methods: {
       //Cashforwithdrawa(){
       //axios.get('user/selectValidRefundAmount.do', {
@@ -3440,25 +3445,25 @@
         }
       },
 
-      getVipRule(){
-        this.showModal.vipRuleModal  = true;
+      getVipRule() {
+        this.showModal.vipRuleModal = true;
         this.vipCount = 10;
-        let interval =  setInterval(() => {
-          this.vipCount --;
-          if(this.vipScroll >1128 && this.vipCount == 0){
-            this.disabledButton  = false;
+        let interval = setInterval(() => {
+          this.vipCount--;
+          if (this.vipScroll > 1128 && this.vipCount == 0) {
+            this.disabledButton = false;
             clearInterval(interval);
-          }else if(this.vipCount == 0){
+          } else if (this.vipCount == 0) {
             clearInterval(interval);
-          }else{
-            this.disabledButton  = true;
+          } else {
+            this.disabledButton = true;
           }
-        },1000)
+        }, 1000)
       },
-      vipRuleScroll(e){
+      vipRuleScroll(e) {
         this.vipScroll = e.srcElement.scrollTop;
-        if(e.srcElement.scrollTop > 1128 && this.vipCount == 0){
-          this.disabledButton  = false;
+        if (e.srcElement.scrollTop > 1128 && this.vipCount == 0) {
+          this.disabledButton = false;
         }
       },
       userInfoUpdate() {
@@ -3837,11 +3842,11 @@
       color: #4B3C3D;
       margin: 0 auto;
       padding: 0 8px 0 20px;
-      margin:20px 0 30px 0;
+      margin: 20px 0 30px 0;
       text-align: left;
-      .body_hide{
-        overflow:auto;
-       height: 500px;
+      .body_hide {
+        overflow: auto;
+        height: 500px;
         h3 {
           font-size: 14px;
           font-family: MicrosoftYaHei;
@@ -3849,22 +3854,22 @@
           line-height: 27px;
         }
       }
-      .body_hide::-webkit-scrollbar{
-          width: 8px;     /*高宽分别对应横竖滚动条的尺寸*/
-          height: 1px;
-        }
-        .body_hide::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-          border-radius: 10px;
-          -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-          background:#E6E6E6;
-        }
-        .body_hide::-webkit-scrollbar-track {/*滚动条里面轨道*/
-          -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-          border-radius: 10px;
-          background:#fff;
-        }
+      .body_hide::-webkit-scrollbar {
+        width: 8px; /*高宽分别对应横竖滚动条的尺寸*/
+        height: 1px;
+      }
+      .body_hide::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        background: #E6E6E6;
+      }
+      .body_hide::-webkit-scrollbar-track { /*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        background: #fff;
+      }
     }
-    
+
   }
 
   .nav_list {
@@ -3987,7 +3992,8 @@
       background: rgb(253, 116, 95);
     }
   }
-  .modal-btnDisbled{
+
+  .modal-btnDisbled {
     height: 36px;
     margin-bottom: 30px;
     color: #bbbec4;
