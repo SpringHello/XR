@@ -3419,11 +3419,6 @@
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.userInfoUpdate()
-            this.getBalance()
-            this.showMoneyByMonth()
-            this.search()
-            this.getUserVipLevel()
-            this.showModal.cashCoupon = false
             this.$Message.success(res.data.message)
           } else {
             this.showModal.cashCoupon = false
@@ -3470,6 +3465,15 @@
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+            this.getBalance()
+            this.showMoneyByMonth()
+            this.search()
+            this.getUserVipLevel()
+            this.showModal.cashCoupon = false
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
           }
         })
       },
