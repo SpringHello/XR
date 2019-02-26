@@ -44,7 +44,7 @@
             </ul>
           </div>
         </div>
-        <p class="hint" v-if="memberInfo.vipName !== '铂金会员'">再累计消费<span>{{ expenditure }}</span>元或截止<span>{{ memberInfo.vipTotalRechargeLastTime}}</span>前再充值<span>{{ rechargeMoney }}</span>元可升级为{{
+        <p class="hint" v-if="memberInfo.vipName !== '铂金会员'">再累计消费<span>{{ expenditure }}</span>元或截止<span>{{ memberInfo.vipTotalRechargeLastTime}}</span>前再转入现金券额度<span>{{ rechargeMoney }}</span>元可升级为{{
           memberInfo.nextVipName}}</p>
         <div class="member-rule">
           <h5>会员制规则</h5>

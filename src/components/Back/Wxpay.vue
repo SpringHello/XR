@@ -110,6 +110,7 @@
             this.loading = false
             this.$router.push('rechargeResult')
             sessionStorage.setItem('rechargeSuccessMsg',response.data.message)
+            sessionStorage.setItem('vipMsg',response.data.vipMessage)
           } else {
             this.loading = false;
             sessionStorage.setItem('rechargeErrorMsg',response.data.message)

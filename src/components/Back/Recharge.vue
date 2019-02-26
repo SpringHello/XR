@@ -1,6 +1,10 @@
 <template>
   <div class="background">
     <div class="wrapper">
+      <Spin fix v-show="loading">
+        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <div>{{loadingMessage}}</div>
+      </Spin>
       <span>个人中心 / <router-link
         to="expenses" style="color:rgba(17, 17, 17, 0.43);">费用中心</router-link> / 账户充值</span>
       <div class="content">
@@ -86,8 +90,8 @@
         </p>
       </Modal>
       <!-- 会员规则弹窗 -->
-      <transition name="fade" >
-        <div class="overlay"  v-if="showModal.vipRuleModal">
+      <transition name="fade">
+        <div class="overlay" v-if="showModal.vipRuleModal">
           <div class="all-modal modal4" @click.stop="showModal.vipRuleModal=true">
             <div class="header">
               <span>会员制规则</span>
@@ -134,7 +138,8 @@
                 </div>
               </div>
             </div>
-            <Button @click.stop="showModal.vipRuleModal=false,agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'><span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+            <Button @click.stop="showModal.vipRuleModal=false,agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
+              <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
           </div>
         </div>
       </transition>
@@ -182,9 +187,11 @@
             trThree: '3折'
           },
         ],
-        vipCount:10, // vip规则计时
-        vipScroll:0,
-        disabledButton:true
+        vipCount: 10, // vip规则计时
+        vipScroll: 0,
+        disabledButton: true,
+        loading: false,
+        loadingMessage: '',
       }
     },
     created() {
@@ -236,27 +243,42 @@
         this.$router.push('active')
       },
       isPay() {
-        this.$router.push('rechargeResult')
-      },
-      getVipRule(){
-        this.showModal.vipRuleModal  = true;
-        this.vipCount = 10;
-        let interval =  setInterval(() => {
-          this.vipCount --;
-          if(this.vipScroll >1128 && this.vipCount == 0){
-            this.disabledButton  = false;
-            clearInterval(interval);
-          }else if(this.vipCount == 0){
-            clearInterval(interval);
-          }else{
-            this.disabledButton  = true;
+        this.loading = true
+        this.loadingMessage = '正在支付，请稍后...'
+        this.$http.get('user/payStatus.do', {
+          params: {}
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.loading = false
+            this.$router.push('rechargeResult')
+            sessionStorage.setItem('rechargeSuccessMsg', response.data.message)
+            sessionStorage.setItem('vipMsg',response.data.vipMessage)
+          } else {
+            this.loading = false;
+            sessionStorage.setItem('rechargeErrorMsg', response.data.message)
+            this.$router.push('rechargeResult')
           }
-        },1000)
+        })
       },
-      vipRuleScroll(e){
+      getVipRule() {
+        this.showModal.vipRuleModal = true;
+        this.vipCount = 10;
+        let interval = setInterval(() => {
+          this.vipCount--;
+          if (this.vipScroll > 1128 && this.vipCount == 0) {
+            this.disabledButton = false;
+            clearInterval(interval);
+          } else if (this.vipCount == 0) {
+            clearInterval(interval);
+          } else {
+            this.disabledButton = true;
+          }
+        }, 1000)
+      },
+      vipRuleScroll(e) {
         this.vipScroll = e.srcElement.scrollTop;
-        if(e.srcElement.scrollTop > 1128 && this.vipCount == 0){
-          this.disabledButton  = false;
+        if (e.srcElement.scrollTop > 1128 && this.vipCount == 0) {
+          this.disabledButton = false;
         }
       },
     },
@@ -471,11 +493,11 @@
       color: #4B3C3D;
       margin: 0 auto;
       padding: 0 8px 0 20px;
-      margin:20px 0 30px 0;
+      margin: 20px 0 30px 0;
       text-align: left;
-      .body_hide{
-        overflow:auto;
-       height: 500px;
+      .body_hide {
+        overflow: auto;
+        height: 500px;
         h3 {
           font-size: 14px;
           font-family: MicrosoftYaHei;
@@ -483,22 +505,22 @@
           line-height: 27px;
         }
       }
-      .body_hide::-webkit-scrollbar{
-          width: 8px;     /*高宽分别对应横竖滚动条的尺寸*/
-          height: 1px;
-        }
-        .body_hide::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-          border-radius: 10px;
-          -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-          background:#E6E6E6;
-        }
-        .body_hide::-webkit-scrollbar-track {/*滚动条里面轨道*/
-          -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-          border-radius: 10px;
-          background:#fff;
-        }
+      .body_hide::-webkit-scrollbar {
+        width: 8px; /*高宽分别对应横竖滚动条的尺寸*/
+        height: 1px;
+      }
+      .body_hide::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        background: #E6E6E6;
+      }
+      .body_hide::-webkit-scrollbar-track { /*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        background: #fff;
+      }
     }
-    
+
   }
 
   .nav_list {
@@ -553,7 +575,8 @@
       background: rgb(253, 116, 95);
     }
   }
-  .modal-btnDisbled{
+
+  .modal-btnDisbled {
     height: 36px;
     margin-bottom: 30px;
     color: #bbbec4;
