@@ -228,7 +228,7 @@
 								<div class="upload-img" style="margin-top:10px">
 									<div class="content" style="background:rgba(247,247,247,1);">
 										<div class="left">
-											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
 											 :format="['jpg','pdf','png','gif']" :max-size="4096" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize"
 											 :on-success="legalPersonIDFront11" style="background: #D8D8D8;">
 												<div class="icon-wrap" v-if="uploadImgDispaly==''" style="background: #FFFFFF;">
@@ -256,7 +256,7 @@
 								<div class="upload-img" style="margin-top:10px">
 									<div class="content" style="background:rgba(247,247,247,1);">
 										<div class="left">
-											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
 											 :format="['jpg','pdf','png','gif']" :max-size="4096" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize"
 											 :on-success="legalPersonIDFront12">
 												<div class="icon-wrap" v-if="uploadImgDispaly1==''" style="background: #FFFFFF;">
@@ -276,7 +276,7 @@
 								<div class="upload-img" style="margin-top:10px">
 									<div class="content" style="background:rgba(247,247,247,1);">
 										<div class="left">
-											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="https://kaifa.xrcloud.net/ruicloud/file/upFile.do"
+											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
 											 :format="['jpg','pdf','png','gif']" :max-size="4096" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize"
 											 :on-success="legalPersonIDFront13">
 												<div class="icon-wrap" v-if="uploadImgDispaly2==''" style="background: #FFFFFF;">
