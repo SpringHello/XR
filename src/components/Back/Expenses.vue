@@ -904,6 +904,23 @@
         <Button type="primary" :disabled="chargeDisabled" @click="upVip">确认</Button>
       </div>
     </Modal>
+
+    <!-- 转入现金券成功弹窗 -->
+    <Modal v-model="showModal.successMsg" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">{{ cashCouponForm.successMsg}}</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.successMsg = false">取消</Button>
+        <Button type="primary" @click="$router.push('schoolSeason')">查看活动</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -1086,7 +1103,8 @@
           vipId: '',
           vipGrade: '',
           vipLevel: 0,
-          upVipCost: 0
+          upVipCost: 0,
+          successMsg: ''
         },
         uploadImgDispaly: '',
         uploadImgDispaly1: '',
@@ -1956,7 +1974,8 @@
           // 修改手机号码（身份证方式）
           modifyPhoneID: false,
           vipRuleModal: false,
-          cashCoupon: false
+          cashCoupon: false,
+          successMsg: false
         },
         // 提现
         withdrawForm: {
@@ -3419,7 +3438,7 @@
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.userInfoUpdate()
-            this.$Message.success(res.data.message)
+            this.showModal.successMsg = true
           } else {
             this.showModal.cashCoupon = false
             this.$message.info({

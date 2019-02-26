@@ -521,7 +521,7 @@ div.modal-header-border {
 .my_table .ivu-table{
 box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
 }
-.my_table .ivu-table td, .ivu-table th{
+.my_table .ivu-table td, .my_table .ivu-table th{
   border: none
 }
 
