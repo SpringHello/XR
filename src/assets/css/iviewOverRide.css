@@ -458,7 +458,7 @@ div.modal-header-border {
 .fr-select .ivu-select-arrow {
   color: #FF881C;
 }
-.schoolseason-select .ivu-select-selection,.schoolseason-select .ivu-cascader-rel .ivu-input {
+.schoolseason-select .ivu-select-selection,.schoolseason-select .ivu-cascader-rel .ivu-input,.schoolseason-select .ivu-input{
   border: 1px solid #E5C2C2;
   box-shadow: none;
 }
@@ -521,7 +521,7 @@ div.modal-header-border {
 .my_table .ivu-table{
 box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
 }
-.my_table .ivu-table td, .ivu-table th{
+.my_table .ivu-table td, .my_table .ivu-table th{
   border: none
 }
 
