@@ -320,6 +320,13 @@ export default {
         callback(new Error('电话号码格式不正确'))
       }
     }
+    const validaRegisteredName = (rule, value, callback) => {
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+          callback(new Error('输入名称不能包含特殊字符、空格或是纯数字'));
+        } else {
+          callback()
+        }
+      }
     return {
       priceReg: false,
       domainList: [],
@@ -336,7 +343,8 @@ export default {
       },
       ruleValidateOne: {
         sslName: [
-          { required: true, message: '请输入证书名称', trigger: 'blur' }
+          { required: true, message: '请输入证书名称', trigger: 'blur' },
+          { required: true, validator: validaRegisteredName, trigger: 'blur' },
         ],
         domain: [
           { required: true, message: '请输入域名', trigger: 'blur' },
