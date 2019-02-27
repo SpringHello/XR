@@ -57,7 +57,7 @@
                     {{item.discount}}折
                   </div> -->
                   <p style="font-size:18px;font-weight:bold;font-family:MicrosoftYaHei-Bold;">{{item.servicetype == 'host' ? '云服务器' : 'GPU云服务器'}}</p>
-                  <p class="config-text" ><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.cpunum}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘<span v-if="item.gpu" style="font-size:12px;font-weight:normal;">+<span>{{item.gpu}}</span>显卡</span></p>
+                  <p class="config-text" ><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.bandwith}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘<span v-if="item.gpu" style="font-size:12px;font-weight:normal;">+<span>{{item.gpu}}</span>显卡</span></p>
                 </div>
                 <div class="host_content">
                 <div style="margin:10px 0;">
@@ -564,7 +564,7 @@
     
     <!-- 会员规则弹窗 -->
     <transition name="fade">
-      <div class="overlay" v-if="showModal.vipRuleModal" @click.stop="showModal.vipRuleModal=false">
+      <div class="overlay" style="z-index:2000" v-if="showModal.vipRuleModal" @click.stop="showModal.vipRuleModal=false">
         <div class="all-modal modal5" @click.stop="showModal.vipRuleModal=true">
           <div class="header">
             <span>会员制规则</span>
@@ -573,26 +573,26 @@
           <div class="body">
             <div class="body_hide" ref='viewBox' >
               <div style="height:1138px;">
-                <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
-                <nav>
-                  <ul class="nav_list">
-                    <li class="nav_item" v-for="(item,index) in vipRule" :key="index">
-                      <div>
-                        {{item.title}}
-                      </div>
-                      <div>
-                        {{item.trOne}}
-                      </div>
-                      <div>
-                        {{item.trTwo}}
-                      </div>
-                      <div>
-                        {{item.trThree}}
-                      </div>
-                    </li>
-                  </ul>
-                </nav>
-                <div class="word_style">
+              <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
+              <nav>
+                <ul class="nav_list">
+                  <li class="nav_item" v-for="(item,index) in vipRule" :key="index">
+                    <div>
+                      {{item.title}}
+                    </div>
+                    <div>
+                      {{item.trOne}}
+                    </div>
+                    <div>
+                      {{item.trTwo}}
+                    </div>
+                    <div>
+                      {{item.trThree}}
+                    </div>
+                  </li>
+                </ul>
+              </nav>
+              <div class="word_style">
                   <h3>通过一次性充值（24小时内累计充值金额）或者上个自然年度（每年1月1日至12月31日）累计消费(订单支付成功七日后)的金额判定不同的会员级别，会员级别不同消费时可享受相应的折扣优惠。</h3>
                   <h3><span>2、会员退货退款</span>：累计消费成为会员的客户，因为消费不涉及会员级别的更改，享受平台正常的退货退款流程。 </h3>
                   <h3 style="color:#FF624B;">充值成为会员的用户，会员充值一定金额后，对应会员级别的最低充值额度（如白银会员1万元、黄金会员5万元、铂金会员15万元）经会员同意后单独放入特定账户，优先消费，不可自动提取，以保证会员资格。若强制要求提现此部分金额，则意味会员主动取消会员资格。则之前购买产品均按折扣之前的价格扣除对应金额后方可提现。不足部分平台保留追补权利。 </h3>
@@ -611,13 +611,13 @@
                   <h3>若累计消费达到会员级别，则会员后续消费发生退货退款不影响会员资格。直到会员有效期时，会在第三年的1月1日-1月17日计算上一年度的累计消费，重新定义会员级别。若没有达到会员级别，且没有充值达到一定金额，则会员级别降级为相应级别。</h3>
                   <h3>比如客户2009年1月1日至7月31日期间累计消费达到5万元，则自动成为白银会员；在2011年1月1日-1月17日期间，会重新计算2010年1月-12月31日期间的消费累计金额，如没达到1万元，则2011年1月17日降级为非会员用户。</h3>
                 </div>
-              </div>
             </div>
-            </div>
-            <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn1']" :disabled='disabledButton'>
-            <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
           </div>
+          </div>
+           <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true,selectedRule = false" :class="[disabledButton?'modal-btnDisbled':'modal-btn1']" :disabled='disabledButton'>
+            <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
         </div>
+      </div>
     </transition>
     <!-- 余额转入现金券 -->
     <Modal v-model="showModal.cashCoupon" :scrollable="true" :width="640">
@@ -637,10 +637,8 @@
           </ul>
         </div>
         <div class="beVip">
-          <Checkbox v-model="cashCouponForm.agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+          <Checkbox v-model="cashCouponForm.agreeStatus" :disabled="selectedRule"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
             style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox>
-          <!-- <Checkbox v-model="cashCouponForm.agreeStatus" :disabled="selectedRule"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
-            style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox> -->
         </div>
         <div style="margin-top: 20px;">
           <Radio-group v-model="zf">
@@ -782,7 +780,6 @@ export default {
       }
     }
     return {
-      vipHeight: '',
       selectVipGrade: '白银会员',
       highEndLength: '',
       selectedRule: true,
@@ -797,7 +794,6 @@ export default {
       disabledButton: true,
       vipCount: 10, // vip规则计时
       vipScroll: 0,
-      vipHeight:1881,
       input: 10000,
       zf: 'zfb',
       balance: 0,
@@ -1895,7 +1891,7 @@ export default {
         }
       })
     },
-    getVipRule() {
+   getVipRule() {
         this.showModal.vipRuleModal = true;
         this.vipCount = 10;
         this.vipScroll = 0;
@@ -2871,7 +2867,7 @@ section {
       text-align: left;
       .body_hide{
         overflow:auto;
-         height: 500px;
+       height: 500px;
         h3 {
           font-size: 14px;
           font-family: MicrosoftYaHei;
