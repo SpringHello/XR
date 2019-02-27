@@ -98,7 +98,7 @@
               <!-- <i @click.stop="showModal.vipRuleModal=false"></i> -->
             </div>
             <div class="body">
-              <div class="body_hide" @scroll.native="vipRuleScroll">
+              <div class="body_hide" ref="viewBox" >
                 <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
                 <nav>
                   <ul class="nav_list">
@@ -275,6 +275,9 @@
             this.disabledButton = true;
           }
         }, 1000)
+        setTimeout(()=>{
+             this.$refs.viewBox.addEventListener('scroll', this.vipRuleScroll,true)
+          },100)  
       },
       vipRuleScroll(e) {
         this.vipScroll = e.srcElement.scrollTop;

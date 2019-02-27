@@ -24,7 +24,7 @@
 
         <p style="color:#333333;font-size:14px;margin-top:40px;">账户余额支付</p>
         <div class="accountInfo">
-          <CheckboxGroup v-model="accountPay" @on-change="checkUseVoucher">
+          <CheckboxGroup v-model="accountPay">
             <Checkbox label="account" style="margin-right:40px;user-select: none">
               <span>使用余额</span>
               <span class="remain">￥{{orderInfo.remainder}}</span>
