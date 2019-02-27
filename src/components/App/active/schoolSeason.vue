@@ -315,6 +315,7 @@
           </div>
           <div>
             <span class="recharge-btn" style="cursor:pointer;" @click="$router.push('memberInfo')">查看会员权益</span>
+            <!-- <span class="recharge-btn" @click="getVipList()" style="cursor:pointer">立即充值</span> -->
             <span class="recharge-btn" v-if="userInfo.vipname!='铂金会员'" @click="$router.push('recharge')" style="cursor:pointer;margin-left:40px;">立即充值</span>
           </div>
         </div>
@@ -652,7 +653,8 @@
         <Button type="primary" @click="recharge" :disabled="chargeDisabled">确认充值</Button>
       </div>
     </Modal>
-    <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390">
+    <!-- 支付宝支付提示弹窗 -->
+    <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
         <p slot="header" class="modal-header-border">
           <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
           <span class="universal-modal-title">提示</span>
@@ -663,12 +665,12 @@
           </div>
         </div>
         <p slot="footer" class="modal-footer-s">
-          <Button @click="showModal.rechargeHint = false">支付遇到问题</Button>
+          <Button @click="showModal.rechargeHint = false;showModal.cashCoupon=true">支付遇到问题</Button>
           <Button type="primary" @click="rechargeOk()">支付完成</Button>
         </p>
       </Modal>
-      <!-- 微信支付弹窗 -->
-    <Modal v-model="showModal.weChatRechargeModal" width="640" :scrollable="true">
+    <!-- 微信支付弹窗 -->
+    <Modal v-model="showModal.weChatRechargeModal" width="640" :scrollable="true" :closable="false" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">微信支付/充值</span>
       </p>
@@ -693,6 +695,44 @@
       <div slot="footer" class="modal-footer-border">
         <Button @click="isPay">已完成支付</Button>
         <Button type="primary" @click="showModal.weChatRechargeModal = false,showModal.cashCoupon = true">更换支付方式</Button>
+      </div>
+    </Modal>
+    <!-- 支付充值失败 -->
+    <Modal v-model="showModal.payDefeatedModal" width="640" :scrollable="true" :closable="false" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">支付/充值</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-p">
+          <Steps :current="2" status="error">
+            <Step title="订单确认"></Step>
+            <Step title="支付"></Step>
+            <Step title="支付失败"></Step>
+          </Steps>
+          <p><img src="../../../assets/img/sceneInfo/si-defeated.png"/><span>抱歉，支付失败，请再次尝试！</span></p>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="showModal.payDefeatedModal = false,showModal.cashCoupon = true">再次支付</Button>
+      </div>
+    </Modal>
+    <!-- 支付充值成功 -->
+    <Modal v-model="showModal.paySuccessModal" width="640" :scrollable="true" :closable="false" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">支付/充值</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-p">
+          <Steps :current="2">
+            <Step title="订单确认"></Step>
+            <Step title="支付"></Step>
+            <Step title="支付成功"></Step>
+          </Steps>
+          <p><img src="../../../assets/img/sceneInfo/si-success.png"/><span>恭喜您成为{{selectVipGrade}}</span></p>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="showModal.paySuccessModal=false">确认</Button>
       </div>
     </Modal>
   </div>
@@ -736,6 +776,7 @@ export default {
       }
     }
     return {
+      selectVipGrade: '白银会员',
       highEndLength: '',
       selectedRule: true,
       serialNum: '',
@@ -1186,22 +1227,33 @@ export default {
     },
     rechargeOk() {
       this.showModal.rechargeHint = false
-      let url = 'uservip/upVip.do'
-        this.$http.get(url, {
-          params: {
-            viplevel: this.cashCouponForm.vipId
-          }
-        }).then(res => {
-          if (res.data.status == 1 && res.status == 200) {
-            this.$message.info({
-                content: res.data.message
+      this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            if (Number(response.data.data.remainder) > this.balance) {
+              let url = 'uservip/upVip.do'
+                this.$http.get(url, {
+                  params: {
+                    viplevel: this.cashCouponForm.vipId
+                  }
+                }).then(res => {
+                  if (res.data.status == 1 && res.status == 200) {
+                    this.$message.info({
+                        content: res.data.message,
+                      })
+                      this.init()
+                  } else {
+                    this.$message.info({
+                      content: res.data.message
+                    })
+                  }
+                })
+            } else {
+              this.$message.error({
+                content: '充值失败,请重新充值'
               })
-          } else {
-            this.$message.info({
-              content: res.data.message
-            })
+            }
           }
-        })
+      })
     },
     getUserVipLevel() {
         if (this.userInfo && this.userInfo.vipname == '白银会员') {
@@ -1218,9 +1270,6 @@ export default {
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
           if (response.status == 200 && response.data.status == '1') {
             this.balance = Number(response.data.data.remainder)
-            // this.voucher = response.data.data.voucher
-            // this.freezeDeposit = response.data.data.frozenMoney
-            // this.withdrawForm.money = this.balance
           }
         })
       },
@@ -1264,18 +1313,29 @@ export default {
         }).then(response => {
           this.showModal.weChatRechargeModal = false
           if (response.status == 200 && response.data.status == 1) {
-            this.$message.info({
-              content: response.data.message
-            })
+            this.showModal.paySuccessModal = true
+            let url = 'uservip/upVip.do'
+                this.$http.get(url, {
+                  params: {
+                    viplevel: this.cashCouponForm.vipId
+                  }
+                }).then(res => {
+                  if (res.data.status == 1 && res.status == 200) {
+                    this.showModal.paySuccessModal = true
+                    this.init()
+                  } else {
+                    this.$message.info({
+                      content: res.data.message
+                    })
+                  }
+                })
           } else {
-            this.$message.info({
-              content: response.data.message
-            })
+            this.showModal.payDefeatedModal = true
           }
         })
       },
       changeVipGrade(item, index) {
-        // console.log(item)
+        this.selectVipGrade = item.vipname
         this.input = item.money
         if (this.cashCouponForm.vipLevel > index) {
           return
@@ -1858,6 +1918,7 @@ export default {
     selectedRule_ok() {
       this.selectedRule = false
       this.showModal.vipRuleModal = false
+      this.cashCouponForm.agreeStatus = true
     }
   },
   computed: {
