@@ -699,7 +699,7 @@
                   }), h('span', {}, '解绑中')])
                 } else if (object.row.status == 6) {
                   // 已冻结
-                  return h('div', {}, h('span', {}, '已冻结'))
+                  return h('span', {}, '已冻结')
                 } else if (object.row.usetype == 0) {
                   return h('Dropdown', {
                     props: {
@@ -914,7 +914,7 @@
                   this.ipData.splice(index, 1, response.data.result[0])
                 }
               })
-              if (!(status == 2 || status == 3 || status == 4)) {
+              if (!(status == 2 || status == 3 || status == 4 || status == 5)) {
                 clearInterval(timer)
               }
             }
@@ -929,6 +929,11 @@
               item._disabled = true
             })
           }
+          this.ipData.forEach(item => {
+            if (item.status != 1) {
+              item._disabled = true
+            }
+          })
           this.total = response.data.result.total
           this.select.forEach(item => {
             this.ipData.forEach(ip => {
@@ -1235,7 +1240,7 @@
         })
         this.$refs.bindForNATFormValidate.resetFields();
       },
-      unbindResources_ok(){
+      unbindResources_ok() {
         this.showModal.unbindResources = false
         var url = ''
         var params = {}
