@@ -165,30 +165,6 @@
       },
       // 判断能否使用现金券余额
       checkUseVoucher(bol) {
-        // 不允许使用现金券余额，但是点击了使用
-        if (this.orderInfo.isUseVoucher == 0 && bol.indexOf('voucher') > -1) {
-          this.accountPay.splice(bol.indexOf('voucher'), 1)
-          this.$message.info({
-            title:'提示',
-            content: '当前订单不满足使用现金券要求'
-          })
-        }
-        // 必须使用现金券，但点击了取消使用
-        if (this.orderInfo.isUseVoucher == 1 && bol.indexOf('voucher') == -1) {
-          this.accountPay.push('voucher')
-          this.$message.info({
-            title:'提示',
-            content: '默认情况下优先使用现金券'
-          })
-        }
-        // 现金券已足够支付，不应再点击账户余额
-        if (this.orderInfo.isUseVoucher == 1 && Number(this.orderInfo.voucher) >= Number(this.orderInfo.money) && bol.indexOf('account') > -1) {
-          this.accountPay.splice(bol.indexOf('account'), 1)
-          this.$message.info({
-            title:'提示',
-            content: '现金券余额已足够支付本订单'
-          })
-        }
         // 现金券不足够支付，必须使用余额
         if (this.orderInfo.isUseVoucher == 1 && Number(this.orderInfo.voucher) < Number(this.orderInfo.money) && bol.indexOf('account') == -1) {
           this.accountPay.push('account')
@@ -201,14 +177,7 @@
       // 第三方支付
       otherPayChange(bol) {
         // 余额已足够支付 不应使用第三方支付
-
-        if (this.accountPay.indexOf('voucher') > -1 && Number(this.orderInfo.voucher) >= Number(this.orderInfo.money)) {
-          this.otherPay = ''
-          this.$message.info({
-            title:'提示',
-            content: '现金券余额已足够支付本订单'
-          })
-        } else if (this.accountPay.indexOf('account') > -1 && Number(this.orderInfo.remainder) >= Number(this.orderInfo.money)) {
+       if (this.accountPay.indexOf('account') > -1 && Number(this.orderInfo.remainder) >= Number(this.orderInfo.money)) {
           this.otherPay = ''
           this.$message.info({
             title:'提示',
