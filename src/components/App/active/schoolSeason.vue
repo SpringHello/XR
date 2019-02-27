@@ -633,8 +633,10 @@
           </ul>
         </div>
         <div class="beVip">
-          <Checkbox v-model="cashCouponForm.agreeStatus" :disabled="selectedRule"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+          <Checkbox v-model="cashCouponForm.agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
             style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox>
+          <!-- <Checkbox v-model="cashCouponForm.agreeStatus" :disabled="selectedRule"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+            style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox> -->
         </div>
         <div style="margin-top: 20px;">
           <Radio-group v-model="zf">
@@ -776,6 +778,7 @@ export default {
       }
     }
     return {
+      vipHeight: '',
       selectVipGrade: '白银会员',
       highEndLength: '',
       selectedRule: true,
@@ -1887,32 +1890,33 @@ export default {
         }
       })
     },
-    getVipRule(){
+    getVipRule() {
       this.showModal.vipRuleModal = true;
       this.vipCount = 10;
       this.vipScroll = 0;
       let interval = setInterval(() => {
-        this.vipCount --;
-        if (this.vipScroll > 1128 && this.vipCount == 0){
-          this.disabledButton = false;
-          clearInterval(interval);
-        } else if (this.vipCount == 0){
-          clearInterval(interval);
-        } else {
-          this.disabledButton = true;
-          if (this.showModal.vipRuleModal == false) {
-            clearInterval(interval);
-          }
+      this.vipCount--;
+      if (this.vipScroll > (this.vipHeight - 561) && this.vipCount == 0) {
+      this.disabledButton = false;
+      clearInterval(interval);
+      } else if (this.vipCount == 0) {
+      clearInterval(interval);
+      } else {
+        this.disabledButton = true;
+        if(this.showModal.vipRuleModal == false){
+        clearInterval(interval);
         }
-      }, 1000);
+      }
+      }, 1000)
       setTimeout(() => {
-        this.$refs.viewBox.addEventListener('scroll', this.vipRuleScroll, true)
-      }, 100)
-    },
+      this.$refs.viewBox.addEventListener('scroll', this.vipRuleScroll, true)
+        }, 100)
+      },
     vipRuleScroll(e){
       this.vipScroll = e.srcElement.scrollTop;
-      if (e.srcElement.scrollTop > 1128 && this.vipCount == 0){
-        this.disabledButton = false
+      this.vipHeight = e.srcElement.scroHeight;
+      if (e.srcElement.scrollTop > (e.srcElement.scroHeight - 561) && this.vipCount == 0) {
+        this.disabledButton = false;
       }
     },
     selectedRule_ok() {
