@@ -98,7 +98,7 @@
               <!-- <i @click.stop="showModal.vipRuleModal=false"></i> -->
             </div>
             <div class="body">
-              <div class="body_hide" @scroll="vipRuleScroll">
+              <div class="body_hide" @scroll.native="vipRuleScroll">
                 <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
                 <nav>
                   <ul class="nav_list">
