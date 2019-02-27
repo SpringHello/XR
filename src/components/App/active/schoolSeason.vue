@@ -53,11 +53,11 @@
             <div class="w_host">
               <div v-for="(item,index) in discountProduct" :key="index">
                 <div class="host_title">
-                  <div class="rectangle">
+                  <!-- <div class="rectangle">
                     {{item.discount}}折
-                  </div>
+                  </div> -->
                   <p style="font-size:18px;font-weight:bold;font-family:MicrosoftYaHei-Bold;">{{item.servicetype == 'host' ? '云服务器' : 'GPU云服务器'}}</p>
-                  <p class="config-text" ><span>{{item.cpunum}}</span>核+<span>{{item.mem}}G</span>+<span>{{item.cpunum}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘<span v-if="item.gpu" style="font-size:12px;font-weight:normal;">+<span>{{item.gpu}}</span>显卡</span></p>
+                  <p class="config-text" ><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.bandwith}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘<span v-if="item.gpu" style="font-size:12px;font-weight:normal;">+<span>{{item.gpu}}</span>显卡</span></p>
                 </div>
                 <div class="host_content">
                 <div style="margin:10px 0;">
@@ -74,7 +74,7 @@
                     <Cascader :data="item.hostSystemList" v-model="item.system" style="width:240px;display: inline-block;" class="schoolseason-select"></Cascader>
                 </div>
                 <div style="text-align:left;margin:20px 0;">
-                    <span style="color:#E1212A;font-size:14px;">￥<span style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/年</span>
+                    <span style="color:#E1212A;font-size:14px;">￥<span style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/{{item.timeType=='month'?'月':'年'}}</span>
                     <span style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{item.originalPrice}}元</span>
                 </div>
                 <Button class="host_button host_button_not"  v-if="!(hour >=9&&hour<12||hour >=14&&hour<20)">暂未开始</Button>
@@ -130,7 +130,7 @@
                       <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
-                  <div v-if="hostConfigListHot.highEnd !=[]">
+                  <div v-if="highEndLength">
                     <span class="sec-title">企业高配型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
                       <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
@@ -174,6 +174,7 @@
               <div class="cash">
                 <p>
                   <span>￥</span>{{(hostProductHot.price*hostProductHot.count).toFixed(2)}}<span>{{PriceHostHot}}</span>
+                  <span style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{(hostProductHot.originalPrice*hostProductHot.count).toFixed(2)}}元</span>
                 </p>
                 <Button @click="productBuy_host()">立即支付</Button>
               </div>
@@ -232,6 +233,7 @@
               <div class="cash" style="margin-top:20px;">
                 <p>
                   <span>￥</span>{{(gpuProductHot.price*gpuProductHot.count).toFixed(2)}}<span>{{PriceGpuHot}}</span>
+                  <span style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{(gpuProductHot.originalPrice*gpuProductHot.count).toFixed(2)}}元</span>
                 </p>
                 <Button @click="productBuy_gpu()">立即支付</Button>
               </div>
@@ -273,6 +275,7 @@
               <div class="cash">
                 <p>
                   <span>￥</span>{{objProductHot.price}}<span>{{PriceobjHot}}</span>
+                  <span style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{objProductHot.originalPrice}}元</span>
                 </p>
                 <Button @click="productBuy_obj()">立即支付</Button>
               </div>
@@ -285,7 +288,7 @@
       <div class="wrap">
         <div class="headline">
           <div>
-            云计算新玩法，会员尊享折上折
+            <span>会员尊享折上折特权</span>
           </div>
           <p>
             新睿云重磅推出会员制，成为会员可享相应折扣
@@ -311,8 +314,8 @@
             </div>
           </div>
           <div>
-            <span class="recharge-btn" style="cursor:pointer;margin-right:40px;" @click="$router.push('memberInfo')">查看会员权益</span>
-            <span class="recharge-btn" @click="$router.push('recharge')" style="cursor:pointer">立即充值</span>
+            <span class="recharge-btn" style="cursor:pointer;" @click="$router.push('memberInfo')">查看会员权益</span>
+            <span class="recharge-btn" v-if="userInfo.vipname!='铂金会员'" @click="$router.push('recharge')" style="cursor:pointer;margin-left:40px;">立即充值</span>
           </div>
         </div>
          <div class="main" v-else>
@@ -321,8 +324,10 @@
               <div :style="{background:'url('+item.img+')'}" :class="item.class" >
                 <p>{{item.title}}</p>
                 <p><span>{{item.discount}}</span>折</p>
-                <span class="font-10px">{{item.time}}</span>
-                <img :src="item.icon" alt="">
+                <div class="flex" style="padding-right:37px">
+                  <span class="font-10px">{{item.time}}</span>
+                  <img :src="item.icon" alt="">
+                </div>
               </div>
               <h3><i></i><span>{{item.title}}</span><i></i></h3>
               <p class="des">24小时内充值
@@ -342,7 +347,7 @@
       <div class="wrap">
         <div class="headline">
           <div>
-            38元无门槛优惠券整点抢
+            38元无门槛优惠券限量抢
           </div>
           <p>
             领取38元券可免费购买新睿云所有产品（特定申明除外）
@@ -565,7 +570,7 @@
             <i @click.stop="showModal.vipRuleModal=false"></i>
           </div>
           <div class="body">
-            <div class="body_hide" @scroll="vipRuleScroll">
+            <div class="body_hide" ref="viewBox">
               <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
               <nav>
                 <ul class="nav_list">
@@ -605,7 +610,7 @@
               </div>
             </div>
           </div>
-          <Button style="margin-bottom:30px" @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'regular-btn']" :disabled='disabledButton'><span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+          <Button style="margin-bottom:30px" @click.stop="selectedRule_ok" :class="[disabledButton?'modal-btnDisbled':'regular-btn']" :disabled='disabledButton'><span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
         </div>
       </div>
     </transition>
@@ -627,7 +632,7 @@
           </ul>
         </div>
         <div class="beVip">
-          <Checkbox v-model="cashCouponForm.agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+          <Checkbox v-model="cashCouponForm.agreeStatus" :disabled="selectedRule"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
             style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox>
         </div>
         <div style="margin-top: 20px;">
@@ -731,6 +736,8 @@ export default {
       }
     }
     return {
+      highEndLength: '',
+      selectedRule: true,
       serialNum: '',
       config: {
         value: '',
@@ -808,6 +815,7 @@ export default {
           servicetype: 'host',
           num: 0,
           discount: '1',
+          timeType: 'year',
           hostSystemList: [{
             value: 'window',
             label: 'Windows',
@@ -848,6 +856,7 @@ export default {
           servicetype: 'host',
           num: 0,
           discount: '1',
+          timeType: 'year',
           hostSystemList: [{
           value: 'window',
           label: 'Windows',
@@ -889,6 +898,7 @@ export default {
           servicetype: 'gpu',
           num: 0,
           discount: '2',
+          timeType: 'month',
           hostSystemList: [{
             value: 'window',
             label: 'Windows',
@@ -923,7 +933,8 @@ export default {
           disksize: 20,
           timeTimetype: {type: 'month', value: '6', discount: '4'},
           count: '1',
-          price: ''
+          price: '',
+          originalPrice: ''
         },
       hostZoneListHot: [],
       hostConfigListHot: {},
@@ -951,7 +962,7 @@ export default {
           children: [
           ],
         }],
-      hostDisksizeListHot: [20, 50, 100, 500],
+      hostDisksizeListHot: [0, 20, 50, 100],
       hostTimeListHot: [
         {type: 'month', value: '6', discount: '4'},
         {type: 'year', value: '1', discount: '3'},
@@ -967,6 +978,7 @@ export default {
         timeTimetype: {type: 'day', value: '7', discount: '4'},
         count: '1',
         price: '',
+        originalPrice: ''
       },
       gpuZoneListHot: [],
       gpuConfigListHot: [],
@@ -1009,7 +1021,8 @@ export default {
           disksize: 20,
           timeTimetype: {type: 'month', value: '3', discount: '5'},
           count: '1',
-          price: ''
+          price: '',
+          originalPrice: ''
         },
       objZoneListHot: [],
       objConfigListHot: [
@@ -1097,6 +1110,8 @@ export default {
         cashCoupon: false,
         rechargeHint: false,
         weChatRechargeModal: false,
+        paySuccessModal: false,
+        payDefeatedModal: false,
         joinedActivity: false,
         notNewcoustomer: false
       },
@@ -1392,6 +1407,11 @@ export default {
               item.label = item.templatedescript
             })
           })
+          this.discountProduct[index].hostSystemList.forEach((item, index) => {
+            if (item.children.length == 0){
+              item.disabled = true
+            }
+          })
           // 设置默认系统
           this.discountProduct.forEach(item => {
             item.system = ['window', res.data.result.window[0].systemtemplateid]
@@ -1414,6 +1434,12 @@ export default {
           item.value = item.systemtemplateid
           item.label = item.templatedescript
         })
+      })
+      // 为空的系统不能点击
+      obj.forEach((item, index) => {
+        if (item.children.length == 0){
+          item.disabled = true
+        }
       })
       selectobj = ['window', responseData.window[0].systemtemplateid]
       return selectobj
@@ -1538,7 +1564,7 @@ export default {
           this.hostConfigListHot.highEnd = res.data.info.filter(item => {
             return item.cpunum == 32 || item.cpunum == 64
           })
-          // console.log(this.hostConfigListHot.highEnd)
+          this.highEndLength = this.hostConfigListHot.highEnd.length
         }
       })
     },
@@ -1622,7 +1648,7 @@ export default {
             return item.gpu == '100'
           })
           this.gpuProductHot.cpuMemory = this.gpuConfigListHot[0]
-          console.log(this.gpuConfigListHot)
+          // console.log(this.gpuConfigListHot)
         }
       })
     },
@@ -1802,30 +1828,41 @@ export default {
       })
     },
     getVipRule(){
-      this.showModal.vipRuleModal  = true;
+      this.showModal.vipRuleModal = true;
       this.vipCount = 10;
-      let interval =  setInterval(() => {
+      this.vipScroll = 0;
+      let interval = setInterval(() => {
         this.vipCount --;
-        if(this.vipScroll >1128 && this.vipCount == 0){
-          this.disabledButton  = false;
+        if (this.vipScroll > 1128 && this.vipCount == 0){
+          this.disabledButton = false;
           clearInterval(interval);
-        }else if(this.vipCount == 0){
+        } else if (this.vipCount == 0){
           clearInterval(interval);
-        }else{
-          this.disabledButton  = true;
+        } else {
+          this.disabledButton = true;
+          if (this.showModal.vipRuleModal == false) {
+            clearInterval(interval);
+          }
         }
-      },1000)
+      }, 1000);
+      setTimeout(() => {
+        this.$refs.viewBox.addEventListener('scroll', this.vipRuleScroll, true)
+      }, 100)
     },
     vipRuleScroll(e){
       this.vipScroll = e.srcElement.scrollTop;
-      if(e.srcElement.scrollTop > 1128 && this.vipCount == 0){
-        this.disabledButton  = false;
+      if (e.srcElement.scrollTop > 1128 && this.vipCount == 0){
+        this.disabledButton = false
       }
     },
+    selectedRule_ok() {
+      this.selectedRule = false
+      this.showModal.vipRuleModal = false
+    }
   },
   computed: {
     chargeDisabled() {
-        return this.cashCouponForm.agreeStatus == false || this.cashCouponForm.upVipCost > this.balance
+        return this.cashCouponForm.agreeStatus == false
       },
     userInfo () {
       return this.$store.state.userInfo
@@ -1845,6 +1882,7 @@ export default {
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
           this.hostProductHot.price = res.data.result.cost
+          this.hostProductHot.originalPrice = res.data.result.originalPrice
         }
       })
     },
@@ -1862,6 +1900,7 @@ export default {
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
           this.gpuProductHot.price = res.data.result.cost
+          this.gpuProductHot.originalPrice = res.data.result.originalPrice
         }
       })
     },
@@ -1878,7 +1917,7 @@ export default {
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
           this.objProductHot.price = res.data.result.cost
-          // console.log(this.objProductHot.price)
+          this.objProductHot.originalPrice = res.data.result.originalPrice
         }
       })
     },
@@ -1899,7 +1938,7 @@ export default {
             })
           }
         })
-      },
+      }
   },
   watch: {
     'hostProductHot.zoneId': {
@@ -2307,7 +2346,6 @@ section {
             font-size: 14px;
             color: rgba(75, 60, 61, 1);
             line-height: 33px;
-            color: rgba(157, 157, 157, 1);
             text-align: center;
             cursor: pointer;
             &.selected {
@@ -2381,7 +2419,7 @@ section {
     center no-repeat;
   .headline {
     div {
-      background: url(../../../assets/img/active/schoolSeason/schoolsenson_headline_3.png)
+      background: url(../../../assets/img/active/schoolSeason/schoolsenson_headline_1.png)
         center no-repeat;
     }
   }
@@ -2421,10 +2459,9 @@ section {
             }
           }
           .font-10px {
-            margin-left: -20px;
+            width:180px;
             display: inline-block;
-            transform: scale(0.84);
-            font-size: 12px;
+            line-height: 20px;
           }
         }
         h3 {
