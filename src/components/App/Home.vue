@@ -2785,8 +2785,10 @@
           line-height: 42px;
           text-align: center;
           cursor: pointer;
+          transition: all .5s;
           &:hover {
-            background: #ffd1b2;
+            border-color: #FF624B;
+            color: #FF624B;
           }
         }
       }

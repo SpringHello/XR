@@ -23,14 +23,18 @@
             低配爆款主机限时疯抢
           </div>
           <p>
-            爆品秒杀 先到先得 低至一折
+            新用户专享 爆品秒杀 先到先得 低至一折
            <span class="rule" @click="showModal.rule1=true">活动规则</span>
           </p>
         </div>
         <div class="main">
-          <div class="tabs  flex" style="justify-content: center">
+          <div class="tabs  flex" style="justify-content: center" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
             <div :class="{started: hour >=9&&hour<12}">9:00~12:00</div>
             <div :class="{started: hour >=14&&hour<20}">14:00~20:00</div>
+          </div>
+          <div class="tabs  flex" style="justify-content: center" v-else>
+            <div style="width:800px;background:#E1212A" v-if="hour >=12&&hour <12">下场秒杀时间14:00~20:00</div>
+            <div style="width:800px;background:#E1212A" v-else>下场秒杀时间9:00～12:00</div>
           </div>
           <div class="box" :class="[hour >=9&&hour<12 || hour >=14&&hour<20?'box_bg_long':'box_bg_short']">
             <div class="box_time" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
@@ -94,7 +98,7 @@
             热门云产品全线打折
           </div>
           <p>
-            云服务器、GPU云服务器等产品新春特惠，助力用户轻松上云
+            新老用户皆可参与云服务器、对象存储等新春特惠活动 
             <span class="rule" @click="showModal.rule2=true">活动规则</span>
           </p>
         </div>
@@ -139,7 +143,7 @@
             <div class="right">
               <div class="item-select">
                 <p>带宽选择</p> 
-                <Select v-model="hostProductHot.bandwith">
+                <Select v-model="hostProductHot.bandwith" class="schoolseason-select">
                   <Option v-for="(item3,index) in hostbandwithListHot" :value="item3" :key="index">{{item3}}M</option>
                 </Select>
               </div>
@@ -148,7 +152,7 @@
                 <Cascader :data="hostSystemListHot" v-model="hostProductHot.system" class="schoolseason-select"></Cascader>
               </div>
               <div class="item-config">
-                <p style="margin-bottom: 10px;">数据盘</p>
+                <p style="margin-bottom: 10px;">NVme SSD数据盘</p>
                 <ul class="flex" style="justify-content: flex-start">
                   <li v-for="(item3,index) in hostDisksizeListHot" :key="index" @click="hostProductHot.disksize=item3" :class="{selected:hostProductHot.disksize==item3}">{{item3}}G</li>
                 </ul>
@@ -163,9 +167,9 @@
               </div>
               <div class="item-select">
                 <p>购买数量</p> 
-                <Button @click="hostProductHot.count--" :disabled="hostProductHot.count<=1">-</Button>
-                <Input type="text" style="width:60px;" class="host-count" v-model="hostProductHot.count" readonly></Input>
-                <Button @click="hostProductHot.count++" :disabled="hostProductHot.count>=7">+</Button>
+                <Button @click="hostProductHot.count--" :disabled="hostProductHot.count<=1" style="border: 1px solid #E5C2C2;">-</Button>
+                <Input type="text" style="width:60px;" class="host-count schoolseason-select" v-model="hostProductHot.count" readonly></Input>
+                <Button @click="hostProductHot.count++" :disabled="hostProductHot.count>=7" style="border: 1px solid #E5C2C2;">+</Button>
               </div>
               <div class="cash">
                 <p>
@@ -191,9 +195,9 @@
                 <div class="item-config">
                   <p style="margin-bottom: 20px;">配置选择</p>
                   <div>
-                    <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;width: 500px;margin-bottom:10px;">
-                      <li style="width:140px;margin-bottom:10px;" v-for="(item3,index) in gpuConfigListHot" :key="index" @click="gpuProductHot.cpuMemory=item3" :class="{selected:gpuProductHot.cpuMemory.cpunum==item3.cpunum&&gpuProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
-                      <span>{{item3.gpusize}}*P100</span></li>
+                    <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;margin-bottom:10px;">
+                      <li style="width:188px;margin-bottom:10px;" v-for="(item3,index) in gpuConfigListHot" :key="index" @click="gpuProductHot.cpuMemory=item3" :class="{selected:gpuProductHot.cpuMemory.cpunum==item3.cpunum&&gpuProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                      <span>{{item3.gpusize}}*NVIDIA P100</span></li>
                     </ul>
                   </div>
                   <p style="font-size:12px;color:rgba(154,127,130,1);margin-top:-10px;">*以上配置皆包含128G SSD系统盘</p>
@@ -203,7 +207,7 @@
             <div class="right">
               <div class="item-select">
                 <p>带宽选择</p> 
-                <Select v-model="gpuProductHot.bandwith">
+                <Select v-model="gpuProductHot.bandwith" class="schoolseason-select">
                   <Option v-for="(item3,index) in gpubandwithListHot" :value="item3" :key="index">{{item3}}M</option>
                 </Select>
               </div>
@@ -221,9 +225,9 @@
               </div>
               <div class="item-select">
                 <p>购买数量</p> 
-                <Button @click="gpuProductHot.count--" :disabled="gpuProductHot.count<=1">-</Button>
-                <Input type="text" style="width:60px;" class="host-count" v-model="gpuProductHot.count" readonly></Input>
-                <Button @click="gpuProductHot.count++" :disabled="gpuProductHot.count>=2">+</Button>
+                <Button @click="gpuProductHot.count--" :disabled="gpuProductHot.count<=1" style="border: 1px solid #E5C2C2;">-</Button>
+                <Input type="text" style="width:60px;" class="host-count schoolseason-select" v-model="gpuProductHot.count" readonly></Input>
+                <Button @click="gpuProductHot.count++" :disabled="gpuProductHot.count>=2" style="border: 1px solid #E5C2C2;">+</Button>
               </div>
               <div class="cash" style="margin-top:20px;">
                 <p>
@@ -341,7 +345,7 @@
             38元无门槛优惠券整点抢
           </div>
           <p>
-            领取38元券可免费购买新睿云38元以内的域名
+            领取38元券可免费购买新睿云所有产品（特定申明除外）
           </p>
         </div>
         <div class="main">
@@ -398,6 +402,40 @@
           </div>
           <div class="footer">
             <Button @click.stop="showModal.regular=false" class="regular-btn">确定</Button>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <!-- 不是新用户提示 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.notNewcoustomer=false" v-if="showModal.notNewcoustomer">
+        <div class="all-modal regular-modal" @click.stop="showModal.notNewcoustomer=true">
+          <div class="header">
+            <i @click.stop="showModal.notNewcoustomer=false"></i>
+            <span >抱歉</span>
+          </div>
+          <div class="body">
+            <p>您不符合参与秒杀活动的条件，去看看 <span @click.stop="rollDiscount(1400)">其他活动</span>吧</p>
+          </div>
+          <div class="footer">
+            <Button @click.stop="rollDiscount(1400)" class="regular-btn">查看其他活动</Button>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <!-- 曾参加过秒杀活动 -->
+    <transition name="fade">
+      <div class="overlay" @click.stop="showModal.joinedActivity=false" v-if="showModal.joinedActivity">
+        <div class="all-modal regular-modal" @click.stop="showModal.joinedActivity=true">
+          <div class="header">
+            <i @click.stop="showModal.joinedActivity=false"></i>
+            <span >抱歉</span>
+          </div>
+          <div class="body">
+            <p>您不符合参与秒杀活动的条件，去看看 <span @click.stop="$router.push('ActiveCenter')">其他活动</span>吧</p>
+          </div>
+          <div class="footer">
+            <Button @click.stop="$router.push('ActiveCenter')" class="regular-btn">查看其他活动</Button>
           </div>
         </div>
       </div>
@@ -520,11 +558,11 @@
     
     <!-- 会员规则弹窗 -->
     <transition name="fade" >
-      <div class="overlay" style="z-index:2000" v-if="showModal.vipRuleModal">
+      <div class="overlay" style="z-index:2000" v-if="showModal.vipRuleModal" @click="showModal.vipRuleModal=false">
         <div class="all-modal modal5" @click.stop="showModal.vipRuleModal=true">
           <div class="header">
             <span>会员制规则</span>
-            <!-- <i @click.stop="showModal.vipRuleModal=false"></i> -->
+            <i @click.stop="showModal.vipRuleModal=false"></i>
           </div>
           <div class="body">
             <div class="body_hide" @scroll="vipRuleScroll">
@@ -548,13 +586,13 @@
                 </ul>
               </nav>
               <div class="word_style">
-                <h3>通过一次性充值（24小时内累计充值金额）或者上个自然年度（每年1月1日至12月31日）累计消费的金额判定不同的会员级别，会员级别不同消费时可享受相应的折扣优惠。</h3>
-                <h3><span>2、会员折扣范围：</span>1. 包括平台自有云产品（域名、SSL证书等第三方平台产品除外），参与活动产品购买时可享受折上折（押金活动除外）。 </h3>
-                <h3><span>3、会员权益有效期</span>：充值或者上个自然年度累计消费达到一定金额即可立即成为会员，会员有效期从会员权益生效之日起至第三年的1月17日。比如2009年7月31日充值1万元或者2009年1月1日至7月31日期间累计消费达到5万元则成为白银会员，有效期至2011年1月17日。 </h3>
-                <h3><span>4、会员其他福利</span>：会员还可享受平台新品免费试用、问题优先解决、免费技术咨询、生日和节日礼品、平台产品不定时赠送等福利。 </h3>
-                <h3><span>5、会员退货退款</span>：累计消费成为会员的客户，因为消费不涉及会员级别的更改，享受平台正常的退货退款流程。 </h3>
+                <h3>通过一次性充值（24小时内累计充值金额）或者上个自然年度（每年1月1日至12月31日）累计消费（订单支付成功七日后）的金额判定不同的会员级别，会员级别不同消费时可享受相应的折扣优惠。</h3>
+                <h3><span>2、会员退货退款</span>：累计消费成为会员的客户，因为消费不涉及会员级别的更改，享受平台正常的退货退款流程。 </h3>
                 <h3 style="color:#FF624B;">
                   充值成为会员的用户，会员充值一定金额后，对应会员级别的最低充值额度（如白银会员1万元、黄金会员5万元、铂金会员15万元）经会员同意后单独放入特定账户，优先消费，不可自动提取，以保证会员资格。若强制要求提现此部分金额，则意味会员主动取消会员资格。则之前购买产品均按折扣之前的价格扣除对应金额后方可提现。不足部分平台保留追补权利。 </h3>
+                <h3><span>3、会员折扣范围：</span>1. 包括平台自有云产品（域名、SSL证书等第三方平台产品除外），参与活动产品购买时可享受折上折（押金活动除外）。 </h3>
+                <h3><span>4、会员权益有效期</span>：充值或者上个自然年度累计消费达到一定金额即可立即成为会员，会员有效期从会员权益生效之日起至第三年的1月17日。比如2009年7月31日充值1万元或者2009年1月1日至7月31日期间累计消费达到5万元则成为白银会员，有效期至2011年1月17日。 </h3>
+                <h3><span>5、会员其他福利</span>：会员还可享受平台新品免费试用、问题优先解决、免费技术咨询、生日和节日礼品、平台产品不定时赠送等福利。 </h3>
                 <h3><span>会员权益发生改变的情形</span></h3>
                 <h3><span>会员保级</span>：会员达到会员有效期后，若有效期内达到任何会员条件，比如充值一定金额或者上一自然年度累计消费达到一定金额，则会员权益相应保留并延期。 </h3>
                 <h3><span>会员升级</span>：某一级别的会员在会员有效期内通过充值或者累计消费后达到更高级别后，以最高级别为准，且会员有效期相应延长。如累计消费达到白银会员后，一次性充值5万元则升级成为黄金会员，会员有效期从成为黄金会员那日开始计算，至第三年的1月17日。 </h3>
@@ -923,15 +961,12 @@ export default {
       // 热门gpu打折
       gpuProductHot: {
         zoneId: '',
-        cpuMemory: {cpunum: '8', memory: '64'},
+        cpuMemory: {cpunum: '8', memory: '64', servicetype: '', gpusize: ''},
         bandwith: 5,
         system: [],
-        disksize: 20,
         timeTimetype: {type: 'day', value: '7', discount: '4'},
         count: '1',
         price: '',
-        // servicetype: '',
-        // gpusize: ''
       },
       gpuZoneListHot: [],
       gpuConfigListHot: [],
@@ -978,8 +1013,8 @@ export default {
         },
       objZoneListHot: [],
       objConfigListHot: [
-        {label: '100', unit: 'G', value: '100'},
-        {label: '500', unit: 'G', value: '500'},
+        {label: '100', unit: 'GB', value: '100'},
+        {label: '500', unit: 'GB', value: '500'},
         {label: '1', unit: 'TB', value: '1024'},
       ],
       objbandwithListHot: [1, 2, 5, 10, 20],
@@ -1020,7 +1055,7 @@ export default {
           title: '白银会员',
           time: '有效期：从会员权益生效之日起至第三年的1月17日。',
           discount: '6.5',
-          money1: '1万及以上',
+          money1: '1万元及以上',
           money2: '≥5万元且<10万元',
           class: 'gray',
           imgDiamonds: require('../../../assets/img/active/schoolSeason/diamonds_1.png'),
@@ -1032,7 +1067,7 @@ export default {
           title: '黄金会员',
           time: '有效期：从会员权益生效之日起至第三年的1月17日。',
           discount: '5.0',
-          money1: '5万及以上',
+          money1: '5万元及以上',
           money2: '≥10万元且＜30万元',
           class: 'orange',
           imgDiamonds: require('../../../assets/img/active/schoolSeason/diamonds_2.png'),
@@ -1044,7 +1079,7 @@ export default {
           title: '铂金会员',
           time: '有效期：从会员权益生效之日起至第三年的1月17日。',
           discount: '3.0',
-          money1: '15万',
+          money1: '15万元',
           money2: '≥30万元',
           class: 'white',
           imgDiamonds: require('../../../assets/img/active/schoolSeason/diamonds_3.png'),
@@ -1061,7 +1096,9 @@ export default {
         vipRuleModal: false,
         cashCoupon: false,
         rechargeHint: false,
-        weChatRechargeModal: false
+        weChatRechargeModal: false,
+        joinedActivity: false,
+        notNewcoustomer: false
       },
       authFormValidate: {
         name: '',
@@ -1290,6 +1327,10 @@ export default {
     roll (val) {
       $('html, body').animate({ scrollTop: val }, 300)
     },
+    rollDiscount (val) {
+      this.showModal.notNewcoustomer = false
+      $('html, body').animate({ scrollTop: val }, 300)
+    },
     init () {
       axios.get('user/GetUserInfo.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
@@ -1434,11 +1475,14 @@ export default {
                     this.$Message.success('创建订单成功')
                     this.$router.push('order')
                   } else {
-                    // this.$message.info({
-                    //   content: res.data.message
-                    // })
-                    this.posText = res.data.message
-                    this.showModal.regular = true
+                    if (res.data.flag == '1') {
+                      this.showModal.notNewcoustomer = true
+                    } else if (res.data.flag == '2') {
+                      this.showModal.joinedActivity = true
+                    } else {
+                      this.posText = res.data.message
+                      this.showModal.regular = true
+                    }
                   }
                 })
               }
@@ -1501,7 +1545,7 @@ export default {
     // 云主机打折提交订单
     productBuy_host() {
         if (this.$store.state.userInfo == null) {
-          this.$LR({type: 'login'})
+          this.showModal.notLoginModal = true
           return
         }
         if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
@@ -1577,13 +1621,15 @@ export default {
           this.gpuConfigListHot = res.data.result.filter(item => {
             return item.gpu == '100'
           })
+          this.gpuProductHot.cpuMemory = this.gpuConfigListHot[0]
+          console.log(this.gpuConfigListHot)
         }
       })
     },
     // gpu打折提交订单
     productBuy_gpu() {
         if (this.$store.state.userInfo == null) {
-          this.$LR({type: 'login'})
+          this.showModal.notLoginModal = true
           return
         }
         if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
@@ -1604,7 +1650,6 @@ export default {
               rootDiskType: 'ssd',
               rootDiskSize: '40',
               diskType: 'ssd',
-              diskSize: this.gpuProductHot.disksize,
               networkId: 'no',
               vpcId: 'no',
               discountForActivity: '39',
@@ -1640,7 +1685,7 @@ export default {
     // obj打折提交订单
     productBuy_obj() {
         if (this.$store.state.userInfo == null) {
-          this.$LR({type: 'login'})
+          this.showModal.notLoginModal = true
           return
         }
         if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
@@ -1654,8 +1699,8 @@ export default {
               cost: this.objProductHot.price + '',
               timeType: this.objProductHot.timeTimetype.type,
               timeValue: this.objProductHot.timeTimetype.type == 'month' ? this.objProductHot.timeTimetype.value : this.objProductHot.timeTimetype.value * 12,
-              capacity: this.objProductHot.cpuMemory.value,
-              flowPackage: this.objProductHot.cpuMemory.value,
+              capacity: this.objProductHot.cpuMemory.label + this.objProductHot.cpuMemory.unit,
+              flowPackage: this.objProductHot.cpuMemory.label + this.objProductHot.cpuMemory.unit,
            }
         axios.post('ruiradosPrice/createOrder.do', params).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1813,7 +1858,6 @@ export default {
           cpu: this.gpuProductHot.cpuMemory.cpunum,
           mem: this.gpuProductHot.cpuMemory.memory,
           bandwith: this.gpuProductHot.bandwith,
-          diskSize: this.gpuProductHot.disksize,
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
@@ -1909,7 +1953,7 @@ section {
       font-weight: bold;
       color: rgba(255, 255, 255, 1);
       padding-top: 7px;
-      line-height: 56px;
+      line-height: 57px;
     }
     p {
       margin-top: 10px;
@@ -1962,8 +2006,10 @@ section {
         line-height: 42px;
         text-align: center;
         cursor: pointer;
+        transition: all .5s;
         &:hover {
-          background: #ffd1b2;
+          border-color: #FF624B;
+          color: #FF624B;
         }
       }
     }
@@ -2071,7 +2117,7 @@ section {
             position: absolute;
             top: 17px;
             right: 0;
-            background: url(../../../assets/img/active/schoolSeason/rectangle.png);
+            background: url(../../../assets/img/active/schoolSeason/rectangle_cc.png);
             font-size: 14px;
             color: rgba(255, 78, 69, 1);
             line-height: 22px;
@@ -2511,8 +2557,9 @@ section {
     font-weight: 400;
     background: none;
     color: #fff;
+    border-color: #fff;
     // &:focus {
-    //   border: none;
+    //   border: none;   
     // }
   }
 }
@@ -2608,8 +2655,14 @@ section {
   }
   .body {
     margin: 20px 0;
+    padding: 0 20px;
     p {
       line-height:20px;
+      span {
+        color: #FF624B;
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
   }
   .footer {
@@ -2899,5 +2952,8 @@ section {
         }
       }
     }
+  }
+  section:nth-of-type(even) {
+    background: #FEFBF4
   }
 </style>
