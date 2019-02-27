@@ -201,6 +201,22 @@
         </BackTop>
       </div>
     </div>
+		<!--登录失效弹窗-->
+		<Modal v-model="showModal.WriteAudit" :scrollable="true" :closable="false" :width="380">
+		  <p slot="header" class="modal-header-border">
+		    <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+		    <span class="universal-modal-title">提示</span>
+		  </p>
+		  <div class="modal-content-s" style="padding: 0;width: 101%;">
+		    <div style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">
+		      您的用户名为“sunquick”的账号正在注销审核中，若需要购买产品，请点击 <span @click="CanCancellation" style="color: #2A99F2;text-decoration: underline;cursor: pointer;">取消注销</span> 。
+		    </div>
+		  </div>
+		  <p slot="footer" class="modal-footer-s">
+		    <Button @click="showModal.WriteAudit = false">关闭弹窗</Button>
+		    <Button type="primary" @click="CanCancellation">取消注销</Button>
+		  </p>
+		</Modal>
     <router-view/>
   </div>
 </template>
@@ -216,6 +232,10 @@
     name: 'back',
     data() {
       return {
+				checkStatus:'',
+				showModal: {
+					WriteAudit: false
+				},
         // pageInfo用于存储当前页面信息
         pageInfo: {
           // hover选中的item
@@ -347,6 +367,7 @@
         this.yunweiInfo = response.data.yunwei
       })
       this.notice()
+			this.loggedOffState()
       // this.$http.get('user/showUserAcessAll.do').then(response => {
       //   console.log(response)
       // })
@@ -489,7 +510,44 @@
           $store.commit('setAuthInfo', {authInfo: null, userInfo: null})
           this.$router.push('/ruicloud/login')
         })
-      }
+      },
+			loggedOffState() {
+				axios.get('user/listClearAccountApplyFor.do', {
+					params: {
+			
+					}
+				}).then(response => {
+					if (response.status == 200 && response.data.status == 1) {
+						//response.data.checkstatus
+						this.checkStatus = response.data.checkstatus
+						if (this.checkStatus == 1) {
+							this.showModal.WriteAudit = true
+						}
+					} else {
+						//this.$Message.info(response.data.message)
+					}
+				})
+			},
+			CanCancellation(){
+				axios.get('user/cancelLogout.do', {
+					params: {
+							
+					}
+				}).then(response => {
+					if (response.status == 200 && response.data.status == 1) {
+						//response.data.checkstatus
+						this.showModal.WriteAudit = false
+						this.$Message.success({
+                    content: response.data.message,
+                    duration: 5,
+                    closable: true
+                });
+					} else {
+						this.showModal.WriteAudit = false
+						this.$Message.error(response.data.message)
+					}
+				})
+			}
     },
     computed: mapState({
       // show代表是否显示three menu,static代表是否固定three menu
