@@ -138,7 +138,7 @@
                 </div>
               </div>
             </div>
-            <Button @click.stop="showModal.vipRuleModal=false,agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
+            <Button @click.stop="showModal.vipRuleModal=false,agreeStatus = true,vipRuleDisabled = false" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
               <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
           </div>
         </div>
@@ -277,7 +277,7 @@
         }, 1000)
         setTimeout(()=>{
              this.$refs.viewBox.addEventListener('scroll', this.vipRuleScroll,true)
-          },100)  
+          },100)
       },
       vipRuleScroll(e) {
         this.vipScroll = e.srcElement.scrollTop;
