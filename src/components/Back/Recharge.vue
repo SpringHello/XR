@@ -42,7 +42,7 @@
                 <div class="pay-right">
                   <div v-if="input >= 10000">
                     <p>您已满足成为{{ memberGrade}}资格！</p>
-                    <Checkbox v-model="agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+                    <Checkbox v-model="agreeStatus" :disabled="vipRuleDisabled"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
                       style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox>
                   </div>
                   <Button type="primary" @click="recharge" :disabled="chargeDisabled">确认充值</Button>
@@ -160,7 +160,8 @@
           vipRuleModal: false
         },
         isFirstCz: false,
-        agreeStatus: true,
+        agreeStatus: false,
+        vipRuleDisabled: true,
         vipRule: [
           {
             title: '类目',
