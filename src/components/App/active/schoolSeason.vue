@@ -1722,7 +1722,7 @@ export default {
         var params = {
               zoneId: this.objProductHot.zoneId,
               activityNum: '40',
-              cost: this.objProductHot.price + '',
+              // cost: this.objProductHot.price + '',
               timeType: this.objProductHot.timeTimetype.type,
               timeValue: this.objProductHot.timeTimetype.type == 'month' ? this.objProductHot.timeTimetype.value : this.objProductHot.timeTimetype.value * 12,
               capacity: this.objProductHot.cpuMemory.label + this.objProductHot.cpuMemory.unit,
