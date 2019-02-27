@@ -820,14 +820,14 @@
 
     <!-- 会员规则弹窗 -->
     <transition name="fade">
-      <div class="overlay" v-if="showModal.vipRuleModal">
+      <div class="overlay" v-if="showModal.vipRuleModal" @click.stop="showModal.vipRuleModal=false">
         <div class="all-modal modal4" @click.stop="showModal.vipRuleModal=true">
           <div class="header">
             <span>会员制规则</span>
-            <!-- <i @click.stop="showModal.vipRuleModal=false"></i> -->
+            <i @click.stop="showModal.vipRuleModal=false"></i>
           </div>
           <div class="body">
-            <div class="body_hide" @scroll.native="vipRuleScroll">
+            <div class="body_hide" ref='viewBox' >
               <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
               <nav>
                 <ul class="nav_list">
@@ -896,8 +896,8 @@
         <p class="cash-coupon-p">剩余余额：<span>¥{{ remainingBalance}}</span></p>
         <div class="beVip">
           <p>您已满足成为{{ cashCouponForm.vipGrade}}资格！</p>
-          <Checkbox v-model="cashCouponForm.agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
-            style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox>
+          <Checkbox v-model="cashCouponForm.agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意</span></Checkbox>
+            <span style="cursor: pointer;color:#4A97EE;margin-left: -18px;" @click="getVipRule">《会员制规则》</span>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -2220,6 +2220,9 @@
         sessionStorage.removeItem('beVip')
       }
     },
+    mounted(){
+     
+    },
     methods: {
       //Cashforwithdrawa(){
       //axios.get('user/selectValidRefundAmount.do', {
@@ -2231,6 +2234,7 @@
       //}
       //})
       //},
+      
       selectChange(item, index) {
         if (item.startmoney > this.totalCost) {
           this.activeIndex = null
@@ -3472,7 +3476,10 @@
           } else {
             this.disabledButton = true;
           }
-        }, 1000)
+        }, 1000);
+          setTimeout(()=>{
+             this.$refs.viewBox.addEventListener('scroll', this.vipRuleScroll,true)
+          },100)  
       },
       vipRuleScroll(e) {
         this.vipScroll = e.srcElement.scrollTop;
