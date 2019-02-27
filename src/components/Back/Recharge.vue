@@ -42,7 +42,7 @@
                 <div class="pay-right">
                   <div v-if="input >= 10000">
                     <p>您已满足成为{{ memberGrade}}资格！</p>
-                    <Checkbox v-model="agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+                    <Checkbox v-model="agreeStatus" :disabled="vipRuleDisabled"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
                       style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox>
                   </div>
                   <Button type="primary" @click="recharge" :disabled="chargeDisabled">确认充值</Button>
@@ -98,7 +98,7 @@
               <!-- <i @click.stop="showModal.vipRuleModal=false"></i> -->
             </div>
             <div class="body">
-              <div class="body_hide" @scroll="vipRuleScroll">
+              <div class="body_hide" ref="viewBox" >
                 <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
                 <nav>
                   <ul class="nav_list">
@@ -138,7 +138,7 @@
                 </div>
               </div>
             </div>
-            <Button @click.stop="showModal.vipRuleModal=false,agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
+            <Button @click.stop="showModal.vipRuleModal=false,agreeStatus = true,vipRuleDisabled = false" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
               <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
           </div>
         </div>
@@ -160,7 +160,8 @@
           vipRuleModal: false
         },
         isFirstCz: false,
-        agreeStatus: true,
+        agreeStatus: false,
+        vipRuleDisabled: true,
         vipRule: [
           {
             title: '类目',
@@ -274,6 +275,9 @@
             this.disabledButton = true;
           }
         }, 1000)
+        setTimeout(()=>{
+             this.$refs.viewBox.addEventListener('scroll', this.vipRuleScroll,true)
+          },100)
       },
       vipRuleScroll(e) {
         this.vipScroll = e.srcElement.scrollTop;

@@ -62,7 +62,6 @@
           <Button @click="$router.push({path:'overview'})" style="margin-right:10px;">取消订单</Button>
            <Button type="primary"  @click="payCash" v-if="isButtonCash">确认购买</Button>
           <Button type="primary"  @click="pay" v-else>提交订单</Button>
-         
         </div>
        
           <div style="clear: both"></div>
@@ -245,7 +244,7 @@
         orderData: [],
         showFree: [],
         couponInfo: {
-          isUse: true,
+          isUse: false,
           couponList: [],
           // 选中的优惠券
           selectTicket: '',
@@ -286,7 +285,8 @@
         isButtonCash:false,
         orderInfo:{
           orderId:''
-        }
+        },
+        orderPay:null
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -409,7 +409,15 @@
               }
             })
           } else if(this.couponInfo.isCash){
-            this.couponInfo.totalCost =  this.couponInfo.cost-this.couponInfo.cost;
+            if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
+              this.couponInfo.totalCost =  Number((this.couponInfo.cash-this.couponInfo.cost).toFixed(2));
+              this.isButtonCash = true;
+              return;
+            }
+            if(this.couponInfo.cash < this.couponInfo.cost){
+              this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
+              return;
+            }
           }else{
              this.couponInfo.totalCost = Number(cost.toFixed(2));
           }
@@ -572,8 +580,50 @@
             }
             this.$router.push('resultNew')
         })
-      }
-      
+      },
+      checkUseVoucher(bol) {
+         axios.get('information/zfconfirm.do', {
+          params: {
+            order,
+            ticket: this.couponInfo.selectTicket,
+            money: this.couponInfo.totalCost
+          }
+        }).then(response => {
+           if (response.status == 200 && response.data.status == 1) {
+            this.orderPay = response.data.result;
+           }else{
+             this.$Message.error({
+               content:response.data.message,
+               duration:5
+             })
+           }
+        })
+        // 不允许使用现金券余额，但是点击了使用
+        if (this.orderPay.isUseVoucher == 0 && bol.indexOf('voucher') > -1) {
+          this.accountPay.splice(bol.indexOf('voucher'), 1)
+          this.$message.info({
+            title:'提示',
+            content: '当前订单不满足使用现金券要求'
+          })
+        }
+        // 必须使用现金券，但点击了取消使用
+        if (this.orderPay.isUseVoucher == 1 && bol.indexOf('voucher') == -1) {
+          this.accountPay.push('voucher')
+          this.$message.info({
+            title:'提示',
+            content: '默认情况下优先使用现金券'
+          })
+        }
+        // 现金券已足够支付，不应再点击账户余额
+        if (this.orderPay.isUseVoucher == 1 && Number(this.orderInfo.voucher) >= Number(this.orderInfo.money) && bol.indexOf('account') > -1) {
+          this.accountPay.splice(bol.indexOf('account'), 1)
+          this.$message.info({
+            title:'提示',
+            content: '现金券余额已足够支付本订单'
+          })
+        }
+       
+      },
     },
     computed: {
       otherSpentCost() {
@@ -612,10 +662,10 @@
           }
         }
         if(this.couponInfo.isCash){
-           if(this.couponInfo.totalCost > this.couponInfo.cash){
+           if(this.couponInfo.cost > this.couponInfo.cash){
               return  this.couponInfo.cash;
             }
-            if(this.couponInfo.totalCost < this.couponInfo.cash || this.couponInfo.totalCost == this.couponInfo.cash){
+            if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
               return  this.couponInfo.cost;
             }
         }
@@ -667,6 +717,9 @@
         }else if(this.goodType == 22){
           return 'SSL证书购买'
         }
+      },
+      orirginTotal(){
+
       }
     },
     watch: {
@@ -692,17 +745,17 @@
       'couponInfo.isCash':{
         handler:function(){
           if(this.couponInfo.isCash){
-            if(this.couponInfo.cash > this.couponInfo.totalCost || this.couponInfo.cash == this.couponInfo.totalCost){
-              this.couponInfo.totalCost =  this.couponInfo.cost-this.couponInfo.cost;
+            if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
+              this.couponInfo.totalCost =  Number((this.couponInfo.cash-this.couponInfo.cost).toFixed(2));
               this.isButtonCash = true;
               return;
             }
-            if(this.couponInfo.cash < this.couponInfo.totalCost){
-              this.couponInfo.totalCost = this.couponInfo.totalCost - this.couponInfo.cash;
+            if(this.couponInfo.cash < this.couponInfo.cost){
+              this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
               return;
             }
           }else{
-              this.couponInfo.totalCost = this.couponInfo.cost;
+              this.couponInfo.totalCost = Number(this.couponInfo.cost.toFixed(2));
           }
         },
         deep: true
@@ -710,11 +763,21 @@
       'couponInfo.isUse':{
         handler:function(){
           if(this.couponInfo.isUse){
-              this.couponInfo.totalCost = this.couponInfo.cost;
+              this.couponInfo.totalCost = Number(this.couponInfo.cost.toFixed(2));
             }
           },
            deep: true
-        }
+      },
+      'couponInfo.cash':{
+        handler:function(){
+          if(this.couponInfo.cash != 0){
+            this.couponInfo.isCash = true;
+            this.couponInfo.isUse = false;
+          }
+        },
+        deep:true,
+        immediate: true
+      }
     }
   }
 </script>
