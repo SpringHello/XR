@@ -236,7 +236,20 @@
             title: '会员折后价',
             render(h, obj) {
               // if (obj.row.originalcost > obj.row.cost) {
-                return h('span', {}, obj.row.cost)
+                return h('div',{
+                  style:{
+                    textAlign:'center'
+                  }
+                }, [
+                    h('p',{},obj.row.cost),
+                    h('p',{
+                      style:{
+                        color:'#FF624B',
+                        fontSize:'12px',
+                        marginTop:'5px'
+                      },
+                    },'（ '+obj.row.discountmessage+' 折）')
+                ])
               // } else {
                 // return h('span', '--')
               // }
@@ -344,6 +357,7 @@
             data.cost = item.cost
             data.discountedorders = item.discountedorders
             data.overTime = item.overTime
+            data.discountmessage = item.discountmessage.substring(item.discountmessage.indexOf('，')-6,item.discountmessage.indexOf('，')-3)
            if(data['订单状态']){
               this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
               this.couponInfo.cost += data['订单状态'] == 1 ? 0:item.cost
