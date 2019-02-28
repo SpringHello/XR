@@ -62,7 +62,7 @@
 		  <!-- <Table :columns="Cashconfirmation" :data="Cashconfirmationdata" style="float: left;margin-top: 20px;width:1159px;"></Table> -->
 			<div class="cont-center" style="height: auto;float: left;margin-top: 20px;width:1159px;">
 				<table style="width: 100%;float: left;background:rgba(247,247,247,1);border-radius:4px 4px 0px 0px;border:1px solid rgba(233,233,233,1);">
-					<tr style="font-size:12px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(51,51,51,1);line-height:30px;">
+					<tr style="font-size:12px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(51,51,51,1);line-height:30px;background:rgba(247,247,247,1);">
 						<th style="width:510px;text-align:left;margin-left: 10px;float: left;">提现金额（元）</th>
 						<th style="width:510px;text-align:left;" >预计到账金额（元）
 						<div class="thdd" style="position: relative;width: 20px;float: right;margin-right: 375px;">
@@ -77,7 +77,7 @@
 						</th>
 						<th style="text-align:left;">到账账户</th>
 					</tr>
-					<tr style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:30px;">
+					<tr style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:30px;background:rgba(255,255,255,1);border-top: 1px solid rgba(233,233,233,1);">
 						<td style="width:510px;text-align:left;margin-left: 10px;float: left;">{{Cashconfirmationdata.money}}</td>
 						<td style="width:510px;text-align:left;">{{Cashconfirmationdata.Actualmoney}}</td>
 						<td style="text-align:left;">{{Cashconfirmationdata.type == 1 ? '银行卡' : "原支付途径"}}</td>
@@ -701,7 +701,7 @@
 		      //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
 		      if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
 		          axios.post('user/newPhoneByIdCard.do', {
-		            idCard: this.authModifyPhoneFormOne.ID,
+		            IdCard: this.authModifyPhoneFormOne.ID,
 		            authType: '0',
 		            newPhone: this.authModifyPhoneFormThere.newPhone,
 		            personIdCardHandUrl: this.uploadImgDispaly
