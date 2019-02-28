@@ -303,10 +303,12 @@
           ticket:''
         },
         orderPay:null,
-        vipName:this.$store.state.userInfo.vipname
+        vipName:this.$store.state.userInfo.vipname,
+        routePath:''
       }
     },
     beforeRouteEnter(to, from, next) {
+      console.log(from);
       let params = {}
       let order = to.query.countOrder == undefined ?'':to.query.countOrder;
         let orderS = sessionStorage.getItem('countOrder') == 'undefined'?null:sessionStorage.getItem('countOrder')
@@ -323,6 +325,7 @@
         params
       }).then(response => {
         next(vm => {
+          vm.routePath = from.fullPath;
           vm.setOrder(response)
         })
        })
@@ -571,7 +574,7 @@
                     content: '订单取消成功',
                     duration: 3
                   })
-                  this.$router.go(-1);
+                  this.$router.push({path:this.routePath});
                 }
               })
             },
