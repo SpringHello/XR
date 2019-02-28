@@ -445,6 +445,18 @@
         })
       },
       changeCashbox(bol){
+        if(this.couponInfo.cash != 0){
+            if( this.orderPay.isUseVoucher == 1 && bol.indexOf('cash') == -1){
+              this.groupList.push('cash');
+              this.$message.info({
+                  title:'提示',
+                  content: '默认情况下优先使用现金券'
+                })
+              return;
+            }else{
+              this.couponInfo.selectTicket = '';
+            }
+          }
         if(this.vipName =='' || this.vipName == undefined){
           if (this.orderPay.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
                this.groupList.splice(bol.indexOf('cash'), 1)
@@ -462,18 +474,6 @@
               })
              return;
           }
-          if(this.couponInfo.cash != 0){
-            if( this.orderPay.isUseVoucher == 1 && bol.indexOf('cash') == -1){
-              this.groupList.push('cash');
-              this.$message.info({
-                  title:'提示',
-                  content: '默认情况下优先使用现金券'
-                })
-              return;
-            }else{
-              this.couponInfo.selectTicket = '';
-            }
-        }
         }
       },
       radioChange() {
@@ -618,7 +618,7 @@
         axios.get('information/payOrder.do',{
           params: {
               order:  this.orderInfo.orderId.substring(0, this.orderInfo.orderId.length-1),
-              ticket: this.orderInfo.ticket
+              ticket: this.couponInfo.selectTicket
             }
         }).then(res =>{
           this.$router.push('resultNew')
@@ -901,11 +901,11 @@
       },
       'couponInfo.cash':{ 
         handler:function(){
-          if(this.vipName =='' || this.vipName == undefined){
+          // if(this.vipName =='' || this.vipName == undefined){
             if(this.couponInfo.cash != 0){
               this.groupList.push('cash');
             }
-          }
+          // }
         },
         deep:true,
         immediate: true
