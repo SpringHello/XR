@@ -142,12 +142,7 @@
     created() {
       this.overTime = sessionStorage.getItem('overtime')
       this.orderInfo = this.$route.params;
-      if (this.orderInfo.isUseVoucher == 1) {
-        this.accountPay.push('voucher')
-      }
-      if (this.orderInfo.isUseVoucher == 1 && Number(this.orderInfo.voucher) < Number(this.orderInfo.money)) {
-        this.accountPay.push('account')
-      }
+     
       // 充值有限制  不能少于10元
       if (this.orderInfo.isNilNorm == 0) {
         this.rechargeMin = 10
@@ -370,10 +365,7 @@
         if (this.accountPay.indexOf('account') > -1) {
           total += this.orderInfo.remainder
         }
-        // 选中了现金券支付
-        if (this.accountPay.indexOf('voucher') > -1) {
-
-        }
+      
       },
       otherPayCount() {
         if (this.orderInfo && this.otherPay != '') {
@@ -386,11 +378,9 @@
       accountPay() {
         let count = 0
         this.accountPay.forEach(item => {
-          if (item == 'voucher') {
-            count += Number(this.orderInfo.voucher)
-          } else {
-            count += Number(this.orderInfo.remainder)
-          }
+          if (item == 'account') {
+             count += Number(this.orderInfo.remainder)
+          } 
         })
         this.accountPayCount = count > this.orderInfo.money ? this.orderInfo.money : count
       },
