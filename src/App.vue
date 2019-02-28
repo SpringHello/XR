@@ -10,10 +10,11 @@
     </div> -->
     <!-- 首页公用header -->
     <header>
-      <div class="wrapper">
+      <div class="wrapper" style="position: relative;">
         <router-link to="/ruicloud/index.htm" class="logo">
           <div></div>
         </router-link>
+        <img style="position: absolute;left: 160px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('schoolSeason')" alt="">
         <div class="operate">
           <ul @mouseleave="ME(-1)">
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">

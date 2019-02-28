@@ -1514,7 +1514,7 @@ export default {
         params: {
           zoneId: item.zoneId,
           vmConfigId: item.id,
-          month: 12
+          month: index==2?1:12
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
@@ -1646,7 +1646,7 @@ export default {
         var params = {
               zoneId: this.hostProductHot.zoneId,
               timeType: this.hostProductHot.timeTimetype.type,
-              timeValue: this.hostProductHot.timeTimetype.type == 'month' ? this.hostProductHot.timeTimetype.value : this.hostProductHot.timeTimetype.value*12,
+              timeValue: this.hostProductHot.timeTimetype.value,
               templateId: this.hostProductHot.system[1],
               isAutoRenew: 1,
               count: this.hostProductHot.count,
@@ -1665,9 +1665,6 @@ export default {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            // this.$message.info({
-            //   content: response.data.message
-            // })
             this.posText = response.data.message
             this.showModal.regular = true
           }
@@ -1730,7 +1727,7 @@ export default {
         var params = {
               zoneId: this.gpuProductHot.zoneId,
               timeType: this.gpuProductHot.timeTimetype.type,
-              timeValue: this.gpuProductHot.timeTimetype.type == 'month' ? this.gpuProductHot.timeTimetype.value : this.gpuProductHot.timeTimetype.value,
+              timeValue: this.gpuProductHot.timeTimetype.value,
               templateId: this.gpuProductHot.system[1],
               isAutoRenew: 1,
               count: this.gpuProductHot.count,
@@ -1750,9 +1747,6 @@ export default {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            // this.$message.info({
-            //   content: response.data.message
-            // })
             this.posText = response.data.message
             this.showModal.regular = true
           }
@@ -1786,9 +1780,8 @@ export default {
         var params = {
               zoneId: this.objProductHot.zoneId,
               activityNum: '40',
-              // cost: this.objProductHot.price + '',
               timeType: this.objProductHot.timeTimetype.type,
-              timeValue: this.objProductHot.timeTimetype.type == 'month' ? this.objProductHot.timeTimetype.value : this.objProductHot.timeTimetype.value * 12,
+              timeValue: this.objProductHot.timeTimetype.value,
               capacity: this.objProductHot.cpuMemory.label + this.objProductHot.cpuMemory.unit,
               flowPackage: this.objProductHot.cpuMemory.label + this.objProductHot.cpuMemory.unit,
            }
@@ -1796,9 +1789,6 @@ export default {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            // this.$message.info({
-            //   content: response.data.message
-            // })
             this.posText = response.data.message
             this.showModal.regular = true
           }

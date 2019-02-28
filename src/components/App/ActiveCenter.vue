@@ -173,7 +173,7 @@
         activedata: [
           {
             imgPath: require('../../assets/img/activecenter/bg-card-kaixue.png'),
-            time: '长期有效',
+            time: '2019.3.1-2019.4.30',
             activeObj: '新老用户皆可参与',
             url: 'schoolSeason',
             isStart: true,

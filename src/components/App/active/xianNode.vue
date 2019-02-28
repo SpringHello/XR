@@ -52,7 +52,7 @@
                 <span>请选择系统</span>
                 <Select v-model="item.selectedSystem" style="width: 190px;text-align:center">
                   <Option value="windows">windows</option>
-                  <Option value="linux">centos</option>
+                  <Option value="centos">centos</option>
                 </Select>
               </div>
               <div class="zone-select">
