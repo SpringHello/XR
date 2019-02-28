@@ -143,6 +143,15 @@
 						<p style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">正在检测您的账号，请稍等…</p>
 						<Progress :percent="cancelpercent" status="active" style="width: 600px;height: 30px;margin-top: 20px;"></Progress>
 					</div>
+					<div v-if="testingStatus==2" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
+						<img src="../../assets/img/back/false.png" />
+						<p style="font-size:18px;color:rgba(255,0,0,1);line-height:24px;margin-top: 15px;">检测失败</p>
+						<div style="width:320px;font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;margin-left: 420px;min-height: 22px;max-height:45px;">
+							{{failurePrompt}}
+						</div>
+						<Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
+						<Button type="primary" @click="$router.push('/ruicloud/overview')" style="margin-left: 10px;margin-top: 40px;">返回控制台</Button>
+					</div>
 				</div>
 			</div>
 			<div class="content2" v-if="selectedTabSec == 'content2'" style="min-height: 665px;">
@@ -317,15 +326,6 @@
 						<Progress :percent="cancelpercent" status="active" style="width: 600px;height: 30px;margin-top: 20px;"></Progress><br /><!-- changeTab('content2') -->
 						<Button type="primary" @click="$router.push('/ruicloud/index')" style="margin-top: 40px;">返回官网</Button>
 					</div>
-					<div v-if="testingStatus==2" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
-						<img src="../../assets/img/back/false.png" />
-						<p style="font-size:18px;color:rgba(255,0,0,1);line-height:24px;margin-top: 15px;">检测失败</p>
-						<div style="width:320px;font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;margin-left: 420px;min-height: 22px;max-height:45px;">
-							{{failurePrompt}}
-						</div>
-						<Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
-						<Button type="primary" @click="$router.push('/ruicloud/overview')" style="margin-left: 10px;margin-top: 40px;">返回控制台</Button>
-					</div>
 				</div>
 			</div>
 			<!-- 注销账号确认弹窗 -->
@@ -487,14 +487,13 @@
 											cancellationDesc: this.formInline.cancellation
 										}).then(response => {
 											if (response.status == 200 && response.data.status == 1) {
-												console.log("这是未实名认证成功信息")
 											} else {
 												this.$Message.error(response.data.message)
 											}
 										})
 									}
 								} else {
-									this.changeTab('content2')
+									this.changeTab('content1')
 									this.testingStatus = response.data.status
 									this.failurePrompt = response.data.message
 									//this.$Message.info(response.data.message)
@@ -567,7 +566,6 @@
 									personIdCardHandUrl: this.uploadImgDispaly
 								}).then(response => {
 									if (response.status == 200 && response.data.status == 1) {
-										console.log("这是个人认证成功信息")
 										this.loggedOffState()
 									} else {
 										this.$Message.error(response.data.message)
@@ -594,7 +592,6 @@
 									agentIdCardHandUrl: this.uploadImgDispaly2
 								}).then(response => {
 									if (response.status == 200 && response.data.status == 1) {
-										console.log("这是企业认证成功信息")
 										this.loggedOffState()
 									} else {
 										this.$Message.error(response.data.message)
