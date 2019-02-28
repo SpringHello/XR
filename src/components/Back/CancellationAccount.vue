@@ -691,7 +691,7 @@
 		font-family: MicrosoftYaHei;
 		color: rgba(51, 51, 51, 1);
 		line-height: 24px;
-		margin-left: 7px;
+		margin-left: 10px;
 	}
 
 	.withdrawal {
