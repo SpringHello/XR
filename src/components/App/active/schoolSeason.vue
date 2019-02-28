@@ -33,7 +33,7 @@
             <div :class="{started: hour >=14&&hour<20}">14:00~20:00</div>
           </div>
           <div class="tabs  flex" style="justify-content: center" v-else>
-            <div style="width:800px;background:#E1212A" v-if="hour >=12&&hour <12">下场秒杀时间14:00~20:00</div>
+            <div style="width:800px;background:#E1212A" v-if="hour >=12&&hour <14">下场秒杀时间14:00~20:00</div>
             <div style="width:800px;background:#E1212A" v-else>下场秒杀时间9:00～12:00</div>
           </div>
           <div class="box" :class="[hour >=9&&hour<12 || hour >=14&&hour<20?'box_bg_long':'box_bg_short']">
@@ -121,19 +121,19 @@
                   <div>
                     <span class="sec-title">基础入门级云服务器</span>
                     <ul class="flex" style="justify-content: flex-start;">
-                      <li v-for="(item3,index) in hostConfigListHot.basic"  :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
+                      <li v-for="(item3,index) in hostConfigListHot.basic"  :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
                   <div>
                     <span class="sec-title">标准进阶型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
+                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
                   <div v-if="highEndLength">
                     <span class="sec-title">企业高配型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
+                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hostProductHot.cpuMemory=item3" :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
                     </ul>
                   </div>
                   <p style="font-size:12px;color:rgba(154,127,130,1);margin-top:-10px;">*以上配置皆包含40G SSD系统盘</p>
@@ -983,7 +983,16 @@ export default {
           originalPrice: ''
         },
       hostZoneListHot: [],
-      hostConfigListHot: {},
+      hostConfigListHot: {
+        basic: [
+          {cpunum: 1, memory: 1},
+          {cpunum: 1, memory: 2},
+          {cpunum: 2, memory: 4}],
+        standard: [
+          {cpunum: 4, memory: 8},
+          {cpunum: 8, memory: 16},
+          {cpunum: 16, memory: 32}]
+        },
       hostbandwithListHot: [1, 2, 5, 10, 20],
       hostSystemListHot: [{
           value: 'window',
@@ -1363,8 +1372,6 @@ export default {
           if (res.data.status == 1) {
             // var startTime = (new Date()).getTime()
             // var now = new Date()
-            // console.log(now)
-            // console.log(new Date(now.setHours(12))
             var startTime = res.data.result
             var now = new Date(startTime)
             var endTime = ''
@@ -1381,13 +1388,14 @@ export default {
               this.timer = setInterval(() => {
                 this.setLimit(limitTime)
                 limitTime -= 1000
+                // console.log(this.hour)
                 if (limitTime <= 0) {
+                  this.hour++
+                  // console.log(this.hour)
                   window.clearInterval(this.timer)
-                  this.hour = 0
                 }
               }, 1000);
             } else {
-              this.hour = 0
               this.h = 0
               this.m1 = 0
               this.m2 = 0
@@ -1622,17 +1630,8 @@ export default {
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
-          // this.gpuConfigListHot = res.data.result.filter(item => {
-          //   return item.gpu == '100'
-          // })
-          this.hostConfigListHot.basic = res.data.info.filter(item => {
-            return item.cpunum == 1 || item.cpunum == 2
-          })
-          this.hostConfigListHot.standard = res.data.info.filter(item => {
-            return item.cpunum == 4 || item.cpunum == 8 || item.cpunum == 16
-          })
           this.hostConfigListHot.highEnd = res.data.info.filter(item => {
-            return item.cpunum == 32 || item.cpunum == 64
+            return (item.cpunum == 32 && item.memory != 128) || item.cpunum == 64
           })
           this.highEndLength = this.hostConfigListHot.highEnd.length
         }
