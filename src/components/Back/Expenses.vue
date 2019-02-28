@@ -3476,6 +3476,7 @@
           this.vipCount--;
           if (this.vipScroll > (this.vipHeight - 561) && this.vipCount == 0) {
             this.disabledButton = false;
+            this.cashCouponForm.vipRuleDisabled = false
             clearInterval(interval);
           } else if (this.vipCount == 0) {
             clearInterval(interval);
@@ -3488,13 +3489,14 @@
         }, 1000);
           setTimeout(()=>{
              this.$refs.viewBox.addEventListener('scroll', this.vipRuleScroll,true);
-          },100)  
+          },100)
       },
       vipRuleScroll(e) {
         this.vipScroll = e.srcElement.scrollTop;
         this.vipHeight = e.srcElement.scrollHeight;
         if (e.srcElement.scrollTop > (e.srcElement.scrollHeight -561) && this.vipCount == 0) {
           this.disabledButton = false;
+          this.cashCouponForm.vipRuleDisabled = false
         }
       },
       userInfoUpdate() {
