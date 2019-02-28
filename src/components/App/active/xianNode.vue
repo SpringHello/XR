@@ -22,12 +22,12 @@
           <i style="font-style:normal;color:#FF3000">温馨提示：</i>依照国家政策规定，
           <span @click="$LR({type: 'register'})" class="pointer" v-if="!userInfo">注册</span>
           <span class="disabled" v-else>注册</span>
-          并
-          <span class="pointer" v-if="!authInfo" @click="showAuthModal()">实名认证</span>
-          <span class="disabled" v-else>实名认证</span>
-          后才可购买使用云产品，请提前完成认证以确保可顺利参与活动。若已完成请先
-          <span @click="$LR({type: 'login'})" class="pointer" v-if="!userInfo">登录</span>
-          <span class="disabled" v-else>登录</span>
+          并实名认证
+          <!-- <span class="pointer" v-if="!authInfo" @click="showAuthModal()">实名认证</span>
+          <span class="disabled" v-else>实名认证</span> -->
+          后才可购买使用云产品，请提前完成认证以确保可顺利参与活动。若已完成请先登录
+          <!-- <span @click="$LR({type: 'login'})" class="pointer" v-if="!userInfo">登录</span>
+          <span class="disabled" v-else>登录</span> -->
           <span class="fr pointer" @click="reminderShow=false">x</span>
         </p>
         <div class="top">
@@ -78,7 +78,8 @@
                   <span><i style="font-size:20px;font-style: normal;">￥</i>{{(item.discountCost*item.selectedCount).toFixed(2)}}</span>
                   <p>原件：{{(item.originCost*item.selectedCount).toFixed(2)}}</p>
                 </div>
-                <i class="btn" @click="getDiskcountMv(item,item.selectedCount)">立即购买</i>
+                <!-- <i class="btn" @click="getDiskcountMv(item,item.selectedCount)">立即购买</i> -->
+                <i class="btn" style="border: solid 1px #9d9d9d;color: #9d9d9d;cursor:not-allowed">立即购买</i>
               </div>
             </div>
           </div>
@@ -781,10 +782,10 @@
               color: rgba(255, 48, 0, 1);
               line-height: 34px;
               cursor: pointer;
-              &:hover {
-                background: #fc291a;
-                color: #fff;
-              }
+              // &:hover {
+              //   background: #fc291a;
+              //   color: #fff;
+              // }
             }
           }
         }

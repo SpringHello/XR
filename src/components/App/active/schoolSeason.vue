@@ -804,6 +804,7 @@ export default {
         vipGrade: '',
         vipLevel: 0,
       },
+      timer: null,
       hour: '',
       h: '--',
       m1: '--',
@@ -1360,10 +1361,14 @@ export default {
     setTime() {
         axios.get('network/getTime.do').then(res => {
           if (res.data.status == 1) {
-            let startTime = res.data.result
-            let now = new Date(startTime)
-            let endTime = ''
-            let limitTime = ''
+            // var startTime = (new Date()).getTime()
+            // var now = new Date()
+            // console.log(now)
+            // console.log(new Date(now.setHours(12))
+            var startTime = res.data.result
+            var now = new Date(startTime)
+            var endTime = ''
+            var limitTime = ''
             this.hour = now.getHours()
             if (this.hour >=9&&this.hour<12) {
               endTime = now.setHours(12, 0, 0, 0)
@@ -2013,6 +2018,10 @@ export default {
       deep: true
     },
   },
+  beforeRouteLeave(to, from, next){
+    clearInterval(this.timer)
+    next()
+  }
 }
 </script>
 
