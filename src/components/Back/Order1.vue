@@ -607,7 +607,10 @@
               ticket: this.orderInfo.ticket
             }
         }).then(res =>{
+          this.$router.push('resultNew')
           if(res.status ==200 && res.data.status == 1){
+            sessionStorage.setItem('payResult', 'success')
+            sessionStorage.setItem('successMsg', response.data.message)
             if (res.data.giftNumMessage) {
                 sessionStorage.setItem('firstMsg', res.data.giftNumMessage)
               } else {
@@ -617,7 +620,6 @@
               sessionStorage.setItem('payResult', 'fail');
               sessionStorage.setItem('errMsg', res.data.message);
             }
-            this.$router.push('resultNew')
         })
       },
     },
@@ -799,17 +801,17 @@
                     if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
                       this.couponInfo.totalCost = (this.couponInfo.cost * item.money) - this.couponInfo.cash;
                     }
-                    if( this.couponInfo.totalCost == 0){
+                    if( Number(this.couponInfo.totalCost) == 0){
                       this.isButtonCash = true; 
                     }
                   } else if (item.tickettype == 0) {
                     if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
-                      this.couponInfo.totalCost = 0;
+                      this.couponInfo.totalCost = 0;      
                     }
                     if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
                       this.couponInfo.totalCost = (this.couponInfo.cost - item.money) - this.couponInfo.cash;
                     }
-                    if( this.couponInfo.totalCost == 0){
+                    if( Number(this.couponInfo.totalCost) == 0){
                       this.isButtonCash = true; 
                     }
                   }
@@ -837,7 +839,8 @@
                     if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
                       this.couponInfo.totalCost = (this.couponInfo.cost * item.money) - this.couponInfo.cash;
                     }
-                    if( this.couponInfo.totalCost == 0){
+                    
+                    if( Number(this.couponInfo.totalCost) == 0){
                       this.isButtonCash = true; 
                     }
                   } else if (item.tickettype == 0) {
@@ -847,7 +850,7 @@
                     if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
                       this.couponInfo.totalCost = (this.couponInfo.cost - item.money) - this.couponInfo.cash;
                     }
-                    if( this.couponInfo.totalCost == 0){
+                    if( Number(this.couponInfo.totalCost) == 0){
                       this.isButtonCash = true; 
                     }
                   }
@@ -857,14 +860,12 @@
               if((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket == ''){
                 if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
                   this.couponInfo.totalCost =  0;
-                  return;
                 }
-                if( this.couponInfo.totalCost == 0){
+                if( Number(this.couponInfo.totalCost) == 0){
                   this.isButtonCash = true; 
                 }
                 if(this.couponInfo.cash < this.couponInfo.cost){
                   this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
-                  return;
                 }
               }
             }
@@ -873,7 +874,7 @@
                 this.couponInfo.totalCost =  0;
                 return;
             }
-            if( this.couponInfo.totalCost == 0){
+            if( Number(this.couponInfo.totalCost) == 0){
                 this.isButtonCash = true; 
             }
             if(this.couponInfo.cash < this.couponInfo.cost){
