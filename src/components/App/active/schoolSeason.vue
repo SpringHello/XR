@@ -57,7 +57,7 @@
                     {{item.discount}}折
                   </div> -->
                   <p style="font-size:18px;font-weight:bold;font-family:MicrosoftYaHei-Bold;">{{item.servicetype == 'host' ? '云服务器' : 'GPU云服务器'}}</p>
-                  <p class="config-text" ><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.bandwith}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘<span v-if="item.gpu" style="font-size:12px;font-weight:normal;">+<span>{{item.gpu}}</span>显卡</span></p>
+                  <p class="config-text" ><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.bandwith}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘<span v-if="item.gpu" style="font-size:12px;font-weight:normal;">+<span>P{{item.gpu}}</span>显卡</span></p>
                 </div>
                 <div class="host_content">
                 <div style="margin:10px 0;">
@@ -521,7 +521,7 @@
             <i @click.stop="showModal.rule1=false"></i>
           </div>
           <div class="body">
-            <h3>1、活动时间：2019.2.21-2019.03.31</h3>
+            <h3>1、活动时间：2019.3.1-2019.4.30</h3>
             <h3>2、活动对象：没有使用过平台任何产品（域名产品除外）且完成实名认证的用户。</h3>
             <h3>3、数量限制：秒杀产品每天数量有限，每天9点和14点开始秒杀，每款每个用户只限购买一台。</h3>
             <h3>4、秒杀产品不可使用任何优惠券和现金券。</h3>
@@ -545,7 +545,7 @@
             <i @click.stop="showModal.rule2=false"></i>
           </div>
           <div class="body">
-            <h3>1、活动时间：2019.2.21-2019.03.31</h3>
+            <h3>1、活动时间：2019.3.1-2019.4.30</h3>
             <h3>2、活动对象：平台已完成实名认证的新老用户</h3>
             <h3>3、数量限制：云服务器产品每个用户限购7台，GPU云服务器限购2台，对象存储产品限购5款。</h3>
             <h3>4、活动产品不可使用任何优惠券和现金券。</h3>
@@ -625,7 +625,7 @@
         <span class="universal-modal-title">充值</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p class="cash-coupon-p">帐户余额：<span> ¥{{ balance }}</span>
+        <!-- <p class="cash-coupon-p">帐户余额：<span> ¥{{ balance }}</span> -->
         <p class="cash-coupon-p">选择会员类型：</p>
         <div class="vip-list">
           <ul v-for="(item,index) in cashCouponForm.vipList" :key="index" :class="{selected: item.vipid == cashCouponForm.vipId,notallowed: index < cashCouponForm.vipLevel }"
@@ -1060,7 +1060,7 @@ export default {
       // 热门对象存储打折
       objProductHot: {
           zoneId: '',
-          cpuMemory: {label: '100', unit: 'G', value: '100'},
+          cpuMemory: {label: '100', unit: 'GB', value: '100'},
           bandwith: 1,
           system: [],
           disksize: 20,
@@ -1726,8 +1726,8 @@ export default {
           }
         var params = {
               zoneId: this.gpuProductHot.zoneId,
-              timeType: this.gpuProductHot.timeTimetype.type,
-              timeValue: this.gpuProductHot.timeTimetype.value,
+              timeType: this.gpuProductHot.timeTimetype.type == 'day' ? 'week' : 'month',
+              timeValue: this.gpuProductHot.timeTimetype.type == 'day' ? this.gpuProductHot.timeTimetype.value / 7 : this.gpuProductHot.timeTimetype.value,
               templateId: this.gpuProductHot.system[1],
               isAutoRenew: 1,
               count: this.gpuProductHot.count,
