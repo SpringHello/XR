@@ -624,7 +624,7 @@
           this.$router.push('resultNew')
           if(res.status ==200 && res.data.status == 1){
             sessionStorage.setItem('payResult', 'success')
-            sessionStorage.setItem('successMsg', response.data.message)
+            sessionStorage.setItem('successMsg', res.data.message)
             if (res.data.giftNumMessage) {
                 sessionStorage.setItem('firstMsg', res.data.giftNumMessage)
               } else {
