@@ -827,7 +827,7 @@
             <i @click.stop="showModal.vipRuleModal=false"></i>
           </div>
           <div class="body">
-            <div class="body_hide" ref='viewBox' >
+            <div class="body_hide" ref='viewBox'>
               <div style="height:1138px;">
                 <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
                 <nav>
@@ -851,13 +851,15 @@
                 <div class="word_style">
                   <h3>通过一次性充值（24小时内累计充值金额）或者上个自然年度（每年1月1日至12月31日）累计消费(订单支付成功七日后)的金额判定不同的会员级别，会员级别不同消费时可享受相应的折扣优惠。</h3>
                   <h3><span>2、会员退货退款</span>：累计消费成为会员的客户，因为消费不涉及会员级别的更改，享受平台正常的退货退款流程。 </h3>
-                  <h3 style="color:#FF624B;">充值成为会员的用户，会员充值一定金额后，对应会员级别的最低充值额度（如白银会员1万元、黄金会员5万元、铂金会员15万元）经会员同意后单独放入特定账户，优先消费，不可自动提取，以保证会员资格。若强制要求提现此部分金额，则意味会员主动取消会员资格。则之前购买产品均按折扣之前的价格扣除对应金额后方可提现。不足部分平台保留追补权利。 </h3>
+                  <h3 style="color:#FF624B;">
+                    充值成为会员的用户，会员充值一定金额后，对应会员级别的最低充值额度（如白银会员1万元、黄金会员5万元、铂金会员15万元）经会员同意后单独放入特定账户，优先消费，不可自动提取，以保证会员资格。若强制要求提现此部分金额，则意味会员主动取消会员资格。则之前购买产品均按折扣之前的价格扣除对应金额后方可提现。不足部分平台保留追补权利。 </h3>
                   <h3><span>会员权益发生改变的情形</span></h3>
                   <h3><span>3、会员折扣范围：</span>1. 包括平台自有云产品（域名、SSL证书等第三方平台产品除外），参与活动产品购买时可享受折上折（押金活动除外）。 </h3>
                   <h3><span>4、会员权益有效期</span>：充值或者上个自然年度累计消费达到一定金额即可立即成为会员，会员有效期从会员权益生效之日起至第三年的1月17日。比如2009年7月31日充值1万元或者2009年1月1日至7月31日期间累计消费达到5万元则成为白银会员，有效期至2011年1月17日。 </h3>
                   <h3><span>5、会员其他福利</span>：会员还可享受平台新品免费试用、问题优先解决、免费技术咨询、生日和节日礼品、平台产品不定时赠送等福利。 </h3>
                   <h3><span>6、协议声明</span>：新睿云平台对于此会员制规则拥有最终解释权，其他未尽事项平台保留最终解释权力。若发现以不正当手段成为会员的用户，我们有资格取消或者封禁会员资格。</h3>
-                  <h3>新睿云有权根据政府法律法规、技术及行业实践、市场行情等变化修改和（或）补充本协议的条款和条件，修改后的条款应公示于新睿云服务网站上，并于公示即时生效。若您在本协议条款内容变更公告后继续使用云服务的，表示您已充分阅读、理解并接受修改后的协议内容，也将遵循修改后的条款内容使用云服务；若您不同意修改后的服务条款，您应立即停止使用云服务</h3>
+                  <h3>
+                    新睿云有权根据政府法律法规、技术及行业实践、市场行情等变化修改和（或）补充本协议的条款和条件，修改后的条款应公示于新睿云服务网站上，并于公示即时生效。若您在本协议条款内容变更公告后继续使用云服务的，表示您已充分阅读、理解并接受修改后的协议内容，也将遵循修改后的条款内容使用云服务；若您不同意修改后的服务条款，您应立即停止使用云服务</h3>
                   <h3><span>会员保级</span>：会员达到会员有效期后，若有效期内达到任何会员条件，比如充值一定金额或者上一自然年度累计消费达到一定金额，则会员权益相应保留并延期。 </h3>
                   <h3><span>会员升级</span>：某一级别的会员在会员有效期内通过充值或者累计消费后达到更高级别后，以最高级别为准，且会员有效期相应延长。如累计消费达到白银会员后，一次性充值5万元则升级成为黄金会员，会员有效期从成为黄金会员那日开始计算，至第三年的1月17日。 </h3>
                   <h3><span>会员降级</span>：会员达到会员有效期后，若有效期内未达到本级别会员条件，则会员权益重新计算。比如充值会员有效期内没有会员级别的充值行为，则有效期后会员权益失效。若有效期内，若会员资格费用发生提现吗，则会员权益立时失效。 </h3>
@@ -869,11 +871,11 @@
                 </div>
               </div>
             </div>
-            </div>
-            <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
-            <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
           </div>
+          <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
+            <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
         </div>
+      </div>
     </transition>
 
     <!-- 余额转入现金券 -->
@@ -900,7 +902,7 @@
         <div class="beVip">
           <p>您已满足成为{{ cashCouponForm.vipGrade}}资格！</p>
           <Checkbox v-model="cashCouponForm.agreeStatus" :disabled="cashCouponForm.vipRuleDisabled"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意</span></Checkbox>
-            <span style="cursor: pointer;color:#4A97EE;margin-left: -18px;" @click="getVipRule">《会员制规则》</span>
+          <span style="cursor: pointer;color:#4A97EE;margin-left: -18px;" @click="getVipRule">《会员制规则》</span>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -923,6 +925,22 @@
         <Button @click="showModal.successMsg = false">取消</Button>
         <Button type="primary" @click="$router.push('schoolSeason')">查看活动</Button>
       </p>
+    </Modal>
+
+    <!-- 订单管理支付确认弹窗 -->
+    <Modal v-model="showModal.payAffirm" :scrollable="true" :width="640">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">支付确认</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p class="cash-coupon-p">总支付金额：<span> ¥{{ payForm.paymentAmount }}</span></p>
+        <p class="cash-coupon-p">现金券支付金额：<span>¥{{payForm.cashCoupon }}</span></p>
+        <p class="cash-coupon-p">现金券余额：<span>¥{{ payForm.cashCouponBalance}}</span></p>
+        <p class="cash-coupon-p" v-if="voucher < parseInt(payForm.paymentAmount)">还需支付：<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="payOk">确认支付</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -1979,7 +1997,8 @@
           modifyPhoneID: false,
           vipRuleModal: false,
           cashCoupon: false,
-          successMsg: false
+          successMsg: false,
+          payAffirm: false
         },
         // 提现
         withdrawForm: {
@@ -2207,7 +2226,12 @@
         returnMoneyDisabled: false,
         vipCount: 10, // vip规则计时
         vipScroll: 0,
-        vipHeight:1881
+        vipHeight: 1881,
+        payForm: {
+          paymentAmount: 0,
+          cashCoupon: 0,
+          cashCouponBalance: 0
+        }
       }
     },
     created() {
@@ -2225,7 +2249,7 @@
         sessionStorage.removeItem('beVip')
       }
     },
-    mounted(){
+    mounted() {
 
     },
     methods: {
@@ -2493,38 +2517,66 @@
       },
       orderPay() {
         if (this.orderNumber.length != 0) {
-          this.$Modal.confirm({
-            title: '',
-            content: '<p>确定要支付选中的订单吗？</p>',
-            scrollable: true,
-            onOk: () => {
-              let order = ''
+          this.payForm.paymentAmount = this.orderNumber.map(item => {
+            return item.cost
+          }).reduce((total, num) => {
+            return total + num
+          }, 0).toFixed(2)
+          this.payForm.cashCoupon = this.voucher >= parseInt(this.payForm.paymentAmount) ? this.payForm.paymentAmount : this.voucher
+          this.payForm.cashCouponBalance = this.voucher >= parseInt(this.payForm.paymentAmount) ? (this.voucher - this.payForm.paymentAmount).toFixed(2) : 0
+          this.showModal.payAffirm = true
+        }
+      },
+      payOk() {
+        let order = ''
+        this.orderNumber.forEach(item => {
+          order += ',' + item.ordernumber
+        })
+        if (this.voucher >= parseInt(this.payForm.paymentAmount)) {
+          axios.get('information/payOrder.do', {
+            params: {
+              order: order.substr(1),
+              ticket: this.operatorid
+            }
+          }).then(res => {
+            this.$router.push('resultNew')
+            if (res.status == 200 && res.data.status == 1) {
+              sessionStorage.setItem('payResult', 'success')
+              sessionStorage.setItem('successMsg', res.data.message)
+              if (res.data.giftNumMessage) {
+                sessionStorage.setItem('firstMsg', res.data.giftNumMessage)
+              } else {
+                sessionStorage.setItem('firstMsg', '')
+              }
+            } else {
+              sessionStorage.setItem('payResult', 'fail');
+              sessionStorage.setItem('errMsg', res.data.message);
+            }
+          })
+        } else {
+          this.$http.get('information/zfconfirm.do', {
+            params: {
+              order: order.substr(1),
+              ticket: this.operatorid,
+              money: (this.payForm.paymentAmount- this.voucher).toFixed(2)
+            }
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              let overtime = new Date(this.orderNumber[0].overTime).getTime()
               this.orderNumber.forEach(item => {
-                order += ',' + item.ordernumber
+                let overTime = new Date(item.overTime).getTime()
+                if (overTime < overtime) {
+                  overtime = overTime
+                }
               })
-              this.$http.get('information/zfconfirm.do', {
-                params: {
-                  order: order.substr(1),
-                  ticket: this.operatorid,
-                  money: this.actualDelivery
-                }
-              }).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  let overtime = new Date(this.orderNumber[0].overTime).getTime()
-                  this.orderNumber.forEach(item => {
-                    let overTime = new Date(item.overTime).getTime()
-                    if (overTime < overtime) {
-                      overtime = overTime
-                    }
-                  })
-                  sessionStorage.setItem('overtime', this.toStr(overtime))
-                  this.$router.push({
-                    name: 'payNew',
-                    params: response.data.result
-                  })
-                } else if (response.status == 200 && response.data.status == 2) {
-                  this.payLoading = false
-                }
+              sessionStorage.setItem('overtime', this.toStr(overtime))
+              this.$router.push({
+                name: 'payNew',
+                params: response.data.result
+              })
+            } else {
+              this.$message.info({
+                content: response.data.message
               })
             }
           })
@@ -3482,19 +3534,19 @@
             clearInterval(interval);
           } else {
             this.disabledButton = true;
-            if( this.showModal.vipRuleModal == false){
+            if (this.showModal.vipRuleModal == false) {
               clearInterval(interval);
             }
           }
         }, 1000);
-          setTimeout(()=>{
-             this.$refs.viewBox.addEventListener('scroll', this.vipRuleScroll,true);
-          },100)
+        setTimeout(() => {
+          this.$refs.viewBox.addEventListener('scroll', this.vipRuleScroll, true);
+        }, 100)
       },
       vipRuleScroll(e) {
         this.vipScroll = e.srcElement.scrollTop;
         this.vipHeight = e.srcElement.scrollHeight;
-        if (e.srcElement.scrollTop > (e.srcElement.scrollHeight -561) && this.vipCount == 0) {
+        if (e.srcElement.scrollTop > (e.srcElement.scrollHeight - 561) && this.vipCount == 0) {
           this.disabledButton = false;
           this.cashCouponForm.vipRuleDisabled = false
         }
