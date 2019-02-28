@@ -235,7 +235,7 @@
           {
             title: '会员折后价',
             render(h, obj) {
-              // if (obj.row.originalcost > obj.row.cost) {
+              if (obj.row.discountmessage != undefined) {
                 return h('div',{
                   style:{
                     textAlign:'center'
@@ -250,9 +250,9 @@
                       },
                     },'（ '+obj.row.discountmessage+' 折）')
                 ])
-              // } else {
-                // return h('span', '--')
-              // }
+              } else {
+                return h('span', '--')
+              }
             }
           }
         ],
@@ -308,23 +308,23 @@
     beforeRouteEnter(to, from, next) {
       let params = {}
       let order = to.query.countOrder == undefined ?'':to.query.countOrder;
-      let orderS = sessionStorage.getItem('countOrder') == 'undefined'?null:sessionStorage.getItem('countOrder')
-      if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
-        params.countOrder = order || orderS;
-        this.orderInfo.orderId = order || orderS;
-        sessionStorage.setItem('countOrder', order + '')
-      }
-      if (to.query.countOrder) {
-        params.countOrder = to.query.countOrder;
-        this.orderInfo.orderId = to.query.countOrder;
-      }
+        let orderS = sessionStorage.getItem('countOrder') == 'undefined'?null:sessionStorage.getItem('countOrder')
+        if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
+          params.countOrder = order || orderS;
+          sessionStorage.setItem('countOrder', order + '')
+        }
+        if (to.query.countOrder) {
+          params.countOrder = to.query.countOrder;
+        } 
+          
+      //  vm.orderInfo.orderId =params.countOrder;
       axios.get('user/searchOrderByBuy.do', {
         params
       }).then(response => {
         next(vm => {
           vm.setOrder(response)
         })
-      })
+       })
     },
     created() {
       this.getSpentCost();
@@ -357,7 +357,9 @@
             data.cost = item.cost
             data.discountedorders = item.discountedorders
             data.overTime = item.overTime
-            data.discountmessage = item.discountmessage.substring(item.discountmessage.indexOf('，')-6,item.discountmessage.indexOf('，')-3)
+            if(item.discountmessage != undefined){
+              data.discountmessage = item.discountmessage.substring(item.discountmessage.indexOf('，')-6,item.discountmessage.indexOf('，')-3)
+            }
            if(data['订单状态']){
               this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
               this.couponInfo.cost += data['订单状态'] == 1 ? 0:item.cost
@@ -788,9 +790,9 @@
             this.couponInfo.couponList.forEach(item => {
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
-                    this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
+                    this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money).toFixed(2));
                   } else if (item.tickettype == 0) {
-                    this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
+                    this.couponInfo.totalCost = Number((this.couponInfo.cost - item.money).toFixed(2));
                   }
                 }
             })
@@ -799,9 +801,9 @@
               this.couponInfo.couponList.forEach(item => {
               if (item.operatorid == this.couponInfo.selectTicket) {
                 if (item.tickettype == 1) {
-                  this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
+                  this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money).toFixed(2));
                 } else if (item.tickettype == 0) {
-                  this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
+                  this.couponInfo.totalCost = Number((this.couponInfo.cost - item.money).toFixed(2));
                 }
               }
             })
@@ -848,10 +850,10 @@
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
                     if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
-                      this.couponInfo.totalCost = this.couponInfo.cash - (this.couponInfo.cost * item.money);
+                      this.couponInfo.totalCost = Number(this.couponInfo.cash - (this.couponInfo.cost * item.money)).toFixed(2);
                     }
                     if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
-                      this.couponInfo.totalCost = (this.couponInfo.cost * item.money) - this.couponInfo.cash;
+                      this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money) - this.couponInfo.cash).toFixed(2);
                     }
                     
                     if( Number(this.couponInfo.totalCost) == 0){
@@ -862,7 +864,7 @@
                       this.couponInfo.totalCost = 0;
                     }
                     if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
-                      this.couponInfo.totalCost = (this.couponInfo.cost - item.money) - this.couponInfo.cash;
+                      this.couponInfo.totalCost = Number((this.couponInfo.cost - item.money) - this.couponInfo.cash).toFixed(2);
                     }
                     if( Number(this.couponInfo.totalCost) == 0){
                       this.isButtonCash = true; 
