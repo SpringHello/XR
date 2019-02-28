@@ -22,36 +22,38 @@
         </div>
         <div style="margin-top:10px;background:#F6FAFD;" class="coupon">
             <div>
-              <div>
-                <Checkbox  v-model="couponInfo.isUse" @on-change="changeCheckbox">
-                  <p style="font-weight: 700;margin-left: 10px;display:inline-block">使用优惠券（该产品有<span style="color:#30BA78;">{{couponInfo.couponList.length}}张</span>优惠券）</p>
-                </Checkbox>
-                <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券</span>
-              </div>
-              <RadioGroup v-model="couponInfo.selectTicket" @on-change="radioChange" type="button" class="coupon_radio"  v-if="couponInfo.isUse">
-                <Radio v-for="item in couponInfo.couponList" :label="item.operatorid" :key="item.operatorid"
-                     style="display:block;margin:20px 0px;height:88px;margin-right:10px;">
-                  <div class="ticketInfo">
-                    <div style="margin-right:36px;line-height:58px;">
-                      <span style="width:100px;" v-if="item.tickettype == 0">满<strong>{{item.startmoney}}</strong>减<strong>{{item.money}}</strong></span>
-                      <span  style="width:100px;" v-else><strong>{{item.money*10}}</strong>折</span>
+              <CheckboxGroup v-model="groupList" @on-change="changeCashbox">
+                <div>
+                  <Checkbox label='coupon'>
+                    <p style="font-weight: 700;margin-left: 10px;display:inline-block">使用优惠券（该产品有<span style="color:#30BA78;">{{couponInfo.couponList.length}}张</span>优惠券）</p>
+                  </Checkbox>
+                  <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券</span>
+                </div>
+                  <RadioGroup v-model="couponInfo.selectTicket" @on-change="radioChange" type="button" class="coupon_radio"  v-if="groupList[0]=='coupon' || groupList[1]=='coupon'">
+                    <Radio v-for="item in couponInfo.couponList" :label="item.operatorid" :key="item.operatorid"
+                        style="display:block;margin:20px 0px;height:88px;margin-right:10px;">
+                      <div class="ticketInfo">
+                        <div style="margin-right:36px;line-height:58px;">
+                          <span style="width:100px;" v-if="item.tickettype == 0">满<strong>{{item.startmoney}}</strong>减<strong>{{item.money}}</strong></span>
+                          <span  style="width:100px;" v-else><strong>{{item.money*10}}</strong>折</span>
+                        </div>
+                        <div>
+                        <p>适用产品：{{item.ticketdescript}}</p>
+                        <p style="margin:10px 0;">使用条件：{{item.remark}}</p>
+                        <p>过期时间：{{item.endtime}}</p>
+                        </div>
+                      </div>
+                    </Radio>
+                </RadioGroup>
+                <div style="margin:22px 0;">
+                  <Checkbox  label='cash'>
+                    <p  style="font-weight: 700;margin-left: 10px;display:inline-block;">使用现金券<span style="color:#FF624B;font-size:18px;">{{couponInfo.cash}}</span>元</p>
+                  </Checkbox>
+                  <span style="float:right;">已经抵扣：<strong style="color:#FF624B;font-size:24px;">{{ vipName != '' || vipName !=undefined ? vipPrice : deductionPrice}}</strong>元</span>
                     </div>
-                    <div>
-                    <p>适用产品：{{item.ticketdescript}}</p>
-                    <p style="margin:10px 0;">使用条件：{{item.remark}}</p>
-                    <p>过期时间：{{item.endtime}}</p>
-                    </div>
-                  </div>
-                </Radio>
-            </RadioGroup>
-             
+              </CheckboxGroup>
             </div>
-            <div style="margin:22px 0;">
-              <Checkbox v-model="couponInfo.isCash" @on-change="changeCashbox">
-                <p  style="font-weight: 700;margin-left: 10px;display:inline-block;">使用现金券<span style="color:#FF624B;font-size:18px;">{{couponInfo.cash}}</span>元</p>
-              </Checkbox>
-               <span style="float:right;">已经抵扣：<strong style="color:#FF624B;font-size:24px;">{{deductionPrice}}</strong>元</span>
-            </div>
+           
      
          <div style="border-top:1px solid #E9E9E9;padding:20px 0;margin-top:20px;">
            <!-- <span style="color:#2d8cf0;cursor:pointer;">全民普惠，3折减单，最高减免7000元！</span> -->
@@ -231,7 +233,7 @@
             }
           },
           {
-            title: '会员优惠价',
+            title: '会员折后价',
             render(h, obj) {
               // if (obj.row.originalcost > obj.row.cost) {
                 return h('span', {}, obj.row.cost)
@@ -244,7 +246,6 @@
         orderData: [],
         showFree: [],
         couponInfo: {
-          isUse: false,
           couponList: [],
           // 选中的优惠券
           selectTicket: '',
@@ -256,13 +257,13 @@
           totalCost: 0,
           // 选中的现金券
           isCash:false,
-          cash:'',
+          cash:0,
 
           isRecommend:false,
           Recommend:''
         },
-
-        selectDiscount:[],
+        disabledCoupon:false,
+        groupList:[],
         
         canUseTicket: true,
         showModal: {
@@ -284,14 +285,16 @@
         // 现金券余额是否充足
         isButtonCash:false,
         orderInfo:{
-          orderId:''
+          orderId:'',
+          ticket:''
         },
-        orderPay:null
+        orderPay:null,
+        vipName:this.$store.state.userInfo.vipname
       }
     },
     beforeRouteEnter(to, from, next) {
       let params = {}
-     let order = to.query.countOrder == undefined ?'':to.query.countOrder;
+      let order = to.query.countOrder == undefined ?'':to.query.countOrder;
       let orderS = sessionStorage.getItem('countOrder') == 'undefined'?null:sessionStorage.getItem('countOrder')
       if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
         params.countOrder = order || orderS;
@@ -313,6 +316,8 @@
     created() {
       this.getSpentCost();
       this.getWalletsBalance();
+      console.log(this.vipName);
+      console.log(this.$store.state.userInfo);
     },
     methods: {
       getSpentCost() {
@@ -378,6 +383,22 @@
             }
           }).then(response => {
             this.couponInfo.couponList = response.data.result
+          });
+          axios.get('information/zfconfirm.do', {
+            params: {
+              order:this.orderInfo.orderId,
+              ticket: this.couponInfo.selectTicket,
+              money: this.couponInfo.totalCost
+            }
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.orderPay = response.data.result;
+            }else{
+              this.$Message.error({
+                content:response.data.message,
+                duration:5
+              })
+            }
           })
         }
       },
@@ -438,23 +459,44 @@
           this.couponInfo.couponList = response.data.result
         })
       },
-      // 是否使用优惠券开关
-      changeCheckbox(bol) {
-        if(this.couponInfo.isCash){
-           this.couponInfo.isCash = !this.couponInfo.isUse;
-        }
-        if (!bol) {
-          this.couponInfo.selectTicket = ''
-        }
-      },
       changeCashbox(bol){
-         if(this.couponInfo.isUse){
-          this.couponInfo.isUse = !this.couponInfo.isCash;
+        if (this.orderPay.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
+               this.groupList.splice(bol.indexOf('cash'), 1)
+              this.$message.info({
+                title:'提示',
+                content: '当前订单不满足使用现金券要求'
+              })
+              return;
         }
-         if(!bol){
-         }else{
-            this.couponInfo.selectTicket = '';
-         }
+            // 现金券已足够支付，不应再点击账户余额
+            // if (this.orderPay.isUseVoucher == 1 && Number(this.couponInfo.cash) >= Number(this.couponInfo.cost) && bol.indexOf('coupon') >-1) {
+            //   this.groupList.splice(bol.indexOf('coupon'), 1);
+            //   this.$message.info({
+            //     title:'提示',
+            //     content: '现金券余额已足够支付本订单'
+            //   })
+            //   return;
+            //   }
+          // if(bol.indexOf('coupon') > -1){
+          //   this.groupList.splice(bol.indexOf('coupon'), 1);
+          //   this.$message.info({
+          //       title:'提示',
+          //       content: '尊敬的用户您好：现金券和优惠券不能同时使用。'
+          //     })
+          //    return;
+          // }
+        if(this.couponInfo.cash != 0){
+          // if( this.orderPay.isUseVoucher == 1 && bol.indexOf('cash') == -1){
+          //   this.groupList.push('cash');
+          //   this.$message.info({
+          //       title:'提示',
+          //       content: '默认情况下优先使用现金券'
+          //     })
+          //    return;
+          // }else{
+          //     this.couponInfo.selectTicket = '';
+          // }
+        }
       },
       radioChange() {
         if (!this.canUseTicket) {
@@ -517,6 +559,9 @@
           if (res.status == 200 && res.data.status == '1') {
             this.couponInfo.cash = res.data.data.voucher
           }
+        }).catch(err =>{
+          if(err)
+          this.$Message.info('网络异常，获取现金券失败请重试');
         })
       },
       revertOrder(){
@@ -565,7 +610,7 @@
         axios.get('information/payOrder.do',{
           params: {
               order:  this.orderInfo.orderId.substring(0, this.orderInfo.orderId.length-1),
-              ticket: ''
+              ticket: this.orderInfo.ticket
             }
         }).then(res =>{
           if(res.status ==200 && res.data.status == 1){
@@ -582,46 +627,9 @@
         })
       },
       checkUseVoucher(bol) {
-         axios.get('information/zfconfirm.do', {
-          params: {
-            order,
-            ticket: this.couponInfo.selectTicket,
-            money: this.couponInfo.totalCost
-          }
-        }).then(response => {
-           if (response.status == 200 && response.data.status == 1) {
-            this.orderPay = response.data.result;
-           }else{
-             this.$Message.error({
-               content:response.data.message,
-               duration:5
-             })
-           }
-        })
+       
         // 不允许使用现金券余额，但是点击了使用
-        if (this.orderPay.isUseVoucher == 0 && bol.indexOf('voucher') > -1) {
-          this.accountPay.splice(bol.indexOf('voucher'), 1)
-          this.$message.info({
-            title:'提示',
-            content: '当前订单不满足使用现金券要求'
-          })
-        }
-        // 必须使用现金券，但点击了取消使用
-        if (this.orderPay.isUseVoucher == 1 && bol.indexOf('voucher') == -1) {
-          this.accountPay.push('voucher')
-          this.$message.info({
-            title:'提示',
-            content: '默认情况下优先使用现金券'
-          })
-        }
-        // 现金券已足够支付，不应再点击账户余额
-        if (this.orderPay.isUseVoucher == 1 && Number(this.orderInfo.voucher) >= Number(this.orderInfo.money) && bol.indexOf('account') > -1) {
-          this.accountPay.splice(bol.indexOf('account'), 1)
-          this.$message.info({
-            title:'提示',
-            content: '现金券余额已足够支付本订单'
-          })
-        }
+       
        
       },
     },
@@ -646,7 +654,7 @@
         }
       },
       deductionPrice(){
-        if(this.couponInfo.isUse){
+        if(this.groupList[0] == 'coupon'){
           let money = 0;
           if (this.couponInfo.selectTicket != '') {
             this.couponInfo.couponList.forEach(item => {
@@ -661,7 +669,7 @@
             return money;
           }
         }
-        if(this.couponInfo.isCash){
+        if(this.groupList[0] == 'cash'){
            if(this.couponInfo.cost > this.couponInfo.cash){
               return  this.couponInfo.cash;
             }
@@ -718,8 +726,41 @@
           return 'SSL证书购买'
         }
       },
-      orirginTotal(){
-
+      vipPrice(){
+        if(this.vipName !='' || this.vipName != undefined){
+          let money = 0;
+          if (this.couponInfo.selectTicket != '') {
+            this.couponInfo.couponList.forEach(item => {
+              if (item.operatorid == this.couponInfo.selectTicket) {
+                if (item.tickettype == 1) {
+                   if(this.couponInfo.cost > this.couponInfo.cash){
+                      money = this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2);
+                   }
+                   if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
+                      money =  this.couponInfo.cash -(this.couponInfo.cost - Number((this.couponInfo.cost * item.money).toFixed(2)));
+                   }
+                } else if (item.tickettype == 0) {
+                  if(this.couponInfo.cost > this.couponInfo.cash){
+                      // money = this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2);
+                      money = (this.couponInfo.cost - item.money - this.couponInfo.cash).toFixed(2);
+                   }
+                   if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
+                      money =  (this.couponInfo.cash -(this.couponInfo.cost - item.money)).toFixed(2);
+                   }
+                  
+                }
+              }
+            })
+            return money;
+          }else{
+             if(this.couponInfo.cost > this.couponInfo.cash){
+              return  this.couponInfo.cash;
+            }
+            if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
+              return  this.couponInfo.cost;
+            }
+          }
+        }
       }
     },
     watch: {
@@ -742,42 +783,37 @@
         },
         deep: true
       },
-      'couponInfo.isCash':{
+      'groupList':{
         handler:function(){
-          if(this.couponInfo.isCash){
+          if(this.groupList[0] != 'coupon' || this.groupList[1] != 'coupon'){
+            this.couponInfo.selectTicket = '';
+          }
+          if(this.vipName !='' || this.vipName != undefined){
             if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
               this.couponInfo.totalCost =  Number((this.couponInfo.cash-this.couponInfo.cost).toFixed(2));
-              this.isButtonCash = true;
               return;
+            }
+            if( this.couponInfo.totalCost == 0){
+                this.isButtonCash = true; 
             }
             if(this.couponInfo.cash < this.couponInfo.cost){
               this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
               return;
             }
-          }else{
-              this.couponInfo.totalCost = Number(this.couponInfo.cost.toFixed(2));
           }
+          this.couponInfo.totalCost = Number(this.couponInfo.cost.toFixed(2));   
         },
         deep: true
       },
-      'couponInfo.isUse':{
-        handler:function(){
-          if(this.couponInfo.isUse){
-              this.couponInfo.totalCost = Number(this.couponInfo.cost.toFixed(2));
-            }
-          },
-           deep: true
-      },
-      'couponInfo.cash':{
-        handler:function(){
-          if(this.couponInfo.cash != 0){
-            this.couponInfo.isCash = true;
-            this.couponInfo.isUse = false;
-          }
-        },
-        deep:true,
-        immediate: true
-      }
+      // 'couponInfo.cash':{ 
+      //   handler:function(){
+      //     if(this.couponInfo.cash != 0 &&){
+      //      this.groupList.push('cash');
+      //     }
+      //   },
+      //   deep:true,
+      //   immediate: true
+      // }
     }
   }
 </script>
