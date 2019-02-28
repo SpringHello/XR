@@ -4768,7 +4768,6 @@
     cursor: pointer;
     border: none;
     padding: 0;
-    background: white;
     margin-top: -3px;
   }
 
