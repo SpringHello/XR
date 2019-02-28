@@ -235,7 +235,7 @@
           {
             title: '会员折后价',
             render(h, obj) {
-              // if (obj.row.originalcost > obj.row.cost) {
+              if (obj.row.discountmessage != undefined) {
                 return h('div',{
                   style:{
                     textAlign:'center'
@@ -250,9 +250,9 @@
                       },
                     },'（ '+obj.row.discountmessage+' 折）')
                 ])
-              // } else {
-                // return h('span', '--')
-              // }
+              } else {
+                return h('span', '--')
+              }
             }
           }
         ],
@@ -315,10 +315,7 @@
         }
         if (to.query.countOrder) {
           params.countOrder = to.query.countOrder;
-        }
-      
-        
-       
+        } 
           
       //  vm.orderInfo.orderId =params.countOrder;
       axios.get('user/searchOrderByBuy.do', {
@@ -360,7 +357,9 @@
             data.cost = item.cost
             data.discountedorders = item.discountedorders
             data.overTime = item.overTime
-            data.discountmessage = item.discountmessage.substring(item.discountmessage.indexOf('，')-6,item.discountmessage.indexOf('，')-3)
+            if(item.discountmessage != undefined){
+              data.discountmessage = item.discountmessage.substring(item.discountmessage.indexOf('，')-6,item.discountmessage.indexOf('，')-3)
+            }
            if(data['订单状态']){
               this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
               this.couponInfo.cost += data['订单状态'] == 1 ? 0:item.cost
