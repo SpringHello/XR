@@ -4,7 +4,7 @@
       <span>首页 / {{routerName}} / 订单确认</span>
       <div class="content">
         <span>订单确认</span>
-        <button style="float:right" class="button" @click="revertOrder">返回</button>
+        <button style="float:right" class="button" @click="$router.go(-1)">返回</button>
         <div class="order_text" v-if="routerName == '新建云主机' || routerName =='续费' || routerName == '新建云硬盘' || routerName == '磁盘升级' || routerName == '新建GPU云服务器' || routerName == '系统盘扩容'">
           <div >
             <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
@@ -61,7 +61,7 @@
          </div>
         </div>
         <div style="text-align:right;margin-top:40px;">
-          <Button @click="$router.push({path:'overview'})" style="margin-right:10px;">取消订单</Button>
+          <Button @click="deleteOrder" style="margin-right:10px;">取消订单</Button>
            <Button type="primary"  @click="payCash" v-if="isButtonCash">确认购买</Button>
           <Button type="primary"  @click="pay" v-else>提交订单</Button>
         </div>
@@ -316,8 +316,6 @@
     created() {
       this.getSpentCost();
       this.getWalletsBalance();
-      console.log(this.vipName);
-      console.log(this.$store.state.userInfo);
     },
     methods: {
       getSpentCost() {
@@ -418,33 +416,6 @@
         })
         this.couponInfo.cost = cost;
         this.couponInfo.originCost = originCost;
-        if (cost != 0) {
-          if (this.couponInfo.selectTicket != '') {
-            this.couponInfo.couponList.forEach(item => {
-              if (item.operatorid == this.couponInfo.selectTicket) {
-                if (item.tickettype == 1) {
-                  this.couponInfo.totalCost = Number((cost * item.money ).toFixed(2));
-                } else if (item.tickettype == 0) {
-                  this.couponInfo.totalCost = Number((cost - item.money).toFixed(2));
-                }
-              }
-            })
-          } else if(this.couponInfo.isCash){
-            if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
-              this.couponInfo.totalCost =  Number((this.couponInfo.cash-this.couponInfo.cost).toFixed(2));
-              this.isButtonCash = true;
-              return;
-            }
-            if(this.couponInfo.cash < this.couponInfo.cost){
-              this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
-              return;
-            }
-          }else{
-             this.couponInfo.totalCost = Number(cost.toFixed(2));
-          }
-        } else {
-          this.couponInfo.totalCost = 0;
-        }
         let orderNumber = this.orderData.map(item => {
           return item.orderId
         })
@@ -557,40 +528,70 @@
           this.$Message.info('网络异常，获取现金券失败请重试');
         })
       },
-      revertOrder(){
-        let name = sessionStorage.getItem('routername');
-        let router ='';
-        if(name == '0' || name == '5' ||name == '4' || name == '20'){
-         router ='host';
-        }else if(name == '1' || name == '9'){
-          router ='disk';
-        }else if(name == '2' || name == '6' || name == '8'){
-          router = 'ip';
-        }else if(name == '3'){
-          router = 'vpc';
-        }else if(name == '10'){
-          router = 'vpc';
-        }else if(name == '11' || name == '12' || name == '13'){
-          router = 'cloudDatabase';
-        }else if(name == 14){
-          return '短信包订单'
-        }else if(name == '15' || name == '16'){
-         router = 'gpuList';
-        }else if(name == '17'){
-          window.location.href = 'https://oss-console.xrcloud.net/ruirados/objectStorage';
-          return;
-        }else if(name == '18'){
-          window.location.href = 'https://domain.xrcloud.net/xrdomain/domainTransfer';
-          return;
-        }else if(name == '19' || name == '21'){
-          window.location.href = 'https://domain.xrcloud.net/xrdomain/domainGroup';
-          return;
-        }else if(name == '22'){
-          window.location.href ='https://domain.xrcloud.net/xrdomain/domainSSL';
+      
+      // 删除订单
+      deleteOrder() {
+        if (this.orderInfo.orderId == '') {
+          this.$Modal.info({
+            content:'请先选择要取消的订单'
+          })
           return;
         }
-        this.$router.push(router)
+          this.$Modal.confirm({
+            title: '',
+            content: '<p>确定要取消选中的订单吗？</p>',
+            scrollable: true,
+            onOk: () => {
+              this.$http.get('continue/delOrderpay.do', {
+                params: {
+                  order: this.orderInfo.orderId.substring(0,this.orderInfo.orderId.length-1)
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success({
+                    content: '订单取消成功',
+                    duration: 3
+                  })
+                  this.$router.go(-1);
+                }
+              })
+            },
+          })
       },
+      // revertOrder(){
+      //   let name = sessionStorage.getItem('routername');
+      //   let router ='';
+      //   if(name == '0' || name == '5' ||name == '4' || name == '20'){
+      //    router ='host';
+      //   }else if(name == '1' || name == '9'){
+      //     router ='disk';
+      //   }else if(name == '2' || name == '6' || name == '8'){
+      //     router = 'ip';
+      //   }else if(name == '3'){
+      //     router = 'vpc';
+      //   }else if(name == '10'){
+      //     router = 'vpc';
+      //   }else if(name == '11' || name == '12' || name == '13'){
+      //     router = 'cloudDatabase';
+      //   }else if(name == 14){
+      //     return '短信包订单'
+      //   }else if(name == '15' || name == '16'){
+      //    router = 'gpuList';
+      //   }else if(name == '17'){
+      //     window.location.href = 'https://oss-console.xrcloud.net/ruirados/objectStorage';
+      //     return;
+      //   }else if(name == '18'){
+      //     window.location.href = 'https://domain.xrcloud.net/xrdomain/domainTransfer';
+      //     return;
+      //   }else if(name == '19' || name == '21'){
+      //     window.location.href = 'https://domain.xrcloud.net/xrdomain/domainGroup';
+      //     return;
+      //   }else if(name == '22'){
+      //     window.location.href ='https://domain.xrcloud.net/xrdomain/domainSSL';
+      //     return;
+      //   }
+      //   this.$router.push(router)
+      // },
 
       // 现金券余额充足支付
       payCash(){
@@ -619,12 +620,6 @@
             this.$router.push('resultNew')
         })
       },
-      checkUseVoucher(bol) {
-       
-        // 不允许使用现金券余额，但是点击了使用
-       
-       
-      },
     },
     computed: {
       otherSpentCost() {
@@ -647,7 +642,7 @@
         }
       },
       deductionPrice(){
-        if(this.groupList[0] == 'coupon'){
+        if(this.groupList[0] == 'coupon' || this.groupList[1] == 'coupon'){
           let money = 0;
           if (this.couponInfo.selectTicket != '') {
             this.couponInfo.couponList.forEach(item => {
@@ -662,7 +657,7 @@
             return money;
           }
         }
-        if(this.groupList[0] == 'cash'){
+        if(this.groupList[0] == 'cash' || this.groupList[1] == 'cash'){
            if(this.couponInfo.cost > this.couponInfo.cash){
               return  this.couponInfo.cash;
             }
@@ -771,6 +766,60 @@
     },
     //  待优化
     watch: {
+      'couponInfo.selectTicket':{
+        handler:function(){
+          if(this.vipName =='' || this.vipName == undefined){
+            this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
+                  } else if (item.tickettype == 0) {
+                    this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
+                  }
+                }
+            })
+          }else{
+            if(this.groupList.indexOf('cash') == -1){
+              this.couponInfo.couponList.forEach(item => {
+              if (item.operatorid == this.couponInfo.selectTicket) {
+                if (item.tickettype == 1) {
+                  this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
+                } else if (item.tickettype == 0) {
+                  this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
+                }
+              }
+            })
+            }else{
+              this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = this.couponInfo.cash - (this.couponInfo.cost * item.money);
+                    }
+                    if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = (this.couponInfo.cost * item.money) - this.couponInfo.cash;
+                    }
+                    if( this.couponInfo.totalCost == 0){
+                      this.isButtonCash = true; 
+                    }
+                  } else if (item.tickettype == 0) {
+                    if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = 0;
+                    }
+                    if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = (this.couponInfo.cost - item.money) - this.couponInfo.cash;
+                    }
+                    if( this.couponInfo.totalCost == 0){
+                      this.isButtonCash = true; 
+                    }
+                  }
+                }
+              })
+            }
+          }
+        },
+        deep:true
+      },
       'groupList':{
         handler:function(val){
           this.couponInfo.totalCost = this.couponInfo.cost.toFixed(2);
@@ -782,20 +831,20 @@
               this.couponInfo.couponList.forEach(item => {
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
-                    if(this.couponInfo.cash > (this.couponInfo.cost * item.money).toFixed(2) || this.couponInfo.cash == (this.couponInfo.cost * item.money).toFixed(2)){
+                    if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
                       this.couponInfo.totalCost = this.couponInfo.cash - (this.couponInfo.cost * item.money);
                     }
-                    if(this.couponInfo.cash < (this.couponInfo.cost * item.money).toFixed(2)){
+                    if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
                       this.couponInfo.totalCost = (this.couponInfo.cost * item.money) - this.couponInfo.cash;
                     }
                     if( this.couponInfo.totalCost == 0){
                       this.isButtonCash = true; 
                     }
                   } else if (item.tickettype == 0) {
-                    if(this.couponInfo.cash > (this.couponInfo.cost - item.money).toFixed(2) || this.couponInfo.cash == (this.couponInfo.cost - item.money).toFixed(2)){
-                      this.couponInfo.totalCost = this.couponInfo.cash - (this.couponInfo.cost - item.money).toFixed(2);
+                    if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = 0;
                     }
-                    if(this.couponInfo.cash < (this.couponInfo.cost - item.money).toFixed(2)){
+                    if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
                       this.couponInfo.totalCost = (this.couponInfo.cost - item.money) - this.couponInfo.cash;
                     }
                     if( this.couponInfo.totalCost == 0){
@@ -804,7 +853,6 @@
                   }
                 }
               })
-              
             }else{
               if((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket == ''){
                 if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
@@ -818,20 +866,20 @@
                   this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
                   return;
                 }
-              }else{
-                this.couponInfo.couponList.forEach(item => {
-                if (item.operatorid == this.couponInfo.selectTicket) {
-                  if (item.tickettype == 1) {
-                    this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
-                  } else if (item.tickettype == 0) {
-                    this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
-                  }
-                }
-              })
               }
             }
           }else{
-             
+            if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
+                this.couponInfo.totalCost =  0;
+                return;
+            }
+            if( this.couponInfo.totalCost == 0){
+                this.isButtonCash = true; 
+            }
+            if(this.couponInfo.cash < this.couponInfo.cost){
+                this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
+                return;
+            }
           }
         },
         deep: true
@@ -839,7 +887,9 @@
       'couponInfo.cash':{ 
         handler:function(){
           if(this.vipName =='' || this.vipName == undefined){
-           this.groupList.push('cash');
+            if(this.couponInfo.cash != 0){
+              this.groupList.push('cash');
+            }
           }
         },
         deep:true,
