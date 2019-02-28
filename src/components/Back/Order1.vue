@@ -235,7 +235,7 @@
           {
             title: '会员折后价',
             render(h, obj) {
-              if (obj.row.discountmessage != undefined) {
+              if (obj.row.discountmessage != '') {
                 return h('div',{
                   style:{
                     textAlign:'center'
@@ -251,7 +251,8 @@
                     },'（ '+obj.row.discountmessage+' 折）')
                 ])
               } else {
-                return h('span', '--')
+
+                return h('span',{}, obj.row.cost)
               }
             }
           }
@@ -359,6 +360,8 @@
             data.overTime = item.overTime
             if(item.discountmessage != undefined){
               data.discountmessage = item.discountmessage.substring(item.discountmessage.indexOf('，')-6,item.discountmessage.indexOf('，')-3)
+            }else{
+              data.discountmessage = ''
             }
            if(data['订单状态']){
               this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
@@ -447,7 +450,7 @@
         })
       },
       changeCashbox(bol){
-        if(this.couponInfo.cash != 0){
+        if(this.couponInfo.cash > 0){
             if( this.orderPay.isUseVoucher == 1 && bol.indexOf('cash') == -1){
               this.groupList.push('cash');
               this.$message.info({
@@ -468,7 +471,7 @@
               })
               return;
           }
-          if(bol.indexOf('coupon') > -1){
+          if(bol.indexOf('coupon') > -1 && this.couponInfo.cash >0){
             this.groupList.splice(bol.indexOf('coupon'), 1);
             this.$message.info({
                 title:'提示',
