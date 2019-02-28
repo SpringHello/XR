@@ -42,7 +42,7 @@
                 <div class="pay-right">
                   <div v-if="input >= 10000">
                     <p>您已满足成为{{ memberGrade}}资格！</p>
-                    <Checkbox v-model="agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+                    <Checkbox v-model="agreeStatus" :disabled="vipRuleDisabled"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
                       style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox>
                   </div>
                   <Button type="primary" @click="recharge" :disabled="chargeDisabled">确认充值</Button>
@@ -141,7 +141,7 @@
                 </div>
               </div>
               </div>
-              <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
+              <Button @click.stop="showModal.vipRuleModal=false,agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
               <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
             </div>
         </div>
@@ -163,7 +163,8 @@
           vipRuleModal: false
         },
         isFirstCz: false,
-        agreeStatus: true,
+        agreeStatus: false,
+        vipRuleDisabled: true,
         vipRule: [
           {
             title: '类目',
@@ -272,6 +273,7 @@
           this.vipCount--;
           if (this.vipScroll > (this.vipHeight -561) && this.vipCount == 0) {
             this.disabledButton = false;
+            this.vipRuleDisabled = false
             clearInterval(interval);
           } else if (this.vipCount == 0) {
             clearInterval(interval);
@@ -284,13 +286,14 @@
         }, 1000)
         setTimeout(()=>{
              this.$refs.viewBox.addEventListener('scroll', this.vipRuleScroll,true)
-          },100)  
+          },100)
       },
       vipRuleScroll(e) {
         this.vipScroll = e.srcElement.scrollTop;
         this.vipHeight = e.srcElement.scrollHeight;
         if (e.srcElement.scrollTop > (e.srcElement.scrollHeight -561) && this.vipCount == 0) {
           this.disabledButton = false;
+          this.vipRuleDisabled = false
         }
       },
     },
