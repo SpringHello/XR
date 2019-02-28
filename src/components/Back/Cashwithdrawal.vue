@@ -63,7 +63,7 @@
 				</div>
 				<Table border :columns="withdrawal" :data="withdrawaldataFilter" style="margin-top: 10px;"></Table>
 				<!-- :total="ordertotal" -->
-				<Page :total="pageall" :page-size="pageNum" @on-change="changePage" style="margin-top: 20px;margin-left: 990px;"></Page>
+				<Page :total="pageall" :page-size="pageNum" @on-change="changePage" style="margin-top: 20px;float: right;"></Page>
 			</div>
 
 			<!-- 线上提现弹窗 -->

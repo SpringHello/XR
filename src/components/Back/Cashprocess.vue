@@ -65,7 +65,7 @@
 					<tr style="font-size:12px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(51,51,51,1);line-height:30px;">
 						<th style="width:510px;text-align:left;margin-left: 10px;float: left;">提现金额（元）</th>
 						<th style="width:510px;text-align:left;" >预计到账金额（元）
-						<div class="thdd" style="position: relative;width: 20px;float: right;margin-right: 382px;">
+						<div class="thdd" style="position: relative;width: 20px;float: right;margin-right: 375px;">
 							<Tooltip placement="top">
 								<div slot="content" style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);">
 											<p style="line-height:22px;">银行扣除相应金额的手续费时会导致到账金额和</p>
@@ -895,7 +895,6 @@
 		cursor: pointer;
 		border: none;
 		padding: 0;
-		background: white;
 		margin-top: -3px;
 	}
 	.spanall{
