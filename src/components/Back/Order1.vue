@@ -460,42 +460,35 @@
         })
       },
       changeCashbox(bol){
-        if (this.orderPay.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
+        if(this.vipName =='' || this.vipName == undefined){
+          if (this.orderPay.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
                this.groupList.splice(bol.indexOf('cash'), 1)
               this.$message.info({
                 title:'提示',
                 content: '当前订单不满足使用现金券要求'
               })
               return;
+          }
+          if(bol.indexOf('coupon') > -1){
+            this.groupList.splice(bol.indexOf('coupon'), 1);
+            this.$message.info({
+                title:'提示',
+                content: '尊敬的用户您好：现金券和优惠券不能同时使用。'
+              })
+             return;
+          }
+          if(this.couponInfo.cash != 0){
+            if( this.orderPay.isUseVoucher == 1 && bol.indexOf('cash') == -1){
+              this.groupList.push('cash');
+              this.$message.info({
+                  title:'提示',
+                  content: '默认情况下优先使用现金券'
+                })
+              return;
+            }else{
+              this.couponInfo.selectTicket = '';
+            }
         }
-            // 现金券已足够支付，不应再点击账户余额
-            // if (this.orderPay.isUseVoucher == 1 && Number(this.couponInfo.cash) >= Number(this.couponInfo.cost) && bol.indexOf('coupon') >-1) {
-            //   this.groupList.splice(bol.indexOf('coupon'), 1);
-            //   this.$message.info({
-            //     title:'提示',
-            //     content: '现金券余额已足够支付本订单'
-            //   })
-            //   return;
-            //   }
-          // if(bol.indexOf('coupon') > -1){
-          //   this.groupList.splice(bol.indexOf('coupon'), 1);
-          //   this.$message.info({
-          //       title:'提示',
-          //       content: '尊敬的用户您好：现金券和优惠券不能同时使用。'
-          //     })
-          //    return;
-          // }
-        if(this.couponInfo.cash != 0){
-          // if( this.orderPay.isUseVoucher == 1 && bol.indexOf('cash') == -1){
-          //   this.groupList.push('cash');
-          //   this.$message.info({
-          //       title:'提示',
-          //       content: '默认情况下优先使用现金券'
-          //     })
-          //    return;
-          // }else{
-          //     this.couponInfo.selectTicket = '';
-          // }
         }
       },
       radioChange() {
@@ -726,94 +719,132 @@
           return 'SSL证书购买'
         }
       },
+      // 待优化
       vipPrice(){
         if(this.vipName !='' || this.vipName != undefined){
           let money = 0;
-          if (this.couponInfo.selectTicket != '') {
-            this.couponInfo.couponList.forEach(item => {
-              if (item.operatorid == this.couponInfo.selectTicket) {
-                if (item.tickettype == 1) {
-                   if(this.couponInfo.cost > this.couponInfo.cash){
-                      money = this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2);
-                   }
-                   if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
-                      money =  this.couponInfo.cash -(this.couponInfo.cost - Number((this.couponInfo.cost * item.money).toFixed(2)));
-                   }
-                } else if (item.tickettype == 0) {
-                  if(this.couponInfo.cost > this.couponInfo.cash){
-                      // money = this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2);
-                      money = (this.couponInfo.cost - item.money - this.couponInfo.cash).toFixed(2);
-                   }
-                   if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
-                      money =  (this.couponInfo.cash -(this.couponInfo.cost - item.money)).toFixed(2);
-                   }
-                  
+            if (this.couponInfo.selectTicket != '' && (this.groupList[0] == 'cash' || this.groupList[1] == 'cash')) {
+              this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    if(this.couponInfo.cost > this.couponInfo.cash){
+                        money =this.couponInfo.cash -(this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2));
+                    }
+                    if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
+                        money =  this.couponInfo.cash - (this.couponInfo.cost - Number((this.couponInfo.cost * item.money).toFixed(2)));
+                    }
+                  } else if (item.tickettype == 0) {
+                    if((this.couponInfo.cost - item.money) > this.couponInfo.cash){
+                        money =  (item.money+this.couponInfo.cash).toFixed(2);
+                    }
+                    if((this.couponInfo.cost - item.money) < this.couponInfo.cash || (this.couponInfo.cost - item.money) == this.couponInfo.cash){
+                        money = this.couponInfo.cost.toFixed(2);
+                    }
+                  }
                 }
-              }
-            })
+              })
             return money;
           }else{
-             if(this.couponInfo.cost > this.couponInfo.cash){
-              return  this.couponInfo.cash;
-            }
-            if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
-              return  this.couponInfo.cost;
+            if((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket == ''){
+               if(this.couponInfo.cost > this.couponInfo.cash){
+                   return this.couponInfo.cash.toFixed(2);
+                }
+                if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
+                    return this.couponInfo.cost.toFixed(2);
+                }
+            }else{
+                this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    money = this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2);
+                  } else if (item.tickettype == 0) {
+                    money =   item.money.toFixed(2);
+                  }
+                }
+              })
+            return money;
             }
           }
+         return 0
         }
       }
     },
+    //  待优化
     watch: {
-      'couponInfo.selectTicket': {
-        handler: function () {
-          if (this.couponInfo.selectTicket != '') {
-            this.couponInfo.couponList.forEach(item => {
-              if (item.operatorid == this.couponInfo.selectTicket) {
-                if (item.tickettype == 1) {
-                  this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
-                } else if (item.tickettype == 0) {
-                  this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
-                }
-              }
-            })
-            this.couponInfo.isUse = true
-          } else {
-            this.couponInfo.totalCost = this.couponInfo.cost.toFixed(2);
-          }
-        },
-        deep: true
-      },
       'groupList':{
-        handler:function(){
-          if(this.groupList[0] != 'coupon' || this.groupList[1] != 'coupon'){
+        handler:function(val){
+          this.couponInfo.totalCost = this.couponInfo.cost.toFixed(2);
+          if(this.groupList[0] != 'coupon' && this.groupList[1] != 'coupon'){
             this.couponInfo.selectTicket = '';
           }
           if(this.vipName !='' || this.vipName != undefined){
-            if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
-              this.couponInfo.totalCost =  Number((this.couponInfo.cash-this.couponInfo.cost).toFixed(2));
-              return;
+            if((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket != ''){
+              this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    if(this.couponInfo.cash > (this.couponInfo.cost * item.money).toFixed(2) || this.couponInfo.cash == (this.couponInfo.cost * item.money).toFixed(2)){
+                      this.couponInfo.totalCost = this.couponInfo.cash - (this.couponInfo.cost * item.money);
+                    }
+                    if(this.couponInfo.cash < (this.couponInfo.cost * item.money).toFixed(2)){
+                      this.couponInfo.totalCost = (this.couponInfo.cost * item.money) - this.couponInfo.cash;
+                    }
+                    if( this.couponInfo.totalCost == 0){
+                      this.isButtonCash = true; 
+                    }
+                  } else if (item.tickettype == 0) {
+                    if(this.couponInfo.cash > (this.couponInfo.cost - item.money).toFixed(2) || this.couponInfo.cash == (this.couponInfo.cost - item.money).toFixed(2)){
+                      this.couponInfo.totalCost = this.couponInfo.cash - (this.couponInfo.cost - item.money).toFixed(2);
+                    }
+                    if(this.couponInfo.cash < (this.couponInfo.cost - item.money).toFixed(2)){
+                      this.couponInfo.totalCost = (this.couponInfo.cost - item.money) - this.couponInfo.cash;
+                    }
+                    if( this.couponInfo.totalCost == 0){
+                      this.isButtonCash = true; 
+                    }
+                  }
+                }
+              })
+              
+            }else{
+              if((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket == ''){
+                if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
+                  this.couponInfo.totalCost =  0;
+                  return;
+                }
+                if( this.couponInfo.totalCost == 0){
+                  this.isButtonCash = true; 
+                }
+                if(this.couponInfo.cash < this.couponInfo.cost){
+                  this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
+                  return;
+                }
+              }else{
+                this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
+                  } else if (item.tickettype == 0) {
+                    this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
+                  }
+                }
+              })
+              }
             }
-            if( this.couponInfo.totalCost == 0){
-                this.isButtonCash = true; 
-            }
-            if(this.couponInfo.cash < this.couponInfo.cost){
-              this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
-              return;
-            }
+          }else{
+             
           }
-          this.couponInfo.totalCost = Number(this.couponInfo.cost.toFixed(2));   
         },
         deep: true
       },
-      // 'couponInfo.cash':{ 
-      //   handler:function(){
-      //     if(this.couponInfo.cash != 0 &&){
-      //      this.groupList.push('cash');
-      //     }
-      //   },
-      //   deep:true,
-      //   immediate: true
-      // }
+      'couponInfo.cash':{ 
+        handler:function(){
+          if(this.vipName =='' || this.vipName == undefined){
+           this.groupList.push('cash');
+          }
+        },
+        deep:true,
+        immediate: true
+      }
     }
   }
 </script>
