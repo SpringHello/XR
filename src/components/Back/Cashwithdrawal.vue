@@ -16,16 +16,16 @@
 							</div>
 							<Button type="primary" style="margin-top: 17px;" @click="showModal.Cashconfirmation = true">申请线上提现</Button>
 						</div>
-						<span style="width:2px;height:126px;background:rgba(233,233,233,1);float: left;margin-top: 20px;"></span>
+						<span id="spanself1"></span>
 						<div class="font" style="margin-left: 18px;width: 142px;">
 							<Tooltip placement="top">
-								<div slot="content" style="width:260px;height:44px;font-size:12px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);">
-									<p style="line-height:22px;">通过微信充值时间超过1年或通过支付宝充值时间</p>
-									<p style="line-height:22px;">超过3个月的现金充值金额只能通过银行卡提现。</p>
+								<div id="divself1" slot="content">
+									<p>通过微信充值时间超过1年或通过支付宝充值时间</p>
+									<p>超过3个月的现金充值金额只能通过银行卡提现。</p>
 								</div>
 								<div class="fontleft">
 									<span>可<span style="color: #FF624B;">银行卡</span>提现金额</span>
-									<Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;cursor: pointer;"></Icon>
+									<Icon type="ios-help-outline" id="iconself1"></Icon>
 								</div>
 								<div class="money">
 									<span>{{Bankmoney}}</span>
@@ -34,7 +34,7 @@
 								<Button type="primary" style="margin-top: 17px;" @click="showModal.cardfirmation = true">申请银行卡提现</Button>
 							</Tooltip>
 						</div>
-						<span style="width:2px;height:126px;background: rgba(233,233,233,1);float: left;margin-top: 20px;"></span>
+						<span id="spanself2"></span>
 					</div>
 					<div class="remindbox-right">
 						<div class="right">
@@ -46,14 +46,14 @@
 								<span>1、充值返奖励金或送现金券的时候，该充值金额不能进行提现；</span>
 								<span>2、已开发票金额不能提现；</span>
 								<span>3、当您的账户存在流水异常或其他异常状态的时候；</span>
-								<span>4、通过线下打款进账的现金充值金额提现方式请 <a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxagA7H2.html" style="color: #2A99F2;text-decoration: underline;">点击这里查看</a></span>
+								<span>4、通过线下打款进账的现金充值金额提现方式请 <a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxagA7H2.html" id="aself1">点击这里查看</a></span>
 								<span>5、单次提现金额上限2000元，7天内最多提现4次</span>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="ordertype">
-					<span style="line-height: 30px;padding-right: 10px;">按申请时间</span>
+					<span id="spanself3">按申请时间</span>
 					<Row>
 						<Col span="12">
 						<Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start" placeholder="选择日期"
@@ -74,11 +74,11 @@
 				</p>
 				<div class="modal-content-s" style="width: 101%;">
 					<div>
-						<p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">您正在申请线上提现，申请后您的款项将在<span
-							 style="color: #FF624B">5个工作日</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。
+						<p class="lh24" id="pself1">您正在申请线上提现，申请后您的款项将在<span style="color: #FF624B">5个工作日</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。
 						</p>
 						<!-- @click="$router.push('/ruicloud/cashwithdrawal')" -->
-						<p class="lh24" style="margin-top: 10px;">若您的线下汇款（对公转账）金额需要提现，请点击查看 <a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxagA7H2.html" style="color: #2A99F2; text-decoration: underline;">线下汇款提现方式</a>。
+						<p class="lh24" style="margin-top: 10px;">若您的线下汇款（对公转账）金额需要提现，请点击查看 <a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxagA7H2.html"
+							 style="color: #2A99F2; text-decoration: underline;">线下汇款提现方式</a>。
 						</p>
 					</div>
 				</div>
@@ -98,30 +98,30 @@
 						<span class="cardspan2"><span class="cardspan3">{{Bankmoney}}</span>.{{Bankdecimalmoney}}元</span>
 					</div>
 				</div>
-				<div class="" style="margin-top: 20px;margin-left: 10px;">
+				<div style="margin-top: 20px;margin-left: 10px;">
 					<Form ref="formAppreciationDate" :model="formAppreciationDate" :rules="ruleValidate" :label-width="100"
 					 label-position="left">
-						<Form-item label="银行开户名" prop="companyName" style="height: 30px;">
+						<Form-item label="银行开户名" prop="companyName" id="hei30">
 							<Input :maxlength="32" v-model="formAppreciationDate.companyName" placeholder="请输入银行开户名" style="width: 300px;"></Input>
 						</Form-item>
-						<Form-item label="开户银行名称" prop="depositBank" style="height: 30px;">
+						<Form-item label="开户银行名称" prop="depositBank" id="hei30">
 							<Input :maxlength="32" v-model="formAppreciationDate.depositBank" placeholder="请输入开户银行名称" style="width: 300px"></Input>
 						</Form-item>
 						<Tooltip :content="bank_account" placement="bottom" :disabled="disabled" :class="{'active' : isTrue}"
 						 @on-popper-hide="setdisable" @on-popper-show="setdisableshow">
-							<Form-item label="银行账户" prop="bankAccount" style="height: 30px;">
+							<Form-item label="银行账户" prop="bankAccount" id="hei30">
 								<Input :maxlength="32" v-model="formAppreciationDate.bankAccount" placeholder="请输入银行账户" style="width: 300px"
 								 v-on:input="conversion"></Input>
 							</Form-item>
 						</Tooltip>
-						<Form-item label="银行所在地" prop="registeredAddress" style="height: 30px;">
+						<Form-item label="银行所在地" prop="registeredAddress" id="hei30">
 							<Input :maxlength="64" v-model="formAppreciationDate.registeredAddress" placeholder="请输入银行所在地" style="width: 300px"></Input>
 						</Form-item>
-						<Form-item label="开户支行名称" prop="taxpayerID" style="height: 30px;">
+						<Form-item label="开户支行名称" prop="taxpayerID" id="hei30">
 							<Input :maxlength="32" v-model="formAppreciationDate.taxpayerID" placeholder="请输入开户支行名称" style="width: 300px"></Input>
 						</Form-item>
 
-						<Form-item label="银行预留电话" prop="registeredPhone" style="height: 30px;">
+						<Form-item label="银行预留电话" prop="registeredPhone" id="hei30">
 							<Input :maxlength="20" v-model="formAppreciationDate.registeredPhone" placeholder="请输入银行预留电话" style="width: 300px"></Input>
 						</Form-item>
 					</Form>
@@ -140,7 +140,7 @@
 				</p>
 				<div class="modal-content-s">
 					<div>
-						<p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">审核已通过，正在打款中。您的款项将在
+						<p class="lh24" id="pself2">审核已通过，正在打款中。您的款项将在
 							<span style="color: #FF624B">5个工作日</span> 内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。请您耐心等待。
 						</p>
 					</div>
@@ -157,7 +157,7 @@
 				</p>
 				<div class="modal-content-s">
 					<div>
-						<p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">
+						<p class="lh24" id="pself3">
 							{{Failedtext}}
 						</p>
 					</div>
@@ -484,10 +484,9 @@
 				this.bank_account = this.formAppreciationDate.bankAccount
 			},
 			carddetermination(name) {
-				if(this.comBankemoney<=0){
+				if (this.comBankemoney <= 0) {
 					this.$Message.info("您当前的金额不能提现！")
-				}
-				else{
+				} else {
 					this.$refs[name].validate((valid) => {
 						if (valid) {
 							sessionStorage.setItem('payeeName', this.formAppreciationDate.companyName)
@@ -504,10 +503,9 @@
 				}
 			},
 			onlinefor() {
-				if(this.comOnlinemoney<=0){
+				if (this.comOnlinemoney <= 0) {
 					this.$Message.info("您当前的金额不能提现！")
-				}
-				else{
+				} else {
 					sessionStorage.setItem('balance', this.comOnlinemoney)
 					sessionStorage.setItem('type', 0)
 					this.$router.push('/ruicloud/cashprocess')
@@ -736,5 +734,73 @@
 	.active {
 		height: 100px;
 	}
-	
+
+	#spanself1 {
+		width: 2px;
+		height: 126px;
+		background: rgba(233, 233, 233, 1);
+		float: left;
+		margin-top: 20px;
+	}
+
+	#divself1 {
+		width: 260px;
+		height: 44px;
+		font-size: 12px;
+		font-family: MicrosoftYaHei;
+		color: rgba(102, 102, 102, 1);
+	}
+
+	#divself1 p {
+		line-height: 22px;
+	}
+
+	#iconself1 {
+		color: #2A99F2;
+		font-size: 16px;
+		cursor: pointer;
+	}
+
+	#spanself2 {
+		width: 2px;
+		height: 126px;
+		background: rgba(233, 233, 233, 1);
+		float: left;
+		margin-top: 20px;
+	}
+
+	#aself1 {
+		color: #2A99F2;
+		text-decoration: underline;
+	}
+
+	#spanself3 {
+		line-height: 30px;
+		padding-right: 10px;
+	}
+
+	#pself1 {
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: rgba(102, 102, 102, 1);
+		line-height: 24px;
+	}
+
+	#hei30 {
+		height: 30px;
+	}
+
+	#pself2 {
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: rgba(102, 102, 102, 1);
+		line-height: 24px;
+	}
+
+	#pself3 {
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: rgba(102, 102, 102, 1);
+		line-height: 24px;
+	}
 </style>

@@ -13,12 +13,12 @@
 						<p class="withp">协议与反馈</p>
 						<img src="../../assets/img/back/Rectangle 2.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -17px;">
+					<div class="withdrawalpo" id="mleft-17">
 						<p class="withp">账号信息检测与注销</p>
 						<img src="../../assets/img/back/Rectangle 21.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -17px;">
-						<p class="withp" style="left: 175px;">注销完成</p>
+					<div class="withdrawalpo" id="mleft-17">
+						<p class="withp" id="left175">注销完成</p>
 						<img src="../../assets/img/back/Rectangle 21.png" />
 					</div>
 				</div>
@@ -27,27 +27,27 @@
 						<p class="withpw">协议与反馈</p>
 						<img src="../../assets/img/back/noname1.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left:-12px;">
+					<div class="withdrawalpo" id="mleft-12">
 						<p class="withpw">账号信息检测</p>
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -12px;">
+					<div class="withdrawalpo" id="mleft-12">
 						<p class="withpw">实名信息填写</p>
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -12px;">
-						<p class="withpw" style="left: 125px;">注销完成</p>
+					<div class="withdrawalpo" id="mleft-12">
+						<p class="withpw" id="left125">注销完成</p>
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
 				</div>
 				<div class="box1">
-					<span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:20px;">注销前请您仔细阅读以下重要信息！</span>
+					<span id="spanself1">注销前请您仔细阅读以下重要信息！</span>
 				</div>
 				<div class="box1">
-					<span style="font-size:14px;color:rgba(255,98,75,1);line-height:20px;">账号注销重要信息</span>
+					<span id="spanself2">账号注销重要信息</span>
 				</div>
 				<div class="Tips">
-					<p style="font-size: 14px;color: #333333;">提交账号注销申请为不可逆操作。 </p>
+					<p id="pself1">提交账号注销申请为不可逆操作。 </p>
 					<p>为保证您的账号、财产安全，并保障正常的社会公共秩序，在您提交新睿云账号注销请求前，请先确认如下信息： </p>
 					<p>1、提交账号注销请求的为您本人，或获得账号持有者本人合法授权的代理人/代表人。后一种情形下，代理人/代表人需将本提示及注销过程中的所有文件，告知账号持有者本人并确保本人已理解并同</p>
 					<p>意前述文件的全部内容。 </p>
@@ -59,28 +59,28 @@
 					<p>7、您提交账号注销申请，并非为了躲避正在或即将发生的纠纷诉讼，或规避主管部门的监管，或绕开法律法规的相关规定等不良意图。</p>
 				</div>
 				<div class="TipsAgain">
-					<p style="color: #333333;font-size: 14px;">再次提示：</p>
-					<p style="color: #333333;font-size: 14px;">提交账号注销申请为不可逆操作。</p>
+					<p id="pself1">再次提示：</p>
+					<p id="pself1">提交账号注销申请为不可逆操作。</p>
 					<p>账号注销后，您将无法再次登录新睿云网站、论坛、APP，无法访问控制面板或云站点控制面板或进行其他依赖于账号权限进行的操作。 </p>
 					<p>您在该账号下的个人信息、交易记录、业务数据、历史信息等均将无法找回。 </p>
 					<p>如果您希望保持与此账号相关联的任何云服务（包括云站点），仅希望终止部分产品/资源，请不要继续后续操作。</p>
 				</div>
 				<div class="confirmation">
-					<p style="color: #333333;font-size: 14px;">确定注销</p>
+					<p id="pself1">确定注销</p>
 					<p>您正在尝试注销自己的新睿云帐号。请确保账号下无有效业务，在账号注销期间不要进行任何操作，以免注销失败。 </p>
 					<p>注销后，您将无法再使用任何阿里云服务，并且您的帐号和数据也将会丢失。</p>
 				</div>
 				<Form ref="formInline" :model="formInline" :rules="ruleInline" inline style="float: left;">
 					<FormItem prop="cancellation">
 						<Input v-model="formInline.cancellation" @on-blur='MonitorInput' type="textarea" :autosize="{minRows: 5,maxRows: 5}"
-						 :rows="5" :placeholder="formInline.cancellationplace" style="width:618px;margin-top: 10px;"></Input>
+						 :rows="5" :placeholder="formInline.cancellationplace" id="inputself1"></Input>
 					</FormItem>
 				</Form>
-				<p style="">
-					<Checkbox v-model="cancellationCheck" style="color:#666666;line-height:16px;">已了解<span style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号空****将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
+				<p>
+					<Checkbox v-model="cancellationCheck" id="checkself1">已了解<span style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号空****将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
 				</p>
-				<Button @click="$router.push('/ruicloud/usercenter')" style="margin-left: 939px;margin-top: 40px;">取消注销</Button>
-				<Button type="primary" :disabled="Cancellationdisabled" @click="handleSubmit('formInline')" style="margin-left: 10px;margin-top: 40px;">确定注销</Button>
+				<Button @click="$router.push('/ruicloud/usercenter')" id="butself1">取消注销</Button>
+				<Button type="primary" :disabled="Cancellationdisabled" @click="handleSubmit('formInline')" id="butself2">确定注销</Button>
 			</div>
 			<div class="content1" v-if="selectedTabSec == 'content1'">
 				<div style="float: left;" @click="changeTab('content0')">
@@ -92,12 +92,12 @@
 						<p class="withp">协议与反馈</p>
 						<img src="../../assets/img/back/Rectangle 2.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -17px;">
+					<div class="withdrawalpo" id="mleft-17">
 						<p class="withp">账号信息检测与注销</p>
 						<img src="../../assets/img/back/Rectangle 22.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -17px;">
-						<p class="withp" style="left: 175px;">注销完成</p>
+					<div class="withdrawalpo" id="mleft-17">
+						<p class="withp" id="left175">注销完成</p>
 						<img src="../../assets/img/back/Rectangle 21.png" />
 					</div>
 				</div>
@@ -106,51 +106,51 @@
 						<p class="withpw">协议与反馈</p>
 						<img src="../../assets/img/back/noname1.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left:-12px;">
+					<div class="withdrawalpo" id="mleft-12">
 						<p class="withpw">账号信息检测</p>
 						<img src="../../assets/img/back/noname3.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -12px;">
+					<div class="withdrawalpo" id="mleft-12">
 						<p class="withpw">实名信息填写</p>
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -12px;">
-						<p class="withpw" style="left: 125px;">注销完成</p>
+					<div class="withdrawalpo" id="mleft-12">
+						<p class="withpw" id="left125">注销完成</p>
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
 				</div>
-				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0" style="float: left;width: 100%;">
+				<div v-if="$store.state.authInfo&&$store.state.authInfo.checkstatus==0" id="divself1">
 					<div v-if="testingStatus==1||testingStatus==0" class="ProgressCancel">
-						<p v-if="testingStatus==0" style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">正在检测您的账号，请稍等…</p>
-						<p v-if="testingStatus==1" style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">检测完毕，请继续完成下一步实名认证，我们会在
+						<p v-if="testingStatus==0" id="pself2">正在检测您的账号，请稍等…</p>
+						<p v-if="testingStatus==1" id="pself2">检测完毕，请继续完成下一步实名认证，我们会在
 							<span style="color: #FF624B;">24小时内</span> 审核完成，并将审核结果发送至您号码为 <span style="color: #FF624B;">{{ $store.state.userInfo.phone}}</span>
 							的手机上，请注意查收。</p>
-						<Progress :percent="cancelpercent" status="active" style="width: 600px;height: 30px;margin-top: 20px;"></Progress><br /><!-- changeTab('content2') -->
+						<Progress :percent="cancelpercent" status="active" id="progressself1"></Progress><br /><!-- changeTab('content2') -->
 						<Button type="primary" v-if="testingStatus==1" @click="changeTab('content2')" style="margin-top: 40px;">下一步</Button>
 					</div>
-					<div v-if="testingStatus==2" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
+					<div v-if="testingStatus==2" id="divself2">
 						<img src="../../assets/img/back/false.png" />
-						<p style="font-size:18px;color:rgba(255,0,0,1);line-height:24px;margin-top: 15px;">检测失败</p>
-						<div style="width:320px;font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;margin-left: 420px;min-height: 22px;max-height:45px;">
+						<p id="pself3">检测失败</p>
+						<div id="divself3">
 							{{failurePrompt}}
 						</div>
-						<Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
-						<Button type="primary" @click="$router.push('/ruicloud/overview')" style="margin-left: 10px;margin-top: 40px;">返回控制台</Button>
+						<Button @click="$router.push('/ruicloud/index')" id="butself3">返回官网</Button>
+						<Button type="primary" id="butself4" @click="$router.push('/ruicloud/overview')">返回控制台</Button>
 					</div>
 				</div>
 				<div v-if="$store.state.authInfo == null" style="float: left;width: 100%;">
 					<div v-if="testingStatus==0" class="ProgressCancel">
-						<p style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">正在检测您的账号，请稍等…</p>
-						<Progress :percent="cancelpercent" status="active" style="width: 600px;height: 30px;margin-top: 20px;"></Progress>
+						<p id="pself4">正在检测您的账号，请稍等…</p>
+						<Progress :percent="cancelpercent" status="active" id="progressself2"></Progress>
 					</div>
-					<div v-if="testingStatus==2" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
+					<div v-if="testingStatus==2" id="divself4">
 						<img src="../../assets/img/back/false.png" />
-						<p style="font-size:18px;color:rgba(255,0,0,1);line-height:24px;margin-top: 15px;">检测失败</p>
-						<div style="width:320px;font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;margin-left: 420px;min-height: 22px;max-height:45px;">
+						<p id="pself5">检测失败</p>
+						<div id="divself3">
 							{{failurePrompt}}
 						</div>
-						<Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
-						<Button type="primary" @click="$router.push('/ruicloud/overview')" style="margin-left: 10px;margin-top: 40px;">返回控制台</Button>
+						<Button @click="$router.push('/ruicloud/index')" id="butself3">返回官网</Button>
+						<Button type="primary" id="butself4" @click="$router.push('/ruicloud/overview')">返回控制台</Button>
 					</div>
 				</div>
 			</div>
@@ -164,12 +164,12 @@
 						<p class="withp">协议与反馈</p>
 						<img src="../../assets/img/back/Rectangle 2.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -17px;">
+					<div class="withdrawalpo" id="mleft-17">
 						<p class="withp">账号信息检测与注销</p>
 						<img src="../../assets/img/back/Rectangle 22.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -17px;">
-						<p class="withp" style="left: 175px;">注销完成</p>
+					<div class="withdrawalpo" id="mleft-17">
+						<p class="withp" id="left175">注销完成</p>
 						<img src="../../assets/img/back/Rectangle 22.png" />
 					</div>
 				</div>
@@ -182,12 +182,12 @@
 						<p class="withpw">账号信息检测</p>
 						<img src="../../assets/img/back/noname3.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -12px;">
+					<div class="withdrawalpo" id="mleft-12">
 						<p class="withpw">实名信息填写</p>
 						<img src="../../assets/img/back/noname3.png" />
 					</div>
-					<div class="withdrawalpo" style="margin-left: -12px;">
-						<p class="withpw" style="left: 125px;">注销完成</p>
+					<div class="withdrawalpo" id="mleft-12">
+						<p class="withpw" id="left125">注销完成</p>
 						<img src="../../assets/img/back/noname2.png" />
 					</div>
 				</div>
@@ -196,34 +196,34 @@
 						<div>
 							<Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">
 								<div v-if="$store.state.authInfo&&$store.state.authInfo.authtype==0&&$store.state.authInfo.checkstatus==0">
-									<Form-item style="width: 100%;margin-top: 20px;margin-bottom:0px;">
-										<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">真实姓名</p>
-										<p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(0,0,0,0.43);margin-top: 10px;">{{ $store.state.userInfo.realname}}</p>
+									<Form-item id="formitself1">
+										<p id="pself6">真实姓名</p>
+										<p id="pself7">{{ $store.state.userInfo.realname}}</p>
 									</Form-item>
-									<FormItem style="width: 100%;margin-top: 20px;" prop="ID">
-										<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">注册身份证号码</p>
-										<Input v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码" style="width:240px;margin-top: 10px;"></Input>
+									<FormItem id="formitself1" prop="ID">
+										<p id="pself6">注册身份证号码</p>
+										<Input id="inputself2" v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码"></Input>
 									</FormItem>
-									<p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.personHint">
+									<p id="pself8" v-if="authModifyPhoneFormOne.personHint">
 										<Icon type="ios-close"></Icon>
 										身份证号码输入有误，验证失败，请尝试
-										<span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+										<span id="spanself3" @click="$router.push('work')">提交工单</span> 或
 										<a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
 									</p>
 								</div>
 								<div v-if="$store.state.authInfo&&$store.state.authInfo.authtype!=0&&$store.state.authInfo.checkstatus==0">
-									<Form-item style="width: 100%;margin-top: 20px;margin-bottom:0px;">
-										<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">真实姓名</p>
-										<p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(0,0,0,0.43);margin-top: 10px;">{{ $store.state.userInfo.realname}}</p>
+									<Form-item id="formitself1">
+										<p id="pself9">真实姓名</p>
+										<p id="pself7">{{ $store.state.userInfo.realname}}</p>
 									</Form-item>
-									<FormItem style="width: 100%;margin-top: 20px;" prop="businessLicense">
-										<p style="font-size:14px;font-family:MicrosoftYaHei;color:#495060;">营业执照号码</p>
-										<Input v-model="authModifyPhoneFormOne.businessLicense" placeholder="请输入营业执照号" style="width:240px;margin-top: 10px;"></Input>
+									<FormItem id="formitself1" prop="businessLicense">
+										<p id="pself9">营业执照号码</p>
+										<Input id="inputself2" v-model="authModifyPhoneFormOne.businessLicense" placeholder="请输入营业执照号"></Input>
 									</FormItem>
-									<p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.companyHint">
+									<p id="pself8" v-if="authModifyPhoneFormOne.companyHint">
 										<Icon type="ios-close"></Icon>
 										公司营业执照号码输入有误，验证失败，请尝试
-										<span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+										<span id="spanself3" @click="$router.push('work')">提交工单</span> 或
 										<a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
 									</p>
 								</div>
@@ -231,20 +231,20 @@
 						</div>
 						<div>
 							<div v-if="$store.state.authInfo&&$store.state.authInfo.authtype==0&&$store.state.authInfo.checkstatus==0">
-								<p style="font-size:14px;color:color:#495060;;margin-top:20px;">
+								<p id="pself10">
 									请上传手持身份证人像照片
 								</p>
-								<div class="upload-img" style="margin-top:10px">
-									<div class="content" style="background:rgba(247,247,247,1);">
+								<div class="upload-img" id="divself5">
+									<div class="content" id="divself6">
 										<div class="left">
 											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
 											 :format="['jpg','pdf','png','gif']" :max-size="4096" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize"
 											 :on-success="legalPersonIDFront11" style="background: #D8D8D8;">
-												<div class="icon-wrap" v-if="uploadImgDispaly==''" style="background: #FFFFFF;">
-													<Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+												<div class="icon-wrap" id="divself7" v-if="uploadImgDispaly==''">
+													<Icon type="plus" size="28" id="iconself2"></Icon>
 												</div>
 												<img v-else :src="uploadImgDispaly">
-												<p style="width: 110px;text-align: center;">上传图片</p>
+												<p id="pself11">上传图片</p>
 											</Upload>
 
 										</div>
@@ -254,25 +254,25 @@
 										</div>
 									</div>
 								</div>
-								<p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+								<p id="pself12">
 									提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过<span class="red">4MB</span>。
 								</p>
 							</div>
 							<div v-if="$store.state.authInfo&&$store.state.authInfo.authtype!=0&&$store.state.authInfo.checkstatus==0">
-								<p style="font-size:14px;color:color:#495060;;margin-top:20px;">
+								<p id="pself10">
 									请根据提示上传相关图片进行验证
 								</p>
-								<div class="upload-img" style="margin-top:10px">
-									<div class="content" style="background:rgba(247,247,247,1);">
+								<div class="upload-img" id="divself5">
+									<div class="content" id="divself6">
 										<div class="left">
 											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
 											 :format="['jpg','pdf','png','gif']" :max-size="4096" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize"
 											 :on-success="legalPersonIDFront12">
-												<div class="icon-wrap" v-if="uploadImgDispaly1==''" style="background: #FFFFFF;">
-													<Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+												<div class="icon-wrap" id="divself7" v-if="uploadImgDispaly1==''">
+													<Icon type="plus" size="28" id="iconself2"></Icon>
 												</div>
 												<img v-else :src="uploadImgDispaly1">
-												<p style="width: 110px;text-align: center;">上传图片</p>
+												<p id="pself11">上传图片</p>
 											</Upload>
 
 										</div>
@@ -282,17 +282,17 @@
 										</div>
 									</div>
 								</div>
-								<div class="upload-img" style="margin-top:10px">
-									<div class="content" style="background:rgba(247,247,247,1);">
+								<div class="upload-img" id="divself5">
+									<div class="content" id="divself6">
 										<div class="left">
 											<Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
 											 :format="['jpg','pdf','png','gif']" :max-size="4096" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize"
 											 :on-success="legalPersonIDFront13">
-												<div class="icon-wrap" v-if="uploadImgDispaly2==''" style="background: #FFFFFF;">
-													<Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+												<div class="icon-wrap" id="divself7" v-if="uploadImgDispaly2==''">
+													<Icon type="plus" size="28" id="iconself2"></Icon>
 												</div>
 												<img v-else :src="uploadImgDispaly2">
-												<p style="width: 110px;text-align: center;">上传图片</p>
+												<p id="pself11">上传图片</p>
 											</Upload>
 
 										</div>
@@ -302,28 +302,28 @@
 										</div>
 									</div>
 								</div>
-								<p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+								<p id="pself12">
 									提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过<span class="red">4MB</span>。
 								</p>
 							</div>
 						</div>
-						<Button @click="$router.push('/ruicloud/usercenter')" style="margin-left: 939px;margin-top: 40px;">取消注销</Button>
-						<Button type="primary" @click="SubInformation" style="margin-left: 10px;margin-top: 40px;">提交信息</Button>
+						<Button @click="$router.push('/ruicloud/usercenter')" id="btuself1">取消注销</Button>
+						<Button type="primary" @click="SubInformation" id="btuself2">提交信息</Button>
 					</div>
-					<div v-if="checkStatus==1" style="width: 100%;text-align: center;margin-top: 120px;justify-content: center;">
+					<div v-if="checkStatus==1" id="divself4">
 						<img src="../../assets/img/back/susses.png" />
-						<p style="font-size:18px;color:rgba(48,186,120,1);line-height:24px;margin-top: 15px;">提交成功</p>
-						<p style="font-size:14px;color:rgba(51,51,51,1);line-height:24px;margin-top: 20px;">您的信息已提交成功，我们会在24小时内审核完毕</p>
-						<p style="font-size:14px;color:rgba(51,51,51,1);line-height:24px;">请耐心等待</p>
-						<Button @click="$router.push('/ruicloud/index')" style="margin-top: 40px;border:1px solid #2A99F2;background: white;color:#2A99F2;">返回官网</Button>
+						<p id="pself13">提交成功</p>
+						<p id="pself14">您的信息已提交成功，我们会在24小时内审核完毕</p>
+						<p id="pself15">请耐心等待</p>
+						<Button @click="$router.push('/ruicloud/index')" id="btuself3">返回官网</Button>
 					</div>
 				</div>
 				<div v-if="$store.state.authInfo == null" style="float: left;width: 100%;">
 					<div v-if="testingStatus==1" class="ProgressCancel">
-						<p style="font-size:14px;color:rgba(51,51,51,1);margin-top: 20px;line-height:20px;">检测完毕，我们会在 
-							<span style="color: #FF624B;">24小时内</span>  审核完成，并将审核结果发送至您号码为 <span style="color: #FF624B;">{{ $store.state.userInfo.phone}}</span>
-							 的手机上，请注意查收。</p>
-						<Progress :percent="cancelpercent" status="active" style="width: 600px;height: 30px;margin-top: 20px;"></Progress><br /><!-- changeTab('content2') -->
+						<p id="pself4">检测完毕，我们会在
+							<span style="color: #FF624B;">24小时内</span> 审核完成，并将审核结果发送至您号码为 <span style="color: #FF624B;">{{ $store.state.userInfo.phone}}</span>
+							的手机上，请注意查收。</p>
+						<Progress :percent="cancelpercent" status="active" id="progressself3"></Progress><br /><!-- changeTab('content2') -->
 						<Button type="primary" @click="$router.push('/ruicloud/index')" style="margin-top: 40px;">返回官网</Button>
 					</div>
 				</div>
@@ -336,7 +336,7 @@
 				</p>
 				<div class="modal-content-s" style="width: 101%;padding: 0;">
 					<div>
-						<p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">确认后，系统将执行注销前检查，通过后自动进入账号注销进程，您无法自行终止。在此期间，请不要使用此账号进行任何操作，以免造成注销失败。
+						<p class="lh24" id="pself16">确认后，系统将执行注销前检查，通过后自动进入账号注销进程，您无法自行终止。在此期间，请不要使用此账号进行任何操作，以免造成注销失败。
 						</p>
 					</div>
 				</div>
@@ -445,14 +445,14 @@
 				//this.cancellationCheck = false
 				//this.formInline.cancellation = ''
 				this.changeTab('content1')
-				if(this.$store.state.authInfo&&this.$store.state.authInfo.checkstatus==0){
+				if (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus == 0) {
 					var Interval = setInterval(() => {
 						this.cancelpercent++
 						if (this.cancelpercent == 100) {
 							clearInterval(Interval)
 							axios.get('user/detectionAccount.do', {
 								params: {
-					
+
 								}
 							}).then(response => {
 								if (response.status == 200 && response.data.status == 1) {
@@ -464,30 +464,28 @@
 								}
 							})
 							return false;
-					
+
 						}
 					}, 100)
-				}
-				else if(this.$store.state.authInfo == null){
+				} else if (this.$store.state.authInfo == null) {
 					var Interval = setInterval(() => {
 						this.cancelpercent++
 						if (this.cancelpercent == 100) {
 							clearInterval(Interval)
 							axios.get('user/detectionAccount.do', {
 								params: {
-					
+
 								}
 							}).then(response => {
 								if (response.status == 200 && response.data.status == 1) {
 									this.testingStatus = response.data.status
-									if(this.testingStatus==1){
+									if (this.testingStatus == 1) {
 										this.changeTab('content2')
 										axios.post('user/clearAccountApplyFor.do', {
 											authType: '2',
 											cancellationDesc: this.formInline.cancellation
 										}).then(response => {
-											if (response.status == 200 && response.data.status == 1) {
-											} else {
+											if (response.status == 200 && response.data.status == 1) {} else {
 												this.$Message.error(response.data.message)
 											}
 										})
@@ -500,11 +498,11 @@
 								}
 							})
 							return false;
-					
+
 						}
 					}, 100)
 				}
-				
+
 			},
 			handleFormatError() {
 				this.$Message.info({
@@ -788,6 +786,266 @@
 		font-size: 12px;
 		font-family: MicrosoftYaHei;
 		color: #666666;
+		line-height: 24px;
+	}
+
+	#mleft-17 {
+		margin-left: -17px;
+	}
+
+	#mleft-12 {
+		margin-left: -12px;
+	}
+
+	#left175 {
+		left: 175px;
+	}
+
+	#left125 {
+		left: 125px;
+	}
+
+	#spanself1 {
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: rgba(51, 51, 51, 1);
+		line-height: 20px;
+	}
+
+	#spanself2 {
+		font-size: 14px;
+		color: rgba(255, 98, 75, 1);
+		line-height: 20px;
+	}
+
+	#pself1 {
+		font-size: 14px;
+		color: #333333;
+	}
+
+	#inputself1 {
+		width: 618px;
+		margin-top: 10px;
+	}
+
+	#checkself1 {
+		color: #666666;
+		line-height: 16px;
+	}
+
+	#butself1 {
+		margin-left: 939px;
+		margin-top: 40px;
+	}
+
+	#butself2 {
+		margin-left: 10px;
+		margin-top: 40px;
+	}
+
+	#divself1 {
+		float: left;
+		width: 100%;
+	}
+
+	#pself2 {
+		font-size: 14px;
+		color: rgba(51, 51, 51, 1);
+		margin-top: 20px;
+		line-height: 20px;
+	}
+
+	#progressself1 {
+		width: 600px;
+		height: 30px;
+		margin-top: 20px;
+	}
+
+	#divself2 {
+		width: 100%;
+		text-align: center;
+		margin-top: 120px;
+		justify-content: center;
+	}
+
+	#pself3 {
+		font-size: 18px;
+		color: rgba(255, 0, 0, 1);
+		line-height: 24px;
+		margin-top: 15px;
+	}
+
+	#divself3 {
+		width: 320px;
+		font-size: 14px;
+		color: rgba(51, 51, 51, 1);
+		line-height: 24px;
+		margin-top: 20px;
+		margin-left: 420px;
+		min-height: 22px;
+		max-height: 45px;
+	}
+
+	#butself3 {
+		margin-top: 40px;
+		border: 1px solid #2A99F2;
+		background: white;
+		color: #2A99F2;
+	}
+
+	#butself4 {
+		margin-left: 10px;
+		margin-top: 40px;
+	}
+
+	#pself4 {
+		font-size: 14px;
+		color: rgba(51, 51, 51, 1);
+		margin-top: 20px;
+		line-height: 20px;
+	}
+
+	#progressself2 {
+		width: 600px;
+		height: 30px;
+		margin-top: 20px;
+	}
+
+	#divself4 {
+		width: 100%;
+		text-align: center;
+		margin-top: 120px;
+		justify-content: center;
+	}
+
+	#pself5 {
+		font-size: 18px;
+		color: rgba(255, 0, 0, 1);
+		line-height: 24px;
+		margin-top: 15px;
+	}
+
+	#formitself1 {
+		width: 100%;
+		margin-top: 20px;
+		margin-bottom: 0px;
+	}
+
+	#pself6 {
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: #495060;
+	}
+
+	#pself7 {
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: rgba(0, 0, 0, 0.43);
+		margin-top: 10px;
+	}
+
+	#inputself2 {
+		width: 240px;
+		margin-top: 10px;
+	}
+
+	#pself8 {
+		color: #FF0000;
+		position: absolute;
+		bottom: 106px;
+	}
+
+	#spanself3 {
+		color: #2d8cf0;
+		cursor: pointer;
+	}
+
+	#pself9 {
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: #495060;
+	}
+
+	#pself10 {
+		font-size: 14px;
+		color: #495060;
+		margin-top: 20px;
+	}
+
+	#divself5 {
+		margin-top: 10px;
+	}
+
+	#divself6 {
+		background: rgba(247, 247, 247, 1);
+	}
+
+	#divself7 {
+		background: #FFFFFF;
+	}
+
+	#iconself2 {
+		color: #D8D8D8;
+	}
+
+	#pself11 {
+		width: 110px;
+		text-align: center;
+	}
+
+	#pself12 {
+		font-size: 14px;
+		color: rgba(153, 153, 153, 1);
+		margin-top: 10px;
+	}
+
+	#btuself1 {
+		margin-left: 939px;
+		margin-top: 40px;
+	}
+
+	#btuself2 {
+		margin-left: 10px;
+		margin-top: 40px;
+	}
+
+	#pself13 {
+		font-size: 18px;
+		color: rgba(48, 186, 120, 1);
+		line-height: 24px;
+		margin-top: 15px;
+	}
+
+	#pself14 {
+		font-size: 14px;
+		color: rgba(51, 51, 51, 1);
+		line-height: 24px;
+		margin-top: 20px;
+	}
+
+	#pself15 {
+		font-size: 14px;
+		color: rgba(51, 51, 51, 1);
+		line-height: 24px;
+	}
+
+	#btuself3 {
+		margin-top: 40px;
+		border: 1px solid #2A99F2;
+		background: white;
+		color: #2A99F2;
+	}
+
+	#progressself3 {
+		width: 600px;
+		height: 30px;
+		margin-top: 20px;
+	}
+
+	#pself16 {
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: rgba(102, 102, 102, 1);
 		line-height: 24px;
 	}
 </style>
