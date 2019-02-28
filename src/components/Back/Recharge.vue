@@ -288,8 +288,8 @@
       },
       vipRuleScroll(e) {
         this.vipScroll = e.srcElement.scrollTop;
-        this.vipHeight = e.srcElement.scrollHeight;
-        if (e.srcElement.scrollTop > (e.srcElement.scrollHeight -561) && this.vipCount == 0) {
+        this.vipHeight = e.srcElement.scroHeight;
+        if (e.srcElement.scrollTop > (e.srcElement.scroHeight -561) && this.vipCount == 0) {
           this.disabledButton = false;
         }
       },

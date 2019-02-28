@@ -899,7 +899,7 @@
         <p class="cash-coupon-p">剩余余额：<span>¥{{ remainingBalance}}</span></p>
         <div class="beVip">
           <p>您已满足成为{{ cashCouponForm.vipGrade}}资格！</p>
-          <Checkbox v-model="cashCouponForm.agreeStatus"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意</span></Checkbox>
+          <Checkbox v-model="cashCouponForm.agreeStatus" :disabled="cashCouponForm.vipRuleDisabled"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意</span></Checkbox>
             <span style="cursor: pointer;color:#4A97EE;margin-left: -18px;" @click="getVipRule">《会员制规则》</span>
         </div>
       </div>
@@ -1101,13 +1101,14 @@
         ],
         disabledButton: true,
         cashCouponForm: {
-          agreeStatus: true,
+          agreeStatus: false,
           vipList: [],
           vipId: '',
           vipGrade: '',
           vipLevel: 0,
           upVipCost: 0,
-          successMsg: ''
+          successMsg: '',
+          vipRuleDisabled: true
         },
         uploadImgDispaly: '',
         uploadImgDispaly1: '',
@@ -2225,7 +2226,7 @@
       }
     },
     mounted(){
-     
+
     },
     methods: {
       //Cashforwithdrawa(){
@@ -2238,7 +2239,7 @@
       //}
       //})
       //},
-      
+
       selectChange(item, index) {
         if (item.startmoney > this.totalCost) {
           this.activeIndex = null
