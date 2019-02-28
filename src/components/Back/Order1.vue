@@ -235,11 +235,25 @@
           {
             title: '会员折后价',
             render(h, obj) {
-              // if (obj.row.originalcost > obj.row.cost) {
-                return h('span', {}, obj.row.cost)
-              // } else {
-                // return h('span', '--')
-              // }
+              if (obj.row.discountmessage != '') {
+                return h('div',{
+                  style:{
+                    textAlign:'center'
+                  }
+                }, [
+                    h('p',{},obj.row.cost),
+                    h('p',{
+                      style:{
+                        color:'#FF624B',
+                        fontSize:'12px',
+                        marginTop:'5px'
+                      },
+                    },'（ '+obj.row.discountmessage+' 折）')
+                ])
+              } else {
+
+                return h('span',{}, obj.row.cost)
+              }
             }
           }
         ],
@@ -295,23 +309,23 @@
     beforeRouteEnter(to, from, next) {
       let params = {}
       let order = to.query.countOrder == undefined ?'':to.query.countOrder;
-      let orderS = sessionStorage.getItem('countOrder') == 'undefined'?null:sessionStorage.getItem('countOrder')
-      if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
-        params.countOrder = order || orderS;
-        this.orderInfo.orderId = order || orderS;
-        sessionStorage.setItem('countOrder', order + '')
-      }
-      if (to.query.countOrder) {
-        params.countOrder = to.query.countOrder;
-        this.orderInfo.orderId = to.query.countOrder;
-      }
+        let orderS = sessionStorage.getItem('countOrder') == 'undefined'?null:sessionStorage.getItem('countOrder')
+        if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
+          params.countOrder = order || orderS;
+          sessionStorage.setItem('countOrder', order + '')
+        }
+        if (to.query.countOrder) {
+          params.countOrder = to.query.countOrder;
+        } 
+          
+      //  vm.orderInfo.orderId =params.countOrder;
       axios.get('user/searchOrderByBuy.do', {
         params
       }).then(response => {
         next(vm => {
           vm.setOrder(response)
         })
-      })
+       })
     },
     created() {
       this.getSpentCost();
@@ -344,6 +358,11 @@
             data.cost = item.cost
             data.discountedorders = item.discountedorders
             data.overTime = item.overTime
+            if(item.discountmessage != undefined){
+              data.discountmessage = item.discountmessage.substring(item.discountmessage.indexOf('，')-6,item.discountmessage.indexOf('，')-3)
+            }else{
+              data.discountmessage = ''
+            }
            if(data['订单状态']){
               this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
               this.couponInfo.cost += data['订单状态'] == 1 ? 0:item.cost
@@ -431,24 +450,7 @@
         })
       },
       changeCashbox(bol){
-        if(this.vipName =='' || this.vipName == undefined){
-          if (this.orderPay.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
-               this.groupList.splice(bol.indexOf('cash'), 1)
-              this.$message.info({
-                title:'提示',
-                content: '当前订单不满足使用现金券要求'
-              })
-              return;
-          }
-          if(bol.indexOf('coupon') > -1){
-            this.groupList.splice(bol.indexOf('coupon'), 1);
-            this.$message.info({
-                title:'提示',
-                content: '尊敬的用户您好：现金券和优惠券不能同时使用。'
-              })
-             return;
-          }
-          if(this.couponInfo.cash != 0){
+        if(this.couponInfo.cash > 0){
             if( this.orderPay.isUseVoucher == 1 && bol.indexOf('cash') == -1){
               this.groupList.push('cash');
               this.$message.info({
@@ -459,7 +461,24 @@
             }else{
               this.couponInfo.selectTicket = '';
             }
-        }
+          }
+        if(this.vipName =='' || this.vipName == undefined){
+          if (this.orderPay.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
+               this.groupList.splice(bol.indexOf('cash'), 1)
+              this.$message.info({
+                title:'提示',
+                content: '当前订单不满足使用现金券要求'
+              })
+              return;
+          }
+          if(bol.indexOf('coupon') > -1 && this.couponInfo.cash >0){
+            this.groupList.splice(bol.indexOf('coupon'), 1);
+            this.$message.info({
+                title:'提示',
+                content: '尊敬的用户您好：现金券和优惠券不能同时使用。'
+              })
+             return;
+          }
         }
       },
       radioChange() {
@@ -521,7 +540,7 @@
       getWalletsBalance(){
         this.$http.post('device/DescribeWalletsBalance.do',{}).then(res =>{
           if (res.status == 200 && res.data.status == '1') {
-            this.couponInfo.cash = res.data.data.voucher
+            this.couponInfo.cash = Number(res.data.data.voucher);
           }
         }).catch(err =>{
           if(err)
@@ -604,13 +623,13 @@
         axios.get('information/payOrder.do',{
           params: {
               order:  this.orderInfo.orderId.substring(0, this.orderInfo.orderId.length-1),
-              ticket: this.orderInfo.ticket
+              ticket: this.couponInfo.selectTicket
             }
         }).then(res =>{
           this.$router.push('resultNew')
           if(res.status ==200 && res.data.status == 1){
             sessionStorage.setItem('payResult', 'success')
-            sessionStorage.setItem('successMsg', response.data.message)
+            sessionStorage.setItem('successMsg', res.data.message)
             if (res.data.giftNumMessage) {
                 sessionStorage.setItem('firstMsg', res.data.giftNumMessage)
               } else {
@@ -774,9 +793,9 @@
             this.couponInfo.couponList.forEach(item => {
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
-                    this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
+                    this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money).toFixed(2));
                   } else if (item.tickettype == 0) {
-                    this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
+                    this.couponInfo.totalCost = Number((this.couponInfo.cost - item.money).toFixed(2));
                   }
                 }
             })
@@ -785,9 +804,9 @@
               this.couponInfo.couponList.forEach(item => {
               if (item.operatorid == this.couponInfo.selectTicket) {
                 if (item.tickettype == 1) {
-                  this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
+                  this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money).toFixed(2));
                 } else if (item.tickettype == 0) {
-                  this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
+                  this.couponInfo.totalCost = Number((this.couponInfo.cost - item.money).toFixed(2));
                 }
               }
             })
@@ -834,10 +853,10 @@
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
                     if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
-                      this.couponInfo.totalCost = this.couponInfo.cash - (this.couponInfo.cost * item.money);
+                      this.couponInfo.totalCost = Number(this.couponInfo.cash - (this.couponInfo.cost * item.money)).toFixed(2);
                     }
                     if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
-                      this.couponInfo.totalCost = (this.couponInfo.cost * item.money) - this.couponInfo.cash;
+                      this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money) - this.couponInfo.cash).toFixed(2);
                     }
                     
                     if( Number(this.couponInfo.totalCost) == 0){
@@ -848,7 +867,7 @@
                       this.couponInfo.totalCost = 0;
                     }
                     if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
-                      this.couponInfo.totalCost = (this.couponInfo.cost - item.money) - this.couponInfo.cash;
+                      this.couponInfo.totalCost = Number((this.couponInfo.cost - item.money) - this.couponInfo.cash).toFixed(2);
                     }
                     if( Number(this.couponInfo.totalCost) == 0){
                       this.isButtonCash = true; 
@@ -887,11 +906,11 @@
       },
       'couponInfo.cash':{ 
         handler:function(){
-          if(this.vipName =='' || this.vipName == undefined){
+          // if(this.vipName =='' || this.vipName == undefined){
             if(this.couponInfo.cash != 0){
               this.groupList.push('cash');
             }
-          }
+          // }
         },
         deep:true,
         immediate: true
