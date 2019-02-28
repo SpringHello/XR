@@ -3499,6 +3499,7 @@
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.userInfoUpdate()
+            this.cashCouponForm.successMsg = res.data.message
             this.showModal.successMsg = true
           } else {
             this.showModal.cashCoupon = false

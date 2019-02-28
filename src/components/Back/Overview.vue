@@ -411,7 +411,7 @@
           // 企业认证
           'company-icon': this.authInfo.authtype == 1 && this.authInfo.checkstatus == 0,
           // 企业认证中
-          'company-authing': this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2
+          'company-authing': (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2)||this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1
         }
       },
       authText() {
@@ -423,6 +423,8 @@
           return '企业认证'
         } else if (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2) {
           return '企业认证中'
+        } else if (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1) {
+          return '企业认证失败'
         }
       }
     },

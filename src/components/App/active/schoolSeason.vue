@@ -1739,7 +1739,6 @@ export default {
               cpuNum: this.gpuProductHot.cpuMemory.cpunum,
               memory: this.gpuProductHot.cpuMemory.memory,
               bandWidth: this.gpuProductHot.bandwith,
-              rootDiskType: 'ssd',
               rootDiskSize: '40',
               diskType: 'ssd',
               networkId: 'no',

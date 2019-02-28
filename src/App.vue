@@ -14,7 +14,7 @@
         <router-link to="/ruicloud/index.htm" class="logo">
           <div></div>
         </router-link>
-        <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('schoolSeason')" alt="">
+        <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('/ruicloud/schoolSeason')" alt="">
         <div class="operate" style="padding-left:90px;">
           <ul @mouseleave="ME(-1)">
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
@@ -183,15 +183,15 @@
             </div>
             <div class="document">
               <p>文档</p>
-              <router-link v-for="(d,index) in document" :key="index" :to="d.url" target="_blank">
+              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank">
                 {{d.title}}
-              </router-link>
+              </a>
             </div>
             <div class="document">
               <p>服务与公告</p>
-              <router-link v-for="(d,index) in notice" :key="index" :to="d.url" target="_blank">
+              <a v-for="(d,index) in notice" :key="index" :href="d.url" target="_blank">
                 {{d.title}}
-              </router-link>
+              </a>
             </div>
             <div class="contact">
               <span>联系我们</span>
@@ -607,13 +607,13 @@
           {title: '计算', url: '/ruicloud/document'},
           {title: '网络', url: '/ruicloud/document'},
           {title: '安全', url: '/ruicloud/document'},
-          {title: '财务与账户', url: '/ruicloud/document'}
+          {title: '财务与账户', url: 'https://www.xrcloud.net/ruicloud/documentInfo/qHwTxQKS7/qZfGQSs8S'}
         ],
         // 服务与公告
         notice: [
-          {title: '最新公告', url: '/ruicloud/dynamic'},
-          {title: '新闻动态', url: '/ruicloud/dynamic'},
-          {title: '技术支持', url: '/ruicloud/dynamic'},
+          {title: '最新公告', url: 'https://news.xrcloud.net/huodonggonggao/article/1.html'},
+          {title: '新闻动态', url: 'https://news.xrcloud.net/fuwuqixunihua'},
+          {title: '技术支持', url: 'https://news.xrcloud.net/'},
         ],
         // 友情链接
         links: [
