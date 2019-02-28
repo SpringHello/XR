@@ -535,7 +535,7 @@
       getWalletsBalance(){
         this.$http.post('device/DescribeWalletsBalance.do',{}).then(res =>{
           if (res.status == 200 && res.data.status == '1') {
-            this.couponInfo.cash = res.data.data.voucher
+            this.couponInfo.cash = Number(res.data.data.voucher);
           }
         }).catch(err =>{
           if(err)
