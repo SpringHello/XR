@@ -236,7 +236,20 @@
             title: '会员折后价',
             render(h, obj) {
               // if (obj.row.originalcost > obj.row.cost) {
-                return h('span', {}, obj.row.cost)
+                return h('div',{
+                  style:{
+                    textAlign:'center'
+                  }
+                }, [
+                    h('p',{},obj.row.cost),
+                    h('p',{
+                      style:{
+                        color:'#FF624B',
+                        fontSize:'12px',
+                        marginTop:'5px'
+                      },
+                    },'（ '+obj.row.discountmessage+' 折）')
+                ])
               // } else {
                 // return h('span', '--')
               // }
@@ -344,6 +357,7 @@
             data.cost = item.cost
             data.discountedorders = item.discountedorders
             data.overTime = item.overTime
+            data.discountmessage = item.discountmessage.substring(item.discountmessage.indexOf('，')-6,item.discountmessage.indexOf('，')-3)
            if(data['订单状态']){
               this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
               this.couponInfo.cost += data['订单状态'] == 1 ? 0:item.cost
@@ -431,6 +445,18 @@
         })
       },
       changeCashbox(bol){
+        if(this.couponInfo.cash != 0){
+            if( this.orderPay.isUseVoucher == 1 && bol.indexOf('cash') == -1){
+              this.groupList.push('cash');
+              this.$message.info({
+                  title:'提示',
+                  content: '默认情况下优先使用现金券'
+                })
+              return;
+            }else{
+              this.couponInfo.selectTicket = '';
+            }
+          }
         if(this.vipName =='' || this.vipName == undefined){
           if (this.orderPay.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
                this.groupList.splice(bol.indexOf('cash'), 1)
@@ -448,18 +474,6 @@
               })
              return;
           }
-          if(this.couponInfo.cash != 0){
-            if( this.orderPay.isUseVoucher == 1 && bol.indexOf('cash') == -1){
-              this.groupList.push('cash');
-              this.$message.info({
-                  title:'提示',
-                  content: '默认情况下优先使用现金券'
-                })
-              return;
-            }else{
-              this.couponInfo.selectTicket = '';
-            }
-        }
         }
       },
       radioChange() {
@@ -604,13 +618,13 @@
         axios.get('information/payOrder.do',{
           params: {
               order:  this.orderInfo.orderId.substring(0, this.orderInfo.orderId.length-1),
-              ticket: this.orderInfo.ticket
+              ticket: this.couponInfo.selectTicket
             }
         }).then(res =>{
           this.$router.push('resultNew')
           if(res.status ==200 && res.data.status == 1){
             sessionStorage.setItem('payResult', 'success')
-            sessionStorage.setItem('successMsg', response.data.message)
+            sessionStorage.setItem('successMsg', res.data.message)
             if (res.data.giftNumMessage) {
                 sessionStorage.setItem('firstMsg', res.data.giftNumMessage)
               } else {
@@ -887,11 +901,11 @@
       },
       'couponInfo.cash':{ 
         handler:function(){
-          if(this.vipName =='' || this.vipName == undefined){
+          // if(this.vipName =='' || this.vipName == undefined){
             if(this.couponInfo.cash != 0){
               this.groupList.push('cash');
             }
-          }
+          // }
         },
         deep:true,
         immediate: true
