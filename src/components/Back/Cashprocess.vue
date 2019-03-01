@@ -689,8 +689,8 @@
 		            businessLicense: this.authModifyPhoneFormOne.businessLicense,
 		            authType: '1',
 		            newPhone: this.authModifyPhoneFormThere.newPhone,
-		            agentIdCardHandUrl: this.uploadImgDispaly1,
-		            legalIdCardFrontUrl: this.uploadImgDispaly2
+		            agentIdCardHandUrl: this.uploadImgDispaly2,
+		            legalIdCardFrontUrl: this.uploadImgDispaly1
 		          }).then(response => {
 		            if (response.status == 200 && response.data.status == 1) {
 		              this.authModifyPhoneStep = 3
