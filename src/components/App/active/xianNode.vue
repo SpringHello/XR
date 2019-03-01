@@ -461,19 +461,20 @@
       },
       //   云主机生成订单
       getDiskcountMv(item, hostCount) {
-        if (!this.$store.state.userInfo) {
-          this.showModal.notLoginModal = true
-        } else {
+        // 西安活动下线，取消登陆和实名认证
+        // if (!this.$store.state.userInfo) {
+        //   this.showModal.notLoginModal = true
+        // } else {
           // 判断是否为新用户
-          axios.get('activity/jdugeTeam.do').then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              if (response.data.result.flag) {
-                if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
-                  this.authHintShow = true
-                  this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-                  this.showModal.authModal = true
-                  return
-                }
+          // axios.get('activity/jdugeTeam.do').then(response => {
+          //   if (response.status == 200 && response.data.status == 1) {
+          //     if (response.data.result.flag) {
+          //       if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+          //         this.authHintShow = true
+          //         this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          //         this.showModal.authModal = true
+          //         return
+          //       }
                 axios.get('information/getDiskcountMv.do', {
                   params: {
                     vmConfigId: item.vmConfigId,
@@ -491,16 +492,16 @@
                     })
                   }
                 })
-              } else {
-                this.showModal.newCoustom = true
-              }
-            } else {
-              this.$message.info({
-                content: response.data.message
-              })
-            }
-          })
-        }
+        //       } else {
+        //         this.showModal.newCoustom = true
+        //       }
+        //     } else {
+        //       this.$message.info({
+        //         content: response.data.message
+        //       })
+        //     }
+        //   })
+        // }
       },
       getVerificationCode() {
         if (!this.authFormValidate.pictureCode) {

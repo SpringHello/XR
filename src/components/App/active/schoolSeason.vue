@@ -643,9 +643,11 @@
               </div>
             </div>
           </div>
-          <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true,selectedRule = false" :class="[disabledButton?'modal-btnDisbled':'modal-btn1']"
+          <Tooltip content="请将页面滑倒底部再点击" placement="top" style="margin-bottom:30px" :disabled="tooltipStatus">
+              <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true,selectedRule = false" :class="[disabledButton?'modal-btnDisbled':'modal-btn1']"
                   :disabled='disabledButton'>
-            <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+                  <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+          </Tooltip>
         </div>
       </div>
     </transition>
@@ -811,6 +813,7 @@
         }
       }
       return {
+        tooltipStatus: false,
         selectVipGrade: '白银会员',
         highEndLength: '',
         selectedRule: true,
@@ -2671,7 +2674,6 @@
   .modal-btn1 {
     width: 134px;
     height: 36px;
-    margin-bottom: 30px;
     background: #FF624B;
     color: #fff;
     border: 1px solid #FF624B;
@@ -3018,7 +3020,6 @@
 
   .modal-btnDisbled {
     height: 36px;
-    margin-bottom: 30px;
     color: #bbbec4;
     background-color: #f7f7f7;
     border-color: #dddee1;

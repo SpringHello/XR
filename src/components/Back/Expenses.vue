@@ -872,8 +872,10 @@
               </div>
             </div>
           </div>
-          <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
+          <Tooltip content="请将页面滑倒底部再点击" placement="top" style="margin-bottom:30px" :disabled="tooltipStatus">
+              <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
             <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+          </Tooltip>
         </div>
       </div>
     </transition>
@@ -1091,6 +1093,7 @@
          this.init()*/
       }
       return {
+        tooltipStatus: false,
         vipRule: [
           {
             title: '类目',
@@ -4075,7 +4078,6 @@
 
   .modal-btn {
     height: 36px;
-    margin-bottom: 30px;
     border: 1px solid #FF624B;
     font-size: 14px;
     font-family: PingFangSC-Regular;
@@ -4090,7 +4092,6 @@
 
   .modal-btnDisbled {
     height: 36px;
-    margin-bottom: 30px;
     color: #bbbec4;
     background-color: #f7f7f7;
     border-color: #dddee1;

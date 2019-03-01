@@ -141,8 +141,10 @@
                 </div>
               </div>
               </div>
-              <Button @click.stop="showModal.vipRuleModal=false,agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
-              <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+              <Tooltip content="请将页面滑倒底部再点击" placement="top" style="margin-bottom:30px" :disabled="tooltipStatus">
+                <Button @click.stop="showModal.vipRuleModal=false,agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
+                <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+              </Tooltip>
             </div>
         </div>
     </transition>
@@ -153,6 +155,7 @@
   export default {
     data() {
       return {
+        tooltipStatus: false,
         balance: 0,
         input: 10,
         rechargeData: [200, 500, 1000, 2000, 5000, 10000, 50000, 150000],
@@ -578,7 +581,6 @@
   .modal-btn {
     width: 134px;
     height: 36px;
-    margin-bottom: 30px;
     border: 1px solid #FF624B;
     font-size: 14px;
     font-family: PingFangSC-Regular;
@@ -593,7 +595,6 @@
 
   .modal-btnDisbled {
     height: 36px;
-    margin-bottom: 30px;
     color: #bbbec4;
     background-color: #f7f7f7;
     border-color: #dddee1;
