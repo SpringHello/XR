@@ -643,7 +643,7 @@
               </div>
             </div>
           </div>
-          <Tooltip content="请将页面滑倒底部再点击" placement="top" style="margin-bottom:30px" :disabled="tooltipStatus">
+          <Tooltip content="请先阅读完会员规则" placement="top" style="margin-bottom:30px" :disabled="tooltipStatus">
               <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true,selectedRule = false" :class="[disabledButton?'modal-btnDisbled':'modal-btn1']"
                   :disabled='disabledButton'>
                   <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
@@ -813,7 +813,7 @@
         }
       }
       return {
-        tooltipStatus: false,
+        tooltipStatus: true,
         selectVipGrade: '白银会员',
         highEndLength: '',
         selectedRule: true,
@@ -1907,6 +1907,7 @@
             this.disabledButton = false;
             clearInterval(interval);
           } else if (this.vipCount == 0) {
+            this.tooltipStatus = false;
             clearInterval(interval);
           } else {
             this.disabledButton = true;
