@@ -1184,6 +1184,7 @@
     },
     created(){
       this.toggleZone(this.$store.state.zone.zoneid)
+      this.getGpuServerList()
       if (this.$store.state.authInfo == null) {
         this.showModal.selectAuthType = true
       }
@@ -1197,7 +1198,6 @@
       }
     },
     mounted(){
-      this.getGpuServerList();
     },
     watch: {
       ratesChangeTime(time) {
@@ -1276,6 +1276,12 @@
               }
             })
         }
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.getGpuServerList()
+        },
+        deep: true
       }
     }
   }
