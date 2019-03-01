@@ -302,7 +302,7 @@
           orderId:'',
           ticket:''
         },
-        isUseVoucher:null,
+        orderPay:null,
         vipName:this.$store.state.userInfo.vipname,
         routePath:''
       }
@@ -411,7 +411,7 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.isUseVoucher = response.data.result.isUseVoucher;
+              this.orderPay = response.data.result;
             }else{
               this.$Message.error({
                 content:response.data.message,
@@ -453,7 +453,7 @@
       },
       changeCashbox(bol){
         if(this.couponInfo.cash > 0){
-            if( this.isUseVoucher == 1 && bol.indexOf('cash') == -1){
+            if( this.orderPay.isUseVoucher == 1 && bol.indexOf('cash') == -1){
               this.groupList.push('cash');
               this.$message.info({
                   title:'提示',
@@ -464,8 +464,8 @@
               this.couponInfo.selectTicket = '';
             }
           }
-      
-          if (this.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
+        if(this.vipName =='' || this.vipName == undefined){
+          if (this.orderPay.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
                this.groupList.splice(bol.indexOf('cash'), 1)
               this.$message.info({
                 title:'提示',
@@ -473,7 +473,6 @@
               })
               return;
           }
-        if(this.vipName =='' || this.vipName == undefined){
           if(bol.indexOf('coupon') > -1 && this.couponInfo.cash >0){
             this.groupList.splice(bol.indexOf('coupon'), 1);
             this.$message.info({
@@ -909,11 +908,15 @@
       },
       'couponInfo.cash':{ 
         handler:function(){
-          // if(this.vipName =='' || this.vipName == undefined){
-            if(this.couponInfo.cash != 0 && this.isUseVoucher == 0){
+            if(this.vipName =='' || this.vipName == undefined){
+              if(this.couponInfo.cash != 0 && this.orderPay.isUseVoucher == 0){
               this.groupList.push('cash');
             }
-          // }
+          }else{
+            if(this.couponInfo.cash != 0){
+               this.groupList.push('cash');
+            }
+          }
         },
         deep:true,
         immediate: true
