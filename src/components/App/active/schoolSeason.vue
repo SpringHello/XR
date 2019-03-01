@@ -1612,7 +1612,8 @@ export default {
       axios.get('information/getServiceoffersByZoneId.do', {
         params: {
           zoneId: zoneId,
-          type: 'host'
+          type: 'host',
+          rootDiskType: 'ssd'
         }
       }).then(res => {
         if (res.status == 200 && res.data.status == 1) {
