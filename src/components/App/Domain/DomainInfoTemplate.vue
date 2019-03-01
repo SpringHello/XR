@@ -135,7 +135,7 @@
               <FormItem label="所属区域" prop="country">
                 <Select v-model="infoTempFormValidate.country" style="width:170px" @on-change="changeCountry"
                         placeholder="请选择国家">
-                  <Option v-for="item in countryList" :value="item.Name" :key="item.Code">{{ item.Name }}</Option>
+                  <Option v-for="item in countryList" :value="item.Code" :key="item.Code">{{ item.Name }}</Option>
                 </Select>
               </FormItem>
               <FormItem prop="province" :label-width="10">
@@ -454,7 +454,8 @@
           userid: '',
           legalPersonIDFront: ''
         },
-        authRuleValidate: {}
+        authRuleValidate: {},
+        countryCN: ''
       }
     },
     methods: {
@@ -478,8 +479,9 @@
         this.provinceList = ''
         this.cityList = ''
         area.forEach(item => {
-          if (item.Name == val) {
+          if (item.Code == val) {
             this.provinceList = item.State
+            this.countryCN = item.Name
           }
         })
       },
@@ -512,8 +514,8 @@
       },
       //发送绑定邮箱验证码
       sendCode(){
-        if (this.codeImg.length != 4) {
-          this.$Message.info('请输入正确的验证码')
+        if (this.codeImg.trim() == '') {
+          this.$Message.info('请输入图形验证码')
           return
         }
         this.codeMessage = '验证码发送中'
@@ -532,7 +534,11 @@
             this.codeMessage = '60s'
             var inter = setInterval(() => {
               countdown--
-              this.codeMessage = countdown + 's'
+              if (countdown < 10) {
+                this.codeMessage = '0' + countdown + 's'
+              } else {
+                this.codeMessage = countdown + 's'
+              }
               if (countdown == 0) {
                 clearInterval(inter)
                 this.codeMessage = '发送验证码'
@@ -550,16 +556,24 @@
       },
       //确认创建模板
       emailOk(){
+        if (this.codeImg.trim() == '') {
+          this.$Message.info('请输入图形验证码')
+          return
+        }
+        if (this.code.trim() == '') {
+          this.$Message.info('请输入邮箱验证码')
+          return
+        }
         this.emailCode = false
         axios.post('domain/createTemple.do', {
           token: sessionStorage.getItem('tokenId'),
           companyEn: this.infoTempFormValidate.enRegistrantOrganization,
-          countryEn: 'CA',
+          countryEn: this.infoTempFormValidate.country,
           stateEn: this.infoTempFormValidate.enProvince,
           cityEn: this.infoTempFormValidate.enCity,
           addressEn: this.infoTempFormValidate.enAddress,
           companyCn: this.infoTempFormValidate.registrantOrganization,
-          countryCn: this.infoTempFormValidate.country,
+          countryCn: this.countryCN,
           stateCn: this.infoTempFormValidate.province,
           cityCn: this.infoTempFormValidate.city,
           addressCn: this.infoTempFormValidate.address,

@@ -95,12 +95,12 @@
       <div style="display: flex">
         <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
           <h2>个人用户</h2>
-          <p><i></i>可以使用睿云所有资源</p>
+          <p><i></i>可以使用新睿云所有资源</p>
           <p><i></i>个人级别的资源建立额度</p>
         </div>
         <div class="selectAuthType">
           <h2>企业用户</h2>
-          <p><i></i>可以使用睿云所有资源</p>
+          <p><i></i>可以使用新睿云所有资源</p>
           <p><i></i>企业级无限量的资源建立额度</p>
           <p><i></i>专业免费的点对点咨询服务</p>
         </div>
@@ -115,7 +115,7 @@
       </div>
       <div slot="footer">
         <p class="modal-text-hint-bottom">
-          提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
+          提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：400-050-5565</p>
       </div>
     </Modal>
     <!-- 加入负载均衡弹窗 -->
@@ -294,7 +294,7 @@
       </div>
     </Modal>
     <!-- 实时续费 -->
-    <Modal v-model="showModal.Renew" width="550" :scrollable="true">
+    <Modal v-model="showModal.Renew" width="590" :scrollable="true">
       <div slot="header" class="modal-header-border">
         <span class="universal-modal-title">续费主机</span>
       </div>
@@ -313,7 +313,7 @@
       </div>
     </Modal>
     <!-- 制作快照弹窗 -->
-    <Modal v-model="showModal.backup" width="550" :scrollable="true" class="create-snas-modal">
+    <Modal v-model="showModal.backup" width="590" :scrollable="true" class="create-snas-modal">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">制作快照</span>
       </p>

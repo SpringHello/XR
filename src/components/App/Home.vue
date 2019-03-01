@@ -4,6 +4,24 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
+          <div class="ss-active" @click="push('/ruicloud/schoolSeason')">
+            <div class="wrap">
+              <div class="container flex-vertical-center">
+                <div class="left">
+                  <h1>云产品新春采购季</h1>
+                  <p>
+                    抵至
+                    <i>1折</i>
+                    更有会员折上折
+                  </p>
+                  <span @click="push('/ruicloud/schoolSeason')">立即购买</span>
+                </div>
+                <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div class="xian-active" @click="push('/ruicloud/xianNode')">
             <div class="wrap">
               <div class="container flex-vertical-center">
@@ -17,16 +35,6 @@
                   <span @click="$router.push('xianNode')">立即参与</span>
                 </div>
                 <img src="../../assets/img/active/xianNode/xian-node-banner.png" alt>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div class="dan-banner" @click="push('/ruicloud/wonderfulDay')">
-            <div class="wraps">
-              <img src="../../assets/img/home/dan_banner.png">
-              <div class="w_button">
-                <span>立即参与</span>
               </div>
             </div>
           </div>
@@ -137,22 +145,6 @@
                 <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
                 <p>万兆光纤极速体验，助力区域企业云上发展</p>
                 <Button>了解详情</Button>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('active_1')"
-               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
-            <div class="head-banner">
-              <div>
-                <div>
-                  <p>
-                    <img style="padding-top: 0" src="../../assets/img/home/home-banner3.png">
-                  </p>
-                  <button style="margin-top: 120px">立即领取</button>
-                </div>
-                <img src="../../assets/img/home/home-banner4.png">
               </div>
             </div>
           </div>
@@ -1163,10 +1155,10 @@
       }
     },
     mounted() {
-      if (!sessionStorage.getItem('welcome')) {
+/*      if (!sessionStorage.getItem('welcome')) {
         this.showModal.welcome = true
         sessionStorage.setItem('welcome', '1')
-      }
+      }*/
       this.menuselected(0)
       // echarts.registerMap('china', china)
       // this.myChart = echarts.init(document.getElementById('echarts'))
@@ -2761,7 +2753,47 @@
       }
     }
   }
-
+  .ss-active {
+    background: url(../../assets/img/active/schoolSeason/schoolseason_banner_bg.png)
+      center no-repeat;
+    color: rgba(51, 51, 51, 1);
+    .container {
+      height: 400px;
+      .left {
+        h1 {
+          font-size: 48px;
+          line-height: 64px;
+          font-weight: normal;
+        }
+        p {
+          margin-top: 20px;
+          font-size: 24px;
+          font-weight: 500;
+          i {
+            color: #ff624b;
+            font-style: normal;
+          }
+        }
+        span {
+          margin-top: 40px;
+          display: inline-block;
+          width: 164px;
+          height: 44px;
+          border-radius: 4px;
+          border: 1px solid rgba(51, 51, 51, 1);
+          font-size: 16px;
+          line-height: 42px;
+          text-align: center;
+          cursor: pointer;
+          transition: all .5s;
+          &:hover {
+            border-color: #FF624B;
+            color: #FF624B;
+          }
+        }
+      }
+    }
+  }
   .xian-active {
     background:url(../../assets/img/active/xianNode/xian-banner-bg.png) center no-repeat,linear-gradient(to bottom, #ffdcbc, #ffe7d2);
     .container {

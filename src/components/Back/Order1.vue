@@ -4,7 +4,7 @@
       <span>首页 / {{routerName}} / 订单确认</span>
       <div class="content">
         <span>订单确认</span>
-        <button style="float:right" class="button" @click="$router.push('buy')">返回</button>
+        <button style="float:right" class="button" @click="$router.go(-1)">返回</button>
         <div class="order_text" v-if="routerName == '新建云主机' || routerName =='续费' || routerName == '新建云硬盘' || routerName == '磁盘升级' || routerName == '新建GPU云服务器' || routerName == '系统盘扩容'">
           <div >
             <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
@@ -22,36 +22,38 @@
         </div>
         <div style="margin-top:10px;background:#F6FAFD;" class="coupon">
             <div>
-              <div>
-                <Checkbox  v-model="couponInfo.isUse" @on-change="changeCheckbox">
-                  <p style="font-weight: 700;margin-left: 10px;display:inline-block">使用优惠券（该产品有<span style="color:#30BA78;">{{couponInfo.couponList.length}}张</span>优惠券）</p>
-                </Checkbox>
-                <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券</span>
-              </div>
-              <RadioGroup v-model="couponInfo.selectTicket" @on-change="radioChange" type="button" class="coupon_radio"  v-if="couponInfo.isUse">
-                <Radio v-for="item in couponInfo.couponList" :label="item.operatorid" :key="item.operatorid"
-                     style="display:block;margin:20px 0px;height:88px;margin-right:10px;">
-                  <div class="ticketInfo">
-                    <div style="margin-right:36px;line-height:58px;">
-                      <span style="width:100px;" v-if="item.tickettype == 0">满<strong>{{item.startmoney}}</strong>减<strong>{{item.money}}</strong></span>
-                      <span  style="width:100px;" v-else><strong>{{item.money*10}}</strong>折</span>
+              <CheckboxGroup v-model="groupList" @on-change="changeCashbox">
+                <div>
+                  <Checkbox label='coupon'>
+                    <p style="font-weight: 700;margin-left: 10px;display:inline-block">使用优惠券（该产品有<span style="color:#30BA78;">{{couponInfo.couponList.length}}张</span>优惠券）</p>
+                  </Checkbox>
+                  <span style="color:#2A99F2;cursor: pointer" @click="showModal.exchangeCard=true">+获取优惠券</span>
+                </div>
+                  <RadioGroup v-model="couponInfo.selectTicket" @on-change="radioChange" type="button" class="coupon_radio"  v-if="groupList[0]=='coupon' || groupList[1]=='coupon'">
+                    <Radio v-for="item in couponInfo.couponList" :label="item.operatorid" :key="item.operatorid"
+                        style="display:block;margin:20px 0px;height:88px;margin-right:10px;">
+                      <div class="ticketInfo">
+                        <div style="margin-right:36px;line-height:58px;">
+                          <span style="width:100px;" v-if="item.tickettype == 0">满<strong>{{item.startmoney}}</strong>减<strong>{{item.money}}</strong></span>
+                          <span  style="width:100px;" v-else><strong>{{item.money*10}}</strong>折</span>
+                        </div>
+                        <div>
+                        <p>适用产品：{{item.ticketdescript}}</p>
+                        <p style="margin:10px 0;">使用条件：{{item.remark}}</p>
+                        <p>过期时间：{{item.endtime}}</p>
+                        </div>
+                      </div>
+                    </Radio>
+                </RadioGroup>
+                <div style="margin:22px 0;">
+                  <Checkbox  label='cash'>
+                    <p  style="font-weight: 700;margin-left: 10px;display:inline-block;">使用现金券<span style="color:#FF624B;font-size:18px;">{{couponInfo.cash}}</span>元</p>
+                  </Checkbox>
+                  <span style="float:right;">已经抵扣：<strong style="color:#FF624B;font-size:24px;">{{ vipName != '' || vipName !=undefined ? vipPrice : deductionPrice}}</strong>元</span>
                     </div>
-                    <div>
-                    <p>适用产品：{{item.ticketdescript}}</p>
-                    <p style="margin:10px 0;">使用条件：{{item.remark}}</p>
-                    <p>过期时间：{{item.endtime}}</p>
-                    </div>
-                  </div>
-                </Radio>
-            </RadioGroup>
-             
+              </CheckboxGroup>
             </div>
-            <div style="margin:22px 0;">
-              <Checkbox v-model="couponInfo.isCash" @on-change="changeCashbox">
-                <p  style="font-weight: 700;margin-left: 10px;display:inline-block;">使用现金券<span style="color:#FF624B;font-size:18px;">{{couponInfo.cash}}</span>元</p>
-              </Checkbox>
-               <span style="float:right;">已经抵扣：<strong style="color:#FF624B;font-size:24px;">{{deductionPrice}}</strong>元</span>
-            </div>
+           
      
          <div style="border-top:1px solid #E9E9E9;padding:20px 0;margin-top:20px;">
            <!-- <span style="color:#2d8cf0;cursor:pointer;">全民普惠，3折减单，最高减免7000元！</span> -->
@@ -59,8 +61,9 @@
          </div>
         </div>
         <div style="text-align:right;margin-top:40px;">
-          <Button @click="$router.push({path:'overview'})" style="margin-right:20px;">取消订单</Button>
-          <Button type="primary"  @click="pay">提交订单</Button>
+          <Button @click="deleteOrder" style="margin-right:10px;">取消订单</Button>
+           <Button type="primary"  @click="payCash" v-if="isButtonCash">确认购买</Button>
+          <Button type="primary"  @click="pay" v-else>提交订单</Button>
         </div>
        
           <div style="clear: both"></div>
@@ -125,7 +128,7 @@
                  h('div', {
                   style: {
                     borderBottom: index == params.row['资源'].length - 1 ? 'none' : '1px solid rgb(233, 234, 236)',
-                    padding: '10px'
+                    padding: '10px 10px 10px 0'
                   }
                 }, parr)
                 )
@@ -224,12 +227,32 @@
             }
           },
           {
-            title: '优惠价',
+            title:'优惠价',
             render(h, obj) {
-              if (obj.row.originalcost > obj.row.cost) {
-                return h('span', {}, obj.row.cost)
+             return  h('span',{},obj.row.优惠价 != undefined ? obj.row.优惠价: '--')
+            }
+          },
+          {
+            title: '会员折后价',
+            render(h, obj) {
+              if (obj.row.discountmessage != '') {
+                return h('div',{
+                  style:{
+                    textAlign:'center'
+                  }
+                }, [
+                    h('p',{},obj.row.cost),
+                    h('p',{
+                      style:{
+                        color:'#FF624B',
+                        fontSize:'12px',
+                        marginTop:'5px'
+                      },
+                    },'（ '+obj.row.discountmessage+' 折）')
+                ])
               } else {
-                return h('span', '--')
+
+                return h('span',{}, obj.row.cost)
               }
             }
           }
@@ -237,7 +260,6 @@
         orderData: [],
         showFree: [],
         couponInfo: {
-          isUse: true,
           couponList: [],
           // 选中的优惠券
           selectTicket: '',
@@ -249,13 +271,13 @@
           totalCost: 0,
           // 选中的现金券
           isCash:false,
-          cash:'',
+          cash:0,
 
           isRecommend:false,
           Recommend:''
         },
-
-        selectDiscount:[],
+        disabledCoupon:false,
+        groupList:[],
         
         canUseTicket: true,
         showModal: {
@@ -273,27 +295,40 @@
         // 订单类型
         goodType:null,
         // 接收是否购买数据盘
-        isNotBuyDisk:false
+        isNotBuyDisk:false,
+        // 现金券余额是否充足
+        isButtonCash:false,
+        orderInfo:{
+          orderId:'',
+          ticket:''
+        },
+        orderPay:null,
+        vipName:this.$store.state.userInfo.vipname,
+        routePath:''
       }
     },
     beforeRouteEnter(to, from, next) {
+      console.log(from);
       let params = {}
-     let order = to.query.countOrder == undefined ?'':to.query.countOrder;
-      let orderS = sessionStorage.getItem('countOrder') == 'undefined'?null:sessionStorage.getItem('countOrder')
-      if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
-        params.countOrder = order || orderS
-        sessionStorage.setItem('countOrder', order + '')
-      }
-      if (to.query.countOrder) {
-        params.countOrder = to.query.countOrder
-      }
+      let order = to.query.countOrder == undefined ?'':to.query.countOrder;
+        let orderS = sessionStorage.getItem('countOrder') == 'undefined'?null:sessionStorage.getItem('countOrder')
+        if (to.query.countOrder || sessionStorage.getItem('countOrder')) {
+          params.countOrder = order || orderS;
+          sessionStorage.setItem('countOrder', order + '')
+        }
+        if (to.query.countOrder) {
+          params.countOrder = to.query.countOrder;
+        } 
+          
+      //  vm.orderInfo.orderId =params.countOrder;
       axios.get('user/searchOrderByBuy.do', {
         params
       }).then(response => {
         next(vm => {
+          vm.routePath = from.fullPath;
           vm.setOrder(response)
         })
-      })
+       })
     },
     created() {
       this.getSpentCost();
@@ -319,12 +354,18 @@
           this.goodType = response.data.result.data[0].goodstype;
           sessionStorage.setItem('routername',response.data.result.data[0].goodstype);
           this.orderData = response.data.result.data.map(item => {
-            var data = JSON.parse(item.display)
+            var data = JSON.parse(item.display);
+            this.orderInfo.orderId +=item.ordernumber+',';
             data.orderId = item.ordernumber
             data.originalcost = item.originalcost
             data.cost = item.cost
             data.discountedorders = item.discountedorders
             data.overTime = item.overTime
+            if(item.discountmessage != undefined){
+              data.discountmessage = item.discountmessage.substring(item.discountmessage.indexOf('，')-6,item.discountmessage.indexOf('，')-3)
+            }else{
+              data.discountmessage = ''
+            }
            if(data['订单状态']){
               this.couponInfo.originCost += data['订单状态'] == 1 ? 0:item.originalcost
               this.couponInfo.cost += data['订单状态'] == 1 ? 0:item.cost
@@ -362,40 +403,41 @@
             }
           }).then(response => {
             this.couponInfo.couponList = response.data.result
+          });
+          axios.get('information/zfconfirm.do', {
+            params: {
+              order:this.orderInfo.orderId,
+              ticket: this.couponInfo.selectTicket,
+              money: this.couponInfo.totalCost
+            }
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.orderPay = response.data.result;
+            }else{
+              this.$Message.error({
+                content:response.data.message,
+                duration:5
+              })
+            }
           })
         }
       },
       // 选中项变化
       onSelectionChange(selection) {
         this.selectLength.selection = selection.length;
-        this.couponInfo.selectTicket = ''
+        this.couponInfo.selectTicket = '';
         this.canUseTicket = selection.every(item => {
           return item.discountedorders != 1
         })
-        let originCost = 0, cost = 0
+        let originCost = 0, cost = 0;
+        this.orderInfo.orderId = '';
         selection.forEach((item) => {
-          cost += item.cost
-          originCost += item.originalcost
+          cost += item.cost;
+          originCost += item.originalcost;
+          this.orderInfo.orderId += item.orderId+',';
         })
-        this.couponInfo.cost = cost
-        this.couponInfo.originCost = originCost
-        if (cost != 0) {
-          if (this.couponInfo.selectTicket != '') {
-            this.couponInfo.couponList.forEach(item => {
-              if (item.operatorid == this.couponInfo.selectTicket) {
-                if (item.tickettype == 1) {
-                  this.couponInfo.totalCost = (cost * item.money ).toFixed(2)
-                } else if (item.tickettype == 0) {
-                  this.couponInfo.totalCost = (cost - item.money).toFixed(2)
-                }
-              }
-            })
-          } else {
-            this.couponInfo.totalCost = cost.toFixed(2)
-          }
-        } else {
-          this.couponInfo.totalCost = 0
-        }
+        this.couponInfo.cost = cost;
+        this.couponInfo.originCost = originCost;
         let orderNumber = this.orderData.map(item => {
           return item.orderId
         })
@@ -410,26 +452,37 @@
           this.couponInfo.couponList = response.data.result
         })
       },
-      // 是否使用优惠券开关
-      changeCheckbox(bol) {
-        if(this.couponInfo.isCash){
-           this.couponInfo.isCash = !this.couponInfo.isUse;
-        }
-       
-        if (!bol) {
-          this.couponInfo.selectTicket = ''
-        }
-      },
       changeCashbox(bol){
-         if(this.couponInfo.isUse){
-          this.couponInfo.isUse = !this.couponInfo.isCash;
+        if(this.couponInfo.cash > 0){
+            if( this.orderPay.isUseVoucher == 1 && bol.indexOf('cash') == -1){
+              this.groupList.push('cash');
+              this.$message.info({
+                  title:'提示',
+                  content: '默认情况下优先使用现金券'
+                })
+              return;
+            }else{
+              this.couponInfo.selectTicket = '';
+            }
+          }
+        if(this.vipName =='' || this.vipName == undefined){
+          if (this.orderPay.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
+               this.groupList.splice(bol.indexOf('cash'), 1)
+              this.$message.info({
+                title:'提示',
+                content: '当前订单不满足使用现金券要求'
+              })
+              return;
+          }
+          if(bol.indexOf('coupon') > -1 && this.couponInfo.cash >0){
+            this.groupList.splice(bol.indexOf('coupon'), 1);
+            this.$message.info({
+                title:'提示',
+                content: '尊敬的用户您好：现金券和优惠券不能同时使用。'
+              })
+             return;
+          }
         }
-         
-         this.couponInfo.totalCost = this.couponInfo.totalCost - (bol?this.couponInfo.cash:0);
-         if(!bol){
-         }else{
-            this.couponInfo.selectTicket = '';
-         }
       },
       radioChange() {
         if (!this.canUseTicket) {
@@ -490,11 +543,107 @@
       getWalletsBalance(){
         this.$http.post('device/DescribeWalletsBalance.do',{}).then(res =>{
           if (res.status == 200 && res.data.status == '1') {
-            this.couponInfo.cash = res.data.data.voucher
+            this.couponInfo.cash = Number(res.data.data.voucher);
           }
+        }).catch(err =>{
+          if(err)
+          this.$Message.info('网络异常，获取现金券失败请重试');
         })
-      }
+      },
       
+      // 删除订单
+      deleteOrder() {
+        if (this.orderInfo.orderId == '') {
+          this.$Modal.info({
+            content:'请先选择要取消的订单'
+          })
+          return;
+        }
+          this.$Modal.confirm({
+            title: '',
+            content: '<p>确定要取消选中的订单吗？</p>',
+            scrollable: true,
+            onOk: () => {
+              this.$http.get('continue/delOrderpay.do', {
+                params: {
+                  order: this.orderInfo.orderId.substring(0,this.orderInfo.orderId.length-1)
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success({
+                    content: '订单取消成功',
+                    duration: 3
+                  })
+                  this.$router.push({path:this.routePath});
+                }
+              })
+            },
+          })
+      },
+      // revertOrder(){
+      //   let name = sessionStorage.getItem('routername');
+      //   let router ='';
+      //   if(name == '0' || name == '5' ||name == '4' || name == '20'){
+      //    router ='host';
+      //   }else if(name == '1' || name == '9'){
+      //     router ='disk';
+      //   }else if(name == '2' || name == '6' || name == '8'){
+      //     router = 'ip';
+      //   }else if(name == '3'){
+      //     router = 'vpc';
+      //   }else if(name == '10'){
+      //     router = 'vpc';
+      //   }else if(name == '11' || name == '12' || name == '13'){
+      //     router = 'cloudDatabase';
+      //   }else if(name == 14){
+      //     return '短信包订单'
+      //   }else if(name == '15' || name == '16'){
+      //    router = 'gpuList';
+      //   }else if(name == '17'){
+      //     window.location.href = 'https://oss-console.xrcloud.net/ruirados/objectStorage';
+      //     return;
+      //   }else if(name == '18'){
+      //     window.location.href = 'https://domain.xrcloud.net/xrdomain/domainTransfer';
+      //     return;
+      //   }else if(name == '19' || name == '21'){
+      //     window.location.href = 'https://domain.xrcloud.net/xrdomain/domainGroup';
+      //     return;
+      //   }else if(name == '22'){
+      //     window.location.href ='https://domain.xrcloud.net/xrdomain/domainSSL';
+      //     return;
+      //   }
+      //   this.$router.push(router)
+      // },
+
+      // 现金券余额充足支付
+      payCash(){
+        if(this.selectLength.selection == 0){
+          this.$Modal.info({
+            content:'请先选择一个订单'
+          })
+          return;
+        }
+        axios.get('information/payOrder.do',{
+          params: {
+              order:  this.orderInfo.orderId.substring(0, this.orderInfo.orderId.length-1),
+              ticket: this.couponInfo.selectTicket
+            }
+        }).then(res =>{
+          this.$router.push('resultNew')
+          if(res.status ==200 && res.data.status == 1){
+            sessionStorage.setItem('payResult', 'success')
+            sessionStorage.setItem('successMsg', res.data.message)
+            if (res.data.giftNumMessage) {
+                sessionStorage.setItem('firstMsg', res.data.giftNumMessage)
+              } else {
+                sessionStorage.setItem('firstMsg', '')
+              }
+            } else {
+              sessionStorage.setItem('payResult', 'fail');
+              sessionStorage.setItem('errMsg', res.data.message);
+            }
+        })
+      },
     },
     computed: {
       otherSpentCost() {
@@ -517,7 +666,7 @@
         }
       },
       deductionPrice(){
-        if(this.couponInfo.isUse){
+        if(this.groupList[0] == 'coupon' || this.groupList[1] == 'coupon'){
           let money = 0;
           if (this.couponInfo.selectTicket != '') {
             this.couponInfo.couponList.forEach(item => {
@@ -532,15 +681,15 @@
             return money;
           }
         }
-        if(this.couponInfo.isCash){
-           if(this.couponInfo.totalCost > this.couponInfo.cash){
+        if(this.groupList[0] == 'cash' || this.groupList[1] == 'cash'){
+           if(this.couponInfo.cost > this.couponInfo.cash){
               return  this.couponInfo.cash;
             }
-            if(this.couponInfo.totalCost < this.couponInfo.cash){
-              return this.couponInfo.cash - this.couponInfo.totalCost;
+            if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
+              return  this.couponInfo.cost;
             }
         }
-        return 0.0;
+        return 0;
       },
       routerName(){
         if(this.goodType == 0){
@@ -588,28 +737,187 @@
         }else if(this.goodType == 22){
           return 'SSL证书购买'
         }
+      },
+      // 待优化
+      vipPrice(){
+        if(this.vipName !='' || this.vipName != undefined){
+          let money = 0;
+            if (this.couponInfo.selectTicket != '' && (this.groupList[0] == 'cash' || this.groupList[1] == 'cash')) {
+              this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    if(this.couponInfo.cost > this.couponInfo.cash){
+                        money =this.couponInfo.cash -(this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2));
+                    }
+                    if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
+                        money =  this.couponInfo.cash - (this.couponInfo.cost - Number((this.couponInfo.cost * item.money).toFixed(2)));
+                    }
+                  } else if (item.tickettype == 0) {
+                    if((this.couponInfo.cost - item.money) > this.couponInfo.cash){
+                        money =  (item.money+this.couponInfo.cash).toFixed(2);
+                    }
+                    if((this.couponInfo.cost - item.money) < this.couponInfo.cash || (this.couponInfo.cost - item.money) == this.couponInfo.cash){
+                        money = this.couponInfo.cost.toFixed(2);
+                    }
+                  }
+                }
+              })
+            return money;
+          }else{
+            if((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket == ''){
+               if(this.couponInfo.cost > this.couponInfo.cash){
+                   return this.couponInfo.cash.toFixed(2);
+                }
+                if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
+                    return this.couponInfo.cost.toFixed(2);
+                }
+            }else{
+                this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    money = this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2);
+                  } else if (item.tickettype == 0) {
+                    money =   item.money.toFixed(2);
+                  }
+                }
+              })
+            return money;
+            }
+          }
+         return 0
+        }
       }
     },
+    //  待优化
     watch: {
-      'couponInfo.selectTicket': {
-        handler: function () {
-          if (this.couponInfo.selectTicket != '') {
+      'couponInfo.selectTicket':{
+        handler:function(){
+          if(this.vipName =='' || this.vipName == undefined){
             this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money).toFixed(2));
+                  } else if (item.tickettype == 0) {
+                    this.couponInfo.totalCost = Number((this.couponInfo.cost - item.money).toFixed(2));
+                  }
+                }
+            })
+          }else{
+            if(this.groupList.indexOf('cash') == -1){
+              this.couponInfo.couponList.forEach(item => {
               if (item.operatorid == this.couponInfo.selectTicket) {
                 if (item.tickettype == 1) {
-                  this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
+                  this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money).toFixed(2));
                 } else if (item.tickettype == 0) {
-                  this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
+                  this.couponInfo.totalCost = Number((this.couponInfo.cost - item.money).toFixed(2));
                 }
               }
             })
-            this.couponInfo.isUse = true
-          } else {
-            this.couponInfo.totalCost = this.couponInfo.cost.toFixed(2)
+            }else{
+              this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = this.couponInfo.cash - (this.couponInfo.cost * item.money);
+                    }
+                    if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = (this.couponInfo.cost * item.money) - this.couponInfo.cash;
+                    }
+                    if( Number(this.couponInfo.totalCost) == 0){
+                      this.isButtonCash = true; 
+                    }
+                  } else if (item.tickettype == 0) {
+                    if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = 0;      
+                    }
+                    if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = (this.couponInfo.cost - item.money) - this.couponInfo.cash;
+                    }
+                    if( Number(this.couponInfo.totalCost) == 0){
+                      this.isButtonCash = true; 
+                    }
+                  }
+                }
+              })
+            }
+          }
+        },
+        deep:true
+      },
+      'groupList':{
+        handler:function(val){
+          this.couponInfo.totalCost = this.couponInfo.cost.toFixed(2);
+          if(this.groupList[0] != 'coupon' && this.groupList[1] != 'coupon'){
+            this.couponInfo.selectTicket = '';
+          }
+          if(this.vipName !='' || this.vipName != undefined){
+            if((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket != ''){
+              this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = Number(this.couponInfo.cash - (this.couponInfo.cost * item.money)).toFixed(2);
+                    }
+                    if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money) - this.couponInfo.cash).toFixed(2);
+                    }
+                    
+                    if( Number(this.couponInfo.totalCost) == 0){
+                      this.isButtonCash = true; 
+                    }
+                  } else if (item.tickettype == 0) {
+                    if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = 0;
+                    }
+                    if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = Number((this.couponInfo.cost - item.money) - this.couponInfo.cash).toFixed(2);
+                    }
+                    if( Number(this.couponInfo.totalCost) == 0){
+                      this.isButtonCash = true; 
+                    }
+                  }
+                }
+              })
+            }else{
+              if((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket == ''){
+                if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
+                  this.couponInfo.totalCost =  0;
+                }
+                if( Number(this.couponInfo.totalCost) == 0){
+                  this.isButtonCash = true; 
+                }
+                if(this.couponInfo.cash < this.couponInfo.cost){
+                  this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
+                }
+              }
+            }
+          }else{
+            if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
+                this.couponInfo.totalCost =  0;
+                return;
+            }
+            if( Number(this.couponInfo.totalCost) == 0){
+                this.isButtonCash = true; 
+            }
+            if(this.couponInfo.cash < this.couponInfo.cost){
+                this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
+                return;
+            }
           }
         },
         deep: true
       },
+      'couponInfo.cash':{ 
+        handler:function(){
+          // if(this.vipName =='' || this.vipName == undefined){
+            if(this.couponInfo.cash != 0){
+              this.groupList.push('cash');
+            }
+          // }
+        },
+        deep:true,
+        immediate: true
+      }
     }
   }
 </script>
@@ -617,7 +925,7 @@
 <style rel="stylesheet/less" lang="less" scoped>
 
   .background {
-    font-family: 'MicrosoftYaHei';
+    font-family: 'MicrosoftYaHei','PingFangSC-Regular';
     background-color: #f5f5f5;
     width: 100%;
     @diff: 101px;
@@ -627,7 +935,7 @@
       width: 1200px;
       margin: 0px auto;
       & > span {
-        font-family: PingFangSC-Regular;
+        font-family: 'PingFangSC-Regular';
         font-size: 12px;
         color: rgba(17, 17, 17, 0.43);
         line-height: 22px;

@@ -25,15 +25,20 @@
                   <ul>
                     <li><span>用户名称</span><span style="display: inline">{{(authInfo&&authInfo.name)? authInfo.name:userInfo.realname}}</span>
                       <span v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"
-                            style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:rgba(42,153,242,1);border-radius:4px;margin-left: 20px">个人认证</span>
+                            style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid rgba(42,153,242,1);margin-left: 20px;font-size: 10px;">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
-                            style="padding: 8px 6px 6px;color:rgba(255,255,255,1);background:#14B278;border-radius:4px;margin-left: 20px">企业认证</span></li>
+                            style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid #14B278;margin-left: 20px;font-size: 10px;color: #14B278">企业认证</span>
+                      <span v-if="authInfo&&authInfo.authtype == 1 && authInfo.checkstatus == 2"
+                            style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid #14B278;margin-left: 20px;font-size: 10px;color: #14B278">企业认证中</span>
+                    </li>
+                    <li><span>会员信息</span><span v-if="vipGrade"><img v-if="vipGrade" :src="vipGrade" alt="vipGrade" height="22" width="74"/></span><span v-else>尚未开通会员</span><span
+                      @click="$router.push('memberInfo')">查看</span></li>
                     <li v-if="!userInfo.loginname"><span>注册邮箱</span><span>尚未绑定</span><span
-                      @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
+                      @click="modifyEmail">去绑定</span></li>
                     <li v-else><span>注册邮箱</span><span>{{ userInfo.loginname }}</span><span
-                      @click="showModal.bindingEmail = true,bindingEmailForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">修改</span></li>
+                      @click="modifyEmail">修改</span></li>
                     <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span
-                      @click="showModal.bindingMobilePhone = true,bindingMobilePhoneForm.step=0,imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">去绑定</span></li>
+                      @click="modifyTelphone">去绑定</span></li>
                     <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span
                       @click="telModify_btn()">修改</span></li>
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
@@ -201,7 +206,8 @@
                     </Button>
                   </FormItem>
                   <FormItem>
-                    <p class="noauth-voice">收不到验证码？请<span :class="{notallow:notAuth.cardAuthForm.sendCodeText !='获取验证码'}" @click="sendCodePersonal('againCode')">重新获取</span>或<span :class="{notallow:notAuth.cardAuthForm.sendCodeText !='获取验证码'}" @click="sendCodePersonal('voice')">接收语音验证码</span></p>
+                    <p class="noauth-voice">收不到验证码？请<span :class="{notallow:notAuth.cardAuthForm.sendCodeText !='获取验证码'}" @click="sendCodePersonal('againCode')">重新获取</span>或<span
+                      :class="{notallow:notAuth.cardAuthForm.sendCodeText !='获取验证码'}" @click="sendCodePersonal('voice')">接收语音验证码</span></p>
                   </FormItem>
                   <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">请上传实名认证图片
                     上传文件支持jpg/png/gif/pdf，单个文件最大不超过4MB。</p>
@@ -336,7 +342,8 @@
                     <Input v-model="notAuth.quicklyAuthForm.validateCode" placeholder="请输入验证码"></Input>
                   </FormItem>
                   <FormItem>
-                    <p class="noauth-voice">收不到验证码？请<span :class="{notallow:notAuth.quicklyAuthForm.sendCodeText!='获取验证码'}" @click="sendCode('againCode')">重新获取</span>或<span :class="{notallow:notAuth.quicklyAuthForm.sendCodeText!='获取验证码'}" @click="sendCode('voice')">接收语音验证码</span></p>
+                    <p class="noauth-voice">收不到验证码？请<span :class="{notallow:notAuth.quicklyAuthForm.sendCodeText!='获取验证码'}" @click="sendCode('againCode')">重新获取</span>或<span
+                      :class="{notallow:notAuth.quicklyAuthForm.sendCodeText!='获取验证码'}" @click="sendCode('voice')">接收语音验证码</span></p>
                   </FormItem>
                   <FormItem>
                     <div style="float:right">
@@ -544,7 +551,9 @@
                            style="width: 300px"></Input>
                   </FormItem>
                   <FormItem>
-                    <p class="noauth-voice">收不到验证码？请<span :class="{notallow:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}" @click="sendCompanyCode('againCode')">重新获取</span>或<span :class="{notallow:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}" @click="sendCompanyCode('voice')">接收语音验证码</span></p>
+                    <p class="noauth-voice">收不到验证码？请<span :class="{notallow:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}"
+                                                          @click="sendCompanyCode('againCode')">重新获取</span>或<span
+                      :class="{notallow:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}" @click="sendCompanyCode('voice')">接收语音验证码</span></p>
                   </FormItem>
                   <FormItem label="身份证号码" prop="agentManID">
                     <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码"
@@ -704,12 +713,12 @@
       <div style="display: flex;margin-top: 20px;">
         <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
           <h2>个人用户</h2>
-          <p><i></i>可以使用睿云所有资源</p>
+          <p><i></i>可以使用新睿云所有资源</p>
           <p><i></i>个人级别的资源建立额度</p>
         </div>
         <div class="selectAuthType">
           <h2>企业用户</h2>
-          <p><i></i>可以使用睿云所有资源</p>
+          <p><i></i>可以使用新睿云所有资源</p>
           <p><i></i>企业级无限量的资源建立额度</p>
           <p><i></i>专业免费的点对点咨询服务</p>
         </div>
@@ -724,7 +733,7 @@
       </div>
       <div slot="footer" style="margin-bottom: 20px;">
         <p class="modal-text-hint-bottom">
-          提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
+          提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：400-050-5565</p>
       </div>
     </Modal>
 
@@ -907,7 +916,7 @@
     <!-- 绑定手机 -->
     <Modal v-model="showModal.bindingMobilePhone" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">修改手机号码</span>
+        <span class="universal-modal-title">设置手机号码</span>
       </p>
       <div class="universal-modal-content-flex">
         <div>
@@ -949,7 +958,8 @@
               </FormItem>
               <Form-item label="短信验证码" prop="newVerificationCode" style="width: 100%">
                 <Input v-model="bindingMobilePhoneForm.newVerificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
-                <Button type="primary" :disabled="bindingMobilePhoneForm.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode1">{{ bindingMobilePhoneForm.newCodeText}}
+                <Button type="primary" :disabled="bindingMobilePhoneForm.newCodeText !='获取验证码'||getBindingMobilePhoneDisabled " @click="getBindingNewMobilePhoneCode1">{{
+                  bindingMobilePhoneForm.newCodeText}}
                 </Button>
               </Form-item>
             </div>
@@ -965,13 +975,23 @@
             <p>1、检查您的邮箱垃圾箱。</p>
             <p>2、如果邮箱仍收不到验证码，请<span @click="bindingMobilePhoneForm.verificationMode = 'phone'">更换验证方式</span></p>
           </div> -->
-          <div v-if="bindingMobilePhoneForm.step ==0" class="voice-vail">
-            <p>没有收到验证码？</p>
-            <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码'}"  @click="getBindingMobilePhoneCode('againCode')">重新获取</span>或<span class="blue code" :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码'}"  @click.prevent="getBindingMobilePhoneCode('voice')">接收语音验证码</span>。</p>
-            <p v-if="$store.state.authInfo">2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue" @click="showModal.modifyPhoneID = true;showModal.bindingMobilePhone=false">通过身份证号码验证</span>更改手机号。</p>
+          <div v-if="bindingMobilePhoneForm.verificationMode == 'phone'&&bindingMobilePhoneForm.step ==0" class="voice-vail">
+            <p>没有收到验证码？<span class="blue" @click="bindingMobilePhoneForm.verificationMode = 'email'">更换验证方式</span></p>
+            <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码' ||getBindingMobilePhoneDisabled}"
+                                        @click="getBindingMobilePhoneCode('againCode')">重新获取</span>或<span class="blue code"
+                                                                                                          :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码' ||getBindingMobilePhoneDisabled}"
+                                                                                                          @click.prevent="getBindingMobilePhoneCode('voice')">接收语音验证码</span>。</p>
+            <p v-if="$store.state.authInfo">2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue"
+                                                                                                                             @click="showModal.modifyPhoneID = true;showModal.bindingMobilePhone=false">通过身份证号码验证</span>更改手机号。
+            </p>
             <p v-else>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span> 或
-            <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
-            更改手机号。</p>
+              <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+              更改手机号。</p>
+          </div>
+          <div class="setNewPasswordText" v-if="bindingMobilePhoneForm.verificationMode == 'email'&&bindingMobilePhoneForm.step ==0">
+            <p>没有收到验证码？</p>
+            <p>1、检查您的邮箱垃圾箱。</p>
+            <p>2、如果邮箱仍收不到验证码，请<span @click="bindingMobilePhoneForm.verificationMode = 'phone'">更换验证方式</span></p>
           </div>
         </div>
       </div>
@@ -985,7 +1005,7 @@
     <!-- 绑定邮箱 -->
     <Modal v-model="showModal.bindingEmail" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">绑定邮箱</span>
+        <span class="universal-modal-title">设置邮箱</span>
       </p>
       <div class="universal-modal-content-flex">
         <div>
@@ -1123,8 +1143,12 @@
         </p>
         <div class="voice-vail">
           <p>没有收到验证码？</p>
-          <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:keycodePlaceholder!='获取验证码'}"  @click="keysendCode('againCode')">重新获取</span>或<span class="blue code" :class="{notallow:keycodePlaceholder!='获取验证码'}"  @click.prevent="keysendCode('voice')">接收语音验证码</span>。</p>
-          <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue" @click="showModal.modifyPhoneID = true;showModal.keyPhoneVal=false">通过身份证号码验证</span>更改手机号。</p>
+          <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:keycodePlaceholder!='获取验证码'}" @click="keysendCode('againCode')">重新获取</span>或<span class="blue code"
+                                                                                                                                                       :class="{notallow:keycodePlaceholder!='获取验证码'}"
+                                                                                                                                                       @click.prevent="keysendCode('voice')">接收语音验证码</span>。
+          </p>
+          <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue" @click="showModal.modifyPhoneID = true;showModal.keyPhoneVal=false">通过身份证号码验证</span>更改手机号。
+          </p>
         </div>
       </div>
       <div slot="footer">
@@ -1155,7 +1179,7 @@
                 </Form-item>
                 <FormItem label="注册身份证号码" style="width: 100%;" prop="ID">
                   <Input v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码"
-                        style="width:240px;"></Input>
+                         style="width:240px;"></Input>
                 </FormItem>
                 <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.personHint">
                   <Icon type="ios-close"></Icon>
@@ -1170,7 +1194,7 @@
                 </Form-item>
                 <FormItem label="公司营业执照号码" style="width: 100%;" prop="businessLicense">
                   <Input v-model="authModifyPhoneFormOne.businessLicense" placeholder="请输入公司营业执照号码"
-                        style="width:240px;"></Input>
+                         style="width:240px;"></Input>
                 </FormItem>
                 <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.companyHint">
                   <Icon type="ios-close"></Icon>
@@ -1201,7 +1225,7 @@
                       :on-exceeded-size="handleMaxSize"
                       :on-success="legalPersonIDFront11">
                       <div class="icon-wrap" v-if="uploadImgDispaly==''">
-                          <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
                       </div>
                       <img v-else :src="uploadImgDispaly">
                       <p>上传图片</p>
@@ -1233,7 +1257,7 @@
                       :on-exceeded-size="handleMaxSize"
                       :on-success="legalPersonIDFront12">
                       <div class="icon-wrap" v-if="uploadImgDispaly1==''">
-                          <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
                       </div>
                       <img v-else :src="uploadImgDispaly1">
                       <p>上传图片</p>
@@ -1260,7 +1284,7 @@
                       :on-exceeded-size="handleMaxSize"
                       :on-success="legalPersonIDFront13">
                       <div class="icon-wrap" v-if="uploadImgDispaly2==''">
-                          <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
                       </div>
                       <img v-else :src="uploadImgDispaly2">
                       <p>上传图片</p>
@@ -1275,7 +1299,7 @@
             </div>
           </div>
           <div v-show="authModifyPhoneStep == 2">
-          <Form :model="authModifyPhoneFormThere" :rules="authModifyPhoneThereRuleValidate" ref="authModifyPhoneFormThere">
+            <Form :model="authModifyPhoneFormThere" :rules="authModifyPhoneThereRuleValidate" ref="authModifyPhoneFormThere">
               <FormItem label="绑定新手机" prop="newPhone" style="width: 100%">
                 <Input v-model="authModifyPhoneFormThere.newPhone" placeholder="请输入新手机号码" style="width:240px"></Input>
               </FormItem>
@@ -1287,10 +1311,11 @@
               </FormItem>
               <Form-item label="短信验证码" prop="newVerificationCode" style="width: 100%">
                 <Input v-model="authModifyPhoneFormThere.newVerificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
-                <Button type="primary" :disabled="authModifyPhoneFormThere.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode('authModifyPhoneFormThere')">{{ authModifyPhoneFormThere.newCodeText}}
+                <Button type="primary" :disabled="authModifyPhoneFormThere.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode('authModifyPhoneFormThere')">{{
+                  authModifyPhoneFormThere.newCodeText}}
                 </Button>
               </Form-item>
-          </Form>
+            </Form>
           </div>
           <div v-show="authModifyPhoneStep == 3" style="text-align:center">
             <Icon type="checkmark-circled" style="font-size:54px;color:#3EBB62;margin:20px 0;"></Icon>
@@ -1376,6 +1401,7 @@
   import axios from '../../util/axiosInterceptor'
   import reg from '../../util/regExp'
   import $store from '../../vuex'
+  import throttle from 'throttle-debounce/debounce'
 
   export default {
     data() {
@@ -1475,6 +1501,7 @@
       }
 
       return {
+        vipGrade: '',
         // 当前选中的tab页
         currentTab: currentTab ? currentTab : 'personalInfo',
         authType,
@@ -1902,7 +1929,7 @@
           {title: '云硬盘备份'},
           {title: '对象存储'},
           {title: '虚拟私有云VPC'},
-   /*       {title: '弹性负载均衡'},*/
+          /*       {title: '弹性负载均衡'},*/
           {title: '云数据库'},
           {title: '云监控服务'}
         ],
@@ -2418,6 +2445,7 @@
       if ($store.state.authInfo && $store.state.authInfo.companyid) {
         this.getPhone()
       }
+      this.getUserVipGrade()
       this.listNotice()
       this.getContacts()
       this.getSystemHead()
@@ -2425,7 +2453,7 @@
       this.getResourceAllocation()
       this.modifyVailType.forEach(item => {
         if (item.type == 'auth') {
-          item.exist = this.$store.state.authInfo ? 1: 0
+          item.exist = this.$store.state.authInfo ? 1 : 0
         }
       })
     },
@@ -2491,7 +2519,7 @@
             break
         }
       },
-      selectedVailType (item, index) {
+      selectedVailType(item, index) {
         if (item.exist) {
           this.selectedVailIndex = index
         }
@@ -2639,6 +2667,16 @@
           }
         })
       },
+      modifyTelphone() {
+        if (this.getBindingMobilePhoneDisabled) {
+          this.bindingMobilePhoneForm.verificationMode = 'email'
+        } else {
+          this.bindingMobilePhoneForm.verificationMode = 'phone'
+        }
+        this.showModal.bindingMobilePhone = true
+        this.bindingMobilePhoneForm.step = 0
+        this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+      },
       // 修改手机弹窗出现前，清空数据
       telModify_btn() {
         this.showModal.ModifyTelVail = true
@@ -2646,6 +2684,17 @@
         this.bindingMobilePhoneForm.step = 0
         this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
         this.modifyPhoneIDcancel()
+      },
+      // 设置邮箱
+      modifyEmail() {
+        if (this.getBindingEmailDisabled) {
+          this.bindingEmailForm.verificationMode = 'email'
+        } else {
+          this.bindingEmailForm.verificationMode = 'phone'
+        }
+        this.showModal.bindingEmail = true
+        this.bindingEmailForm.step = 0
+        this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
       },
       // 重置表单
       reset() {
@@ -2662,7 +2711,7 @@
             var url = ''
             if (codeType == 'code' || codeType == 'againCode' && this.notAuth.quicklyAuthForm.sendCodeText == '获取验证码') {
               url = 'user/code.do'
-            } else if (codeType == 'voice' && this.notAuth.quicklyAuthForm.sendCodeText == '获取验证码'){
+            } else if (codeType == 'voice' && this.notAuth.quicklyAuthForm.sendCodeText == '获取验证码') {
               url = 'user/voiceCode.do'
             } else {
               return false
@@ -2708,7 +2757,7 @@
           var url = ''
           if (codeType == 'code' || codeType == 'againCode' && this.notAuth.cardAuthForm.sendCodeText == '获取验证码') {
             url = 'user/code.do'
-          } else if (codeType == 'voice' && this.notAuth.cardAuthForm.sendCodeText == '获取验证码'){
+          } else if (codeType == 'voice' && this.notAuth.cardAuthForm.sendCodeText == '获取验证码') {
             url = 'user/voiceCode.do'
           } else {
             return false
@@ -2741,7 +2790,7 @@
       },
       // 个人认证
       // 身份证照片认证
-      personalAttest() {
+      personalAttest: throttle(2000, function () {
         this.$refs.cardAuth.validate(validate => {
           if (validate) {
             if (!this.notAuth.cardAuthForm.IDCardFront || !this.notAuth.cardAuthForm.IDCardBack || !this.notAuth.cardAuthForm.IDCardPerson) {
@@ -2761,6 +2810,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
+                this.getPhone()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2769,10 +2819,9 @@
             })
           }
         })
-
-      },
+      }),
       // 快速认证
-      quicklyAuth() {
+      quicklyAuth: throttle(2000, function () {
         var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
           return Promise.resolve(validate)
         })
@@ -2791,6 +2840,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
+                this.getPhone()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2799,9 +2849,9 @@
             })
           }
         })
-      },
+      }),
       // 企业认证
-      enterpriseAttest() {
+      enterpriseAttest: throttle(2000, function () {
         this.$refs.companyAuth.validate(validate => {
           if (validate) {
             if (this.notAuth.companyAuthForm.combine == '') {
@@ -2857,6 +2907,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
+                this.getPhone()
                 this.currentTab = ''
               } else {
                 this.$message.info({
@@ -2866,7 +2917,7 @@
             })
           }
         })
-      },
+      }),
       /* 企业认证发送验证码 */
       sendCompanyCode(codeType) {
         var regPhone = false
@@ -2885,7 +2936,7 @@
           var url = ''
           if (codeType == 'code' || codeType == 'againCode' && this.notAuth.companyAuthForm.codePlaceholder == '发送验证码') {
             url = 'user/code.do'
-          } else if (codeType == 'voice' && this.notAuth.companyAuthForm.codePlaceholder == '发送验证码'){
+          } else if (codeType == 'voice' && this.notAuth.companyAuthForm.codePlaceholder == '发送验证码') {
             url = 'user/voiceCode.do'
           } else {
             return false
@@ -3055,19 +3106,29 @@
         this.$refs.bindingMobilePhone.validateField('pictureCode', (text) => {
           if (text == '') {
             var url = ''
-            if (codeType == 'code' || codeType == 'againCode' && this.bindingMobilePhoneForm.codeText == '获取验证码') {
+            if (codeType == 'code' || codeType == 'againCode' && this.bindingMobilePhoneForm.codeText == '获取验证码' && !this.getBindingMobilePhoneDisabled) {
               url = 'user/code.do'
-            } else if (codeType == 'voice' && this.bindingMobilePhoneForm.codeText == '获取验证码'){
+            } else if (codeType == 'voice' && this.bindingMobilePhoneForm.codeText == '获取验证码' && !this.getBindingMobilePhoneDisabled) {
               url = 'user/voiceCode.do'
             } else {
               return false
             }
-            axios.get(url, {
-              params: {
+            let params = {}
+            if (this.bindingMobilePhoneForm.verificationMode == 'phone') {
+              params = {
                 aim: this.userInfo.phone,
                 isemail: 0,
                 vailCode: this.bindingMobilePhoneForm.pictureCode
               }
+            } else {
+              params = {
+                aim: this.userInfo.loginname ? this.userInfo.loginname : '',
+                isemail: 1,
+                vailCode: this.bindingMobilePhoneForm.pictureCode
+              }
+            }
+            axios.get(url, {
+              params: params
             }).then(response => {
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
@@ -3522,13 +3583,13 @@
               this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.keyWeight = response.data.data.weight
             } else {
-              this.$Message.info(response.data.msg)
+              this.$Message.info(response.data.message)
             }
           })
         } else {
           this.$Modal.confirm({
             title: '提示',
-            content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有认证,请您到<span style="color: #2A99F2;">用户中心</span>去进行认证</p>',
+            content: '尊敬的用户您好，系统检测到您当前没有认证,请您到<span style="color: #2A99F2;">用户中心</span>去进行认证</p>',
           });
         }
       },
@@ -3540,7 +3601,7 @@
         var url = ''
         if (codeType == 'code' || codeType == 'againCode' && this.keycodePlaceholder == '获取验证码') {
           url = 'user/code.do'
-        } else if (codeType == 'voice' && this.keycodePlaceholder == '获取验证码'){
+        } else if (codeType == 'voice' && this.keycodePlaceholder == '获取验证码') {
           url = 'user/voiceCode.do'
         } else {
           return false
@@ -3664,15 +3725,15 @@
         this.$refs[name].validate((vail) => {
           if (vail) {
             // /user/newPhoneByIdCard.do
-          // post请求
-          // 参数IDCard 身份证
-          // authType认证类型(0是个人 1是企业)
-          // newPhone新手机号
-          // (个人认证 personIdCardHandUrl 个人认证手持照片)
-          //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
-          if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+            // post请求
+            // 参数IDCard 身份证
+            // authType认证类型(0是个人 1是企业)
+            // newPhone新手机号
+            // (个人认证 personIdCardHandUrl 个人认证手持照片)
+            //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
+            if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
               axios.post('user/newPhoneByIdCard.do', {
-                IDCard: this.authModifyPhoneFormOne.ID,
+                IdCard: this.authModifyPhoneFormOne.ID,
                 authType: '0',
                 newPhone: this.authModifyPhoneFormThere.newPhone,
                 personIdCardHandUrl: this.uploadImgDispaly
@@ -3707,28 +3768,28 @@
         this.$refs['authModifyPhoneFormThere'].resetFields()
         this.uploadImgDispaly = ''
       },
-      uploadIDImg () {
-      if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
-        if (this.uploadImgDispaly == '') {
-          this.$Message.info({
-            content: '请上传手持身份证人像照片',
-            duration: 2
-          })
-        } else {
-          this.authModifyPhoneStep = 2
+      uploadIDImg() {
+        if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+          if (this.uploadImgDispaly == '') {
+            this.$Message.info({
+              content: '请上传手持身份证人像照片',
+              duration: 2
+            })
+          } else {
+            this.authModifyPhoneStep = 2
+          }
+        } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
+          if (this.uploadImgDispaly1 == '' || this.uploadImgDispaly2 == '') {
+            this.$Message.info({
+              content: '请上传手持身份证人像照片',
+              duration: 2
+            })
+          } else {
+            this.authModifyPhoneStep = 2
+          }
         }
-      } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
-        if (this.uploadImgDispaly1 == '' || this.uploadImgDispaly2 == '') {
-          this.$Message.info({
-            content: '请上传手持身份证人像照片',
-            duration: 2
-          })
-        } else {
-          this.authModifyPhoneStep = 2
-        }
-      }
-    },
-    getBindingNewMobilePhoneCode(name) {
+      },
+      getBindingNewMobilePhoneCode(name) {
         this.$refs[name].validateField('newPhone', (text) => {
           if (text == '') {
             axios.get('user/code.do', {
@@ -3759,6 +3820,17 @@
           }
         })
       },
+      getUserVipGrade() {
+        if (this.userInfo && this.userInfo.vipname == '白银会员') {
+          this.vipGrade = require('../../assets/img/usercenter/uc-img3.png')
+        } else if (this.userInfo && this.userInfo.vipname == '黄金会员') {
+          this.vipGrade = require('../../assets/img/usercenter/uc-img4.png')
+        } else if (this.userInfo && this.userInfo.vipname == '铂金会员') {
+          this.vipGrade = require('../../assets/img/usercenter/uc-img5.png')
+        } else {
+          this.vipGrade = ''
+        }
+      }
     },
     computed: {
       userInfo() {
@@ -3858,9 +3930,10 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-.red {
-    color:#FF624B
+  .red {
+    color: #FF624B
   }
+
   h2 {
     font-size: 22px;
     font-family: MicrosoftYaHei;
@@ -3903,6 +3976,9 @@
               color: rgba(102, 102, 102, 1);
               line-height: 14px;
               display: inline-block;
+              > img {
+                vertical-align: bottom;
+              }
             }
             span:nth-child(1) {
               width: 60px;
@@ -4017,11 +4093,11 @@
         }
         span:nth-child(3) {
           font-size: 12px;
-          font-family: MicrosoftYaHei;
-          color: rgba(255, 255, 255, 1);
-          padding: 8px;
-          background: #14B278;
-          border-radius: 4px;
+          background: rgba(255, 255, 255, 1);
+          border-radius: 10px;
+          color: #14B278;
+          padding: 4px 8px;
+          border: 1px solid #14B278;
           margin-left: 20px;
         }
       }
@@ -4043,11 +4119,11 @@
         }
         span:nth-child(2) {
           font-size: 12px;
-          font-family: MicrosoftYaHei;
-          color: rgba(255, 255, 255, 1);
-          padding: 8px;
-          background: rgba(42, 153, 242, 1);
-          border-radius: 4px;
+          background: rgba(255, 255, 255, 1);
+          border-radius: 10px;
+          color: rgba(42, 153, 242, 1);
+          padding: 4px 8px;
+          border: 1px solid rgba(42, 153, 242, 1);
         }
       }
     }
@@ -4350,10 +4426,11 @@
     padding-left: 8px;
     height: 32px;
   }
+
   .modify-vail-modal {
     .title {
-      font-size:14px;
-      color:rgba(51,51,51,1);
+      font-size: 14px;
+      color: rgba(51, 51, 51, 1);
       margin-bottom: 10px;
     }
     .box {
@@ -4362,8 +4439,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-radius:4px;
-      border:1px solid rgba(233,233,233,1);
+      border-radius: 4px;
+      border: 1px solid rgba(233, 233, 233, 1);
       cursor: pointer;
       .left {
         display: flex;
@@ -4372,13 +4449,13 @@
           margin-right: 10px;
         }
         p {
-          font-size:14px;
-          color:rgba(51,51,51,1);
+          font-size: 14px;
+          color: rgba(51, 51, 51, 1);
           margin-bottom: 10px;
         }
         span {
           font-size: 12px;
-          color:rgba(102,102,102,1);
+          color: rgba(102, 102, 102, 1);
         }
       }
       .arrow {
@@ -4386,14 +4463,14 @@
       }
     }
     .blue {
-      border:1px solid rgba(42,153,242,1);
-      box-shadow:0px 0px 10px -5px rgba(42,153,242,1);
-      .left p,.arrow {
+      border: 1px solid rgba(42, 153, 242, 1);
+      box-shadow: 0px 0px 10px -5px rgba(42, 153, 242, 1);
+      .left p, .arrow {
         color: #2A99F2
       }
     }
     .gray {
-      background:rgba(233,233,233,1);
+      background: rgba(233, 233, 233, 1);
     }
   }
 </style>

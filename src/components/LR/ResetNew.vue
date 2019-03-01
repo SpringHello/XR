@@ -7,10 +7,10 @@
           <div class="body">
             <div class="process-header">
               <ul style="display:flex;">
-                <li v-for="(item,index) in stepList" :key="index" class="process_text" :class="item.style">
-                  <div class="process_pace" v-if="item.failOrSuccess == false">{{index+1}}</div>
+                <li v-for="(item,indexs) in stepList" :key="indexs" class="process_text" :class="item.style">
+                  <div class="process_pace" v-if="item.failOrSuccess == false">{{indexs+1}}</div>
                   <div class="process_ok" v-else></div>
-                  <span >{{item.value}}</span>
+                  <span>{{item.value}}</span>
                   <span class="line" :class="{lineselected: item.failOrSuccess}"></span>
                 </li>
               </ul>
@@ -19,23 +19,24 @@
             <!-- 输入账号 -->
             <div class="verification" v-if="index == 1 && accountIsDis=='8'" :class="style">
                <p class="ver_p" >请输入您的账号</p>
-              <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" >
+              <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" @submit.native.prevent>
                 <FormItem prop="account">
-                  <x-Input   :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入账号' ></x-Input>
+                  <x-Input   :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入注册时用的邮箱或者手机号'  style="width:365px;"></x-Input>
                 </FormItem>
               </Form>
                 
-              <div style="float:right;">
-                 <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;cursor:pointer;" @click="next('no')">现账号无法使用</p>
-                 <Button type="primary" style="width:110px" @click="next('yes')">下一步</Button>
+              <div style="float:right;margin-top:-10px;">
+                 <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;cursor:pointer;text-align: right;" @click="next('no')">现账号无法使用</p>
+                 <div class="v_top" @click="$router.push('login')">返回</div>
+                 <Button type="primary" class="ive_button" style="width:110px" @click="next('yes')">下一步</Button>
               </div>
             </div>
 
             
             <!-- 账号能用 -->
             <div class="verification" v-if="index == 2 && accountIsDis=='1'">
-               <p class="ver_p">您正在为账户：{{formValidate.account}}重置密码，请选择方式验证。</p>
-              <div class="verifcation_box" v-for="(item,index) in verificationList" :key="index" @click="jump(index,'ok')">
+               <p class="ver_p">您正在为账户：{{newPhone}}重置密码，请选择方式验证。</p>
+              <div class="verifcation_box" v-for="(item,index) in verificationList" :key="index" @click="jump(index,'ok')" v-if="item.prohibit">
                 <div>
                   <img :src='item.icon'>
                 </div>
@@ -46,17 +47,21 @@
                 <div class="ver_arrow">
                 </div>
               </div>
+              <div style="float:right;">
+                 <Button type="primary" class="ive_button"  @click="index = 1,accountIsDis ='8'">上一步</Button>
+              </div>
             </div>
 
             <div class="verification" v-if="index == 1 && accountIsDis =='9'" :class="style">
                <p class="ver_p" >请输入您的账号</p>
-              <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" >
+              <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" @submit.native.prevent>
                 <FormItem prop="account">
-                  <x-Input   :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入账号' ></x-Input>
+                  <x-Input   :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入注册时用的邮箱或者手机号' ></x-Input>
                 </FormItem>
               </Form>
               <div style="float:right;">
-                 <Button type="primary" style="width:110px" @click="next('go')">下一步</Button>
+                <div class="v_top" @click="$router.push('login')">返回</div>
+                 <Button type="primary" class="ive_button"  @click="next('go')">下一步</Button>
               </div>
             </div>
 
@@ -73,65 +78,55 @@
                 <div class="ver_arrow">
                 </div>
               </div>
-            </div>
-
-            <div class="verification" style="margin-top:74px;" v-if="index == 2 && accountIsDis=='3'">
-              <div class="verifcation_box" v-for="(item,index) in personalList" :key="index" @click="jump(index+2,'individual')">
-                <div>
-                  <img :src='item.icon'>
-                </div>
-                <div class="ver_font">
-                  <p class="ver_p1">{{item.title}}</p>
-                  <p class="ver_p2">{{item.des}}</p>
-                </div>
-                <div class="ver_arrow">
-                </div>
+              <div style="float:right;">
+                <div class="v_top" @click="index = 1 , accountIsDis ='9'">上一步</div>
               </div>
             </div>
+
             
             <!-- 邮箱验证方式 -->
             <div class="verification" v-if="verPage == 'email'">
               <p class="ver_p">我们会发送一封验证邮件到您的邮箱，请注意查收</p>
-                <Form ref="dataPhone"  :model="dataFroms" :rules="dataFromsValidate" >
+                <Form ref="dataPhone"  :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                   <FormItem prop='email'>
-                    <x-Input   :icon='url.icon1' v-model="dataFroms.email"  placeholder='请输入邮箱' ></x-Input>
+                    <x-Input   :icon='url.icon1' v-model="dataFroms.email"  placeholder='请输入邮箱' choice='' :disabled='true'></x-Input>
                   </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large'  placeholder='请输入验证码' style="width:258px;"></Input>
                     <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
+                    <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
-                      <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
+                      <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;height:44px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
                          <div slot="code">
                           <div class="ver_yan">
                               <span @click="sendCode(1)" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
                               <span v-else style="color:#666666;">{{count}}</span>
                           </div>
-                          <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE;cursor:pointer;" @click="sendCode(1)">重新获取</span>或<span  style="color:#4A97EE;cursor:pointer;" @click="getVoiceCode">接收语音验证</span></p>
                         </div>
                       </x-Input>
                    </FormItem>
                 </Form>
-              <div class="v_email" @click="voiceCode(1)">
-               下一步
+              <div style="float:right;">
+                <div class="v_top" @click="index = 2,verPage=''">上一步</div>
+                <div class="v_email"  @click="voiceCode(1)">下一步</div>
               </div>
             </div>
 
             <!-- 手机验证方式 -->
             <div class="verification" v-if="index == 3 && verPage == 'phone'">
               <p class="ver_p">请输入有效手机号码用于接收验证码</p>
-               <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" >
+               <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                    <FormItem prop='phone' >
-                     <x-Input  :icon='url.iconPhone'  v-model="dataFroms.phone"  placeholder='请输入手机号' choice='select'></x-Input>
+                     <x-Input  :icon='url.iconPhone'  v-model="dataFroms.phone"  placeholder='请输入手机号' choice='select' :disabled='true'></x-Input>
                    </FormItem>
-                  <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
-                    <Input  v-model="dataFroms.vCode" size='large' placeholder='请输入验证码' style="width:258px;"></Input>
+                  <FormItem prop='vCode' style="margin-bottom:0px;">
+                    <x-Input  v-model="dataFroms.vCode" placeholder='请输入验证码' style="width:258px;" choice=''></x-Input>
                     <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
-                      <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
+                      <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;height:44px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
                         <div slot="code">
                           <div class="ver_yan">
                               <span @click="sendCode(0)" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
@@ -142,13 +137,16 @@
                       </x-Input>
                    </FormItem>
                </Form>
-               <Button type="primary" @click="voiceCode(0)" style="float:right;margin-top:12px;">下一步</Button>
+               <div style="float:right;">
+                 <div class="v_top" @click="index = 2,verPage=''">上一步</div>
+                  <Button type="primary" class="ive_button" @click="voiceCode(0)" >下一步</Button>
+                </div>
             </div>
 
             <!-- 身份证验证方式 -->
-            <div class="verification"  v-if="verPage == 'card'">
+            <div class="verification_poto"  v-if="verPage == 'card'">
               <div v-if="absc">
-                <Form ref='dataInfo' :model="dataFroms" :rules="dataFromsValidate" >
+                <Form ref='dataInfo' :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                   <FormItem prop='name'>
                     <x-Input ref="xinput" :icon='url.icon1' v-model="dataFroms.name"  placeholder='请输入您的姓名' ></x-Input>
                   </FormItem>
@@ -157,49 +155,59 @@
                     <p v-if="errorCard != ''" class="ivu-form-item-error-tip">{{errorCard}}</p>
                   </FormItem>
                 </Form>
-                <Button type="primary" @click="cardNext" style="float:right;">下一步</Button>
+                <div style="float:right;">
+                  <div class="v_top" @click="index = 2,verPage=''">上一步</div>
+                  <Button type="primary" @click="cardNext" class="ive_button" style="margin-right: 44px;">下一步</Button>
+                </div>
               </div>
               <!-- 上传身份证照片 -->
               <div v-else>
-                <div class="up_content">
+                <div class="up_border">
+                  <div class="up_content">
                     <div class="up_propress" v-for="item in uploadList" :key="item.id" v-if="item.showProgress">
                        <Progress  v-if="item.showProgress" :percent="item.percentage" hide-info style="line-height:110px;"></Progress>
                     </div>
-                    <Upload
-                        ref="upload"
-                        :show-upload-list="false"
-                        :on-success="handleSuccess"
-                        :format="['jpg','jpeg','png']"
-                        :max-size="4096"
-                        :on-format-error="handleFormatError"
-                        :on-exceeded-size="handleMaxSize"
-                        :before-upload="handleBeforeUpload"
-                        :data='flieList'
-                        type="drag"
-                        action="file/upFile.do"
-                        style="display: inline-block;">
-                        <div class="up_button" v-if="fileUrl.imgUrl ==''">
-                            <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
-                        </div>
-                        <div class="up_button" v-else>
-                          <img :src="fileUrl.imgUrl">
-                        </div>
-                        <Button type="primary" style="margin-top:20px;">上传图片</Button>
-                    </Upload>
+                      <Upload
+                          ref="upload"
+                          :show-upload-list="false"
+                          :on-success="handleSuccess"
+                          :format="['jpg','jpeg','png']"
+                          :max-size="4096"
+                          :on-format-error="handleFormatError"
+                          :on-exceeded-size="handleMaxSize"
+                          :before-upload="handleBeforeUpload"
+                          :data='flieList'
+                          type="drag"
+                          action="file/upFile.do"
+                          class="up_load"
+                           style="background-color:#fff;"
+                         >
+                          <div class="up_button" v-if="fileUrl.imgUrl ==''">
+                              <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
+                          </div>
+                          <div class="up_button" v-else>
+                            <img :src="fileUrl.imgUrl">
+                          </div>
+                          <Button type="primary" style="margin-top:20px;">上传图片</Button>
+                      </Upload>
+                  </div>
+                  <div class="up_photo">
+                      <img src="../../assets/img/usercenter/card-person.png">
+                      <p>手持身份证人像照片</p>
+                  </div>
                 </div>
-                <div class="up_photo">
-                    <img src="../../assets/img/usercenter/card-person.png">
-                    <p>手持身份证人像照片</p>
-                </div>
-                  <p style="margin:10px 0 20px 0;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
-                  <Button type="primary" style="float:right;" @click="legalNext('personal')">下一步</Button>
+                  <p style="margin:10px 0 20px 0;color:#666666;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
+                  <div style="float:right;">
+                    <div class="v_top" @click="absc = !absc">上一步</div>
+                    <Button type="primary" class="ive_button" @click="legalNext('personal')">下一步</Button>
+                  </div>
               </div>
             </div>
 
               <!-- 企业验证 -->
              <div   v-if="verPage == 'enterprise'">
               <div v-if="absc" class="verification">
-                <Form  ref="dataInfo" :model="dataFroms" :rules="dataFromsValidate" >
+                <Form  ref="dataInfo" :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                   <FormItem prop='company'>
                     <x-Input ref="xinput" :icon='url.icon1' v-model="dataFroms.company"  placeholder='请输入您的公司名称' ></x-Input>
                   </FormItem>
@@ -208,11 +216,14 @@
                     <p v-if="errorCard != ''" class="ivu-form-item-error-tip">{{errorCard}}</p>
                   </FormItem>
                 </Form>
-                <Button type="primary" @click="cardNext" style="float:right;">下一步</Button>
+                <div style="float:right;">
+                  <div class="v_top" @click="index = 2,verPage=''">上一步</div>
+                  <Button type="primary" @click="cardNext" class="ive_button" style="margin-right: 44px;">下一步</Button>
+                </div>
               </div>
               <!-- 上传身份证照片 -->
               <div v-else  class="up_company">
-                <div style="width:401px;display: inline-block;">
+                <div style="width:407px;display: inline-block;border:1px dashed #999999;padding:40px;border-radius:4px;">
                   <div class="up_content">
                     <div class="up_propress" v-for="item in legalList" :key="item.id" v-if="item.showProgress">
                        <Progress  v-if="item.showProgress" :percent="item.percentage" hide-info style="line-height:110px;"></Progress>
@@ -228,8 +239,10 @@
                         :before-upload="legalBeforeUpload"
                         :data='flieList'
                         type="drag"
+                        class="up_load"
                         action="file/upFile.do"
-                        style="display: inline-block;">
+                        style="background-color:#fff;"
+                        >
                         <div class="up_button" v-if="fileUrl.legalUrl ==''">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
                         </div>
@@ -243,9 +256,8 @@
                     <img src="../../assets/img/usercenter/card-font.png">
                     <p>法人身份证正面照片</p>
                   </div>
-                    <p style="margin:50px 0 20px 0;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
                 </div>
-                <div style="display: inline-block;width:401px;margn-left:22px;vertical-align:top;">
+                <div class='up_coPhoto' style="">
                   <div class="up_content">
                     <div class="up_propress" v-for="item in uploadList" :key="item.id" v-if="item.showProgress">
                        <Progress  v-if="item.showProgress" :percent="item.percentage" hide-info style="line-height:110px;"></Progress>
@@ -262,7 +274,8 @@
                         :data='flieList'
                         type="drag"
                         action="file/upFile.do"
-                        style="display: inline-block;">
+                         class="up_load"
+                        >
                         <div class="up_button" v-if="fileUrl.imgUrl == ''">
                             <Icon type="plus-round" size=40 color='#E9E9E9'></Icon>
                         </div>
@@ -277,7 +290,14 @@
                     <p>经办人手持身份证照片</p>
                   </div>
                 </div>
-                <Button type="primary" style="float:right;" @click="legalNext('company')">下一步</Button>
+                <div>
+                    <p style="margin:19px 0 20px 0;color:#666666;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
+                    <div style="float:right;">
+                      <div class="v_top" @click="absc = !absc">上一步</div>
+                      <Button type="primary" style="float:right;" class="ive_button" @click="legalNext('company')">下一步</Button>
+                    </div>
+                </div>
+                
               </div>
             </div>
 
@@ -287,34 +307,41 @@
               <p style="margin-top:20px;">如果你的邮箱和手机均不可使用，请您联系<a target="_blank"
                    :href="`tencent://message/?uin=${QQInfo}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:#2A99F2">人工客服</a>获取帮助。</p>
+              <div style="float:right;margin-top:20px;">
+                  <div class="v_top" @click="index = 2,verPage =''">上一步</div>
+                </div>
             </div>
 
             <!-- 设置新密码 -->
             <div class="verification" v-if="index == 4 && verPage == ''">
-               <Form  :model="dataFroms" :rules="dataFromsValidate" >
+               <Form ref="dataPaw" :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                 <FormItem prop='newPaw'>
-                  <x-Input   :icon='url.iconLock' v-model="dataFroms.newPaw"  placeholder='请设置新密码' choice='eye'></x-Input>
+                  <x-Input   :icon='url.iconLock'   v-model="dataFroms.newPaw"  placeholder='请设置新密码' choice='eye'></x-Input>
                 </FormItem>
                 <FormItem prop='oldPaw'>
-                  <x-Input @blur="verificationPaw" :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请确认新密码' choice='eye'></x-Input>
+                  <x-Input   :icon='url.iconLock' v-model="dataFroms.oldPaw" style="margin-top:20px;"  placeholder='请确认新密码' choice='eye'></x-Input>
                 </FormItem>
                </Form>
-               <Button type="primary" style="margin-top:21px;float:right;" @click="submit">确认</Button>
+               <div style="float:right;">
+                  <div class="v_top" @click="backEmailOrPhone">上一步</div>
+                  <Button type="primary" class="ive_button" @click="submit">确认</Button>
+                </div>
+              
             </div>
 
               <!-- 重置手机号 -->
-             <div class="verification" v-if="index == 4 && verPage == 'phone'">
-               <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" >
+             <div class="verification" v-if="index == 4 && verPage == 'cphone'">
+               <Form ref="dataPhone" :model="dataFroms" :rules="dataFromsValidate" @submit.native.prevent>
                    <FormItem prop='phone' >
                      <x-Input  :icon='url.iconPhone'  v-model="dataFroms.phone"  placeholder='请输入手机号' choice='select'></x-Input>
                    </FormItem>
-                   <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
-                    <Input  v-model="dataFroms.vCode" size='large' placeholder='请输入验证码' style="width:258px;"></Input>
+                   <FormItem prop='vCode' style="margin-bottom:0px;">
+                    <x-Input  v-model="dataFroms.vCode" placeholder='请输入验证码' style="width:258px;"></x-Input>
                     <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
-                      <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
+                      <x-Input  :icon='url.iconYan' choice='validate'  style="margin-top:20px;height:44px;" v-model="dataFroms.code"  placeholder='请输入验证码' >
                         <div slot="code">
                           <div class="ver_yan">
                               <span @click="sendCode(0)" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
@@ -325,7 +352,10 @@
                       </x-Input>
                    </FormItem>
                </Form>
-               <Button type="primary" @click="validateInfo" style="float:right;margin-top:12px;">确定</Button>
+               <div style="float:right;">
+                  <div class="v_top" @click="test">上一步</div>
+                   <Button type="primary" class="ive_button" @click="validateInfo">确定</Button>
+                </div>
             </div>
 
             <!-- 完成 -->
@@ -341,9 +371,9 @@
               </div>
               <div v-else>
                 <div class="reset_acc">
-                  <img src="../../assets/img/updatePaw/shape.png">
+                  <img src="../../assets/img/updatePaw/lr_reset.png">
                   <p style="font-size:18px;margin-top:20px;">您的更改申请提交成功</p>
-                  <p style="font-size:14px;margin:18px 0;">我们会在24小时内将审核结果发至您的新手机号：{{formValidate.account}}</p>
+                  <p style="font-size:14px;margin:18px 0;width: 500px;text-align:left;">我们会在24小时内将审核结果发至您的新手机号：{{formValidate.account}}</p>
                   <p style="font-size:14px;">——请注意查收——</p>
                   <Button type="primary" style="margin-top:20px;" @click="$router.push({path:'login'})">完成</Button>
                 </div>
@@ -365,13 +395,15 @@ import md5 from 'md5'
 let val = '/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/'; //营业执照格式
 const vailAucct = (rule, value, callback) => {
   let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+  let email = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
   if (value == "") {
-    return callback(new Error("请输入手机号"));
-  } else if (!reg.test(value)) {
-    return callback(new Error("手机号格式不正确"));
-  } else {
+    return callback(new Error("请输入账号"));
+  }else if (!reg.test(value) && !email.test(value)) {
+    return callback(new Error("账号格式不正确"));
+  } else{
     callback();
   }
+
 };
 
 const IDCardValid = (rule, value, callback) =>{
@@ -385,17 +417,31 @@ const IDCardValid = (rule, value, callback) =>{
   }
 }
 
+const newPawValid =(rule, value, callback) =>{
+  let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
+  if(value == ''){
+    return callback(new Error('请输入新密码'));
+  }else if(!reg.test(value)){
+    return callback(new Error('密码长度不小于8位，必须包含至少一个大写字母一个小写字母和一个数字'))
+  }else{
+    callback();
+  }
+}
+
 
 
 export default {
   data() {
     const passwordValid = (rule,value, callback)=>{
+      let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
       if(value == ''){
         return callback(new Error('请输入确认密码'));
       }else if(value != this.dataFroms.newPaw){
         return callback(new Error('您的密码两次输入不一致，请重新输入'));
+      }else if(!reg.test(value)){
+        return callback(new Error('密码长度不小于8位，必须包含至少一个大写字母一个小写字母和一个数字'))
       }else{
-        callback()
+        callback();
       }
     }
     return {
@@ -435,17 +481,20 @@ export default {
         {
           icon: require("../../assets/img/updatePaw/paw_email.png"),
           title: "邮箱验证",
-          des: "您需要使用注册邮箱进行身份验证"
+          des: "您需要使用注册邮箱进行身份验证",
+          prohibit:true
         },
         {
           icon: require("../../assets/img/updatePaw/paw_phone.png"),
           title: "手机验证",
-          des: "您需要使用注册手机进行身份验证"
+          des: "您需要使用注册手机进行身份验证",
+          prohibit:true
         },
         {
           icon: require("../../assets/img/updatePaw/paw_user.png"),
           title: "人工申诉",
-          des: "若您未认证且手机和邮箱均不可使用"
+          des: "若您未认证且手机和邮箱均不可使用",
+          prohibit:true
         }
       ],
 
@@ -462,18 +511,6 @@ export default {
         }
       ],
 
-      personalList: [
-        {
-          icon: require("../../assets/img/updatePaw/paw_card.png"),
-          title: "个人认证",
-          des: "您需要使用实名认证信息进行身份验证"
-        },
-        {
-          icon: require("../../assets/img/updatePaw/paw_user.png"),
-          title: "企业认证",
-          des: "您需要使用公司信息进行身份验证"
-        }
-      ],
 
       // 输入账号
       formValidate: {
@@ -493,7 +530,7 @@ export default {
           {required:true,validator: vailAucct,trigger: 'blur'}
         ],
         newPaw:[
-          {required: true, message:'请输入新密码', trigger: 'blur'}
+          {required: true, validator:newPawValid, trigger: 'blur'}
         ],
         oldPaw:[
           {required: true, validator:passwordValid, trigger: 'blur'}
@@ -509,7 +546,7 @@ export default {
         ],
         company:[{required:true, message: '请输入公司名称', trigger: 'blur'}],
         license:[{required:true, message: '请输入营业执照号码', trigger: 'blur'}],
-        business:[{required:true, message: '请输入营业执照', trigger:"blur"}]
+        business:[{required:true, message: '请输入营业执照', trigger:"blur"}],
       },
 
 
@@ -560,7 +597,9 @@ export default {
       legalList:[],
       // 区分是个人还是
       userInfo:'',
-      errorCard:''
+      errorCard:'',
+      newPhone:'',
+      backEmail:0
     };
   },
   components: {
@@ -576,9 +615,11 @@ export default {
   },
   methods: {
     sendCode: throttle(5000, function(val) {
-      this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
       this.$refs.dataPhone.validate((valid) => {
         if(valid){
+          if(this.vCodeMessage != ''){
+            this.$Message.error('图形验证码错误，请重新输入');
+          };
           axios.get("user/code.do", {
           params: {
             aim: val == 1 ? this.dataFroms.email: this.dataFroms.phone,
@@ -604,6 +645,7 @@ export default {
                   duration: 5
                 });
             } else {
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
               this.vCodeMessage = response.data.message;
             }
           }).catch(err =>{
@@ -615,28 +657,32 @@ export default {
     }),
 
     submit() {
-      axios
-        .get("user/findPassword.do", {
-          params: {
-            username: this.dataFroms.phone != '' ?this.dataFroms.phone : this.dataFroms.email,
-            password: this.dataFroms.oldPaw
-          }
-        })
-        .then(response => {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
-          if (response.status == 200 && response.statusText == "OK") {
-            if (response.data.status == 1) {
-              this.$Message.success(response.data.message);
-              this.index = 5;
-              this.verPage = 'submit';
-            } else {
-             this.$Message.error(response.data.message);
+      this.$refs.dataPaw.validate((valid) => {
+        if(valid){
+          axios.get("user/findPassword.do", {
+            params: {
+              username: this.dataFroms.phone != '' ? this.dataFroms.phone : this.dataFroms.email,
+              password: this.dataFroms.oldPaw
             }
-          }
-        });
+          })
+          .then(response => {
+            if (response.status == 200 && response.statusText == "OK") {
+              if (response.data.status == 1) {
+                this.$Message.success(response.data.message);
+                this.index = 5;
+                this.resetAccount = true;
+                this.verPage = 'submit';
+              } else {
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.$Message.error(response.data.message);
+              }
+            }
+          });
+        }
+      })
     },
 
-    // 
+    
     getUserInfo(val){
       axios.get('user/isHaveEamilOrAuthByPhone.do',{
             params:{
@@ -645,20 +691,49 @@ export default {
       }).then(res =>{
             if(res.status == 200 && res.data.status == 1){
               if(val == 'personal'){
+                if(res.data.phone == ''){
+                  this.verificationList[1].prohibit = false;
+                }else{
+                  this.dataFroms.phone = res.data.phone;
+                  this.index = 2;
+                  this.accountIsDis = '1';
+                  this.newPhone = this.formValidate.account.replace(
+                    this.formValidate.account.substring(3, 7),
+                    "****"
+                    );
+                  this.verificationList[1].prohibit = true;
+                }
                 if(res.data.emailFlag){
                  this.userInfo = res.data.emailFlag;
+                 this.dataFroms.email = res.data.email;
+                 this.newPhone = this.formValidate.account.replace(
+                    this.formValidate.account.substring(3, 7),
+                    "****"
+                    );
+                  this.index = 2;
+                  this.accountIsDis = '1';
+                  this.verificationList[0].prohibit = true;
                  return;
+                }else{
+                  this.verificationList[0].prohibit = false;
                 }
-                return;
               }else{
                 if(res.data.personAuthFlag  && res.data.companyAuthFlag ){
                   this.userInfo = 'company';
+                  this.index = 2;
+                  this.accountIsDis = '2';
                     return;
                   }else if(res.data.personAuthFlag){
                     this.userInfo = 'person';
+                    this.index = 2;
+                    this.accountIsDis = '2';
                   }else if(res.data.companyAuthFlag){
                     this.userInfo = 'company';
+                    this.index = 2;
+                    this.accountIsDis = '2';
                   }else{
+                    this.index = 2;
+                    this.accountIsDis = '2';
                     this.userInfo = '';
                     this.$Message.info({
                       content:'您还没有实名认证',
@@ -667,13 +742,12 @@ export default {
                   }
               }
             }else{
-              this.$Message.error('网络错误，请重试或者联系客服');
+              this.$Message.error(res.data.message);
+              return;
             }
-      }).catch(err =>{
-
       })
-
     },
+
 
     //跳转相应验证
     jump(index,name) {
@@ -687,8 +761,6 @@ export default {
               this.verPage = 'enterprise';
               this.index = 3;
               return;
-            }else{
-              return;
             }
           }else if(index == 3){
             this.index = 3;
@@ -696,7 +768,7 @@ export default {
              return;
           }
       }
- 
+
       if(name == 'ok' && index == 2){
         this.index = 3; 
          this.verPage = 'people';
@@ -718,26 +790,25 @@ export default {
         this.index = 3; 
       }
     },
+
     next(val) {
       if (val == "yes") {
-        if (regExp.phoneVail(this.formValidate.account)) {
-           this.accountIsDis = '1';
-           this.getUserInfo('personal');
-          this.formValidate.account = this.formValidate.account.replace(
-            this.formValidate.account.substring(3, 7),
-            "****"
-          );
-          this.index = 2;
-          
-        }
+        this.$refs.formValidate.validate((valid) =>{
+          if(valid){
+            this.newPhone = this.formValidate.account;
+            this.getUserInfo('personal');
+          }
+        })
       } else if(val == 'no'){
         this.accountIsDis = '9';
         this.stepList[3].value = '设置新手机号';
         this.resetAccount = true
       }else if(val == 'go'){
-        this.getUserInfo('reset');
-         this.index = 2;
-         this.accountIsDis = '2';
+        this.$refs.formValidate.validate((valid) =>{
+          if(valid){
+            this.getUserInfo('reset');
+          }
+        })
       }
     },
 
@@ -820,15 +891,17 @@ export default {
 
     // 短信验证码
     voiceCode(val){
+      this.backEmail = val;
       this.$refs.dataPhone.validate((valid)=>{
         if(valid){
         if(this.dataFroms.code == ''){
-        this.$Message.error({
-                  content: '请输入手机验证码',
-                  duration: 5
-            });
-            return;
-      }
+          let code = val == 1?'邮箱':'手机'
+          this.$Message.error({
+                    content: '请输入'+code+'验证码',
+                    duration: 5
+              });
+          return;
+        }
         axios.get('user/judgeCode.do',{
           params:{
             aim:val == 1?this.dataFroms.email:this.dataFroms.phone,
@@ -840,6 +913,7 @@ export default {
             this.index = 4;
             this.verPage = '';
           }else{
+            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
             this.$Message.error({
                   content: res.data.message,
                   duration: 5
@@ -850,15 +924,9 @@ export default {
       })
     },
 
-    verificationPaw(){
-      if(this.dataFroms.newPaw !== this.dataFroms.oldPaw){
-        this.errorMessage = '两次输入的密码不一致'
-      }
-    },
 
     //获取邮箱验证码
     getVerificationCode() {
-       this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
       this.$refs.dataPhone.validate((valid) => {
         if(valid){
           axios.get("user/code.do", {
@@ -886,6 +954,7 @@ export default {
                   duration: 5
                 });
             } else {
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
               this.vCodeMessage = response.data.message;
             }
           });
@@ -895,7 +964,11 @@ export default {
 
     // 获取语音验证码
     getVoiceCode(){
-      this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+      if(this.vCodeMessage != ''){
+            this.$Message.error('图形验证码错误，请重新输入');
+      };
+       this.$refs.dataPhone.validate((valid) => {
+        if(valid){
       axios.get('user/voiceCode.do',{
         params:{
           aim:this.dataFroms.phone,
@@ -915,22 +988,30 @@ export default {
               this.timeP = true;
                 }
             },1000);
+        }else{
+          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
         }
+      })
+      }
       })
     },
 
-    // 身份
+    // 重置手机账号提交
     validateInfo(){
       let params = {
-         IDCard:this.dataFroms.idCard,
+          IdCard:this.dataFroms.idCard,
           authType:'0',
           personIdCardHandUrl:this.fileUrl.imgUrl,
+          newPhone:this.dataFroms.phone,
+          oldPhone:this.formValidate.account
       }
       let paramsOne ={
          businessLicense:this.dataFroms.business,
           authType:'1',
           agentIdCardHandUrl:this.fileUrl.imgUrl,
+          newPhone:this.dataFroms.phone,
           legalIdCardFrontUrl:this.fileUrl.legalUrl,
+          oldPhone:this.formValidate.account
       }
       let data = this.userInfo == 'person'?params:paramsOne;
       axios.post('user/newPhoneByIdCard.do',
@@ -942,6 +1023,8 @@ export default {
             duration: 5
           });
           this.index = 5;
+          this.resetAccount = false;
+          this.verPage = 'submit';
         }else{
           this.$Message.error({
             content: res.data.message,
@@ -998,7 +1081,7 @@ export default {
           })
         }else{
           this.index = 4;
-          this.verPage ='phone';
+          this.verPage ='cphone';
         }
       }
      if(value == 'personal'){
@@ -1010,8 +1093,31 @@ export default {
           return;
      }else{
         this.index = 4;
-        this.verPage ='phone';
+        this.verPage ='cphone';
      }
+      }
+    },
+
+    // 返回第三步个人或企业认证
+    test(){
+       if( this.userInfo == 'person'){
+              this.verPage = "card";
+               this.index = 3; 
+               return;
+        }else if(this.userInfo == 'company'){
+              this.verPage = 'enterprise';
+              this.index = 3;
+              return;
+        }
+    },
+
+    backEmailOrPhone(){
+      if(this.backEmail == 1){
+        this.index = 3;
+        this.verPage = 'email';
+      }else{
+        this.index = 3;
+        this.verPage = 'phone';
       }
     },
 
@@ -1021,12 +1127,16 @@ export default {
   },
   watch: {
     index() {
-      for (let i = 1; i < this.stepList.length + 1; i++) {
+      for (let i = 1; i < this.stepList.length +1; i++) {
         if (this.index === i) {
           this.stepList[i - 1].style = "process_text_checked";
+          this.stepList[i - 1].failOrSuccess = false;
         } else if (i < this.index) {
           this.stepList[i - 1].failOrSuccess = true;
           this.stepList[i - 1].style = "";
+        }else{
+          this.stepList[i - 1].style = "";
+          this.stepList[i - 1].failOrSuccess = false;
         }
       }
     },
@@ -1221,13 +1331,15 @@ export default {
         margin: 0 auto;
         margin-top: 39px;
         .v_email {
-          width: 124px;
+          width: 110px;
           height: 38px;
           background: rgba(42, 153, 242, 1);
           border-radius: 4px;
           color: rgb(255, 255, 255);
           line-height: 38px;
-          margin-left: 234px;
+          display: inline-block;
+          margin-left: 10px;
+          margin-top:-3px;
           text-align: center;
           transition: background 0.2s ease-in-out;
         }
@@ -1296,7 +1408,6 @@ export default {
           .ver_arrow::before{
             content: '';
             background: @color;
-           
           }
         }
       }
@@ -1357,7 +1468,7 @@ export default {
   }
   .up_company{
     margin: 0 auto;
-    width: 871px;
+    width: 841px;
     margin-top:41px;
   }
   .up_propress{
@@ -1371,5 +1482,43 @@ export default {
   }
   .up_content{
     display: inline-block;vertical-align:middle;position: relative;
+  }
+  .up_border{
+    border:1px dashed #999999;padding:40px;border-radius:4px;
+  }
+  .verification_poto{
+    width: 408px;
+    margin: 0 auto;
+    margin-top: 39px;
+  }
+  .up_coPhoto{
+    display: inline-block;width:407px;margin-left:22px;vertical-align:top;border:1px dashed #999999;padding:40px;border-radius:4px;
+  }
+  .up_load{
+    display: inline-block;
+  }
+
+ 
+  .v_top{
+    border: 1px solid #2a99f2;
+    color: #2A99F2;
+    font-size: 14px;
+    width: 110px;
+    height: 38px;
+    border-radius: 4px;
+    line-height: 38px;
+    display: inline-block;
+    text-align: center;
+    transition: border 0.2s ease-in-out;
+    vertical-align: top;
+  }
+  .v_top:hover{
+    border:1px solid rgb(15, 140, 243);
+    cursor: pointer;
+  }
+  .ive_button{
+    width: 110px;
+    height: 38px;
+    margin-left: 10px;
   }
 </style>

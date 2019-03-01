@@ -4,10 +4,16 @@
       <span id="title">总览</span>
       <div id="head-info">
         <div style="width:346px">
-          <span class="universal-mini" style="font-size: 14px">欢迎您：</span>
-          <p style="font-size: 18px;color: #333333;margin-top: 15px;position: relative">{{userInfo.realname}}
-            <i :class="auth" class="auth-icon" style="margin-left: 10px;"></i>
-          </p>
+          <div class="user-info">
+            <img v-if="vipGrade" :src="vipGrade" alt="vipGrade" height="22" width="74"/>
+            <div class="portrait">
+              <img :src="userInfo.headportrait" alt="head-img">
+            </div>
+            <div style="position: relative">
+              <p style="font-size: 18px;color: #333333;margin-bottom: 17px;font-weight:400;">{{userInfo.realname}}</p>
+              <span :class="auth" class="auth-icon">{{ authText}}</span>
+            </div>
+          </div>
           <div style="display: flex;margin-top:25px">
             <span style="margin-right:20px;">
               <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
@@ -215,7 +221,8 @@
           '#houtaiicon-yunanquan1',
           '#houtaiicon-yunyunwei1',
           '#houtaiicon-yunyunwei1'
-        ]
+        ],
+        vipGrade: ''
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -248,6 +255,7 @@
       })
     },
     created() {
+      this.getUserVipGrade()
     },
     methods: {
       // 设置数据
@@ -357,6 +365,17 @@
       },
       goDynamic(type, id) {
         this.$router.push({path: 'dynamic', query: {type, id}})
+      },
+      getUserVipGrade() {
+        if (this.userInfo && this.userInfo.vipname == '白银会员') {
+          this.vipGrade = require('../../assets/img/usercenter/uc-img3.png')
+        } else if (this.userInfo && this.userInfo.vipname == '黄金会员') {
+          this.vipGrade = require('../../assets/img/usercenter/uc-img4.png')
+        } else if (this.userInfo && this.userInfo.vipname == '铂金会员') {
+          this.vipGrade = require('../../assets/img/usercenter/uc-img5.png')
+        } else {
+          this.vipGrade = ''
+        }
       }
     },
     computed: {
@@ -392,7 +411,20 @@
           // 企业认证
           'company-icon': this.authInfo.authtype == 1 && this.authInfo.checkstatus == 0,
           // 企业认证中
-          'company-authing': this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2
+          'company-authing': (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2)||this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1
+        }
+      },
+      authText() {
+        if (this.userInfo.personalauth == 1 && this.userInfo.companyauth == 1 && this.authInfo.checkstatus == undefined) {
+          return '未认证'
+        } else if (this.userInfo.personalauth == 0 && this.userInfo.companyauth == 1 && this.authInfo.authtype != 1) {
+          return '个人认证'
+        } else if (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 0) {
+          return '企业认证'
+        } else if (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2) {
+          return '企业认证中'
+        } else if (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1) {
+          return '企业认证失败'
         }
       }
     },
@@ -408,34 +440,55 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .user-info {
+    display: flex;
+    position: relative;
+    > img {
+      position: absolute;
+      bottom: 0;
+    }
+    .portrait {
+      margin-right: 20px;
+      > img {
+        margin: 0 18px 0 15px;
+        height: 50px;
+        width: 50px;
+        border-radius: 39px;
+      }
+    }
+  }
+
   /* 未认证class icon */
   .auth-icon {
-    width: 67px;
+    width: 56px;
     height: 18px;
-    display: inline-block;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-repeat: no-repeat;
+    background: rgba(255, 255, 255, 1);
+    border-radius: 10px;
+    border: 1px solid rgba(42, 153, 242, 1);
+    color: rgba(42, 153, 242, 1);
+    font-size: 10px;
+    padding: 2px 4px;
   }
 
   .not-auth {
-    background-image: url(../../assets/img/overview/authenticate-icon-1.png);
+
   }
 
   /* 个人认证class icon */
   .personal-icon {
-    background-image: url(../../assets/img/overview/authenticate-icon-4.png);
+
   }
 
-  /* 企业认证class icon */
+  /* 企业认证中class icon */
   .company-authing {
-    background-image: url(../../assets/img/overview/authenticate-icon-5.png);
+    border: 1px solid #14B278;
+    color: #14B278;
   }
 
   /* 企业认证class icon */
   .company-icon {
-    background-image: url(../../assets/img/overview/authenticate-icon-7.png);
+    border: 1px solid #14B278;
+    color: #14B278;
   }
 
   #overview {

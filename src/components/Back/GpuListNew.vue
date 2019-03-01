@@ -20,10 +20,10 @@
           </div>
           <div style="margin:16px 0 16px 0;">
             <Button type="primary"  @click="$router.push({path:'/ruicloud/buy/bgpu'})">+  创建</Button>
-            <Button type="primary" :disabled='disabledList.closeDisabled' style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">关机</Button>
-            <Button type="primary" :disabled='disabledList.openDisabled' @click="$router.push({path:'/ruicloud/buy/bgpu'})">开机</Button>
-            <Button type="primary" :disabled='disabledList.closeDisabled' style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">重启</Button>
-            <Button type="primary" :disabled='disabledList.deleteDisabled' style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">删除</Button>
+            <Button type="primary" :disabled='disabledList.closeDisabled' style="margin:0 10px;" @click="stopHost">关机</Button>
+            <Button type="primary" :disabled='disabledList.openDisabled' @click="openHost">开机</Button>
+            <Button type="primary" :disabled='disabledList.closeDisabled' style="margin:0 10px;" @click="reStartGPU">重启</Button>
+            <Button type="primary" :disabled='disabledList.deleteDisabled' style="margin:0 10px;" @click="deleteHost">删除</Button>
             <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">更多操作</Button>
           </div>
            <div class="selectMark">
@@ -201,12 +201,12 @@
       <div style="display: flex">
         <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
           <h2>个人用户</h2>
-          <p><i></i>可以使用睿云所有资源</p>
+          <p><i></i>可以使用新睿云所有资源</p>
           <p><i></i>个人级别的资源建立额度</p>
         </div>
         <div class="selectAuthType">
           <h2>企业用户</h2>
-          <p><i></i>可以使用睿云所有资源</p>
+          <p><i></i>可以使用新睿云所有资源</p>
           <p><i></i>企业级无限量的资源建立额度</p>
           <p><i></i>专业免费的点对点咨询服务</p>
         </div>
@@ -221,7 +221,7 @@
       </div>
       <div slot="footer">
         <p class="modal-text-hint-bottom">
-          提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
+          提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：400-050-5565</p>
       </div>
     </Modal>
 
@@ -449,61 +449,6 @@
                 ])
               },
               render:(h,params)=> {
-                //创建中
-                if (params.row.status == 2 && params.row.computerstate == undefined) {
-                  return h('div', [
-                    h('Spin', {
-                      style: {
-                        display: 'inline-block'
-                      }
-                    }),
-                    h('span', {
-                      style: {
-                        color: '#2A99F2',
-                        cursor: 'pointer'
-                      },
-                    }, '创建中')])
-                } else if (params.row.status == 3) {
-                  //删除中
-                  return h('div', [
-                    h('Spin', {
-                      style: {
-                        display: 'inline-block'
-                      }
-                    }),
-                    h('span', {
-                      style: {
-                        color: '#2A99F2',
-                        cursor: 'pointer'
-                      },
-                    }, '删除中')])
-                } else if (params.row.status == 2 && params.row.computerstate == 0) {
-                  return h('div', [
-                    h('Spin', {
-                      style: {
-                        display: 'inline-block'
-                      }
-                    }),
-                    h('span', {
-                      style: {
-                        color: '#2A99F2',
-                        cursor: 'pointer'
-                      },
-                    }, '开机中')])
-                }else if(params.row.status == 2 && params.row.computerstate == 1){
-                  return h('div', [
-                    h('Spin', {
-                      style: {
-                        display: 'inline-block'
-                      }
-                    }),
-                    h('span', {
-                      style: {
-                        color: '#2A99F2',
-                        cursor: 'pointer'
-                      },
-                    },'关机中')])
-                }else{
                   return h('div',[
                     h('span',{
                       style:{
@@ -515,7 +460,7 @@
                         width:'100px'
                       },
                       domProps:{
-                        title:params.row.companyname+''+params.row.computername
+                        title:params.row.companyname+'/'+params.row.computername
                       },
                       on: {
                         click: () => {
@@ -531,16 +476,133 @@
                       }
                     },params.row.companyname+'/'+params.row.computername)])
                 }
-              }
             },
             {
               title:'状态/监控(全部)',
               width:138,
               render:(h,params) => {
-                return h('div',[
-                  h('img',{}),
-                  h('span',{}, params.row.status == '-1' ? '异常' :params.row.status == '0' ? '欠费' : params.row.computerstate == '0' && params.row.status=='1' ? '关机' :params.row.computerstate == '1' && params.row.status=='1'  ? '开机' :'')
-                 ])
+              let restart = params.row.restart ? params.row.restart : 0;
+              let restore = params.row.restore ? params.row.restore : 0;
+              let bindip = params.row.bindip ? params.row.bindip : 0;
+              let icon_1 = require('../../assets/img/host/h-icon1.png');
+              let icon_2 = require('../../assets/img/host/h-icon2.png');
+              let icon_3 = require('../../assets/img/host/h-icon3.png');
+              let icon_4 = require('../../assets/img/host/h-icon4.png');
+              let imgStyle = {
+                marginLeft: '5px',
+                lineHeight: '16px'
+              }
+              switch (params.row.status){
+                case -2:
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block'
+                    }
+                  }), h('span', {style: imgStyle}, '销毁中')])
+                  break;
+                case -1:
+                  return h('div',{
+                    style: {
+                      display: 'flex'
+                    }
+                  },[h('img',{
+                      attrs: {
+                        src: icon_2
+                      }
+                    }, '')
+                  ]);
+                break;
+                case 0:
+                  return h('div', {
+                    style: {
+                      display: 'flex'
+                    }
+                  }, [
+                    h('img', {
+                      attrs: {
+                        src: icon_3
+                      }
+                    }, ''),
+                    h('span', {
+                      style: imgStyle
+                    }, '欠费')
+                  ]);
+                break;
+                case 1:
+                  if (params.row.computerstate == 1) {
+                    return h('div',{
+                      style:{
+                        display:'flex'
+                      }
+                    },[h('img',{
+                      attrs:{
+                        src:icon_1
+                      }
+                    },''),h('span',{
+                      style:imgStyle
+                    },'开启')
+                    ]);
+                  }else{
+                    return h('div',{
+                      style:{
+                        display:'flex'
+                      }
+                      },[h('img',{
+                        attrs:{
+                          src:icon_4
+                        }
+                      },''),h('span',{
+                          style:imgStyle
+                      },'关机')
+                      ]);
+                  }
+                break;
+                case 2:
+                  if (restart == 1) {
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }), h('span', {style: styleInfo}, '重启中')])
+                  } else if (restore == 1) {
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }), h('span', {style: styleInfo}, '重装中')])
+                  } else if (bindip == 1) {
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }), h('span', {style: styleInfo}, '绑定中')])
+                  } else if (bindip == 2) {
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }), h('span', {style: styleInfo}, '解绑中')])
+                  } else if (params.row.computerstate == 0) {
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }), h('span', {style: styleInfo}, '开机中')])
+                  } else if (params.row.computerstate == 1) {
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }), h('span', {style: styleInfo}, '关机中')])
+                  } else {
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }), h('span', {style: styleInfo}, '创建中')])
+                  }
+                  break
+              }
               },
                filters: [
                 {
@@ -583,14 +645,93 @@
             },
             {
               title:'镜像系统',
-              key:'templatename'
+              render:(h,params) => {
+                let templateName = params.row.templatename.substr(0, 1).toUpperCase(); // 用第一个字符判断镜像选用图标
+                let icon_1 = require('../../assets/img/host/h-icon5.png');
+                let icon_2 = require('../../assets/img/host/h-icon6.png');
+                let icon_3 = require('../../assets/img/host/h-icon7.png');
+                let icon_4 = require('../../assets/img/host/h-icon8.png');
+                let imgStyle = {
+                  height: '16px',
+                  width: '16px',
+                  marginRight: '5px'
+                }
+                switch (templateName) {
+                  case 'W':
+                    return h('div', {
+                      style: {
+                        display: 'flex',
+                        alignItems: 'center'
+                      }
+                    }, [
+                      h('img', {
+                        attrs: {
+                          src: icon_1
+                        },
+                        style: imgStyle
+                      }, ''),
+                      h('span', {}, params.row.templatename)
+                    ])
+                    break
+                  case 'C':
+                    return h('div', {
+                      style: {
+                        display: 'flex',
+                        alignItems: 'center'
+                      }
+                    }, [
+                      h('img', {
+                        attrs: {
+                          src: icon_2
+                        },
+                        style: imgStyle
+                      }, ''),
+                      h('span', {}, params.row.templatename)
+                    ])
+                    break
+                  case 'U':
+                    return h('div', {
+                      style: {
+                        display: 'flex',
+                        alignItems: 'center'
+                      }
+                    }, [
+                      h('img', {
+                        attrs: {
+                          src: icon_3
+                        },
+                        style: imgStyle
+                      }, ''),
+                      h('span', {}, params.row.templatename)
+                    ])
+                    break
+                  case 'D':
+                    return h('div', {
+                      style: {
+                        display: 'flex',
+                        alignItems: 'center'
+                      }
+                    }, [
+                      h('img', {
+                        attrs: {
+                          src: icon_4
+                        },
+                        style: imgStyle
+                      }, ''),
+                      h('span', {}, params.row.templatename)
+                    ])
+                    break
+                  default:
+                    return h('span', {}, params.row.templatename)
+                }
+              }
             },
             {
               title:'IP地址',
               render:(h,params)=>{
                 return h('div',[
-                  h('span',{},params.row.publicip ?params.row.publicip+'(公)':''),
-                  h('span',{},params.row.publicip ?params.row.publicip+'(内)':'')
+                  h('span',{},params.row.publicip ?params.row.publicip+'(公)':'----'),
+                  h('span',{},params.row.publicip ?params.row.publicip+'(内)':'----')
                 ])
               }
             },
@@ -994,6 +1135,13 @@
 
         //主机开机
        openHost(){
+         if(this.selectLength.selection == 0){
+            this.$Message.info({
+              content:'请选择一个主机',
+              duration:5
+            });
+            return;
+          }
          this.$http.get('gpuserver/startGPU.do',{
            params:{
              gpuId :this.uuId,
@@ -1011,6 +1159,13 @@
 
       //主机关机
        stopHost(){
+         if(this.selectLength.selection == 0){
+            this.$Message.info({
+              content:'请选择一个主机',
+              duration:5
+            });
+            return;
+          }
          this.$http.get('gpuserver/stopGPU.do',{
            params:{
              gpuId :this.uuId,
@@ -1029,6 +1184,13 @@
 
       //删除主机
        deleteHost(info){
+         if(this.selectLength.selection == 0){
+            this.$Message.info({
+              content:'请选择一个主机',
+              duration:5
+            })
+            return;
+          }
          if(info.caseType != 3){
            this.$Message.warning('只能删除实时计费主机');
            return
@@ -1061,6 +1223,13 @@
 
       //重启主机
         reStartGPU(){
+          if(this.selectLength.selection == 0){
+            this.$Message.info({
+              content:'请选择一个主机',
+              duration:5
+            });
+            return;
+          }
           this.$http.get('gpuserver/reStartGPU.do',{
             params:{
               gpuId :this.uuId,
@@ -1081,9 +1250,10 @@
 
       // 选中主机
       selectIndex(selecion){
-         this.selectLength.selection = selection.length;
+        this.selectLength.selection = selection.length;
         for(let i = 0;i<selecion.length;i++){
           this.uuid += selecion.computerid+','
+          this.uuid = this.uuid.substring(0,this.uuid.length-1);
             if(selecion[i].row.computerstate != '1' && selecion[i].row.status !='1'){ //开机状态
                 this.disabledList.openDisbled = true;
             }else if(selecion[i].computerstate != '0' && selecion[i].row.status !='1'){ // 关机状态
@@ -1092,10 +1262,10 @@
               this.disabledList.deleteDisbled = true;
             }
         }
-      }, 
+      },
 
         //创建镜像
-        createMrrior(){
+      createMrrior(){
           this.$refs.mirrorValidate.validate((valid) => {
             if (valid) {
               axios.get('Snapshot/createTemplate.do', {
@@ -1115,7 +1285,7 @@
               })
             }
           })
-        },
+      },
 
         //创建快照
         // createVMSnapshot(){

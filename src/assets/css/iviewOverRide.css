@@ -443,11 +443,10 @@ div.modal-header-border {
   text-align: center;
 }
 
-.fr-select .ivu-select-selection {
+.fr-select .ivu-select-selection{
   border: 1px solid #FF881C;
   box-shadow: 0 0 0 2px rgba(253, 140, 115, .2);
 }
-
 .fr-select .ivu-select-item-selected:hover {
   background: #FF881C;
 }
@@ -459,7 +458,13 @@ div.modal-header-border {
 .fr-select .ivu-select-arrow {
   color: #FF881C;
 }
-
+.schoolseason-select .ivu-select-selection,.schoolseason-select .ivu-cascader-rel .ivu-input,.schoolseason-select .ivu-input{
+  border: 1px solid #E5C2C2;
+  box-shadow: none;
+}
+#schoolseason .host-count .ivu-input {
+    text-align: center;
+}
 
 /* 自定义监控下拉框 */
 .cm-select.ivu-select-single .ivu-select-selection {
@@ -516,6 +521,18 @@ div.modal-header-border {
 .my_table .ivu-table{
 box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
 }
-.my_table .ivu-table td, .ivu-table th{
+.my_table .ivu-table td, .my_table .ivu-table th{
   border: none
+}
+
+.schoolseason-progress .ivu-progress-inner {
+  background: #F8DADA;
+}
+.schoolseason-progress .ivu-progress-bg {
+  background:linear-gradient(90deg,rgba(255,150,102,1) 0%,rgba(255,73,45,1) 100%);
+  box-shadow:2px 1px 6px -1px rgba(230,47,47,0.59);
+}
+
+.ss-anth-modal .ivu-form-item-error-tip {
+  margin-left: 80px;
 }

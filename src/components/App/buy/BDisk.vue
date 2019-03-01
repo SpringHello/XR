@@ -210,6 +210,12 @@
         this.dataDiskList.splice(index, 1)
       },
       addDiskCart() {
+        if (this.zone.zoneid == '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
+          this.$message.info({
+            content: '请选择一个区域'
+          })
+          return
+        }
         if (this.$parent.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
@@ -236,6 +242,12 @@
         // window.scrollTo(0, 182)
       },
       buyDisk() {
+        if (this.zone.zoneid == '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
+          this.$message.info({
+            content: '请选择一个地区'
+          })
+          return
+        }
         if (this.diskName == '') {
           this.$message.info({content: '请输入磁盘名称'})
           return
@@ -367,6 +379,7 @@
           color: #666666;
           cursor: pointer;
           margin-right: 10px;
+          margin-bottom: 10px;
           padding: 6px 15px;
           display: inline-block;
         }

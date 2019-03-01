@@ -14,7 +14,8 @@
         <router-link to="/ruicloud/index.htm" class="logo">
           <div></div>
         </router-link>
-        <div class="operate">
+        <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('/ruicloud/schoolSeason')" alt="">
+        <div class="operate" style="padding-left:90px;">
           <ul @mouseleave="ME(-1)">
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
@@ -182,15 +183,15 @@
             </div>
             <div class="document">
               <p>文档</p>
-              <router-link v-for="(d,index) in document" :key="index" :to="d.url" target="_blank">
+              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank">
                 {{d.title}}
-              </router-link>
+              </a>
             </div>
             <div class="document">
               <p>服务与公告</p>
-              <router-link v-for="(d,index) in notice" :key="index" :to="d.url" target="_blank">
+              <a v-for="(d,index) in notice" :key="index" :href="d.url" target="_blank">
                 {{d.title}}
-              </router-link>
+              </a>
             </div>
             <div class="contact">
               <span>联系我们</span>
@@ -506,24 +507,36 @@
             path: '/ruicloud/document',
           },
           {
-            title: '资讯',
-            path: 'https://news.xrcloud.net',
+            title: '新闻动态',
+            path: '',
             content: [
               {
-                prod: '云服务',
-                path: 'https://news.xrcloud.net/yunfuwu'
+                prod: '香港云服务器 ',
+                path: 'https://news.xrcloud.net/xianggangyunfuwuqi'
               },
               {
-                prod: '云咨询',
-                path: 'https://news.xrcloud.net/yunzixun'
+                prod: '虚拟主机',
+                path: 'https://news.xrcloud.net/xunizhuji'
               },
               {
-                prod: '云技术',
-                path: 'https://news.xrcloud.net/yunjishu'
+                prod: '云服务器',
+                path: 'https://news.xrcloud.net/yunfuwuqi'
+              },
+              {
+                prod: '服务器虚拟化',
+                path: 'https://news.xrcloud.net/fuwuqixunihua'
+              },
+              {
+                prod: '云计算',
+                path: 'https://news.xrcloud.net/yunjisuan'
               },
               {
                 prod: '云安全',
                 path: 'https://news.xrcloud.net/yunanquan'
+              },
+              {
+                prod: '域名交流',
+                path: 'https://news.xrcloud.net/yumingjiaoliu'
               }
             ]
           },
@@ -594,13 +607,13 @@
           {title: '计算', url: '/ruicloud/document'},
           {title: '网络', url: '/ruicloud/document'},
           {title: '安全', url: '/ruicloud/document'},
-          {title: '财务与账户', url: '/ruicloud/document'}
+          {title: '财务与账户', url: 'https://www.xrcloud.net/ruicloud/documentInfo/qHwTxQKS7/qZfGQSs8S'}
         ],
         // 服务与公告
         notice: [
-          {title: '最新公告', url: '/ruicloud/dynamic'},
-          {title: '新闻动态', url: '/ruicloud/dynamic'},
-          {title: '技术支持', url: '/ruicloud/dynamic'},
+          {title: '最新公告', url: 'https://news.xrcloud.net/huodonggonggao/article/1.html'},
+          {title: '新闻动态', url: 'https://news.xrcloud.net/fuwuqixunihua'},
+          {title: '技术支持', url: 'https://news.xrcloud.net/'},
         ],
         // 友情链接
         links: [
@@ -969,14 +982,14 @@
                         &.info {
                           padding: 10px 0;
                           height: 50px;
-                          width: 400px;
+                          width: 800px;
                           margin: 0 auto;
                         }
                         .info:hover{
                           color: #2A99F2;
                         }
                         > div {
-                          width: 15%;
+                          //width: 15%;
                           // &:last-of-type {
                           //   > div {
                           //     height: 155px;
