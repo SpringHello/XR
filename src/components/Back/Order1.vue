@@ -229,7 +229,7 @@
           {
             title:'优惠价',
             render(h, obj) {
-             return  h('span',{},obj.row.优惠价 != undefined ? obj.row.优惠价: '--')
+             return  h('span',{},obj.row['优惠价'] != undefined ? obj.row['优惠价']: '--')
             }
           },
           {
@@ -241,7 +241,7 @@
                     textAlign:'center'
                   }
                 }, [
-                    h('p',{},obj.row.cost),
+                    h('p',{},obj.row['会员优惠价']),
                     h('p',{
                       style:{
                         color:'#FF624B',
@@ -252,7 +252,7 @@
                 ])
               } else {
 
-                return h('span',{}, obj.row.cost)
+                return h('span',{}, obj.row['会员优惠价'])
               }
             }
           }
@@ -302,7 +302,7 @@
           orderId:'',
           ticket:''
         },
-        orderPay:null,
+        orderPay:{},
         vipName:this.$store.state.userInfo.vipname,
         routePath:''
       }
@@ -318,8 +318,6 @@
         if (to.query.countOrder) {
           params.countOrder = to.query.countOrder;
         } 
-          
-      //  vm.orderInfo.orderId =params.countOrder;
       axios.get('user/searchOrderByBuy.do', {
         params
       }).then(response => {
@@ -348,7 +346,7 @@
       },
       // 设置order列表
       setOrder(response) {
-        if (response.status == 200 && response.data.status == 1) {
+          if (response.status == 200 && response.data.status == 1) {
           this.selectLength.total = response.data.result.data.length;
           this.goodType = response.data.result.data[0].goodstype;
           sessionStorage.setItem('routername',response.data.result.data[0].goodstype);
@@ -372,10 +370,10 @@
                 data._checked = data['订单状态'] == 1 ?false:true
                 data._disabled= data['订单状态'] == 1 ?true:false
               }else{
-                data._checked = true
-              this.couponInfo.originCost += item.originalcost
-              this.couponInfo.cost += item.cost
-              this.couponInfo.totalCost += item.cost
+                data._checked = true;
+              this.couponInfo.originCost += item.originalcost;
+              this.couponInfo.cost += Number(item.cost);
+              this.couponInfo.totalCost += Number(item.cost);
               }
             return data
           })
@@ -412,6 +410,9 @@
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.orderPay = response.data.result;
+              if(this.couponInfo.cash != 0 && this.orderPay.isUseVoucher != 0){
+                  this.groupList.push('cash');
+              }
             }else{
               this.$Message.error({
                 content:response.data.message,
@@ -437,6 +438,12 @@
         })
         this.couponInfo.cost = cost;
         this.couponInfo.originCost = originCost;
+         if(selection.length == 0){
+          this.couponInfo.totalCost = 0;
+        }else{
+          if(this.groupList.length == 0)
+           this.couponInfo.totalCost = cost
+        }
         let orderNumber = this.orderData.map(item => {
           return item.orderId
         })
@@ -459,27 +466,25 @@
                   title:'提示',
                   content: '默认情况下优先使用现金券'
                 })
-              return;
             }else{
               this.couponInfo.selectTicket = '';
             }
           }
-        if(this.vipName =='' || this.vipName == undefined){
+       
           if (this.orderPay.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
                this.groupList.splice(bol.indexOf('cash'), 1)
               this.$message.info({
                 title:'提示',
-                content: '当前订单不满足使用现金券要求'
+                content: this.orderPay.xjqdesc
               })
-              return;
           }
+          if(this.vipName =='' || this.vipName == undefined){
           if(bol.indexOf('coupon') > -1 && this.couponInfo.cash >0){
             this.groupList.splice(bol.indexOf('coupon'), 1);
             this.$message.info({
                 title:'提示',
                 content: '尊敬的用户您好：现金券和优惠券不能同时使用。'
               })
-             return;
           }
         }
       },
@@ -491,25 +496,19 @@
       },
       // 页面支付方法
       pay() {
-        let order = ''
-        this.orderData.forEach(item => {
-          if (item._checked) {
-            order += item.orderId + ','
-          }
-        })
-        if (order == '') {
-          this.$message.info('请选择需要支付的订单')
+        if ( this.orderInfo.orderId == '') {
+          this.$Message.info('请选择需要支付的订单');
           return
         }
         axios.get('information/zfconfirm.do', {
           params: {
-            order,
+            order:this.orderInfo.orderId.substring(0,this.orderInfo.orderId.length-1),
             ticket: this.couponInfo.selectTicket,
             money: this.couponInfo.totalCost
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            sessionStorage.setItem('overtime', this.orderData[0].overTime)
+            sessionStorage.setItem('overtime', this.orderData[0].overTime);
             this.$router.push({
               name: 'payNew',
               params: response.data.result
@@ -579,40 +578,6 @@
             },
           })
       },
-      // revertOrder(){
-      //   let name = sessionStorage.getItem('routername');
-      //   let router ='';
-      //   if(name == '0' || name == '5' ||name == '4' || name == '20'){
-      //    router ='host';
-      //   }else if(name == '1' || name == '9'){
-      //     router ='disk';
-      //   }else if(name == '2' || name == '6' || name == '8'){
-      //     router = 'ip';
-      //   }else if(name == '3'){
-      //     router = 'vpc';
-      //   }else if(name == '10'){
-      //     router = 'vpc';
-      //   }else if(name == '11' || name == '12' || name == '13'){
-      //     router = 'cloudDatabase';
-      //   }else if(name == 14){
-      //     return '短信包订单'
-      //   }else if(name == '15' || name == '16'){
-      //    router = 'gpuList';
-      //   }else if(name == '17'){
-      //     window.location.href = 'https://oss-console.xrcloud.net/ruirados/objectStorage';
-      //     return;
-      //   }else if(name == '18'){
-      //     window.location.href = 'https://domain.xrcloud.net/xrdomain/domainTransfer';
-      //     return;
-      //   }else if(name == '19' || name == '21'){
-      //     window.location.href = 'https://domain.xrcloud.net/xrdomain/domainGroup';
-      //     return;
-      //   }else if(name == '22'){
-      //     window.location.href ='https://domain.xrcloud.net/xrdomain/domainSSL';
-      //     return;
-      //   }
-      //   this.$router.push(router)
-      // },
 
       // 现金券余额充足支付
       payCash(){
@@ -845,12 +810,24 @@
       },
       'groupList':{
         handler:function(val){
-          this.couponInfo.totalCost = this.couponInfo.cost.toFixed(2);
+          if(this.groupList.length == 1){
+            // if(this.groupList.indexOf('cash') == -1){
+            // this.couponInfo.totalCost = this.couponInfo.cost.toFixed(2);
+            // }
+            if( this.groupList.indexOf('coupon') == -1){
+              this.couponInfo.totalCost = Number(this.couponInfo.cost.toFixed(2));
+            }
+          }
+          if(this.groupList.length == 0){
+            this.couponInfo.totalCost = Number(this.couponInfo.cost.toFixed(2));
+          }
+        
           if(this.groupList[0] != 'coupon' && this.groupList[1] != 'coupon'){
             this.couponInfo.selectTicket = '';
           }
-          if(this.vipName !='' || this.vipName != undefined){
+          if(this.vipName !='' || this.vipName != undefined || this.vipName != 'undefined'){
             if((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket != ''){
+              
               this.couponInfo.couponList.forEach(item => {
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
@@ -885,42 +862,26 @@
                 if( Number(this.couponInfo.totalCost) == 0){
                   this.isButtonCash = true; 
                 }
-                if(this.couponInfo.cash < this.couponInfo.cost){
+                if(this.couponInfo.cash < this.couponInfo.cost && this.couponInfo.selectTicket == ''){
                   this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
                 }
               }
             }
           }else{
-            if(this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost){
+            if((this.couponInfo.cash > this.couponInfo.cost || this.couponInfo.cash == this.couponInfo.cost) && this.couponInfo.selectTicket == ''){
                 this.couponInfo.totalCost =  0;
-                return;
             }
             if( Number(this.couponInfo.totalCost) == 0){
                 this.isButtonCash = true; 
             }
-            if(this.couponInfo.cash < this.couponInfo.cost){
+            if(this.couponInfo.cash < this.couponInfo.cost && this.couponInfo.selectTicket == ''){
                 this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
-                return;
             }
           }
         },
-        deep: true
+        deep: true,
+        immediate:true
       },
-      'couponInfo.cash':{ 
-        handler:function(){
-            if(this.vipName =='' || this.vipName == undefined){
-              if(this.couponInfo.cash != 0 && this.orderPay.isUseVoucher == 0){
-              this.groupList.push('cash');
-            }
-          }else{
-            if(this.couponInfo.cash != 0){
-               this.groupList.push('cash');
-            }
-          }
-        },
-        deep:true,
-        immediate: true
-      }
     }
   }
 </script>

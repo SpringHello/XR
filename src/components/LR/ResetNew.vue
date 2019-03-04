@@ -130,7 +130,7 @@
                         <div slot="code">
                           <div class="ver_yan">
                               <span @click="sendCode(0)" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
-                              <span v-else style="color:#666666;">{{count}}</span>
+                              <span v-else style="color:#666666;">{{count+'S'}}</span>
                           </div>
                           <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE;cursor:pointer;" @click="sendCode(0)">重新获取</span>或<span  style="color:#4A97EE;cursor:pointer;" @click="getVoiceCode">接收语音验证</span></p>
                         </div>
