@@ -227,7 +227,7 @@
   import axios from '@/util/axiosInterceptor'
   import debounce from 'throttle-debounce/debounce'
   import '@/assets/iconfont/backend/iconfont.js'
-
+  import '@/assets/iconfont/backend/iconfont.css'
   export default {
     name: 'back',
     data() {
