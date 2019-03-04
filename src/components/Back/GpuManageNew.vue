@@ -74,7 +74,7 @@
                             <p>镜像系统</p><span>{{gpuDetail.template}}</span>
                         </div>
                         
-                        <p>系统盘容量</p>
+                        <p>系统盘容量 <span></span></p>
                         <p>数据盘容量</p>
                         <p>关联弹性伸缩</p>
                         <p>登陆密码</p>
@@ -491,80 +491,7 @@
         //回滚信息
         loadingMessage:'',
         loading:false,
-        //快照
-        // snapshotList:[
-        //   {
-        //     type: 'selection',
-        //     width:'70'
-        //   },
-        //   {
-        //     title:'快照名称',
-        //     key:'snapshotname',
-        //     render:(h,params) =>{
-        //       if (params.row.status == 2) {
-        //         return h('div', [
-        //           h('Spin', {
-        //             style: {
-        //               display: 'inline-block'
-        //             }
-        //           }),
-        //           h('span',{
-        //             style: {
-        //               color:'#2A99F2'
-        //             }
-        //           },'创建中')
-        //         ])
-        //       } else{
-        //         return h('span',{
-        //
-        //         },params.row.snapshotname)
-        //       }
-        //     }
-        //   },
-        //   {
-        //     title:'快照策略',
-        //     render:(h,params) =>{
-        //       return h('span',{},params.row.createway == 'hand' ? '手动' :'')
-        //     }
-        //   },
-        //   {
-        //     title:'快照间隔',
-        //     render:(h,params) =>{
-        //       return h('span',{},params.row.intervals == 'hand' ? '手动' :'')
-        //     }
-        //   },
-        //   {
-        //     title:'创建于',
-        //     key:'addtime'
-        //   },
-        //   {
-        //     title:'操作',
-        //     width:100,
-        //     render:(h,params) =>{
-        //       if (params.row.status == -1 ) {
-        //         return h('span', {
-        //           style: {
-        //             cursor: 'not-allowed'
-        //           },
-        //         }, '异常')
-        //       } else if(params.row.status == 3){
-        //       return h('span',{
-        //         style:{
-        //           color:'#2A99F2',
-        //           cursor:'pointer'
-        //         },
-        //         on:{
-        //           click: () => {
-        //             this.showWindow.rollback = true;
-        //             this.snapsDetails = params.row;
-        //           }
-        //         }
-        //       },'回滚')
-        //     }
-        //    }
-        //   }
-        // ],
-        // snapshotData:[],
+        
         dateList:[
           {
             value:'近一天'
@@ -738,78 +665,6 @@
         })
       },
 
-      //列出快照
-      // selectSnapshotList(){
-      //   axios.get('Snapshot/listVMSnapshot.do',{
-      //     params:{
-      //       zoneId:this.$store.state.zone.zoneid,
-      //       resourceId:sessionStorage.getItem('uuId')
-      //     }
-      //   }).then(res => {
-      //     if(res.status == 200 && res.data.status == 1){
-      //       this.snapshotData = res.data.result;
-      //     }
-      //   })
-      // },
-      // selectKuai(val){
-      //   for(let i=0;i<val.length;i++){
-      //     let idList = new Array();
-      //     idList.push(val[i].id);
-      //     this.ids = idList.join(',');
-      //     console.log(this.ids);
-      //   }
-      // },
-
-      //删除快照
-      // deleteSnapshot(){
-      //   if(this.ids == ''){
-      //     this.$Message.info('请先选择一个快照');
-      //     return;
-      //   }
-      //   this.$Modal.confirm({
-      //     title:'删除快照',
-      //     content:'是否删除快照',
-      //     onOk:()=>{
-      //         axios.get('Snapshot/deleteVMSnapshot.do',{
-      //           params:{
-      //             zoneId:this.$store.state.zone.zoneid,
-      //             ids:this.ids
-      //           }
-      //         }).then(res => {
-      //           if(res.status == 200 && res.data.status == 1){
-      //            this.$Message.success('删除快照成功');
-      //            this.selectSnapshotList();
-      //           }else {
-      //             this.$Message.info('删除快照出小差了');
-      //           }
-      //         })
-      //     }
-      //   })
-      // },
-
-      //回滚快照
-      // goBackSnapshot(){
-      //   console.log(this.snapsDetails);
-      //   return;
-      //     this.showWindow.rollback = false
-      //     this.loadingMessage = '正在回滚主机'
-      //     this.loading = true
-      //     axios.get('Snapshot/revertToVMSnapshot.do', {
-      //       params: {
-      //         snapshotId: this.snapsDetails.snapshotid,
-      //         zoneId: this.$store.state.zone.zoneid,
-      //       }
-      //     })
-      //       .then(response => {
-      //         if (response.status == 200) {
-      //           this.loading = false
-      //           this.$Message.success({
-      //             content: response.data.message,
-      //             duration: 5
-      //           })
-      //         }
-      //       })
-      // },
 
       //重置密码
       resetConfirm(name) {
@@ -1158,7 +1013,6 @@
             this.momery.xAxis.data = response.data.result.xaxis;
           }
         })
-      // this.selectSnapshotList();
 
     },
 
