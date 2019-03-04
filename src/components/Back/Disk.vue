@@ -11,7 +11,6 @@
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#houtaiicon-yunyingpan1"></use>
           </svg>
-          <span class="iconfont houtaiicon-icon-test2"></span>
           <span id="title">云硬盘</span>
           <button id="refresh_button" @click="refreshPage" style="margin-top: 10px;">刷新</button>
         </div>
