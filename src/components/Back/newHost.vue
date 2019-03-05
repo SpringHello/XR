@@ -1872,7 +1872,16 @@
           let list = []
           this.resetPasswordHostData.forEach((item, index) => {
             if (item.changepassword && !item.currentPassword) {
-
+              list.push({
+                VMId: item.computerid,
+                oldpassword: item.currentPassword,
+                VMName: item.instancename
+              })
+            } else {
+              list.push({
+                VMId: item.computerid,
+                VMName: item.instancename
+              })
             }
           })
           let params = {
@@ -1884,6 +1893,17 @@
               this.$Message.success(res.data.message)
               this.showModal.resetPassword = false
               this.getHostList()
+            } else if (res.status == 200 && res.data.status == 2) {
+              if (res.data.result.length != 0) {
+                res.data.result.forEach(name => {
+                  this.resetPasswordHostData.forEach((item, index) => {
+                    if (item.instancename == name) {
+                      item.errorMsg = 'passwordMistake'
+                      this.resetPasswordHostData.splice(index, 1, item)
+                    }
+                  })
+                })
+              }
             } else {
               this.$message.info({
                 content: res.data.message
