@@ -11,7 +11,7 @@
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/index.htm" class="logo">
+        <router-link to="//www.xrclound.net/index.htm" class="logo" alt='新睿云'>
           <div></div>
         </router-link>
         <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('/ruicloud/schoolSeason')" alt="">
@@ -22,7 +22,7 @@
                 <div class="menu-dropdown-rel">
                   <a v-if="item.title=='资讯'"  :href="item.path" target="_blank"><span>{{item.title}}</span>
                   </a>
-                  <router-link v-else :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
+                  <router-link v-else :to="item.path" :title="item.title"><span>{{item.title}}<sup title="活动中心" class="circle-dot-a"
                                                                                v-if="item.title=='活动中心'"></sup></span>
                   </router-link>
                 </div>
@@ -35,8 +35,8 @@
                             <h2 v-if="index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
                             <h2 v-else>{{prod.prod}}</h2>
                             <div v-for="(i,index) in prod.prodItem" style="line-height: normal" :key="index">
-                              <router-link :to="i.path" v-if="i.path==''">{{i.title}}</router-link>
-                              <router-link :to="i.path" v-else>{{i.title}}</router-link>
+                              <router-link :to="i.path" v-if="i.path==''" :title="i.title">{{i.title}}</router-link>
+                              <router-link :to="i.path" v-else :title="i.title">{{i.title}}</router-link>
                               <p>{{i.desc}}</p>
                             </div>
                           </div>
@@ -45,8 +45,8 @@
                             <div v-for="(subi,index) in prod.subProd" :key="index">
                               <h2>{{subi.prod}}</h2>
                               <div v-for="(i,index) in subi.prodItem" style="line-height: normal" :key="index">
-                                <router-link :to="i.path" v-if="i.path==''">{{i.title}}</router-link>
-                                <router-link :to="i.path" v-else>{{i.title}}</router-link>
+                                <router-link :to="i.path" v-if="i.path==''" :title="i.title">{{i.title}}</router-link>
+                                <router-link :to="i.path" v-else :title="i.title">{{i.title}}</router-link>
                                 <p>{{i.desc}}</p>
                               </div>
                             </div>
@@ -59,7 +59,7 @@
               </div>
             </li>
           </ul>
-          <div class="line" :style="lineStyle"></div>
+          <div class="line" :style="lineStyle" title="新睿云新闻动态"></div>
         </div>
         <div class="operate">
           <!-- 尚未登录 -->
@@ -174,7 +174,7 @@
                 <ul>
                   <span>{{item.title}}</span>
                   <li v-for="(subItem,subIndex) in item.desc" :key="subIndex">
-                    <router-link v-if="subItem.url!=''" :to="subItem.url">{{subItem.subTitle}}
+                    <router-link v-if="subItem.url!=''" :to="subItem.url" :title="subItem.subTitle">{{subItem.subTitle}}
                     </router-link>
                     <router-link v-else :to="subItem.url">{{subItem.subTitle}}</router-link>
                   </li>
@@ -183,7 +183,7 @@
             </div>
             <div class="document">
               <p>文档</p>
-              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank">
+              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank" :title="d.title">
                 {{d.title}}
               </a>
             </div>

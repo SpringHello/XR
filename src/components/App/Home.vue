@@ -16,7 +16,7 @@
                   </p>
                   <span @click="push('/ruicloud/schoolSeason')">立即购买</span>
                 </div>
-                <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt>
+                <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt="云产品新春采购季">
               </div>
             </div>
           </div>
@@ -26,7 +26,7 @@
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
-                  <img src="../../assets/img/active/xianNode/banner-text.png" alt>
+                  <img src="../../assets/img/active/xianNode/banner-text.png" alt="新节点云服务器">
                   <p>
                     新节点云服务器
                     <i>折扣特惠</i>，
@@ -78,7 +78,7 @@
                   <button>立即领取</button>
                 </div>
                 <div class="free-receive-img">
-                  <img src="../../assets/img/active/freeToReceive/fr-banner7.png"/>
+                  <img src="../../assets/img/active/freeToReceive/fr-banner7.png" alt/>
                 </div>
               </div>
             </div>
@@ -155,10 +155,10 @@
     <div class="box-container">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
-          <i class="iconfont" :class="item.img" style="font-size:40px;line-height:1"></i>
+          <i class="iconfont" :class="item.img" style="font-size:40px;line-height:1" :title="item.title"></i>
           <div>
-            <p>{{item.title}}</p>
-            <span>{{item.desc}}</span>
+            <p :title="item.title">{{item.title}}</p>
+            <span :title="item.desc">{{item.desc}}</span>
           </div>
         </div>
       </div>
@@ -177,7 +177,7 @@
           <div class="container">
             <div class="left-menu">
               <ul>
-                <li v-for="(item,index) in eigthSceneMenu" :key="index" @click="menuselected(index)" :class="{selected:eightsceneIndex == index}">{{item.name}}</li>
+                <li v-for="(item,index) in eigthSceneMenu" :key="index" @click="menuselected(index)" :class="{selected:eightsceneIndex == index}" >{{item.name}}</li>
               </ul>
             </div>
             <div class="content" v-for="(item,index) in selectedEightscene" :key="index">
