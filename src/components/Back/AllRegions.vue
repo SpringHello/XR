@@ -9,7 +9,7 @@
 					<div class="tiaoa">
 						<span class="tiaoa1"></span>
 						<div class="allnum">
-							<span class="num1">6666</span>
+							<span class="num1">{{TotalWuantity}}</span>
 							<span class="num2">个</span><br />
 							<span class="num3">总数量</span>
 						</div>
@@ -18,7 +18,7 @@
 					<div class="tiaoa" style="margin-left: 10px;">
 						<span class="tiaoa1"></span>
 						<div class="allnum">
-							<span class="num1">1</span>
+							<span class="num1">{{QuantityExpire}}</span>
 							<span class="num2">个</span><br />
 							<span class="num3">即将过期数量</span>
 						</div>
@@ -27,7 +27,7 @@
 					<div class="tiaoa" style="margin-left: 10px;">
 						<span class="tiaoa1"></span>
 						<div class="allnum">
-							<span class="num1">2</span>
+							<span class="num1">{{OutdatedQuantity}}</span>
 							<span class="num2">个</span><br />
 							<span class="num3">已经过期数量</span>
 						</div>
@@ -36,13 +36,13 @@
 					<div class="tiaoa" style="margin-left: 10px;">
 						<span class="tiaoa1"></span>
 						<div class="disan">
-							<span class="num1">1</span>
+							<span class="num1">{{TotalNumberDomain}}</span>
 							<span class="num2">个</span><br />
 							<span class="num3">域名总数量</span>
 						</div>
 						<span class="tiao2"></span>
 						<div class="disan1">
-							<span class="num1">0</span>
+							<span class="num1">{{TotalNumberCertificates}}</span>
 							<span class="num2">个</span><br />
 							<span class="num3">域名证书总数量</span>
 						</div>
@@ -52,18 +52,18 @@
 				<Button class="btn1" type="primary" @click="$router.push('/ruicloud/work')">增加配额</Button>
 				<span class="xian1"></span>
 				<div class="allbox">
-					<div class="box" v-for="item in gggg">
+					<div class="box" v-for="item in LargeArea">
 						<div class="boxtop" v-bind:class="{ newboxtop: num>0}"></div>
 						<div class="boxtop-all">
 							<div class="jjjj" @click="">
-								<Icon type="location" class="icon1"></Icon>
-								<!-- <i class="iconfont houtaiicon-weizhi-lan"></i> -->
-								<span class="boxtop-name">华东一区</span>
+								<i class="iconfont houtaiicon-weizhihei" id="icon1"></i>
+								<span class="boxtop-name">{{item.zoneName.zonename}}</span>
 							</div>
 							<span class="numbercloud">云服务器总数</span>
 							<span class="numberofc" v-bind:class="{ newnumberofc: num33>0}">5</span>
 							<span class="numberge">个</span>
 							<span class="xiantiaoa"></span>
+							<i class="iconfont houtaiicon-gouwuche1" id="gouwuche1" @click=""></i>
 							<div class="rightall">
 								<div>
 									<img src="../../assets/img/back/kaiqi.png" class="img-kaiqi" />
@@ -95,22 +95,40 @@
 								<div class="VPCALL">
 									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
 									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">云硬盘</span>
+									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
 								</div>
 								<div class="VPCALL">
 									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
 									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">公网IP</span>
+									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
 								</div>
 								<div class="VPCALL">
 									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
 									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">数据库</span>
+									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
 								</div>
 								<div class="VPCALL">
 									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
+									 <Tooltip placement="top">
+										 <div slot="content" id="enna">
+											<span>数字代表该区域 </span>
+											<span>存储包 </span>
+											<span>容量 </span>
+										</div>
+										<i class="iconfont houtaiicon-bangzhu"></i>
+									</Tooltip>
 									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">对象存储</span>
+									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
 								</div>
 								<div class="VPCALL">
 									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
 									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">GPU服务器</span>
+									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
+								</div>
+								<div class="VPCALL">
+									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
+									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">NAT网关</span>
+									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
 								</div>
 							</div>
 						</div>
@@ -123,15 +141,15 @@
 								<span class="lookgd">查看更多</span>
 							</div><br />
 							<div style="margin-top: 13px;margin-left: -5px;">
-								<div class="VPCALL">
+								<div class="VPCCALL">
 									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
 									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">负载均衡</span>
 								</div>
-								<div class="VPCALL">
+								<div class="VPCCALL">
 									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
 									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">防火墙</span>
 								</div>
-								<div class="VPCALL">
+								<div class="VPCCALL">
 									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
 									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">VPC</span>
 								</div>
@@ -156,14 +174,45 @@
 				num:1,
 				num1:1,
 				num33:1,
-				gggg:5
+				//总数量
+				TotalWuantity:0,
+				//即将过期数量
+				QuantityExpire:0,
+				//已经过期数量
+				OutdatedQuantity:0,
+				//域名总数量
+				TotalNumberDomain:0,
+				//域名证书总数量
+				TotalNumberCertificates:0,
+				//云服务器总数量
+				TotalCumberCloud:0,
+				//区域详情
+				LargeArea:''
 			}
 		},
 		created() {
-
+			this.CallResources()
 		},
 		methods: {
-
+			CallResources(){
+				axios.get('information/getAllResourceByZoneId.do', {
+				  params: {
+					  
+				  }
+				}).then(response => {
+				  if (response.status == 200 && response.data.status == 1) {
+						console.log(response.data.result[0].insideList)
+						this.TotalWuantity=response.data.totalNum
+						this.QuantityExpire=response.data.comingExpiredNum
+						this.OutdatedQuantity=response.data.alreadyExpiredNum
+						this.TotalNumberDomain=response.data.domainNum
+						this.TotalNumberCertificates=response.data.sslNum
+						this.LargeArea=response.data.result
+				  } else {
+					  
+				  }
+				})
+			}
 		},
 		computed: {
 
@@ -343,10 +392,10 @@
 		margin-top: -190px;
 		position: relative;
 	}
-	.icon1{
-		font-size: 20px;
+	#icon1{
+		font-size: 15px;
 		margin-left: 20px;
-		margin-top: 22px;
+		margin-top: 20px;
 		float: left;
 	}
 	.boxtop-name{
@@ -392,6 +441,13 @@
 		border:1px solid rgba(182,182,182,1);
 		top: 50px;
 		left: 190px;
+	}
+	#gouwuche1{
+		color: #2A99F2FF;
+		position: absolute;
+		top: 20px;
+		left: 333px;
+		display: none;
 	}
 	.rightall{
 		width: 141px;
@@ -600,6 +656,18 @@
 	.VPCALL:hover{
 		background:rgba(232,244,254,1);
 	}
+	.VPCCALL{
+		width:107px;
+		height:61px;
+		background:rgba(245,245,245,1);
+		border-radius:4px;
+		float: left;
+		margin-left: 5px;
+		margin-top: 5px;
+	}
+	.VPCCALL:hover{
+		background:rgba(232,244,254,1);
+	}
 	.jjjj{
 		color:rgba(51,51,51,1);
 	}
@@ -630,5 +698,37 @@
 		height:190px;
 		background:linear-gradient(98deg,rgba(40,132,221,1) 0%,rgba(59,79,255,0.12) 100%);
 		opacity:0.0989;
+	}
+	.boxtop-all:hover #gouwuche1{
+		display: block;
+	}
+	.houtaiicon-bangzhu{
+		color: #2A99F2FF;
+		float: left;
+		margin-top: 5px;
+		margin-left: -17px;
+		display: none;
+	}
+	.VPCALL:hover .houtaiicon-bangzhu{
+		display: block;
+	}
+	#gwchh{
+		color: #2A99F2FF;
+		margin-right: 10px;
+		margin-top: 5px;
+		float: right;
+		display: none;
+	}
+	.VPCALL:hover #gwchh{
+		display: block;
+	}
+	#enna{
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		color:rgba(102,102,102,1);
+		line-height:16px;
+	}
+	#enna span:nth-of-type(2){
+		color: #FF624BFF;
 	}
 </style>
