@@ -35,6 +35,24 @@
   padding-top: 0
 }
 
+/* 注销流程进度条样式调整 */
+.ProgressCancel .ivu-progress-success .ivu-progress-bg{
+		background: #2A99F2;
+	}
+.ProgressCancel .ivu-progress-bg{
+		min-height: 30px;
+		background: #2A99F2;
+	}
+.ProgressCancel .ivu-progress-success .ivu-progress-text{
+	color: #2A99F2;
+}
+.ProgressCancel .ivu-icon{
+	font-size: 30px;
+}
+.ProgressCancel .ivu-progress-text-inner{
+	font-size: 18px;
+}
+
 /* 每行两列form表单样式 */
 .universal-modal-content-flex form {
   display: flex;
@@ -374,6 +392,38 @@ div.modal-header-border {
   white-space: normal !important;
 }
 
+/* 提现银行卡样式修改 */
+.font .ivu-tooltip-inner{
+		background:rgba(255,255,255,1);
+		box-shadow:0px 1px 4px 0px rgba(0,0,0,0.2);
+		border-radius:2px;
+	}
+
+.font .ivu-tooltip-popper{
+	margin-left: 63px;
+}
+
+.font .ivu-tooltip-arrow{
+	background: white;
+}
+
+/* 提现流程第二部样式修改 */
+.thdd .ivu-tooltip-inner{
+		background:rgba(255,255,255,1);
+		box-shadow:0px 1px 4px 0px rgba(0,0,0,0.2);
+		border-radius:2px;
+		margin-top: 15px;
+	}
+.thdd .ivu-tooltip-popper{
+	font-size:12px;
+	font-family:MicrosoftYaHei;
+	color:rgba(102,102,102,1);
+	line-height:22px;
+}
+.thdd .ivu-tooltip-arrow{
+	background: white;
+}
+
 .smlj-bag .ivu-modal-content {
   background: url('../../assets/img/active/smlj/modal-bg.png');
 }
@@ -515,6 +565,9 @@ div.modal-header-border {
 .ivu-modal-header{
   background: #333333;
   border-bottom: none;
+  border-radius: 6px 6px 0 0;
+}
+.ivu-modal-close .ivu-icon-ios-close-empty{
   border-radius: 6px 6px 0px 0px;
 }
 

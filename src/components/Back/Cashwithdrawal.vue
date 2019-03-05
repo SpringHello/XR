@@ -2,43 +2,58 @@
 	<div id="background">
 		<div id="wrapper">
 			<span>个人中心 / 费用中心 / 提现</span>
-			<div class="content">
-				<span>自助线上提现</span>
+			<div class="content" style="min-height: 655px;">
+				<span>自助提现</span>
 				<div class="remindbox">
 					<div class="remindbox-left">
-						<div class="font">
-							<span>可<span style="color: #FF624B;">线上</span>提现金额</span>
+						<div class="font" style="margin-left: 20px;">
+							<div class="fontleft">
+								<span>可<span style="color: #FF624B;">线上</span>提现金额</span>
+							</div>
 							<div class="money">
 								<span>{{Onlinemoney}}</span>
 								<span>.{{Onlinedecimalmoney}}元</span>
 							</div>
 							<Button type="primary" style="margin-top: 17px;" @click="showModal.Cashconfirmation = true">申请线上提现</Button>
 						</div>
-						<div class="font">
-							<span>可<span style="color: #FF624B;">银行卡</span>提现金额</span>
-							<div class="money">
-								<span>{{Bankmoney}}</span>
-								<span>.{{Bankdecimalmoney}}元</span>
-							</div>
-							<Button type="primary" style="margin-top: 17px;" @click="showModal.cardfirmation = true">申请银行卡提现</Button>
+						<span id="spanself1"></span>
+						<div class="font" style="margin-left: 18px;width: 142px;">
+							<Tooltip placement="top">
+								<div id="divself1" slot="content">
+									<p>通过微信充值时间超过1年或通过支付宝充值时间</p>
+									<p>超过3个月的现金充值金额只能通过银行卡提现。</p>
+								</div>
+								<div class="fontleft">
+									<span>可<span style="color: #FF624B;">银行卡</span>提现金额</span>
+									<Icon type="ios-help-outline" id="iconself1"></Icon>
+								</div>
+								<div class="money">
+									<span>{{Bankmoney}}</span>
+									<span>.{{Bankdecimalmoney}}元</span>
+								</div>
+								<Button type="primary" style="margin-top: 17px;" @click="showModal.cardfirmation = true">申请银行卡提现</Button>
+							</Tooltip>
 						</div>
+						<span id="spanself2"></span>
 					</div>
 					<div class="remindbox-right">
 						<div class="right">
-							<span><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。如需帮助，可查看
-								<a href="#" style="color: #2A99F2;text-decoration: underline;">自助提现常见问题</a></span>
+							<span style="line-height: 21px;margin-top: 5px;"><span style="line-height: 21px;">申请线上提现后您的款项将在</span><span
+								 style="color: #FF624B;line-height: 21px;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看
+								<a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxZtv8QU.html" style="color: #2A99F2;text-decoration: underline;">自助提现常见问题</a></span>
 							<div class="following">
-								<span>以下几种现金充值金额不支持自助线上提现：</span><br />
-								<span>1、被暂时冻结的现金充值金额</span>
-								<span>2、通过微信充值时间超过1年或通过支付宝充值时间超过3个月的现金充值金额</span>
-								<span>3、通过线下打款进账的现金充值金额提现方式请 <a href="#" style="color: #2A99F2;text-decoration: underline;">点击这里查看</a></span>
-								<span>4、单次提现金额上限2000元，7天内最多提现4次</span>
+								<span style="margin-top: 10px;">可提现金额通常情况下等于用户可用余额，当用户存在以下操作的时候可提现金额会与用户可用余额有差异：</span><br />
+								<span>1、充值返奖励金或送现金券的时候，该充值金额不能进行提现；</span>
+								<span>2、已开发票金额不能提现；</span>
+								<span>3、当您的账户存在流水异常或其他异常状态的时候；</span>
+								<span>4、通过线下打款进账的现金充值金额提现方式请 <a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxagA7H2.html" id="aself1">点击这里查看</a></span>
+								<span>5、单次提现金额上限2000元，7天内最多提现4次</span>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="ordertype">
-					<span style="line-height: 30px;padding-right: 10px;">按申请时间</span>
+					<span id="spanself3">按申请时间</span>
 					<Row>
 						<Col span="12">
 						<Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start" placeholder="选择日期"
@@ -48,9 +63,9 @@
 				</div>
 				<Table border :columns="withdrawal" :data="withdrawaldataFilter" style="margin-top: 10px;"></Table>
 				<!-- :total="ordertotal" -->
-
+				<Page :total="pageall" :page-size="pageNum" @on-change="changePage" style="margin-top: 20px;float: right;"></Page>
 			</div>
-			<Page :total="pageall" :page-size="pageNum" @on-change="changePage" style="float: right;margin-right: 30px;"></Page>
+
 			<!-- 线上提现弹窗 -->
 			<Modal v-model="showModal.Cashconfirmation" :scrollable="true" :closable="false" :width="390">
 				<p slot="header" class="modal-header-border">
@@ -59,11 +74,11 @@
 				</p>
 				<div class="modal-content-s" style="width: 101%;">
 					<div>
-						<p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">您正在申请线上提现，申请后您的款项将在<span
-							 style="color: #FF624B">5个工作日</span>内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。
+						<p class="lh24" id="pself1">您正在申请线上提现，申请后您的款项将在<span style="color: #FF624B">5个工作日</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。
 						</p>
 						<!-- @click="$router.push('/ruicloud/cashwithdrawal')" -->
-						<p class="lh24" style="margin-top: 10px;">若您的线下汇款（对公转账）金额需要提现，请点击查看 <a href="#" style="color: #2A99F2; text-decoration: underline;">线下汇款提现方式</a>。
+						<p class="lh24" style="margin-top: 10px;">若您的线下汇款（对公转账）金额需要提现，请点击查看 <a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxagA7H2.html"
+							 style="color: #2A99F2; text-decoration: underline;">线下汇款提现方式</a>。
 						</p>
 					</div>
 				</div>
@@ -83,29 +98,30 @@
 						<span class="cardspan2"><span class="cardspan3">{{Bankmoney}}</span>.{{Bankdecimalmoney}}元</span>
 					</div>
 				</div>
-				<div class="" style="margin-top: 20px;margin-left: 10px;">
+				<div style="margin-top: 20px;margin-left: 10px;">
 					<Form ref="formAppreciationDate" :model="formAppreciationDate" :rules="ruleValidate" :label-width="100"
 					 label-position="left">
-						<Form-item label="银行开户名" prop="companyName" style="height: 30px;">
+						<Form-item label="银行开户名" prop="companyName" id="hei30">
 							<Input :maxlength="32" v-model="formAppreciationDate.companyName" placeholder="请输入银行开户名" style="width: 300px;"></Input>
 						</Form-item>
-						<Form-item label="开户银行名称" prop="depositBank" style="height: 30px;">
+						<Form-item label="开户银行名称" prop="depositBank" id="hei30">
 							<Input :maxlength="32" v-model="formAppreciationDate.depositBank" placeholder="请输入开户银行名称" style="width: 300px"></Input>
 						</Form-item>
-						<Tooltip :content="bank_account" placement="bottom" :disabled="disabled" :class="{'active' : isTrue}" @on-popper-hide="setdisable" @on-popper-show="setdisableshow">
-							<Form-item label="银行账户" prop="bankAccount" style="height: 30px;">
+						<Tooltip :content="bank_account" placement="bottom" :disabled="disabled" :class="{'active' : isTrue}"
+						 @on-popper-hide="setdisable" @on-popper-show="setdisableshow">
+							<Form-item label="银行账户" prop="bankAccount" id="hei30">
 								<Input :maxlength="32" v-model="formAppreciationDate.bankAccount" placeholder="请输入银行账户" style="width: 300px"
 								 v-on:input="conversion"></Input>
 							</Form-item>
 						</Tooltip>
-						<Form-item label="银行所在地" prop="registeredAddress" style="height: 30px;">
+						<Form-item label="银行所在地" prop="registeredAddress" id="hei30">
 							<Input :maxlength="64" v-model="formAppreciationDate.registeredAddress" placeholder="请输入银行所在地" style="width: 300px"></Input>
 						</Form-item>
-						<Form-item label="开户支行名称" prop="taxpayerID" style="height: 30px;">
+						<Form-item label="开户支行名称" prop="taxpayerID" id="hei30">
 							<Input :maxlength="32" v-model="formAppreciationDate.taxpayerID" placeholder="请输入开户支行名称" style="width: 300px"></Input>
 						</Form-item>
 
-						<Form-item label="银行预留电话" prop="registeredPhone" style="height: 30px;">
+						<Form-item label="银行预留电话" prop="registeredPhone" id="hei30">
 							<Input :maxlength="20" v-model="formAppreciationDate.registeredPhone" placeholder="请输入银行预留电话" style="width: 300px"></Input>
 						</Form-item>
 					</Form>
@@ -124,13 +140,30 @@
 				</p>
 				<div class="modal-content-s">
 					<div>
-						<p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">审核已通过，正在打款中。您的款项将在
-							<span style="color: #FF624B">5个工作日</span> 内按照后进先出的原则退回您的原线上充值账户（微信、QQ钱包、网银或国际卡）。请您耐心等待。
+						<p class="lh24" id="pself2">审核已通过，正在打款中。您的款项将在
+							<span style="color: #FF624B">5个工作日</span> 内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。请您耐心等待。
 						</p>
 					</div>
 				</div>
 				<p slot="footer" class="modal-footer-s">
 					<Button type="primary" @click="showModal.Paymentdetails = false">确定</Button>
+				</p>
+			</Modal>
+			<!-- 提现失败弹窗 -->
+			<Modal v-model="showModal.withdrawalfailure" :scrollable="true" :closable="false" :width="390">
+				<p slot="header" class="modal-header-border">
+					<Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+					<span class="universal-modal-title">线上提现</span>
+				</p>
+				<div class="modal-content-s">
+					<div>
+						<p class="lh24" id="pself3">
+							{{Failedtext}}
+						</p>
+					</div>
+				</div>
+				<p slot="footer" class="modal-footer-s">
+					<Button type="primary" @click="showModal.withdrawalfailure = false">确定</Button>
 				</p>
 			</Modal>
 		</div>
@@ -195,6 +228,7 @@
 			}
 			return {
 				ordertime: '',
+				Failedtext: '',
 				//小数点前后金额
 				comOnlinemoney: 0,
 				comBankemoney: 0,
@@ -273,7 +307,8 @@
 					// 打款详情弹窗
 					Paymentdetails: false,
 					// 银行卡提现弹窗
-					cardfirmation: false
+					cardfirmation: false,
+					withdrawalfailure: false
 				},
 				options: {
 					shortcuts: [{
@@ -322,7 +357,7 @@
 						title: '状态',
 						key: 'type',
 						render: (h, params) => {
-							// 4提现中 5已提现 
+							// 4提现中 5已提现 7余额提现失败
 							var text = ''
 							switch (params.row.type) {
 								case 4:
@@ -330,6 +365,9 @@
 									break;
 								case 5:
 									text = '已提现'
+									break;
+								case 7:
+									text = '提现失败'
 									break;
 								default:
 									break;
@@ -340,6 +378,27 @@
 
 									}
 								}, text)
+							} else if (params.row.type == 7) {
+								return h('div', [
+									h('span', {
+										style: {
+
+										}
+									}, text),
+									h('span', {
+										style: {
+											color: '#2d8cf0',
+											cursor: 'pointer',
+											marginLeft: '10px'
+										},
+										on: {
+											click: () => {
+												this.showModal.withdrawalfailure = true
+												this.Failedtext = params.row.withdrawfailreason
+											}
+										}
+									}, "查看详情")
+								]);
 							} else if (params.row.type == 4) {
 								return h('div', [
 									h('span', {
@@ -425,30 +484,38 @@
 				this.bank_account = this.formAppreciationDate.bankAccount
 			},
 			carddetermination(name) {
-				this.$refs[name].validate((valid) => {
-					if (valid) {
-						sessionStorage.setItem('payeeName', this.formAppreciationDate.companyName)
-						sessionStorage.setItem('bankAccInfor', this.formAppreciationDate.depositBank)
-						sessionStorage.setItem('payeeAccount', this.formAppreciationDate.bankAccount)
-						sessionStorage.setItem('bankAddress', this.formAppreciationDate.registeredAddress)
-						sessionStorage.setItem('bankBranch', this.formAppreciationDate.taxpayerID)
-						sessionStorage.setItem('reservedPhone', this.formAppreciationDate.registeredPhone)
-						sessionStorage.setItem('balance', this.comBankemoney)
-						sessionStorage.setItem('type', 1)
-						this.$router.push('/ruicloud/cashprocess')
-					}
-				})
+				if (this.comBankemoney <= 0) {
+					this.$Message.info("您当前的金额不能提现！")
+				} else {
+					this.$refs[name].validate((valid) => {
+						if (valid) {
+							sessionStorage.setItem('payeeName', this.formAppreciationDate.companyName)
+							sessionStorage.setItem('bankAccInfor', this.formAppreciationDate.depositBank)
+							sessionStorage.setItem('payeeAccount', this.formAppreciationDate.bankAccount)
+							sessionStorage.setItem('bankAddress', this.formAppreciationDate.registeredAddress)
+							sessionStorage.setItem('bankBranch', this.formAppreciationDate.taxpayerID)
+							sessionStorage.setItem('reservedPhone', this.formAppreciationDate.registeredPhone)
+							sessionStorage.setItem('balance', this.comBankemoney)
+							sessionStorage.setItem('type', 1)
+							this.$router.push('/ruicloud/cashprocess')
+						}
+					})
+				}
 			},
 			onlinefor() {
-				sessionStorage.setItem('balance', this.comOnlinemoney)
-				sessionStorage.setItem('type', 0)
-				this.$router.push('/ruicloud/cashprocess')
+				if (this.comOnlinemoney <= 0) {
+					this.$Message.info("您当前的金额不能提现！")
+				} else {
+					sessionStorage.setItem('balance', this.comOnlinemoney)
+					sessionStorage.setItem('type', 0)
+					this.$router.push('/ruicloud/cashprocess')
+				}
 			},
-			setdisable(){
-				this.isTrue=false
+			setdisable() {
+				this.isTrue = false
 			},
-			setdisableshow(){
-				this.isTrue=true
+			setdisableshow() {
+				this.isTrue = true
 			}
 		},
 		computed: {
@@ -458,10 +525,10 @@
 			'formAppreciationDate.bankAccount': function(val) {
 				if (val == null) {
 					this.disabled = true
-					this.isTrue=false
+					this.isTrue = false
 				} else {
 					this.disabled = false
-					this.isTrue=true
+					this.isTrue = true
 				}
 			}
 		}
@@ -502,23 +569,21 @@
 
 	.remindbox {
 		margin-top: 20px;
-		height: 172px;
+		height: 186px;
 		background: rgba(239, 247, 254, 1);
 		border-radius: 4px;
 		border: 1px solid rgba(42, 153, 242, 1);
 	}
 
 	.remindbox-left {
-		width: 24%;
+		width: 29%;
 		height: 100%;
 		float: left;
 	}
 
 	.font {
-		width: 102px;
-		height: auto;
+		width: 122px;
 		float: left;
-		margin-left: 20px;
 		margin-top: 30px;
 	}
 
@@ -531,6 +596,7 @@
 	.money {
 		float: left;
 		margin-top: 17px;
+		width: 100%;
 	}
 
 	.money span:nth-of-type(1) {
@@ -549,7 +615,7 @@
 	}
 
 	.remindbox-right {
-		width: 76%;
+		width: 71%;
 		height: 100%;
 		float: left;
 	}
@@ -567,7 +633,7 @@
 	}
 
 	.following {
-		width: 418px;
+		width: 600px;
 		height: 100px;
 	}
 
@@ -580,6 +646,7 @@
 	}
 
 	.following span:nth-of-type(2) {
+		width: 100%;
 		font-size: 12px;
 		font-family: MicrosoftYaHei;
 		color: #666666;
@@ -587,6 +654,7 @@
 	}
 
 	.following span:nth-of-type(3) {
+		width: 100%;
 		font-size: 12px;
 		font-family: MicrosoftYaHei;
 		color: #666666;
@@ -594,6 +662,15 @@
 	}
 
 	.following span:nth-of-type(4) {
+		width: 100%;
+		font-size: 12px;
+		font-family: MicrosoftYaHei;
+		color: #666666;
+		line-height: 20px;
+	}
+
+	.following span:nth-of-type(6) {
+		width: 100%;
 		font-size: 12px;
 		font-family: MicrosoftYaHei;
 		color: #666666;
@@ -601,6 +678,7 @@
 	}
 
 	.following span:nth-of-type(5) {
+		width: 100%;
 		font-size: 12px;
 		font-family: MicrosoftYaHei;
 		color: #666666;
@@ -655,5 +733,74 @@
 
 	.active {
 		height: 100px;
+	}
+
+	#spanself1 {
+		width: 2px;
+		height: 126px;
+		background: rgba(233, 233, 233, 1);
+		float: left;
+		margin-top: 20px;
+	}
+
+	#divself1 {
+		width: 260px;
+		height: 44px;
+		font-size: 12px;
+		font-family: MicrosoftYaHei;
+		color: rgba(102, 102, 102, 1);
+	}
+
+	#divself1 p {
+		line-height: 22px;
+	}
+
+	#iconself1 {
+		color: #2A99F2;
+		font-size: 16px;
+		cursor: pointer;
+	}
+
+	#spanself2 {
+		width: 2px;
+		height: 126px;
+		background: rgba(233, 233, 233, 1);
+		float: left;
+		margin-top: 20px;
+	}
+
+	#aself1 {
+		color: #2A99F2;
+		text-decoration: underline;
+	}
+
+	#spanself3 {
+		line-height: 30px;
+		padding-right: 10px;
+	}
+
+	#pself1 {
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: rgba(102, 102, 102, 1);
+		line-height: 24px;
+	}
+
+	#hei30 {
+		height: 30px;
+	}
+
+	#pself2 {
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: rgba(102, 102, 102, 1);
+		line-height: 24px;
+	}
+
+	#pself3 {
+		font-size: 14px;
+		font-family: MicrosoftYaHei;
+		color: rgba(102, 102, 102, 1);
+		line-height: 24px;
 	}
 </style>
