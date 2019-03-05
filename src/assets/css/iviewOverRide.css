@@ -384,6 +384,9 @@ div.modal-header-border {
 .records-radio-person .ivu-radio-inner {
   top: -1px;
 }
+.firewall .ivu-tooltip-inner{
+  background-color: #fff;
+}
 
 #renew .ivu-tooltip-inner {
   white-space: normal !important;
