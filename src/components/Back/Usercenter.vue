@@ -2681,7 +2681,7 @@
         }
       },
       getPhone() {
-        if ($store.state.authInfo.companyid) {
+        if ($store.state.authInfo&&$store.state.authInfo.companyid) {
           axios.post('user/getPhone.do', {
             companyId: $store.state.authInfo.companyid
           }).then(response => {
