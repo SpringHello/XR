@@ -158,17 +158,6 @@
         this.startTime = res.data.result
         this.setTime()
       },
-      // 判断能否使用现金券余额
-      checkUseVoucher(bol) {
-        // 现金券不足够支付，必须使用余额
-        if (this.orderInfo.isUseVoucher == 1 && Number(this.orderInfo.voucher) < Number(this.orderInfo.money) && bol.indexOf('account') == -1) {
-          this.accountPay.push('account')
-          this.$message.info({
-            title:'提示',
-            content: '默认情况下优先使用账户余额'
-          })
-        }
-      },
       // 第三方支付
       otherPayChange(bol) {
         // 余额已足够支付 不应使用第三方支付
@@ -196,13 +185,6 @@
             if (this.accountPay[0] == 'account' && Number(this.orderInfo.remainder) < Number(this.orderInfo.money)) {
               this.$message.info({
                  title:'提示',
-                content: '账户余额不足'
-              })
-              return
-            } else if (this.accountPay[0] == 'voucher' && Number(this.orderInfo.voucher) < Number(this.orderInfo.money)) {
-              // 选中现金券
-              this.$message.info({
-                title:'提示',
                 content: '账户余额不足'
               })
               return

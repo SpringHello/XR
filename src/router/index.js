@@ -133,7 +133,7 @@ const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
 const Host = () =>import('@/components/Back/Host')
-//const NewHost = () =>import('@/components/Back/newHost')
+// const NewHost = () =>import('@/components/Back/newHost')
 //const NewHostManage = () =>import('@/components/Back/newHostManage')
 //const NewUpgrade = () =>import('@/components/Back/newUpgrade')
 const GPU = () =>import('@/components/Back/GPU')
@@ -427,7 +427,7 @@ var router = new Router({
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
-        //{path: 'newHost', name: 'newHost', component: NewHost},
+        // {path: 'newHost', name: 'newHost', component: NewHost},
         //{path: 'newHostManage', name: 'newHostManage', component: NewHostManage},
         //{path: 'newUpgrade', name: 'newUpgrade', component: NewUpgrade},
         {path: 'gpu', name: 'gpu', component: GPU},

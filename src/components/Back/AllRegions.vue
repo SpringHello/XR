@@ -337,12 +337,6 @@
 		height:190px;
 		background:rgba(245,245,245,1);
 	}
-	.newboxtop{
-		width:371px;
-		height:190px;
-		background:linear-gradient(98deg,rgba(40,132,221,1) 0%,rgba(59,79,255,0.12) 100%);
-		opacity:0.0989;
-	}
 	.boxtop-all{
 		width:371px;
 		height:190px;
@@ -545,12 +539,6 @@
 		margin-top: 10px;
 		float: left;
 	}
-	.newnnum{
-		color:rgba(51,51,51,1);
-	}
-	.newnnumzi{
-		color:rgba(102,102,102,1);
-	}
 	.nnumzi{
 		font-size:12px;
 		font-family:MicrosoftYaHei;
@@ -630,5 +618,17 @@
 	}
 	.newnumberofc{
 		color:rgba(51,51,51,1);
+	}
+	.newnnum{
+		color:rgba(51,51,51,1);
+	}
+	.newnnumzi{
+		color:rgba(102,102,102,1);
+	}
+	.newboxtop{
+		width:371px;
+		height:190px;
+		background:linear-gradient(98deg,rgba(40,132,221,1) 0%,rgba(59,79,255,0.12) 100%);
+		opacity:0.0989;
 	}
 </style>

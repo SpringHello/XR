@@ -853,13 +853,13 @@
                   <h3><span>2、会员退货退款</span>：累计消费成为会员的客户，因为消费不涉及会员级别的更改，享受平台正常的退货退款流程。 </h3>
                   <h3 style="color:#FF624B;">
                     充值成为会员的用户，会员充值一定金额后，对应会员级别的最低充值额度（如白银会员1万元、黄金会员5万元、铂金会员15万元）经会员同意后单独放入特定账户，优先消费，不可自动提取，以保证会员资格。若强制要求提现此部分金额，则意味会员主动取消会员资格。则之前购买产品均按折扣之前的价格扣除对应金额后方可提现。不足部分平台保留追补权利。 </h3>
-                  <h3><span>会员权益发生改变的情形</span></h3>
                   <h3><span>3、会员折扣范围：</span>1. 包括平台自有云产品（域名、SSL证书等第三方平台产品除外），参与活动产品购买时可享受折上折（押金活动除外）。 </h3>
                   <h3><span>4、会员权益有效期</span>：充值或者上个自然年度累计消费达到一定金额即可立即成为会员，会员有效期从会员权益生效之日起至第三年的1月17日。比如2009年7月31日充值1万元或者2009年1月1日至7月31日期间累计消费达到5万元则成为白银会员，有效期至2011年1月17日。 </h3>
                   <h3><span>5、会员其他福利</span>：会员还可享受平台新品免费试用、问题优先解决、免费技术咨询、生日和节日礼品、平台产品不定时赠送等福利。 </h3>
                   <h3><span>6、协议声明</span>：新睿云平台对于此会员制规则拥有最终解释权，其他未尽事项平台保留最终解释权力。若发现以不正当手段成为会员的用户，我们有资格取消或者封禁会员资格。</h3>
                   <h3>
                     新睿云有权根据政府法律法规、技术及行业实践、市场行情等变化修改和（或）补充本协议的条款和条件，修改后的条款应公示于新睿云服务网站上，并于公示即时生效。若您在本协议条款内容变更公告后继续使用云服务的，表示您已充分阅读、理解并接受修改后的协议内容，也将遵循修改后的条款内容使用云服务；若您不同意修改后的服务条款，您应立即停止使用云服务</h3>
+                  <h3><span>会员权益发生改变的情形</span></h3>
                   <h3><span>会员保级</span>：会员达到会员有效期后，若有效期内达到任何会员条件，比如充值一定金额或者上一自然年度累计消费达到一定金额，则会员权益相应保留并延期。 </h3>
                   <h3><span>会员升级</span>：某一级别的会员在会员有效期内通过充值或者累计消费后达到更高级别后，以最高级别为准，且会员有效期相应延长。如累计消费达到白银会员后，一次性充值5万元则升级成为黄金会员，会员有效期从成为黄金会员那日开始计算，至第三年的1月17日。 </h3>
                   <h3><span>会员降级</span>：会员达到会员有效期后，若有效期内未达到本级别会员条件，则会员权益重新计算。比如充值会员有效期内没有会员级别的充值行为，则有效期后会员权益失效。若有效期内，若会员资格费用发生提现吗，则会员权益立时失效。 </h3>
@@ -872,8 +872,10 @@
               </div>
             </div>
           </div>
-          <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
+          <Tooltip content="请先阅读完会员规则" placement="top" style="margin-bottom:30px" :disabled="tooltipStatus">
+              <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
             <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+          </Tooltip>
         </div>
       </div>
     </transition>
@@ -1091,6 +1093,7 @@
          this.init()*/
       }
       return {
+        tooltipStatus: true,
         vipRule: [
           {
             title: '类目',
@@ -2981,7 +2984,7 @@
       },
       bindingMobilePhoneStepTwo(name) {
         this.$refs[name].validate((valid) => {
-          console.log(valid)
+     
           if (valid) {
             if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
               axios.post('user/isIdCardAndNameSame.do', {
@@ -3121,8 +3124,8 @@
                 businessLicense: this.authModifyPhoneFormOne.businessLicense,
                 authType: '1',
                 newPhone: this.authModifyPhoneFormThere.newPhone,
-                agentIdCardHandUrl: this.uploadImgDispaly1,
-                legalIdCardFrontUrl: this.uploadImgDispaly2
+                agentIdCardHandUrl: this.uploadImgDispaly2,
+                legalIdCardFrontUrl: this.uploadImgDispaly1
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.authModifyPhoneStep = 3
@@ -3532,6 +3535,7 @@
             this.cashCouponForm.vipRuleDisabled = false
             clearInterval(interval);
           } else if (this.vipCount == 0) {
+            this.tooltipStatus = false;
             clearInterval(interval);
           } else {
             this.disabledButton = true;
@@ -4075,7 +4079,6 @@
 
   .modal-btn {
     height: 36px;
-    margin-bottom: 30px;
     border: 1px solid #FF624B;
     font-size: 14px;
     font-family: PingFangSC-Regular;
@@ -4090,7 +4093,6 @@
 
   .modal-btnDisbled {
     height: 36px;
-    margin-bottom: 30px;
     color: #bbbec4;
     background-color: #f7f7f7;
     border-color: #dddee1;

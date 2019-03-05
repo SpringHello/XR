@@ -33,7 +33,7 @@
             <div :class="{started: hour >=14&&hour<20}">14:00~20:00</div>
           </div>
           <div class="tabs  flex" style="justify-content: center" v-else>
-            <div style="width:800px;background:#E1212A" v-if="hour >=12&&hour <12">下场秒杀时间14:00~20:00</div>
+            <div style="width:800px;background:#E1212A" v-if="hour >=12&&hour <14">下场秒杀时间14:00~20:00</div>
             <div style="width:800px;background:#E1212A" v-else>下场秒杀时间9:00～12:00</div>
           </div>
           <div class="box" :class="[hour >=9&&hour<12 || hour >=14&&hour<20?'box_bg_long':'box_bg_short']">
@@ -128,24 +128,24 @@
                     <span class="sec-title">基础入门级云服务器</span>
                     <ul class="flex" style="justify-content: flex-start;">
                       <li v-for="(item3,index) in hostConfigListHot.basic" :key="index" @click="hostProductHot.cpuMemory=item3"
-                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3">
-                        <span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
+                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                      </li>
                     </ul>
                   </div>
                   <div>
                     <span class="sec-title">标准进阶型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
                       <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hostProductHot.cpuMemory=item3"
-                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3">
-                        <span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
+                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                      </li>
                     </ul>
                   </div>
                   <div v-if="highEndLength">
                     <span class="sec-title">企业高配型云服务器</span>
                     <ul class="flex" style="justify-content: flex-start">
                       <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hostProductHot.cpuMemory=item3"
-                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}" v-if="index<3">
-                        <span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span></li>
+                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                      </li>
                     </ul>
                   </div>
                   <p style="font-size:12px;color:rgba(154,127,130,1);margin-top:-10px;">*以上配置皆包含40G SSD系统盘</p>
@@ -624,13 +624,13 @@
                   <h3><span>2、会员退货退款</span>：累计消费成为会员的客户，因为消费不涉及会员级别的更改，享受平台正常的退货退款流程。 </h3>
                   <h3 style="color:#FF624B;">
                     充值成为会员的用户，会员充值一定金额后，对应会员级别的最低充值额度（如白银会员1万元、黄金会员5万元、铂金会员15万元）经会员同意后单独放入特定账户，优先消费，不可自动提取，以保证会员资格。若强制要求提现此部分金额，则意味会员主动取消会员资格。则之前购买产品均按折扣之前的价格扣除对应金额后方可提现。不足部分平台保留追补权利。 </h3>
-                  <h3><span>会员权益发生改变的情形</span></h3>
                   <h3><span>3、会员折扣范围：</span>1. 包括平台自有云产品（域名、SSL证书等第三方平台产品除外），参与活动产品购买时可享受折上折（押金活动除外）。 </h3>
                   <h3><span>4、会员权益有效期</span>：充值或者上个自然年度累计消费达到一定金额即可立即成为会员，会员有效期从会员权益生效之日起至第三年的1月17日。比如2009年7月31日充值1万元或者2009年1月1日至7月31日期间累计消费达到5万元则成为白银会员，有效期至2011年1月17日。 </h3>
                   <h3><span>5、会员其他福利</span>：会员还可享受平台新品免费试用、问题优先解决、免费技术咨询、生日和节日礼品、平台产品不定时赠送等福利。 </h3>
                   <h3><span>6、协议声明</span>：新睿云平台对于此会员制规则拥有最终解释权，其他未尽事项平台保留最终解释权力。若发现以不正当手段成为会员的用户，我们有资格取消或者封禁会员资格。</h3>
                   <h3>
                     新睿云有权根据政府法律法规、技术及行业实践、市场行情等变化修改和（或）补充本协议的条款和条件，修改后的条款应公示于新睿云服务网站上，并于公示即时生效。若您在本协议条款内容变更公告后继续使用云服务的，表示您已充分阅读、理解并接受修改后的协议内容，也将遵循修改后的条款内容使用云服务；若您不同意修改后的服务条款，您应立即停止使用云服务</h3>
+                  <h3><span>会员权益发生改变的情形</span></h3>
                   <h3><span>会员保级</span>：会员达到会员有效期后，若有效期内达到任何会员条件，比如充值一定金额或者上一自然年度累计消费达到一定金额，则会员权益相应保留并延期。 </h3>
                   <h3><span>会员升级</span>：某一级别的会员在会员有效期内通过充值或者累计消费后达到更高级别后，以最高级别为准，且会员有效期相应延长。如累计消费达到白银会员后，一次性充值5万元则升级成为黄金会员，会员有效期从成为黄金会员那日开始计算，至第三年的1月17日。 </h3>
                   <h3><span>会员降级</span>：会员达到会员有效期后，若有效期内未达到本级别会员条件，则会员权益重新计算。比如充值会员有效期内没有会员级别的充值行为，则有效期后会员权益失效。若有效期内，若会员资格费用发生提现吗，则会员权益立时失效。 </h3>
@@ -643,9 +643,11 @@
               </div>
             </div>
           </div>
-          <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true,selectedRule = false" :class="[disabledButton?'modal-btnDisbled':'modal-btn1']"
+          <Tooltip content="请先阅读完会员规则" placement="top" style="margin-bottom:30px" :disabled="tooltipStatus">
+              <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true,selectedRule = false" :class="[disabledButton?'modal-btnDisbled':'modal-btn1']"
                   :disabled='disabledButton'>
-            <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+                  <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+          </Tooltip>
         </div>
       </div>
     </transition>
@@ -811,6 +813,7 @@
         }
       }
       return {
+        tooltipStatus: true,
         selectVipGrade: '白银会员',
         highEndLength: '',
         selectedRule: true,
@@ -1002,7 +1005,16 @@
           originalPrice: ''
         },
         hostZoneListHot: [],
-        hostConfigListHot: {},
+        hostConfigListHot: {
+          basic: [
+            {cpunum: 1, memory: 1},
+            {cpunum: 1, memory: 2},
+            {cpunum: 2, memory: 4}],
+          standard: [
+            {cpunum: 4, memory: 8},
+            {cpunum: 8, memory: 16},
+            {cpunum: 16, memory: 32}]
+        },
         hostbandwithListHot: [1, 2, 5, 10, 20],
         hostSystemListHot: [{
           value: 'window',
@@ -1370,8 +1382,6 @@
           if (res.data.status == 1) {
             // var startTime = (new Date()).getTime()
             // var now = new Date()
-            // console.log(now)
-            // console.log(new Date(now.setHours(12))
             var startTime = res.data.result
             var now = new Date(startTime)
             var endTime = ''
@@ -1388,13 +1398,14 @@
               this.timer = setInterval(() => {
                 this.setLimit(limitTime)
                 limitTime -= 1000
+                // console.log(this.hour)
                 if (limitTime <= 0) {
+                  this.hour++
+                  // console.log(this.hour)
                   window.clearInterval(this.timer)
-                  this.hour = 0
                 }
               }, 1000);
             } else {
-              this.hour = 0
               this.h = 0
               this.m1 = 0
               this.m2 = 0
@@ -1629,17 +1640,8 @@
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            // this.gpuConfigListHot = res.data.result.filter(item => {
-            //   return item.gpu == '100'
-            // })
-            this.hostConfigListHot.basic = res.data.info.filter(item => {
-              return item.cpunum == 1 || item.cpunum == 2
-            })
-            this.hostConfigListHot.standard = res.data.info.filter(item => {
-              return item.cpunum == 4 || item.cpunum == 8 || item.cpunum == 16
-            })
             this.hostConfigListHot.highEnd = res.data.info.filter(item => {
-              return item.cpunum == 32 || item.cpunum == 64
+              return (item.cpunum == 32 && item.memory != 128) || item.cpunum == 64
             })
             this.highEndLength = this.hostConfigListHot.highEnd.length
           }
@@ -1748,7 +1750,7 @@
           memory: this.gpuProductHot.cpuMemory.memory,
           bandWidth: this.gpuProductHot.bandwith,
           rootDiskType: 'ssd',
-          rootDiskSize: '40',
+          rootDiskSize: '128',
           diskType: '',
           diskSize: '',
           networkId: 'no',
@@ -1905,6 +1907,7 @@
             this.disabledButton = false;
             clearInterval(interval);
           } else if (this.vipCount == 0) {
+            this.tooltipStatus = false;
             clearInterval(interval);
           } else {
             this.disabledButton = true;
@@ -2672,7 +2675,6 @@
   .modal-btn1 {
     width: 134px;
     height: 36px;
-    margin-bottom: 30px;
     background: #FF624B;
     color: #fff;
     border: 1px solid #FF624B;
@@ -3019,7 +3021,6 @@
 
   .modal-btnDisbled {
     height: 36px;
-    margin-bottom: 30px;
     color: #bbbec4;
     background-color: #f7f7f7;
     border-color: #dddee1;
