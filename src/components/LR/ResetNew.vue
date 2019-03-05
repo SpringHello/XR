@@ -24,7 +24,7 @@
                   <x-Input   :icon='url.icon1' v-model="formValidate.account"  placeholder='请输入注册时用的邮箱或者手机号'  style="width:365px;"></x-Input>
                 </FormItem>
               </Form>
-                
+
               <div style="float:right;margin-top:-10px;">
                  <p style="color:#4A97EE;margin-bottom:20px;font-size:14px;cursor:pointer;text-align: right;" @click="next('no')">现账号无法使用</p>
                  <div class="v_top" @click="$router.push('login')">返回</div>
@@ -32,7 +32,7 @@
               </div>
             </div>
 
-            
+
             <!-- 账号能用 -->
             <div class="verification" v-if="index == 2 && accountIsDis=='1'">
                <p class="ver_p">您正在为账户：{{newPhone}}重置密码，请选择方式验证。</p>
@@ -83,7 +83,6 @@
               </div>
             </div>
 
-            
             <!-- 邮箱验证方式 -->
             <div class="verification" v-if="verPage == 'email'">
               <p class="ver_p">我们会发送一封验证邮件到您的邮箱，请注意查收</p>
@@ -196,7 +195,7 @@
                       <p>手持身份证人像照片</p>
                   </div>
                 </div>
-                  <p style="margin:10px 0 20px 0;color:#666666;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
+                  <p style="margin:10px 0 20px 0;color:#666666;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p>
                   <div style="float:right;">
                     <div class="v_top" @click="absc = !absc">上一步</div>
                     <Button type="primary" class="ive_button" @click="legalNext('personal')">下一步</Button>
@@ -291,13 +290,13 @@
                   </div>
                 </div>
                 <div>
-                    <p style="margin:19px 0 20px 0;color:#666666;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p> 
+                    <p style="margin:19px 0 20px 0;color:#666666;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p>
                     <div style="float:right;">
                       <div class="v_top" @click="absc = !absc">上一步</div>
                       <Button type="primary" style="float:right;" class="ive_button" @click="legalNext('company')">下一步</Button>
                     </div>
                 </div>
-                
+
               </div>
             </div>
 
@@ -326,7 +325,7 @@
                   <div class="v_top" @click="backEmailOrPhone">上一步</div>
                   <Button type="primary" class="ive_button" @click="submit">确认</Button>
                 </div>
-              
+
             </div>
 
               <!-- 重置手机号 -->
@@ -445,9 +444,7 @@ export default {
       }
     }
     return {
-       
       imgSrc: "user/getKaptchaImage.do",
-
       //步骤集合
       stepList: [
         {
@@ -520,7 +517,7 @@ export default {
         account: [{ required: true, validator: vailAucct, trigger: "blur" }]
       },
 
-      
+
       dataFromsValidate:{
         email:[
           {required:true,message:'请输入邮箱',trigger: 'blur'},
@@ -611,7 +608,7 @@ export default {
     });
   },
   mounted(){
-  
+
   },
   methods: {
     sendCode: throttle(5000, function(val) {
@@ -682,7 +679,7 @@ export default {
       })
     },
 
-    
+
     getUserInfo(val){
       axios.get('user/isHaveEamilOrAuthByPhone.do',{
             params:{
@@ -755,7 +752,7 @@ export default {
           if(index == 2){
             if( this.userInfo == 'person'){
               this.verPage = "card";
-               this.index = 3; 
+               this.index = 3;
                return;
             }else if(this.userInfo == 'company'){
               this.verPage = 'enterprise';
@@ -770,15 +767,15 @@ export default {
       }
 
       if(name == 'ok' && index == 2){
-        this.index = 3; 
+        this.index = 3;
          this.verPage = 'people';
          return;
       }
 
-      if (index == 0) { 
+      if (index == 0) {
         if(this.userInfo){
           this.verPage = "email";
-          this.index = 3; 
+          this.index = 3;
         }else{
           this.$Message.info({
             content:'您的账号还没有绑定邮箱',
@@ -787,7 +784,7 @@ export default {
         }
       } else if (index == 1) {
         this.verPage = "phone";
-        this.index = 3; 
+        this.index = 3;
       }
     },
 
@@ -1037,7 +1034,7 @@ export default {
       })
     },
 
-    // 
+    //
     cardNext(){
       this.$refs.dataInfo.validate((valid)=>{
         if(valid){
@@ -1102,7 +1099,7 @@ export default {
     test(){
        if( this.userInfo == 'person'){
               this.verPage = "card";
-               this.index = 3; 
+               this.index = 3;
                return;
         }else if(this.userInfo == 'company'){
               this.verPage = 'enterprise';
@@ -1347,7 +1344,7 @@ export default {
           background: rgb(71, 167, 245);
           cursor: pointer;
         }
-     
+
          .verifcation_box {
           padding: 21px 20px 23px 21px;
           margin-bottom: 12px;
@@ -1475,7 +1472,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    background-color: rgba(255,255,255,0.8); 
+    background-color: rgba(255,255,255,0.8);
     z-index: 999;
     width: 150px;
     height: 112px;
@@ -1498,7 +1495,7 @@ export default {
     display: inline-block;
   }
 
- 
+
   .v_top{
     border: 1px solid #2a99f2;
     color: #2A99F2;

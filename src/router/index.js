@@ -132,8 +132,8 @@ const Balance = () =>import('@/components/Back/Balance')
 const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
-const Host = () =>import('@/components/Back/Host')
-// const NewHost = () =>import('@/components/Back/newHost')
+const Host = () =>import('@/components/Back/newHost')
+//const NewHost = () =>import('@/components/Back/newHost')
 //const NewHostManage = () =>import('@/components/Back/newHostManage')
 //const NewUpgrade = () =>import('@/components/Back/newUpgrade')
 const GPU = () =>import('@/components/Back/GPU')
@@ -185,7 +185,7 @@ const GpuManageNew = () => import('@/components/Back/GpuManageNew')
 const gpuUpLevel = () => import('@/components/Back/gpuUpLevel')
 const Cashwithdrawal = () => import('@/components/Back/Cashwithdrawal')
 const Cashprocess = () => import('@/components/Back/Cashprocess')
-
+const CancellationAccount = () =>import('@/components/Back/CancellationAccount')
 // 域名系统 ==============================
 
 const Link = () => import('@/components/Link')
@@ -443,8 +443,9 @@ var router = new Router({
         {path: 'resultNew', name:'resultNew', component:ResultNew},
         {path: 'payNew', name:'payNew', component: PayNew},
         {path: 'expenses', name: 'expenses', component: Expenses},
-				{path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
-				{path: 'cashprocess', name: 'cashprocess', component: Cashprocess},
+		{path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
+		{path: 'cashprocess', name: 'cashprocess', component: Cashprocess},
+		{path: 'cancellationaccount', name: 'cancellationaccount', component: CancellationAccount},
         {path: 'userCenter', name: 'userCenter', component: UserCenter},
         {path: 'memberInfo', name: 'memberInfo', component: MemberInfo},
         {path: 'userInfo', name: 'userInfo', component: UserInfo},
