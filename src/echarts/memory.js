@@ -31,7 +31,7 @@ export default {
     },
     series: [
         {
-            name: '使用率',
+            name: '内存使用率',
             type: 'line',
             stack: '总量',
             itemStyle: {
