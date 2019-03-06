@@ -400,6 +400,7 @@ var router = new Router({
 
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
         {path: 'hotQuestion/:parentId/:id', component: hotQuestion},
+        {path: '/*', name: 'home', component: Home},
       ]
     },
     {

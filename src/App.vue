@@ -20,9 +20,11 @@
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a v-if="item.title=='资讯'"  :href="item.path" target="_blank"><span>{{item.title}}</span>
+                  <a v-if="item.title=='新闻动态'"  :href="item.path" target="_blank"><span>{{item.title}}</span>
                   </a>
-                  <router-link v-else :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
+                  <a v-else-if="item.title=='关于我们'"  :href="item.path" rel="nofollow"><span>{{item.title}}</span>
+                  </a>
+                  <router-link v-else  :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
                                                                                v-if="item.title=='活动中心'"></sup></span>
                   </router-link>
                 </div>
@@ -67,7 +69,8 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
+                  <a  href="https://www.xrcloud.net/ruicloud/overview"   rel="nofollow" ><span>控制台</span>
+                  </a>
                 </div>
               </div>
             </li>
@@ -81,14 +84,16 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/login"><span>登录</span></router-link>
+                  <a  href="https://www.xrcloud.net/ruicloud/login"   rel="nofollow" ><span>登录</span>
+                  </a>
                 </div>
               </div>
             </li>
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <router-link to="/ruicloud/register"><span>注册</span></router-link>
+                  <a  href="https://www.xrcloud.net/ruicloud/register"   rel="nofollow" ><span>注册</span>
+                  </a>
                 </div>
               </div>
             </li>
@@ -508,7 +513,7 @@
           },
           {
             title: '新闻动态',
-            path: '',
+            path: 'https://news.xrcloud.net/',
             content: [
               {
                 prod: '香港云服务器 ',
@@ -542,7 +547,7 @@
           },
           {
             title: '关于我们',
-            path: '/ruicloud/about.htm'
+            path: 'https://www.xrcloud.net/ruicloud/about.htm'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
