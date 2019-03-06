@@ -487,7 +487,7 @@
                   {
                     title: 'SSL证书',
                     desc: '网站可信身份认证与安全数据传输',
-                    path: '/ruicloud/ssl'
+                    path: '/ruicloud/ssl.htm'
                   },
                 ],
                 subProd: [
