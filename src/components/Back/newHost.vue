@@ -76,8 +76,10 @@
           </Dropdown>
         </div>
         <div class="selectMark">
-          <img src="../../assets/img/host/h-icon10.png"/>
+          <img src="../../assets/img/host/h-icon10.png" alt="icon"/>
           <span>共 {{ hostPages}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
+          <span class="guide" style="margin-left: 20px"><Icon type="grid"></Icon></span>
+          <span class="guide"><Icon type="navicon-round"></Icon></span>
         </div>
         <Table :columns="hostListColumns" :data="hostListData" @on-selection-change="hostSelectionChange"></Table>
         <div style="margin: 10px;overflow: hidden">
@@ -503,6 +505,7 @@
   export default {
     data() {
       return {
+        guide_1: true,
         regExpObj: {
           password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,32}$/
         },
@@ -2925,6 +2928,16 @@
       font-size: 14px;
       font-family: MicrosoftYaHei;
       color: rgba(102, 102, 102, 1);
+    }
+    .guide {
+      float: right;
+      cursor: pointer;
+      i {
+        font-size: 20px;
+        &:hover {
+          color: #2A99F2;
+        }
+      }
     }
   }
 
