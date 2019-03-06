@@ -20,9 +20,11 @@
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a v-if="item.title=='资讯'"  :href="item.path" target="_blank"><span>{{item.title}}</span>
+                  <a v-if="item.title=='新闻动态'"  :href="item.path" target="_blank"><span>{{item.title}}</span>
                   </a>
-                  <router-link v-else :to="item.path" :title="item.title"><span>{{item.title}}<sup title="活动中心" class="circle-dot-a"
+                  <a v-else-if="item.title=='关于我们'"  :href="item.path" rel="nofollow"><span>{{item.title}}</span>
+                  </a>
+                  <router-link v-else  :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
                                                                                v-if="item.title=='活动中心'"></sup></span>
                   </router-link>
                 </div>
@@ -67,7 +69,8 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
+                  <a  href="https://zschj.xrcloud.net/ruicloud/overview"   rel="nofollow" ><span>控制台</span>
+                  </a>
                 </div>
               </div>
             </li>
@@ -81,14 +84,16 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/login"><span>登录</span></router-link>
+                  <a  href="https://zschj.xrcloud.net/ruicloud/login"   rel="nofollow" ><span>登录</span>
+                  </a>
                 </div>
               </div>
             </li>
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <router-link to="/ruicloud/register"><span>注册</span></router-link>
+                  <a  href="https://zschj.xrcloud.net/ruicloud/register"   rel="nofollow" ><span>注册</span>
+                  </a>
                 </div>
               </div>
             </li>
@@ -183,13 +188,13 @@
             </div>
             <div class="document">
               <p>文档</p>
-              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank" :title="d.title">
+              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank" rel="nofollow">
                 {{d.title}}
               </a>
             </div>
             <div class="document">
               <p>服务与公告</p>
-              <a v-for="(d,index) in notice" :key="index" :href="d.url" target="_blank">
+              <a v-for="(d,index) in notice" :key="index" :href="d.url" target="_blank" rel="nofollow">
                 {{d.title}}
               </a>
             </div>
@@ -213,10 +218,10 @@
             <p style="margin:0px;margin-right: 20px;">{{item.time}}</p>
             <li style="cursor: auto">{{item.title}}</li>
             <li>
-              <a href="http://www.miitbeian.gov.cn/" target="_blank" style="color:#fff">{{item.preparation}}</a>
+              <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow" style="color:#fff">{{item.preparation}}</a>
             </li>
             <li>
-              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922" target="_blank"
+              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922"  rel="nofollow" target="_blank"
                  style="color:#fff">
                 <img src="./assets/img/app/record.png" style="vertical-align: middle;margin-right: 5px">{{item.desc}}
               </a>
@@ -508,7 +513,7 @@
           },
           {
             title: '新闻动态',
-            path: '',
+            path: 'https://news.xrcloud.net/',
             content: [
               {
                 prod: '香港云服务器 ',
@@ -542,7 +547,7 @@
           },
           {
             title: '关于我们',
-            path: '/ruicloud/about.htm'
+            path: 'https://zschj.xrcloud.net/ruicloud/about.htm'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
@@ -607,7 +612,7 @@
           {title: '计算', url: '/ruicloud/document'},
           {title: '网络', url: '/ruicloud/document'},
           {title: '安全', url: '/ruicloud/document'},
-          {title: '财务与账户', url: 'https://www.xrcloud.net/ruicloud/documentInfo/qHwTxQKS7/qZfGQSs8S'}
+          {title: '财务与账户', url: 'https://zschj.xrcloud.net/ruicloud/documentInfo/qHwTxQKS7/qZfGQSs8S'}
         ],
         // 服务与公告
         notice: [
@@ -617,7 +622,7 @@
         ],
         // 友情链接
         links: [
-          {href: 'https://www.xrcloud.net/ruicloud/', text: '新睿云'}
+          {href: 'https://zschj.xrcloud.net/ruicloud/', text: '新睿云'}
         ],
         Preparation: [
           {
