@@ -791,7 +791,7 @@
             key: 'templatename',
             render: (h, params) => {
               let templateName = params.row.templatename.substr(0, 1).toUpperCase() // 用第一个字符判断镜像选用图标
-              let icon_1 = require('../../assets/img/host/h-icon5.png')
+              let icon_1 = require('../../assets/img/host/h-icon12.png')
               let icon_2 = require('../../assets/img/host/h-icon6.png')
               let icon_3 = require('../../assets/img/host/h-icon7.png')
               let icon_4 = require('../../assets/img/host/h-icon8.png')
