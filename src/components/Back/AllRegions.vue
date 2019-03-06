@@ -53,17 +53,17 @@
 				<span class="xian1"></span>
 				<div class="allbox">
 					<div class="box" v-for="item in LargeArea">
-						<div class="boxtop" v-bind:class="{ newboxtop: num>0}"></div>
+						<div class="boxtop" v-bind:class="{ newboxtop: item.overview.num>0}"></div>
 						<div class="boxtop-all">
-							<div class="jjjj" @click="">
+							<div class="jjjj" @click="toggleZone(item)">
 								<i class="iconfont houtaiicon-weizhihei" id="icon1"></i>
-								<span class="boxtop-name">{{item.zoneName.zonename}}</span>
+								<span class="boxtop-name">{{item.zoneName}}</span>
 							</div>
 							<span class="numbercloud">云服务器总数</span>
-							<span class="numberofc" v-bind:class="{ newnumberofc: num33>0}">5</span>
+							<span class="numberofc" v-bind:class="{ newnumberofc: item.overview.num>0}">{{item.overview.num}}</span>
 							<span class="numberge">个</span>
 							<span class="xiantiaoa"></span>
-							<i class="iconfont houtaiicon-gouwuche1" id="gouwuche1" @click=""></i>
+							<i class="iconfont houtaiicon-gouwuche1" id="gouwuche1" @click="$router.push('/ruicloud/buy')"></i>
 							<div class="rightall">
 								<div>
 									<img src="../../assets/img/back/kaiqi.png" class="img-kaiqi" />
@@ -71,45 +71,24 @@
 									<img src="../../assets/img/back/qianfei.png" class="img-qianfei" />
 									<img src="../../assets/img/back/guanji.png" class="img-guanji" />
 								</div>
-								<div>
-									<span class="kaiq">开启</span>
-									<span class="yic">异常</span>
-									<span class="qianf">欠费</span>
-									<span class="guanj">关机</span>
+								<div class="kaiq">
+									<span v-for="iter in item.overview.list">{{iter.name}}</span>
 								</div>
-								<div>
-									<span class="kaiqzi">5</span>
-									<span class="yiczi">1</span>
-									<span class="qianfzi">8</span>
-									<span class="guanjzi">2</span>
+								<div class="kaiqzi">
+									<span v-for="iter in item.overview.list">{{iter.num}}</span>
 								</div>
 							</div>
 						</div>
 						<div class="boxcontent1">
 							<div>
 								<span class="fufeinum">付费资源数量</span>
-								<span class="fufeinum1" v-bind:class="{ newnumberofc: num33>0}">2</span>
+								<span class="fufeinum1" v-bind:class="{ newnumberofc: item.payResources.num>0}">{{item.payResources.num}}</span>
 								<span class="fufeinum2">种</span>
 							</div><br />
 							<div style="margin-top: 13px;margin-left: -5px;">
-								<div class="VPCALL">
-									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
-									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">云硬盘</span>
-									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
-								</div>
-								<div class="VPCALL">
-									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
-									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">公网IP</span>
-									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
-								</div>
-								<div class="VPCALL">
-									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
-									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">数据库</span>
-									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
-								</div>
-								<div class="VPCALL">
-									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
-									 <Tooltip placement="top">
+								<div class="VPCALL" v-for="ited in item.payResources.list" @click="push(ited)">
+									<span class="nnum" v-bind:class="{ newnnum: ited.num>0}">{{ited.num}}</span>
+									 <Tooltip placement="top" v-if="ited.name=='对象存储'">
 										 <div slot="content" id="enna">
 											<span>数字代表该区域 </span>
 											<span>存储包 </span>
@@ -117,18 +96,8 @@
 										</div>
 										<i class="iconfont houtaiicon-bangzhu"></i>
 									</Tooltip>
-									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">对象存储</span>
-									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
-								</div>
-								<div class="VPCALL">
-									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
-									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">GPU服务器</span>
-									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
-								</div>
-								<div class="VPCALL">
-									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
-									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">NAT网关</span>
-									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click=""></i>
+									<span class="nnumzi" v-bind:class="{ newnnumzi: ited.num>0}">{{ited.name}}</span>
+									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click.stop="pushbuy(ited)"></i>
 								</div>
 							</div>
 						</div>
@@ -136,22 +105,14 @@
 						<div class="boxcontent2">
 							<div>
 								<span class="mianfeizy">免费资源数量</span>
-								<span class="mianfeizy1" v-bind:class="{ newnumberofc: num33>0}">4</span>
+								<span class="mianfeizy1" v-bind:class="{ newnumberofc: item.payResources.num>0}">{{item.payResources.num}}</span>
 								<span class="mianfeizy2">种</span>
-								<span class="lookgd">查看更多</span>
+								<span class="lookgd" @click="toggleZone(item)">查看更多</span>
 							</div><br />
 							<div style="margin-top: 13px;margin-left: -5px;">
-								<div class="VPCCALL">
-									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
-									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">负载均衡</span>
-								</div>
-								<div class="VPCCALL">
-									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
-									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">防火墙</span>
-								</div>
-								<div class="VPCCALL">
-									<span class="nnum" v-bind:class="{ newnnum: num1>0}">0</span>
-									<span class="nnumzi" v-bind:class="{ newnnumzi: num1>0}">VPC</span>
+								<div class="VPCCALL" v-for="ites in item.freeResources.list" @click="$router.push(ites.url)">
+									<span class="nnum" v-bind:class="{ newnnum: ites.num>0}">{{ites.num}}</span>
+									<span class="nnumzi" v-bind:class="{ newnnumzi: ites.num>0}">{{ites.name}}</span>
 								</div>
 							</div>
 						</div>
@@ -171,9 +132,6 @@
 		data() {
 
 			return {
-				num:1,
-				num1:1,
-				num33:1,
 				//总数量
 				TotalWuantity:0,
 				//即将过期数量
@@ -187,7 +145,7 @@
 				//云服务器总数量
 				TotalCumberCloud:0,
 				//区域详情
-				LargeArea:''
+				LargeArea:[]
 			}
 		},
 		created() {
@@ -201,7 +159,6 @@
 				  }
 				}).then(response => {
 				  if (response.status == 200 && response.data.status == 1) {
-						console.log(response.data.result[0].insideList)
 						this.TotalWuantity=response.data.totalNum
 						this.QuantityExpire=response.data.comingExpiredNum
 						this.OutdatedQuantity=response.data.alreadyExpiredNum
@@ -212,6 +169,38 @@
 					  
 				  }
 				})
+			},
+			push(ited){
+				if(ited.url=='https://testoss-console.xrcloud.net/ruirados/objectStorage'){
+					window.location.href='https://testoss-console.xrcloud.net/ruirados/objectStorage'
+				}
+				else if(ited.url=='vpc#NAT'){
+					sessionStorage.setItem('VPN', ited.url)
+					 this.$router.push(ited.url)
+				}
+				else{
+					 this.$router.push(ited.url)
+				}
+			},
+			pushbuy(ited){
+				if(ited.buyUrl=='vpc#NAT'){
+					sessionStorage.setItem('VPN', ited.url)
+					 this.$router.push(ited.buyUrl)
+				}
+				else{
+					 this.$router.push('/ruicloud/buy/'+ited.buyUrl)
+				}
+			},
+			toggleZone(item) {
+			  // 切换默认区域
+			  axios.get('user/setDefaultZone.do', {params: {zoneId: item.zoneId}}).then(response => {
+			  })
+			  for (var zone of this.$store.state.zoneList) {
+			    if (zone.zoneid == item.zoneId) {
+			      $store.commit('setZone', zone);
+				  this.$router.push('/ruicloud/overview')
+			    }
+			  }
 			}
 		},
 		computed: {
@@ -475,7 +464,7 @@
 		margin-top: 90px;
 		left: 0;
 	}
-	.kaiq{
+	.kaiq span:nth-of-type(1){
 		position: absolute;
 		left: 23px;
 		font-size:12px;
@@ -484,7 +473,7 @@
 		color:rgba(102,102,102,1);
 		line-height:16px;
 	}
-	.yic{
+	.kaiq span:nth-of-type(2){
 		position: absolute;
 		left: 23px;
 		margin-top: 30px;
@@ -494,7 +483,7 @@
 		color:rgba(102,102,102,1);
 		line-height:16px;
 	}
-	.qianf{
+	.kaiq span:nth-of-type(3){
 		position: absolute;
 		left: 23px;
 		margin-top: 60px;
@@ -504,7 +493,7 @@
 		color:rgba(102,102,102,1);
 		line-height:16px;
 	}
-	.guanj{
+	.kaiq span:nth-of-type(4){
 		position: absolute;
 		left: 23px;
 		margin-top: 90px;
@@ -514,7 +503,7 @@
 		color:rgba(102,102,102,1);
 		line-height:16px;
 	}
-	.kaiqzi{
+	.kaiqzi span:nth-of-type(1){
 		position: absolute;
 		left: 68px;
 		margin-top: -1px;
@@ -524,7 +513,7 @@
 		color:rgba(48,186,120,1);
 		line-height:20px;
 	}
-	.yiczi{
+	.kaiqzi span:nth-of-type(2){
 		position: absolute;
 		left: 68px;
 		margin-top: 29px;
@@ -534,7 +523,7 @@
 		color:rgba(255,0,0,1);
 		line-height:20px;
 	}
-	.qianfzi{
+	.kaiqzi span:nth-of-type(3){
 		position: absolute;
 		left: 68px;
 		margin-top: 59px;
@@ -542,9 +531,9 @@
 		font-family:Arial-BoldMT;
 		font-weight:normal;
 		color:rgba(245,166,35,1);
-		line-height:20px;
+		line-height:20px;	
 	}
-	.guanjzi{
+	.kaiqzi span:nth-of-type(4){
 		position: absolute;
 		left: 68px;
 		margin-top: 89px;
@@ -586,24 +575,6 @@
 		margin-top: 8px;
 		margin-left: 6px;
 	}
-	.nnum{
-		font-size:14px;
-		font-family:ArialMT;
-		color:rgba(153,153,153,1);
-		line-height:20px;
-		margin-left: 10px;
-		margin-top: 10px;
-		float: left;
-	}
-	.nnumzi{
-		font-size:12px;
-		font-family:MicrosoftYaHei;
-		color:rgba(153,153,153,1);
-		line-height:16px;
-		float: left;
-		margin-left: -10px;
-		margin-top: 35px;
-	}
 	.xiantiaof{
 		width:353px;
 		height:2px;
@@ -644,6 +615,27 @@
 		margin-top: 8px;
 		margin-left: 6px;
 	}
+	.nnum{
+		font-size:14px;
+		font-family:ArialMT;
+		color:rgba(153,153,153,1);
+		line-height:20px;
+		margin-left: 10px;
+		margin-top: 10px;
+		float: left;
+	}
+	.nnumzi{
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		color:rgba(153,153,153,1);
+		line-height:16px;
+		position: absolute;
+		margin-left: -10px;
+		margin-top: 35px;
+	}
+	.boxcontent1 .VPCALL:nth-of-type(4) .nnumzi{
+		margin-left: -27px;
+	}
 	.VPCALL{
 		width:107px;
 		height:61px;
@@ -683,6 +675,7 @@
 		float: left;
 		margin-top: 8px;
 		margin-left: 6px;
+		cursor: pointer;
 	}
 	.newnumberofc{
 		color:rgba(51,51,51,1);
@@ -704,9 +697,9 @@
 	}
 	.houtaiicon-bangzhu{
 		color: #2A99F2FF;
-		float: left;
-		margin-top: 5px;
-		margin-left: -17px;
+		position:absolute;
+		margin-top: -7px;
+		margin-left: 7px;
 		display: none;
 	}
 	.VPCALL:hover .houtaiicon-bangzhu{
