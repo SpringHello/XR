@@ -339,9 +339,9 @@
         var reg = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
         if (value == "") {
           return callback(new Error("请输入网站域名"));
-        } else if (!reg.test(value)) {
+        } /*else if (!reg.test(value)) {
           return callback(new Error("请输入正确的域名"));
-        } else {
+        }*/ else {
           callback();
         }
       };
@@ -405,10 +405,10 @@
         for (let i = 0; i <= value.length; i++) {
           if (value.length == 0 || value[i] == "") {
             return callback(new Error("请输入网站域名"));
-          } else if (!reg.test(value[i]) && value[i] !== "") {
+          } /*else if (!reg.test(value[i]) && value[i] !== "") {
             // console.log(value[i]);
             return callback(new Error("请输入正确的网站域名"));
-          } else {
+          }*/ else {
             callback();
           }
         }
@@ -418,9 +418,9 @@
         let reg = /((https|http|ftp|rtsp|mms):\/\/)?(([0-9a-z_!~*'().&=+$%-]+:)?[0-9a-z_!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-z_!~*'()-]+\.)*([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+\/?)/g;
         if (value == "") {
           return callback(new Error("请输入网站首页URL"));
-        } else if (!reg.test(value)) {
+        } /*else if (!reg.test(value)) {
           return callback(new Error("请输入正确的网站首页URL"));
-        } else {
+        } */else {
           callback();
         }
       };
