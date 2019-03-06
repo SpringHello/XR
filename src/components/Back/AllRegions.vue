@@ -155,7 +155,7 @@
 			CallResources(){
 				axios.get('information/getAllResourceByZoneId.do', {
 				  params: {
-					  
+
 				  }
 				}).then(response => {
 				  if (response.status == 200 && response.data.status == 1) {
@@ -166,7 +166,7 @@
 						this.TotalNumberCertificates=response.data.sslNum
 						this.LargeArea=response.data.result
 				  } else {
-					  
+
 				  }
 				})
 			},
@@ -531,7 +531,7 @@
 		font-family:Arial-BoldMT;
 		font-weight:normal;
 		color:rgba(245,166,35,1);
-		line-height:20px;	
+		line-height:20px;
 	}
 	.kaiqzi span:nth-of-type(4){
 		position: absolute;

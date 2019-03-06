@@ -16,6 +16,9 @@
               <router-link to="overview" :class="{active:pageInfo.path=='overview'}"><span>总览</span></router-link>
             </li>
             <li>
+              <router-link to="AllRegions" :class="{active:pageInfo.path=='AllRegions'}"><span>资源</span></router-link>
+            </li>
+            <li>
               <router-link to="work" :class="{active:pageInfo.path=='work'}"><span>工单</span></router-link>
             </li>
             <li>
