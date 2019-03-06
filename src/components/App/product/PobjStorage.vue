@@ -5,7 +5,7 @@
       <div class="logo-wrapper">
         <img :src="logo.img">
         <div class="info">
-          <span class="title">{{logo.title}}</span>
+          <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <a href="https://oss-console.xrcloud.net/ruirados/objectStorage">立即体验</a>
         </div>

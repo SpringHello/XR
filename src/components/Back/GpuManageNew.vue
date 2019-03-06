@@ -354,7 +354,7 @@
     otherURL: 'alarm/getVmAlarmByDay.do'
   }
   import cpuOptions from "@/echarts/cpuUtilization"
-  import momeryOptions from  "@/echarts/objectStroage"
+  import momeryOptions from  "@/echarts/memory"
   const momery = JSON.stringify(momeryOptions);
   const cpu = JSON.stringify(cpuOptions);
 

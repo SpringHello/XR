@@ -5,7 +5,7 @@
       <div class="logo-wrapper">
         <img :src="logo.img" alt="弹性云服务器" title="弹性云服务器">
         <div class="info">
-          <span class="title">{{logo.title}}</span>
+          <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter" class="link-button">立即购买</router-link>
         </div>
