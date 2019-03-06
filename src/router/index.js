@@ -174,8 +174,8 @@ const MemberInfo = () => import('@/components/Back/MemberInfo')
 const UserInfo = () => import('@/components/Back/UserInfo')
 const MsgCenter = () => import('@/components/Back/MsgCenter')
 const OperationLog = () => import('@/components/Back/OperationLog')
-const Manage = () => import('@/components/Back/Manage')
-const Upgrade = () => import('@/components/Back/Upgrade')
+const Manage = () => import('@/components/Back/newHostManage')
+const Upgrade = () => import('@/components/Back/newUpgrade')
 const FirewallManage = () => import('@/components/Back/FirewallManage')
 const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
@@ -401,6 +401,7 @@ var router = new Router({
 
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
         {path: 'hotQuestion/:parentId/:id', component: hotQuestion},
+        {path: '/*', name: 'home', component: Home},
       ]
     },
     {
