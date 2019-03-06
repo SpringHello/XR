@@ -194,6 +194,7 @@ const BRecords = () => import('@/components/Back/Records')
 const RecordDetails = () => import('@/components/Back/RecordDetails')
 const CompletedFilingDetails = () => import('@/components/Back/CompletedFilingDetails')
 const SpaceDetails = () => import('@/components/Back/SpaceDetails')
+const AllRegions = () => import('@/components/Back/AllRegions')
 
 
 const CloudDatabaseBackup = () => import('@/components/Back/CloudDatabaseBackup')
@@ -463,6 +464,7 @@ var router = new Router({
         {path: 'BRecords', name: 'BRecords', component: BRecords},
         {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails},
         {path: 'SpaceDetails', name: 'SpaceDetails', component: SpaceDetails},
+		{path: 'AllRegions', name: 'AllRegions', component: AllRegions},
         {path: 'completedFilingDetails', name: 'completedFilingDetails', component: CompletedFilingDetails},
         {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
         {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},

@@ -433,6 +433,19 @@ div.modal-header-border {
   line-height: 25px;
 }
 
+/* 所有资源页面提示框修改 */
+.VPCALL .ivu-tooltip-popper{
+}
+
+.VPCALL .ivu-tooltip-arrow{
+	border-top-color:white;
+}
+
+.VPCALL .ivu-tooltip-inner{
+	background: white;
+	color:rgba(102,102,102,1);
+}
+
 /* 拼团活动下拉框 */
 .groupBooking-select .ivu-select-selection {
   border: 1px solid #FD8C73;
