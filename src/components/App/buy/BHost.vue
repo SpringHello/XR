@@ -377,20 +377,38 @@
             <div class="item-wrapper">
               <div style="display: flex">
                 <div>
-                  <p class="item-title">防火墙</p>
+                  <p class="item-title" style="margin-top: 7px;">防火墙</p>
                 </div>
                 <div>
-                  <p
-                    style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:25px; border: 1px solid #D9D9D9;padding: 5px 25px;">
-                    默认设置
-                  </p>
+                  <Select v-model="selectAcllistid" style="width:200px">
+                    <Option v-for="(item,index) in acllist" :key="index" :value="item.acllistid">
+                      {{item.acllistname}}
+                    </Option>
+                  </Select>
+                  <span style="margin-left:10px;color:#4381EE;font-size:14px;" @click="$router.push('document')">帮助文档</span>
                 </div>
               </div>
-              <p
-                style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
-                默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。<span style="color: #377DFF;cursor: pointer"
-                                                                    @click="$router.push('firewall')">如何修改</span>
-              </p>
+            </div>
+            <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
+              如您有业务需要开通其他端口，您可以 <span style="color: rgb(42, 153, 242);cursor: pointer"
+                                                           @click="$router.push('firewall')">新建防火墙</span></p>
+            <!-- 防火墙规则 -->
+            <div class="item-wrapper">
+              <div style="display: flex">
+                <div>
+                  <p class="item-title" style="margin-top: 7px;">防火墙规则</p>
+                </div>
+                <div>
+                  <Tabs type="card" :animated="false">
+                      <TabPane label="入站规则">
+                        <Table :columns="upRuleCol" :data="upRuleData" style="width:620px;"></Table>
+                      </TabPane>
+                      <TabPane label="出站规则">
+                        <Table :columns="downRuleCol" :data="downRuleData" style="width:620px;"></Table>
+                      </TabPane>
+                  </Tabs>
+                </div>
+              </div>
             </div>
             <!--公网IP价格-->
             <div class="item-wrapper" style="margin-top: 28px;" v-show="IPConfig.publicIP">
@@ -611,6 +629,96 @@
         zone = zoneList[0]
       }
       return {
+        acllist: [
+          {
+            acllistname: '默认防火墙',
+            acllistid: '1'
+          }
+        ],
+        selectAcllistid: '1',
+        upRuleCol: [
+        {
+          title: '名称',
+          key: 'acllistitemname'
+        },
+        {
+          title: '来源',
+          key: 'cidr'
+        },
+        {
+          title: '协议端口',
+          render: (h, params) => {
+            var port = ''
+            if (params.row.startport == params.row.endport) {
+              port = params.row.startport
+            } else {
+              port = params.row.startport + '' + params.row.endport
+            }
+            return h('span', {}, port)
+          }
+        },
+        {
+          title: '策略',
+          key: 'operation',
+          render: (h, params) => {
+            return h('span', {}, params.row.operation == 'Allow' ? '允许' : '拒绝')
+          }
+        }
+      ],
+      upRuleData: [
+        {
+          acllistitemname: "默认防火墙",
+          acllistid: "",
+          acllistname: "默认防火墙",
+          cidr: "0.0.0.0/0",
+          operation: "Allow",
+          startport: 22,
+          endport: 32,
+        },
+      ],
+       downRuleCol: [
+        {
+          title: '名称',
+          key: 'acllistitemname'
+        },
+        {
+          title: '来源',
+          key: 'cidr'
+        },
+        {
+          title: '协议端口',
+          render: (h, params) => {
+            var port = ''
+            if (params.row.startport == params.row.endport) {
+              port = params.row.startport
+            } else {
+              port = params.row.startport + '' + params.row.endport
+            }
+            return h('span', {}, port)
+          }
+        },
+        {
+          title: '策略',
+          key: 'operation',
+          render: (h, params) => {
+            return h('span', {}, params.row.operation == 'Allow' ? '允许' : '拒绝')
+          }
+        }
+      ],
+      downRuleData: [
+      ],
+        // 新建规则表单
+        newRuleForm: {
+          name: '',
+          way: '',
+          protocol: '',
+          protocolOptions: ['TCP', 'UDP', 'ICMP', 'ALL'],
+          endPort: 1,
+          startPort: 1,
+          access: '',
+          cidr: '0.0.0.0/0',
+          itemid: 1,
+        },
         zoneList,
         zone,
         // 配置类型
@@ -757,6 +865,7 @@
       this.queryVpc()
       this.queryIPPrice()
       this.queryDiskPrice()
+      this.fireRule()
       if (this.$route.query.mirrorType) {
         this.currentType = this.$route.query.mirrorType;
         this.createType = 'custom'
@@ -1250,6 +1359,18 @@
         } else {
           this.currentType = item.value;
         }
+      },
+      fireRule() {
+        axios.get('network/listAclList.do', {
+          params: {
+            zoneId: this.zone.zoneid
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            console.log(response.data.result)
+            // this.FirewallData = response.data.result
+          }
+        })
       }
     },
     computed: {
@@ -1278,7 +1399,7 @@
           }
           return i.zoneId == this.zone.zoneid
         })
-      }
+      },
     },
     watch: {
       'timeForm': {
@@ -1340,6 +1461,7 @@
           })
           this.setTemplate()
           this.queryVpc()
+          this.fireRule()
         },
         deep: true
       },

@@ -27,9 +27,14 @@
           <TabPane label="虚拟私有云VPC" name="VPC">
             <div class="operator-bar">
               <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
-              <Button type="primary" @click="createInterconnect">添加VPC互通网关</Button>
-              <!--<Button type="primary">修改VPC</Button>-->
-              <Button type="primary" @click="delVpc">删除VPC</Button>
+               <Dropdown style="margin-left: 20px" @on-click='vpcClick'>
+                   <Button type="primary">更多操作</Button>
+                   <DropdownMenu slot="list">
+                        <DropdownItem name='add' >添加VPC互通网关</DropdownItem>
+                        <DropdownItem name='delete'>删除VPC</DropdownItem>
+                        <DropdownItem name='reset'>恢复默认</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
             </div>
             <div class="card-wrap">
               <div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"
@@ -40,6 +45,7 @@
                       <p>名称：<span style="float:unset">{{item.status==2?'创建中':item.status==3?'清理重启中':item.status==4? '删除中': item.vpcname}}</span>
                         <Spin size="small" v-if="item.status!=1" style="display: inline-block"></Spin>
                       </p>
+                      <!-- <p>所属公网IP：<span>{{item.sourcenatip}}</span></p> -->
                       <p>网段：<span>{{item.cidr}}</span></p>
                     </div>
                   </div>
@@ -1466,6 +1472,46 @@
       buyIP() {
         sessionStorage.setItem('pane', 'Peip')
         this.$router.push('buy/bip')
+      },
+      restartVpcPlus(){
+           let id = ''
+          this.netData.forEach(item => {
+              if(item.vpcid != undefined)
+              id += item.vpcid+','
+          });
+        this.$message.confirm({
+          content: '您确认恢复默认吗',
+          onOk: () => {
+            this.$http.get('network/restartVpc.do', {
+            params: {
+                vpcId: id.substring(0,id.length-1),
+                cleanup: true
+            }
+            }).then(res => {
+               if(res.status == 200 && res.data.status == 1){
+                    this.$Message.success({
+                        content: res.data.message
+                    })
+               }else{
+                    this.$Message.info({
+                        content: res.data.message
+                    })
+               }
+           })
+          }
+          
+        })
+      },
+      vpcClick(name){
+          if(name == 'add'){
+              this.createInterconnect();
+          }
+          if(name == 'delete'){
+              this.delVpc();
+          }
+          if(name == 'reset'){
+              this.restartVpcPlus();
+          }
       }
     },
     computed: mapState({

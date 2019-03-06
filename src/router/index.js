@@ -158,7 +158,6 @@ const TelescopicDetails = () => import('@/components/Back/TelescopicDetails')
 const CloudMonitor = () => import('@/components/Back/CloudMonitor')
 const CloudMonitorCreateStrategy = () => import('@/components/Back/CloudMonitorCreateStrategy')
 const Vpc = () => import('@/components/Back/Vpc')
-const vpcNew = () => import('@/components/Back/vpcNew')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Vpn = () => import('@/components/Back/Vpn')
 const Ip = () => import('@/components/Back/Ip')
@@ -436,7 +435,6 @@ var router = new Router({
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
         {path: 'vpc', name: 'vpc', component: Vpc},
-        {path: 'vpcNew', name: 'vpcNew', component: vpcNew},
         {path: 'vpn', name: 'vpn', component: Vpn},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
