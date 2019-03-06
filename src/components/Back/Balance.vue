@@ -693,15 +693,14 @@
       },
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok() {
-        //console.log(this.bindHostForm.vm.join(','))
-        this.showModal.bind = false
-        this.balData.forEach(item => {
-          if (item.lbid && item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid && item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
-            item.status = 7
-            item._disabled = true
-          }
-        })
         if (this.bindHostForm.vm.length != 0) {
+          this.showModal.bind = false
+          this.balData.forEach(item => {
+            if (item.lbid && item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid && item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
+              item.status = 7
+              item._disabled = true
+            }
+          })
           var url = ''
           var params = {}
           if (this.balanceSelection._internal) {
@@ -732,7 +731,7 @@
             }
           })
         } else {
-          this.showModal.bind = false
+          this.$Message.info('请选择需要绑定的主机')
         }
       },
       /* 解绑虚拟机 */
@@ -762,14 +761,14 @@
       },
       /* 确认解绑虚拟机 */
       unbindHost_ok() {
-        this.showModal.unbind = false
-        this.balData.forEach(item => {
-          if (item.lbid && item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid && item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
-            item.status = 6
-            item._disabled = true
-          }
-        })
         if (this.unbindForm.vm.length != 0) {
+          this.showModal.unbind = false
+          this.balData.forEach(item => {
+            if (item.lbid && item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid && item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
+              item.status = 6
+              item._disabled = true
+            }
+          })
           var url = ''
           var params = {}
           if (this.balanceSelection._internal) {
@@ -799,7 +798,7 @@
             }
           })
         } else {
-          this.showModal.unbind = false
+          this.$Message.info('请选择需要解绑的主机')
         }
       },
       /* 删除负载均衡 */
