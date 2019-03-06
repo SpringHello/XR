@@ -877,23 +877,6 @@
                           }
                         }
                       }, '解绑IP'),
-                      // h('DropdownItem', {
-                      //   nativeOn: {
-                      //     click: () => {
-                      //       if(params.row.computerstate == '1' && params.row.status=='1'){
-                      //         this.companyname = params.row.companyname;
-                      //         if(params.row.status == 2 || params.row.status ==3){
-                      //           this.$Message.info('请等待主机完成当前操作');
-                      //         }else {
-                      //           this.showModal.snapshot = true;
-                      //           this.uuId = params.row.computerid;
-                      //         }
-                      //       }else{
-                      //         this.$Message.info('制作快照前请先开启主机');
-                      //       }
-                      //     }
-                      //   }
-                      // }, '制作快照'),
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
@@ -911,24 +894,6 @@
                           }
                         }
                       }, '制作镜像'),
-                      // h('DropdownItem', {
-                      //   nativeOn: {
-                      //     click: () => {
-                      //       if (params.row.computerstate == '0' && params.row.status == '1') {
-                      //         if (params.row.status == 2 || params.row.status == 3) {
-                      //           this.$Message.info('请等待主机完成当前操作');
-                      //         } else {
-                      //           this.$router.push({path: 'gpuUpLevel'});
-                      //           sessionStorage.setItem('uuId', params.row.computerid);
-                      //           sessionStorage.setItem('comptername', params.row.companyname)
-                      //           sessionStorage.setItem('serviceofferid', params.row.serviceofferid);
-                      //         }
-                      //       }else{
-                      //         this.$Message.info('升级主机前请先关闭主机');
-                      //       }
-                      //     }
-                      //   }
-                      // }, '主机升级'),
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
