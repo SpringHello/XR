@@ -11,7 +11,7 @@
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/index.htm" class="logo">
+        <router-link to="//www.xrclound.net/index.htm" class="logo" alt='新睿云'>
           <div></div>
         </router-link>
         <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('/ruicloud/schoolSeason')" alt="">
@@ -20,9 +20,11 @@
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a v-if="item.title=='资讯'"  :href="item.path" target="_blank"><span>{{item.title}}</span>
+                  <a v-if="item.title=='新闻动态'"  :href="item.path" target="_blank"><span>{{item.title}}</span>
                   </a>
-                  <router-link v-else :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
+                  <a v-else-if="item.title=='关于我们'"  :href="item.path" rel="nofollow"><span>{{item.title}}</span>
+                  </a>
+                  <router-link v-else  :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
                                                                                v-if="item.title=='活动中心'"></sup></span>
                   </router-link>
                 </div>
@@ -35,8 +37,8 @@
                             <h2 v-if="index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
                             <h2 v-else>{{prod.prod}}</h2>
                             <div v-for="(i,index) in prod.prodItem" style="line-height: normal" :key="index">
-                              <router-link :to="i.path" v-if="i.path==''">{{i.title}}</router-link>
-                              <router-link :to="i.path" v-else>{{i.title}}</router-link>
+                              <router-link :to="i.path" v-if="i.path==''" :title="i.title">{{i.title}}</router-link>
+                              <router-link :to="i.path" v-else :title="i.title">{{i.title}}</router-link>
                               <p>{{i.desc}}</p>
                             </div>
                           </div>
@@ -45,8 +47,8 @@
                             <div v-for="(subi,index) in prod.subProd" :key="index">
                               <h2>{{subi.prod}}</h2>
                               <div v-for="(i,index) in subi.prodItem" style="line-height: normal" :key="index">
-                                <router-link :to="i.path" v-if="i.path==''">{{i.title}}</router-link>
-                                <router-link :to="i.path" v-else>{{i.title}}</router-link>
+                                <router-link :to="i.path" v-if="i.path==''" :title="i.title">{{i.title}}</router-link>
+                                <router-link :to="i.path" v-else :title="i.title">{{i.title}}</router-link>
                                 <p>{{i.desc}}</p>
                               </div>
                             </div>
@@ -59,7 +61,7 @@
               </div>
             </li>
           </ul>
-          <div class="line" :style="lineStyle"></div>
+          <div class="line" :style="lineStyle" title="新睿云新闻动态"></div>
         </div>
         <div class="operate">
           <!-- 尚未登录 -->
@@ -67,7 +69,8 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
+                  <a  href="https://www.xrcloud.net/ruicloud/overview"   rel="nofollow" ><span>控制台</span>
+                  </a>
                 </div>
               </div>
             </li>
@@ -81,14 +84,16 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/login"><span>登录</span></router-link>
+                  <a  href="https://www.xrcloud.net/ruicloud/login"   rel="nofollow" ><span>登录</span>
+                  </a>
                 </div>
               </div>
             </li>
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <router-link to="/ruicloud/register"><span>注册</span></router-link>
+                  <a  href="https://www.xrcloud.net/ruicloud/register"   rel="nofollow" ><span>注册</span>
+                  </a>
                 </div>
               </div>
             </li>
@@ -174,7 +179,7 @@
                 <ul>
                   <span>{{item.title}}</span>
                   <li v-for="(subItem,subIndex) in item.desc" :key="subIndex">
-                    <router-link v-if="subItem.url!=''" :to="subItem.url">{{subItem.subTitle}}
+                    <router-link v-if="subItem.url!=''" :to="subItem.url" :title="subItem.subTitle">{{subItem.subTitle}}
                     </router-link>
                     <router-link v-else :to="subItem.url">{{subItem.subTitle}}</router-link>
                   </li>
@@ -183,13 +188,13 @@
             </div>
             <div class="document">
               <p>文档</p>
-              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank">
+              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank" rel="nofollow">
                 {{d.title}}
               </a>
             </div>
             <div class="document">
               <p>服务与公告</p>
-              <a v-for="(d,index) in notice" :key="index" :href="d.url" target="_blank">
+              <a v-for="(d,index) in notice" :key="index" :href="d.url" target="_blank" rel="nofollow">
                 {{d.title}}
               </a>
             </div>
@@ -213,10 +218,10 @@
             <p style="margin:0px;margin-right: 20px;">{{item.time}}</p>
             <li style="cursor: auto">{{item.title}}</li>
             <li>
-              <a href="http://www.miitbeian.gov.cn/" target="_blank" style="color:#fff">{{item.preparation}}</a>
+              <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow" style="color:#fff">{{item.preparation}}</a>
             </li>
             <li>
-              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922" target="_blank"
+              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922"  rel="nofollow" target="_blank"
                  style="color:#fff">
                 <img src="./assets/img/app/record.png" style="vertical-align: middle;margin-right: 5px">{{item.desc}}
               </a>
@@ -487,7 +492,7 @@
                   {
                     title: 'SSL证书',
                     desc: '网站可信身份认证与安全数据传输',
-                    path: '/ruicloud/ssl'
+                    path: '/ruicloud/ssl.htm'
                   },
                 ],
                 subProd: [
@@ -508,7 +513,7 @@
           },
           {
             title: '新闻动态',
-            path: '',
+            path: 'https://news.xrcloud.net/',
             content: [
               {
                 prod: '香港云服务器 ',
@@ -542,7 +547,7 @@
           },
           {
             title: '关于我们',
-            path: '/ruicloud/about.htm'
+            path: 'https://www.xrcloud.net/ruicloud/about.htm'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)

@@ -1114,18 +1114,20 @@
 
       },
       manage(item, status) {
-        this.$router.push({
-          path: 'manage',
-          query: {
-            computername: item.computername,
-            zoneid: item.zoneid,
-            vmid: item.computerid,
-            instancename: item.instancename,
-            connecturl: item.connecturl,
-            companyid: item.companyid,
-            id: item.id
-          }
-        })
+        sessionStorage.setItem('manageId', item.computerid)
+        this.$router.push('manage')
+        /*        this.$router.push({
+                  path: 'manage',
+                  query: {
+                    computername: item.computername,
+                    zoneid: item.zoneid,
+                    vmid: item.computerid,
+                    instancename: item.instancename,
+                    connecturl: item.connecturl,
+                    companyid: item.companyid,
+                    id: item.id
+                  }
+                })*/
         // sessionStorage.setItem('oneHostinfo', JSON.stringify(item))
         // this.$router.push('manage')
       },
@@ -1317,7 +1319,7 @@
         })
       },
       renewalUpgrade() {
-        localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
+/*        localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
         localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
         // localStorage.setItem('zoneid', this.currentHost[0].zoneid)
         sessionStorage.setItem('hostname', this.currentHost[0].computername)
@@ -1326,7 +1328,9 @@
         sessionStorage.setItem('rootdisksize', this.currentHost[0].rootdisksize)
         this.$router.push({
           name: 'upgrade'
-        })
+        })*/
+        sessionStorage.setItem('upgradeId', this.currentHost[0].computerid)
+        this.$router.push('upgrade')
       },
       hideEvent(name) {
         switch (name) {
@@ -1408,7 +1412,7 @@
                       }
                     })
                   } else {
-                    localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
+        /*            localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
                     localStorage.setItem('disksize', this.currentHost[0].disksize)
                     localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
                     localStorage.setItem('zoneid', this.currentHost[0].zoneid)
@@ -1418,7 +1422,9 @@
                     sessionStorage.setItem('rootdisksize', this.currentHost[0].rootdisksize)
                     this.$router.push({
                       name: 'upgrade'
-                    })
+                    })*/
+                    sessionStorage.setItem('upgradeId', this.currentHost[0].computerid)
+                    this.$router.push('upgrade')
                   }
                 }
               })

@@ -3,7 +3,7 @@
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
-        <img :src="logo.img">
+        <img :src="logo.img" alt="弹性云服务器" title="弹性云服务器">
         <div class="info">
           <span class="title">{{logo.title}}</span>
           <span class="desc">{{logo.desc}}</span>

@@ -20,7 +20,9 @@
                 <span>余额</span>
                 <button @click="torecharge">充值</button>
                 <!-- $router.push('/ruicloud/cashwithdrawal') -->
-                <!--<button @click="$router.push('/ruicloud/cashwithdrawal')" style="margin-right: 10px;">提现</button>-->
+                <button @click="Cashwithdrawal"
+                        style="margin-right: 10px;border:1px solid rgba(43,153,242,1);background: white;color:rgba(43,153,242,1);border-radius:2px;width:54px;height:28px;">提现
+                </button>
                 <div>
                   <ul style="width: 50%">
                     <li>可用余额</li>
@@ -433,8 +435,6 @@
         <Button type="primary" @click="freezeToRenewNext">下一步</Button>
       </div>
     </Modal>
-
-    <!-- 押金转续费确认 -->
 
     <Modal v-model="showModal.freezeToRenewAffirm" crollable="true" :closable="false" :width="390" :mask-closable="false">
       <p slot="header" class="modal-header-border">
@@ -873,8 +873,9 @@
             </div>
           </div>
           <Tooltip content="请先阅读完会员规则" placement="top" style="margin-bottom:30px" :disabled="tooltipStatus">
-              <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']" :disabled='disabledButton'>
-            <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+            <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true" :class="[disabledButton?'modal-btnDisbled':'modal-btn']"
+                    :disabled='disabledButton'>
+              <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
           </Tooltip>
         </div>
       </div>
@@ -943,6 +944,23 @@
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="payOk">确认支付</Button>
       </div>
+    </Modal>
+    <!-- 未实名弹窗 -->
+    <Modal v-model="showModal.nonrealName" :scrollable="true" :closable="true" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">实名验证</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">您尚未实名认证，为保障您的资金安全，提现之前需要您通过实名认证。
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.nonrealName = false">取消</Button>
+        <Button type="primary" @click="goreal">去实名</Button>
+      </p>
     </Modal>
   </div>
 </template>
@@ -2001,7 +2019,8 @@
           vipRuleModal: false,
           cashCoupon: false,
           successMsg: false,
-          payAffirm: false
+          payAffirm: false,
+          nonrealName: false
         },
         // 提现
         withdrawForm: {
@@ -2018,7 +2037,6 @@
           code: '',
           // 手机验证码
           phoneCode: '',
-
           id: "1",
           operType: "2",
           payeeName: '',
@@ -2030,7 +2048,8 @@
           smsCode: '',
           // 短信验证码
           phone: ''
-        },
+        }
+        ,
         // 新增磁盘表单的验证规则
         withdrawValidate: {
           // 收款人账户
@@ -2038,68 +2057,85 @@
             {required: true, message: '请填写收款账户', trigger: 'blur'}
           ],
           // 账户类型
-          accountType: [
-            {required: true, message: '请选择账户类型', trigger: 'change'}
-          ],
+          accountType:
+            [
+              {required: true, message: '请选择账户类型', trigger: 'change'}
+            ],
           // 开户行
-          bankName: [
-            {required: true, message: '请填写开户行', trigger: 'blur'}
-          ],
+          bankName:
+            [
+              {required: true, message: '请填写开户行', trigger: 'blur'}
+            ],
           // 验证码
-          phoneCode: [
-            {required: true, message: '请输入验证码', trigger: 'blur'}
-          ],
+          phoneCode:
+            [
+              {required: true, message: '请输入验证码', trigger: 'blur'}
+            ],
           // 收款人姓名
-          payeeName: [
-            {required: true, message: '请填写收款人姓名', trigger: 'blur'}
-          ],
+          payeeName:
+            [
+              {required: true, message: '请填写收款人姓名', trigger: 'blur'}
+            ],
           // 开户行
-          bankAccInfor: [
-            {required: true, message: '请选择购买方式', trigger: 'blur'}
-          ]
-        },
+          bankAccInfor:
+            [
+              {required: true, message: '请选择购买方式', trigger: 'blur'}
+            ]
+        }
+        ,
         /* 验证码地址(加上时间戳，防止缓存) */
         imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
         /*发送验证码button innerText*/
-        codePlaceholder: '发送验证码',
-        freezeToRenew: 'freezeToRenew',
-        freezeOrderColumns: [
-          {
-            title: '名称/ID',
-            key: '名称/ID'
-          },
-          {
-            title: '资源',
-            width: 200,
-            render: (h, params) => {
-              let obj = JSON.parse(params.row['资源'])
-              let arr = []
-              for (let key in obj) {
-                arr.push(h('li', {}, key + ': ' + obj[key]))
+        codePlaceholder:
+          '发送验证码',
+        freezeToRenew:
+          'freezeToRenew',
+        freezeOrderColumns:
+          [
+            {
+              title: '名称/ID',
+              key: '名称/ID'
+            },
+            {
+              title: '资源',
+              width: 200,
+              render: (h, params) => {
+                let obj = JSON.parse(params.row['资源'])
+                let arr = []
+                for (let key in obj) {
+                  arr.push(h('li', {}, key + ': ' + obj[key]))
+                }
+                return h('ul', {}, arr)
               }
-              return h('ul', {}, arr)
+            },
+            {
+              title: '计费类型',
+              key: '计费类型'
+            },
+            {
+              title: '续费时长',
+              key: '续费时长'
             }
-          },
-          {
-            title: '计费类型',
-            key: '计费类型'
-          },
-          {
-            title: '续费时长',
-            key: '续费时长'
-          }
-        ],
-        freezeOrderData: [],
+          ],
+        freezeOrderData:
+          [],
         /*解冻到余额/账户  默认解冻到余额*/
-        unfreezeTo: 'account',
-        unfreezeToHint: 'account',
-        unfreezeToBalanceDisabled: true,
-        unfreezeToBalanceText: '(10S)',
-        unfreezeToBalanceTimer: null,
+        unfreezeTo:
+          'account',
+        unfreezeToHint:
+          'account',
+        unfreezeToBalanceDisabled:
+          true,
+        unfreezeToBalanceText:
+          '(10S)',
+        unfreezeToBalanceTimer:
+          null,
         // 输入兑换码
-        exchangeCardCode: '',
+        exchangeCardCode:
+          '',
         // 默认不显示兑换码错误
-        exchangeCardCodeError: false,
+        exchangeCardCodeError:
+          false,
         /* cardVolumeColumn:[
          {
          type: 'selection',
@@ -2133,17 +2169,24 @@
          }
          },
          ], */
-        cardVolumeTableData: [],
-        card_type: '',
-        operatorid: '',
-        card_pageSize: 5,
-        costSeen: false,
-        activeIndex: null,
-        freezeParticularsColumns: [
-          {
-            title: '押金金额',
-            key: 'eachfrozenmoney'
-          }, {
+        cardVolumeTableData:
+          [],
+        card_type:
+          '',
+        operatorid:
+          '',
+        card_pageSize:
+          5,
+        costSeen:
+          false,
+        activeIndex:
+          null,
+        freezeParticularsColumns:
+          [
+            {
+              title: '押金金额',
+              key: 'eachfrozenmoney'
+            }, {
             title: '押金事由',
             key: 'describes'
           }, {
@@ -2209,32 +2252,55 @@
               }
             }
           },
-        ],
-        freezeParticularsData: [],
-        unfreezeId: '',
-        exchangeCardMessage: '',
-        refundTo: 'account',
-        refundBeforeHintText: '(10S)',
-        refundBeforeHintDisabled: true,
-        refundBeforeHintTimer: null,
-        refundLastHintDisabled: true,
-        refundLastHintText: '(10S)',
-        refundLastHintTimer: null,
-        refundLastTo: 'account',
-        freezeToRenewAffirmDisabled: true,
-        freezeToRenewAffirmText: '(10S)',
-        freezeToRenewAffirmTimer: null,
-        renewalFeeTime: '',
-        freezeEndTime: '',
-        returnMoneyDisabled: false,
-        vipCount: 10, // vip规则计时
-        vipScroll: 0,
-        vipHeight: 1881,
-        payForm: {
-          paymentAmount: 0,
-          cashCoupon: 0,
-          cashCouponBalance: 0
-        }
+          ],
+        freezeParticularsData:
+          [],
+        unfreezeId:
+          '',
+        exchangeCardMessage:
+          '',
+        refundTo:
+          'account',
+        refundBeforeHintText:
+          '(10S)',
+        refundBeforeHintDisabled:
+          true,
+        refundBeforeHintTimer:
+          null,
+        refundLastHintDisabled:
+          true,
+        refundLastHintText:
+          '(10S)',
+        refundLastHintTimer:
+          null,
+        refundLastTo:
+          'account',
+        freezeToRenewAffirmDisabled:
+          true,
+        freezeToRenewAffirmText:
+          '(10S)',
+        freezeToRenewAffirmTimer:
+          null,
+        renewalFeeTime:
+          '',
+        freezeEndTime:
+          '',
+        returnMoneyDisabled:
+          false,
+        vipCount:
+          10, // vip规则计时
+        vipScroll:
+          0,
+        vipHeight:
+          1881,
+        payForm:
+          {
+            paymentAmount: 0,
+            cashCoupon:
+              0,
+            cashCouponBalance:
+              0
+          }
       }
     },
     created() {
@@ -2561,7 +2627,7 @@
             params: {
               order: order.substr(1),
               ticket: this.operatorid,
-              money: (this.payForm.paymentAmount- this.voucher).toFixed(2)
+              money: (this.payForm.paymentAmount - this.voucher).toFixed(2)
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -2984,7 +3050,7 @@
       },
       bindingMobilePhoneStepTwo(name) {
         this.$refs[name].validate((valid) => {
-     
+
           if (valid) {
             if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
               axios.post('user/isIdCardAndNameSame.do', {
@@ -3572,6 +3638,17 @@
           }
         })
       },
+      Cashwithdrawal() {
+        if (this.authInfo && this.authInfo.checkstatus == 0) {
+          this.$router.push('/ruicloud/cashwithdrawal')
+        } else {
+          this.showModal.nonrealName = true
+        }
+      },
+      goreal() {
+        sessionStorage.setItem('pane', 'nonrealname')
+        this.$router.push('/ruicloud/Usercenter')
+      }
     },
     computed: {
       payDisabled() {
@@ -3584,14 +3661,16 @@
         function checkPaymentStatus(orderNumber) {
           return orderNumber.paymentstatus == 1 || orderNumber.overTimeStatus == 1
         }
-      },
+      }
+      ,
       deleteDisabled() {
         if (this.orderNumber.length === 0) {
           return true
         } else {
           return false
         }
-      },
+      }
+      ,
       refundDisabled() {
         if (this.orderNumber.some(checkReturnMoneyFlag) || this.orderNumber.length === 0) {
           return true
@@ -3602,10 +3681,12 @@
         function checkReturnMoneyFlag(orderNumber) {
           return orderNumber.returnMoneyFlag == 0
         }
-      },
+      }
+      ,
       unfreezeToBalanceHintText() {
         return this.unfreezeTo == 'yue' ? '*解冻到余额后将无法进行提现操作，请您谨慎操作！' : ''
-      },
+      }
+      ,
       // 返回一个对象，包含提现时的发送验证码方式（手机、邮箱），号码
       withdrawConfirm() {
         var type = '', number = ''
@@ -3620,25 +3701,31 @@
           type,
           number
         }
-      },
+      }
+      ,
       authInfo() {
         return this.$store.state.authInfo ? this.$store.state.authInfo : null
-      },
+      }
+      ,
       userInfo() {
         return this.$store.state.userInfo ? this.$store.state.userInfo : null
-      },
+      }
+      ,
       chargeDisabled() {
         return this.cashCouponForm.agreeStatus == false || this.cashCouponForm.upVipCost > this.balance
-      },
+      }
+      ,
       remainingBalance() {
         let cost = parseInt(this.balance - this.cashCouponForm.upVipCost)
         return cost >= 0 ? cost : 0
       }
-    },
+    }
+    ,
     watch: {
       dateRange() {
         this.search()
-      },
+      }
+      ,
     }
   }
 </script>
