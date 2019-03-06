@@ -132,8 +132,9 @@ const Balance = () =>import('@/components/Back/Balance')
 const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
-const Host = () =>import('@/components/Back/Host')
-// const NewHost = () =>import('@/components/Back/newHost')
+const Host = () =>import('@/components/Back/newHost')
+const HostCard = () =>import('@/components/Back/Host')
+//const NewHost = () =>import('@/components/Back/newHost')
 //const NewHostManage = () =>import('@/components/Back/newHostManage')
 //const NewUpgrade = () =>import('@/components/Back/newUpgrade')
 const GPU = () =>import('@/components/Back/GPU')
@@ -157,6 +158,7 @@ const TelescopicDetails = () => import('@/components/Back/TelescopicDetails')
 const CloudMonitor = () => import('@/components/Back/CloudMonitor')
 const CloudMonitorCreateStrategy = () => import('@/components/Back/CloudMonitorCreateStrategy')
 const Vpc = () => import('@/components/Back/Vpc')
+const vpcNew = () => import('@/components/Back/vpcNew')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Vpn = () => import('@/components/Back/Vpn')
 const Ip = () => import('@/components/Back/Ip')
@@ -185,7 +187,7 @@ const GpuManageNew = () => import('@/components/Back/GpuManageNew')
 const gpuUpLevel = () => import('@/components/Back/gpuUpLevel')
 const Cashwithdrawal = () => import('@/components/Back/Cashwithdrawal')
 const Cashprocess = () => import('@/components/Back/Cashprocess')
-
+const CancellationAccount = () =>import('@/components/Back/CancellationAccount')
 // 域名系统 ==============================
 
 const Link = () => import('@/components/Link')
@@ -426,6 +428,7 @@ var router = new Router({
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
+        {path: 'hostCard', name: 'hostCard', component: HostCard},
         // {path: 'newHost', name: 'newHost', component: NewHost},
         //{path: 'newHostManage', name: 'newHostManage', component: NewHostManage},
         //{path: 'newUpgrade', name: 'newUpgrade', component: NewUpgrade},
@@ -433,6 +436,7 @@ var router = new Router({
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
         {path: 'vpc', name: 'vpc', component: Vpc},
+        {path: 'vpcNew', name: 'vpcNew', component: vpcNew},
         {path: 'vpn', name: 'vpn', component: Vpn},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
@@ -443,8 +447,9 @@ var router = new Router({
         {path: 'resultNew', name:'resultNew', component:ResultNew},
         {path: 'payNew', name:'payNew', component: PayNew},
         {path: 'expenses', name: 'expenses', component: Expenses},
-				{path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
-				{path: 'cashprocess', name: 'cashprocess', component: Cashprocess},
+		{path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
+		{path: 'cashprocess', name: 'cashprocess', component: Cashprocess},
+		{path: 'cancellationaccount', name: 'cancellationaccount', component: CancellationAccount},
         {path: 'userCenter', name: 'userCenter', component: UserCenter},
         {path: 'memberInfo', name: 'memberInfo', component: MemberInfo},
         {path: 'userInfo', name: 'userInfo', component: UserInfo},

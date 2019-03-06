@@ -68,7 +68,7 @@
           </div>
         </div>
         <div class="footer">
-          <Button style="margin-right: 10px" type="ghost" @click="$router.push('newHost')">取消升级</Button>
+          <Button style="margin-right: 10px" type="ghost" @click="$router.push('host')">取消升级</Button>
           <Button type="primary" :disabled="price == 0" @click="payOrder">立即购买</Button>
         </div>
       </div>
@@ -353,7 +353,7 @@
         color: rgba(102, 102, 102, 1);
         line-height: 28px;
         > span {
-          color: #333333;
+          color: #FF624B;
         }
       }
       .price {

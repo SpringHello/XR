@@ -10,23 +10,23 @@
       </Alert>
       <div class="host-config">
         <div class="config-top">
-          <p class="title"><img @click="$router.push('newHost')" src="../../assets/img/host/h-icon9.png" alt="back to hostList"/> 名称：{{ hostInfo.computerName}}
+          <p class="title"><img @click="$router.push('host')" src="../../assets/img/host/h-icon9.png" alt="back to hostList"/> 名称：{{ hostInfo.computerName}}
             <img class="last" @click="renameForm.hostName = '',showModal.rename = true" src="../../assets/img/host/h-icon11.png" alt="modification computerName"/>
             <button @click="$router.go(0)">刷新</button>
-            <button style="margin-right: 10px" @click="linkHost" v-if="hostInfo.computerStatus == 1">连接主机</button>
+            <button style="margin-right: 10px;background: #2A99F2;color: #FFF" @click="linkHost" v-if="hostInfo.computerStatus == 1">连接主机</button>
           </p>
           <p>{{ hostInfo.cpuNum }}核CPU，{{ hostInfo.memory}}G内存，{{ hostInfo.rootDiskSize}}G硬盘，{{ hostInfo.bandwith}}M带宽 | {{ hostInfo.zoneName}} <span
             @click="hostUpgrade">[升级]</span>
           </p>
         </div>
         <div class="config-type">
-          <ul v-for="item in configTypes" :class="{selected: configType == item}" @click="configType = item">{{ item }}</ul>
+          <ul v-for="item in configTypes" :class="{selected: configType == item}" @click="changeTabs(item)">{{ item }}</ul>
         </div>
       </div>
       <div class="config-info">
         <div class="tab-1" v-show="configType == '基础信息' ">
           <div>
-            <p>主机信息<span> [设置]</span></p>
+            <p>主机信息<!--<span>[设置]</span>--></p>
             <ul>
               <li><span class="one">镜像系统</span><span class="two">{{ hostInfo.template}}</span><span class="three" @click="modifyMirror"> [修改]</span></li>
               <li><span class="one">系统盘容量</span><span class="two">{{ hostInfo.rootDiskSize}}G</span><span class="three" @click="hostUpgrade"> [扩容]</span></li>
@@ -42,7 +42,7 @@
             </ul>
           </div>
           <div>
-            <p>网络信息<span> [设置]</span></p>
+            <p>网络信息<!--<span> [设置]</span>--></p>
             <ul>
               <li><span class="four">所属VPC</span>
                 <span class="three" v-if="hostInfo.vpc" @click="toOther('vpc')">{{ hostInfo.vpc}}</span>
@@ -55,13 +55,13 @@
                 <span :class="{three: bindForm.unbindText == '解绑IP'}" v-if="hostInfo.publicIp" @click="unbindIp"> [{{ bindForm.unbindText}}]</span>
                 <span :class="{three: bindForm.bindIpText == '绑定IP' }" v-else @click="bindIP"> [{{ bindForm.bindIpText }}]</span></li>
               <li><span class="four">带宽</span><span class="two">{{ hostInfo.bandwith?hostInfo.bandwith: '0'}}M</span>
-                <span class="three" v-if="hostInfo.bandwith"> [扩容]</span></li>
+                <span class="three" v-if="hostInfo.bandwith" @click="adjustIP"> [扩容]</span></li>
               <li><span class="four">负载均衡</span><span class="two">{{(hostInfo.loadbalance + '') ? hostInfo.loadbalance + '' : '----'}}</span></li>
               <li><span class="four">NAT网关</span><span class="two">{{ hostInfo.netGateway? hostInfo.netGateway : '----'}}</span></li>
             </ul>
           </div>
           <div>
-            <p>安全信息<span> [设置]</span></p>
+            <p>安全信息<!--<span> [设置]</span>--></p>
             <ul>
               <li><span class="four">安全组</span><span :class="{three: hostInfo.firewall}" @click="toOther('firewall')"> {{ hostInfo.firewall ? hostInfo.firewall: '----'}}</span>
               </li>
@@ -69,16 +69,68 @@
             </ul>
           </div>
           <div>
-            <p>资费信息<span> [设置]</span></p>
+            <p>资费信息<!--<span> [设置]</span>--></p>
             <ul>
               <li><span class="four">计费类型</span><span
                 class="two"> {{ hostInfo.case_type == 1 ? '包年' : hostInfo.case_type == 2 ? '包月' : hostInfo.case_type == 3 ? '实时' : '七天'}}</span></li>
               <li><span class="four">自动续费</span>
-                <i-switch size="small" style="position: relative;top: -2px;" v-model="isAutoRenew" @click="changAutoRenew"></i-switch>
+                <i-switch size="small" style="position: relative;top: -2px;" v-model="isAutoRenew" @on-change="changAutoRenew"></i-switch>
               </li>
               <li><span class="four">创建时间</span><span class="two"> {{ hostInfo.createTime}}</span></li>
               <li><span class="four">到期时间</span><span class="two"> {{ hostInfo.endTime}}</span></li>
             </ul>
+          </div>
+        </div>
+        <div class="tab-2" v-show="configType == '主机监控'">
+          <div class="item" v-for="(item,index) in tab2.monitoringList">
+            <div class="item-title">
+              <span>{{ item.title}}</span>
+              <span>{{  tab2.currentData }}</span>
+            </div>
+            <div class="item-type">
+              <Radio-group v-model="item.type" type="button" @on-change="changeMonitorDate(index)">
+                <Radio label="近一天"></Radio>
+                <Radio label="最近7天"></Radio>
+                <Radio label="最近30天"></Radio>
+              </Radio-group>
+              <Radio-group v-model="item.showType" type="button" @on-change="changeMonitorShowType(index)" style="float:right">
+                <Radio label="折线"></Radio>
+                <Radio label="柱状图"></Radio>
+              </Radio-group>
+            </div>
+            <chart :options="item.chart" style="width:100%;height:80%;"></chart>
+          </div>
+        </div>
+        <div class="tab-4" v-show="configType == '快照管理'">
+          <Button type="primary" :disabled="delSnapshootDisabled" @click="showModal.delsnaps = true">删除快照</Button>
+          <div class="selectMark">
+            <img src="../../assets/img/host/h-icon10.png"/>
+            <span>共 {{ tab4.pageSize}} 项 | 已选择 <span style="color:#FF624B;">{{ tab4.snapshootSelection.length }} </span>项</span>
+          </div>
+          <Table :columns="tab4.snapshootColumns" :data="tab4.snapshootData" @on-selection-change="snapshootSelectionChange"></Table>
+          <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+              <Page :total="tab4.snapshootPages" :current="tab4.currentPage" :page-size="tab4.pageSize" @on-change="changeSnapshootPage"></Page>
+            </div>
+          </div>
+        </div>
+        <div class="tab-5" v-show="configType == '操作日志'">
+          <div class="title">
+            <RadioGroup v-model="tab5.timeHorizon" type="button" @on-change="logToggle">
+              <Radio label="近一天"></Radio>
+              <Radio label="近一周"></Radio>
+              <Radio label="近一月"></Radio>
+            </RadioGroup>
+            <Input v-model="tab5.searchName" style="width: 25%" placeholder="请输入搜索的关键字">
+            <span slot="prepend">操作名称</span>
+            <Button slot="append" icon="ios-search" @click="getHostLog"></Button>
+            </Input>
+          </div>
+          <Table :columns="tab5.logColumns" :data="tab5.logData"></Table>
+          <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+              <Page :total="tab5.logPages" :current="tab5.currentPage" :page-size="tab5.pageSize" @on-change="changeLogPage"></Page>
+            </div>
           </div>
         </div>
       </div>
@@ -114,7 +166,7 @@
             <Cascader :data="osOptions" v-model="mirrorModifyForm.system"></Cascader>
           </Form-item>
           <Form-item label="控制台密码" style="width: 70%" prop="consolePassword">
-            <Input v-model="mirrorModifyForm.consolePassword" placeholder="请输入控制台登录密码"></Input>
+            <Input v-model="mirrorModifyForm.consolePassword" type="password" placeholder="请输入控制台登录密码"></Input>
           </Form-item>
         </Form>
       </div>
@@ -230,15 +282,15 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="modifyPasswordForm" ref="modifyPassword" :rules="modifyPasswordFormRule">
-          <FormItem label="当前密码" prop="oldPassword" style="width: 80%;">
+          <FormItem label="当前密码" prop="oldPassword" style="width: 80%;margin-bottom: 10px">
             <Input type="password" :type="modifyPasswordForm.oldPasswordInput" v-model="modifyPasswordForm.oldPassword"></Input>
             <img class="modal-img" @click="changeLoginPasType(1)" src="../../assets/img/login/lr-icon3.png"/>
           </FormItem>
-          <FormItem label="新的密码" prop="newPassword" style="width: 80%;">
+          <FormItem label="新的密码" prop="newPassword" style="width: 80%;margin-bottom: 10px">
             <Input type="password" :type="modifyPasswordForm.newPasswordInput" v-model="modifyPasswordForm.newPassword"></Input>
             <img class="modal-img" @click="changeLoginPasType(2)" src="../../assets/img/login/lr-icon3.png"/>
           </FormItem>
-          <FormItem label="确认密码" prop="confirmPassword" style="width: 80%;">
+          <FormItem label="确认密码" prop="confirmPassword" style="width: 80%;margin-bottom: 10px">
             <Input type="password" :type="modifyPasswordForm.confirmPasswordInput" v-model="modifyPasswordForm.confirmPassword"></Input>
             <img class="modal-img" @click="changeLoginPasType(3)" src="../../assets/img/login/lr-icon3.png"/>
           </FormItem>
@@ -317,7 +369,7 @@
         <Form :model="adjustForm" label-position="left">
           <Form-item label="带宽" style="width: 80%">
             <div style="width:300px;display: inline-block;vertical-align: middle;margin-left: 11px">
-              <Slider v-model='adjustForm.brand' show-input :min='1'></Slider>
+              <Slider v-model='adjustForm.brand' show-input :min='adjustForm.minBrand'></Slider>
             </div>
             <span>Mbps</span>
           </Form-item>
@@ -329,14 +381,50 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.adjust = false">取消</Button>
-        <Button type="primary" @click="adjustOK" :disabled="adjustForm.minBrand==adjustForm.brand">确定
+        <Button type="primary" @click="adjustOK" :disabled="adjustForm.brand == adjustForm.minBrand">确定
         </Button>
       </div>
+    </Modal>
+    <!-- 回滚弹窗 -->
+    <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">主机回滚</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">是否确定回滚主机</p>
+          <p class="lh24">提示：您正使用<span class="bluetext">{{tab4.snapsName}}</span>回滚<span class="bluetext">{{tab4.hostName}}</span>至<span
+            class="bluetext">{{tab4.hostCreatetime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.rollback=false">取消</Button>
+        <Button type="primary" @click="rollbackSubmit">确定</Button>
+      </p>
+    </Modal>
+    <!-- 删除快照弹窗 -->
+    <Modal v-model="showModal.delsnaps" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">删除快照</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">确定要删除选中的快照吗？</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.delsnaps=false">取消</Button>
+        <Button type="primary" @click="delsnapsSubm">确定</Button>
+      </p>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import line from '@/echarts/hostManage/line'
+  import bar from '@/echarts/hostManage/bar'
   import regExp from '../../util/regExp'
   import {debounce} from 'throttle-debounce'
 
@@ -379,7 +467,9 @@
           publicIPHint: false,
           bindIP: false,
           unbindIP: false,
-          adjust: false
+          adjust: false,
+          rollback: false,
+          delsnaps: false
         },
         renameForm: {
           hostName: ''
@@ -407,7 +497,7 @@
           input: ''
         },
         configType: '基础信息',
-        configTypes: ['基础信息', '主机监控', '安全组', '快照管理', '操作日志'],
+        configTypes: ['基础信息', '主机监控', /*'安全组',*/ '快照管理', '操作日志'],
         isAutoRenew: false,
         diskMountForm: {
           mountDisk: '',
@@ -480,6 +570,177 @@
           cost: '0',
           caseType: 0
         },
+
+        tab2: {
+          monitoringList: [
+            {
+              title: 'CPU使用率',
+              type: '近一天',
+              showType: '折线',
+              chart: null
+            },
+            {
+              title: '内存使用率',
+              type: '近一天',
+              showType: '折线',
+              chart: null
+            },
+            {
+              title: '磁盘使用率',
+              type: '近一天',
+              showType: '折线',
+              chart: null
+            }
+          ],
+          currentData: this.getCurrentDate()
+        },
+
+        tab4: {
+          snapshootColumns: [
+            {
+              type: 'selection',
+              width: 60,
+              align: 'center'
+            },
+            {
+              title: '快照名称',
+              key: 'snapshotname',
+            },
+            {
+              title: '状态',
+              key: 'status',
+              render: (h, params) => {
+                switch (params.row.status) {
+                  case 1:
+                    return h('span', {}, '正常')
+                  case -1:
+                    return h('span', {}, '异常')
+                  case 2:
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block',
+                        marginRight: '10px'
+                      }
+                    }), h('span', {}, '创建中')])
+                  case 3:
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block',
+                        marginRight: '10px'
+                      }
+                    }), h('span', {}, '删除中')])
+                }
+              }
+            },
+            {
+              title: '快照策略',
+              key: 'createway',
+              render: (h, params) => {
+                const row = params.row
+                const text = row.createway === 'hand' ? '手动备份' : row.createway
+                return h('span', {}, text)
+              }
+            },
+            {
+              title: '快照间隔',
+              key: 'intervals',
+              render: (h, params) => {
+                const row = params.row
+                const text = row.intervals === 'hand' ? '手动' : row.intervals === 'day' ? '每天' : row.intervals === 'week' ? '每周' : row.intervals === 'month' ? '每月' : ''
+                return h('span', {}, text)
+              }
+            },
+            {
+              title: '创建时间',
+              key: 'addtime',
+            },
+            {
+              title: '操作',
+              key: 'action',
+              width: 100,
+              render: (h, params) => {
+                if (params.row.status !== 1) {
+                  return h('span', {
+                    style: {
+                      cursor: 'not-allowed'
+                    },
+                  }, '回滚')
+                } else {
+                  return h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.showModal.rollback = true
+                        this.tab4.cursnapshot = params.row
+                        this.tab4.snapsName = params.row.snapshotname
+                        this.tab4.hostName = params.row.name
+                        this.tab4.hostCreatetime = params.row.addtime
+                      }
+                    }
+                  }, '回滚')
+                }
+              }
+            }
+          ],
+          snapshootData: [],
+          snapshootPages: 0,
+          currentPage: 1,
+          pageSize: 10,
+          snapshootSelection: [],
+          cursnapshot: null,
+          snapsName: '',
+          hostName: '',
+          hostCreatetime: ''
+        },
+
+        tab5: {
+          timeHorizon: '近一天',
+          searchName: '',
+          logColumns: [
+            {
+              title: '操作',
+              key: 'operatedes'
+            },
+            {
+              title: '操作结果',
+              render: (h, params) => {
+                let text = params.row.operatestatus == 1 ? '成功' : '失败'
+                return h('span', {}, text)
+              },
+              filters: [
+                {
+                  label: '成功',
+                  value: 1
+                },
+                {
+                  label: '失败',
+                  value: 2
+                }
+              ],
+              filterMultiple: false,
+              filterMethod(value, row) {
+                if (value === 1) {
+                  return row.operatestatus == 1
+                } else if (value === 2) {
+                  return row.operatestatus != 1
+                }
+              }
+            },
+            {
+              title: '创建时间',
+              key: 'operatortime',
+              sortable: true
+            }
+          ],
+          logData: [],
+          logPages: 0,
+          currentPage: 1,
+          pageSize: 10,
+          logTime: this.getCurrentDate() + ',' + this.getTomorrow()
+        }
       }
     },
     created() {
@@ -487,6 +748,23 @@
       this.getHostInfo()
     },
     methods: {
+      changeTabs(item) {
+        this.configType = item
+        switch (item) {
+          case '基础信息':
+            this.getHostInfo()
+            break
+          case '主机监控':
+            this.getComputerMonitor()
+            break
+          case '快照管理':
+            this.getHostSnapshoot()
+            break
+          case '操作日志':
+            this.getHostLog()
+            break
+        }
+      },
       getHostInfo() {
         let url = 'information/listVMByComputerId.do'
         this.$http.get(url, {
@@ -546,7 +824,7 @@
               })
             } else {
               sessionStorage.setItem('upgradeId', this.computerId)
-              this.$router.push('newUpgrade')
+              this.$router.push('upgrade')
             }
           }
         })
@@ -843,12 +1121,17 @@
           }
         })
       },
+      adjustIP() {
+        this.adjustForm.brand = parseInt(this.hostInfo.bandwith)
+        this.adjustForm.minBrand = parseInt(this.hostInfo.bandwith)
+        this.showModal.adjust = true
+      },
       adjustOK() {
         this.showModal.adjust = false
         this.$http.get('continue/UpPublicBnadwith.do', {
           params: {
             bandwith: this.adjustForm.brand,
-            publicIpId: this.hostInfo.id
+            publicIpId: this.hostInfo.publicId
           }
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -865,7 +1148,7 @@
         this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
           params: {
             brandwith: this.adjustForm.brand,
-            publicIpId: this.hostInfo.id
+            publicIpId: this.hostInfo.publicId
           }
         }).then(response => {
           if (response.status == 200) {
@@ -876,12 +1159,245 @@
         })
       }),
       changAutoRenew() {
+        let url = 'information/setAutoRenew.do'
+        this.$http.get(url, {
+          params: {
+            type: 'host',
+            id: this.hostInfo.id,
+            flag: this.isAutoRenew ? '1' : '0'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.$Message.info(res.data.message)
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
 
-      }
+      getComputerMonitor() {
+        this.$http.get('alarm/getVmAlarmByHour.do', {
+          params: {
+            vmname: this.hostInfo.instanceName,
+            type: 'core'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            // 用的以前接口数据格式，只有挨个赋值
+            let cpuBrokenLine = JSON.parse(JSON.stringify(line))
+            let memoryBrokenLine = JSON.parse(JSON.stringify(line))
+            let diskBrokenLine = JSON.parse(JSON.stringify(line))
+            cpuBrokenLine.xAxis.data = response.data.result.xaxis
+            memoryBrokenLine.xAxis.data = response.data.result.xaxis
+            diskBrokenLine.xAxis.data = response.data.result.xaxis
+            cpuBrokenLine.series.push({
+              name: 'CPU使用率（%）',
+              type: 'line',
+              data: response.data.result.cpuUse,
+              barWidth: '15%'
+            })
+            this.tab2.monitoringList[0].chart = cpuBrokenLine
+            memoryBrokenLine.series.push({
+              name: '内存使用率（%）',
+              type: 'line',
+              data: response.data.result.memoryUse,
+              barWidth: '15%'
+            })
+            this.tab2.monitoringList[1].chart = memoryBrokenLine
+            diskBrokenLine.series.push({
+              name: '磁盘使用率（%）',
+              type: 'line',
+              data: response.data.result.diskUse,
+              barWidth: '15%'
+            })
+            this.tab2.monitoringList[2].chart = diskBrokenLine
+          }
+        })
+      },
+      changeMonitorDate(index) {
+        let url = this.tab2.monitoringList[index].type == '近一天' ? 'alarm/getVmAlarmByHour.do' : 'alarm/getVmAlarmByDay.do'
+        let dateType = this.tab2.monitoringList[index].type == '最近7天' ? 'week' : 'month'
+        this.$http.get(url, {
+          params: {
+            vmname: this.hostInfo.instanceName,
+            type: 'core',
+            datetype: dateType
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            let broken = this.tab2.monitoringList[index].type == 'line' ? JSON.parse(JSON.stringify(line)) : JSON.parse(JSON.stringify(bar))
+            let type = this.tab2.monitoringList[index].showType == '折线' ? 'line' : 'bar'
+            let name = index == 0 ? 'CPU使用率（%）' : index == 1 ? '内存使用率（%）' : '磁盘使用率（%）'
+            let data = index == 0 ? res.data.result.cpuUse : index == 1 ? res.data.result.memoryUse : res.data.result.diskUse
+            broken.series.push({
+              name: name,
+              type: type,
+              data: data,
+              barWidth: '15%'
+            })
+            broken.xAxis.data = res.data.result.xaxis
+            this.tab2.monitoringList[index].chart = broken
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      changeMonitorShowType(index) {
+        let broken = {}
+        if (this.tab2.monitoringList[index].showType == '折线') {
+          broken = JSON.parse(JSON.stringify(line))
+          broken.series.push({
+            name: this.tab2.monitoringList[index].chart.series[0].name,
+            type: 'line',
+            data: this.tab2.monitoringList[index].chart.series[0].data,
+            barWidth: '15%'
+          })
+          broken.xAxis.data = this.tab2.monitoringList[index].chart.xAxis.data
+          this.tab2.monitoringList[index].chart = broken
+        } else {
+          broken = JSON.parse(JSON.stringify(bar))
+          broken.series.push({
+            name: this.tab2.monitoringList[index].chart.series[0].name,
+            type: 'bar',
+            data: this.tab2.monitoringList[index].chart.series[0].data,
+            barWidth: '15%'
+          })
+          broken.xAxis.data = this.tab2.monitoringList[index].chart.xAxis.data
+          this.tab2.monitoringList[index].chart = broken
+        }
+      },
+      getHostSnapshoot() {
+        this.$http.get('Snapshot/listVMSnapshot.do', {
+          params: {
+            resourceType: 1,
+            resourceId: this.computerId
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.tab4.snapshootData = response.data.result
+          }
+        })
+      },
+      snapshootSelectionChange(selected) {
+        this.tab4.snapshootSelection = selected
+      },
+      changeSnapshootPage(page) {
+        this.tab4.currentPage = page
+        this.getHostSnapshoot()
+      },
+      rollbackSubmit() {
+        this.showModal.rollback = false
+        let URL = 'Snapshot/revertToVMSnapshot.do'
+        this.$http.get(URL, {
+          params: {
+            snapshotId: this.tab4.cursnapshot.snapshotid,
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success({
+              content: response.data.message,
+              duration: 5
+            })
+          } else {
+            this.$message.info({
+              content: response.data.message,
+            })
+          }
+        })
+      },
+      // 确定删除快照
+      delsnapsSubm() {
+        this.showModal.delsnaps = false
+        this.tab4.snapshootData.forEach(item => {
+          this.tab4.snapshootSelection.forEach(item1 => {
+            if (item.snapshotid == item1.snapshotid) {
+              item.status = 3
+            }
+          })
+        })
+        let ids = this.tab4.snapshootSelection.map(item => {
+          return item.id
+        })
+        this.tab4.snapshootSelection = []
+        var URL = 'Snapshot/deleteVMSnapshot.do'
+        this.$http.get(URL, {
+          params: {
+            ids: ids + ''
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            this.getHostSnapshoot()
+          } else {
+            this.$message.info({
+              content: response.data.message,
+            })
+          }
+        })
+      },
+      changeLogPage(page) {
+        this.tab5.currentPage = page
+        this.getHostLog()
+      },
+      getHostLog() {
+        this.$http.get('log/queryLog.do', {
+          params: {
+            pageSize: this.tab5.pageSize,
+            currentPage: this.tab5.currentPage,
+            target: 'host',
+            queryTime: this.tab5.logTime,
+            targetId: this.hostInfo.id,
+            message: this.tab5.searchName
+          }
+        }).then(response => {
+          this.tab5.logPages = response.data.total
+          this.tab5.logData = response.data.tableData
+        })
+      },
+      logToggle() {
+        switch (this.tab5.timeHorizon) {
+          case '近一天':
+            this.tab5.logTime = this.getCurrentDate() + ',' + this.getTomorrow()
+            break
+          case '近一周':
+            this.tab5.logTime = this.logNearlySevenDays() + ',' + this.getTomorrow()
+            break
+          case '近一月':
+            this.tab5.logTime = this.logNearlyThirtyDays() + ',' + this.getTomorrow()
+            break
+        }
+        this.tab5.currentPage = 1
+        this.getHostLog()
+      },
+      getTomorrow() {
+        var day = new Date()
+        day.setTime(day.getTime() + 24 * 60 * 60 * 1000)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      logNearlySevenDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 6)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      logNearlyThirtyDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 29)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
+      },
     },
     computed: {
       auth() {
         return this.$store.state.authInfo != null
+      },
+      delSnapshootDisabled() {
+        return this.tab4.snapshootSelection.length === 0
       }
     },
     watch: {
@@ -905,7 +1421,6 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .host-config {
     padding: 20px 20px 0;
-    margin-top: 18px;
     background: rgba(246, 250, 253, 1);
     border-radius: 2px;
     .config-top {
@@ -1017,6 +1532,57 @@
             }
           }
         }
+      }
+    }
+    .tab-2 {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      .item {
+        border-radius: 4px;
+        padding: 20px;
+        border: 1px dashed rgba(153, 153, 153, 1);
+        width: 570px;
+        height: 405px;
+        margin-bottom: 20px;
+        .item-title {
+          border-bottom: 1px solid rgba(233, 233, 233, 1);
+          padding-bottom: 10px;
+          > span {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(51, 51, 51, 1);
+            line-height: 20px;
+          }
+          span:nth-child(2) {
+            float: right;
+            color: rgba(153, 153, 153, 1);
+          }
+        }
+        .item-type {
+          margin-top: 18px;
+        }
+      }
+    }
+    .tab-4 {
+      .selectMark {
+        margin: 10px 0;
+        > img {
+          position: relative;
+          top: 4px;
+        }
+        > span {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(102, 102, 102, 1);
+        }
+      }
+    }
+    .tab-5 {
+      .title {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
       }
     }
   }
