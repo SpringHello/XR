@@ -183,13 +183,13 @@
             </div>
             <div class="document">
               <p>文档</p>
-              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank">
+              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank" rel="nofollow">
                 {{d.title}}
               </a>
             </div>
             <div class="document">
               <p>服务与公告</p>
-              <a v-for="(d,index) in notice" :key="index" :href="d.url" target="_blank">
+              <a v-for="(d,index) in notice" :key="index" :href="d.url" target="_blank" rel="nofollow">
                 {{d.title}}
               </a>
             </div>
@@ -213,10 +213,10 @@
             <p style="margin:0px;margin-right: 20px;">{{item.time}}</p>
             <li style="cursor: auto">{{item.title}}</li>
             <li>
-              <a href="http://www.miitbeian.gov.cn/" target="_blank" style="color:#fff">{{item.preparation}}</a>
+              <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow" style="color:#fff">{{item.preparation}}</a>
             </li>
             <li>
-              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922" target="_blank"
+              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922"  rel="nofollow" target="_blank"
                  style="color:#fff">
                 <img src="./assets/img/app/record.png" style="vertical-align: middle;margin-right: 5px">{{item.desc}}
               </a>
