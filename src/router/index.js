@@ -400,8 +400,7 @@ var router = new Router({
         {path: 'Pelastic',component: Pelastic},
 
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
-        {path: 'hotQuestion/:parentId/:id', component: hotQuestion},
-        {path: '/*', name: 'home', component: Home},
+        {path: 'hotQuestion/:parentId/:id', component: hotQuestion}
       ]
     },
     {
