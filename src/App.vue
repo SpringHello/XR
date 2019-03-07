@@ -126,15 +126,15 @@
                     <router-link to="/ruicloud/userCenter">用户中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="/ruicloud/expenses">
-                    <router-link to="/ruicloud/expenses">费用中心</router-link>
+                    <router-link to="ruicloud/expenses">费用中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="/ruicloud/msgCenter" style="position:relative">
-                    <router-link to="/ruicloud/msgCenter">消息中心
+                    <router-link to="ruicloud/msgCenter">消息中心
                       <!--<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>-->
                     </router-link>
                   </DropdownItem>
                   <DropdownItem name="/ruicloud/operationLog">
-                    <router-link to="/ruicloud/operationLog">操作日志</router-link>
+                    <router-link to="ruicloud/operationLog">操作日志</router-link>
                   </DropdownItem>
                   <DropdownItem divided name="exit">
                     <!-- <router-link to="">退出</router-link> -->
@@ -148,7 +148,7 @@
       </div>
     </header>
     <!-- 页面展示 -->
-    <router-view/>
+    <router-view />
     <!-- 所有前台页面共用底部导航块 -->
     <div id="app-foot">
       <!--      &lt;!&ndash; 新用户注册最大6个月免费 &ndash;&gt;

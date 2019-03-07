@@ -20,10 +20,10 @@
           </div>
           <div style="margin:16px 0 16px 0;">
             <Button type="primary"  @click="$router.push({path:'/ruicloud/buy/bgpu'})">+  创建</Button>
-            <Button type="primary" :disabled='disabledList.closeDisabled' style="margin:0 10px;" @click="stopHost">关机</Button>
-            <Button type="primary" :disabled='disabledList.openDisabled' @click="openHost">开机</Button>
-            <Button type="primary" :disabled='disabledList.closeDisabled' style="margin:0 10px;" @click="reStartGPU">重启</Button>
-            <Button type="primary" :disabled='disabledList.deleteDisabled' style="margin:0 10px;" @click="deleteHost">删除</Button>
+            <Button type="primary" :disabled='disabledList.closeDisbled' style="margin:0 10px;" @click="stopHost">关机</Button>
+            <Button type="primary" :disabled='disabledList.openDisbled' @click="openHost">开机</Button>
+            <Button type="primary" :disabled='disabledList.closeDisbled' style="margin:0 10px;" @click="reStartGPU">重启</Button>
+            <Button type="primary" :disabled='disabledList.deleteDisbled' style="margin:0 10px;" @click="deleteHost">删除</Button>
             <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">更多操作</Button>
           </div>
            <div class="selectMark">
@@ -33,6 +33,8 @@
           <Table :columns="hostList" :data="hostData"  @on-select-change="selectIndex"></Table>
         </div>
       </div>
+
+
 
       <!--绑定IP-->
       <Modal title="绑定IP"  :mask-closable="false" v-model="showModal.ipShow">
@@ -1219,11 +1221,11 @@
         for(let i = 0;i<selecion.length;i++){
           this.uuid += selecion.computerid+','
           this.uuid = this.uuid.substring(0,this.uuid.length-1);
-            if(selecion[i].row.computerstate != '1' && selecion[i].row.status !='1'){ //开机状态
+            if(selecion[i].row.computerstate != 1 && selecion[i].row.status !=1){ //开机状态
                 this.disabledList.openDisbled = true;
-            }else if(selecion[i].computerstate != '0' && selecion[i].row.status !='1'){ // 关机状态
+            }else if(selecion[i].computerstate != 0 && selecion[i].row.status !=1){ // 关机状态
               this.disabledList.closeDisbled = true;
-            }else if(selecion[i].status == '-1'){
+            }else if(selecion[i].status == -1){
               this.disabledList.deleteDisbled = true;
             }
         }
