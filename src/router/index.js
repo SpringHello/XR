@@ -124,10 +124,10 @@ const ResetNew = () =>import('@/components/LR/ResetNew')
 // import Overview from '@/components/Back/Overview'
 // import Host from '@/components/Back/Host'
 
-const Overview = () =>import('@/components/Back/Overview')
-const Work = () =>import('@/components/Back/Work')
-const Recharge = () =>import('@/components/Back/Recharge.vue')
-const RechargeResult = () =>import('@/components/Back/RechargeResult.vue')
+const Overview = () => import('@/components/Back/Overview')
+const Work = () => import('@/components/Back/Work')
+const Recharge = () => import('@/components/Back/Recharge.vue')
+const RechargeResult = () => import('@/components/Back/RechargeResult.vue')
 const Balance = () =>import('@/components/Back/Balance')
 const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
@@ -137,7 +137,6 @@ const HostCard = () =>import('@/components/Back/Host')
 //const NewHost = () =>import('@/components/Back/newHost')
 //const NewHostManage = () =>import('@/components/Back/newHostManage')
 //const NewUpgrade = () =>import('@/components/Back/newUpgrade')
-const GPU = () =>import('@/components/Back/GPU')
 const GpuList = () =>import('@/components/Back/GpuList')
 const GpuListNew = () =>import('@/components/Back/GpuListNew')
 const Mirror = () =>import('@/components/Back/Mirror')
@@ -183,7 +182,6 @@ const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
 const gpuManage = () => import('@/components/Back/gpuManage')
 const GpuManageNew = () => import('@/components/Back/GpuManageNew')
-const gpuUpLevel = () => import('@/components/Back/gpuUpLevel')
 const Cashwithdrawal = () => import('@/components/Back/Cashwithdrawal')
 const Cashprocess = () => import('@/components/Back/Cashprocess')
 const CancellationAccount = () =>import('@/components/Back/CancellationAccount')
@@ -399,7 +397,6 @@ var router = new Router({
         {path: 'PobjectStorage', component: PobjectStorage},
         {path: 'Pgpu', component: Pgpu},
         {path: 'Pelastic',component: Pelastic},
-
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
         {path: 'hotQuestion/:parentId/:id', component: hotQuestion}
       ]
@@ -432,7 +429,6 @@ var router = new Router({
         // {path: 'newHost', name: 'newHost', component: NewHost},
         //{path: 'newHostManage', name: 'newHostManage', component: NewHostManage},
         //{path: 'newUpgrade', name: 'newUpgrade', component: NewUpgrade},
-        {path: 'gpu', name: 'gpu', component: GPU},
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
         {path: 'vpc', name: 'vpc', component: Vpc},
@@ -446,9 +442,9 @@ var router = new Router({
         {path: 'resultNew', name:'resultNew', component:ResultNew},
         {path: 'payNew', name:'payNew', component: PayNew},
         {path: 'expenses', name: 'expenses', component: Expenses},
-		{path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
-		{path: 'cashprocess', name: 'cashprocess', component: Cashprocess},
-		{path: 'cancellationaccount', name: 'cancellationaccount', component: CancellationAccount},
+		    {path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
+		    {path: 'cashprocess', name: 'cashprocess', component: Cashprocess},
+		    {path: 'cancellationaccount', name: 'cancellationaccount', component: CancellationAccount},
         {path: 'userCenter', name: 'userCenter', component: UserCenter},
         {path: 'memberInfo', name: 'memberInfo', component: MemberInfo},
         {path: 'userInfo', name: 'userInfo', component: UserInfo},
@@ -474,7 +470,6 @@ var router = new Router({
         {path: 'GpuListNew', name: 'GpuListNew', component: GpuListNew},
         {path: 'gpuManage', name: 'gpuManage', component: gpuManage},
         {path: 'GpuManageNew', name: 'GpuManageNew', component: GpuManageNew},
-        {path: 'gpuUpLevel', name: 'gpuUpLevel', component: gpuUpLevel},
         // 域名系统 =====================
         {path: 'Elastic', name: 'Elastic', component: Elastic},
         {path: 'ElasticDetails', name: 'ElasticDetails', component: ElasticDetails},

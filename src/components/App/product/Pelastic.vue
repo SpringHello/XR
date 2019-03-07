@@ -5,7 +5,7 @@
       <div class="logo-wrapper">
         <img :src="logo.img" style="top:38px;">
         <div class="info">
-          <span class="title">{{logo.title}}</span>
+          <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>

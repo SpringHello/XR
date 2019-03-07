@@ -21,7 +21,7 @@ export default {
     xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: []
+        data: [0, 0, 0, 0, 0, 0, 0]
     },
     yAxis: {
         axisLabel: {
@@ -46,7 +46,7 @@ export default {
                 offset: 1,
                 color: '#ffe'
             }])}},
-            data: []
+            data: [0, 0, 0, 0, 0, 0, 0]
         },
     ]
 }
