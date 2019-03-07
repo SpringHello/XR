@@ -78,8 +78,11 @@
         <div class="selectMark">
           <img src="../../assets/img/host/h-icon10.png" alt="icon"/>
           <span>共 {{ hostPages}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
-          <span class="guide" style="margin-left: 20px" @click="$router.push('host')"><Icon type="grid"></Icon></span>
-          <span class="guide" @click="$router.push('hostCard')"><Icon type="navicon-round"></Icon></span>
+          <span class="guide" style="margin-left: 20px" @click="$router.push('hostCard')"><Icon type="grid"></Icon></span>
+          <span class="guide" @click="$router.push('host')"><Icon type="navicon-round"></Icon></span>
+          <div class="guide-hint" v-show="guide_1 == 0">
+
+          </div>
         </div>
         <Table :columns="hostListColumns" :data="hostListData" @on-selection-change="hostSelectionChange"></Table>
         <div style="margin: 10px;overflow: hidden">
@@ -505,7 +508,7 @@
   export default {
     data() {
       return {
-        guide_1: true,
+        guide_1: 0,
         regExpObj: {
           password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,32}$/
         },
@@ -2829,6 +2832,19 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .hint() {
+    width: 200px;
+    height: 110px;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    position: absolute;
+    z-index: 9999;
+    &::after {
+
+    }
+  }
+
   .monitor {
     position: fixed;
     right: 0;
@@ -2920,6 +2936,7 @@
 
   .selectMark {
     margin-bottom: 10px;
+    position: relative;
     > img {
       position: relative;
       top: 4px;
@@ -2938,6 +2955,9 @@
           color: #2A99F2;
         }
       }
+    }
+    .guide-hint {
+      .hint()
     }
   }
 

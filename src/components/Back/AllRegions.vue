@@ -63,7 +63,7 @@
 							<span class="numberofc" v-bind:class="{ newnumberofc: item.overview.num>0}">{{item.overview.num}}</span>
 							<span class="numberge">个</span>
 							<span class="xiantiaoa"></span>
-							<i class="iconfont houtaiicon-gouwuche1" id="gouwuche1" @click="$router.push('/ruicloud/buy')"></i>
+							<i class="iconfont houtaiicon-gouwuche1" id="gouwuche1" @click="JumpGwc(item)"></i>
 							<div class="rightall">
 								<div>
 									<img src="../../assets/img/back/kaiqi.png" class="img-kaiqi" />
@@ -88,14 +88,14 @@
 							<div style="margin-top: 13px;margin-left: -5px;">
 								<div class="VPCALL" v-for="ited in item.payResources.list" @click="push(ited)">
 									<span class="nnum" v-bind:class="{ newnnum: ited.num>0}">{{ited.num}}</span>
-									 <Tooltip placement="top" v-if="ited.name=='对象存储'">
-										 <div slot="content" id="enna">
+									<Poptip trigger="hover" v-if="ited.name=='对象存储'">
+										<div slot="content" id="enna">
 											<span>数字代表该区域 </span>
 											<span>存储包 </span>
 											<span>容量 </span>
 										</div>
 										<i class="iconfont houtaiicon-bangzhu"></i>
-									</Tooltip>
+									</Poptip>
 									<span class="nnumzi" v-bind:class="{ newnnumzi: ited.num>0}">{{ited.name}}</span>
 									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click.stop="pushbuy(ited)"></i>
 								</div>
@@ -201,6 +201,9 @@
 				  this.$router.push('/ruicloud/overview')
 			    }
 			  }
+			},
+			JumpGwc(item){
+				console.log(item)
 			}
 		},
 		computed: {
