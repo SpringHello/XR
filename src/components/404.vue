@@ -1,9 +1,11 @@
 <template>
   <div id="background">
-    <img src="assets/img/back/Rectangle 2.png" class="imgg" />
-		<h1>Error，页面出错啦！请点击返回首页或者刷新页面～</h1>
-		<button @click="$router.push('/ruicloud/')" class="btn1">返回首页</button>
-		<button @click="$router.history.go(0)" class="btn2">刷新页面</button>
+		<div id="wrapper">
+			<img src="../assets/img/back/404.png" class="imgg" />
+			<h1>Error，页面出错啦！请点击返回首页或者刷新页面～</h1>
+			<Button @click="$router.push('/ruicloud/')" class="btn1">返回首页</Button>
+			 <Button type="primary" @click="$router.history.go(0)" class="btn2">刷新页面</Button>
+		</div>
   </div>
 </template>
 
@@ -12,11 +14,16 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-	.background {
+	#background {
 		background:rgba(42,153,242,0.12);
 		width: 100%;
+		height: 100%;
 		@diff: 101px;
 		min-height: calc(~"100% - @{diff}");
+	}
+	#wrapper {
+		width: 100%;
+		margin: 0px auto;
 		text-align: center;
 		justify-content: center;
 	}
@@ -39,11 +46,9 @@
 	.btn2{
 		width:114px;
 		height:40px;
-		background:rgba(42,153,242,1);
 		border-radius:4px;
-		margin-top: 40px;
 		margin-left: 10px;
-		color:rgba(255,255,255,1);
 		font-size:18px;
+		margin-top: 40px;
 	}
 </style>
