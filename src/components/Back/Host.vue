@@ -99,6 +99,9 @@
             </Dropdown-menu>
           </Dropdown>
         </div>
+        <div style="position: relative">
+          <span class="guide" @click="$router.push('host')"><Icon type="navicon-round"></Icon></span>
+        </div>
         <div>
           <Tabs type="card" :animated="false" v-model="status">
 
@@ -2115,6 +2118,19 @@
     span {
       color: #2A99F2;
       cursor: pointer;
+    }
+  }
+  .guide {
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+    z-index: 9999;
+    i {
+      font-size: 20px;
+      &:hover {
+        color: #2A99F2;
+      }
     }
   }
 </style>

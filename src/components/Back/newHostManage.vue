@@ -22,6 +22,22 @@
         <div class="config-type">
           <ul v-for="item in configTypes" :class="{selected: configType == item}" @click="changeTabs(item)">{{ item }}</ul>
         </div>
+        <div class="hint_1" v-show="guideStep == 1">
+          <p>点击「升级」可进行主机升级。</p>
+          <span @click="guideStep = 2">知道了</span>
+        </div>
+        <div class="hint_2" v-show="guideStep == 2">
+          <p>主机信息项可进行镜像修改、数据盘扩容、数据盘挂/卸载、修改密码等操作。</p>
+          <span @click="guideStep = 3">知道了</span>
+        </div>
+        <div class="hint_3" v-show="guideStep == 3">
+          <p>网络信息项可进行公网IP解绑，带宽扩容等操作。</p>
+          <span @click="guideStep = 4">知道了</span>
+        </div>
+        <div class="hint_4" v-show="guideStep == 4">
+          <p>资费信息项可进行自动续费的开启和关闭操作。</p>
+          <span @click="guideStep = 5">知道了</span>
+        </div>
       </div>
       <div class="config-info">
         <div class="tab-1" v-show="configType == '基础信息' ">
@@ -74,7 +90,8 @@
               <li><span class="four">计费类型</span><span
                 class="two"> {{ hostInfo.case_type == 1 ? '包年' : hostInfo.case_type == 2 ? '包月' : hostInfo.case_type == 3 ? '实时' : '七天'}}</span></li>
               <li><span class="four">自动续费</span>
-                <i-switch size="small" style="position: relative;top: -2px;" v-model="isAutoRenew" @on-change="changAutoRenew"></i-switch>
+                <i-switch size="small" style="position: relative;top: -2px;" v-model="isAutoRenew" @on-change="changAutoRenew"
+                          :disabled="hostInfo.case_type != 2 ||hostInfo.case_type != 1"></i-switch>
               </li>
               <li><span class="four">创建时间</span><span class="two"> {{ hostInfo.createTime}}</span></li>
               <li><span class="four">到期时间</span><span class="two"> {{ hostInfo.endTime}}</span></li>
@@ -454,6 +471,7 @@
         }
       }
       return {
+        guideStep: 0,
         hostInfo: {},
         computerId: '',
         showModal: {
@@ -746,6 +764,10 @@
     created() {
       this.computerId = sessionStorage.getItem('manageId')
       this.getHostInfo()
+      if (sessionStorage.getItem('guideHint')) {
+        this.guideStep = 1
+        sessionStorage.removeItem('guideHint')
+      }
     },
     methods: {
       changeTabs(item) {
@@ -1419,10 +1441,50 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .hint() {
+    width: 200px;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    position: absolute;
+    z-index: 9999;
+    padding: 20px;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: #666666;
+      line-height: 20px;
+      margin-bottom: 20px;
+    }
+    > span {
+      float: right;
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(24, 144, 255, 1);
+      cursor: pointer;
+    }
+    span:nth-child(2) {
+      margin-left: 10px;
+    }
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #FFF;
+      position: absolute;
+      bottom: -6px;
+      right: 50%;
+      transform: rotate(135deg);
+      box-shadow: 1px -1px 0px 0px rgba(0, 0, 0, 0.2);
+    }
+  }
+
   .host-config {
     padding: 20px 20px 0;
     background: rgba(246, 250, 253, 1);
     border-radius: 2px;
+    position: relative;
     .config-top {
       padding-bottom: 20px;
       > p {
@@ -1480,6 +1542,26 @@
           color: #2A99F2;
         }
       }
+    }
+    .hint_1 {
+      .hint();
+      left: 250px;
+      top: -60px;
+    }
+    .hint_2 {
+      .hint();
+      left: -35px;
+      top: 25px;
+    }
+    .hint_3 {
+      .hint();
+      left: 270px;
+      top: 65px;
+    }
+    .hint_4 {
+      .hint();
+      top: 65px;
+      right: 150px;
     }
   }
 

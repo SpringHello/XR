@@ -18,7 +18,7 @@
         <div class="universal-alert">
           <p>云主机是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置。XRcloud为您提供的云主机具有安全、弹性、高性能等特点。</p>
         </div>
-        <div class="operator-bar">
+        <div class="operator-bar" style="position: relative">
           <Button type="primary" @click="$router.push('/ruicloud/buy/bhost')">+ 创建</Button>
           <Poptip
             confirm
@@ -78,8 +78,33 @@
         <div class="selectMark">
           <img src="../../assets/img/host/h-icon10.png" alt="icon"/>
           <span>共 {{ hostPages}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
-          <span class="guide" style="margin-left: 20px"><Icon type="grid"></Icon></span>
-          <span class="guide"><Icon type="navicon-round"></Icon></span>
+          <span class="guide" style="margin-left: 20px" @click="$router.push('hostCard')"><Icon type="grid"></Icon></span>
+          <span class="guide" @click="$router.push('host')"><Icon type="navicon-round"></Icon></span>
+          <div class="hint_1" v-show="guideStep == 1">
+            <p>需要新睿云2.0指引提示？</p>
+            <span @click="guideNext">需要</span>
+            <span @click="guideStep = 0">不需要</span>
+          </div>
+          <div class="hint_2" v-show="guideStep == 2">
+            <p>连接主机在这里</p>
+            <span @click="guideStep = 3">知道了</span>
+          </div>
+          <div class="hint_3" v-show="guideStep == 3">
+            <p>上面的操作按钮，可对列表进行批量操作。更多操作里除了更改密码，其余都是单项操作</p>
+            <span @click="guideStep = 4">知道了</span>
+          </div>
+          <div class="hint_4" v-show="guideStep == 4">
+            <p>点击「状态」可查看该主机的监控数据。（异常和删除至回收站状态不可查看）</p>
+            <span @click="guideStep = 5">知道了</span>
+          </div>
+          <div class="hint_5" v-show="guideStep == 5">
+            <p>点击用户名称可进入管理页面。</p>
+            <span @click="guideStep = 6">知道了</span>
+          </div>
+          <div class="hint_6" v-show="guideStep == 6">
+            <p>管理主机在这里</p>
+            <span @click="hintToManage">知道了</span>
+          </div>
         </div>
         <Table :columns="hostListColumns" :data="hostListData" @on-selection-change="hostSelectionChange"></Table>
         <div style="margin: 10px;overflow: hidden">
@@ -505,7 +530,7 @@
   export default {
     data() {
       return {
-        guide_1: true,
+        guideStep: 1,
         regExpObj: {
           password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,32}$/
         },
@@ -2535,6 +2560,35 @@
         sessionStorage.setItem('pane', type)
         this.$router.push('/ruicloud/usercenter')
       },
+      guideNext() {
+        if (this.hostListData.length != 0) {
+          let flag = false
+          this.hostListData.forEach(item => {
+            if (item.status == 1) {
+              flag = true
+            }
+          })
+          if (flag) {
+            this.guideStep = 2
+          } else {
+            this.guideStep = 0
+            this.$Message.info('您还没有正常状态的云主机，无法查看指引提示，请先创建主机')
+          }
+        } else {
+          this.guideStep = 0
+          this.$Message.info('您还没有云主机，无法查看指引提示，请先创建主机')
+        }
+      },
+      hintToManage() {
+        this.guideStep = 0
+        this.hostListData.forEach(item => {
+          if (item.status == 1) {
+            sessionStorage.setItem('guideHint', '1')
+            sessionStorage.setItem('manageId', item.computerid)
+            this.$router.push('manage')
+          }
+        })
+      }
     },
     computed: {
       auth() {
@@ -2829,6 +2883,45 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .hint() {
+    width: 200px;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    position: absolute;
+    z-index: 9999;
+    padding: 20px;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: #666666;
+      line-height: 20px;
+      margin-bottom: 20px;
+    }
+    > span {
+      float: right;
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(24, 144, 255, 1);
+      cursor: pointer;
+    }
+    span:nth-child(2) {
+      margin-left: 10px;
+    }
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #FFF;
+      position: absolute;
+      bottom: -6px;
+      right: 50%;
+      transform: rotate(135deg);
+      box-shadow: 1px -1px 0px 0px rgba(0, 0, 0, 0.2);
+    }
+  }
+
   .monitor {
     position: fixed;
     right: 0;
@@ -2920,6 +3013,7 @@
 
   .selectMark {
     margin-bottom: 10px;
+    position: relative;
     > img {
       position: relative;
       top: 4px;
@@ -2938,6 +3032,36 @@
           color: #2A99F2;
         }
       }
+    }
+    .hint_1 {
+      .hint();
+      right: -60px;
+      top: -105px;
+    }
+    .hint_2 {
+      .hint();
+      right: 0;
+      top: -30px;
+    }
+    .hint_3 {
+      .hint();
+      left: 290px;
+      top: -215px;
+    }
+    .hint_4 {
+      .hint();
+      left: 150px;
+      top: -65px;
+    }
+    .hint_5 {
+      .hint();
+      left: 10px;
+      top: -33px;
+    }
+    .hint_6 {
+      .hint();
+      right: 0;
+      top: 0;
     }
   }
 

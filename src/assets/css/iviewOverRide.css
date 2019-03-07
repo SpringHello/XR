@@ -406,22 +406,8 @@ div.modal-header-border {
 .font .ivu-tooltip-arrow{
 	background: white;
 }
-
-/* 提现流程第二部样式修改 */
-.thdd .ivu-tooltip-inner{
-		background:rgba(255,255,255,1);
-		box-shadow:0px 1px 4px 0px rgba(0,0,0,0.2);
-		border-radius:2px;
-		margin-top: 15px;
-	}
-.thdd .ivu-tooltip-popper{
-	font-size:12px;
-	font-family:MicrosoftYaHei;
-	color:rgba(102,102,102,1);
-	line-height:22px;
-}
-.thdd .ivu-tooltip-arrow{
-	background: white;
+.font .ivu-poptip-popper{
+	margin-left: 66px;
 }
 
 .smlj-bag .ivu-modal-content {
@@ -432,6 +418,12 @@ div.modal-header-border {
 .modal-wrapper .modal .modal-body p {
   line-height: 25px;
 }
+
+/* 所有资源页面提示框修改 */
+.VPCALL .ivu-poptip-popper{
+	margin-left: -5px;
+}
+
 
 /* 拼团活动下拉框 */
 .groupBooking-select .ivu-select-selection {

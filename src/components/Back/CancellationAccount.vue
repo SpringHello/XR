@@ -1,7 +1,7 @@
 <template>
 	<div id="background">
 		<div id="wrapper">
-			<span>个人中心 / 用户中心 / 注销账号</span>
+			<span><span @click="$router.push('/ruicloud/userCenter')">个人中心</span> / <span @click="$router.push('/ruicloud/userCenter')">用户中心</span> / <span @click="$router.push('/ruicloud/CancellationAccount')">注销账号</span></span>
 			<div class="content0" v-if="selectedTabSec == 'content0'">
 				<div style="float: left;" @click="backpage">
 					<Icon class="icon1" type="chevron-left"></Icon>

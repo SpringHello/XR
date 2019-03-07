@@ -1,7 +1,7 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>个人中心 / 费用中心 / 提现</span>
+      <span><span @click="$router.push('/ruicloud/userCenter')">个人中心</span> / <span @click="$router.push('/ruicloud/expenses')">费用中心</span> / <span @click="$router.push('/ruicloud/Cashwithdrawal')">提现</span></span>
       <div class="content" v-if="selectedTabSec == 'content'" style="min-height: 665px;">
         <div style="float: left;" @click="backpage">
           <Icon class="icon1" type="chevron-left"></Icon>
@@ -71,13 +71,13 @@
               <th class="thself">提现金额（元）</th>
               <th style="width:510px;text-align:left;">预计到账金额（元）
                 <div class="thdd" id="divself">
-                  <Tooltip placement="top">
-                    <div slot="content" id="divself2">
-                      <p style="line-height:22px;">银行扣除相应金额的手续费时会导致到账金额和</p>
-                      <p style="line-height:22px;">提现金额不一致。</p>
-                    </div>
-                    <Icon type="ios-help-outline" id="iconself"></Icon>
-                  </Tooltip>
+				  <Poptip trigger="hover">
+				  	<div slot="content" id="divself2">
+				  	  <p style="line-height:22px;">银行扣除相应金额的手续费时会导致到账金额和</p>
+				  	  <p style="line-height:22px;">提现金额不一致。</p>
+				  	</div>
+				  	<Icon type="ios-help-outline" id="iconself"></Icon>
+				  </Poptip>
                 </div>
               </th>
               <th style="text-align:left;">到账账户</th>
