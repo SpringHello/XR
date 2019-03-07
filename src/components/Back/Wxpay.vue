@@ -118,7 +118,9 @@
               sessionStorage.setItem('rechargeSuccessMsg', response.data.message)
               sessionStorage.setItem('vipMsg', response.data.vipMessage)
             } else {
-
+              sessionStorage.setItem('payResult', 'success')
+              sessionStorage.setItem('successMsg', response.data.message)
+              this.$router.push('resultNew');
             }
           } else {
             this.loading = false;
@@ -126,7 +128,9 @@
               sessionStorage.setItem('rechargeErrorMsg', response.data.message)
               this.$router.push('rechargeResult')
             } else {
-
+              sessionStorage.setItem('payResult', 'fail')
+              sessionStorage.setItem('errMsg', response.data.message)
+              this.$router.push('resultNew');
             }
           }
         })
