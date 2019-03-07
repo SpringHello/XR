@@ -28,19 +28,19 @@
             title:'0元购',
             img:require('../../assets/img/login/icon-fire.png'),
             text:'领现金豪礼，享免费产品！',
-            src:'/ruicloud/active_1',
+            src:'/active_1',
             srctext:'立即参与'
           },
           {
             title:'双旦同庆，钜惠上云',
             text:'高配云产品 限时2.7折; 更有首购好礼',
-            src:'/ruicloud/wonderfulDay',
+            src:'/wonderfulDay',
             srctext:'立即抢购'
           },
           {
             title:'免费云主机 不限量领取',
             text:'交押金最长可用1年，押金闪退！',
-            src:'/ruicloud/fractive',
+            src:'/fractive',
             srctext:'立即抢购'
           },
         ]

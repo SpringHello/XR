@@ -1,7 +1,7 @@
 <template>
 	<div id="background">
 		<div id="wrapper">
-			<span><span @click="$router.push('/ruicloud/userCenter')">个人中心</span> / <span @click="$router.push('/ruicloud/expenses')">费用中心</span> / <span @click="$router.push('/ruicloud/Cashwithdrawal')">提现</span></span>
+			<span><span @click="$router.push('/userCenter')">个人中心</span> / <span @click="$router.push('/expenses')">费用中心</span> / <span @click="$router.push('/Cashwithdrawal')">提现</span></span>
 			<div class="content" style="min-height: 655px;">
 				<span>自助提现</span>
 				<div class="remindbox">
@@ -76,7 +76,7 @@
 					<div>
 						<p class="lh24" id="pself1">您正在申请线上提现，申请后您的款项将在<span style="color: #FF624B">5个工作日</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。
 						</p>
-						<!-- @click="$router.push('/ruicloud/cashwithdrawal')" -->
+						<!-- @click="$router.push('/cashwithdrawal')" -->
 						<p class="lh24" style="margin-top: 10px;">若您的线下汇款（对公转账）金额需要提现，请点击查看 <a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxagA7H2.html"
 							 style="color: #2A99F2; text-decoration: underline;">线下汇款提现方式</a>。
 						</p>
@@ -129,7 +129,7 @@
 				<p slot="footer" class="modal-footer-s">
 					<Button @click="showModal.cardfirmation = false">取消</Button>
 					<Button type="primary" @click="carddetermination('formAppreciationDate')">确定</Button>
-					<!-- $router.push('/ruicloud/cashprocess') -->
+					<!-- $router.push('/cashprocess') -->
 				</p>
 			</Modal>
 			<!-- 打款详情弹窗 -->
@@ -497,7 +497,7 @@
 							sessionStorage.setItem('reservedPhone', this.formAppreciationDate.registeredPhone)
 							sessionStorage.setItem('balance', this.comBankemoney)
 							sessionStorage.setItem('type', 1)
-							this.$router.push('/ruicloud/cashprocess')
+							this.$router.push('/cashprocess')
 						}
 					})
 				}
@@ -508,7 +508,7 @@
 				} else {
 					sessionStorage.setItem('balance', this.comOnlinemoney)
 					sessionStorage.setItem('type', 0)
-					this.$router.push('/ruicloud/cashprocess')
+					this.$router.push('/cashprocess')
 				}
 			},
 			setdisable() {

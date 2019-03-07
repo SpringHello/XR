@@ -59,7 +59,7 @@
                 </div>
               </div>
             </div>
-            
+
             <!--是否需要公网IP-->
             <div class="item-wrapper">
               <div style="display: flex">
@@ -1190,7 +1190,7 @@
         axios.get('information/deployVirtualMachine.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({
-              path: '/ruicloud/order'
+              path: '/order'
             })
           } else {
             this.$message.info({

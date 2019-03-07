@@ -19,7 +19,7 @@
         <p><span>见面礼！</span>包含<i style="color:#FF3000;font-style:normal"> 戴森、科沃斯 </i>爆款奖品，100%中奖率，注册登录即可拥有一次抽奖机会!</p>
       </div>
       <div class="content center">
-        <!-- <div class="player"> 
+        <!-- <div class="player">
           <div class="player-shade" ref="playerShade" @click="controlVideo"></div>
           <video style="display: none" controls="controls" ref="media" name="media" width="648px">
             <source src="http://file.xrcloud.net/vedio/2018-11-09/adver.mp4" type="video/mp4">
@@ -101,7 +101,7 @@
           <p><img src="../../../assets/img/active/anniversary/aa-icon4.png"/><span>抢购预告：对象存储（10:30开始）、云数据库（16:30开始）</span></p>
         </div>
       </div>
-       
+
     </div>
     <!-- gpu专区-->
       <div class="active-3">
@@ -246,7 +246,7 @@
       <!-- 页面导航 -->
       <div class="page-pilot">
         <ul>
-          <li @click="$router.push('/ruicloud/index.htm')">新睿云首页</li>
+          <li @click="$router.push('/index.htm')">新睿云首页</li>
           <li @click="roll(1000)">幸运抽奖</li>
           <li @click="roll(1700)">1.7折云产品</li>
           <li @click="roll(2700)">8折GPU服务器</li>
@@ -686,7 +686,7 @@
             margin: 0 auto;
           }
         }
-        
+
         .timer {
           padding-top: 620px;
           h3 {

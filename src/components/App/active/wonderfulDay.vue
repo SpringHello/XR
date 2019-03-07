@@ -23,11 +23,11 @@
         </div>
         <div class="gift_three">
             <img  src="../../../assets/img/active/doubleDenier/0_da.png">
-            <a :href="'/ruicloud/frActive'" target="_blank">查看详情</a>
+            <a :href="'/frActive'" target="_blank">查看详情</a>
         </div>
         <div class="gift_four">
             <img  src="../../../assets/img/active/doubleDenier/38_da.png">
-            <a :href="'/ruicloud/active_1'" target="_blank">立即领取</a>
+            <a :href="'/active_1'" target="_blank">立即领取</a>
         </div>
         </div>
         <div class="w_center" ref="center">
@@ -55,7 +55,7 @@
               <div class="w_special">
               <div>
                   <p class="w_pfn" >云服务器特惠专场</p>
-                  <p style="color:#222222;font-size:16px;">云服务器（1核1G）免费体验，最高可用152小时 <a class="w_span" :href="'/ruicloud/active_1'" target="_blank">立即领取</a></p>
+                  <p style="color:#222222;font-size:16px;">云服务器（1核1G）免费体验，最高可用152小时 <a class="w_span" :href="'/active_1'" target="_blank">立即领取</a></p>
                   <div class="w_host">
                   <div v-for="(item,index) in allObjcet.cloudHost" :key="index">
                       <div class="host_title">
@@ -101,7 +101,7 @@
             <!--  -->
             <div>
                 <p class="w_pfn" style="color:#4E49F3">GPU云服务器特惠专场</p>
-                <p style="color:#222222;font-size:16px;">GPU云服务器（16核64G P40显卡）免费体验，最高可用3小时 <a class="w_span" :href="'/ruicloud/active_1'" target="_blank">立即领取</a></p>
+                <p style="color:#222222;font-size:16px;">GPU云服务器（16核64G P40显卡）免费体验，最高可用3小时 <a class="w_span" :href="'/active_1'" target="_blank">立即领取</a></p>
                 <div class="w_host" style="margin-top:29px;">
                 <div v-for="(item,index) in allObjcet.gpuHost" :key="index">
                     <div class="gpu_title">
@@ -195,7 +195,7 @@
             <div class="w_special">
             <div>
                 <p class="w_pfn">对象存储特惠专场</p>
-                <p style="color:#222222;font-size:16px;">对象存储（100G存储包+100G下行流量）免费体验，最长可用1个月  <a class="w_span" :href="'/ruicloud/active_1'" target="_blank">立即领取</a></p>
+                <p style="color:#222222;font-size:16px;">对象存储（100G存储包+100G下行流量）免费体验，最长可用1个月  <a class="w_span" :href="'/active_1'" target="_blank">立即领取</a></p>
                 <div class="w_host">
                 <div v-for="(item,index) in allObjcet.objectHost" :key="index">
                     <div class="host_title">
@@ -228,7 +228,7 @@
             <!--  -->
             <div>
                 <p class="w_pfn">云数据库特惠专场</p>
-                <p style="color:#222222;font-size:16px;">云数据库（1核1G）免费体验，最高可用97小时   <a class="w_span" :href="'/ruicloud/active_1'" target="_blank">立即领取</a></p>
+                <p style="color:#222222;font-size:16px;">云数据库（1核1G）免费体验，最高可用97小时   <a class="w_span" :href="'/active_1'" target="_blank">立即领取</a></p>
                 <div class="w_host">
                 <div v-for="(item,index) in allObjcet.cloudData" :key="index">
                     <div class="host_title">
@@ -1523,7 +1523,7 @@
       span{
           position: absolute;bottom: 85px; right: 48.6%;color:rgb(187, 190, 196);font-size: 15px;cursor: not-allowed;
       }
-     
+
     }
     .w_draw{
       display: inline-block;

@@ -101,13 +101,13 @@
           <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-warning" style="top: 48px;left: 30px;">
             <i class="ivu-icon ivu-icon-android-alert"></i>
           </div>
-          <p class="lh24">您好，您不符合本活动的参与条件，去<span style="color: #2A99F2;cursor: pointer" @click="$router.push('/ruicloud/ActiveCenter')">活动中心</span>看看其他活动吧！如果有其他需要可联系我们销售或者客服。
+          <p class="lh24">您好，您不符合本活动的参与条件，去<span style="color: #2A99F2;cursor: pointer" @click="$router.push('/ActiveCenter')">活动中心</span>看看其他活动吧！如果有其他需要可联系我们销售或者客服。
           </p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.inConformityModal = false">取消</Button>
-        <Button type="primary" @click="$router.push('/ruicloud/ActiveCenter')">去活动中心</Button>
+        <Button type="primary" @click="$router.push('/ActiveCenter')">去活动中心</Button>
       </p>
     </Modal>
     <!-- 领取成功 -->
@@ -124,7 +124,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.getSuccessModal = false">取消</Button>
-        <Button type="primary" @click="$router.push('/ruicloud/cloudDatabase')">查看数据库</Button>
+        <Button type="primary" @click="$router.push('/cloudDatabase')">查看数据库</Button>
       </p>
     </Modal>
     <!-- 支付充值失败 -->

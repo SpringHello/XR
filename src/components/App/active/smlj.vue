@@ -310,7 +310,7 @@
             this.sucessMsg = response.data.message
             this.modal1 = true
           } else {
-            this.failMsg = response.data.message.replace('<a>用户中心', '<a href="/ruicloud/userCenter">用户中心')
+            this.failMsg = response.data.message.replace('<a>用户中心', '<a href="/userCenter">用户中心')
             this.modal2 = true
           }
         })

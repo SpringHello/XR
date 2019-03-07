@@ -49,7 +49,7 @@
 					</div>
 				</div>
 				<span class="allziyuan">所有区域</span>
-				<Button class="btn1" type="primary" @click="$router.push('/ruicloud/work')">增加配额</Button>
+				<Button class="btn1" type="primary" @click="$router.push('/work')">增加配额</Button>
 				<span class="xian1"></span>
 				<div class="allbox">
 					<div class="box" v-for="item in LargeArea">
@@ -195,7 +195,7 @@
 						 this.$router.push(ited.buyUrl)
 					}
 					else{
-						 this.$router.push('/ruicloud/buy/'+ited.buyUrl)
+						 this.$router.push('/buy/'+ited.buyUrl)
 					}
 				  }
 				}
@@ -207,7 +207,7 @@
 			  for (var zone of this.$store.state.zoneList) {
 			    if (zone.zoneid == item.zoneId) {
 			      $store.commit('setZone', zone);
-				  this.$router.push('/ruicloud/overview')
+				  this.$router.push('/overview')
 			    }
 			  }
 			},
@@ -219,11 +219,11 @@
 				  if (zone.zoneid == item.zoneId) {
 				    $store.commit('setZone', zone);
 					if(item.type=='2'){
-						this.$router.push('/ruicloud/buy/bgpu')
+						this.$router.push('/buy/bgpu')
 					}
 					else if(item.type=='1'){
-						this.$router.push('/ruicloud/buy/bhost')
-					}	
+						this.$router.push('/buy/bhost')
+					}
 				  }
 				}
 			},

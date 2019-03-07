@@ -4,7 +4,7 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div class="ss-active" @click="push('/ruicloud/schoolSeason')">
+          <div class="ss-active" @click="push('/schoolSeason')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
@@ -14,7 +14,7 @@
                     <i>1折</i>
                     更有会员折上折
                   </p>
-                  <span @click="push('/ruicloud/schoolSeason')">立即购买</span>
+                  <span @click="push('/schoolSeason')">立即购买</span>
                 </div>
                 <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt="云产品新春采购季">
               </div>
@@ -22,7 +22,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="xian-active" @click="push('/ruicloud/xianNode')">
+          <div class="xian-active" @click="push('/xianNode')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
@@ -51,7 +51,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="eightscene" @click="push('/ruicloud/sceneList')">
+          <div class="eightscene" @click="push('/sceneList')">
             <div class="wrap">
               <div class="left">
                 <img src="../../assets/img/home/eightscene-text.png" alt="">
@@ -68,7 +68,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/fractive')"
+          <div @click="push('/fractive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
               <div class="free-receive-content">
@@ -105,7 +105,7 @@
         </my-carousel-item>
 
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/objStorageActive')"
+          <div @click="push('/objStorageActive')"
                style="cursor: pointer;">
             <div class="obj-storage">
               <div class="wrap">
@@ -120,7 +120,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/groupBooking')"
+          <div @click="push('/groupBooking')"
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
               <div class="groupBook-content">
@@ -139,7 +139,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="east-banner" @click="push('/ruicloud/EastSouthNode')">
+          <div class="east-banner" @click="push('/EastSouthNode')">
             <div class="wrap">
               <div class="text">
                 <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
@@ -355,7 +355,7 @@
                 <p style="font-size: 14px;color:#999999;line-height: 20px;width:500px;border-right: 1px solid #d8d8d8;
     padding-right: 40px;">
                   {{area.desc}}</p>
-                <router-link to="/ruicloud/buy" class="buy" style="padding:13px 30px">立即购买</router-link>
+                <router-link to="/buy" class="buy" style="padding:13px 30px">立即购买</router-link>
               </div>
             </my-carousel-item>
           </my-carousel>
@@ -582,7 +582,7 @@
         otherPayWay: '',
         balance: '0.0',
         attestationShow: false,
-        imgSrc: `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        imgSrc: `/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         //定时器
         pageTimer: null,
         serialNum: '',
@@ -636,7 +636,7 @@
               require('../../assets/img/sceneList/sl-icon4.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/ruicloud/sceneInfo/host',
+            link: '/sceneInfo/host',
             hint: '免费使用一年'
           },
           {
@@ -649,7 +649,7 @@
               require('../../assets/img/sceneList/sl-icon8.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/ruicloud/sceneInfo/web',
+            link: '/sceneInfo/web',
             hint: '免费使用一年'
           },
           {
@@ -662,7 +662,7 @@
               require('../../assets/img/sceneList/sl-icon29.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/ruicloud/sceneInfo/disk',
+            link: '/sceneInfo/disk',
             hint: '免费使用一年'
           },
           {
@@ -675,7 +675,7 @@
               require('../../assets/img/sceneList/sl-icon14.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/ruicloud/sceneInfo/software',
+            link: '/sceneInfo/software',
             hint: '免费使用一年'
           },
           {
@@ -686,7 +686,7 @@
               require('../../assets/img/sceneList/sl-icon16.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/ruicloud/sceneInfo/game',
+            link: '/sceneInfo/game',
             hint: '免费使用'
           },
           {
@@ -699,7 +699,7 @@
               require('../../assets/img/sceneList/sl-icon20.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/ruicloud/sceneInfo/design',
+            link: '/sceneInfo/design',
             hint: '免费使用'
           },
           {
@@ -712,7 +712,7 @@
               require('../../assets/img/sceneList/sl-icon24.png'),
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/ruicloud/sceneInfo/AI',
+            link: '/sceneInfo/AI',
             hint: '免费使用'
           },
           {
@@ -722,7 +722,7 @@
               require('../../assets/img/sceneList/sl-icon25.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/ruicloud/sceneInfo/supercomputing',
+            link: '/sceneInfo/supercomputing',
             hint: '免费使用'
           },
         ],

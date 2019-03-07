@@ -17,23 +17,23 @@
                     <p :class="{active:it.active,open:it.open}" @click="it.open=!it.open">{{it.title}}</p>
                     <li v-for="j in it.subMenu" v-show="it.open">
                       <router-link
-                        :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${j.parentId}`">
+                        :to="`/documentInfo/${$router.currentRoute.params.parentId}/${j.parentId}`">
                         {{j.title}}
                       </router-link>
                     </li>
                   </ul>
                   <router-link v-else
-                               :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${it.parentId}`">
+                               :to="`/documentInfo/${$router.currentRoute.params.parentId}/${it.parentId}`">
                     {{it.title}}
                   </router-link>
                 </li>
               </ul>
-              <router-link v-else :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${i.parentId}`">
+              <router-link v-else :to="`/documentInfo/${$router.currentRoute.params.parentId}/${i.parentId}`">
                 {{i.title}}
               </router-link>
             </li>
           </ul>
-          <router-link v-else :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${item.parentId}`"
+          <router-link v-else :to="`/documentInfo/${$router.currentRoute.params.parentId}/${item.parentId}`"
                        :class="{active:item.active}">
             {{item.title}}
           </router-link>

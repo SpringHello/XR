@@ -7,7 +7,7 @@
     </div>
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/index.htm" class="logo">
+        <router-link to="/index.htm" class="logo">
           <div></div>
         </router-link>
         <div class="operate">
@@ -205,7 +205,7 @@
       </div>
     </div>
      <router-view/>
-     
+
 		<!--登录失效弹窗-->
 		<Modal v-model="showModal.WriteAudit" :scrollable="true" :closable="false" :width="380">
 		  <p slot="header" class="modal-header-border">
@@ -222,7 +222,7 @@
 		    <Button type="primary" @click="CanCancellation">取消注销</Button>
 		  </p>
 		</Modal>
-   
+
   </div>
 </template>
 

@@ -8,7 +8,7 @@
         <div class="body">
           <div class="body-left">
             <div class="item" v-for="item in articleList">
-              <router-link :to="'/ruicloud/article/'+`${item.code}.html`" target="_blank">
+              <router-link :to="'/article/'+`${item.code}.html`" target="_blank">
                 <div class="item-left">
                   <div class="item-img" :style="{backgroundImage: 'url('+item.coverUrl+')'}"></div>
                 </div>
@@ -44,7 +44,7 @@
             <div class="hot-information">
               <h3><div class="licon2"></div>热门资讯</h3>
               <div v-for="h in hot" class="info">
-                <router-link :to="`/ruicloud/article/${h.code}.html`" target="_blank">
+                <router-link :to="`/article/${h.code}.html`" target="_blank">
                   <div class="hotInfo-title">
                     <Poptip :content="h.title" slot="content" trigger="hover" class="htitle">{{h.title}}</Poptip>
                     <p class="time">{{h.author}}发布于: {{h.createDate}}</p>

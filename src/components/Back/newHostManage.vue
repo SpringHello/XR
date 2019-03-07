@@ -6,7 +6,7 @@
         <span>管理</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
-        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+        <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div class="host-config">
         <div class="config-top">
@@ -331,7 +331,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.publicIPHint = false">取消</Button>
-        <Button type="primary" @click="$router.push('/ruicloud/buy/bip')">创建公网IP</Button>
+        <Button type="primary" @click="$router.push('/buy/bip')">创建公网IP</Button>
       </p>
     </Modal>
     <!-- 绑定静态IP -->
@@ -349,7 +349,7 @@
             </Select>
             <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
               <span style="font-weight:800;font-size:20px;">+</span>
-              <span style="cursor:pointer;" @click="$router.push('/ruicloud/buy/bip')">购买弹性IP</span>
+              <span style="cursor:pointer;" @click="$router.push('/buy/bip')">购买弹性IP</span>
             </span>
           </Form-item>
         </Form>
@@ -821,7 +821,7 @@
         localStorage.setItem('link-vmid', this.hostInfo.computerId)
         localStorage.setItem('link-zoneid', this.hostInfo.zoneId)
         localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
-        window.open('/ruicloud/link')
+        window.open('/link')
       },
       hostUpgrade() {
         if (this.hostInfo.computerStatus == 1) {

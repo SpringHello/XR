@@ -212,7 +212,7 @@ var router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/ruicloud',
+      path: '',
       name: App.name,
       component: App,
       children: [
@@ -402,7 +402,7 @@ var router = new Router({
       ]
     },
     {
-      path: '/ruicloud',
+      path: '',
       name: Back.name,
       component: Back,
       // 后台页面必须登录
@@ -478,7 +478,7 @@ var router = new Router({
       ]
     },
     {
-      path: '/ruicloud',
+      path: '',
       name: LR.name,
       component: LR,
       children: [
@@ -491,7 +491,7 @@ var router = new Router({
         {path: 'resetNew', name: 'resetNew', component: ResetNew}
       ]
     },
-    {path: '/ruicloud/link', name: 'link', component: Link},
+    {path: '/link', name: 'link', component: Link},
     {path: '/*', name: '404', component: notFindPage},
   ]
 })
@@ -503,7 +503,7 @@ router.beforeEach((to, from, next) => {
     })) {
     if (!localStorage.getItem('authToken')) {
       next({
-        path: '/ruicloud/login'
+        path: '/login'
         // query: { redirect: to.fullPath }//把要跳转的地址作为参数传到下一步
       })
     } else {

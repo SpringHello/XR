@@ -4,7 +4,7 @@
       <span class="title">云数据库 / <span>云数据库</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
-        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+        <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
         <div id="header">
@@ -19,13 +19,13 @@
         </div>
         <div class="operator-bar">
           <Button type="primary" @click="createDatabase">
-            <!-- <router-link to="/ruicloud/buy" style="color:#fff">创建云数据库</router-link> -->
+            <!-- <router-link to="/buy" style="color:#fff">创建云数据库</router-link> -->
             创建云数据库
           </Button>
         </div>
         <div class="databases">
           <Table :columns="databaseColumns" :data="dataBaseData"></Table>
-          <p>点击查看<span @click="$router.push('/ruicloud/documentInfo/RjCUjfFD7/RjDqVv0ZP')">如何连接数据库？</span></p>
+          <p>点击查看<span @click="$router.push('/documentInfo/RjCUjfFD7/RjDqVv0ZP')">如何连接数据库？</span></p>
         </div>
       </div>
     </div>
@@ -215,7 +215,7 @@
             </Select>
             <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
               <span style="font-weight:800;font-size:20px;">+</span>
-              <span style="cursor:pointer;" @click="$router.push('/ruicloud/buy/bip')">购买弹性IP</span>
+              <span style="cursor:pointer;" @click="$router.push('/buy/bip')">购买弹性IP</span>
             </span>
           </Form-item>
         </Form>
@@ -239,7 +239,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.publicIPHint = false">取消</Button>
-        <Button type="primary" @click="$router.push('/ruicloud/buy/bip')">创建公网IP</Button>
+        <Button type="primary" @click="$router.push('/buy/bip')">创建公网IP</Button>
       </p>
     </Modal>
   </div>
@@ -773,7 +773,7 @@
                         }
                       })
                     }
-                  } 
+                  }
                 }, '删除'), h('Dropdown', {
                   props: {
                     trigger: 'click'
@@ -1106,7 +1106,7 @@
         }
       },
       createDatabase() {
-        this.$router.push('/ruicloud/buy/bdata')
+        this.$router.push('/buy/bdata')
         //sessionStorage.setItem('pane', 'Pdatabase')
       },
       listDatabase() {

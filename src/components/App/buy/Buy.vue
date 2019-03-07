@@ -5,7 +5,7 @@
         <Select @on-change="change" v-model="product.currentProduct" class="mySelect" style="width: 102px">
           <Option v-for="item in product.productList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <router-link :to="`/ruicloud/${docPath}`" target="_blank">查看产品详情</router-link>
+        <router-link :to="`/${docPath}`" target="_blank">查看产品详情</router-link>
       </div>
       <div id="body" ref="bo">
         <router-view/>
@@ -243,7 +243,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -335,7 +335,7 @@
             warning: false
           }
         },
-        imgSrc: '/ruicloud/user/getKaptchaImage.do',
+        imgSrc: '/user/getKaptchaImage.do',
         showModal: {
           login: false
         },
@@ -436,7 +436,7 @@
             if (response.data.status == 1) {
               this.$router.go(0)
             } else {
-              this.imgSrc = `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.imgSrc = `/user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.vailForm.loginname.message = response.data.message
               this.vailForm.loginname.warning = true
             }
@@ -641,7 +641,7 @@
             return item.status == 200 && item.data.status == 1
           })) {
             this.$router.push({
-              path: '/ruicloud/order', query: {
+              path: '/order', query: {
                 countOrder
               }
             })
@@ -663,7 +663,7 @@
         sessionStorage.setItem('cart', JSON.stringify(this.cart))
       },
       change(value) {
-        this.$router.push(`/ruicloud/buy/${value}`)
+        this.$router.push(`/buy/${value}`)
       },
       // 导出清单
       exportXLSX() {

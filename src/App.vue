@@ -11,10 +11,10 @@
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
-        <router-link to="//www.xrclound.net/index.htm" class="logo" alt='新睿云'>
+        <a href="//kaifa.xrclound.net/index.htm" class="logo" alt='新睿云'>
           <div></div>
-        </router-link>
-        <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('/ruicloud/schoolSeason')" alt="">
+        </a>
+        <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('/schoolSeason')" alt="">
         <div class="operate" style="padding-left:90px;">
           <ul @mouseleave="ME(-1)">
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
@@ -69,7 +69,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a  href="https://zschj.xrcloud.net/ruicloud/overview"   rel="nofollow" ><span>控制台</span>
+                  <a  href="https://zschj.xrcloud.net/overview"   rel="nofollow" ><span>控制台</span>
                   </a>
                 </div>
               </div>
@@ -77,14 +77,14 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/entrance.htm"><span>备案</span></router-link>
+                  <router-link to="/entrance.htm"><span>备案</span></router-link>
                 </div>
               </div>
             </li>
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a  href="https://zschj.xrcloud.net/ruicloud/login"   rel="nofollow" ><span>登录</span>
+                  <a  href="https://zschj.xrcloud.net/login"   rel="nofollow" ><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -92,7 +92,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a  href="https://zschj.xrcloud.net/ruicloud/register"   rel="nofollow" ><span>注册</span>
+                  <a  href="https://zschj.xrcloud.net/register"   rel="nofollow" ><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -103,14 +103,14 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
+                  <router-link to="/overview"><span>控制台</span></router-link>
                 </div>
               </div>
             </li>
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/ruicloud/entrance"><span>备案</span></router-link>
+                  <router-link to="/entrance"><span>备案</span></router-link>
                 </div>
               </div>
             </li>
@@ -122,18 +122,18 @@
                   <Icon type="arrow-down-b"></Icon>
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem name="/ruicloud/userCenter">
-                    <router-link to="/ruicloud/userCenter">用户中心</router-link>
+                  <DropdownItem name="/userCenter">
+                    <router-link to="/userCenter">用户中心</router-link>
                   </DropdownItem>
-                  <DropdownItem name="/ruicloud/expenses">
+                  <DropdownItem name="/expenses">
                     <router-link to="ruicloud/expenses">费用中心</router-link>
                   </DropdownItem>
-                  <DropdownItem name="/ruicloud/msgCenter" style="position:relative">
+                  <DropdownItem name="/msgCenter" style="position:relative">
                     <router-link to="ruicloud/msgCenter">消息中心
                       <!--<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>-->
                     </router-link>
                   </DropdownItem>
-                  <DropdownItem name="/ruicloud/operationLog">
+                  <DropdownItem name="/operationLog">
                     <router-link to="ruicloud/operationLog">操作日志</router-link>
                   </DropdownItem>
                   <DropdownItem divided name="exit">
@@ -231,7 +231,7 @@
                 B1-20180455</a>
             </li>
             <li>
-              <a href="https://www.xrcloud.net/ruicloud/about.htm" rel="nofollow" style="color:#fff">关于我们</a>
+              <a href="https://www.xrcloud.net/about.htm" rel="nofollow" style="color:#fff">关于我们</a>
             </li>
           </ul>
         </div>
@@ -411,17 +411,17 @@
          },
          {
          title: '关于我们',
-         path: '/ruicloud/about'
+         path: '/about'
          }
          ], // banner item*/
         titleItem: [
           {
             title: '活动中心',
-            path: '/ruicloud/ActiveCenter.htm'
+            path: '/ActiveCenter.htm'
           },
           {
             title: '首页',
-            path: '/ruicloud/index.htm'
+            path: '/index.htm'
           },
           {
             title: '产品',
@@ -430,31 +430,31 @@
               {
                 prod: '云计算',
                 prodItem: [
-                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ruicloud/Pecs.htm'},
-                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost.htm'},
-                  {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss.htm'},
-                  {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/ruicloud/Pgpu.htm'},
-                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/ruicloud/Pelastic'},
+                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/Pecs.htm'},
+                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/Phost.htm'},
+                  {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/Pecss.htm'},
+                  {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/Pgpu.htm'},
+                  {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/Pelastic'},
                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
                 ]
               },
               {
                 prod: '云网络',
                 prodItem: [
-                  {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/ruicloud/Pvpc.htm'},
-                  {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/ruicloud/Peip.htm'},
-                  {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/ruicloud/Pbalance.htm'},
-                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/ruicloud/Pnat.htm'},
-                  {title: '虚拟专网VPN', desc: '跨VPC连接', path: '/ruicloud/Pvirvpn.htm'},
+                  {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/Pvpc.htm'},
+                  {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/Peip.htm'},
+                  {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/Pbalance.htm'},
+                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/Pnat.htm'},
+                  {title: '虚拟专网VPN', desc: '跨VPC连接', path: '/Pvirvpn.htm'},
                   {title: 'CDN（敬请期待）', desc: '节点丰富、安全易用', path: ''}
                 ]
               },
               {
                 prod: '云存储',
                 prodItem: [
-                  {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/ruicloud/Pdisk.htm'},
-                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/ruicloud/Pbackupdisk.htm'},
-                  {title: '对象存储', desc: '安全稳定，海量便捷', path: '/ruicloud/PobjStorage.htm'}
+                  {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/Pdisk.htm'},
+                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/Pbackupdisk.htm'},
+                  {title: '对象存储', desc: '安全稳定，海量便捷', path: '/PobjStorage.htm'}
                 ]
               },
               {
@@ -463,7 +463,7 @@
                   {
                     title: '云数据库',
                     desc: 'MySQL、PostgreSQL、mongoDB、Redis',
-                    path: '/ruicloud/PdataBase.htm'
+                    path: '/PdataBase.htm'
                   },
                 ],
                 subProd: [
@@ -473,12 +473,12 @@
                       {
                         title: '域名注册',
                         desc: '自定义域名注册、查询',
-                        path: '/ruicloud/domainname'
+                        path: '/domainname'
                       },
                       {
                         title: '域名备案',
                         desc: '高效贴心的域名备案服务',
-                        path: '/ruicloud/entrance'
+                        path: '/entrance'
                       },
                     ]
                   },
@@ -487,19 +487,19 @@
               {
                 prod: '云安全',
                 prodItem: [
-                  {title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall.htm'},
-                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos.htm'},
+                  {title: '防火墙', desc: '自定义规则、协议、端口', path: '/Pfirewall.htm'},
+                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/Pddos.htm'},
                   {
                     title: 'SSL证书',
                     desc: '网站可信身份认证与安全数据传输',
-                    path: '/ruicloud/ssl.htm'
+                    path: '/ssl.htm'
                   },
                 ],
                 subProd: [
                   {
                     prod: '云运维',
                     prodItem: [
-                      {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor.htm'},
+                      {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/Pmonitor.htm'},
                       {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: ''}
                     ]
                   }
@@ -509,7 +509,7 @@
           },
           {
             title: '文档',
-            path: '/ruicloud/document',
+            path: '/document',
           },
           {
             title: '新闻动态',
@@ -547,7 +547,7 @@
           },
           {
             title: '关于我们',
-            path: 'https://zschj.xrcloud.net/ruicloud/about.htm'
+            path: 'https://zschj.xrcloud.net/about.htm'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
@@ -566,53 +566,53 @@
           {
             title: '云计算',
             desc: [
-              {subTitle: '弹性云服务器（ECS）', url: '/ruicloud/Pecs.htm'},
-              {subTitle: '镜像服务', url: '/ruicloud/Phost.htm'},
-              {subTitle: 'ESC快照', url: '/ruicloud/Pecss.htm'},
-              {subTitle: 'GPU服务器', url: '/ruicloud/Pgpu.htm'},
-              {subTitle: '弹性伸缩', url: '/ruicloud/Pelastic'},
+              {subTitle: '弹性云服务器（ECS）', url: '/Pecs.htm'},
+              {subTitle: '镜像服务', url: '/Phost.htm'},
+              {subTitle: 'ESC快照', url: '/Pecss.htm'},
+              {subTitle: 'GPU服务器', url: '/Pgpu.htm'},
+              {subTitle: '弹性伸缩', url: '/Pelastic'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
             ]
           },
           {
             title: '云网络',
             desc: [
-              {subTitle: '虚拟私有云VPC', url: '/ruicloud/Pvpc.htm'},
-              {subTitle: '弹性IP', url: '/ruicloud/Peip.htm'},
-              {subTitle: '负载均衡', url: '/ruicloud/Pbalance.htm'},
-              {subTitle: 'NAT网关', url: '/ruicloud/Pnat.htm'},
-              {subTitle: '虚拟专网VPN', url: '/ruicloud/Pvirvpn.htm'},
+              {subTitle: '虚拟私有云VPC', url: '/Pvpc.htm'},
+              {subTitle: '弹性IP', url: '/Peip.htm'},
+              {subTitle: '负载均衡', url: '/Pbalance.htm'},
+              {subTitle: 'NAT网关', url: '/Pnat.htm'},
+              {subTitle: '虚拟专网VPN', url: '/Pvirvpn.htm'},
               {subTitle: 'CDN（敬请期待）', url: ''}
             ]
           },
           {
             title: '云储存',
             desc: [
-              {subTitle: '云硬盘', url: '/ruicloud/Pdisk.htm'},
-              {subTitle: '云硬盘备份', url: '/ruicloud/Pbackupdisk.htm'},
-              {title: '对象存储', url: '/ruicloud/PobjStorage.htm'}
+              {subTitle: '云硬盘', url: '/Pdisk.htm'},
+              {subTitle: '云硬盘备份', url: '/Pbackupdisk.htm'},
+              {title: '对象存储', url: '/PobjStorage.htm'}
             ]
           },
           {
             title: '云安全',
             desc: [
-              {subTitle: '防火墙', url: '/ruicloud/Pfirewall.htm'},
-              {subTitle: 'DDOS高防IP', url: '/ruicloud/Pddos.htm'}
+              {subTitle: '防火墙', url: '/Pfirewall.htm'},
+              {subTitle: 'DDOS高防IP', url: '/Pddos.htm'}
             ]
           },
           {
             title: '云维护',
             desc: [
-              {subTitle: '云监控', url: '/ruicloud/Pmonitor.htm'},
+              {subTitle: '云监控', url: '/Pmonitor.htm'},
               {subTitle: '访问监控（敬请期待）', url: ''}
             ]
           }
         ], // 页尾列表详情
         document: [
-          {title: '计算', url: '/ruicloud/document'},
-          {title: '网络', url: '/ruicloud/document'},
-          {title: '安全', url: '/ruicloud/document'},
-          {title: '财务与账户', url: 'https://zschj.xrcloud.net/ruicloud/documentInfo/qHwTxQKS7/qZfGQSs8S'}
+          {title: '计算', url: '/document'},
+          {title: '网络', url: '/document'},
+          {title: '安全', url: '/document'},
+          {title: '财务与账户', url: 'https://zschj.xrcloud.net/documentInfo/qHwTxQKS7/qZfGQSs8S'}
         ],
         // 服务与公告
         notice: [
@@ -622,7 +622,7 @@
         ],
         // 友情链接
         links: [
-          {href: 'https://zschj.xrcloud.net/ruicloud/', text: '新睿云'}
+          {href: 'https://zschj.xrcloud.net/', text: '新睿云'}
         ],
         Preparation: [
           {

@@ -164,7 +164,7 @@
             <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
               如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到
               <router-link style="color: rgb(42, 153, 242);cursor: pointer"
-                           to="/ruicloud/vpc">控制台新建。
+                           to="/vpc">控制台新建。
               </router-link>
             </p>
             <!--网卡选择-->
@@ -430,7 +430,7 @@
         <!--费用、以及加入预算清单-->
         <div style="margin-top: 20px">
           <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-             @click="$router.push({path:'/ruicloud/document'})">查看计价详情</p>
+             @click="$router.push({path:'/document'})">查看计价详情</p>
           <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
             <span v-if="timeForm.currentTimeType == 'annual'&&timeForm.currentTimeValue.type == 'year'">折后费用：</span><span v-else>费用：</span><span
             style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
@@ -1150,7 +1150,7 @@
           diskSize += `${item.size},`
           diskType += `${item.type},`
         })
- 
+
         let params = {
           zoneId: this.zone.zoneid,
           templateId: this.currentType == 'public' ? this.system.systemId : this.customMirror.systemtemplateid,
@@ -1177,7 +1177,7 @@
         }
         axios.get('gpuserver/createGpuServer.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('/ruicloud/order')
+            this.$router.push('/order')
           } else {
             this.$message.info({
               content: response.data.message

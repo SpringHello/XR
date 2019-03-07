@@ -3,7 +3,7 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div class="ss-active" @click="push('/ruicloud/schoolSeason')">
+          <div class="ss-active" @click="push('/schoolSeason')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
@@ -13,7 +13,7 @@
                     <i>1折</i>
                     更有会员折上折
                   </p>
-                  <span @click="push('/ruicloud/schoolSeason')">立即购买</span>
+                  <span @click="push('/schoolSeason')">立即购买</span>
                 </div>
                 <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt>
               </div>
@@ -21,7 +21,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="xian-active" @click="push('/ruicloud/xianNode')">
+          <div class="xian-active" @click="push('/xianNode')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
@@ -47,7 +47,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div  @click="push('/ruicloud/objStorageActive')"
+          <div  @click="push('/objStorageActive')"
             style="cursor: pointer;">
             <div class="obj-storage">
               <div class="wrap">
@@ -89,7 +89,7 @@
           </div>
         </my-carousel-item>
        <!-- <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/anniversaryActive')"
+          <div @click="push('/anniversaryActive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="anniversary-active">
             </div>

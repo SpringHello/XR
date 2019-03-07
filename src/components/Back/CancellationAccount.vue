@@ -1,7 +1,7 @@
 <template>
 	<div id="background">
 		<div id="wrapper">
-			<span><span @click="$router.push('/ruicloud/userCenter')">个人中心</span> / <span @click="$router.push('/ruicloud/userCenter')">用户中心</span> / <span @click="$router.push('/ruicloud/CancellationAccount')">注销账号</span></span>
+			<span><span @click="$router.push('/userCenter')">个人中心</span> / <span @click="$router.push('/userCenter')">用户中心</span> / <span @click="$router.push('/CancellationAccount')">注销账号</span></span>
 			<div class="content0" v-if="selectedTabSec == 'content0'">
 				<div style="float: left;" @click="backpage">
 					<Icon class="icon1" type="chevron-left"></Icon>
@@ -79,7 +79,7 @@
 				<p>
 					<Checkbox v-model="cancellationCheck" id="checkself1">已了解<span style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号空****将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
 				</p>
-				<Button @click="$router.push('/ruicloud/usercenter')" id="butself1">取消注销</Button>
+				<Button @click="$router.push('/usercenter')" id="butself1">取消注销</Button>
 				<Button type="primary" :disabled="Cancellationdisabled" @click="handleSubmit('formInline')" id="butself2">确定注销</Button>
 			</div>
 			<div class="content1" v-if="selectedTabSec == 'content1'">
@@ -134,8 +134,8 @@
 						<div id="divself3">
 							{{failurePrompt}}
 						</div>
-						<Button @click="$router.push('/ruicloud/index')" id="butself3">返回官网</Button>
-						<Button type="primary" id="butself4" @click="$router.push('/ruicloud/overview')">返回控制台</Button>
+						<Button @click="$router.push('/index')" id="butself3">返回官网</Button>
+						<Button type="primary" id="butself4" @click="$router.push('/overview')">返回控制台</Button>
 					</div>
 				</div>
 				<div v-if="$store.state.authInfo == null" style="float: left;width: 100%;">
@@ -149,8 +149,8 @@
 						<div id="divself3">
 							{{failurePrompt}}
 						</div>
-						<Button @click="$router.push('/ruicloud/index')" id="butself3">返回官网</Button>
-						<Button type="primary" id="butself4" @click="$router.push('/ruicloud/overview')">返回控制台</Button>
+						<Button @click="$router.push('/index')" id="butself3">返回官网</Button>
+						<Button type="primary" id="butself4" @click="$router.push('/overview')">返回控制台</Button>
 					</div>
 				</div>
 			</div>
@@ -307,7 +307,7 @@
 								</p>
 							</div>
 						</div>
-						<Button @click="$router.push('/ruicloud/usercenter')" id="btuself1">取消注销</Button>
+						<Button @click="$router.push('/usercenter')" id="btuself1">取消注销</Button>
 						<Button type="primary" @click="SubInformation" id="btuself2">提交信息</Button>
 					</div>
 					<div v-if="checkStatus==1" id="divself4">
@@ -315,7 +315,7 @@
 						<p id="pself13">提交成功</p>
 						<p id="pself14">您的信息已提交成功，我们会在24小时内审核完毕</p>
 						<p id="pself15">请耐心等待</p>
-						<Button @click="$router.push('/ruicloud/index')" id="btuself3">返回官网</Button>
+						<Button @click="$router.push('/index')" id="btuself3">返回官网</Button>
 					</div>
 				</div>
 				<div v-if="$store.state.authInfo == null" style="float: left;width: 100%;">
@@ -324,7 +324,7 @@
 							<span style="color: #FF624B;">24小时内</span> 审核完成，并将审核结果发送至您号码为 <span style="color: #FF624B;">{{ $store.state.userInfo.phone}}</span>
 							的手机上，请注意查收。</p>
 						<Progress :percent="cancelpercent" status="active" id="progressself3"></Progress><br /><!-- changeTab('content2') -->
-						<Button type="primary" @click="$router.push('/ruicloud/index')" style="margin-top: 40px;">返回官网</Button>
+						<Button type="primary" @click="$router.push('/index')" style="margin-top: 40px;">返回官网</Button>
 					</div>
 				</div>
 			</div>

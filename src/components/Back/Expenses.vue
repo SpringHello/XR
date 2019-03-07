@@ -19,7 +19,7 @@
               <div class="item">
                 <span>余额</span>
                 <button @click="torecharge">充值</button>
-                <!-- $router.push('/ruicloud/cashwithdrawal') -->
+                <!-- $router.push('/cashwithdrawal') -->
                 <button @click="Cashwithdrawal"
                         style="margin-right: 10px;border:1px solid rgba(43,153,242,1);background: white;color:rgba(43,153,242,1);border-radius:2px;width:54px;height:28px;">提现
                 </button>
@@ -2330,7 +2330,7 @@
       //if (response.status == 200 && response.data.status == 1) {
       //sessionStorage.setItem('moneyBank', response.data.moneyBank)
       //sessionStorage.setItem('moneyOnLine', response.data.moneyOnLine)
-      //this.$router.push('/ruicloud/cashwithdrawal')
+      //this.$router.push('/cashwithdrawal')
       //}
       //})
       //},
@@ -3642,14 +3642,14 @@
       },
       Cashwithdrawal() {
         if (this.authInfo && this.authInfo.checkstatus == 0) {
-          this.$router.push('/ruicloud/cashwithdrawal')
+          this.$router.push('/cashwithdrawal')
         } else {
           this.showModal.nonrealName = true
         }
       },
       goreal() {
         sessionStorage.setItem('pane', 'nonrealname')
-        this.$router.push('/ruicloud/Usercenter')
+        this.$router.push('/Usercenter')
       },
 			seaWaterN(){
 				let url = 'user/searchWaterNumberExcel.do'

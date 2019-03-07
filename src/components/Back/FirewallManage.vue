@@ -540,7 +540,7 @@
       // 监听区域变换
       '$store.state.zone': {
         handler: function () {
-          this.$router.push('/ruicloud/firewall')
+          this.$router.push('/firewall')
         },
         deep: true
       }

@@ -14,7 +14,7 @@
     <dl>
       <dt>解决方法：</dt>
       <dd>可能由远程访问端口非默认端口或端口设置不一致所致。<br>
-        详见 <router-link to="/ruicloud/computed/faq1"><a>端口问题导致无法远程连接</a></router-link> 。</dd>
+        详见 <router-link to="/computed/faq1"><a>端口问题导致无法远程连接</a></router-link> 。</dd>
     </dl>
     <h1>外网带宽占用高问题</h1>
     <dl>
@@ -23,7 +23,7 @@
     </dl>
     <dl>
       <dt>解决方法：</dt>
-      <dd>详见 <router-link to="/ruicloud/computed/faq2"><a>外网带宽占用高导致无法登录 </a></router-link></dd>
+      <dd>详见 <router-link to="/computed/faq2"><a>外网带宽占用高导致无法登录 </a></router-link></dd>
     </dl>
     <router-view></router-view>
   </div>

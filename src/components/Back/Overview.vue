@@ -21,14 +21,14 @@
           </svg>
               <span v-if="userInfo.loginname" style="vertical-align: middle">{{userInfo.loginname}}</span>
               <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;"
-                    @click="togo('/ruicloud/userCenter','personalInfo')">点击绑定</span>
+                    @click="togo('/userCenter','personalInfo')">点击绑定</span>
             </span>
             <span>
               <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
             <use xlink:href="#houtaiicon-shouji"></use>
           </svg>
               <span v-if="userInfo.phone||authInfo.phone" style="vertical-align: middle">{{userInfo.phone||userInfo.phone}}</span>
-              <router-link v-else style="vertical-align: middle" to="/ruicloud/userCenter">点击绑定</router-link>
+              <router-link v-else style="vertical-align: middle" to="/userCenter">点击绑定</router-link>
             </span>
           </div>
         </div>
@@ -40,7 +40,7 @@
               <p class="universal-large" v-else>{{item.value}}元</p>
             </div>
           </div>
-          <router-link to="/ruicloud/recharge">
+          <router-link to="/recharge">
             <button class="universal-middle" style="cursor:pointer">立即充值</button>
           </router-link>
         </div>
