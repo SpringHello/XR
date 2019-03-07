@@ -143,7 +143,7 @@
       </div>
     </Modal>
     <!-- 支付充值成功 -->
-    <Modal v-model="showModal.paySuccessModal" width="640" :scrollable="true">
+    <Modal v-model="showModal.paySuccessModal" width="640" :scrollable="true" :closable="false" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">支付/充值</span>
       </p>
@@ -2208,10 +2208,10 @@
             case 'zfb':
               window.open(`zfb/alipayapi.do?total_fee=${this.cashPledge}`)
               this.pageTimer = setInterval(() => {
-                axios.get('activity/compareForMoney.do', {
-                  params: {freezeMoney: this.cashPledge}
+                axios.get('user/payStatus.do', {
+                  params: {}
                 }).then(val => {
-                  if (val.data.status == 1) {
+                  if (val.status == 200 && val.data.status == 1) {
                     this.showModal.orderConfirmationModal = false
                     clearInterval(this.pageTimer)
                     this.showModal.paySuccessModal = true

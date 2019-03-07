@@ -231,7 +231,7 @@
                 B1-20180455</a>
             </li>
             <li>
-              <router-link to="/ruicloud/about.htm" style="color:#fff;float:right">关于我们</router-link>
+              <a href="https://www.xrcloud.net/ruicloud/about.htm" rel="nofollow" style="color:#fff">关于我们</a>
             </li>
           </ul>
         </div>
