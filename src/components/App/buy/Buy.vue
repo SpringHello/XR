@@ -466,7 +466,6 @@
               zoneId: prod.zone.zoneid,
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
               timeValue: prod.timeForm.currentTimeValue.value,
-              templateId: prod.currentType == 'public' ? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
               isAutoRenew: prod.autoRenewal ? '1' : '0',
               count: prod.count,
               countOrder
@@ -479,7 +478,9 @@
               params.rootDiskType = prod.currentSystem.diskType
               params.networkId = 'no'
               params.vpcId = 'no'
+              params.templateId = prod.system
             } else {
+              // params.templateId =  prod.currentType == 'public' ? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
               params.cpuNum = prod.vmConfig.kernel
               params.memory = prod.vmConfig.RAM
               params.bandWidth = prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0
@@ -493,13 +494,13 @@
               }
               params.diskType = diskType
               params.diskSize = diskSize
-            }
-            if (prod.currentType === 'app') {
-              params.templateId = prod.currentApp.templateid
-            } else if (prod.currentType === 'public') {
-              params.templateId = prod.system.systemId
-            } else {
-              params.templateId = prod.customMirror.systemtemplateid
+              if (prod.currentType === 'app') {
+                params.templateId = prod.currentApp.templateid
+              } else if (prod.currentType === 'public') {
+                params.templateId = prod.system.systemId
+              } else {
+                params.templateId = prod.customMirror.systemtemplateid
+              }
             }
             // 设置了主机名和密码
             if (prod.currentLoginType == 'custom') {
