@@ -497,7 +497,7 @@ var router = new Router({
       ]
     },
     {path: '/ruicloud/link', name: 'link', component: Link},
-    {path: '/*', name: '404', component: Home},
+    {path: '/*', name: '404', component: notFindPage},
   ]
 })
 
