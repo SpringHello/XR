@@ -30,10 +30,58 @@
             <img src="../../assets/img/host/h-icon10.png"/>
             <span>共 {{ selectLength.total}} 项 | 已选择 <span style="color:#FF624B;">{{ selectLength.selection }} </span>项</span>
           </div>
-          <Table :columns="hostList" :data="hostData"  @on-select-change="selectIndex"></Table>
+          <Table :columns="hostList" :data="hostData"  @on-selection-change="selectIndex"></Table>
         </div>
       </div>
-
+      <div :class="[isSource== false?'right-surface-hidde':'right-surface']">
+        <div class="tab_box">
+          <div class="tab-top">
+            <span>{{monitorName}} GPU服务器监控图表</span>
+            <div @click="isSource = false">
+              <Icon type="close" style="font-size: 18px;cursor: pointer"></Icon>
+            </div>
+          </div>
+          <div class="surface-boder">
+            <div class="title-Png">
+                <span>CPU利用率</span>
+                <span style="float: right">{{CPUTime}}</span>
+            </div>
+              <div class="chart" >
+                <ul class="objectList">
+                    <li :class="cpuIndex == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="requestClick('cpu',item.label)">{{item.value}}</li>
+                </ul>
+                <div class="chart-rig">
+                  <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda('cpu')">导出</Button>
+                  <ul class="objectList">
+                    <li :class="cpuMapIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartTwoClick('cpu',index)">{{item.value}}</li>
+                  </ul>
+                </div>
+              </div>
+                <chart ref="cpu" :options="cpu" style="width: 100%;height: 80%;user-select: none; position: relative; background: transparent;"></chart>
+          </div>
+                
+          <div class="surface-boder">
+                <div class="title-Png">
+                  <span>内存使用率</span>
+                  <span style="float: right">{{momeryTime}}</span>
+                </div>
+                  <div class="chart" >
+                    <ul class="objectList">
+                      <li :class="momeryIndex == item.label? 'objectItems':'objectItem'" v-for="item in momeryList" :key="item.label" @click="requestClick('memory',item.label)">{{item.value}}</li>
+                    </ul>
+                    <div class="chart-rig">
+                      <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda('momery')">导出</Button>
+                      <ul class="objectList">
+                        <li :class="momeryMapIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in momeryMapList" :key="index" @click="chartTwoClick('memory',index)">{{item.value}}</li>
+                      </ul>
+                    </div>
+                  </div>
+                    <chart ref="momery" style="width: 100%;height: 80%;user-select: none; position: relative; background: transparent;" :options="momery"></chart>
+          </div>
+             
+        </div>
+      </div>
+      
 
 
       <!--绑定IP-->
@@ -52,47 +100,6 @@
           <Button type="primary" @click="bindipSubmit">确定</Button>
         </div>
       </Modal>
-
-
-
-      <!--制作快照-->
-      <!--<Modal v-model="showModal.snapshot" width="550" :scrollable="true" class="create-snas-modal">
-        <p slot="header" class="modal-header-border">
-          <span class="universal-modal-title">制作快照</span>
-        </p>
-        <div class="universal-modal-content-flex">
-          <p class="mb20">您正为<span class="bluetext">{{companyname}}</span>制作快照</p>
-          <Form ref="snapshotValidate" :model="snapshotValidate" :rules="snapshotRuleValidate">
-            <FormItem label="快照名称" prop="name">
-              <Input v-model="snapshotValidate.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
-            </FormItem>
-            <div style="padding-top: 11px;margin-right: 100px;">
-              <div style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息
-                <Poptip trigger="hover" width="400">
-                  <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
-                  <div slot="content">
-                    <div>
-                      您可以选择在制作快照的时候保存您主机的当前运行状态。当您选择“保存”之时，
-                      当前主机的内存将被记录，在您对快照执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
-                      此次快照将不记录主机内存信息，您在通过该快照回滚的时候只能在关机状态下执行。
-                    </div>
-                  </div>
-                </Poptip>
-              </div>
-              <RadioGroup v-model="snapshotValidate.memory">
-                <Radio label="1">保存</Radio>
-                <Radio label="0">不保存</Radio>
-              </RadioGroup>
-            </div>
-          </Form>
-          <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
-          </p>
-        </div>
-        <div slot="footer" class="modal-footer-border">
-          <Button type="ghost" @click="showModal.snapshot = false">取消</Button>
-          <Button type="primary" @click="createVMSnapshot">确定</Button>
-        </div>
-      </Modal>-->
 
 
       <!--制作镜像-->
@@ -235,6 +242,15 @@
   import axios from 'axios'
   import $store from '@/vuex'
   import merge from 'merge'
+  import cpuOptions from "@/echarts/cpuUtilization"
+  import momeryOptions from  "@/echarts/memory"
+  var urlList = {
+    dayURL: 'alarm/getVmAlarmByHour.do',
+    otherURL: 'alarm/getVmAlarmByDay.do'
+  }
+  const momery = JSON.stringify(momeryOptions);
+  const cpu = JSON.stringify(cpuOptions);
+
   const snoapshotName = (rule,value,callback)=>{
     let reg = /^[0-9]{2,4094}$/
     if(value == ''){
@@ -259,6 +275,82 @@
     export default{
       data(){
         return{
+          isSource:false,
+          cpu:JSON.parse(cpu),
+          momery:JSON.parse(momery),
+          //cpu统计图
+          dayList:[
+            {
+              value:'今天',
+              data:[0,0,0,0,0],
+              day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
+              label:0
+            },
+            {
+              value:'最近7天',
+              data:[0,0,0,0,0,0,0],
+              day:['---','---','---','---','---','---','---'],
+              label:1
+            },
+            {
+              value:'最近30天',
+              data:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+              day:['---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---'],
+              label:2
+            }
+          ],
+          chartList:[
+            {
+              value:'折线',
+              type:'line',
+              boundaryGap:false
+            },
+            {
+              value:'柱状图',
+              type:'bar',
+              boundaryGap:true
+            }
+          ],
+          cpuIndex:0,
+          cpuMapIndex:0,
+          CPUTime:'',
+
+          //内存统计图
+          momeryList:[
+            {
+              value:'今天',
+              data:[0,0,0,0,0],
+              day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
+              label:0
+            },
+            {
+              value:'最近7天',
+              data:[0,0,0,0,0,0,0],
+              day:['---','---','---','---','---','---','---'],
+              label:1
+            },
+            {
+              value:'最近30天',
+              data:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+              day:['---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---'],
+              label:2
+            }
+          ],
+          momeryMapList:[
+            {
+              value:'折线',
+              type:'line',
+              boundaryGap:false
+            },
+            {
+              value:'柱状图',
+              type:'bar',
+              boundaryGap:true
+            }
+          ],
+          momeryMapIndex:0,
+          momeryIndex:0,
+          momeryTime:'',
           //GPU的数据库ID
           VMId:'',
           //GPU的computerid
@@ -434,7 +526,7 @@
           relevanceDisks:false,
           relevanceIps: false,
           relevanceAlteration:[],
-
+          monitorName:'',
           //table
           hostList:[
             {
@@ -451,8 +543,9 @@
                 ])
               },
               render:(h,params)=> {
+                if (params.row.status == 1){
                   return h('div',[
-                    h('span',{
+                    h('p',{
                       style:{
                         color:'#2A99F2',
                         cursor:'pointer',
@@ -477,6 +570,12 @@
                         }
                       }
                     },params.row.companyname+'/'+params.row.computername)])
+                    }else{
+                      return h('ul', {}, [
+                        h('li', {}, params.row.companyname + ' / '),
+                        h('li', {}, params.row.computername)
+                      ])
+                    }
                 }
             },
             {
@@ -534,7 +633,18 @@
                   if (params.row.computerstate == 1) {
                     return h('div',{
                       style:{
-                        display:'flex'
+                        display:'flex',
+                        cursor:'pointer'
+                      },
+                      on:{
+                        click:()=>{
+                          this.isSource = !this.isSource;
+                          this.monitorName = params.row.computername;
+                          if(this.isSource != false){
+                            sessionStorage.setItem('instancename',params.row.instancename);
+                            this.showGetChart();
+                          }
+                        }
                       }
                     },[h('img',{
                       attrs:{
@@ -547,7 +657,18 @@
                   }else{
                     return h('div',{
                       style:{
-                        display:'flex'
+                        display:'flex',
+                        cursor:'pointer'
+                      },
+                      on:{
+                        click:()=>{
+                          this.isSource = !this.isSource;
+                          this.monitorName = params.row.computername;
+                           if(this.isSource != false){
+                            sessionStorage.setItem('instancename',params.row.instancename);
+                            this.showGetChart();
+                          }
+                        }
                       }
                       },[h('img',{
                         attrs:{
@@ -627,13 +748,13 @@
               filterMultiple: false,
               filterMethod (value, row) {
                 if (value === 1) {
-                  return row.status === '1'&&row.computerstate=='1';
+                  return row.status === 1 && row.computerstate == 1;
                 } else if (value === 2) {
-                  return row.status === '1'&&row.computerstate=='0';
+                  return row.status === 1 &&row.computerstate== 0;
                 }else if(value === 3){
-                  return row.status === '0'
+                  return row.status === 0
                 }else if(value === 4){
-                  return row.status === '-1'
+                  return row.status === -1
                 }
               }
             },
@@ -643,7 +764,17 @@
             },
             {
               title:'主机配置',
-              key:'serviceoffername'
+              render: (h, params) => {
+              let textArr = params.row.serviceoffername.split('+')
+              let text_1 = 'CPU:' + textArr[0]
+              let text_2 = '内存:' + textArr[2]
+              let text_3 = '带宽:' + textArr[1]
+              return h('ul', {}, [
+                h('li', {}, text_1),
+                h('li', {}, text_2),
+                h('li', {}, text_3)
+              ])
+            }
             },
             {
               title:'镜像系统',
@@ -971,9 +1102,9 @@
           zoneId:'',
           intervalInstance: null,
           disabledList:{
-            openDisbled:false,
-            closeDisbled:false,
-            deleteDisbled:false,
+            openDisbled:true,
+            closeDisbled:true,
+            deleteDisbled:true,
           },
           selectLength:{
             total:0,
@@ -1189,7 +1320,7 @@
 
 
       //重启主机
-        reStartGPU(){
+      reStartGPU(){
           if(this.selectLength.selection == 0){
             this.$Message.info({
               content:'请选择一个主机',
@@ -1213,22 +1344,29 @@
               this.getGpuServerList();
             }
           })
-        },
+      },
 
       // 选中主机
-      selectIndex(selecion){
+      selectIndex(selection){
         this.selectLength.selection = selection.length;
-        for(let i = 0;i<selecion.length;i++){
-          this.uuid += selecion.computerid+','
+        if(selection.length != 0){
+          for(let i = 0;i<selection.length;i++){
+          this.uuid += selection.computerid+','
           this.uuid = this.uuid.substring(0,this.uuid.length-1);
-            if(selecion[i].row.computerstate != 1 && selecion[i].row.status !=1){ //开机状态
-                this.disabledList.openDisbled = true;
-            }else if(selecion[i].computerstate != 0 && selecion[i].row.status !=1){ // 关机状态
-              this.disabledList.closeDisbled = true;
-            }else if(selecion[i].status == -1){
+            if(selection[i].computerstate == 1 && selection[i].status ==1){ //开机状态
+               this.disabledList.closeDisbled = false;
+            }else if(selection[i].computerstate == 0 && selection[i].status ==1){ // 关机状态
+               this.disabledList.openDisbled = false;
+            }else if(selection[i].status == -1){
               this.disabledList.deleteDisbled = true;
             }
         }
+        }else{
+          this.disabledList.deleteDisbled = true;
+          this.disabledList.openDisbled = true;
+          this.disabledList.closeDisbled = true;
+        }
+        
       },
 
         //创建镜像
@@ -1254,51 +1392,28 @@
           })
       },
 
-        //创建快照
-        // createVMSnapshot(){
-        //   this.$refs.snapshotValidate.validate((valid) => {
-        //     if (valid) {
-        //       axios.get('Snapshot/createVMSnapshot.do', {
-        //         params: {
-        //           VMId: this.uuId,
-        //           snapshotName: this.snapshotValidate.name,
-        //           memoryStatus: this.snapshotValidate.memory,
-        //           zoneId: this.$store.state.zone.zoneid
-        //         }
-        //       }).then(res => {
-        //         if (res.status == 200 && res.data.status == 1) {
-        //           this.$Message.success('快照创建成功');
-        //           this.showModal.snapshot = false;
-        //         } else {
-        //           this.$Message.info('创建快照出小差了');
-        //         }
-        //       })
-        //     }
-        //   })
-        // },
-
         //续费类型切换
-        renewChange(index){
+      renewChange(index){
           this.timeValue = '';
          if(index == 'year'){
            this.timeValueList = this.renewValidate.time[0].date;
          }else if(index == 'month'){
            this.timeValueList = this.renewValidate.time[1].date;
          }
-        },
+      },
 
         //资费变更切换
-        ratesChangeTimes(index){
+      ratesChangeTimes(index){
             this.ratesChangeTime = '';
           if(index == 'year'){
             this.timeValueList = this.renewValidate.time[0].date;
           }else if(index == 'month'){
             this.timeValueList = this.renewValidate.time[1].date;
           }
-        },
+      },
 
          //获取主机续费价格
-        getGpuMonery(){
+      getGpuMonery(){
          axios.get('information/getYjPrice.do',{
            params:{
             timeType:this.timeType,
@@ -1318,10 +1433,10 @@
                }
              }
          })
-        },
+      },
 
         //主机续费提交
-        setGPuMoney(){
+      setGPuMoney(){
          let gpuList =JSON.stringify([{type:6,id:this.VMId}]);
           axios.post('continue/continueOrder.do',{
             zoneId:this.$store.state.zone.zoneid,
@@ -1340,7 +1455,7 @@
               })
             }
           })
-        },
+      },
 
       //资费变更查询ip
        ratesChange() {
@@ -1422,19 +1537,166 @@
       },
 
         //连接主机
-        link(item) {
+      link(item) {
           localStorage.setItem('link-companyid', item.companyid)
           localStorage.setItem('link-vmid', item.computerid)
           localStorage.setItem('link-zoneid', item.zoneid)
           localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
           window.open('/ruicloud/link')
-        },
+      },
+
+      requestClick(name,val){
+        if(name == 'cpu'){
+          this.cpuIndex = val;
+          switch (this.dayList[val].value) {
+            case '今天':
+              this.CPUTime = this.getCurrentDate()
+              break
+            case '最近7天':
+              this.CPUTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+            case '最近30天':
+              this.CPUTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
+              break
+          }
+        }else if(name == 'memory'){
+          this.momeryIndex = val;
+          switch (this.momeryList[val].value) {
+            case '今天':
+              this.momeryTime = this.getCurrentDate()
+              break
+            case '最近7天':
+              this.momeryTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+            case '最近30天':
+              this.momeryTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
+              break
+          }
+        }
+        let url='';
+        let dateType = '';
+       if(name == 'cpu'){
+         url =  this.dayList[val].value == '今天'?urlList.dayURL : urlList.otherURL;
+         dateType = this.dayList[val].label == 1 ? 'week' :'month';
+        }else if(name == 'memory'){
+          url =  this.momeryList[val].value == '今天'?urlList.dayURL : urlList.otherURL;
+         dateType = this.momeryList[val].label == 1 ? 'week' :'month';
+       }
+       axios.get(url,{
+         params:{
+           vmname:sessionStorage.getItem('instancename'),
+           type:'core',
+           datetype:dateType,
+           zoneId:this.$store.state.zone.zoneid
+         }
+       }).then(res => {
+         if(res.status == 200 && res.data.status == 1){
+           if(name == 'cpu'){
+             this.cpu.xAxis.data = res.data.result.xaxis;
+             this.cpu.series[0].data =  res.data.result[name + 'Use'];
+           }else {
+            this.momery.xAxis.data = res.data.result.xaxis;
+             this.momery.series[0].data =  res.data.result[name + 'Use'];
+           }
+         }
+       })
+      },
+      showGetChart(){
+         this.$http.get('alarm/getVmAlarmByHour.do', {
+          params: {
+            vmname: sessionStorage.getItem('instancename'),
+            type: 'core',
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.cpu.series[0].data = response.data.result.cpuUse;
+            this.momery.series[0].data = response.data.result.memoryUse;
+            this.cpu.xAxis.data = response.data.result.xaxis;
+            this.momery.xAxis.data = response.data.result.xaxis;
+          }
+        })
+      },
+      chartTwoClick(name,val){
+        if(name == 'cpu'){
+          this.cpuMapIndex = val;
+          this.cpu.series[0].type = this.chartList[val].type;
+          this.cpu.xAxis.boundaryGap = this.chartList[val].boundaryGap;
+        }else if(name == 'memory'){
+          this.momeryMapIndex = val;
+          this.momery.series[0].type = this.momeryMapList[val].type;
+          this.momery.xAxis.boundaryGap = this.momeryMapList[val].boundaryGap;
+        }
+      },
+      getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
+      },
+      getYesterday() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      getNearlySevenDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 7)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      getNearlyThirtyDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 30)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+       //导出统计图
+      checkImg(code){
+        var parts = code.split(';base64,');
+        var contentType = parts[0].split(':')[1];
+        var raw = window.atob(parts[1]);
+        var rawLength = raw.length;
+        var uInt8Array = new Uint8Array(rawLength);
+        for (var i = 0; i < rawLength; ++i) {
+          uInt8Array[i] = raw.charCodeAt(i);
+        }
+        return new Blob([uInt8Array], {type: contentType});
+      },
+      dowloda(name){
+        var img = new Image();
+        img = this.$refs[name].getConnectedDataURL({
+          pixelRatio: 2,
+          backgroundColor: '#ffffff',
+          type:'png'
+        });
+        let a = document.createElement('a');
+        document.body.appendChild(a);
+        var blob =this.checkImg(img);
+        a.style.display = 'none';
+        let url = URL.createObjectURL(blob);
+        a.href = url;
+        //添加了download属性才会是下载文件，不然就是跳转
+        a.download = 'echarts';
+        a.click();
+        document.body.removeChild(a);
+      },
+
       },
       created(){
         this.toggleZone(this.$store.state.zone.zoneid)
         if (this.$store.state.authInfo == null) {
           this.showModal.selectAuthType = true
         }
+        this.CPUTime = this.getCurrentDate();
+        this.momeryTime = this.getCurrentDate();
+        this.$http.get('alarm/getVmAlarmByHour.do', {
+          params: {
+            vmname: sessionStorage.getItem('instancename'),
+            type: 'core',
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.cpu.series[0].data = response.data.result.cpuUse;
+            this.momery.series[0].data = response.data.result.memoryUse;
+            this.cpu.xAxis.data = response.data.result.xaxis;
+            this.momery.xAxis.data = response.data.result.xaxis;
+          }
+        })
         // this.intervalInstance = setInterval(() => {
         //   this.getGpuServerList()
         // }, 5 * 1000)
@@ -1588,5 +1850,110 @@
       font-family: MicrosoftYaHei;
       color: rgba(102, 102, 102, 1);
     }
+  }
+  
+    
+    .surface-boder{
+      border-radius:4px;
+      border:1px dashed  rgba(153,153,153,1);
+      padding: 20px;
+      margin-top: 20px;
+      width: 570px;
+      height: 405px;
+    }
+    .tab_box{
+        padding: 20px 20px;
+        background: #FFFFFF;
+        .tab-top{
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 20px;
+          > span {
+            font-size: 18px;
+            font-family: MicrosoftYaHei;
+            color: rgba(51, 51, 51, 1);
+          }
+        }
+    }
+    .title-Png{
+      font-family: MicrosoftYaHei;
+      margin-top: 10px;
+      border-bottom: 1px solid #E9E9E9;
+      padding-bottom: 10px;
+      span:nth-child(1){
+        font-size: 16px;
+        color: #333333;
+      }
+      span:nth-child(2){
+        font-size: 14px;
+        color: #666666;
+      }
+    }
+   .objectList {
+      display: inline-block;
+      font-family: PingFangSC;
+    li:first-child{
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    li:last-child{
+      border-top-right-radius:4px;
+      border-bottom-right-radius: 4px;
+    }
+    .objectItem {
+      display: inline-block;
+      padding: 5px 16px;
+      text-align: center;
+      border: 1px solid #D9D9D9;
+      color: #2a99f2;
+      cursor: pointer;
+    }
+    .objectItems {
+      display: inline-block;
+      padding: 5px 16px;
+      text-align: center;
+      border: 1px solid #2a99f2;
+      color: #2a99f2;
+      cursor: pointer;
+    }
+    .objectItem:hover {
+      border:1px solid #2a99f2;
+      cursor: pointer;
+    }
+  }
+  .chart{
+      margin-top:10px;height:30px;
+  }
+    .chart-rig{
+     height:30px;
+     display: inline-block;
+     margin-left:86px
+    }
+  .right-surface{
+    position: absolute;
+    right: 0;
+    top: 56px;
+    background: #fff;
+    width: 600px;
+    height: 100%;
+    z-index: 1000;
+    box-shadow:-5px 0px 14px -7px rgba(148,148,148,0.4);
+    border-radius:2px;
+    transition: width ease-in-out 0.5s, opacity ease-in-out 0.5s;
+    opacity: 1;
+  }
+
+  .right-surface-hidde{
+    position: fixed;
+    right: 0;
+    top: 56px;
+    background: #fff;
+    width: 0;
+    height: 100%;
+    z-index: 1000;
+    box-shadow:-5px 0px 14px -7px rgba(148,148,148,0.4);
+    border-radius:2px;
+    opacity: 0;
+    transition: width ease-in-out 0.5s, opacity ease-in-out 0.5s;
   }
 </style>
