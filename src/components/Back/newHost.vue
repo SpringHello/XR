@@ -80,7 +80,7 @@
           <span>共 {{ hostPages}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
           <span class="guide" style="margin-left: 20px" @click="$router.push('hostCard')"><Icon type="grid"></Icon></span>
           <span class="guide" @click="$router.push('host')"><Icon type="navicon-round"></Icon></span>
-          <div class="guide-hint" v-show="guide_1 == 0">
+          <div class="hint_0" v-show="guide_1 == 0">
 
           </div>
         </div>
@@ -2956,8 +2956,10 @@
         }
       }
     }
-    .guide-hint {
-      .hint()
+    .hint_0 {
+      .hint();
+      right: 0;
+      top: -110px;
     }
   }
 
