@@ -165,7 +165,7 @@
       </div>
     </Modal>
     <!-- 支付充值成功 -->
-    <Modal v-model="showModal.paySuccessModal" width="640" :scrollable="true">
+    <Modal v-model="showModal.paySuccessModal" width="640" :scrollable="true" :mask-closable="false" :closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">支付/充值</span>
       </p>
