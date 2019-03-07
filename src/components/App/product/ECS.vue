@@ -3,9 +3,9 @@
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
-        <img :src="logo.img">
+        <img :src="logo.img" alt="弹性云服务器" title="弹性云服务器">
         <div class="info">
-          <span class="title">{{logo.title}}</span>
+          <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter" class="link-button">立即购买</router-link>
         </div>
@@ -18,9 +18,9 @@
         <div class="features-flex">
           <div v-for="(feature,index) in features" class="flex-item" :key="index">
             <div>
-              <i class="iconfont" :class="feature.img" style="font-size:40px;color:#fff;"></i>
+              <i class="iconfont" :class="feature.img" style="font-size:40px;color:#fff;" :alt='feature.title'></i>
               <div>
-                <span class="title">{{feature.title}}</span>
+                <h4 class="title" style="font-weight: normal;">{{feature.title}}</h4>
                 <span class="desc">{{feature.desc}}</span>
               </div>
             </div>
@@ -86,9 +86,9 @@
         <p class="subTitle">产品优势</p>
         <div class="advantage-flex">
           <div v-for="(advantage,index) in advantages" class="flex-item" :key="index">
-            <i class="iconfont" :class="advantage.img"></i>
+            <i class="iconfont" :class="advantage.img" :alt='advantage.title'></i>
             <div>
-              <span class="title">{{advantage.title}}</span>
+              <h4 class="title" style="font-weight: normal;">{{advantage.title}}</h4>
               <span class="desc">{{advantage.desc}}</span>
             </div>
           </div>
@@ -134,7 +134,7 @@
               <span class="title">{{recommendation.title}}</span>
               <span class="desc">{{recommendation.desc}}</span>
             </div>
-            <router-link :to="recommendation.path" target="_blank">详情</router-link>
+            <router-link :to="recommendation.path" target="_blank" :title="recommendation.title" :alt='recommendation.title'>详情</router-link>
           </div>
         </div>
       </div>
