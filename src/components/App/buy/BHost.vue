@@ -51,65 +51,11 @@
             <h2>主机规格选择</h2>
             <!--镜像选择-->
             <div class="item-wrapper">
-              <div style="display: flex">
-                <div>
-                  <p class="item-title">镜像类型</p>
-                  <p class="item-title" style="margin-top: 40px;">镜像系统</p>
-                </div>
-                <div>
-                  <div v-for="item in mirrorType" class="zoneItem"
-                       :class="{zoneSelect:currentType==item.value}"
-                       @click="selectMirror(item)">{{item.label}}
-                  </div>
-                  <!--镜像+应用 列表-->
-                  <div v-if="currentType=='app'">
-                    <div v-if="currentType=='app'">
-                      <Dropdown v-for="(item,index) in appList" style="margin-right:10px;margin-top:20px;"
-                                @on-click="setAppOS" :key="index">
-                        <div
-                          style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
-                          {{item.selectSystem||item.system}}
-                        </div>
-                        <Dropdown-menu slot="list">
-                          <Dropdown-item v-for="(system,index1) in item.systemList" :key="index1"
-                                         :name="`${system.templatedescript}#${system.systemtemplateid}#${index}`"
-                                         style="white-space: pre-wrap;display:block;">
-                            <span>{{system.templatedescript}}</span>
-                          </Dropdown-item>
-                        </Dropdown-menu>
-                      </Dropdown>
-                    </div>
-                  </div>
-
-                  <!--公共镜像 列表-->
-                  <div v-if="currentType=='public'">
-                    <Dropdown v-for="(item,index) in publicList" style="margin-right:10px;margin-top:20px;"
-                              @on-click="setOS" :key="index">
-                      <div
-                        style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
-                        {{item.selectSystem||item.system}}
-                      </div>
-                      <Dropdown-menu slot="list">
-                        <Dropdown-item v-for="(system,index1) in item.systemList" :key="index1"
-                                       :name="`${system.templatename}#${system.systemtemplateid}#${index}`"
-                                       style="white-space: pre-wrap;display:block;">
-                          <span>{{system.templatename}}</span>
-                        </Dropdown-item>
-                      </Dropdown-menu>
-                    </Dropdown>
-                  </div>
-
-                  <!--自定义镜像 列表-->
-                  <div v-if="currentType=='custom'">
-                    <div v-for="item in customList" :key="item.value" class="zoneItem"
-                         :class="{zoneSelect:customMirror.id==item.id}"
-                         @click="setOwnTemplate(item)" style="margin-top: 20px;">{{item.templatename}}
-                    </div>
-                    <div v-if="customList.length==0" class="zoneItem" style="margin-top: 20px;">
-                      暂无镜像
-                    </div>
-                  </div>
-                  <p v-if="mirrorShow" style="margin-top:10px;color:#FF0000;font-size:14px;">镜像还未选择，请先选择镜像再进行购买</p>
+              <div style="display: flex;justify-content: space-between;">
+                <div v-for="(item,index) in mirrorListQ" :key="index" class="fast-mirror" :class="{'select-fast-mirror':FastMirrorIndex==index}" @click="FastMirrorIndex=index;selectFastMirror=item.systemtemplateid">
+                  <img :src="require('../../../assets/img/host/h-icon12.png')" alt="" v-if="index==0||index==1">
+                  <img :src="require(`../../../assets/img/host/h-icon${index+4}.png`)" alt="" v-else>
+                  <span>{{item.templatename}}</span>
                 </div>
               </div>
             </div>
@@ -632,6 +578,8 @@
         zone = zoneList[0]
       }
       return {
+        selectFastMirror: '',
+        FastMirrorIndex: 0,
         mirrorShow: false,
         acllist: [
           {
@@ -889,6 +837,7 @@
     },
     created() {
       this.setTemplate()
+      this.getFastMirror()
       this.queryQuick()
       this.queryCustomVM()
       this.queryVpc()
@@ -904,6 +853,18 @@
       // this.$store.dispatch('getZoneList')
     },
     methods: {
+      getFastMirror() {
+        axios.get('information/getTemplateByZoneId.do', {
+          params: {
+            zoneId: this.zone.zoneid,
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.mirrorListQ = response.data.result
+            this.selectFastMirror = response.data.result[0].systemtemplateid
+          }
+        })
+      },
       roll(val) {
         $('html, body').animate({scrollTop: val}, 300)
       },
@@ -1104,7 +1065,7 @@
           })
           return
         }
-        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
+        if (this.createType != 'fast' && ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined))) {
           // this.$message.info({
           //   content: '请选择一个镜像系统'
           // })
@@ -1126,7 +1087,6 @@
         prod.typeName = '云主机'
         prod.zone = this.zone
         prod.timeForm = this.timeForm
-        prod.system = this.currentType == 'public' ? this.system : this.appSystem
         prod.customMirror = this.customMirror
         prod.currentType = this.currentType
         prod.publicIP = this.publicIP
@@ -1140,7 +1100,9 @@
         if (this.createType == 'fast') {
           prod.currentSystem = this.currentSystem
           prod.cost = this.fastCost
+          prod.system = this.selectFastMirror
         } else {
+          prod.system = this.currentType == 'public' ? this.system : this.appSystem
           prod.IPConfig = this.IPConfig
           prod.vmConfig = this.vmConfig
           prod.dataDiskList = this.dataDiskList
@@ -1148,7 +1110,6 @@
           prod.network = this.network
           prod.cost = this.totalCost
         }
-
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
       },
       // 购买主机
@@ -1159,7 +1120,7 @@
           })
           return
         }
-        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
+        if (this.createType != 'fast' && ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined))) {
           // this.$message.info({
           //   content: '请选择一个镜像系统'
           // })
@@ -1197,6 +1158,7 @@
           params.rootDiskType = this.currentSystem.diskType
           params.networkId = 'no'
           params.vpcId = 'no'
+          params.templateId = this.selectFastMirror
         } else {
           params.cpuNum = this.vmConfig.kernel
           params.memory = this.vmConfig.RAM
@@ -1206,20 +1168,19 @@
           params.networkId = this.network
           params.vpcId = this.vpc
           var diskType = '', diskSize = ''
-
           for (let disk of this.dataDiskList) {
             diskType += `${disk.type},`
             diskSize += `${disk.size},`
           }
           params.diskType = diskType
           params.diskSize = diskSize
-        }
-        if (this.currentType === 'app') {
-          params.templateId = this.appSystem.systemId
-        } else if (this.currentType === 'public') {
-          params.templateId = this.system.systemId
-        } else {
-          params.templateId = this.customMirror.systemtemplateid
+          if (this.currentType === 'app') {
+            params.templateId = this.appSystem.systemId
+          } else if (this.currentType === 'public') {
+            params.templateId = this.system.systemId
+          } else {
+            params.templateId = this.customMirror.systemtemplateid
+          }
         }
         // 设置了主机名和密码
         if (this.currentLoginType == 'custom') {
@@ -1502,6 +1463,7 @@
           this.setTemplate()
           this.queryVpc()
           this.fireList()
+          this.getFastMirror()
         },
         deep: true
       },
@@ -1838,6 +1800,43 @@
     border: 1px solid #D9D9D9;
     padding: 4px 8px;
     margin-left: -5px;
+  }
+  .fast-mirror {
+    width:136px;
+    height:64px;
+    background:rgba(255,255,255,1);
+    border:1px solid rgba(217,217,217,1);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    img {
+      display: block;
+      margin: 0 10px;
+    }
+  }
+  .select-fast-mirror {
+    overflow: hidden;
+    border:1px solid rgba(59,120,255,1);
+    position: relative;
+    ::after {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: -16px;
+      right: -16px;
+      width: 30px;
+      height: 30px;
+      background: rgba(59,120,255,1);
+      transform:rotate(45deg);
+    }
+    ::before {
+      content: "✓";
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      color: #fff;
+      z-index: 1;
+    }
   }
 </style>
 
