@@ -35,6 +35,11 @@
   import VueQArt from 'vue-qart'
 
   export default {
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.from = from.fullPath
+      })
+    },
     components: {
       VueQArt
     },
@@ -61,7 +66,7 @@
         downloadButton: false,
         loading: false,
         loadingMessage: '',
-
+        from: ''
       }
     },
     created() {
@@ -108,13 +113,21 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.loading = false
-            this.$router.push('rechargeResult')
-            sessionStorage.setItem('rechargeSuccessMsg',response.data.message)
-            sessionStorage.setItem('vipMsg',response.data.vipMessage)
+            if (this.from.indexOf('/ruicloud/recharge') == 0 || this.from.indexOf('/ruicloud/Recharge') == 0) {
+              this.$router.push('rechargeResult')
+              sessionStorage.setItem('rechargeSuccessMsg', response.data.message)
+              sessionStorage.setItem('vipMsg', response.data.vipMessage)
+            } else {
+
+            }
           } else {
             this.loading = false;
-            sessionStorage.setItem('rechargeErrorMsg',response.data.message)
-            this.$router.push('rechargeResult')
+            if (this.from.indexOf('/ruicloud/recharge') == 0 || this.from.indexOf('/ruicloud/Recharge') == 0) {
+              sessionStorage.setItem('rechargeErrorMsg', response.data.message)
+              this.$router.push('rechargeResult')
+            } else {
+
+            }
           }
         })
       }
