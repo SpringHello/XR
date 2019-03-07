@@ -89,6 +89,8 @@
                             style="width: 116px;position: relative;bottom: 12px"></Input-number>
               <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
               </Button>
+							<Button type="primary" style="bottom: 12px;position: relative" @click="seaWaterN">导出流水
+							</Button>
               <Table highlight-row :columns="columns" :data="tabledata"></Table>
               <div style="margin: 10px;overflow: hidden">
                 <div style="float: right;">
@@ -3648,7 +3650,29 @@
       goreal() {
         sessionStorage.setItem('pane', 'nonrealname')
         this.$router.push('/ruicloud/Usercenter')
-      }
+      },
+			seaWaterN(){
+				let url = 'user/searchWaterNumberExcel.do'
+				let params = {
+				  type: this.types,
+				  starttime: this.dateRange[0],
+				  endtime: this.dateRange[1],
+				  startcount: this.value1,
+				  endcount: this.value2
+				}
+				this.$http.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
+				  if (res.status == 200) {
+				    this.$Message.success('导出成功')
+				    let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+				    let objectUrl = URL.createObjectURL(blob)
+				    window.location.href = objectUrl
+				  } else {
+				    this.$message.info({
+				      content: res.data.message
+				    })
+				  }
+				})
+			}
     },
     computed: {
       payDisabled() {
