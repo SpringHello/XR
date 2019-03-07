@@ -1,7 +1,7 @@
 <template>
 	<div id="background">
 		<div id="wrapper">
-			<span>个人中心 / 费用中心 / 提现</span>
+			<span><span @click="$router.push('/ruicloud/userCenter')">个人中心</span> / <span @click="$router.push('/ruicloud/expenses')">费用中心</span> / <span @click="$router.push('/ruicloud/Cashwithdrawal')">提现</span></span>
 			<div class="content" style="min-height: 655px;">
 				<span>自助提现</span>
 				<div class="remindbox">
@@ -18,7 +18,7 @@
 						</div>
 						<span id="spanself1"></span>
 						<div class="font" style="margin-left: 18px;width: 142px;">
-							<Tooltip placement="top">
+							<Poptip trigger="hover">
 								<div id="divself1" slot="content">
 									<p>通过微信充值时间超过1年或通过支付宝充值时间</p>
 									<p>超过3个月的现金充值金额只能通过银行卡提现。</p>
@@ -32,7 +32,7 @@
 									<span>.{{Bankdecimalmoney}}元</span>
 								</div>
 								<Button type="primary" style="margin-top: 17px;" @click="showModal.cardfirmation = true">申请银行卡提现</Button>
-							</Tooltip>
+							</Poptip>
 						</div>
 						<span id="spanself2"></span>
 					</div>
