@@ -2,7 +2,7 @@
   <div style="background: #FFF; font-family:PingFangSC-Regular;" id="domain">
     <div class="domain-wrapper">
       <div class="topOne">
-        <p>域名注册全新上线</p>
+        <h3>域名注册全新上线</h3>
         <span>帮助建立您的网上业务，从这里开始…</span>
         <div class="search">
           <Input v-model="searchText" style="width: 550px;border-radius: 0" size="large" placeholder="请输入您要查找的域名">
@@ -52,14 +52,14 @@
         <p><span><<<<<<<<<<</span>平台优势<span>>>>>>>>>>></span></p>
         <ul>
           <li v-for="(adv,index) in advantage" :key="index">
-            <img :src="adv.img">
-            <p>{{adv.title}}</p>
+            <img :src="adv.img" :alt="adv.title">
+            <h3>{{adv.title}}</h3>
             <span>{{adv.desc}}</span>
           </li>
         </ul>
       </div>
       <div class="selective">
-        <p><span><<<<<<<<<<</span>域名选购技巧<span>>>>>>>>>>></span></p>
+        <h3><span><<<<<<<<<<</span>域名选购技巧<span>>>>>>>>>>></span></h3>
         <ul>
           <li><span>1、</span>
             <p>系统会对您第一次注册结算成功的域名注册信息进行保存，您再次注册域名时，可以看到之前创建成功的域名信息模板;</p></li>
@@ -272,10 +272,10 @@
       padding: 87px 0 81px 0;
       text-align: center;
       background: url('../../../assets/img/domain/banner.png') no-repeat center;
-      p {
+      h3 {
         font-size: 48px;
         color: rgba(255, 255, 255, 1);
-
+        font-weight: normal;
       }
       span {
         display: block;
@@ -415,10 +415,11 @@
 
   .content-advantage {
     padding-bottom: 70px;
-    p {
+    h3 {
       font-size: 36px;
       color: rgba(55, 125, 255, 1);
       padding: 100px 0 51px 0;
+      font-weight: normal;
       span {
         display: inline-block;
         font-size: 24px;
@@ -466,7 +467,8 @@
   .selective {
     background: rgba(237, 242, 250, 1);
     padding-bottom: 80px;
-    p {
+    h3 {
+      font-weight: normal;
       font-size: 36px;
       color: rgba(55, 125, 255, 1);
       padding: 72px 0 36px 0;

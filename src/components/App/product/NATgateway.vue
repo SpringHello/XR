@@ -3,7 +3,7 @@
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
-        <img :src="logo.img">
+        <img :src="logo.img" alt="NAT网关" title="NAT网关">
         <div class="info">
           <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>

@@ -21,13 +21,13 @@ export default {
     xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: [0, 0, 0, 0, 0, 0, 0]
+        data: ['0', '0', '0', '0', '0', '0', '0']
     },
     yAxis: {
         axisLabel: {
             formatter: '{value} %'
         },
-        max: '100'
+        max:'100'
     },
     series: [
         {
