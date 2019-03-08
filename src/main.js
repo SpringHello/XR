@@ -156,7 +156,10 @@ Date.prototype.format = function (fmt) {
 var vm = new Vue({
   router,
   store,
-  render: h => h(Main)
+  render: h => h(Main),
+  mounted () {
+    document.dispatchEvent(new Event('render-event'))
+  }
 })
 
 vm.$Message.config({
