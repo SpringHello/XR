@@ -24,7 +24,17 @@
             <Button type="primary" :disabled='disabledList.openDisbled' @click="openHost">开机</Button>
             <Button type="primary" :disabled='disabledList.closeDisbled' style="margin:0 10px;" @click="reStartGPU">重启</Button>
             <Button type="primary" :disabled='disabledList.deleteDisbled' style="margin:0 10px;" @click="deleteHost">删除</Button>
-            <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/ruicloud/buy/bgpu'})">更多操作</Button>
+            <Dropdown>
+              <Button type="primary" style="margin:0 10px;">更多操作</Button>
+              <DropdownMenu slot="list">
+                  <DropdownItem>重置密码</DropdownItem>
+                  <DropdownItem>绑定IP</DropdownItem>
+                  <DropdownItem>重命名</DropdownItem> 
+                  <DropdownItem>资费变更</DropdownItem>
+                  <DropdownItem>主机续费</DropdownItem>
+                  <DropdownItem>制作镜像</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </div>
            <div class="selectMark">
             <img src="../../assets/img/host/h-icon10.png"/>
@@ -33,6 +43,7 @@
           <Table :columns="hostList" :data="hostData"  @on-selection-change="selectIndex"></Table>
         </div>
       </div>
+
       <div :class="[isSource== false?'right-surface-hidde':'right-surface']">
         <div class="tab_box">
           <div class="tab-top">
@@ -234,7 +245,23 @@
       </div>
     </Modal>
 
-
+    <!-- 重置密码 -->
+    <Modal title="重置密码" width="590" :scrollable="true">
+       <Form ref="resetPasswordForm" :model="resetPasswordForm" label-position="left" :label-width="100" style="margin-top:20px;" :rules="resetRuleValidate">
+          <Form-item label="请输入旧密码" prop="oldPassword">
+            <Input v-model="resetPasswordForm.oldPassword" placeholder="请输入旧密码" type="password"  style="width:250px;"></Input>
+          </Form-item>
+          <Form-item label="请输入新密码" prop="newPassword">
+            <Input v-model="resetPasswordForm.newPassword" placeholder="请输入不小于六位数的新密码" type="password"  style="width:250px;"></Input>
+          </Form-item>
+          <Form-item label="请确认新密码" prop="confirmPassword">
+            <Input v-model="resetPasswordForm.confirmPassword" placeholder="请确认新密码" type="password"   style="width:250px;"></Input>
+          </Form-item>
+          <Form-item>
+            <Button type="primary" size="small" @click="resetConfirm('resetPasswordForm')">{{resetPasswordForm.buttonMessage}}</Button>
+          </Form-item>
+        </Form>
+    </Modal>
     </div>
 </template>
 
@@ -271,6 +298,27 @@
       callback();
     }
   }
+  const validatePassword = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (!regExp.test(value)) {
+          callback(new Error('新密码由6-23位的字母数字组成，必须包含大小写字母、数字'));
+        } else {
+          if (regExp.test(value)) {
+            this.$refs.resetPasswordForm.validateField('confirmPassword');
+          }
+          callback();
+        }
+    }
+  const validatePassCheck = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (this.resetPasswordForm.newPassword != value) {
+          callback(new Error('两次密码不一致'));
+        } else {
+          callback();
+        }
+}
 
     export default{
       data(){
@@ -357,7 +405,13 @@
           uuId:'',
           //主机名称
           companyname:'',
-
+          
+          resetPasswordForm:{
+            oldPassword:'',
+            newPassword:'',
+            confirmPassword:'',
+            buttonMessage:'确认重置'
+          },
           //筛选主机
           gpuTimeValue:'',
           gpuTimeList:[
@@ -535,7 +589,7 @@
               align: 'center'
             },
             {
-              width:109,
+              // width:109,
                renderHeader: (h, params) => {
                 return h('ul', {}, [
                   h('li', {}, '用户名称 / '),
@@ -580,7 +634,7 @@
             },
             {
               title:'状态/监控(全部)',
-              width:138,
+              // width:138,
               render:(h,params) => {
               let restart = params.row.restart ? params.row.restart : 0;
               let restore = params.row.restore ? params.row.restore : 0;
@@ -759,10 +813,6 @@
               }
             },
             {
-              title:'地域节点',
-              key:'zonename'
-            },
-            {
               title:'主机配置',
               render: (h, params) => {
               let textArr = params.row.serviceoffername.split('+')
@@ -863,8 +913,8 @@
               title:'IP地址',
               render:(h,params)=>{
                 return h('div',[
-                  h('span',{},params.row.publicip ?params.row.publicip+'(公)':'----'),
-                  h('span',{},params.row.publicip ?params.row.publicip+'(内)':'----')
+                  h('p',{},params.row.publicip ?params.row.publicip+'(公)':'----'),
+                  h('p',{},params.row.publicip ?params.row.publicip+'(内)':'----')
                 ])
               }
             },
@@ -875,6 +925,7 @@
                 h('li', {}, '到期时间')
               ])
             },
+            width:160,
               render:(h,params)=>{
                 return h('div',[
                   h('p',{style:{marginBottom:'5px'}},params.row.createtime+'/'),
@@ -1675,6 +1726,34 @@
         a.click();
         document.body.removeChild(a);
       },
+
+      // 重置密码
+    resetConfirm(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.resetPasswordForm.buttonMessage = '正在重置中...'
+            this.$http.get('information/resetPasswordForVirtualMachine.do', {
+              params: {
+                VMId: sessionStorage.getItem('uuId'),
+                password: this.resetPasswordForm.newPassword,
+                oldPassword: this.resetPasswordForm.oldPassword,
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+              this.resetPasswordForm.buttonMessage = '确认重置'
+              this.resetPasswordForm.oldPassword = ''
+              this.resetPasswordForm.newPassword = ''
+              this.resetPasswordForm.confirmPassword = ''
+            })
+          }
+        })
+    },
 
       },
       created(){
