@@ -636,6 +636,7 @@
             render: (h, params) => {
               let restart = params.row.restart ? params.row.restart : 0
               let restore = params.row.restore ? params.row.restore : 0
+              let resetpwd = params.row.resetpwd ? params.row.resetpwd : 0
               let bindip = params.row.bindip ? params.row.bindip : 0
               let icon_1 = require('../../assets/img/host/h-icon1.png')
               let icon_2 = require('../../assets/img/host/h-icon2.png')
@@ -761,6 +762,12 @@
                         display: 'inline-block'
                       }
                     }), h('span', {style: styleInfo}, '重装中')])
+                  } else if (resetpwd == 1) {
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }), h('span', {style: styleInfo}, '重置中')])
                   } else if (bindip == 1) {
                     return h('div', {}, [h('Spin', {
                       style: {
@@ -1861,6 +1868,8 @@
       verifyPassword() {
         if (this.regExpObj.password.test(this.resetPasswordForm.password)) {
           this.resetPasswordForm.errorMsg = 'passwordHintTwo'
+        } else{
+          this.resetPasswordForm.errorMsg = 'passwordHint'
         }
       },
       resetPasswordNext() {
@@ -1873,7 +1882,7 @@
             flag = false
           }
         })
-        if (!this.resetPasswordForm.password) {
+        if (!this.resetPasswordForm.password || !this.regExpObj.password.test(this.resetPasswordForm.password)) {
           this.resetPasswordForm.errorMsg = 'passwordUndercapacity'
           return false
         }
@@ -1899,10 +1908,10 @@
           let url = 'information/resetPasswordForVirtualMachineBatch.do'
           let list = []
           this.resetPasswordHostData.forEach((item, index) => {
-            if (item.changepassword && !item.currentPassword) {
+            if (item.changepassword && item.currentPassword) {
               list.push({
                 VMId: item.computerid,
-                oldpassword: item.currentPassword,
+                oldPassword: item.currentPassword,
                 VMName: item.instancename
               })
             } else {
@@ -1920,12 +1929,25 @@
             if (res.status == 200 && res.data.status == 1) {
               this.$Message.success(res.data.message)
               this.showModal.resetPassword = false
-              this.getHostList()
+              this.hostListData.forEach(host => {
+                this.resetPasswordHostData.forEach(item => {
+                  if (host.id == item.id) {
+                    host.status = 2
+                    host.resetpwd = 1
+                    host._disabled = true
+                  }
+                })
+              })
+              let ids = this.resetPasswordHostData.map(item => {
+                return item.id
+              })
+              this.timingRefresh(ids + '')
+              this.hostSelection = []
             } else if (res.status == 200 && res.data.status == 2) {
               if (res.data.result.length != 0) {
                 res.data.result.forEach(name => {
                   this.resetPasswordHostData.forEach((item, index) => {
-                    if (item.instancename == name) {
+                    if (item.computerid == name.errhost) {
                       item.errorMsg = 'passwordMistake'
                       this.resetPasswordHostData.splice(index, 1, item)
                     }
