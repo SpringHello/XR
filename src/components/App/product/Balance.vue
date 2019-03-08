@@ -3,7 +3,7 @@
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
-        <img :src="logo.img" alt="负载均衡">
+        <img :src="logo.img" alt="负载均衡" title="负载均衡">
         <div class="info">
           <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
