@@ -118,6 +118,18 @@
             <chart :options="item.chart" style="width:100%;height:80%;"></chart>
           </div>
         </div>
+        <div class="tab-3" v-show="configType == '安全组'">
+          <div class="content">
+            <div class="tab-3-title">
+              <span>我是安全组名称1</span>
+              <span style="margin-left: 40px">所属子网：<span>vpc</span></span>
+              <RadioGroup v-model="tab3.rule" type="button" style="float: right">
+                <Radio label="出站规则"></Radio>
+                <Radio label="入站规则"></Radio>
+              </RadioGroup>
+            </div>
+          </div>
+        </div>
         <div class="tab-4" v-show="configType == '快照管理'">
           <Button type="primary" :disabled="delSnapshootDisabled" @click="showModal.delsnaps = true">删除快照</Button>
           <div class="selectMark">
@@ -612,6 +624,10 @@
           ],
           currentData: this.getCurrentDate()
         },
+
+        tab3:{
+          rule: '出站规则',
+     },
 
         tab4: {
           snapshootColumns: [
@@ -1643,6 +1659,27 @@
         }
         .item-type {
           margin-top: 18px;
+        }
+      }
+    }
+    .tab-3 {
+      .content {
+        padding: 20px;
+        background: rgba(255, 255, 255, 1);
+        border-radius: 4px;
+        border: 1px solid rgba(229, 233, 237, 1);
+        .tab-3-title{
+          border-bottom:1px solid rgba(233,233,233,1);
+          padding-bottom: 20px;
+          span{
+            font-size:14px;
+            font-family:MicrosoftYaHei;
+            color:rgba(51,51,51,1);
+            span{
+              color: #2A99F2;
+              cursor: pointer;
+            }
+          }
         }
       }
     }
