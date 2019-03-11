@@ -11,9 +11,9 @@
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
-        <router-link to="//www.xrclound.net/index.htm" class="logo" alt='新睿云'>
+        <a href="https://www.xrcloud.net/ruicloud/index.htm" class="logo" alt='新睿云'>
           <div></div>
-        </router-link>
+        </a>
         <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100;cursor: pointer" src="./assets/img/active/schoolSeason/nav_logo_cc.png"
              @click="$router.push('/ruicloud/schoolSeason')" alt="">
         <div class="operate" style="padding-left:90px;">
