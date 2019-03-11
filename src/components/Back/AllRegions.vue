@@ -106,7 +106,7 @@
 						<div class="boxcontent2">
 							<div>
 								<span class="mianfeizy">免费资源数量</span>
-								<span class="mianfeizy1" v-bind:class="{ newnumberofc: item.payResources.num>0}">{{item.payResources.num}}</span>
+								<span class="mianfeizy1" v-bind:class="{ newnumberofc: item.freeResources.num>0}">{{item.freeResources.num}}</span>
 								<span class="mianfeizy2">种</span>
 								<span class="lookgd" @click="toggleZone(item)">查看更多</span>
 							</div><br />
@@ -493,6 +493,7 @@
 		top: 20px;
 		left: 333px;
 		display: none;
+		cursor: pointer;
 	}
 	.rightall{
 		width: 141px;
@@ -767,6 +768,7 @@
 		margin-top: 5px;
 		float: right;
 		display: none;
+		cursor: pointer;
 	}
 	.VPCALL:hover #gwchh{
 		display: block;
