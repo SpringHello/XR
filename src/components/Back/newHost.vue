@@ -59,7 +59,7 @@
                 <Tooltip content="资费变更只适用于实时计费的资源" placement="top">资费变更
                 </Tooltip>
               </Dropdown-item>
-              <Dropdown-item name="renewal" :disabled="histRenewDisabled">主机续费</Dropdown-item>
+              <Dropdown-item name="renewal" :disabled="hostRenewDisabled">主机续费</Dropdown-item>
               <Dropdown-item name="backup" :disabled="makeSnapshotDisabled">制作快照</Dropdown-item>
               <Dropdown-item name="mirror" :disabled="makeMirrorDisabled">
                 <Tooltip content="制作镜像只适用于已关机的资源" placement="top">制作镜像
@@ -1318,7 +1318,7 @@
                         }, '资费变更'),
                         h('DropdownItem', {
                           attrs: {
-                            name: 'histRenew'
+                            name: 'hostRenew'
                           }
                         }, '主机续费'),
                         h('DropdownItem', {
@@ -2740,7 +2740,7 @@
           return !(this.hostSelection[0].status == 1 && this.hostSelection[0].caseType == 3)
         }
       },
-      histRenewDisabled() {
+      hostRenewDisabled() {
         let len = this.hostSelection.length
         if (len !== 1) {
           return true
@@ -2805,7 +2805,7 @@
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
-              hostIdArr: this.hostSelection[0].id,
+              hostIdArr: this.hostCurrentSelected.id,
               ipIdArr: selectIp,
               diskArr: selectDisk
             }
@@ -2852,7 +2852,7 @@
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              hostIdArr: this.hostSelection[0].id,
+              hostIdArr: this.hostCurrentSelected.id,
               ipIdArr: selectIp,
               diskArr: selectDisk
             }
@@ -2889,7 +2889,7 @@
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              hostIdArr: this.hostSelection[0].id,
+              hostIdArr: this.hostCurrentSelected.id,
               ipIdArr: selectIp,
               diskArr: selectDisk
             }
