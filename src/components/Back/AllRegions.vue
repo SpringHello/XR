@@ -63,9 +63,11 @@
 						</div>
 						<span class="tiao2"></span>
 						<div class="disan1">
-							<span class="num1">{{TotalNumberCertificates}}</span>
-							<span class="num2">个</span><br />
-							<span class="num3">域名证书总数量</span>
+							<p style="height: 25px;">
+								<span class="num1">{{TotalNumberCertificates}}</span>
+								<span class="num2">个</span><br />
+							</p>
+							<div><span class="num3">域名证书总数量</span></div>
 						</div>
 					</div>
 				</div>
