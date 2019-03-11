@@ -25,18 +25,26 @@
         <div class="hint_1" v-show="guideStep == 1">
           <p>点击「升级」可进行主机升级。</p>
           <span @click="guideStep = 2">知道了</span>
+          <span></span>
+          <span>{{guideStep + 6 }} / 10</span>
         </div>
         <div class="hint_2" v-show="guideStep == 2">
           <p>主机信息项可进行镜像修改、数据盘扩容、数据盘挂/卸载、修改密码等操作。</p>
           <span @click="guideStep = 3">知道了</span>
+          <span></span>
+          <span>{{guideStep  + 6 }} / 10</span>
         </div>
         <div class="hint_3" v-show="guideStep == 3">
           <p>网络信息项可进行公网IP解绑，带宽扩容等操作。</p>
           <span @click="guideStep = 4">知道了</span>
+          <span></span>
+          <span>{{guideStep  + 6 }} / 10</span>
         </div>
         <div class="hint_4" v-show="guideStep == 4">
           <p>资费信息项可进行自动续费的开启和关闭操作。</p>
           <span @click="seeAll">知道了</span>
+          <span></span>
+          <span>{{guideStep  + 6 }} / 10</span>
         </div>
       </div>
       <div class="config-info">
@@ -1788,6 +1796,11 @@
     }
     span:nth-child(2) {
       margin-left: 10px;
+    }
+    span:nth-child(4) {
+      float: left;
+      cursor: auto;
+      color: rgb(255, 98, 75);
     }
     &::after {
       content: '';
