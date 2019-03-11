@@ -343,43 +343,6 @@
         cart,
         // 区域核心内存配置详细信息
         info: [],
-        // scrollFun: () => {
-        //   if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246) {
-        //     this.$refs.buyDiv.style.position = 'fixed'
-        //     this.$refs.buyDiv.style.bottom = 0
-        //   } else {
-        //     this.$refs.buyDiv.style.position = 'unset'
-        //   }
-        // },
-        // scrollList: () => {
-        //   var allWidth = window.screen.width
-        //   // 获取div距顶部距离
-        //   var top = this.$refs.lists.offsetTop
-        //   //获取屏幕高度
-        //   var windowTop = window.innerHeight
-        //   //屏幕卷去的高度
-        //   var scrollTops = document.documentElement.scrollTop || document.body.scrollTop
-        //   if (top >= scrollTops && top < (scrollTops + windowTop)) {
-        //     this.$refs.lists.style.position = 'unset'
-        //   } else {
-        //     this.$refs.lists.style.position = 'fixed'
-        //     this.$refs.lists.style.top = 0
-        //     if (allWidth > 1670 && allWidth <= 1920) {
-        //       this.$refs.lists.style.right = (allWidth - 1570) + 'px'
-        //     } else if (allWidth > 1920 &&allWidth <= 3000) {
-        //       this.$refs.lists.style.right = '200px'
-        //     } else if (allWidth > 3000) {
-        //       this.$refs.lists.style.right = '400px'
-        //     }else {
-        //       this.$refs.lists.style.right = '80px'
-        //     }
-        //     if (scrollTops < 1200) {
-        //       this.$refs.list.style.maxHeight = (1300 - scrollTops) + 'px'
-        //     } else {
-        //       this.$refs.list.style.maxHeight = 100 + 'px'
-        //     }
-        //   }
-        // },
         scrollList1: () => {
           var clientHeight = document.documentElement.clientHeight
           //屏幕卷去的高度
