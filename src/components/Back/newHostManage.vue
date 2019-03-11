@@ -755,8 +755,8 @@
                       this.del(params.row.id);
                     }
                   }},'删除'),
-                  h('span',{style:{margin:'0 10px',color:'#999999'}},'|'),
-                  h('span',{style:{color:'#2A99F2',cursor:'pointer'}},'修改规则')
+                  // h('span',{style:{margin:'0 10px',color:'#999999'}},'|'),
+                  // h('span',{style:{color:'#2A99F2',cursor:'pointer'}},'修改规则')
                 ])
               }
             }
