@@ -84,26 +84,37 @@
             <p>需要新睿云2.0指引提示？</p>
             <span @click="guideNext">需要</span>
             <span @click="guideStep = 0">不需要</span>
+            <span>{{guideStep }} / 10</span>
           </div>
           <div class="hint_2" v-show="guideStep == 2">
             <p>连接主机在这里</p>
             <span @click="guideStep = 3">知道了</span>
+            <span></span>
+            <span>{{guideStep }} / 10</span>
           </div>
           <div class="hint_3" v-show="guideStep == 3">
             <p>上面的操作按钮，可对列表进行批量操作。更多操作里除了更改密码，其余都是单项操作</p>
             <span @click="guideStep = 4">知道了</span>
+            <span></span>
+            <span>{{guideStep }} / 10</span>
           </div>
           <div class="hint_4" v-show="guideStep == 4">
             <p>点击「状态」可查看该主机的监控数据。（异常和删除至回收站状态不可查看）</p>
             <span @click="guideStep = 5">知道了</span>
+            <span></span>
+            <span>{{guideStep }} / 10</span>
           </div>
           <div class="hint_5" v-show="guideStep == 5">
             <p>点击用户名称可进入管理页面。</p>
             <span @click="guideStep = 6">知道了</span>
+            <span></span>
+            <span>{{guideStep }} / 10</span>
           </div>
           <div class="hint_6" v-show="guideStep == 6">
             <p>管理主机在这里</p>
             <span @click="hintToManage">知道了</span>
+            <span></span>
+            <span>{{guideStep }} / 10</span>
           </div>
         </div>
         <Table :columns="hostListColumns" :data="hostListData" @on-selection-change="hostSelectionChange"></Table>
@@ -828,8 +839,6 @@
               let icon_3 = require('../../assets/img/host/h-icon7.png')
               let icon_4 = require('../../assets/img/host/h-icon8.png')
               let imgStyle = {
-                height: '16px',
-                width: '16px',
                 marginRight: '5px'
               }
               switch (templateName) {
@@ -842,7 +851,9 @@
                   }, [
                     h('img', {
                       attrs: {
-                        src: icon_1
+                        src: icon_1,
+                        height: '16',
+                        width: '16',
                       },
                       style: imgStyle
                     }, ''),
@@ -1488,7 +1499,7 @@
       if (this.$store.state.authInfo == null) {
         this.showModal.selectAuthType = true
       }
-      if(sessionStorage.getItem('isSeeHint')){
+      if (sessionStorage.getItem('isSeeHint')) {
         this.guideStep = 0
       }
       this.getHostList()
@@ -1871,7 +1882,7 @@
       verifyPassword() {
         if (this.regExpObj.password.test(this.resetPasswordForm.password)) {
           this.resetPasswordForm.errorMsg = 'passwordHintTwo'
-        } else{
+        } else {
           this.resetPasswordForm.errorMsg = 'passwordHint'
         }
       },
@@ -2170,6 +2181,10 @@
                 this.$Message.success(response.data.message)
                 this.hostSelection = []
                 this.getHostList()
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
               }
             })
           }
@@ -2933,6 +2948,11 @@
     span:nth-child(2) {
       margin-left: 10px;
     }
+    span:nth-child(4) {
+      float: left;
+      cursor: auto;
+      color: rgb(255, 98, 75);
+    }
     &::after {
       content: '';
       display: inline-block;
@@ -2940,7 +2960,7 @@
       height: 10px;
       background: #FFF;
       position: absolute;
-      bottom: -6px;
+      bottom: -5px;
       right: 50%;
       transform: rotate(135deg);
       box-shadow: 1px -1px 0px 0px rgba(0, 0, 0, 0.2);
