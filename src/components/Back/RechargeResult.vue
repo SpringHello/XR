@@ -20,7 +20,7 @@
             <p style="color: #2A99F2">{{vipMsg}}</p>
             <div style="margin-top: 20px">
               <Button type="ghost" style="margin-right: 10px" @click="beVip">成为会员</Button>
-              <Button type="primary" @click="$router.push('overview')">进入控制台</Button>
+              <Button type="primary" @click="$router.push('expenses')">进入控制台</Button>
             </div>
           </div>
           <div class="pay-info" v-else>

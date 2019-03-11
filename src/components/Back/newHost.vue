@@ -1488,6 +1488,9 @@
       if (this.$store.state.authInfo == null) {
         this.showModal.selectAuthType = true
       }
+      if(sessionStorage.getItem('isSeeHint')){
+        this.guideStep = 0
+      }
       this.getHostList()
     },
     methods: {

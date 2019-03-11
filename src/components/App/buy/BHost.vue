@@ -52,7 +52,7 @@
             <!--镜像选择-->
             <div class="item-wrapper">
               <div style="display: flex;justify-content: space-between;">
-                <div v-for="(item,index) in mirrorListQ" :key="index" class="fast-mirror" :class="{'select-fast-mirror':FastMirrorIndex==index}" @click="FastMirrorIndex=index;selectFastMirror=item.systemtemplateid">
+                <div v-for="(item,index) in mirrorListQ" :key="index" class="fast-mirror" :class="{'select-fast-mirror':FastMirrorIndex==index}" @click="setOSQ(item,index)">
                   <img :src="require('../../../assets/img/host/h-icon12.png')" alt="" v-if="index==0||index==1">
                   <img :src="require(`../../../assets/img/host/h-icon${index+4}.png`)" alt="" v-else>
                   <span>{{item.templatename}}</span>
@@ -730,7 +730,7 @@
         loginType: [{type: 'default', label: '默认设置'}, {type: 'custom', label: '自定义设置'}],
         currentLoginType: 'default',
         // 系统用户名
-        systemUsername: '',
+        systemUsername: 'administrator',
         // 主机名称
         computerName: '',
         // 主机名称提示信息
@@ -806,33 +806,7 @@
         // 快速创建优惠价格
         fastCoupon: 0,
         mirrorQuery: this.$route.query.mirror,
-        mirrorListQ: [
-          {
-            img: require('../../../assets/img/host/h-icon12.png'),
-            text: 'windows-2008-64',
-            id: ''
-          },
-          {
-            img: require('../../../assets/img/host/h-icon12.png'),
-            text: 'windows-2012-64',
-            id: ''
-          },
-          {
-            img: require('../../../assets/img/host/h-icon6.png'),
-            text: 'Centos7.4-64bit',
-            id: ''
-          },
-          {
-            img: require('../../../assets/img/host/h-icon7.png'),
-            text: 'centos-6.8-64',
-            id: ''
-          },
-          {
-            img: require('../../../assets/img/host/h-icon8.png'),
-            text: 'Ubuntu-server-16.04-64bit',
-            id: ''
-          }
-        ],
+        mirrorListQ: [],
       }
     },
     created() {
@@ -979,6 +953,16 @@
           }
         } else {
           this.publicList[arg[2]].selectSystem = arg[0]
+        }
+      },
+      setOSQ(item,index) {
+        this.FastMirrorIndex=index
+        this.selectFastMirror=item.systemtemplateid
+        var str = item.templatename.substr(0, 1)
+        if (str === 'W' || str === 'w') {
+          this.systemUsername = 'administrator'
+        } else {
+          this.systemUsername = 'root'
         }
       },
       setAppOS(name) {

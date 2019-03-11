@@ -33,8 +33,8 @@
           </CheckboxGroup>
         </div>
 
-        <p style="color:#333333;font-size:14px;">其他支付方式支付</p>
-        <div class="pay">
+        <p style="color:#333333;font-size:14px;" v-if="orderStatus == -1">其他支付方式支付</p>
+        <div class="pay" v-if="orderStatus == -1">
           <!--包年包月第三方支付页面-->
           <Tabs value="name1" @on-click="currentTabs">
             <span slot="extra">其他支付方式支付：<span style="color:#FF624B;font-size:18px;">{{otherPayCount.toFixed(2)}}</span>元</span>
@@ -125,7 +125,8 @@
         m: '--',
         s: '--',
         intervalInstance: null,
-        payText: '确认支付'
+        payText: '确认支付',
+        orderStatus:0
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -142,7 +143,7 @@
     created() {
       this.overTime = sessionStorage.getItem('overtime')
       this.orderInfo = this.$route.params;
-     
+      this.orderStatus = sessionStorage.getItem('orderStatus').indexOf('实时');
       // 充值有限制  不能少于10元
       if (this.orderInfo.isNilNorm == 0) {
         this.rechargeMin = 10
@@ -181,6 +182,13 @@
             })
             return
           } else if (this.accountPay.length == 1) {
+            if(this.orderStatus == 1){
+              this.$message.info({
+                 title:'提示',
+                content: `<p>账户余额不足,请<a style="color:#2A99F2;cursor:pointer;" href="recharge">充值</a></p>`
+              })
+              return;
+            }
             // 选中余额支付
             if (this.accountPay[0] == 'account' && Number(this.orderInfo.remainder) < Number(this.orderInfo.money)) {
               this.$message.info({
@@ -190,13 +198,6 @@
               return
             }
             cost += Number(this.orderInfo.remainder)
-          } else if (this.accountPay.length == 2 && Number(this.orderInfo.remainder) + Number(this.orderInfo.voucher) < Number(this.orderInfo.money)) {
-            cost += Number(this.orderInfo.remainder) + Number(this.orderInfo.voucher)
-            this.$message.info({
-              title:'提示',
-              content: '账户余额不足'
-            })
-            return
           }
           // 采用账户余额支付
           this.payText = '支付中...'
