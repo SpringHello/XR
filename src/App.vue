@@ -11,7 +11,7 @@
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
-        <a href="//kaifa.xrclound.net/index.htm" class="logo" alt='新睿云'>
+        <a href="//kaifa.xrclound.net" class="logo" alt='新睿云'>
           <div></div>
         </a>
         <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('/schoolSeason')" alt="">
@@ -77,7 +77,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link to="/entrance.htm"><span>备案</span></router-link>
+                  <router-link to="/entrance"><span>备案</span></router-link>
                 </div>
               </div>
             </li>
@@ -231,7 +231,7 @@
                 B1-20180455</a>
             </li>
             <li>
-              <a href="https://www.xrcloud.net/about.htm" rel="nofollow" style="color:#fff">关于我们</a>
+              <a href="https://www.xrcloud.net/about" rel="nofollow" style="color:#fff">关于我们</a>
             </li>
           </ul>
         </div>
@@ -417,11 +417,11 @@
         titleItem: [
           {
             title: '活动中心',
-            path: '/ActiveCenter.htm'
+            path: '/ActiveCenter'
           },
           {
             title: '首页',
-            path: '/index.htm'
+            path: '/'
           },
           {
             title: '产品',
@@ -430,10 +430,10 @@
               {
                 prod: '云计算',
                 prodItem: [
-                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/Pecs.htm'},
-                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/Phost.htm'},
-                  {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/Pecss.htm'},
-                  {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/Pgpu.htm'},
+                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/Pecs'},
+                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/Phost'},
+                  {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/Pecss'},
+                  {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/Pgpu'},
                   {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '/Pelastic'},
                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
                 ]
@@ -441,20 +441,20 @@
               {
                 prod: '云网络',
                 prodItem: [
-                  {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/Pvpc.htm'},
-                  {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/Peip.htm'},
-                  {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/Pbalance.htm'},
-                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/Pnat.htm'},
-                  {title: '虚拟专网VPN', desc: '跨VPC连接', path: '/Pvirvpn.htm'},
+                  {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/Pvpc'},
+                  {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/Peip'},
+                  {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/Pbalance'},
+                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/Pnat'},
+                  {title: '虚拟专网VPN', desc: '跨VPC连接', path: '/Pvirvpn'},
                   {title: 'CDN（敬请期待）', desc: '节点丰富、安全易用', path: ''}
                 ]
               },
               {
                 prod: '云存储',
                 prodItem: [
-                  {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/Pdisk.htm'},
-                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/Pbackupdisk.htm'},
-                  {title: '对象存储', desc: '安全稳定，海量便捷', path: '/PobjStorage.htm'}
+                  {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/Pdisk'},
+                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/Pbackupdisk'},
+                  {title: '对象存储', desc: '安全稳定，海量便捷', path: '/PobjStorage'}
                 ]
               },
               {
@@ -463,7 +463,7 @@
                   {
                     title: '云数据库',
                     desc: 'MySQL、PostgreSQL、mongoDB、Redis',
-                    path: '/PdataBase.htm'
+                    path: '/PdataBase'
                   },
                 ],
                 subProd: [
@@ -487,19 +487,19 @@
               {
                 prod: '云安全',
                 prodItem: [
-                  {title: '防火墙', desc: '自定义规则、协议、端口', path: '/Pfirewall.htm'},
-                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/Pddos.htm'},
+                  {title: '防火墙', desc: '自定义规则、协议、端口', path: '/Pfirewall'},
+                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/Pddos'},
                   {
                     title: 'SSL证书',
                     desc: '网站可信身份认证与安全数据传输',
-                    path: '/ssl.htm'
+                    path: '/ssl'
                   },
                 ],
                 subProd: [
                   {
                     prod: '云运维',
                     prodItem: [
-                      {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/Pmonitor.htm'},
+                      {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/Pmonitor'},
                       {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: ''}
                     ]
                   }
@@ -547,7 +547,7 @@
           },
           {
             title: '关于我们',
-            path: 'https://zschj.xrcloud.net/about.htm'
+            path: 'https://zschj.xrcloud.net/about'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
@@ -566,10 +566,10 @@
           {
             title: '云计算',
             desc: [
-              {subTitle: '弹性云服务器（ECS）', url: '/Pecs.htm'},
-              {subTitle: '镜像服务', url: '/Phost.htm'},
-              {subTitle: 'ESC快照', url: '/Pecss.htm'},
-              {subTitle: 'GPU服务器', url: '/Pgpu.htm'},
+              {subTitle: '弹性云服务器（ECS）', url: '/Pecs'},
+              {subTitle: '镜像服务', url: '/Phost'},
+              {subTitle: 'ESC快照', url: '/Pecss'},
+              {subTitle: 'GPU服务器', url: '/Pgpu'},
               {subTitle: '弹性伸缩', url: '/Pelastic'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
             ]
@@ -577,33 +577,33 @@
           {
             title: '云网络',
             desc: [
-              {subTitle: '虚拟私有云VPC', url: '/Pvpc.htm'},
-              {subTitle: '弹性IP', url: '/Peip.htm'},
-              {subTitle: '负载均衡', url: '/Pbalance.htm'},
-              {subTitle: 'NAT网关', url: '/Pnat.htm'},
-              {subTitle: '虚拟专网VPN', url: '/Pvirvpn.htm'},
+              {subTitle: '虚拟私有云VPC', url: '/Pvpc'},
+              {subTitle: '弹性IP', url: '/Peip'},
+              {subTitle: '负载均衡', url: '/Pbalance'},
+              {subTitle: 'NAT网关', url: '/Pnat'},
+              {subTitle: '虚拟专网VPN', url: '/Pvirvpn'},
               {subTitle: 'CDN（敬请期待）', url: ''}
             ]
           },
           {
             title: '云储存',
             desc: [
-              {subTitle: '云硬盘', url: '/Pdisk.htm'},
-              {subTitle: '云硬盘备份', url: '/Pbackupdisk.htm'},
-              {title: '对象存储', url: '/PobjStorage.htm'}
+              {subTitle: '云硬盘', url: '/Pdisk'},
+              {subTitle: '云硬盘备份', url: '/Pbackupdisk'},
+              {title: '对象存储', url: '/PobjStorage'}
             ]
           },
           {
             title: '云安全',
             desc: [
-              {subTitle: '防火墙', url: '/Pfirewall.htm'},
-              {subTitle: 'DDOS高防IP', url: '/Pddos.htm'}
+              {subTitle: '防火墙', url: '/Pfirewall'},
+              {subTitle: 'DDOS高防IP', url: '/Pddos'}
             ]
           },
           {
             title: '云维护',
             desc: [
-              {subTitle: '云监控', url: '/Pmonitor.htm'},
+              {subTitle: '云监控', url: '/Pmonitor'},
               {subTitle: '访问监控（敬请期待）', url: ''}
             ]
           }
