@@ -36,7 +36,7 @@
         </div>
         <div class="hint_4" v-show="guideStep == 4">
           <p>资费信息项可进行自动续费的开启和关闭操作。</p>
-          <span @click="guideStep = 5">知道了</span>
+          <span @click="seeAll">知道了</span>
         </div>
       </div>
       <div class="config-info">
@@ -528,6 +528,7 @@
   import bar from '@/echarts/hostManage/bar'
   import regExp from '../../util/regExp'
   import {debounce} from 'throttle-debounce'
+
   const validateCdir = (rule, value, callback) => {
     var re = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/(\d|[1-2]\d|3[0-2])$/
     if (!value) {
@@ -584,7 +585,7 @@
           adjust: false,
           rollback: false,
           delsnaps: false,
-          createRule:false
+          createRule: false
         },
         renameForm: {
           hostName: ''
@@ -710,59 +711,61 @@
           currentData: this.getCurrentDate()
         },
 
-        tab3:{
+        tab3: {
           rule: '出站规则',
-          id:'',
-          totalLenght:0,
-          selectLenght:0,
-          firewalLoading:false,
-          firewalList:[
+          id: '',
+          totalLenght: 0,
+          selectLenght: 0,
+          firewalLoading: false,
+          firewalList: [
             {
               type: 'selection',
               width: 55,
               align: 'center'
             },
             {
-              title:'安全组名称',
-              key:'acllistitemname'
+              title: '安全组名称',
+              key: 'acllistitemname'
             },
             {
-              title:'协议',
-              key:'agreement'
+              title: '协议',
+              key: 'agreement'
             },
             {
-              title:'行为',
-              key:'operation'
+              title: '行为',
+              key: 'operation'
             },
             {
-              title:'起始端口',
-              key:'startport'
+              title: '起始端口',
+              key: 'startport'
             },
             {
-              title:'结束端口',
-              key:'endport'
+              title: '结束端口',
+              key: 'endport'
             },
             {
-              title:'CIDR',
-              key:'cidr'
+              title: 'CIDR',
+              key: 'cidr'
             },
             {
-              title:'操作',
-              render:(h,params)=>{
-                return h('div',[
-                  h('span',{style:{color:'#FF0000',cursor:'pointer'},on:{
-                    click:()=>{
-                      this.del(params.row.id);
+              title: '操作',
+              render: (h, params) => {
+                return h('div', [
+                  h('span', {
+                    style: {color: '#FF0000', cursor: 'pointer'}, on: {
+                      click: () => {
+                        this.del(params.row.id);
+                      }
                     }
-                  }},'删除'),
+                  }, '删除'),
                   // h('span',{style:{margin:'0 10px',color:'#999999'}},'|'),
                   // h('span',{style:{color:'#2A99F2',cursor:'pointer'}},'修改规则')
                 ])
               }
             }
           ],
-          firewalData:[]
-      },
+          firewalData: []
+        },
 
         tab4: {
           snapshootColumns: [
@@ -950,7 +953,6 @@
         this.guideStep = 1
         sessionStorage.removeItem('guideHint')
       }
-      this.getAclList()
     },
     methods: {
       changeTabs(item) {
@@ -961,6 +963,9 @@
             break
           case '主机监控':
             this.getComputerMonitor()
+            break
+          case '防火墙':
+            this.getAclList()
             break
           case '快照管理':
             this.getHostSnapshoot()
@@ -1065,7 +1070,7 @@
           templateId: this.mirrorModifyForm.system[1],
           adminPassword: this.mirrorModifyForm.consolePassword
         }).then(response => {
-          if (response.status == 200) {
+          if (response.status == 200 && response.data.status == 1) {
             this.showModal.mirrorModify = false
             this.mirrorModifyForm.buttonText = '确认重装'
             this.mirrorModifyForm.system = []
@@ -1073,6 +1078,7 @@
             this.$Message.success('系统重装成功')
             this.getHostInfo()
           } else {
+            this.mirrorModifyForm.buttonText = '确认重装'
             this.$message.info({
               content: response.data.message
             })
@@ -1598,48 +1604,48 @@
       },
 
       // 获取安全组
-      getAclList(){
+      getAclList() {
         this.tab3.firewalLoading = true;
         this.$http.get('network/listaclListItem.do', {
           params: {
-            aclListId: sessionStorage.getItem('firewallId')
+            aclListId: this.hostInfo.firewallId
           }
         }).then(response => {
-            if(response.status == 200 && response.data.status == 1){
-              if(this.tab3.rule == '出站规则'){
-                this.tab3.selectLenght = 0;
-                this.tab3.firewalData = response.data.result.down;
-                this.tab3.totalLenght = response.data.result.down.length;
-                this.tab3.firewalLoading = false;
-              }
-              if(this.tab3.rule == '入站规则'){
-                this.tab3.selectLenght = 0;
-                this.tab3.firewalData = response.data.result.up;
-                this.tab3.totalLenght = response.data.result.up.length;
-                this.tab3.firewalLoading = false;
-              }
-            }else{
-              this.$Message.info({
-                content:response.data.message,
-                duration:5
-              })
+          if (response.status == 200 && response.data.status == 1) {
+            if (this.tab3.rule == '出站规则') {
+              this.tab3.selectLenght = 0;
+              this.tab3.firewalData = response.data.result.down;
+              this.tab3.totalLenght = response.data.result.down.length;
               this.tab3.firewalLoading = false;
             }
-          }).catch(err =>{
-            if(err)
+            if (this.tab3.rule == '入站规则') {
+              this.tab3.selectLenght = 0;
+              this.tab3.firewalData = response.data.result.up;
+              this.tab3.totalLenght = response.data.result.up.length;
+              this.tab3.firewalLoading = false;
+            }
+          } else {
+            this.$Message.info({
+              content: response.data.message,
+              duration: 5
+            })
             this.tab3.firewalLoading = false;
-          })
-      },  
-      tab3RadioChange(){
-        this.getAclList();
-      },
-      firewalSelectionChange(selection){
-        this.tab3.selectLenght = selection.length;
-        selection.forEach(item =>{
-          this.tab3.id += item.id+','
+          }
+        }).catch(err => {
+          if (err)
+            this.tab3.firewalLoading = false;
         })
       },
-       handleSubmit () {
+      tab3RadioChange() {
+        this.getAclList();
+      },
+      firewalSelectionChange(selection) {
+        this.tab3.selectLenght = selection.length;
+        selection.forEach(item => {
+          this.tab3.id += item.id + ','
+        })
+      },
+      handleSubmit() {
         this.$refs.newRuleFormValidate.validate(validate => {
             if (validate) {
               if (this.newRuleForm.protocol == 'ALL' || this.newRuleForm.protocol == 'ICMP') {
@@ -1681,7 +1687,7 @@
                   this.$Message.success({
                     content: response.data.message
                   })
-                 this.getAclList();
+                  this.getAclList();
                 } else {
                   this.getAclList();
                   //this.loading = false
@@ -1694,7 +1700,7 @@
           }
         )
       },
-      del(aclId){
+      del(aclId) {
         // this.upInformation.tableData.forEach(item => {
         //   if (item.id == aclId) {
         //     this.$set(item, '_status', 2)
@@ -1707,14 +1713,14 @@
         // })
         this.$http.get('network/deleteNetworkACL.do', {
           params: {
-            id: aclId == ''?this.tab3.id.substring(0,this.tab3.id.length-1):aclId
+            id: aclId == '' ? this.tab3.id.substring(0, this.tab3.id.length - 1) : aclId
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
               content: response.data.message
             })
-           this.getAclList();
+            this.getAclList();
           } else {
             this.getAclList();
             this.$message.info({
@@ -1723,6 +1729,10 @@
           }
         })
       },
+      seeAll() {
+        sessionStorage.setItem('isSeeHint','1')
+        this.guideStep = 5
+      }
     },
     computed: {
       auth() {
@@ -1731,7 +1741,7 @@
       delSnapshootDisabled() {
         return this.tab4.snapshootSelection.length === 0
       },
-      selectLenght(){
+      selectLenght() {
         return this.tab3.selectLenght;
       }
     },
@@ -1965,14 +1975,14 @@
         background: rgba(255, 255, 255, 1);
         border-radius: 4px;
         border: 1px solid rgba(229, 233, 237, 1);
-        .tab-3-title{
-          border-bottom:1px solid rgba(233,233,233,1);
+        .tab-3-title {
+          border-bottom: 1px solid rgba(233, 233, 233, 1);
           padding-bottom: 20px;
-          span{
-            font-size:14px;
-            font-family:MicrosoftYaHei;
-            color:rgba(51,51,51,1);
-            span{
+          span {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(51, 51, 51, 1);
+            span {
               color: #2A99F2;
               cursor: pointer;
             }
@@ -1991,7 +2001,7 @@
           color: rgba(102, 102, 102, 1);
         }
       }
-      .firewal{
+      .firewal {
         padding: 20px 0;
       }
     }
