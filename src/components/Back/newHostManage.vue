@@ -118,11 +118,11 @@
             <chart :options="item.chart" style="width:100%;height:80%;"></chart>
           </div>
         </div>
-        <div class="tab-3" v-show="configType == '安全组'">
+        <div class="tab-3" v-show="configType == '防火墙'">
           <div class="content">
             <div class="tab-3-title">
               <span>{{ hostInfo.firewall ? hostInfo.firewall: '----'}}</span>
-              <span style="margin-left: 40px">所属子网：<span>{{hostInfo.vpc}}</span></span>
+              <span style="margin-left: 40px">所属Vpc：<span @click="toOther('vpc')">{{hostInfo.vpc}}</span></span>
               <RadioGroup v-model="tab3.rule" type="button" style="float: right" @on-change='tab3RadioChange'>
                 <Radio label="出站规则"></Radio>
                 <Radio label="入站规则"></Radio>
@@ -131,7 +131,7 @@
             <div class="firewal">
               <div>
                 <Button type="primary" @click="showModal.createRule = true">创建规则</Button>
-                <Button type="primary" style="margin-left:10px;" @click="del('')">删除</Button>
+                <!-- <Button type="primary" style="margin-left:10px;" @click="del('')">删除</Button> -->
                 <!-- <Button >开启所有端口</Button>
                 <Button >关闭所有端口</Button>
                 <Button >恢复默认</Button> -->
@@ -612,7 +612,7 @@
           input: ''
         },
         configType: '基础信息',
-        configTypes: ['基础信息', '主机监控', '安全组', '快照管理', '操作日志'],
+        configTypes: ['基础信息', '主机监控', '防火墙', '快照管理', '操作日志'],
         isAutoRenew: false,
         diskMountForm: {
           mountDisk: '',
