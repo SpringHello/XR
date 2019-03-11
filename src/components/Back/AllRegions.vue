@@ -59,7 +59,8 @@
 								<i class="iconfont houtaiicon-weizhihei" id="icon1"></i>
 								<span class="boxtop-name">{{item.zoneName}}</span>
 							</div>
-							<span class="numbercloud">云服务器总数</span>
+							<span class="numbercloud" v-if="item.type=='1'">云服务器总数</span>
+							<span class="numbercloud1" v-if="item.type=='2'">GPU服务器总数</span>
 							<span class="numberofc" v-bind:class="{ newnumberofc: item.overview.num>0}">{{item.overview.num}}</span>
 							<span class="numberge">个</span>
 							<span class="xiantiaoa"></span>
@@ -86,7 +87,7 @@
 								<span class="fufeinum2">种</span>
 							</div><br />
 							<div style="margin-top: 13px;margin-left: -5px;">
-								<div class="VPCALL" v-for="ited in item.payResources.list" @click="push(ited)">
+								<div class="VPCALL" v-for="ited in item.payResources.list" @click="push(item,ited)">
 									<span class="nnum" v-bind:class="{ newnnum: ited.num>0}">{{ited.num}}</span>
 									<Poptip trigger="hover" v-if="ited.name=='对象存储'">
 										<div slot="content" id="enna">
@@ -97,7 +98,7 @@
 										<i class="iconfont houtaiicon-bangzhu"></i>
 									</Poptip>
 									<span class="nnumzi" v-bind:class="{ newnnumzi: ited.num>0}">{{ited.name}}</span>
-									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click.stop="pushbuy(ited)"></i>
+									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click.stop="pushbuy(item,ited)"></i>
 								</div>
 							</div>
 						</div>
@@ -105,12 +106,12 @@
 						<div class="boxcontent2">
 							<div>
 								<span class="mianfeizy">免费资源数量</span>
-								<span class="mianfeizy1" v-bind:class="{ newnumberofc: item.payResources.num>0}">{{item.payResources.num}}</span>
+								<span class="mianfeizy1" v-bind:class="{ newnumberofc: item.freeResources.num>0}">{{item.freeResources.num}}</span>
 								<span class="mianfeizy2">种</span>
 								<span class="lookgd" @click="toggleZone(item)">查看更多</span>
 							</div><br />
 							<div style="margin-top: 13px;margin-left: -5px;">
-								<div class="VPCCALL" v-for="ites in item.freeResources.list" @click="$router.push(ites.url)">
+								<div class="VPCCALL" v-for="ites in item.freeResources.list" @click="freepush(item,ites)">
 									<span class="nnum" v-bind:class="{ newnnum: ites.num>0}">{{ites.num}}</span>
 									<span class="nnumzi" v-bind:class="{ newnnumzi: ites.num>0}">{{ites.name}}</span>
 								</div>
@@ -170,25 +171,42 @@
 				  }
 				})
 			},
-			push(ited){
-				if(ited.url=='https://testoss-console.xrcloud.net/ruirados/objectStorage'){
-					window.location.href='https://testoss-console.xrcloud.net/ruirados/objectStorage'
-				}
-				else if(ited.url=='vpc#NAT'){
-					sessionStorage.setItem('VPN', ited.url)
-					 this.$router.push(ited.url)
-				}
-				else{
-					 this.$router.push(ited.url)
+			push(item,ited){
+				// 切换默认区域
+				axios.get('user/setDefaultZone.do', {params: {zoneId: item.zoneId}}).then(response => {
+				})
+				for (var zone of this.$store.state.zoneList) {
+				  if (zone.zoneid == item.zoneId) {
+				    $store.commit('setZone', zone);
+					if(ited.url=='https://testoss-console.xrcloud.net/ruirados/objectStorage'){
+						window.location.href='https://testoss-console.xrcloud.net/ruirados/objectStorage'
+					}
+					else if(ited.url=='vpc#NAT'){
+						sessionStorage.setItem('VPN', ited.url)
+						 this.$router.push(ited.url)
+					}
+					else{
+						 this.$router.push(ited.url)
+					}
+					
+				  }
 				}
 			},
-			pushbuy(ited){
-				if(ited.buyUrl=='vpc#NAT'){
-					sessionStorage.setItem('VPN', ited.url)
-					 this.$router.push(ited.buyUrl)
-				}
-				else{
-					 this.$router.push('/ruicloud/buy/'+ited.buyUrl)
+			pushbuy(item,ited){
+				// 切换默认区域
+				axios.get('user/setDefaultZone.do', {params: {zoneId: item.zoneId}}).then(response => {
+				})
+				for (var zone of this.$store.state.zoneList) {
+				  if (zone.zoneid == item.zoneId) {
+				    $store.commit('setZone', zone);
+					if(ited.buyUrl=='vpc#NAT'){
+						sessionStorage.setItem('VPN', ited.url)
+						 this.$router.push(ited.buyUrl)
+					}
+					else{
+						 this.$router.push('/ruicloud/buy/'+ited.buyUrl)
+					}
+				  }
 				}
 			},
 			toggleZone(item) {
@@ -203,7 +221,31 @@
 			  }
 			},
 			JumpGwc(item){
-				console.log(item)
+				// 切换默认区域
+				axios.get('user/setDefaultZone.do', {params: {zoneId: item.zoneId}}).then(response => {
+				})
+				for (var zone of this.$store.state.zoneList) {
+				  if (zone.zoneid == item.zoneId) {
+				    $store.commit('setZone', zone);
+					if(item.type=='2'){
+						this.$router.push('/ruicloud/buy/bgpu')
+					}
+					else if(item.type=='1'){
+						this.$router.push('/ruicloud/buy/bhost')
+					}	
+				  }
+				}
+			},
+			freepush(item,ites){
+				// 切换默认区域
+				axios.get('user/setDefaultZone.do', {params: {zoneId: item.zoneId}}).then(response => {
+				})
+				for (var zone of this.$store.state.zoneList) {
+				  if (zone.zoneid == item.zoneId) {
+				    $store.commit('setZone', zone);
+						this.$router.push(ites.url)
+				  }
+				}
 			}
 		},
 		computed: {
@@ -404,10 +446,20 @@
 		color:rgba(102,102,102,1);
 		line-height:16px;
 		top: 110px;
-		left: 19px;
+		left: 30px;
+		position: absolute;
+	}
+	.numbercloud1{
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		color:rgba(102,102,102,1);
+		line-height:16px;
+		top: 110px;
+		left: 17px;
 		position: absolute;
 	}
 	.numberofc{
+		width: 30px;
 		font-size:24px;
 		font-family:Arial-BoldMT;
 		font-weight:normal;
@@ -416,6 +468,7 @@
 		top: 103px;
 		left: 101px;
 		position: absolute;
+		text-align: center;
 	}
 	.numberge{
 		font-size:12px;
@@ -423,7 +476,7 @@
 		color:rgba(102,102,102,1);
 		line-height:16px;
 		top: 111px;
-		left: 120px;
+		left: 128px;
 		position: absolute;
 	}
 	.xiantiaoa{
@@ -440,6 +493,7 @@
 		top: 20px;
 		left: 333px;
 		display: none;
+		cursor: pointer;
 	}
 	.rightall{
 		width: 141px;
@@ -714,6 +768,7 @@
 		margin-top: 5px;
 		float: right;
 		display: none;
+		cursor: pointer;
 	}
 	.VPCALL:hover #gwchh{
 		display: block;

@@ -18,7 +18,7 @@
         <div class="universal-alert">
           <p>云主机是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置。XRcloud为您提供的云主机具有安全、弹性、高性能等特点。</p>
         </div>
-        <div class="operator-bar">
+        <div class="operator-bar" style="position: relative">
           <Button type="primary" @click="$router.push('/ruicloud/buy/bhost')">+ 创建</Button>
           <Poptip
             confirm
@@ -80,8 +80,30 @@
           <span>共 {{ hostPages}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
           <span class="guide" style="margin-left: 20px" @click="$router.push('hostCard')"><Icon type="grid"></Icon></span>
           <span class="guide" @click="$router.push('host')"><Icon type="navicon-round"></Icon></span>
-          <div class="guide-hint" v-show="guide_1 == 0">
-
+          <div class="hint_1" v-show="guideStep == 1">
+            <p>需要新睿云2.0指引提示？</p>
+            <span @click="guideNext">需要</span>
+            <span @click="guideStep = 0">不需要</span>
+          </div>
+          <div class="hint_2" v-show="guideStep == 2">
+            <p>连接主机在这里</p>
+            <span @click="guideStep = 3">知道了</span>
+          </div>
+          <div class="hint_3" v-show="guideStep == 3">
+            <p>上面的操作按钮，可对列表进行批量操作。更多操作里除了更改密码，其余都是单项操作</p>
+            <span @click="guideStep = 4">知道了</span>
+          </div>
+          <div class="hint_4" v-show="guideStep == 4">
+            <p>点击「状态」可查看该主机的监控数据。（异常和删除至回收站状态不可查看）</p>
+            <span @click="guideStep = 5">知道了</span>
+          </div>
+          <div class="hint_5" v-show="guideStep == 5">
+            <p>点击用户名称可进入管理页面。</p>
+            <span @click="guideStep = 6">知道了</span>
+          </div>
+          <div class="hint_6" v-show="guideStep == 6">
+            <p>管理主机在这里</p>
+            <span @click="hintToManage">知道了</span>
           </div>
         </div>
         <Table :columns="hostListColumns" :data="hostListData" @on-selection-change="hostSelectionChange"></Table>
@@ -508,7 +530,7 @@
   export default {
     data() {
       return {
-        guide_1: 0,
+        guideStep: 1,
         regExpObj: {
           password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,32}$/
         },
@@ -614,6 +636,7 @@
             render: (h, params) => {
               let restart = params.row.restart ? params.row.restart : 0
               let restore = params.row.restore ? params.row.restore : 0
+              let resetpwd = params.row.resetpwd ? params.row.resetpwd : 0
               let bindip = params.row.bindip ? params.row.bindip : 0
               let icon_1 = require('../../assets/img/host/h-icon1.png')
               let icon_2 = require('../../assets/img/host/h-icon2.png')
@@ -739,6 +762,12 @@
                         display: 'inline-block'
                       }
                     }), h('span', {style: styleInfo}, '重装中')])
+                  } else if (resetpwd == 1) {
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }), h('span', {style: styleInfo}, '重置中')])
                   } else if (bindip == 1) {
                     return h('div', {}, [h('Spin', {
                       style: {
@@ -1459,6 +1488,9 @@
       if (this.$store.state.authInfo == null) {
         this.showModal.selectAuthType = true
       }
+      if(sessionStorage.getItem('isSeeHint')){
+        this.guideStep = 0
+      }
       this.getHostList()
     },
     methods: {
@@ -1839,6 +1871,8 @@
       verifyPassword() {
         if (this.regExpObj.password.test(this.resetPasswordForm.password)) {
           this.resetPasswordForm.errorMsg = 'passwordHintTwo'
+        } else{
+          this.resetPasswordForm.errorMsg = 'passwordHint'
         }
       },
       resetPasswordNext() {
@@ -1851,7 +1885,7 @@
             flag = false
           }
         })
-        if (!this.resetPasswordForm.password) {
+        if (!this.resetPasswordForm.password || !this.regExpObj.password.test(this.resetPasswordForm.password)) {
           this.resetPasswordForm.errorMsg = 'passwordUndercapacity'
           return false
         }
@@ -1877,10 +1911,10 @@
           let url = 'information/resetPasswordForVirtualMachineBatch.do'
           let list = []
           this.resetPasswordHostData.forEach((item, index) => {
-            if (item.changepassword && !item.currentPassword) {
+            if (item.changepassword && item.currentPassword) {
               list.push({
                 VMId: item.computerid,
-                oldpassword: item.currentPassword,
+                oldPassword: item.currentPassword,
                 VMName: item.instancename
               })
             } else {
@@ -1898,12 +1932,25 @@
             if (res.status == 200 && res.data.status == 1) {
               this.$Message.success(res.data.message)
               this.showModal.resetPassword = false
-              this.getHostList()
+              this.hostListData.forEach(host => {
+                this.resetPasswordHostData.forEach(item => {
+                  if (host.id == item.id) {
+                    host.status = 2
+                    host.resetpwd = 1
+                    host._disabled = true
+                  }
+                })
+              })
+              let ids = this.resetPasswordHostData.map(item => {
+                return item.id
+              })
+              this.timingRefresh(ids + '')
+              this.hostSelection = []
             } else if (res.status == 200 && res.data.status == 2) {
               if (res.data.result.length != 0) {
                 res.data.result.forEach(name => {
                   this.resetPasswordHostData.forEach((item, index) => {
-                    if (item.instancename == name) {
+                    if (item.computerid == name.errhost) {
                       item.errorMsg = 'passwordMistake'
                       this.resetPasswordHostData.splice(index, 1, item)
                     }
@@ -2538,6 +2585,35 @@
         sessionStorage.setItem('pane', type)
         this.$router.push('/ruicloud/usercenter')
       },
+      guideNext() {
+        if (this.hostListData.length != 0) {
+          let flag = false
+          this.hostListData.forEach(item => {
+            if (item.status == 1) {
+              flag = true
+            }
+          })
+          if (flag) {
+            this.guideStep = 2
+          } else {
+            this.guideStep = 0
+            this.$Message.info('您还没有正常状态的云主机，无法查看指引提示，请先创建主机')
+          }
+        } else {
+          this.guideStep = 0
+          this.$Message.info('您还没有云主机，无法查看指引提示，请先创建主机')
+        }
+      },
+      hintToManage() {
+        this.guideStep = 0
+        this.hostListData.forEach(item => {
+          if (item.status == 1) {
+            sessionStorage.setItem('guideHint', '1')
+            sessionStorage.setItem('manageId', item.computerid)
+            this.$router.push('manage')
+          }
+        })
+      }
     },
     computed: {
       auth() {
@@ -2834,14 +2910,40 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .hint() {
     width: 200px;
-    height: 110px;
     background: rgba(255, 255, 255, 1);
     box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
     position: absolute;
     z-index: 9999;
+    padding: 20px;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: #666666;
+      line-height: 20px;
+      margin-bottom: 20px;
+    }
+    > span {
+      float: right;
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(24, 144, 255, 1);
+      cursor: pointer;
+    }
+    span:nth-child(2) {
+      margin-left: 10px;
+    }
     &::after {
-
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #FFF;
+      position: absolute;
+      bottom: -6px;
+      right: 50%;
+      transform: rotate(135deg);
+      box-shadow: 1px -1px 0px 0px rgba(0, 0, 0, 0.2);
     }
   }
 
@@ -2956,8 +3058,35 @@
         }
       }
     }
-    .guide-hint {
-      .hint()
+    .hint_1 {
+      .hint();
+      right: -60px;
+      top: -105px;
+    }
+    .hint_2 {
+      .hint();
+      right: 0;
+      top: -30px;
+    }
+    .hint_3 {
+      .hint();
+      left: 290px;
+      top: -215px;
+    }
+    .hint_4 {
+      .hint();
+      left: 150px;
+      top: -65px;
+    }
+    .hint_5 {
+      .hint();
+      left: 10px;
+      top: -33px;
+    }
+    .hint_6 {
+      .hint();
+      right: 0;
+      top: 0;
     }
   }
 

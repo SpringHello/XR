@@ -3,9 +3,9 @@
     <!-- logo -->
     <div class="logo" style="background-image: linear-gradient(225deg,#5f97ff,#4b8aff 62%,#377dff);">
       <div class="logo-wrapper">
-        <img :src="logo.img">
+        <img :src="logo.img" alt="云硬盘" title="云硬盘">
         <div class="info">
-          <span class="title" style="font-size: 48px;color: #fff;">{{logo.title}}</span>
+          <h3 >{{logo.title}}</h3>
           <span class="desc" style="color: #fff;">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter">立即购买</router-link>
         </div>

@@ -5,7 +5,7 @@
       <div class="logo-wrapper">
         <img :src="logo.img">
         <div class="info">
-          <span class="title">{{logo.title}}</span>
+          <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter" class="link-button">立即购买</router-link>
         </div>
