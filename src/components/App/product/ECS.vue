@@ -20,7 +20,7 @@
             <div>
               <i class="iconfont" :class="feature.img" style="font-size:40px;color:#fff;" :alt='feature.title'></i>
               <div>
-                <u class="title" style="text-decoration:none;display:block;">{{feature.title}}</u>
+                <h4 class="title" style="font-weight: normal;">{{feature.title}}</h4>
                 <span class="desc">{{feature.desc}}</span>
               </div>
             </div>
@@ -88,7 +88,7 @@
           <div v-for="(advantage,index) in advantages" class="flex-item" :key="index">
             <i class="iconfont" :class="advantage.img" :alt='advantage.title'></i>
             <div>
-              <u class="title" style="text-decoration:none;display:block;">{{advantage.title}}</u>
+              <h4 class="title" style="font-weight: normal;">{{advantage.title}}</h4>
               <span class="desc">{{advantage.desc}}</span>
             </div>
           </div>
@@ -134,7 +134,7 @@
               <span class="title">{{recommendation.title}}</span>
               <span class="desc">{{recommendation.desc}}</span>
             </div>
-            <router-link :to="recommendation.path" target="_blank" :alt='recommendation.title'>详情</router-link>
+            <router-link :to="recommendation.path" target="_blank" :title="recommendation.title" :alt='recommendation.title'>详情</router-link>
           </div>
         </div>
       </div>

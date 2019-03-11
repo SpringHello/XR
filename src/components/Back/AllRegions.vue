@@ -87,7 +87,7 @@
 								<span class="fufeinum2">种</span>
 							</div><br />
 							<div style="margin-top: 13px;margin-left: -5px;">
-								<div class="VPCALL" v-for="ited in item.payResources.list" @click="push(ited)">
+								<div class="VPCALL" v-for="ited in item.payResources.list" @click="push(item,ited)">
 									<span class="nnum" v-bind:class="{ newnnum: ited.num>0}">{{ited.num}}</span>
 									<Poptip trigger="hover" v-if="ited.name=='对象存储'">
 										<div slot="content" id="enna">
@@ -171,16 +171,25 @@
 				  }
 				})
 			},
-			push(ited){
-				if(ited.url=='https://testoss-console.xrcloud.net/ruirados/objectStorage'){
-					window.location.href='https://testoss-console.xrcloud.net/ruirados/objectStorage'
-				}
-				else if(ited.url=='vpc#NAT'){
-					sessionStorage.setItem('VPN', ited.url)
-					 this.$router.push(ited.url)
-				}
-				else{
-					 this.$router.push(ited.url)
+			push(item,ited){
+				// 切换默认区域
+				axios.get('user/setDefaultZone.do', {params: {zoneId: item.zoneId}}).then(response => {
+				})
+				for (var zone of this.$store.state.zoneList) {
+				  if (zone.zoneid == item.zoneId) {
+				    $store.commit('setZone', zone);
+					if(ited.url=='https://testoss-console.xrcloud.net/ruirados/objectStorage'){
+						window.location.href='https://testoss-console.xrcloud.net/ruirados/objectStorage'
+					}
+					else if(ited.url=='vpc#NAT'){
+						sessionStorage.setItem('VPN', ited.url)
+						 this.$router.push(ited.url)
+					}
+					else{
+						 this.$router.push(ited.url)
+					}
+					
+				  }
 				}
 			},
 			pushbuy(item,ited){

@@ -87,7 +87,7 @@
                       </ul>
                     </div>
                   </div>
-                    <chart ref="momery" style="width: 100%;height: 80%;user-select: none; position: relative; background: transparent;" :options="momery"></chart>
+                  <chart ref="momery" style="width: 100%;height: 80%;user-select: none; position: relative; background: transparent;" :options="momery"></chart>
           </div>
              
         </div>
@@ -271,6 +271,7 @@
   import merge from 'merge'
   import cpuOptions from "@/echarts/cpuUtilization"
   import momeryOptions from  "@/echarts/memory"
+   var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/;
   var urlList = {
     dayURL: 'alarm/getVmAlarmByHour.do',
     otherURL: 'alarm/getVmAlarmByDay.do'
@@ -309,7 +310,16 @@
           }
           callback();
         }
-    }
+  }
+  const validateoldPassword = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } /*else if (!regExp.test(value)) {
+          callback(new Error('密码由6位以上的字母数字组成，必须包含大小写字母、数字'));
+        } */else {
+          callback();
+        }
+      }
   const validatePassCheck = (rule, value, callback) => {
         if (!value) {
           callback(new Error('密码不能为空'));
@@ -318,7 +328,7 @@
         } else {
           callback();
         }
-}
+  }
 
     export default{
       data(){
@@ -412,6 +422,17 @@
             confirmPassword:'',
             buttonMessage:'确认重置'
           },
+          resetRuleValidate:{
+          oldPassword: [
+            {required: true, validator: validateoldPassword, trigger: 'blur'}
+          ],
+          newPassword: [
+            {required: true, validator: validatePassword, trigger: 'blur'}
+          ],
+          confirmPassword: [
+            {required: true, validator: validatePassCheck, trigger: 'blur'}
+          ],
+        },
           //筛选主机
           gpuTimeValue:'',
           gpuTimeList:[

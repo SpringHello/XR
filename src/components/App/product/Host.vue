@@ -3,8 +3,8 @@
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
-        <img :src="logo.img">
-        <div class="info">
+        <img :src="logo.img" alt="镜像服务" title="镜像服务">
+        <div class="info" >
           <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <div>
