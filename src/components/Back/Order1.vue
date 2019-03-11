@@ -349,15 +349,17 @@
           if (response.status == 200 && response.data.status == 1) {
           this.selectLength.total = response.data.result.data.length;
           this.goodType = response.data.result.data[0].goodstype;
+          let orderStatus =';'
           sessionStorage.setItem('routername',response.data.result.data[0].goodstype);
           this.orderData = response.data.result.data.map(item => {
             var data = JSON.parse(item.display);
             this.orderInfo.orderId +=item.ordernumber+',';
-            data.orderId = item.ordernumber
-            data.originalcost = item.originalcost
-            data.cost = item.cost
-            data.discountedorders = item.discountedorders
-            data.overTime = item.overTime
+            data.orderId = item.ordernumber;
+            data.originalcost = item.originalcost;
+            data.cost = item.cost;
+            data.discountedorders = item.discountedorders;
+            data.overTime = item.overTime;
+            orderStatus += data['类型'];
             if(item.discountmessage != undefined){
               data.discountmessage = item.discountmessage.substring(item.discountmessage.indexOf('，')-6,item.discountmessage.indexOf('，')-3)
             }else{
@@ -377,6 +379,7 @@
               }
             return data
           })
+        sessionStorage.setItem('orderStatus',orderStatus)
          for(let i =0;i<this.orderData.length;i++){
              if(this.orderData[i]._checked == true){
                this.selectLength.selection ++ ;
@@ -431,11 +434,16 @@
         })
         let originCost = 0, cost = 0;
         this.orderInfo.orderId = '';
+        let orderStatus = '';
+        console.log(selection);
         selection.forEach((item) => {
           cost += item.cost;
           originCost += item.originalcost;
           this.orderInfo.orderId += item.orderId+',';
+          orderStatus +=item['类型']
+          console.log(item['类型']);
         })
+        sessionStorage.setItem('orderStatus',orderStatus)
         this.couponInfo.cost = cost;
         this.couponInfo.originCost = originCost;
          if(selection.length == 0){
