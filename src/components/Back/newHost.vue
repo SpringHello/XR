@@ -54,6 +54,7 @@
               <Dropdown-item name="resetPassword" :disabled="resetPasswordDisabled">重置密码</Dropdown-item>
               <Dropdown-item name="joinLoadBalance" :disabled="joinLoadBalanceDisabled">加入负载均衡</Dropdown-item>
               <Dropdown-item name="bindingIP" :disabled="bindingIPDisabled">绑定IP</Dropdown-item>
+              <Dropdown-item name="unbindIP" :disabled="unbindIPDisabled">解绑公网IP</Dropdown-item>
               <Dropdown-item name="rename" :disabled="renameDisabled">重命名</Dropdown-item>
               <Dropdown-item name="ratesChange" :disabled="ratesChangeDisabled">
                 <Tooltip content="资费变更只适用于实时计费的资源" placement="top">资费变更
@@ -65,7 +66,6 @@
                 <Tooltip content="制作镜像只适用于已关机的资源" placement="top">制作镜像
                 </Tooltip>
               </Dropdown-item>
-              <Dropdown-item name="unbindIP" :disabled="unbindIPDisabled">解绑公网IP</Dropdown-item>
               <Dropdown-item name="upgrade" :disabled="hostUpgradeDisabled">
                 <Tooltip content="主机升级只适用于已关机的资源" placement="top">
                   主机升级<span
@@ -1142,6 +1142,11 @@
                         }, '绑定IP'),
                         h('DropdownItem', {
                           attrs: {
+                            name: 'unbindIP'
+                          }
+                        }, '解绑公网IP'),
+                        h('DropdownItem', {
+                          attrs: {
                             name: 'rename'
                           }
                         }, '重命名'),
@@ -1160,11 +1165,6 @@
                             name: 'makeSnapshot'
                           }
                         }, '制作快照'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'unbindIP'
-                          }
-                        }, '解绑公网IP'),
                         h('DropdownItem', {
                           attrs: {
                             name: 'shutdown'
@@ -1308,6 +1308,11 @@
                         }, '绑定IP'),
                         h('DropdownItem', {
                           attrs: {
+                            name: 'unbindIP'
+                          }
+                        }, '解绑公网IP'),
+                        h('DropdownItem', {
+                          attrs: {
                             name: 'rename'
                           }
                         }, '重命名'),
@@ -1336,11 +1341,6 @@
                             name: 'makeMirror'
                           }
                         }, '制作镜像'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'unbindIP'
-                          }
-                        }, '解绑公网IP'),
                         h('DropdownItem', {
                           attrs: {
                             name: 'startingUp'
@@ -1393,7 +1393,7 @@
         resetPasswordForm: {
           password: '',
           passwordAffirm: '',
-          agreeRule: true,
+          agreeRule: false,
           hintGrade: 0,
           errorMsg: 'passwordHint'
         },
@@ -1657,7 +1657,6 @@
                   })
                 })
               }
-
             }
           })
         }, 3000)
