@@ -10,8 +10,14 @@
 						<span class="tiaoa1"></span>
 						<div class="allnum">
 							<span class="num1">{{TotalWuantity}}</span>
-							<span class="num2">个</span><br />
-							<span class="num3">总数量</span>
+							<span class="num2">个</span>
+							<Poptip trigger="hover">
+								<div slot="content" id="ffff">
+									<span>平台所有区域资源数量之和</span>
+								</div>
+								<i class="iconfont houtaiicon-bangzhu" id="num4"></i><br />
+							</Poptip>
+							<div><span class="num3">总数量</span></div>
 						</div>
 						<img class="img1" src="../../assets/img/back/ziyuan1.png" />
 					</div>
@@ -19,8 +25,15 @@
 						<span class="tiaoa1"></span>
 						<div class="allnum">
 							<span class="num1">{{QuantityExpire}}</span>
-							<span class="num2">个</span><br />
-							<span class="num3">即将过期数量</span>
+							<span class="num2">个</span>
+							<Poptip trigger="hover">
+								<div slot="content" id="ffff">
+									<span>平台所有区域付费资源即将到期提醒，具体提醒政策请参见</br></span>
+									<span>帮助文档-<a href="https://www.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/km08mXqRb" style="color: #2A99F2FF;text-decoration: underline;">购买指南</a>-到期提醒栏目；</span>
+								</div>
+								<i class="iconfont houtaiicon-bangzhu" id="num4"></i><br />
+							</Poptip>
+							<div><span class="num3">即将过期数量</span></div>
 						</div>
 						<img class="img1" src="../../assets/img/back/ziyuan2.png" />
 					</div>
@@ -28,23 +41,33 @@
 						<span class="tiaoa1"></span>
 						<div class="allnum">
 							<span class="num1">{{OutdatedQuantity}}</span>
-							<span class="num2">个</span><br />
-							<span class="num3">已经过期数量</span>
+							<span class="num2">个</span>
+							<Poptip trigger="hover">
+								<div slot="content" id="ffff">
+									<span>平台所有区域已经过期的资源总数</span>
+								</div>
+								<i class="iconfont houtaiicon-bangzhu" id="num4"></i><br />
+							</Poptip>
+							<div><span class="num3">已经过期数量</span></div>
 						</div>
 						<img class="img1" src="../../assets/img/back/ziyuan3.png" />
 					</div>
 					<div class="tiaoa" style="margin-left: 10px;">
 						<span class="tiaoa1"></span>
 						<div class="disan">
-							<span class="num1">{{TotalNumberDomain}}</span>
-							<span class="num2">个</span><br />
-							<span class="num3">域名总数量</span>
+							<p style="height: 25px;">
+								<span class="num1">{{TotalNumberDomain}}</span>
+								<span class="num2">个</span><br />
+							</p>
+							<div><span class="num3">域名总数量</span></div>
 						</div>
 						<span class="tiao2"></span>
 						<div class="disan1">
-							<span class="num1">{{TotalNumberCertificates}}</span>
-							<span class="num2">个</span><br />
-							<span class="num3">域名证书总数量</span>
+							<p style="height: 25px;">
+								<span class="num1">{{TotalNumberCertificates}}</span>
+								<span class="num2">个</span><br />
+							</p>
+							<div><span class="num3">域名证书总数量</span></div>
 						</div>
 					</div>
 				</div>
@@ -59,13 +82,15 @@
 								<i class="iconfont houtaiicon-weizhihei" id="icon1"></i>
 								<span class="boxtop-name">{{item.zoneName}}</span>
 							</div>
-							<span class="numbercloud" v-if="item.type=='1'">云服务器总数</span>
-							<span class="numbercloud1" v-if="item.type=='2'">GPU服务器总数</span>
-							<span class="numberofc" v-bind:class="{ newnumberofc: item.overview.num>0}">{{item.overview.num}}</span>
-							<span class="numberge">个</span>
+							<div @click="LJTZ(item)" style="cursor: pointer;">
+								<span class="numbercloud" v-if="item.type=='1'">云服务器总数</span>
+								<span class="numbercloud1" v-if="item.type=='2'">GPU服务器总数</span>
+								<span class="numberofc" v-bind:class="{ newnumberofc: item.overview.num>0}">{{item.overview.num}}</span>
+								<span class="numberge">个</span>
+							</div>
 							<span class="xiantiaoa"></span>
 							<i class="iconfont houtaiicon-gouwuche1" id="gouwuche1" @click="JumpGwc(item)"></i>
-							<div class="rightall">
+							<div class="rightall" @click="LJTZ(item)" style="cursor: pointer;">
 								<div>
 									<img src="../../assets/img/back/kaiqi.png" class="img-kaiqi" />
 									<img src="../../assets/img/back/yichang.png" class="img-yichang" />
@@ -246,6 +271,22 @@
 						this.$router.push(ites.url)
 				  }
 				}
+			},
+			LJTZ(item){
+				// 切换默认区域
+				axios.get('user/setDefaultZone.do', {params: {zoneId: item.zoneId}}).then(response => {
+				})
+				for (var zone of this.$store.state.zoneList) {
+				  if (zone.zoneid == item.zoneId) {
+				    $store.commit('setZone', zone);
+						if(item.type=='2'){
+							this.$router.push('/ruicloud/GpuList')
+						}
+						else if(item.type=='1'){
+							this.$router.push('/ruicloud/host')
+						}
+				  }
+				}
 			}
 		},
 		computed: {
@@ -328,6 +369,7 @@
 		height: 70px;
 		margin-top: 26px;
 		margin-left: 20px;
+		text-align: left;
 	}
 
 	.num1 {
@@ -336,6 +378,7 @@
 		font-weight: normal;
 		color: rgba(51, 51, 51, 1);
 		line-height: 24px;
+		float: left;
 	}
 
 	.num2 {
@@ -343,6 +386,16 @@
 		font-family: MicrosoftYaHei;
 		color: rgba(102, 102, 102, 1);
 		line-height: 16px;
+		float: left;
+		margin-top: 8px;
+		margin-left: 5px;
+	}
+	#num4{
+		display: block;
+		float: left;
+		margin-left:10px;
+		color: #2A99F2FF;
+		cursor: pointer;
 	}
 
 	.num3 {
@@ -350,7 +403,7 @@
 		font-family: MicrosoftYaHei;
 		color: rgba(102, 102, 102, 1);
 		line-height: 16px;
-		margin-top: 5px;
+		margin-top: 7px;
 		float: left;
 	}
 
@@ -752,7 +805,7 @@
 	.boxtop-all:hover #gouwuche1{
 		display: block;
 	}
-	.houtaiicon-bangzhu{
+	.VPCALL .houtaiicon-bangzhu{
 		color: #2A99F2FF;
 		position:absolute;
 		margin-top: -7px;
@@ -781,5 +834,11 @@
 	}
 	#enna span:nth-of-type(2){
 		color: #FF624BFF;
+	}
+	#ffff{
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		color:rgba(102,102,102,1);
+		line-height:16px;
 	}
 </style>

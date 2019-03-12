@@ -424,6 +424,9 @@ div.modal-header-border {
 	margin-left: 30px;
 }
 
+.allnum .ivu-poptip-popper{
+	margin-left: 10px;
+}
 
 /* 拼团活动下拉框 */
 .groupBooking-select .ivu-select-selection {
