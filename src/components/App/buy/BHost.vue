@@ -339,7 +339,7 @@
             </div>
             <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
               如您有业务需要开通其他端口，您可以 <span style="color: rgb(42, 153, 242);cursor: pointer"
-                                                           @click="$router.push('firewall')">新建防火墙</span></p>
+                                                           @click="$router.push({path:'/ruicloud/firewall'})">新建防火墙</span></p>
             <!-- 防火墙规则 -->
             <div class="item-wrapper">
               <div style="display: flex">

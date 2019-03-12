@@ -182,15 +182,16 @@
             })
             return
           } else if (this.accountPay.length == 1) {
-            if(this.orderStatus == 1){
+            
+            // 选中余额支付
+            if (this.accountPay[0] == 'account' && Number(this.orderInfo.remainder) < Number(this.orderInfo.money)) {
+              if(this.orderStatus == 1){
               this.$message.info({
                  title:'提示',
                 content: `<p>账户余额不足,请<a style="color:#2A99F2;cursor:pointer;" href="recharge">充值</a></p>`
               })
-              return;
-            }
-            // 选中余额支付
-            if (this.accountPay[0] == 'account' && Number(this.orderInfo.remainder) < Number(this.orderInfo.money)) {
+                return;
+              }
               this.$message.info({
                  title:'提示',
                 content: '账户余额不足'

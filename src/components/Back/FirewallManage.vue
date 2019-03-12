@@ -345,7 +345,7 @@
                     }, [h('span', {
                       style: {
                         cursor: 'pointer',
-                        color: '#2A99F2'
+                        color: '#FF0000'
                       }
                     }, '删除')]
                   )

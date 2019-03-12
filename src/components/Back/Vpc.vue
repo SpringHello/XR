@@ -42,8 +42,8 @@
                 <div class="content">
                   <div class="item-wrap">
                     <div class="item item1">
-                      <p>名称：<span style="float:unset">{{item.status==2?'创建中':item.status==3?'清理重启中':item.status==4? '删除中': item.vpcname}}</span>
-                        <Spin size="small" v-if="item.status!=1" style="display: inline-block"></Spin>
+                      <p>名称：<span style="float:unset">{{item.status==2?'创建中':item.status==3?'清理重启中':item.status==4? '删除中': item.status == -1?'异常' :item.vpcname}}</span>
+                        <Spin size="small" v-if="item.status!=1 && item.status!=-1" style="display: inline-block"></Spin>
                       </p>
                       <!-- <p>所属公网IP：<span>{{item.sourcenatip}}</span></p> -->
                       <p>网段：<span>{{item.cidr}}</span></p>
@@ -70,9 +70,9 @@
                   </div>
                 </div>
                 <div class="card-bottom">
-                  <div v-if="item.status!=2">
-                    <Button type="primary" class="btn-bgwhite" @click="restartVpc(item)">重启</Button>
-                    <Button type="primary" @click="manage(item)">管理</Button>
+                  <div>
+                    <Button   :disabled='item.status==1?false :true'  @click="restartVpc(item)">重启</Button>
+                    <Button type="primary"  :disabled='item.status==1?false :true' @click="manage(item)">管理</Button>
                   </div>
                 </div>
               </div>
