@@ -125,11 +125,11 @@
                 <span style="float: right" v-if="false">我有推荐码</span>
               </div>
             </div>
-            <div class="registerSuccess" v-if="registerForm.onStep === 3">
+            <div class="registerSuccess" v-if="registerForm.onStep === 3||registerForm.onStep === 4">
               <img src="../../assets/img/login/lr-icon9.png"/>
               <h2>注册成功</h2>
               <p>现在完成<span style="color: #2A99F2;cursor: pointer;text-decoration: underline" @click="$router.push('userCenter')"> 实名认证 </span>即可获得<span
-                style="color: #FF624B"> 196元 </span>专属优惠券，还可参加<span style="color: #FF624B"> 多款主机免费领 </span>活动</p>
+                style="color: #FF624B"> 196元 </span>专属优惠券，还可参加<span style="color: #FF624B;cursor: pointer" @click="$router.push('fractive')"> 多款主机免费领 </span>活动。<span v-show="registerForm.onStep === 4">请联系您的专属客服小牛获取优惠券</span></p>
               <button @click="$router.push('userCenter')">前往认证</button>
               <router-link to="/ruicloud/">返回首页></router-link>
             </div>
@@ -258,7 +258,8 @@
             <p>9.5 在任何情况下，乙方依据本协议向甲方承担的违约赔偿责任总额不得超过向甲方收取的违约所涉及服务已支付之[壹]月服务费用。</p>
             <p>9.6无论本协议其他条款是否有相反约定，乙方对因本协议项下违约行为而导致的甲方可得利益损失、商业信誉损失以及数据丢失或损坏等其他损失不承担责任。</p>
             <p>9.7为应对大数据业务中产生的海量中间数据乙方云服务器的实例提供充足的本地盘存储空间供您自主选择。如您选择乙方弹性云服务器实例，表明您完全同意本免责声明的全部内容。</p>
-            <p>您理解并认可，本地盘存储使用的是连接到主机上的物理硬盘，由于物理硬盘可能出现机器损坏、瑕疵、磁道损坏等机械故障从而无法对数据存储提供充分的可靠保障，因此，本地盘存储不对其上面的数据做可靠性保证；尽管乙方已尽了勤勉、合理最大的努力，但仍然不能保证现有的安全技术措施将使您的数据不受任何形式的损失，您同意乙方不对由此原因造成的本地盘存储上任何数据的丢失、损毁等承担责任。
+            <p>
+              您理解并认可，本地盘存储使用的是连接到主机上的物理硬盘，由于物理硬盘可能出现机器损坏、瑕疵、磁道损坏等机械故障从而无法对数据存储提供充分的可靠保障，因此，本地盘存储不对其上面的数据做可靠性保证；尽管乙方已尽了勤勉、合理最大的努力，但仍然不能保证现有的安全技术措施将使您的数据不受任何形式的损失，您同意乙方不对由此原因造成的本地盘存储上任何数据的丢失、损毁等承担责任。
               在终止服务前，您应根据数据的重要性和敏感程度，定期对数据进行额外备份、清理、销毁、忽略或者其他相应操作。
               在终止服务后，乙方本地盘存储服务有权对本地盘存储进行快速格式化，无需对其上残留的任何数据负责，无需承担对本地盘存储上的数据进行清除或销毁的责任，无需对由于本地盘存储上的数据因未清理或未销毁而导致的泄露或造成任何损失而承担任何损失赔偿和责任。</p>
             <p style="margin-top: 20px; text-indent:0em"><strong>第十条 保密</strong></p>
@@ -1138,11 +1139,16 @@
         if (localStorage.getItem('comefrom')) {
           params.qdCode = localStorage.getItem('comefrom')
         }
+        if (localStorage.getItem('sellCode')) {
+          params.sellCode = localStorage.getItem('sellCode')
+        }
         axios.get('user/register.do', {
           params
         }).then(response => {
           if (response.status === 200 && response.data.status === 1) {
             this.registerForm.onStep = 3
+          } else if (response.status === 200 && response.data.status === 3) {
+            this.registerForm.onStep = 4
           } else {
             this.$message.info({
               content: response.data.message

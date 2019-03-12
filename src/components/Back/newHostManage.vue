@@ -961,6 +961,9 @@
         this.guideStep = 1
         sessionStorage.removeItem('guideHint')
       }
+      if (sessionStorage.getItem('isSeeHint')) {
+        this.guideStep = 0
+      }
     },
     methods: {
       changeTabs(item) {

@@ -53,8 +53,7 @@
             <div class="item-wrapper">
               <div style="display: flex;justify-content: space-between;">
                 <div v-for="(item,index) in mirrorListQ" :key="index" class="fast-mirror" :class="{'select-fast-mirror':FastMirrorIndex==index}" @click="setOSQ(item,index)">
-                  <img :src="require('../../../assets/img/host/h-icon12.png')" alt="" v-if="index==0||index==1">
-                  <img :src="require(`../../../assets/img/host/h-icon${index+4}.png`)" alt="" v-else>
+                  <img :src="item.img" alt="">
                   <span>{{item.templatename}}</span>
                 </div>
               </div>
@@ -807,6 +806,13 @@
         fastCoupon: 0,
         mirrorQuery: this.$route.query.mirror,
         mirrorListQ: [],
+        mirrorListQImg: [
+          {img: require('../../../assets/img/host/h-icon12.png')},
+          {img: require('../../../assets/img/host/h-icon12.png')},
+          {img: require('../../../assets/img/host/h-icon6.png')},
+          {img: require('../../../assets/img/host/h-icon6.png')},
+          {img: require('../../../assets/img/host/h-icon7.png')},
+        ],
       }
     },
     created() {
@@ -835,6 +841,9 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.mirrorListQ = response.data.result
+            this.mirrorListQ.forEach((item,index) => {
+              item.img = this.mirrorListQImg[index].img
+            })
             this.selectFastMirror = response.data.result[0].systemtemplateid
           }
         })

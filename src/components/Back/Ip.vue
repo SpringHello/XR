@@ -932,6 +932,7 @@
           this.ipData.forEach(item => {
             if (item.status != 1) {
               item._disabled = true
+              this.timingRefresh(item.publicipid)
             }
           })
           this.total = response.data.result.total
