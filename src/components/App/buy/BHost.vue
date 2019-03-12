@@ -332,7 +332,7 @@
                       {{item.acllistname}}
                     </Option>
                   </Select>
-                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;" @click="$router.push('document')">帮助文档</span>
+                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/ruicloud/document')">帮助文档</span>
                 </div>
               </div>
             </div>
