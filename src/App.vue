@@ -11,10 +11,10 @@
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
-        <a href="//kaifa.xrclound.net" class="logo" alt='新睿云'>
+        <a href="/" class="logo" alt='新睿云'>
           <div></div>
         </a>
-        <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('/schoolSeason')" alt="">
+        <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('/activtiy/2019spring/')" alt="">
         <div class="operate" style="padding-left:90px;">
           <ul @mouseleave="ME(-1)">
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
@@ -417,7 +417,7 @@
         titleItem: [
           {
             title: '活动中心',
-            path: '/ActiveCenter'
+            path: '/activity/'
           },
           {
             title: '首页',

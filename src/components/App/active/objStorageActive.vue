@@ -281,7 +281,7 @@ export default {
           title: '提示',
           content: '您好，你还未进行实名认证，请先实名认证即可参加此活动。<a href="userCenter">立即认证</a>',
           onOk: () => {
-            this.$router.push('userCenter')
+            this.$router.push('/userCenter')
           }
         })
         return
@@ -301,7 +301,7 @@ export default {
     },
     createdKey () {
       sessionStorage.setItem('pane', 'key')
-      this.$router.push('userCenter')
+      this.$router.push('/userCenter')
     },
     vail (field) {
       var text = this.form[field];

@@ -3,7 +3,7 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div class="ss-active" @click="push('/schoolSeason')">
+          <div class="ss-active" @click="push('/activtiy/2019spring/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
@@ -13,7 +13,7 @@
                     <i>1折</i>
                     更有会员折上折
                   </p>
-                  <span @click="push('/schoolSeason')">立即购买</span>
+                  <span @click="push('/activtiy/2019spring/')">立即购买</span>
                 </div>
                 <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt>
               </div>
@@ -21,7 +21,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="xian-active" @click="push('/xianNode')">
+          <div class="xian-active" @click="push('/activity/xian/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
@@ -31,7 +31,7 @@
                     <i>折扣特惠</i>，
                     100%资源可用、100%性能可用！
                   </p>
-                  <span @click="$router.push('xianNode')">立即参与</span>
+                  <span @click="$router.push('/activity/xian')">立即参与</span>
                 </div>
                 <img src="../../assets/img/active/xianNode/xian-node-banner.png" alt>
               </div>
@@ -39,7 +39,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('frActive')"
+          <div @click="push('/activity/free/')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
 
@@ -47,7 +47,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div  @click="push('/objStorageActive')"
+          <div  @click="push('/activity/objectstorage/')"
             style="cursor: pointer;">
             <div class="obj-storage">
               <div class="wrap">
@@ -62,7 +62,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('groupBooking')"
+          <div @click="push('/activity/share')"
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
               <div>
@@ -78,7 +78,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+          <div @click="push('/activity/zero/')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
                 <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png"></p>
@@ -175,7 +175,7 @@
             imgPath: require('../../assets/img/activecenter/bg-card-kaixue.png'),
             time: '2019.3.1-2019.4.30',
             activeObj: '新老用户皆可参与',
-            url: 'schoolSeason',
+            url: '/activtiy/2019spring/',
             isStart: true,
             weight: '1',
           },
@@ -183,7 +183,7 @@
             imgPath: require('../../assets/img/activecenter/bg-card-6.png'),
             time: '2019.1.28-2019.03.01',
             activeObj: '仅限新用户',
-            url: 'xianNode',
+            url: '/activity/xian/',
             isStart: true,
             weight: '1',
           },
@@ -193,7 +193,7 @@
             desc: '交押金最长可用一年 押金闪退',
             time: '2018.08.03开始',
             activeObj: '云主机 新注册用户',
-            url: 'frActive',
+            url: '/activity/free/',
             isStart: true,
             weight: '1'
           },
@@ -202,7 +202,7 @@
             textImg: require('../../assets/img/activecenter/text-1.png'),
             time: '2018年12月7日开始',
             activeObj: '新老用户',
-            url: 'active_1',
+            url: '/activity/zero/',
             isStart: true,
             weight: '1',
           },
@@ -212,7 +212,7 @@
             desc: '安全稳定高效的云端存储服务 免费试用50G',
             time: ' 2018年8月1日',
             activeObj: '对象存储 新老用户',
-            url: 'objStorageActive',
+            url: '/activity/objectstorage/',
             isStart: true,
             weight: '1',
             color: 'black'
@@ -224,7 +224,7 @@
             time: '2018.10.19开始',
             // time: '即将上线',
             activeObj: '云数据库 新老用户',
-            url: 'DBActive',
+            url: '/activity/hotdatabase/',
             isStart: true,
             weight: '1',
             color: 'black'
@@ -235,7 +235,7 @@
             desc: '每成功一位即赠送一个月 最多可领12个月',
             time: '2018.07.19开始',
             activeObj: '云主机 新老用户',
-            url: 'groupBooking',
+            url: '/activity/share',
             isStart: true,
             weight: '2'
           }

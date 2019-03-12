@@ -4,7 +4,7 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div class="ss-active" @click="push('/schoolSeason')">
+          <div class="ss-active" @click="push('/activtiy/2019spring/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
@@ -14,7 +14,7 @@
                     <i>1折</i>
                     更有会员折上折
                   </p>
-                  <span @click="push('/schoolSeason')">立即购买</span>
+                  <span @click="push('/activtiy/2019spring/')">立即购买</span>
                 </div>
                 <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt="云产品新春采购季">
               </div>
@@ -22,7 +22,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="xian-active" @click="push('/xianNode')">
+          <div class="xian-active" @click="push('/activity/xian/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
@@ -32,7 +32,7 @@
                     <i>折扣特惠</i>，
                     100%资源可用、100%性能可用！
                   </p>
-                  <span @click="$router.push('xianNode')">立即参与</span>
+                  <span @click="$router.push('activity/xian/')">立即参与</span>
                 </div>
                 <img src="../../assets/img/active/xianNode/xian-node-banner.png" alt>
               </div>
@@ -40,7 +40,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+          <div @click="push('/activity/zero/')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
                 <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png"></p>
@@ -51,24 +51,24 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="eightscene" @click="push('/sceneList')">
+          <div class="eightscene" @click="push('/scene/')">
             <div class="wrap">
               <div class="left">
                 <img src="../../assets/img/home/eightscene-text.png" alt="">
-                <Button @click.stop="$router.push('sceneList')">立即使用</Button>
+                <Button @click.stop="$router.push('/scene/')">立即使用</Button>
               </div>
               <div class="right">
                 <p>现在注册</p>
                 <p>即可体验 <span>免费套餐</span></p>
                 <p>多款云主机</p>
-                <p @click.stop="$router.push('fractive')">免费领取</p>
+                <p @click.stop="$router.push('/activity/free')">免费领取</p>
                 <Button type="primary" long @click.stop="$router.push('register')">注册新账号</Button>
               </div>
             </div>
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('/fractive')"
+          <div @click="push('/activity/free/')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
               <div class="free-receive-content">
@@ -86,7 +86,7 @@
         </my-carousel-item>
 
         <my-carousel-item class="carousel-item">
-          <div @click="push('DBActive')"
+          <div @click="push('/activity/hotdatabase/')"
                style="cursor: pointer;background: #F56B23;">
             <div class="db-active">
               <div class="db-active-content">
@@ -105,7 +105,7 @@
         </my-carousel-item>
 
         <my-carousel-item class="carousel-item">
-          <div @click="push('/objStorageActive')"
+          <div @click="push('/activity/objectstorage/')"
                style="cursor: pointer;">
             <div class="obj-storage">
               <div class="wrap">
@@ -120,7 +120,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('/groupBooking')"
+          <div @click="push('/activity/share/')"
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
               <div class="groupBook-content">
@@ -139,7 +139,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="east-banner" @click="push('/EastSouthNode')">
+          <div class="east-banner" @click="push('/eastsouth/')">
             <div class="wrap">
               <div class="text">
                 <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
@@ -616,14 +616,14 @@
           {bgUrl: require('../../assets/img/home/eightscene-bg-8.png')}
         ],
         eigthSceneMenu: [
-          {name: '云电脑', link: 'host'},
-          {name: '自助建站', link: 'web'},
-          {name: '存储&网盘', link: 'disk'},
-          {name: '软件研发', link: 'software'},
-          {name: '游戏服务', link: 'game'},
-          {name: '图形设计', link: 'design'},
-          {name: '人工智能', link: 'AI'},
-          {name: '超级运算', link: 'supercomputing'}
+          {name: '云电脑', link: 'yundiannao/'},
+          {name: '自助建站', link: 'selfhelpbuildingwebsite/'},
+          {name: '存储&网盘', link: 'storagedisk/'},
+          {name: '软件研发', link: 'softwaredevelopment/'},
+          {name: '游戏服务', link: 'gameservice/'},
+          {name: '图形设计', link: 'graphicdesign/'},
+          {name: '人工智能', link: 'ai/'},
+          {name: '超级运算', link: 'supercomputing/'}
         ],
         eigthSceneContent: [
           {
@@ -636,7 +636,7 @@
               require('../../assets/img/sceneList/sl-icon4.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/sceneInfo/host',
+            link: '/scene/yundiannao/',
             hint: '免费使用一年'
           },
           {
@@ -649,7 +649,7 @@
               require('../../assets/img/sceneList/sl-icon8.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/sceneInfo/web',
+            link: '/scene/selfhelpbuildingwebsite/',
             hint: '免费使用一年'
           },
           {
@@ -662,7 +662,7 @@
               require('../../assets/img/sceneList/sl-icon29.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/sceneInfo/disk',
+            link: '/scene/storagedisk/',
             hint: '免费使用一年'
           },
           {
@@ -675,7 +675,7 @@
               require('../../assets/img/sceneList/sl-icon14.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/sceneInfo/software',
+            link: '/scene/softwaredevelopment/',
             hint: '免费使用一年'
           },
           {
@@ -686,7 +686,7 @@
               require('../../assets/img/sceneList/sl-icon16.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/sceneInfo/game',
+            link: '/scene/gameservice/',
             hint: '免费使用'
           },
           {
@@ -699,7 +699,7 @@
               require('../../assets/img/sceneList/sl-icon20.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/sceneInfo/design',
+            link: '/scene/graphicdesign/',
             hint: '免费使用'
           },
           {
@@ -712,7 +712,7 @@
               require('../../assets/img/sceneList/sl-icon24.png'),
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/sceneInfo/AI',
+            link: '/scene/ai/',
             hint: '免费使用'
           },
           {
@@ -722,7 +722,7 @@
               require('../../assets/img/sceneList/sl-icon25.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/sceneInfo/supercomputing',
+            link: '/scene/supercomputing/',
             hint: '免费使用'
           },
         ],

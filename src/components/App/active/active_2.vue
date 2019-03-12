@@ -344,7 +344,7 @@
           {
             title: '0元购主机，注册领现金',
             text: '196元现金大礼包免费领',
-            src: '/active_1'
+            src: '/activity/zero/'
           },
           {
             title: '北京一区盛大开服',

@@ -42,7 +42,7 @@
                 next({path: '/productShare'})
                 break
               case 2:
-                next({path: '/activity'})
+                next({path: '/activity/'})
                 break
               default:
                 next()

@@ -204,7 +204,7 @@
                 <p class="tl"><span style="text-decoration:none"> 押金 </span>¥{{ item.cashPledge }} <span>原价：{{ item.originalPrice}}元</span></p>
               </div>
               <div class="item-footer">
-                <button :class="{disabled: false}" @click="$router.push('fractive')">立即领取</button>
+                <button :class="{disabled: false}" @click="$router.push('activity/free/')">立即领取</button>
               </div>
             </div>
           </div>
@@ -237,7 +237,7 @@
             <div v-if="index !=3" class="send-full-dashed" :class="{'onStep': true}"></div>
           </ul>
         </div>
-        <button class="activecenter-btn" @click="$router.push('activecenter')">点击查看其他优惠活动</button>
+        <button class="activecenter-btn" @click="$router.push('activity')">点击查看其他优惠活动</button>
       </div>
       <!-- footer -->
       <div class="active-footer">
@@ -292,7 +292,7 @@
             <span style="padding-top: 58px;display:block"> 本活动自11月17日开始，您可在活动中心查看其他活动。</span>
             <div style="display:flex;width:340px;margin-top:64px;" class="center">
               <button @click.stop="showModal.activeStart=false" style="background:#fc3d26" class="button-primary">关闭弹窗</button>
-              <button @click.stop="$router.push('activecenter')" class="button-primary">去活动中心</button>
+              <button @click.stop="$router.push('activity')" class="button-primary">去活动中心</button>
             </div>
           </div>
         </div>

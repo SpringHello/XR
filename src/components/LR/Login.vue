@@ -5,11 +5,11 @@
         <div class="banner">
           <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('schoolSeason')" class="cc-active">
+              <div @click="$router.push('activtiy/2019spring/')" class="cc-active">
               </div>
             </my-carousel-item>
             <!-- <my-carousel-item class="carousel-item">
-              <div @click="$router.push('xianNode')" class="xian-active">
+              <div @click="$router.push('activity/xian')" class="xian-active">
               </div>
             </my-carousel-item>
             <my-carousel-item class="carousel-item">
@@ -17,7 +17,7 @@
               </div>
             </my-carousel-item> -->
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('fractive')" class="fr-active">
+              <div @click="$router.push('activity/free/')" class="fr-active">
               </div>
             </my-carousel-item>
           </my-carousel>
@@ -643,10 +643,10 @@
             localStorage.setItem('authToken', res.data.message)
             if (this.from.indexOf('/Register') == 0 || this.from.indexOf('/register') == 0 || this.from.indexOf('/resetNew') == 0 || this.from == '/') {
               this.$router.push('overview')
-            } else if (this.from.indexOf('/ActiveCenter') == 0) {
+            } else if (this.from.indexOf('/activity/') == 0) {
               this.$router.push({path: this.from})
-            } else if (this.from.indexOf('/activity?token=') == 0) {
-              this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
+            } else if (this.from.indexOf('/gbactivity/?token=') == 0) {
+              this.$router.push({name: 'gbactivity', query: {token: this.from.match(/=(\S*)/)[1]}})
             } else {
               this.$router.push({path: this.from})
             }
@@ -674,8 +674,8 @@
             localStorage.setItem('authToken', res.data.message)
             if (this.from.indexOf('/Register') == 0 || this.from.indexOf('/register') == 0 || this.from.indexOf('/resetNew') == 0 || this.from == '/') {
               this.$router.push('overview')
-            } else if (this.from.indexOf('/activity?token=') == 0) {
-              this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
+            } else if (this.from.indexOf('/gbactivity?token=') == 0) {
+              this.$router.push({name: 'gbactivity', query: {token: this.from.match(/=(\S*)/)[1]}})
             } else {
               this.$router.push({path: this.from})
             }

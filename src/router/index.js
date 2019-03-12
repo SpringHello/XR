@@ -55,7 +55,7 @@ const objStorageActive = () =>import('@/components/App/active/objStorageActive')
 const smlj = () =>import('@/components/App/active/smlj')
 const GroupBooking = () =>import('@/components/App/groupbooking/homePage')
 const ProductShare = () =>import('@/components/App/groupbooking/sharePage')
-const Activity = () =>import('@/components/App/groupbooking/activityPage')
+const GBActivity = () =>import('@/components/App/groupbooking/activityPage')
 const FrActive = () =>import('@/components/App/active/freeReceive')
 
 const DBActive = () =>import('@/components/App/active/DatabaseActive')
@@ -212,7 +212,7 @@ var router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '',
+      path: '/',
       name: App.name,
       component: App,
       children: [
@@ -224,11 +224,11 @@ var router = new Router({
         //{path: 'document.htm', name: 'document', component: Document},
         //{path: 'entrance.htm', name: 'entrance', component: Entrance},
 
-        {path: 'index', name: 'home', component: Home},
+        //{path: 'index', name: 'home', component: Home},
         //{path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
-        {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
+        {path: 'activity', name: 'activity', component: ActiveCenter},
         {path: 'document', name: 'document', component: Document},
 
         {path: 'article/:typeId', name: 'art', component: Art},
@@ -310,9 +310,9 @@ var router = new Router({
          }
          ]
          },*/
-        {path: 'groupBooking', name: 'groupBooking', component: GroupBooking},
+        {path: 'activity/share', name: 'activity/share', component: GroupBooking},
         {path: 'productShare', name: 'productShare', component: ProductShare},
-        {path: 'activity', name: 'activity', component: Activity},
+        {path: 'gbactivity', name: 'gbactivity', component: GBActivity},
         {
           path: 'buy',
           name: 'buy',
@@ -333,23 +333,23 @@ var router = new Router({
         {path: 'vps', name: 'vps', component: Vps},
        /*{path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
          {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
-        {path: 'active_1', name: 'active_1', component: active_1},
+        {path: 'activity/zero/', name: 'activity/zero/', component: active_1},
         {path: 'entrance', name: 'entrance', component: Entrance},
         //{path: 'active_2', name: 'active_2', component: active_2},
-        {path: 'objStorageActive', name: 'objStorageActive', component: objStorageActive},
+        {path: 'activity/objectstorage/', name: 'activity/objectstorage/', component: objStorageActive},
         {path: 'smlj', name: 'smlj', component: smlj},
-        {path: 'frActive', name: 'frActive', component: FrActive},
+        {path: 'activity/free/', name: 'activity/free/', component: FrActive},
         {path: 'wonderfulDay',name: 'wonderfulDay', component:wonderfulDay},
 
-        {path: 'dbActive', name: 'dbActive', component: DBActive},
+        {path: 'activity/hotdatabase/', name: 'activity/hotdatabase/', component: DBActive},
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
-        {path: 'xianNode', name: 'xianNode', component: xianNode},
-        {path: 'schoolSeason', name: 'schoolSeason', component: schoolSeason},
+        {path: 'activity/xian/', name: 'activity/xian/', component: xianNode},
+        {path: 'activtiy/2019spring/', name: 'activtiy/2019spring/', component: schoolSeason},
 
-        {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},
-        {path: 'SceneInfo/:type', name: 'SceneInfo', component: SceneInfo},
-        {path: 'SceneList', name: 'SceneList', component: SceneList},
+        {path: 'eastsouth/', name: 'eastsouth/', component: EastSouthNode},
+        {path: 'Scene/:type', name: 'Scene', component: SceneInfo},
+        {path: 'scene', name: 'scene', component: SceneList},
 
         {path: 'Domainname', name: 'Domainname', component: Domainname},
         {path: 'DomainResult', name: 'DomainResult', component: DomainResult},

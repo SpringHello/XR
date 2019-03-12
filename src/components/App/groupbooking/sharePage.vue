@@ -48,7 +48,7 @@
           console.log(error)
         })
       } else{
-        next({path: '/groupBooking'})
+        next({path: '/activity/share/'})
       }
     },
     data() {

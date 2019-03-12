@@ -121,7 +121,7 @@
       </div>
       <div class="register">
         <p>为您提供出众的上云实践机会和全面的尊贵服务</p>
-        <Button @click="$router.push('register')">立即注册</Button>
+        <Button @click="$router.push('/register')">立即注册</Button>
       </div>
     </div>
   </div>
@@ -236,7 +236,7 @@
     },
     methods: {
       tobuy(zone) {
-        this.$router.push('buy')
+        this.$router.push('/buy')
         sessionStorage.setItem('defaultzone', zone)
       }
     },

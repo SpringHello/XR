@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="top">
         <img src="../../assets/img/login/coupon.png"/>
-        <h3><img src="../../assets/img/login/success.png"/>恭喜您，注册成功！158元注册奖励已经发送至您的个人账户中，您还可以点此领取<span style="cursor: pointer;color: #2a99f2" @click="$router.push('active_1')">【38元现金抵扣券】</span></h3>
+        <h3><img src="../../assets/img/login/success.png"/>恭喜您，注册成功！158元注册奖励已经发送至您的个人账户中，您还可以点此领取<span style="cursor: pointer;color: #2a99f2" @click="$router.push('activity/zero/')">【38元现金抵扣券】</span></h3>
         <!-- <button @click="$router.push('buy')">立即使用</button> -->
         <p class="text-s">你可以通过费用中心-我的卡券查看并使用礼券</p>
 
@@ -28,7 +28,7 @@
             title:'0元购',
             img:require('../../assets/img/login/icon-fire.png'),
             text:'领现金豪礼，享免费产品！',
-            src:'/active_1',
+            src:'/activity/zero/',
             srctext:'立即参与'
           },
           {
@@ -40,7 +40,7 @@
           {
             title:'免费云主机 不限量领取',
             text:'交押金最长可用1年，押金闪退！',
-            src:'/fractive',
+            src:'/activity/free/',
             srctext:'立即抢购'
           },
         ]

@@ -34,7 +34,7 @@
       <div class="cash-get">
         <div class="container">
           <div class="left">
-            <p>此现金券需前往<span @click="$router.push('expenses')" style="color:#FF6028">个人中心</span>使用</p>
+            <p>此现金券需前往<span @click="$router.push('/expenses')" style="color:#FF6028">个人中心</span>使用</p>
           </div>
           <div class="right" @click="getTicket"></div>
         </div>
@@ -376,7 +376,7 @@
         }
         this.$http.get('information/deployVirtualMachine.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
+            this.$router.push('/order')
           } else {
             this.$message.info({
               content: response.data.message
@@ -406,7 +406,7 @@
         }
         this.$http.get('database/createDB.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
+            this.$router.push('/order')
           } else {
             this.$message.info({
               content: response.data.message
@@ -428,7 +428,7 @@
         }
         this.$http.post('ruiradosPrice/createOrder.do', params).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
+            this.$router.push('/order')
           } else {
             this.$message.info({
               content: response.data.message
@@ -461,7 +461,7 @@
         }
         this.$http.get('gpuserver/createGpuServer.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
+            this.$router.push('/order')
           } else {
             this.$message.info({
               content: response.data.message
