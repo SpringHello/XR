@@ -231,7 +231,7 @@
                 B1-20180455</a>
             </li>
             <li>
-              <a href="https://www.xrcloud.net/about" rel="nofollow" style="color:#fff">关于我们</a>
+              <a href="https://www.xrcloud.net/about/" rel="nofollow" style="color:#fff">关于我们</a>
             </li>
           </ul>
         </div>
@@ -547,7 +547,7 @@
           },
           {
             title: '关于我们',
-            path: 'https://zschj.xrcloud.net/about'
+            path: 'https://zschj.xrcloud.net/about/'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)

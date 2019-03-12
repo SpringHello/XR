@@ -219,10 +219,10 @@
 				  if (zone.zoneid == item.zoneId) {
 				    $store.commit('setZone', zone);
 					if(item.type=='2'){
-						this.$router.push('/buy/bgpu')
+						this.$router.push('/buy/gpu/')
 					}
 					else if(item.type=='1'){
-						this.$router.push('/buy/bhost')
+						this.$router.push('/buy/host/')
 					}
 				  }
 				}

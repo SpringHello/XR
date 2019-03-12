@@ -19,7 +19,7 @@
           <p>云主机是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置。XRcloud为您提供的云主机具有安全、弹性、高性能等特点。</p>
         </div>
         <div class="operator-bar" style="position: relative">
-          <Button type="primary" @click="$router.push('/buy/bhost')">+ 创建</Button>
+          <Button type="primary" @click="$router.push('/buy/host/')">+ 创建</Button>
           <Poptip
             confirm
             width="230"
@@ -230,7 +230,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.publicIPHint = false">取消</Button>
-        <Button type="primary" @click="$router.push('/buy/bip')">创建公网IP</Button>
+        <Button type="primary" @click="$router.push('/buy/elasticip/')">创建公网IP</Button>
       </p>
     </Modal>
     <!-- 绑定静态IP -->
@@ -248,7 +248,7 @@
             </Select>
             <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
               <span style="font-weight:800;font-size:20px;">+</span>
-              <span style="cursor:pointer;" @click="$router.push('/buy/bip')">购买弹性IP</span>
+              <span style="cursor:pointer;" @click="$router.push('/buy/elasticip/')">购买弹性IP</span>
             </span>
           </Form-item>
         </Form>

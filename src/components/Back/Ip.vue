@@ -855,7 +855,7 @@
       // 跳转到相应的购买页面
       tobuy(url) {
         sessionStorage.setItem('pane', url)
-        this.$router.push('buy/bip')
+        this.$router.push('buy/elasticip/')
       },
       // 释放弹性IP
       resetIP() {

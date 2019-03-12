@@ -40,7 +40,7 @@
           <Select v-model="ipValidate.ip" placeholder="请选择IP" style="width: 200px">
             <Option v-for="item in ipValidate.ipList" :value="item.publicipid" :key="item.publicipid">{{item.publicip}}</Option>
           </Select>
-          <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('buy/bip')">购买弹性IP</span>
+          <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('buy/elasticip/')">购买弹性IP</span>
         </FormItem>
       </Form>
       <br>
@@ -149,7 +149,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.publicIPHint = false">取消</Button>
-        <Button type="primary" @click="$router.push('buy/bip')">创建公网IP</Button>
+        <Button type="primary" @click="$router.push('buy/elasticip/')">创建公网IP</Button>
       </p>
     </Modal>
 

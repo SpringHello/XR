@@ -318,14 +318,14 @@ var router = new Router({
           name: 'buy',
           component: Buy,
           children: [
-            {path: '', name: 'bhost', component: BHost},
-            {path: 'bhost', name: 'bhost', component: BHost},
-            {path: 'bdisk', name: 'bdisk', component: BDisk},
-            {path: 'bip', name: 'bip', component: BIP},
-            {path: 'bdata', name: 'bdata', component: BData},
-            {path: 'bobj', name: 'bobj', component: BObj},
-            {path: 'bgpu', name: 'bgpu', component: BGpu},
-            {path: 'bssl', name: 'bssl', component: BSsl}
+            {path: '', name: 'host/', component: BHost},
+            {path: 'host', name: 'host/', component: BHost},
+            {path: 'disk', name: 'disk/', component: BDisk},
+            {path: 'elasticip', name: 'elasticip/', component: BIP},
+            {path: 'database', name: 'database/', component: BData},
+            {path: 'objectstorage', name: 'objectstorage/', component: BObj},
+            {path: 'gpu', name: 'gpu/', component: BGpu},
+            {path: 'ssl', name: 'ssl/', component: BSsl}
           ]
         },
 
@@ -333,21 +333,21 @@ var router = new Router({
         {path: 'vps', name: 'vps', component: Vps},
        /*{path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
          {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
-        {path: 'activity/zero/', name: 'activity/zero/', component: active_1},
+        {path: 'activity/zero', name: 'activity/zero', component: active_1},
         {path: 'entrance', name: 'entrance', component: Entrance},
         //{path: 'active_2', name: 'active_2', component: active_2},
-        {path: 'activity/objectstorage/', name: 'activity/objectstorage/', component: objStorageActive},
+        {path: 'activity/objectstorage', name: 'activity/objectstorage', component: objStorageActive},
         {path: 'smlj', name: 'smlj', component: smlj},
-        {path: 'activity/free/', name: 'activity/free/', component: FrActive},
+        {path: 'activity/free', name: 'activity/free', component: FrActive},
         {path: 'wonderfulDay',name: 'wonderfulDay', component:wonderfulDay},
 
-        {path: 'activity/hotdatabase/', name: 'activity/hotdatabase/', component: DBActive},
+        {path: 'activity/hotdatabase', name: 'activity/hotdatabase', component: DBActive},
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
-        {path: 'activity/xian/', name: 'activity/xian/', component: xianNode},
-        {path: 'activtiy/2019spring/', name: 'activtiy/2019spring/', component: schoolSeason},
+        {path: 'activity/xian', name: 'activity/xian', component: xianNode},
+        {path: 'activtiy/2019spring', name: 'activtiy/2019spring', component: schoolSeason},
 
-        {path: 'eastsouth/', name: 'eastsouth/', component: EastSouthNode},
+        {path: 'eastsouth', name: 'eastsouth', component: EastSouthNode},
         {path: 'Scene/:type', name: 'Scene', component: SceneInfo},
         {path: 'scene', name: 'scene', component: SceneList},
 

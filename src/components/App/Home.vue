@@ -833,7 +833,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Peip',
-                useLink: $store.state.userInfo ? 'buy/bip' : 'buy/bip',
+                useLink: $store.state.userInfo ? 'buy/elasticip/' : 'buy/elasticip/',
                 ME: false
               },
               {

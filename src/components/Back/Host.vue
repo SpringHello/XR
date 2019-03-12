@@ -817,7 +817,7 @@
         }
       },
       publicIPHint_ok() {
-        this.$router.push('/buy/bip')
+        this.$router.push('/buy/elasticip/')
       },
       bindRenewal() {
         if (this.cost != '--') {

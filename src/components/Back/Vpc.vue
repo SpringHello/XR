@@ -1471,7 +1471,7 @@
       },
       buyIP() {
         sessionStorage.setItem('pane', 'Peip')
-        this.$router.push('buy/bip')
+        this.$router.push('buy/elasticip/')
       },
       restartVpcPlus(){
            let id = ''

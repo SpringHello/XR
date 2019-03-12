@@ -5,7 +5,7 @@
         <Select @on-change="change" v-model="product.currentProduct" class="mySelect" style="width: 102px">
           <Option v-for="item in product.productList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <router-link :to="`/${docPath}`" target="_blank">查看产品详情</router-link>
+        <router-link :to="`/${docPath}/`" target="_blank">查看产品详情</router-link>
       </div>
       <div id="body" ref="bo">
         <router-view/>
@@ -301,13 +301,13 @@
         product: {
           currentProduct: this.$route.name,
           productList: [
-            {label: '云主机', value: 'bhost'},
-            {label: '云硬盘', value: 'bdisk'},
-            {label: '公网IP', value: 'bip'},
-            {label: '数据库', value: 'bdata'},
-            {label: '对象存储', value: 'bobj'},
-            {label: 'GPU服务器', value: 'bgpu'},
-            {label: 'SSL证书', value: 'bssl'}
+            {label: '云主机', value: 'host/'},
+            {label: '云硬盘', value: 'disk/'},
+            {label: '公网IP', value: 'elasticip/'},
+            {label: '数据库', value: 'database/'},
+            {label: '对象存储', value: 'objectstorage/'},
+            {label: 'GPU服务器', value: 'gpu/'},
+            {label: 'SSL证书', value: 'ssl/'}
           ]
         },
         // 当前可以创建的剩余资源数
@@ -713,13 +713,13 @@
       },
       docPath() {
         let map = {
-          bhost: 'Pecs',
-          bdisk: 'Pdisk',
-          bip: 'Peip',
-          bdata: 'PdataBase',
-          bgpu: 'Pgpu',
-          bobj: 'PobjStorage',
-          bssl: 'ssl'
+          host: 'Pecs',
+          disk: 'Pdisk',
+          elasticip: 'Peip',
+          database: 'PdataBase',
+          gpu: 'Pgpu',
+          objectstorage: 'PobjStorage',
+          ssl: 'ssl'
         }
         return map[this.product.currentProduct]
       }
