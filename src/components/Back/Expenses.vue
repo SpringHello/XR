@@ -89,8 +89,8 @@
                             style="width: 116px;position: relative;bottom: 12px"></Input-number>
               <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
               </Button>
-							<Button type="primary" style="bottom: 12px;position: relative" @click="seaWaterN">导出流水
-							</Button>
+              <Button type="primary" style="bottom: 12px;position: relative" @click="seaWaterN">导出流水
+              </Button>
               <Table highlight-row :columns="columns" :data="tabledata"></Table>
               <div style="margin: 10px;overflow: hidden">
                 <div style="float: right;">
@@ -785,7 +785,7 @@
             <span>退款到充值账户（需3-5个工作日）</span>
           </Radio>
           <Radio label="yue" style="display: block;margin-bottom:20px">
-            <span>退款到余额<span style="color: #FF1E39;margin-left: 15px">选择“退款到余额”后，将无法进行提现操作，请您谨慎操作！</span></span>
+            <span>退款到余额</span>
           </Radio>
         </RadioGroup>
       </div>
@@ -3403,23 +3403,25 @@
             }
           })
         } else {
-          window.clearInterval(this.refundLastHintTimer)
-          this.refundLastHintDisabled = true
-          this.refundLastHintText = '(10S)'
-          let i = 10
-          this.refundLastHintTimer = setInterval(() => {
-            i -= 1
-            if (i == 0) {
-              window.clearInterval(this.refundLastHintTimer)
-              this.refundLastHintDisabled = false
-              this.refundLastHintText = ''
-            } else {
-              this.refundLastHintText = '(0' + i + 'S)'
-              this.refundLastHintDisabled = true
-            }
-          }, 1000)
+          /*          window.clearInterval(this.refundLastHintTimer)
+                    this.refundLastHintDisabled = true
+                    this.refundLastHintText = '(10S)'
+                    let i = 10
+                    this.refundLastHintTimer = setInterval(() => {
+                      i -= 1
+                      if (i == 0) {
+                        window.clearInterval(this.refundLastHintTimer)
+                        this.refundLastHintDisabled = false
+                        this.refundLastHintText = ''
+                      } else {
+                        this.refundLastHintText = '(0' + i + 'S)'
+                        this.refundLastHintDisabled = true
+                      }
+                    }, 1000)
+                    this.showModal.refundNextHint = false
+                    this.showModal.refundLastHint = true*/
           this.showModal.refundNextHint = false
-          this.showModal.refundLastHint = true
+          this.refundLsat_ok()
         }
       },
       refundLsat_ok() {
@@ -3651,28 +3653,28 @@
         sessionStorage.setItem('pane', 'nonrealname')
         this.$router.push('/ruicloud/Usercenter')
       },
-			seaWaterN(){
-				let url = 'user/searchWaterNumberExcel.do'
-				let params = {
-				  type: this.types,
-				  starttime: this.dateRange[0],
-				  endtime: this.dateRange[1],
-				  startcount: this.value1,
-				  endcount: this.value2
-				}
-				this.$http.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
-				  if (res.status == 200) {
-				    this.$Message.success('导出成功')
-				    let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
-				    let objectUrl = URL.createObjectURL(blob)
-				    window.location.href = objectUrl
-				  } else {
-				    this.$message.info({
-				      content: res.data.message
-				    })
-				  }
-				})
-			}
+      seaWaterN() {
+        let url = 'user/searchWaterNumberExcel.do'
+        let params = {
+          type: this.types,
+          starttime: this.dateRange[0],
+          endtime: this.dateRange[1],
+          startcount: this.value1,
+          endcount: this.value2
+        }
+        this.$http.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
+          if (res.status == 200) {
+            this.$Message.success('导出成功')
+            let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
+            let objectUrl = URL.createObjectURL(blob)
+            window.location.href = objectUrl
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      }
     },
     computed: {
       payDisabled() {
