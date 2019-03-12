@@ -83,7 +83,7 @@
           <div class="hint_1" v-show="guideStep == 1">
             <p>需要新睿云2.0指引提示？</p>
             <span @click="guideNext">需要</span>
-            <span @click="guideStep = 0">不需要</span>
+            <span @click="seeAll">不需要</span>
             <span>{{guideStep }} / 10</span>
           </div>
           <div class="hint_2" v-show="guideStep == 2">
@@ -1610,6 +1610,7 @@
             this.hostListData.forEach(host => {
               if (host.status == 2 || host.status == -2) {
                 host._disabled = true
+                this.timingRefresh(host.id)
               }
             })
           }
@@ -1647,6 +1648,14 @@
                   })
                 })
                 clearInterval(timer)
+              } else {
+                this.hostListData.forEach((host, index) => {
+                  locality.forEach(item => {
+                    if (host.id == item.id && item.status == 1) {
+                      this.hostListData.splice(index, 1, item)
+                    }
+                  })
+                })
               }
 
             }
@@ -2628,6 +2637,10 @@
             this.$router.push('manage')
           }
         })
+      },
+      seeAll() {
+        sessionStorage.setItem('isSeeHint', '1')
+        this.guideStep = 0
       }
     },
     computed: {
