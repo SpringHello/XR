@@ -1282,7 +1282,7 @@
         unbind(publicip,computerid) {
          if(publicip != ''){
            this.$Message.info({
-             content: `<span style="color:#2A99F2"></span>GPU云服务器,正在解绑公网IP`
+             content: `<span style="color:#2A99F2">${this.companyname}</span>GPU云服务器,正在解绑公网IP`
            })
          }
             this.$http.get('network/disableStaticNat.do', {
@@ -1564,7 +1564,7 @@
       },
 
         //资费变更确定
-       ratesChange_ok() {
+      ratesChange_ok() {
         var selectIp = ''
         var selectDisk = ''
         for (var i = 0; i < this.relevanceAlteration.length; i++) {
@@ -1776,7 +1776,7 @@
         })
     },
 
-      },
+  },
       created(){
         this.toggleZone(this.$store.state.zone.zoneid)
         if (this.$store.state.authInfo == null) {
@@ -1797,9 +1797,7 @@
             this.momery.xAxis.data = response.data.result.xaxis;
           }
         })
-        // this.intervalInstance = setInterval(() => {
-        //   this.getGpuServerList()
-        // }, 5 * 1000)
+        
       },
       computed:{
         auth() {

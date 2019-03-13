@@ -9,9 +9,9 @@
         <div class="head">
           <div>
             <div class="host-name">
-              <img @click="$router.push('GpuListNew')" src="../../assets/img/host/h-icon9.png"/>
+              <img style="cursor:pointer;" @click="$router.push('GpuListNew')" src="../../assets/img/host/h-icon9.png"/>
               <span >名称:{{gpuName}}</span>
-              <img src="../../assets/img/host/h-icon11.png" @click="showWindow.rename = true" style="height:16px;">
+              <img  src="../../assets/img/host/h-icon11.png" @click="showWindow.rename = true" style="height:16px;cursor:pointer;">
             </div>
             <div class="button_right">
               <Button type="primary" @click="link">连接主机</Button>
@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="host-details">
-              <p>{{gpuDetail.cpuNum}}CPU ,{{gpuDetail.memory}}G内存 ,{{gpuDetail.bandwith}}M宽带 | {{gpuDetail.zoneName}}<span>[升级]</span></p>
+              <p>{{gpuDetail.cpuNum}}CPU ,{{gpuDetail.memory}}G内存 ,{{gpuDetail.bandwith}}M宽带 </p>
           </div>
           <!-- <div style="display: flex;margin-top: 20px;">
             <div class="host_box">
@@ -84,13 +84,13 @@
                     <p>网络信息<span >[设置]</span></p>
                     <div class="info-subject">
                         <div>
-                            <p>所属VPC</p><span>{{gpuDetail.template}}</span>
+                            <p>所属VPC</p><span>{{gpuDetail.vpc}}</span>
                         </div>
                         
-                        <p>所属子网</p>
-                        <p>内网IP</p>
-                        <p>外网IP</p>
-                        <p>带宽</p>
+                        <p>所属子网</p><span>{{gpuDetail.networkName}}</span>
+                        <p>内网IP <span>{{gpuDetail.privateIp?gpuDetail.privateIp:'----'}}</span></p>
+                        <p>外网IP <span>{{gpuDetail.publicIp? gpuDetail.publicIp : '----'}}</span></p>
+                        <p>带宽 <span>{{ gpuDetail.bandwith?gpuDetail.bandwith: '0'}}M</span></p>
                         <p>负载均衡</p>
                         <p>NAT网关</p>
                     </div>
@@ -112,8 +112,8 @@
                             <p>计费类型</p><span>{{gpuDetail.template}}</span>
                         </div>
                         <p>自动续费</p>
-                        <p>创建时间</p>
-                        <p>到期时间</p>
+                        <p>创建时间 <span>{{gpuDetail.createTime}}</span></p>
+                        <p>到期时间 <span>{{gpuDetail.endTime}}</span></p>
                     </div>
                 </div>
             </TabPane>
@@ -795,6 +795,9 @@
             this.$Message.info(res.data.message);
             this.logLoading = false;
           }
+        }).catch(err =>{
+          if(err)
+          this.logLoading = false;
         })
       },
       dataTimeChange(time){
@@ -990,6 +993,29 @@
         sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone);
         this.$router.push('link');
       },
+
+      checkRenameForm() {
+        this.$refs.renameForm.validate((valid) => {
+          if (valid) {
+            this.showModal.rename = false
+            this.$http.post('information/changeVmName.do', {
+              vmId: this.hostCurrentSelected.computerid,
+              name: this.renameForm.hostName
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+                this.hostSelection = []
+                this.getHostList()
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+
     },
 
     created(){
@@ -1056,6 +1082,9 @@
         .info-subject{
             margin-top: 20px;
             color:#666666;
+            >p{
+              margin:7px 0;
+            }
         }
     }
   }

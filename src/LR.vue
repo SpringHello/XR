@@ -31,6 +31,13 @@
 <script>
   export default {
     name: 'LR',
+    beforeRouteEnter(to, from, next) {
+      if (to.query.sellCode) {
+        // 销售来源渠道
+        localStorage.setItem('sellCode', to.query.sellCode)
+      }
+      next()
+    },
     data () {
       return {}
     },
