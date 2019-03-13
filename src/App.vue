@@ -513,35 +513,35 @@
           },
           {
             title: '新闻动态',
-            path: 'https://news.xrcloud.net/',
+            path: 'https://kaifa.xrcloud.net/homePage/1.html',
             content: [
               {
                 prod: '香港云服务器 ',
-                path: 'https://news.xrcloud.net/xianggangyunfuwuqi'
+                path: 'https://kaifa.xrcloud.net/xianggangyunfuwuqi'
               },
               {
                 prod: '虚拟主机',
-                path: 'https://news.xrcloud.net/xunizhuji'
+                path: 'https://kaifa.xrcloud.net/xunizhuji'
               },
               {
                 prod: '云服务器',
-                path: 'https://news.xrcloud.net/yunfuwuqi'
+                path: 'https://kaifa.xrcloud.net/yunfuwuqi'
               },
               {
                 prod: '服务器虚拟化',
-                path: 'https://news.xrcloud.net/fuwuqixunihua'
+                path: 'https://kaifa.xrcloud.net/fuwuqixunihua'
               },
               {
                 prod: '云计算',
-                path: 'https://news.xrcloud.net/yunjisuan'
+                path: 'https://kaifa.xrcloud.net/yunjisuan'
               },
               {
                 prod: '云安全',
-                path: 'https://news.xrcloud.net/yunanquan'
+                path: 'https://kaifa.xrcloud.net/yunanquan'
               },
               {
                 prod: '域名交流',
-                path: 'https://news.xrcloud.net/yumingjiaoliu'
+                path: 'https://kaifa.xrcloud.net/yumingjiaoliu'
               }
             ]
           },
