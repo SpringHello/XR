@@ -353,7 +353,7 @@
           $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
         } else {
           next(vm => {
-            vm.$router.push({path: '/ruicloud/login'})
+            vm.$router.push({path: '/login'})
           })
         }
         next()
@@ -515,7 +515,7 @@
       exit() {
         axios.get('user/logout.do').then(response => {
           $store.commit('setAuthInfo', {authInfo: null, userInfo: null})
-          this.$router.push('/ruicloud/login')
+          this.$router.push('/login')
         })
       },
 			loggedOffState() {
@@ -589,8 +589,8 @@
       zone: state => state.zone,
       zoneList() {
         var map = {
-          '/ruicloud/GpuList': [1],
-          '/ruicloud/host': [0],
+          '/GpuList': [1],
+          '/host': [0],
         }
         var type = map[this.$route.path] || [0, 1]
         var zoneList = this.$store.state.zoneList.filter(zone => {

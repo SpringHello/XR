@@ -69,7 +69,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a  href="https://zschj.xrcloud.net/overview"   rel="nofollow" ><span>控制台</span>
+                  <a  href="https://kaifa.xrcloud.net/overview"   rel="nofollow" ><span>控制台</span>
                   </a>
                 </div>
               </div>
@@ -84,7 +84,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a  href="https://zschj.xrcloud.net/login"   rel="nofollow" ><span>登录</span>
+                  <a  href="https://kaifa.xrcloud.net/login"   rel="nofollow" ><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -92,7 +92,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a  href="https://zschj.xrcloud.net/register"   rel="nofollow" ><span>注册</span>
+                  <a  href="https://kaifa.xrcloud.net/register"   rel="nofollow" ><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -126,15 +126,15 @@
                     <router-link to="/userCenter">用户中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="/expenses">
-                    <router-link to="ruicloud/expenses">费用中心</router-link>
+                    <router-link to="/expenses">费用中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="/msgCenter" style="position:relative">
-                    <router-link to="ruicloud/msgCenter">消息中心
+                    <router-link to="/msgCenter">消息中心
                       <!--<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>-->
                     </router-link>
                   </DropdownItem>
                   <DropdownItem name="/operationLog">
-                    <router-link to="ruicloud/operationLog">操作日志</router-link>
+                    <router-link to="/operationLog">操作日志</router-link>
                   </DropdownItem>
                   <DropdownItem divided name="exit">
                     <!-- <router-link to="">退出</router-link> -->
@@ -547,7 +547,7 @@
           },
           {
             title: '关于我们',
-            path: 'https://zschj.xrcloud.net/about/'
+            path: 'https://kaifa.xrcloud.net/about/'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
@@ -622,7 +622,7 @@
         ],
         // 友情链接
         links: [
-          {href: 'https://zschj.xrcloud.net/', text: '新睿云'}
+          {href: 'https://kaifa.xrcloud.net/', text: '新睿云'}
         ],
         Preparation: [
           {
