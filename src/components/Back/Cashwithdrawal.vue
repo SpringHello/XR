@@ -430,7 +430,17 @@
 				// 每页条数
 				pageNum: 10,
 				// 第几页
-				currentPage: 1
+				currentPage: 1,
+				AllSession:{
+					payeeName:'',
+					bankAccInfor:'',
+					payeeAccount:'',
+					bankAddress:'',
+					bankBranch:'',
+					reservedPhone:'',
+					type:'',
+					balance:''
+				}
 			}
 		},
 		created() {
@@ -489,14 +499,15 @@
 				} else {
 					this.$refs[name].validate((valid) => {
 						if (valid) {
-							sessionStorage.setItem('payeeName', this.formAppreciationDate.companyName)
-							sessionStorage.setItem('bankAccInfor', this.formAppreciationDate.depositBank)
-							sessionStorage.setItem('payeeAccount', this.formAppreciationDate.bankAccount)
-							sessionStorage.setItem('bankAddress', this.formAppreciationDate.registeredAddress)
-							sessionStorage.setItem('bankBranch', this.formAppreciationDate.taxpayerID)
-							sessionStorage.setItem('reservedPhone', this.formAppreciationDate.registeredPhone)
-							sessionStorage.setItem('balance', this.comBankemoney)
-							sessionStorage.setItem('type', 1)
+							this.AllSession.payeeName=this.formAppreciationDate.companyName
+							this.AllSession.bankAccInfor=this.formAppreciationDate.depositBank
+							this.AllSession.payeeAccount=this.formAppreciationDate.bankAccount
+							this.AllSession.bankAddress=this.formAppreciationDate.registeredAddress
+							this.AllSession.bankBranch=this.formAppreciationDate.taxpayerID
+							this.AllSession.reservedPhone=this.formAppreciationDate.registeredPhone
+							this.AllSession.balance=this.comBankemoney
+							this.AllSession.type=1
+							sessionStorage.setItem('ALLf',JSON.stringify(this.AllSession))
 							this.$router.push('/ruicloud/cashprocess')
 						}
 					})
@@ -506,8 +517,9 @@
 				if (this.comOnlinemoney <= 0) {
 					this.$Message.info("您当前的金额不能提现！")
 				} else {
-					sessionStorage.setItem('balance', this.comOnlinemoney)
-					sessionStorage.setItem('type', 0)
+					this.AllSession.balance=this.comBankemoney
+					this.AllSession.type=0
+					sessionStorage.setItem('ALLf',JSON.stringify(this.AllSession))
 					this.$router.push('/ruicloud/cashprocess')
 				}
 			},

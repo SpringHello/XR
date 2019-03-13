@@ -359,6 +359,9 @@
         authModifyPhoneStep: 0,
         disabled11: true,
         disabled12: false,
+		AllseMoney:{},
+		monenymo:'',
+		AcmoneyGG:'',
         authModifyPhoneFormThere: {
           verificationCode: '',
           pictureCode: '',
@@ -463,26 +466,18 @@
         this.$emit('changeTabSec', name)
       },
       Callpresentation() {
-        var typed = sessionStorage.getItem('type')
-        var payeeName = sessionStorage.getItem('payeeName')
-        var payeeAccountType = '银行卡'
-        var payeeAccount = sessionStorage.getItem('payeeAccount')
-        var bankAccInfor = sessionStorage.getItem('bankAccInfor')
-        var bankAddress = sessionStorage.getItem('bankAddress')
-        var bankBranch = sessionStorage.getItem('bankBranch')
-        var reservedPhone = sessionStorage.getItem('reservedPhone')
         axios.post('user/balanceWithdrawal.do', {
-          balance: this.Actualamount,
+		  balance: this.Actualamount,
           smsCode: this.formCustom.messagecode,
           username: this.userphone,
-          type: typed,
-          payeeName: payeeName,
-          payeeAccountType: payeeAccountType,
-          payeeAccount: payeeAccount,
-          bankAccInfor: bankAccInfor,
-          bankAddress: bankAddress,
-          bankBranch: bankBranch,
-          reservedPhone: reservedPhone
+          type: this.AllseMoney.type,
+          payeeName: this.AllseMoney.payeeName,
+          payeeAccountType: '银行卡',
+          payeeAccount: this.AllseMoney.payeeAccount,
+          bankAccInfor: this.AllseMoney.bankAccInfor,
+          bankAddress: this.AllseMoney.bankAddress,
+          bankBranch: this.AllseMoney.bankBranch,
+          reservedPhone: this.AllseMoney.reservedPhone
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.successtime = response.data.date
@@ -497,19 +492,27 @@
         this.$router.history.go(-1)
       },
       money() {
-        this.moneyall = parseFloat(sessionStorage.getItem('balance'))
-        this.moneysure = this.moneyall
-        this.Actualamount = sessionStorage.getItem('money')
+		this.AllseMoney=JSON.parse(sessionStorage.getItem('ALLf'))
+		if(this.AllseMoney==null||this.AllseMoney==''){
+			this.$router.push('/ruicloud/cashwithdrawal')
+		}
+		else{
+			sessionStorage.removeItem('ALLf')
+			this.moneyall = parseFloat(this.AllseMoney.balance)
+			this.moneysure = this.moneyall
+		}
+		
       },
       moneyconfirm() {
+		  this.Actualamount = this.monenymo
         this.Cashconfirmationdata.money = this.Actualamount
-        this.Cashconfirmationdata.Actualmoney = sessionStorage.getItem('Acmoney')
-        this.Cashconfirmationdata.type = sessionStorage.getItem('type')
+        this.Cashconfirmationdata.Actualmoney = this.AcmoneyGG
+        this.Cashconfirmationdata.type = this.AllseMoney.type
       },
       Firststep() {
         var type = ''
         var Lastmoney = 0
-        var typecard = sessionStorage.getItem('type')
+        var typecard = this.AllseMoney.type
         if (typecard == 0) {
           type = 'online'
         } else if (typecard == 1) {
@@ -528,16 +531,16 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            sessionStorage.setItem('Acmoney', response.data.remain)
+			this.AcmoneyGG=response.data.remain
             axios.get('user/judgeWithdrawalContidion.do', {
               params: {
                 balance: Lastmoney
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                sessionStorage.setItem('money', Lastmoney)
+				this.monenymo=Lastmoney
                 this.changeTab('content1')
-                this.money()
+                //this.money()
                 this.moneyconfirm()
               } else {
                 this.$Message.info(response.data.message)
@@ -733,7 +736,6 @@
       },
       bindingMobilePhoneStepTwo(name) {
         this.$refs[name].validate((valid) => {
-          console.log(valid)
           if (valid) {
             if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
               axios.post('user/isIdCardAndNameSame.do', {
