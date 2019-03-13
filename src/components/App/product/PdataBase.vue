@@ -117,7 +117,7 @@
           img: require('../../../assets/img/product/p-database.png'),
           title: '数据库',
           desc: '专业化的高性能、高可靠云数据库服务，支持Mysql、SQL Server、PostgreSQL、mongoDB、Redis引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。 ',
-          linkRouter: 'buy/bdata'
+          linkRouter: '/buy/database/'
         },
         features: [
           {

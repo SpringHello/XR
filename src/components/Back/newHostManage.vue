@@ -225,7 +225,7 @@
             </Select>
           </Form-item>
           <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 45%;"
-                @click="$router.push('buy/bdisk')">
+                @click="$router.push('/buy/disk/')">
               <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
               购买磁盘
             </span>
@@ -250,7 +250,7 @@
             </Select>
           </Form-item>
           <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 45%;"
-                @click="$router.push('buy/bdisk')">
+                @click="$router.push('/buy/disk/')">
               <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
               购买磁盘
             </span>

@@ -1106,7 +1106,7 @@
         }
       },
       createDatabase() {
-        this.$router.push('/buy/bdata')
+        this.$router.push('/buy/database/')
         //sessionStorage.setItem('pane', 'Pdatabase')
       },
       listDatabase() {

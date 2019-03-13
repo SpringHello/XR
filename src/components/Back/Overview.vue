@@ -297,16 +297,16 @@
               content.url = currentUrl[index]
               // 需要跳转到购买页面的资源，添加url
               if (content.itemName == '弹性云主机ECS') {
-                content.cartUrl = 'buy#Pecs'
+                content.cartUrl = '/buy/#Pecs'
               } else if (content.itemName == '弹性IP') {
-                content.cartUrl = 'buy/bip#Peip'
+                content.cartUrl = '/buy/elasticip/#Peip'
               } else if (content.itemName == '云硬盘') {
-                content.cartUrl = 'buy/bdata#Pdisk'
+                content.cartUrl = '/buy/disk/#Pdisk'
               } else if (content.itemName == 'NAT网关') {
                 content.cartUrl = 'vpc#NAT'
               }
               if (content.itemName == '数据库') {
-                content.cartUrl = 'buy/bdata#NAT'
+                content.cartUrl = '/buy/database/#NAT'
               } else if (content.itemName == 'GPU服务器') {
                 content.cartUrl = 'buy/bgpu'
               } else if (content.itemName == '对象存储') {

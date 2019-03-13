@@ -753,7 +753,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pecs',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: true
               },
               {
@@ -773,7 +773,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Phost',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: false
               },
               {
@@ -783,7 +783,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pecss',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: false
               },
               {
@@ -823,7 +823,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pvpc',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: true
               },
               {
@@ -833,7 +833,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Peip',
-                useLink: $store.state.userInfo ? 'buy/elasticip/' : 'buy/elasticip/',
+                useLink: $store.state.userInfo ? '/buy/elasticip/' : '/buy/elasticip/',
                 ME: false
               },
               {
@@ -843,7 +843,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pbalance',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: false
               },
               {
@@ -893,7 +893,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pdisk',
-                useLink: $store.state.userInfo ? 'buy/bdisk' : 'buy/bdisk',
+                useLink: $store.state.userInfo ? '/buy/disk/' : '/buy/disk/',
                 ME: true
               },
               {
@@ -933,7 +933,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pfirewall',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: true
               },
               {
@@ -993,7 +993,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'PdataBase',
-                useLink: $store.state.userInfo ? 'buy/bdata' : 'buy/bdata',
+                useLink: $store.state.userInfo ? '/buy/database/' : '/buy/database/',
                 ME: true
               },
             ],

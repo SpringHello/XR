@@ -66,7 +66,7 @@
           <FormItem>
             <span style="color:#2A99F2;font-size:14px;position:absolute;top:36px;">
               <span style="font-weight:800;font-size:20px;">+</span>
-              <span style="cursor:pointer;" @click="$router.push('buy/bdata')">购买数据库</span>
+              <span style="cursor:pointer;" @click="$router.push('/buy/database/')">购买数据库</span>
             </span>
           </FormItem>
           <FormItem label="数据库名称" prop="name">

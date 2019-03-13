@@ -846,7 +846,7 @@
       },
       buyIP() {
         sessionStorage.setItem('pane', 'Peip')
-        this.$router.push('buy/elasticip/')
+        this.$router.push('/buy/elasticip/')
       }
     },
     watch: {
