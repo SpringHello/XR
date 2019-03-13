@@ -51,68 +51,14 @@
             <h2>主机规格选择</h2>
             <!--镜像选择-->
             <div class="item-wrapper">
-              <div style="display: flex">
-                <div>
-                  <p class="item-title">镜像类型</p>
-                  <p class="item-title" style="margin-top: 40px;">镜像系统</p>
-                </div>
-                <div>
-                  <div v-for="item in mirrorType" class="zoneItem"
-                       :class="{zoneSelect:currentType==item.value}"
-                       @click="selectMirror(item)">{{item.label}}
-                  </div>
-                  <!--镜像+应用 列表-->
-                  <div v-if="currentType=='app'">
-                    <div v-if="currentType=='app'">
-                      <Dropdown v-for="(item,index) in appList" style="margin-right:10px;margin-top:20px;"
-                                @on-click="setAppOS" :key="index">
-                        <div
-                          style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
-                          {{item.selectSystem||item.system}}
-                        </div>
-                        <Dropdown-menu slot="list">
-                          <Dropdown-item v-for="(system,index1) in item.systemList" :key="index1"
-                                         :name="`${system.templatedescript}#${system.systemtemplateid}#${index}`"
-                                         style="white-space: pre-wrap;display:block;">
-                            <span>{{system.templatedescript}}</span>
-                          </Dropdown-item>
-                        </Dropdown-menu>
-                      </Dropdown>
-                    </div>
-                  </div>
-
-                  <!--公共镜像 列表-->
-                  <div v-if="currentType=='public'">
-                    <Dropdown v-for="(item,index) in publicList" style="margin-right:10px;margin-top:20px;"
-                              @on-click="setOS" :key="index">
-                      <div
-                        style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
-                        {{item.selectSystem||item.system}}
-                      </div>
-                      <Dropdown-menu slot="list">
-                        <Dropdown-item v-for="(system,index1) in item.systemList" :key="index1"
-                                       :name="`${system.templatename}#${system.systemtemplateid}#${index}`"
-                                       style="white-space: pre-wrap;display:block;">
-                          <span>{{system.templatename}}</span>
-                        </Dropdown-item>
-                      </Dropdown-menu>
-                    </Dropdown>
-                  </div>
-
-                  <!--自定义镜像 列表-->
-                  <div v-if="currentType=='custom'">
-                    <div v-for="item in customList" :key="item.value" class="zoneItem"
-                         :class="{zoneSelect:customMirror.id==item.id}"
-                         @click="setOwnTemplate(item)" style="margin-top: 20px;">{{item.templatename}}
-                    </div>
-                    <div v-if="customList.length==0" class="zoneItem" style="margin-top: 20px;">
-                      暂无镜像
-                    </div>
-                  </div>
+              <div style="display: flex;justify-content: space-between;">
+                <div v-for="(item,index) in mirrorListQ" :key="index" class="fast-mirror" :class="{'select-fast-mirror':FastMirrorIndex==index}" @click="setOSQ(item,index)">
+                  <img :src="item.img" alt="">
+                  <span>{{item.templatename}}</span>
                 </div>
               </div>
             </div>
-
+            
             <!--是否需要公网IP-->
             <div class="item-wrapper">
               <div style="display: flex">
@@ -225,6 +171,7 @@
                       暂无镜像
                     </div>
                   </div>
+                  <p v-if="mirrorShow" style="margin-top:10px;color:#FF0000;font-size:14px;">镜像还未选择，请先选择镜像再进行购买</p>
                 </div>
               </div>
             </div>
@@ -377,20 +324,38 @@
             <div class="item-wrapper">
               <div style="display: flex">
                 <div>
-                  <p class="item-title">防火墙</p>
+                  <p class="item-title" style="margin-top: 7px;">防火墙</p>
                 </div>
                 <div>
-                  <p
-                    style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:25px; border: 1px solid #D9D9D9;padding: 5px 25px;">
-                    默认设置
-                  </p>
+                  <Select v-model="selectAcllistid" style="width:200px">
+                    <Option v-for="item in acllist" :key="item.acllistid"  :value="item.acllistid">
+                      {{item.acllistname}}
+                    </Option>
+                  </Select>
+                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/ruicloud/document')">帮助文档</span>
                 </div>
               </div>
-              <p
-                style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
-                默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。<span style="color: #377DFF;cursor: pointer"
-                                                                    @click="$router.push('firewall')">如何修改</span>
-              </p>
+            </div>
+            <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
+              如您有业务需要开通其他端口，您可以 <span style="color: rgb(42, 153, 242);cursor: pointer"
+                                                           @click="$router.push({path:'/ruicloud/firewall'})">新建防火墙</span></p>
+            <!-- 防火墙规则 -->
+            <div class="item-wrapper">
+              <div style="display: flex">
+                <div>
+                  <p class="item-title" style="margin-top: 7px;">防火墙规则</p>
+                </div>
+                <div>
+                  <Tabs type="card" :animated="false">
+                      <TabPane label="入站规则">
+                        <Table :columns="upRuleCol" :data="upRuleData" style="width:620px;"></Table>
+                      </TabPane>
+                      <TabPane label="出站规则">
+                        <Table :columns="downRuleCol" :data="downRuleData" style="width:620px;"></Table>
+                      </TabPane>
+                  </Tabs>
+                </div>
+              </div>
             </div>
             <!--公网IP价格-->
             <div class="item-wrapper" style="margin-top: 28px;" v-show="IPConfig.publicIP">
@@ -595,6 +560,7 @@
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
   import regExp from '@/util/regExp'
+  import $ from 'jquery'
 
   var debounce = require('throttle-debounce/debounce')
   export default {
@@ -611,6 +577,98 @@
         zone = zoneList[0]
       }
       return {
+        selectFastMirror: '',
+        FastMirrorIndex: 0,
+        mirrorShow: false,
+        acllist: [
+          {
+            acllistname: '默认防火墙',
+            acllistid: '1'
+          }
+        ],
+        selectAcllistid: '1',
+        upRuleCol: [
+          {
+            title: '名称',
+            key: 'acllistitemname'
+          },
+          {
+            title: '来源',
+            key: 'cidr'
+          },
+          {
+            title: '协议端口',
+            render: (h, params) => {
+              var port = ''
+              if (params.row.startport == params.row.endport) {
+                port = params.row.startport
+              } else {
+                port = params.row.startport + ' ' + params.row.endport
+              }
+              return h('span', {}, port)
+            }
+          },
+          {
+            title: '策略',
+            key: 'operation',
+            render: (h, params) => {
+              return h('span', {}, params.row.operation == 'Allow' ? '允许' : '拒绝')
+            }
+          }
+        ],
+        upRuleData: [
+          {
+            acllistitemname: "默认防火墙",
+            acllistname: "默认防火墙",
+            cidr: "0.0.0.0/0",
+            operation: "Allow",
+            startport: '3360 3389 443 80',
+            endport: '',
+          },
+        ],
+        downRuleCol: [
+          {
+            title: '名称',
+            key: 'acllistitemname'
+          },
+          {
+            title: '来源',
+            key: 'cidr'
+          },
+          {
+            title: '协议端口',
+            render: (h, params) => {
+              var port = ''
+              if (params.row.startport == params.row.endport) {
+                port = params.row.startport
+              } else {
+                port = params.row.startport + '' + params.row.endport
+              }
+              return h('span', {}, port)
+            }
+          },
+          {
+            title: '策略',
+            key: 'operation',
+            render: (h, params) => {
+              return h('span', {}, params.row.operation == 'Allow' ? '允许' : '拒绝')
+            }
+          }
+        ],
+        downRuleData: [
+        ],
+        // 新建规则表单
+        newRuleForm: {
+          name: '',
+          way: '',
+          protocol: '',
+          protocolOptions: ['TCP', 'UDP', 'ICMP', 'ALL'],
+          endPort: 1,
+          startPort: 1,
+          access: '',
+          cidr: '0.0.0.0/0',
+          itemid: 1,
+        },
         zoneList,
         zone,
         // 配置类型
@@ -671,7 +729,7 @@
         loginType: [{type: 'default', label: '默认设置'}, {type: 'custom', label: '自定义设置'}],
         currentLoginType: 'default',
         // 系统用户名
-        systemUsername: '',
+        systemUsername: 'administrator',
         // 主机名称
         computerName: '',
         // 主机名称提示信息
@@ -746,12 +804,20 @@
         cost: 0,
         // 快速创建优惠价格
         fastCoupon: 0,
-
-        mirrorQuery: this.$route.query.mirror
+        mirrorQuery: this.$route.query.mirror,
+        mirrorListQ: [],
+        mirrorListQImg: [
+          {img: require('../../../assets/img/host/h-icon12.png')},
+          {img: require('../../../assets/img/host/h-icon12.png')},
+          {img: require('../../../assets/img/host/h-icon6.png')},
+          {img: require('../../../assets/img/host/h-icon6.png')},
+          {img: require('../../../assets/img/host/h-icon7.png')},
+        ],
       }
     },
     created() {
       this.setTemplate()
+      this.getFastMirror()
       this.queryQuick()
       this.queryCustomVM()
       this.queryVpc()
@@ -767,6 +833,24 @@
       // this.$store.dispatch('getZoneList')
     },
     methods: {
+      getFastMirror() {
+        axios.get('information/getTemplateByZoneId.do', {
+          params: {
+            zoneId: this.zone.zoneid,
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.mirrorListQ = response.data.result
+            this.mirrorListQ.forEach((item,index) => {
+              item.img = this.mirrorListQImg[index].img
+            })
+            this.selectFastMirror = response.data.result[0].systemtemplateid
+          }
+        })
+      },
+      roll(val) {
+        $('html, body').animate({scrollTop: val}, 300)
+      },
       // 设置系统模版
       setTemplate() {
         // 镜像+应用
@@ -880,6 +964,16 @@
           this.publicList[arg[2]].selectSystem = arg[0]
         }
       },
+      setOSQ(item,index) {
+        this.FastMirrorIndex=index
+        this.selectFastMirror=item.systemtemplateid
+        var str = item.templatename.substr(0, 1)
+        if (str === 'W' || str === 'w') {
+          this.systemUsername = 'administrator'
+        } else {
+          this.systemUsername = 'root'
+        }
+      },
       setAppOS(name) {
         var arg = name.split('#')
         for (var item of this.appList) {
@@ -964,10 +1058,12 @@
           })
           return
         }
-        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
-          this.$message.info({
-            content: '请选择一个镜像系统'
-          })
+        if (this.createType != 'fast' && ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined))) {
+          // this.$message.info({
+          //   content: '请选择一个镜像系统'
+          // })
+          this.roll(500)
+          this.mirrorShow = true
           return
         }
         if (this.currentLoginType == 'custom') {
@@ -984,7 +1080,6 @@
         prod.typeName = '云主机'
         prod.zone = this.zone
         prod.timeForm = this.timeForm
-        prod.system = this.currentType == 'public' ? this.system : this.appSystem
         prod.customMirror = this.customMirror
         prod.currentType = this.currentType
         prod.publicIP = this.publicIP
@@ -998,7 +1093,9 @@
         if (this.createType == 'fast') {
           prod.currentSystem = this.currentSystem
           prod.cost = this.fastCost
+          prod.system = this.selectFastMirror
         } else {
+          prod.system = this.currentType == 'public' ? this.system : this.appSystem
           prod.IPConfig = this.IPConfig
           prod.vmConfig = this.vmConfig
           prod.dataDiskList = this.dataDiskList
@@ -1006,7 +1103,6 @@
           prod.network = this.network
           prod.cost = this.totalCost
         }
-
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
       },
       // 购买主机
@@ -1017,10 +1113,12 @@
           })
           return
         }
-        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
-          this.$message.info({
-            content: '请选择一个镜像系统'
-          })
+        if (this.createType != 'fast' && ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'app' && this.appSystem.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined))) {
+          // this.$message.info({
+          //   content: '请选择一个镜像系统'
+          // })
+          this.roll(500)
+          this.mirrorShow = true
           return
         }
         if (this.currentLoginType == 'custom') {
@@ -1053,6 +1151,7 @@
           params.rootDiskType = this.currentSystem.diskType
           params.networkId = 'no'
           params.vpcId = 'no'
+          params.templateId = this.selectFastMirror
         } else {
           params.cpuNum = this.vmConfig.kernel
           params.memory = this.vmConfig.RAM
@@ -1062,20 +1161,19 @@
           params.networkId = this.network
           params.vpcId = this.vpc
           var diskType = '', diskSize = ''
-
           for (let disk of this.dataDiskList) {
             diskType += `${disk.type},`
             diskSize += `${disk.size},`
           }
           params.diskType = diskType
           params.diskSize = diskSize
-        }
-        if (this.currentType === 'app') {
-          params.templateId = this.appSystem.systemId
-        } else if (this.currentType === 'public') {
-          params.templateId = this.system.systemId
-        } else {
-          params.templateId = this.customMirror.systemtemplateid
+          if (this.currentType === 'app') {
+            params.templateId = this.appSystem.systemId
+          } else if (this.currentType === 'public') {
+            params.templateId = this.system.systemId
+          } else {
+            params.templateId = this.customMirror.systemtemplateid
+          }
         }
         // 设置了主机名和密码
         if (this.currentLoginType == 'custom') {
@@ -1181,7 +1279,6 @@
         }).then(response => {
           this.networkList = response.data.result
           this.network = this.networkList[0].ipsegmentid
-          //this.network = this.networkList[0].ipsegmentid
         })
       },
       // 查看主机IP价格
@@ -1250,6 +1347,24 @@
         } else {
           this.currentType = item.value;
         }
+      },
+      fireList() {
+        axios.get('network/listAclList.do', {
+          params: {
+            zoneId: this.zone.zoneid,
+            aclId: this.network
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.acllist[0].acllistname = response.data.result[0].acllistname
+            this.upRuleData = response.data.result[0].acllistitem.filter(item => {
+              return item.type == 'Ingress'
+            })
+            this.downRuleData = response.data.result[0].acllistitem.filter(item => {
+              return item.type != 'Ingress'
+            })
+          }
+        })
       }
     },
     computed: {
@@ -1278,7 +1393,7 @@
           }
           return i.zoneId == this.zone.zoneid
         })
-      }
+      },
     },
     watch: {
       'timeForm': {
@@ -1340,11 +1455,16 @@
           })
           this.setTemplate()
           this.queryVpc()
+          this.fireList()
+          this.getFastMirror()
         },
         deep: true
       },
       publicIP() {
         this.queryQuick()
+      },
+      'network'() {
+          this.fireList()
       }
     }
   }
@@ -1673,6 +1793,43 @@
     border: 1px solid #D9D9D9;
     padding: 4px 8px;
     margin-left: -5px;
+  }
+  .fast-mirror {
+    width:136px;
+    height:64px;
+    background:rgba(255,255,255,1);
+    border:1px solid rgba(217,217,217,1);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    img {
+      display: block;
+      margin: 0 10px;
+    }
+  }
+  .select-fast-mirror {
+    overflow: hidden;
+    border:1px solid rgba(59,120,255,1);
+    position: relative;
+    ::after {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: -16px;
+      right: -16px;
+      width: 30px;
+      height: 30px;
+      background: rgba(59,120,255,1);
+      transform:rotate(45deg);
+    }
+    ::before {
+      content: "✓";
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      color: #fff;
+      z-index: 1;
+    }
   }
 </style>
 

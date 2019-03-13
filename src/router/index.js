@@ -124,19 +124,19 @@ const ResetNew = () =>import('@/components/LR/ResetNew')
 // import Overview from '@/components/Back/Overview'
 // import Host from '@/components/Back/Host'
 
-const Overview = () =>import('@/components/Back/Overview')
-const Work = () =>import('@/components/Back/Work')
-const Recharge = () =>import('@/components/Back/Recharge.vue')
-const RechargeResult = () =>import('@/components/Back/RechargeResult.vue')
+const Overview = () => import('@/components/Back/Overview')
+const Work = () => import('@/components/Back/Work')
+const Recharge = () => import('@/components/Back/Recharge.vue')
+const RechargeResult = () => import('@/components/Back/RechargeResult.vue')
 const Balance = () =>import('@/components/Back/Balance')
 const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
-const Host = () =>import('@/components/Back/Host')
-// const NewHost = () =>import('@/components/Back/newHost')
+const Host = () =>import('@/components/Back/newHost')
+const HostCard = () =>import('@/components/Back/Host')
+//const NewHost = () =>import('@/components/Back/newHost')
 //const NewHostManage = () =>import('@/components/Back/newHostManage')
 //const NewUpgrade = () =>import('@/components/Back/newUpgrade')
-const GPU = () =>import('@/components/Back/GPU')
 const GpuList = () =>import('@/components/Back/GpuList')
 const GpuListNew = () =>import('@/components/Back/GpuListNew')
 const Mirror = () =>import('@/components/Back/Mirror')
@@ -173,8 +173,8 @@ const MemberInfo = () => import('@/components/Back/MemberInfo')
 const UserInfo = () => import('@/components/Back/UserInfo')
 const MsgCenter = () => import('@/components/Back/MsgCenter')
 const OperationLog = () => import('@/components/Back/OperationLog')
-const Manage = () => import('@/components/Back/Manage')
-const Upgrade = () => import('@/components/Back/Upgrade')
+const Manage = () => import('@/components/Back/newHostManage')
+const Upgrade = () => import('@/components/Back/newUpgrade')
 const FirewallManage = () => import('@/components/Back/FirewallManage')
 const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
@@ -182,10 +182,9 @@ const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
 const gpuManage = () => import('@/components/Back/gpuManage')
 const GpuManageNew = () => import('@/components/Back/GpuManageNew')
-const gpuUpLevel = () => import('@/components/Back/gpuUpLevel')
 const Cashwithdrawal = () => import('@/components/Back/Cashwithdrawal')
 const Cashprocess = () => import('@/components/Back/Cashprocess')
-
+const CancellationAccount = () =>import('@/components/Back/CancellationAccount')
 // 域名系统 ==============================
 
 const Link = () => import('@/components/Link')
@@ -193,6 +192,7 @@ const BRecords = () => import('@/components/Back/Records')
 const RecordDetails = () => import('@/components/Back/RecordDetails')
 const CompletedFilingDetails = () => import('@/components/Back/CompletedFilingDetails')
 const SpaceDetails = () => import('@/components/Back/SpaceDetails')
+const AllRegions = () => import('@/components/Back/AllRegions')
 
 
 const CloudDatabaseBackup = () => import('@/components/Back/CloudDatabaseBackup')
@@ -361,7 +361,7 @@ var router = new Router({
 
 
 
-        {path: 'Pecs.htm', component: Pecs},
+   /*     {path: 'Pecs.htm', component: Pecs},
         {path: 'Phost.htm', component: Phost},
         {path: 'Pecss.htm', component: Pecss},
         {path: 'Pvpc.htm', component: Pvpc},
@@ -377,7 +377,7 @@ var router = new Router({
         {path: 'PobjStorage.htm', component: PobjStorage},
         {path: 'PdataBase.htm', component: PdataBase},
         {path: 'PobjectStorage.htm', component: PobjectStorage},
-        {path: 'Pgpu.htm', component: Pgpu},
+        {path: 'Pgpu.htm', component: Pgpu},*/
 
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
@@ -397,9 +397,8 @@ var router = new Router({
         {path: 'PobjectStorage', component: PobjectStorage},
         {path: 'Pgpu', component: Pgpu},
         {path: 'Pelastic',component: Pelastic},
-
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
-        {path: 'hotQuestion/:parentId/:id', component: hotQuestion},
+        {path: 'hotQuestion/:parentId/:id', component: hotQuestion}
       ]
     },
     {
@@ -426,10 +425,10 @@ var router = new Router({
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
+        {path: 'hostCard', name: 'hostCard', component: HostCard},
         // {path: 'newHost', name: 'newHost', component: NewHost},
         //{path: 'newHostManage', name: 'newHostManage', component: NewHostManage},
         //{path: 'newUpgrade', name: 'newUpgrade', component: NewUpgrade},
-        {path: 'gpu', name: 'gpu', component: GPU},
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
         {path: 'vpc', name: 'vpc', component: Vpc},
@@ -443,8 +442,9 @@ var router = new Router({
         {path: 'resultNew', name:'resultNew', component:ResultNew},
         {path: 'payNew', name:'payNew', component: PayNew},
         {path: 'expenses', name: 'expenses', component: Expenses},
-				{path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
-				{path: 'cashprocess', name: 'cashprocess', component: Cashprocess},
+		    {path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
+		    {path: 'cashprocess', name: 'cashprocess', component: Cashprocess},
+		    {path: 'cancellationaccount', name: 'cancellationaccount', component: CancellationAccount},
         {path: 'userCenter', name: 'userCenter', component: UserCenter},
         {path: 'memberInfo', name: 'memberInfo', component: MemberInfo},
         {path: 'userInfo', name: 'userInfo', component: UserInfo},
@@ -460,6 +460,7 @@ var router = new Router({
         {path: 'BRecords', name: 'BRecords', component: BRecords},
         {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails},
         {path: 'SpaceDetails', name: 'SpaceDetails', component: SpaceDetails},
+		{path: 'AllRegions', name: 'AllRegions', component: AllRegions},
         {path: 'completedFilingDetails', name: 'completedFilingDetails', component: CompletedFilingDetails},
         {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
         {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},
@@ -469,7 +470,6 @@ var router = new Router({
         {path: 'GpuListNew', name: 'GpuListNew', component: GpuListNew},
         {path: 'gpuManage', name: 'gpuManage', component: gpuManage},
         {path: 'GpuManageNew', name: 'GpuManageNew', component: GpuManageNew},
-        {path: 'gpuUpLevel', name: 'gpuUpLevel', component: gpuUpLevel},
         // 域名系统 =====================
         {path: 'Elastic', name: 'Elastic', component: Elastic},
         {path: 'ElasticDetails', name: 'ElasticDetails', component: ElasticDetails},
@@ -492,7 +492,7 @@ var router = new Router({
       ]
     },
     {path: '/ruicloud/link', name: 'link', component: Link},
-    {path: '/*', name: '404', component: Home},
+    {path: '/*', name: '404', component: notFindPage},
   ]
 })
 

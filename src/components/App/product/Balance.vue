@@ -3,9 +3,9 @@
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
-        <img :src="logo.img">
+        <img :src="logo.img" alt="负载均衡" title="负载均衡">
         <div class="info">
-          <span class="title">{{logo.title}}</span>
+          <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>
@@ -18,7 +18,7 @@
         <div class="features-flex">
           <div v-for="(feature,index) in features" class="flex-item" :key="index">
             <div>
-              <i class="iconfont" :class="feature.img" style="font-size:40px;color:#fff;"></i>
+              <i class="iconfont" :title="feature.title" :class="feature.img" style="font-size:40px;color:#fff;"></i>
               <div>
                 <span class="title">{{feature.title}}</span>
                 <span class="desc">{{feature.desc}}</span>

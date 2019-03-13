@@ -68,6 +68,7 @@
                         </Dropdown-item>
                       </Dropdown-menu>
                     </Dropdown>
+                    <p v-if="mirrorShow" style="color:#FF0000;font-size:14px;">镜像还未选择，请先选择镜像再进行购买</p>
                   </div>
                 </div>
               </div>
@@ -189,22 +190,38 @@
             <div class="item-wrapper">
               <div style="display: flex">
                 <div>
-                  <p class="item-title">防火墙</p>
+                  <p class="item-title" style="margin-top: 7px;">防火墙</p>
                 </div>
                 <div>
-                  <p
-                    style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:25px; border: 1px solid #D9D9D9;padding: 5px 25px;">
-                    默认设置
-                  </p>
+                  <Select v-model="selectAcllistid" style="width:200px">
+                    <Option v-for="item in acllist" :key="item.acllistid"  :value="item.acllistid">
+                      {{item.acllistname}}
+                    </Option>
+                  </Select>
+                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/ruicloud/document')">帮助文档</span>
                 </div>
               </div>
-              <p v-if="port"
-                 style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
-                默认防火墙仅打开{{port}}端口，您可以在创建之后再控制台自定义防火墙规则。
-                <router-link style="color: #377DFF;cursor: pointer"
-                             to="/ruicloud/firewall">如何修改
-                </router-link>
-              </p>
+            </div>
+            <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
+              如您有业务需要开通其他端口，您可以 <span style="color: rgb(42, 153, 242);cursor: pointer"
+                                                           @click="$router.push({path:'/ruicloud/firewall'})">新建防火墙</span></p>
+            <!-- 防火墙规则 -->
+            <div class="item-wrapper">
+              <div style="display: flex">
+                <div>
+                  <p class="item-title" style="margin-top: 7px;">防火墙规则</p>
+                </div>
+                <div>
+                  <Tabs type="card" :animated="false">
+                      <TabPane label="入站规则">
+                        <Table :columns="upRuleCol" :data="upRuleData" style="width:620px;"></Table>
+                      </TabPane>
+                      <TabPane label="出站规则">
+                        <Table :columns="downRuleCol" :data="downRuleData" style="width:620px;"></Table>
+                      </TabPane>
+                  </Tabs>
+                </div>
+              </div>
             </div>
             <!--公网IP价格-->
             <div class="item-wrapper" style="margin-top: 28px;" v-show="IPConfig.publicIP">
@@ -364,7 +381,7 @@
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
   import regExp from '@/util/regExp'
-
+  import $ from 'jquery'
   var debounce = require('throttle-debounce/debounce')
   export default {
     data() {
@@ -380,6 +397,84 @@
         zone = zoneList[0]
       }
       return {
+        mirrorShow: false,
+        acllist: [
+          {
+            acllistname: '默认防火墙',
+            acllistid: '1'
+          }
+        ],
+        selectAcllistid: '1',
+        upRuleCol: [
+          {
+            title: '名称',
+            key: 'acllistitemname'
+          },
+          {
+            title: '来源',
+            key: 'cidr'
+          },
+          {
+            title: '协议端口',
+            render: (h, params) => {
+              var port = ''
+              if (params.row.startport == params.row.endport) {
+                port = params.row.startport
+              } else {
+                port = params.row.startport + ' ' + params.row.endport
+              }
+              return h('span', {}, port)
+            }
+          },
+          {
+            title: '策略',
+            key: 'operation',
+            render: (h, params) => {
+              return h('span', {}, params.row.operation == 'Allow' ? '允许' : '拒绝')
+            }
+          }
+        ],
+        upRuleData: [
+          {
+            acllistitemname: "默认防火墙",
+            acllistname: "默认防火墙",
+            cidr: "0.0.0.0/0",
+            operation: "Allow",
+            startport: '3360 3389 443 80',
+            endport: '',
+          },
+        ],
+        downRuleCol: [
+          {
+            title: '名称',
+            key: 'acllistitemname'
+          },
+          {
+            title: '来源',
+            key: 'cidr'
+          },
+          {
+            title: '协议端口',
+            render: (h, params) => {
+              var port = ''
+              if (params.row.startport == params.row.endport) {
+                port = params.row.startport
+              } else {
+                port = params.row.startport + '' + params.row.endport
+              }
+              return h('span', {}, port)
+            }
+          },
+          {
+            title: '策略',
+            key: 'operation',
+            render: (h, params) => {
+              return h('span', {}, params.row.operation == 'Allow' ? '允许' : '拒绝')
+            }
+          }
+        ],
+        downRuleData: [
+        ],
         zoneList,
         zone,
         // 计费方式
@@ -494,6 +589,9 @@
       this.listDbTemplates()
     },
     methods: {
+      roll(val) {
+        $('html, body').animate({scrollTop: val}, 300)
+      },
       listDbTemplates() {
         axios.get('database/listDbTemplates.do', {
           params: {
@@ -661,9 +759,11 @@
           return
         }
         if (this.system.systemName == undefined) {
-          this.$message.info({
-            content: '请选择一个数据库镜像'
-          })
+          // this.$message.info({
+          //   content: '请选择一个数据库镜像'
+          // })
+          this.roll(500)
+          this.mirrorShow = true
           return
         }
 
@@ -703,9 +803,11 @@
           return
         }
         if (this.system.systemName == undefined) {
-          this.$message.info({
-            content: '请选择一个镜像'
-          })
+          // this.$message.info({
+          //   content: '请选择一个镜像'
+          // })
+          this.roll(500)
+          this.mirrorShow = true
           return
         }
         if (!regExp.hostPassword(this.password)) {
@@ -748,6 +850,24 @@
           }
         })
       },
+      fireList() {
+        axios.get('network/listAclList.do', {
+          params: {
+            zoneId: this.zone.zoneid,
+            aclId: this.network
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.acllist[0].acllistname = response.data.result[0].acllistname
+            this.upRuleData = response.data.result[0].acllistitem.filter(item => {
+              return item.type == 'Ingress'
+            })
+            this.downRuleData = response.data.result[0].acllistitem.filter(item => {
+              return item.type != 'Ingress'
+            })
+          }
+        })
+      }
     },
     computed: {
       userInfo() {
@@ -790,6 +910,7 @@
           })
           this.queryVpc()
           this.listDbTemplates()
+          this.fireList()
         },
         deep: true
       },
@@ -846,6 +967,9 @@
           this.queryIPPrice()
         },
         deep: true
+      },
+      'network'() {
+          this.fireList()
       }
     }
   }

@@ -18,7 +18,7 @@
         <div class="universal-alert">
           <p>云主机是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置。XRcloud为您提供的云主机具有安全、弹性、高性能等特点。</p>
         </div>
-        <div class="operator-bar">
+        <div class="operator-bar" style="position: relative">
           <Button type="primary" @click="$router.push('/ruicloud/buy/bhost')">+ 创建</Button>
           <Poptip
             confirm
@@ -51,20 +51,21 @@
               <Icon type="arrow-down-b"></Icon>
             </Button>
             <Dropdown-menu slot="list">
+              <Dropdown-item name="resetPassword" :disabled="resetPasswordDisabled">重置密码</Dropdown-item>
               <Dropdown-item name="joinLoadBalance" :disabled="joinLoadBalanceDisabled">加入负载均衡</Dropdown-item>
               <Dropdown-item name="bindingIP" :disabled="bindingIPDisabled">绑定IP</Dropdown-item>
+              <Dropdown-item name="unbindIP" :disabled="unbindIPDisabled">解绑公网IP</Dropdown-item>
               <Dropdown-item name="rename" :disabled="renameDisabled">重命名</Dropdown-item>
               <Dropdown-item name="ratesChange" :disabled="ratesChangeDisabled">
                 <Tooltip content="资费变更只适用于实时计费的资源" placement="top">资费变更
                 </Tooltip>
               </Dropdown-item>
-              <Dropdown-item name="renewal" :disabled="histRenewDisabled">主机续费</Dropdown-item>
+              <Dropdown-item name="renewal" :disabled="hostRenewDisabled">主机续费</Dropdown-item>
               <Dropdown-item name="backup" :disabled="makeSnapshotDisabled">制作快照</Dropdown-item>
               <Dropdown-item name="mirror" :disabled="makeMirrorDisabled">
                 <Tooltip content="制作镜像只适用于已关机的资源" placement="top">制作镜像
                 </Tooltip>
               </Dropdown-item>
-              <Dropdown-item name="unbindIP" :disabled="unbindIPDisabled">解绑公网IP</Dropdown-item>
               <Dropdown-item name="upgrade" :disabled="hostUpgradeDisabled">
                 <Tooltip content="主机升级只适用于已关机的资源" placement="top">
                   主机升级<span
@@ -75,8 +76,46 @@
           </Dropdown>
         </div>
         <div class="selectMark">
-          <img src="../../assets/img/host/h-icon10.png"/>
-          <span>共 {{ pageSize}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
+          <img src="../../assets/img/host/h-icon10.png" alt="icon"/>
+          <span>共 {{ hostPages}} 项 | 已选择 <span style="color:#FF624B;">{{ hostSelection.length }} </span>项</span>
+          <span class="guide" style="margin-left: 20px" @click="$router.push('hostCard')"><Icon type="grid"></Icon></span>
+          <span class="guide" @click="$router.push('host')"><Icon type="navicon-round"></Icon></span>
+          <div class="hint_1" v-show="guideStep == 1">
+            <p>需要新睿云2.0指引提示？</p>
+            <span @click="guideNext">需要</span>
+            <span @click="seeAll">不需要</span>
+            <span>{{guideStep }} / 10</span>
+          </div>
+          <div class="hint_2" v-show="guideStep == 2">
+            <p>连接主机在这里</p>
+            <span @click="guideStep = 3">知道了</span>
+            <span></span>
+            <span>{{guideStep }} / 10</span>
+          </div>
+          <div class="hint_3" v-show="guideStep == 3">
+            <p>上面的操作按钮，可对列表进行批量操作。更多操作里除了更改密码，其余都是单项操作</p>
+            <span @click="guideStep = 4">知道了</span>
+            <span></span>
+            <span>{{guideStep }} / 10</span>
+          </div>
+          <div class="hint_4" v-show="guideStep == 4">
+            <p>点击「状态」可查看该主机的监控数据。（异常和删除至回收站状态不可查看）</p>
+            <span @click="guideStep = 5">知道了</span>
+            <span></span>
+            <span>{{guideStep }} / 10</span>
+          </div>
+          <div class="hint_5" v-show="guideStep == 5">
+            <p>点击用户名称可进入管理页面。</p>
+            <span @click="guideStep = 6">知道了</span>
+            <span></span>
+            <span>{{guideStep }} / 10</span>
+          </div>
+          <div class="hint_6" v-show="guideStep == 6">
+            <p>管理主机在这里</p>
+            <span @click="hintToManage">知道了</span>
+            <span></span>
+            <span>{{guideStep }} / 10</span>
+          </div>
         </div>
         <Table :columns="hostListColumns" :data="hostListData" @on-selection-change="hostSelectionChange"></Table>
         <div style="margin: 10px;overflow: hidden">
@@ -86,7 +125,33 @@
         </div>
       </div>
     </div>
-
+    <!-- 监控信息 -->
+    <div class="monitor" ref="monitor">
+      <div class="title">
+        <span>{{ monitorName }}云主机监控图表</span>
+        <div @click="closeMonitor">
+          <Icon type="close" style="font-size: 18px;cursor: pointer"></Icon>
+        </div>
+      </div>
+      <div class="item" v-for="(item,index) in monitoringList">
+        <div class="item-title">
+          <span>{{ item.title}}</span>
+          <span>{{  currentData }}</span>
+        </div>
+        <div class="item-type">
+          <Radio-group v-model="item.type" type="button" @on-change="changeMonitorDate(index)">
+            <Radio label="近一天"></Radio>
+            <Radio label="最近7天"></Radio>
+            <Radio label="最近30天"></Radio>
+          </Radio-group>
+          <Radio-group v-model="item.showType" type="button" @on-change="changeMonitorShowType(index)" style="float:right">
+            <Radio label="折线"></Radio>
+            <Radio label="柱状图"></Radio>
+          </Radio-group>
+        </div>
+        <chart :options="item.chart" style="width:100%;height:80%;"></chart>
+      </div>
+    </div>
     <!--选择两种认证方式-->
     <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" :styles="{top:'172px'}">
       <div slot="header" class="modal-header-border">
@@ -117,6 +182,23 @@
         <p class="modal-text-hint-bottom">
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：400-050-5565</p>
       </div>
+    </Modal>
+    <!-- 删除主机弹窗 -->
+    <Modal v-model="showModal.delHost" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">删除主机</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">主机删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.delHost = false">取消</Button>
+        <Button type="primary" @click="delHostOk">确认删除</Button>
+      </p>
     </Modal>
     <!-- 加入负载均衡弹窗 -->
     <Modal v-model="showModal.balance" width="590" :scrollable="true">
@@ -184,7 +266,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
-        <Button type="primary" @click="bindipSubmit('bindForm')">确定
+        <Button type="primary" @click="bindIpSubmit('bindForm')">确定
         </Button>
       </div>
     </Modal>
@@ -290,7 +372,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.renewal = false">取消</Button>
-        <Button type="primary" @click="renewalok" :disabled="cost=='--'">确认续费</Button>
+        <Button type="primary" @click="renewalOk" :disabled="cost=='--'">确认续费</Button>
       </div>
     </Modal>
     <!-- 实时续费 -->
@@ -389,17 +471,80 @@
         <Button type="primary" @click="unbind">确认解绑</Button>
       </p>
     </Modal>
+    <!-- 批量重置密码框-->
+    <Modal v-model="showModal.resetPassword" width="700" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">重置密码</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p class="resetModal-title">您已选 <span>{{ resetPasswordHostData.length }} 台主机</span></p>
+        <ul class="resetModal-table">
+          <li>No.</li>
+          <li>用户名</li>
+          <li>主机名</li>
+          <li>当前密码</li>
+        </ul>
+        <ul class="resetModal-table data" v-for="(item,index) in resetPasswordHostData">
+          <li>{{ index + 1 }}</li>
+          <li>{{ item.computername}}</li>
+          <li @click="toManage(item)">{{ item.instancename}}</li>
+          <li v-if="item.changepassword">
+            <input :class="{error: item.errorMsg}" v-model="item.currentPassword" @input="item.errorMsg = ''" type="text" placeHolder="请输入当前密码" :maxlength="32"></input>
+            <p v-if="item.errorMsg == 'passwordMistake'">您输入的密码有误</p>
+            <p v-if="item.errorMsg == 'passwordIsEmpty'">请输入主机密码</p>
+          </li>
+          <li v-else>默认密码</li>
+        </ul>
+        <div v-if="resetPasswordForm.hintGrade == 0">
+          <div class="resetModal-import">
+            <span>新密码</span>
+            <input v-model="resetPasswordForm.password" type="password" @input="verifyPassword" placeHolder="请输入新密码" ref="passwordInput"/>
+            <img src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInput')"/>
+          </div>
+          <div class="resetModal-hint">
+            <p v-show="resetPasswordForm.errorMsg=='passwordUndercapacity'">您输入的密码强度不足</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordHint'">提醒：密码必须是8-32个包含数字和大小写字母的字符</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordHintTwo'">注意：您的密码已经符合设置密码规则，但密码需要具备一定的强度，建议您设置12位以上，至少包括4项（：，-（）；）的特殊字符，每种字符大于等于2位</p>
+          </div>
+          <div class="resetModal-import">
+            <span>确认密码</span>
+            <input type="password" v-model="resetPasswordForm.passwordAffirm" placeHolder="请确认新密码" ref="passwordInputAffirm"/>
+            <img src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInputAffirm')"/>
+          </div>
+          <div class="resetModal-hint">
+            <p v-show="resetPasswordForm.errorMsg=='passwordAffirm'">提醒：两次输入的密码不一致</p>
+          </div>
+        </div>
+        <div v-else class="resetModal-p">
+          <p>1、为了避免数据丢失，重置密码需要在<span>关机</span>状态下操作，实例将关机中断您的业务，请仔细确认</p>
+          <p>2、强制关机可能会导致数据丢失或文件损坏，您也可以主动关机后进行重置密码</p>
+          <p style="margin-bottom: 20px">3、强制关机可能需要您等待较长时间，请耐心等待</p>
+          <Checkbox v-model="resetPasswordForm.agreeRule"><span style="margin-left: 10px;font-size: 14px">同意强制关机</span></Checkbox>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.resetPassword = false">取消</Button>
+        <Button type="primary" @click="resetPasswordNext" v-if="resetPasswordForm.hintGrade == 0">下一步</Button>
+        <Button type="primary" v-else :disabled="!resetPasswordForm.agreeRule" @click="resetPasswordOk">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   import axios from 'axios'
+  import line from '@/echarts/hostManage/line'
+  import bar from '@/echarts/hostManage/bar'
   import regExp from '../../util/regExp'
 
   export default {
     data() {
       return {
+        guideStep: 1,
+        regExpObj: {
+          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,32}$/
+        },
         showModal: {
           selectAuthType: false,
           balance: false,
@@ -411,7 +556,9 @@
           Renew: false,
           backup: false,
           mirror: false,
-          unbindIP: false
+          unbindIP: false,
+          delHost: false,
+          resetPassword: false
         },
         hostListColumns: [
           {
@@ -428,8 +575,8 @@
               ])
             },
             render: (h, params) => {
-              let text_1 = params.row.companyname ? params.row.companyname : '----'
-              let text_2 = params.row.computername ? params.row.computername : '----'
+              let text_1 = params.row.computername ? params.row.computername : '----'
+              let text_2 = params.row.instancename ? params.row.instancename : '----'
               if (params.row.status == 1) {
                 return h('ul', {}, [
                   h('li', {
@@ -440,7 +587,7 @@
                     on: {
                       click: () => {
                         sessionStorage.setItem('manageId', params.row.computerid)
-                        this.$router.push('newHostManage')
+                        this.$router.push('manage')
                       }
                     }
                   }, text_1 + ' / '),
@@ -452,7 +599,7 @@
                     on: {
                       click: () => {
                         sessionStorage.setItem('manageId', params.row.computerid)
-                        this.$router.push('newHostManage')
+                        this.$router.push('manage')
                       }
                     }
                   }, text_2)
@@ -500,22 +647,33 @@
             render: (h, params) => {
               let restart = params.row.restart ? params.row.restart : 0
               let restore = params.row.restore ? params.row.restore : 0
+              let resetpwd = params.row.resetpwd ? params.row.resetpwd : 0
               let bindip = params.row.bindip ? params.row.bindip : 0
               let icon_1 = require('../../assets/img/host/h-icon1.png')
               let icon_2 = require('../../assets/img/host/h-icon2.png')
               let icon_3 = require('../../assets/img/host/h-icon3.png')
               let icon_4 = require('../../assets/img/host/h-icon4.png')
+              let icon_5 = require('../../assets/img/host/h-icon5.png')
               let styleInfo = {
                 marginLeft: '5px',
                 lineHeight: '16px'
               }
               switch (params.row.status) {
                 case -2:
-                  return h('div', {}, [h('Spin', {
+                  return h('div', {
                     style: {
-                      display: 'inline-block'
+                      display: 'flex'
                     }
-                  }), h('span', {style: styleInfo}, '销毁中')])
+                  }, [
+                    h('img', {
+                      attrs: {
+                        src: icon_5
+                      }
+                    }, ''),
+                    h('span', {
+                      style: styleInfo
+                    }, '删除至回收站')
+                  ])
                   break
                 case -1:
                   return h('div', {
@@ -553,7 +711,17 @@
                   if (params.row.computerstate == 1) {
                     return h('div', {
                       style: {
-                        display: 'flex'
+                        display: 'flex',
+                        cursor: 'pointer',
+                      },
+                      on: {
+                        click: () => {
+                          if (this.$refs.monitor.style.width != '600px') {
+                            this.showMonitor(params.row.instancename)
+                          } else {
+                            this.closeMonitor()
+                          }
+                        }
                       }
                     }, [
                       h('img', {
@@ -568,7 +736,17 @@
                   } else {
                     return h('div', {
                       style: {
-                        display: 'flex'
+                        display: 'flex',
+                        cursor: 'pointer',
+                      },
+                      on: {
+                        click: () => {
+                          if (this.$refs.monitor.style.width != '600px') {
+                            this.showMonitor(params.row.instancename)
+                          } else {
+                            this.closeMonitor()
+                          }
+                        }
                       }
                     }, [
                       h('img', {
@@ -595,6 +773,12 @@
                         display: 'inline-block'
                       }
                     }), h('span', {style: styleInfo}, '重装中')])
+                  } else if (resetpwd == 1) {
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }), h('span', {style: styleInfo}, '重置中')])
                   } else if (bindip == 1) {
                     return h('div', {}, [h('Spin', {
                       style: {
@@ -650,13 +834,11 @@
             key: 'templatename',
             render: (h, params) => {
               let templateName = params.row.templatename.substr(0, 1).toUpperCase() // 用第一个字符判断镜像选用图标
-              let icon_1 = require('../../assets/img/host/h-icon5.png')
+              let icon_1 = require('../../assets/img/host/h-icon12.png')
               let icon_2 = require('../../assets/img/host/h-icon6.png')
               let icon_3 = require('../../assets/img/host/h-icon7.png')
               let icon_4 = require('../../assets/img/host/h-icon8.png')
               let imgStyle = {
-                height: '16px',
-                width: '16px',
                 marginRight: '5px'
               }
               switch (templateName) {
@@ -669,7 +851,9 @@
                   }, [
                     h('img', {
                       attrs: {
-                        src: icon_1
+                        src: icon_1,
+                        height: '16',
+                        width: '16',
                       },
                       style: imgStyle
                     }, ''),
@@ -805,7 +989,8 @@
                     style: {
                       cursor: 'pointer',
                       color: '#2A99F2',
-                      marginRight: '10px'
+                      marginRight: '10px',
+                      lineHeight: '74px'
                     },
                     on: {
                       click: () => {
@@ -819,7 +1004,8 @@
                     },
                     on: {
                       click: () => {
-                        alert('删除')
+                        this.hostCurrentSelected = params.row
+                        this.hostDelete(2)
                       }
                     }
                   }, '删除')])
@@ -829,7 +1015,8 @@
                     style: {
                       cursor: 'pointer',
                       color: '#2A99F2',
-                      marginRight: '10px'
+                      marginRight: '10px',
+                      lineHeight: '74px'
                     },
                     on: {
                       click: () => {
@@ -844,7 +1031,8 @@
                     },
                     on: {
                       click: () => {
-                        alert('删除')
+                        this.hostCurrentSelected = params.row
+                        this.hostDelete(2)
                       }
                     }
                   }, '删除')])
@@ -873,7 +1061,7 @@
                         on: {
                           click: () => {
                             sessionStorage.setItem('manageId', params.row.computerid)
-                            this.$router.push('newHostManage')
+                            this.$router.push('manage')
                           }
                         }
                       }, '管理'),
@@ -888,6 +1076,9 @@
                           'on-click': (type) => {
                             this.hostCurrentSelected = params.row
                             switch (type) {
+                              case 'resetPassword':
+                                this.hostResetPassword(2)
+                                break
                               case 'joinLoadBalance':
                                 this.joinBalance()
                                 break
@@ -928,20 +1119,32 @@
                                 this.hostRestart(2)
                                 break
                               case 'deleteHost':
+                                this.hostDelete(2)
                                 break
                             }
                           }
                         }
-                      }, [h('a', {}, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
-                        attrs: {
-                          name: 'joinLoadBalance'
-                        }
-                      }, '加入负载均衡'),
+                      }, [h('a', {}, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'resetPassword'
+                          }
+                        }, '重置密码'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'joinLoadBalance'
+                          }
+                        }, '加入负载均衡'),
                         h('DropdownItem', {
                           attrs: {
                             name: 'bindingIP'
                           }
                         }, '绑定IP'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'unbindIP'
+                          }
+                        }, '解绑公网IP'),
                         h('DropdownItem', {
                           attrs: {
                             name: 'rename'
@@ -962,11 +1165,6 @@
                             name: 'makeSnapshot'
                           }
                         }, '制作快照'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'unbindIP'
-                          }
-                        }, '解绑公网IP'),
                         h('DropdownItem', {
                           attrs: {
                             name: 'shutdown'
@@ -999,7 +1197,7 @@
                         on: {
                           click: () => {
                             sessionStorage.setItem('manageId', params.row.computerid)
-                            this.$router.push('newHostManage')
+                            this.$router.push('manage')
                           }
                         }
                       }, '管理'),
@@ -1014,6 +1212,9 @@
                           'on-click': (type) => {
                             this.hostCurrentSelected = params.row
                             switch (type) {
+                              case 'resetPassword':
+                                this.hostResetPassword(2)
+                                break
                               case 'joinLoadBalance':
                                 this.joinBalance()
                                 break
@@ -1050,7 +1251,7 @@
                                       })
                                     } else {
                                       sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
-                                      this.$router.push('newUpgrade')
+                                      this.$router.push('upgrade')
                                     }
                                   }
                                 })
@@ -1080,6 +1281,7 @@
                                 this.hostStart(2)
                                 break
                               case 'deleteHost':
+                                this.hostDelete(2)
                                 break
                             }
                           }
@@ -1088,16 +1290,27 @@
                         style: {
                           marginBottom: '5px'
                         }
-                      }, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
-                        attrs: {
-                          name: 'joinLoadBalance'
-                        }
-                      }, '加入负载均衡'),
+                      }, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'resetPassword'
+                          }
+                        }, '重置密码'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'joinLoadBalance'
+                          }
+                        }, '加入负载均衡'),
                         h('DropdownItem', {
                           attrs: {
                             name: 'bindingIP'
                           }
                         }, '绑定IP'),
+                        h('DropdownItem', {
+                          attrs: {
+                            name: 'unbindIP'
+                          }
+                        }, '解绑公网IP'),
                         h('DropdownItem', {
                           attrs: {
                             name: 'rename'
@@ -1110,7 +1323,7 @@
                         }, '资费变更'),
                         h('DropdownItem', {
                           attrs: {
-                            name: 'histRenew'
+                            name: 'hostRenew'
                           }
                         }, '主机续费'),
                         h('DropdownItem', {
@@ -1130,11 +1343,6 @@
                         }, '制作镜像'),
                         h('DropdownItem', {
                           attrs: {
-                            name: 'unbindIP'
-                          }
-                        }, '解绑公网IP'),
-                        h('DropdownItem', {
-                          attrs: {
                             name: 'startingUp'
                           }
                         }, '开机'),
@@ -1147,7 +1355,26 @@
                   }
                   break
                 default:
-                  return h('span', {}, '----')
+                  return h('div', {}, [
+                    h('p', {
+                      style: {
+                        lineHeight: '20px',
+                        cursor: 'not-allowed'
+                      },
+                    }, '连接'),
+                    h('p', {
+                      style: {
+                        lineHeight: '30px',
+                        cursor: 'not-allowed'
+                      }
+                    }, '管理'),
+                    h('p', {
+                      style: {
+                        lineHeight: '23px',
+                        cursor: 'not-allowed'
+                      }
+                    }, '更多操作'),
+                  ])
                   break
               }
             }
@@ -1160,6 +1387,16 @@
         hostSelection: [],
         hostCurrentSelected: null,
 
+        hostDelWay: 1, // 1：点击按钮删除主机 2： 点击更多操作删除；原因是参数传的不同
+        resetPasswordWay: 1, // 1：点击顶部更多操作重置 2： 点击行内更多操作重置；原因是参数传的不同,
+        resetPasswordHostData: [],
+        resetPasswordForm: {
+          password: '',
+          passwordAffirm: '',
+          agreeRule: false,
+          hintGrade: 0,
+          errorMsg: 'passwordHint'
+        },
         listLoadBalanceRole: [],
         loadBalanceForm: {
           loadbalanceroleid: ''
@@ -1238,6 +1475,22 @@
             {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
           ],
         },
+        monitorName: '',
+        monitoringList: [
+          {
+            title: 'CPU使用率',
+            type: '近一天',
+            showType: '折线',
+            chart: null
+          },
+          {
+            title: '内存使用率',
+            type: '近一天',
+            showType: '折线',
+            chart: null
+          }
+        ],
+        currentData: this.getCurrentDate()
       }
     },
     created() {
@@ -1245,6 +1498,9 @@
       // 用户未认证，弹出认证提示框
       if (this.$store.state.authInfo == null) {
         this.showModal.selectAuthType = true
+      }
+      if (sessionStorage.getItem('isSeeHint')) {
+        this.guideStep = 0
       }
       this.getHostList()
     },
@@ -1260,75 +1516,83 @@
         }
       },
       hideEvent(name) {
-        if (this.hostSelection.length !== 1) {
-          return false
-        }
-        this.hostCurrentSelected = this.hostSelection[0]
-        switch (name) {
-          case 'joinLoadBalance':
-            this.joinBalance()
-            break
-          case 'bindingIP':
-            this.bindIP()
-            break
-          case 'rename':
-            this.renameForm.hostName = ''
-            this.showModal.rename = true
-            break
-          case 'ratesChange':
-            if (this.hostCurrentSelected.caseType == 3) {
-              this.ratesChange()
-            }
-            break
-          case 'renewal':
-            this.renewHost(this.hostCurrentSelected)
-            break
-          case 'backup':
-            this.backupForm.backupName = ''
-            this.backupForm.description = ''
-            this.currentHostname = this.hostCurrentSelected.computername
-            this.showModal.backup = true
-            break
-          case 'mirror':
-            if (this.hostCurrentSelected.status == 1 && this.hostCurrentSelected.computerstate == 0) {
-              this.mirrorForm.mirrorName = ''
-              this.mirrorForm.description = ''
-              this.showModal.mirror = true
-            }
-            break
-          case 'unbindIP':
-            if (this.hostCurrentSelected.publicip) {
-              this.showModal.unbindIP = true
-            } else {
-              this.$Message.warning('该主机没有绑定公网IP')
-            }
-            break
-          case 'upgrade':
-            if (this.hostCurrentSelected.status == 1 && this.hostCurrentSelected.computerstate == 0) {
-              this.$http.get('network/VMIsHaveSnapshot.do', {
-                params: {
-                  VMId: this.hostCurrentSelected.computerid
-                }
-              }).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  if (!response.data.result) {
-                    this.$Modal.confirm({
-                      title: '提示',
-                      content: '您的主机有快照，无法升级，请删除快照再试',
-                      scrollable: true,
-                      okText: '删除快照',
-                      onOk: () => {
-                        this.$router.push('snapshot')
-                      }
-                    })
-                  } else {
-                    sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
-                    this.$router.push('newUpgrade')
+        if (name !== 'resetPassword') {
+          if (this.hostSelection.length !== 1) {
+            return false
+          }
+          this.hostCurrentSelected = this.hostSelection[0]
+          switch (name) {
+            case 'joinLoadBalance':
+              this.joinBalance()
+              break
+            case 'bindingIP':
+              this.bindIP()
+              break
+            case 'rename':
+              this.renameForm.hostName = ''
+              this.showModal.rename = true
+              break
+            case 'ratesChange':
+              if (this.hostCurrentSelected.caseType == 3) {
+                this.ratesChange()
+              }
+              break
+            case 'renewal':
+              this.renewHost(this.hostCurrentSelected)
+              break
+            case 'backup':
+              this.backupForm.backupName = ''
+              this.backupForm.description = ''
+              this.currentHostname = this.hostCurrentSelected.computername
+              this.showModal.backup = true
+              break
+            case 'mirror':
+              if (this.hostCurrentSelected.status == 1 && this.hostCurrentSelected.computerstate == 0) {
+                this.mirrorForm.mirrorName = ''
+                this.mirrorForm.description = ''
+                this.showModal.mirror = true
+              }
+              break
+            case 'unbindIP':
+              if (this.hostCurrentSelected.publicip) {
+                this.showModal.unbindIP = true
+              } else {
+                this.$Message.warning('该主机没有绑定公网IP')
+              }
+              break
+            case 'upgrade':
+              if (this.hostCurrentSelected.status == 1 && this.hostCurrentSelected.computerstate == 0) {
+                this.$http.get('network/VMIsHaveSnapshot.do', {
+                  params: {
+                    VMId: this.hostCurrentSelected.computerid
                   }
-                }
-              })
-            }
-            break
+                }).then(response => {
+                  if (response.status == 200 && response.data.status == 1) {
+                    if (!response.data.result) {
+                      this.$Modal.confirm({
+                        title: '提示',
+                        content: '您的主机有快照，无法升级，请删除快照再试',
+                        scrollable: true,
+                        okText: '删除快照',
+                        onOk: () => {
+                          this.$router.push('snapshot')
+                        }
+                      })
+                    } else {
+                      sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
+                      this.$router.push('upgrade')
+                    }
+                  }
+                })
+              }
+              break
+          }
+        } else {
+          if (this.hostSelection.length > 5) {
+            this.$Message.info('重置密码至多选择 5 项')
+            return false
+          }
+          this.hostResetPassword(1)
         }
       },
       getHostList() {
@@ -1343,6 +1607,12 @@
           if (res.data.status == 1 && res.status == 200) {
             this.hostListData = res.data.result.data
             this.hostPages = res.data.result.total
+            this.hostListData.forEach(host => {
+              if (host.status == 2 || host.status == -2) {
+                host._disabled = true
+                this.timingRefresh(host.id)
+              }
+            })
           }
         })
       },
@@ -1378,12 +1648,20 @@
                   })
                 })
                 clearInterval(timer)
+              } else {
+                this.hostListData.forEach((host, index) => {
+                  locality.forEach(item => {
+                    if (host.id == item.id && item.status == 1) {
+                      this.hostListData.splice(index, 1, item)
+                    }
+                  })
+                })
               }
-
             }
           })
         }, 3000)
       },
+      // 通过val来区分是批量选择的还是单个列表里操作的
       hostShutdown(val) {
         let params = {}
         if (val == 1) {
@@ -1393,6 +1671,7 @@
                 host.bindip = 0
                 host.status = 2
                 host.computerstate = 1
+                host._disabled = true
               }
             })
           })
@@ -1406,6 +1685,7 @@
               host.bindip = 0
               host.status = 2
               host.computerstate = 1
+              host._disabled = true
             }
           })
           params = {
@@ -1440,6 +1720,7 @@
                 host.status = 2
                 host.computerstate = 0
                 host.bindip = 0
+                host._disabled = true
               }
             })
           })
@@ -1452,6 +1733,7 @@
               host.status = 2
               host.bindip = 0
               host.computerstate = 0
+              host._disabled = true
             }
           })
           params = {
@@ -1484,6 +1766,7 @@
               if (host.id == item) {
                 host.status = 2
                 host.restart = 1
+                host._disabled = true
               }
             })
           })
@@ -1495,6 +1778,7 @@
             if (host.id == this.hostCurrentSelected.id) {
               host.status = 2
               host.restart = 1
+              host._disabled = true
             }
           })
           params = {
@@ -1521,10 +1805,183 @@
           }
         })
       },
-      hostDelete() {
-        if (this.hostSelection.length > 5) {
-          this.$Message.info('删除主机至多选择 5 项')
-          return
+      hostDelete(val) {
+        this.hostDelWay = val
+        if (val === 1) {
+          if (this.hostSelection.length > 5) {
+            this.$Message.info('删除主机至多选择 5 项')
+            return
+          }
+          this.showModal.delHost = true
+        } else {
+          this.showModal.delHost = true
+        }
+      },
+      delHostOk() {
+        let params = {}
+        if (this.hostDelWay === 1) {
+          this.hostListData.forEach(host => {
+            this.selectHostIds.forEach(item => {
+              if (host.id == item) {
+                host.status = -2
+                host._disabled = true
+              }
+            })
+          })
+          params = {
+            id: this.selectHostIds + ''
+          }
+        } else {
+          this.hostListData.forEach(host => {
+            if (host.id == this.hostCurrentSelected.id) {
+              host.status = -2
+              host._disabled = true
+            }
+          })
+          params = {
+            id: this.hostCurrentSelected.id,
+          }
+        }
+        let url = 'information/deleteVM.do'
+        this.$http.get(url, {
+          params: params
+        }).then(res => {
+          this.showModal.delHost = false
+          if (res.status === 200 && res.data.status === 1) {
+            this.$Message.success(res.data.message)
+            if (this.hostDelWay === 1) {
+              this.timingRefresh(this.selectHostIds + '')
+            } else {
+              this.timingRefresh(this.hostCurrentSelected.id)
+            }
+            this.hostSelection = []
+          } else {
+            this.getHostList()
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      hostResetPassword(val) {
+        this.resetPasswordWay = val
+        this.resetPasswordForm.password = ''
+        this.resetPasswordForm.hintGrade = 0
+        this.resetPasswordForm.passwordAffirm = ''
+        if (val === 1) {
+          if (this.hostSelection.length === 0) {
+            return false
+          }
+          this.resetPasswordHostData = this.hostSelection
+          this.showModal.resetPassword = true
+        } else {
+          this.resetPasswordHostData = []
+          this.resetPasswordHostData[0] = this.hostCurrentSelected
+          this.showModal.resetPassword = true
+        }
+      },
+      toManage(item) {
+        sessionStorage.setItem('manageId', item.computerid)
+        this.$router.push('manage')
+      },
+      changeResetPasswordType(name) {
+        this.$refs[name].type === 'password' ? this.$refs[name].type = 'text' : this.$refs[name].type = 'password'
+      },
+      verifyPassword() {
+        if (this.regExpObj.password.test(this.resetPasswordForm.password)) {
+          this.resetPasswordForm.errorMsg = 'passwordHintTwo'
+        } else {
+          this.resetPasswordForm.errorMsg = 'passwordHint'
+        }
+      },
+      resetPasswordNext() {
+        let flag = true
+        this.resetPasswordForm.errorMsg = ''
+        this.resetPasswordHostData.forEach((item, index) => {
+          if (item.changepassword && !item.currentPassword) {
+            item.errorMsg = 'passwordIsEmpty'
+            this.resetPasswordHostData.splice(index, 1, item)
+            flag = false
+          }
+        })
+        if (!this.resetPasswordForm.password || !this.regExpObj.password.test(this.resetPasswordForm.password)) {
+          this.resetPasswordForm.errorMsg = 'passwordUndercapacity'
+          return false
+        }
+        if (this.resetPasswordForm.password !== this.resetPasswordForm.passwordAffirm) {
+          this.resetPasswordForm.errorMsg = 'passwordAffirm'
+          return false
+        }
+        if (flag) {
+          this.resetPasswordForm.hintGrade = 1
+        }
+      },
+      resetPasswordOk() {
+        let flag = true
+        this.resetPasswordForm.errorMsg = ''
+        this.resetPasswordHostData.forEach((item, index) => {
+          if (item.changepassword && !item.currentPassword) {
+            item.errorMsg = 'passwordIsEmpty'
+            this.resetPasswordHostData.splice(index, 1, item)
+            flag = false
+          }
+        })
+        if (flag) {
+          let url = 'information/resetPasswordForVirtualMachineBatch.do'
+          let list = []
+          this.resetPasswordHostData.forEach((item, index) => {
+            if (item.changepassword && item.currentPassword) {
+              list.push({
+                VMId: item.computerid,
+                oldPassword: item.currentPassword,
+                VMName: item.instancename
+              })
+            } else {
+              list.push({
+                VMId: item.computerid,
+                VMName: item.instancename
+              })
+            }
+          })
+          let params = {
+            password: this.resetPasswordForm.password,
+            list: JSON.stringify(list)
+          }
+          this.$http.post(url, params).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.$Message.success(res.data.message)
+              this.showModal.resetPassword = false
+              this.hostListData.forEach(host => {
+                this.resetPasswordHostData.forEach(item => {
+                  if (host.id == item.id) {
+                    host.status = 2
+                    host.resetpwd = 1
+                    host._disabled = true
+                  }
+                })
+              })
+              let ids = this.resetPasswordHostData.map(item => {
+                return item.id
+              })
+              this.timingRefresh(ids + '')
+              this.hostSelection = []
+            } else if (res.status == 200 && res.data.status == 2) {
+              if (res.data.result.length != 0) {
+                res.data.result.forEach(name => {
+                  this.resetPasswordHostData.forEach((item, index) => {
+                    if (item.computerid == name.errhost) {
+                      item.errorMsg = 'passwordMistake'
+                      this.resetPasswordHostData.splice(index, 1, item)
+                    }
+                  })
+                })
+              }
+            } else {
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
         }
       },
       //加入负载均衡
@@ -1609,7 +2066,7 @@
               okText: '调整子网',
               content: '您选择的主机的子网的网络服务方案为普通网络，不支持负载均衡。若您需要将该主机加入负载均衡可将该主机移入子网服务方案为：公网/私网负载均衡网络的子网之后在进行加入负载均衡操作',
               onOk: () => {
-                sessionStorage.setItem('vpcId', item.vpcid)
+                sessionStorage.setItem('vpcId', this.hostCurrentSelected.vpcid)
                 this.$router.push('vpcManage')
               }
             })
@@ -1687,13 +2144,14 @@
           })
         }
       },
-      bindipSubmit(name) {
+      bindIpSubmit(name) {
         this.$refs[name].validate((valid) => {
             if (valid) {
               this.hostListData.forEach(host => {
                 if (host.id == this.hostCurrentSelected.id) {
                   host.status = 2
                   host.bindip = 1
+                  host._disabled = true
                 }
               })
               this.showModal.bindIP = false
@@ -1729,7 +2187,12 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
+                this.hostSelection = []
                 this.getHostList()
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
               }
             })
           }
@@ -1849,7 +2312,7 @@
         }
       },
       // 包年/月主机续费
-      renewalok() {
+      renewalOk() {
         var selectIp = ''
         var selectDisk = ''
         for (var i = 0; i < this.bindRenewalVal.length; i++) {
@@ -1948,7 +2411,7 @@
             id: this.RenewForm.id,
           }
         }).then(response => {
-          this.getData()
+          this.getHostList()
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success('主机续费成功')
           } else {
@@ -2010,6 +2473,7 @@
           if (host.id == this.hostCurrentSelected.id) {
             host.status = 2
             host.bindip = 2
+            host._disabled = true
           }
         })
         this.showModal.unbindIP = false
@@ -2039,6 +2503,144 @@
         localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
         window.open('/ruicloud/link')
       },
+      showMonitor(name) {
+        this.monitorName = name
+        this.monitoringList.forEach(item => {
+          item.type = '近一天'
+          item.showType = '折线'
+        })
+        this.getComputerMonitor()
+        this.$refs.monitor.style.width = '600px'
+        this.$refs.monitor.style.opacity = '1'
+      },
+      closeMonitor() {
+        this.$refs.monitor.style.width = '0px'
+        this.$refs.monitor.style.opacity = '0'
+      },
+      getComputerMonitor() {
+        this.$http.get('alarm/getVmAlarmByHour.do', {
+          params: {
+            vmname: this.monitorName,
+            type: 'core'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            // 用的以前接口数据格式，只有挨个赋值
+            let cpuBrokenLine = JSON.parse(JSON.stringify(line))
+            let memoryBrokenLine = JSON.parse(JSON.stringify(line))
+            cpuBrokenLine.xAxis.data = response.data.result.xaxis
+            memoryBrokenLine.xAxis.data = response.data.result.xaxis
+            cpuBrokenLine.series.push({
+              name: 'CPU使用率（%）',
+              type: 'line',
+              data: response.data.result.cpuUse,
+              barWidth: '15%'
+            })
+            this.monitoringList[0].chart = cpuBrokenLine
+            memoryBrokenLine.series.push({
+              name: '内存使用率（%）',
+              type: 'line',
+              data: response.data.result.memoryUse,
+              barWidth: '15%'
+            })
+            this.monitoringList[1].chart = memoryBrokenLine
+          }
+        })
+      },
+      changeMonitorDate(index) {
+        let url = this.monitoringList[index].type == '近一天' ? 'alarm/getVmAlarmByHour.do' : 'alarm/getVmAlarmByDay.do'
+        let dateType = this.monitoringList[index].type == '最近7天' ? 'week' : 'month'
+        this.$http.get(url, {
+          params: {
+            vmname: this.monitorName,
+            type: 'core',
+            datetype: dateType
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            let broken = this.monitoringList[index].type == 'line' ? JSON.parse(JSON.stringify(line)) : JSON.parse(JSON.stringify(bar))
+            let type = this.monitoringList[index].showType == '折线' ? 'line' : 'bar'
+            let name = index == 0 ? 'CPU使用率（%）' : '内存使用率（%）'
+            let data = index == 0 ? res.data.result.cpuUse : res.data.result.memoryUse
+            broken.series.push({
+              name: name,
+              type: type,
+              data: data,
+              barWidth: '15%'
+            })
+            broken.xAxis.data = res.data.result.xaxis
+            this.monitoringList[index].chart = broken
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      changeMonitorShowType(index) {
+        let broken = {}
+        if (this.monitoringList[index].showType == '折线') {
+          broken = JSON.parse(JSON.stringify(line))
+          broken.series.push({
+            name: this.monitoringList[index].chart.series[0].name,
+            type: 'line',
+            data: this.monitoringList[index].chart.series[0].data,
+            barWidth: '15%'
+          })
+          broken.xAxis.data = this.monitoringList[index].chart.xAxis.data
+          this.monitoringList[index].chart = broken
+        } else {
+          broken = JSON.parse(JSON.stringify(bar))
+          broken.series.push({
+            name: this.monitoringList[index].chart.series[0].name,
+            type: 'bar',
+            data: this.monitoringList[index].chart.series[0].data,
+            barWidth: '15%'
+          })
+          broken.xAxis.data = this.monitoringList[index].chart.xAxis.data
+          this.monitoringList[index].chart = broken
+        }
+      },
+      getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
+      },
+      push(type) {
+        sessionStorage.setItem('pane', type)
+        this.$router.push('/ruicloud/usercenter')
+      },
+      guideNext() {
+        if (this.hostListData.length != 0) {
+          let flag = false
+          this.hostListData.forEach(item => {
+            if (item.status == 1) {
+              flag = true
+            }
+          })
+          if (flag) {
+            this.guideStep = 2
+          } else {
+            this.guideStep = 0
+            this.$Message.info('您还没有正常状态的云主机，无法查看指引提示，请先创建主机')
+          }
+        } else {
+          this.guideStep = 0
+          this.$Message.info('您还没有云主机，无法查看指引提示，请先创建主机')
+        }
+      },
+      hintToManage() {
+        this.guideStep = 0
+        this.hostListData.forEach(item => {
+          if (item.status == 1) {
+            sessionStorage.setItem('guideHint', '1')
+            sessionStorage.setItem('manageId', item.computerid)
+            this.$router.push('manage')
+          }
+        })
+      },
+      seeAll() {
+        sessionStorage.setItem('isSeeHint', '1')
+        this.guideStep = 0
+      }
     },
     computed: {
       auth() {
@@ -2090,14 +2692,33 @@
         if (len === 0) {
           return true
         } else {
-          // 只有开机状态的主机才能关机
+          // 只有开机状态的主机才能重启
           return !this.hostSelection.every(host => {
             return host.status == 1 && host.computerstate == 1
           })
         }
       },
       deleteDisabled() {
-        return this.hostSelection.length === 0
+        let len = this.hostSelection.length
+        if (len === 0) {
+          return true
+        } else {
+          // 过渡状态主机不能再次删除
+          return this.hostSelection.some(host => {
+            return host.status == -2 || host.status == 2
+          })
+        }
+      },
+      resetPasswordDisabled() {
+        let len = this.hostSelection.length
+        if (len === 0) {
+          return true
+        } else {
+          // 开启关闭主机才能重置密码
+          return this.hostSelection.some(host => {
+            return host.status != 1
+          })
+        }
       },
       joinLoadBalanceDisabled() {
         let len = this.hostSelection.length
@@ -2131,7 +2752,7 @@
           return !(this.hostSelection[0].status == 1 && this.hostSelection[0].caseType == 3)
         }
       },
-      histRenewDisabled() {
+      hostRenewDisabled() {
         let len = this.hostSelection.length
         if (len !== 1) {
           return true
@@ -2196,7 +2817,7 @@
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
-              hostIdArr: this.hostSelection[0].id,
+              hostIdArr: this.hostCurrentSelected.id,
               ipIdArr: selectIp,
               diskArr: selectDisk
             }
@@ -2243,7 +2864,7 @@
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              hostIdArr: this.hostSelection[0].id,
+              hostIdArr: this.hostCurrentSelected.id,
               ipIdArr: selectIp,
               diskArr: selectDisk
             }
@@ -2280,7 +2901,7 @@
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              hostIdArr: this.hostSelection[0].id,
+              hostIdArr: this.hostCurrentSelected.id,
               ipIdArr: selectIp,
               diskArr: selectDisk
             }
@@ -2314,6 +2935,100 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .hint() {
+    width: 200px;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    position: absolute;
+    z-index: 9999;
+    padding: 20px;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: #666666;
+      line-height: 20px;
+      margin-bottom: 20px;
+    }
+    > span {
+      float: right;
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(24, 144, 255, 1);
+      cursor: pointer;
+    }
+    span:nth-child(2) {
+      margin-left: 10px;
+    }
+    span:nth-child(4) {
+      float: left;
+      cursor: auto;
+      color: rgb(255, 98, 75);
+    }
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #FFF;
+      position: absolute;
+      bottom: -5px;
+      right: 50%;
+      transform: rotate(135deg);
+      box-shadow: 1px -1px 0px 0px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .monitor {
+    position: fixed;
+    right: 0;
+    top: 56px;
+    width: 0;
+    opacity: 0;
+    transition: all .5s;
+    @diff: 102px;
+    min-height: calc(~"100% - @{diff}");
+    background: rgba(255, 255, 255, 1);
+    box-shadow: -5px 0px 14px -7px rgba(148, 148, 148, 0.4);
+    border-radius: 2px;
+    padding: 20px;
+    z-index: 3;
+    .title {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      > span {
+        font-size: 18px;
+        font-family: MicrosoftYaHei;
+        color: rgba(51, 51, 51, 1);
+      }
+    }
+    .item {
+      border-radius: 4px;
+      padding: 20px;
+      border: 1px dashed rgba(153, 153, 153, 1);
+      width: 570px;
+      height: 405px;
+      margin-bottom: 20px;
+      .item-title {
+        border-bottom: 1px solid rgba(233, 233, 233, 1);
+        padding-bottom: 10px;
+        > span {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(51, 51, 51, 1);
+          line-height: 20px;
+        }
+        span:nth-child(2) {
+          float: right;
+          color: rgba(153, 153, 153, 1);
+        }
+      }
+      .item-type {
+        margin-top: 18px;
+      }
+    }
+  }
 
   .selectAuthType {
     width: 50%;
@@ -2355,6 +3070,7 @@
 
   .selectMark {
     margin-bottom: 10px;
+    position: relative;
     > img {
       position: relative;
       top: 4px;
@@ -2363,6 +3079,46 @@
       font-size: 14px;
       font-family: MicrosoftYaHei;
       color: rgba(102, 102, 102, 1);
+    }
+    .guide {
+      float: right;
+      cursor: pointer;
+      i {
+        font-size: 20px;
+        &:hover {
+          color: #2A99F2;
+        }
+      }
+    }
+    .hint_1 {
+      .hint();
+      right: -60px;
+      top: -105px;
+    }
+    .hint_2 {
+      .hint();
+      right: 0;
+      top: -30px;
+    }
+    .hint_3 {
+      .hint();
+      left: 290px;
+      top: -215px;
+    }
+    .hint_4 {
+      .hint();
+      left: 150px;
+      top: -65px;
+    }
+    .hint_5 {
+      .hint();
+      left: 10px;
+      top: -33px;
+    }
+    .hint_6 {
+      .hint();
+      right: 0;
+      top: 0;
     }
   }
 
@@ -2389,6 +3145,112 @@
     span {
       color: #2A99F2;
       cursor: pointer;
+    }
+  }
+
+  .resetModal-title {
+    font-size: 12px;
+    font-family: MicrosoftYaHei;
+    color: rgba(102, 102, 102, 1);
+    > span {
+      font-weight: bold;
+      color: #333333;
+    }
+  }
+
+  .resetModal-table {
+    margin-top: 14px;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    height: 40px;
+    background: rgba(246, 250, 253, 1);
+    box-shadow: 0px 1px 1px 0px rgba(204, 204, 204, 0.5);
+    > li {
+      width: 30%;
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: rgba(51, 51, 51, 1);
+      padding-left: 20px;
+    }
+    li:nth-child(1) {
+      width: 10%;
+    }
+  }
+
+  .data {
+    background: #FFF;
+    margin-top: 0;
+    height: 60px;
+    > li {
+      > input {
+        height: 30px;
+        border: 1px solid rgba(225, 225, 225, 1);
+        border-radius: 4px;
+        padding-left: 5px;
+        outline: none;
+        &.error {
+          border: 1px solid #FF0000;
+          color: #FF0000;
+        }
+      }
+      > p {
+        color: #FF0000;
+        margin-top: 5px
+      }
+    }
+    li:nth-child(3) {
+      color: #2A99F2;
+      cursor: pointer;
+    }
+  }
+
+  .resetModal-import {
+    margin-top: 20px;
+    position: relative;
+    > span {
+      display: inline-block;
+      width: 80px;
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(51, 51, 51, 1);
+    }
+    > img {
+      cursor: pointer;
+      position: absolute;
+      left: 54%;
+      top: 30%;
+    }
+    > input {
+      height: 30px;
+      width: 300px;
+      padding-left: 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(225, 225, 225, 1);
+    }
+  }
+
+  .resetModal-hint {
+    margin-top: 5px;
+    > p {
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: rgba(255, 0, 0, 1);
+      line-height: 16px;
+      padding-left: 82px;
+    }
+  }
+
+  .resetModal-p {
+    margin-top: 20px;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(102, 102, 102, 1);
+      line-height: 20px;
+      span {
+        color: #FF0000;
+      }
     }
   }
 </style>

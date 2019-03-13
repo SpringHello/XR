@@ -3,9 +3,9 @@
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
-        <img :src="logo.img">
+        <img :src="logo.img" alt="弹性公网IP" title="弹性公网IP">
         <div class="info">
-          <span class="title">{{logo.title}}</span>
+          <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter">立即购买</router-link>
         </div>

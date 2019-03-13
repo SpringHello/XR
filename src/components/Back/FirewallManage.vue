@@ -24,6 +24,10 @@
             <div class="network-wrapper">
               <i class="arrow" :class="{open:downInformation.open}"
                  @click="downInformation.open=!downInformation.open"></i><span style="user-select:none">出站规则</span>
+                <Poptip trigger="hover">
+                  <p slot="content" style="color:#666666;height:14px;"><span style="color:#FF624B;">出站规则</span>：云主机访问互联网的流量，规则匹配报文目的端口</p>
+                  <Icon type="ios-help-outline" size='15'></Icon>
+                </Poptip>
               <div>
                 <Table v-if="downInformation.open" style="margin-top:15px;transition:.5s"
                        :data="downInformation.tableData"
@@ -34,6 +38,10 @@
             <div class="network-wrapper">
               <i class="arrow" :class="{open:upInformation.open}" @click="upInformation.open=!upInformation.open"></i>
               <span style="user-select:none">入站规则</span>
+               <Poptip trigger="hover">
+                  <p slot="content" style="color:#666666;height:14px;"><span style="color:#FF624B;">出站规则</span>：云主机访问互联网的流量，规则匹配报文目的端口</p>
+                 <Icon type="ios-help-outline" size='15'></Icon>
+               </Poptip>
               <div>
                 <Table v-if="upInformation.open" style="margin-top:15px;transition:.5s"
                        :data="upInformation.tableData"
@@ -337,7 +345,7 @@
                     }, [h('span', {
                       style: {
                         cursor: 'pointer',
-                        color: '#2A99F2'
+                        color: '#FF0000'
                       }
                     }, '删除')]
                   )
@@ -391,7 +399,8 @@
           hostList: []
         }
         ,
-        currentNetwork: ''
+        currentNetwork: '',
+        isShow:false
       }
     },
     created(){
@@ -521,6 +530,10 @@
             })
           }
         })
+      },
+      tooltipFocus(){
+        this.isShow = true;
+        console.log( this.isShow);
       }
     },
     watch: {
@@ -632,7 +645,7 @@
               color: rgba(17, 17, 17, 0.75);
               line-height: 18px;
               font-weight: 600;
-              margin-right: 40px;
+              // margin-right: 40px;
             }
             .operatingArea {
               display: inline-block;
@@ -647,4 +660,8 @@
       }
     }
   }
+  .ivu-icon-ios-help-outline:before{
+    color: #2A99F2;
+  }
+
 </style>

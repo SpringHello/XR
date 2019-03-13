@@ -281,7 +281,7 @@
     otherURL: 'alarm/getVmAlarmByDay.do'
   }
   import cpuOptions from "@/echarts/cpuUtilization"
-  import momeryOptions from  "@/echarts/objectStroage"
+  import momeryOptions from  "@/echarts/memory"
   const momery = JSON.stringify(momeryOptions);
   const cpu = JSON.stringify(cpuOptions);
 
@@ -418,80 +418,7 @@
         //回滚信息
         loadingMessage:'',
         loading:false,
-        //快照
-        // snapshotList:[
-        //   {
-        //     type: 'selection',
-        //     width:'70'
-        //   },
-        //   {
-        //     title:'快照名称',
-        //     key:'snapshotname',
-        //     render:(h,params) =>{
-        //       if (params.row.status == 2) {
-        //         return h('div', [
-        //           h('Spin', {
-        //             style: {
-        //               display: 'inline-block'
-        //             }
-        //           }),
-        //           h('span',{
-        //             style: {
-        //               color:'#2A99F2'
-        //             }
-        //           },'创建中')
-        //         ])
-        //       } else{
-        //         return h('span',{
-        //
-        //         },params.row.snapshotname)
-        //       }
-        //     }
-        //   },
-        //   {
-        //     title:'快照策略',
-        //     render:(h,params) =>{
-        //       return h('span',{},params.row.createway == 'hand' ? '手动' :'')
-        //     }
-        //   },
-        //   {
-        //     title:'快照间隔',
-        //     render:(h,params) =>{
-        //       return h('span',{},params.row.intervals == 'hand' ? '手动' :'')
-        //     }
-        //   },
-        //   {
-        //     title:'创建于',
-        //     key:'addtime'
-        //   },
-        //   {
-        //     title:'操作',
-        //     width:100,
-        //     render:(h,params) =>{
-        //       if (params.row.status == -1 ) {
-        //         return h('span', {
-        //           style: {
-        //             cursor: 'not-allowed'
-        //           },
-        //         }, '异常')
-        //       } else if(params.row.status == 3){
-        //       return h('span',{
-        //         style:{
-        //           color:'#2A99F2',
-        //           cursor:'pointer'
-        //         },
-        //         on:{
-        //           click: () => {
-        //             this.showWindow.rollback = true;
-        //             this.snapsDetails = params.row;
-        //           }
-        //         }
-        //       },'回滚')
-        //     }
-        //    }
-        //   }
-        // ],
-        // snapshotData:[],
+       
         dateList:[
           {
             value:'近一天'
@@ -995,7 +922,7 @@
         }
       },
 
-        setMonitoring() {
+      setMonitoring() {
         this.showWindow.warningSetting = true;
         this.$http.get('information/alarmConfig.do', {
           params: {

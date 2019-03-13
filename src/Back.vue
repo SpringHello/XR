@@ -16,6 +16,9 @@
               <router-link to="overview" :class="{active:pageInfo.path=='overview'}"><span>总览</span></router-link>
             </li>
             <li>
+              <router-link to="AllRegions" :class="{active:pageInfo.path=='AllRegions'}"><span>资源</span></router-link>
+            </li>
+            <li>
               <router-link to="work" :class="{active:pageInfo.path=='work'}"><span>工单</span></router-link>
             </li>
             <li>
@@ -201,7 +204,25 @@
         </BackTop>
       </div>
     </div>
-    <router-view/>
+     <router-view/>
+     
+		<!--登录失效弹窗-->
+		<Modal v-model="showModal.WriteAudit" :scrollable="true" :closable="false" :width="380">
+		  <p slot="header" class="modal-header-border">
+		    <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+		    <span class="universal-modal-title">提示</span>
+		  </p>
+		  <div class="modal-content-s" style="padding: 0;width: 101%;">
+		    <div style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">
+		      您的用户名为“sunquick”的账号正在注销审核中，若需要购买产品，请点击 <span @click="CanCancellation" style="color: #2A99F2;text-decoration: underline;cursor: pointer;">取消注销</span> 。
+		    </div>
+		  </div>
+		  <p slot="footer" class="modal-footer-s">
+		    <Button @click="showModal.WriteAudit = false">关闭弹窗</Button>
+		    <Button type="primary" @click="CanCancellation">取消注销</Button>
+		  </p>
+		</Modal>
+   
   </div>
 </template>
 
@@ -216,6 +237,10 @@
     name: 'back',
     data() {
       return {
+				checkStatus:'',
+				showModal: {
+					WriteAudit: false
+				},
         // pageInfo用于存储当前页面信息
         pageInfo: {
           // hover选中的item
@@ -254,8 +279,8 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              //{subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
+              //{subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
@@ -285,20 +310,20 @@
             subItem: [
               {subName: '防火墙', type: 'firewall'},
               {subName: '云监控', type: 'CloudMonitor'},
-              {subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
-              //{subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
+              //{subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
+              {subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
             ]
           },
           {
             mainName: '域名服务',
             type: 'domain',
             subItem: [
-              {subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
-              {subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              {subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
-              //{subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
-              //{subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              //{subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
+              //{subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
+              //{subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+              //{subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
+              {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
+              {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+              {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
             ]
           },
           {
@@ -349,6 +374,7 @@
         this.yunweiInfo = response.data.yunwei
       })
       this.notice()
+			this.loggedOffState()
       // this.$http.get('user/showUserAcessAll.do').then(response => {
       //   console.log(response)
       // })
@@ -491,7 +517,44 @@
           $store.commit('setAuthInfo', {authInfo: null, userInfo: null})
           this.$router.push('/ruicloud/login')
         })
-      }
+      },
+			loggedOffState() {
+				axios.get('user/listClearAccountApplyFor.do', {
+					params: {
+
+					}
+				}).then(response => {
+					if (response.status == 200 && response.data.status == 1) {
+						//response.data.checkstatus
+						this.checkStatus = response.data.checkstatus
+						if (this.checkStatus == 1) {
+							this.showModal.WriteAudit = true
+						}
+					} else {
+						//this.$Message.info(response.data.message)
+					}
+				})
+			},
+			CanCancellation(){
+				axios.get('user/cancelLogout.do', {
+					params: {
+
+					}
+				}).then(response => {
+					if (response.status == 200 && response.data.status == 1) {
+						//response.data.checkstatus
+						this.showModal.WriteAudit = false
+						this.$Message.success({
+                    content: response.data.message,
+                    duration: 5,
+                    closable: true
+                });
+					} else {
+						this.showModal.WriteAudit = false
+						this.$Message.error(response.data.message)
+					}
+				})
+			}
     },
     computed: mapState({
       // show代表是否显示three menu,static代表是否固定three menu

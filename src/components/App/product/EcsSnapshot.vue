@@ -3,9 +3,9 @@
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
-        <img :src="logo.img">
+        <img :src="logo.img" alt="ecs快照" title="ecs快照">
         <div class="info">
-          <span class="title">{{logo.title}}</span>
+          <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>
