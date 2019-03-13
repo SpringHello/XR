@@ -543,13 +543,9 @@
   // import china from '@/echarts/china.json'
   import throttle from 'throttle-debounce/throttle'
   import axios from 'axios'
-  import VueQArt from 'vue-qart'
 
 
   export default {
-    components: {
-      VueQArt
-    },
     data() {
       return {
         selectedBar: true,
