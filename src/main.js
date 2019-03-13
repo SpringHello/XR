@@ -38,11 +38,10 @@ Vue.prototype.$LR = LR
 Vue.config.productionTip = false
 
 
-
 //axios.defaults.withCredentials = true
 
- axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
-//axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
+//axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
+axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 // axios.defaults.baseURL = 'https://www.xrcloud.net/ruicloud/'
 //axios.defaults.baseURL = 'https://www.xrcloud.net/ruicloud/'
 
@@ -56,19 +55,20 @@ Vue.prototype.$http = axios.create({
 })
 
 /* 抛出全局异常*/
-const errorHandler = (error, vm)=>{
+const errorHandler = (error, vm) => {
   console.error('抛出全局异常')
   console.error(error)
 }
 
 Vue.config.errorHandler = errorHandler
-Vue.prototype.$throw = (error)=> errorHandler(error,this)
+Vue.prototype.$throw = (error) => errorHandler(error, this)
+
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {
     if (config.params) {
       config.params = {
-        zoneId: store.state.zone.zoneid,
+        zoneId: store.state.zone ? store.state.zone.zoneid : '',
         ...config.params
       }
       config.params = appendMD5(config.params)
@@ -76,7 +76,7 @@ function requestIntercept(config) {
   } else if (config.method == 'post') {
     config.data = {
       ...config.data,
-      zoneId: store.state.zone.zoneid
+      zoneId: store.state.zone ? store.state.zone.zoneid : ''
 
     }
     config.data = appendMD5(config.data, 'post')
@@ -157,7 +157,7 @@ var vm = new Vue({
   router,
   store,
   render: h => h(Main),
-  mounted () {
+  mounted() {
     document.dispatchEvent(new Event('render-event'))
   }
 })

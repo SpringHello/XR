@@ -212,11 +212,11 @@ var router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '',
       name: App.name,
       component: App,
       children: [
-        {path: '', name: 'home', component: Home},
+        {path: '/', name: 'home', component: Home},
         //{path: 'index.htm', name: 'home', component: Home},
         //{path: 'ecs.htm', name: 'ecs', component: Ecs},
         //{path: 'about.htm', name: 'about', component: Aboutus},
@@ -360,9 +360,9 @@ var router = new Router({
         {path: 'CheckReg', name: 'CheckReg', component: CheckReg},
 
 
-        {path: 'Pecs', component: Pecs},
-        {path: 'Phost', component: Phost},
-        {path: 'Pecss', component: Pecss},
+        {path: 'ecs', component: Pecs},
+        {path: 'mirrorservice', component: Phost},
+        {path: 'ecssnapshot', component: Pecss},
         {path: 'Pvpc', component: Pvpc},
         {path: 'Peip', component: Peip},
         {path: 'Pbalance', component: Pbalance},
@@ -376,7 +376,7 @@ var router = new Router({
         {path: 'PobjStorage', component: PobjStorage},
         {path: 'PdataBase', component: PdataBase},
         {path: 'PobjectStorage', component: PobjectStorage},
-        {path: 'Pgpu', component: Pgpu},
+        {path: 'gpu', component: Pgpu},
         {path: 'Pelastic',component: Pelastic},
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
         {path: 'hotQuestion/:parentId/:id', component: hotQuestion}

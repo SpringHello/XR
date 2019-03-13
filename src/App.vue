@@ -14,17 +14,18 @@
         <a href="/" class="logo" alt='新睿云'>
           <div></div>
         </a>
-        <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png" @click="$router.push('/activtiy/2019spring/')" alt="">
+        <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png"
+             @click="$router.push('/activtiy/2019spring/')" alt="">
         <div class="operate" style="padding-left:90px;">
           <ul @mouseleave="ME(-1)">
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a v-if="item.title=='新闻动态'"  :href="item.path" target="_blank"><span>{{item.title}}</span>
+                  <a v-if="item.title=='新闻动态'" :href="item.path" target="_blank"><span>{{item.title}}</span>
                   </a>
-                  <a v-else-if="item.title=='关于我们'"  :href="item.path" rel="nofollow"><span>{{item.title}}</span>
+                  <a v-else-if="item.title=='关于我们'" :href="item.path" rel="nofollow"><span>{{item.title}}</span>
                   </a>
-                  <router-link v-else  :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
+                  <router-link v-else :to="item.path"><span>{{item.title}}<sup class="circle-dot-a"
                                                                                v-if="item.title=='活动中心'"></sup></span>
                   </router-link>
                 </div>
@@ -69,7 +70,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a  href="https://kaifa.xrcloud.net/overview"   rel="nofollow" ><span>控制台</span>
+                  <a href="https://kaifa.xrcloud.net/overview" rel="nofollow"><span>控制台</span>
                   </a>
                 </div>
               </div>
@@ -84,7 +85,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a  href="https://kaifa.xrcloud.net/login"   rel="nofollow" ><span>登录</span>
+                  <a href="https://kaifa.xrcloud.net/login" rel="nofollow"><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -92,7 +93,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a  href="https://kaifa.xrcloud.net/register"   rel="nofollow" ><span>注册</span>
+                  <a href="https://kaifa.xrcloud.net/register" rel="nofollow"><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -148,7 +149,7 @@
       </div>
     </header>
     <!-- 页面展示 -->
-    <router-view />
+    <router-view/>
     <!-- 所有前台页面共用底部导航块 -->
     <div id="app-foot">
       <!--      &lt;!&ndash; 新用户注册最大6个月免费 &ndash;&gt;
@@ -221,7 +222,7 @@
               <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow" style="color:#fff">{{item.preparation}}</a>
             </li>
             <li>
-              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922"  rel="nofollow" target="_blank"
+              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922" rel="nofollow" target="_blank"
                  style="color:#fff">
                 <img src="./assets/img/app/record.png" style="vertical-align: middle;margin-right: 5px">{{item.desc}}
               </a>
@@ -647,15 +648,35 @@
         UUID: ''
       }
     },
+    mounted() {
+      // this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
+      // if (sessionStorage.getItem('hintShow') == 'true') {
+      //   this.$refs.hint.style.height = '80px'
+      // }
+      //this.setTime()
 
-    beforeRouteEnter(to, from, next) {
-      if (to.query.from) {
-        // 流量来源记录
-        localStorage.setItem('comefrom', to.query.from)
+      let params = {
+        batchNumber: window.UUID,
+        type: '1',
+        pageURL: window.location.href
       }
-      if (to.query.sellCode) {
+      // 获取入口信息
+      axios.post('information/webReachableRecord.do', params)
+
+    },
+    created() {
+      // if (sessionStorage.getItem('hintShow') == null) {
+      //   sessionStorage.setItem('hintShow', 'true')
+      // }
+      let from = window.location.href.split('from')[1] ? window.location.href.split('from')[1] : ''
+      let sellCode = window.location.href.split('sellCode')[1] ? window.location.href.split('sellCode')[1] : ''
+      if (from) {
+        // 流量来源记录
+        localStorage.setItem('comefrom', from)
+      }
+      if (sellCode) {
         // 销售来源渠道
-        localStorage.setItem('sellCode', to.query.sellCode)
+        localStorage.setItem('sellCode', sellCode)
       }
       window.UUID = uuid.v4()
       let params = {
@@ -672,40 +693,14 @@
       // 获取zone信息
       var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime()}})
       Promise.all([userInfo, zoneList]).then(values => {
-          if (values[0].data.status == 1 && values[0].status == 200) {
-            $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
-            localStorage.setItem('realname', values[0].data.result.realname)
-          }
-          if (values[1].data.status == 1 && values[1].status == 200) {
-            $store.commit('setZoneList', values[1].data.result)
-          }
-          next()
-        },
-        value => {
-          next()
-        })
-    },
-    mounted() {
-      // this.hintShow = sessionStorage.getItem('hintShow') == 'true' ? true : false
-      // if (sessionStorage.getItem('hintShow') == 'true') {
-      //   this.$refs.hint.style.height = '80px'
-      // }
-      //this.setTime()
-      if (document.readyState === 'complete') { //当页面加载状态为完全结束时进入
-        let params = {
-          batchNumber: window.UUID,
-          type: '1',
-          pageURL: window.location.href
+        if (values[0].data.status == 1 && values[0].status == 200) {
+          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+          localStorage.setItem('realname', values[0].data.result.realname)
         }
-        // 获取入口信息
-        axios.post('information/webReachableRecord.do', params
-        )
-      }
-    },
-    created() {
-      // if (sessionStorage.getItem('hintShow') == null) {
-      //   sessionStorage.setItem('hintShow', 'true')
-      // }
+        if (values[1].data.status == 1 && values[1].status == 200) {
+          $store.commit('setZoneList', values[1].data.result)
+        }
+      },)
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
@@ -817,7 +812,7 @@
         var content = this.$refs.content
         for (var i in content) {
           if (i == this.currentItem) {
-            content[i].style.height = `${content[i].firstChild.clientHeight+25}px`
+            content[i].style.height = `${content[i].firstChild.clientHeight + 25}px`
           } else {
             content[i].style.height = '0px'
           }
@@ -946,7 +941,7 @@
                     }
                   }
                 }
-                 .menu-dropdown-rels {
+                .menu-dropdown-rels {
                   a {
                     color: #fff;
                     transition: all .3s;
@@ -990,7 +985,7 @@
                           width: 800px;
                           margin: 0 auto;
                         }
-                        .info:hover{
+                        .info:hover {
                           color: #2A99F2;
                         }
                         > div {
