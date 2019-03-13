@@ -40,14 +40,14 @@
 						<div class="right">
 							<span style="line-height: 21px;margin-top: 5px;"><span style="line-height: 21px;">申请线上提现后您的款项将在</span><span
 								 style="color: #FF624B;line-height: 21px;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看
-								<a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxZtv8QU.html" style="color: #2A99F2;text-decoration: underline;">自助提现常见问题</a></span>
+								<a @click="$router.push('/ruicloud/documentInfo/6bSa9TMxO/6zxZtv8QU')" style="color: #2A99F2;text-decoration: underline;">自助提现常见问题</a></span>
 							<div class="following">
 								<span style="margin-top: 10px;">可提现金额通常情况下等于用户可用余额，当用户存在以下操作的时候可提现金额会与用户可用余额有差异：</span><br />
 								<span>1、充值返奖励金或送现金券的时候，该充值金额不能进行提现；</span>
 								<span>2、已开发票金额不能提现；</span>
 								<span>3、当您的账户存在流水异常或其他异常状态的时候；</span>
-								<span>4、通过线下打款进账的现金充值金额提现方式请 <a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxagA7H2.html" id="aself1">点击这里查看</a></span>
-								<span>5、单次提现金额上限2000元，7天内最多提现4次</span>
+								<span>4、通过线下打款进账的现金充值金额提现方式请 <a @click="$router.push('/ruicloud/documentInfo/6bSa9TMxO/6zxagA7H2')" id="aself1">点击这里查看</a></span>
+								<span>5、单次提现金额上限{{XZnum}}元，7天内最多提现{{XZcishu}}次</span>
 							</div>
 						</div>
 					</div>
@@ -77,7 +77,7 @@
 						<p class="lh24" id="pself1">您正在申请线上提现，申请后您的款项将在<span style="color: #FF624B">5个工作日</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。
 						</p>
 						<!-- @click="$router.push('/ruicloud/cashwithdrawal')" -->
-						<p class="lh24" style="margin-top: 10px;">若您的线下汇款（对公转账）金额需要提现，请点击查看 <a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxagA7H2.html"
+						<p class="lh24" style="margin-top: 10px;">若您的线下汇款（对公转账）金额需要提现，请点击查看 <a @click="$router.push('/ruicloud/documentInfo/6bSa9TMxO/6zxagA7H2')"
 							 style="color: #2A99F2; text-decoration: underline;">线下汇款提现方式</a>。
 						</p>
 					</div>
@@ -243,6 +243,8 @@
 				bank_account: '',
 				disabled: true,
 				isTrue: false,
+				XZcishu:'',
+				XZnum:'',
 				order_dateRange: ['', ''],
 				formAppreciationDate: {
 					companyName: '',
@@ -444,6 +446,7 @@
 			}
 		},
 		created() {
+			this.xianzhia()
 			this.money()
 			this.Recordlist()
 		},
@@ -461,6 +464,18 @@
 						this.Bankdecimalmoney = ary1.split(".")[1]
 						this.comOnlinemoney = response.data.moneyOnLine
 						this.comBankemoney = response.data.moneyBank
+					}
+				})
+			},
+			xianzhia(){
+				axios.get('user/getBalanceWithdrawalLimit.do', {
+					params: {
+						type:3
+					}
+				}).then(response => {
+					if (response.status == 200 && response.data.status == 1) {
+						this.XZcishu=response.data.result.number
+						this.XZnum=response.data.result.money
 					}
 				})
 			},
@@ -517,7 +532,7 @@
 				if (this.comOnlinemoney <= 0) {
 					this.$Message.info("您当前的金额不能提现！")
 				} else {
-					this.AllSession.balance=this.comBankemoney
+					this.AllSession.balance=this.comOnlinemoney
 					this.AllSession.type=0
 					sessionStorage.setItem('ALLf',JSON.stringify(this.AllSession))
 					this.$router.push('/ruicloud/cashprocess')

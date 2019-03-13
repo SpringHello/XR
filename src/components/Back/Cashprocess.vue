@@ -23,7 +23,7 @@
         </div>
         <div class="box1">
 					<span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看
-						<a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxZtv8QU.html" class="colora">自助提现常见问题</a></span>
+						<a @click="$router.push('/ruicloud/documentInfo/6bSa9TMxO/6zxZtv8QU')" class="colora">自助提现常见问题</a></span>
         </div>
         <p id="idp1">
           <span class="spanall">可提现金额</span>
@@ -35,7 +35,7 @@
             <Radio label="l1"><span class="spanall">{{moneysure}} 元（本次可提现金额）</span></Radio>
             <Radio label="l2" :disabled="disabled12">其他金额
               <InputNumber id="idinputnum1" :disabled="disabled11" :max="moneysure"
-                           :min="1" v-model="Otheramount" @on-change="Otheramountg"></InputNumber>
+                           :min="minmoney" v-model="Otheramount" @on-change="Otheramountg"></InputNumber>
               <span id="idspan1">元</span></Radio>
           </RadioGroup>
         </div>
@@ -347,6 +347,7 @@
         moneyall: 0,
         //本次可提现总金额
         moneysure: 0,
+		minmoney:0,
         //提现可输入金额
         Otheramount: 1,
         Actualamount: 0,
@@ -457,7 +458,7 @@
       }
     },
     created() {
-      this.money()
+        this.money()
       //this.moneyconfirm()
     },
     methods: {
@@ -499,7 +500,16 @@
 		else{
 			sessionStorage.removeItem('ALLf')
 			this.moneyall = parseFloat(this.AllseMoney.balance)
-			this.moneysure = this.moneyall
+			axios.get('user/getBalanceWithdrawalLimit.do', {
+				params: {
+					type:this.AllseMoney.type
+				}
+			}).then(response => {
+				if (response.status == 200 && response.data.status == 1) {
+					this.moneysure =  parseFloat(response.data.result.money)
+					this.minmoney = parseFloat(response.data.result.minMoney)
+				}
+			})
 		}
 		
       },
@@ -792,9 +802,7 @@
       },
 
       moneysure: function (val) {
-        if (val > 2000.00) {
-          this.moneysure = 2000.00
-        } else if (val < 0) {
+        if (val < 0) {
           this.moneysure = 0
         } else if (val < 1) {
           this.disabled12 = true
