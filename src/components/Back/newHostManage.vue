@@ -1803,7 +1803,7 @@
     span:nth-child(4) {
       float: left;
       cursor: auto;
-      color: rgb(255, 98, 75);
+      color: #666666;
     }
     &::after {
       content: '';
