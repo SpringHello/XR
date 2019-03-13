@@ -5,7 +5,7 @@
         <div class="text">
           <h1>SSL证书</h1>
           <p>在云上签发各品牌数字证书，实现网站HTTPS化，使网站可信，防 劫持、防篡改、防监听。并进行统一生命周期管理，简化证书部署， 一键分发到云上产品，实现网站的可信身份认证与安全数据传输。</p>
-          <Button @click="$router.push('buy/bssl')">立即购买</Button>
+          <Button @click="$router.push('/buy/ssl/')">立即购买</Button>
         </div>
         <img src="../../assets/img/ssl/banner.png" alt>
       </div>
@@ -256,7 +256,7 @@ export default {
     },
     toBuy(defaultType) {
       sessionStorage.setItem('defaultType', defaultType)
-      this.$router.push('buy/bssl')
+      this.$router.push('/buy/ssl/')
     },
     changeTabSec(data) {
       this.selectedTabSec = data
@@ -360,7 +360,7 @@ export default {
       margin-bottom: 20px;
       dt {
         height: 40px;
-        padding-top: 8px; 
+        padding-top: 8px;
         color: rgba(59, 134, 255, 1);
         background: rgba(222, 235, 255, 1);
         font-size: 18px;

@@ -454,7 +454,7 @@
       ownMirrorCreathost(item) {
         if(this.$store.state.zone.zonename.indexOf("GPU") != -1) {
           this.$router.push({
-            path: 'buy/bgpu',
+            path: '/buy/gpu/',
             query: {
               zoneid: item.zoneid,
               mirrorType: 'custom',
@@ -524,7 +524,7 @@
         sessionStorage.setItem('templateId',item.templateid);
         if(this.$store.state.zone.zonename.indexOf("GPU") != -1){
           this.$router.push({
-            path: 'buy/bgpu',
+            path: '/buy/gpu/',
             query: {
               zoneid: item.zoneid,
               mirrorType: 'public',
@@ -533,7 +533,7 @@
           })
         }else {
           this.$router.push({
-            path: 'buy',
+            path: '/buy/',
             query: {
               zoneid: item.zoneid,
               mirrorType: 'public',

@@ -308,9 +308,9 @@
               if (content.itemName == '数据库') {
                 content.cartUrl = '/buy/database/#NAT'
               } else if (content.itemName == 'GPU服务器') {
-                content.cartUrl = 'buy/bgpu'
+                content.cartUrl = '/buy/gpu/'
               } else if (content.itemName == '对象存储') {
-                content.cartUrl = 'buy/bobj'
+                content.cartUrl = '/buy/objectstorage/'
               }
             })
           })

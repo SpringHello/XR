@@ -116,7 +116,7 @@
           img: require('../../../assets/img/product/u-banner.png'),
           title: 'GPU加速云服务器',
           desc: 'GPU 云服务器（GPU Cloud Computing）是基于 GPU 应用的计算服务，具有实时高速的并行计算和浮点计算能力，适应用于 3D 图形应用程序、视频解码、深度学习、科学计算等应用场景。我们提供和标准云服务器一致的管理方式，有效解放您的计算压力，提升产品的计算处理效率与竞争力。',
-          linkRouter: $store.state.userInfo ? 'buy/bgpu' : 'buy/bgpu'
+          linkRouter: $store.state.userInfo ? '/buy/gpu/' : '/buy/gpu/'
         },
         features: [
           {
@@ -244,7 +244,7 @@
     },
     methods: {
       toBuy(){
-        this.$router.push($store.state.userInfo ? 'buy/bgpu' : 'login')
+        this.$router.push($store.state.userInfo ? '/buy/gpu/' : 'login')
       },
     }
   }

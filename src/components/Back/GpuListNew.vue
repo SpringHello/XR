@@ -19,12 +19,12 @@
           <p>基于GPU应用的计算服务，具有实时的并行计算和浮点计算能力，适用于3D图形应用、深度学习、科学计算等</p>
           </div>
           <div style="margin:16px 0 16px 0;">
-            <Button type="primary"  @click="$router.push({path:'/buy/bgpu'})">+  创建</Button>
+            <Button type="primary"  @click="$router.push({path:'/buy/gpu/'})">+  创建</Button>
             <Button type="primary" :disabled='disabledList.closeDisbled' style="margin:0 10px;" @click="stopHost">关机</Button>
             <Button type="primary" :disabled='disabledList.openDisbled' @click="openHost">开机</Button>
             <Button type="primary" :disabled='disabledList.closeDisbled' style="margin:0 10px;" @click="reStartGPU">重启</Button>
             <Button type="primary" :disabled='disabledList.deleteDisbled' style="margin:0 10px;" @click="deleteHost">删除</Button>
-            <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/buy/bgpu'})">更多操作</Button>
+            <Button type="primary" style="margin:0 10px;" @click="$router.push({path:'/buy/gpu/'})">更多操作</Button>
           </div>
            <div class="selectMark">
             <img src="../../assets/img/host/h-icon10.png"/>

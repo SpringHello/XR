@@ -125,7 +125,7 @@
               <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
               购买主机
             </span>
-          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 42%;" @click="$router.push('buy/bgpu')"
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 42%;" @click="$router.push('/buy/gpu/')"
                 v-else>
               <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
               购买GPU云服务器

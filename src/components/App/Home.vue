@@ -763,7 +763,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pgpu',
-                useLink: $store.state.userInfo ? 'buy/bgpu' : 'buy/bgpu',
+                useLink: $store.state.userInfo ? '/buy/gpu/' : '/buy/gpu/',
                 ME: false
               },
               {
@@ -903,7 +903,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'PobjStorage',
-                useLink: $store.state.userInfo ? 'buy/bobj' : 'buy/bobj',
+                useLink: $store.state.userInfo ? '/buy/objectstorage/' : '/buy/objectstorage/',
                 ME: false
               },
               {
