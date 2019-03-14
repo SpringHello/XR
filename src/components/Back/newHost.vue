@@ -2789,7 +2789,7 @@
         if (len !== 1) {
           return true
         } else {
-          return this.hostSelection[0].status != 1
+          return this.hostSelection[0].status != 1 && this.hostSelection[0].status != 0
         }
       }
     },
@@ -2963,7 +2963,7 @@
     span:nth-child(4) {
       float: left;
       cursor: auto;
-      color: rgb(255, 98, 75);
+      color: #666666;
     }
     &::after {
       content: '';

@@ -23,7 +23,7 @@
         </div>
         <div class="box1">
 					<span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看
-						<a href="https://support.xrcloud.net/6bSa9TMxO/document/6zxZtv8QU.html" class="colora">自助提现常见问题</a></span>
+						<a @click="$router.push('/ruicloud/documentInfo/6bSa9TMxO/6zxZtv8QU')" class="colora">自助提现常见问题</a></span>
         </div>
         <p id="idp1">
           <span class="spanall">可提现金额</span>
@@ -35,7 +35,7 @@
             <Radio label="l1"><span class="spanall">{{moneysure}} 元（本次可提现金额）</span></Radio>
             <Radio label="l2" :disabled="disabled12">其他金额
               <InputNumber id="idinputnum1" :disabled="disabled11" :max="moneysure"
-                           :min="1" v-model="Otheramount" @on-change="Otheramountg"></InputNumber>
+                           :min="minmoney" v-model="Otheramount" @on-change="Otheramountg"></InputNumber>
               <span id="idspan1">元</span></Radio>
           </RadioGroup>
         </div>
@@ -347,6 +347,7 @@
         moneyall: 0,
         //本次可提现总金额
         moneysure: 0,
+		minmoney:0,
         //提现可输入金额
         Otheramount: 1,
         Actualamount: 0,
@@ -359,6 +360,9 @@
         authModifyPhoneStep: 0,
         disabled11: true,
         disabled12: false,
+		AllseMoney:{},
+		monenymo:'',
+		AcmoneyGG:'',
         authModifyPhoneFormThere: {
           verificationCode: '',
           pictureCode: '',
@@ -454,7 +458,7 @@
       }
     },
     created() {
-      this.money()
+        this.money()
       //this.moneyconfirm()
     },
     methods: {
@@ -463,26 +467,18 @@
         this.$emit('changeTabSec', name)
       },
       Callpresentation() {
-        var typed = sessionStorage.getItem('type')
-        var payeeName = sessionStorage.getItem('payeeName')
-        var payeeAccountType = '银行卡'
-        var payeeAccount = sessionStorage.getItem('payeeAccount')
-        var bankAccInfor = sessionStorage.getItem('bankAccInfor')
-        var bankAddress = sessionStorage.getItem('bankAddress')
-        var bankBranch = sessionStorage.getItem('bankBranch')
-        var reservedPhone = sessionStorage.getItem('reservedPhone')
         axios.post('user/balanceWithdrawal.do', {
-          balance: this.Actualamount,
+		  balance: this.Actualamount,
           smsCode: this.formCustom.messagecode,
           username: this.userphone,
-          type: typed,
-          payeeName: payeeName,
-          payeeAccountType: payeeAccountType,
-          payeeAccount: payeeAccount,
-          bankAccInfor: bankAccInfor,
-          bankAddress: bankAddress,
-          bankBranch: bankBranch,
-          reservedPhone: reservedPhone
+          type: this.AllseMoney.type,
+          payeeName: this.AllseMoney.payeeName,
+          payeeAccountType: '银行卡',
+          payeeAccount: this.AllseMoney.payeeAccount,
+          bankAccInfor: this.AllseMoney.bankAccInfor,
+          bankAddress: this.AllseMoney.bankAddress,
+          bankBranch: this.AllseMoney.bankBranch,
+          reservedPhone: this.AllseMoney.reservedPhone
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.successtime = response.data.date
@@ -497,19 +493,36 @@
         this.$router.history.go(-1)
       },
       money() {
-        this.moneyall = parseFloat(sessionStorage.getItem('balance'))
-        this.moneysure = this.moneyall
-        this.Actualamount = sessionStorage.getItem('money')
+		this.AllseMoney=JSON.parse(sessionStorage.getItem('ALLf'))
+		if(this.AllseMoney==null||this.AllseMoney==''){
+			this.$router.push('/ruicloud/cashwithdrawal')
+		}
+		else{
+			sessionStorage.removeItem('ALLf')
+			this.moneyall = parseFloat(this.AllseMoney.balance)
+			axios.get('user/getBalanceWithdrawalLimit.do', {
+				params: {
+					type:this.AllseMoney.type
+				}
+			}).then(response => {
+				if (response.status == 200 && response.data.status == 1) {
+					this.moneysure =  parseFloat(response.data.result.money)
+					this.minmoney = parseFloat(response.data.result.minMoney)
+				}
+			})
+		}
+		
       },
       moneyconfirm() {
+		  this.Actualamount = this.monenymo
         this.Cashconfirmationdata.money = this.Actualamount
-        this.Cashconfirmationdata.Actualmoney = sessionStorage.getItem('Acmoney')
-        this.Cashconfirmationdata.type = sessionStorage.getItem('type')
+        this.Cashconfirmationdata.Actualmoney = this.AcmoneyGG
+        this.Cashconfirmationdata.type = this.AllseMoney.type
       },
       Firststep() {
         var type = ''
         var Lastmoney = 0
-        var typecard = sessionStorage.getItem('type')
+        var typecard = this.AllseMoney.type
         if (typecard == 0) {
           type = 'online'
         } else if (typecard == 1) {
@@ -528,16 +541,16 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            sessionStorage.setItem('Acmoney', response.data.remain)
+			this.AcmoneyGG=response.data.remain
             axios.get('user/judgeWithdrawalContidion.do', {
               params: {
                 balance: Lastmoney
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                sessionStorage.setItem('money', Lastmoney)
+				this.monenymo=Lastmoney
                 this.changeTab('content1')
-                this.money()
+                //this.money()
                 this.moneyconfirm()
               } else {
                 this.$Message.info(response.data.message)
@@ -733,7 +746,6 @@
       },
       bindingMobilePhoneStepTwo(name) {
         this.$refs[name].validate((valid) => {
-          console.log(valid)
           if (valid) {
             if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
               axios.post('user/isIdCardAndNameSame.do', {
@@ -790,9 +802,7 @@
       },
 
       moneysure: function (val) {
-        if (val > 2000.00) {
-          this.moneysure = 2000.00
-        } else if (val < 0) {
+        if (val < 0) {
           this.moneysure = 0
         } else if (val < 1) {
           this.disabled12 = true
