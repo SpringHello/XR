@@ -1009,6 +1009,10 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
                 this.getHostInfo()
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
               }
             })
           }
