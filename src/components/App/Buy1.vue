@@ -1526,7 +1526,7 @@
   export default {
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        if (from.path == '/Pdisk') {
+        if (from.path == '/disk/') {
           vm.product.currentProduct = 'Pdisk'
         } else if (from.path == '/Peip') {
           vm.product.currentProduct = 'Peip'

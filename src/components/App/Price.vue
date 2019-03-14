@@ -665,15 +665,15 @@
         switch (this.product) {
           case 'hostPrice':
             // this.$router.push('/Pecs')
-            window.open('/Pecs')
+            window.open('/ecs')
             break
           case 'diskPrice':
             // this.$router.push('/Pdisk')
-            window.open('/Pdisk')
+            window.open('/disk/')
             break
           case 'elasticIPPrice':
             // this.$router.push('/Peip')
-            window.open('/Peip')
+            window.open('/elasticip/')
             break
         }
       }

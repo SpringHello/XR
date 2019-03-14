@@ -105,7 +105,7 @@
           img: require('../../../assets/img/product/disk-logo.png'),
           title: '云硬盘',
           desc: '云硬盘是为云服务器实例提供持久性块存储的服务，可以挂载到同一可用区下的云服务器实例上，云硬盘具有高可靠、高性能、灵活易用等特点，同时云硬盘支持在线操作和管理。',
-          linkRouter: 'buy'
+          linkRouter: '/buy/disk/'
         },
         features: [
           {

@@ -59,7 +59,7 @@
 
                 <span style="margin-top:40px;">配合使用</span>
                 <div style="display: flex">
-                  <div v-for="(pimg,index) in stageInfo.pImg" style="margin-right: 10px;" :key="index"> 
+                  <div v-for="(pimg,index) in stageInfo.pImg" style="margin-right: 10px;" :key="index">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
                       <p><i class="iconfont" :class="pimg.icon" style="font-size:40px;color:#3c7efb;"></i></p>
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
@@ -185,13 +185,13 @@
             img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path: 'Pecs'
+            path: '/ecs/'
           },
           {
             img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path: 'Pvpc'
+            path: '/vpc/'
           }
         ]
       }

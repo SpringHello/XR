@@ -748,7 +748,7 @@
                 img: '#icon-danxingyunfuwuqiECS',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pecs',
+                detailLink: '/ecs/',
                 useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: true
               },
@@ -768,7 +768,7 @@
                 img: '#icon-feiyongzhongxin',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Phost',
+                detailLink: '/mirrorservice/',
                 useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: false
               },
@@ -778,7 +778,7 @@
                 img: '#icon-ECSkuaizhao',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pecss',
+                detailLink: '/ecssnapshot/',
                 useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: false
               },
@@ -828,7 +828,7 @@
                 img: '#icon-danxingIP',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Peip',
+                detailLink: '/elasticip/',
                 useLink: $store.state.userInfo ? '/buy/elasticip/' : '/buy/elasticip/',
                 ME: false
               },
@@ -838,7 +838,7 @@
                 img: '#icon-fuzaijunheng2',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pbalance',
+                detailLink: '/loadbalancing/',
                 useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: false
               },
@@ -848,7 +848,7 @@
                 img: '#icon-NTAwangguan',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pnat',
+                detailLink: '/natgateway/',
                 useLink: '',
                 ME: false
               },
@@ -858,7 +858,7 @@
                 img: '#icon-xunizhuanwangVPN',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pvirvpn',
+                detailLink: '/vpn/',
                 useLink: '',
                 ME: false
               },
@@ -888,7 +888,7 @@
                 img: '#icon-yunyingpan',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pdisk',
+                detailLink: '/disk/',
                 useLink: $store.state.userInfo ? '/buy/disk/' : '/buy/disk/',
                 ME: true
               },
@@ -908,7 +908,7 @@
                 img: '#icon-yunyingpanbeifen',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pbackupdisk',
+                detailLink: '/diskbackup/',
                 useLink: '',
                 ME: false
               }
@@ -928,7 +928,7 @@
                 img: '#icon-fanghuoqiang',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pfirewall',
+                detailLink: '/firewall/',
                 useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: true
               },

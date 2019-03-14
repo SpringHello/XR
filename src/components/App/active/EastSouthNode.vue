@@ -174,9 +174,9 @@
             prod: '云计算',
             icon: 'icon-yunjisuan1',
             prodItem: [
-              { title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/Pecs' },
-              { title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/Phost' },
-              { title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/Pecss' },
+              { title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ecs/' },
+              { title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/mirrorservice/' },
+              { title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ecssnapshot/' },
               { title: '裸金属服务器', desc: '专属物理服务器', path: '' },
               { title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '' }
             ]
@@ -185,11 +185,11 @@
             prod: '云网络',
             icon: 'icon-yunwangluo1',
             prodItem: [
-              { title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/Pvpc' },
-              { title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/Peip' },
-              { title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/Pbalance' },
-              { title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/Pnat' },
-              { title: '虚拟专网VPN', desc: '跨VPC链接', path: '/Pvirvpn' },
+              { title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/vpc/' },
+              { title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/elasticip/' },
+              { title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/loadbalancing/' },
+              { title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/natgateway/' },
+              { title: '虚拟专网VPN', desc: '跨VPC链接', path: '/vpn/' },
               { title: 'CDN', desc: '节点丰富、安全易用', path: '' }
             ]
           },
@@ -197,8 +197,8 @@
             prod: '云存储',
             icon: 'icon-yuncunchu1',
             prodItem: [
-              { title: '云硬盘', path: '/Pdisk' },
-              { title: '云硬盘备份', path: '/Pbackupdisk' },
+              { title: '云硬盘', path: '/disk/' },
+              { title: '云硬盘备份', path: '/diskbackup/' },
               { title: '对象存储', path: '' }
             ]
           },
@@ -213,7 +213,7 @@
             prod: '云安全',
             icon: 'icon-yunanquan1',
             prodItem: [
-              { title: '防火墙', desc: '自定义规则、协议、端口', path: '/Pfirewall' },
+              { title: '防火墙', desc: '自定义规则、协议、端口', path: '/firewall/' },
               { title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/Pddos' }
             ]
           },
