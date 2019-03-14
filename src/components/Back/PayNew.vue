@@ -9,17 +9,17 @@
       <div class="content">
         <span style="font-size:24px;color:#333333;">支付</span>
         <div class="content_pay">
-            <div style="border-bottom:1px solid #E9E9E9;padding-bottom:20px;">
-                <span style="font-size:18px;">共支付<span style="color:#FF624B;">{{orderInfo.orderNum}}</span>笔订单</span>
-                <span style="float:right;margin-top:4px;">总计支付:<strong style="color:#FF624B;font-size:24px;">{{orderInfo.money}}</strong>元</span>
-            </div>
-           <div class="pay_time">
-                <p>请在
-                    <span>{{ h }} :</span>
-                    <span>{{ m }} :</span>
-                    <span>{{ s }} </span>秒内完成支付，否则订单会自动取消
-                </p>
-           </div>
+          <div style="border-bottom:1px solid #E9E9E9;padding-bottom:20px;">
+            <span style="font-size:18px;">共支付<span style="color:#FF624B;">{{orderInfo.orderNum}}</span>笔订单</span>
+            <span style="float:right;margin-top:4px;">总计支付:<strong style="color:#FF624B;font-size:24px;">{{orderInfo.money}}</strong>元</span>
+          </div>
+          <div class="pay_time">
+            <p>请在
+              <span>{{ h }} :</span>
+              <span>{{ m }} :</span>
+              <span>{{ s }} </span>秒内完成支付，否则订单会自动取消
+            </p>
+          </div>
         </div>
 
         <p style="color:#333333;font-size:14px;margin-top:40px;">账户余额支付</p>
@@ -39,13 +39,13 @@
           <Tabs value="name1" @on-click="currentTabs">
             <span slot="extra">其他支付方式支付：<span style="color:#FF624B;font-size:18px;">{{otherPayCount.toFixed(2)}}</span>元</span>
             <TabPane label="第三方支付" name="name1">
-                <RadioGroup v-model="otherPay" @on-change="otherPayChange">
-                    <Radio label="ali" style="margin-right: 40px;">
-                    <img style="vertical-align: middle;" src="../../assets/img/payresult/alipay.png">
-                    </Radio>
-                    <Radio label="wx">
-                    <img style="vertical-align: middle;" src="../../assets/img/payresult/wxpay.png">
-                    </Radio>
+              <RadioGroup v-model="otherPay" @on-change="otherPayChange">
+                <Radio label="ali" style="margin-right: 40px;">
+                  <img style="vertical-align: middle;" src="../../assets/img/payresult/alipay.png">
+                </Radio>
+                <Radio label="wx">
+                  <img style="vertical-align: middle;" src="../../assets/img/payresult/wxpay.png">
+                </Radio>
               </RadioGroup>
             </TabPane>
             <!-- <TabPane label="线下汇款" name="name2">
@@ -65,7 +65,7 @@
                     </div>
                 </div>
             </TabPane> -->
-        </Tabs>
+          </Tabs>
         </div>
         <div style="margin-top:20px;text-align:right;" v-if="currentTab=='otherPay'">
           <Button @click="$router.push({path:'order'})" style="margin-right:10px;">取消支付</Button>
@@ -89,6 +89,7 @@
         <Button type="primary" @click="paySuccess">已完成支付</Button>
       </p>
     </Modal>
+
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -126,7 +127,7 @@
         s: '--',
         intervalInstance: null,
         payText: '确认支付',
-        orderStatus:0
+        orderStatus: 0
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -142,7 +143,7 @@
     },
     created() {
       this.overTime = sessionStorage.getItem('overtime')
-      this.orderInfo = this.$route.params;
+      this.orderInfo = JSON.parse(sessionStorage.getItem('payInfo')) ? JSON.parse(sessionStorage.getItem('payInfo')) : this.$route.params
       this.orderStatus = sessionStorage.getItem('orderStatus').indexOf('实时');
       // 充值有限制  不能少于10元
       if (this.orderInfo.isNilNorm == 0) {
@@ -162,10 +163,10 @@
       // 第三方支付
       otherPayChange(bol) {
         // 余额已足够支付 不应使用第三方支付
-       if (this.accountPay.indexOf('account') > -1 && Number(this.orderInfo.remainder) >= Number(this.orderInfo.money)) {
+        if (this.accountPay.indexOf('account') > -1 && Number(this.orderInfo.remainder) >= Number(this.orderInfo.money)) {
           this.otherPay = ''
           this.$message.info({
-            title:'提示',
+            title: '提示',
             content: '账户余额已足够支付本订单'
           })
         }
@@ -177,23 +178,23 @@
         if (this.otherPay == '') {
           if (this.accountPay.length == 0) {
             this.$message.info({
-              title:'提示',
+              title: '提示',
               content: '请选择支付方式'
             })
             return
           } else if (this.accountPay.length == 1) {
-            
+
             // 选中余额支付
             if (this.accountPay[0] == 'account' && Number(this.orderInfo.remainder) < Number(this.orderInfo.money)) {
-              if(this.orderStatus == 1){
-              this.$message.info({
-                 title:'提示',
-                content: `<p>账户余额不足,请<a style="color:#2A99F2;cursor:pointer;" href="recharge">充值</a></p>`
-              })
+              if (this.orderStatus == 1) {
+                this.$message.info({
+                  title: '提示',
+                  content: `<p>账户余额不足,请<a style="color:#2A99F2;cursor:pointer;" href="recharge">充值</a></p>`
+                })
                 return;
               }
               this.$message.info({
-                 title:'提示',
+                title: '提示',
                 content: '账户余额不足'
               })
               return
@@ -272,7 +273,7 @@
             this.showModal.paymentCofirm = true
           } else {
             this.$message.info({
-              title:'提示',
+              title: '提示',
               content: '支付遇到问题，请稍候再试'
             })
           }
@@ -333,12 +334,12 @@
         }
         return i;
       },
-      currentTabs(name){
-          if(name =='name2'){
-            this.currentTab = 'outLine'
-          }else{
-             this.currentTab = 'otherPay'
-          }
+      currentTabs(name) {
+        if (name == 'name2') {
+          this.currentTab = 'outLine'
+        } else {
+          this.currentTab = 'otherPay'
+        }
       }
     },
     computed: {
@@ -349,7 +350,7 @@
         if (this.accountPay.indexOf('account') > -1) {
           total += this.orderInfo.remainder
         }
-      
+
       },
       otherPayCount() {
         if (this.orderInfo && this.otherPay != '') {
@@ -363,8 +364,8 @@
         let count = 0
         this.accountPay.forEach(item => {
           if (item == 'account') {
-             count += Number(this.orderInfo.remainder)
-          } 
+            count += Number(this.orderInfo.remainder)
+          }
         })
         this.accountPayCount = count > this.orderInfo.money ? this.orderInfo.money : count
       },
@@ -410,32 +411,32 @@
         background-color: white;
         padding: 20px;
         min-height: 700px;
-        .content_pay{
-            margin-top:20px;
-            background: #F6FAFD;
-            padding: 20px;
-            .pay_time{
-                padding-top:20px;
-                > p {
-                font-size: 17px;
-                font-family: PingFangSC-Regular;
-                color: rgba(51, 51, 51, 1);
-                line-height: 28px;
-                span {
-                    color: #FD0000;
-                }
-                }
-                & > span {
-                font-family: Microsoft YaHei-Bold;
-                font-size: 24px;
-                color: rgba(17, 17, 17, 0.75);
-                font-weight: bold;
-                }
+        .content_pay {
+          margin-top: 20px;
+          background: #F6FAFD;
+          padding: 20px;
+          .pay_time {
+            padding-top: 20px;
+            > p {
+              font-size: 17px;
+              font-family: PingFangSC-Regular;
+              color: rgba(51, 51, 51, 1);
+              line-height: 28px;
+              span {
+                color: #FD0000;
+              }
             }
+            & > span {
+              font-family: Microsoft YaHei-Bold;
+              font-size: 24px;
+              color: rgba(17, 17, 17, 0.75);
+              font-weight: bold;
+            }
+          }
         }
-        >p{
-            margin-top:20px;
-             line-height: 28px;
+        > p {
+          margin-top: 20px;
+          line-height: 28px;
         }
         .accountInfo {
           border: 1px solid rgb(233, 233, 233);
@@ -458,8 +459,9 @@
           border: 1px solid rgb(233, 233, 233);
           border-radius: 3px;
           padding: 20px 15px;
-          .other_pay{
-            margin-bottom:20px;padding-bottom:12px;
+          .other_pay {
+            margin-bottom: 20px;
+            padding-bottom: 12px;
             border: 1px solid #E9E9E9;
           }
           .toggleWrapper {
@@ -498,8 +500,8 @@
             cursor: pointer;
           }
           .outLineContent {
-              display: flex;
-              justify-content: space-between;
+            display: flex;
+            justify-content: space-between;
             .out_hint {
               width: 555px;
               line-height: 25px;

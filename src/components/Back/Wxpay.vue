@@ -98,10 +98,18 @@
     },
     methods: {
       select() {
-        this.$router.push('recharge');
+        if (this.from.indexOf('/ruicloud/recharge') == 0 || this.from.indexOf('/ruicloud/Recharge') == 0) {
+          this.$router.push('recharge');
+        } else {
+          this.$router.push('payNew')
+        }
       },
       payError() {
-        this.$router.push('recharge');
+        if (this.from.indexOf('/ruicloud/recharge') == 0 || this.from.indexOf('/ruicloud/Recharge') == 0) {
+          this.$router.push('recharge');
+        } else {
+          this.$router.push('payNew')
+        }
       },
       paySuccess() {
         this.loading = true
