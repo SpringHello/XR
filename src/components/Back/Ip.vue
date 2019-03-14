@@ -550,11 +550,13 @@
                         this.renewalHost = false
                         this.renewalGpu = false
                         this.renewalNAT = false
-                        this.currentIp = this.select[0].id
+                        this.renewalInfo.IPAddress = obj.row.publicip
+                        this.renewalInfo.bandwidth = obj.row.bandwith
+                        this.renewalInfo.endTime = obj.row.endtime
                         let url = 'network/listPublicIpById.do'
                         this.$http.get(url, {
                           params: {
-                            ipId: this.select[0].publicipid
+                            ipId: obj.row.publicipid
                           }
                         }).then(response => {
                           if (response.data.status === 1) {
@@ -676,7 +678,9 @@
             title: '操作',
             render: (h, object) => {
               if (this.auth) {
-                if (object.row.status == 2) {
+                if (object.row.status == 0) {
+                  return h('span', {}, '已欠费')
+                } else if (object.row.status == 2) {
                   // 创建中
                   return h('div', {}, [h('Spin', {
                     style: {
@@ -911,6 +915,7 @@
               let status = response.data.result[0].status
               this.ipData.forEach((item, index) => {
                 if (item.id === response.data.result[0].id) {
+                  response.data.result[0]._disabled = true
                   this.ipData.splice(index, 1, response.data.result[0])
                 }
               })
@@ -930,7 +935,7 @@
             })
           }
           this.ipData.forEach(item => {
-            if (item.status != 1) {
+            if (item.status != 1 || item.status == 0) {
               item._disabled = true
               this.timingRefresh(item.publicipid)
             }

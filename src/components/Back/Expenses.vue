@@ -941,7 +941,7 @@
         <p class="cash-coupon-p">总支付金额：<span> ¥{{ payForm.paymentAmount }}</span></p>
         <p class="cash-coupon-p">现金券支付金额：<span>¥{{payForm.cashCoupon }}</span></p>
         <p class="cash-coupon-p">现金券余额：<span>¥{{ payForm.cashCouponBalance}}</span></p>
-        <p class="cash-coupon-p" v-if="voucher < parseInt(payForm.paymentAmount)">还需支付：<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
+        <p class="cash-coupon-p" v-if="voucher <= parseInt(payForm.paymentAmount)">还需支付：<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="payOk">确认支付</Button>
@@ -2593,8 +2593,8 @@
           }).reduce((total, num) => {
             return total + num
           }, 0).toFixed(2)
-          this.payForm.cashCoupon = this.voucher >= parseInt(this.payForm.paymentAmount) ? this.payForm.paymentAmount : this.voucher
-          this.payForm.cashCouponBalance = this.voucher >= parseInt(this.payForm.paymentAmount) ? (this.voucher - this.payForm.paymentAmount).toFixed(2) : 0
+          this.payForm.cashCoupon = this.voucher > parseInt(this.payForm.paymentAmount) ? this.payForm.paymentAmount : this.voucher
+          this.payForm.cashCouponBalance = this.voucher > parseInt(this.payForm.paymentAmount) ? (this.voucher - this.payForm.paymentAmount).toFixed(2) : 0
           this.showModal.payAffirm = true
         }
       },
@@ -2603,7 +2603,7 @@
         this.orderNumber.forEach(item => {
           order += ',' + item.ordernumber
         })
-        if (this.voucher >= parseInt(this.payForm.paymentAmount)) {
+        if (this.voucher > parseInt(this.payForm.paymentAmount)) {
           axios.get('information/payOrder.do', {
             params: {
               order: order.substr(1),
@@ -2641,6 +2641,7 @@
                 }
               })
               sessionStorage.setItem('overtime', this.toStr(overtime))
+              sessionStorage.setItem('payInfo', JSON.stringify(response.data.result))
               this.$router.push({
                 name: 'payNew',
                 params: response.data.result

@@ -107,7 +107,7 @@
 						</div>
 						<div class="boxcontent1">
 							<div>
-								<span class="fufeinum">付费资源数量</span>
+								<span class="fufeinum">其他付费资源数量</span>
 								<span class="fufeinum1" v-bind:class="{ newnumberofc: item.payResources.num>0}">{{item.payResources.num}}</span>
 								<span class="fufeinum2">种</span>
 							</div><br />

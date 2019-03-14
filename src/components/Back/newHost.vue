@@ -852,7 +852,6 @@
                     h('img', {
                       attrs: {
                         src: icon_1,
-                        height: '16',
                         width: '16',
                       },
                       style: imgStyle
@@ -2512,10 +2511,12 @@
         this.getComputerMonitor()
         this.$refs.monitor.style.width = '600px'
         this.$refs.monitor.style.opacity = '1'
+        this.$refs.monitor.style.display = 'block'
       },
       closeMonitor() {
         this.$refs.monitor.style.width = '0px'
         this.$refs.monitor.style.opacity = '0'
+        this.$refs.monitor.style.display = 'none'
       },
       getComputerMonitor() {
         this.$http.get('alarm/getVmAlarmByHour.do', {
@@ -2789,7 +2790,7 @@
         if (len !== 1) {
           return true
         } else {
-          return this.hostSelection[0].status != 1
+          return this.hostSelection[0].status != 1 && this.hostSelection[0].status != 0
         }
       }
     },
@@ -2963,7 +2964,7 @@
     span:nth-child(4) {
       float: left;
       cursor: auto;
-      color: rgb(255, 98, 75);
+      color: #666666;
     }
     &::after {
       content: '';
@@ -2980,7 +2981,8 @@
   }
 
   .monitor {
-    position: fixed;
+    display: none;
+    position: absolute;
     right: 0;
     top: 56px;
     width: 0;

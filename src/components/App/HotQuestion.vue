@@ -103,7 +103,7 @@
       })
       Promise.all([third, info]).then(value => {
         this.menuList = value[0].data.result
-        this.content = value[1].data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
+        this.content = value[1].data.result[0].content.replace(/<img src="/g, '<img src="https://jk.xrcloud.net/')
       })
       next()
     },
@@ -120,7 +120,7 @@
       setData(value){
         this.mainMenu = value[0].data.result
         this.menuList = value[1].data.result
-        this.content = value[2].data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
+        this.content = value[2].data.result[0].content.replace(/<img src="/g, '<img src="https://jk.xrcloud.net/')
       },
       getContent(id){
         this.minor = id || this.minor || this.menuList[0].parentId
@@ -130,7 +130,7 @@
             id: this.minor
           }
         }).then(response => {
-          this.content = response.data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
+          this.content = response.data.result[0].content.replace(/<img src="/g, '<img src="https://jk.xrcloud.net/')
         })
       },
       refresh(){

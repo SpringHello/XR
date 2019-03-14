@@ -68,12 +68,6 @@ export default {
             type: Boolean,
             default: false
         },
-        autocomplete: {
-            validator (value) {
-                return oneOf(value, ['on', 'off']);
-            },
-            default: 'off'
-        },
         elementId: {
             type: String
         }, 
@@ -81,10 +75,10 @@ export default {
             type:String,
             default:''
         },
-        // type:{
-        //     type:String,
-        //     default:''
-        // }
+        type:{
+            type:String,
+            default:''
+        }
     },
     data(){
         return{
