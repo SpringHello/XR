@@ -852,7 +852,6 @@
                     h('img', {
                       attrs: {
                         src: icon_1,
-                        height: '16',
                         width: '16',
                       },
                       style: imgStyle
