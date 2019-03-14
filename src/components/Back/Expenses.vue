@@ -941,7 +941,7 @@
         <p class="cash-coupon-p">总支付金额：<span> ¥{{ payForm.paymentAmount }}</span></p>
         <p class="cash-coupon-p">现金券支付金额：<span>¥{{payForm.cashCoupon }}</span></p>
         <p class="cash-coupon-p">现金券余额：<span>¥{{ payForm.cashCouponBalance}}</span></p>
-        <p class="cash-coupon-p" v-if="voucher < parseInt(payForm.paymentAmount)">还需支付：<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
+        <p class="cash-coupon-p" v-if="voucher <= parseInt(payForm.paymentAmount)">还需支付：<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="payOk">确认支付</Button>
