@@ -2042,11 +2042,11 @@
   }
 
   .right-surface-hidde{
-    position: fixed;
+    position: absolute;
     right: 0;
     top: 56px;
     background: #fff;
-    width: 0;
+    width: 600px;
     height: 100%;
     z-index: 1000;
     box-shadow:-5px 0px 14px -7px rgba(148,148,148,0.4);
