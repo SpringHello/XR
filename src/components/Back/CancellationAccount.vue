@@ -67,7 +67,7 @@
 				<div class="confirmation">
 					<p id="pself1">确定注销</p>
 					<p>您正在尝试注销自己的新睿云帐号。请确保账号下无有效业务，在账号注销期间不要进行任何操作，以免注销失败。 </p>
-					<p>注销后，您将无法再使用任何阿里云服务，并且您的帐号和数据也将会丢失。</p>
+					<p>注销后，您将无法再使用任何新睿云服务，并且您的帐号和数据也将会丢失。</p>
 				</div>
 				<Form ref="formInline" :model="formInline" :rules="ruleInline" inline style="float: left;">
 					<FormItem prop="cancellation">
@@ -76,7 +76,7 @@
 					</FormItem>
 				</Form>
 				<p>
-					<Checkbox v-model="cancellationCheck" id="checkself1">已了解<span @click="$router.push('/ruicloud/documentInfo/6bSYke1gB/EdIzqD3Bb')" style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号空****将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
+					<Checkbox v-model="cancellationCheck" id="checkself1">已了解<span @click="$router.push('/ruicloud/documentInfo/6bSYke1gB/EdIzqD3Bb')" style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号空{{$store.state.userInfo.phone}}将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
 				</p>
 				<Button @click="$router.push('/ruicloud/usercenter')" id="butself1">取消注销</Button>
 				<Button type="primary" :disabled="Cancellationdisabled" @click="handleSubmit('formInline')" id="butself2">确定注销</Button>
