@@ -53,8 +53,8 @@
                     </div>
               </CheckboxGroup>
             </div>
-           
-     
+
+
          <div style="border-top:1px solid #E9E9E9;padding:20px 0;margin-top:20px;">
            <!-- <span style="color:#2d8cf0;cursor:pointer;">全民普惠，3折减单，最高减免7000元！</span> -->
            <span style="float:right;">实际支付：<strong style="color:#FF624B;font-size:24px;">{{couponInfo.totalCost}}</strong>元</span>
@@ -65,7 +65,7 @@
            <Button type="primary"  @click="payCash" v-if="isButtonCash">确认购买</Button>
           <Button type="primary"  @click="pay" v-else>提交订单</Button>
         </div>
-       
+
           <div style="clear: both"></div>
       </div>
     </div>
@@ -278,7 +278,7 @@
         },
         disabledCoupon:false,
         groupList:[],
-        
+
         canUseTicket: true,
         showModal: {
           exchangeCard: false
@@ -317,7 +317,7 @@
         }
         if (to.query.countOrder) {
           params.countOrder = to.query.countOrder;
-        } 
+        }
       axios.get('user/searchOrderByBuy.do', {
         params
       }).then(response => {
@@ -478,7 +478,7 @@
               this.couponInfo.selectTicket = '';
             }
           }
-       
+
           if (this.orderPay.isUseVoucher == 0 && bol.indexOf('cash') >-1 ) {
                this.groupList.splice(bol.indexOf('cash'), 1)
               this.$message.info({
@@ -517,6 +517,7 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             sessionStorage.setItem('overtime', this.orderData[0].overTime);
+            sessionStorage.setItem('payInfo', JSON.stringify(response.data.result));
             this.$router.push({
               name: 'payNew',
               params: response.data.result
@@ -556,7 +557,7 @@
           this.$Message.info('网络异常，获取现金券失败请重试');
         })
       },
-      
+
       // 删除订单
       deleteOrder() {
         if (this.orderInfo.orderId == '') {
@@ -796,17 +797,17 @@
                       this.couponInfo.totalCost = (this.couponInfo.cost * item.money) - this.couponInfo.cash;
                     }
                     if( Number(this.couponInfo.totalCost) == 0){
-                      this.isButtonCash = true; 
+                      this.isButtonCash = true;
                     }
                   } else if (item.tickettype == 0) {
                     if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
-                      this.couponInfo.totalCost = 0;      
+                      this.couponInfo.totalCost = 0;
                     }
                     if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
                       this.couponInfo.totalCost = (this.couponInfo.cost - item.money) - this.couponInfo.cash;
                     }
                     if( Number(this.couponInfo.totalCost) == 0){
-                      this.isButtonCash = true; 
+                      this.isButtonCash = true;
                     }
                   }
                 }
@@ -829,13 +830,13 @@
           if(this.groupList.length == 0){
             this.couponInfo.totalCost = Number(this.couponInfo.cost.toFixed(2));
           }
-        
+
           if(this.groupList[0] != 'coupon' && this.groupList[1] != 'coupon'){
             this.couponInfo.selectTicket = '';
           }
           if(this.vipName !='' || this.vipName != undefined || this.vipName != 'undefined'){
             if((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket != ''){
-              
+
               this.couponInfo.couponList.forEach(item => {
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
@@ -845,9 +846,9 @@
                     if(this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))){
                       this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money) - this.couponInfo.cash).toFixed(2);
                     }
-                    
+
                     if( Number(this.couponInfo.totalCost) == 0){
-                      this.isButtonCash = true; 
+                      this.isButtonCash = true;
                     }
                   } else if (item.tickettype == 0) {
                     if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
@@ -857,7 +858,7 @@
                       this.couponInfo.totalCost = Number((this.couponInfo.cost - item.money) - this.couponInfo.cash).toFixed(2);
                     }
                     if( Number(this.couponInfo.totalCost) == 0){
-                      this.isButtonCash = true; 
+                      this.isButtonCash = true;
                     }
                   }
                 }
@@ -868,7 +869,7 @@
                   this.couponInfo.totalCost =  0;
                 }
                 if( Number(this.couponInfo.totalCost) == 0){
-                  this.isButtonCash = true; 
+                  this.isButtonCash = true;
                 }
                 if(this.couponInfo.cash < this.couponInfo.cost && this.couponInfo.selectTicket == ''){
                   this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
@@ -880,7 +881,7 @@
                 this.couponInfo.totalCost =  0;
             }
             if( Number(this.couponInfo.totalCost) == 0){
-                this.isButtonCash = true; 
+                this.isButtonCash = true;
             }
             if(this.couponInfo.cash < this.couponInfo.cost && this.couponInfo.selectTicket == ''){
                 this.couponInfo.totalCost = Number((this.couponInfo.cost - this.couponInfo.cash).toFixed(2));
