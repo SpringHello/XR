@@ -214,14 +214,14 @@
             icon: 'icon-yunanquan1',
             prodItem: [
               { title: '防火墙', desc: '自定义规则、协议、端口', path: '/firewall/' },
-              { title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/Pddos' }
+              { title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ddos/' }
             ]
           },
           {
             prod: '云运维',
             icon: 'icon-yunyunwei1',
             prodItem: [
-              { title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/Pmonitor' },
+              { title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/monitor/' },
               { title: '访问控制', desc: '权限管理、精准控制', path: '' }
             ]
           }

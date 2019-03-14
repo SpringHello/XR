@@ -238,8 +238,8 @@ var router = new Router({
         //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
         {path: 'ssl', name: 'ssl', component: Ssl},
         {
-          path: 'entrance',
-          name: 'entrance',
+          path: 'icp',
+          name: 'icp',
           component: Entrance
         },
         {
@@ -334,7 +334,6 @@ var router = new Router({
        /*{path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
          {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
         {path: 'activity/zero', name: 'activity/zero', component: active_1},
-        {path: 'entrance', name: 'entrance', component: Entrance},
         //{path: 'active_2', name: 'active_2', component: active_2},
         {path: 'activity/objectstorage', name: 'activity/objectstorage', component: objStorageActive},
         {path: 'smlj', name: 'smlj', component: smlj},
@@ -351,7 +350,7 @@ var router = new Router({
         {path: 'Scene/:type', name: 'Scene', component: SceneInfo},
         {path: 'scene', name: 'scene', component: SceneList},
 
-        {path: 'Domainname', name: 'Domainname', component: Domainname},
+        {path: 'domain', name: 'domain', component: Domainname},
         {path: 'DomainResult', name: 'DomainResult', component: DomainResult},
 
         //{path: 'DomainTemplate', name: 'DomainTemplate', component: DomainTemplate},
@@ -371,13 +370,13 @@ var router = new Router({
         {path: 'disk', component: Pdisk},
         {path: 'diskbackup', component: Pbackupdisk},
         {path: 'firewall', component: Pfirewall},
-        {path: 'Pddos', component: Pddos},
-        {path: 'Pmonitor', component: Pmonitor},
-        {path: 'PobjStorage', component: PobjStorage},
-        {path: 'PdataBase', component: PdataBase},
+        {path: 'ddos', component: Pddos},
+        {path: 'monitor', component: Pmonitor},
+        {path: 'objectstorage', component: PobjStorage},
+        {path: 'database', component: PdataBase},
         {path: 'PobjectStorage', component: PobjectStorage},
         {path: 'gpu', component: Pgpu},
-        {path: 'Pelastic',component: Pelastic},
+        {path: 'elasticscalable',component: Pelastic},
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
         {path: 'hotQuestion/:parentId/:id', component: hotQuestion}
       ]

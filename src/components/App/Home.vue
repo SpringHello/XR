@@ -758,7 +758,7 @@
                 img: '#houtaiicon-GPUzhuji',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pgpu',
+                detailLink: '/gpu/',
                 useLink: $store.state.userInfo ? '/buy/gpu/' : '/buy/gpu/',
                 ME: false
               },
@@ -898,7 +898,7 @@
                 img: '#houtaiicon-duixiangchunchu',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'PobjStorage',
+                detailLink: '/objectstorage/',
                 useLink: $store.state.userInfo ? '/buy/objectstorage/' : '/buy/objectstorage/',
                 ME: false
               },
@@ -938,7 +938,7 @@
                 img: '#icon-DDOSgaofangIP1',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pddos',
+                detailLink: '/ddos/',
                 useLink: '',
                 ME: false
               }
@@ -988,7 +988,7 @@
                 img: '#houtaiicon-yunshujukuMySQL',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'PdataBase',
+                detailLink: '/database/',
                 useLink: $store.state.userInfo ? '/buy/database/' : '/buy/database/',
                 ME: true
               },

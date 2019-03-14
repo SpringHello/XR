@@ -500,7 +500,7 @@
       },
       toEntrance() {
         sessionStorage.setItem('back', 'back')
-        this.$router.push('entrance')
+        this.$router.push('/icp/')
       },
       updateMainWeb(id, status) {
         this.domain = false;
