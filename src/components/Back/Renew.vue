@@ -25,7 +25,8 @@
                   <!--<Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
                     自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
                   </Alert>-->
-                  <Button type="primary" @click="selectAll" style="margin-right:10px;">全选</Button><Button type="primary" @click="renewalAll">一键续费</Button>
+                  <Button type="primary" @click="selectAll" style="margin-right:10px;">全选</Button>
+                  <Button type="primary" @click="renewalAll">一键续费</Button>
                   <div style="float:right">
                     <Tooltip content="当您开启关联选择，在您选择具有关联属性的产品之时，系统会默认勾选其关联资源。例如选择主机之时，会关联选择所绑定的弹性IP、云硬盘等资源。"
                              placement="bottom" style="vertical-align: middle">
@@ -74,7 +75,8 @@
                   <!--<Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
                     自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
                   </Alert>-->
-                  <Button type="primary" @click="selectAll" style="margin-right:10px;">全选</Button><Button type="primary" @click="renewalAll">一键续费</Button>
+                  <Button type="primary" @click="selectAll" style="margin-right:10px;">全选</Button>
+                  <Button type="primary" @click="renewalAll">一键续费</Button>
                   <div style="float:right">
                     <Tooltip content="当您开启关联选择，在您选择具有关联属性的产品之时，系统会默认勾选其关联资源。例如选择主机之时，会关联选择所绑定的弹性IP、云硬盘等资源。"
                              placement="bottom" style="vertical-align: middle">
@@ -125,7 +127,8 @@
                   <!--<Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
                     自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
                   </Alert>-->
-                  <Button type="primary" @click="selectAll" style="margin-right:10px;">全选</Button><Button type="primary" @click="renewalAll">一键续费</Button>
+                  <Button type="primary" @click="selectAll" style="margin-right:10px;">全选</Button>
+                  <Button type="primary" @click="renewalAll">一键续费</Button>
                   <div style="float:right">
                     <Tooltip content="当您开启关联选择，在您选择具有关联属性的产品之时，系统会默认勾选其关联资源。例如选择主机之时，会关联选择所绑定的弹性IP、云硬盘等资源。"
                              placement="bottom" style="vertical-align: middle">
@@ -179,7 +182,8 @@
                   <!--<Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
                     自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
                   </Alert>-->
-                  <Button type="primary" @click="selectAll" style="margin-right:10px;">全选</Button><Button type="primary" @click="renewalAll">一键续费</Button>
+                  <Button type="primary" @click="selectAll" style="margin-right:10px;">全选</Button>
+                  <Button type="primary" @click="renewalAll">一键续费</Button>
                   <div style="float:right">
                     <Tooltip content="当您开启关联选择，在您选择具有关联属性的产品之时，系统会默认勾选其关联资源。例如选择主机之时，会关联选择所绑定的弹性IP、云硬盘等资源。"
                              placement="bottom" style="vertical-align: middle">
@@ -273,8 +277,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default{
-    data(){
+  export default {
+    data() {
       return {
         columns: [
           {
@@ -293,7 +297,11 @@
           {
             title: '剩余时长',
             render: (h, obj) => {
-              return h('span', `${obj.row.remainingDay}天${obj.row.remainingHour}时${obj.row.remainingMinute}分`)
+              if (obj.row.remainingMinute < 0) {
+                return h('span', {}, '已到期')
+              } else {
+                return h('span', `${obj.row.remainingDay}天${obj.row.remainingHour}时${obj.row.remainingMinute}分`)
+              }
             }
           },
           {
@@ -430,11 +438,11 @@
         renewalItem: null
       }
     },
-    created(){
+    created() {
       this.search()
     },
     methods: {
-      select(select, notSelection){
+      select(select, notSelection) {
         if (this.linkRenew) {
           let groupList = []
           select.forEach(item => {
@@ -477,7 +485,7 @@
         }
       },
       // 改变关联续费模式
-      change(){
+      change() {
         if (this.linkRenew) {
           let groupList = [];
           this.map[this.tabLabel].forEach(i => {
@@ -496,7 +504,7 @@
           })
         }
       },
-      toggleStatus(item){
+      toggleStatus(item) {
         var flag = item.isAuto ? 0 : 1
         var url = 'information/setAutoRenew.do'
         this.$http.get(url, {
@@ -525,7 +533,7 @@
           }
         })
       },
-      search(){
+      search() {
         function deepCopy(data) {
           const t = typeof data;
           let o;
@@ -630,7 +638,7 @@
           }
         })
       },
-      renewalAll(){
+      renewalAll() {
         let isEmpty = true;
         this.requestParam.ipArray = []
         this.requestParam.hostArray = []
@@ -653,14 +661,14 @@
         this.renewalTime = '';
         this.modal = true
       },
-      selectAll(){
+      selectAll() {
         this.map[this.tabLabel].forEach(i => {
           this[`${i}List`].forEach(item => {
             this.$set(item, '_checked', true)
           })
         });
       },
-      toggle(item){
+      toggle(item) {
         if (!item.select) {
           item.select = true
           this.selectArray.push(item)
@@ -670,7 +678,7 @@
         this.selectArray.splice(index, 1)
         item.select = false
       },
-      renewalOne(item){
+      renewalOne(item) {
         this.modal = true
         this.renewalType = ''
         this.renewalTime = ''
@@ -682,7 +690,7 @@
         this.renewalItem = item
         this.requestParam[`${item.type}Array`].push(item.id)
       },
-      ok(){
+      ok() {
         let list = [];
         [{type: 'ip', id: 2}, {type: 'host', id: 0}, {type: 'disk', id: 1}, {type: 'nat', id: 4}].forEach(i => {
           this.requestParam[`${i.type}Array`].forEach(item => {
@@ -700,7 +708,7 @@
           }
         })
       },
-      clear(){
+      clear() {
         this.selectArray = []
         this.hostList.forEach(item => {
           item.select = false
@@ -708,11 +716,11 @@
       }
     },
     watch: {
-      renewalType(type){
+      renewalType(type) {
         this.renewalTime = ''
         this.timeOptions.renewalTime = this.timeOptions[type]
       },
-      renewalTime(time){
+      renewalTime(time) {
         if (time == '') {
           this.cost = '--'
         } else {
@@ -742,7 +750,7 @@
       }
     },
     computed: {
-      allShow(){
+      allShow() {
         return {
           all: this.hostList.length + this.ipList.length + this.diskList.length + this.natList.length,
           hour: this.hourHostList.length + this.hourIpList.length + this.hourDiskList.length + this.hourNatList.length,

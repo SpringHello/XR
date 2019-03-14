@@ -98,8 +98,7 @@
               <li><span class="four">计费类型</span><span
                 class="two"> {{ hostInfo.case_type == 1 ? '包年' : hostInfo.case_type == 2 ? '包月' : hostInfo.case_type == 3 ? '实时' : '七天'}}</span></li>
               <li><span class="four">自动续费</span>
-                <i-switch size="small" style="position: relative;top: -2px;" v-model="isAutoRenew" @on-change="changAutoRenew"
-                          :disabled="hostInfo.case_type != 2 && hostInfo.case_type != 1"></i-switch>
+                <i-switch size="small" style="position: relative;top: -2px;" v-model="isAutoRenew" @on-change="changAutoRenew"></i-switch>
               </li>
               <li><span class="four">创建时间</span><span class="two"> {{ hostInfo.createTime}}</span></li>
               <li><span class="four">到期时间</span><span class="two"> {{ hostInfo.endTime}}</span></li>
@@ -1381,6 +1380,10 @@
         })
       }),
       changAutoRenew() {
+        if (this.hostInfo.case_type != 2 && this.hostInfo.case_type != 1) {
+          this.getHostInfo()
+          return
+        }
         let url = 'information/setAutoRenew.do'
         this.$http.get(url, {
           params: {
@@ -1741,7 +1744,7 @@
         })
       },
       seeAll() {
-        sessionStorage.setItem('isSeeHint','1')
+        sessionStorage.setItem('isSeeHint', '1')
         this.guideStep = 5
       }
     },
