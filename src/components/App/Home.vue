@@ -1116,7 +1116,7 @@
             online: true
           },
           {
-            text: '武汉',
+            text: '西安',
             top: '238px',
             left: '352px',
             online: true

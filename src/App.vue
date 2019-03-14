@@ -70,7 +70,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a  href="https://zschj.xrcloud.net/ruicloud/overview"   rel="nofollow" ><span>控制台</span>
+                  <a  href="https://www.xrcloud.net/ruicloud/overview"   rel="nofollow" ><span>控制台</span>
                   </a>
                 </div>
               </div>
@@ -85,7 +85,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a  href="https://zschj.xrcloud.net/ruicloud/login"   rel="nofollow" ><span>登录</span>
+                  <a  href="https://www.xrcloud.net/ruicloud/login"   rel="nofollow" ><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -93,7 +93,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a  href="https://zschj.xrcloud.net/ruicloud/register"   rel="nofollow" ><span>注册</span>
+                  <a  href="https://www.xrcloud.net/ruicloud/register"   rel="nofollow" ><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -548,7 +548,7 @@
           },
           {
             title: '关于我们',
-            path: 'https://zschj.xrcloud.net/ruicloud/about.htm'
+            path: 'https://www.xrcloud.net/ruicloud/about.htm'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
@@ -613,7 +613,7 @@
           {title: '计算', url: '/ruicloud/document'},
           {title: '网络', url: '/ruicloud/document'},
           {title: '安全', url: '/ruicloud/document'},
-          {title: '财务与账户', url: 'https://zschj.xrcloud.net/ruicloud/documentInfo/qHwTxQKS7/qZfGQSs8S'}
+          {title: '财务与账户', url: 'https://www.xrcloud.net/ruicloud/documentInfo/qHwTxQKS7/qZfGQSs8S'}
         ],
         // 服务与公告
         notice: [
@@ -623,7 +623,7 @@
         ],
         // 友情链接
         links: [
-          {href: 'https://zschj.xrcloud.net/ruicloud/', text: '新睿云'}
+          {href: 'https://www.xrcloud.net/ruicloud/', text: '新睿云'}
         ],
         Preparation: [
           {
