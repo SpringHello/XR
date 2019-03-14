@@ -60,9 +60,9 @@
 				<div class="TipsAgain">
 					<p id="pself1">再次提示：</p>
 					<p id="pself1">提交账号注销申请为不可逆操作。</p>
-					<p>账号注销后，您将无法再次登录新睿云网站、论坛、APP，无法访问控制面板或云站点控制面板或进行其他依赖于账号权限进行的操作。 </p>
+					<p>账号注销后，您将无法再次登录新睿云网站、论坛、APP，无法访问控制面板或进行其他依赖于账号权限进行的操作。 </p>
 					<p>您在该账号下的个人信息、交易记录、业务数据、历史信息等均将无法找回。 </p>
-					<p>如果您希望保持与此账号相关联的任何云服务（包括云站点），仅希望终止部分产品/资源，请不要继续后续操作。</p>
+					<p>如果您希望保持与此账号相关联的任何云服务，仅希望终止部分产品/资源，请不要继续后续操作。</p>
 				</div>
 				<div class="confirmation">
 					<p id="pself1">确定注销</p>
@@ -76,7 +76,7 @@
 					</FormItem>
 				</Form>
 				<p>
-					<Checkbox v-model="cancellationCheck" id="checkself1">已了解<span style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号空****将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
+					<Checkbox v-model="cancellationCheck" id="checkself1">已了解<span @click="$router.push('/ruicloud/documentInfo/6bSYke1gB/EdIzqD3Bb')" style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号空****将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
 				</p>
 				<Button @click="$router.push('/ruicloud/usercenter')" id="butself1">取消注销</Button>
 				<Button type="primary" :disabled="Cancellationdisabled" @click="handleSubmit('formInline')" id="butself2">确定注销</Button>
