@@ -758,9 +758,9 @@
 		margin-top: -20px;
 	}
 
-/*	.active {
-		height: 100px;
-	}*/
+	.active {
+		// height: 100px;
+	}
 
 	#spanself1 {
 		width: 2px;

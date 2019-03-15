@@ -143,18 +143,18 @@
                   </Input>
                 </FormItem>-->
               <FormItem label="内网端口" prop="frontPort" v-if="creatbalancemodal.formInline.radio=='public'">
-                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" maxlength="5" placeholder="请输入1-65535之间任意数字">
+                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字">
                 </Input>
               </FormItem>
               <FormItem label="源端口" prop="frontPort" v-else>
-                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" maxlength="5" placeholder="请输入1-65535之间任意数字">
+                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字">
                 </Input>
               </FormItem>
-              <FormItem label="公网端口" prop="rearPort" maxlength="5" v-if="creatbalancemodal.formInline.radio=='public'">
+              <FormItem label="公网端口" prop="rearPort" :maxlength="5" v-if="creatbalancemodal.formInline.radio=='public'">
                 <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字">
                 </Input>
               </FormItem>
-              <FormItem label="实例端口" prop="rearPort" maxlength="5" v-else>
+              <FormItem label="实例端口" prop="rearPort" :maxlength="5" v-else>
                 <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字">
                 </Input>
               </FormItem>

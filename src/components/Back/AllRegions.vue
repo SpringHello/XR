@@ -113,17 +113,21 @@
 							</div><br />
 							<div style="margin-top: 13px;margin-left: -5px;">
 								<div class="VPCALL" v-for="ited in item.payResources.list" @click="push(item,ited)">
-									<span class="nnum" v-bind:class="{ newnnum: ited.num>0}">{{ited.num}}</span>
-									<Poptip trigger="hover" v-if="ited.name=='对象存储'">
-										<div slot="content" id="enna">
-											<span>数字代表该区域 </span>
-											<span>存储包 </span>
-											<span>容量 </span>
-										</div>
-										<i class="iconfont houtaiicon-bangzhu"></i>
-									</Poptip>
-									<span class="nnumzi" v-bind:class="{ newnnumzi: ited.num>0}">{{ited.name}}</span>
-									<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click.stop="pushbuy(item,ited)"></i>
+									<p style="height: 30px;line-height: 30px;margin-top: 5px;">
+										<span class="nnum" v-bind:class="{ newnnum: ited.num>0}">{{ited.num}}</span>
+										<Poptip trigger="hover" v-if="ited.name=='对象存储'">
+											<div slot="content" id="enna">
+												<span>数字代表该区域 </span>
+												<span>存储包 </span>
+												<span>容量 </span>
+											</div>
+											<i class="iconfont houtaiicon-bangzhu"></i>
+										</Poptip>
+										<i class="iconfont houtaiicon-gouwuche1" id="gwchh" @click.stop="pushbuy(item,ited)"></i>
+									</p>
+									<p style="height: 20px;">
+										<span class="nnumzi" v-bind:class="{ newnnumzi: ited.num>0}">{{ited.name}}</span>
+									</p>
 								</div>
 							</div>
 						</div>
@@ -137,8 +141,12 @@
 							</div><br />
 							<div style="margin-top: 13px;margin-left: -5px;">
 								<div class="VPCCALL" v-for="ites in item.freeResources.list" @click="freepush(item,ites)">
-									<span class="nnum" v-bind:class="{ newnnum: ites.num>0}">{{ites.num}}</span>
-									<span class="nnumzi" v-bind:class="{ newnnumzi: ites.num>0}">{{ites.name}}</span>
+									<p style="height: 30px;margin-top: 5px;">
+										<span class="nnum2" v-bind:class="{ newnnum: ites.num>0}">{{ites.num}}</span>
+									</p>
+									<p style="height: 20px;">
+										<span class="nnumzi2" v-bind:class="{ newnnumzi: ites.num>0}">{{ites.name}}</span>
+									</p>
 								</div>
 							</div>
 						</div>
@@ -655,7 +663,7 @@
 	}
 	.boxcontent1{
 		width: 331px;
-		height: 157px;
+		height: 177px;
 		margin-left: 20px;
 		margin-top: 20px;
 	}
@@ -691,7 +699,6 @@
 		border:1px solid rgba(229,233,237,1);
 		float: left;
 		margin-left: 10px;
-		margin-top: 20px;
 	}
 	.boxcontent2{
 		width: 331px;
@@ -726,25 +733,38 @@
 		margin-left: 6px;
 	}
 	.nnum{
+		max-width: 55px;
 		font-size:14px;
 		font-family:ArialMT;
 		color:rgba(153,153,153,1);
-		line-height:20px;
+		line-height:30px;
 		margin-left: 10px;
-		margin-top: 10px;
 		float: left;
+		overflow: hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
 	}
 	.nnumzi{
 		font-size:12px;
 		font-family:MicrosoftYaHei;
 		color:rgba(153,153,153,1);
 		line-height:16px;
-		position: absolute;
-		margin-left: -10px;
-		margin-top: 35px;
+		margin-left: 10px;
 	}
-	.boxcontent1 .VPCALL:nth-of-type(4) .nnumzi{
-		margin-left: -27px;
+	.nnum2{
+		font-size:14px;
+		font-family:ArialMT;
+		color:rgba(153,153,153,1);
+		line-height:30px;
+		margin-left: 10px;
+		float: left;
+	}
+	.nnumzi2{
+		font-size:12px;
+		font-family:MicrosoftYaHei;
+		color:rgba(153,153,153,1);
+		line-height:16px;
+		margin-left: 10px;
 	}
 	.VPCALL{
 		width:107px;
@@ -807,18 +827,15 @@
 	}
 	.VPCALL .houtaiicon-bangzhu{
 		color: #2A99F2FF;
-		position:absolute;
-		margin-top: -7px;
-		margin-left: 7px;
+		margin-left: 2px;
 		display: none;
 	}
 	.VPCALL:hover .houtaiicon-bangzhu{
 		display: block;
 	}
-	#gwchh{
+	.VPCALL #gwchh{
 		color: #2A99F2FF;
-		margin-right: 10px;
-		margin-top: 5px;
+		margin-right: 5px;
 		float: right;
 		display: none;
 		cursor: pointer;
