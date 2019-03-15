@@ -107,13 +107,13 @@
 						<Form-item label="开户银行名称" prop="depositBank" id="hei30">
 							<Input :maxlength="32" v-model="formAppreciationDate.depositBank" placeholder="请输入开户银行名称" style="width: 300px"></Input>
 						</Form-item>
-						<Tooltip :content="bank_account" placement="bottom" :disabled="disabled" :class="{'active' : isTrue}"
-						 @on-popper-hide="setdisable" @on-popper-show="setdisableshow">
 							<Form-item label="银行账户" prop="bankAccount" id="hei30">
+                <Tooltip :content="bank_account" placement="bottom-end" :disabled="disabled" :class="{'active' : isTrue}"
+                         @on-popper-hide="setdisable" @on-popper-show="setdisableshow">
 								<Input :maxlength="32" v-model="formAppreciationDate.bankAccount" placeholder="请输入银行账户" style="width: 300px"
 								 v-on:input="conversion"></Input>
+                </Tooltip>
 							</Form-item>
-						</Tooltip>
 						<Form-item label="银行所在地" prop="registeredAddress" id="hei30">
 							<Input :maxlength="64" v-model="formAppreciationDate.registeredAddress" placeholder="请输入银行所在地" style="width: 300px"></Input>
 						</Form-item>
@@ -758,9 +758,9 @@
 		margin-top: -20px;
 	}
 
-	.active {
+/*	.active {
 		height: 100px;
-	}
+	}*/
 
 	#spanself1 {
 		width: 2px;

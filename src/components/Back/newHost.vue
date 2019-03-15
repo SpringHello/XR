@@ -1609,7 +1609,11 @@
             this.hostListData.forEach(host => {
               if (host.status == 2 || host.status == -2) {
                 host._disabled = true
-                this.timingRefresh(host.id)
+                if (host.id) {
+                  this.timingRefresh(host.id)
+                } else {
+                  this.getHostList()
+                }
               }
             })
           }

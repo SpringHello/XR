@@ -203,8 +203,8 @@
 				for (var zone of this.$store.state.zoneList) {
 				  if (zone.zoneid == item.zoneId) {
 				    $store.commit('setZone', zone);
-					if(ited.url=='https://testoss-console.xrcloud.net/ruirados/objectStorage'){
-						window.location.href='https://testoss-console.xrcloud.net/ruirados/objectStorage'
+					if(ited.url=='https://oss-console.xrcloud.net/ruirados/objectStorage'){
+						window.location.href='https://oss-console.xrcloud.net/ruirados/objectStorage'
 					}
 					else if(ited.url=='vpc#NAT'){
 						sessionStorage.setItem('VPN', ited.url)
@@ -213,7 +213,7 @@
 					else{
 						 this.$router.push(ited.url)
 					}
-					
+
 				  }
 				}
 			},
@@ -257,7 +257,7 @@
 					}
 					else if(item.type=='1'){
 						this.$router.push('/ruicloud/buy/bhost')
-					}	
+					}
 				  }
 				}
 			},

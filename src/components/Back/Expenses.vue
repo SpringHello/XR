@@ -29,7 +29,7 @@
                     <li style="color: #2A99F2;cursor: pointer" @click="getVipList">¥{{ balance }}</li>
                   </ul>
                   <ul style="width: 30%">
-                    <li>冻结押金
+                    <li>冻结金额
                       <span @click="freezeDetails">
                       <Icon type="ios-help-outline"
                             style="color:#2A99F2;font-size:16px;margin-left: 10px;cursor: pointer;"></Icon>

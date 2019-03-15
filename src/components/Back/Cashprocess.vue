@@ -349,7 +349,7 @@
         moneysure: 0,
 		minmoney:0,
         //提现可输入金额
-        Otheramount: 1,
+        Otheramount: 0,
         Actualamount: 0,
         //用户电话号码
         userphone: '',
@@ -511,7 +511,7 @@
 				}
 			})
 		}
-		
+
       },
       moneyconfirm() {
 		  this.Actualamount = this.monenymo

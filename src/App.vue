@@ -474,7 +474,7 @@
                       {
                         title: '域名注册',
                         desc: '自定义域名注册、查询',
-                        path: 'https://www.xrcloud.net/ruicloud/domain'
+                        path: 'https://www.xrcloud.net/ruicloud/domainname'
                       },
                       {
                         title: '域名备案',

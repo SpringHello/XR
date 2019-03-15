@@ -1128,13 +1128,13 @@
             online: true
           },
           {
-            text: '浙江',
+            text: '绍兴',
             top: '240px',
             left: '436px',
             online: true
           },
           {
-            text: '广州',
+            text: '东莞',
             top: '290px',
             left: '360px',
             online: true
