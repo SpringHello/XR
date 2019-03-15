@@ -853,6 +853,7 @@
                     h('img', {
                       attrs: {
                         src: icon_1,
+                        width: '16',
                       },
                       style: imgStyle
                     }, ''),
@@ -2511,10 +2512,12 @@
         this.getComputerMonitor()
         this.$refs.monitor.style.width = '600px'
         this.$refs.monitor.style.opacity = '1'
+        this.$refs.monitor.style.display = 'block'
       },
       closeMonitor() {
         this.$refs.monitor.style.width = '0px'
         this.$refs.monitor.style.opacity = '0'
+        this.$refs.monitor.style.display = 'none'
       },
       getComputerMonitor() {
         this.$http.get('alarm/getVmAlarmByHour.do', {
@@ -2979,7 +2982,8 @@
   }
 
   .monitor {
-    position: fixed;
+    display: none;
+    position: absolute;
     right: 0;
     top: 56px;
     width: 0;
