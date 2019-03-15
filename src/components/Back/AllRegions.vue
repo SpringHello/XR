@@ -114,7 +114,7 @@
 							<div style="margin-top: 13px;margin-left: -5px;">
 								<div class="VPCALL" v-for="ited in item.payResources.list" @click="push(item,ited)">
 									<p style="height: 30px;line-height: 30px;margin-top: 5px;">
-										<span class="nnum" v-bind:class="{ newnnum: ited.num>0}">{{ited.num}}0000</span>
+										<span class="nnum" v-bind:class="{ newnnum: ited.num>0}">{{ited.num}}</span>
 										<Poptip trigger="hover" v-if="ited.name=='对象存储'">
 											<div slot="content" id="enna">
 												<span>数字代表该区域 </span>
