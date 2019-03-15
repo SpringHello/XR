@@ -13,13 +13,13 @@
                 </div>
              </transition>
         </div>
-        <input :value='account'  :style="style"
+        <input :value='account'  :style="style" 
         :id="elementId"
          autocomplete="new-password"
         :spellcheck="spellcheck" 
         :disabled="disabled"
         :readonly="readonly"
-        :type="type"
+        :type="passwordType"
         ref='xInput'
         :class="inputClasses"
         :placeholder="placeholder" 
@@ -94,7 +94,7 @@ export default {
             timeBoo:true,
             isEye:false,
             timeP:false,
-            type:''
+            passwordType:''
         }
     },
     mounted(){
@@ -115,6 +115,7 @@ export default {
             this.$emit('on-change',e);
         },
         inputBlur(e){
+            this.$refs.xInput.setAttribute('readonly',true); // 添加只读用于去掉浏览器自动完成
             this.$emit('on-blur', e);
             let val = e.target.value;
             this.dispatch('FormItem', 'on-form-blur', this.account);
@@ -132,6 +133,7 @@ export default {
             this.$emit('on-keyup', event);
         },
         handleFocus (event) {
+            this.$refs.xInput.removeAttribute('readonly');
             this.$emit('on-focus', event);
         },
         dispatch(componentName, eventName, params) {
@@ -165,9 +167,9 @@ export default {
         eyeType(){
             this.isEye = !this.isEye;
             if(this.isEye){
-                this.type ='';
+                this.passwordType ='';
             }else{
-                this.type = 'password';
+                this.passwordType = 'password';
             }
         }
     },
@@ -202,30 +204,23 @@ export default {
             if(this.choice == 'select'){
             this.isSelect = 'select';
             this.style = 'height: 44px;padding-left: 96px;';
-            this.type = '';
-            // return;
             }
             if(this.choice == 'validate'){
                 this.isSelect = 'validate';
-                this.style='height: 44px;padding-left: 48px;padding-right:98px;'
-               this.type = '';
-                // return;
+                this.style='height: 44px;padding-left: 48px;padding-right:98px;';
             }
             if(this.choice == 'eye'){
                 this.isSelect = 'eye';
                 this.style='height: 44px;padding-left: 48px;padding-right:70px;';
-                this.type = 'password';
-                //  return;
+                this.passwordType = 'password';
             }
             if(this.choice ==''){
                 this.isSelect = '';
-                this.style='height: 44px;padding-left:48px;',
-                this.type = '';
+                this.style='height: 44px;padding-left:48px;';
             }
             if(this.icon == ''){
                 this.isSelect = '';
-                this.style='height: 44px;padding-left:48px;',
-                this.type = '';
+                this.style='height: 44px;padding-left:48px;';
             }
          },
         immediate:true
@@ -238,14 +233,6 @@ export default {
           },
           immediate:true
       },
-      isEye:{
-        handler(){
-            if(this.icon == ''){
-            this.eyes =  this.isEye ?require('../../assets/img/login/lr-icon3.png') :require('../../assets/img/updatePaw/paw_closeEye.png')
-            }
-         },
-         immediate:true
-      }
     }
 }
 </script>

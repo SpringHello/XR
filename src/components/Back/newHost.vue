@@ -839,7 +839,8 @@
               let icon_3 = require('../../assets/img/host/h-icon7.png')
               let icon_4 = require('../../assets/img/host/h-icon8.png')
               let imgStyle = {
-                marginRight: '5px'
+                marginRight: '5px',
+                width: '16px',
               }
               switch (templateName) {
                 case 'W':
