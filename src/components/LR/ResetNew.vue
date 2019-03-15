@@ -100,7 +100,7 @@
                          <div slot="code">
                           <div class="ver_yan">
                               <span @click="sendCode(1)" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
-                              <span v-else style="color:#666666;">{{count}}</span>
+                              <span v-else style="color:#666666;">{{count+' S'}}</span>
                           </div>
                         </div>
                       </x-Input>
@@ -129,7 +129,7 @@
                         <div slot="code">
                           <div class="ver_yan">
                               <span @click="sendCode(0)" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
-                              <span v-else style="color:#666666;">{{count+'S'}}</span>
+                              <span v-else style="color:#666666;">{{count+' S'}}</span>
                           </div>
                           <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE;cursor:pointer;" @click="sendCode(0)">重新获取</span>或<span  style="color:#4A97EE;cursor:pointer;" @click="getVoiceCode">接收语音验证</span></p>
                         </div>
@@ -416,21 +416,22 @@ const IDCardValid = (rule, value, callback) =>{
   }
 }
 
-const newPawValid =(rule, value, callback) =>{
-  let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
-  if(value == ''){
-    return callback(new Error('请输入新密码'));
-  }else if(!reg.test(value)){
-    return callback(new Error('密码长度不小于8位，必须包含至少一个大写字母一个小写字母和一个数字'))
-  }else{
-    callback();
-  }
-}
+
 
 
 
 export default {
   data() {
+    const newPawValid =(rule, value, callback) =>{
+      let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
+      if(value == ''){
+        return callback(new Error('请输入新密码'));
+      }else if(!reg.test(value)){
+        return callback(new Error('密码长度不小于8位，必须包含至少一个大写字母一个小写字母和一个数字'))
+      }else{
+        callback();
+      }
+    }
     const passwordValid = (rule,value, callback)=>{
       let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
       if(value == ''){
@@ -444,7 +445,7 @@ export default {
       }
     }
     return {
-      imgSrc: "https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do",
+      imgSrc: "/user/getKaptchaImage.do",
       //步骤集合
       stepList: [
         {
@@ -527,10 +528,10 @@ export default {
           {required:true,validator: vailAucct,trigger: 'blur'}
         ],
         newPaw:[
-          {required: true, validator:newPawValid, trigger: 'blur'}
+          { validator:newPawValid,trigger:'change'}
         ],
         oldPaw:[
-          {required: true, validator:passwordValid, trigger: 'blur'}
+          { validator:passwordValid}
         ],
         vCode:[
           {required:true, message:'请输入图形验证码',trigger: 'blur'}
@@ -608,7 +609,7 @@ export default {
     });
   },
   mounted(){
-
+  
   },
   methods: {
     sendCode: throttle(5000, function(val) {
