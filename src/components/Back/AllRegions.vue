@@ -221,7 +221,7 @@
 					else{
 						 this.$router.push(ited.url)
 					}
-					
+
 				  }
 				}
 			},
@@ -265,7 +265,7 @@
 					}
 					else if(item.type=='1'){
 						this.$router.push('/ruicloud/buy/bhost')
-					}	
+					}
 				  }
 				}
 			},

@@ -511,7 +511,7 @@
 				}
 			})
 		}
-		
+
       },
       moneyconfirm() {
 		  this.Actualamount = this.monenymo

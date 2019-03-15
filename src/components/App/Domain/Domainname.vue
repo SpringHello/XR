@@ -271,7 +271,7 @@
       height: 400px;
       padding: 87px 0 81px 0;
       text-align: center;
-      background: url('../../../assets/img/domain/banner.png') no-repeat center;
+      background: url('../../../assets/img/domain/domain-banner.png') no-repeat center;
       h3 {
         font-size: 48px;
         color: rgba(255, 255, 255, 1);

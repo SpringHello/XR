@@ -361,7 +361,7 @@ var router = new Router({
 
 
 
-   /*     {path: 'Pecs.htm', component: Pecs},
+        {path: 'Pecs.htm', component: Pecs},
         {path: 'Phost.htm', component: Phost},
         {path: 'Pecss.htm', component: Pecss},
         {path: 'Pvpc.htm', component: Pvpc},
@@ -377,7 +377,7 @@ var router = new Router({
         {path: 'PobjStorage.htm', component: PobjStorage},
         {path: 'PdataBase.htm', component: PdataBase},
         {path: 'PobjectStorage.htm', component: PobjectStorage},
-        {path: 'Pgpu.htm', component: Pgpu},*/
+        {path: 'Pgpu.htm', component: Pgpu},
 
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
