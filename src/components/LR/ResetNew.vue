@@ -92,7 +92,7 @@
                   </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large'  placeholder='请输入验证码' style="width:258px;"></Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="changePictureVerification">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -121,7 +121,7 @@
                    </FormItem>
                   <FormItem prop='vCode' style="margin-bottom:0px;">
                     <x-Input  v-model="dataFroms.vCode" placeholder='请输入验证码' style="width:258px;" choice=''></x-Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="changePictureVerification">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -336,7 +336,7 @@
                    </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;">
                     <x-Input  v-model="dataFroms.vCode" placeholder='请输入验证码' style="width:258px;"></x-Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="changePictureVerification">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -444,7 +444,7 @@ export default {
       }
     }
     return {
-      imgSrc: "user/getKaptchaImage.do",
+      imgSrc: "https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do",
       //步骤集合
       stepList: [
         {
@@ -642,7 +642,7 @@ export default {
                   duration: 5
                 });
             } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.changePictureVerification();
               this.vCodeMessage = response.data.message;
             }
           }).catch(err =>{
@@ -670,7 +670,7 @@ export default {
                 this.resetAccount = true;
                 this.verPage = 'submit';
               } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.changePictureVerification();
               this.$Message.error(response.data.message);
               }
             }
@@ -910,7 +910,7 @@ export default {
             this.index = 4;
             this.verPage = '';
           }else{
-            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+           this.changePictureVerification();
             this.$Message.error({
                   content: res.data.message,
                   duration: 5
@@ -951,7 +951,7 @@ export default {
                   duration: 5
                 });
             } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.changePictureVerification();
               this.vCodeMessage = response.data.message;
             }
           });
@@ -986,7 +986,7 @@ export default {
                 }
             },1000);
         }else{
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+          this.changePictureVerification();
         }
       })
       }
@@ -1116,6 +1116,10 @@ export default {
         this.index = 3;
         this.verPage = 'phone';
       }
+    },
+
+    changePictureVerification(){
+            this.imgSrc = this.imgSrc+`?t=${new Date().getTime()}`;
     },
 
   },
