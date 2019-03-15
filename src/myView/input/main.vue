@@ -115,7 +115,7 @@ export default {
             this.$emit('on-change',e);
         },
         inputBlur(e){
-            this.$refs.xInput.setAttribute('readonly',true); // 添加只读用于去掉浏览器自动完成
+            this.$refs.xInput.setAttribute('readonly',true); // 添加只读
             this.$emit('on-blur', e);
             let val = e.target.value;
             this.dispatch('FormItem', 'on-form-blur', this.account);
