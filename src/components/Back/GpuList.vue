@@ -433,8 +433,13 @@
         //table
         hostList:[
           {
-            title:'用户名称/唯一名称',
-            width:109,
+          renderHeader: (h, params) => {
+                return h('ul', {}, [
+                  h('li', {}, '用户名称 / '),
+                  h('li', {}, '唯一名称')
+                ])
+              },
+            width:120,
             render:(h,params)=> {
               //创建中
               if (params.row.status == 2 && params.row.computerstate == undefined) {
@@ -491,18 +496,11 @@
                     },
                   },'关机中')])
               }else{
-                return h('div',[
-                  h('span',{
+                return h('ul',[
+                  h('li',{
                     style:{
                       color:'#2A99F2',
                       cursor:'pointer',
-                      overflow:'hidden',
-                      whiteSpace: 'nowrap',
-                      textOverflow: 'ellipsis',
-                      width:'100px'
-                    },
-                    domProps:{
-                      title:params.row.companyname+''+params.row.computername
                     },
                     on: {
                       click: () => {
@@ -516,7 +514,25 @@
                         }
                       }
                     }
-                  },params.row.companyname+'/'+params.row.computername)])
+                  },params.row.companyname+' /'),
+                  h('li',{
+                    style:{
+                      color:'#2A99F2',
+                      cursor:'pointer',
+                    },
+                     on: {
+                      click: () => {
+                        if (params.row.status != -1) {
+                          this.$router.push({path: 'gpuManage'});
+                          this.$store.commit('setZone',params.row);
+                          sessionStorage.setItem('uuId', params.row.computerid);
+                          sessionStorage.setItem('gpuId',params.row.id);
+                          sessionStorage.setItem('gpu_name',params.row.computername);
+                          sessionStorage.setItem('instancename',params.row.instancename)
+                        }
+                      }
+                    }
+                  },params.row.computername)])
               }
             }
           },

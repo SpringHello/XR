@@ -839,7 +839,8 @@
               let icon_3 = require('../../assets/img/host/h-icon7.png')
               let icon_4 = require('../../assets/img/host/h-icon8.png')
               let imgStyle = {
-                marginRight: '5px'
+                marginRight: '5px',
+                width: '16px',
               }
               switch (templateName) {
                 case 'W':
@@ -1609,7 +1610,11 @@
             this.hostListData.forEach(host => {
               if (host.status == 2 || host.status == -2) {
                 host._disabled = true
-                this.timingRefresh(host.id)
+                if (host.id) {
+                  this.timingRefresh(host.id)
+                } else {
+                  this.getHostList()
+                }
               }
             })
           }

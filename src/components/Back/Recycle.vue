@@ -337,6 +337,14 @@
         return this.$store.state.authInfo != null
 
       }
+    },
+    watch:{
+      "$stroe.state.zone":{
+        handler:function(){
+          this.fetchData();
+        },
+        deep:true
+      }
     }
   }
 </script>

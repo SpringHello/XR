@@ -997,6 +997,22 @@
           this.newStrategyForm.weekTimeData.push(oneDate)
         }
       },
+    },
+    watch:{
+      '$store.state.zone':{
+        handler:function(){
+          this.strategyList();
+          axios.get('database/listDatebaseBackupFile.do', {
+          params: {
+            zoneId: this.$store.state.zone.zoneid,
+          }}).then(res =>{
+              if(res.status == 200 && res.data.status ==1){
+                this.backupData = res.data.result;
+              }
+          })
+        },
+        deep:true
+      }
     }
   };
 </script>

@@ -92,7 +92,7 @@
                   </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;text-align:right;">
                     <Input  v-model="dataFroms.vCode" size='large'  placeholder='请输入验证码' style="width:258px;"></Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="changePictureVerification">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -100,7 +100,7 @@
                          <div slot="code">
                           <div class="ver_yan">
                               <span @click="sendCode(1)" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
-                              <span v-else style="color:#666666;">{{count}}</span>
+                              <span v-else style="color:#666666;">{{count+' S'}}</span>
                           </div>
                         </div>
                       </x-Input>
@@ -121,7 +121,7 @@
                    </FormItem>
                   <FormItem prop='vCode' style="margin-bottom:0px;">
                     <x-Input  v-model="dataFroms.vCode" placeholder='请输入验证码' style="width:258px;" choice=''></x-Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="changePictureVerification">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -129,7 +129,7 @@
                         <div slot="code">
                           <div class="ver_yan">
                               <span @click="sendCode(0)" v-if="timeBoo" style="cursor: pointer;">获取验证码</span>
-                              <span v-else style="color:#666666;">{{count+'S'}}</span>
+                              <span v-else style="color:#666666;">{{count+' S'}}</span>
                           </div>
                           <p v-if="timeP" style="color:#F10C0C;margin-top:6px;">收不到验证码？请换<span style="color:#4A97EE;cursor:pointer;" @click="sendCode(0)">重新获取</span>或<span  style="color:#4A97EE;cursor:pointer;" @click="getVoiceCode">接收语音验证</span></p>
                         </div>
@@ -336,7 +336,7 @@
                    </FormItem>
                    <FormItem prop='vCode' style="margin-bottom:0px;">
                     <x-Input  v-model="dataFroms.vCode" placeholder='请输入验证码' style="width:258px;"></x-Input>
-                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    <img style="vertical-align:middle;cursor:pointer;margin-left:20px;" :src="imgSrc" @click="changePictureVerification">
                     <p class="ivu-form-item-error-tip" v-if="vCodeMessage != ''">{{vCodeMessage}}</p>
                   </FormItem>
                    <FormItem prop='code'>
@@ -416,21 +416,22 @@ const IDCardValid = (rule, value, callback) =>{
   }
 }
 
-const newPawValid =(rule, value, callback) =>{
-  let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
-  if(value == ''){
-    return callback(new Error('请输入新密码'));
-  }else if(!reg.test(value)){
-    return callback(new Error('密码长度不小于8位，必须包含至少一个大写字母一个小写字母和一个数字'))
-  }else{
-    callback();
-  }
-}
+
 
 
 
 export default {
   data() {
+    const newPawValid =(rule, value, callback) =>{
+      let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
+      if(value == ''){
+        return callback(new Error('请输入新密码'));
+      }else if(!reg.test(value)){
+        return callback(new Error('密码长度不小于8位，必须包含至少一个大写字母一个小写字母和一个数字'))
+      }else{
+        callback();
+      }
+    }
     const passwordValid = (rule,value, callback)=>{
       let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
       if(value == ''){
@@ -444,7 +445,7 @@ export default {
       }
     }
     return {
-      imgSrc: "user/getKaptchaImage.do",
+      imgSrc: "/user/getKaptchaImage.do",
       //步骤集合
       stepList: [
         {
@@ -527,10 +528,10 @@ export default {
           {required:true,validator: vailAucct,trigger: 'blur'}
         ],
         newPaw:[
-          {required: true, validator:newPawValid, trigger: 'blur'}
+          { validator:newPawValid,trigger:'change'}
         ],
         oldPaw:[
-          {required: true, validator:passwordValid, trigger: 'blur'}
+          { validator:passwordValid}
         ],
         vCode:[
           {required:true, message:'请输入图形验证码',trigger: 'blur'}
@@ -608,7 +609,7 @@ export default {
     });
   },
   mounted(){
-
+  
   },
   methods: {
     sendCode: throttle(5000, function(val) {
@@ -642,7 +643,7 @@ export default {
                   duration: 5
                 });
             } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.changePictureVerification();
               this.vCodeMessage = response.data.message;
             }
           }).catch(err =>{
@@ -670,7 +671,7 @@ export default {
                 this.resetAccount = true;
                 this.verPage = 'submit';
               } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.changePictureVerification();
               this.$Message.error(response.data.message);
               }
             }
@@ -910,7 +911,7 @@ export default {
             this.index = 4;
             this.verPage = '';
           }else{
-            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+           this.changePictureVerification();
             this.$Message.error({
                   content: res.data.message,
                   duration: 5
@@ -951,7 +952,7 @@ export default {
                   duration: 5
                 });
             } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              this.changePictureVerification();
               this.vCodeMessage = response.data.message;
             }
           });
@@ -986,7 +987,7 @@ export default {
                 }
             },1000);
         }else{
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+          this.changePictureVerification();
         }
       })
       }
@@ -1116,6 +1117,10 @@ export default {
         this.index = 3;
         this.verPage = 'phone';
       }
+    },
+
+    changePictureVerification(){
+            this.imgSrc = this.imgSrc+`?t=${new Date().getTime()}`;
     },
 
   },

@@ -19,8 +19,8 @@
           </div>
           <div class="amount">
             <span class="s3">充值金额</span>
-            <InputNumber v-model="input" :min="10" :step="10" placeholder="请输入金额"
-                         style="width: 75px;height:32px;margin-left: 40px;font-size: 14px;" :precision="0"></InputNumber>
+            <InputNumber v-model="input"  :step="10" placeholder="请输入金额"
+                         style="width: 75px;height:32px;margin-left: 40px;font-size: 14px;" ></InputNumber>
             <span class="s4">元</span>
             <Button v-for="(item,index) in rechargeData" :key="index" type="ghost" class="but" @click="input = item">{{ item }}元</Button>
           </div>
@@ -337,6 +337,9 @@
         line-height: 22px;
         padding: 11px 0px;
         display: block;
+        >s{
+          cursor: pointer;
+        }
       }
       .content {
         background-color: white;

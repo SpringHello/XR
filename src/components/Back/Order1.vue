@@ -435,13 +435,11 @@
         let originCost = 0, cost = 0;
         this.orderInfo.orderId = '';
         let orderStatus = '';
-        console.log(selection);
         selection.forEach((item) => {
           cost += item.cost;
           originCost += item.originalcost;
           this.orderInfo.orderId += item.orderId+',';
           orderStatus +=item['类型']
-          console.log(item['类型']);
         })
         sessionStorage.setItem('orderStatus',orderStatus)
         this.couponInfo.cost = cost;
