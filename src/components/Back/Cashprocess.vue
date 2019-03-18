@@ -23,7 +23,7 @@
         </div>
         <div class="box1">
 					<span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看
-						<a @click="$router.push('/ruicloud/documentInfo/6bSa9TMxO/6zxZtv8QU')" class="colora">自助提现常见问题</a></span>
+						<a @click="$router.push('/documentInfo/6bSa9TMxO/6zxZtv8QU')" class="colora">自助提现常见问题</a></span>
         </div>
         <p id="idp1">
           <span class="spanall">可提现金额</span>
@@ -123,8 +123,8 @@
             <p>1、网络异常可能会造成短信丢失，请<span class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click="getPhoneCode('againCode')">重新获取</span>或<span
               class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}" @click.prevent="getPhoneCode('voice')">接收语音验证码</span>。</p>
             <p v-if="authInfo&&authInfo.checkstatus==0">2、如果手机已丢失或停机，请<span class="spanaa" @click="showModal.modifyPhoneID = true;showModal.cashverification=false">通过身份证号码验证</span>或<span
-              class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</span>更改手机号。</p>
-            <p v-if="!authInfo||authInfo&&authInfo.checkstatus!=0">2、如果手机已丢失或停机，请<span class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</span>或<a
+              class="spanaa" @click="$router.push('/work')">提交工单</span>更改手机号。</p>
+            <p v-if="!authInfo||authInfo&&authInfo.checkstatus!=0">2、如果手机已丢失或停机，请<span class="spanaa" @click="$router.push('/work')">提交工单</span>或<a
               target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
               class="spanaa" style="font-size: 13px;">联系客服</a>更改手机号。</p>
           </div>
@@ -304,7 +304,7 @@
         <div id="divself4">
           <span id="spanself1">提现申请提交成功</span><br/>
           <span id="spanself2">预计 <span>{{successtime}}</span> 前到账（遇公众假期顺延）</span><br/>
-          <Button type="primary" style="float: left;margin-top: 20px;" @click="$router.push('/ruicloud/cashwithdrawal')">我知道了</Button>
+          <Button type="primary" style="float: left;margin-top: 20px;" @click="$router.push('/cashwithdrawal')">我知道了</Button>
         </div>
       </div>
     </div>
@@ -495,7 +495,7 @@
       money() {
 		this.AllseMoney=JSON.parse(sessionStorage.getItem('ALLf'))
 		if(this.AllseMoney==null||this.AllseMoney==''){
-			this.$router.push('/ruicloud/cashwithdrawal')
+			this.$router.push('/cashwithdrawal')
 		}
 		else{
 			sessionStorage.removeItem('ALLf')

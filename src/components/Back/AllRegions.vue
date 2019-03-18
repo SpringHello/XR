@@ -29,7 +29,7 @@
               <Poptip trigger="hover">
                 <div slot="content" id="ffff">
                   <span>平台所有区域付费资源即将到期提醒，具体提醒政策请参见</br></span>
-                  <span>帮助文档-<a href="https://www.xrcloud.net/ruicloud/documentInfo/kiRWuMFJd/km08mXqRb"
+                  <span>帮助文档-<a href="https://www.xrcloud.net/documentInfo/kiRWuMFJd/km08mXqRb"
                                 style="color: #2A99F2FF;text-decoration: underline;">购买指南</a>-到期提醒栏目；</span>
                 </div>
                 <i class="iconfont houtaiicon-bangzhu" id="num4"></i><br/>
@@ -290,10 +290,10 @@
           if (zone.zoneid == item.zoneId) {
             $store.commit('setZone', zone);
             if (item.type == '2') {
-              this.$router.push('/ruicloud/GpuList')
+              this.$router.push('/GpuList')
             }
             else if (item.type == '1') {
-              this.$router.push('/ruicloud/host')
+              this.$router.push('/host')
             }
           }
         }

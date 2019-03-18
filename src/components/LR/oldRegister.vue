@@ -342,7 +342,7 @@
           <img src="../../assets/img/app/record.png" style="vertical-align: middle">京公网安备11010802024922号
         </a>
         <span>
-         <router-link to="/ruicloud/about">关于我们</router-link>
+         <router-link to="/about/">关于我们</router-link>
         </span>
       </div>
     </div>

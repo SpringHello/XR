@@ -210,9 +210,9 @@
           if (response.status == 200 && response.statusText == 'OK') {
             if (response.data.status == 1) {
               localStorage.setItem('authToken', response.data.message)
-              if (this.from.indexOf('/ruicloud/smlj') == 0) {
+              if (this.from.indexOf('/smlj') == 0) {
                 this.$router.push({path: this.from})
-              } else if (this.from.indexOf('/ruicloud/activity/?token=') == 0) {
+              } else if (this.from.indexOf('/activity/?token=') == 0) {
                 this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
               } else {
                 this.$router.push({path: 'overview'})

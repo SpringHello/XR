@@ -98,14 +98,14 @@
     },
     methods: {
       select() {
-        if (this.from.indexOf('/ruicloud/recharge') == 0 || this.from.indexOf('/ruicloud/Recharge') == 0) {
+        if (this.from.indexOf('/recharge') == 0 || this.from.indexOf('/Recharge') == 0) {
           this.$router.push('recharge');
         } else {
           this.$router.push('payNew')
         }
       },
       payError() {
-        if (this.from.indexOf('/ruicloud/recharge') == 0 || this.from.indexOf('/ruicloud/Recharge') == 0) {
+        if (this.from.indexOf('/recharge') == 0 || this.from.indexOf('/Recharge') == 0) {
           this.$router.push('recharge');
         } else {
           this.$router.push('payNew')
