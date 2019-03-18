@@ -114,6 +114,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: '云硬盘备份 - 云硬盘快照 - 云存储 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云硬盘备份,云硬盘快照'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '云硬盘备份能对磁盘（系统盘或数据盘）某个时刻的数据进行备份和回滚，云硬盘备份为全量快照，提升了云硬盘的安全性，同时增强了云硬盘备份的易用性。'
+        }]
+    },
     data(){
       return {
         logo: {

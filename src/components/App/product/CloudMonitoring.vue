@@ -101,6 +101,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: '智能云监控 - 云服务器运维 - 云运维 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云监控,智能云监控,云服务器运维'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云监控告警服务主要用图表化信息帮助您了解云服务器运行状况和性能。告警推送消息帮助您第一时间了解业务异常，让您无需额外开发，就能全面掌控云服务器资源使用、运行情况。'
+        }]
+    },
     data(){
       return {
         logo: {

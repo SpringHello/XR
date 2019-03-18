@@ -99,6 +99,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: '云盘服务器 - 网站云硬盘 - 云存储 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云硬盘,网站云硬盘,云盘服务器'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '云硬盘是为云服务器实例提供持久性块存储的服务，可以挂载到同一可用区下的云服务器实例上，云硬盘具有高可靠、高性能、灵活易用等特点，同时云硬盘支持在线操作和管理。'
+        }]
+    },
     data(){
       return {
         logo: {

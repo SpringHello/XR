@@ -101,6 +101,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: 'ecs快照 - 云服务器数据库备份回滚 - 云计算 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'ecs快照,数据备份,数据库备份,云服务器数据备份,数据回滚,数据库回滚,云服务器数据回滚'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云的ECS快照能对云服务器某个时刻的数据进行备份和回滚，且ECS快照为全量快照，提升了安全性的同时，降低了ECS快照的管理难度。'
+        }]
+    },
     data(){
       return {
         logo: {

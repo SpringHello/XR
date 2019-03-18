@@ -546,6 +546,17 @@
 
 
   export default {
+    metaInfo: {
+      title: 'ecs弹性云服务器租用 - 便宜云主机免费试用 - 高防云服务器租赁 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云服务器,云主机,云主机服务器,云服务器租用,云主机租用,新睿云'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云是领先的基础云计算服务商。云计算产品主要包含云服务器、GPU云服务器、云存储、对象存储OSS、CDN、负载均衡、系统镜像、DDOS防火墙等。提供了可靠、可扩展并且费用低廉的云计算服务。现免费加入,一键领取云主机试用套餐,轻松上云！'
+        }]
+    },
     data() {
       return {
         selectedBar: true,

@@ -5,7 +5,7 @@
       <div class="logo-wrapper">
         <img :src="logo.img" alt="弹性云服务器" title="弹性云服务器">
         <div class="info">
-          <h3 >{{logo.title}}</h3>
+          <h3>{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter" class="link-button">立即购买</router-link>
         </div>
@@ -144,8 +144,20 @@
 
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
-  export default{
-    data(){
+
+  export default {
+    metaInfo: {
+      title: 'ecs弹性云服务器 - ecs云主机租用  - 云计算 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'ecs,云服务器ecs,ecs服务器,ecs云服务器,弹性云服务器,云服务器ecs租用,云主机ecs,ecs云主机'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '弹性云服务器（(Elastic Compute Service,简称ECS）是一种可随时自助获取，处理能力可弹性伸缩的计算服务，帮助用户构建可靠、安全、灵活、高效的应用环境，确保服务持久稳定运行，提升运维效率，降低用户的CAPEX和OPEX。'
+        }]
+    },
+    data() {
       return {
         logo: {
           img: require('../../../assets/img/product/ECS-host.png'),

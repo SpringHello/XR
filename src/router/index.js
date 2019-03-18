@@ -105,7 +105,6 @@ const Pddos = () =>import('@/components/App/product/DDOShighIP.vue')
 const Pmonitor = () =>import('@/components/App/product/CloudMonitoring.vue')
 const PobjStorage = () =>import('@/components/App/product/PobjStorage.vue')
 const PdataBase = () =>import('@/components/App/product/PdataBase.vue')
-const PobjectStorage = () =>import('@/components/App/product/ObjectStorage.vue')
 const Pgpu = () =>import('@/components/App/product/Pgpu.vue')
 const Pelastic = () => import('@/components/App/product/Pelastic.vue')
 // 登录注册页面
@@ -374,7 +373,6 @@ var router = new Router({
         {path: 'monitor', component: Pmonitor},
         {path: 'objectstorage', component: PobjStorage},
         {path: 'database', component: PdataBase},
-        {path: 'PobjectStorage', component: PobjectStorage},
         {path: 'gpu', component: Pgpu},
         {path: 'elasticscalable',component: Pelastic},
         {path: 'documentInfo/:parentId/:id', component: documentInfo},

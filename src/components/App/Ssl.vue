@@ -103,6 +103,17 @@
 import axios from 'axios'
 import sslDetail from './sslDetail'
 export default {
+  metaInfo: {
+    title: 'ov、dv沃通（wotrus）ssl证书价格 - 便宜ssl数字证书 - 多域名ssl加密证书 - 网站ssl证书申请 - 云安全 - 新睿云', // set a title
+    meta: [{                 // set meta
+      name: 'keywords',
+      content: 'ssl,ssl证书,沃通,沃通ca,多域名ssl证书,ssl证书申请,ssl证书价格,便宜ssl证书,ssl加密证书,ssl数字证书,便宜ssl,网站ssl证书,申请ssl证书,多域名ssl'
+    },
+      {                 // set meta
+        name: 'description',
+        content: '沃通全球著名的SSL证书提供商已经为全球180多个国家和地区超过十万个网站颁发了全球信任的SSL证书。在云上签发各品牌数字证书，实现网站HTTPS化，使网站可信，防劫持、防篡改、防监听。'
+      }]
+  },
   data () {
     return {
       selectedTab: 'home',

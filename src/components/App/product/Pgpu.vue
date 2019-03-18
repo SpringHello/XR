@@ -110,6 +110,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: 'gpu云服务器租用 - gpu加速云主机 - 云计算 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'gpu服务器,gpu云服务器,gpu加速,gpu云主机,gpu云服务器租用'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云的GPU云服务器是基于GPU应用的计算服务，多适用于视频解码，图形渲染，深度学习，科学计算等应用场景，该产品具有实时高速，并行计算跟浮点计算能力强等特点。'
+        }]
+    },
     data(){
       return {
         logo: {

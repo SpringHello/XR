@@ -111,6 +111,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: '云数据库服务 - 云数据库rds，支持Mysql、SQL Server、PostgreSQL、mongoDB、Redis引擎 - 云数据库 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云数据库,云数据库rds,mysql云数据库,云数据库mysql,云数据库服务'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '专业化的高性能、高可靠云数据库服务，支持Mysql、SQL Server、PostgreSQL、mongoDB、Redis引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。'
+        }]
+    },
     data(){
       return {
         logo: {

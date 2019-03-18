@@ -11,6 +11,9 @@ import 'iview/dist/styles/iview.css'
 import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
+import MetaInfo from 'vue-meta-info'
+
+
 
 //import './util/BMap'
 // import ECharts from 'vue-echarts/components/ECharts.vue'
@@ -40,8 +43,8 @@ Vue.config.productionTip = false
 
 //axios.defaults.withCredentials = true
 
-//axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
-axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
+axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
+//axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 // axios.defaults.baseURL = 'https://www.xrcloud.net/ruicloud/'
 //axios.defaults.baseURL = 'https://www.xrcloud.net/ruicloud/'
 
@@ -123,7 +126,7 @@ Vue.use(slider)
 Vue.component('chart', ECharts)
 Vue.use(VueClipboards)
 
-
+Vue.use(MetaInfo)
 // 日期原型对象拓展
 Date.prototype.format = function (fmt) {
   var o = {

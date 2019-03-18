@@ -112,6 +112,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: 'nat网关 - dnat - snat - 云网络 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'nat,nat网关,snat,dnat'
+      },
+        {                 // set meta
+          name: 'description',
+          content: 'nat网关，在VPC环境下构建一个公网流量的出入口，通过自定义SourceNAT、Destination NAT、StaticNAT规则灵活使用网络资源，支持多IP共享公网带宽。'
+        }]
+    },
     data(){
       return {
         logo: {

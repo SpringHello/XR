@@ -114,6 +114,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: '服务器流量防火墙 - 虚拟防火墙 - 云安全 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '防火墙,服务器防火墙,流量防火墙,虚拟防火墙'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '虚拟防火墙是VPC内部VLAN与VLAN之间的安全组策略，用户根据需要建立访问规则对端口和协议进行进/出站控制。'
+        }]
+    },
     data(){
       return {
         logo: {

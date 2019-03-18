@@ -1,11 +1,11 @@
 <template>
-    <div class="product">
+  <div class="product">
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
         <img :src="logo.img" style="top:38px;">
         <div class="info">
-          <h3 >{{logo.title}}</h3>
+          <h3>{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>
@@ -103,9 +103,21 @@
 </template>
 
 <script type="text/ecmascript-6">
-import $store from '@/vuex'
-export default {
-     data(){
+  import $store from '@/vuex'
+
+  export default {
+    metaInfo: {
+      title: '弹性伸缩云计算服务 - 云计算 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '弹性伸缩,弹性计算,弹性云计算服务'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云的弹性伸缩服务，可以根据你的业务需求，设置创建伸缩策略告警伸缩，对云主机计算资源进行定时伸缩自动化管理，达到高效率、节约成本、及时容错的目的。'
+        }]
+    },
+    data() {
       return {
         logo: {
           img: require('../../../assets/img/product/u_elastic.png'),
@@ -145,7 +157,7 @@ export default {
             {
               title: '网站应用',
               icon: 'icon-wangzhanyingyong',
-              img:'',
+              img: '',
               desc: [
                 {subTitle: '场景描述', subDesc: ['在web服务的业务逻辑层会有扩缩容的需求。比如电商销售、在线教育、视频播客、新闻资讯等，客户端的请求通过负载均衡到达应用服务器，当业务访问量大幅快速波动时，弹性伸缩服务可以根据请求量及负载，弹性扩容或者缩容应用服务器的数量。']},
               ],
@@ -211,7 +223,7 @@ export default {
         ]
       }
     },
-}
+  }
 </script>
 
 <style lang="less" scoped>

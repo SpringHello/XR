@@ -112,6 +112,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: 'vpn虚拟专有网络 - vpn服务器 - vpn网关 - 云网络 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'vpn,vpn服务器,vpn网关,虚拟专有网络'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '虚拟专用网络（Virtual Private Network）是通过互联网，采用IPsec加密技术，实现用户本地数据中心、用户办公网络与新睿云VPC之间安全可靠的连接，使用便捷灵活，即开即用，打造可伸缩的混合云环境。'
+        }]
+    },
     data(){
       return {
         logo: {

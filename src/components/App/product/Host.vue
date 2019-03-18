@@ -114,6 +114,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: '公共镜像 - 私有镜像 - ecs镜像市场 - 云镜像管理 - 云计算 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '公共镜像,私有镜像,镜像市场,云镜像市场,ecs镜像市场,镜像管理'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云的镜像服务可以灵活便捷的使用公共镜像或私有镜像创建云服务器，具备完善的镜像管理能力。'
+        }]
+    },
     data(){
       return {
         logo: {

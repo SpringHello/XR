@@ -111,6 +111,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: '负载均衡服务器 - nginx负载均衡 - lvs负载均衡 - 云网络 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '负载均衡,nginx负载均衡,负载均衡服务器,负载均衡器,服务器负载均衡,lvs负载均衡,网络负载均衡,负载均衡nginx'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '弹性负载均衡将访问流量自动分发到多台云服务器上，扩展应用系统对外的服务能力，实现更高水平的应用容错。弹性负载均衡可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器上进行处理。'
+        }]
+    },
     data(){
       return {
         logo: {
