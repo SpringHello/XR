@@ -445,7 +445,7 @@ export default {
       }
     }
     return {
-      imgSrc: "/user/getKaptchaImage.do",
+      imgSrc: "/ruicloud/user/getKaptchaImage.do",
       //步骤集合
       stepList: [
         {
