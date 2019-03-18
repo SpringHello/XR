@@ -76,7 +76,7 @@
 					</FormItem>
 				</Form>
 				<p>
-					<Checkbox v-model="cancellationCheck" id="checkself1">已了解<span @click="$router.push('/ruicloud/documentInfo/6bSYke1gB/EdIzqD3Bb')" style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号{{$store.state.userInfo.phone}}将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
+					<Checkbox v-model="cancellationCheck" id="checkself1">已了解<span @click="$router.push('/documentInfo/6bSYke1gB/EdIzqD3Bb')" style="color: #2A99F2;">《新睿云账号注销协议》</span>，提交申请后，我的账号{{$store.state.userInfo.phone}}将被注销，包含的内容、数据和服务都不可再恢复</Checkbox>
 				</p>
 				<Button @click="$router.push('/usercenter')" id="butself1">取消注销</Button>
 				<Button type="primary" :disabled="Cancellationdisabled" @click="handleSubmit('formInline')" id="butself2">确定注销</Button>
