@@ -150,12 +150,12 @@
                 <Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字">
                 </Input>
               </FormItem>
-              <FormItem label="公网端口" prop="rearPort" :maxlength="5" v-if="creatbalancemodal.formInline.radio=='public'">
-                <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字">
+              <FormItem label="公网端口" prop="rearPort" v-if="creatbalancemodal.formInline.radio=='public'">
+                <Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字">
                 </Input>
               </FormItem>
-              <FormItem label="实例端口" prop="rearPort" :maxlength="5" v-else>
-                <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字">
+              <FormItem label="实例端口" prop="rearPort" v-else>
+                <Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字">
                 </Input>
               </FormItem>
               <FormItem label="算法" prop="algorithm">
