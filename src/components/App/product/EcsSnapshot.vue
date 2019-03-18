@@ -118,7 +118,7 @@
           img: require('../../../assets/img/product/ECS-logo.png'),
           title: 'ECS 快照',
           desc: 'ECS快照能对云服务器某个时刻的数据进行备份和回滚，且ECS快照为全量快照，提升了安全性的同时，降低了ECS快照的管理难度。',
-          linkRouter: $store.state.userInfo ? '/snapshot' : 'login'
+          linkRouter: $store.state.userInfo ? '/snapshot' : '/login'
         },
         features: [
           {img: 'icon-zidongkuaizhao', title: '自动快照', desc: '自动为用户创建快照。用户需要首先创建自动快照策略，然后再把自动快照策略应用到虚拟机实例或磁盘上，系统按照策略自动为该虚拟机或磁盘创建快照。'},

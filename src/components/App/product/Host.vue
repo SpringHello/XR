@@ -131,7 +131,7 @@
           img: require('../../../assets/img/product/ESC-mirror.png'),
           title: '镜像服务',
           desc: '可以灵活便捷的使用公共镜像或私有镜像创建云服务器，具备完善的镜像管理能力。',
-          linkRouter: $store.state.userInfo ? 'mirror' : 'login'
+          linkRouter: $store.state.userInfo ? '/mirror' : '/login'
         },
         features: [
           {

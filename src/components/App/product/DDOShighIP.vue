@@ -129,7 +129,7 @@
           img: require('../../../assets/img/product/ddos-logo.png'),
           title: 'DDOS防护',
           desc: '新睿云通过专用硬件，针对DDoS攻击，为用户提供高防IP服务。高防IP为用户已备案的域名提供最高40Gbps的DDoS高级防护。用户在遭遇大流量DDoS攻击的情况下，可以在配置高防IP后将攻击流量引至高防IP，确保源站稳定可用。',
-          linkRouter: $store.state.userInfo ? 'firewall' : 'login'
+          linkRouter: $store.state.userInfo ? '/firewallList' : '/login'
         },
         features: [
           {img: 'icon-DDOSliuliangqingxi', title: 'DDOS流量清洗', desc: '支持畸形报文过滤，对SYN flood、ACK flood、UDP flood、ICMP flood、RST flood等攻击类型进行清洗。'},
