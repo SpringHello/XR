@@ -281,8 +281,8 @@
             subItem: [
               {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
               //{subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
-              {subName: '云硬盘', type: 'disk'},
-              {subName: '云硬盘备份', type: 'diskBackup'}
+              {subName: '云硬盘', type: 'diskList'},
+              {subName: '云硬盘备份', type: 'diskBackupList'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
             ]
           },
@@ -292,14 +292,14 @@
             subItem: [
               {
                 subName: '虚拟私有云VPC',
-                type: 'vpc',
+                type: 'vpcList',
                 thrItem: [{thrName: '虚拟私有云VPC', pane: 'VPC'}, {thrName: 'NAT网关', pane: 'NAT'}]
               },
               {subName: '弹性IP', type: 'ip'},
               {subName: '负载均衡', type: 'balance'},
               {
                 subName: '虚拟专网VPN',
-                type: 'vpn',
+                type: 'vpnList',
                 thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
               }
             ]
@@ -308,7 +308,7 @@
             mainName: '云安全',
             type: 'security',
             subItem: [
-              {subName: '防火墙', type: 'firewall'},
+              {subName: '防火墙', type: 'firewallList'},
               {subName: '云监控', type: 'CloudMonitor'},
               {subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
               //{subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},

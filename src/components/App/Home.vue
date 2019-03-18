@@ -1212,8 +1212,8 @@
 
     },
     created() {
-      this.getnews()
-      this.getlinkList()
+      //this.getnews()
+      //this.getlinkList()
       //this.getMirror(this.eightsceneIndex)
     },
     methods: {

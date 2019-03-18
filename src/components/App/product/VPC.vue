@@ -128,7 +128,7 @@
           img: require('../../../assets/img/product/p-VPC.png'),
           title: '虚拟私有云VPC',
           desc: '基于新睿云给用户构建隔离的、私密的虚拟网络环境，用户可以自由配置VPC内的IP地址范围、子网、路由表、安全组和网关等，用户可以申请弹性带宽和弹性IP搭建业务系统，同时也可以通过专线/VPN等接入方式实现云上VPC与传统IDC的互联，构建混合云系统。',
-          linkRouter: $store.state.userInfo ? 'vpc' : 'login'
+          linkRouter: $store.state.userInfo ? '/vpcList' : '/login'
         },
         features: [
           {

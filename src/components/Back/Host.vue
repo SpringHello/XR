@@ -1292,7 +1292,7 @@
       },
       gotoNew() {
         this.$store.commit('setSelect', 'new')
-        this.$router.push('buy')
+        this.$router.push('/buy/')
       },
       // 查询续费主机下是否有ip或磁盘
       renewType() {

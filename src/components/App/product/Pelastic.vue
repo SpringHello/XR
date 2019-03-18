@@ -123,7 +123,7 @@
           img: require('../../../assets/img/product/u_elastic.png'),
           title: '弹性伸缩',
           desc: '可以根据你的业务需求，设置创建伸缩策略告警伸缩，对云主机计算资源进行定时伸缩自动化管理，达到高效率、节约成本、及时容错的目的。 ',
-          linkRouter: $store.state.userInfo ? 'elastic' : 'login'
+          linkRouter: $store.state.userInfo ? '/elastic' : '/login'
         },
         features: [
           {

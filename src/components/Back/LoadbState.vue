@@ -17,10 +17,10 @@
 					<Step title="创建公网/私网服务方案的子网"></Step>
 					<Step title="创建负载均衡"></Step>
 				</Steps>
-				<Button type="primary" v-if="status==0">创建VPC</Button>
-				<Button type="primary" v-if="status==1">创建子网</Button>
-				<Button type="primary" v-if="status==2">创建负载均衡</Button>
-				<Button class="btn11" @click="$router.go(0)">刷新</Button>
+				<Button type="primary" v-if="status==0" @click="vpcjump">创建VPC</Button>
+				<Button type="primary" v-if="status==1" @click="ziwjump">创建子网</Button>
+				<Button type="primary" v-if="status==2" @click="loadjump">创建负载均衡</Button>
+				<Button class="btn11" @click="Refresh">刷新</Button>
 				<div style="clear: both;"></div>
 			</div>
 			<div style="clear: both;"></div>
@@ -38,7 +38,7 @@
 	beforeRouteEnter(to, from, next) {
 		next(vm => {
 		  if(vm.status==3){
-			vm.$router.push('/vpc')
+			vm.$router.push('/balance')
 		  }
 		  else{
 		  	  
@@ -57,7 +57,19 @@
     methods: {
 		vpcjump(){
 			sessionStorage.setItem('vpcstatus',true)
-			window.open('/ip')
+			window.open('/vpcList')
+		},
+		ziwjump(){
+			sessionStorage.setItem('ziwstatus',true)
+			window.open('/vpcList')
+		},
+		loadjump(){
+			
+		},
+		Refresh(){
+			sessionStorage.removeItem('vpcstatus')
+			sessionStorage.removeItem('ziwstatus')
+			this.$router.go(0)
 		}
     },
     computed: {

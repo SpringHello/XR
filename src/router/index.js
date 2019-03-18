@@ -283,33 +283,6 @@ var router = new Router({
           component: Map
         },
         //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
-        /*{
-         path: 'price',
-         name: 'price',
-         component: Price,
-         children: [
-         {
-         path: '',
-         name: 'hostPrice',
-         component: hostPrice
-         },
-         {
-         path: 'hostPrice',
-         name: 'hostPrice',
-         component: hostPrice
-         },
-         {
-         path: 'diskPrice',
-         name: 'diskPrice',
-         component: diskPrice
-         },
-         {
-         path: 'elasticIPPrice',
-         name: 'elasticIPPrice',
-         component: elasticIPPrice
-         }
-         ]
-         },*/
         {path: 'activity/share', name: 'activity/share', component: GroupBooking},
         {path: 'productShare', name: 'productShare', component: ProductShare},
         {path: 'gbactivity', name: 'gbactivity', component: GBActivity},
@@ -395,14 +368,14 @@ var router = new Router({
         {path: 'balance', name: 'balance', component: Balance},
 				{path: 'loadbstate', name: 'loadbstate', component: LoadbState},
         {path: 'balanceParticulars', name: 'balanceParticulars', component: BalanceParticulars},
-        {path: 'disk', name: 'disk', component: Disk},
-        {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
+        {path: 'diskList', name: 'diskList', component: Disk},
+        {path: 'diskBackupList', name: 'diskBackupList', component: DiskBackup},
         {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
         {path: 'CloudMonitor', name: 'CloudMonitor', component: CloudMonitor},
         {path: 'cloudMonitorCreateStrategy', name: 'cloudMonitorCreateStrategy', component: CloudMonitorCreateStrategy},
         //{path:'objectStorage',name:'objectStorage',component:ObjectStorage},
         {path: 'snapshot', name: 'snapshot', component: Snapshot},
-        {path: 'firewall', name: 'firewall', component: Firewall},
+        {path: 'firewallList', name: 'firewallList', component: Firewall},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
         {path: 'hostCard', name: 'hostCard', component: HostCard},
@@ -411,8 +384,8 @@ var router = new Router({
         //{path: 'newUpgrade', name: 'newUpgrade', component: NewUpgrade},
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
-        {path: 'vpc', name: 'vpc', component: Vpc},
-        {path: 'vpn', name: 'vpn', component: Vpn},
+        {path: 'vpcList', name: 'vpcList', component: Vpc},
+        {path: 'vpnList', name: 'vpnList', component: Vpn},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
         // {path: 'orderNew', name: 'orderNew', component: OrderNew},
@@ -440,7 +413,7 @@ var router = new Router({
         {path: 'BRecords', name: 'BRecords', component: BRecords},
         {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails},
         {path: 'SpaceDetails', name: 'SpaceDetails', component: SpaceDetails},
-		{path: 'AllRegions', name: 'AllRegions', component: AllRegions},
+	    	{path: 'AllRegions', name: 'AllRegions', component: AllRegions},
         {path: 'completedFilingDetails', name: 'completedFilingDetails', component: CompletedFilingDetails},
         {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
         {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},

@@ -910,8 +910,26 @@
         this.paneStatus.vpc = 'NAT'
         sessionStorage.removeItem('VPN')
       }
+			this.testjump()
     },
     methods: {
+			testjump(){
+				var vpcstatus=sessionStorage.getItem('vpcstatus')
+				var ptstatus=sessionStorage.getItem('ziwstatus')
+				if (vpcstatus=='true') {
+				  this.showModal.newVpc=true
+				  sessionStorage.removeItem('vpcstatus')
+				}
+				if(ptstatus=='true'){
+					sessionStorage.removeItem('ziwstatus')
+					this.$Message.info({
+                    content: '请选择VPC并点击【管理】进入VPC详情页新建新的VPC子网',
+                    duration: 1000,
+										top: 150,
+                    closable: true
+                });
+				}
+			},
       // 区域切换刷新数据
       refresh() {
         var zoneId = $store.state.zone.zoneid

@@ -129,7 +129,7 @@
           img: require('../../../assets/img/product/p-net.png'),
           title: 'NAT网关',
           desc: '在VPC环境下构建一个公网流量的出入口，通过自定义SourceNAT、Destination NAT、StaticNAT规则灵活使用网络资源，支持多IP共享公网带宽。',
-          linkRouter: $store.state.userInfo ? 'vpc' : 'login'
+          linkRouter: $store.state.userInfo ? '/vpcList' : '/login'
         },
         features: [
           {
