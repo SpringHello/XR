@@ -438,7 +438,7 @@ var router = new Router({
         {path: 'BRecords', name: 'BRecords', component: BRecords},
         {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails},
         {path: 'SpaceDetails', name: 'SpaceDetails', component: SpaceDetails},
-		{path: 'AllRegions', name: 'AllRegions', component: AllRegions},
+	    	{path: 'AllRegions', name: 'AllRegions', component: AllRegions},
         {path: 'completedFilingDetails', name: 'completedFilingDetails', component: CompletedFilingDetails},
         {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
         {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},

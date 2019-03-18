@@ -1,7 +1,7 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span><span @click="$router.push('/ruicloud/userCenter')">个人中心</span> / <span @click="$router.push('/ruicloud/expenses')">费用中心</span> / <span @click="$router.push('/ruicloud/Cashwithdrawal')">提现</span></span>
+      <span><span @click="$router.push('/userCenter')">个人中心</span> / <span @click="$router.push('/expenses')">费用中心</span> / <span @click="$router.push('/Cashwithdrawal')">提现</span></span>
       <div class="content" v-if="selectedTabSec == 'content'" style="min-height: 665px;">
         <div style="float: left;" @click="backpage">
           <Icon class="icon1" type="chevron-left"></Icon>
