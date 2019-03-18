@@ -282,33 +282,6 @@ var router = new Router({
           component: Map
         },
         //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
-        /*{
-         path: 'price',
-         name: 'price',
-         component: Price,
-         children: [
-         {
-         path: '',
-         name: 'hostPrice',
-         component: hostPrice
-         },
-         {
-         path: 'hostPrice',
-         name: 'hostPrice',
-         component: hostPrice
-         },
-         {
-         path: 'diskPrice',
-         name: 'diskPrice',
-         component: diskPrice
-         },
-         {
-         path: 'elasticIPPrice',
-         name: 'elasticIPPrice',
-         component: elasticIPPrice
-         }
-         ]
-         },*/
         {path: 'activity/share', name: 'activity/share', component: GroupBooking},
         {path: 'productShare', name: 'productShare', component: ProductShare},
         {path: 'gbactivity', name: 'gbactivity', component: GBActivity},
