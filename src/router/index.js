@@ -367,7 +367,7 @@ var router = new Router({
         {path: 'balance', name: 'balance', component: Balance},
         {path: 'balanceParticulars', name: 'balanceParticulars', component: BalanceParticulars},
         {path: 'diskList', name: 'diskList', component: Disk},
-        {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
+        {path: 'diskBackupList', name: 'diskBackupList', component: DiskBackup},
         {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
         {path: 'CloudMonitor', name: 'CloudMonitor', component: CloudMonitor},
         {path: 'cloudMonitorCreateStrategy', name: 'cloudMonitorCreateStrategy', component: CloudMonitorCreateStrategy},
