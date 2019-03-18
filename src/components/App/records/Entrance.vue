@@ -164,7 +164,7 @@
     },
     beforeRouteEnter(to, from, next) {
       if ($store.state.userInfo && $store.state.userInfo.recordFlag) {
-        next({path: '/ruicloud/waitSecondTrial'})
+        next({path: '/waitSecondTrial'})
       } else {
         next()
       }

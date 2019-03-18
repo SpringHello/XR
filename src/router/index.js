@@ -55,7 +55,7 @@ const objStorageActive = () =>import('@/components/App/active/objStorageActive')
 const smlj = () =>import('@/components/App/active/smlj')
 const GroupBooking = () =>import('@/components/App/groupbooking/homePage')
 const ProductShare = () =>import('@/components/App/groupbooking/sharePage')
-const Activity = () =>import('@/components/App/groupbooking/activityPage')
+const GBActivity = () =>import('@/components/App/groupbooking/activityPage')
 const FrActive = () =>import('@/components/App/active/freeReceive')
 
 const DBActive = () =>import('@/components/App/active/DatabaseActive')
@@ -105,7 +105,6 @@ const Pddos = () =>import('@/components/App/product/DDOShighIP.vue')
 const Pmonitor = () =>import('@/components/App/product/CloudMonitoring.vue')
 const PobjStorage = () =>import('@/components/App/product/PobjStorage.vue')
 const PdataBase = () =>import('@/components/App/product/PdataBase.vue')
-const PobjectStorage = () =>import('@/components/App/product/ObjectStorage.vue')
 const Pgpu = () =>import('@/components/App/product/Pgpu.vue')
 const Pelastic = () => import('@/components/App/product/Pelastic.vue')
 // 登录注册页面
@@ -212,23 +211,23 @@ var router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/ruicloud',
+      path: '',
       name: App.name,
       component: App,
       children: [
-        {path: '', name: 'home', component: Home},
-        {path: 'index.htm', name: 'home', component: Home},
-        {path: 'ecs.htm', name: 'ecs', component: Ecs},
-        {path: 'about.htm', name: 'about', component: Aboutus},
-        {path: 'ActiveCenter.htm', name: 'ActiveCenter', component: ActiveCenter},
-        {path: 'document.htm', name: 'document', component: Document},
-        {path: 'entrance.htm', name: 'entrance', component: Entrance},
+        {path: '/', name: 'home', component: Home},
+        //{path: 'index.htm', name: 'home', component: Home},
+        //{path: 'ecs.htm', name: 'ecs', component: Ecs},
+        //{path: 'about.htm', name: 'about', component: Aboutus},
+        //{path: 'ActiveCenter.htm', name: 'ActiveCenter', component: ActiveCenter},
+        //{path: 'document.htm', name: 'document', component: Document},
+        //{path: 'entrance.htm', name: 'entrance', component: Entrance},
 
-        {path: 'index', name: 'home', component: Home},
+        //{path: 'index', name: 'home', component: Home},
         //{path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
-        {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
+        {path: 'activity', name: 'activity', component: ActiveCenter},
         {path: 'document', name: 'document', component: Document},
 
         {path: 'article/:typeId', name: 'art', component: Art},
@@ -238,8 +237,8 @@ var router = new Router({
         //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
         {path: 'ssl', name: 'ssl', component: Ssl},
         {
-          path: 'entrance',
-          name: 'entrance',
+          path: 'icp',
+          name: 'icp',
           component: Entrance
         },
         {
@@ -310,22 +309,22 @@ var router = new Router({
          }
          ]
          },*/
-        {path: 'groupBooking', name: 'groupBooking', component: GroupBooking},
+        {path: 'activity/share', name: 'activity/share', component: GroupBooking},
         {path: 'productShare', name: 'productShare', component: ProductShare},
-        {path: 'activity', name: 'activity', component: Activity},
+        {path: 'gbactivity', name: 'gbactivity', component: GBActivity},
         {
           path: 'buy',
           name: 'buy',
           component: Buy,
           children: [
-            {path: '', name: 'bhost', component: BHost},
-            {path: 'bhost', name: 'bhost', component: BHost},
-            {path: 'bdisk', name: 'bdisk', component: BDisk},
-            {path: 'bip', name: 'bip', component: BIP},
-            {path: 'bdata', name: 'bdata', component: BData},
-            {path: 'bobj', name: 'bobj', component: BObj},
-            {path: 'bgpu', name: 'bgpu', component: BGpu},
-            {path: 'bssl', name: 'bssl', component: BSsl}
+            {path: '', name: 'host/', component: BHost},
+            {path: 'host', name: 'host/', component: BHost},
+            {path: 'disk', name: 'disk/', component: BDisk},
+            {path: 'elasticip', name: 'elasticip/', component: BIP},
+            {path: 'database', name: 'database/', component: BData},
+            {path: 'objectstorage', name: 'objectstorage/', component: BObj},
+            {path: 'gpu', name: 'gpu/', component: BGpu},
+            {path: 'ssl', name: 'ssl/', component: BSsl}
           ]
         },
 
@@ -333,25 +332,24 @@ var router = new Router({
         {path: 'vps', name: 'vps', component: Vps},
        /*{path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
          {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
-        {path: 'active_1', name: 'active_1', component: active_1},
-        {path: 'entrance', name: 'entrance', component: Entrance},
+        {path: 'activity/zero', name: 'activity/zero', component: active_1},
         //{path: 'active_2', name: 'active_2', component: active_2},
-        {path: 'objStorageActive', name: 'objStorageActive', component: objStorageActive},
+        {path: 'activity/objectstorage', name: 'activity/objectstorage', component: objStorageActive},
         {path: 'smlj', name: 'smlj', component: smlj},
-        {path: 'frActive', name: 'frActive', component: FrActive},
+        {path: 'activity/free', name: 'activity/free', component: FrActive},
         {path: 'wonderfulDay',name: 'wonderfulDay', component:wonderfulDay},
 
-        {path: 'dbActive', name: 'dbActive', component: DBActive},
+        {path: 'activity/hotdatabase', name: 'activity/hotdatabase', component: DBActive},
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
-        {path: 'xianNode', name: 'xianNode', component: xianNode},
-        {path: 'schoolSeason', name: 'schoolSeason', component: schoolSeason},
+        {path: 'activity/xian', name: 'activity/xian', component: xianNode},
+        {path: 'activtiy/2019spring', name: 'activtiy/2019spring', component: schoolSeason},
 
-        {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},
-        {path: 'SceneInfo/:type', name: 'SceneInfo', component: SceneInfo},
-        {path: 'SceneList', name: 'SceneList', component: SceneList},
+        {path: 'eastsouth', name: 'eastsouth', component: EastSouthNode},
+        {path: 'Scene/:type', name: 'Scene', component: SceneInfo},
+        {path: 'scene', name: 'scene', component: SceneList},
 
-        {path: 'Domainname', name: 'Domainname', component: Domainname},
+        {path: 'domain', name: 'domain', component: Domainname},
         {path: 'DomainResult', name: 'DomainResult', component: DomainResult},
 
         //{path: 'DomainTemplate', name: 'DomainTemplate', component: DomainTemplate},
@@ -360,49 +358,29 @@ var router = new Router({
         {path: 'CheckReg', name: 'CheckReg', component: CheckReg},
 
 
-
-        {path: 'Pecs.htm', component: Pecs},
-        {path: 'Phost.htm', component: Phost},
-        {path: 'Pecss.htm', component: Pecss},
-        {path: 'Pvpc.htm', component: Pvpc},
-        {path: 'Peip.htm', component: Peip},
-        {path: 'Pbalance.htm', component: Pbalance},
-        {path: 'Pnat.htm', component: Pnat},
-        {path: 'Pvirvpn.htm', component: Pvirvpn},
-        {path: 'Pdisk.htm', component: Pdisk},
-        {path: 'Pbackupdisk.htm', component: Pbackupdisk},
-        {path: 'Pfirewall.htm', component: Pfirewall},
-        {path: 'Pddos.htm', component: Pddos},
-        {path: 'Pmonitor.htm', component: Pmonitor},
-        {path: 'PobjStorage.htm', component: PobjStorage},
-        {path: 'PdataBase.htm', component: PdataBase},
-        {path: 'PobjectStorage.htm', component: PobjectStorage},
-        {path: 'Pgpu.htm', component: Pgpu},
-
-        {path: 'Pecs', component: Pecs},
-        {path: 'Phost', component: Phost},
-        {path: 'Pecss', component: Pecss},
-        {path: 'Pvpc', component: Pvpc},
-        {path: 'Peip', component: Peip},
-        {path: 'Pbalance', component: Pbalance},
-        {path: 'Pnat', component: Pnat},
-        {path: 'Pvirvpn', component: Pvirvpn},
-        {path: 'Pdisk', component: Pdisk},
-        {path: 'Pbackupdisk', component: Pbackupdisk},
-        {path: 'Pfirewall', component: Pfirewall},
-        {path: 'Pddos', component: Pddos},
-        {path: 'Pmonitor', component: Pmonitor},
-        {path: 'PobjStorage', component: PobjStorage},
-        {path: 'PdataBase', component: PdataBase},
-        {path: 'PobjectStorage', component: PobjectStorage},
-        {path: 'Pgpu', component: Pgpu},
-        {path: 'Pelastic',component: Pelastic},
+        {path: 'ecs', component: Pecs},
+        {path: 'mirrorservice', component: Phost},
+        {path: 'ecssnapshot', component: Pecss},
+        {path: 'vpc', component: Pvpc},
+        {path: 'elasticip', component: Peip},
+        {path: 'loadbalancing', component: Pbalance},
+        {path: 'natgateway', component: Pnat},
+        {path: 'vpn', component: Pvirvpn},
+        {path: 'disk', component: Pdisk},
+        {path: 'diskbackup', component: Pbackupdisk},
+        {path: 'firewall', component: Pfirewall},
+        {path: 'ddos', component: Pddos},
+        {path: 'monitor', component: Pmonitor},
+        {path: 'objectstorage', component: PobjStorage},
+        {path: 'database', component: PdataBase},
+        {path: 'gpu', component: Pgpu},
+        {path: 'elasticscalable',component: Pelastic},
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
         {path: 'hotQuestion/:parentId/:id', component: hotQuestion}
       ]
     },
     {
-      path: '/ruicloud',
+      path: '',
       name: Back.name,
       component: Back,
       // 后台页面必须登录
@@ -478,7 +456,7 @@ var router = new Router({
       ]
     },
     {
-      path: '/ruicloud',
+      path: '',
       name: LR.name,
       component: LR,
       children: [
@@ -491,7 +469,7 @@ var router = new Router({
         {path: 'resetNew', name: 'resetNew', component: ResetNew}
       ]
     },
-    {path: '/ruicloud/link', name: 'link', component: Link},
+    {path: '/link', name: 'link', component: Link},
     {path: '/*', name: '404', component: notFindPage},
   ]
 })
@@ -503,7 +481,7 @@ router.beforeEach((to, from, next) => {
     })) {
     if (!localStorage.getItem('authToken')) {
       next({
-        path: '/ruicloud/login'
+        path: '/login'
         // query: { redirect: to.fullPath }//把要跳转的地址作为参数传到下一步
       })
     } else {

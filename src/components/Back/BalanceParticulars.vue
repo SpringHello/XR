@@ -288,7 +288,7 @@
     watch: {
       '$store.state.zone': {
         handler: function () {
-          this.$router.push('/ruicloud/balance')
+          this.$router.push('/balance')
         },
         deep: true
       }

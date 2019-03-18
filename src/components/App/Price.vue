@@ -103,7 +103,7 @@
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
             <img :src="imgSrc"
-                 @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                 @click="imgSrc=`http://localhost:8082/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -219,7 +219,7 @@
     },
     created () {
       this.zone = $store.state.zoneList[0].zoneid
-      if (this.$router.history.current.path == '/ruicloud/price' || this.$router.history.current.path == '/ruicloud/price/') {
+      if (this.$router.history.current.path == '/price' || this.$router.history.current.path == '/price/') {
         this.product = 'hostPrice'
       } else {
         this.product = this.$router.history.current.path.substring(16)
@@ -336,7 +336,7 @@
         }
       },
       submit () {
-        this.$http.get('http://localhost:8082/ruicloud/user/login.do', {
+        this.$http.get('http://localhost:8082/user/login.do', {
           params: {
             username: this.form.loginname,
             password: this.form.password,
@@ -347,7 +347,7 @@
             if (response.data.status == 1) {
               this.$router.go(0)
             } else {
-              this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.imgSrc = `http://localhost:8082/user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.vailForm.loginname.message = response.data.message
               this.vailForm.loginname.warning = true
             }
@@ -360,13 +360,13 @@
       changeProduct (value) {
         switch (value) {
           case 'hostPrice':
-            this.$router.push('/ruicloud/price/hostPrice')
+            this.$router.push('/price/hostPrice')
             break
           case 'diskPrice':
-            this.$router.push('/ruicloud/price/diskPrice')
+            this.$router.push('/price/diskPrice')
             break
           case 'elasticIPPrice':
-            this.$router.push('/ruicloud/price/elasticIPPrice')
+            this.$router.push('/price/elasticIPPrice')
             break
         }
       },
@@ -376,7 +376,7 @@
           this.buyButton = true
           this.exportButton = false
           this.$LR({type:'login'})
-          this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.imgSrc = `http://localhost:8082/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
           this.detailedList.forEach(item => {
             switch (item.budgetType) {
@@ -553,7 +553,7 @@
         }).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('/ruicloud/order')
+            this.$router.push('/order')
           } else {
             this.infoMessage = response.data.message
           }
@@ -596,7 +596,7 @@
         })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$router.push('/ruicloud/order')
+              this.$router.push('/order')
             } else {
               this.$message.info({
                 content: response.data.message
@@ -621,7 +621,7 @@
           if (response.status == 200 && response.data.status == 1
       )
         {
-          this.$router.push('/ruicloud/order')
+          this.$router.push('/order')
         }
       else
         {
@@ -647,7 +647,7 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$router.push('/ruicloud/order')
+              this.$router.push('/order')
             } else {
               this.$message.info({
                 content: response.data.message
@@ -664,16 +664,16 @@
       viewProduct () {
         switch (this.product) {
           case 'hostPrice':
-            // this.$router.push('/ruicloud/Pecs')
-            window.open('/ruicloud/Pecs')
+            // this.$router.push('/Pecs')
+            window.open('/ecs')
             break
           case 'diskPrice':
-            // this.$router.push('/ruicloud/Pdisk')
-            window.open('/ruicloud/Pdisk')
+            // this.$router.push('/Pdisk')
+            window.open('/disk/')
             break
           case 'elasticIPPrice':
-            // this.$router.push('/ruicloud/Peip')
-            window.open('/ruicloud/Peip')
+            // this.$router.push('/Peip')
+            window.open('/elasticip/')
             break
         }
       }

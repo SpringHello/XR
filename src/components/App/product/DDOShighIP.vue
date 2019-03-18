@@ -112,6 +112,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: 'ddos高防云服务器 - ddos防御 - 防护ddos攻击 - 云安全 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'ddos,ddos防御,防ddos攻击,ddos防护,防御ddos,ddos服务器,防ddos服务器,ddos云防御,ddos高防'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云通过专用硬件，针对DDoS攻击，为用户提供高防IP服务。高防IP为用户已备案的域名提供最高40Gbps的DDoS高级防护。用户在遭遇大流量DDoS攻击的情况下，可以在配置高防IP后将攻击流量引至高防IP，确保源站稳定可用。'
+        }]
+    },
     data(){
       return {
         logo: {
@@ -184,25 +195,25 @@
             img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path: 'Pecs'
+            path: '/ecs/'
           },
           {
             img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path: 'Pvpc'
+            path: '/vpc/'
           },
           {
             img: 'icon-fuzaijunheng2',
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
-            path: 'Pbalance'
+            path: '/loadbalancing/'
           },
           {
             img: 'icon-NATwangguan',
             title: 'NAT网关',
             desc: '添加端口转发规则，允许来自公网或其他VPC对您的私有网络服务进行访问。',
-            path: 'Pnat'
+            path: '/natgateway/'
           }
         ]
       }

@@ -303,9 +303,9 @@
   export default {
     beforeRouteEnter(to, from, next) {
       next(vm => {
-        if (from.path == '/ruicloud/Pdisk') {
+        if (from.path == '/disk/') {
           vm.product.currentProduct = 'Pdisk'
-        } else if (from.path == '/ruicloud/Peip') {
+        } else if (from.path == '/elasticip/') {
           vm.product.currentProduct = 'Peip'
         } else {
           vm.product.currentProduct = 'Pecs'

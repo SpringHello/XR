@@ -81,10 +81,10 @@
       <div class="modal-body">
         <img src="../../../../assets/img/active/group-booking/gb-icon13.png"/>
         <p>您已经是新睿云的常客， </p>
-        <p>您已经使用过新睿云产品，成为云客重新购买并分享链接可赚取更多时长哦！<span @click="$router.push('groupBooking')">立即购买</span></p>
+        <p>您已经使用过新睿云产品，成为云客重新购买并分享链接可赚取更多时长哦！<span @click="$router.push('activity/share')">立即购买</span></p>
       </div>
       <div slot="footer" class="modal-footer">
-        <button @click="$router.push('groupBooking')">立即购买</button>
+        <button @click="$router.push('activity/share')">立即购买</button>
       </div>
     </Modal>
   </div>

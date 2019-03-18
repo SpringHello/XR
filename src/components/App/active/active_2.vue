@@ -167,7 +167,7 @@
       <div slot="footer" style="text-align:center">
         <Button type="primary" size="large"
                 style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">
-          <router-link to='/ruicloud/host' style="color:#fff"> 立即查看</router-link>
+          <router-link to='/host' style="color:#fff"> 立即查看</router-link>
         </Button>
       </div>
     </Modal>
@@ -344,17 +344,17 @@
           {
             title: '0元购主机，注册领现金',
             text: '196元现金大礼包免费领',
-            src: '/ruicloud/active_1'
+            src: '/activity/zero/'
           },
           {
             title: '北京一区盛大开服',
             text: '布局首都，新购特惠，限时抢购',
-            src: '/ruicloud/newNodes_1'
+            src: '/newNodes_1'
           },
           {
             title: '北方二区（沈阳）盛大开服',
             text: '春暖花开，活动绽放，3折优惠起',
-            src: '/ruicloud/newNodes_2'
+            src: '/newNodes_2'
           }
         ],
         img: false,

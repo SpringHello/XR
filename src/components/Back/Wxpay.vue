@@ -121,7 +121,7 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.loading = false
-            if (this.from.indexOf('/ruicloud/recharge') == 0 || this.from.indexOf('/ruicloud/Recharge') == 0) {
+            if (this.from.indexOf('/recharge') == 0 || this.from.indexOf('/Recharge') == 0) {
               this.$router.push('rechargeResult')
               sessionStorage.setItem('rechargeSuccessMsg', response.data.message)
               sessionStorage.setItem('vipMsg', response.data.vipMessage)
@@ -132,7 +132,7 @@
             }
           } else {
             this.loading = false;
-            if (this.from.indexOf('/ruicloud/recharge') == 0 || this.from.indexOf('/ruicloud/Recharge') == 0) {
+            if (this.from.indexOf('/recharge') == 0 || this.from.indexOf('/Recharge') == 0) {
               sessionStorage.setItem('rechargeErrorMsg', response.data.message)
               this.$router.push('rechargeResult')
             } else {

@@ -7,7 +7,7 @@
     <div class="wrapper">
       <span class="title">
         云网络 /
-        <router-link to='/ruicloud/vpc' style="color:rgba(17, 17, 17, 0.43);">网络私有云VPC /</router-link>
+        <router-link to='/vpc' style="color:rgba(17, 17, 17, 0.43);">网络私有云VPC /</router-link>
         <span style="">管理</span>
       </span>
       <div class="body">
@@ -1104,7 +1104,7 @@
       // 监听区域变换
       '$store.state.zone': {
         handler: function () {
-          this.$router.push('/ruicloud/vpc')
+          this.$router.push('/vpc')
         },
         deep: true
       }

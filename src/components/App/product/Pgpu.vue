@@ -110,13 +110,24 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: 'gpu云服务器租用 - gpu加速云主机 - 云计算 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'gpu服务器,gpu云服务器,gpu加速,gpu云主机,gpu云服务器租用'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云的GPU云服务器是基于GPU应用的计算服务，多适用于视频解码，图形渲染，深度学习，科学计算等应用场景，该产品具有实时高速，并行计算跟浮点计算能力强等特点。'
+        }]
+    },
     data(){
       return {
         logo: {
           img: require('../../../assets/img/product/u-banner.png'),
           title: 'GPU加速云服务器',
           desc: 'GPU 云服务器（GPU Cloud Computing）是基于 GPU 应用的计算服务，具有实时高速的并行计算和浮点计算能力，适应用于 3D 图形应用程序、视频解码、深度学习、科学计算等应用场景。我们提供和标准云服务器一致的管理方式，有效解放您的计算压力，提升产品的计算处理效率与竞争力。',
-          linkRouter: $store.state.userInfo ? 'buy/bgpu' : 'buy/bgpu'
+          linkRouter: $store.state.userInfo ? '/buy/gpu/' : '/buy/gpu/'
         },
         features: [
           {
@@ -219,32 +230,32 @@
             img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path: 'Pecs'
+            path: '/ecs/'
           },
           {
             img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path: 'Pvpc'
+            path: '/vpc/'
           },
           {
             img: 'icon-fuzaijunheng2',
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
-            path: 'Pbalance'
+            path: '/loadbalancing/'
           },
           {
             img: 'icon-xunizhuanwangVPN',
             title: '虚拟专网VPN',
             desc: '虚拟专用网络VPN，用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活…',
-            path: 'Pvirvpn'
+            path: '/vpn/'
           },
         ]
       }
     },
     methods: {
       toBuy(){
-        this.$router.push($store.state.userInfo ? 'buy/bgpu' : 'login')
+        this.$router.push($store.state.userInfo ? '/buy/gpu/' : 'login')
       },
     }
   }

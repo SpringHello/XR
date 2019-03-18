@@ -5,7 +5,7 @@
         <div class="text">
           <h1>SSL证书</h1>
           <p>在云上签发各品牌数字证书，实现网站HTTPS化，使网站可信，防 劫持、防篡改、防监听。并进行统一生命周期管理，简化证书部署， 一键分发到云上产品，实现网站的可信身份认证与安全数据传输。</p>
-          <Button @click="$router.push('buy/bssl')">立即购买</Button>
+          <Button @click="$router.push('/buy/ssl/')">立即购买</Button>
         </div>
         <img src="../../assets/img/ssl/banner.png" alt>
       </div>
@@ -103,6 +103,17 @@
 import axios from 'axios'
 import sslDetail from './sslDetail'
 export default {
+  metaInfo: {
+    title: 'ov、dv沃通（wotrus）ssl证书价格 - 便宜ssl数字证书 - 多域名ssl加密证书 - 网站ssl证书申请 - 云安全 - 新睿云', // set a title
+    meta: [{                 // set meta
+      name: 'keywords',
+      content: 'ssl,ssl证书,沃通,沃通ca,多域名ssl证书,ssl证书申请,ssl证书价格,便宜ssl证书,ssl加密证书,ssl数字证书,便宜ssl,网站ssl证书,申请ssl证书,多域名ssl'
+    },
+      {                 // set meta
+        name: 'description',
+        content: '沃通全球著名的SSL证书提供商已经为全球180多个国家和地区超过十万个网站颁发了全球信任的SSL证书。在云上签发各品牌数字证书，实现网站HTTPS化，使网站可信，防劫持、防篡改、防监听。'
+      }]
+  },
   data () {
     return {
       selectedTab: 'home',
@@ -256,7 +267,7 @@ export default {
     },
     toBuy(defaultType) {
       sessionStorage.setItem('defaultType', defaultType)
-      this.$router.push('buy/bssl')
+      this.$router.push('/buy/ssl/')
     },
     changeTabSec(data) {
       this.selectedTabSec = data
@@ -360,7 +371,7 @@ export default {
       margin-bottom: 20px;
       dt {
         height: 40px;
-        padding-top: 8px; 
+        padding-top: 8px;
         color: rgba(59, 134, 255, 1);
         background: rgba(222, 235, 255, 1);
         font-size: 18px;

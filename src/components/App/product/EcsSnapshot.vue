@@ -101,6 +101,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: 'ecs快照 - 云服务器数据库备份回滚 - 云计算 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'ecs快照,数据备份,数据库备份,云服务器数据备份,数据回滚,数据库回滚,云服务器数据回滚'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云的ECS快照能对云服务器某个时刻的数据进行备份和回滚，且ECS快照为全量快照，提升了安全性的同时，降低了ECS快照的管理难度。'
+        }]
+    },
     data(){
       return {
         logo: {
@@ -161,13 +172,13 @@
             img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path: 'Pecs'
+            path: '/ecs/'
           },
           {
             img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path: 'Pvpc'
+            path: '/vpc/'
           }
         ]
       }

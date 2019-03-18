@@ -21,14 +21,14 @@
           </svg>
               <span v-if="userInfo.loginname" style="vertical-align: middle">{{userInfo.loginname}}</span>
               <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;"
-                    @click="togo('/ruicloud/userCenter','personalInfo')">点击绑定</span>
+                    @click="togo('/userCenter','personalInfo')">点击绑定</span>
             </span>
             <span>
               <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
             <use xlink:href="#houtaiicon-shouji"></use>
           </svg>
               <span v-if="userInfo.phone||authInfo.phone" style="vertical-align: middle">{{userInfo.phone||userInfo.phone}}</span>
-              <router-link v-else style="vertical-align: middle" to="/ruicloud/userCenter">点击绑定</router-link>
+              <router-link v-else style="vertical-align: middle" to="/userCenter">点击绑定</router-link>
             </span>
           </div>
         </div>
@@ -40,7 +40,7 @@
               <p class="universal-large" v-else>{{item.value}}元</p>
             </div>
           </div>
-          <router-link to="/ruicloud/recharge">
+          <router-link to="/recharge">
             <button class="universal-middle" style="cursor:pointer">立即充值</button>
           </router-link>
         </div>
@@ -297,20 +297,20 @@
               content.url = currentUrl[index]
               // 需要跳转到购买页面的资源，添加url
               if (content.itemName == '弹性云主机ECS') {
-                content.cartUrl = 'buy#Pecs'
+                content.cartUrl = '/buy/#Pecs'
               } else if (content.itemName == '弹性IP') {
-                content.cartUrl = 'buy/bip#Peip'
+                content.cartUrl = '/buy/elasticip/#Peip'
               } else if (content.itemName == '云硬盘') {
-                content.cartUrl = 'buy/bdata#Pdisk'
+                content.cartUrl = '/buy/disk/#Pdisk'
               } else if (content.itemName == 'NAT网关') {
                 content.cartUrl = 'vpc#NAT'
               }
               if (content.itemName == '数据库') {
-                content.cartUrl = 'buy/bdata#NAT'
+                content.cartUrl = '/buy/database/#NAT'
               } else if (content.itemName == 'GPU服务器') {
-                content.cartUrl = 'buy/bgpu'
+                content.cartUrl = '/buy/gpu/'
               } else if (content.itemName == '对象存储') {
-                content.cartUrl = 'buy/bobj'
+                content.cartUrl = '/buy/objectstorage/'
               }
             })
           })

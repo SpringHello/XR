@@ -379,7 +379,7 @@
       },
       '$store.state.zone': {
         handler: function () {
-          this.$router.push('/ruicloud/vpc')
+          this.$router.push('/vpc')
         },
         deep: true
       }

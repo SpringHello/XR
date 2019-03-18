@@ -1387,7 +1387,7 @@
         localStorage.setItem('link-vmid', this.$route.query.vmid)
         localStorage.setItem('link-zoneid', this.$route.query.zoneid)
         localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
-        window.open('/ruicloud/link')
+        window.open('/link')
       }
     },
     beforeRouteLeave(to, from, next) {

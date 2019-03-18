@@ -627,7 +627,7 @@
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.Modifyname = false">取消</Button>
         <Button type="primary" @click="">确定</Button>
-        <!-- $router.push('/ruicloud/cashprocess') -->
+        <!-- $router.push('/cashprocess') -->
       </p>
     </Modal>
 
@@ -679,9 +679,9 @@
                                                               @click="getPhoneCode('againCode')">重新获取</span>或<span class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}"
                                                                                                                    @click.prevent="getPhoneCode('voice')">接收语音验证码</span>。</p>
           <p v-if="authInfo&&authInfo.checkstatus==0" style="line-height:24px;">2、如果手机已丢失或停机，请<span class="spanaa" @click="showModal.modifyPhoneID = true;showModal.cashverification=false">通过身份证号码验证</span>或<span
-            class="spanaa" @click="$router.push('/ruicloud/work')">提交工单</span>更改手机号。</p>
+            class="spanaa" @click="$router.push('/work')">提交工单</span>更改手机号。</p>
           <p v-if="!authInfo||authInfo&&authInfo.checkstatus!=0" style="line-height:24px;">2、如果手机已丢失或停机，请<span class="spanaa"
-                                                                                                               @click="$router.push('/ruicloud/work')">提交工单</span>或<a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                                                                                                               @click="$router.push('/work')">提交工单</span>或<a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                                                                                                                                                                       class="spanaa" style="font-size: 13px;">联系客服</a>更改手机号。</p>
         </div>
       </div>
@@ -4047,7 +4047,7 @@
               }
             }).then(res => {
               if (res.data.status == 1 && res.status == 200) {
-                this.$router.push('/ruicloud/cancellationaccount')
+                this.$router.push('/cancellationaccount')
               } else {
                 this.$message.info({
                   content: res.data.message

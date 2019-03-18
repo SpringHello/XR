@@ -5,7 +5,7 @@
         / 告警策略 / <span>新建告警策略</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
-        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+        <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
          <div class="nas-content">
@@ -198,7 +198,7 @@
                             </li>
                           </ul>
                         </div>
-                        <div class="center-gap"> 
+                        <div class="center-gap">
                           <span> →</span>
                           <span>←</span>
                         </div>
@@ -214,14 +214,14 @@
                           </ul>
                         </div>
                       </div>
-                    </div>      
+                    </div>
                     <p>提示：您可以在个人中心—告警中心—联系人管中添加和编辑联系人信息。</p>
                   </div>
                   <Button type="primary" @click="newAlarmStrategy_ok" style="margin-top:20px;">{{btnflag}}</Button>
                 </Form>
               </div>
             </div>
-       
+
       </div>
     </div>
   </div>
@@ -729,7 +729,7 @@ export default {
           this.allResources = response.data.list
           this.allResourcesOrigin = JSON.stringify(response.data.list)
           this.allResourcesLength = response.data.list.length
-        } 
+        }
       })
     },
     // 添加资源

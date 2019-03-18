@@ -65,7 +65,7 @@
       </nav>
       <div class="content">
         <Breadcrumb>
-          <Breadcrumb-item href="/ruicloud/document">产品文档</Breadcrumb-item>
+          <Breadcrumb-item href="/document">产品文档</Breadcrumb-item>
           <Breadcrumb-item>网络</Breadcrumb-item>
         </Breadcrumb>
         <router-view></router-view>

@@ -5,7 +5,7 @@
             <span>GPU云服务器</span>
           </span>
           <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
-            <router-link to="/ruicloud/userCenter">立即认证</router-link>
+            <router-link to="/userCenter">立即认证</router-link>
           </Alert>
         <div id="content">
             <div id="header">
@@ -19,7 +19,7 @@
           <p>基于GPU应用的计算服务，具有实时的并行计算和浮点计算能力，适用于3D图形应用、深度学习、科学计算等</p>
           </div>
           <div style="margin:16px 0 16px 0;">
-            <Button type="primary"  @click="$router.push({path:'/ruicloud/buy/bgpu'})">+  创建</Button>
+            <Button type="primary"  @click="$router.push({path:'/buy/gpu/'})">+  创建</Button>
             <Button type="primary" :disabled='disabledList.closeDisbled' style="margin:0 10px;" @click="stopHost">关机</Button>
             <Button type="primary" :disabled='disabledList.openDisbled' @click="openHost">开机</Button>
             <Button type="primary" :disabled='disabledList.closeDisbled' style="margin:0 10px;" @click="reStartGPU">重启</Button>
@@ -29,7 +29,7 @@
               <DropdownMenu slot="list">
                   <DropdownItem>重置密码</DropdownItem>
                   <DropdownItem>绑定IP</DropdownItem>
-                  <DropdownItem>重命名</DropdownItem> 
+                  <DropdownItem>重命名</DropdownItem>
                   <DropdownItem>资费变更</DropdownItem>
                   <DropdownItem>主机续费</DropdownItem>
                   <DropdownItem>制作镜像</DropdownItem>
@@ -70,7 +70,7 @@
               </div>
                 <chart ref="cpu" :options="cpu" style="width: 100%;height: 80%;user-select: none; position: relative; background: transparent;"></chart>
           </div>
-                
+
           <div class="surface-boder">
                 <div class="title-Png">
                   <span>内存使用率</span>
@@ -89,10 +89,10 @@
                   </div>
                   <chart ref="momery" style="width: 100%;height: 80%;user-select: none; position: relative; background: transparent;" :options="momery"></chart>
           </div>
-             
+
         </div>
       </div>
-      
+
 
 
       <!--绑定IP-->
@@ -102,7 +102,7 @@
             <Select v-model="ipValidate.ip" placeholder="请选择IP" style="width: 200px">
               <Option v-for="item in ipValidate.ipList" :value="item.publicipid" :key="item.publicipid">{{item.publicip}}</Option>
             </Select>
-            <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('buy/bip')">购买弹性IP</span>
+            <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('/buy/elasticip/')">购买弹性IP</span>
           </FormItem>
         </Form>
         <br>
@@ -172,7 +172,7 @@
         </div>
         <p slot="footer" class="modal-footer-s">
           <Button @click="showModal.publicIPHint = false">取消</Button>
-          <Button type="primary" @click="$router.push('buy/bip')">创建公网IP</Button>
+          <Button type="primary" @click="$router.push('/buy/elasticip/')">创建公网IP</Button>
         </p>
       </Modal>
 
@@ -415,7 +415,7 @@
           uuId:'',
           //主机名称
           companyname:'',
-          
+
           resetPasswordForm:{
             oldPassword:'',
             newPassword:'',
@@ -1438,7 +1438,7 @@
           this.disabledList.openDisbled = true;
           this.disabledList.closeDisbled = true;
         }
-        
+
       },
 
         //创建镜像
@@ -1614,7 +1614,7 @@
           localStorage.setItem('link-vmid', item.computerid)
           localStorage.setItem('link-zoneid', item.zoneid)
           localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
-          window.open('/ruicloud/link')
+          window.open('/link')
       },
 
       requestClick(name,val){
@@ -1797,7 +1797,7 @@
             this.momery.xAxis.data = response.data.result.xaxis;
           }
         })
-        
+
       },
       computed:{
         auth() {
@@ -1949,8 +1949,8 @@
       color: rgba(102, 102, 102, 1);
     }
   }
-  
-    
+
+
     .surface-boder{
       border-radius:4px;
       border:1px dashed  rgba(153,153,153,1);

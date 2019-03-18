@@ -11,6 +11,9 @@ import 'iview/dist/styles/iview.css'
 import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
+import MetaInfo from 'vue-meta-info'
+
+
 
 //import './util/BMap'
 // import ECharts from 'vue-echarts/components/ECharts.vue'
@@ -38,6 +41,7 @@ Vue.prototype.$LR = LR
 Vue.config.productionTip = false
 
 
+//axios.defaults.withCredentials = true
 
 axios.defaults.withCredentials = true
 
@@ -54,19 +58,20 @@ Vue.prototype.$http = axios.create({
 })
 
 /* 抛出全局异常*/
-const errorHandler = (error, vm)=>{
+const errorHandler = (error, vm) => {
   console.error('抛出全局异常')
   console.error(error)
 }
 
 Vue.config.errorHandler = errorHandler
-Vue.prototype.$throw = (error)=> errorHandler(error,this)
+Vue.prototype.$throw = (error) => errorHandler(error, this)
+
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {
     if (config.params) {
       config.params = {
-        zoneId: store.state.zone.zoneid,
+        zoneId: store.state.zone ? store.state.zone.zoneid : '',
         ...config.params
       }
       config.params = appendMD5(config.params)
@@ -74,7 +79,7 @@ function requestIntercept(config) {
   } else if (config.method == 'post') {
     config.data = {
       ...config.data,
-      zoneId: store.state.zone.zoneid
+      zoneId: store.state.zone ? store.state.zone.zoneid : ''
 
     }
     config.data = appendMD5(config.data, 'post')
@@ -121,7 +126,7 @@ Vue.use(slider)
 Vue.component('chart', ECharts)
 Vue.use(VueClipboards)
 
-
+Vue.use(MetaInfo)
 // 日期原型对象拓展
 Date.prototype.format = function (fmt) {
   var o = {
@@ -154,7 +159,10 @@ Date.prototype.format = function (fmt) {
 var vm = new Vue({
   router,
   store,
-  render: h => h(Main)
+  render: h => h(Main),
+  mounted() {
+    document.dispatchEvent(new Event('render-event'))
+  }
 })
 
 vm.$Message.config({

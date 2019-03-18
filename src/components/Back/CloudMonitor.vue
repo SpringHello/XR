@@ -5,7 +5,7 @@
         <!-- / <span>云主机快照</span> -->
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
-        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+        <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
         <div id="header">
@@ -62,7 +62,7 @@
                 </div>
                 <div class="chart-shade" ref="firstShade">
                   <p style="margin-top: 100px">请购买弹性云服务器后查看信息</p>
-                  <button v-if="noHost" style="margin-right: 10px" @click="$router.push('buy/bhost')">购买云主机</button>
+                  <button v-if="noHost" style="margin-right: 10px" @click="$router.push('/buy/host/')">购买云主机</button>
                   <button v-if="noHost" @click="$router.push('documentInfo/kiRWuMFJd/kly3c37B1')">查看云主机购买指南</button>
                   <button v-if="!noHost" @click="addOverviewMonitoring(1)">添加监控指标</button>
                 </div>
@@ -103,7 +103,7 @@
                 </div>
                 <div class="chart-shade" style="width: 1160px;" ref="secondShade">
                   <p style="margin-top: 150px">请购买弹性云服务器后查看信息</p>
-                  <button v-if="noHost" style="margin-right: 10px" @click="$router.push('buy/bhost')">购买云主机</button>
+                  <button v-if="noHost" style="margin-right: 10px" @click="$router.push('/buy/host/')">购买云主机</button>
                   <button v-if="noHost" @click="$router.push('documentInfo/kiRWuMFJd/kly3c37B1')">查看云主机购买指南</button>
                   <button v-if="!noHost" @click="addOverviewMonitoring(2)">添加监控指标</button>
                 </div>
@@ -147,7 +147,7 @@
           <TabPane label="告警策略" name="alarmStrategy">
             <div class="as-content">
               <Button type="primary" style="margin-bottom: 10px" @click="$router.push('CloudMonitorCreateStrategy')">新建告警策略</Button>
-              <a href="https://www.xrcloud.net/ruicloud/documentInfo/wbOm1R2ti/wbX7w9BdC" style="float: right;line-height: 30px;" target="_blank">查看帮助文档</a>
+              <a href="https://www.xrcloud.net/documentInfo/wbOm1R2ti/wbX7w9BdC" style="float: right;line-height: 30px;" target="_blank">查看帮助文档</a>
               <Table :columns="alarmStrategyColumns" :data="alarmStrategyData"></Table>
             </div>
           </TabPane>

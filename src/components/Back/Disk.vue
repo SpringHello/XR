@@ -4,7 +4,7 @@
       <span class="title">云存储 / <span>云硬盘</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
-        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+        <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
         <div id="header">
@@ -125,7 +125,7 @@
               <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
               购买主机
             </span>
-          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 42%;" @click="$router.push('buy/bgpu')"
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 42%;" @click="$router.push('/buy/gpu/')"
                 v-else>
               <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
               购买GPU云服务器

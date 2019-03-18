@@ -132,6 +132,17 @@
 
 <script type="text/ecmascript-6">
   export default {
+    metaInfo: {
+      title: 'oss对象存储服务 - 云存储服务器 - 云存储 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'oss,oss存储,oss对象存储,对象存储,对象存储服务,对象存储oss,云存储服务器'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云对象存储OSS分布式海量数据存取服务。OSS提供标准的对象存储服务，您可以通过网络随时随地方便地存储和获取图片/音频/视频/文本/大文件等各类数据文件。'
+        }]
+    },
     data() {
       return {
         logo: {
@@ -259,25 +270,25 @@
             img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path: 'Pecs'
+            path: '/ecs/'
           },
           {
             img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path: 'Pvpc'
+            path: '/vpc/'
           },
           {
             img: 'icon-fuzaijunheng2',
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
-            path: 'Pbalance'
+            path: '/loadbalancing/'
           },
           {
             img: 'icon-xunizhuanwangVPN',
             title: '虚拟专网VPN',
             desc: '虚拟专用网络VPN，用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活...',
-            path: 'Pvirvpn'
+            path: '/vpn/'
           }
         ]
       }

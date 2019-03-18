@@ -135,7 +135,7 @@
             <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
               如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到
               <router-link style="color: rgb(42, 153, 242);cursor: pointer"
-                           to="/ruicloud/vpc">控制台新建。
+                           to="/vpc">控制台新建。
               </router-link>
             </p>
             <!--网卡选择-->
@@ -842,7 +842,7 @@
         }
         axios.get('database/createDB.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('/ruicloud/order')
+            this.$router.push('/order')
           } else {
             this.$message.info({
               content: response.data.message

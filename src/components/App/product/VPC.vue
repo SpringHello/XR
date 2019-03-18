@@ -111,6 +111,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: 'vpc虚拟私有云 - 云网络 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'vpc,虚拟私有云,vpc网络'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云给用户构建隔离的、私密的虚拟网络环境，用户可以自由配置VPC内的IP地址范围、子网、路由表、安全组和网关等，用户可以申请弹性带宽和弹性IP搭建业务系统，同时也可以通过专线/VPN等接入方式实现云上VPC与传统IDC的互联，构建混合云系统。'
+        }]
+    },
     data(){
       return {
         logo: {
@@ -206,25 +217,25 @@
             img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path: 'Pecs'
+            path: '/ecs/'
           },
           {
             img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path: 'Pvpc'
+            path: '/vpc/'
           },
           {
             img: 'icon-fuzaijunheng2',
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
-            path: 'Pbalance'
+            path: '/loadbalancing/'
           },
           {
             img: 'icon-xunizhuanwangVPN',
             title: '虚拟专网VPN',
             desc: '虚拟专用网络VPN，用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活...',
-            path: 'Pvirvpn'
+            path: '/vpn/'
           }
         ]
       }

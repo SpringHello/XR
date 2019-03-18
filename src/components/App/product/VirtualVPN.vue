@@ -93,7 +93,7 @@
       <div class="wrapper">
         <p class="subTitle">相关推荐</p>
         <div class="recommendation-flex">
-          <div v-for="(recommendation,index) in recommendations" class="flex-item" :key="index"> 
+          <div v-for="(recommendation,index) in recommendations" class="flex-item" :key="index">
             <div class="icon-wrap">
               <i class="iconfont" :class="recommendation.img"></i>
             </div>
@@ -112,6 +112,17 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: 'vpn虚拟专有网络 - vpn服务器 - vpn网关 - 云网络 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'vpn,vpn服务器,vpn网关,虚拟专有网络'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '虚拟专用网络（Virtual Private Network）是通过互联网，采用IPsec加密技术，实现用户本地数据中心、用户办公网络与新睿云VPC之间安全可靠的连接，使用便捷灵活，即开即用，打造可伸缩的混合云环境。'
+        }]
+    },
     data(){
       return {
         logo: {
@@ -180,13 +191,13 @@
             img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path: 'Pecs'
+            path: '/ecs/'
           },
           {
             img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path: 'Pvpc'
+            path: '/vpc/'
           }
         ]
       }

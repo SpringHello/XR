@@ -1,7 +1,7 @@
 <template>
 	<div id="background">
 		<div id="wrapper">
-			<span><span @click="$router.push('/ruicloud/userCenter')">个人中心</span> / <span @click="$router.push('/ruicloud/expenses')">费用中心</span> / <span @click="$router.push('/ruicloud/Cashwithdrawal')">提现</span></span>
+			<span><span @click="$router.push('/userCenter')">个人中心</span> / <span @click="$router.push('/expenses')">费用中心</span> / <span @click="$router.push('/Cashwithdrawal')">提现</span></span>
 			<div class="content" style="min-height: 655px;">
 				<span>自助提现</span>
 				<div class="remindbox">
@@ -129,7 +129,7 @@
 				<p slot="footer" class="modal-footer-s">
 					<Button @click="showModal.cardfirmation = false">取消</Button>
 					<Button type="primary" @click="carddetermination('formAppreciationDate')">确定</Button>
-					<!-- $router.push('/ruicloud/cashprocess') -->
+					<!-- $router.push('/cashprocess') -->
 				</p>
 			</Modal>
 			<!-- 打款详情弹窗 -->
@@ -523,7 +523,7 @@
 							this.AllSession.balance=this.comBankemoney
 							this.AllSession.type=1
 							sessionStorage.setItem('ALLf',JSON.stringify(this.AllSession))
-							this.$router.push('/ruicloud/cashprocess')
+              this.$router.push('/cashprocess')
 						}
 					})
 				}
@@ -535,7 +535,7 @@
 					this.AllSession.balance=this.comOnlinemoney
 					this.AllSession.type=0
 					sessionStorage.setItem('ALLf',JSON.stringify(this.AllSession))
-					this.$router.push('/ruicloud/cashprocess')
+					this.$router.push('/cashprocess')
 				}
 			},
 			setdisable() {

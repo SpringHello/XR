@@ -7,7 +7,7 @@
     </div>
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/index.htm" class="logo">
+        <router-link to="/" class="logo">
           <div></div>
         </router-link>
         <div class="operate">
@@ -47,17 +47,17 @@
                 </a>
                 <DropdownMenu slot="list">
                   <DropdownItem name="userCenter">
-                    <router-link to="/ruicloud/userCenter">用户中心</router-link>
+                    <router-link to="/userCenter">用户中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="expenses">
-                    <router-link to="/ruicloud/expenses">费用中心</router-link>
+                    <router-link to="/expenses">费用中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="msgCenter" style="position:relative">
-                    <router-link to="/ruicloud/msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
+                    <router-link to="/msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
                     </router-link>
                   </DropdownItem>
                   <DropdownItem name="operationLog">
-                    <router-link to="/ruicloud/operationLog">操作日志</router-link>
+                    <router-link to="/operationLog">操作日志</router-link>
                   </DropdownItem>
                   <DropdownItem divided name="exit">
                     <!-- <router-link to="">退出</router-link> -->
@@ -353,7 +353,7 @@
           $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
         } else {
           next(vm => {
-            vm.$router.push({path: '/ruicloud/login'})
+            vm.$router.push({path: '/login'})
           })
         }
         next()
@@ -515,7 +515,7 @@
       exit() {
         axios.get('user/logout.do').then(response => {
           $store.commit('setAuthInfo', {authInfo: null, userInfo: null})
-          this.$router.push('/ruicloud/login')
+          this.$router.push('/login')
         })
       },
 			loggedOffState() {
@@ -589,8 +589,8 @@
       zone: state => state.zone,
       zoneList() {
         var map = {
-          '/ruicloud/GpuList': [1],
-          '/ruicloud/host': [0],
+          '/GpuList': [1],
+          '/host': [0],
         }
         var type = map[this.$route.path] || [0, 1]
         var zoneList = this.$store.state.zoneList.filter(zone => {
