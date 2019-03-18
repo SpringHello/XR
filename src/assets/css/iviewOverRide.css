@@ -427,6 +427,12 @@ div.modal-header-border {
 	margin-left: 10px;
 }
 
+/* 所有资源页面提示框修改 */
+.allbox .ivu-steps-vertical .ivu-steps-main .ivu-steps-title{
+	line-height: 21px;
+	font-size: 14px;
+}
+
 /* 拼团活动下拉框 */
 .groupBooking-select .ivu-select-selection {
   border: 1px solid #FD8C73;
