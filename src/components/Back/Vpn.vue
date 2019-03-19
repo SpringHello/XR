@@ -7,7 +7,7 @@
     <div id="wrapper">
       <span class="title">
         云网络 /
-         <span>VPN</span>
+         <span>虚拟专网VPN</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/userCenter">立即认证</router-link>
