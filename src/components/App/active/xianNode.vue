@@ -157,7 +157,7 @@
           </div>
           <div class="body">
             <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/success-icon.png" style="vertical-align: middle;">恭喜您！已通过实名认证</p>
-            <p> 您可前往<span class="red" @click="$router.push('userCenter')"> 个人中心</span>查看您的认证信息</p>
+            <p> 您可前往<span class="red" @click="$router.push('/userCenter')"> 个人中心</span>查看您的认证信息</p>
             <button @click.stop="showModal.authSucModal=false" style="margin-top: 35px;" class="modal-btn"><span>返回活动</span></button>
           </div>
         </div>
@@ -172,7 +172,7 @@
           </div>
           <div class="body" style="padding-top:72px;">
             <p>很抱歉！您不是新用户，不符合参与本次活动的条件！</p>
-            <p style="color:#FF3000;margin-top:10px;cursor:pointer" @click="$router.push('activecenter')">去看看其他优惠活动吧 →</p>
+            <p style="color:#FF3000;margin-top:10px;cursor:pointer" @click="$router.push('/activity/')">去看看其他优惠活动吧 →</p>
           </div>
         </div>
       </div>
@@ -392,7 +392,7 @@
     methods: {
       toAuth() {
         sessionStorage.setItem('pane', 'certification')
-        this.$router.push('userCenter')
+        this.$router.push('/userCenter')
       },
       showAuthModal() {
         this.authHintShow = false
@@ -485,7 +485,7 @@
                 }).then(res => {
                   if (res.status == 200 && res.data.status == 1) {
                     this.$Message.success('创建订单成功')
-                    this.$router.push('order')
+                    this.$router.push('/order')
                   } else {
                     this.$message.info({
                       content: res.data.message

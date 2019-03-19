@@ -3,14 +3,14 @@
 		<div id="wrapper">
 			<img src="../assets/img/back/404.png" class="imgg" />
 			<h1>Error，页面出错啦！请点击返回首页或者刷新页面～</h1>
-			<Button @click="$router.push('/ruicloud/')" class="btn1">返回首页</Button>
+			<Button @click="$router.push('/')" class="btn1">返回首页</Button>
 			 <Button type="primary" @click="$router.history.go(0)" class="btn2">刷新页面</Button>
 		</div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-	
+
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>

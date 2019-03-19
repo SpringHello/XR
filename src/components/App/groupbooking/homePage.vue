@@ -39,10 +39,10 @@
           if (res.data.status == 1) {
             switch (res.data.result) {
               case 1:
-                next({path: '/ruicloud/productShare'})
+                next({path: '/productShare'})
                 break
               case 2:
-                next({path: '/ruicloud/activity'})
+                next({path: '/activity/'})
                 break
               default:
                 next()

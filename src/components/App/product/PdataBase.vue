@@ -111,13 +111,24 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: '云数据库服务 - 云数据库rds，支持Mysql、SQL Server、PostgreSQL、mongoDB、Redis引擎 - 云数据库 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云数据库,云数据库rds,mysql云数据库,云数据库mysql,云数据库服务'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '专业化的高性能、高可靠云数据库服务，支持Mysql、SQL Server、PostgreSQL、mongoDB、Redis引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。'
+        }]
+    },
     data(){
       return {
         logo: {
           img: require('../../../assets/img/product/p-database.png'),
           title: '数据库',
           desc: '专业化的高性能、高可靠云数据库服务，支持Mysql、SQL Server、PostgreSQL、mongoDB、Redis引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。 ',
-          linkRouter: 'buy/bdata'
+          linkRouter: '/buy/database/'
         },
         features: [
           {
@@ -207,25 +218,25 @@
             img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path: 'Pecs'
+            path: '/ecs/'
           },
           {
             img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path: 'Pvpc'
+            path: '/vpc/'
           },
           {
             img: 'icon-fuzaijunheng2',
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
-            path: 'Pbalance'
+            path: '/loadbalancing/'
           },
           {
             img: 'icon-xunizhuanwangVPN',
             title: '虚拟专网VPN',
             desc: '虚拟专用网络VPN，用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活...',
-            path: 'Pvirvpn'
+            path: '/vpn/'
           }
         ]
       }

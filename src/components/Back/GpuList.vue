@@ -5,7 +5,7 @@
             <span>GPU云服务器</span>
           </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
-        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+        <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
         <div id="header">
@@ -19,7 +19,7 @@
           <p>基于GPU应用的计算服务，具有实时的并行计算和浮点计算能力，适用于3D图形应用、深度学习、科学计算等</p>
         </div>
         <div style="margin:16px 0 16px 0;">
-          <Button type="primary" @click="$router.push({path:'/ruicloud/buy/bgpu'})">创建</Button>
+          <Button type="primary" @click="$router.push({path:'/buy/gpu/'})">创建</Button>
           <div style="display: inline-block;float: right;">
             <Select v-model="gpuTimeValue" style="width:200px" placeholder="计费类型" @on-change="getGpuServerList">
               <Option v-for="item in gpuTimeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -40,7 +40,7 @@
           <Select v-model="ipValidate.ip" placeholder="请选择IP" style="width: 200px">
             <Option v-for="item in ipValidate.ipList" :value="item.publicipid" :key="item.publicipid">{{item.publicip}}</Option>
           </Select>
-          <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('buy/bip')">购买弹性IP</span>
+          <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('/buy/elasticip/')">购买弹性IP</span>
         </FormItem>
       </Form>
       <br>
@@ -149,7 +149,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.publicIPHint = false">取消</Button>
-        <Button type="primary" @click="$router.push('buy/bip')">创建公网IP</Button>
+        <Button type="primary" @click="$router.push('/buy/elasticip/')">创建公网IP</Button>
       </p>
     </Modal>
 
@@ -1195,7 +1195,7 @@
         localStorage.setItem('link-vmid', item.computerid)
         localStorage.setItem('link-zoneid', item.zoneid)
         localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
-        window.open('/ruicloud/link')
+        window.open('/link')
       },
     },
     created(){

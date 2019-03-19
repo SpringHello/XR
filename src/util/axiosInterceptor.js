@@ -4,11 +4,10 @@
 import axios from 'axios'
 import md5 from 'md5'
 
-//axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 //axios.defaults.baseURL = 'http://zengxin.xrclouds.net/ruicloud/'
 //axios.defaults.baseURL = 'http://zhouyi.xrcloud.net/ruicloud'
-//axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
-axios.defaults.baseURL = 'http://www.xrcloud.net/ruicloud/'
+axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
+//axios.defaults.baseURL = 'http://www.xrcloud.net/ruicloud/'
 
 //axios.defaults.withCredentials = true
 function appendMD5(params, type) {

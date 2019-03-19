@@ -9,7 +9,7 @@
         <div v-for="item in menuList" class="menu-item">
           <ul>
             <li v-for="i in item.value">
-              <router-link :to="`/ruicloud/hotQuestion/${$router.currentRoute.params.parentId}/${i.id}`">
+              <router-link :to="`/hotQuestion/${$router.currentRoute.params.parentId}/${i.id}`">
                 {{i.name}}
               </router-link>
             </li>

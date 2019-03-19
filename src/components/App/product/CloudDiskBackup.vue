@@ -114,13 +114,24 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: '云硬盘备份 - 云硬盘快照 - 云存储 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云硬盘备份,云硬盘快照'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '云硬盘备份能对磁盘（系统盘或数据盘）某个时刻的数据进行备份和回滚，云硬盘备份为全量快照，提升了云硬盘的安全性，同时增强了云硬盘备份的易用性。'
+        }]
+    },
     data(){
       return {
         logo: {
           img: require('../../../assets/img/product/backup-logo.png'),
           title: '云硬盘备份',
           desc: '云硬盘备份能对磁盘（系统盘或数据盘）某个时刻的数据进行备份和回滚，云硬盘备份为全量快照，提升了云硬盘的安全性，同时增强了云硬盘备份的易用性。',
-          linkRouter: $store.state.userInfo ? 'diskBackup' : 'login'
+          linkRouter: $store.state.userInfo ? '/diskBackupList' : '/login'
         },
         features: [
           {
@@ -134,7 +145,7 @@
             desc: '由用户手动创建。用户可以根据需要，手动为磁盘创建快照，作为数据备份。'
           },
           {img: 'icon-cipankelonghuifu',
-           title: '磁盘克隆恢复', 
+           title: '磁盘克隆恢复',
            desc: '用户可以通过克隆的云硬盘创建和原始硬盘一样的数据盘。'
           }
         ],
@@ -171,25 +182,25 @@
             img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path: 'Pecs'
+            path: '/ecs/'
           },
           {
             img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path: 'Pvpc'
+            path: '/vpc/'
           },
           {
             img: 'icon-fuzaijunheng2',
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
-            path: 'Pbalance'
+            path: '/loadbalancing/'
           },
           {
             img: 'icon-NATwangguan',
             title: 'NAT网关',
             desc: '添加端口转发规则，允许来自公网或其他VPC对您的私有网络服务进行访问。',
-            path: 'Pnat'
+            path: '/natgateway/'
           }
         ]
       }

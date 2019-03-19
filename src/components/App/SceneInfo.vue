@@ -18,7 +18,7 @@
             <transition name="slide-fade">
               <ul v-show="otherSceneShow">
                 <li v-for="otherScene in sceneGroup">
-                  <a :href="'/ruicloud/sceneInfo/'+otherScene.link">
+                  <a :href="'/scene/'+otherScene.link">
                     {{otherScene.name}}
                   </a>
                 </li>
@@ -97,13 +97,13 @@
           <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-warning" style="top: 48px;left: 30px;">
             <i class="ivu-icon ivu-icon-android-alert"></i>
           </div>
-          <p class="lh24">您好，您不符合本活动的参与条件，去<span style="color: #2A99F2;cursor: pointer" @click="$router.push('/ruicloud/ActiveCenter')">活动中心</span>看看其他活动吧！如果有其他需要可联系我们销售或者客服。
+          <p class="lh24">您好，您不符合本活动的参与条件，去<span style="color: #2A99F2;cursor: pointer" @click="$router.push('/activity/')">活动中心</span>看看其他活动吧！如果有其他需要可联系我们销售或者客服。
           </p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.inConformityModal = false">取消</Button>
-        <Button type="primary" @click="$router.push('/ruicloud/ActiveCenter')">去活动中心</Button>
+        <Button type="primary" @click="$router.push('/activity/')">去活动中心</Button>
       </p>
     </Modal>
     <!-- 领取成功 -->
@@ -120,7 +120,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.getSuccessModal = false">取消</Button>
-        <Button type="primary" @click="$router.push('/ruicloud/host')">查看主机</Button>
+        <Button type="primary" @click="$router.push('/host')">查看主机</Button>
       </p>
     </Modal>
     <!-- 支付充值失败 -->
@@ -1812,14 +1812,14 @@
         userType: '',
         scene: '云电脑',
         sceneGroup: [
-          {name: '云电脑', link: 'host'},
-          {name: '个人建站', link: 'web'},
-          {name: '个人网盘', link: 'disk'},
-          {name: '软件研发', link: 'software'},
-          {name: '云游戏服务', link: 'game'},
-          {name: '图形设计', link: 'design'},
-          {name: '人工智能', link: 'AI'},
-          {name: '超级运算', link: 'supercomputing'},
+          {name: '云电脑', link: 'yundiannao/'},
+          {name: '个人建站', link: 'selfhelpbuildingwebsite/'},
+          {name: '个人网盘', link: 'storagedisk/'},
+          {name: '软件研发', link: 'softwaredevelopment/'},
+          {name: '云游戏服务', link: 'gameservice/'},
+          {name: '图形设计', link: 'graphicdesign/'},
+          {name: '人工智能', link: 'ai/'},
+          {name: '超级运算', link: 'supercomputing/'},
         ],
         otherSceneShow: false,
         areaGroup: [],
@@ -1914,7 +1914,7 @@
             {required: true, message: '请输入验证码'}
           ]
         },
-        imgSrc: `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        imgSrc: `/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         //定时器
         pageTimer: null,
         serialNum: ''
@@ -1932,31 +1932,31 @@
       },
       setData(val) {
         switch (val) {
-          case 'host':
+          case 'yundiannao':
             this.scene = '云电脑'
             this.userType = '1'
             break
-          case 'web':
+          case 'selfhelpbuildingwebsite':
             this.scene = '自助建站'
             this.userType = '2'
             break
-          case 'disk':
+          case 'storagedisk':
             this.scene = '存储&网盘'
             this.userType = '3'
             break
-          case 'software':
+          case 'softwaredevelopment':
             this.scene = '软件研发'
             this.userType = '4'
             break
-          case 'game':
+          case 'gameservice':
             this.scene = '游戏服务'
             this.userType = '5'
             break
-          case 'design':
+          case 'graphicdesign':
             this.scene = '图形设计'
             this.userType = '6'
             break
-          case 'AI':
+          case 'ai':
             this.scene = '人工智能'
             this.userType = '7'
             break

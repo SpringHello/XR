@@ -271,7 +271,7 @@
             </div>
             <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
               如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span style="color: rgb(42, 153, 242);cursor: pointer"
-                                                           @click="$router.push('/ruicloud/vpc')">控制台新建。</span></p>
+                                                           @click="$router.push('/vpc')">控制台新建。</span></p>
             <!--网卡选择-->
             <div class="item-wrapper">
               <div style="display: flex">
@@ -332,13 +332,13 @@
                       {{item.acllistname}}
                     </Option>
                   </Select>
-                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/ruicloud/document')">帮助文档</span>
+                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/document')">帮助文档</span>
                 </div>
               </div>
             </div>
             <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
               如您有业务需要开通其他端口，您可以 <span style="color: rgb(42, 153, 242);cursor: pointer"
-                                                           @click="$router.push({path:'/ruicloud/firewall'})">新建防火墙</span></p>
+                                                           @click="$router.push({path:'/firewall'})">新建防火墙</span></p>
             <!-- 防火墙规则 -->
             <div class="item-wrapper">
               <div style="display: flex">
@@ -578,6 +578,7 @@
       }
       return {
         selectFastMirror: '',
+        selectFastMirrorInfo: {systemId: '',systemName: ''},
         FastMirrorIndex: 0,
         mirrorShow: false,
         acllist: [
@@ -845,6 +846,7 @@
               item.img = this.mirrorListQImg[index].img
             })
             this.selectFastMirror = response.data.result[0].systemtemplateid
+            this.selectFastMirrorInfo = {systemId: response.data.result[0].systemtemplateid,systemName: response.data.result[0].templatename}
           }
         })
       },
@@ -966,7 +968,8 @@
       },
       setOSQ(item,index) {
         this.FastMirrorIndex=index
-        this.selectFastMirror=item.systemtemplateid
+        this.selectFastMirrorInfo = {systemId: item.systemtemplateid,systemName: item.templatename}
+        this.selectFastMirror =  item.systemtemplateid
         var str = item.templatename.substr(0, 1)
         if (str === 'W' || str === 'w') {
           this.systemUsername = 'administrator'
@@ -1093,7 +1096,7 @@
         if (this.createType == 'fast') {
           prod.currentSystem = this.currentSystem
           prod.cost = this.fastCost
-          prod.system = this.selectFastMirror
+          prod.system = this.selectFastMirrorInfo
         } else {
           prod.system = this.currentType == 'public' ? this.system : this.appSystem
           prod.IPConfig = this.IPConfig
@@ -1183,7 +1186,7 @@
         axios.get('information/deployVirtualMachine.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({
-              path: '/ruicloud/order'
+              path: '/order'
             })
           } else {
             this.$message.info({
@@ -1457,6 +1460,11 @@
           this.queryVpc()
           this.fireList()
           this.getFastMirror()
+          // 费用变化
+          this.queryQuick()
+          this.queryCustomVM()
+          this.queryIPPrice()
+          this.queryDiskPrice()
         },
         deep: true
       },

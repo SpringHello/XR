@@ -6,7 +6,7 @@
           <div class="left">
             <h1>云产品新春采购季</h1>
             <p>
-              抵至
+              低至
               <i>1折</i>
               更有会员折上折
             </p>
@@ -339,9 +339,9 @@
             </div>
           </div>
           <div>
-            <span class="recharge-btn" style="cursor:pointer;" @click="$router.push('memberInfo')">查看会员权益</span>
+            <span class="recharge-btn" style="cursor:pointer;" @click="$router.push('/memberInfo')">查看会员权益</span>
             <!-- <span class="recharge-btn" @click="getVipList()" style="cursor:pointer">立即充值</span> -->
-            <span class="recharge-btn" v-if="userInfo.vipname!='铂金会员'" @click="$router.push('recharge')" style="cursor:pointer;margin-left:40px;">立即充值</span>
+            <span class="recharge-btn" v-if="userInfo.vipname!='铂金会员'" @click="$router.push('/recharge')" style="cursor:pointer;margin-left:40px;">立即充值</span>
           </div>
         </div>
         <div class="main" v-else>
@@ -391,7 +391,7 @@
                   <span>全线产品均可使用</span>
                 </div>
               </div>
-              <p>此现金券需前往<span @click="$router.push('expenses')">个人中心</span>使用</p>
+              <p>此现金券需前往<span @click="$router.push('/expenses')">个人中心</span>使用</p>
             </div>
             <div class="right" style="cursor:pointer" @click="getTicket()">立即领取</div>
           </div>
@@ -465,10 +465,10 @@
             <span>抱歉</span>
           </div>
           <div class="body">
-            <p>您不符合参与秒杀活动的条件，去看看 <span @click.stop="$router.push('ActiveCenter')">其他活动</span>吧</p>
+            <p>您不符合参与秒杀活动的条件，去看看 <span @click.stop="$router.push('/activity/')">其他活动</span>吧</p>
           </div>
           <div class="footer">
-            <Button @click.stop="$router.push('ActiveCenter')" class="regular-btn">查看其他活动</Button>
+            <Button @click.stop="$router.push('/activity/')" class="regular-btn">查看其他活动</Button>
           </div>
         </div>
       </div>
@@ -1424,7 +1424,7 @@
       },
       toAuth() {
         sessionStorage.setItem('pane', 'certification')
-        this.$router.push('userCenter')
+        this.$router.push('/userCenter')
       },
       roll(val) {
         $('html, body').animate({scrollTop: val}, 300)
@@ -1586,7 +1586,7 @@
                 }).then(res => {
                   if (res.status == 200 && res.data.status == 1) {
                     this.$Message.success('创建订单成功')
-                    this.$router.push('order')
+                    this.$router.push('/order')
                   } else {
                     if (res.data.flag == '1') {
                       this.showModal.notNewcoustomer = true
@@ -1678,7 +1678,7 @@
         }
         axios.get('information/deployVirtualMachine.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
+            this.$router.push('/order')
           } else {
             this.posText = response.data.message
             this.showModal.regular = true
@@ -1761,7 +1761,7 @@
         }
         axios.get('gpuserver/createGpuServer.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
+            this.$router.push('/order')
           } else {
             this.posText = response.data.message
             this.showModal.regular = true
@@ -1803,7 +1803,7 @@
         }
         axios.post('ruiradosPrice/createOrder.do', params).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
+            this.$router.push('/order')
           } else {
             this.posText = response.data.message
             this.showModal.regular = true

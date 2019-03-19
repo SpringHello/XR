@@ -4,7 +4,7 @@
       <img class="img_1" src="../../assets/img/sceneList/sl-banner10.png"/>
       <img class="img_2" src="../../assets/img/sceneList/sl-banner11.png"/>
       <div class="content-list">
-        <div v-for="(item,index) in sceneList" class="scene" :class="{last: index == 4||index == 5 || index == 6 ||index == 7 }" @click="$router.push('sceneInfo/' + item.link)">
+        <div v-for="(item,index) in sceneList" class="scene" :class="{last: index == 4||index == 5 || index == 6 ||index == 7 }" @click="$router.push('/scene/' + item.link)">
           <div class="scene-top" :style="{'background-image': 'url(' + item.bannerSrc + ')'}">
             {{ item.text}}
           </div>
@@ -38,7 +38,7 @@
                 src: require('../../assets/img/sceneList/sl-icon4.png')
               }
             ],
-            link: 'host',
+            link: 'yundiannao/',
             bannerSrc: require('../../assets/img/sceneList/sl-banner2.png')
           },
           {
@@ -57,7 +57,7 @@
                 src: require('../../assets/img/sceneList/sl-icon8.png')
               }
             ],
-            link: 'web',
+            link: 'selfhelpbuildingwebsite/',
             bannerSrc: require('../../assets/img/sceneList/sl-banner3.png')
           },
           {
@@ -76,7 +76,7 @@
                 src: require('../../assets/img/sceneList/sl-icon29.png')
               }
             ],
-            link: 'disk',
+            link: 'storagedisk/',
             bannerSrc: require('../../assets/img/sceneList/sl-banner4.png')
           },
           {
@@ -95,7 +95,7 @@
                 src: require('../../assets/img/sceneList/sl-icon14.png')
               }
             ],
-            link: 'software',
+            link: 'softwaredevelopment/',
             bannerSrc: require('../../assets/img/sceneList/sl-banner5.png')
           },
           {
@@ -108,7 +108,7 @@
                 src: require('../../assets/img/sceneList/sl-icon16.png')
               }
             ],
-            link: 'game',
+            link: 'gameservice/',
             bannerSrc: require('../../assets/img/sceneList/sl-banner6.png')
           },
           {
@@ -127,7 +127,7 @@
                 src: require('../../assets/img/sceneList/sl-icon20.png')
               }
             ],
-            link: 'design',
+            link: 'graphicdesign/',
             bannerSrc: require('../../assets/img/sceneList/sl-banner7.png')
           },
           {
@@ -146,7 +146,7 @@
                 src: require('../../assets/img/sceneList/sl-icon24.png')
               }
             ],
-            link: 'AI',
+            link: 'ai/',
             bannerSrc: require('../../assets/img/sceneList/sl-banner8.png')
           },
           {
@@ -156,7 +156,7 @@
                 src: require('../../assets/img/sceneList/sl-icon25.png')
               }
             ],
-            link: 'supercomputing',
+            link: 'supercomputing/',
             bannerSrc: require('../../assets/img/sceneList/sl-banner9.png')
           }]
       }

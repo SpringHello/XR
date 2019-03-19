@@ -4,7 +4,7 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div class="ss-active" @click="push('/ruicloud/schoolSeason')">
+          <div class="ss-active" @click="push('/activtiy/2019spring/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
@@ -14,7 +14,7 @@
                     <i>1折</i>
                     更有会员折上折
                   </p>
-                  <span @click="push('/ruicloud/schoolSeason')">立即购买</span>
+                  <span @click="push('/activtiy/2019spring/')">立即购买</span>
                 </div>
                 <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt="云产品新春采购季">
               </div>
@@ -22,7 +22,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="xian-active" @click="push('/ruicloud/xianNode')">
+          <div class="xian-active" @click="push('/activity/xian/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
@@ -32,7 +32,7 @@
                     <i>折扣特惠</i>，
                     100%资源可用、100%性能可用！
                   </p>
-                  <span @click="$router.push('xianNode')">立即参与</span>
+                  <span @click="$router.push('activity/xian/')">立即参与</span>
                 </div>
                 <img src="../../assets/img/active/xianNode/xian-node-banner.png" alt>
               </div>
@@ -40,7 +40,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+          <div @click="push('/activity/zero/')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
                 <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png"></p>
@@ -51,24 +51,24 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="eightscene" @click="push('/ruicloud/sceneList')">
+          <div class="eightscene" @click="push('/scene/')">
             <div class="wrap">
               <div class="left">
                 <img src="../../assets/img/home/eightscene-text.png" alt="">
-                <Button @click.stop="$router.push('sceneList')">立即使用</Button>
+                <Button @click.stop="$router.push('/scene/')">立即使用</Button>
               </div>
               <div class="right">
                 <p>现在注册</p>
                 <p>即可体验 <span>免费套餐</span></p>
                 <p>多款云主机</p>
-                <p @click.stop="$router.push('fractive')">免费领取</p>
+                <p @click.stop="$router.push('/activity/free')">免费领取</p>
                 <Button type="primary" long @click.stop="$router.push('register')">注册新账号</Button>
               </div>
             </div>
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/fractive')"
+          <div @click="push('/activity/free/')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
               <div class="free-receive-content">
@@ -86,7 +86,7 @@
         </my-carousel-item>
 
         <my-carousel-item class="carousel-item">
-          <div @click="push('DBActive')"
+          <div @click="push('/activity/hotdatabase/')"
                style="cursor: pointer;background: #F56B23;">
             <div class="db-active">
               <div class="db-active-content">
@@ -105,7 +105,7 @@
         </my-carousel-item>
 
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/objStorageActive')"
+          <div @click="push('/activity/objectstorage/')"
                style="cursor: pointer;">
             <div class="obj-storage">
               <div class="wrap">
@@ -120,7 +120,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('/ruicloud/groupBooking')"
+          <div @click="push('/activity/share/')"
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
               <div class="groupBook-content">
@@ -139,7 +139,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div class="east-banner" @click="push('/ruicloud/EastSouthNode')">
+          <div class="east-banner" @click="push('/eastsouth/')">
             <div class="wrap">
               <div class="text">
                 <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
@@ -355,7 +355,7 @@
                 <p style="font-size: 14px;color:#999999;line-height: 20px;width:500px;border-right: 1px solid #d8d8d8;
     padding-right: 40px;">
                   {{area.desc}}</p>
-                <router-link to="/ruicloud/buy" class="buy" style="padding:13px 30px">立即购买</router-link>
+                <router-link to="/buy" class="buy" style="padding:13px 30px">立即购买</router-link>
               </div>
             </my-carousel-item>
           </my-carousel>
@@ -543,12 +543,19 @@
   // import china from '@/echarts/china.json'
   import throttle from 'throttle-debounce/throttle'
   import axios from 'axios'
-  import VueQArt from 'vue-qart'
 
 
   export default {
-    components: {
-      VueQArt
+    metaInfo: {
+      title: 'ecs弹性云服务器租用 - 便宜云主机免费试用 - 高防云服务器租赁 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云服务器,云主机,云主机服务器,云服务器租用,云主机租用,新睿云'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云是领先的基础云计算服务商。云计算产品主要包含云服务器、GPU云服务器、云存储、对象存储OSS、CDN、负载均衡、系统镜像、DDOS防火墙等。提供了可靠、可扩展并且费用低廉的云计算服务。现免费加入,一键领取云主机试用套餐,轻松上云！'
+        }]
     },
     data() {
       return {
@@ -582,7 +589,7 @@
         otherPayWay: '',
         balance: '0.0',
         attestationShow: false,
-        imgSrc: `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        imgSrc: `/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         //定时器
         pageTimer: null,
         serialNum: '',
@@ -616,14 +623,14 @@
           {bgUrl: require('../../assets/img/home/eightscene-bg-8.png')}
         ],
         eigthSceneMenu: [
-          {name: '云电脑', link: 'host'},
-          {name: '自助建站', link: 'web'},
-          {name: '存储&网盘', link: 'disk'},
-          {name: '软件研发', link: 'software'},
-          {name: '游戏服务', link: 'game'},
-          {name: '图形设计', link: 'design'},
-          {name: '人工智能', link: 'AI'},
-          {name: '超级运算', link: 'supercomputing'}
+          {name: '云电脑', link: 'yundiannao/'},
+          {name: '自助建站', link: 'selfhelpbuildingwebsite/'},
+          {name: '存储&网盘', link: 'storagedisk/'},
+          {name: '软件研发', link: 'softwaredevelopment/'},
+          {name: '游戏服务', link: 'gameservice/'},
+          {name: '图形设计', link: 'graphicdesign/'},
+          {name: '人工智能', link: 'ai/'},
+          {name: '超级运算', link: 'supercomputing/'}
         ],
         eigthSceneContent: [
           {
@@ -636,7 +643,7 @@
               require('../../assets/img/sceneList/sl-icon4.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/ruicloud/sceneInfo/host',
+            link: '/scene/yundiannao/',
             hint: '免费使用一年'
           },
           {
@@ -649,7 +656,7 @@
               require('../../assets/img/sceneList/sl-icon8.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/ruicloud/sceneInfo/web',
+            link: '/scene/selfhelpbuildingwebsite/',
             hint: '免费使用一年'
           },
           {
@@ -662,7 +669,7 @@
               require('../../assets/img/sceneList/sl-icon29.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/ruicloud/sceneInfo/disk',
+            link: '/scene/storagedisk/',
             hint: '免费使用一年'
           },
           {
@@ -675,7 +682,7 @@
               require('../../assets/img/sceneList/sl-icon14.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/ruicloud/sceneInfo/software',
+            link: '/scene/softwaredevelopment/',
             hint: '免费使用一年'
           },
           {
@@ -686,7 +693,7 @@
               require('../../assets/img/sceneList/sl-icon16.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/ruicloud/sceneInfo/game',
+            link: '/scene/gameservice/',
             hint: '免费使用'
           },
           {
@@ -699,7 +706,7 @@
               require('../../assets/img/sceneList/sl-icon20.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/ruicloud/sceneInfo/design',
+            link: '/scene/graphicdesign/',
             hint: '免费使用'
           },
           {
@@ -712,7 +719,7 @@
               require('../../assets/img/sceneList/sl-icon24.png'),
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/ruicloud/sceneInfo/AI',
+            link: '/scene/ai/',
             hint: '免费使用'
           },
           {
@@ -722,7 +729,7 @@
               require('../../assets/img/sceneList/sl-icon25.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/ruicloud/sceneInfo/supercomputing',
+            link: '/scene/supercomputing/',
             hint: '免费使用'
           },
         ],
@@ -752,8 +759,8 @@
                 img: '#icon-danxingyunfuwuqiECS',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pecs',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                detailLink: '/ecs/',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: true
               },
               {
@@ -762,8 +769,8 @@
                 img: '#houtaiicon-GPUzhuji',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pgpu',
-                useLink: $store.state.userInfo ? 'buy/bgpu' : 'buy/bgpu',
+                detailLink: '/gpu/',
+                useLink: $store.state.userInfo ? '/buy/gpu/' : '/buy/gpu/',
                 ME: false
               },
               {
@@ -772,8 +779,8 @@
                 img: '#icon-feiyongzhongxin',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Phost',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                detailLink: '/mirrorservice/',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: false
               },
               {
@@ -782,8 +789,8 @@
                 img: '#icon-ECSkuaizhao',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pecss',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                detailLink: '/ecssnapshot/',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: false
               },
               {
@@ -823,7 +830,7 @@
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pvpc',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: true
               },
               {
@@ -832,8 +839,8 @@
                 img: '#icon-danxingIP',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Peip',
-                useLink: $store.state.userInfo ? 'buy/bip' : 'buy/bip',
+                detailLink: '/elasticip/',
+                useLink: $store.state.userInfo ? '/buy/elasticip/' : '/buy/elasticip/',
                 ME: false
               },
               {
@@ -842,8 +849,8 @@
                 img: '#icon-fuzaijunheng2',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pbalance',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                detailLink: '/loadbalancing/',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: false
               },
               {
@@ -852,7 +859,7 @@
                 img: '#icon-NTAwangguan',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pnat',
+                detailLink: '/natgateway/',
                 useLink: '',
                 ME: false
               },
@@ -862,7 +869,7 @@
                 img: '#icon-xunizhuanwangVPN',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pvirvpn',
+                detailLink: '/vpn/',
                 useLink: '',
                 ME: false
               },
@@ -892,8 +899,8 @@
                 img: '#icon-yunyingpan',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pdisk',
-                useLink: $store.state.userInfo ? 'buy/bdisk' : 'buy/bdisk',
+                detailLink: '/disk/',
+                useLink: $store.state.userInfo ? '/buy/disk/' : '/buy/disk/',
                 ME: true
               },
               {
@@ -902,8 +909,8 @@
                 img: '#houtaiicon-duixiangchunchu',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'PobjStorage',
-                useLink: $store.state.userInfo ? 'buy/bobj' : 'buy/bobj',
+                detailLink: '/objectstorage/',
+                useLink: $store.state.userInfo ? '/buy/objectstorage/' : '/buy/objectstorage/',
                 ME: false
               },
               {
@@ -912,7 +919,7 @@
                 img: '#icon-yunyingpanbeifen',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pbackupdisk',
+                detailLink: '/diskbackup/',
                 useLink: '',
                 ME: false
               }
@@ -932,8 +939,8 @@
                 img: '#icon-fanghuoqiang',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pfirewall',
-                useLink: $store.state.userInfo ? 'buy' : 'buy',
+                detailLink: '/firewall/',
+                useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: true
               },
               {
@@ -942,7 +949,7 @@
                 img: '#icon-DDOSgaofangIP1',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pddos',
+                detailLink: '/ddos/',
                 useLink: '',
                 ME: false
               }
@@ -992,8 +999,8 @@
                 img: '#houtaiicon-yunshujukuMySQL',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'PdataBase',
-                useLink: $store.state.userInfo ? 'buy/bdata' : 'buy/bdata',
+                detailLink: '/database/',
+                useLink: $store.state.userInfo ? '/buy/database/' : '/buy/database/',
                 ME: true
               },
             ],
@@ -1205,8 +1212,8 @@
 
     },
     created() {
-      this.getnews()
-      this.getlinkList()
+      //this.getnews()
+      //this.getlinkList()
       //this.getMirror(this.eightsceneIndex)
     },
     methods: {

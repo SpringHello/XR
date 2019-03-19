@@ -1,11 +1,11 @@
 <template>
-    <div class="product">
+  <div class="product">
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
         <img :src="logo.img" style="top:38px;" alt="弹性伸缩" title="弹性伸缩">
         <div class="info">
-          <h3 >{{logo.title}}</h3>
+          <h3>{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>
@@ -103,15 +103,27 @@
 </template>
 
 <script type="text/ecmascript-6">
-import $store from '@/vuex'
-export default {
-     data(){
+  import $store from '@/vuex'
+
+  export default {
+    metaInfo: {
+      title: '弹性伸缩云计算服务 - 云计算 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '弹性伸缩,弹性计算,弹性云计算服务'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云的弹性伸缩服务，可以根据你的业务需求，设置创建伸缩策略告警伸缩，对云主机计算资源进行定时伸缩自动化管理，达到高效率、节约成本、及时容错的目的。'
+        }]
+    },
+    data() {
       return {
         logo: {
           img: require('../../../assets/img/product/u_elastic.png'),
           title: '弹性伸缩',
           desc: '可以根据你的业务需求，设置创建伸缩策略告警伸缩，对云主机计算资源进行定时伸缩自动化管理，达到高效率、节约成本、及时容错的目的。 ',
-          linkRouter: $store.state.userInfo ? 'elastic' : 'login'
+          linkRouter: $store.state.userInfo ? '/elastic' : '/login'
         },
         features: [
           {
@@ -145,7 +157,7 @@ export default {
             {
               title: '网站应用',
               icon: 'icon-wangzhanyingyong',
-              img:'',
+              img: '',
               desc: [
                 {subTitle: '场景描述', subDesc: ['在web服务的业务逻辑层会有扩缩容的需求。比如电商销售、在线教育、视频播客、新闻资讯等，客户端的请求通过负载均衡到达应用服务器，当业务访问量大幅快速波动时，弹性伸缩服务可以根据请求量及负载，弹性扩容或者缩容应用服务器的数量。']},
               ],
@@ -188,30 +200,30 @@ export default {
             img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path: 'Pecs'
+            path: '/ecs/'
           },
           {
             img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path: 'Pvpc'
+            path: '/vpc/'
           },
           {
             img: 'icon-fuzaijunheng2',
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
-            path: 'Pbalance'
+            path: '/loadbalancing/'
           },
           {
             img: 'icon-xunizhuanwangVPN',
             title: '虚拟专网VPN',
             desc: '虚拟专用网络VPN，用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活…',
-            path: 'Pvirvpn'
+            path: '/vpn/'
           },
         ]
       }
     },
-}
+  }
 </script>
 
 <style lang="less" scoped>

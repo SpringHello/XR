@@ -7,7 +7,7 @@
     </div>
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/index.htm" class="logo">
+        <router-link to="/" class="logo">
           <div></div>
         </router-link>
         <div class="operate">
@@ -47,17 +47,17 @@
                 </a>
                 <DropdownMenu slot="list">
                   <DropdownItem name="userCenter">
-                    <router-link to="/ruicloud/userCenter">用户中心</router-link>
+                    <router-link to="/userCenter">用户中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="expenses">
-                    <router-link to="/ruicloud/expenses">费用中心</router-link>
+                    <router-link to="/expenses">费用中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="msgCenter" style="position:relative">
-                    <router-link to="/ruicloud/msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
+                    <router-link to="/msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
                     </router-link>
                   </DropdownItem>
                   <DropdownItem name="operationLog">
-                    <router-link to="/ruicloud/operationLog">操作日志</router-link>
+                    <router-link to="/operationLog">操作日志</router-link>
                   </DropdownItem>
                   <DropdownItem divided name="exit">
                     <!-- <router-link to="">退出</router-link> -->
@@ -281,8 +281,8 @@
             subItem: [
               {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
               //{subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
-              {subName: '云硬盘', type: 'disk'},
-              {subName: '云硬盘备份', type: 'diskBackup'}
+              {subName: '云硬盘', type: 'diskList'},
+              {subName: '云硬盘备份', type: 'diskBackupList'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
             ]
           },
@@ -292,14 +292,14 @@
             subItem: [
               {
                 subName: '虚拟私有云VPC',
-                type: 'vpc',
+                type: 'vpcList',
                 thrItem: [{thrName: '虚拟私有云VPC', pane: 'VPC'}, {thrName: 'NAT网关', pane: 'NAT'}]
               },
               {subName: '弹性IP', type: 'ip'},
               {subName: '负载均衡', type: 'balance'},
               {
                 subName: '虚拟专网VPN',
-                type: 'vpn',
+                type: 'vpnList',
                 thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
               }
             ]
@@ -308,7 +308,7 @@
             mainName: '云安全',
             type: 'security',
             subItem: [
-              {subName: '防火墙', type: 'firewall'},
+              {subName: '防火墙', type: 'firewallList'},
               {subName: '云监控', type: 'CloudMonitor'},
               {subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
               //{subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
@@ -353,7 +353,7 @@
           $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
         } else {
           next(vm => {
-            vm.$router.push({path: '/ruicloud/login'})
+            vm.$router.push({path: '/login'})
           })
         }
         next()
@@ -515,7 +515,7 @@
       exit() {
         axios.get('user/logout.do').then(response => {
           $store.commit('setAuthInfo', {authInfo: null, userInfo: null})
-          this.$router.push('/ruicloud/login')
+          this.$router.push('/login')
         })
       },
 			loggedOffState() {
@@ -589,8 +589,8 @@
       zone: state => state.zone,
       zoneList() {
         var map = {
-          '/ruicloud/GpuList': [1],
-          '/ruicloud/host': [0],
+          '/GpuList': [1],
+          '/host': [0],
         }
         var type = map[this.$route.path] || [0, 1]
         var zoneList = this.$store.state.zoneList.filter(zone => {

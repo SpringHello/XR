@@ -2,11 +2,11 @@
   <div id="app">
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/index.htm" class="logo">
+        <router-link to="/" class="logo">
           <div></div>
         </router-link>
         <div class="home">
-          <router-link to="/ruicloud/index.htm">首页</router-link>
+          <router-link to="/">首页</router-link>
         </div>
       </div>
     </header>
@@ -21,7 +21,7 @@
           <img src="./assets/img/app/record.png" style="vertical-align: middle">京公网安备11010802024922号
         </a>
         <span>
-         <router-link to="/ruicloud/about">关于我们</router-link>
+         <router-link to="/about/">关于我们</router-link>
         </span>
       </div>
     </div>

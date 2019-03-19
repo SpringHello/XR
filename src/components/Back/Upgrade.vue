@@ -59,7 +59,7 @@
                  <i class="money">{{cost.toFixed(2)}}元</i>
               </span>
             <span style="margin-top:10px;">
-                <a href="/ruicloud/documentInfo/l6RqDbCKZ/l6RwGIm3S" target="_blank">购买和计费说明</a>
+                <a href="/documentInfo/l6RqDbCKZ/l6RwGIm3S" target="_blank">购买和计费说明</a>
               </span>
             <button @click="payOrder">立即购买</button>
           </div>
@@ -755,7 +755,7 @@ export default {
             this.$Message.success('订单提交成功')
             // this.$router.replace("order")
             this.$router.push({
-              path: '/ruicloud/order', query: {
+              path: '/order', query: {
                 countOrder
               }
             })

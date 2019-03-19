@@ -20,7 +20,7 @@
                   <button class="ghost button" @click="push('expenses')">查看订单</button>
                   <button class="primary button" @click="revertOrder">查看已购买产品</button>
                 </div>
-                <div v-if="payResult=='fail'" >
+                <div v-if="payResult=='fail'">
                   <button class="ghost button" @click="kf">联系客服</button>
                   <button class="primary button" @click="push('order')">返回订单</button>
                 </div>
@@ -36,6 +36,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import $store from '@/vuex'
+
   export default {
     data() {
       var payResult = sessionStorage.getItem('payResult')
@@ -57,7 +58,13 @@
       }
     },
     created() {
-      this.toggleZone(this.$store.state.zone.zoneid)
+      if (sessionStorage.getItem('orderZoneId')) {
+        this.toggleZone(sessionStorage.getItem('orderZoneId'))
+        sessionStorage.removeItem('orderZoneId')
+      } else {
+        this.toggleZone(this.$store.state.zone.zoneid)
+      }
+
       if (this.payResult == undefined) {
         this.$router.replace('overview')
       }
@@ -100,36 +107,36 @@
         }
       },
       // 进入购买的产品页
-      revertOrder(){
+      revertOrder() {
         let name = sessionStorage.getItem('routername');
-        let router ='';
-        if(name == '0' || name == '5' ||name == '4' || name == '20'){
-         router ='host';
-        }else if(name == '1' || name == '9'){
-          router ='disk';
-        }else if(name == '2' || name == '6' || name == '8'){
+        let router = '';
+        if (name == '0' || name == '5' || name == '4' || name == '20') {
+          router = 'host';
+        } else if (name == '1' || name == '9') {
+          router = 'disk';
+        } else if (name == '2' || name == '6' || name == '8') {
           router = 'ip';
-        }else if(name == '3'){
+        } else if (name == '3') {
           router = 'vpc';
-        }else if(name == '10'){
+        } else if (name == '10') {
           router = 'vpc';
-        }else if(name == '11' || name == '12' || name == '13'){
+        } else if (name == '11' || name == '12' || name == '13') {
           router = 'cloudDatabase';
-        }else if(name == 14){
+        } else if (name == 14) {
           return '短信包订单'
-        }else if(name == '15' || name == '16'){
-         router = 'gpuList';
-        }else if(name == '17'){
+        } else if (name == '15' || name == '16') {
+          router = 'gpuList';
+        } else if (name == '17') {
           window.location.href = 'https://oss-console.xrcloud.net/ruirados/objectStorage';
           return;
-        }else if(name == '18'){
+        } else if (name == '18') {
           window.location.href = 'https://domain.xrcloud.net/xrdomain/domainTransfer';
           return;
-        }else if(name == '19' || name == '21'){
+        } else if (name == '19' || name == '21') {
           window.location.href = 'https://domain.xrcloud.net/xrdomain/domainGroup';
           return;
-        }else if(name == '22'){
-          window.location.href ='https://domain.xrcloud.net/xrdomain/domainSSL';
+        } else if (name == '22') {
+          window.location.href = 'https://domain.xrcloud.net/xrdomain/domainSSL';
           return;
         }
         this.$router.push(router)
@@ -187,11 +194,17 @@
           color: #fff;
           border-color: #2A99F2;
         }
-        .title_font{
-            margin:20px 0;font-size: 18px;color:#FF0000;font-weight: normal;
+        .title_font {
+          margin: 20px 0;
+          font-size: 18px;
+          color: #FF0000;
+          font-weight: normal;
         }
-        .title_font2{
-             margin:20px 0;font-size: 18px;color:#30BA78;font-weight: normal;
+        .title_font2 {
+          margin: 20px 0;
+          font-size: 18px;
+          color: #30BA78;
+          font-weight: normal;
         }
       }
     }

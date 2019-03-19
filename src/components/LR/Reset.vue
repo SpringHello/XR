@@ -5,7 +5,7 @@
         <div class="banner">
           <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('xianNode')" class="xian-active">
+              <div @click="$router.push('activity/xian/')" class="xian-active">
               </div>
             </my-carousel-item>
             <my-carousel-item class="carousel-item">
@@ -13,7 +13,7 @@
               </div>
             </my-carousel-item>
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('fractive')" class="fr-active">
+              <div @click="$router.push('activity/free/')" class="fr-active">
               </div>
             </my-carousel-item>
           </my-carousel>

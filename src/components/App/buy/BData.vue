@@ -135,7 +135,7 @@
             <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
               如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到
               <router-link style="color: rgb(42, 153, 242);cursor: pointer"
-                           to="/ruicloud/vpc">控制台新建。
+                           to="/vpc">控制台新建。
               </router-link>
             </p>
             <!--网卡选择-->
@@ -198,13 +198,13 @@
                       {{item.acllistname}}
                     </Option>
                   </Select>
-                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/ruicloud/document')">帮助文档</span>
+                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/document')">帮助文档</span>
                 </div>
               </div>
             </div>
             <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
               如您有业务需要开通其他端口，您可以 <span style="color: rgb(42, 153, 242);cursor: pointer"
-                                                           @click="$router.push({path:'/ruicloud/firewall'})">新建防火墙</span></p>
+                                                           @click="$router.push({path:'/firewall'})">新建防火墙</span></p>
             <!-- 防火墙规则 -->
             <div class="item-wrapper">
               <div style="display: flex">
@@ -842,7 +842,7 @@
         }
         axios.get('database/createDB.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('/ruicloud/order')
+            this.$router.push('/order')
           } else {
             this.$message.info({
               content: response.data.message
@@ -911,6 +911,9 @@
           this.queryVpc()
           this.listDbTemplates()
           this.fireList()
+          this.queryCustomVM()
+          this.queryDiskPrice()
+          this.queryIPPrice()
         },
         deep: true
       },

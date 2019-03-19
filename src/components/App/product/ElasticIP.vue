@@ -52,7 +52,7 @@
               <img :src="stage.img">
               <div style="padding:20px;">
                 <span>场景描述</span>
-                <p v-for="(p,i) in stage.desc" :key="i"> 
+                <p v-for="(p,i) in stage.desc" :key="i">
                   {{p}}
                 </p>
               </div>
@@ -101,13 +101,24 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   export default{
+    metaInfo: {
+      title: 'eip按流量计费 - 弹性公网ip - 云网络 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '弹性公网ip,弹性ip,eip,弹性公网ip按流量计费'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '弹性公网IP是互联网上合法的静态公网IP地址。弹性公网IP地址是与用户账户相关联的资源，用户可以将弹性公网IP地址与任意虚拟机实例/NAT网关/VPN/负载均衡绑定，并可以随时解绑对应关系，再分配到其他资源实例上。'
+        }]
+    },
     data(){
       return {
         logo: {
           img: require('../../../assets/img/product/p-IP.png'),
           title: '弹性公网IP',
           desc: '弹性公网IP是互联网上合法的静态公网IP地址。弹性公网IP地址是与用户账户相关联的资源，用户可以将弹性公网IP地址与任意虚拟机实例/NAT网关/VPN/负载均衡绑定，并可以随时解绑对应关系，再分配到其他资源实例上。用户可以按需购买，实时开通，同时配置变更实时生效。',
-          linkRouter: 'buy'
+          linkRouter: '/buy/elasticip/'
         },
         features: [
           {img: 'icon-duligongwangipziyuan', title: '独立公网IP资源', desc: '为用户提供一个单独公网IP和一定速率带宽，实现与互联网的互通。公网IP可与任意虚拟机实例、NAT网关、负载均衡、VPN网关等实例绑定或解绑，并支持带宽速率的提升和降低，灵活匹配用户不同业务场景。'},
@@ -152,25 +163,25 @@
             img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path: 'Pecs'
+            path: '/ecs/'
           },
           {
             img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path: 'Pvpc'
+            path: '/vpc/'
           },
           {
             img: 'icon-fuzaijunheng2',
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
-            path: 'Pbalance'
+            path: '/loadbalancing/'
           },
           {
             img: 'icon-xunizhuanwangVPN',
             title: '虚拟专网VPN',
             desc: '虚拟专用网络VPN，用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活…',
-            path: 'Pvirvpn'
+            path: '/vpn/'
           }
         ]
       }

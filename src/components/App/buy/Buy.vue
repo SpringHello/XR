@@ -5,7 +5,7 @@
         <Select @on-change="change" v-model="product.currentProduct" class="mySelect" style="width: 102px">
           <Option v-for="item in product.productList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <router-link :to="`/ruicloud/${docPath}`" target="_blank">查看产品详情</router-link>
+        <router-link :to="`/${docPath}/`" target="_blank">查看产品详情</router-link>
       </div>
       <div id="body" ref="bo">
         <router-view/>
@@ -47,18 +47,11 @@
                 </div>
                 <!--快速创建主机-->
                 <div v-if="prod.createType=='fast'">
-                  <!--公共镜像-->
-                  <p class="item" v-if="prod.currentType!='custom'">
+                  <p class="item" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;" :title="prod.system.systemName">
                     <span class="hidden">$</span>
                     <span class="title">镜像</span><span
                     class="hidden">#</span>{{prod.system.systemName}}
                   </p>
-                  <!--自定义镜像-->
-                  <p class="item" v-if="prod.currentType=='custom'">
-                    <span class="hidden">$</span><span class="title">镜像</span><span
-                    class="hidden">#</span>{{prod.customMirror.templatename}}
-                  </p>
-
                   <p class="item"><span class="hidden">$</span><span class="title">配置</span><span
                     class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.publicIP?prod.currentSystem.bandWidth:0}M带宽、${prod.currentSystem.diskSize}G系统盘`}}
                   </p>
@@ -243,7 +236,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -301,13 +294,13 @@
         product: {
           currentProduct: this.$route.name,
           productList: [
-            {label: '云主机', value: 'bhost'},
-            {label: '云硬盘', value: 'bdisk'},
-            {label: '公网IP', value: 'bip'},
-            {label: '数据库', value: 'bdata'},
-            {label: '对象存储', value: 'bobj'},
-            {label: 'GPU服务器', value: 'bgpu'},
-            {label: 'SSL证书', value: 'bssl'}
+            {label: '云主机', value: 'host/'},
+            {label: '云硬盘', value: 'disk/'},
+            {label: '公网IP', value: 'elasticip/'},
+            {label: '数据库', value: 'database/'},
+            {label: '对象存储', value: 'objectstorage/'},
+            {label: 'GPU服务器', value: 'gpu/'},
+            {label: 'SSL证书', value: 'ssl/'}
           ]
         },
         // 当前可以创建的剩余资源数
@@ -335,7 +328,7 @@
             warning: false
           }
         },
-        imgSrc: '/ruicloud/user/getKaptchaImage.do',
+        imgSrc: '/user/getKaptchaImage.do',
         showModal: {
           login: false
         },
@@ -399,7 +392,7 @@
             if (response.data.status == 1) {
               this.$router.go(0)
             } else {
-              this.imgSrc = `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.imgSrc = `/user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.vailForm.loginname.message = response.data.message
               this.vailForm.loginname.warning = true
             }
@@ -441,7 +434,7 @@
               params.rootDiskType = prod.currentSystem.diskType
               params.networkId = 'no'
               params.vpcId = 'no'
-              params.templateId = prod.system
+              params.templateId = prod.system.systemId
             } else {
               // params.templateId =  prod.currentType == 'public' ? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
               params.cpuNum = prod.vmConfig.kernel
@@ -604,7 +597,7 @@
             return item.status == 200 && item.data.status == 1
           })) {
             this.$router.push({
-              path: '/ruicloud/order', query: {
+              path: '/order', query: {
                 countOrder
               }
             })
@@ -626,7 +619,7 @@
         sessionStorage.setItem('cart', JSON.stringify(this.cart))
       },
       change(value) {
-        this.$router.push(`/ruicloud/buy/${value}`)
+        this.$router.push(`/buy/${value}`)
       },
       // 导出清单
       exportXLSX() {
@@ -676,13 +669,13 @@
       },
       docPath() {
         let map = {
-          bhost: 'Pecs',
-          bdisk: 'Pdisk',
-          bip: 'Peip',
-          bdata: 'PdataBase',
-          bgpu: 'Pgpu',
-          bobj: 'PobjStorage',
-          bssl: 'ssl'
+          host: 'Pecs',
+          disk: 'Pdisk',
+          elasticip: 'Peip',
+          database: 'PdataBase',
+          gpu: 'Pgpu',
+          objectstorage: 'PobjStorage',
+          ssl: 'ssl'
         }
         return map[this.product.currentProduct]
       }

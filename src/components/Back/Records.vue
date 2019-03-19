@@ -271,7 +271,7 @@
                             } else if (row.status == "管局审核拒绝" || row.status == "初审拒绝") {
                               this.jumpRecord(row.id, row.webcompany_Id);
                             } else if (row.operation == '短信核验') {
-                              window.open('https://www.xrcloud.net/ruicloud/documentInfo/qHwTxQKS7/qZhAC3dxb')
+                              window.open('https://www.xrcloud.net/documentInfo/qHwTxQKS7/qZhAC3dxb')
                             }
                           }
                         }
@@ -500,7 +500,7 @@
       },
       toEntrance() {
         sessionStorage.setItem('back', 'back')
-        this.$router.push('entrance')
+        this.$router.push('/icp/')
       },
       updateMainWeb(id, status) {
         this.domain = false;

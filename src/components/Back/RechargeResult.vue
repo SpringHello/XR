@@ -5,7 +5,7 @@
          <span>支付</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
-        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+        <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content" style="min-height: 400px">
         <div id="header" style="border-bottom: 1px solid #E9E9E9">
@@ -38,34 +38,59 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
   export default {
     data() {
       return {
-        payStatus: '',
+        payStatus: '支付成功',
         msg: '',
-        vipMsg:''
+        vipMsg: ''
+      }
+    },
+    beforeRouteEnter(to, from, next) {
+      if (window.location.href.indexOf('serialNum') !== -1) {
+        let serialNum = sessionStorage.getItem('serialNum')
+        axios.get('user/payStatus.do', {
+          params: {
+            serialNum: serialNum
+          }
+        }).then(response => {
+          next(vm => {
+            if (response.status == 200 && response.data.status == 1) {
+              vm.payStatus = '支付成功'
+              vm.msg = response.data.message
+              vm.vipMsg = response.data.vipMessage
+            } else {
+              vm.payStatus = '支付失败'
+              vm.msg = response.data.message
+            }
+          })
+        })
+      } else {
+        next(vm => {
+          if (sessionStorage.getItem('rechargeSuccessMsg')) {
+            vm.payStatus = '支付成功'
+            vm.msg = sessionStorage.getItem('rechargeSuccessMsg') ? sessionStorage.getItem('rechargeSuccessMsg') : ''
+            vm.vipMsg = sessionStorage.getItem('vipMsg') ? sessionStorage.getItem('vipMsg') : ''
+            sessionStorage.removeItem('rechargeSuccessMsg')
+            sessionStorage.removeItem('vipMsg')
+          }
+          if (sessionStorage.getItem('rechargeErrorMsg')) {
+            vm.payStatus = '支付失败'
+            vm.msg = sessionStorage.getItem('rechargeErrorMsg') ? sessionStorage.getItem('rechargeErrorMsg') : ''
+            sessionStorage.removeItem('rechargeErrorMsg')
+          }
+        })
       }
     },
     created() {
-      if (sessionStorage.getItem('rechargeSuccessMsg')) {
-        this.payStatus = '支付成功'
-        this.msg = sessionStorage.getItem('rechargeSuccessMsg')
-        this.vipMsg = sessionStorage.getItem('vipMsg')
-        sessionStorage.removeItem('rechargeSuccessMsg')
-        sessionStorage.removeItem('vipMsg')
-      }
-      if (sessionStorage.getItem('rechargeErrorMsg')) {
-        this.payStatus = '支付失败'
-        this.msg = sessionStorage.getItem('rechargeErrorMsg')
-        sessionStorage.removeItem('rechargeErrorMsg')
-      }
     },
     methods: {
       kf() {
         window.open('tencent://message/?uin=1014172393&amp;Site=www.cloudsoar.com&amp;Menu=yes', '_blank')
       },
-      beVip(){
-        sessionStorage.setItem('beVip','1')
+      beVip() {
+        sessionStorage.setItem('beVip', '1')
         this.$router.push('expenses')
       }
     },

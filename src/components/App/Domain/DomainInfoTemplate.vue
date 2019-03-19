@@ -619,7 +619,7 @@
         axios.post('domain/createOrder.do', params).then(response => {
           if (response.data.status == 1) {
             sessionStorage.setItem('orderNum', response.data.orderNum)
-//            this.$router.push('/ruicloud/order')
+//            this.$router.push('/order')
             this.$router.push({
               path: 'order', query: {
                 countOrder

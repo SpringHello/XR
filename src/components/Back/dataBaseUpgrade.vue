@@ -40,7 +40,7 @@
                  <i class="money">{{cost}}元</i>
               </span>
             <span style="margin-top:10px;">
-                <a href="/ruicloud/#/computed/3-1" target="_blank">购买和计费说明</a>
+                <a href="/#/computed/3-1" target="_blank">购买和计费说明</a>
               </span>
             <button @click="payOrder">立即购买</button>
           </div>

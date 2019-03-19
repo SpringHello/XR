@@ -6,7 +6,7 @@
          <span>弹性IP</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
-        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+        <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
         <div id="header">
@@ -453,7 +453,7 @@
                   on: {
                     click: () => {
                       sessionStorage.setItem('vpcId', params.row.vpcid)
-                      this.$router.push('/ruicloud/vpcManage')
+                      this.$router.push('/vpcManage')
                     }
                   }
                 }, params.row.vpcname)
@@ -613,7 +613,7 @@
                   },
                   on: {
                     click: () => {
-                      this.$router.push('/ruicloud/host')
+                      this.$router.push('/host')
                     }
                   }
                 }, text)
@@ -859,7 +859,7 @@
       // 跳转到相应的购买页面
       tobuy(url) {
         sessionStorage.setItem('pane', url)
-        this.$router.push('buy/bip')
+        this.$router.push('/buy/database/')
       },
       // 释放弹性IP
       resetIP() {

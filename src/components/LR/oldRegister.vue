@@ -5,7 +5,7 @@
         <div class="banner" v-show="loginShow">
           <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('xianNode')" class="xian-active">
+              <div @click="$router.push('activity/xian/')" class="xian-active">
               </div>
             </my-carousel-item>
             <my-carousel-item class="carousel-item">
@@ -13,7 +13,7 @@
               </div>
             </my-carousel-item>
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('fractive')" class="fr-active">
+              <div @click="$router.push('activity/free/')" class="fr-active">
               </div>
             </my-carousel-item>
           </my-carousel>
@@ -342,7 +342,7 @@
           <img src="../../assets/img/app/record.png" style="vertical-align: middle">京公网安备11010802024922号
         </a>
         <span>
-         <router-link to="/ruicloud/about">关于我们</router-link>
+         <router-link to="/about/">关于我们</router-link>
         </span>
       </div>
     </div>

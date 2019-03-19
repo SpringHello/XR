@@ -109,14 +109,14 @@
 
     <!--新建告警策略-->
     <Modal title="新建告警策略" width="550" :mask-closable="false" v-model="alarmStrategy.newAddStrategy">
-     
+
       <Form :model="alarmStrategy" ref="alarmStrategy" :rules="alarmStrategyValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="alarmStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
       <div>
-        <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="https://www.xrcloud.net/ruicloud/documentInfo/wHfINiD0y/wI2GZzD6x" style="color: #2A99F2;" >查看详细统计规则</a></p>
+        <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="https://www.xrcloud.net/documentInfo/wHfINiD0y/wI2GZzD6x" style="color: #2A99F2;" >查看详细统计规则</a></p>
         <div>
           <Select @on-change="cpuSelect" v-model="alarmStrategy.cpuValue" style="width:123px" transfer>
             <Option v-for="item in alarmStrategy.cpuList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -177,14 +177,14 @@
 
     <!--修改告警策略-->
     <Modal title="修改告警策略" width="550" :mask-closable="false" v-model="updateStrategy.newAddStrategy">
-    
+
       <Form :model="updateStrategy" ref="updateStrategy" :rules="updateStrategyValidtor" label-position="top">
         <FormItem label="名称" prop="name">
           <Input v-model="updateStrategy.name" placeholder="请输入名称" style="width: 240px;"></Input>
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
       <div>
-        <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="https://www.xrcloud.net/ruicloud/documentInfo/wHfINiD0y/wI2GZzD6x" style="color: #2A99F2;">查看详细统计规则</a></p>
+        <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="https://www.xrcloud.net/documentInfo/wHfINiD0y/wI2GZzD6x" style="color: #2A99F2;">查看详细统计规则</a></p>
         <div>
           <Select @on-change="cpuSelect" v-model="updateStrategy.cpuValue" style="width:123px" transfer>
             <Option v-for="item in updateStrategy.cpuList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -417,7 +417,7 @@
 
     <!--移入云主机-->
     <modal title="移入云主机" width="550" :mask-closable="false" v-model="moveCloudHost">
-    
+
       <p>您正为<span style="color:#2A99F2;">{{details.stretchname}}</span>移入云主机</p>
       <div>
         <div class="move_box">
@@ -434,7 +434,7 @@
                 <span>添加</span>
               </div>
             </div>
-          
+
           </div>
           <div class="move_box_left">
             <div>
@@ -464,7 +464,7 @@
 
     <!--修改伸缩组-->
     <modal title="修改伸缩组" v-model="updateTelescopic" width="550" :mask-closable="false">
-     
+
       <Form ref="updateTelescopicList" :model="updateTelescopicList" :rules="updateRuleValidate" style="width: 519px"  label-position="top" inline>
         <FormItem label="名称" prop="stretchname">
           <Input v-model="updateTelescopicList.stretchname" style="width: 240px" placeholder="请输入名称"></Input>
@@ -2100,7 +2100,7 @@
             })
           }
         })
-      
+
       },
 
       //删除告警策略
@@ -2376,7 +2376,7 @@
         this.timedTask.minuteList = [],
         this.timedTask.endMinuteList = [],
         this.updateTimedTask.minuteList = [],
-        this.updateTimedTask.endMinuteList = [];   
+        this.updateTimedTask.endMinuteList = [];
         for(let i = 0;i<61;i++){
           for(let j = 1;j<5;j++){
              if(i==5*(j*3)){
@@ -2388,7 +2388,7 @@
             }
           }
         }
-    
+
       },
 
       //切换小时
@@ -2400,9 +2400,9 @@
 
               let index =  this.timedTask.hourList.findIndex(item => {
                   return   item.value === this.timedTask.hour
-              });        
+              });
               if(this.getCurrentDate(this.timedTask.startTime) == this.getCurrentDate(this.timedTask.endTime)){
-           
+
                  for(let i = 0;i<this.timedTask.hourList.length;i++){
 
                   if(i<index || i==index){
@@ -2414,7 +2414,7 @@
                   }
                 }
               }else{
-             
+
                 for(let i = 0;i<this.timedTask.endHourList.length;i++){
                   this.timedTask.endHourList[i].dis = false;
                 }
@@ -2431,7 +2431,7 @@
 
               let index =  this.updateTimedTask.hourList.findIndex(item => {
                   return   item.value === this.updateTimedTask.hour
-              });        
+              });
               if(this.getCurrentDate(this.updateTimedTask.startTime) == this.getCurrentDate(this.updateTimedTask.endTime)){
                  for(let i = 0;i<this.updateTimedTask.hourList.length;i++){
 
@@ -2458,11 +2458,11 @@
         if(taskData.length != 0){
           for(let i = 0;i<taskData.length; i++){
             let year = taskData[i].starttime.substring(taskData[i].starttime.indexOf(' '),taskData[i].starttime.length);
-            
+
           if( year == this.timedTask.startTime){
-      
+
             for(let i = 0;i<this.timedTask.hourList.length;i++){
-              
+
                   if(i<index || i==index){
 
                     this.timedTask.hourList[i].dis = true;
@@ -2472,7 +2472,7 @@
                     this.timedTask.hourList[i].dis = false;
                   }
             }
-          } 
+          }
         }
         }
       },
@@ -2686,7 +2686,7 @@
         })
       },
 
-   
+
 
       //获取启动配置
       selectAllElastic(){
@@ -2703,7 +2703,7 @@
     },
     created(){
       this.getDetails();
-    
+
       this.getScaleAlarmStrategy();
       this.selectActivity(1);
       this.selectTask();
