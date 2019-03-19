@@ -131,7 +131,7 @@
           img: require('../../../assets/img/product/backup-logo.png'),
           title: '云硬盘备份',
           desc: '云硬盘备份能对磁盘（系统盘或数据盘）某个时刻的数据进行备份和回滚，云硬盘备份为全量快照，提升了云硬盘的安全性，同时增强了云硬盘备份的易用性。',
-          linkRouter: $store.state.userInfo ? 'diskBackup' : 'login'
+          linkRouter: $store.state.userInfo ? '/diskBackupList' : '/login'
         },
         features: [
           {

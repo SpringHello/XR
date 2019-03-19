@@ -299,7 +299,8 @@
         imageViewShow: false,
         percent: 0,
         balance: 0,
-        currentData: this.getCurrentDate()
+        currentData: this.getCurrentDate(),
+        pageTimer: null
       }
     },
     created() {
@@ -453,6 +454,16 @@
           name: 'recharge',
         })
         window.open(href, '_blank')
+        this.pageTimer = setInterval(() => {
+          axios.get('activity/compareForMoney.do', {
+            params: {freezeMoney: 50}
+          }).then(val => {
+            if (val.data.status == 1) {
+              clearInterval(this.pageTimer)
+              this.showModal.freezeHint = true
+            }
+          })
+        }, 2000)
       },
       // 提交幕布申请
       applyCurtain(val) {
@@ -580,6 +591,10 @@
       toMap() {
         window.open('map')
       }
+    },
+    beforeRouteLeave(to, from, next) {
+      clearInterval(this.pageTimer)
+      next()
     }
   }
 </script>

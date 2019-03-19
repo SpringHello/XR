@@ -129,7 +129,7 @@
           img: require('../../../assets/img/product/p-VPN.png'),
           title: '虚拟专用网络VPN',
           desc: '虚拟专用网络（Virtual Private Network）是通过互联网，采用IPsec加密技术，实现用户本地数据中心、用户办公网络与新睿云VPC之间安全可靠的连接，使用便捷灵活，即开即用，打造可伸缩的混合云环境。',
-          linkRouter: $store.state.userInfo ? 'vpn' : 'login'
+          linkRouter: $store.state.userInfo ? '/vpnList' : '/login'
         },
         features: [
           {

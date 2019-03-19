@@ -717,9 +717,9 @@
          }*/
       })
       // 设置友情链接
-      this.$http.get('article/friendshipLink.do').then(response => {
+/*      this.$http.get('article/friendshipLink.do').then(response => {
         this.links = response.data.result
-      })
+      })*/
     },
     methods: {
       /* li mouseenter事件 重新设置line样式 */

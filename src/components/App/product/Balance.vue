@@ -128,7 +128,7 @@
           img: require('../../../assets/img/product/p-balance.png'),
           title: '负载均衡',
           desc: '弹性负载均衡将访问流量自动分发到多台云服务器上，扩展应用系统对外的服务能力，实现更高水平的应用容错。弹性负载均衡可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器上进行处理。',
-          linkRouter: $store.state.userInfo ? 'balance' : 'login'
+          linkRouter: $store.state.userInfo ? '/balance' : '/login'
         },
         features: [
           {
