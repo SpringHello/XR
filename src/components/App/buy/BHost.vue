@@ -578,6 +578,7 @@
       }
       return {
         selectFastMirror: '',
+        selectFastMirrorInfo: {systemId: '',systemName: ''},
         FastMirrorIndex: 0,
         mirrorShow: false,
         acllist: [
@@ -845,6 +846,7 @@
               item.img = this.mirrorListQImg[index].img
             })
             this.selectFastMirror = response.data.result[0].systemtemplateid
+            this.selectFastMirrorInfo = {systemId: response.data.result[0].systemtemplateid,systemName: response.data.result[0].templatename}
           }
         })
       },
@@ -966,7 +968,8 @@
       },
       setOSQ(item,index) {
         this.FastMirrorIndex=index
-        this.selectFastMirror=item.systemtemplateid
+        this.selectFastMirrorInfo = {systemId: item.systemtemplateid,systemName: item.templatename}
+        this.selectFastMirror =  item.systemtemplateid
         var str = item.templatename.substr(0, 1)
         if (str === 'W' || str === 'w') {
           this.systemUsername = 'administrator'
@@ -1093,7 +1096,7 @@
         if (this.createType == 'fast') {
           prod.currentSystem = this.currentSystem
           prod.cost = this.fastCost
-          prod.system = this.selectFastMirror
+          prod.system = this.selectFastMirrorInfo
         } else {
           prod.system = this.currentType == 'public' ? this.system : this.appSystem
           prod.IPConfig = this.IPConfig
@@ -1457,6 +1460,11 @@
           this.queryVpc()
           this.fireList()
           this.getFastMirror()
+          // 费用变化
+          this.queryQuick()
+          this.queryCustomVM()
+          this.queryIPPrice()
+          this.queryDiskPrice()
         },
         deep: true
       },

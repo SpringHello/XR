@@ -1245,6 +1245,9 @@
           this.setGpuServer()
           this.queryVpc()
           this.fireList()
+          this.queryCustomVM()
+          this.queryDiskPrice()
+          this.queryIPPrice()
         },
         deep: true
       },
