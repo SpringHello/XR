@@ -21,7 +21,7 @@
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a v-if="item.title=='新闻动态'" :href="item.path" target="_blank"><span>{{item.title}}</span>
+                  <a v-if="item.title=='帮助文档'||item.title=='新闻动态'" :href="item.path" target="_blank"><span>{{item.title}}</span>
                   </a>
                   <a v-else-if="item.title=='关于我们'" :href="item.path" rel="nofollow"><span>{{item.title}}</span>
                   </a>
@@ -32,10 +32,10 @@
                 <div class="menu-dropdown-list">
                   <div class="content-dropdown">
                     <div class="content" ref="content" style="height:0px;">
-                      <div v-if="item.content" class="column" :class="{info:index1 == 4}" style="padding:21px 0;">
+                      <div v-if="item.content" class="column" :class="{info: index1 == 3||index1 == 4}" style="padding:21px 0;">
                         <div v-for="(prod,index) in item.content" :key="index">
                           <div>
-                            <h2 v-if="index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
+                            <h2 v-if="index1 == 3||index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
                             <h2 v-else>{{prod.prod}}</h2>
                             <div v-for="(i,index) in prod.prodItem" style="line-height: normal" :key="index">
                               <a :href="i.path" v-if="i.path==''">{{i.title}}</a>
@@ -509,28 +509,30 @@
             ]
           },
           {
-            title: '文档',
-            path: '/document',
+            title: '帮助文档',
+            path: 'https://kaifa.xrcloud.net/support/products.html',
+            content: [
+              {
+                prod: '产品文档',
+                path: 'https://kaifa.xrcloud.net/support/products.html'
+              },
+              {
+                prod: '常见问题',
+                path: 'https://kaifa.xrcloud.net/support/asks.html'
+              },
+              {
+                prod: '快速入门',
+                path: 'https://kaifa.xrcloud.net/support/quick.html'
+              }
+            ]
           },
           {
             title: '新闻动态',
             path: 'https://kaifa.xrcloud.net/homePage/1.html',
             content: [
               {
-                prod: '香港云服务器 ',
-                path: 'https://kaifa.xrcloud.net/xianggangyunfuwuqi'
-              },
-              {
-                prod: '虚拟主机',
-                path: 'https://kaifa.xrcloud.net/xunizhuji'
-              },
-              {
                 prod: '云服务器',
                 path: 'https://kaifa.xrcloud.net/news/yunfuwuqi/1.html'
-              },
-              {
-                prod: '服务器虚拟化',
-                path: 'https://kaifa.xrcloud.net/fuwuqixunihua'
               },
               {
                 prod: '云计算',
@@ -538,11 +540,24 @@
               },
               {
                 prod: '云安全',
-                path: 'https://kaifa.xrcloud.net/yunanquan'
+                path: 'https://kaifa.xrcloud.net/news/yunanquan/1.html'
               },
               {
+                prod: '香港云服务器 ',
+                path: 'https://kaifa.xrcloud.net/news/xianggangyunfuwuqi/1.html'
+              },
+              {
+                prod: '虚拟主机',
+                path: 'https://kaifa.xrcloud.net/news/xunizhuji/1.html'
+              },
+              {
+                prod: '服务器虚拟化',
+                path: 'https://kaifa.xrcloud.net/news/fuwuqixunihua/1.html'
+              },
+
+              {
                 prod: '域名交流',
-                path: 'https://kaifa.xrcloud.net/yumingjiaoliu'
+                path: 'https://kaifa.xrcloud.net/news/yumingjiaoliu/1.html'
               }
             ]
           },
