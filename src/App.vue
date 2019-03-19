@@ -526,7 +526,7 @@
               },
               {
                 prod: '云服务器',
-                path: 'https://kaifa.xrcloud.net/yunfuwuqi'
+                path: 'https://kaifa.xrcloud.net/news/yunfuwuqi/1.html'
               },
               {
                 prod: '服务器虚拟化',
@@ -534,7 +534,7 @@
               },
               {
                 prod: '云计算',
-                path: 'https://kaifa.xrcloud.net/yunjisuan'
+                path: 'https://kaifa.xrcloud.net/news/yunjisuan/1.html'
               },
               {
                 prod: '云安全',
