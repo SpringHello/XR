@@ -227,11 +227,11 @@
           // 支付宝支付
           this.getzfbNum()
           // 支付宝支付
-          if (this.orderInfo.timeType == 1) {
+/*          if (this.orderInfo.timeType == 1) {
             window.open(`zfb/alipayapi.do?total_fee=${this.rechargeValue.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
           } else {
             window.open(`zfb/alipayapi.do?total_fee=${this.otherPayCount.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
-          }
+          }*/
         } else if (this.otherPay == 'wx') {
           sessionStorage.setItem('wx-orders', this.orderInfo.order)
           sessionStorage.setItem('wx-ticket', this.orderInfo.ticket)
@@ -269,7 +269,7 @@
         }).then(response => {
           if (response.data.status === 1 && response.status == 200) {
             this.zfbNum = response.data.serialNum
-            window.open(`zfb/alipayapi.do?serialNum=${this.zfbNum}`)
+            window.open(`zfb/alipaypage.do?serialNum=${this.zfbNum}`)
             this.showModal.paymentCofirm = true
           } else {
             this.$message.info({
