@@ -911,6 +911,9 @@
           this.queryVpc()
           this.listDbTemplates()
           this.fireList()
+          this.queryCustomVM()
+          this.queryDiskPrice()
+          this.queryIPPrice()
         },
         deep: true
       },
