@@ -157,6 +157,7 @@ const CloudMonitor = () => import('@/components/Back/CloudMonitor')
 const CloudMonitorCreateStrategy = () => import('@/components/Back/CloudMonitorCreateStrategy')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
+const VpnBlanck = () => import('@/components/Back/VpnBlanck')
 const Vpn = () => import('@/components/Back/Vpn')
 const Ip = () => import('@/components/Back/Ip')
 const Order = () => import('@/components/Back/Order')
@@ -384,6 +385,7 @@ var router = new Router({
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
         {path: 'vpcList', name: 'vpcList', component: Vpc},
         {path: 'vpnList', name: 'vpnList', component: Vpn},
+        {path: 'VpnBlanck', name: 'VpnBlanck', component: VpnBlanck},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
         // {path: 'orderNew', name: 'orderNew', component: OrderNew},
