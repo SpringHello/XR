@@ -39,7 +39,7 @@
               <i class="arrow" :class="{open:upInformation.open}" @click="upInformation.open=!upInformation.open"></i>
               <span style="user-select:none">入站规则</span>
                <Poptip trigger="hover">
-                  <p slot="content" style="color:#666666;height:14px;"><span style="color:#FF624B;">出站规则</span>：云主机访问互联网的流量，规则匹配报文目的端口</p>
+                  <p slot="content" style="color:#666666;height:14px;"><span style="color:#FF624B;">入站规则</span>：互联网访问云主机的流量，规则匹配报文目的端口</p>
                  <Icon type="ios-help-outline" size='15'></Icon>
                </Poptip>
               <div>

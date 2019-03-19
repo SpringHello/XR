@@ -349,6 +349,7 @@
           if (response.status == 200 && response.data.status == 1) {
           this.selectLength.total = response.data.result.data.length;
           this.goodType = response.data.result.data[0].goodstype;
+          sessionStorage.setItem('orderZoneId',JSON.parse(response.data.result.data[0].configure)[0].zoneid)
           let orderStatus =';'
           sessionStorage.setItem('routername',response.data.result.data[0].goodstype);
           this.orderData = response.data.result.data.map(item => {

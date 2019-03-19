@@ -269,6 +269,7 @@
         }).then(response => {
           if (response.data.status === 1 && response.status == 200) {
             this.zfbNum = response.data.serialNum
+            sessionStorage.setItem('serialNum', this.zfbNum)
             window.open(`zfb/alipaypage.do?serialNum=${this.zfbNum}`)
             this.showModal.paymentCofirm = true
           } else {

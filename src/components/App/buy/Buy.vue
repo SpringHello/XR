@@ -47,18 +47,11 @@
                 </div>
                 <!--快速创建主机-->
                 <div v-if="prod.createType=='fast'">
-                  <!--公共镜像-->
-                  <p class="item" v-if="prod.currentType!='custom'">
+                  <p class="item" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;" :title="prod.system.systemName">
                     <span class="hidden">$</span>
                     <span class="title">镜像</span><span
                     class="hidden">#</span>{{prod.system.systemName}}
                   </p>
-                  <!--自定义镜像-->
-                  <p class="item" v-if="prod.currentType=='custom'">
-                    <span class="hidden">$</span><span class="title">镜像</span><span
-                    class="hidden">#</span>{{prod.customMirror.templatename}}
-                  </p>
-
                   <p class="item"><span class="hidden">$</span><span class="title">配置</span><span
                     class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.publicIP?prod.currentSystem.bandWidth:0}M带宽、${prod.currentSystem.diskSize}G系统盘`}}
                   </p>
@@ -441,7 +434,7 @@
               params.rootDiskType = prod.currentSystem.diskType
               params.networkId = 'no'
               params.vpcId = 'no'
-              params.templateId = prod.system
+              params.templateId = prod.system.systemId
             } else {
               // params.templateId =  prod.currentType == 'public' ? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
               params.cpuNum = prod.vmConfig.kernel
