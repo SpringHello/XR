@@ -1,5 +1,6 @@
 <template>
   <div class="objstorage-active">
+    <h1 id="hide-h1">对象存储活动</h1>
     <div class="banner">
         <div class="carousel-item">
           <div
@@ -158,6 +159,17 @@ var messageMap = {
   },
 }
 export default {
+  metaInfo: {
+    title: '免费对象存储OSS，免费领取50G存储包 - 活动中心 - 新睿云', // set a title
+    meta: [{                 // set meta
+      name: 'keywords',
+      content: '免费对象存储'
+    },
+      {                 // set meta
+        name: 'description',
+        content: '新睿云推出对象存储OSS活动，免费领取50G存储包，新老用户均可领取，每人只可领取一次，新睿云对象存储OSS聚焦海量、安全、低成本、高可靠的云存储服务，提供99.999999999%的数据可靠性。'
+      }]
+  },
   created () {
     axios.get('/ruiradosPrice/zoneList.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {

@@ -32,7 +32,7 @@
                 <div class="menu-dropdown-list">
                   <div class="content-dropdown">
                     <div class="content" ref="content" style="height:0px;">
-                      <div v-if="item.content" class="column" :class="{info: index1 == 3||index1 == 4}" style="padding:21px 0;">
+                      <div v-if="item.content" class="column" :class="{info:index1 == 4,zx:index1 == 3}" style="padding:21px 0;">
                         <div v-for="(prod,index) in item.content" :key="index">
                           <div>
                             <h2 v-if="index1 == 3||index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
@@ -625,16 +625,16 @@
           }
         ], // 页尾列表详情
         document: [
-          {title: '计算', url: '/document'},
-          {title: '网络', url: '/document'},
-          {title: '安全', url: '/document'},
-          {title: '财务与账户', url: 'https://zschj.xrcloud.net/documentInfo/qHwTxQKS7/qZfGQSs8S'}
+          {title: '计算', url: 'https://kaifa.xrcloud.net/support/products.html'},
+          {title: '网络', url: 'https://kaifa.xrcloud.net/support/products.html'},
+          {title: '安全', url: 'https://kaifa.xrcloud.net/support/products.html'},
+          {title: '财务与账户', url: 'https://kaifa.xrcloud.net/support/products.html'}
         ],
         // 服务与公告
         notice: [
-          {title: '最新公告', url: 'https://news.xrcloud.net/huodonggonggao/article/1.html'},
-          {title: '新闻动态', url: 'https://news.xrcloud.net/fuwuqixunihua'},
-          {title: '技术支持', url: 'https://news.xrcloud.net/'},
+          {title: '最新公告', url: 'https://kaifa.xrcloud.net/homePage/1.html'},
+          {title: '新闻动态', url: 'https://kaifa.xrcloud.net/homePage/1.html'},
+          {title: '技术支持', url: 'https://kaifa.xrcloud.net/support/products.html'},
         ],
         // 友情链接
         links: [
@@ -732,9 +732,9 @@
          }*/
       })
       // 设置友情链接
-/*      this.$http.get('article/friendshipLink.do').then(response => {
-        this.links = response.data.result
-      })*/
+      /*      this.$http.get('article/friendshipLink.do').then(response => {
+              this.links = response.data.result
+            })*/
     },
     methods: {
       /* li mouseenter事件 重新设置line样式 */
@@ -998,6 +998,12 @@
                           padding: 10px 0;
                           height: 50px;
                           width: 800px;
+                          margin: 0 auto;
+                        }
+                        &.zx{
+                          padding: 10px 0;
+                          height: 50px;
+                          width: 400px;
                           margin: 0 auto;
                         }
                         .info:hover {

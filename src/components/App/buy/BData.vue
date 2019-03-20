@@ -1,5 +1,6 @@
 <template>
   <div id="bhost">
+    <h1 id="hide-h1">云数据库购买</h1>
     <!--数据库div-->
     <div id="Pdata">
       <div style="padding:40px;">
@@ -384,6 +385,17 @@
   import $ from 'jquery'
   var debounce = require('throttle-debounce/debounce')
   export default {
+    metaInfo: {
+      title: '云数据库服务器租用价格 - 云数据库公网流量收费费用 - 购买 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云数据库租用价格,云数据库服务器价格,云数据库价格,云数据库费用,云数据库公网流量费用,云数据库购买,云数据库网站收费,云数据库收费'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '专业化的高性能、高可靠云数据库服务，支持Mysql、SQL Server、PostgreSQL、mongoDB、Redis引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。用户可按月、年租用购买，可查看云数据库服务的费用、价格、报价。'
+        }]
+    },
     data() {
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 0

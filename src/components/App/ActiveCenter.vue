@@ -1,5 +1,6 @@
 <template>
   <div class="active-center">
+    <h1 id="hide-h1">活动中心</h1>
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">

@@ -1,5 +1,6 @@
 <template>
   <div id="xian-node">
+    <h1 id="hide-h1">新节点上线</h1>
     <div class="banner">
       <div class="wrap">
         <div class="container flex-vertical-center">
@@ -247,6 +248,17 @@
   import reg from '../../../util/regExp'
 
   export default {
+    metaInfo: {
+      title: '陕西西安云服务器、云主机租用，新节点低至1.7折 - 活动中心 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '西安云服务器,西安云主机,陕西云服务器,陕西云主机,西安云服务器租用,西安云主机租用'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云陕西西安节点正式上线，新节点云服务器折扣优惠，每位用户仅可参与一次活动最多可购3台云服务器，仅限新用户。'
+        }]
+    },
     data() {
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {

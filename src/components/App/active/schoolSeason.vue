@@ -1,5 +1,6 @@
 <template>
   <div id="schoolseason">
+    <h1 id="hide-h1">新春采购季</h1>
     <div class="banner">
       <div class="wrap">
         <div class="container flex-vertical-center">
@@ -781,6 +782,17 @@
   import VueQArt from 'vue-qart'
 
   export default {
+    metaInfo: {
+      title: '云产品2019新春采购季，低至1折，更有会员折上折 - 活动中心 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云产品打折,新春采购季,1折云产品'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云2019年新春采购季，新用户专享，爆品秒杀，限时低至1折；新老用户皆可参与云服务器、对象存储等全线打折；同时新睿云重磅推出会员制，会员尊享折上折特权。'
+        }]
+    },
     components: {
       VueQArt
     },

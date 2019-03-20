@@ -1,5 +1,6 @@
 <template>
   <div style="background: #FFF">
+    <h1 id="hide-h1">备案</h1>
     <records></records>
     <div class="body-top">
       <div class="content">

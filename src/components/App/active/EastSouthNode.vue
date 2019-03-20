@@ -1,5 +1,6 @@
 <template>
   <div class="east-south-node">
+    <h1 id="hide-h1">新区域上线</h1>
     <div class="banner east-banner" v-show="defaultNode=='east'">
       <div class="wrap">
         <div class="text">
@@ -129,6 +130,17 @@
 
 <script type="text/ecmascript-6">
   export default {
+    metaInfo: {
+      title: '华东云计算数据中心机房 - 华南互联网idc数据中心 - 活动中心 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '数据中心,idc数据中心,互联网数据中心,云数据中心,数据中心机房,云计算数据中心'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云在华东地区、华南地区建立数据中心，将为用户提供更优质的云计算服务，降低IT成本，加速企业发展。'
+        }]
+    },
     data () {
       return {
         bannershow: false,

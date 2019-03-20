@@ -1,5 +1,6 @@
 <template>
   <div style="background: #FFF;    position: relative;">
+    <h1 id="hide-h1">应用场景</h1>
     <div class="center">
       <img class="img_1" src="../../assets/img/sceneList/sl-banner10.png"/>
       <img class="img_2" src="../../assets/img/sceneList/sl-banner11.png"/>
@@ -19,6 +20,13 @@
 
 <script type="text/ecmascript-6">
   export default {
+    metaInfo: {
+      title: '云服务器、云主机应用场景 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云服务器应用,云主机应用'
+      }]
+    },
     data() {
       return {
         sceneList: [
