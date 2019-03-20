@@ -7,7 +7,7 @@
     <div id="wrapper">
       <span class="title">
         云网络 /
-         <span>VPN</span>
+         <span>虚拟专网VPN</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/userCenter">立即认证</router-link>
@@ -25,21 +25,26 @@
         </div>
 
         <Tabs type="card" :animated="false" v-model="paneStatus.vpn">
-          <TabPane label="远程接入" name="remote">
+          <TabPane label="VPN连接" name="VPN">
             <div class="operator-bar">
-              <Button type="primary" @click="newRemoteAccess">创建VPN接入点</Button>
-              <Button type="primary" @click="delRemoteAccess">挂断VPN接入</Button>
-              <Table :columns="remoteVpnColumns" :data="remoteVpnData" @radio-change="remoteRadio"
-                     style="margin-top:20px;"></Table>
-            </div>
-          </TabPane>
-          <TabPane label="隧道VPN" name="VPN">
-            <div class="operator-bar">
+              <Button type="primary" @click="newTunnelVpn1">创建VPN本地网关</Button>
               <Button type="primary" @click="newTunnelVpn">创建隧道</Button>
               <!--<Button type="primary">重启隧道</Button>-->
               <Button type="primary" @click="delTunnelVpn">删除隧道</Button>
               <Button type="primary" @click="restartVpn">重启连接</Button>
               <Table :columns="tunnelVpnColumns" :data="tunnelVpnData" @radio-change="tunnelRadio"
+                     style="margin-top:20px;"></Table>
+            </div>
+          </TabPane>
+          <TabPane label="VPN本地网关" name="localGateway">
+          </TabPane>
+          <TabPane label="VPN客户网关" name="customerGateway">
+          </TabPane>
+          <TabPane label="VPN拨入" name="remote">
+            <div class="operator-bar">
+              <Button type="primary" @click="newRemoteAccess">创建VPN接入点</Button>
+              <Button type="primary" @click="delRemoteAccess">挂断VPN接入</Button>
+              <Table :columns="remoteVpnColumns" :data="remoteVpnData" @radio-change="remoteRadio"
                      style="margin-top:20px;"></Table>
             </div>
           </TabPane>
@@ -401,6 +406,32 @@
         <Button type="primary" @click="createNAT">创建NAT网关</Button>
       </p>
     </Modal>
+    <!-- 2.1改版弹窗 -->
+    <!-- 新建vpn接入点 modal -->
+    <Modal v-model="showModal.newLocalGateway" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">创建VPN本地网关</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="formValidateLocalGateway" :rules="ruleValidateLocalGateway" ref="formValidateLocalGateway">
+          <FormItem label="本地网关名称" prop="name"> 
+            <Input v-model="formValidateLocalGateway.name" placeholder="请输入10个字符以内的名称"></Input>
+          </FormItem>
+          <FormItem label="VPC ID" prop="vpcId">
+            <Select v-model="formValidateLocalGateway.vpcId">
+              <Option v-for="item in newTunnelVpnForm.vpcIdOptions" :value="item.vpcid" :key="item.vpcid"
+                      v-if="item.vpcid!=newTunnelVpnForm.vpcId2">
+                {{item.vpcname}}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="default" @click="showModal.newLocalGateway = false">取消</Button>
+        <Button type="primary" @click="newLocalGatewayOk('formValidateLocalGateway')">确认创建</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -457,6 +488,7 @@
         loadingMessage: '',
         loading: false,
         showModal: {
+          newLocalGateway: false,
           // 远程VPN
           newRemoteAccess: false,
           // 隧道VPN
@@ -634,6 +666,18 @@
           CIDR: [
             {required: true, message: '请输入对端网络CIDR', trigger: 'blur'}
           ],
+        },
+        formValidateLocalGateway: {
+          name: '',
+          vpcId: '',
+        },
+        ruleValidateLocalGateway: {
+          name: [
+              { required: true, message: '请输入本地网关名称', trigger: 'blur' }
+          ],
+          vpcId: [
+              { required: true, message: 'Please select the city', trigger: 'change' }
+          ]
         },
         // 远程vpn列表
         remoteVpnColumns: [
@@ -1000,6 +1044,30 @@
         this.showModal.newTunnelVpn = true
         this.$http.get('network/listVpc.do').then(response => {
           this.newTunnelVpnForm.vpcIdOptions = response.data.result
+        })
+      },
+      newTunnelVpn1() {
+        this.showModal.newLocalGateway = true
+        this.$http.get('network/listVpc.do').then(response => {
+          this.newTunnelVpnForm.vpcIdOptions = response.data.result
+        })
+      },
+      newLocalGatewayOk(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            axios.post('network/createSiteToSiteVpnGateway.do', {
+              zoneId: $store.state.zone.zoneid,
+              vpcId: this.formValidateLocalGateway.vpcId,
+              localGatewayName: this.formValidateLocalGateway.name
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                // this.remoteVpnData = response.data.result
+                this.$Message.success(response.data.message)
+              } else {
+                this.$Message.error(response.data.message)
+              }
+            })
+          }
         })
       },
       nextStep() {

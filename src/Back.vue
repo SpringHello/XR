@@ -299,7 +299,7 @@
               {subName: '负载均衡', type: 'balance'},
               {
                 subName: '虚拟专网VPN',
-                type: 'vpnList',
+                type: 'vpnBlanck',
                 thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
               }
             ]
