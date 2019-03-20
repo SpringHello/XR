@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="content-advantage">
-        <p><span><<<<<<<<<<</span>平台优势<span>>>>>>>>>>></span></p>
+        <h3><span><<<<<<<<<<</span>平台优势<span>>>>>>>>>>></span></h3>
         <ul>
           <li v-for="(adv,index) in advantage" :key="index">
             <img :src="adv.img" :alt="adv.title">
