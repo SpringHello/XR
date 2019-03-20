@@ -95,22 +95,22 @@
     </div>
 
     <!-- 新建vpc modal -->
-    <Modal v-model="showModal.newVpc" width="550" :scrollable="true">
+    <Modal v-model="showModal.newVpc" width="500" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">新建VPC</span>
       </p>
-      <div class="universal-modal-content-flex">
-        <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate">
+      <div class="universal-modal-content-flex" id="moli2">
+        <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate" style="width: 100%">
           <FormItem label="vpc名称" prop="vpcName">
-            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称"></Input>
+            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称" style="width:300px;float: right;"></Input>
           </FormItem>
-          <FormItem label="地址范围" prop="vpc">
-            <Select v-model="newForm.vpc" placeholder="请选择">
+          <FormItem label="地址范围" prop="vpc" style="margin-top: 20px;">
+            <Select v-model="newForm.vpc" placeholder="请选择" style="width:300px;float: right;">
               <Option v-for="item in newForm.VPCOptions" :key="item" :value="item">{{item}}</Option>
             </Select>
           </FormItem>
-          <FormItem label="vpc描述" prop="desc">
-            <Input v-model="newForm.desc" placeholder="请输入vpc描述"></Input>
+          <FormItem label="vpc描述" prop="desc" style="margin-top: 20px;">
+            <Input v-model="newForm.desc" placeholder="请输入vpc描述" style="width:300px;float: right;"></Input>
           </FormItem>
           <!--          <FormItem label="购买方式" prop="timeType">
                       <Select v-model="newForm.timeType">
@@ -126,7 +126,11 @@
                         </Option>
                       </Select>
                     </FormItem>-->
-          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+					<div class="modal-content-s divall">
+					  <div>
+					    VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改<span class="spanaa"></span>
+					  </div>
+					</div>
         </Form>
         <!--创建vpc时暂时不绑定公网IP-->
         <!--<div>
@@ -1801,4 +1805,25 @@
       }
     }
   }
+	.spanaa {
+	  color: #2A99F2;
+	  text-decoration: underline;
+	  font-size: 12px;
+	  font-family: MicrosoftYaHei;
+	  cursor: pointer;
+	  border: none;
+	  padding: 0;
+	  margin-top: -3px;
+	}
+	
+	.divall {
+	  background:rgba(42,153,242,0.06);
+	  border-radius:2px;
+	  border:1px solid rgba(42,153,242,1);
+	  width: 460px;
+	  height: auto;
+	  margin-top: 20px;
+	  padding: 10px;
+	  font-size: 12px;
+	}
 </style>
