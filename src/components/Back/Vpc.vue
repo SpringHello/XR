@@ -916,14 +916,17 @@
     created() {
       this.intervalInstance = setInterval(this.getVpcData, 10000)
 			var pane=sessionStorage.getItem('VPN')
-      if (pane=='NAT') {
+      // if (pane=='NAT') {
+      //   this.paneStatus.vpc = 'NAT'
+      //   sessionStorage.removeItem('VPN')
+      // }
+			// else if (pane=='VPC') {
+			// 	this.paneStatus.vpc = 'VPC'
+			// 	sessionStorage.removeItem('VPN')
+      // }
+      if(sessionStorage.getItem('VPN')){
         this.paneStatus.vpc = 'NAT'
-        sessionStorage.removeItem('VPN')
       }
-			else if (pane=='VPC') {
-				this.paneStatus.vpc = 'VPC'
-				sessionStorage.removeItem('VPN')
-			}
 			this.testjump()
     },
     methods: {

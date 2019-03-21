@@ -118,7 +118,7 @@
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <a v-else>
+               <a v-else>
                 {{subItem.subName}}
               </a>
             </li>
@@ -297,14 +297,14 @@
               },
 							{
 							  subName: 'NAT网关',
-							  type: 'natstate',
+							  type: 'natList',
 								pane: 'NAT'
 							},
               {subName: '弹性IP', type: 'ip'},
               {subName: '负载均衡', type: 'loadbState'},
               {
                 subName: '虚拟专网VPN',
-                type: 'vpnBlanck',
+                type: 'vpnList',
                 thrItem: [
                   {thrName: 'VPN连接', pane: 'VPN'},
                   {thrName: 'VPN本地网关', pane: 'localGateway'},
@@ -457,7 +457,7 @@
       }),
 
       // 进入三级路由，记录二级路由入口
-      push(pType, sType,pane) {
+      push(pType, sType, pane) {
 				// console.log(pane)
         this.pageInfo.static = true;
         this.pageInfo.selectItem = pType;
@@ -480,12 +480,11 @@
         } else {
 					if(pane==undefined){
 						this.$router.push(sType)
+					} else{
+            var newpane = pane + '#虚拟私有云VPC'
+            this.pane(newpane)
+            this.$router.push(sType)
 					}
-					else{
-						sessionStorage.setItem('VPN',pane)
-						this.$router.push(sType)
-					}
-          
         }
       },
       go(path) {
