@@ -128,6 +128,8 @@ const Work = () => import('@/components/Back/Work')
 const Recharge = () => import('@/components/Back/Recharge.vue')
 const RechargeResult = () => import('@/components/Back/RechargeResult.vue')
 const Balance = () =>import('@/components/Back/Balance')
+const LoadbState = () =>import('@/components/Back/LoadbState')
+const NatState = () =>import('@/components/Back/NatState')
 const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
@@ -366,6 +368,8 @@ var router = new Router({
         {path: 'recharge', name: 'recharge', component: Recharge},
         {path: 'rechargeResult', name: 'rechargeResult', component: RechargeResult},
         {path: 'balance', name: 'balance', component: Balance},
+				{path: 'loadbstate', name: 'loadbstate', component: LoadbState},
+				{path: 'natstate', name: 'natstate', component: NatState},
         {path: 'balanceParticulars', name: 'balanceParticulars', component: BalanceParticulars},
         {path: 'diskList', name: 'diskList', component: Disk},
         {path: 'diskBackupList', name: 'diskBackupList', component: DiskBackup},
@@ -384,6 +388,7 @@ var router = new Router({
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
         {path: 'vpcList', name: 'vpcList', component: Vpc},
+				{path: 'natList', name: 'natList', component: Vpc},
         {path: 'vpnList', name: 'vpnList', component: Vpn},
         {path: 'VpnBlanck', name: 'VpnBlanck', component: VpnBlanck},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},

@@ -134,6 +134,60 @@
   float: none;
 }
 
+/* 新增负载均衡样式修改 */
+#moli .ivu-form-item {
+  width: 81%;
+}
+#moli .ivu-form-item .ivu-form-item-label {
+  float: left;
+}
+#moli .ivu-form-item-error-tip{
+	margin-left: 95px;
+	margin-top: 30px;
+}
+#moli .ivu-form-item{
+	margin-bottom: 0;
+}
+#moli1 .ivu-form-item {
+  width: 81%;
+}
+#moli1 .ivu-form-item .ivu-form-item-label {
+  float: left;
+}
+#moli1 .ivu-form-item-error-tip{
+	margin-left: 75px;
+	margin-top: 30px;
+}
+#moli1 .ivu-form-item{
+	margin-bottom: 0;
+}
+#moli2 .ivu-form-item {
+  width: 83%;
+}
+#moli2 .ivu-form-item .ivu-form-item-label {
+  float: left;
+}
+#moli2 .ivu-form-item-error-tip{
+	margin-left: 85px;
+	margin-top: 30px;
+}
+#moli2 .ivu-form-item{
+	margin-bottom: 0;
+}
+#moli2 #gfgf{
+	float: right;
+	width: 145px;
+	margin-right: 78px;
+}
+#moli2 #fgfg{
+	float: left;
+	width: 230px;
+}
+#gfgf .ivu-form-item-error-tip{
+	margin-left: 5px;
+	margin-top: 52px;
+}
+
 /* 重置modal中header,body,footer的padding */
 .ivu-modal-header {
   padding: 20px 20px 0;
@@ -425,6 +479,12 @@ div.modal-header-border {
 
 .allnum .ivu-poptip-popper{
 	margin-left: 10px;
+}
+
+/* 所有资源页面提示框修改 */
+.allbox .ivu-steps-vertical .ivu-steps-main .ivu-steps-title{
+	line-height: 21px;
+	font-size: 14px;
 }
 
 /* 拼团活动下拉框 */

@@ -32,153 +32,143 @@
         <!--负载均衡表-->
         <Table highlight-row stripe :columns="balColumns" :data="balData" @radio-change="selectBalance"></Table>
         <!--创建负载均衡模态框-->
-        <Modal v-model="creatbalancemodal.showBalanceName" :scrollable="true" width="550">
-          <p slot="header" class="modal-header-border">
-            <span class="universal-modal-title">创建负载均衡</span>
-          </p>
-          <Steps :current="creatbalancemodal.current" size="small" style="margin:15px;">
-            <Step title="创建负载均衡" style="opacity:0.7"></Step>
-            <Step title="配置转发规则"></Step>
-            <Step title="完成" style="opacity:0.7"></Step>
-          </Steps>
-
-          <!--步骤creatbalancemodal.current == 0-->
-          <div v-show="creatbalancemodal.current == 0" class="universal-modal-content"
-               style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-            <Form ref="form1" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline"
-                  style="width: 100%">
-              <FormItem label="名称" prop="name">
-                <Input type="text" v-model="creatbalancemodal.formInline.name" placeholder="请输入小于16位的负载均衡名称"
-                       style="width:240px;" :maxlength="16">
-                </Input>
-              </FormItem>
-              <FormItem label="类型" prop="radio">
-                <RadioGroup v-model="creatbalancemodal.formInline.radio" @on-change="changeNet">
-                  <Radio label="public">公网</Radio>
-                  <Radio label="private">内网</Radio>
-                </RadioGroup>
-              </FormItem>
-              <!--当为公网时-->
-              <FormItem label="所属VPC" prop="vpc"
-                        style="width:240px;">
-                <Select v-model="creatbalancemodal.formInline.vpc" @on-change="changeVPC">
-                  <Option v-for="item in creatbalancemodal.formInline.VPCList"
-                          :value="item.vpcid"
-                          :key="item.vpcid">{{ item.vpcname }}
-                  </Option>
-                </Select>
-              </FormItem>
-              <FormItem label="公网IP" prop="publicIp" v-if="creatbalancemodal.formInline.radio == 'public'"
-                        style="width:240px;">
-                <Select v-model="creatbalancemodal.formInline.publicIp">
-                  <Option v-for="item in creatbalancemodal.formInline.PublicIpList"
-                          :value="`${item.vpcid}#${item.publicipid}`"
-                          :key="item.publicipid">{{ item.publicip }}
-                  </Option>
-                </Select>
-              </FormItem>
-              <span v-if="creatbalancemodal.formInline.radio=='public'"
-                    style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 50%;top: 63.5%;"
-                    @click="buyIP">
-              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
-              购买弹性IP
-            </span>
-              <FormItem label="所属子网" prop="subnet"
-                        style="width:240px;">
-                <Select v-model="creatbalancemodal.formInline.subnet">
-                  <Option v-for="item in creatbalancemodal.formInline.subnetList"
-                          :value="`${item.ipsegmentid}#${item.ipsegment}#${item.vpcid}`"
-                          :key="item.ipsegmentid">{{ item.name }}
-                  </Option>
-                </Select>
-              </FormItem>
-              <Poptip trigger="hover" style="float: right;position: relative;right: 240px;bottom: 50px;"
-                      v-if="creatbalancemodal.formInline.radio == 'public'">
-                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
-                <div slot="content">
-                  <div style="height: 50px;">
-                    <p style="line-height: 14px;">没有可选子网？</p>
-                    <p style="line-height: 14px;">创建公网负载均衡需要所属子网服务方案为公网负载均衡;</p>
-                    <p style="line-height: 14px;">您需要先创建一个服务方案为公网负载均衡的子网，再创建公网负载均衡。</p>
-                  </div>
-                </div>
-              </Poptip>
-              <Poptip trigger="hover" style="float: right;position: relative;right: 240px;bottom: 50px;"
-                      v-if="creatbalancemodal.formInline.radio == 'private'">
-                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
-                <div slot="content" style="height: 50px;">
-                  <div>
-                    <p style="line-height: 14px;">没有可选子网？</p>
-                    <p style="line-height: 14px;">创建私网负载均衡需要所属子网服务方案为内网负载均衡;</p>
-                    <p style="line-height: 14px;">您需要先创建一个服务方案为内网负载均衡的子网，再创建内网负载均衡。</p>
-                  </div>
-                </div>
-              </Poptip>
-              <!--当为内网时-->
-
-              <FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'">
-                <RadioGroup v-model="creatbalancemodal.formInline.intranetIp">
-                  <Radio label="auto">自动分配</Radio>
-                  <Radio label="specify">指定IP</Radio>
-                </RadioGroup>
-              </FormItem>
-              <!--当为指定IP时-->
-              <FormItem
-                v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
-                {{ creatbalancemodal.formInline.intranetIpNum}}.
-                <InputNumber v-model="creatbalancemodal.formInline.num" :max="254" :min="2" :precision="0"></InputNumber>
-              </FormItem>
-              <p style="font-size: 12px;color: #999999;"
-                 v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
-                网络范围：{{ creatbalancemodal.formInline.intranetIpNum}}.2-254</p>
-            </Form>
-          </div>
-
-          <!--步骤creatbalancemodal.current == 1-->
-          <div v-show="creatbalancemodal.current == 1" class="universal-modal-content-flex"
-               style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-            <Form ref="form2" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline">
-              <!--  <FormItem label="规则名称" prop="ruleName">
-                  <Input type="text" v-model="creatbalancemodal.formInline.ruleName" placeholder="请输入规则名称">
-                  </Input>
-                </FormItem>-->
-              <FormItem label="内网端口" prop="frontPort" v-if="creatbalancemodal.formInline.radio=='public'">
-                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字">
-                </Input>
-              </FormItem>
-              <FormItem label="源端口" prop="frontPort" v-else>
-                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字">
-                </Input>
-              </FormItem>
-              <FormItem label="公网端口" prop="rearPort" v-if="creatbalancemodal.formInline.radio=='public'">
-                <Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字">
-                </Input>
-              </FormItem>
-              <FormItem label="实例端口" prop="rearPort" v-else>
-                <Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字">
-                </Input>
-              </FormItem>
-              <FormItem label="算法" prop="algorithm">
-                <Select v-model="creatbalancemodal.formInline.algorithm">
-                  <Option v-for="item in creatbalancemodal.formInline.arithmeticList" :value="item.value"
-                          :key="item.value">{{ item.label }}
-                  </Option>
-                </Select>
-                </Input>
-              </FormItem>
-              <p v-if="creatbalancemodal.current == 1" style="font-size: 12px;color: #666666;line-height: 16px;">
-                提示：当您完成负载均衡创建之后，您可以在负载均衡详情页面<!--修改转发规则与健康检查规则，并--> 管理您的后端服务器。<!--同时您也可以在该页面选择开启或者关闭会保持功能。什么是 <span
-                style="color: #377DFF;">会话保持？</span>-->
-              </p>
-            </Form>
-          </div>
-          <div slot="footer">
-            <Button @click="cancel" v-show="creatbalancemodal.current == 0">取消</Button>
-            <Button v-show="creatbalancemodal.current == 1" @click="preStep">上一步</Button>
-            <Button type="primary" @click="nextStep" v-show="creatbalancemodal.current == 0">下一步</Button>
-            <Button type="primary" @click="removeBalance" v-show="creatbalancemodal.current == 1">完成</Button>
-          </div>
-        </Modal>
+        <Modal v-model="creatbalancemodal.showBalanceName" :scrollable="true" width="500">
+        				<p slot="header" class="modal-header-border">
+        					<span class="universal-modal-title">创建负载均衡</span>
+        				</p>
+        				<Steps :current="creatbalancemodal.current" size="small" style="overflow: hidden;width: 135%;">
+        					<Step title="创建负载均衡" style="opacity:0.7"></Step>
+        					<Step title="配置转发规则"></Step>
+        					<Step title="完成" style="opacity:0.7"></Step>
+        				</Steps>
+        
+        				<!--步骤creatbalancemodal.current == 0-->
+        				<div v-show="creatbalancemodal.current == 0" class="universal-modal-content" style="border-bottom: 1px solid #D8D8D8;margin-top: 20px;padding-bottom: 10px;"
+        				 id="moli1">
+        					<Form ref="form1" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline" style="width: 100%">
+        						<FormItem label="名称" prop="name">
+        							<Input type="text" v-model="creatbalancemodal.formInline.name" placeholder="请输入小于16位的负载均衡名称" style="width:300px;float: right;"
+        							 :maxlength="16">
+        							</Input>
+        						</FormItem>
+        						<FormItem label="类型" prop="radio" style="margin-top: 15px;">
+        							<RadioGroup v-model="creatbalancemodal.formInline.radio" @on-change="changeNet" style="margin-left: 28px;">
+        								<Radio label="public">公网</Radio>
+        								<Radio label="private">内网</Radio>
+        							</RadioGroup>
+        						</FormItem>
+        						<!--当为公网时-->
+        						<FormItem label="所属VPC" prop="vpc"
+        						          style="margin-top: 10px;">
+        						  <Select v-model="creatbalancemodal.formInline.vpc" @on-change="changeVPC" style="width:300px;float: right;">
+        						    <Option v-for="item in creatbalancemodal.formInline.VPCList"
+        						            :value="item.vpcid"
+        						            :key="item.vpcid">{{ item.vpcname }}
+        						    </Option>
+        						  </Select>
+        						</FormItem>
+        						<FormItem label="公网IP" prop="publicIp" v-if="creatbalancemodal.formInline.radio == 'public'" style="margin-top: 20px;">
+        							<Select v-model="creatbalancemodal.formInline.publicIp" style="width:300px;float: right;">
+        								<Option v-for="item in creatbalancemodal.formInline.PublicIpList" :value="`${item.vpcid}#${item.publicipid}`"
+        								 :key="item.publicipid">{{ item.publicip }}
+        								</Option>
+        							</Select>
+        						</FormItem>
+        						<FormItem label="所属子网" prop="subnet" style="margin-top: 20px;">
+        							<Select v-model="creatbalancemodal.formInline.subnet" style="width:300px;float: right;">
+        								<Option v-for="item in creatbalancemodal.formInline.subnetList" :value="`${item.ipsegmentid}#${item.ipsegment}#${item.vpcid}`"
+        								 :key="item.ipsegmentid">{{ item.name }}
+        								</Option>
+        							</Select>
+        						</FormItem>
+        						<span v-if="creatbalancemodal.formInline.radio=='public'" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 80%;top: 60%;"
+        						 @click="buyIP">
+        							<img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png" />
+        							购买弹性IP
+        						</span>
+        						<Poptip trigger="hover" style="float: right;position: relative;right: 68px;bottom: 22px;
+        " v-if="creatbalancemodal.formInline.radio == 'public'">
+        							<Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+        							<div slot="content">
+        								<div style="height: 50px;">
+        									<p style="line-height: 14px;">没有可选子网？</p>
+        									<p style="line-height: 14px;">创建公网负载均衡需要所属子网服务方案为公网负载均衡;</p>
+        									<p style="line-height: 14px;">您需要先创建一个服务方案为公网负载均衡的子网，再创建公网负载均衡。</p>
+        								</div>
+        							</div>
+        						</Poptip>
+        						<Poptip trigger="hover" style="float: right;position: relative;right: 65px;bottom: 20px;" v-if="creatbalancemodal.formInline.radio == 'private'">
+        							<Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+        							<div slot="content" style="height: 50px;">
+        								<div>
+        									<p style="line-height: 14px;">没有可选子网？</p>
+        									<p style="line-height: 14px;">创建私网负载均衡需要所属子网服务方案为内网负载均衡;</p>
+        									<p style="line-height: 14px;">您需要先创建一个服务方案为内网负载均衡的子网，再创建内网负载均衡。</p>
+        								</div>
+        							</div>
+        						</Poptip>
+        						<!--当为内网时-->
+        
+        						<FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'">
+        							<RadioGroup v-model="creatbalancemodal.formInline.intranetIp" style="margin-left: 17px;">
+        								<Radio label="auto">自动分配</Radio>
+        								<Radio label="specify">指定IP</Radio>
+        							</RadioGroup>
+        						</FormItem>
+        						<!--当为指定IP时-->
+        						<FormItem v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'" style="margin-left: 77px;">
+        							{{ creatbalancemodal.formInline.intranetIpNum}}.
+        							<InputNumber v-model="creatbalancemodal.formInline.num" :max="254" :min="2" :precision="0"></InputNumber>
+        						</FormItem>
+        						<p style="font-size: 12px;color: #999999;margin-left: 77px;margin-top: 5px;" v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
+        							网络范围：{{ creatbalancemodal.formInline.intranetIpNum}}.2-254</p>
+        					</Form>
+        				</div>
+        
+        				<!--步骤creatbalancemodal.current == 1-->
+        				<div v-show="creatbalancemodal.current == 1" class="universal-modal-content-flex" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;" id="moli">
+        					<Form ref="form2" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline" style="width: 100%">
+        						<!--  <FormItem label="规则名称" prop="ruleName">
+        		          <Input type="text" v-model="creatbalancemodal.formInline.ruleName" placeholder="请输入规则名称">
+        		          </Input>
+        		        </FormItem>-->
+        						<FormItem label="监听端口" prop="rearPort" v-if="creatbalancemodal.formInline.radio=='public'" style="width: 86%;margin-top: 10px;">
+        							<Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
+        							</Input>
+        						</FormItem>
+        						<FormItem label="源端口" prop="frontPort" v-else style="width: 86%;margin-top: 20px;">
+        							<Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
+        							</Input>
+        						</FormItem>
+        						<FormItem label="服务器端口" prop="frontPort" v-if="creatbalancemodal.formInline.radio=='public'" style="width: 86%;margin-top: 20px;">
+        							<Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
+        							</Input>
+        						</FormItem>
+        						<FormItem label="实例端口" prop="rearPort" v-else style="width: 86%;margin-top: 20px;">
+        							<Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
+        							</Input>
+        						</FormItem>
+        						<FormItem label="算法" prop="algorithm" style="width: 86%;margin-top: 20px;">
+        							<Select v-model="creatbalancemodal.formInline.algorithm" style="width:300px;float: right;">
+        								<Option v-for="item in creatbalancemodal.formInline.arithmeticList" :value="item.value" :key="item.value">{{ item.label }}
+        								</Option>
+        							</Select>
+        							</Input>
+        						</FormItem>
+        						<div class="modal-content-s divall" v-if="creatbalancemodal.current == 1">
+        						  <div>
+        						    当您完成负载均衡创建之后，您可以在负载均衡管理页面修改转发规则与健康检查规则，并管理您的后端服务器。<span class="spanaa"></span>
+        						  </div>
+        						</div>
+        					</Form>
+        				</div>
+        				<div slot="footer">
+        					<Button @click="cancel" v-show="creatbalancemodal.current == 0">取消</Button>
+        					<Button v-show="creatbalancemodal.current == 1" @click="preStep">上一步</Button>
+        					<Button type="primary" @click="nextStep" v-show="creatbalancemodal.current == 0">下一步</Button>
+        					<Button type="primary" @click="removeBalance" v-show="creatbalancemodal.current == 1">完成</Button>
+        				</div>
+        			</Modal>
 
         <!-- 绑定虚拟机 -->
         <Modal v-model="showModal.bind" width="550" :scrollable="true">
@@ -866,4 +856,25 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+	.spanaa {
+	  color: #2A99F2;
+	  text-decoration: underline;
+	  font-size: 12px;
+	  font-family: MicrosoftYaHei;
+	  cursor: pointer;
+	  border: none;
+	  padding: 0;
+	  margin-top: -3px;
+	}
+	
+	.divall {
+	  background:rgba(42,153,242,0.06);
+	  border-radius:2px;
+	  border:1px solid rgba(42,153,242,1);
+	  width: 460px;
+	  height: auto;
+	  margin-top: 20px;
+	  padding: 10px;
+	  font-size: 12px;
+	}
 </style>
