@@ -420,8 +420,8 @@
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.orderPay = response.data.result;
-              if (Number(response.data.result.voucher.toFixed(2)) != 0 && response.data.result.isUseVoucher != 0) {
-                this.groupList.push('cash');
+              if(Number(response.data.result.voucher.toFixed(2)) != 0 && response.data.result.isUseVoucher != 0){
+                  this.groupList.push('cash');
               }
             } else {
               this.$Message.error({
@@ -720,26 +720,27 @@
       vipPrice() {
         if (this.vipName != '' || this.vipName != undefined) {
           let money = 0;
-          if (this.couponInfo.selectTicket != '' && (this.groupList[0] == 'cash' || this.groupList[1] == 'cash')) {
-            this.couponInfo.couponList.forEach(item => {
-              if (item.operatorid == this.couponInfo.selectTicket) {
-                if (item.tickettype == 1) {
-                  if (this.couponInfo.cost > this.couponInfo.cash) {
-                    money = this.couponInfo.cash - (this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2));
-                  }
-                  if (this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash) {
-                    money = this.couponInfo.cash - (this.couponInfo.cost - Number((this.couponInfo.cost * item.money).toFixed(2)));
-                  }
-                } else if (item.tickettype == 0) {
-                  if ((this.couponInfo.cost - item.money) > this.couponInfo.cash) {
-                    money = (item.money + this.couponInfo.cash).toFixed(2);
-                  }
-                  if ((this.couponInfo.cost - item.money) < this.couponInfo.cash || (this.couponInfo.cost - item.money) == this.couponInfo.cash) {
-                    money = this.couponInfo.cost.toFixed(2);
+            if (this.couponInfo.selectTicket != '' && (this.groupList[0] == 'cash' || this.groupList[1] == 'cash')) {
+              this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    if(this.couponInfo.cost > this.couponInfo.cash){
+                        money = this.couponInfo.cash -(this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2));
+                    }
+                    if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
+                        money =  this.couponInfo.cash - (this.couponInfo.cost - Number((this.couponInfo.cost * item.money).toFixed(2)));
+                    }
+                  } else if (item.tickettype == 0) {
+                    if((this.couponInfo.cost - item.money) > this.couponInfo.cash){
+                        money =  (item.money+this.couponInfo.cash).toFixed(2);
+                    }
+                    if((this.couponInfo.cost - item.money) < this.couponInfo.cash || (this.couponInfo.cost - item.money) == this.couponInfo.cash){
+                        money = this.couponInfo.cost.toFixed(2);
+                    }
                   }
                 }
               }
-            })
+            )
             return money;
           } else {
             if ((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket == '') {
@@ -795,8 +796,8 @@
               this.couponInfo.couponList.forEach(item => {
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
-                    if (this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))) {
-                      this.couponInfo.totalCost = this.couponInfo.cash - (this.couponInfo.cost * item.money);
+                    if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = Number(this.couponInfo.cash - (this.couponInfo.cost * item.money)).toFixed(2);
                     }
                     if (this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))) {
                       this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money) - this.couponInfo.cash).toFixed(2);
