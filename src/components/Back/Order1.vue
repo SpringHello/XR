@@ -356,7 +356,7 @@
           } else {
             sessionStorage.setItem('orderZoneId', JSON.parse(response.data.result.data[0].configure).zoneid)
           }
-          let orderStatus = ';'
+          let orderStatus = '';
           sessionStorage.setItem('routername', response.data.result.data[0].goodstype);
           this.orderData = response.data.result.data.map(item => {
             var data = JSON.parse(item.display);
@@ -420,7 +420,7 @@
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.orderPay = response.data.result;
-              if (this.couponInfo.cash != 0 && this.orderPay.isUseVoucher != 0) {
+              if (Number(response.data.result.voucher.toFixed(2)) != 0 && response.data.result.isUseVoucher != 0) {
                 this.groupList.push('cash');
               }
             } else {
@@ -799,7 +799,7 @@
                       this.couponInfo.totalCost = this.couponInfo.cash - (this.couponInfo.cost * item.money);
                     }
                     if (this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))) {
-                      this.couponInfo.totalCost = (this.couponInfo.cost * item.money) - this.couponInfo.cash;
+                      this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money) - this.couponInfo.cash).toFixed(2);
                     }
                     if (Number(this.couponInfo.totalCost) == 0) {
                       this.isButtonCash = true;
@@ -809,7 +809,7 @@
                       this.couponInfo.totalCost = 0;
                     }
                     if (this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))) {
-                      this.couponInfo.totalCost = (this.couponInfo.cost - item.money) - this.couponInfo.cash;
+                      this.couponInfo.totalCost = Number((this.couponInfo.cost - item.money) - this.couponInfo.cash).toFixed(2);
                     }
                     if (Number(this.couponInfo.totalCost) == 0) {
                       this.isButtonCash = true;

@@ -14,9 +14,9 @@
         <a href="/" class="logo" alt='新睿云'>
           <div></div>
         </a>
-        <img style="position: absolute;left:50%;margin-left:-440px;z-index:1100" src="./assets/img/active/schoolSeason/nav_logo_cc.png"
-             @click="$router.push('/activtiy/2019spring/')" alt="">
-        <div class="operate" style="padding-left:90px;">
+        <img class="logo-img" src="./assets/img/active/schoolSeason/nav_logo_cc.png"
+             @click="$router.push('/activtiy/2019spring/')" alt="新春采购季">
+        <div class="operate operate-pdding">
           <ul @mouseleave="ME(-1)">
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
               <div class="menu-dropdown">
@@ -32,7 +32,7 @@
                 <div class="menu-dropdown-list">
                   <div class="content-dropdown">
                     <div class="content" ref="content" style="height:0px;">
-                      <div v-if="item.content" class="column" :class="{info: index1 == 3||index1 == 4}" style="padding:21px 0;">
+                      <div v-if="item.content" class="column" :class="{info:index1 == 4,zx:index1 == 3}" style="padding:21px 0;">
                         <div v-for="(prod,index) in item.content" :key="index">
                           <div>
                             <h2 v-if="index1 == 3||index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
@@ -204,7 +204,7 @@
               <span>服务热线：400-0505-565</span>
               <span>企业邮箱：service@unionstech.cn</span>
               <span>企业地址：北京市海淀区东升大厦AB座611、612</span>
-              <img src="./assets/img/app/QR-code.jpg" style="width:100px;height:100px;">
+              <img src="./assets/img/app/QR-code.jpg" alt="新睿云二维码">
             </div>
           </div>
           <div class="page-links">
@@ -219,20 +219,20 @@
             <p style="margin:0px;margin-right: 20px;">{{item.time}}</p>
             <li style="cursor: auto">{{item.title}}</li>
             <li>
-              <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow" style="color:#fff">{{item.preparation}}</a>
+              <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">{{item.preparation}}</a>
             </li>
             <li>
               <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922" rel="nofollow" target="_blank"
-                 style="color:#fff">
-                <img src="./assets/img/app/record.png" style="vertical-align: middle;margin-right: 5px">{{item.desc}}
+                >
+                <img src="./assets/img/app/record.png"  alt="京公网安备">{{item.desc}}
               </a>
             </li>
             <li>
-              <a href="javascript:void(0)" target="_blank" style="color:#fff;cursor: auto">增值电信业务经营许可证
+              <a href="javascript:void(0)" target="_blank" style="cursor: auto">增值电信业务经营许可证
                 B1-20180455</a>
             </li>
             <li>
-              <a href="https://www.xrcloud.net/about/" rel="nofollow" style="color:#fff">关于我们</a>
+              <a href="https://www.xrcloud.net/about/" rel="nofollow" >关于我们</a>
             </li>
           </ul>
         </div>
@@ -254,8 +254,8 @@
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
-                <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus">
-                  <img src="./assets/img/app/qq-gray.png" v-else>
+                <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus" alt="人工客服">
+                  <img src="./assets/img/app/qq-gray.png" v-else alt="人工客服">
                 <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
                 </a>
               </Tooltip>
@@ -272,9 +272,9 @@
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
-                 <img src="./assets/img/app/qq-red.png" v-if="qq.qqstatus">
-                  <img src="./assets/img/app/qq-gray.png" v-else>
-                <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
+                 <img src="./assets/img/app/qq-red.png" v-if="qq.qqstatus" alt="售前咨询">
+                  <img src="./assets/img/app/qq-gray.png" v-else alt="售前咨询">
+                <span >{{qq.servicename}}</span>
                 <i :class="{inline:qq.qqstatus}"></i>
                 </a>
               </Tooltip>
@@ -291,9 +291,9 @@
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
-                 <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus">
-                  <img src="./assets/img/app/qq-gray.png" v-else>
-                <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
+                 <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus" alt="技术支持">
+                  <img src="./assets/img/app/qq-gray.png" v-else alt="技术支持">
+                <span >{{qq.servicename}}</span>
                 <i :class="{inline:qq.qqstatus}"></i>
                 </a>
               </Tooltip>
@@ -625,16 +625,16 @@
           }
         ], // 页尾列表详情
         document: [
-          {title: '计算', url: '/document'},
-          {title: '网络', url: '/document'},
-          {title: '安全', url: '/document'},
-          {title: '财务与账户', url: 'https://zschj.xrcloud.net/documentInfo/qHwTxQKS7/qZfGQSs8S'}
+          {title: '计算', url: 'https://kaifa.xrcloud.net/support/products.html'},
+          {title: '网络', url: 'https://kaifa.xrcloud.net/support/products.html'},
+          {title: '安全', url: 'https://kaifa.xrcloud.net/support/products.html'},
+          {title: '财务与账户', url: 'https://kaifa.xrcloud.net/support/products.html'}
         ],
         // 服务与公告
         notice: [
-          {title: '最新公告', url: 'https://news.xrcloud.net/huodonggonggao/article/1.html'},
-          {title: '新闻动态', url: 'https://news.xrcloud.net/fuwuqixunihua'},
-          {title: '技术支持', url: 'https://news.xrcloud.net/'},
+          {title: '最新公告', url: 'https://kaifa.xrcloud.net/homePage/1.html'},
+          {title: '新闻动态', url: 'https://kaifa.xrcloud.net/homePage/1.html'},
+          {title: '技术支持', url: 'https://kaifa.xrcloud.net/support/products.html'},
         ],
         // 友情链接
         links: [
@@ -732,9 +732,9 @@
          }*/
       })
       // 设置友情链接
-/*      this.$http.get('article/friendshipLink.do').then(response => {
-        this.links = response.data.result
-      })*/
+      /*      this.$http.get('article/friendshipLink.do').then(response => {
+              this.links = response.data.result
+            })*/
     },
     methods: {
       /* li mouseenter事件 重新设置line样式 */
@@ -915,6 +915,9 @@
             background-size: cover;
           }
         }
+        .operate-pdding{
+            padding-left:90px;
+        }
         .operate {
           > ul {
             display: inline-block;
@@ -998,6 +1001,12 @@
                           padding: 10px 0;
                           height: 50px;
                           width: 800px;
+                          margin: 0 auto;
+                        }
+                        &.zx{
+                          padding: 10px 0;
+                          height: 50px;
+                          width: 400px;
                           margin: 0 auto;
                         }
                         .info:hover {
@@ -1183,6 +1192,9 @@
                   margin-bottom: 30px;
                 }
               }
+              img{
+                width:100px;height:100px;
+              }
             }
           }
           .page-links {
@@ -1214,6 +1226,9 @@
         }
         .footer-bottom {
           background-color: #1B1B1B;
+          a{
+            color: #fff;
+          }
           ul {
             width: 1200px;
             margin: 0 auto;
@@ -1231,6 +1246,9 @@
               color: #FFF;
               margin-right: 70px;
               cursor: pointer;
+            }
+            img{
+              vertical-align: middle;margin-right: 5px
             }
           }
         }
@@ -1306,6 +1324,7 @@
                 }
                 span {
                   vertical-align: middle;
+                  width: 56px;display: inline-block;
                 }
               }
             }
@@ -1387,5 +1406,7 @@
     border-radius: 50%;
     background-color: rgb(237, 63, 20, 0.5);
   }
-
+  .logo-img{
+    position: absolute;left:50%;margin-left:-440px;z-index:1100
+  }
 </style>

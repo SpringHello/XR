@@ -1,5 +1,6 @@
 <template>
   <div id="bhost">
+    <h1 id="hide-h1">弹性IP购买</h1>
     <!--公网IP div-->
     <div id="Peip" style="padding: 30px 40px 40px 40px;">
       <!--两种配置方式公共页面-->
@@ -121,6 +122,17 @@
   import regExp from '@/util/regExp'
   var debounce = require('throttle-debounce/debounce')
   export default{
+    metaInfo: {
+      title: '弹性公网ip怎么付费 - 弹性公网ip收费 - 购买 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '弹性公网ip怎么付费,弹性ip收费,弹性公网ip收费,弹性ip怎么计费'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '弹性公网IP是互联网上合法的静态公网IP地址。弹性公网IP地址是与用户账户相关联的资源，用户可以将弹性公网IP地址与任意虚拟机实例/NAT网关/VPN/负载均衡绑定，并可以随时解绑对应关系，用户可按月、年租用购买，还可实时计费。'
+        }]
+    },
     data(){
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 0 || zone.gpuserver == 1

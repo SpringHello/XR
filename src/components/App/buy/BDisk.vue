@@ -1,5 +1,6 @@
 <template>
   <div id="bhost">
+    <h1 id="hide-h1">云硬盘购买</h1>
     <!--云硬盘div-->
     <div id="Pdisk" style="padding: 30px 40px 40px 40px;">
       <!--两种配置方式公共页面-->
@@ -145,6 +146,17 @@
   import regExp from '@/util/regExp'
   var debounce = require('throttle-debounce/debounce')
   export default{
+    metaInfo: {
+      title: '云硬盘租用价格 - 购买 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云硬盘租用价格,云硬盘价格'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '云硬盘是为云服务器实例提供持久性块存储的服务，可以挂载到同一可用区下的云服务器实例上，云硬盘具有高可靠、高性能、灵活易用等特点，同时云硬盘支持在线操作和管理。用户可按月、年租用购买，还可实时计费。'
+        }]
+    },
     data(){
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 0

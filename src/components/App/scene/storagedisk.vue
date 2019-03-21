@@ -5,7 +5,7 @@
          :style="{ 'background-image': 'url(' + item.bannerImg + ')','background-repeat':'no-repeat','background-size':'cover' }">
       <div class="center">
         <div class="head">
-          <img src="../../assets/img/sceneInfo/free-hint.png"/>
+          <img src="../../../assets/img/sceneInfo/free-hint.png"/>
           <span v-if="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'|| scene == '游戏服务'" style="top: 45px;right: 15px;">免费试用</span>
           <span v-else>免费使用一年</span>
           <div class="title">
@@ -19,7 +19,7 @@
             <transition name="slide-fade">
               <ul v-show="otherSceneShow">
                 <li v-for="otherScene in sceneGroup">
-                  <a :href="'/scene/'+otherScene.link">
+                  <a :href="otherScene.link">
                     {{otherScene.name}}
                   </a>
                 </li>
@@ -136,7 +136,7 @@
             <Step title="支付"></Step>
             <Step title="支付失败"></Step>
           </Steps>
-          <p><img src="../../assets/img/sceneInfo/si-defeated.png"/><span>抱歉，支付失败，请再次尝试！</span></p>
+          <p><img src="../../../assets/img/sceneInfo/si-defeated.png"/><span>抱歉，支付失败，请再次尝试！</span></p>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -155,7 +155,7 @@
             <Step title="支付"></Step>
             <Step title="支付成功"></Step>
           </Steps>
-          <p><img src="../../assets/img/sceneInfo/si-success.png"/><span>恭喜您支付成功！我们即将冻结押金</span><span style="color: #D0021B;margin-left: 0">{{ cashPledge }}</span><span
+          <p><img src="../../../assets/img/sceneInfo/si-success.png"/><span>恭喜您支付成功！我们即将冻结押金</span><span style="color: #D0021B;margin-left: 0">{{ cashPledge }}</span><span
             style="margin-left: 0">元</span></p>
         </div>
       </div>
@@ -217,8 +217,8 @@
             </Radio>
             <Radio label="otherPay" class="pw-img" :disabled="balance >= cashPledge">
               <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
-              <img src="../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null">
-              <img src="../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null">
+              <img src="../../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null">
+              <img src="../../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null">
             </Radio>
             <!--            <Radio label="otherPay" class="pw-img">
                           <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
@@ -280,7 +280,7 @@
         <span class="universal-modal-title">实名认证</span>
       </p>
       <div style="text-align:center;padding:40px 0;">
-        <img src="../../assets/img/payresult/paySuccess.png"
+        <img src="../../../assets/img/payresult/paySuccess.png"
              style="width:36px;vertical-align:middle;margin-right:10px;">
         <span style="font-size:14px;line-height:36px">恭喜您，实名认证成功！</span>
       </div>
@@ -294,7 +294,7 @@
         <span class="universal-modal-title">实名认证</span>
       </p>
       <div style="text-align:center;padding:40px 0;">
-        <img src="../../assets/img/payresult/payFail.png"
+        <img src="../../../assets/img/payresult/payFail.png"
              style="width:36px;vertical-align:middle;margin-right:10px;">
         <span style="font-size:14px;line-height:36px">抱歉，实名认证失败，原因：{{authErrorText}}</span>
       </div>
@@ -306,33 +306,24 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import axios from '../../util/axiosInterceptor'
-  import reg from '../../util/regExp'
+  import axios from '../../../util/axiosInterceptor'
+  import reg from '../../../util/regExp'
   import VueQArt from 'vue-qart'
 
   export default {
-
     metaInfo: {
-      title: '应用场景 - 新睿云', // set a title
+      title: '免费云存储服务器 - 个人网盘搭建制作 - 存储安全 - 应用场景 - 新睿云', // set a title
       meta: [{                 // set meta
         name: 'keywords',
-        content: '应用场景，新睿云'
-      }]
+        content: '个人网盘,个人网盘搭建,个人网盘制作,存储安全,云存储,云存储服务器,免费云存储'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云个人网盘服务具有使用方便、管理简单、稳定可靠等特点。具备多协议支持能力（包括FTP、FTPS、SFTP等文件传输协议）；远程文件查找能力；多标签界面管理能力；断点续传；站点管理与传输队列管理等能力。'
+        }]
     },
     components: {
       VueQArt
-    },
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        vm.setData(to.params.type)
-        vm.getRegion(to.params.type)
-      })
-    },
-    beforeRouteUpdate(to, from, next) {
-      next(vm => {
-        vm.setData(to.params.type)
-        vm.getRegion(to.params.type)
-      })
     },
     data() {
       const validaRegisteredPhone = (rule, value, callback) => {
@@ -560,7 +551,7 @@
                 system: 'linux'
               }
             ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner1.png')
+            bannerImg: require('../../../assets/img/sceneInfo/si-banner1.png')
           },
           {
             currentScene: '自助建站',
@@ -745,7 +736,7 @@
                 system: 'linux'
               }
             ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner2.png')
+            bannerImg: require('../../../assets/img/sceneInfo/si-banner2.png')
           },
           {
             currentScene: '存储&网盘',
@@ -930,7 +921,7 @@
                 system: 'linux'
               }
             ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner3.png')
+            bannerImg: require('../../../assets/img/sceneInfo/si-banner3.png')
           },
           {
             currentScene: '软件研发',
@@ -1115,7 +1106,7 @@
                 system: 'linux'
               }
             ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner4.png')
+            bannerImg: require('../../../assets/img/sceneInfo/si-banner4.png')
           },
           {
             currentScene: '游戏服务',
@@ -1289,7 +1280,7 @@
                 system: 'linux'
               }
             ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner5.png')
+            bannerImg: require('../../../assets/img/sceneInfo/si-banner5.png')
           },
           {
             currentScene: '图形设计',
@@ -1463,7 +1454,7 @@
                 system: 'linux'
               }
             ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner6.png')
+            bannerImg: require('../../../assets/img/sceneInfo/si-banner6.png')
           },
           {
             currentScene: '人工智能',
@@ -1637,7 +1628,7 @@
                 system: 'linux'
               }
             ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner7.png')
+            bannerImg: require('../../../assets/img/sceneInfo/si-banner7.png')
           },
           {
             currentScene: '超级运算',
@@ -1811,7 +1802,7 @@
                 system: 'linux'
               }
             ],
-            bannerImg: require('../../assets/img/sceneInfo/si-banner8.png')
+            bannerImg: require('../../../assets/img/sceneInfo/si-banner8.png')
           },
         ],
         // 标记当前场景信息
@@ -1821,14 +1812,14 @@
         userType: '',
         scene: '云电脑',
         sceneGroup: [
-          {name: '云电脑', link: 'yundiannao/'},
-          {name: '个人建站', link: 'selfhelpbuildingwebsite/'},
-          {name: '个人网盘', link: 'storagedisk/'},
-          {name: '软件研发', link: 'softwaredevelopment/'},
-          {name: '云游戏服务', link: 'gameservice/'},
-          {name: '图形设计', link: 'graphicdesign/'},
-          {name: '人工智能', link: 'ai/'},
-          {name: '超级运算', link: 'supercomputing/'},
+          {name: '云电脑', link: '/yundiannao/'},
+          {name: '个人建站', link: '/selfhelpbuildingwebsite/'},
+          {name: '个人网盘', link: '/storagedisk/'},
+          {name: '软件研发', link: '/softwaredevelopment/'},
+          {name: '云游戏服务', link: '/gameservice/'},
+          {name: '图形设计', link: '/graphicdesign/'},
+          {name: '人工智能', link: '/ai/'},
+          {name: '超级运算', link: '/supercomputing/'},
         ],
         otherSceneShow: false,
         areaGroup: [],
@@ -1837,7 +1828,7 @@
         time: '',
         config: {
           value: '0',
-          imagePath: require('../../assets/img/pay/payBackground.png'),
+          imagePath: require('../../../assets/img/pay/payBackground.png'),
           filter: 'black',
           size: 500
         },
@@ -1930,6 +1921,8 @@
       }
     },
     created() {
+      this.setData('storagedisk')
+      this.getRegion('storagedisk')
     },
     methods: {
       init() {
@@ -2055,7 +2048,7 @@
       getRegion(val) {
         let url = 'activity/getTemActInfo.do'
         let params = {}
-        if (val == 'host' || val == 'web' || val == 'disk' || val == 'software') {
+        if (val == 'yundiannao' || val == 'selfhelpbuildingwebsite' || val == 'storagedisk' || val == 'softwaredevelopment') {
           params = {
             activityName: '免费领主机'
           }

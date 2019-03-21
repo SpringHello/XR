@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1 id="hide-h1">零元购</h1>
     <div class="head">
       <div class="head-banner">
         <div>
@@ -162,6 +163,17 @@
   import $ from 'jquery'
 
   export default {
+    metaInfo: {
+      title: '0元试用云主机 - 38元云服务器优惠券 - 158元云主机现金券 - 活动中心 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '0元云服务器,0元试用云主机,0元云主机,云服务器优惠券'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云推出0元购活动，可用于免费试用云服务器产品，新用户注册即可领取38元无门槛优惠券，同时注册完成账户可立即获得158元现金红包。'
+        }]
+    },
     data() {
       window.scrollTo(0, 0);
       return {
