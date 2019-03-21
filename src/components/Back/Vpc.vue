@@ -930,6 +930,7 @@
 			testjump(){
 				var vpcstatus=sessionStorage.getItem('vpcstatus')
 				var ptstatus=sessionStorage.getItem('ziwstatus')
+				var natstatus=sessionStorage.getItem('natstatus')
 				if (vpcstatus=='true') {
 				  this.showModal.newVpc=true
 				  sessionStorage.removeItem('vpcstatus')
@@ -942,6 +943,10 @@
 										top: 150,
                     closable: true
                 });
+				}
+				if(natstatus=='true'){
+					this.showModal.addNat=true
+					sessionStorage.removeItem('natstatus')
 				}
 			},
       // 区域切换刷新数据

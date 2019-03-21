@@ -25,73 +25,6 @@
 				</div>
 				<div style="clear: both;"></div>
 			</div>
-			<!-- 添加NAT 网关 -->
-			<Modal v-model="showModal.addNat" width="500" :scrollable="true">
-			  <p slot="header" class="modal-header-border">
-			    <span class="universal-modal-title">添加NAT网关</span>
-			  </p>
-			  <div class="universal-modal-content-flex" id="moli2">
-			    <Form :model="addNatForm" :rules="addNatRuleValidate" ref="addNatFormValidate" style="width: 100%">
-			      <FormItem label="网关名称" prop="natName">
-			        <Input v-model="addNatForm.natName" placeholder="请输入网关名称" style="width:300px;float: right;"></Input>
-			      </FormItem>
-			      <FormItem label="VPC ID" prop="vpc" style="margin-top: 20px;">
-			        <Select v-model="addNatForm.vpc" placeholder="请选择" style="width:300px;float: right;" @on-change="listIP">
-			          <Option v-for="item in netData" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}</Option>
-			        </Select>
-			      </FormItem>
-			      <FormItem label="弹性IP" style="margin-top: 20px;">
-			        <Select v-model="addNatForm.publicIp" style="width:300px;float: right;">
-			          <Option v-for="item in addNatForm.publicIpOptions" :value="item.publicipid" :key="item.publicipid">
-			            {{item.publicip}}
-			          </Option>
-			        </Select>
-			        <i @click="$router.push('ip')">
-			          <Icon type="plus" color="#2A99F2" size="17"
-			                style="position: relative;top: 35px;cursor:pointer;left:35px;"></Icon>
-							
-			        </i>
-					<span style="position: relative;top: 11px;cursor:pointer;left:52px;float: left;color:#2A99F2 ;">新建弹性IP</span>
-			      </FormItem>
-			      <FormItem label="计费模式" prop="timeType" style="margin-top: 22px;" id="fgfg">
-			        <Select v-model="addNatForm.timeType" style="width:145px;float: left;">
-			          <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
-			                  :key="item.value">{{ item.label }}
-			          </Option>
-			        </Select>
-			      </FormItem>
-			      <FormItem label="" prop="timeValue" v-if="addNatForm.timeType!='current'" id="gfgf">
-			        <Select v-model="addNatForm.timeValue" style="width:145px;float: right;margin-top: 22px;">
-			          <Option v-for="item in customTimeOptions[addNatForm.timeType]" :value="item.value" :key="item.value">
-			            {{item.label}}
-			          </Option>
-			        </Select>
-			      </FormItem>
-			      <FormItem label="弹性IP带宽" v-if="addNatForm.publicIp=='新建弹性IP'"  style="width:90%">
-			        <i-slider v-model="addNatForm.IPSize" :min=1 :max=100 unit="M" :points="[20,50]"
-			                  style="width:300px;vertical-align: middle;"></i-slider>
-			        <InputNumber :max="100" :min="1" v-model="addNatForm.IPSize" :editable="false"
-			                     style="margin-top: 10px;" :precision="0"></InputNumber>
-			        <span style="margin-left: 10px">M</span>
-			      </FormItem>
-				  <div style="margin-top: 20px;">
-					  <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-					  <span style="font-size: 24px;color: #FF624B;line-height: 32px;float:left">￥{{addNatForm.cost}}
-					  <span v-if="addNatForm.timeValue != ''"> /
-					  <span v-if="addNatForm.timeType == 'year'"
-					        style="font-size: 16px; color: #FF624B;">{{addNatForm.timeValue}}年</span>
-					  <span v-if="addNatForm.timeType == 'month'"
-					        style="font-size: 16px; color: #FF624B;">{{addNatForm.timeValue}}月</span>
-					  </span>
-					  </span>
-				  </div>
-			    </Form>
-			  </div>
-			  <div slot="footer" class="modal-footer-border">
-				  <Button @click="this.showModal.addNat=false">取消</Button>
-			    <Button type="primary" @click="handleAddNatSubmit">完成</Button>
-			  </div>
-			</Modal>
 		</div>
 	</div>
 </template>
@@ -124,46 +57,8 @@
 			})
 		},
 		data() {
-			// 验证vpc互通网关，源IP与目标IP不能相同
-			const validaRegisteredName = regExp.validaRegisteredName
 			return {
-				status: 0,
-				// vpc列表数据
-				netData: [],
-				showModal: {
-				  // 添加nat网关
-				  addNat: false
-				},
-				// 添加nat网关表单
-				addNatForm: {
-				  natName: '',
-				  vpc: '',
-				  publicIpOptions: [],
-				  publicIp: '',
-				  timeType: '',
-				  timeValue: '',
-				  IPSize: 1,
-				  cost: '--'
-				},
-				// 添加nat网关验证规则
-				addNatRuleValidate: {
-				  natName: [
-				    {required: true, validator: validaRegisteredName, trigger: 'blur'}
-				  ],
-				  vpc: [
-				    {required: true, message: '请选择VPC', trigger: 'change'}
-				  ],
-				  publicIp: [
-				    {required: true, message: '请选择弹性IP', trigger: 'change'}
-				  ],
-				  timeType: [
-				    {required: true, message: '请选择购买方式', trigger: 'change'}
-				  ],
-				  timeValue: [
-				    {required: true, message: '请选择购买时长', trigger: 'change'}
-				  ]
-				},
-				customTimeOptions
+				status: 0
 			}
 		},
 		created() {
@@ -179,7 +74,8 @@
 				window.open('/ip')
 			},
 			loadjump() {
-				this.showModal.addNat = true
+				sessionStorage.setItem('natstatus', true)
+				window.open('/natList')
 			},
 			Refresh() {
 				sessionStorage.removeItem('vpcstatus')
@@ -201,67 +97,6 @@
 						
 				  }
 				})
-			},
-			// 当vpc id变化时，重新查询当前vpc下的弹性IP
-			listIP() {
-			  /*
-			   useType : 0 代表未使用
-			   status : 1 代表状态正常
-			   */
-			  var url = 'network/listPublicIp.do'
-			  this.addNatForm.publicIp = ''
-			  axios.get(url, {
-			    params: {
-			      useType: 0,
-			      status: 1,
-			      zoneId: $store.state.zone.zoneid,
-			      vpcId: this.addNatForm.vpc
-			    }
-			  }).then(response => {
-			    if (response.status == 200 && response.data.status == 1) {
-			      // response.data.result.push({publicipid: '新建弹性IP', publicip: '新建弹性IP'})
-			      this.addNatForm.publicIpOptions = response.data.result
-			    }
-			  })
-			},
-			// 提交新建nat网关表单
-			handleAddNatSubmit() {
-			  this.$refs.addNatFormValidate.validate((valid) => {
-			    if (valid) {
-			      // 表单验证通过
-			      let params = {
-			        isAutorenew: 0,
-			        natName: this.addNatForm.natName,
-			        vpcId: this.addNatForm.vpc,
-			        zoneId: $store.state.zone.zoneid,
-			        timeType: this.addNatForm.timeType,
-			        timeValue: this.addNatForm.timeValue || 1
-			      }
-			      if (this.addNatForm.publicIp == '新建弹性IP') {
-			        params.bandWith = this.addNatForm.IPSize
-			      } else {
-			        params.publicIpId = this.addNatForm.publicIp
-			      }
-			      axios.get('network/createNatGateway.do', {
-			        params
-			      }).then(response => {
-			        this.showModal.addNat = false
-			        if (response.status == 200 && response.data.status == 1) {
-					  this.$router.push('/natList')
-					  this.$Message.success({
-					    content: response.data.message
-					  })
-			        }
-			        if (response.status == 200 && response.data.status == 2) {
-			          this.$message.info({
-			            content: response.data.message
-			          })
-			        }
-			      })
-			    } else {
-			      // 表单验证失败
-			    }
-			  })
 			}
 		},
 		computed: {
