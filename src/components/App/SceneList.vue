@@ -5,7 +5,7 @@
       <img class="img_1" src="../../assets/img/sceneList/sl-banner10.png"/>
       <img class="img_2" src="../../assets/img/sceneList/sl-banner11.png"/>
       <div class="content-list">
-        <div v-for="(item,index) in sceneList" class="scene" :class="{last: index == 4||index == 5 || index == 6 ||index == 7 }" @click="$router.push('/scene/' + item.link)">
+        <div v-for="(item,index) in sceneList" class="scene" :class="{last: index == 4||index == 5 || index == 6 ||index == 7 }" @click="$router.push(item.link)">
           <div class="scene-top" :style="{'background-image': 'url(' + item.bannerSrc + ')'}">
             {{ item.text}}
           </div>

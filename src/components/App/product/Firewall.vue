@@ -1,6 +1,6 @@
 <template>
   <div class="product">
-    <h1 id="hide-h1">防火墙</h1>
+    <h1 id="hide-h1">虚拟防火墙</h1>
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">

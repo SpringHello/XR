@@ -4,7 +4,7 @@
     <div class="banner east-banner" v-show="defaultNode=='east'">
       <div class="wrap">
         <div class="text">
-          <h1><span>华东一区</span>盛大开服</h1>
+          <h2><span>华东一区</span>盛大开服</h2>
           <p><span>「华东地域」</span>数据中心盛大开服，最高等级机房建设标准，极致网络体验， 助力华东企业云端发展。</p>
           <Button @click="tobuy('huadong')">立即购买</Button>
         </div>
@@ -16,7 +16,7 @@
     <div class="banner south-banner" v-show="defaultNode=='south'">
       <div class="wrap">
         <div class="text">
-          <h1><span>华南一区</span>盛大开服</h1>
+          <h2><span>华南一区</span>盛大开服</h2>
           <p><span>「华南地域」</span>数据中心盛大开服，万兆光纤极速体验，助力区域企业云上发展。</p>
           <Button @click="tobuy('huanan')">立即购买</Button>
         </div>
@@ -53,7 +53,7 @@
           <div class="wrap">
             <div class="box">
               <div class="desc">
-                <h1>地域优势</h1>
+                <h2>地域优势</h2>
                 <span>新睿云「华东地区」：高端服务，助力实体经济云上赋能</span>
                 <p>华东地区具备发展集成电路的良好基础，汇聚了丰富的网络骨干资源，同时拥有优越的商业资源优势。在华东地区部署业务，能更好、更便利地服务本地市场，获得更优质的技术支持。新睿云选择在华东地区建立数据中心，将为用户提供更优质的云计算服务，降低IT成本，加速企业发展。</p>
               </div>
@@ -67,7 +67,7 @@
           <div class="wrap">
             <div class="box">
               <div class="desc">
-                <h1>地域优势</h1>
+                <h2>地域优势</h2>
                 <span>新睿云「华南地区」：大规模 高质量 助力企业上云</span>
                 <p>华南地区云计算产业起步早、组建队伍早，有良好的云计算发展建设基础，同时在中科院支持下建立了“云计算产业技术创新与育成中心”，汇聚了一批批云计算领域优秀人才。新睿云在这里建设数据中心，将为用户数据存储、业务发展提供优质服务，推进企业进步。</p>
               </div>
@@ -287,7 +287,7 @@
       .text {
         padding: 78px 0;
         width: 600px;
-        h1 {
+        h2 {
           font-size: 48px;
           span {
             display: inline-block;
@@ -438,7 +438,7 @@
           align-items: center;
           .desc {
             width: 550px;
-            h1 {
+            h2 {
               font-size: 36px;
             }
             span {

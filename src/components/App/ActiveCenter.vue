@@ -8,7 +8,7 @@
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
-                  <h1>云产品新春采购季</h1>
+                  <h2>云产品新春采购季</h2>
                   <p>
                     低至
                     <i>1折</i>
@@ -612,7 +612,7 @@
     .container {
       height: 400px;
       .left {
-        h1 {
+        h2 {
           font-size: 48px;
           line-height: 64px;
           font-weight: normal;

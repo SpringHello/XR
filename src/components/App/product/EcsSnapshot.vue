@@ -1,6 +1,6 @@
 <template>
   <div class="product">
-    <h1 id="hide-h1">ecs快照</h1>
+    <h1 id="hide-h1">ECS 快照</h1>
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">

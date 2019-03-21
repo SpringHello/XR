@@ -1,6 +1,6 @@
 <template>
   <div class="product">
-    <h1 id="hide-h1">对象储存</h1>
+    <h1 id="hide-h1">对象存储 OSS</h1>
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">

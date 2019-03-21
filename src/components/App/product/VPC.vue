@@ -1,6 +1,6 @@
 <template>
   <div class="product">
-    <h1 id="hide-h1">VPC</h1>
+    <h1 id="hide-h1">虚拟私有云VPC</h1>
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">

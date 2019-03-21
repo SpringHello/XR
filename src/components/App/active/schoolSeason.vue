@@ -1,6 +1,5 @@
 <template>
   <div id="schoolseason">
-    <h1 id="hide-h1">新春采购季</h1>
     <div class="banner">
       <div class="wrap">
         <div class="container flex-vertical-center">

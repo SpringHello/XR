@@ -1,6 +1,6 @@
 <template>
   <div style="background: #FFF; font-family:PingFangSC-Regular;" id="domain">
-    <h1 id="hide-h1">域名购买</h1>
+    <h1 id="hide-h1">域名注册查询</h1>
     <div class="domain-wrapper">
       <div class="topOne">
         <h3>域名注册全新上线</h3>

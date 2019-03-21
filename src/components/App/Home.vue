@@ -9,7 +9,7 @@
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
-                  <h1>云产品新春采购季</h1>
+                  <h2>云产品新春采购季</h2>
                   <p>
                     低至
                     <i>1折</i>
@@ -143,7 +143,7 @@
           <div class="east-banner" @click="push('/eastsouth/')">
             <div class="wrap">
               <div class="text">
-                <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
+                <h2><span><i>华东</i><i>华南</i></span>盛大开服</h2>
                 <p>万兆光纤极速体验，助力区域企业云上发展</p>
                 <Button>了解详情</Button>
               </div>
@@ -644,7 +644,7 @@
               require('../../assets/img/sceneList/sl-icon4.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/scene/yundiannao/',
+            link: 'yundiannao/',
             hint: '免费使用一年'
           },
           {
@@ -657,7 +657,7 @@
               require('../../assets/img/sceneList/sl-icon8.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/scene/selfhelpbuildingwebsite/',
+            link: 'selfhelpbuildingwebsite/',
             hint: '免费使用一年'
           },
           {
@@ -670,7 +670,7 @@
               require('../../assets/img/sceneList/sl-icon29.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/scene/storagedisk/',
+            link: 'storagedisk/',
             hint: '免费使用一年'
           },
           {
@@ -683,7 +683,7 @@
               require('../../assets/img/sceneList/sl-icon14.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/scene/softwaredevelopment/',
+            link: 'softwaredevelopment/',
             hint: '免费使用一年'
           },
           {
@@ -694,7 +694,7 @@
               require('../../assets/img/sceneList/sl-icon16.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/scene/gameservice/',
+            link: 'gameservice/',
             hint: '免费使用'
           },
           {
@@ -707,7 +707,7 @@
               require('../../assets/img/sceneList/sl-icon20.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/scene/graphicdesign/',
+            link: 'graphicdesign/',
             hint: '免费使用'
           },
           {
@@ -720,7 +720,7 @@
               require('../../assets/img/sceneList/sl-icon24.png'),
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/scene/ai/',
+            link: 'ai/',
             hint: '免费使用'
           },
           {
@@ -730,7 +730,7 @@
               require('../../assets/img/sceneList/sl-icon25.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/scene/supercomputing/',
+            link: 'supercomputing/',
             hint: '免费使用'
           },
         ],
@@ -2768,7 +2768,7 @@
     .container {
       height: 400px;
       .left {
-        h1 {
+        h2 {
           font-size: 48px;
           line-height: 64px;
           font-weight: normal;
@@ -2926,7 +2926,7 @@
       padding: 78px 0;
       padding-left: 50px;
       width: 600px;
-      h1 {
+      h2 {
         font-size: 48px;
         span {
           display: inline-block;

@@ -1,6 +1,6 @@
 <template>
   <div class="product">
-    <h1 id="hide-h1">DDOS</h1>
+    <h1 id="hide-h1">DDOS防护</h1>
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
