@@ -1,10 +1,11 @@
 <template>
   <div style="background: #FFF;    position: relative;">
+    <h1 id="hide-h1">应用场景</h1>
     <div class="center">
       <img class="img_1" src="../../assets/img/sceneList/sl-banner10.png"/>
       <img class="img_2" src="../../assets/img/sceneList/sl-banner11.png"/>
       <div class="content-list">
-        <div v-for="(item,index) in sceneList" class="scene" :class="{last: index == 4||index == 5 || index == 6 ||index == 7 }" @click="$router.push('/scene/' + item.link)">
+        <div v-for="(item,index) in sceneList" class="scene" :class="{last: index == 4||index == 5 || index == 6 ||index == 7 }" @click="$router.push(item.link)">
           <div class="scene-top" :style="{'background-image': 'url(' + item.bannerSrc + ')'}">
             {{ item.text}}
           </div>
@@ -19,6 +20,13 @@
 
 <script type="text/ecmascript-6">
   export default {
+    metaInfo: {
+      title: '云服务器、云主机应用场景 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '云服务器应用,云主机应用'
+      }]
+    },
     data() {
       return {
         sceneList: [

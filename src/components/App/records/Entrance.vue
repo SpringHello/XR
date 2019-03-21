@@ -1,5 +1,6 @@
 <template>
   <div style="background: #FFF">
+    <h1 id="hide-h1">备案</h1>
     <records></records>
     <div class="body-top">
       <div class="content">
@@ -159,6 +160,17 @@
     },
   }
   export default {
+    metaInfo: {
+      title: '域名备案查询 - 域名备案流程 - 网站域名备案 - 域名与备案 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '域名备案,备案域名,域名备案查询,域名备案流程,网站域名备案'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云提供专业、高效的域名备案服务，目前支持北京、沈阳、西安等地区的域名备案申请，按域名备案流程进行域名备案，助您快速完成网站备案，以便网站正常访问。'
+        }]
+    },
     components: {
       records
     },

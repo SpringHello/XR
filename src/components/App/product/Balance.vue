@@ -1,5 +1,6 @@
 <template>
   <div class="product">
+    <h1 id="hide-h1">负载均衡</h1>
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">

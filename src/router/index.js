@@ -36,10 +36,20 @@ const Record = () =>import('@/components/App/Record')
 const Aboutus = () =>import('@/components/App/Aboutus')
 const ActiveCenter = () =>import('@/components/App/ActiveCenter')
 const Dynamic = () =>import('@/components/App/Dynamic')
-const SceneInfo = () =>import('@/components/App/SceneInfo')
+//const SceneInfo = () =>import('@/components/App/SceneInfo')
 const SceneList = () =>import('@/components/App/SceneList')
 // const ProductBulletin = () => import('@/components/App/ProductBulletin')
 const Ssl = () =>import('@/components/App/Ssl')
+
+// 八大场景
+const yundiannao = () =>import('@/components/App/scene/yundiannao')
+const selfhelpbuildingwebsite = () =>import('@/components/App/scene/selfhelpbuildingwebsite')
+const storagedisk = () =>import('@/components/App/scene/storagedisk')
+const softwaredevelopment = () =>import('@/components/App/scene/softwaredevelopment')
+const gameservice = () =>import('@/components/App/scene/gameservice')
+const graphicdesign = () =>import('@/components/App/scene/graphicdesign')
+const ai = () =>import('@/components/App/scene/ai')
+const supercomputing = () =>import('@/components/App/scene/supercomputing')
 
 // 前台活动页面路由
 //const Active = () => import('@/components/App/active/active')
@@ -318,7 +328,7 @@ var router = new Router({
         {path: 'activtiy/2019spring', name: 'activtiy/2019spring', component: schoolSeason},
 
         {path: 'eastsouth', name: 'eastsouth', component: EastSouthNode},
-        {path: 'Scene/:type', name: 'Scene', component: SceneInfo},
+        //{path: 'Scene/:type', name: 'Scene', component: SceneInfo},
         {path: 'scene', name: 'scene', component: SceneList},
 
         {path: 'domain', name: 'domain', component: Domainname},
@@ -329,6 +339,14 @@ var router = new Router({
         {path: 'DomainInfoTemplate', name: 'DomainInfoTemplate', component: DomainInfoTemplate},
         {path: 'CheckReg', name: 'CheckReg', component: CheckReg},
 
+        {path: 'yundiannao', name: 'yundiannao', component: yundiannao},
+        {path: 'selfhelpbuildingwebsite', selfhelpbuildingwebsite: 'scene', component: selfhelpbuildingwebsite},
+        {path: 'storagedisk', name: 'storagedisk', component: storagedisk},
+        {path: 'softwaredevelopment', name: 'softwaredevelopment', component: softwaredevelopment},
+        {path: 'gameservice', name: 'gameservice', component: gameservice},
+        {path: 'graphicdesign', name: 'graphicdesign', component: graphicdesign},
+        {path: 'ai', name: 'ai', component: ai},
+        {path: 'supercomputing', name: 'supercomputing', component: supercomputing},
 
         {path: 'ecs', component: Pecs},
         {path: 'mirrorservice', component: Phost},

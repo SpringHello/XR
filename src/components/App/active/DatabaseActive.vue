@@ -1,5 +1,6 @@
 <template>
   <div style="background: #FFF">
+    <h1 id="hide-h1">数据库免费领</h1>
     <div class="banner">
       <div class="banner-content">
         <div class="banner-text">
@@ -315,6 +316,17 @@
   import $ from 'jquery'
 
   export default {
+    metaInfo: {
+      title: '云数据库免费试用60天 - 活动中心 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '免费云数据库'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云推出云数据库产品免费试用60天活动，云数据库产品包含：Mysql 单实例、Redis分布式缓存服务、PostgreSQL 单实例、MongoDB 单实例；实例创建完成后请前往控制台使用，试用期结束可正常续订。'
+        }]
+    },
     components: {
       VueQArt
     },

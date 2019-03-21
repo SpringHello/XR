@@ -1,10 +1,11 @@
 <template>
   <div class="aboutus">
+    <h1 id="hide-h1">关于我们</h1>
     <!-- banner -->
     <div class="banner">
     </div>
     <!-- tabs标签 -->
-    <div class="tabs">     
+    <div class="tabs">
       <div class="wrap" v-for="(item,index) in tabsinfo" :key="index" :class="{active:index == num}"
            @click="tab(index,item.view)">
         <div>
@@ -166,6 +167,17 @@
 
 <script type="text/ecmascript-6">
   export default {
+    metaInfo: {
+      title: '关于我们 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '关于我们,新睿云'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云是北京允睿讯通科技有限公司(中国高新技术企业)旗下的公有云平台，是为客户提供云服务器、云存储、云网络、云数据库、云安全、云监控等产品的云服务提供商。'
+        }]
+    },
     data() {
       return {
         num: 0,

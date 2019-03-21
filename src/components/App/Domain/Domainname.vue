@@ -1,5 +1,6 @@
 <template>
   <div style="background: #FFF; font-family:PingFangSC-Regular;" id="domain">
+    <h1 id="hide-h1">域名注册查询</h1>
     <div class="domain-wrapper">
       <div class="topOne">
         <h3>域名注册全新上线</h3>
@@ -49,7 +50,7 @@
         </div>
       </div>
       <div class="content-advantage">
-        <p><span><<<<<<<<<<</span>平台优势<span>>>>>>>>>>></span></p>
+        <h3><span><<<<<<<<<<</span>平台优势<span>>>>>>>>>>></span></h3>
         <ul>
           <li v-for="(adv,index) in advantage" :key="index">
             <img :src="adv.img" :alt="adv.title">

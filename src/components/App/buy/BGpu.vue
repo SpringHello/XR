@@ -1,5 +1,6 @@
 <template>
   <div id="bhost">
+    <h1 id="hide-h1">云GPU购买</h1>
     <!--数据库div-->
     <div id="Pdata">
       <div style="padding:40px;">
@@ -345,7 +346,7 @@
         </div>
 
         <!--登录设置-->
-        <div style="margin-top: 20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px">
+        <div style="margin-top: 20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;padding-left: 40px">
           <h2>登录设置</h2>
           <div class="item-wrapper">
             <div style="display: flex">
@@ -428,9 +429,9 @@
           </div>
         </div>
         <!--费用、以及加入预算清单-->
-        <div style="margin-top: 20px">
-          <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-             @click="$router.push({path:'/document'})">查看计价详情</p>
+        <div style="margin-top: 20px;padding: 0 40px 40px">
+          <a style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+             href="https://kaifa.xrcloud.net/support/products.html">查看计价详情</a>
           <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
             <span v-if="timeForm.currentTimeType == 'annual'&&timeForm.currentTimeValue.type == 'year'">折后费用：</span><span v-else>费用：</span><span
             style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
@@ -462,6 +463,17 @@
 
   var debounce = require('throttle-debounce/debounce')
   export default {
+    metaInfo: {
+      title: '便宜gpu云服务器价格多少钱 - gpu云服务器怎么收费 - gpu云服务器租用费用 - 购买 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: 'gpu云服务器价格,gpu云服务器多少钱,gpu云服务器怎么收费,gpu云服务器租用费用,便宜gpu云服务器'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云的GPU云服务器是基于GPU应用的计算服务，多适用于视频解码，图形渲染，深度学习，科学计算等应用场景，该产品具有实时高速，并行计算跟浮点计算能力强等特点。用户可按月、年租用购买，可查看gpu云服务器的租用费用、价格、报价。'
+        }]
+    },
     /*beforeRouteEnter(to, from, next){
      axios.get('information/zone.do', {
      params: {
@@ -1124,7 +1136,7 @@
       },
       buyData() {
         if (this.userInfo == null) {
-          this.$parent.showModal.login = true
+          this.$LR({type: 'login'})
           return
         }
         if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {

@@ -1770,6 +1770,7 @@
       },
       '$store.state.zone': {
         handler: function () {
+          this.$router.push('host')
         },
         deep: true
       },
