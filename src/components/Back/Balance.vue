@@ -408,8 +408,16 @@
           this.creatbalancemodal.formInline.VPCList = response.data.result
         }
       })
+			this.testjump()
     },
     methods: {
+			testjump(){
+				var vpcstatus=sessionStorage.getItem('balstatus')
+				if (vpcstatus=='true') {
+				  this.creatbalancemodal.showBalanceName=true
+				  sessionStorage.removeItem('balstatus')
+				}
+			},
       refresh() {
         // 获取负载均衡的初始数据
         axios.get('loadbalance/listLoadBalanceRole.do', {
