@@ -137,7 +137,6 @@ const HostCard = () =>import('@/components/Back/Host')
 //const NewHostManage = () =>import('@/components/Back/newHostManage')
 //const NewUpgrade = () =>import('@/components/Back/newUpgrade')
 const GpuList = () =>import('@/components/Back/GpuList')
-const GpuListNew = () =>import('@/components/Back/GpuListNew')
 const Mirror = () =>import('@/components/Back/Mirror')
 const SSHSecretKey = () =>import('@/components/Back/SSHSecretKey')
 const Snapshot = () =>import('@/components/Back/Snapshot')
@@ -418,7 +417,6 @@ var router = new Router({
         {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase},
         {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade},
         {path: 'GpuList', name: 'GpuList', component: GpuList},
-        {path: 'GpuListNew', name: 'GpuListNew', component: GpuListNew},
         {path: 'gpuManage', name: 'gpuManage', component: gpuManage},
         {path: 'GpuManageNew', name: 'GpuManageNew', component: GpuManageNew},
         // 域名系统 =====================

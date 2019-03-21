@@ -1696,7 +1696,7 @@
                   cdir: this.newRuleForm.cidr,
                   startport: this.newRuleForm.startPort,
                   endport: this.newRuleForm.endPort,
-                  acllistid: sessionStorage.getItem('firewallId'),
+                  acllistid: this.hostInfo.firewallId,
                   access: this.newRuleForm.access
                 }
               }).then(response => {

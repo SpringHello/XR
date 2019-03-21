@@ -937,13 +937,13 @@
           this.ipData.forEach(item => {
             if (item.status != 1 || item.status == 0) {
               item._disabled = true
-              if (item.publicipid) {
-                this.timingRefresh(item.publicipid)
-              } else {
-                setTimeout(() => {
-                  this.refresh()
-                }, 2000)
-              }
+              // if (item.publicipid) {
+              //   this.timingRefresh(item.publicipid)
+              // } else {
+              //   setTimeout(() => {
+              //     this.refresh()
+              //   }, 2000)
+              // }
             }
           })
           this.total = response.data.result.total
