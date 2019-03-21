@@ -728,7 +728,7 @@
                       on: {
                         click: () => {
                           if (params.row.status != -1) {
-                            this.$router.push({path: 'gpuManage'});
+                            this.$router.push({path: 'GpuManageNew'});
                             this.$store.commit('setZone',params.row);
                             sessionStorage.setItem('uuId', params.row.computerid);
                             sessionStorage.setItem('gpuId',params.row.id);
