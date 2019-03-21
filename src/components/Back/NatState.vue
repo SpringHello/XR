@@ -111,7 +111,7 @@
 				  }
 				}).then(response => {
 				  if (response.status == 200 && response.data.status == 1) {
-					  vm.status=0
+					  vm.status=response.data.result
 					  if (vm.status == 3) {
 					  	vm.$router.push('/natList')
 					  } else {
