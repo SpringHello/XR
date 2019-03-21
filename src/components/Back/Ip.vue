@@ -854,8 +854,16 @@
       } else {
         this.hide = 'none';
       }
+			this.testjump()
     },
     methods: {
+			testjump(){
+				var ptstatus=sessionStorage.getItem('ziwstatus')
+				if(ptstatus=='true'){
+					this.showModal.newIPModal=true
+					sessionStorage.removeItem('ziwstatus')
+				}
+			},
       // 跳转到相应的购买页面
       tobuy(url) {
         sessionStorage.setItem('pane', url)
