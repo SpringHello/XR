@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     toPage() {
-      // this.$router.push({ name: 'vpcList', params: { modal: 'newVpc' }})
+      this.$router.push({ name: 'vpcList', params: { modal: 'newVpc' }})
       var origin = window.location.origin
       // window.open(origin+'/'+this.url+'?pane='+this.pane+'&modal='+this.modal)
       // sessionStorage.setItem('pane', 'Peip')
@@ -87,6 +87,7 @@ export default {
           if (response.data.result.vpnGateway) {
             this.step = 5
           }
+          // this.step = 5
           if (this.step == 5) {
             this.$router.push('vpnList')
           }

@@ -305,7 +305,12 @@
               {
                 subName: '虚拟专网VPN',
                 type: 'vpnBlanck',
-                // thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
+                thrItem: [
+                  {thrName: 'VPN连接', pane: 'VPN'},
+                  {thrName: 'VPN本地网关', pane: 'localGateway'},
+                  {thrName: 'VPN客户网关', pane: 'customerGateway'},
+                  {thrName: 'VPN拨入', pane: 'remote'},
+                   ]
               }
             ]
           },
