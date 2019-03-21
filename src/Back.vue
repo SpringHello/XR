@@ -300,7 +300,7 @@
               {
                 subName: '虚拟专网VPN',
                 type: 'vpnBlanck',
-                thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
+                // thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
               }
             ]
           },

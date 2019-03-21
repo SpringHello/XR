@@ -23,7 +23,7 @@
             <Step title="创建VPN网关"></Step>
           </Steps>
           <div>
-            <Button type="primary" @click="toPage()">{{stepText}}</Button>
+            <Button type="primary" @click="toPage(url,pane,modal)">{{stepText}}</Button>
             <Button type="ghost" style="color:#57a3f3;border-color: #57a3f3;" @click="refresh()">刷新</Button>
           </div>
         </main>
@@ -42,8 +42,16 @@ export default {
       stepText: '创建vpc',
       stepTextList: ['创建vpc','绑定源NAT','创建本地网关','创建客户网关','创建VPN网关'],
       pathList: [
-        {name: 'vpcList',modal: 'newVpc'}
-      ]
+        { name: 'vpcList', pane: '', modal: 'newVpc' },
+        { name: 'vpcList', pane: '', modal: 'addNat' },
+        { name: 'vpnList', pane: 'VPN', modal: 'newVpc' },
+        { name: 'vpnList', pane: 'localGateway', modal: 'newVpc' },
+        { name: 'vpnList', pane: 'customerGateway', modal: 'newVpc' },
+        { name: 'vpnList', pane: '', modal: '' }
+      ],
+      url: '',
+      pane: '',
+      modal: ''
     }
   },
   created () {
@@ -54,9 +62,10 @@ export default {
   },
   methods: {
     toPage() {
-      this.$router.push({ name: 'vpcList', params: { modal: 'newVpc' }})
-      window.open()
-      win
+      // this.$router.push({ name: 'vpcList', params: { modal: 'newVpc' }})
+      var origin = window.location.origin
+      // window.open(origin+'/'+this.url+'?pane='+this.pane+'&modal='+this.modal)
+      // sessionStorage.setItem('pane', 'Peip')
     },
     refresh() {
       axios.get('network/vpnOverview.do', {params: {
@@ -93,6 +102,9 @@ export default {
   watch: {
     step: function (val) {
       this.stepText = this.stepTextList[val]
+      this.url = this.pathList[val].name
+      this.pane = this.pathList[val].pane
+      this.modal = this.pathList[val].modal
     },
   },
   components: {
