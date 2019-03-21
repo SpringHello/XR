@@ -1630,20 +1630,20 @@
           if (res.data.status == 1 && res.status == 200) {
             this.hostListData = res.data.result.data
             this.hostPages = res.data.result.total
+            let ids = []
             this.hostListData.forEach(host => {
               if (host.status == 2 || host.status == -2) {
                 host._disabled = true
-                if (host.id) {
-                  this.timingRefresh(host.id)
-                } else {
-                  this.getHostList()
-                }
+                ids.push(host.id)
               }
             })
             if (!this.auth) {
               this.hostListData.forEach(host => {
                 host._disabled = true
               })
+            }
+            if(ids.length != 0){
+              this.timingRefresh(ids+'');
             }
           }
         })

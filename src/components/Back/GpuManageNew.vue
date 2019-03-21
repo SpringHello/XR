@@ -14,113 +14,72 @@
               <img  src="../../assets/img/host/h-icon11.png" @click="showWindow.rename = true" style="height:16px;cursor:pointer;">
             </div>
             <div class="button_right">
-              <Button type="primary" @click="link">连接主机</Button>
-              <router-link :to="$router.push('GpuManageNew')">
-                <Button>刷新</Button>
-              </router-link>
+              <button class="button-one" @click="link" v-if="gpuDetail.computerStatus == 1">连接主机</button>
+              <button class="button-tow" @click="$router.go(0)">刷新</button>
             </div>
           </div>
           <div class="host-details">
               <p>{{gpuDetail.cpuNum}}CPU ,{{gpuDetail.memory}}G内存 ,{{gpuDetail.bandwith}}M宽带 </p>
           </div>
-          <!-- <div style="display: flex;margin-top: 20px;">
-            <div class="host_box">
-              <i v-if="gpuDetail.cpuNum">{{gpuDetail.cpuNum}}CPU , </i>
-              <i v-if="gpuDetail.memory">{{gpuDetail.memory}}G内存 , </i>
-              <i v-if="gpuDetail.bandwith">{{gpuDetail.bandwith}}M宽带 </i>
-              <i v-if="gpuDetail.zoneName"> | {{gpuDetail.zoneName}}</i>
-                <p>镜像系统：{{gpuDetail.template}}</p>
-                <p>到期时间/有效期：{{gpuDetail.case_type == 3 ? '无' : gpuDetail.endTime}}</p>
-                <p>内网地址：{{gpuDetail.privateIp}}</p>
-              <p>登录密码：  <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword">{{codePlaceholder}}</span></p>
-            </div>
-            <div class="host_box">
-              <p>所属VPC：<span>{{gpuDetail.vpc}}</span></p>
-              <p>绑定公网：<span>{{gpuDetail.publicIp}}</span></p>
-              <div>所属负载均衡：
-                <Tooltip placement="top-start" v-if="gpuDetail.loadbalance.length>0">
-                  <span class="bluetext one-row-text" style="width:100px;">{{gpuDetail.loadbalance.join('|')}}</span>
-                  <div slot="content" v-for="(item,index) in gpuDetail.loadbalance" :key="index">
-                    <p>{{item}}</p>
-                  </div>
-                </Tooltip>
-                <span class="bluetext" style="width:0px;" v-else>{{gpuDetail.loadbalance.join('|')}}</span>
-              </div>
-              <div>挂载磁盘：
-                <Tooltip placement="top-start" v-if="gpuDetail.disk.length>0">
-                  <span class="bluetext one-row-text"  style="width:120px;">{{gpuDetail.disk.join('|')}}</span>
-                  <div slot="content" v-for="(item,index) in gpuDetail.disk" :key="index">
-                    <p>{{item}}</p>
-                  </div>
-                </Tooltip>
-                <span class="bluetext" style="width:0px;" v-else>{{gpuDetail.disk.join('|')}}</span>
-              </div>
-            </div> 
-            <div class="host_box">
-              <p>计费类型：{{gpuDetail.case_type == 1 ?'包年计费':gpuDetail.case_type == 2 ? '包月计费' : gpuDetail.case_type == 3 ? '实时计费' :''}}</p>
-              <p>创建于：{{gpuDetail.createTime}}</p>
-              <p>自动续费：<span>{{gpuDetail.isAutoRenw == 1 ? '开' : '关'}}</span></p>
-            </div>
-          </div> -->
         </div>
-        
-        <div class="tabs">
-          <Tabs class="tabpane" type="card" :animated="false">
-            <TabPane label="基础信息">
-                <div class="tabs-info">
-                    <p>主机信息<span >[设置]</span></p>
-                    <div class="info-subject">
-                        <div>
-                            <p>镜像系统</p><span>{{gpuDetail.template}}</span>
-                        </div>
-                        
-                        <p>系统盘容量 <span></span></p>
-                        <p>数据盘容量</p>
-                        <p>登陆密码</p>
-                        <p>主机状态</p>
-                    </div>
+        <div class="config-type">
+          <ul v-for="item in configTypes" :class="{selected: configType == item}" @click="changeTabs(item)">{{ item }}</ul>
+        </div>
+        <div class="config-info">
+          <div class="tab-1" v-if="configType == '基础信息' ">
+                <div>
+                   <p>主机信息</p>  
+                  <ul>
+                    <li><span class="one">镜像系统</span><span class="two">{{ gpuDetail.template}}</span><span class="three" @click="modifyMirror"> [修改]</span></li>
+                    <li><span class="one">系统盘容量</span><span class="two">{{ gpuDetail.rootDiskSize}}G</span></li>
+                    <li><span class="one">数据盘容量</span><span class="two">{{ gpuDetail.diskSize}}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three" @click="diskUnload"> / 卸载]</span></li>
+                    <li><span class="one">登陆密码</span><span class="two">{{ gpuDetail.template}}</span><span class="three" v-if="codePlaceholder == '发送密码'" @click="showWindow.lookPassword = true"> [{{codePlaceholder}}]</span>
+                      <span class="two" v-else> [{{codePlaceholder}}]</span></li>
+                    <li><span class="one">主机状态</span> <span  class="two">{{ gpuDetail.computerStatus? '开机': '关机' }}</span></li>
+                  </ul>
                 </div>
-                 <div class="tabs-info">
-                    <p>网络信息<span >[设置]</span></p>
-                    <div class="info-subject">
-                        <div>
-                            <p>所属VPC</p><span>{{gpuDetail.vpc}}</span>
-                        </div>
-                        
-                        <p>所属子网</p><span>{{gpuDetail.networkName}}</span>
-                        <p>内网IP <span>{{gpuDetail.privateIp?gpuDetail.privateIp:'----'}}</span></p>
-                        <p>外网IP <span>{{gpuDetail.publicIp? gpuDetail.publicIp : '----'}}</span></p>
-                        <p>带宽 <span>{{ gpuDetail.bandwith?gpuDetail.bandwith: '0'}}M</span></p>
-                        <p>负载均衡</p>
-                        <p>NAT网关</p>
-                    </div>
+                 <div>
+                   <p>网络信息</p>
+                    <ul>
+                      <li><span class="four">所属VPC</span>
+                        <span class="three" v-if="gpuDetail.vpc" @click="toOther('vpc')">{{ gpuDetail.vpc}}</span>
+                        <span v-else class="two">----</span></li>
+                      <li><span class="four">所属子网</span>
+                        <span class="three" v-if="gpuDetail.networkName" @click="toOther('vpc')">{{ gpuDetail.networkName}}</span>
+                        <span v-else class="two">----</span></li>
+                      <li><span class="four">内网IP</span><span class="two">{{ gpuDetail.privateIp?gpuDetail.privateIp:'----'}}</span></li>
+                      <li><span class="four">外网IP</span><span class="two">{{ gpuDetail.publicIp? gpuDetail.publicIp : '----'}}</span>
+                        <span :class="{three: bindForm.unbindText == '解绑IP'}" v-if="gpuDetail.publicIp" @click="unbindIp"> [{{ bindForm.unbindText}}]</span>
+                        <span :class="{three: bindForm.bindIpText == '绑定IP' }" v-else @click="bindIP"> [{{ bindForm.bindIpText }}]</span></li>
+                      <li><span class="four">带宽</span><span class="two">{{ gpuDetail.bandwith?gpuDetail.bandwith: '0'}}M</span>
+                        <span class="three" v-if="gpuDetail.bandwith" @click="adjustIP"> [扩容]</span></li>
+                      <li><span class="four">负载均衡</span><span class="two">{{(gpuDetail.loadbalance + '') ? gpuDetail.loadbalance + '' : '----'}}</span></li>
+                      <li><span class="four">NAT网关</span><span class="two">{{ gpuDetail.netGateway? gpuDetail.netGateway : '----'}}</span></li>
+                    </ul>
                 </div>
-                 <div class="tabs-info">
-                    <p>安全信息<span >[设置]</span></p>
-                    <div class="info-subject">
-                        <div>
-                            <p>安全组</p><span>{{gpuDetail.template}}</span>
-                        </div>
-                        
-                        <p>开放端口</p>
-                    </div>
+                 <div>
+                    <p>安全信息</p>
+                    <ul>
+                      <li><span class="four">安全组</span><span :class="{three: gpuDetail.firewall}" @click="toOther('firewall')"> {{ gpuDetail.firewall ? gpuDetail.firewall: '----'}}</span>
+                      </li>
+                      <li><span class="four">开放端口</span><span class="two"> {{gpuDetail.ports? gpuDetail.ports: '----' }}</span></li>
+                    </ul>
                 </div>
-                 <div class="tabs-info">
-                    <p>资费信息<span >[设置]</span></p>
-                    <div class="info-subject">
-                        <div>
-                            <p>计费类型</p><span>{{gpuDetail.template}}</span>
-                        </div>
-                        <p>自动续费</p>
-                        <p>创建时间 <span>{{gpuDetail.createTime}}</span></p>
-                        <p>到期时间 <span>{{gpuDetail.endTime}}</span></p>
-                    </div>
+                 <div>
+                  <p>资费信息</p>
+                  <ul>
+                    <li><span class="four">计费类型</span><span
+                      class="two"> {{ gpuDetail.case_type == 1 ? '包年' : gpuDetail.casetype == 2 ? '包月' : gpuDetail.casetype == 3 ? '实时' : '七天'}}</span></li>
+                    <li><span class="four">自动续费</span>
+                      <i-switch size="small" style="position: relative;top: -2px;" v-model="isAutoRenew" @on-change="changAutoRenew"></i-switch>
+                    </li>
+                    <li><span class="four">创建时间</span><span class="two"> {{ gpuDetail.createTime}}</span></li>
+                    <li><span class="four">到期时间</span><span class="two"> {{ gpuDetail.endTime}}</span></li>
+                  </ul>
                 </div>
-            </TabPane>
-            <TabPane style="background: #FFFFFF;" label="主机监控">
-              <!--CPU利用率-->
-              <div class="tab_box">
-                <!--<Button type="primary" @click="setMonitoring">监控警告设置</Button>-->
+          </div>
+          <div class="tab-2" v-if="configType == '主机监控'">
+            <div class="tab_box">
                 <div class="title-Png">
                   <span>CPU利用率</span>
                   <span style="float: right">{{CPUTime}}</span>
@@ -166,16 +125,35 @@
                 </div>
               </div>
               </div>
-
-            </TabPane>
-            <TabPane label="安全组">
-              <div class="tab_box">
-                
+          </div>
+          <div class="tab-3" v-if="configType == '防火墙'">
+            <div class="content">
+              <div class="tab-3-title">
+                <span>{{ gpuDetail.firewall ? gpuDetail.firewall: '----'}}</span>
+                <span style="margin-left: 40px">所属Vpc：<span @click="toOther('vpc')">{{gpuDetail.vpc}}</span></span>
+                <RadioGroup v-model="tab3.rule" type="button" style="float: right" @on-change='tab3RadioChange'>
+                  <Radio label="出站规则"></Radio>
+                  <Radio label="入站规则"></Radio>
+                </RadioGroup>
               </div>
-            </TabPane>
-            <!--操作日志-->
-            <TabPane label="操作日志">
-              <div class="tab_box">
+              <div class="firewal">
+                <div>
+                  <Button type="primary" @click="showWindow.createRule = true">创建规则</Button>
+                  <!-- <Button type="primary" style="margin-left:10px;" @click="del('')">删除</Button> -->
+                  <!-- <Button >开启所有端口</Button>
+                  <Button >关闭所有端口</Button>
+                  <Button >恢复默认</Button> -->
+                </div>
+                <div class="selectMark">
+                  <img src="../../assets/img/host/h-icon10.png"/>
+                  <span>共 {{tab3.totalLenght}} 项 | 已选择 <span style="color:#FF624B;">{{selectLenght}}</span>项</span>
+                </div>
+                <Table :columns='tab3.firewalList' :data='tab3.firewalData' :loading='tab3.firewalLoading' @on-selection-change="firewalSelectionChange"></Table>
+              </div>
+            </div>
+          </div>
+          <div class="tab-5" v-if="configType == '操作日志'">
+            <div class="tab_box">
                 <p style="margin-bottom: 10px">操作日志</p>
                 <div style="display: inline-block">
                   <ul class="objectList">
@@ -195,35 +173,7 @@
                   </div>
                 </div>
               </div>
-            </TabPane>
-            <!--修改密码-->
-            <TabPane label="修改密码">
-              <div class="tab_box">
-                <label>修改密码</label>
-                <Form ref="resetPasswordForm" :model="resetPasswordForm" label-position="left" :label-width="100"
-                      style="margin-top:20px;"
-                      :rules="resetRuleValidate">
-                  <Form-item label="请输入旧密码" prop="oldPassword">
-                    <Input v-model="resetPasswordForm.oldPassword" placeholder="请输入旧密码" type="password"
-                           style="width:250px;"></Input>
-                  </Form-item>
-                  <Form-item label="请输入新密码" prop="newPassword">
-                    <Input v-model="resetPasswordForm.newPassword" placeholder="请输入不小于六位数的新密码" type="password"
-                           style="width:250px;"></Input>
-                  </Form-item>
-                  <Form-item label="请确认新密码" prop="confirmPassword">
-                    <Input v-model="resetPasswordForm.confirmPassword" placeholder="请确认新密码" type="password"
-                           style="width:250px;"></Input>
-                  </Form-item>
-                  <Form-item>
-                    <Button type="primary" size="small" @click="resetConfirm('resetPasswordForm')">
-                      {{resetPasswordForm.buttonMessage}}
-                    </Button>
-                  </Form-item>
-                </Form>
-              </div>
-            </TabPane>
-          </Tabs>
+          </div>
         </div>
 
       </div>
@@ -308,65 +258,303 @@
       </Modal>
 
         <!-- 修改主机名称 -->
-    <Modal v-model="showWindow.rename" width="550" :scrollable="true">
+      <Modal v-model="showWindow.rename" width="550" :scrollable="true">
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">主机重命名</span>
+        </p>
+        <div class="universal-modal-content-flex">
+          <Form :model="renameForm" ref="renameForm" :rules="renameFormRule">
+            <Form-item label="主机名" prop="hostName">
+              <Input v-model="renameForm.hostName" placeholder="请输入新主机名" :maxlength="15"></Input>
+            </Form-item>
+          </Form>
+        </div>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="ghost" @click="showWindow.rename = false">取消</Button>
+          <Button type="primary" @click="checkRenameForm">确定</Button>
+        </div>
+      </Modal>
+      <!-- 创建规则 -->
+      <Modal v-model="showWindow.createRule" width="550" :scrollable="true">
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">创建规则</span>
+        </p>
+        <div class="universal-modal-content-flex">
+          <Form ref="newRuleFormValidate" :model="newRuleForm" :rules="ruleValidate">
+            <Form-item label="名称" prop="name">
+              <Input v-model="newRuleForm.name" placeholder="请输入..."></Input>
+            </Form-item>
+            <Form-item label="方向" prop="way">
+              <Select v-model="newRuleForm.way" placeholder="请选择">
+                <Option value="Egress">
+                  出站规则
+                </Option>
+                <Option value="Ingress">
+                  入站规则
+                </Option>
+              </Select>
+            </Form-item>
+            <Form-item label="协议" prop="protocol">
+              <Select v-model="newRuleForm.protocol" placeholder="请选择">
+                <Option v-for="item in newRuleForm.protocolOptions" :value="item" :key="item">
+                  {{item}}
+                </Option>
+              </Select>
+            </Form-item>
+            <Form-item label="CIDR" prop="cidr">
+              <Input v-model="newRuleForm.cidr" placeholder="请输入IP地址..."></Input>
+            </Form-item>
+            <!--<Form-item label="优先级（数字越小优先级越高）">
+              <InputNumber v-model="newRuleForm.itemid" :max="10" :min="1"></InputNumber>
+            </Form-item>-->
+            <Form-item label="起始端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
+              <InputNumber v-model="newRuleForm.startPort" :max="65535" :min="0" :precision="0"></InputNumber>
+            </Form-item>
+            <Form-item label="结束端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
+              <InputNumber v-model="newRuleForm.endPort" :max="65535" :min="0" :precision="0"></InputNumber>
+            </Form-item>
+            <Form-item label="行为" prop="access">
+              <Select v-model="newRuleForm.access" placeholder="请选择">
+                <Option value="Allow">
+                  接受
+                </Option>
+                <Option value="Deny">
+                  拒绝
+                </Option>
+              </Select>
+            </Form-item>
+          </Form>
+        </div>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="ghost" @click="showWindow.createRule = false">取消
+          </Button>
+          <Button type="primary" @click="handleSubmit">确定
+          </Button>
+        </div>
+      </Modal>
+      <!-- 修改镜像重装系统 -->
+      <Modal v-model="showWindow.mirrorModify" width="550" :scrollable="true">
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">修改镜像系统</span>
+        </p>
+        <div class="universal-modal-content-flex">
+          <p class="modal-p">*提示：重装主机后，将无法找回系统盘数据。数据盘需要重新挂载，请按照帮助中心中的指导说明进行。</p>
+          <Form :model="mirrorModifyForm" ref="mirrorModifyForm" :rules="mirrorModifyFormRule">
+            <Form-item label="选择镜像" style="width: 70%" prop="system">
+              <Cascader :data="osOptions" v-model="mirrorModifyForm.system"></Cascader>
+            </Form-item>
+            <Form-item label="控制台密码" style="width: 70%" prop="consolePassword">
+              <Input v-model="mirrorModifyForm.consolePassword" type="password" placeholder="请输入控制台登录密码"></Input>
+            </Form-item>
+          </Form>
+        </div>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="ghost" @click="showWindow.mirrorModify = false">取消</Button>
+          <Button type="primary" @click="resetSystem" :disabled="mirrorModifyForm.buttonText == '重装中'">{{mirrorModifyForm.buttonText}}</Button>
+        </div>
+      </Modal>
+
+      <!-- 确认系统重装弹窗 -->
+    <Modal v-model="showWindow.reload" :scrollable="true" :closable="false" :width="390">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">主机重命名</span>
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">警告</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">为了数据安全，系统重装之前主机会自动关闭。重装结束后，主机会自动开机。</p>
+          <p>请输入“confirm”</p>
+          <Input v-model="reloadHintForm.input" placeholder="请输入“confirm”"
+                 style="width: 300px;margin-top: 10px;"></Input>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showWindow.reload=false">取消</Button>
+        <Button type="primary" @click="resetSystem_ok" :disabled="reloadHintForm.input!='confirm'">确定</Button>
+      </p>
+    </Modal>
+
+    <!-- 挂载硬盘模态框 -->
+    <Modal v-model="showWindow.mountDisk" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">挂载云硬盘</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="renameForm" ref="renameForm" :rules="renameFormRule">
-          <Form-item label="主机名" prop="hostName">
-            <Input v-model="renameForm.hostName" placeholder="请输入新主机名" :maxlength="15"></Input>
+        <Form :model="diskMountForm" :rules="mountRuleValidate" ref="mountDisk">
+          <Form-item label="可挂载磁盘列表" prop="mountDisk">
+            <Select v-model="diskMountForm.mountDisk" placeholder="请选择">
+              <Option v-for="(item,index) in diskMountForm.diskList" :key="index" :value="item.diskid">{{ item.diskname}}
+              </Option>
+            </Select>
+          </Form-item>
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 45%;"
+                @click="$router.push('/buy/disk/')">
+              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
+              购买磁盘
+            </span>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showWindow.mountDisk = false">取消</Button>
+        <Button type="primary" @click="mountDisk_ok">确认挂载</Button>
+      </div>
+    </Modal>
+    <!-- 修改密码 -->
+    <Modal v-model="showWindow.modifyPassword" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">修改密码</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="modifyPasswordForm" ref="modifyPassword" :rules="modifyPasswordFormRule">
+          <FormItem label="当前密码" prop="oldPassword" style="width: 80%;margin-bottom: 10px">
+            <Input type="password" :type="modifyPasswordForm.oldPasswordInput" v-model="modifyPasswordForm.oldPassword"></Input>
+            <img class="modal-img" @click="changeLoginPasType(1)" src="../../assets/img/login/lr-icon3.png"/>
+          </FormItem>
+          <FormItem label="新的密码" prop="newPassword" style="width: 80%;margin-bottom: 10px">
+            <Input type="password" :type="modifyPasswordForm.newPasswordInput" v-model="modifyPasswordForm.newPassword"></Input>
+            <img class="modal-img" @click="changeLoginPasType(2)" src="../../assets/img/login/lr-icon3.png"/>
+          </FormItem>
+          <FormItem label="确认密码" prop="confirmPassword" style="width: 80%;margin-bottom: 10px">
+            <Input type="password" :type="modifyPasswordForm.confirmPasswordInput" v-model="modifyPasswordForm.confirmPassword"></Input>
+            <img class="modal-img" @click="changeLoginPasType(3)" src="../../assets/img/login/lr-icon3.png"/>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showWindow.modifyPassword = false">取消</Button>
+        <Button type="primary" @click="modifyPassword_ok">确认修改</Button>
+      </div>
+    </Modal>
+
+    <!-- 绑定ip时，没有公网ip提示 -->
+    <Modal v-model="showWindow.publicIPHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">您还未拥有公网IP，请先创建公网IP。</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showWindow.publicIPHint = false">取消</Button>
+        <Button type="primary" @click="$router.push('/buy/elasticip/')">创建公网IP</Button>
+      </p>
+    </Modal>
+    <!-- 绑定静态IP -->
+    <Modal v-model="showWindow.bindIP" width="590" :scrollable="true">
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">绑定IP</span>
+      </div>
+      <div class="universal-modal-content-flex">
+        <Form :model="bindForm" ref="bindForm" :rules="bindFormRule">
+          <Form-item label="选择弹性IP" prop="publicIP">
+            <Select v-model="bindForm.publicIP" placeholder="请选择">
+              <Option v-for="(item,index) in publicIPList" :key="index" :value="item.publicipid">
+                {{item.publicip}}
+              </Option>
+            </Select>
+            <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
+              <span style="font-weight:800;font-size:20px;">+</span>
+              <span style="cursor:pointer;" @click="$router.push('/buy/elasticip/')">购买弹性IP</span>
+            </span>
           </Form-item>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="showWindow.rename = false">取消</Button>
-        <Button type="primary" @click="checkRenameForm">确定</Button>
+        <Button type="ghost" @click="showWindow.bindIP = false">取消</Button>
+        <Button type="primary" @click="bindIp_ok('bindForm')">确定
+        </Button>
       </div>
     </Modal>
-
-      <!-- 回滚确认弹窗 -->
-      <!--<Modal v-model="showWindow.rollback" :scrollable="true" :closable="false" :width="390">-->
-        <!--<div class="modal-content-s">-->
-          <!--<Icon type="android-alert" class="yellow f24 mr10"></Icon>-->
-          <!--<div>-->
-            <!--<strong>主机回滚</strong>-->
-            <!--<p class="lh24">是否确定回滚主机</p>-->
-            <!--<p class="lh24">提示：您正使用<span class="bluetext">{{snapsDetails.snapshotname}}</span>回滚<span-->
-              <!--class="bluetext">{{snapsDetails.name}}</span>至<span-->
-              <!--class="bluetext">{{snapsDetails.addtime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<p slot="footer" class="modal-footer-s">-->
-          <!--<Button @click="showWindow.rollback = false">取消</Button>-->
-          <!--<Button type="primary" @click="goBackSnapshot">确定</Button>-->
-        <!--</p>-->
-      <!--</Modal>-->
+    <!-- 解绑公网ip确认框 -->
+    <Modal v-model="showWindow.unbindIP" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">解绑IP</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">您确认解绑主机的公网IP吗
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showWindow.unbindIP = false">取消</Button>
+        <Button type="primary" @click="unbind_ok">确认解绑</Button>
+      </p>
+    </Modal>
+    <!-- 带宽调整 -->
+    <Modal v-model="showWindow.adjust" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">带宽调整</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="adjustForm" label-position="left">
+          <Form-item label="带宽" style="width: 80%">
+            <div style="width:300px;display: inline-block;vertical-align: middle;margin-left: 11px">
+              <Slider v-model='adjustForm.brand' show-input :min='adjustForm.minBrand'></Slider>
+            </div>
+            <span>Mbps</span>
+          </Form-item>
+          <Form-item label="应付差价：" style="width: 80%">
+            <span style="font-family: Microsoft YaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{adjustForm.cost}}
+            </span>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showWindow.adjust = false">取消</Button>
+        <Button type="primary" @click="adjustOK" :disabled="adjustForm.brand == adjustForm.minBrand">确定
+        </Button>
+      </div>
+    </Modal>
     </div>
 </template>
 
 <script>
   import axios from 'axios'
   import $store from '@/vuex'
+  import {debounce} from 'throttle-debounce'
   var urlList = {
     dayURL: 'alarm/getVmAlarmByHour.do',
     otherURL: 'alarm/getVmAlarmByDay.do'
   }
+  import regExps from '../../util/regExp'
   import cpuOptions from "@/echarts/cpuUtilization"
   import momeryOptions from  "@/echarts/memory"
   const momery = JSON.stringify(momeryOptions);
   const cpu = JSON.stringify(cpuOptions);
-
+  const validateCdir = (rule, value, callback) => {
+    var re = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/(\d|[1-2]\d|3[0-2])$/
+    if (!value) {
+      return callback(new Error('CIDR不能为空'));
+    } else {
+      if (!re.test(value)) {
+        callback(new Error('请输入正确的CIDR'));
+      } else {
+        callback();
+      }
+    }
+  }
   export default {
     data(){
       var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
-      const validateoldPassword = (rule, value, callback) => {
-        if (!value) {
-          callback(new Error('密码不能为空'));
-        } /*else if (!regExp.test(value)) {
-          callback(new Error('密码由6位以上的字母数字组成，必须包含大小写字母、数字'));
-        } */else {
-          callback();
+      const validaRegisteredPassWord = (rule, value, callback) => {
+        if (value.length < 8 || value.length > 30) {
+          callback(new Error('密码长度8-30字符'));
+        } else if (!regExp.registerPasswordVail(value)) {
+          callback(new Error('密码必须包含数字和字母大小写,不限特殊字符和空格'));
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredPassWordTwo = (rule, value, callback) => {
+        if (this.modifyPasswordForm.newPassword != value) {
+          callback(new Error('两次输入的密码不一致'));
+        } else {
+          callback()
         }
       }
       const validatePassword = (rule, value, callback) => {
@@ -399,6 +587,14 @@
           callback();
         }
       }
+      const validaSystem = (rule, value, callback) => {
+        if (value.length == 0) {
+          callback(new Error('请选择镜像系统'));
+        } else {
+          callback();
+        }
+      }
+      const validaRegisteredName = regExps.validaRegisteredName
       return{
         indexs:0,
         cpu:JSON.parse(cpu),
@@ -410,7 +606,7 @@
           ids:'',
         //gpuName
         gpuName:sessionStorage.getItem('gpu_name'),
-
+        isAutoRenew:'',
         //cpu统计图
         dayList:[
           {
@@ -529,25 +725,23 @@
         logTime:'',
         currentPage:1,
 
-        //修改密码
-        resetPasswordForm:{
-          oldPassword:'',
-          newPassword:'',
-          confirmPassword:'',
-          buttonMessage:'确认重置'
+        publicIPList: [],
+        bindForm: {
+          publicIP: '',
+          bindIpText: '绑定IP',
+          unbindText: '解绑IP'
         },
-        resetRuleValidate:{
-          oldPassword: [
-            {required: true, validator: validateoldPassword, trigger: 'blur'}
-          ],
-          newPassword: [
-            {required: true, validator: validatePassword, trigger: 'blur'}
-          ],
-          confirmPassword: [
-            {required: true, validator: validatePassCheck, trigger: 'blur'}
-          ],
+        bindFormRule: {
+          publicIP: [
+            {required: true, message: '请选择', trigger: 'change'}
+          ]
         },
-
+        adjustForm: {
+          minBrand: 0,
+          brand: 0,
+          cost: '0',
+          caseType: 0
+        },
         //发送密码
         isActive:true,
         codePlaceholder:'发送密码',
@@ -561,7 +755,37 @@
             {required:true,message:'请输入密码',trigger:'blur'}
           ]
         },
-
+        newRuleForm: {
+          name: '',
+          way: '',
+          protocol: '',
+          protocolOptions: ['TCP', 'UDP', 'ICMP', 'ALL'],
+          endPort: 1,
+          startPort: 1,
+          access: '',
+          cidr: '0.0.0.0/0',
+          itemid: 1,
+        },
+        ruleValidate: {
+          name: [
+            {required: true, validator: validaRegisteredName, trigger: 'change'}
+          ],
+          way: [
+            {required: true, message: '请选择方向', trigger: 'change'},
+          ],
+          protocol: [
+            {required: true, message: '请选择协议', trigger: 'change'}
+          ],
+          itemid: [
+            {required: true, message: '请填写优先级', trigger: 'change'},
+          ],
+          access: [
+            {required: true, message: '请选择行为', trigger: 'change'},
+          ],
+          cidr: [
+            {required: true, validator: validateCdir, trigger: 'blur'}
+          ]
+        },
 
         //Gpu服务器详情
         gpuDetail:{},
@@ -572,9 +796,65 @@
           warningSetting:false,
           lookPassword:false,
           rollback:false,
-          rename:false
+          rename:false,
+          createRule:false,
+          mirrorModify:false,
+          reload:false,
+          mountDisk:false,
+          modifyPassword:false,
+          publicIPHint: false,
+          bindIP: false,
+          unbindIP: false,
+          adjust:false
+        },
+        mirrorModifyForm: {
+          system: [],
+          consolePassword: '',
+          buttonText: '确认重装'
+        },
+        mirrorModifyFormRule: {
+          system: [
+            {required: true, validator: validaSystem, trigger: 'change'}
+          ],
+          consolePassword: [
+            {required: true, message: '请输入控制台登录密码', trigger: 'blur'}
+          ]
+        },
+        osOptions: [],
+        reloadHintForm: {
+          input: ''
         },
 
+        modifyPasswordForm: {
+          oldPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+          oldPasswordInput: 'password',
+          newPasswordInput: 'password',
+          confirmPasswordInput: 'password',
+        },
+        modifyPasswordFormRule: {
+          oldPassword: [
+            {required: true, message: '请输入旧密码', trigger: 'blur'},
+          ],
+          newPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: validaRegisteredPassWord, trigger: 'blur'}
+          ],
+          confirmPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: validaRegisteredPassWordTwo, trigger: 'blur'}
+          ],
+        },
+        diskMountForm: {
+          mountDisk: '',
+          diskList: []
+        },
+        mountRuleValidate: {
+          mountDisk: [
+            {required: true, message: '请选择挂载的磁盘', trigger: 'change'}
+          ]
+        },
         //告警设置字段
         setList: [
           {
@@ -644,11 +924,84 @@
             {
                 hostName:{required:'true',message:'请输入主机名称',trigger:'blur'}
             }
-        ]    
+        ],    
+        configType: '基础信息',
+        configTypes: ['基础信息', '主机监控', '防火墙', '操作日志'],
+        tab3: {
+          rule: '出站规则',
+          id: '',
+          totalLenght: 0,
+          selectLenght: 0,
+          firewalLoading: false,
+          firewalList: [
+            {
+              type: 'selection',
+              width: 55,
+              align: 'center'
+            },
+            {
+              title: '安全组名称',
+              key: 'acllistitemname'
+            },
+            {
+              title: '协议',
+              key: 'agreement'
+            },
+            {
+              title: '行为',
+              key: 'operation'
+            },
+            {
+              title: '起始端口',
+              key: 'startport'
+            },
+            {
+              title: '结束端口',
+              key: 'endport'
+            },
+            {
+              title: 'CIDR',
+              key: 'cidr'
+            },
+            {
+              title: '操作',
+              render: (h, params) => {
+                return h('div', [
+                  h('span', {
+                    style: {color: '#FF0000', cursor: 'pointer'}, on: {
+                      click: () => {
+                        this.del(params.row.id);
+                      }
+                    }
+                  }, '删除'),
+                  // h('span',{style:{margin:'0 10px',color:'#999999'}},'|'),
+                  // h('span',{style:{color:'#2A99F2',cursor:'pointer'}},'修改规则')
+                ])
+              }
+            }
+          ],
+          firewalData: []
+        },
       }
     },
     methods:{
-
+       changeTabs(item) {
+        this.configType = item;
+        switch (item) {
+          case '基础信息':
+            this.getGpuHostDetail()
+            break
+          case '主机监控':
+            this.getUtilization()
+            break
+          case '防火墙':
+            this.getAclList()
+            break
+          case '操作日志':
+            this.selectOperationLog()
+            break
+        }
+      },
       //获取GPU服务器详情
       getGpuHostDetail(){
         axios.get('gpuserver/listGpuServerById.do',{
@@ -660,6 +1013,7 @@
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.gpuDetail = res.data.result;
+            this.isAutoRenew = Boolean(this.gpuDetail.isAutoRenw)
           }
         })
       },
@@ -997,7 +1351,7 @@
       checkRenameForm() {
         this.$refs.renameForm.validate((valid) => {
           if (valid) {
-            this.showModal.rename = false
+            this.showWindow.rename = false
             this.$http.post('information/changeVmName.do', {
               vmId: this.hostCurrentSelected.computerid,
               name: this.renameForm.hostName
@@ -1016,9 +1370,387 @@
         })
       },
 
+      tab3RadioChange() {
+        this.getAclList();
+      },
+      // 获取防火墙
+      getAclList() {
+        this.tab3.firewalLoading = true;
+        this.$http.get('network/listaclListItem.do', {
+          params: {
+            aclListId: this.gpuDetail.firewallId
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (this.tab3.rule == '出站规则') {
+              this.tab3.selectLenght = 0;
+              this.tab3.firewalData = response.data.result.down;
+              this.tab3.totalLenght = response.data.result.down.length;
+              this.tab3.firewalLoading = false;
+            }
+            if (this.tab3.rule == '入站规则') {
+              this.tab3.selectLenght = 0;
+              this.tab3.firewalData = response.data.result.up;
+              this.tab3.totalLenght = response.data.result.up.length;
+              this.tab3.firewalLoading = false;
+            }
+          } else {
+            this.$Message.info({
+              content: response.data.message,
+              duration: 5
+            })
+            this.tab3.firewalLoading = false;
+          }
+        }).catch(err => {
+          if (err)
+            this.tab3.firewalLoading = false;
+        })
+      },
+
+      firewalSelectionChange(selection) {
+        this.tab3.selectLenght = selection.length;
+        selection.forEach(item => {
+          this.tab3.id += item.id + ','
+        })
+      },
+
+      handleSubmit() {
+        this.$refs.newRuleFormValidate.validate(validate => {
+            if (validate) {
+              if (this.newRuleForm.protocol == 'ALL' || this.newRuleForm.protocol == 'ICMP') {
+                this.newRuleForm.startPort = 1
+                this.newRuleForm.endPort = 65535
+              }
+              this.showWindow.createRule = false
+              let data = {
+                acllistitemname: this.newRuleForm.name,
+                //itemid: this.newRuleForm.itemid,
+                agreement: this.newRuleForm.protocol,
+                operation: this.newRuleForm.access == 'Allow' ? '接受' : '拒绝',
+                _status: 1
+              }
+              if (this.newRuleForm.way != 'Egress') {
+                this.tab3.firewalData.push(data);
+                this.tab3.rule = '入站规则';
+              } else {
+                this.tab3.firewalData.push(data);
+                this.tab3.rule = '出站规则';
+              }
+              //this.loadingMessage = '正在创建规则，请稍候'
+              //this.loading = true
+              this.$http.get('network/createNetworkACL.do', {
+                params: {
+                  name: this.newRuleForm.name,
+                  way: this.newRuleForm.way,
+                  protocol: this.newRuleForm.protocol,
+                  //itemid: this.newRuleForm.itemid,
+                  cdir: this.newRuleForm.cidr,
+                  startport: this.newRuleForm.startPort,
+                  endport: this.newRuleForm.endPort,
+                  acllistid: this.gpuDetail.firewallId,
+                  access: this.newRuleForm.access
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  //this.loading = false
+                  this.$Message.success({
+                    content: response.data.message
+                  })
+                  this.getAclList();
+                } else {
+                  this.getAclList();
+                  //this.loading = false
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+              })
+            }
+          }
+        )
+      },
+
+      getMirrorList() {
+        let url = 'information/getTemplateAndTemplateFunction.do'
+        this.$http.get(url, {
+          params: {}
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.osOptions = res.data.result
+          } else {
+            this.$Message.info(res.data.message)
+          }
+        })
+      },
+
+      modifyMirror() {
+        this.getMirrorList()
+        this.showWindow.mirrorModify = true
+      },
+
+      resetSystem() {
+        this.$refs.mirrorModifyForm.validate((valid) => {
+          if (valid) {
+            this.showWindow.reload = true
+          }
+        })
+      },
+      resetSystem_ok() {
+        this.showWindow.reload = false
+        this.mirrorModifyForm.buttonText = '重装中'
+        this.$http.post('information/restoreVirtualMachine.do', {
+          VMId: this.gpuDetail.computerid,
+          templateId: this.mirrorModifyForm.system[1],
+          adminPassword: this.mirrorModifyForm.consolePassword
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.showWindow.mirrorModify = false
+            this.mirrorModifyForm.buttonText = '确认重装'
+            this.mirrorModifyForm.system = []
+            this.mirrorModifyForm.consolePassword = ''
+            this.$Message.success('系统重装成功')
+            this.getGpuHostDetail()
+          } else {
+            this.mirrorModifyForm.buttonText = '确认重装'
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+       
+     
+      // 挂载磁盘
+      diskMount() {
+        this.getDiskList()
+        this.showWindow.mountDisk = true
+      },
+      getDiskList() {
+        let url = 'Disk/listDisk.do'
+        this.$http.get(url, {
+          params: {
+            isCanAttach: '1'
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.diskMountForm.diskList = res.data.result
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      mountDisk_ok() {
+        this.$refs.mountDisk.validate((valid) => {
+          if (valid) {
+            this.$Message.info('磁盘正在挂载，请稍候。。。')
+            this.showWindow.mountDisk = false
+            this.$http.get('Disk/attachVolume.do', {
+              params: {
+                diskId: this.diskMountForm.mountDisk,
+                VMId: this.gpuDetail.computerid
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.info({
+                  content: response.data.message,
+                })
+                this.getGpuHostDetail()
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      modifyPassword_ok() {
+        this.$refs.modifyPassword.validate((valid) => {
+          if (valid) {
+            this.showWindow.modifyPassword = false
+            let url = 'information/resetPasswordForVirtualMachine.do'
+            this.$http.get(url, {
+              params: {
+                VMId:this.gpuDetail.computerid,
+                password: this.modifyPasswordForm.newPassword,
+                oldPassword: this.modifyPasswordForm.oldPassword
+              }
+            }).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+                this.$Message.info({
+                  content: res.data.message,
+                })
+                this.getGpuHostDetail()
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      changeLoginPasType(val) {
+        switch (val) {
+          case 1:
+            this.modifyPasswordForm.oldPasswordInput == 'password' ? this.modifyPasswordForm.oldPasswordInput = 'text' : this.modifyPasswordForm.oldPasswordInput = 'password'
+            break
+          case 2:
+            this.modifyPasswordForm.newPasswordInput == 'password' ? this.modifyPasswordForm.newPasswordInput = 'text' : this.modifyPasswordForm.newPasswordInput = 'password'
+            break
+          case 3:
+            this.modifyPasswordForm.confirmPasswordInput == 'password' ? this.modifyPasswordForm.confirmPasswordInput = 'text' : this.modifyPasswordForm.confirmPasswordInput = 'password'
+            break
+        }
+      },
+      toOther(val) {
+        switch (val) {
+          case 'vpc':
+            sessionStorage.setItem('vpcId', this.gpuDetail.vpcId)
+            this.$router.push('vpcManage')
+            break
+          case 'firewall':
+            if (this.gpuDetail.firewall) {
+              sessionStorage.setItem('firewallId', this.gpuDetail.firewallId)
+              this.$router.push('firewallManage')
+            }
+            break
+        }
+      },
+      changAutoRenew() {
+        if (this.gpuDetail.casetype != 2 && this.gpuDetail.casetype != 1) {
+          this.getGpuHostDetail()
+          return
+        }
+        let url = 'information/setAutoRenew.do'
+        this.$http.get(url, {
+          params: {
+            type: 'host',
+            id: this.gpuDetail.id,
+            flag: this.isAutoRenew ? '1' : '0'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.$Message.info(res.data.message)
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      }, 
+      
+      bindIP() {
+        if (this.bindForm.bindIpText != '绑定IP') {
+          return
+        }
+        this.bindForm.publicIP = ''
+        this.$http.get('network/listPublicIp.do', {
+          params: {
+            useType: 0,
+            vpcId: this.gpuDetail.vpcId
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.publicIPList = response.data.result
+            if (this.publicIPList == '') {
+              this.showWindow.publicIPHint = true
+            } else {
+              this.showWindow.bindIP = true
+            }
+          }
+        })
+      },
+      bindIp_ok(name) {
+        this.$refs[name].validate((valid) => {
+            if (valid) {
+              this.showWindow.bindIP = false
+              this.$http.get('network/enableStaticNat.do', {
+                params: {
+                  ipId: this.bindForm.publicIP,
+                  VMId: this.gpuDetail.computerid
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.info(response.data.message)
+                  this.bindForm.bindIpText = '绑定中'
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+              })
+            }
+          }
+        )
+      },
+      unbindIp() {
+        if (this.bindForm.unbindText != '解绑IP') {
+          return
+        }
+        this.showWindow.unbindIP = true
+      },
+      unbind_ok() {
+        this.showWindow.unbindIP = false
+        this.$http.get('network/disableStaticNat.do', {
+          params: {
+            ipId: this.gpuDetail.publicIpId,
+            VMId: this.gpuDetail.computerid
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.info(response.data.message)
+            this.bindForm.unbindText = '解绑中'
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      adjustIP() {
+        this.adjustForm.brand = parseInt(this.gpuDetail.bandwith)
+        this.adjustForm.minBrand = parseInt(this.gpuDetail.bandwith)
+        this.showWindow.adjust = true
+      },
+      adjustOK() {
+        this.showWindow.adjust = false
+        this.$http.get('continue/UpPublicBnadwith.do', {
+          params: {
+            bandwith: this.adjustForm.brand,
+            publicIpId: this.gpuDetail.publicId
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$router.push({path: 'order'})
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          }
+        )
+      },
+      queryAdjustPrice: debounce(500, function () {
+        this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
+          params: {
+            brandwith: this.adjustForm.brand,
+            publicIpId: this.gpuDetail.publicId
+          }
+        }).then(response => {
+          if (response.status == 200) {
+            this.adjustForm.cost = response.data.result
+          } else {
+            this.adjustForm.cost = '正在计算'
+          }
+        })
+      }),
     },
 
     created(){
+        this.computerId = sessionStorage.getItem('manageId')
         this.getGpuHostDetail();
         this.getUtilization();
         this.logTime = this.getCurrentDate() + ',' + this.getTomorrow();
@@ -1040,6 +1772,12 @@
         })
 
     },
+    watch:{
+      'adjustForm.brand'(value, oldValue) {
+        this.adjustForm.cost = '正在计算'
+        this.queryAdjustPrice()
+      },
+    }
 
   }
 </script>
@@ -1070,10 +1808,6 @@
             margin-left: 5px;
             color:#2A99F2;
         }
-        span:hover{
-            color:  rgb(77, 171, 248);
-            cursor: pointer;
-        }
         border: 1px dashed #999999;
         padding: 20px 0 0 20px;
         border-radius: 4px;
@@ -1094,6 +1828,33 @@
   .button_right{
     float: right;
     color: #2A99F2;
+    .button-one{
+      width: 78px;
+      height: 28px;
+      background-color: #2A99F2;
+      color: #fff;
+      margin-right: 10px;
+      cursor: pointer;
+      border: none;
+      border:1px solid #2A99F2;
+      box-shadow: 0px 0px 0px rgb(42, 153, 242);
+      border-radius: 4px;
+    }
+    .button-tow{
+      width: 78px;
+      height: 28px;
+      background-color: #fff;
+      color: #2a99f2;
+      margin-right: 10px;
+      cursor: pointer;
+      border: none;
+      border:1px solid #2A99F2;
+      border-radius: 4px;
+    }
+    .button-tow:hover{
+      color: #fff;
+      background-color: #2A99F2;
+    }
   }
   .host_box{
     background: #FFFFFF;
@@ -1110,6 +1871,7 @@
     }
   }
   .tab_box{
+    width: 100%;
     margin-top: -14px;
     padding: 10px 20px 0 0;
     background: #FFFFFF;
@@ -1242,5 +2004,161 @@
           font-size: 18px;
           margin: 0 10px 0 5px;
       }
+  }
+  .config-type {
+      margin-top: -40px;
+      display: flex;
+      > ul {
+        font-family: MicrosoftYaHei;
+        color: rgba(102, 102, 102, 1);
+        line-height: 20px;
+        font-size: 14px;
+        padding: 10px;
+        cursor: pointer;
+        &.selected {
+          background: #FFF;
+          color: #2A99F2;
+        }
+      }
+    }
+     .config-info {
+    background: #FFF;
+    padding: 20px;
+    min-height: 660px;
+    .tab-1 {
+      display: flex;
+      justify-content: space-between;
+      > div {
+        min-height: 280px;
+        width: 280px;
+        background: rgba(255, 255, 255, 1);
+        border-radius: 4px;
+        padding: 20px;
+        border: 1px dashed rgba(153, 153, 153, 1);
+        > p {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(51, 51, 51, 1);
+          margin-bottom: 20px;
+          > span {
+            color: rgba(42, 153, 242, 1);
+            // cursor: pointer;
+          }
+        }
+        > ul {
+          margin-top: 20px;
+          > li {
+            line-height: 28px;
+            span {
+              font-size: 14px;
+              font-family: MicrosoftYaHei;
+              color: rgba(102, 102, 102, 1);
+              &.one {
+                display: inline-block;
+                width: 90px;
+              }
+              &.two {
+                color: rgba(51, 51, 51, 1);
+              }
+              &.three {
+                cursor: pointer;
+                color: #2A99F2;
+              }
+              &.four {
+                display: inline-block;
+                width: 80px;
+              }
+            }
+          }
+        }
+      }
+    }
+    .tab-2 {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      .item {
+        border-radius: 4px;
+        padding: 20px;
+        border: 1px dashed rgba(153, 153, 153, 1);
+        width: 570px;
+        height: 405px;
+        margin-bottom: 20px;
+        .item-title {
+          border-bottom: 1px solid rgba(233, 233, 233, 1);
+          padding-bottom: 10px;
+          > span {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(51, 51, 51, 1);
+            line-height: 20px;
+          }
+          span:nth-child(2) {
+            float: right;
+            color: rgba(153, 153, 153, 1);
+          }
+        }
+        .item-type {
+          margin-top: 18px;
+        }
+      }
+    }
+    .tab-3 {
+      .content {
+        padding: 20px;
+        background: rgba(255, 255, 255, 1);
+        border-radius: 4px;
+        border: 1px solid rgba(229, 233, 237, 1);
+        .tab-3-title {
+          border-bottom: 1px solid rgba(233, 233, 233, 1);
+          padding-bottom: 20px;
+          span {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(51, 51, 51, 1);
+            span {
+              color: #2A99F2;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+      .selectMark {
+        margin: 10px 0;
+        > img {
+          position: relative;
+          top: 4px;
+        }
+        > span {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(102, 102, 102, 1);
+        }
+      }
+      .firewal {
+        padding: 20px 0;
+      }
+    }
+    .tab-4 {
+      .selectMark {
+        margin: 10px 0;
+        > img {
+          position: relative;
+          top: 4px;
+        }
+        > span {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(102, 102, 102, 1);
+        }
+      }
+    }
+    .tab-5 {
+      .title {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+    }
   }
 </style>
