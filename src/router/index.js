@@ -300,7 +300,7 @@ var router = new Router({
           name: 'buy',
           component: Buy,
           children: [
-            {path: '', name: 'host/', component: BHost},
+            {path: '/', name: 'host/', component: BHost},
             {path: 'host', name: 'host/', component: BHost},
             {path: 'disk', name: 'disk/', component: BDisk},
             {path: 'elasticip', name: 'elasticip/', component: BIP},
