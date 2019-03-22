@@ -57,10 +57,9 @@ export default {
     return {
       step: 0,
       stepText: '创建vpc',
-      stepTextList: ['创建vpc', '创建公网IP', '创建NAT网关'],
       pathList: [
         { name: '创建vpc', url: 'vpcList', pane: 'VPC', modal: 'newVpc' },
-        { name: '创建公网/私网服务方案的子网', url: 'vpcList', pane: 'VPC', modal: 'confirm' },
+        { name: '创建子网', url: 'vpcList', pane: 'VPC', modal: 'confirm' },
         { name: '创建负载均衡', url: 'balance', pane: '', modal: 'showBalanceName' },
       ],
       url: 'vpcList',
@@ -75,13 +74,11 @@ export default {
   },
   methods: {
     toPage () {
-			if(this.pane) {
-				this.paneStatus.vpc = sessionStorage.getItem('pane')
-			}
+			
       if(this.modal) {
 				sessionStorage.setItem('modal', this.modal)
 			}
-      window.open(`/${this.url}`)
+			window.open(`/${this.url}?pane=${this.pane}`)
     },
     refresh () {
       axios.get('loadbalance/listOverview.do', {
