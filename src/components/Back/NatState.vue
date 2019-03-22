@@ -1,195 +1,143 @@
 <template>
-	<div id="background">
-		<div id="wrapper">
-			<span><span @click="">云网络</span> / <span @click="">NAT网关</span></span>
-			<div class="content">
-				<div class="allbox">
-					<p style="height: 45px;">
-						<i class="iconfont houtaiicon-xunisiyouyunVPC" id="iconn1"></i>
-						<span class="iname">NAT网关</span>
-						<div style="clear: both;"></div>
-					</p>
-					<p style="width:500px;">
-						<span class="theone">新睿云 NAT 网关支持用户的私有子网中的弹性云服务器、云数据库实例连接 Internet 网络或其他新睿云服务。</span>
-					</p>
-					<Steps :current="status" direction="vertical" size="small" style="margin-top: 18px;">
-						<Step title="创建VPC"></Step>
-						<Step title="创建公网IP"></Step>
-						<Step title="创建NAT网关"></Step>
-					</Steps>
-					<Button type="primary" v-if="status==0" @click="vpcjump">创建VPC</Button>
-					<Button type="primary" v-if="status==1" @click="ziwjump">创建公网IP</Button>
-					<Button type="primary" v-if="status==2" @click="loadjump">创建NAT网关</Button>
-					<Button class="btn11" @click="Refresh">刷新</Button>
-					<div style="clear: both;"></div>
-				</div>
-				<div style="clear: both;"></div>
-			</div>
-		</div>
-	</div>
+  <div id="background">
+    <div id="wrapper">
+      <span class="title">
+        云网络 /
+        <span>NAT网关</span>
+      </span>
+      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">
+        您尚未进行实名认证，只有认证用户才能对外提供服务，
+        <router-link to="/userCenter">立即认证</router-link>
+      </Alert>
+      <div id="content">
+        <main>
+          <header>
+            <i class="iconfont houtaiicon-xunisiyouyunVPC"></i>
+            <span>NAT网关</span>
+            <p>新睿云 NAT 网关支持用户的私有子网中的弹性云服务器、云数据库实例连接 Internet 网络或其他新睿云服务。</p>
+          </header>
+          <Steps :current="step" direction="vertical">
+            <Step title="创建VPC"></Step>
+            <Step title="创建公网IP"></Step>
+            <Step title="创建NAT网关"></Step>
+          </Steps>
+          <div>
+            <Button type="primary" @click="toPage(url,pane,modal)">{{stepText}}</Button>
+            <Button type="ghost" style="color:#57a3f3;border-color: #57a3f3;" @click="refresh()">刷新</Button>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
-	import {customTimeOptions} from '../../options'
-	import axios from 'axios'
-	import $store from '../../vuex'
-	import regExp from '../../util/regExp'
+import axios from 'axios'
+import $store from '../../vuex'
+import { mapState } from 'vuex'
+export default {
+  beforeRouteEnter (to, from, next) {
+    axios.get('network/listNatOverview.do', {
+      params: {
+        zoneId: $store.state.zone.zoneid
+      }
+    }).then(response => {
+      if (response.status == 200 && response.data.status == 1) {
+        if (response.data.stepOver) {
+          next({ path: '/vpcList' })
+        } else {
+          next(vm => {
+            vm.step = response.data.result
+          })
+        }
+      }
+    })
+  },
+  data () {
+    return {
+      step: 0,
+      stepText: '创建vpc',
+      stepTextList: ['创建vpc', '创建公网IP', '创建NAT网关'],
+      pathList: [
+        { name: '创建vpc', url: 'vpcList', pane: 'VPC', modal: 'newVpc' },
+        { name: '创建公网IP', url: 'ip', pane: '', modal: 'newIPModal' },
+        { name: '创建NAT网关', url: 'vpcList', pane: 'NAT', modal: 'addNat' },
+      ],
+      url: 'vpcList',
+      pane: 'VPC',
+      modal: 'newVpc'
+    }
+  },
+  created () {
+  },
+  mounted () {
 
-	export default {
-		beforeRouteEnter(to, from, next) {
-			next(vm => {
-				axios.get('network/listNatOverview.do', {
-				  params: {
-					  zoneId:$store.state.zone.zoneid
-				  }
-				}).then(response => {
-				  if (response.status == 200 && response.data.status == 1) {
-					  vm.status=response.data.result
-					  if (vm.status == 3) {
-					  	vm.$router.push('/natList')
-					  } else {
-					  
-					  }
-				  } else {
-						
-				  }
-				})
-			})
-		},
-		data() {
-			return {
-				status: 0
-			}
-		},
-		created() {
+  },
+  methods: {
+    toPage () {
+      if (this.pane) {
+        this.paneStatus.vpc = sessionStorage.getItem('pane')
+      }
+      if (this.modal) {
+        sessionStorage.setItem('modal', this.modal)
+      }
+      window.open(`/${this.url}`)
+    },
+    refresh () {
+      axios.get('network/listNatOverview.do', {
+        params: {
+          zoneId: $store.state.zone.zoneid,
+        }
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.step = response.data.result
+        }
+      })
+    },
+  },
+  computed: mapState({
+    paneStatus: state => state.paneStatus,
+    auth () {
+      return this.$store.state.authInfo != null
+    }
+  }),
+  watch: {
+    step: function (val) {
+      this.stepText = this.pathList[val].name
+      this.url = this.pathList[val].url
+      this.pane = this.pathList[val].pane
+      this.modal = this.pathList[val].modal
+    },
+  },
+  components: {
 
-		},
-		methods: {
-			vpcjump() {
-				sessionStorage.setItem('vpcstatus', true)
-				window.open('/vpcList')
-			},
-			ziwjump() {
-				sessionStorage.setItem('ziwstatus', true)
-				window.open('/ip')
-			},
-			loadjump() {
-				sessionStorage.setItem('natstatus', true)
-				window.open('/natList')
-			},
-			Refresh() {
-				sessionStorage.removeItem('vpcstatus')
-				sessionStorage.removeItem('ziwstatus')
-				this.$router.go(0)
-				axios.get('network/listNatOverview.do', {
-				  params: {
-					  zoneId:$store.state.zone.zoneid
-				  }
-				}).then(response => {
-				  if (response.status == 200 && response.data.status == 1) {
-					  this.status=response.data.result
-					  if (this.status == 3) {
-					  	this.$router.push('/natList')
-					  } else {
-					  
-					  }
-				  } else {
-						
-				  }
-				})
-			}
-		},
-		computed: {
-
-		},
-		watch: {
-
-		}
-	}
+  }
+}
 </script>
 <style rel="stylesheet/less" lang="less" scoped>
-	.background {
-		background-color: #f5f5f5;
-		width: 100%;
-		@diff: 101px;
-		min-height: calc(~"100% - @{diff}");
-	}
-
-	.wrapper {
-		width: 1200px;
-		margin: 0px auto;
-	}
-
-	.wrapper span {
-		padding: 11px 0px;
-		display: block;
-		font-size: 12px;
-		font-family: MicrosoftYaHei;
-		color: rgba(102, 102, 102, 1);
-		line-height: 16px;
-	}
-
-	.content {
-		width: 1200px;
-		height: 580px;
-		background: rgba(255, 255, 255, 1);
-	}
-
-	.allbox {
-		margin-top: 100px;
-		margin-left: 411px;
-		float: left;
-	}
-
-	#iconn1 {
-		font-size: 43px;
-		color: rgba(42, 153, 242, 1);
-		margin-top: 4px;
-		float: left;
-	}
-
-	.iname {
-		font-size: 24px;
-		font-family: MicrosoftYaHei-Bold;
-		font-weight: bold;
-		color: rgba(42, 153, 242, 1);
-		margin-left: 9px;
-		margin-top: 3px;
-	}
-
-	.theone {
-		font-size: 14px;
-		font-family: MicrosoftYaHei;
-		color: rgba(102, 102, 102, 1);
-		line-height: 24px;
-	}
-
-	.btn11 {
-		background: rgba(255, 255, 255, 1);
-		border: 1px solid rgba(42, 153, 242, 1);
-		color: rgba(42, 153, 242, 1);
-		margin-left: 10px;
-		width: 68px;
-	}
-	.spanaa {
-	  color: #2A99F2;
-	  text-decoration: underline;
-	  font-size: 12px;
-	  font-family: MicrosoftYaHei;
-	  cursor: pointer;
-	  border: none;
-	  padding: 0;
-	  margin-top: -3px;
-	}
-	
-	.divall {
-	  background:rgba(42,153,242,0.06);
-	  border-radius:2px;
-	  border:1px solid rgba(42,153,242,1);
-	  width: 460px;
-	  height: auto;
-	  margin-top: 20px;
-	  padding: 10px;
-	  font-size: 12px;
-	}
+#content {
+  font-family: MicrosoftYaHei;
+  display: flex;
+  justify-content: center;
+  main {
+    width: 500px;
+    margin-top: 100px;
+    header {
+      color: #2a99f2;
+      font-size: 24px;
+      i {
+        font-size: 30px;
+      }
+      span {
+        font-weight: bold;
+      }
+      p {
+        margin: 20px 0;
+        font-size: 14px;
+        color: rgba(102, 102, 102, 1);
+        line-height: 24px;
+      }
+    }
+  }
+}
 </style>

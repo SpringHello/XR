@@ -412,11 +412,11 @@
     },
     methods: {
 			testjump(){
-				var vpcstatus=sessionStorage.getItem('balstatus')
-				if (vpcstatus=='true') {
-				  this.creatbalancemodal.showBalanceName=true
-				  sessionStorage.removeItem('balstatus')
-				}
+        if (sessionStorage.getItem('modal')) {
+          var modalName = sessionStorage.getItem('modal')
+          this.creatbalancemodal[modalName] = true
+          sessionStorage.removeItem('modal')
+        }
 			},
       refresh() {
         // 获取负载均衡的初始数据

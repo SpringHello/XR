@@ -464,8 +464,7 @@
     },
     data() {
       const validaRegisteredName = regExp.validaRegisteredName
-      var pane = sessionStorage.getItem('pane') || 'remote'
-      sessionStorage.removeItem('pane')
+      
       // 校验接入点用户名
       const validateUserName = (rule, value, callback) => {
         if (!/^\w{1,6}$/.test(value)) {
@@ -946,7 +945,21 @@
 
       }
     },
+    created() {
+      this.testjump()
+    },
     methods: {
+      testjump(){
+        // if (sessionStorage.getItem('pane')) {
+        //   this.paneStatus.vpn = sessionStorage.getItem('pane')
+        //   sessionStorage.removeItem('pane')
+        // }
+        if (sessionStorage.getItem('modal')) {
+          var modalName = sessionStorage.getItem('modal')
+          this.showModal[modalName] = true
+          sessionStorage.removeItem('modal')
+        }
+      },
       // 切换地区重新获取数据
       refresh() {
         // 远程接入列表
@@ -999,7 +1012,7 @@
         })
       },
       createNAT() {
-        sessionStorage.setItem('VPN','VPN')
+        this.paneStatus.vpc = 'NAT'
         this.$router.push('vpc')
       },
       // 提交远程接入请求

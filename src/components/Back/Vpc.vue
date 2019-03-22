@@ -891,6 +891,7 @@
       }
     },
     beforeRouteEnter(to, from, next) {
+      console.log(to)
       var zoneId = $store.state.zone.zoneid
       // 获取vpc数据
       var vpcResponse = axios.get('network/listVpc.do', {
@@ -915,43 +916,25 @@
     },
     created() {
       this.intervalInstance = setInterval(this.getVpcData, 10000)
-			var pane=sessionStorage.getItem('VPN')
-      // if (pane=='NAT') {
-      //   this.paneStatus.vpc = 'NAT'
-      //   sessionStorage.removeItem('VPN')
-      // }
-			// else if (pane=='VPC') {
-			// 	this.paneStatus.vpc = 'VPC'
-			// 	sessionStorage.removeItem('VPN')
-      // }
-      if(sessionStorage.getItem('VPN')){
-        this.paneStatus.vpc = 'NAT'
-      }
 			this.testjump()
     },
     methods: {
-			testjump(){
-				var vpcstatus=sessionStorage.getItem('vpcstatus')
-				var ptstatus=sessionStorage.getItem('ziwstatus')
-				var natstatus=sessionStorage.getItem('natstatus')
-				if (vpcstatus=='true') {
-				  this.showModal.newVpc=true
-				  sessionStorage.removeItem('vpcstatus')
-				}
-				if(ptstatus=='true'){
-					sessionStorage.removeItem('ziwstatus')
-					this.$Message.info({
-                    content: '请选择VPC并点击【管理】进入VPC详情页新建新的VPC子网',
-                    duration: 1000,
-										top: 150,
-                    closable: true
-                });
-				}
-				if(natstatus=='true'){
-					this.showModal.addNat=true
-					sessionStorage.removeItem('natstatus')
-				}
-			},
+      testjump(){
+        if (sessionStorage.getItem('modal')) {
+          var modalName = sessionStorage.getItem('modal')
+          if (modalName == 'confirm') {
+            this.$message.confirm({
+                content: '请选择VPC并点击【管理】进入VPC详情页新建新的VPC子网',
+                duration: 1000,
+                top: 150,
+                closable: true
+            })
+          } else {
+            this.showModal[modalName] = true
+          }
+          sessionStorage.removeItem('modal')
+        }
+      },
       // 区域切换刷新数据
       refresh() {
         var zoneId = $store.state.zone.zoneid

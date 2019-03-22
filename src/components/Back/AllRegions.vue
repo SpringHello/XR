@@ -164,7 +164,7 @@
   import axios from 'axios'
   import $store from '../../vuex'
   import reg from '../../util/regExp'
-
+  import {mapState} from 'vuex'
   export default {
 
     data() {
@@ -217,7 +217,7 @@
               window.location.href = 'https://oss-console.xrcloud.net/ruirados/objectStorage'
             }
             else if (ited.url == 'vpc#NAT') {
-              sessionStorage.setItem('VPN', ited.url)
+              this.paneStatus.vpc = ited.url.split('#')[1]
               this.$router.push(ited.url)
             }
             else {
@@ -235,7 +235,7 @@
           if (zone.zoneid == item.zoneId) {
             $store.commit('setZone', zone);
             if (ited.buyUrl == 'vpc#NAT') {
-              sessionStorage.setItem('VPN', ited.url)
+              this.paneStatus.vpc = ited.url.split('#')[1]
               this.$router.push(ited.buyUrl)
             }
             else {
@@ -299,7 +299,12 @@
         }
       }
     },
-    computed: {},
+    computed: mapState({
+      paneStatus: state => state.paneStatus,
+      auth () {
+        return this.$store.state.authInfo != null
+      }
+    }),
     watch: {}
   }
 </script>

@@ -297,20 +297,20 @@
               },
 							{
 							  subName: 'NAT网关',
-							  type: 'natList',
+							  type: 'natState',
 								pane: 'NAT'
 							},
               {subName: '弹性IP', type: 'ip'},
               {subName: '负载均衡', type: 'loadbState'},
               {
                 subName: '虚拟专网VPN',
-                type: 'vpnList',
+                type: 'vpnBlanck',
                 thrItem: [
                   {thrName: 'VPN连接', pane: 'VPN'},
                   {thrName: 'VPN本地网关', pane: 'localGateway'},
                   {thrName: 'VPN客户网关', pane: 'customerGateway'},
                   {thrName: 'VPN拨入', pane: 'remote'},
-                   ]
+                ]
               }
             ]
           },
@@ -399,7 +399,7 @@
               this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
               this.pageInfo.sType = sItem.type
               this.pageInfo.static = true
-							this.pageInfo.pane=sItem.pane
+              this.pageInfo.pane=sItem.pane
             }
           }
         }
@@ -635,7 +635,7 @@
                 this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
                 this.pageInfo.sType = sItem.type
                 this.pageInfo.static = true
-								this.pageInfo.pane=sItem.pane
+                this.pageInfo.pane=sItem.pane
               }
             }
           }
