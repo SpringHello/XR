@@ -18,7 +18,7 @@
           </header>
           <Steps :current="step" direction="vertical">
             <Step title="创建VPC"></Step>
-            <Step title="创建公网IP"></Step>
+            <Step title="创建弹性IP"></Step>
             <Step title="创建NAT网关"></Step>
           </Steps>
           <div>
@@ -57,7 +57,6 @@ export default {
     return {
       step: 0,
       stepText: '创建vpc',
-      stepTextList: ['创建vpc', '创建公网IP', '创建NAT网关'],
       pathList: [
         { name: '创建vpc', url: 'vpcList', pane: 'VPC', modal: 'newVpc' },
         { name: '创建公网IP', url: 'ip', pane: '', modal: 'newIPModal' },
