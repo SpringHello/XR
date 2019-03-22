@@ -1637,6 +1637,9 @@
                 ids.push(host.id)
               }
             })
+            if (ids.length !== 0) {
+              this.timingRefresh(ids + '')
+            }
             if (!this.auth) {
               this.hostListData.forEach(host => {
                 host._disabled = true
@@ -1840,10 +1843,10 @@
       hostDelete(val) {
         this.hostDelWay = val
         if (val === 1) {
-          if (this.hostSelection.length > 5) {
-            this.$Message.info('删除主机至多选择 5 项')
-            return
-          }
+          /*          if (this.hostSelection.length > 5) {
+                      this.$Message.info('删除主机至多选择 5 项')
+                      return
+                    }*/
           this.showModal.delHost = true
         } else {
           this.showModal.delHost = true
