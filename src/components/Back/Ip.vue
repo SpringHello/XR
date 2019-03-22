@@ -313,7 +313,7 @@
       </p>
       <div class="modal-content-s">
         <div>
-          <p class="lh24">您正将<span> {{ publicipOnDelete}} </span>移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。
+          <p class="lh24">您正将<span> {{ publicipOnDelete}} </span>等ip移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。
           </p>
         </div>
       </div>
@@ -942,7 +942,7 @@
             }
           })
           this.total = response.data.result.total
-          if(publicipids.length !==0) {
+          if (publicipids.length !== 0) {
             this.timingRefresh(publicipids + '')
           }
           this.select.forEach(item => {
@@ -1789,6 +1789,7 @@
             this.hide = 'none';
           }
           this.refresh()
+          this.select = []
         },
         deep: true
       },
@@ -1803,9 +1804,10 @@
       },
       publicipOnDelete() {
         if (this.select.length !== 0) {
-          let ips = this.select.map(item => {
-            return item.publicip
-          })
+          /*       let ips = this.select.map(item => {
+                   return item.publicip
+                 })*/
+          let ips = this.select[0].publicip // 由于弹窗出现长度错误，只显示1个id地址
           return ips + ''
         } else {
           return ''
