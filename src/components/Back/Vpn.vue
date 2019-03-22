@@ -39,6 +39,9 @@
           <TabPane label="VPN本地网关" name="localGateway">
           </TabPane>
           <TabPane label="VPN客户网关" name="customerGateway">
+						 <Button type="primary" @click="showModal.newTunnelVpntwo=true">创建VPN客户网关</Button>
+						 <Table :columns="VpnClientGa" :data="VpnClientGaData" @radio-change="VpnClientRadio"
+						        style="margin-top:10px;"></Table>
           </TabPane>
           <TabPane label="VPN拨入" name="remote">
             <div class="operator-bar">
@@ -221,7 +224,113 @@
         <Button type="primary" @click="newTunnelVpnOk" v-if="newTunnelVpnForm.step==2">完成</Button>
       </div>
     </Modal>
-
+		
+		<Modal v-model="showModal.newTunnelVpntwo" width="500" :scrollable="true">
+		  <p slot="header" class="modal-header-border">
+		    <span class="universal-modal-title">创建隧道</span>
+		  </p>
+		  <div class="universal-modal-content-flex" id="moli5">
+		    <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate"
+		          ref="newTunnelVpnFormValidate1" style="width: 100%">
+		      <FormItem label="客户网关名称" prop="name1">
+		        <Input v-model="newTunnelVpnForm.name1" placeholder="请输入0-16字节名称" style="width:300px;float: right;"></Input>
+		      </FormItem>
+		      <FormItem label="对端源IP地址" prop="IP" style="margin-top: 20px;">
+		        <Input v-model="newTunnelVpnForm.IP" placeholder="例如10.132.31.27" style="width:300px;float: right;"></Input>
+		      </FormItem>
+		      <FormItem label="对端网络CIDR" prop="CIDR" style="margin-top: 20px;">
+		        <Input v-model="newTunnelVpnForm.CIDR" placeholder="例如192.168.0.0/16" style="width:300px;float: right;"></Input>
+		      </FormItem>
+		      <FormItem label="预共享密钥" prop="key" style="margin-top: 20px;">
+		        <Input v-model="newTunnelVpnForm.key" placeholder="请输入0-128字节密码" style="width:300px;float: right;"></Input>
+		      </FormItem>
+		    </Form>
+		    <p style="opacity: 0.8;text-align: left;margin-top: 20px; color:rgba(255,152,1,1);margin-left: 115px;">本端的共享密钥必须和对端的共享密钥一致</p>
+				<div class="clock-show icon" @click=""
+				     :class="{rotateup:newTunnelVpnForm.showDetail}" style=""></div>
+		    <span style="display: inline-block;color:#2A99F2;cursor:pointer;margin-top: 10px;margin-left: 115px;"
+		          @click="newTunnelVpnForm.showDetail=true"
+		          v-show="!newTunnelVpnForm.showDetail">
+		        展开高级选项&nbsp;
+		      </span>
+		    <span style="display: inline-block;margin-bottom: 10px;color:#2A99F2;cursor:pointer;margin-top: 10px;margin-left: 115px;"
+		          @click="newTunnelVpnForm.showDetail=false"
+		          v-show="newTunnelVpnForm.showDetail">
+		        隐藏高级选项
+		      </span>
+					<div class="divbox" v-show="newTunnelVpnForm.showDetail">
+						与对端网关的IKE加密算法、IKE哈希算法、ESP加密算法、ESP哈希算法保持一致
+					</div>
+		
+		    <!--高级选项FormItem-->
+		    <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate" ref="newTunnelVpnFormValidate">
+		      <FormItem label="IKE加密算法" prop="vpcId" v-show="newTunnelVpnForm.showDetail">
+		        <Select v-model="newTunnelVpnForm.IKE" style="width:300px;float: right;">
+		          <Option v-for="item in newTunnelVpnForm.IKEOptions" :value="item.key" :key="item.key">
+		            {{item.label}}
+		          </Option>
+		        </Select>
+		      </FormItem>
+					<FormItem label="IKE哈希算法" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 10px;">
+					  <Select v-model="newTunnelVpnForm.IKEHash" style="width:300px;float: right;">
+					    <Option v-for="item in newTunnelVpnForm.IKEHashOptions" :value="item.key" :key="item.key">
+					      {{item.label}}
+					    </Option>
+					  </Select>
+					</FormItem>
+		      <FormItem label="ESP加密算法" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 10px;">
+		        <Select v-model="newTunnelVpnForm.ESP" style="width:300px;float: right;">
+		          <Option v-for="item in newTunnelVpnForm.ESPOptions" :value="item.key" :key="item.key">
+		            {{item.label}}
+		          </Option>
+		        </Select>
+		      </FormItem>
+		      <FormItem label="ESP哈希算法" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 10px;">
+		        <Select v-model="newTunnelVpnForm.ESPHash" style="width:300px;float: right;">
+		          <Option v-for="item in newTunnelVpnForm.ESPHashOptions" :value="item.key" :key="item.label">
+		            {{item.label}}
+		          </Option>
+		        </Select>
+		      </FormItem>
+		      <FormItem label="IKE DH算法" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 10px;">
+		        <Select v-model="newTunnelVpnForm.IKEDH" style="width:300px;float: right;">
+		          <Option v-for="item in newTunnelVpnForm.IKEDHoptions" :value="item.key" :key="item.label">
+		            {{item.label}}
+		          </Option>
+		        </Select>
+		      </FormItem>
+		      <FormItem label="完全正向保密" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 10px;">
+		        <Select v-model="newTunnelVpnForm.secret" style="width:300px;float: right;">
+		          <Option v-for="item in newTunnelVpnForm.secretOptions" :value="item.key" :key="item.label">
+		            {{item.label}}
+		          </Option>
+		        </Select>
+		      </FormItem>
+		      <FormItem label="IKE使用期限第二阶段" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 3px;">
+		        <InputNumber v-model="newTunnelVpnForm.ikelifetime" :min="-1" style="width:300px;float: right;margin-top: 7px;" :precision="0"></InputNumber>
+		      </FormItem>
+		      <FormItem label="ESP使用期限第二阶段" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: -3px;">
+		        <InputNumber v-model="newTunnelVpnForm.esplifetime" :min="-1" style="width:300px;float: right;margin-top: 7px;" :precision="0"></InputNumber>
+		      </FormItem>
+		      <FormItem label="" prop="vpcId" v-show="newTunnelVpnForm.showDetail" id="firstff">
+		
+		        <Checkbox v-model="newTunnelVpnForm.checkGroup1">失效对等检测</Checkbox>
+		
+		      </FormItem>
+		      <FormItem label="" prop="vpcId" v-show="newTunnelVpnForm.showDetail" id="twoff">
+		
+		        <Checkbox v-model="newTunnelVpnForm.checkGroup2">Force UDP</Checkbox>
+		
+		      </FormItem>
+		
+		    </Form>
+		  </div>
+		  <div slot="footer" class="modal-footer-border">
+		    <Button @click="showModal.newTunnelVpn = false">取消</Button>
+		    <Button type="primary" @click="testOk">确定创建</Button>
+		  </div>
+		</Modal>
+		
     <!--vpn修改配置-->
     <Modal v-model="showModal.FixVPN" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -455,10 +564,17 @@
           zoneId: $store.state.zone.zoneid,
         }
       })
-      Promise.all([remote, customer]).then(values => {
+			// VPN客户网关
+			var test1data = axios.get('network/listCustomergateway.do', {
+			  
+			    zoneId: $store.state.zone.zoneid,
+			  
+			})
+      Promise.all([remote, customer,test1data]).then(values => {
         next(vm => {
           vm.initRemoteData(values[0])
           vm.initCustomerData(values[1])
+					vm.test1(values[2])
         })
       })
     },
@@ -499,7 +615,8 @@
           FixVPNContent: false,
           // 接入点用户管理
           userManage: false,
-          notHaveNAT: false
+          notHaveNAT: false,
+					newTunnelVpntwo:false
         },
         // 新建vpc接入点表单
         newRemoteAccessForm: {
@@ -918,7 +1035,76 @@
             }
           }
         ],
+				VpnClientGa: [
+				  {
+				    type: 'radio',
+				    align: 'center',
+				    width: 60,
+				  },
+				  {
+				    title: '名称',
+				    key: ''
+				  },
+				  {
+				    title: '目的IP地址',
+				    key: '',
+				  },
+				  {
+				    title: '目的网络CIDR',
+				    key: ''
+				  },
+				  {
+				    title: '预共享秘钥',
+				    key: '',
+				  },
+				  {
+				    title: 'IKE算法',
+				    key: ''
+				  },
+				  {
+				    title: 'ESP算法',
+				    key: ''
+				  },
+					{
+					  title: '创建时间',
+						width: 200,
+					  key: ''
+					},
+				  {
+				    title: '管理',
+						 render: (h, obj) => {
+						  var text = ''
+						  switch (obj.row.sourcestatus) {
+						    case '1':
+						      text = '修改'
+						      break
+						    case '2':
+						      text = '删除'
+						      break
+						  }
+						  if (text) {
+						    return h('div', {}, [h('Spin', {
+						      style: {
+						        display: 'inline-block'
+						      }
+						    }), h('span', {}, text)])
+						  }
+						  if (obj.row.sourcestatus == 1) {
+						    return h('div', {}, [h('Spin', {
+						      style: {
+						        display: 'inline-block'
+						      }
+						    }), h('span', {}, '修改')])
+						  }
+						  else if (obj.row.sourcestatus == 2) {
+						    text = '删除'
+						  }
+						  return h('span', {}, text)
+						}
+				  }
+				],
         tunnelVpnData: [],
+				VpnClientGaData: [],
         // 管理用户列表
         userList: [],
         // 远程VPN id
@@ -938,6 +1124,7 @@
         // 当前选中远程接入
         currentRemote: null,
         currentTunnel: null,
+				VpnClientTunnel: null,
         modifyForm: {
           sourcevpnId: '',
           connectType: '',
@@ -947,6 +1134,9 @@
       }
     },
     methods: {
+			toggle: function (item) {
+			  item._show = !item._show
+			},
       // 切换地区重新获取数据
       refresh() {
         // 远程接入列表
@@ -961,11 +1151,19 @@
             zoneId: $store.state.zone.zoneid,
           }
         })
-        Promise.all([remote, customer]).then(values => {
+				// VPN客户网关
+				var test1data = axios.get('network/listCustomergateway.do', {
+				  params: {
+				    zoneId: $store.state.zone.zoneid,
+				  }
+				})
+        Promise.all([remote, customer,test1data]).then(values => {
           this.initRemoteData(values[0])
           this.initCustomerData(values[1])
+					this.test1(values[2])
           this.currentTunnel = null
           this.currentRemote = null
+					this.VpnClientTunnel =null
         })
       },
       initRemoteData(response) {
@@ -978,6 +1176,11 @@
           this.tunnelVpnData = response.data.result
         }
       },
+			test1(response) {
+			  if (response.status == 200 && response.data.status == 1) {
+			    this.VpnClientGaData = response.data.result
+			  }
+			},
       // 打开远程接入modal
       newRemoteAccess() {
         this.showModal.newRemoteAccess = true
@@ -1134,6 +1337,66 @@
           }
         })
       },
+			testOk() {
+			  this.showModal.newTunnelVpn = false
+			  this.newTunnelVpnForm.step = 0
+			  this.newTunnelVpnForm.showDetail = false
+			  let localcidr, localgateway
+			  this.newTunnelVpnForm.vpcIdOptions.forEach(item => {
+			    if (this.formValidateLocalGateway.vpcId == item.vpcid) {
+			      localcidr = item.cidr
+			      localgateway = item.sourcenatip
+			    }
+			  })
+			  this.tunnelVpnData.push({
+			    localcidr,
+			    localgateway,
+			    targetdestinationipaddress: this.newTunnelVpnForm.IP,
+			    targetcidr: this.newTunnelVpnForm.CIDR,
+			    sourcestatus: '-2',
+			    sourceipsecKey: this.newTunnelVpnForm.key,
+			    sourcecreatetime: '创建中'
+			  })
+			  this.$http.get('network/createTunnelVpn.do', {
+			    params: {
+            vpcId: formValidateLocalGateway.vpcId, // 源vpcid   目标vpcid
+						gateway:localgateway,
+						zoneId:$store.state.zone.zoneid,
+						localCidr:localcidr,
+						s2sVpnGatewayId: this.currentTunnel.sourcevpnId,
+            // targetVpcId: this.newTunnelVpnForm.vpcId2, // 源vpcid   目标vpcid
+            name: this.newTunnelVpnForm.name1, // 源vpcid   目标vpcid  名称1
+            // nameTwo: this.newTunnelVpnForm.name2, // 源vpcid   目标vpcid
+            destinationIpAddress: this.newTunnelVpnForm.IP,
+            cidr: this.newTunnelVpnForm.CIDR,
+            ipsecKey: this.newTunnelVpnForm.key,
+            ikeEncryption: this.newTunnelVpnForm.IKE,
+            ikeHash: this.newTunnelVpnForm.IKEHash,
+            espEncryption: this.newTunnelVpnForm.ESP,
+            espHash: this.newTunnelVpnForm.ESPHash,
+            passive: this.newTunnelVpnForm.connType,
+            completeSecrecy: this.newTunnelVpnForm.secret,
+            ikeDH: this.newTunnelVpnForm.IKEDH,
+            ikelifetime: this.newTunnelVpnForm.ikelifetime,
+            esplifetime: this.newTunnelVpnForm.esplifetime,
+            failureDetection: this.newTunnelVpnForm.checkGroup1,
+            forceUdpEspPackets: this.newTunnelVpnForm.checkGroup2,
+
+          }
+			  }).then(response => {
+			    if (response.status == 200 && response.data.status == 1) {
+			      this.refresh()
+			      this.$Message.success({
+			        content: response.data.message
+			      })
+			    } else {
+			      this.refresh()
+			      this.$message.info({
+			        content: response.data.message
+			      })
+			    }
+			  })
+			},
       // 选中远程接入
       remoteRadio(current) {
         this.currentRemote = current
@@ -1142,6 +1405,9 @@
       tunnelRadio(current) {
         this.currentTunnel = current
       },
+			VpnClientRadio(current) {
+			  this.VpnClientTunnel = current
+			},
       // 挂断VPN接入
       delRemoteAccess() {
         if (this.currentRemote == null) {
@@ -1456,4 +1722,19 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+	.rotateup.icon {
+	  transform: rotate(-225deg);
+	  -ms-transform: rotate(-225deg);
+	  -webkit-transform: rotate(-225deg);
+	}
+	.divbox{
+		width:460px;
+		height:36px;
+		background:rgba(255,196,57,0.1);
+		border-radius:2px;
+		border:1px solid rgba(255,196,57,1);
+		margin-bottom: 15px;
+		text-align: center;
+		line-height: 36px;
+	}
 </style>
