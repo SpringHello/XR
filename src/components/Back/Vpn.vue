@@ -566,9 +566,9 @@
       })
 			// VPN客户网关
 			var test1data = axios.get('network/listCustomergateway.do', {
-			  
-			    zoneId: $store.state.zone.zoneid,
-			  
+			    params: {
+			      zoneId: $store.state.zone.zoneid,
+			    }
 			})
       Promise.all([remote, customer,test1data]).then(values => {
         next(vm => {
@@ -1338,10 +1338,20 @@
         })
       },
 			testOk() {
-			  this.showModal.newTunnelVpn = false
-			  this.newTunnelVpnForm.step = 0
 			  this.newTunnelVpnForm.showDetail = false
 			  let localcidr, localgateway
+				//获取列出本地网关数据
+				axios.get('network/listVpnGateways.do', {
+				   params: {
+				     zoneId: $store.state.zone.zoneid,
+				   }
+				}).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+								console.log(response.data)
+              } else {
+                this.$Message.error(response.data.message)
+              }
+            })
 			  this.newTunnelVpnForm.vpcIdOptions.forEach(item => {
 			    if (this.formValidateLocalGateway.vpcId == item.vpcid) {
 			      localcidr = item.cidr
