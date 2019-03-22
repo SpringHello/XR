@@ -79,13 +79,10 @@ export default {
   },
   methods: {
     toPage () {
-      if (this.pane) {
-        this.paneStatus.vpn = sessionStorage.getItem('pane')
-      }
       if (this.modal) {
         sessionStorage.setItem('modal', this.modal)
       }
-      window.open(`/${this.url}`)
+      window.open(`/${this.url}?pane=${this.pane}`)
 
     },
     refresh () {

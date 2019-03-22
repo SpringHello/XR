@@ -44,7 +44,7 @@ export default {
     }).then(response => {
       if (response.status == 200 && response.data.status == 1) {
         if (response.data.stepOver) {
-          next({ path: '/vpcList' })
+          next({ path: '/vpcList',query: {pane: 'NAT'} })
         } else {
           next(vm => {
             vm.step = response.data.result
@@ -74,13 +74,10 @@ export default {
   },
   methods: {
     toPage () {
-      if (this.pane) {
-        this.paneStatus.vpc = sessionStorage.getItem('pane')
-      }
       if (this.modal) {
         sessionStorage.setItem('modal', this.modal)
       }
-      window.open(`/${this.url}`)
+      window.open(`/${this.url}?pane=${this.pane}`)
     },
     refresh () {
       axios.get('network/listNatOverview.do', {

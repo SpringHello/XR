@@ -920,6 +920,7 @@
     },
     methods: {
       testjump(){
+        this.paneStatus.vpc = this.$route.query.pane
         if (sessionStorage.getItem('modal')) {
           var modalName = sessionStorage.getItem('modal')
           if (modalName == 'confirm') {

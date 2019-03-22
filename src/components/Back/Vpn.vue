@@ -1137,10 +1137,7 @@
     },
     methods: {
       testjump(){
-        // if (sessionStorage.getItem('pane')) {
-        //   this.paneStatus.vpn = sessionStorage.getItem('pane')
-        //   sessionStorage.removeItem('pane')
-        // }
+        this.paneStatus.vpn = this.$route.query.pane
         if (sessionStorage.getItem('modal')) {
           var modalName = sessionStorage.getItem('modal')
           this.showModal[modalName] = true
