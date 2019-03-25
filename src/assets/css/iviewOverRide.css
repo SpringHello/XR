@@ -68,7 +68,10 @@
   float: none;
   font-size: 14px;
 }
-
+/* 每行两列form,label文字14px */
+.universal-modal-label-14px form .ivu-form-item .ivu-form-item-label {
+  font-size: 14px;
+}
 /* form表单样式,错误提示不换行 */
 .universal-form-tips-line .ivu-form-item-content {
   display: flex;
