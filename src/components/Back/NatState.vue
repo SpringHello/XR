@@ -23,7 +23,7 @@
           </Steps>
           <div>
             <Button type="primary" @click="toPage(url,pane,modal)">{{stepText}}</Button>
-            <Button type="ghost" style="color:#57a3f3;border-color: #57a3f3;" @click="refresh()">刷新</Button>
+            <Button type="ghost" style="color:#57a3f3;border-color: #57a3f3;margin-left: 10px;" @click="refresh()">刷新</Button>
           </div>
         </main>
       </div>

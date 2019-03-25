@@ -297,7 +297,7 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-    	  <Button @click="this.showModal.addNat=false">取消</Button>
+    	  <Button @click="showModal.addNat=false">取消</Button>
         <Button type="primary" @click="handleAddNatSubmit">完成</Button>
       </div>
     </Modal>
