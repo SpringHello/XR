@@ -70,7 +70,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a href="https://kaifa.xrcloud.net/overview" rel="nofollow"><span>控制台</span>
+                  <a href="https://zschj.xrcloud.net/overview" rel="nofollow"><span>控制台</span>
                   </a>
                 </div>
               </div>
@@ -85,7 +85,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a href="https://kaifa.xrcloud.net/login" rel="nofollow"><span>登录</span>
+                  <a href="https://zschj.xrcloud.net/login" rel="nofollow"><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -93,7 +93,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a href="https://kaifa.xrcloud.net/register" rel="nofollow"><span>注册</span>
+                  <a href="https://zschj.xrcloud.net/register" rel="nofollow"><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -510,60 +510,60 @@
           },
           {
             title: '帮助文档',
-            path: 'https://kaifa.xrcloud.net/support/products.html',
+            path: 'https://zschj.xrcloud.net/support/products.html',
             content: [
               {
                 prod: '产品文档',
-                path: 'https://kaifa.xrcloud.net/support/products.html'
+                path: 'https://zschj.xrcloud.net/support/products.html'
               },
               {
                 prod: '常见问题',
-                path: 'https://kaifa.xrcloud.net/support/asks.html'
+                path: 'https://zschj.xrcloud.net/support/asks.html'
               },
               {
                 prod: '快速入门',
-                path: 'https://kaifa.xrcloud.net/support/quick.html'
+                path: 'https://zschj.xrcloud.net/support/quick.html'
               }
             ]
           },
           {
             title: '新闻动态',
-            path: 'https://kaifa.xrcloud.net/homePage/1.html',
+            path: 'https://zschj.xrcloud.net/homePage/1.html',
             content: [
               {
                 prod: '云服务器',
-                path: 'https://kaifa.xrcloud.net/news/yunfuwuqi/1.html'
+                path: 'https://zschj.xrcloud.net/news/yunfuwuqi/1.html'
               },
               {
                 prod: '云计算',
-                path: 'https://kaifa.xrcloud.net/news/yunjisuan/1.html'
+                path: 'https://zschj.xrcloud.net/news/yunjisuan/1.html'
               },
               {
                 prod: '云安全',
-                path: 'https://kaifa.xrcloud.net/news/yunanquan/1.html'
+                path: 'https://zschj.xrcloud.net/news/yunanquan/1.html'
               },
               {
                 prod: '香港云服务器 ',
-                path: 'https://kaifa.xrcloud.net/news/xianggangyunfuwuqi/1.html'
+                path: 'https://zschj.xrcloud.net/news/xianggangyunfuwuqi/1.html'
               },
               {
                 prod: '虚拟主机',
-                path: 'https://kaifa.xrcloud.net/news/xunizhuji/1.html'
+                path: 'https://zschj.xrcloud.net/news/xunizhuji/1.html'
               },
               {
                 prod: '服务器虚拟化',
-                path: 'https://kaifa.xrcloud.net/news/fuwuqixunihua/1.html'
+                path: 'https://zschj.xrcloud.net/news/fuwuqixunihua/1.html'
               },
 
               {
                 prod: '域名交流',
-                path: 'https://kaifa.xrcloud.net/news/yumingjiaoliu/1.html'
+                path: 'https://zschj.xrcloud.net/news/yumingjiaoliu/1.html'
               }
             ]
           },
           {
             title: '关于我们',
-            path: 'https://kaifa.xrcloud.net/about/'
+            path: 'https://zschj.xrcloud.net/about/'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
@@ -625,20 +625,20 @@
           }
         ], // 页尾列表详情
         document: [
-          {title: '计算', url: 'https://kaifa.xrcloud.net/support/products.html'},
-          {title: '网络', url: 'https://kaifa.xrcloud.net/support/products.html'},
-          {title: '安全', url: 'https://kaifa.xrcloud.net/support/products.html'},
-          {title: '财务与账户', url: 'https://kaifa.xrcloud.net/support/products.html'}
+          {title: '计算', url: 'https://zschj.xrcloud.net/support/products.html'},
+          {title: '网络', url: 'https://zschj.xrcloud.net/support/products.html'},
+          {title: '安全', url: 'https://zschj.xrcloud.net/support/products.html'},
+          {title: '财务与账户', url: 'https://zschj.xrcloud.net/support/products.html'}
         ],
         // 服务与公告
         notice: [
-          {title: '最新公告', url: 'https://kaifa.xrcloud.net/homePage/1.html'},
-          {title: '新闻动态', url: 'https://kaifa.xrcloud.net/homePage/1.html'},
-          {title: '技术支持', url: 'https://kaifa.xrcloud.net/support/products.html'},
+          {title: '最新公告', url: 'https://zschj.xrcloud.net/homePage/1.html'},
+          {title: '新闻动态', url: 'https://zschj.xrcloud.net/homePage/1.html'},
+          {title: '技术支持', url: 'https://zschj.xrcloud.net/support/products.html'},
         ],
         // 友情链接
         links: [
-          {href: 'https://kaifa.xrcloud.net/', text: '新睿云'}
+          {href: 'https://zschj.xrcloud.net/', text: '新睿云'}
         ],
         Preparation: [
           {
@@ -732,9 +732,9 @@
          }*/
       })
       // 设置友情链接
-      /*      this.$http.get('article/friendshipLink.do').then(response => {
-              this.links = response.data.result
-            })*/
+      this.$http.get('article/friendshipLink.do').then(response => {
+        this.links = response.data.result
+      })
     },
     methods: {
       /* li mouseenter事件 重新设置line样式 */

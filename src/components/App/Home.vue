@@ -426,7 +426,7 @@
               <dd v-html="showNews.abstracts">
               </dd>
               <dd>
-                <a :href='`https://news.xrcloud.net/essay/${showNews.code}.html`' target="_blank" class="news-btn">
+                <a :href='`https://zschj.xrcloud.net/news/${showNews.code}.html`' target="_blank" class="news-btn">
                   查看详情
                 </a>
               </dd>
@@ -438,16 +438,16 @@
         </div>
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
-            <dt>
+            <!--<dt>
               <a :href="`https://news.xrcloud.net/${item.EnglishName}`" class="moreinfo">
                 <Icon type="chevron-right"></Icon>
                 <span>{{item.typename}}</span>
               </a>
-            </dt>
+            </dt>-->
             <dd>
               <ul>
                 <li v-for="(secitem,i) in item.artile" :key="i">
-                  <a :href="`https://news.xrcloud.net/essay/${secitem.code}.html`" target="_blank">
+                  <a :href="`https://zschj.xrcloud.net/news/${secitem.code}.html`" target="_blank">
                       <div class="alink">
                         <div class="title">{{secitem.title}}</div>
                         <i v-if="secitem.isHot">HOT</i>
@@ -1213,9 +1213,8 @@
 
     },
     created() {
-      //this.getnews()
-      //this.getlinkList()
-      //this.getMirror(this.eightsceneIndex)
+      this.getnews()
+      this.getlinkList()
     },
     methods: {
       init() {
@@ -1267,7 +1266,7 @@
       getlinkList() {
         axios.get('article/getArticleType.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.linkList = response.data.result.slice(0, 3)
+            this.linkList = response.data.result.slice(0, 2)
           }
         })
       },
