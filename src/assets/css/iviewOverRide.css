@@ -182,13 +182,24 @@
 	width: 145px;
 	margin-right: 78px;
 }
+#moli2 #gfgf1{
+	float: right;
+	width: 145px;
+	margin-right: 78px;
+}
 #moli2 #fgfg{
 	float: left;
 	width: 230px;
 }
+#moli2 #jiakuan{
+	width: 100%;
+}
 #gfgf .ivu-form-item-error-tip{
 	margin-left: 5px;
 	margin-top: 52px;
+}
+#gfgf1 .ivu-form-item-error-tip{
+	margin-left: 5px;
 }
 #moli5 .ivu-form-item {
   width: 90%;

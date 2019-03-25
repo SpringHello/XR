@@ -23,7 +23,7 @@
           </Steps>
           <div>
             <Button type="primary" @click="toPage(url,pane,modal)">{{stepText}}</Button>
-            <Button type="ghost" style="color:#57a3f3;border-color: #57a3f3;" @click="refresh()">刷新</Button>
+            <Button type="ghost" style="color:#57a3f3;border-color: #57a3f3;margin-left: 10px;" @click="refresh()">刷新</Button>
           </div>
         </main>
       </div>
@@ -44,7 +44,7 @@ export default {
     }).then(response => {
       if (response.status == 200 && response.data.status == 1) {
         if (response.data.stepOver) {
-          next({ path: '/vpcList',query: {pane: 'NAT'} })
+          next({ path: '/natList',query: {pane: 'NAT'} })
         } else {
           next(vm => {
             vm.step = response.data.result
