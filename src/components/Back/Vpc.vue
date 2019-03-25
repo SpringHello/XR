@@ -260,7 +260,7 @@
                     style="position: relative;top: 35px;cursor:pointer;left:35px;"></Icon>
     				
             </i>
-    		<span style="position: relative;top: 11px;cursor:pointer;left:52px;float: left;color:#2A99F2 ;">新建弹性IP</span>
+    		<span style="position: relative;top: 11px;cursor:pointer;left:52px;float: left;color:#2A99F2 ;" @click="$router.push('ip')">新建弹性IP</span>
           </FormItem>
           <FormItem label="计费模式" prop="timeType" style="margin-top: 22px;" id="fgfg">
             <Select v-model="addNatForm.timeType" style="width:145px;float: left;">
@@ -891,7 +891,7 @@
       }
     },
     beforeRouteEnter(to, from, next) {
-      console.log(to)
+      //console.log(to)
       var zoneId = $store.state.zone.zoneid
       // 获取vpc数据
       var vpcResponse = axios.get('network/listVpc.do', {
