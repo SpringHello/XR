@@ -325,7 +325,7 @@ var router = new Router({
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
         {path: 'activity/xian', name: 'activity/xian', component: xianNode},
-        {path: 'activtiy/2019spring', name: 'activtiy/2019spring', component: schoolSeason},
+        {path: 'activity/2019spring', name: 'activity/2019spring', component: schoolSeason},
 
         {path: 'eastsouth', name: 'eastsouth', component: EastSouthNode},
         //{path: 'Scene/:type', name: 'Scene', component: SceneInfo},

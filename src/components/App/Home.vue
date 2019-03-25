@@ -5,7 +5,7 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div class="ss-active" @click="push('/activtiy/2019spring/')">
+          <div class="ss-active" @click="push('/activity/2019spring/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
@@ -15,7 +15,7 @@
                     <i>1折</i>
                     更有会员折上折
                   </p>
-                  <span @click="push('/activtiy/2019spring/')">立即购买</span>
+                  <span @click="push('/activity/2019spring/')">立即购买</span>
                 </div>
                 <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt="云产品新春采购季">
               </div>

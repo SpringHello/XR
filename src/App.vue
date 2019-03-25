@@ -15,7 +15,7 @@
           <div></div>
         </a>
         <img class="logo-img" src="./assets/img/active/schoolSeason/nav_logo_cc.png"
-             @click="$router.push('/activtiy/2019spring/')" alt="新春采购季">
+             @click="$router.push('/activity/2019spring/')" alt="新春采购季">
         <div class="operate operate-pdding">
           <ul @mouseleave="ME(-1)">
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">

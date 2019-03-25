@@ -928,7 +928,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.successMsg = false">取消</Button>
-        <Button type="primary" @click="$router.push('activtiy/2019spring/')">查看活动</Button>
+        <Button type="primary" @click="$router.push('activity/2019spring/')">查看活动</Button>
       </p>
     </Modal>
 

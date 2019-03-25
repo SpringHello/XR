@@ -5,7 +5,7 @@
         <div class="banner">
           <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('activtiy/2019spring/')" class="cc-active">
+              <div @click="$router.push('activity/2019spring/')" class="cc-active">
               </div>
             </my-carousel-item>
             <!-- <my-carousel-item class="carousel-item">
