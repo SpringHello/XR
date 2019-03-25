@@ -44,7 +44,7 @@ export default {
     }).then(response => {
       if (response.status == 200 && response.data.status == 1) {
         if (response.data.stepOver) {
-          next({ path: '/vpcList',query: {pane: 'NAT'} })
+          next({ path: '/natList',query: {pane: 'NAT'} })
         } else {
           next(vm => {
             vm.step = response.data.result

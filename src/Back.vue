@@ -481,7 +481,14 @@
 					if(pane==undefined){
 						this.$router.push(sType)
 					} else{
-            var newpane = pane + '#虚拟私有云VPC'
+// 						var panename=''
+// 						if(panename='#虚拟私有云VPC'){
+// 							var newpane = pane + panename
+// 						}
+//             else if(panename='#NAT网关'){
+//             	var newpane = pane + panename
+//             }
+						var newpane = pane + '#虚拟私有云VPC'
             this.pane(newpane)
             this.$router.push(sType)
 					}

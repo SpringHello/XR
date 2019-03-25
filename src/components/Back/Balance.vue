@@ -109,7 +109,7 @@
         						</Poptip>
         						<!--当为内网时-->
         
-        						<FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'">
+        						<FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'" style="margin-top: 10px;">
         							<RadioGroup v-model="creatbalancemodal.formInline.intranetIp" style="margin-left: 17px;">
         								<Radio label="auto">自动分配</Radio>
         								<Radio label="specify">指定IP</Radio>
