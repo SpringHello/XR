@@ -326,7 +326,7 @@
 		    </Form>
 		  </div>
 		  <div slot="footer" class="modal-footer-border">
-		    <Button @click="showModal.newTunnelVpn = false">取消</Button>
+		    <Button @click="showModal.newTunnelVpntwo = false">取消</Button>
 		    <Button type="primary" @click="testOk">确定创建</Button>
 		  </div>
 		</Modal>
