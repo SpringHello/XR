@@ -228,7 +228,6 @@
         <Button type="primary" @click="newTunnelVpnOk" v-if="newTunnelVpnForm.step==2">完成</Button>
       </div>
     </Modal>
-<<<<<<< HEAD
 		
 		<Modal v-model="showModal.newTunnelVpntwo" width="500" :scrollable="true">
 		  <p slot="header" class="modal-header-border">
@@ -335,9 +334,6 @@
 		    <Button type="primary" @click="testOk">确定创建</Button>
 		  </div>
 		</Modal>
-		
-=======
->>>>>>> 9da6f5924c79f9eb3af86e662d4c7d73601af63a
     <!--vpn修改配置-->
     <Modal v-model="showModal.FixVPN" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
