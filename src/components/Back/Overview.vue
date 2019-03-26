@@ -405,7 +405,7 @@
       auth() {
         return {
           // 未认证
-          'not-auth': !this.authInfo || this.authInfo && this.authInfo.checkstatus != 0,
+          'not-auth': (!this.authInfo) || (this.authInfo && this.authInfo.checkstatus != 0),
           // 个人认证
           'personal-icon': this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0,
           // 企业认证
@@ -415,7 +415,7 @@
         }
       },
       authText() {
-        if (!this.authInfo || this.authInfo && this.authInfo.checkstatus != 0) {
+        if ((!this.authInfo) || (this.authInfo && this.authInfo.checkstatus != 0)) {
           return '未认证'
         } else if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
           return '个人认证'
