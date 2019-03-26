@@ -53,21 +53,21 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="购买方式" prop="timeType" id="fgfg" style="margin-top: 20px;">
+          <FormItem label="购买方式" prop="timeType" id="fgfg">
             <Select v-model="newIPForm.timeType" @on-change="changeTimeType"  style="width:145px;float: left;margin-left: 4px;">
               <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
                       :key="item.value">{{ item.label }}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="" prop="timeValue" v-if="newIPForm.timeType!='current'" id="gfgf1" style="margin-top: 20px;">
+          <FormItem label="" prop="timeValue" v-if="newIPForm.timeType!='current'" id="gfgf1">
             <Select v-model="newIPForm.timeValue" @on-change="queryNewIPPrice" style="width:145px;float: right;">
               <Option v-for="item in customTimeOptions[newIPForm.timeType]" :value="item.value" :key="item.value">
                 {{item.label}}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="带宽" id="jiakuan" style="margin-top: 20px;">
+          <FormItem label="带宽" id="jiakuan">
             <i-slider v-model="newIPForm.bandWidth" :min=1 :max=100 unit="MB" :points="[20,50]"
                       style="width:300px;vertical-align: middle;margin-left: 7px;" @change="queryNewIPPrice"></i-slider>
             <InputNumber :max="100" :min="1" v-model="newIPForm.bandWidth" :editable="false"
@@ -1909,7 +1909,6 @@
 	  border:1px solid rgba(42,153,242,1);
 	  width: 460px;
 	  height: auto;
-	  margin-top: 20px;
 	  padding: 10px;
 	  font-size: 12px;
 	}

@@ -68,7 +68,10 @@
   float: none;
   font-size: 14px;
 }
-
+/* 每行两列form,label文字14px */
+.universal-modal-label-14px form .ivu-form-item .ivu-form-item-label {
+  font-size: 14px;
+}
 /* form表单样式,错误提示不换行 */
 .universal-form-tips-line .ivu-form-item-content {
   display: flex;
@@ -171,9 +174,6 @@
 	margin-left: 85px;
 	margin-top: 30px;
 }
-#moli2 .ivu-form-item{
-	margin-bottom: 0;
-}
 #moli2 #gfgf{
 	float: right;
 	width: 145px;
@@ -193,7 +193,6 @@
 }
 #gfgf .ivu-form-item-error-tip{
 	margin-left: 5px;
-	margin-top: 52px;
 }
 #gfgf1 .ivu-form-item-error-tip{
 	margin-left: 5px;
