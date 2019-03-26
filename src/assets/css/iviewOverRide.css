@@ -174,6 +174,16 @@
 	margin-left: 85px;
 	margin-top: 30px;
 }
+#moli22 .ivu-form-item {
+  width: 86%;
+}
+#moli22 .ivu-form-item .ivu-form-item-label {
+  float: left;
+}
+#moli22 .ivu-form-item-error-tip{
+	margin-left: 95px;
+	margin-top: 30px;
+}
 #moli2 #gfgf{
 	float: right;
 	width: 145px;
