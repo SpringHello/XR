@@ -62,7 +62,7 @@
             <p>主机内存: <span> {{endMemory}}G</span></p>
             <p>系统盘容量: <span> {{ systemDiskSize}}GB</span></p>
             <div class="price">
-              <a href="/documentInfo/l6RqDbCKZ/l6RwGIm3S" target="_blank">购买和计费说明</a>
+              <a href="/support_docs/kiRWuMFJd_kmeqtVSId.html" target="_blank">购买和计费说明</a>
               <p>应付差价：<span>{{ price }}</span>元</p>
             </div>
           </div>
