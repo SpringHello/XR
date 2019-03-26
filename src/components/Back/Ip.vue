@@ -930,7 +930,7 @@
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
           let publicipids = []
-          if (!this.auth) {
+          if (!this.auth || (this.auth && this.auth.checkstatus !== 0)) {
             this.ipData.forEach(item => {
               item._disabled = true
             })

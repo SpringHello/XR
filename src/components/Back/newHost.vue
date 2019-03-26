@@ -1640,7 +1640,7 @@
             if (ids.length !== 0) {
               this.timingRefresh(ids + '')
             }
-            if (!this.auth) {
+            if (!this.auth || (this.auth && this.auth.checkstatus !==0 ) ) {
               this.hostListData.forEach(host => {
                 host._disabled = true
               })
