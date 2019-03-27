@@ -260,22 +260,12 @@
                   <p class="item-title" style="margin-top:0px;">价格</p>
                 </div>
                 <div>
-                  <p style="font-size: 16px;color: #F85E1D;">{{IPConfig.cost.toFixed(2)}}元</p>
-                </div>
-              </div>
-            </div>
-          </div>
-            <!--公网IP价格-->
-            <div class="item-wrapper" style="margin-top: 28px;" v-show="IPConfig.publicIP">
-              <div style="display: flex">
-                <div>
-                  <p class="item-title" style="margin-top:0px;">价格</p>
-                </div>
-                <div>
                   <p style="font-size: 16px;color: #F85E1D;">{{ipCost.toFixed(2)}}元</p>
                 </div>
               </div>
             </div>
+          </div>
+           
           </div>
 
           <!--云硬盘-->

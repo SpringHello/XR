@@ -709,7 +709,7 @@
                       on: {
                         click: () => {
                           if (params.row.status != -1) {
-                            this.$router.push({path: 'gpuManage'});
+                            this.$router.push({path: 'gpuManageNew'});
                             this.$store.commit('setZone',params.row);
                             sessionStorage.setItem('uuId', params.row.computerid);
                             sessionStorage.setItem('gpuId',params.row.id);
@@ -728,7 +728,7 @@
                       on: {
                         click: () => {
                           if (params.row.status != -1) {
-                            this.$router.push({path: 'GpuManageNew'});
+                            this.$router.push({path: 'gpuManageNew'});
                             this.$store.commit('setZone',params.row);
                             sessionStorage.setItem('uuId', params.row.computerid);
                             sessionStorage.setItem('gpuId',params.row.id);
@@ -1523,7 +1523,7 @@
            onOk:()=>{
              axios.get('information/deleteVM.do',{
                params:{
-                 id: this.deleteList.id || this.deleteId
+                 id: this.deleteList.id == undefined? this.deleteId:this.deleteList.id
                }
              }).then(res => {
                if(res.status == 200 && res.data.status == 1){
