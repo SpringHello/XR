@@ -95,22 +95,23 @@
     </div>
 
     <!-- 新建vpc modal -->
-    <Modal v-model="showModal.newVpc" width="550" :scrollable="true">
+    <Modal v-model="showModal.newVpc" width="500" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">新建VPC</span>
       </p>
-      <div class="universal-modal-content-flex">
-        <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate">
+      <div class="universal-modal-content-flex" id="moli2">
+        <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate" style="width: 100%">
           <FormItem label="vpc名称" prop="vpcName">
-            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称"></Input>
+            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称" style="width:300px;float: right;"></Input>
           </FormItem>
           <FormItem label="地址范围" prop="vpc">
-            <Select v-model="newForm.vpc" placeholder="请选择">
+            <Select v-model="newForm.vpc" placeholder="请选择" style="width:300px;float: right;">
               <Option v-for="item in newForm.VPCOptions" :key="item" :value="item">{{item}}</Option>
             </Select>
           </FormItem>
-          <FormItem label="vpc描述" prop="desc">
-            <Input v-model="newForm.desc" placeholder="请输入vpc描述"></Input>
+					<span style="color:rgba(255,98,75,1);position: relative;left: 80px;">重要提醒：地址范围选定之后不可更改。</span>
+          <FormItem label="vpc描述" prop="desc" style="margin-top: 10px;">
+            <Input v-model="newForm.desc" placeholder="请输入vpc描述" style="width:300px;float: right;"></Input>
           </FormItem>
           <!--          <FormItem label="购买方式" prop="timeType">
                       <Select v-model="newForm.timeType">
@@ -126,7 +127,11 @@
                         </Option>
                       </Select>
                     </FormItem>-->
-          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+					<div class="modal-content-s divall">
+					  <div>
+					    VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改<span class="spanaa"></span>
+					  </div>
+					</div>
         </Form>
         <!--创建vpc时暂时不绑定公网IP-->
         <!--<div>
@@ -230,66 +235,70 @@
     </Modal>
 
     <!-- 添加NAT 网关 -->
-    <Modal v-model="showModal.addNat" width="550" :scrollable="true">
+    <Modal v-model="showModal.addNat" width="500" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">添加NAT网关</span>
       </p>
-      <div class="universal-modal-content-flex">
-        <Form :model="addNatForm" :rules="addNatRuleValidate" ref="addNatFormValidate">
+      <div class="universal-modal-content-flex" id="moli2">
+        <Form :model="addNatForm" :rules="addNatRuleValidate" ref="addNatFormValidate" style="width: 100%">
           <FormItem label="网关名称" prop="natName">
-            <Input v-model="addNatForm.natName" placeholder="请输入网关名称" style="width: 200px"></Input>
+            <Input v-model="addNatForm.natName" placeholder="请输入网关名称" style="width:300px;float: right;"></Input>
           </FormItem>
           <FormItem label="VPC ID" prop="vpc">
-            <Select v-model="addNatForm.vpc" placeholder="请选择" style="width: 200px" @on-change="listIP">
+            <Select v-model="addNatForm.vpc" placeholder="请选择" style="width:300px;float: right;" @on-change="listIP">
               <Option v-for="item in netData" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}</Option>
             </Select>
           </FormItem>
-          <FormItem label="选择弹性IP">
-            <Select v-model="addNatForm.publicIp" style="width: 200px">
+          <FormItem label="弹性IP">
+            <Select v-model="addNatForm.publicIp" style="width:300px;float: right;">
               <Option v-for="item in addNatForm.publicIpOptions" :value="item.publicipid" :key="item.publicipid">
                 {{item.publicip}}
               </Option>
             </Select>
             <i @click="$router.push('ip')">
-              <Icon type="plus" color="#2A99F2" size="20"
-                    style="position: relative;top: 4px;cursor:pointer;margin-left: 10px;"></Icon>
+              <Icon type="plus" color="#2A99F2" size="17"
+                    style="position: relative;top: 35px;cursor:pointer;left:35px;"></Icon>
+    				
             </i>
+    		<span style="position: relative;top: 11px;cursor:pointer;left:52px;float: left;color:#2A99F2 ;" @click="$router.push('ip')">新建弹性IP</span>
           </FormItem>
-          <FormItem label="选择计费模式" prop="timeType">
-            <Select v-model="addNatForm.timeType" style="width: 200px">
+          <FormItem label="计费模式" prop="timeType" id="fgfg">
+            <Select v-model="addNatForm.timeType" style="width:145px;float: left;">
               <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
                       :key="item.value">{{ item.label }}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="购买时长" prop="timeValue" v-if="addNatForm.timeType!='current'">
-            <Select v-model="addNatForm.timeValue" style="width: 200px">
+          <FormItem label="" prop="timeValue" v-if="addNatForm.timeType!='current'" id="gfgf">
+            <Select v-model="addNatForm.timeValue" style="width:145px;float: right;">
               <Option v-for="item in customTimeOptions[addNatForm.timeType]" :value="item.value" :key="item.value">
                 {{item.label}}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="新建弹性IP带宽" v-if="addNatForm.publicIp=='新建弹性IP'" style="width:90%">
+          <FormItem label="弹性IP带宽" v-if="addNatForm.publicIp=='新建弹性IP'"  style="width:90%">
             <i-slider v-model="addNatForm.IPSize" :min=1 :max=100 unit="M" :points="[20,50]"
                       style="width:300px;vertical-align: middle;"></i-slider>
             <InputNumber :max="100" :min="1" v-model="addNatForm.IPSize" :editable="false"
-                         style="margin-left: 20px" :precision="0"></InputNumber>
+                         style="margin-top: 10px;" :precision="0"></InputNumber>
             <span style="margin-left: 10px">M</span>
           </FormItem>
-          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+    	  <div>
+    		  <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
+    		  <span style="font-size: 24px;color: #FF624B;line-height: 32px;float:left">￥{{addNatForm.cost}}
+    		  <span v-if="addNatForm.timeValue != ''"> /
+    		  <span v-if="addNatForm.timeType == 'year'"
+    		        style="font-size: 16px; color: #FF624B;">{{addNatForm.timeValue}}年</span>
+    		  <span v-if="addNatForm.timeType == 'month'"
+    		        style="font-size: 16px; color: #FF624B;">{{addNatForm.timeValue}}月</span>
+    		  </span>
+    		  </span>
+    	  </div>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">￥{{addNatForm.cost}}
-        <span v-if="addNatForm.timeValue != ''"> /
-        <span v-if="addNatForm.timeType == 'year'"
-              style="font-size: 16px; color: #2A99F2;">{{addNatForm.timeValue}}年</span>
-        <span v-if="addNatForm.timeType == 'month'"
-              style="font-size: 16px; color: #2A99F2;">{{addNatForm.timeValue}}月</span>
-        </span>
-        </span>
-        <Button type="primary" @click="handleAddNatSubmit">完成配置</Button>
+    	  <Button @click="showModal.addNat=false">取消</Button>
+        <Button type="primary" @click="handleAddNatSubmit">完成</Button>
       </div>
     </Modal>
     <!-- 删除NAT 网关 -->
@@ -882,6 +891,7 @@
       }
     },
     beforeRouteEnter(to, from, next) {
+      //console.log(to)
       var zoneId = $store.state.zone.zoneid
       // 获取vpc数据
       var vpcResponse = axios.get('network/listVpc.do', {
@@ -906,12 +916,26 @@
     },
     created() {
       this.intervalInstance = setInterval(this.getVpcData, 10000)
-      if (sessionStorage.getItem('VPN')) {
-        this.paneStatus.vpc = 'NAT'
-        sessionStorage.removeItem('VPN')
-      }
+			this.testjump()
     },
     methods: {
+      testjump(){
+        this.paneStatus.vpc = this.$route.query.pane
+        if (sessionStorage.getItem('modal')) {
+          var modalName = sessionStorage.getItem('modal')
+          if (modalName == 'confirm') {
+            this.$message.confirm({
+                content: '请选择VPC并点击【管理】进入VPC详情页新建新的VPC子网',
+                duration: 1000,
+                top: 150,
+                closable: true
+            })
+          } else {
+            this.showModal[modalName] = true
+          }
+          sessionStorage.removeItem('modal')
+        }
+      },
       // 区域切换刷新数据
       refresh() {
         var zoneId = $store.state.zone.zoneid
@@ -1783,4 +1807,24 @@
       }
     }
   }
+	.spanaa {
+	  color: #2A99F2;
+	  text-decoration: underline;
+	  font-size: 12px;
+	  font-family: MicrosoftYaHei;
+	  cursor: pointer;
+	  border: none;
+	  padding: 0;
+	  margin-top: -3px;
+	}
+	
+	.divall {
+	  background:rgba(42,153,242,0.06);
+	  border-radius:2px;
+	  border:1px solid rgba(42,153,242,1);
+	  width: 460px;
+	  height: auto;
+	  padding: 10px;
+	  font-size: 12px;
+	}
 </style>

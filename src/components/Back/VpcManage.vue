@@ -176,20 +176,20 @@
     </div>
 
     <!-- 添加子网 modal -->
-    <Modal v-model="showModal.addNetwork" width="550" :scrollable="true">
+    <Modal v-model="showModal.addNetwork" width="500" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">添加私有网络</span>
       </p>
-      <div class="universal-modal-content-flex">
-        <Form :model="newNetworkForm" :rules="newNetworkRuleValidate" ref="newNetworkValidate">
+      <div class="universal-modal-content-flex" id="moli22">
+        <Form :model="newNetworkForm" :rules="newNetworkRuleValidate" ref="newNetworkValidate" style="width: 100%;">
           <FormItem label="子网名称" prop="networkName">
-            <Input v-model="newNetworkForm.networkName" placeholder="请输入子网名称"></Input>
+            <Input v-model="newNetworkForm.networkName" placeholder="请输入子网名称" style="width: 300px;float: right;"></Input>
           </FormItem>
           <FormItem label="子网描述" prop="networkDesc">
-            <Input v-model="newNetworkForm.networkDesc" placeholder="请输入子网描述"></Input>
+            <Input v-model="newNetworkForm.networkDesc" placeholder="请输入子网描述"  style="width: 300px;float: right;"></Input>
           </FormItem>
           <FormItem label="应用防火墙" prop="firewall">
-            <Select v-model="newNetworkForm.firewall" placeholder="请选择">
+            <Select v-model="newNetworkForm.firewall" placeholder="请选择"  style="width: 300px;float: right;">
               <Option v-for="(item,index) in newNetworkForm.firewallOptions" :key="item.acllistid"
                       :value="item.acllistid">
                 {{item.acllistname}}
@@ -197,7 +197,7 @@
             </Select>
           </FormItem>
           <FormItem label="服务方案" prop="serviceOffer">
-            <Select v-model="newNetworkForm.serviceOffer" placeholder="请选择">
+            <Select v-model="newNetworkForm.serviceOffer" placeholder="请选择"  style="width: 300px;float: right;">
               <Option v-for="(item,index) in newNetworkForm.serviceOfferOptions" :key="item.netofferid"
                       :value="item.netofferid">
                 {{item.netoffername}}
@@ -205,12 +205,16 @@
             </Select>
           </FormItem>
           <Form-item label="网关" prop="gateway">
-            <span v-if="data.cidr">{{data.cidr.split('.')[0]}}.{{data.cidr.split('.')[1]}}.</span>
+            <span v-if="data.cidr" style="margin-left: 47px;">{{data.cidr.split('.')[0]}}.{{data.cidr.split('.')[1]}}.</span>
             <InputNumber :max="255" :min="0" v-model="newNetworkForm.gateway" size="small"
                          style="width:55px;" :precision="0"></InputNumber>
             .1
           </Form-item>
-          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+          <div class="modal-content-s divall">
+            <div>
+              VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改<span class="spanaa"></span>
+            </div>
+          </div>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -1113,40 +1117,6 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  // css3下拉显示小图标
-  .clock-show.icon {
-    margin-left: 10px;
-    color: #2A99F2;
-    position: relative;
-    width: 13px !important;
-    height: 13px !important;
-    border: solid 1px currentColor;
-    border-radius: 50%;
-    //cursor: pointer;
-    transform: rotate(-45deg);
-    -ms-transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-    transition: all 0.5s;
-  }
-
-  .clock-show.icon:before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 4px;
-    width: 5px !important;
-    height: 5px!important;
-    border: currentColor solid 1px;
-    border-top-style: none;
-    border-right-style: none;
-  }
-
-  .rotateup.icon {
-    transform: rotate(-225deg);
-    -ms-transform: rotate(-225deg);
-    -webkit-transform: rotate(-225deg);
-  }
-
   .btn-bgwhite {
     border-color: #2A99F2;
     color: #2A99F2;
@@ -1469,5 +1439,24 @@
       }
     }
   }
-
+.spanaa {
+	  color: #2A99F2;
+	  text-decoration: underline;
+	  font-size: 12px;
+	  font-family: MicrosoftYaHei;
+	  cursor: pointer;
+	  border: none;
+	  padding: 0;
+	  margin-top: -3px;
+	}
+	
+	.divall {
+	  background:rgba(42,153,242,0.06);
+	  border-radius:2px;
+	  border:1px solid rgba(42,153,242,1);
+	  width: 460px;
+	  height: auto;
+	  padding: 10px;
+	  font-size: 12px;
+	}
 </style>
