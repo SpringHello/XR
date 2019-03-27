@@ -252,7 +252,7 @@
                 <div v-for="(qq,index) of QQInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
-                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.xrcloud.net&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
                 <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus" alt="人工客服">
                   <img src="./assets/img/app/qq-gray.png" v-else alt="人工客服">
@@ -270,7 +270,7 @@
                 <div v-for="(qq,index) of xiaoshouInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
-                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.xrcloud.net&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
                  <img src="./assets/img/app/qq-red.png" v-if="qq.qqstatus" alt="售前咨询">
                   <img src="./assets/img/app/qq-gray.png" v-else alt="售前咨询">
@@ -289,7 +289,7 @@
                 <div v-for="(qq,index) of yunweiInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
-                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.xrcloud.net&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
                  <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus" alt="技术支持">
                   <img src="./assets/img/app/qq-gray.png" v-else alt="技术支持">
@@ -625,16 +625,19 @@
           }
         ], // 页尾列表详情
         document: [
-          {title: '计算', url: 'https://zschj.xrcloud.net/support/products.html'},
-          {title: '网络', url: 'https://zschj.xrcloud.net/support/products.html'},
-          {title: '安全', url: 'https://zschj.xrcloud.net/support/products.html'},
-          {title: '财务与账户', url: 'https://zschj.xrcloud.net/support/products.html'}
+          {title: '云服务器', url: 'https://zschj.xrcloud.net/news/yunfuwuqi/1.html'},
+          {title: '云计算', url: 'https://zschj.xrcloud.net/news/yunjisuan/1.html'},
+          {title: '云安全', url: 'https://zschj.xrcloud.net/news/yunanquan/1.html'},
+          {title: '香港云服务器', url: 'https://zschj.xrcloud.net/news/xianggangyunfuwuqi/1.html'},
+          {title: '虚拟主机', url: 'https://zschj.xrcloud.net/news/xunizhuji/1.html'},
+          {title: '服务器虚拟化', url: 'https://zschj.xrcloud.net/news/fuwuqixunihua/1.html'},
+          {title: '域名交流', url: 'https://zschj.xrcloud.net/news/yumingjiaoliu/1.html'}
         ],
         // 服务与公告
         notice: [
-          {title: '最新公告', url: 'https://zschj.xrcloud.net/homePage/1.html'},
-          {title: '新闻动态', url: 'https://zschj.xrcloud.net/homePage/1.html'},
-          {title: '技术支持', url: 'https://zschj.xrcloud.net/support/products.html'},
+          {title: '产品文档', url: 'https://zschj.xrcloud.net/support/products.html'},
+          {title: '常见问题', url: 'https://zschj.xrcloud.net/support/asks.html'},
+          {title: '快速入门', url: 'https://zschj.xrcloud.net/support/quick.html'},
         ],
         // 友情链接
         links: [
