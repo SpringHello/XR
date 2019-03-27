@@ -137,6 +137,30 @@
         </div>
       </div>
     </div>
+    <div class="shade" v-show="onLogin">
+      <div class="shade-center">
+        <div class="spinner">
+          <div class="spinner-container container1">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+          </div>
+          <div class="spinner-container container2">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+          </div>
+          <div class="spinner-container container3">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <Modal v-model="ruleModal" width="800" :scrollable="true">
       <p slot="header" class="modal-header-border" style="text-align: center">
@@ -731,6 +755,27 @@
         }
       }
     }
+    .shade {
+      position: fixed;
+      background-color: rgba(55, 55, 55, 0.6);
+      height: 100%;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .shade-center {
+        height: 140px;
+        width: 220px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
+      }
+    }
   }
 
   .rules {
@@ -753,7 +798,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import areaTel from '../../options/area_tel'
-  var throttle = require('throttle-debounce/throttle')
+  var debounce = require('throttle-debounce/debounce')
   import gt from '../../util/gt'
 
   export default {
@@ -786,7 +831,8 @@
           verificationCodeNum: 0, //验证码错误次数,
         },
         codeCaptchaObjStatus: false,
-        codeCaptchaObj: null
+        codeCaptchaObj: null,
+        onLogin: false
       }
     },
     created() {
@@ -811,6 +857,7 @@
             }, function (captchaObj) {
               captchaObj.onReady(function () {
                 captchaObj.verify()
+                _self.onLogin = false
               }).onSuccess(function () {
                 _self.registerForm.errorMsg = ''
                 var result = captchaObj.getValidate()
@@ -850,6 +897,7 @@
             }, function (captchaObj) {
               captchaObj.onReady(function () {
                 captchaObj.verify()
+                _self.onLogin = false
               }).onSuccess(function () {
                 _self.registerForm.errorMsg = ''
                 var result = captchaObj.getValidate()
@@ -926,7 +974,7 @@
           }
         }
       },
-      sendRegisterVailCodeCheck: throttle(3000, function() {
+      sendRegisterVailCodeCheck: debounce(200, function() {
         if (this.registerForm.registerType === 'phone') {
           if (!this.registerForm.loginPhone || !this.regExpObj.phone.test(this.registerForm.loginPhone)) {
             this.registerForm.errorMsg = 'formatPhoneError'
@@ -955,6 +1003,7 @@
           params
         }).then(response => {
           if (response.status === 200 && response.data.status === 1) {
+            this.onLogin = true
             this.gtInitCode()
           } else {
             this.registerForm.errorMsg = 'isRegister'
@@ -1003,11 +1052,12 @@
           }
         )
       },
-      getRegisterVoiceCodeCheck: throttle(3000, function() {
+      getRegisterVoiceCodeCheck: debounce(200, function() {
         if (!this.regExpObj.phone.test(this.registerForm.loginPhone)) {
           this.registerForm.errorMsg = 'formatPhoneError'
           return
         }
+        this.onLogin = true
         this.gtInitVoice()
       }),
       getRegisterVoiceCode() {

@@ -8,7 +8,7 @@
 					<div class="remindbox-left">
 						<div class="font" style="margin-left: 20px;">
 							<div class="fontleft">
-								<span>可<span style="color: #FF624B;">线上</span>提现金额</span>
+								<span>可<span style="color: #FF624B;">原路</span>退回金额</span>
 							</div>
 							<div class="money">
 								<span>{{Onlinemoney}}</span>
@@ -38,7 +38,7 @@
 					</div>
 					<div class="remindbox-right">
 						<div class="right">
-							<span style="line-height: 21px;margin-top: 5px;"><span style="line-height: 21px;">申请线上提现后您的款项将在</span><span
+							<span style="line-height: 21px;margin-top: 5px;"><span style="line-height: 21px;">申请提现后您的款项将在</span><span
 								 style="color: #FF624B;line-height: 21px;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看
 								<a @click="$router.push('/ruicloud/documentInfo/6bSa9TMxO/6zxZtv8QU')" style="color: #2A99F2;text-decoration: underline;">自助提现常见问题</a></span>
 							<div class="following">
