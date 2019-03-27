@@ -62,9 +62,9 @@ export default {
       pathList: [
         { name: '创建vpc', url: 'vpcList', pane: 'VPC', modal: 'newVpc' },
         { name: '绑定源NAT', url: 'natState', pane: 'NAT', modal: '' },
-        { name: '创建本地网关', url: 'vpnList', pane: 'localGateway', modal: '' },
-        { name: '创建客户网关', url: 'vpnList', pane: 'customerGateway', modal: '' },
-        { name: '创建VPN网关', url: 'vpnList', pane: 'VPN', modal: '' },
+        { name: '创建本地网关', url: 'vpnList', pane: 'localGateway', modal: 'newLocalGateway' },
+        { name: '创建客户网关', url: 'vpnList', pane: 'customerGateway', modal: 'newTunnelVpntwo' },
+        { name: '创建VPN网关', url: 'vpnList', pane: 'VPN', modal: 'vpnLink' }
       ],
       url: 'vpcList',
       pane: 'VPC',

@@ -68,9 +68,13 @@
   float: none;
   font-size: 14px;
 }
-/* 每行两列form,label文字14px */
+/* form表单,label文字14px */
 .universal-modal-label-14px form .ivu-form-item .ivu-form-item-label {
   font-size: 14px;
+}
+/* form表单, formItem间距10px*/
+.universal-modal-mb-10px form .ivu-form-item, form.universal-modal-mb-10px .ivu-form-item {
+  margin-bottom: 10px;
 }
 /* form表单样式,错误提示不换行 */
 .universal-form-tips-line .ivu-form-item-content {
@@ -200,28 +204,6 @@
 }
 #gfgf1 .ivu-form-item-error-tip{
 	margin-left: 5px;
-}
-#moli5 .ivu-form-item {
-  width: 90%;
-}
-#moli5 .ivu-form-item .ivu-form-item-label {
-  float: left;
-  width: 113px;
-  text-align: left;
-}
-#moli5 .ivu-form-item-error-tip{
-	margin-left: 115px;
-	margin-top: 30px;
-}
-#moli5 .ivu-form-item{
-	margin-bottom: 0;
-}
-#moli5 #firstff{
-	width: 100px;
-}
-#moli5 #twoff{
-	width: 100px;
-	margin-right: 240px;
 }
 
 /* 重置modal中header,body,footer的padding */
