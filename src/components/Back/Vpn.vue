@@ -228,6 +228,112 @@
         <Button type="primary" @click="newTunnelVpnOk" v-if="newTunnelVpnForm.step==2">完成</Button>
       </div>
     </Modal>
+		
+		<Modal v-model="showModal.newTunnelVpntwo" width="500" :scrollable="true">
+		  <p slot="header" class="modal-header-border">
+		    <span class="universal-modal-title">创建隧道</span>
+		  </p>
+		  <div class="universal-modal-content-flex" id="moli5">
+		    <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate"
+		          ref="newTunnelVpnFormValidate1" style="width: 100%">
+		      <FormItem label="客户网关名称" prop="name1">
+		        <Input v-model="newTunnelVpnForm.name1" placeholder="请输入0-16字节名称" style="width:300px;float: right;"></Input>
+		      </FormItem>
+		      <FormItem label="对端源IP地址" prop="IP" style="margin-top: 20px;">
+		        <Input v-model="newTunnelVpnForm.IP" placeholder="例如10.132.31.27" style="width:300px;float: right;"></Input>
+		      </FormItem>
+		      <FormItem label="对端网络CIDR" prop="CIDR" style="margin-top: 20px;">
+		        <Input v-model="newTunnelVpnForm.CIDR" placeholder="例如192.168.0.0/16" style="width:300px;float: right;"></Input>
+		      </FormItem>
+		      <FormItem label="预共享密钥" prop="key" style="margin-top: 20px;">
+		        <Input v-model="newTunnelVpnForm.key" placeholder="请输入0-128字节密码" style="width:300px;float: right;"></Input>
+		      </FormItem>
+		    </Form>
+		    <p style="opacity: 0.8;text-align: left;margin-top: 20px; color:rgba(255,152,1,1);margin-left: 115px;">本端的共享密钥必须和对端的共享密钥一致</p>
+				<div class="clock-show icon" @click=""
+				     :class="{rotateup:newTunnelVpnForm.showDetail}" style=""></div>
+		    <span style="display: inline-block;color:#2A99F2;cursor:pointer;margin-top: 10px;margin-left: 115px;"
+		          @click="newTunnelVpnForm.showDetail=true"
+		          v-show="!newTunnelVpnForm.showDetail">
+		        展开高级选项&nbsp;
+		      </span>
+		    <span style="display: inline-block;margin-bottom: 10px;color:#2A99F2;cursor:pointer;margin-top: 10px;margin-left: 115px;"
+		          @click="newTunnelVpnForm.showDetail=false"
+		          v-show="newTunnelVpnForm.showDetail">
+		        隐藏高级选项
+		      </span>
+					<div class="divbox" v-show="newTunnelVpnForm.showDetail">
+						与对端网关的IKE加密算法、IKE哈希算法、ESP加密算法、ESP哈希算法保持一致
+					</div>
+		
+		    <!--高级选项FormItem-->
+		    <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate" ref="newTunnelVpnFormValidate">
+		      <FormItem label="IKE加密算法" prop="vpcId" v-show="newTunnelVpnForm.showDetail">
+		        <Select v-model="newTunnelVpnForm.IKE" style="width:300px;float: right;">
+		          <Option v-for="item in newTunnelVpnForm.IKEOptions" :value="item.key" :key="item.key">
+		            {{item.label}}
+		          </Option>
+		        </Select>
+		      </FormItem>
+					<FormItem label="IKE哈希算法" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 10px;">
+					  <Select v-model="newTunnelVpnForm.IKEHash" style="width:300px;float: right;">
+					    <Option v-for="item in newTunnelVpnForm.IKEHashOptions" :value="item.key" :key="item.key">
+					      {{item.label}}
+					    </Option>
+					  </Select>
+					</FormItem>
+		      <FormItem label="ESP加密算法" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 10px;">
+		        <Select v-model="newTunnelVpnForm.ESP" style="width:300px;float: right;">
+		          <Option v-for="item in newTunnelVpnForm.ESPOptions" :value="item.key" :key="item.key">
+		            {{item.label}}
+		          </Option>
+		        </Select>
+		      </FormItem>
+		      <FormItem label="ESP哈希算法" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 10px;">
+		        <Select v-model="newTunnelVpnForm.ESPHash" style="width:300px;float: right;">
+		          <Option v-for="item in newTunnelVpnForm.ESPHashOptions" :value="item.key" :key="item.label">
+		            {{item.label}}
+		          </Option>
+		        </Select>
+		      </FormItem>
+		      <FormItem label="IKE DH算法" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 10px;">
+		        <Select v-model="newTunnelVpnForm.IKEDH" style="width:300px;float: right;">
+		          <Option v-for="item in newTunnelVpnForm.IKEDHoptions" :value="item.key" :key="item.label">
+		            {{item.label}}
+		          </Option>
+		        </Select>
+		      </FormItem>
+		      <FormItem label="完全正向保密" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 10px;">
+		        <Select v-model="newTunnelVpnForm.secret" style="width:300px;float: right;">
+		          <Option v-for="item in newTunnelVpnForm.secretOptions" :value="item.key" :key="item.label">
+		            {{item.label}}
+		          </Option>
+		        </Select>
+		      </FormItem>
+		      <FormItem label="IKE使用期限第二阶段" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: 3px;">
+		        <InputNumber v-model="newTunnelVpnForm.ikelifetime" :min="-1" style="width:300px;float: right;margin-top: 7px;" :precision="0"></InputNumber>
+		      </FormItem>
+		      <FormItem label="ESP使用期限第二阶段" prop="vpcId" v-show="newTunnelVpnForm.showDetail" style="margin-top: -3px;">
+		        <InputNumber v-model="newTunnelVpnForm.esplifetime" :min="-1" style="width:300px;float: right;margin-top: 7px;" :precision="0"></InputNumber>
+		      </FormItem>
+		      <FormItem label="" prop="vpcId" v-show="newTunnelVpnForm.showDetail" id="firstff">
+		
+		        <Checkbox v-model="newTunnelVpnForm.checkGroup1">失效对等检测</Checkbox>
+		
+		      </FormItem>
+		      <FormItem label="" prop="vpcId" v-show="newTunnelVpnForm.showDetail" id="twoff">
+		
+		        <Checkbox v-model="newTunnelVpnForm.checkGroup2">Force UDP</Checkbox>
+		
+		      </FormItem>
+		
+		    </Form>
+		  </div>
+		  <div slot="footer" class="modal-footer-border">
+		    <Button @click="showModal.newTunnelVpntwo = false">取消</Button>
+		    <Button type="primary" @click="testOk">确定创建</Button>
+		  </div>
+		</Modal>
     <!--vpn修改配置-->
     <Modal v-model="showModal.FixVPN" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">

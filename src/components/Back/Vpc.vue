@@ -104,13 +104,13 @@
           <FormItem label="vpc名称" prop="vpcName">
             <Input v-model="newForm.vpcName" placeholder="请输入vpc名称" style="width:300px;float: right;"></Input>
           </FormItem>
-          <FormItem label="地址范围" prop="vpc" style="margin-top: 20px;">
+          <FormItem label="地址范围" prop="vpc">
             <Select v-model="newForm.vpc" placeholder="请选择" style="width:300px;float: right;">
               <Option v-for="item in newForm.VPCOptions" :key="item" :value="item">{{item}}</Option>
             </Select>
           </FormItem>
-					<span style="color:rgba(255,98,75,1);position: relative;top:20px;left: 80px;">重要提醒：地址范围选定之后不可更改。</span>
-          <FormItem label="vpc描述" prop="desc" style="margin-top: 30px;">
+					<span style="color:rgba(255,98,75,1);position: relative;left: 80px;">重要提醒：地址范围选定之后不可更改。</span>
+          <FormItem label="vpc描述" prop="desc" style="margin-top: 10px;">
             <Input v-model="newForm.desc" placeholder="请输入vpc描述" style="width:300px;float: right;"></Input>
           </FormItem>
           <!--          <FormItem label="购买方式" prop="timeType">
@@ -244,12 +244,12 @@
           <FormItem label="网关名称" prop="natName">
             <Input v-model="addNatForm.natName" placeholder="请输入网关名称" style="width:300px;float: right;"></Input>
           </FormItem>
-          <FormItem label="VPC ID" prop="vpc" style="margin-top: 20px;">
+          <FormItem label="VPC ID" prop="vpc">
             <Select v-model="addNatForm.vpc" placeholder="请选择" style="width:300px;float: right;" @on-change="listIP">
               <Option v-for="item in netData" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}</Option>
             </Select>
           </FormItem>
-          <FormItem label="弹性IP" style="margin-top: 20px;">
+          <FormItem label="弹性IP">
             <Select v-model="addNatForm.publicIp" style="width:300px;float: right;">
               <Option v-for="item in addNatForm.publicIpOptions" :value="item.publicipid" :key="item.publicipid">
                 {{item.publicip}}
@@ -262,7 +262,7 @@
             </i>
     		<span style="position: relative;top: 11px;cursor:pointer;left:52px;float: left;color:#2A99F2 ;" @click="$router.push('ip')">新建弹性IP</span>
           </FormItem>
-          <FormItem label="计费模式" prop="timeType" style="margin-top: 22px;" id="fgfg">
+          <FormItem label="计费模式" prop="timeType" id="fgfg">
             <Select v-model="addNatForm.timeType" style="width:145px;float: left;">
               <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
                       :key="item.value">{{ item.label }}
@@ -270,7 +270,7 @@
             </Select>
           </FormItem>
           <FormItem label="" prop="timeValue" v-if="addNatForm.timeType!='current'" id="gfgf">
-            <Select v-model="addNatForm.timeValue" style="width:145px;float: right;margin-top: 22px;">
+            <Select v-model="addNatForm.timeValue" style="width:145px;float: right;">
               <Option v-for="item in customTimeOptions[addNatForm.timeType]" :value="item.value" :key="item.value">
                 {{item.label}}
               </Option>
@@ -283,7 +283,7 @@
                          style="margin-top: 10px;" :precision="0"></InputNumber>
             <span style="margin-left: 10px">M</span>
           </FormItem>
-    	  <div style="margin-top: 20px;">
+    	  <div>
     		  <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
     		  <span style="font-size: 24px;color: #FF624B;line-height: 32px;float:left">￥{{addNatForm.cost}}
     		  <span v-if="addNatForm.timeValue != ''"> /
@@ -1824,7 +1824,6 @@
 	  border:1px solid rgba(42,153,242,1);
 	  width: 460px;
 	  height: auto;
-	  margin-top: 20px;
 	  padding: 10px;
 	  font-size: 12px;
 	}
