@@ -41,50 +41,56 @@
       </div>
     </div>
     <!-- 新建vpc modal -->
-    <Modal v-model="showModal.newIPModal" width="550" :scrollable="true">
+    <Modal v-model="showModal.newIPModal" width="500" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">新建弹性IP</span>
       </p>
-      <div class="universal-modal-content-flex">
-        <Form :model="newIPForm" :rules="newIPRuleValidate" ref="newIPFormValidate">
+      <div class="universal-modal-content-flex" id="moli2">
+        <Form :model="newIPForm" :rules="newIPRuleValidate" ref="newIPFormValidate" style="width: 100%">
           <FormItem label="所属VPC" prop="vpc">
-            <Select v-model="newIPForm.vpc" placeholder="请选择所属VPC">
+            <Select v-model="newIPForm.vpc" placeholder="请选择所属VPC" style="width:300px;float: right;">
               <Option v-for="item in newIPForm.VPCOptions" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="购买方式" prop="timeType">
-            <Select v-model="newIPForm.timeType" @on-change="changeTimeType">
+          <FormItem label="购买方式" prop="timeType" id="fgfg">
+            <Select v-model="newIPForm.timeType" @on-change="changeTimeType"  style="width:145px;float: left;margin-left: 4px;">
               <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
                       :key="item.value">{{ item.label }}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="购买时长" prop="timeValue" v-if="newIPForm.timeType!='current'">
-            <Select v-model="newIPForm.timeValue" @on-change="queryNewIPPrice">
+          <FormItem label="" prop="timeValue" v-if="newIPForm.timeType!='current'" id="gfgf1">
+            <Select v-model="newIPForm.timeValue" @on-change="queryNewIPPrice" style="width:145px;float: right;">
               <Option v-for="item in customTimeOptions[newIPForm.timeType]" :value="item.value" :key="item.value">
                 {{item.label}}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="带宽" style="width:90%;">
-            <i-slider v-model="newIPForm.bandWidth" :min=1 :max=100 unit="M" :points="[20,50]"
-                      style="width:300px;vertical-align: middle;" @change="queryNewIPPrice"></i-slider>
+          <FormItem label="带宽" id="jiakuan">
+            <i-slider v-model="newIPForm.bandWidth" :min=1 :max=100 unit="MB" :points="[20,50]"
+                      style="width:300px;vertical-align: middle;margin-left: 7px;" @change="queryNewIPPrice"></i-slider>
             <InputNumber :max="100" :min="1" v-model="newIPForm.bandWidth" :editable="false"
-                         style="margin-left: 20px" @on-change="queryNewIPPrice" :precision="0"></InputNumber>
-            <span style="margin-left: 10px">M</span>
+                         style="width: 60px;height: 30px;margin-left: 15px;" @on-change="queryNewIPPrice" :precision="0"></InputNumber>
+            <span style="margin-left: 5px;">MB</span>
           </FormItem>
-          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+          <div class="modal-content-s divall">
+            <div>
+              VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改<span class="spanaa"></span>
+            </div>
+          </div>
+					<div style="margin-top: 20px;">
+						<span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费</span>
+						<span style="font-size: 24px;color:#FF624B;line-height: 32px;float:left;margin-left: 10px;">￥{{newIPForm.cost}} <span
+						  v-if="newIPForm.timeValue != ''">/</span>
+						  <span v-if="newIPForm.timeType == 'year' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}年</span>
+						  <span v-if="newIPForm.timeType == 'month' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}月</span>
+						  <!--<span v-if="newIPForm.timeType == 'current'">/ <span style="font-size: 16px;">时</span></span>-->
+						</span>
+					</div>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">￥{{newIPForm.cost}} <span
-          v-if="newIPForm.timeValue != ''">/</span>
-          <span v-if="newIPForm.timeType == 'year' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}年</span>
-          <span v-if="newIPForm.timeType == 'month' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}月</span>
-          <!--<span v-if="newIPForm.timeType == 'current'">/ <span style="font-size: 16px;">时</span></span>-->
-        </span>
         <Button type="primary" @click="handleNewIPSubmit">完成配置</Button>
       </div>
     </Modal>
@@ -854,8 +860,17 @@
       } else {
         this.hide = 'none';
       }
+			this.testjump()
     },
     methods: {
+			testjump(){
+			  if (sessionStorage.getItem('modal')) {
+			    var modalName = sessionStorage.getItem('modal')
+					if(modalName == 'newIPModal')
+			      this.showModal[modalName] = true
+			    sessionStorage.removeItem('modal')
+			  }
+			},
       // 跳转到相应的购买页面
       tobuy(url) {
         sessionStorage.setItem('pane', url)
@@ -1881,4 +1896,24 @@
     overflow: auto;
     margin-top: 20px;
   }
+	.spanaa {
+	  color: #2A99F2;
+	  text-decoration: underline;
+	  font-size: 12px;
+	  font-family: MicrosoftYaHei;
+	  cursor: pointer;
+	  border: none;
+	  padding: 0;
+	  margin-top: -3px;
+	}
+	
+	.divall {
+	  background:rgba(42,153,242,0.06);
+	  border-radius:2px;
+	  border:1px solid rgba(42,153,242,1);
+	  width: 460px;
+	  height: auto;
+	  padding: 10px;
+	  font-size: 12px;
+	}
 </style>

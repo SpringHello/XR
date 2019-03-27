@@ -106,7 +106,7 @@
              :style="menuStyle(parentItem.type)">
           <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==pageInfo.hoverItem}">
             <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
-                @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">
+                @click="push(parentItem.type,subItem.type,subItem.pane)" :class="{hover:subItem.type==pageInfo.sType}">
               <Dropdown v-if="subItem.thrItem" @on-click="pane">
                 <a href="javascript:void(0)">
                   {{subItem.subName}}
@@ -118,7 +118,7 @@
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <a v-else>
+               <a v-else>
                 {{subItem.subName}}
               </a>
             </li>
@@ -293,14 +293,24 @@
               {
                 subName: '虚拟私有云VPC',
                 type: 'vpcList',
-                thrItem: [{thrName: '虚拟私有云VPC', pane: 'VPC'}, {thrName: 'NAT网关', pane: 'NAT'}]
+								pane: 'VPC'
               },
+							{
+							  subName: 'NAT网关',
+							  type: 'natState',
+								pane: 'NAT'
+							},
               {subName: '弹性IP', type: 'ip'},
-              {subName: '负载均衡', type: 'balance'},
+              {subName: '负载均衡', type: 'loadbState'},
               {
                 subName: '虚拟专网VPN',
-                type: 'vpnList',
-                thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
+                type: 'vpnBlanck',
+                thrItem: [
+                  {thrName: 'VPN连接', pane: 'VPN'},
+                  {thrName: 'VPN本地网关', pane: 'localGateway'},
+                  {thrName: 'VPN客户网关', pane: 'customerGateway'},
+                  {thrName: 'VPN拨入', pane: 'remote'},
+                ]
               }
             ]
           },
@@ -389,6 +399,7 @@
               this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
               this.pageInfo.sType = sItem.type
               this.pageInfo.static = true
+              this.pageInfo.pane=sItem.pane
             }
           }
         }
@@ -446,7 +457,8 @@
       }),
 
       // 进入三级路由，记录二级路由入口
-      push(pType, sType) {
+      push(pType, sType, pane) {
+				// console.log(pane)
         this.pageInfo.static = true;
         this.pageInfo.selectItem = pType;
         this.pageInfo.sType = sType;
@@ -466,7 +478,14 @@
           //   }
           // })
         } else {
-          this.$router.push(sType)
+					//console.log(pane)
+					if(pane==undefined){
+						this.$router.push(sType)
+					} else{
+						var newpane = pane + '#虚拟私有云VPC'
+            this.pane(newpane)
+            this.$router.push(sType)
+					}
         }
       },
       go(path) {
@@ -617,6 +636,7 @@
                 this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
                 this.pageInfo.sType = sItem.type
                 this.pageInfo.static = true
+                this.pageInfo.pane=sItem.pane
               }
             }
           }
