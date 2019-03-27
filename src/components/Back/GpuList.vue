@@ -45,7 +45,7 @@
               title="您确认删除选中的主机吗？">
               <Button type="primary" :disabled="disabledList.deleteDisbled">删除</Button>
             </Poptip>
-            <Button type="primary" :disabled='disabledList.deleteDisbled' style="margin:0 10px;" @click="deleteHost">删除</Button>
+            <!-- <Button type="primary" :disabled='disabledList.deleteDisbled' style="margin:0 10px;" @click="deleteHost">删除</Button> -->
             <Dropdown>
               <Button type="primary" style="margin:0 10px;" @click="hideEvent">更多操作
                  <Icon type="arrow-down-b"></Icon>
@@ -1120,7 +1120,8 @@
                       },
                       on: {
                         click: () => {
-                          this.deleteHost(params.row)
+                          this.deleteList = params.row;
+                          this.deleteHost()
                         }
                       }
                     }, '删除')])
@@ -1144,7 +1145,8 @@
                       },
                       on: {
                         click: () => {
-                          this.deleteHost(params.row)
+                          this.deleteList = params.row;
+                          this.deleteHost()
                         }
                       }
                     }, '删除')])
@@ -1323,7 +1325,7 @@
           },
           selectLength:[],
           total:0,
-          deleteId:0,
+          deleteId:'',
           deleteList:''
         }
       },
@@ -1574,8 +1576,6 @@
           for(let i = 0;i<selection.length;i++){
           this.uuid += selection[i].computerid+',';
           this.uuid = this.uuid.substring(0,this.uuid.length-1);
-          this.deleteId += selection[i].id+',';
-           this.deleteId = this.deleteId.substring(0,this.deleteId.length-1);
             if(selection[i].computerstate == 1 && selection[i].status ==1){ //开机状态
                this.disabledList.closeDisbled = false;
             }else if(selection[i].computerstate == 0 && selection[i].status ==1){ // 关机状态
