@@ -577,7 +577,7 @@
             render: (h, params) => {
               let text_1 = params.row.computername ? params.row.computername : '----'
               let text_2 = params.row.instancename ? params.row.instancename : '----'
-              if (params.row.status == 1 && this.auth) {
+              if (params.row.status == 1 && this.auth && this.auth.checkstatus == 0) {
                 return h('ul', {}, [
                   h('li', {
                     style: {
@@ -983,7 +983,7 @@
           {
             title: '操作',
             render: (h, params) => {
-              if (!this.auth) {
+              if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
                 return h('div', {}, [
                   h('p', {
                     style: {
@@ -1640,7 +1640,7 @@
             if (ids.length !== 0) {
               this.timingRefresh(ids + '')
             }
-            if (!this.auth) {
+            if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
               this.hostListData.forEach(host => {
                 host._disabled = true
               })
@@ -2681,7 +2681,7 @@
     },
     computed: {
       auth() {
-        return this.$store.state.authInfo != null
+        return this.$store.state.authInfo
       },
       selectHostIds() {
         let ids = []

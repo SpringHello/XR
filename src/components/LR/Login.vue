@@ -106,6 +106,30 @@
         </div>
       </div>
     </div>
+    <div class="shade" v-show="onLogin">
+      <div class="shade-center">
+        <div class="spinner">
+          <div class="spinner-container container1">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+          </div>
+          <div class="spinner-container container2">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+          </div>
+          <div class="spinner-container container3">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -347,11 +371,33 @@
         }
       }
     }
+    .shade {
+      position: fixed;
+      background-color: rgba(55, 55, 55, 0.6);
+      height: 100%;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .shade-center {
+        height: 140px;
+        width: 220px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
+      }
+    }
   }
 </style>
 <script type="text/ecmascript-6">
   import axios from 'axios'
-  var throttle = require('throttle-debounce/throttle')
+
+  var debounce = require('throttle-debounce/debounce')
   import gt from '../../util/gt'
 
   export default {
@@ -387,6 +433,7 @@
         passwordCaptchaObjStatus: false,
         codeCaptchaObj: null,
         codeCaptchaObjStatus: false,
+        onLogin: false
       }
     },
     created() {
@@ -446,6 +493,7 @@
             }, function (captchaObj) {
               captchaObj.onReady(function () {
                 captchaObj.verify()
+                _self.onLogin = false
               }).onSuccess(function () {
                 _self.loginForm.errorMsg = ''
                 var result = captchaObj.getValidate()
@@ -519,6 +567,7 @@
             }, function (captchaObj) {
               captchaObj.onReady(function () {
                 captchaObj.verify()
+                _self.onLogin = false
               }).onSuccess(function () {
                 _self.loginForm.errorMsg = ''
                 var result = captchaObj.getValidate()
@@ -558,6 +607,7 @@
             }, function (captchaObj) {
               captchaObj.onReady(function () {
                 captchaObj.verify()
+                _self.onLogin = false
               }).onSuccess(function () {
                 _self.loginForm.errorMsg = ''
                 var result = captchaObj.getValidate()
@@ -614,7 +664,7 @@
           this.loginForm.errorMsg = 'formatError'
         }
       },
-      toLogin: throttle(3000, function () {
+      toLogin: debounce(200, function () {
         if (!this.loginForm.loginName) {
           this.loginForm.errorMsg = 'formatError'
           return
@@ -624,6 +674,7 @@
             this.loginForm.errorMsg = 'passwordMistake'
             return
           }
+          this.onLogin = true
           this.gtInitPassword()
         } else {
           if (!this.loginForm.verificationCode) {
@@ -693,7 +744,7 @@
           }
         })
       },
-      sendLoginVailCodeCheck:throttle(3000, function () {
+      sendLoginVailCodeCheck: debounce(200, function () {
         if (!this.loginForm.loginName || !(this.regExpObj.phone.test(this.loginForm.loginName) || this.regExpObj.email.test(this.loginForm.loginName))) {
           this.loginForm.errorMsg = 'formatError'
           return
@@ -709,6 +760,7 @@
           if (response.status === 200 && response.data.status === 1) {
             this.loginForm.errorMsg = 'notRegister'
           } else {
+            this.onLogin = true
             this.gtInitCode()
           }
         })
@@ -756,11 +808,12 @@
           }
         })
       },
-      getLoginVoicecodeCheck:throttle(3000, function () {
+      getLoginVoicecodeCheck: debounce(200, function () {
         if (!this.regExpObj.phone.test(this.loginForm.loginName)) {
           this.loginForm.errorMsg = 'formatError'
           return
         }
+        this.onLogin = true
         this.gtInitVoice()
       }),
       getLoginVoiceCode() {
