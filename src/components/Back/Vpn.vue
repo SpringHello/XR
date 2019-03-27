@@ -1189,7 +1189,7 @@
             render: (h, params) => {
               
               return h('div', {}, [
-                h('sapn',{
+                h('span',{
                   style: {
                     marginRight: '10px',
                     color: '#2A99F2',
@@ -1229,7 +1229,7 @@
                     }
                   }
                 },'重启'),
-                h('sapn',{
+                h('span',{
                   style: {
                     color: '#2A99F2',
                     cursor: 'pointer'
