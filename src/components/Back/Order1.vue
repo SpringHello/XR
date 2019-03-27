@@ -9,9 +9,9 @@
              v-if="routerName == '新建云主机' || routerName =='续费' || routerName == '新建云硬盘' || routerName == '磁盘升级' || routerName == '新建GPU云服务器' || routerName == '系统盘扩容'">
           <div>
             <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
-            <p style="margin-top:10px;">请牢记您所设置的密码，如遗忘可登录云服务器控制台重置密码。<a class="blue_font" href="https://www.xrcloud.net/documentInfo/kiRWuMFJd/kmKQJcCNq" target="_blank" >查看</a></p>
-            <p style="margin-top:10px;" v-if="isNotBuyDisk || routerName == '新建云硬盘'">云服务器购买成功后，数据盘默认是未挂载的情况，需要自行格式化硬盘后，挂载分区后才能在云服务器内看到。<a class="blue_font" href="https://www.xrcloud.net/documentInfo/kiRWuMFJd/l3OwHRSfs" target="_blank">查看windows如何格式化、</a><a class="blue_font" href="https://www.xrcloud.net/documentInfo/kiRWuMFJd/l3YdhChS2" target="_blank">Linux如何格式化</a></p>
-            <p style="margin-top:10px;" v-if="routerName == '系统盘扩容'">若您购买了额外的系统盘，默认为未分区状态，需要自行扩容文件系统之后使用。<a class="blue_font" href="https://www.xrcloud.net/documentInfo/kiRWuMFJd/14u6nDwUP8" target="_blank">查看如何扩容windows文件系统、</a><a class="blue_font" href="https://www.xrcloud.net/documentInfo/kiRWuMFJd/14u6nDwUP8" target="_blank">扩容Linux文件系统</a></p>
+            <p style="margin-top:10px;">请牢记您所设置的密码，如遗忘可登录云服务器控制台重置密码。<a class="blue_font" href="/support_docs/kiRWuMFJd_kmKQJcCNq.html" target="_blank" >查看</a></p>
+            <p style="margin-top:10px;" v-if="isNotBuyDisk || routerName == '新建云硬盘'">云服务器购买成功后，数据盘默认是未挂载的情况，需要自行格式化硬盘后，挂载分区后才能在云服务器内看到。<a class="blue_font" href="support_docs/kieLofe4O_3BKrwYD0i.html" target="_blank">查看windows如何格式化、</a><a class="blue_font" href="/support_docs/kieLofe4O_l455ekGff.html" target="_blank">Linux如何格式化</a></p>
+            <p style="margin-top:10px;" v-if="routerName == '系统盘扩容'">若您购买了额外的系统盘，默认为未分区状态，需要自行扩容文件系统之后使用。<a class="blue_font" href="/support_docs/kiRWuMFJd_14u6nDwUP8.html" target="_blank">查看如何扩容windows文件系统、</a><a class="blue_font" href="/support_docs/kiRWuMFJd_14usXqMEji.html" target="_blank">扩容Linux文件系统</a></p>
           </div>
         </div>
         <div class="selectMark">
@@ -420,8 +420,8 @@
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.orderPay = response.data.result;
-              if (Number(response.data.result.voucher.toFixed(2)) != 0 && response.data.result.isUseVoucher != 0) {
-                this.groupList.push('cash');
+              if(Number(response.data.result.voucher.toFixed(2)) != 0 && response.data.result.isUseVoucher != 0){
+                  this.groupList.push('cash');
               }
             } else {
               this.$Message.error({
@@ -720,26 +720,27 @@
       vipPrice() {
         if (this.vipName != '' || this.vipName != undefined) {
           let money = 0;
-          if (this.couponInfo.selectTicket != '' && (this.groupList[0] == 'cash' || this.groupList[1] == 'cash')) {
-            this.couponInfo.couponList.forEach(item => {
-              if (item.operatorid == this.couponInfo.selectTicket) {
-                if (item.tickettype == 1) {
-                  if (this.couponInfo.cost > this.couponInfo.cash) {
-                    money = this.couponInfo.cash - (this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2));
-                  }
-                  if (this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash) {
-                    money = this.couponInfo.cash - (this.couponInfo.cost - Number((this.couponInfo.cost * item.money).toFixed(2)));
-                  }
-                } else if (item.tickettype == 0) {
-                  if ((this.couponInfo.cost - item.money) > this.couponInfo.cash) {
-                    money = (item.money + this.couponInfo.cash).toFixed(2);
-                  }
-                  if ((this.couponInfo.cost - item.money) < this.couponInfo.cash || (this.couponInfo.cost - item.money) == this.couponInfo.cash) {
-                    money = this.couponInfo.cost.toFixed(2);
+            if (this.couponInfo.selectTicket != '' && (this.groupList[0] == 'cash' || this.groupList[1] == 'cash')) {
+              this.couponInfo.couponList.forEach(item => {
+                if (item.operatorid == this.couponInfo.selectTicket) {
+                  if (item.tickettype == 1) {
+                    if(this.couponInfo.cost > this.couponInfo.cash){
+                        money = this.couponInfo.cash -(this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2));
+                    }
+                    if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
+                        money =  this.couponInfo.cash - (this.couponInfo.cost - Number((this.couponInfo.cost * item.money).toFixed(2)));
+                    }
+                  } else if (item.tickettype == 0) {
+                    if((this.couponInfo.cost - item.money) > this.couponInfo.cash){
+                        money =  (item.money+this.couponInfo.cash).toFixed(2);
+                    }
+                    if((this.couponInfo.cost - item.money) < this.couponInfo.cash || (this.couponInfo.cost - item.money) == this.couponInfo.cash){
+                        money = this.couponInfo.cost.toFixed(2);
+                    }
                   }
                 }
               }
-            })
+            )
             return money;
           } else {
             if ((this.groupList[0] == 'cash' || this.groupList[1] == 'cash') && this.couponInfo.selectTicket == '') {
@@ -795,8 +796,8 @@
               this.couponInfo.couponList.forEach(item => {
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
-                    if (this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))) {
-                      this.couponInfo.totalCost = this.couponInfo.cash - (this.couponInfo.cost * item.money);
+                    if(this.couponInfo.cash > Number((this.couponInfo.cost - item.money).toFixed(2)) || this.couponInfo.cash == Number((this.couponInfo.cost - item.money).toFixed(2))){
+                      this.couponInfo.totalCost = Number(this.couponInfo.cash - (this.couponInfo.cost * item.money)).toFixed(2);
                     }
                     if (this.couponInfo.cash < Number((this.couponInfo.cost - item.money).toFixed(2))) {
                       this.couponInfo.totalCost = Number((this.couponInfo.cost * item.money) - this.couponInfo.cash).toFixed(2);

@@ -226,6 +226,7 @@
             initRecycle.bind(this)()
             this.fetchData()
           } else {
+            this.fetchData()
             this.$Message.info(response.data.message)
           }
         })
@@ -267,6 +268,7 @@
             initRecycle.bind(this)()
             this.fetchData()
           } else {
+            this.fetchData()
             this.$Message.info(response.data.message)
           }
         })
@@ -282,6 +284,7 @@
             initRecycle.bind(this)()
             this.fetchData()
           } else {
+            this.fetchData()
             this.$Message.info(response.data.message)
           }
         })
@@ -327,6 +330,7 @@
             initRecycle.bind(this)()
             this.fetchData()
           } else {
+            this.fetchData()
             this.$Message.info(response.data.message)
           }
         })

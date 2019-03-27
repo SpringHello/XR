@@ -5,7 +5,7 @@
         <div class="banner">
           <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('activtiy/2019spring/')" class="cc-active">
+              <div @click="$router.push('activity/2019spring/')" class="cc-active">
               </div>
             </my-carousel-item>
             <!-- <my-carousel-item class="carousel-item">
@@ -753,7 +753,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import areaTel from '../../options/area_tel'
-  import throttle from 'throttle-debounce/throttle'
+  var throttle = require('throttle-debounce/throttle')
   import gt from '../../util/gt'
 
   export default {
@@ -795,7 +795,7 @@
     },
     methods: {
       /* 滑动验证初始化 -- 发送验证码*/
-      gtInitCode: throttle(3000, function () {
+      gtInitCode() {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
@@ -832,9 +832,9 @@
             })
           }
         })
-      }),
+      },
       /* 滑动验证初始化 -- 发送语音验证码 */
-      gtInitVoice: throttle(3000, function () {
+      gtInitVoice() {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
@@ -871,7 +871,7 @@
             })
           }
         })
-      }),
+      },
       /* 切换banner */
       change(activeIndex) {
         this.activeBanner = activeIndex + 1
@@ -926,7 +926,7 @@
           }
         }
       },
-      sendRegisterVailCodeCheck() {
+      sendRegisterVailCodeCheck: throttle(3000, function() {
         if (this.registerForm.registerType === 'phone') {
           if (!this.registerForm.loginPhone || !this.regExpObj.phone.test(this.registerForm.loginPhone)) {
             this.registerForm.errorMsg = 'formatPhoneError'
@@ -960,7 +960,7 @@
             this.registerForm.errorMsg = 'isRegister'
           }
         })
-      },
+      }),
       sendRegisterVailCode() {
         this.registerForm.verificationCodeText = '发送中'
         let url = 'user/code.do'
@@ -1003,13 +1003,13 @@
           }
         )
       },
-      getRegisterVoiceCodeCheck() {
+      getRegisterVoiceCodeCheck: throttle(3000, function() {
         if (!this.regExpObj.phone.test(this.registerForm.loginPhone)) {
           this.registerForm.errorMsg = 'formatPhoneError'
           return
         }
         this.gtInitVoice()
-      },
+      }),
       getRegisterVoiceCode() {
         let url = 'user/voiceCode.do'
         axios.get(url, {

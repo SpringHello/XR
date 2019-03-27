@@ -5,7 +5,7 @@
         <div class="banner">
           <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('activtiy/2019spring/')" class="cc-active">
+              <div @click="$router.push('activity/2019spring/')" class="cc-active">
               </div>
             </my-carousel-item>
             <!-- <my-carousel-item class="carousel-item">
@@ -351,7 +351,7 @@
 </style>
 <script type="text/ecmascript-6">
   import axios from 'axios'
-  import throttle from 'throttle-debounce/throttle'
+  var throttle = require('throttle-debounce/throttle')
   import gt from '../../util/gt'
 
   export default {
@@ -395,7 +395,7 @@
     },
     methods: {
       /* 滑动验证初始化--密码登录*/
-      gtInitPassword: throttle(3000, function () {
+      gtInitPassword() {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {
@@ -467,9 +467,9 @@
             })
           }
         })
-      }),
+      },
       /* 滑动验证初始化-- 发送验证码*/
-      gtInitCode: throttle(3000, function () {
+      gtInitCode() {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
@@ -540,9 +540,9 @@
             })
           }
         })
-      }),
+      },
       /* 滑动验证初始化 -- 发送语音验证码*/
-      gtInitVoice: throttle(3000, function () {
+      gtInitVoice() {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
@@ -579,7 +579,7 @@
             })
           }
         })
-      }),
+      },
       /* 切换banner */
       change(activeIndex) {
         this.activeBanner = activeIndex + 1
@@ -614,7 +614,7 @@
           this.loginForm.errorMsg = 'formatError'
         }
       },
-      toLogin() {
+      toLogin: throttle(3000, function () {
         if (!this.loginForm.loginName) {
           this.loginForm.errorMsg = 'formatError'
           return
@@ -632,7 +632,7 @@
           }
           this.loginByCode()
         }
-      },
+      }),
       loginByPassword() {
         let url = 'user/login.do', params = {
           username: this.loginForm.loginName,
@@ -693,7 +693,7 @@
           }
         })
       },
-      sendLoginVailCodeCheck() {
+      sendLoginVailCodeCheck:throttle(3000, function () {
         if (!this.loginForm.loginName || !(this.regExpObj.phone.test(this.loginForm.loginName) || this.regExpObj.email.test(this.loginForm.loginName))) {
           this.loginForm.errorMsg = 'formatError'
           return
@@ -712,7 +712,7 @@
             this.gtInitCode()
           }
         })
-      },
+      }),
       sendLoginVailCode() {
         this.loginForm.verificationCodeText = '发送中'
         let url = 'user/code.do'
@@ -756,13 +756,13 @@
           }
         })
       },
-      getLoginVoicecodeCheck() {
+      getLoginVoicecodeCheck:throttle(3000, function () {
         if (!this.regExpObj.phone.test(this.loginForm.loginName)) {
           this.loginForm.errorMsg = 'formatError'
           return
         }
         this.gtInitVoice()
-      },
+      }),
       getLoginVoiceCode() {
         let url = 'user/voiceCode.do'
         axios.get(url, {

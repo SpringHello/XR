@@ -299,7 +299,7 @@ var router = new Router({
           name: 'buy',
           component: Buy,
           children: [
-            {path: '', name: 'host/', component: BHost},
+            {path: '/', name: 'host/', component: BHost},
             {path: 'host', name: 'host/', component: BHost},
             {path: 'disk', name: 'disk/', component: BDisk},
             {path: 'elasticip', name: 'elasticip/', component: BIP},
@@ -325,7 +325,7 @@ var router = new Router({
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
         {path: 'activity/xian', name: 'activity/xian', component: xianNode},
-        {path: 'activtiy/2019spring', name: 'activtiy/2019spring', component: schoolSeason},
+        {path: 'activity/2019spring', name: 'activity/2019spring', component: schoolSeason},
 
         {path: 'eastsouth', name: 'eastsouth', component: EastSouthNode},
         //{path: 'Scene/:type', name: 'Scene', component: SceneInfo},
