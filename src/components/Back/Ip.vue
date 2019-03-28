@@ -75,9 +75,6 @@
             <span style="margin-left: 5px;">MB</span>
           </FormItem>
           <div class="modal-content-s divall">
-            <div>
-              VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改<span class="spanaa"></span>
-            </div>
           </div>
 					<div style="margin-top: 20px;">
 						<span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费</span>
@@ -860,7 +857,14 @@
       } else {
         this.hide = 'none';
       }
-			this.testjump()
+      this.testjump()
+      axios.get('network/listVpc.do', {
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
+          this.newIPForm.VPCOptions = response.data.result
+        })
     },
     methods: {
 			testjump(){
@@ -980,13 +984,7 @@
       // 打开新建IP模态框
       openNewIPModal() {
         this.showModal.newIPModal = true
-        axios.get('network/listVpc.do', {
-          params: {
-            zoneId: $store.state.zone.zoneid
-          }
-        }).then(response => {
-          this.newIPForm.VPCOptions = response.data.result
-        })
+        
       },
       // 改变购买方式触发函数
       changeTimeType() {
