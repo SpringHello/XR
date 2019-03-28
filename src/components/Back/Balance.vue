@@ -133,20 +133,24 @@
         		          </Input>
         		        </FormItem>-->
         						<FormItem label="监听端口" prop="rearPort" v-if="creatbalancemodal.formInline.radio=='public'" style="width: 86%;margin-top: 10px;">
-        							<Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
-        							</Input>
+                      <InputNumber :max="65535" :min="1" v-model="creatbalancemodal.formInline.rearPort" style="width:300px;float: right;"></InputNumber>
+        							<!-- <Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
+        							</Input> -->
         						</FormItem>
         						<FormItem label="源端口" prop="frontPort" v-else style="width: 86%;margin-top: 20px;">
-        							<Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
+                      <InputNumber :max="65535" :min="1" v-model="creatbalancemodal.formInline.frontPort" style="width:300px;float: right;"></InputNumber>
+        							<!-- <Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;"> -->
         							</Input>
         						</FormItem>
         						<FormItem label="服务器端口" prop="frontPort" v-if="creatbalancemodal.formInline.radio=='public'" style="width: 86%;margin-top: 20px;">
-        							<Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
+                       <InputNumber :max="65535" :min="1" v-model="creatbalancemodal.formInline.frontPort" style="width:300px;float: right;"></InputNumber>
+        							<!-- <Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;"> -->
         							</Input>
         						</FormItem>
         						<FormItem label="实例端口" prop="rearPort" v-else style="width: 86%;margin-top: 20px;">
-        							<Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
-        							</Input>
+                      <InputNumber :max="65535" :min="1" v-model="creatbalancemodal.formInline.rearPort" style="width:300px;float: right;"></InputNumber>
+        							<!-- <Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
+        							</Input> -->
         						</FormItem>
         						<FormItem label="算法" prop="algorithm" style="width: 86%;margin-top: 20px;">
         							<Select v-model="creatbalancemodal.formInline.algorithm" style="width:300px;float: right;">
@@ -344,8 +348,8 @@
                 value: 'source'
               }
             ],
-            frontPort: '',
-            rearPort: '',
+            frontPort: 1,
+            rearPort: 1,
             VPCList: [],
             vpc: '',
             PublicIpList: [],
