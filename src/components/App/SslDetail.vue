@@ -146,7 +146,7 @@
           class="Template-content"
         >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如下图所示为超真OV SSL证书，颁发者为：WoSign OV SSL CA，证书主题中“O”字段(Organization)会显示申请单位的名称(中文或英文单位名称)。</div>
         <div class="img2">
-          <img src="../../assets/img/ssl/OVSSL-2.gif">
+          <img src="../../assets/img/ssl/OVSSL-2.gif" alt="证书">
         </div>
       </div>
     </div>
@@ -209,7 +209,7 @@
           >数字证书</a>都支持采用最安全的SHA1或SHA256 RSA签名算法和2048位公钥长度。
         </div>
         <div class="img2">
-          <img src="../../assets/img/ssl/DV_1.gif">
+          <img src="../../assets/img/ssl/DV_1.gif" alt="DV">
         </div>
       </div>
     </div>

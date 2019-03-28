@@ -3,8 +3,8 @@
     <h1>创建负载均衡</h1>
     <ol>
       <li>进入新睿云控制台“负载均衡”页面，点击“创建负载均衡”<br>
-        <img src="../../../../assets/img/doc/networks/networks-img1.png"><br>
-        <img src="../../../../assets/img/doc/networks/networks-img2.png">
+        <img src="../../../../assets/img/doc/networks/networks-img1.png" alt="创建负载均衡"><br>
+        <img src="../../../../assets/img/doc/networks/networks-img2.png" alt="创建负载均衡弹窗">
       </li>
       <li>用户根据需要填写规则名、算法、公有端口、私有端口、公网IP等信息。
       </li>

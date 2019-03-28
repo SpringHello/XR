@@ -5,7 +5,7 @@
     <div class="body-bottom">
       <div class="content">
         <h2>备案区域</h2>
-        <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png"/> {{ area }}</p>
+        <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png" alt="icon"/> {{ area }}</p>
         <h3>备案信息验证</h3>
         <Form ref="filingInformation" :model="filingInformation" :rules="filingInformationRuleValidate"
               :label-width="120">
@@ -57,8 +57,8 @@
           <FormItem label="ICP备案密码" prop="IPCPassword">
             <Input v-model="filingInformation.IPCPassword" placeholder="请输入ICP备案密码" style="width: 500px;position: relative" :type="inputType"
                    @on-focus="inputType='password'"></Input>
-            <img v-show="inputType=='password'" @click="inputType='text'" src="../../../assets/img/reset/closeEye.png" class="eyeIcon" style="position: absolute;top: 26%;left: 43%;">
-            <img v-show="inputType=='text'"  @click="inputType='password'"  src="../../../assets/img/reset/eye.png" class="eyeIcon" style="position: absolute;top: 26%;left: 43%;">
+            <img v-show="inputType=='password'" @click="inputType='text'" src="../../../assets/img/reset/closeEye.png" class="eyeIcon" style="position: absolute;top: 26%;left: 43%;" alt="close">
+            <img v-show="inputType=='text'"  @click="inputType='password'"  src="../../../assets/img/reset/eye.png" class="eyeIcon" style="position: absolute;top: 26%;left: 43%;" alt="eye">
           </FormItem>
           <FormItem label="">
             <p class="formP">备案号与密码为管局下发，若您忘记可通过管局官网找回</p>

@@ -4,7 +4,7 @@
         <div class="w_header">
         <div class="header_center">
             <div style="display:inline-block;position:relative;top: 91px;left: 102px;">
-            <img src="../../../assets/img/active/doubleDenier/dbFont.png">
+            <img src="../../../assets/img/active/doubleDenier/dbFont.png" alt="双旦同庆">
             <p class="pt_white" style="margin-top:0;">免费新体验，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
             <div class="w_button">
                 <span>登录即可抽奖</span>
@@ -14,19 +14,19 @@
         </div>
         <div class="w_gift">
         <div class="gift_one">
-            <img  src="../../../assets/img/active/doubleDenier/li_da.png">
+            <img  src="../../../assets/img/active/doubleDenier/li_da.png" alt="礼品">
             <span @click="jumpCnter('center')">查看详情</span>
         </div>
         <div class="gift_two">
-            <img  src="../../../assets/img/active/doubleDenier/zhe_da.png">
+            <img  src="../../../assets/img/active/doubleDenier/zhe_da.png" alt="打折">
             <span @click="jumpCnter('zhe')">查看详情</span>
         </div>
         <div class="gift_three">
-            <img  src="../../../assets/img/active/doubleDenier/0_da.png">
+            <img  src="../../../assets/img/active/doubleDenier/0_da.png" alt="免费">
             <a :href="'/activity/free/'" target="_blank">查看详情</a>
         </div>
         <div class="gift_four">
-            <img  src="../../../assets/img/active/doubleDenier/38_da.png">
+            <img  src="../../../assets/img/active/doubleDenier/38_da.png" alt="38元">
             <a :href="'/activity/zero/'" target="_blank">立即领取</a>
         </div>
         </div>
@@ -34,12 +34,12 @@
         <div class="w_give">
             <p class="w_pFont">活动首购 好礼相送</p>
             <p style="color:#222222;font-size:16px;margin-bottom:40px;font-family: 'Microsoft YaHei'">首购享好礼，在此活动中购买任意产品即可领取 “京东E卡（30元）”一张！</p>
-            <img src="../../../assets/img/active/doubleDenier/JDE.png">
+            <img src="../../../assets/img/active/doubleDenier/JDE.png" alt="京东">
             <span >点击领取</span>
         </div>
         <div class="w_draw" ref="draw">
             <div style="position: relative;top:54px;" @click="showModal.LotteryModal=true">
-            <img src="../../../assets/img/active/doubleDenier/colorFont.png">
+            <img src="../../../assets/img/active/doubleDenier/colorFont.png" alt="抽奖">
             </div>
             <div class="draw_span">
             <span style="margin-right:29px" @click="showModal.luckDrawRuleModal=true">抽奖规则</span>
@@ -285,7 +285,7 @@
       <div class="w_header">
         <div class="header_center">
           <div style="display:inline-block;position:relative;top: 91px;left: 102px;">
-              <img src="../../../assets/img/active/doubleDenier/dbFont.png">
+              <img src="../../../assets/img/active/doubleDenier/dbFont.png" alt="ic双旦同庆on">
             <p class="pt_white" style="margin-top:0;">免费新体验，首购享好礼！爆款云产品、高配GPU云服务器等低至 <span style="font-size:36px;">2.7</span> 折</p>
             <div class="w_button" @click="loginInfo">
               <span >登录即可抽奖</span>
@@ -394,7 +394,7 @@
         <div class="all-modal modal1" @click.stop="showModal.notPrizeChanceModal=true">
           <div class="header no"></div>
           <div class="body">
-            <img src="../../../assets/img/active/anniversary/regret-text.png" style="margin:30px 0 25px 0;"/>
+            <img src="../../../assets/img/active/anniversary/regret-text.png" style="margin:30px 0 25px 0;" alt="很遗憾"/>
             <p style="margin-bottom:38px;"> 您没有抽奖机会了，请返回活动页面购买产品获得抽奖次数！</p>
             <button @click.stop="showModal.notPrizeChanceModal=false" class="button-primary"><span>返回活动</span></button>
           </div>
@@ -487,7 +487,7 @@
       <div class="overlay" @click.stop="showModal.winPrizeModal=false" v-if="showModal.winPrizeModal">
         <div class="modal2" @click.stop="showModal.winPrizeModal=true">
           <div class="body">
-            <img :src="award.imgUrl" style="margin:110px 0 30px 0;"/>
+            <img :src="award.imgUrl" style="margin:110px 0 30px 0;" alt="描述"/>
             <p style="" class="text">
               <span>恭喜您，抽中了</span> 
               <span>{{ award.name }}</span>

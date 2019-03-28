@@ -1,12 +1,12 @@
 <template>
   <div id="smlj">
     <div style="width:1200px;margin:0px auto;position: relative;height:396px;">
-      <img src="../../../assets/img/active/smlj/text.png" style="width:438px;position: absolute;left:0px;top:25%;">
-      <img src="../../../assets/img/active/smlj/img.png" style="width:700px;position: absolute;right:0px">
+      <img src="../../../assets/img/active/smlj/text.png" style="width:438px;position: absolute;left:0px;top:25%;" alt="免费试用">
+      <img src="../../../assets/img/active/smlj/img.png" style="width:700px;position: absolute;right:0px" alt="banner">
     </div>
     <div v-if="ljOK" class="active-body" :class="{error:ljError,ended:ljEnded,over:ljOverded}" style="width:1200px;">
       <div class="ok">
-        <img src="../../../assets/img/active/smlj/header.png" style="width:1200px;display: block">
+        <img src="../../../assets/img/active/smlj/header.png" style="width:1200px;display: block" alt="header">
         <div class="body">
           <div class="left">
             <div class="wrapper">

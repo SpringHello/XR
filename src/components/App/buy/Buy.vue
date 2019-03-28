@@ -14,7 +14,7 @@
             <p style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #EDEDED; padding-bottom: 30px;">
               价格预算清单</p>
             <div style="height:310px">
-              <img src="../../../assets/img/buy/no-goods.png" alt="">
+              <img src="../../../assets/img/buy/no-goods.png" alt="价格预算清单">
               <p>还没有任何内容加入清单哦</p>
             </div>
           </div>
@@ -236,7 +236,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`/user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
           </div>
         </form>
       </div>

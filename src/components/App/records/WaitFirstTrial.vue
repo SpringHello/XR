@@ -4,7 +4,7 @@
     <o-step :onStep="4" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body">
-      <img src="../../../assets/img/records/records-img5.png"/>
+      <img src="../../../assets/img/records/records-img5.png" alt="records"/>
       <p>恭喜您资料提交成功，我们将在2个工作日内对资料进行审核，审核通过后会通过短信提示您，请保持电话畅通。</p>
       <button @click="$router.push('BRecords')">查看审批进程</button>
     </div>

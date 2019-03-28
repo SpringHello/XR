@@ -57,7 +57,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="描述"> 
+            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码"> 
           </div>
         </form>
       </div>
@@ -79,7 +79,7 @@
     </Modal>
     <Modal v-model="oldModal" width="500" :scrollable="true">
       <div class="modal-body">
-        <img src="../../../../assets/img/active/group-booking/gb-icon13.png" alt="描述"/>
+        <img src="../../../../assets/img/active/group-booking/gb-icon13.png" alt="错误"/>
         <p>您已经是新睿云的常客， </p>
         <p>您已经使用过新睿云产品，成为云客重新购买并分享链接可赚取更多时长哦！<span @click="$router.push('activity/share')">立即购买</span></p>
       </div>

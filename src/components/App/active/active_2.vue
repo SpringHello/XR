@@ -5,11 +5,11 @@
         <div>
           <div>
             <p>
-              <img src="../../../assets/img/active/active_2/ziti.png" style="width:400px;" alt="描述">
+              <img src="../../../assets/img/active/active_2/ziti.png" style="width:400px;" alt="免费">
             </p>
           </div>
           <transition name="list">
-            <img v-if="img" src="../../../assets/img/active/active_2/banner-aircraft.png" style="padding-right:80px;" alt="描述">
+            <img v-if="img" src="../../../assets/img/active/active_2/banner-aircraft.png" style="padding-right:80px;" alt="新睿云">
           </transition>
         </div>
       </div>
@@ -19,24 +19,24 @@
             <h2 style="margin-bottom: 20px" class="head-headline-process">活动流程</h2>
             <div class="items">
               <dl>
-                <dt v-if="isLogin==1"><img src="../../../assets/img/active/active_2/icon-process-1.png" alt="描述"></dt>
-                <dt v-else><img src="../../../assets/img/active/active_2/icon-process-11.png" alt="描述"></dt>
+                <dt v-if="isLogin==1"><img src="../../../assets/img/active/active_2/icon-process-1.png" alt="icon"></dt>
+                <dt v-else><img src="../../../assets/img/active/active_2/icon-process-11.png" alt="icon"></dt>
                 <dd :class="{select:isLogin==1}">① 新用户注册登录<i
                   :class="{select:(companyauth==0&&isLogin==1)||(personalauth==0&&isLogin==1)}"></i>
                 </dd>
               </dl>
               <dl>
                 <dt v-if="companyauth==0||personalauth==0"><img
-                  src="../../../assets/img/active/active_2/icon-process-2.png" alt="描述">
+                  src="../../../assets/img/active/active_2/icon-process-2.png" alt="icon">
                 </dt>
-                <dt v-else><img src="../../../assets/img/active/active_2/icon-process-22.png" alt="描述"></dt>
+                <dt v-else><img src="../../../assets/img/active/active_2/icon-process-22.png" alt="icon"></dt>
                 <dd :class="{select:companyauth==0||personalauth==0}">② 完成实名认证<i
                   :class="{select:(isLogin==1&&companyauth==0&&isReceive!=0)||(isLogin==1&&personalauth==0&&isReceive!=0)}"></i>
                 </dd>
               </dl>
               <dl>
-                <dt v-if="isReceive==0"><img src="../../../assets/img/active/active_2/icon-process-3.png" alt="描述"></dt>
-                <dt v-else><img src="../../../assets/img/active/active_2/icon-process-33.png" alt="描述"></dt>
+                <dt v-if="isReceive==0"><img src="../../../assets/img/active/active_2/icon-process-3.png" alt="icon"></dt>
+                <dt v-else><img src="../../../assets/img/active/active_2/icon-process-33.png" alt="icon"></dt>
                 <dd :class="{select:isReceive!=0}">③ 免费领取个人云主机</dd>
               </dl>
 
@@ -138,7 +138,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="描述">
+            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>

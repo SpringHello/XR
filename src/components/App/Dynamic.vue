@@ -6,9 +6,9 @@
           <Menu style="width: 300px;" :open-names="openNames" :active-name="selectAnnouncement" @on-select="show">
             <Submenu name="ann">
               <template slot="title">
-                <img v-if="openNames.indexOf('ann')>-1" src="../../assets/img/product/dynamic-2.png" alt=""
+                <img v-if="openNames.indexOf('ann')>-1" src="../../assets/img/product/dynamic-2.png" alt="dynamic"
                      style="margin-right:8px;vertical-align: middle">
-                <img v-else src="../../assets/img/product/dynamic-2-1.png" alt=""
+                <img v-else src="../../assets/img/product/dynamic-2-1.png" alt="dynamic"
                      style="margin-right:8px;vertical-align: middle">
                 <span
                   style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;vertical-align: middle">产品公告</span>
@@ -17,9 +17,9 @@
             </Submenu>
             <Submenu name="active">
               <template slot="title">
-                <img v-if="openNames.indexOf('active')>-1" src="../../assets/img/product/dynamic-3.png" alt=""
+                <img v-if="openNames.indexOf('active')>-1" src="../../assets/img/product/dynamic-3.png" alt="dynamic"
                      style="margin-right:8px;vertical-align: middle">
-                <img v-else src="../../assets/img/product/dynamic-3-1.png" alt=""
+                <img v-else src="../../assets/img/product/dynamic-3-1.png" alt="dynamic"
                      style="margin-right:8px;vertical-align: middle">
                 <span
                   style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;vertical-align: middle">最新活动</span>
@@ -28,9 +28,9 @@
             </Submenu>
             <Submenu name="news">
               <template slot="title">
-                <img v-if="openNames.indexOf('news')>-1" src="../../assets/img/product/dynamic-4.png" alt=""
+                <img v-if="openNames.indexOf('news')>-1" src="../../assets/img/product/dynamic-4.png" alt="dynamic"
                      style="margin-right:8px;vertical-align: middle">
-                <img v-else src="../../assets/img/product/dynamic-4-1.png" alt=""
+                <img v-else src="../../assets/img/product/dynamic-4-1.png" alt="dynamic"
                      style="margin-right:8px;vertical-align: middle">
                 <span
                   style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;vertical-align: middle">新闻动态</span>

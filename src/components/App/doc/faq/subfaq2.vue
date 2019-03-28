@@ -7,7 +7,7 @@
         <li>使用系统自带资源管理器查看带宽使用情况。
           <p>打开任务管理器：</p>
           <p>或者在桌面执行【开始】，【运行】，输入 taskmgr 语句。</p>
-          <img src="../../../../assets/img/doc/faq/faq-img13.png"><br>
+          <img src="../../../../assets/img/doc/faq/faq-img13.png" alt="性能"><br>
         </li>
         <li>根据消耗带宽的进程来进行判断：<br>
           <ul>
@@ -33,10 +33,10 @@
           </blockquote>
         </li>
         <li>安装完毕后，运行 iftop 。会展示消耗流量的 IP 。<br>
-          <img src="../../../../assets/img/doc/faq/faq-img14.png"><br>
+          <img src="../../../../assets/img/doc/faq/faq-img14.png" alt="运行"><br>
         </li>
         <li>根据 iftop 中消耗流量的 IP ，执行 lsof -i | grep ip 语句来查看连接该 IP 的进程。<br>
-          <img src="../../../../assets/img/doc/faq/faq-img15.png"><br>
+          <img src="../../../../assets/img/doc/faq/faq-img15.png" alt="查看"><br>
           <p>此示例截图中可以看到，此服务器外网带宽主要由 SSH 进程消耗。</p>
         </li>
         <li>排查分析。<br>

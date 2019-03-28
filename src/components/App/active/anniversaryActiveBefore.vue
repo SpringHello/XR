@@ -15,7 +15,7 @@
     </div>
     <div class="introduct center">
       <div class="top headline">
-        <img style="margin-left:100px;" src="../../../assets/img/active/anniversary/aa-banner14.png" alt="描述"/>
+        <img style="margin-left:100px;" src="../../../assets/img/active/anniversary/aa-banner14.png" alt="抽奖"/>
         <p><span>见面礼！</span>包含<i style="color:#FF3000;font-style:normal"> 戴森、科沃斯 </i>爆款奖品，100%中奖率，注册登录即可拥有一次抽奖机会!</p>
       </div>
       <div class="content center">
@@ -41,12 +41,12 @@
     </div>
     <div class="host center">
       <div class="top headline" style="margin-top: 54px;margin-bottom:10px;">
-        <img style="margin-left:100px;" src="../../../assets/img/active/anniversary/aa-banner15.png" alt="描述"/>
+        <img style="margin-left:100px;" src="../../../assets/img/active/anniversary/aa-banner15.png" alt="特惠"/>
         <p>热销云产品<i> 1.7折 </i>分时抢购，首次购买任意产品均可获得抽奖机会!<span class="rule" @click="showModal.discountRuleModal=true">活动规则</span></p>
       </div>
       <div class="content center">
         <div class="products-title tl" style="margin:0 24px;">
-          <img src="../../../assets/img/active/anniversary/aa-icon6.png" alt="描述"/>
+          <img src="../../../assets/img/active/anniversary/aa-icon6.png" alt="icon"/>
           <span>云服务器限时抢购中</span>
           <!-- <div style="margin-top: 8px">
             <span>本场结束倒计时:</span>
@@ -98,7 +98,7 @@
           </li>
         </ul>
         <div class="products-footer tl" style="margin-left:38px;">
-          <p><img src="../../../assets/img/active/anniversary/aa-icon4.png" alt="描述"/><span>抢购预告：对象存储（10:30开始）、云数据库（16:30开始）</span></p>
+          <p><img src="../../../assets/img/active/anniversary/aa-icon4.png" alt="icon"/><span>抢购预告：对象存储（10:30开始）、云数据库（16:30开始）</span></p>
         </div>
       </div>
 
@@ -106,13 +106,13 @@
     <!-- gpu专区-->
       <div class="active-3">
         <div class="active-3-title">
-          <img style="position: absolute;left: 30%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon7.png" alt="描述"/>
-          <img style="margin-left: 145px;" src="../../../assets/img/active/anniversary/aa-banner6.png" alt="描述"/>
+          <img style="position: absolute;left: 30%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon7.png" alt="11.17"/>
+          <img style="margin-left: 145px;" src="../../../assets/img/active/anniversary/aa-banner6.png" alt="8折"/>
           <p>全网首次<span>GPU服务器折扣活动</span>，每日抢购时间 19:00-20:00！</p>
         </div>
         <div class="gpuList w12">
           <div class="gpu-title tl">
-            <img src="../../../assets/img/active/anniversary/aa-icon8.png" alt="描述"/>
+            <img src="../../../assets/img/active/anniversary/aa-icon8.png" alt="icon"/>
             <span>GPU云服务器 每日19:00开启抢购</span>
             <!-- <div style="margin-top: 8px">
               <span>本场结束倒计时:</span>
@@ -162,13 +162,13 @@
       <!-- 0元抢购活动 -->
       <div class="active-4">
         <div class="active-4-title">
-          <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="描述"/>
-          <img style="margin-left: 80px" src="../../../assets/img/active/anniversary/aa-banner16.png" alt="描述"/>
+          <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="11.17"/>
+          <img style="margin-left: 80px" src="../../../assets/img/active/anniversary/aa-banner16.png" alt="免费一年"/>
           <p><span>适用于低负载、低并发、小型开发测试环境、普通数据处理服务等场景</span></p>
         </div>
         <div class="hostList w12">
           <div class="host-title tl">
-            <img src="../../../assets/img/active/anniversary/aa-icon3.png" alt="描述"/>
+            <img src="../../../assets/img/active/anniversary/aa-icon3.png" alt="icon"/>
             <span>基础配置云服务器</span>
             <div style="margin-top: 8px">
               <span>0元试用，最长可达12个月，押金随时可退！</span>
@@ -213,8 +213,8 @@
       <!-- 消费满送 -->
       <div class="active-5">
         <div class="active-5-title">
-          <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="描述"/>
-          <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner21.png" alt="描述"/>
+          <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="11.17"/>
+          <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner21.png" alt="回赠"/>
           <p><span>购买云产品获赠好礼，最高额消费可领全部礼品</span></p>
         </div>
         <!-- <div class="send-full w12">
@@ -231,8 +231,8 @@
           <ul v-for="(item,index) in sendFullList">
             <li><p :class="{'onStep': index >= spentCostNode}">消费满<span> {{ item.text_1}} </span>可领</p></li>
             <li><span :class="{'onStep': index >= spentCostNode}">{{ item.text_2 }}</span></li>
-            <li style="margin-top: 30px"><p style="position: relative;right: 18px" v-if="index >= spentCostNode"><img src="../../../assets/img/active/anniversary/aa-icon17.png" alt="描述"/> <img src="../../../assets/img/active/anniversary/aa-icon18.png" alt="描述"/></p>
-              <p style="position: relative;right: 18px" v-else><img src="../../../assets/img/active/anniversary/aa-icon19.png"/> <img src="../../../assets/img/active/anniversary/aa-icon20.png" alt="描述"/></p></li>
+            <li style="margin-top: 30px"><p style="position: relative;right: 18px" v-if="index >= spentCostNode"><img src="../../../assets/img/active/anniversary/aa-icon17.png" alt="icon"/> <img src="../../../assets/img/active/anniversary/aa-icon18.png" alt="icon"/></p>
+              <p style="position: relative;right: 18px" v-else><img src="../../../assets/img/active/anniversary/aa-icon19.png" alt="icon"/> <img src="../../../assets/img/active/anniversary/aa-icon20.png" alt="icon"/></p></li>
             <li><img v-if="index >= spentCostNode" :src="item.src_2" alt="描述"/><img v-else :src="item.src_1" alt="描述"/></li>
             <div v-if="index !=3" class="send-full-dashed" :class="{'onStep': true}"></div>
           </ul>

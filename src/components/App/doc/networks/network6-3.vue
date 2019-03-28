@@ -4,7 +4,7 @@
     <ol>
       <li>登录控制台，点击网络-vpc；</li>
       <li>选中需要删除的vpc，点击“删除”<br>
-        <img src="../../../../assets/img/doc/networks/networks-img18.png"></li>
+        <img src="../../../../assets/img/doc/networks/networks-img18.png" alt="删除VPC"></li>
       <li>在传出的确认操作中，点击“确认”确认删除；</li>
       <li>vpc删除成功。</li>
     </ol>

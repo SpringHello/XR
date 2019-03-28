@@ -44,10 +44,10 @@
           <div @click="push('/activity/zero/')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
-                <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png"></p>
+                <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png" alt="ziti2"></p>
                   <button>立即领取</button>
                 </div>
-                <img src="../../assets/img/home/home-banner4.png"></div>
+                <img src="../../assets/img/home/home-banner4.png" alt="banner"></div>
             </div>
           </div>
         </my-carousel-item>
@@ -55,7 +55,7 @@
           <div class="eightscene" @click="push('/scene/')">
             <div class="wrap">
               <div class="left">
-                <img src="../../assets/img/home/eightscene-text.png" alt="">
+                <img src="../../assets/img/home/eightscene-text.png" alt="eightscene">
                 <Button @click.stop="$router.push('/scene/')">立即使用</Button>
               </div>
               <div class="right">
@@ -79,7 +79,7 @@
                   <button>立即领取</button>
                 </div>
                 <div class="free-receive-img">
-                  <img src="../../assets/img/active/freeToReceive/fr-banner7.png" alt/>
+                  <img src="../../assets/img/active/freeToReceive/fr-banner7.png" alt="fr-banner"/>
                 </div>
               </div>
             </div>
@@ -98,7 +98,7 @@
                   <button>立即试用</button>
                 </div>
                 <div class="db-active-img">
-                  <img src="../../assets/img/active/dbActive/dba-banner8.png"/>
+                  <img src="../../assets/img/active/dbActive/dba-banner8.png" alt="banner"/>
                 </div>
               </div>
             </div>
@@ -125,7 +125,7 @@
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
               <div class="groupBook-content">
-                <img src="../../assets/img/active/group-booking/gb-icon14.png"/>
+                <img src="../../assets/img/active/group-booking/gb-icon14.png" alt="icon"/>
                 <div class="groupBook-text">
                   <p>全民狂欢趴</p>
                   <p>云主机低价拼团 一人成团 </p>
@@ -133,7 +133,7 @@
                   <button>立即参与</button>
                 </div>
                 <div class="groupBook-img">
-                  <img src="../../assets/img/active/group-booking/gb-banner9.png"/>
+                  <img src="../../assets/img/active/group-booking/gb-banner9.png" alt="banner"/>
                 </div>
               </div>
             </div>
@@ -169,7 +169,7 @@
       <div class="bg">
         <div class="bg-wrap">
           <div class="bg" ref="bgcheck">
-            <img v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl"/>
+            <img v-for="(item,index) in eigthimgs" :key="index" :src="item.bgUrl" alt="描述"/>
           </div>
         </div>
       </div>
@@ -195,7 +195,7 @@
               </div>
               <div class="software">
                 <p class="title">支持软件</p>
-                <img v-for="(item1,index) in item.software" :key="index" :src="item1" style="margin-right:28px;"/>
+                <img v-for="(item1,index) in item.software" :key="index" :src="item1" style="margin-right:28px;" alt="icon"/>
               </div>
               <div class="configure">
                 <p class="title">推荐配置</p>
@@ -374,9 +374,9 @@
             <p>{{item.title}}</p>
             <div class="img-wrap" @mouseenter="requireEnter(index)" @mouseleave="requireLeave(index)">
               <span>
-                <img :src="item.imgHover" alt="" v-if="item.isShow == 'infinite'">
-                <img :src="item.imgonce" alt="" v-else-if="item.isShow == 'once'">
-                <img :src="item.img" alt="" v-else>
+                <img :src="item.imgHover" alt="描述" v-if="item.isShow == 'infinite'">
+                <img :src="item.imgonce" alt="描述" v-else-if="item.isShow == 'once'">
+                <img :src="item.img" alt="描述" v-else>
               </span>
             </div>
             <span>{{item.desc}}</span>
@@ -403,8 +403,8 @@
           <ul>
             <li v-for="(item,index) in authorityContainer" :key="index" @mouseenter="datacenterEnter(index)" @mouseleave="datacenterLeave(index)" :class="{bluetext: item.isShow}">
               <span class="img-wrap">
-                <img :src="item.img" v-if="!item.isShow">
-                <img :src="item.imgHover" v-else>
+                <img :src="item.img" v-if="!item.isShow" alt="描述">
+                <img :src="item.imgHover" v-else alt="描述">
               </span>
               <span>{{item.title}}</span>
             </li>
@@ -433,7 +433,7 @@
             </dl>
           </div>
           <div class="main-right">
-            <img :src="showNews.coverUrl" class="news-img"/>
+            <img :src="showNews.coverUrl" class="news-img" alt="news"/>
           </div>
         </div>
         <div class="link-list wrap">
@@ -493,7 +493,7 @@
             </div>
             <div class="partner">
               <div v-for="(partner,index) in partners" :key="index">
-                <img :src="partner">
+                <img :src="partner" alt="partner">
               </div>
             </div>
           </div>
@@ -526,11 +526,11 @@
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.welcome=false" v-if="showModal.welcome">
         <div class="welcome">
-          <img src="../../assets/img/active/doubleDenier/dd-banner9.png" @click="$router.push({path:'wonderfulDay'})"/>
-          <img src="../../assets/img/active/doubleDenier/dd-banner10.png" @click="$router.push({path:'wonderfulDay'})"/>
-          <img src="../../assets/img/active/doubleDenier/dd-banner11.png" @click="$router.push({path:'wonderfulDay'})"/>
-          <img src="../../assets/img/active/doubleDenier/dd-banner12.png" @click="$router.push({path:'wonderfulDay'})"/>
-          <img src="../../assets/img/active/doubleDenier/dd-icon1.png" @click.stop="showModal.welcome = false"/>
+          <img src="../../assets/img/active/doubleDenier/dd-banner9.png" @click="$router.push({path:'wonderfulDay'})" alt="banner"/>
+          <img src="../../assets/img/active/doubleDenier/dd-banner10.png" @click="$router.push({path:'wonderfulDay'})" alt="banner"/>
+          <img src="../../assets/img/active/doubleDenier/dd-banner11.png" @click="$router.push({path:'wonderfulDay'})" alt="banner"/>
+          <img src="../../assets/img/active/doubleDenier/dd-banner12.png" @click="$router.push({path:'wonderfulDay'})" alt="banner"/>
+          <img src="../../assets/img/active/doubleDenier/dd-icon1.png" @click.stop="showModal.welcome = false" alt="icon"/>
         </div>
       </div>
     </transition>

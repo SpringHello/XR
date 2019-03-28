@@ -2,7 +2,7 @@
   <div>
     <h1>使用说明</h1>
     <p>登录管理控制台，在您的账户名下进入“费用中心”->“我的卡券”，可查看已激活的代金券信息。</p>
-    <img src="../../../../assets/img/doc/uaf/uaf-img5.png">
+    <img src="../../../../assets/img/doc/uaf/uaf-img5.png" alt="我的卡劵">
     <h2>使用规则</h2>
     <ul>
       <li>一个订单只能使用一张代金券</li>

@@ -94,7 +94,7 @@
                   <div class="item-content-text" v-if="upload.photo===''">
                     点击选择文件
                   </div>
-                  <img v-else :src="upload.photo" style="height: 165px;width:270px;">
+                  <img v-else :src="upload.photo" style="height: 165px;width:270px;" alt="上传图片">
                   <Progress v-show="percent>0" :percent="percent"></Progress>
                   <Button type="primary" v-if="upload.photo===''">上传</Button>
                 </Upload>
@@ -104,7 +104,7 @@
         </div>
         <div class="uploadTitle" style="margin: 34px 0 10px 20px;">
           <div class="item" style="text-align: center">
-            <img @click="imageViewShow=true" style="height: 203px;cursor: zoom-in" src="../../../assets/img/records/records-img6.png"/>
+            <img @click="imageViewShow=true" style="height: 203px;cursor: zoom-in" src="../../../assets/img/records/records-img6.png" alt="头像"/>
           </div>
         </div>
       </div>

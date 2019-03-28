@@ -54,7 +54,7 @@
             <div class="item-wrapper">
               <div style="display: flex;justify-content: space-between;">
                 <div v-for="(item,index) in mirrorListQ" :key="index" class="fast-mirror" :class="{'select-fast-mirror':FastMirrorIndex==index}" @click="setOSQ(item,index)">
-                  <img :src="item.img" alt="">
+                  <img :src="item.img" alt="描述">
                   <span>{{item.templatename}}</span>
                 </div>
               </div>
@@ -388,7 +388,7 @@
                     </div>
                   </div>
                   <img src="../../../assets/img/buy/across.png" @click="removeHostDisk(index)"
-                       style="cursor: pointer;height:11px;">
+                       style="cursor: pointer;height:11px;" alt="across">
                 </div>
               </div>
               <div class="item-wrapper">

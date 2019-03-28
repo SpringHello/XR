@@ -70,7 +70,7 @@
             </div>
             <div class="zero" v-show="buyLists.length==0">
               <p>您还没有选择任何域名哦</p>
-              <img src="../../../assets/img/domain/Rectangle.png">
+              <img src="../../../assets/img/domain/Rectangle.png" alt="icon">
             </div>
             <div class="statistical" v-show="buyLists.length!=0">
               <div>

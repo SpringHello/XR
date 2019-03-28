@@ -65,7 +65,7 @@
               </div>
               <img src="../../../assets/img/buy/across.png" @click="removeDisk(index)"
                    v-show="dataDiskList.length>1"
-                   style="cursor: pointer;height:11px;">
+                   style="cursor: pointer;height:11px;" alt="across">
             </div>
           </div>
           <div class="item-wrapper">

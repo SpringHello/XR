@@ -2,7 +2,7 @@
   <!--产品与公告-->
   <div id="bulletin">
     <div class="banner" style="width: 100%;height: 675px;">
-      <img src="../../assets/img/product/bulletin-logo.png" style="width: 100%;height: 675px;">
+      <img src="../../assets/img/product/bulletin-logo.png" style="width: 100%;height: 675px;" alt="bulletin">
     </div>
     <div id="time">
       <ul>
