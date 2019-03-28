@@ -188,14 +188,14 @@
               </div>
             </div>
             <div class="document">
-              <p>文档</p>
-              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank" rel="nofollow">
+              <p>新闻动态</p>
+              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank" >
                 {{d.title}}
               </a>
             </div>
             <div class="document">
-              <p>服务与公告</p>
-              <a v-for="(d,index) in notice" :key="index" :href="d.url" target="_blank" rel="nofollow">
+              <p>文档</p>
+              <a v-for="(d,index) in notice" :key="index" :href="d.url" target="_blank">
                 {{d.title}}
               </a>
             </div>
@@ -290,7 +290,7 @@
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.xrcloud.net&amp;Menu=yes`"
-                   style="color:rgb(73, 80, 96)">
+                   style="color:rgb(73, 80, 96)" rel="nofollow">
                  <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus" alt="技术支持">
                   <img src="./assets/img/app/qq-gray.png" v-else alt="技术支持">
                 <span >{{qq.servicename}}</span>
@@ -645,7 +645,7 @@
         ],
         Preparation: [
           {
-            time: '©2014-2018',
+            time: '©2019',
             title: '北京允睿讯通科技有限公司',
             preparation: '京ICP备15035854号',
             desc: '京公网安备11010802024922号',
