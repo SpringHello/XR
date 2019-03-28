@@ -210,42 +210,42 @@
 		    <!--高级选项FormItem-->
 		    <div v-show="showDetailIcon">
 		      <FormItem label="IKE加密算法">
-		        <Select v-model="formCustomerGateway.IKE" transfer="true">
+		        <Select v-model="formCustomerGateway.IKE" transfer>
 		          <Option v-for="item in formCustomerGateway.IKEOptions" :value="item.key" :key="item.key">
 		            {{item.label}}
 		          </Option>
 		        </Select>
 		      </FormItem>
 					<FormItem label="IKE哈希算法">
-					  <Select v-model="formCustomerGateway.IKEHash" transfer="true">
+					  <Select v-model="formCustomerGateway.IKEHash" transfer>
 					    <Option v-for="item in formCustomerGateway.IKEHashOptions" :value="item.key" :key="item.key">
 					      {{item.label}}
 					    </Option>
 					  </Select>
 					</FormItem>
 		      <FormItem label="ESP加密算法">
-		        <Select v-model="formCustomerGateway.ESP" transfer="true">
+		        <Select v-model="formCustomerGateway.ESP" transfer>
 		          <Option v-for="item in formCustomerGateway.ESPOptions" :value="item.key" :key="item.key">
 		            {{item.label}}
 		          </Option>
 		        </Select>
 		      </FormItem>
 		      <FormItem label="ESP哈希算法">
-		        <Select v-model="formCustomerGateway.ESPHash" transfer="true">
+		        <Select v-model="formCustomerGateway.ESPHash" transfer>
 		          <Option v-for="item in formCustomerGateway.ESPHashOptions" :value="item.key" :key="item.label">
 		            {{item.label}}
 		          </Option>
 		        </Select>
 		      </FormItem>
 		      <FormItem label="IKE DH算法">
-		        <Select v-model="formCustomerGateway.IKEDH" transfer="true">
+		        <Select v-model="formCustomerGateway.IKEDH" transfer>
 		          <Option v-for="item in formCustomerGateway.IKEDHoptions" :value="item.key" :key="item.label">
 		            {{item.label}}
 		          </Option>
 		        </Select>
 		      </FormItem>
 		      <FormItem label="完全正向保密">
-		        <Select v-model="formCustomerGateway.secret" transfer="true">
+		        <Select v-model="formCustomerGateway.secret" transfer>
 		          <Option v-for="item in formCustomerGateway.secretOptions" :value="item.key" :key="item.label">
 		            {{item.label}}
 		          </Option>
