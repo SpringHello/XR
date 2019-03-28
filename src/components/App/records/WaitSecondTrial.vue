@@ -4,7 +4,7 @@
     <o-step :onStep="5" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="4" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body">
-      <img src="../../../assets/img/records/records-img5.png"/>
+      <img src="../../../assets/img/records/records-img5.png" alt="records"/>
       <p>恭喜您资料提交成功，我们已将您的资料提交管局审核，审核通过后会通过短信提示您，请保持电话畅通。</p>
       <button @click="$router.push('BRecords')">查看审批进程</button>
     </div>
@@ -20,13 +20,9 @@
     metaInfo: {
       title: '域名备案查询 - 域名备案流程 - 网站域名备案 - 域名与备案 - 新睿云', // set a title
       meta: [{                 // set meta
-        name: 'keywords',
-        content: '域名备案,备案域名,域名备案查询,域名备案流程,网站域名备案'
-      },
-        {                 // set meta
-          name: 'description',
-          content: '新睿云提供专业、高效的域名备案服务，目前支持北京、沈阳、西安等地区的域名备案申请，按域名备案流程进行域名备案，助您快速完成网站备案，以便网站正常访问。'
-        }]
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
     },
     components: {
       step, records,oStep

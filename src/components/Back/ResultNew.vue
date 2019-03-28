@@ -113,13 +113,13 @@
         if (name == '0' || name == '5' || name == '4' || name == '20') {
           router = 'host';
         } else if (name == '1' || name == '9') {
-          router = 'disk';
+          router = 'diskList';
         } else if (name == '2' || name == '6' || name == '8') {
           router = 'ip';
         } else if (name == '3') {
-          router = 'vpc';
+          router = 'vpcList';
         } else if (name == '10') {
-          router = 'vpc';
+          router = 'natState';
         } else if (name == '11' || name == '12' || name == '13') {
           router = 'cloudDatabase';
         } else if (name == 14) {

@@ -4,9 +4,9 @@
     <ol>
       <li>进入控制台-网络-VPC-新建</li>
       <li>填写新建vpc表单，选择区域，确定名称，地址范围与描述。<br>
-        <img src="../../../../assets/img/doc/networks/networks-img8.png"></li>
+        <img src="../../../../assets/img/doc/networks/networks-img8.png" alt="新建VPC"></li>
       <li>点击确定，等待vpc创建完成。<br>
-        <img src="../../../../assets/img/doc/networks/networks-img9.png">
+        <img src="../../../../assets/img/doc/networks/networks-img9.png" alt="创建完成">
         <Table border :columns="columns" :data="data"></Table>
       </li>
     </ol>

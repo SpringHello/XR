@@ -265,7 +265,7 @@
               </div>
             </div>
           </div>
-           
+
           </div>
 
           <!--云硬盘-->
@@ -285,7 +285,7 @@
                     </div>
                   </div>
                   <img src="../../../assets/img/buy/across.png" @click="removeDisk(index)"
-                       style="cursor: pointer;height:11px;">
+                       style="cursor: pointer;height:11px;" alt="across">
                 </div>
               </div>
               <div class="item-wrapper">
@@ -456,13 +456,9 @@
     metaInfo: {
       title: '便宜gpu云服务器价格多少钱 - gpu云服务器怎么收费 - gpu云服务器租用费用 - 购买 - 新睿云', // set a title
       meta: [{                 // set meta
-        name: 'keywords',
-        content: 'gpu云服务器价格,gpu云服务器多少钱,gpu云服务器怎么收费,gpu云服务器租用费用,便宜gpu云服务器'
-      },
-        {                 // set meta
-          name: 'description',
-          content: '新睿云的GPU云服务器是基于GPU应用的计算服务，多适用于视频解码，图形渲染，深度学习，科学计算等应用场景，该产品具有实时高速，并行计算跟浮点计算能力强等特点。用户可按月、年租用购买，可查看gpu云服务器的租用费用、价格、报价。'
-        }]
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
     },
     /*beforeRouteEnter(to, from, next){
      axios.get('information/zone.do', {

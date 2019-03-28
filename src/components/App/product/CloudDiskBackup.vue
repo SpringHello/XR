@@ -4,7 +4,7 @@
     <!-- logo -->
     <div class="logo" style="background-image: linear-gradient(225deg,#5f97ff,#4b8aff 62%,#377dff);">
       <div class="logo-wrapper">
-        <img :src="logo.img">
+        <img :src="logo.img" alt="描述">
         <div class="info">
           <h3 >{{logo.title}}</h3>
           <span class="desc" style="color: #fff;">{{logo.desc}}</span>
@@ -53,7 +53,7 @@
           </div>
           <div class="right">
             <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex">
-              <img :src="stage.img">
+              <img :src="stage.img" alt="描述">
               <div style="padding:20px;">
                 <span>场景描述</span>
                 <p v-for="(p,i) in stage.desc">

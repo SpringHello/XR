@@ -65,7 +65,7 @@
               </div>
               <img src="../../../assets/img/buy/across.png" @click="removeDisk(index)"
                    v-show="dataDiskList.length>1"
-                   style="cursor: pointer;height:11px;">
+                   style="cursor: pointer;height:11px;" alt="across">
             </div>
           </div>
           <div class="item-wrapper">
@@ -149,13 +149,9 @@
     metaInfo: {
       title: '云硬盘租用价格 - 购买 - 新睿云', // set a title
       meta: [{                 // set meta
-        name: 'keywords',
-        content: '云硬盘租用价格,云硬盘价格'
-      },
-        {                 // set meta
-          name: 'description',
-          content: '云硬盘是为云服务器实例提供持久性块存储的服务，可以挂载到同一可用区下的云服务器实例上，云硬盘具有高可靠、高性能、灵活易用等特点，同时云硬盘支持在线操作和管理。用户可按月、年租用购买，还可实时计费。'
-        }]
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
     },
     data(){
       var zoneList = this.$store.state.zoneList.filter(zone => {

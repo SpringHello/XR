@@ -54,7 +54,7 @@
             <div class="item-wrapper">
               <div style="display: flex;justify-content: space-between;">
                 <div v-for="(item,index) in mirrorListQ" :key="index" class="fast-mirror" :class="{'select-fast-mirror':FastMirrorIndex==index}" @click="setOSQ(item,index)">
-                  <img :src="item.img" alt="">
+                  <img :src="item.img" alt="描述">
                   <span>{{item.templatename}}</span>
                 </div>
               </div>
@@ -388,7 +388,7 @@
                     </div>
                   </div>
                   <img src="../../../assets/img/buy/across.png" @click="removeHostDisk(index)"
-                       style="cursor: pointer;height:11px;">
+                       style="cursor: pointer;height:11px;" alt="across">
                 </div>
               </div>
               <div class="item-wrapper">
@@ -568,13 +568,9 @@
     metaInfo: {
       title: 'ecs云服务器租用价格 - 云主机购买 - 云服务器费用报价 - 购买 - 新睿云', // set a title
       meta: [{                 // set meta
-        name: 'keywords',
-        content: '云服务器租用价格,云服务器费用,云服务器报价,云主机购买,购买云主机,ecs服务器租用价格'
-      },
-        {                 // set meta
-          name: 'description',
-          content: '弹性云服务器（(Elastic Compute Service,简称ECS）是一种可随时自助获取，处理能力可弹性伸缩的计算服务，用户可按月、年租用购买，可查看ecs云服务器的租用费用、价格、报价。'
-        }]
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
     },
     data() {
       var zoneList = this.$store.state.zoneList.filter(zone => {

@@ -6,8 +6,8 @@
       <p>{{ recordsTypeDesc }}</p>
       <div class="recordsFlow">
         <ul v-for="item in flowList" :key="item.step">
-          <img v-if="item.step > onStep" :src="item.src"/>
-          <img v-else :src="item.onSrc"/>
+          <img v-if="item.step > onStep" :src="item.src" alt="描述"/>
+          <img v-else :src="item.onSrc" alt="描述"/>
           <p :class="{onStep: item.step <= onStep}">{{ item.title }}</p>
           <p :class="{onStep: item.step <= onStep}">{{ item.step }}</p>
           <div class="left-line" :class="{onStep: item.step <= onStep}"></div>

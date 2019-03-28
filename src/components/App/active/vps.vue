@@ -12,13 +12,13 @@
       <div style="box-shadow: 0 2px 9px 0 rgba(153,153,153,0.10);">
         <div class="type">
           <span v-if="company" :class="{active: company}" @click="company = true"><img
-            src="../../../assets/img/active/vps/qiye.png">企业用户</span>
+            src="../../../assets/img/active/vps/qiye.png" alt="企业用户">企业用户</span>
           <span v-if="company === false" :class="{active: company}" @click="company = true"><img
-            src="../../../assets/img/active/vps/gerenh.png">企业用户</span>
+            src="../../../assets/img/active/vps/gerenh.png" alt="企业用户">企业用户</span>
           <span v-if="company === false" :class="{active: company === false}" @click="company = false"><img
-            src="../../../assets/img/active/vps/person.png">个人用户</span>
+            src="../../../assets/img/active/vps/person.png" alt="个人用户">个人用户</span>
           <span v-if="company" :class="{active: company === false}" @click="company = false"><img
-            src="../../../assets/img/active/vps/geren.png">个人用户</span>
+            src="../../../assets/img/active/vps/geren.png" alt="个人用户">个人用户</span>
         </div>
       </div>
       <div class="center">
@@ -27,30 +27,30 @@
             <h2>活动流程</h2>
             <div class="items">
               <dl>
-                <dt v-if="isLogin==1"><img src="../../../assets/img/active/vps/zhuce.png"></dt>
-                <dt v-else><img src="../../../assets/img/active/vps/one.png"></dt>
+                <dt v-if="isLogin==1"><img src="../../../assets/img/active/vps/zhuce.png" alt="icon"></dt>
+                <dt v-else><img src="../../../assets/img/active/vps/one.png" alt="icon"></dt>
                 <dd :class="{select:isLogin==1}">① 新用户注册登录<i :class="{select:(company&&companyauth==0&&isLogin==1)||((!company)&&personalauth==0&&isLogin==1)}"></i></dd>
               </dl>
               <dl v-if="company">
-                <dt v-if="companyauth==0"><img src="../../../assets/img/active/vps/shiming.png"></dt>
-                <dt v-else><img src="../../../assets/img/active/vps/fore.png"></dt>
+                <dt v-if="companyauth==0"><img src="../../../assets/img/active/vps/shiming.png" alt="icon"></dt>
+                <dt v-else><img src="../../../assets/img/active/vps/fore.png" alt="icon"></dt>
                 <dd :class="{select:companyauth==0}">② 完成企业实名认证<i :class="{select:isLogin==1&&companyauth==0&&isReceive==2}"></i></dd>
               </dl>
               <dl v-if="!company">
-                <dt v-if="personalauth==0"><img src="../../../assets/img/active/vps/three.png">
+                <dt v-if="personalauth==0"><img src="../../../assets/img/active/vps/three.png" alt="icon">
                 </dt>
-                <dt v-else><img src="../../../assets/img/active/vps/five.png"></dt>
+                <dt v-else><img src="../../../assets/img/active/vps/five.png" alt="icon"></dt>
                 <dd :class="{select:personalauth==0}">② 完成个人实名认证<i :class="{select:isLogin==1&&personalauth==0&&isReceive==1}"></i></dd>
               </dl>
 
               <dl v-if="company">
-                <dt v-if="isReceive!=2"><img src="../../../assets/img/active/vps/lingquzhuji.png"></dt>
-                <dt v-else><img src="../../../assets/img/active/vps/two.png"></dt>
+                <dt v-if="isReceive!=2"><img src="../../../assets/img/active/vps/lingquzhuji.png" alt="icon"></dt>
+                <dt v-else><img src="../../../assets/img/active/vps/two.png" alt="icon"></dt>
                 <dd :class="{select:isReceive==2}">③ 免费领取企业云主机</dd>
               </dl>
               <dl v-if="!company">
-                <dt v-if="isReceive!=1"><img src="../../../assets/img/active/vps/lingquzhuji.png"></dt>
-                <dt v-else><img src="../../../assets/img/active/vps/two.png"></dt>
+                <dt v-if="isReceive!=1"><img src="../../../assets/img/active/vps/lingquzhuji.png" alt="icon"></dt>
+                <dt v-else><img src="../../../assets/img/active/vps/two.png" alt="icon"></dt>
                 <dd :class="{select:isReceive==1}">③ 免费领取个人云主机</dd>
               </dl>
             </div>
@@ -87,7 +87,7 @@
                       <p class="price"></span>限时免费</p>
                       <button @click="freeReceive(item)">立即领取</button>
                     </div>
-                    <img src="../../../assets/img/active/vps/Group3.png">
+                    <img src="../../../assets/img/active/vps/Group3.png" alt="icon">
                   </div>
                 </div>
               </li>
@@ -117,7 +117,7 @@
                       <p class="price"></span>限时免费</p>
                       <button @click="freeReceive(item)">立即领取</button>
                     </div>
-                    <img src="../../../assets/img/active/vps/Group3.png">
+                    <img src="../../../assets/img/active/vps/Group3.png" alt="icon">
                   </div>
                 </div>
               </li>
@@ -191,7 +191,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
           </div>
         </form>
       </div>

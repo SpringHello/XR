@@ -51,7 +51,7 @@
           <div class="right" style="height:620px;">
             <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex" :key="index">
               <div style="flex: 0 0 70%">
-                <img :src="stage.img">
+                <img :src="stage.img" alt="描述">
               </div>
 
               <div>

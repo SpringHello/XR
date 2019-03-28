@@ -5,7 +5,7 @@
       <li>进入新睿云官网：https://xinruiyun.com点击注册</li>
       <li>填写注册表单</li>
     </ol>
-    <img src="../../../../assets/img/doc/computed3-img1.png">
+    <img src="../../../../assets/img/doc/computed3-img1.png" alt="注册">
   </div>
 </template>
 <style>

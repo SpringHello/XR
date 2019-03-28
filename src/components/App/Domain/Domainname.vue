@@ -38,7 +38,7 @@
         <p><span><<<<<<<<<<</span>域名申请流程<span>>>>>>>>>>></span></p>
         <ul>
           <li v-for="(item,index) in domainList" :key="index">
-            <img :src="item.img">
+            <img :src="item.img" alt="描述">
             <p>{{item.name}}</p>
           </li>
         </ul>
@@ -53,7 +53,7 @@
         <h3><span><<<<<<<<<<</span>平台优势<span>>>>>>>>>>></span></h3>
         <ul>
           <li v-for="(adv,index) in advantage" :key="index">
-            <img :src="adv.img" :alt="adv.title">
+            <img :src="adv.img" :alt="adv.title" alt="标题">
             <h3>{{adv.title}}</h3>
             <span>{{adv.desc}}</span>
           </li>
@@ -88,13 +88,9 @@
     metaInfo: {
       title: 'com、cn域名注册查询 - 个人域名注册申请 - 网站域名注册商 - 域名与备案 - 新睿云', // set a title
       meta: [{                 // set meta
-        name: 'keywords',
-        content: '域名注册,注册域名,域名注册查询,cn域名注册,com域名注册,域名注册com,域名注册商,网站域名注册,个人注册域名,域名注册申请,个人域名注册,域名注册网站'
-      },
-        {                 // set meta
-          name: 'description',
-          content: '新睿云提供专业的域名注册、域名查询、域名申请等服务，域名包含但不限于com域名、cn域名，是您网站域名购买的首选域名注册服务商。'
-        }]
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
     },
     data(){
       window.scrollTo(0, 0);

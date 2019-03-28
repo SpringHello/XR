@@ -6,7 +6,7 @@
     <div class="body-bottom">
       <div class="content">
         <h2>备案区域</h2>
-        <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png"/> {{ area }}</p>
+        <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png" alt="区域"/> {{ area }}</p>
         <div class="main-info">
           <h2>主体信息</h2>
           <div class="main-ul">
@@ -90,7 +90,7 @@
                   </Upload>
                 </div>
                 <div class="item-img">
-                  <img src="../../../assets/img/records/records-img1.png">
+                  <img src="../../../assets/img/records/records-img1.png" alt="示例图">
                   <p>示例图</p>
                 </div>
               </div>
@@ -115,12 +115,12 @@
                     <div class="item-content-text" v-if="item.IDCardBack==''">
                       点击上传图片
                     </div>
-                    <img v-else :src="item.IDCardBack" style="height: 120px;width:164px;">
+                    <img v-else :src="item.IDCardBack" style="height: 120px;width:164px;" alt="上传图片">
                     <Progress v-show="percentBack>0" :percent="percentBack"></Progress>
                   </Upload>
                 </div>
                 <div class="item-img">
-                  <img src="../../../assets/img/records/records-img2.png">
+                  <img src="../../../assets/img/records/records-img2.png" alt="示例图">
                   <p>示例图</p>
                 </div>
               </div>
@@ -149,12 +149,12 @@
                     <div class="item-content-text" v-if="uploadForm.combine==''">
                       点击上传图片
                     </div>
-                    <img v-else :src="uploadForm.combine" style="height: 120px;width:164px;">
+                    <img v-else :src="uploadForm.combine" style="height: 120px;width:164px;" alt="上传图片">
                     <Progress v-show="percentCombine>0" :percent="percentCombine"></Progress>
                   </Upload>
                 </div>
                 <div class="item-img">
-                  <img class="enter" src="../../../assets/img/records/records-img3.png">
+                  <img class="enter" src="../../../assets/img/records/records-img3.png" alt="示例图">
                   <p>示例图</p>
                 </div>
               </div>
@@ -172,13 +172,13 @@
                     <p v-for="(file,index) in item.certifiedDomainNoCertificationDefaultList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
                       <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')||(file.suffix == 'gif')"
                            :class="{one:item.certifiedDomainNoCertificationDefaultList.length==1,two:item.certifiedDomainNoCertificationDefaultList.length==2,three:item.certifiedDomainNoCertificationDefaultList.length==3}"
-                           src="../../../assets/img/records/records-img.png"/>
+                           src="../../../assets/img/records/records-img.png" alt="records"/>
                       <img v-if="file.suffix == 'doc'||file.suffix == 'ocx'"
                            :class="{one:item.certifiedDomainNoCertificationDefaultList.length==1,two:item.certifiedDomainNoCertificationDefaultList.length==2,three:item.certifiedDomainNoCertificationDefaultList.length==3}"
-                           src="../../../assets/img/records/records-doc.png"/>
+                           src="../../../assets/img/records/records-doc.png" alt="records"/>
                       <img v-if="file.suffix == 'pdf'"
                            :class="{one:item.certifiedDomainNoCertificationDefaultList.length==1,two:item.certifiedDomainNoCertificationDefaultList.length==2,three:item.certifiedDomainNoCertificationDefaultList.length==3}"
-                           src="../../../assets/img/records/records-pdf.png"/>
+                           src="../../../assets/img/records/records-pdf.png" alt="records"/>
                       {{ file.name }}
                       <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="removeSSL(upIndex,index)"></Icon>
                     </p>
@@ -215,13 +215,13 @@
                     <p v-for="(file,index) in item.otherFile" style="text-align: center;font-size: 14px;margin-bottom:5px;line-height: 1.5;">
                       <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')||(file.suffix == 'gif')"
                            :class="{one:item.otherFile.length==1,two:item.otherFile.length==2,three:item.otherFile.length==3}"
-                           src="../../../assets/img/records/records-img.png"/>
+                           src="../../../assets/img/records/records-img.png" alt="records"/>
                       <img v-if="file.suffix == 'doc'||file.suffix == 'ocx'"
                            :class="{one:item.otherFile.length==1,two:item.otherFile.length==2,three:item.otherFile.length==3}"
-                           src="../../../assets/img/records/records-doc.png"/>
+                           src="../../../assets/img/records/records-doc.png" alt="records"/>
                       <img v-if="file.suffix == 'pdf'"
                            :class="{one:item.otherFile.length==1,two:item.otherFile.length==2,three:item.otherFile.length==3}"
-                           src="../../../assets/img/records/records-pdf.png"/>
+                           src="../../../assets/img/records/records-pdf.png" alt="records"/>
                       {{ file.name }}
                       <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="removeOtherFile(upIndex,index)"></Icon>
                     </p>
@@ -257,13 +257,13 @@
                   <p v-for="(file,index) in item.checkList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
                     <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')||(file.suffix == 'gif')"
                          :class="{one:item.checkList.length==1,two:item.checkList.length==2}"
-                         src="../../../assets/img/records/records-img.png"/>
+                         src="../../../assets/img/records/records-img.png" alt="records"/>
                     <img v-if="file.suffix == 'doc'||file.suffix == 'ocx'"
                          :class="{one:item.checkList.length==1,two:item.checkList.length==2}"
-                         src="../../../assets/img/records/records-doc.png"/>
+                         src="../../../assets/img/records/records-doc.png" alt="records"/>
                     <img v-if="file.suffix == 'pdf'"
                          :class="{one:item.checkList.length==1,two:item.checkList.length==2}"
-                         src="../../../assets/img/records/records-pdf.png"/>
+                         src="../../../assets/img/records/records-pdf.png" alt="records"/>
                     {{ file.name }}
                     <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="removeCheckList(upIndex,index)"></Icon>
                   </p>
@@ -288,7 +288,7 @@
           </div>
           <div class="uploadTitle" style="margin: 34px 0 10px 20px;">
             <div class="item" style="text-align: center;position: relative">
-              <img @click="imageViewShow = true" :src="checkSrc"/>
+              <img @click="imageViewShow = true" :src="checkSrc" alt="描述"/>
             </div>
           </div>
         </div>
@@ -316,13 +316,9 @@
     metaInfo: {
       title: '域名备案查询 - 域名备案流程 - 网站域名备案 - 域名与备案 - 新睿云', // set a title
       meta: [{                 // set meta
-        name: 'keywords',
-        content: '域名备案,备案域名,域名备案查询,域名备案流程,网站域名备案'
-      },
-        {                 // set meta
-          name: 'description',
-          content: '新睿云提供专业、高效的域名备案服务，目前支持北京、沈阳、西安等地区的域名备案申请，按域名备案流程进行域名备案，助您快速完成网站备案，以便网站正常访问。'
-        }]
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
     },
     components: {
       step, records, oStep

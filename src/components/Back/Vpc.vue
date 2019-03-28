@@ -9,7 +9,7 @@
         云网络 /
          <span>网络私有云VPC</span>
       </span>
-      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
+      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="(!auth)||auth && auth.checkstatus !== 0">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
@@ -258,7 +258,7 @@
             <i @click="$router.push('ip')">
               <Icon type="plus" color="#2A99F2" size="17"
                     style="position: relative;top: 35px;cursor:pointer;left:35px;"></Icon>
-    				
+
             </i>
     		<span style="position: relative;top: 11px;cursor:pointer;left:52px;float: left;color:#2A99F2 ;" @click="$router.push('ip')">新建弹性IP</span>
           </FormItem>
@@ -1133,6 +1133,11 @@
             })
           })
           this.natData = response.data.result
+          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
+            this.natData.forEach(nat => {
+              nat._disabled = true
+            })
+          }
         }
       },
       radio(item) {
@@ -1541,7 +1546,7 @@
     computed: mapState({
       paneStatus: state => state.paneStatus,
       auth() {
-        return this.$store.state.authInfo != null
+        return this.$store.state.authInfo
       }
     }),
     watch: {
@@ -1817,7 +1822,7 @@
 	  padding: 0;
 	  margin-top: -3px;
 	}
-	
+
 	.divall {
 	  background:rgba(42,153,242,0.06);
 	  border-radius:2px;
