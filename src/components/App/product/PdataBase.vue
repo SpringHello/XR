@@ -1,5 +1,6 @@
 <template>
   <div class="product" id="pdatabase">
+    <h1 id="hide-h1">数据库</h1>
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">

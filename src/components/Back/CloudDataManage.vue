@@ -553,7 +553,7 @@
           type: '近一天'
         },
         logTime: this.getCurrentDate() + ',' + this.getTomorrow(),
-        target: 'host',
+        target: 'db',
         currentPage: 1,
         pageSize: 10,
         total: 0,
@@ -791,11 +791,11 @@
       if (sessionStorage.getItem('databaseInfo')) {
         this.databaseInfo = JSON.parse(sessionStorage.getItem('databaseInfo'))
       }
-      console.log(this.databaseInfo)
       this.queryData('cpu')
       this.queryData('disk')
       this.queryData('memory')
       this.queryData('flow')
+      this.search()
     },
     methods: {
       portModify() {
@@ -1145,8 +1145,11 @@
         var url = this[type].type == '今天' ? urlList.dayURL : urlList.otherURL
         var queryType = type == 'flow' ? 'network' : 'core'
         var dateType = this[type].type == '最近7天' ? 'week' : 'month'
-        this.$http.get(`${url}?vmname=${this.databaseInfo.instancename}&type=${queryType}&datetype=${dateType}`)
-          .then(response => {
+        this.$http.get(url, { params: {
+          vmname: this.databaseInfo.instancename,
+          type: queryType,
+          datetype: dateType
+        }}).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               if (type == 'flow') {
                 this.ipPolar.xAxis.data = response.data.result.xaxis

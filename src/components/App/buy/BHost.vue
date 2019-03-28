@@ -1,5 +1,6 @@
 <template>
   <div id="bhost">
+    <h1 id="hide-h1">云主机购买</h1>
     <div id="Pecs">
       <!--选择配置方式，快速配置、自定义配置-->
       <div style="height:60px;display: flex">
@@ -332,7 +333,7 @@
                       {{item.acllistname}}
                     </Option>
                   </Select>
-                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/document')">帮助文档</span>
+                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/support/products.html')">帮助文档</span>
                 </div>
               </div>
             </div>
@@ -564,6 +565,13 @@
 
   var debounce = require('throttle-debounce/debounce')
   export default {
+    metaInfo: {
+      title: 'ecs云服务器租用价格 - 云主机购买 - 云服务器费用报价 - 购买 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
+    },
     data() {
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 0
@@ -578,6 +586,7 @@
       }
       return {
         selectFastMirror: '',
+        selectFastMirrorInfo: {systemId: '',systemName: ''},
         FastMirrorIndex: 0,
         mirrorShow: false,
         acllist: [
@@ -845,6 +854,7 @@
               item.img = this.mirrorListQImg[index].img
             })
             this.selectFastMirror = response.data.result[0].systemtemplateid
+            this.selectFastMirrorInfo = {systemId: response.data.result[0].systemtemplateid,systemName: response.data.result[0].templatename}
           }
         })
       },
@@ -966,7 +976,8 @@
       },
       setOSQ(item,index) {
         this.FastMirrorIndex=index
-        this.selectFastMirror=item.systemtemplateid
+        this.selectFastMirrorInfo = {systemId: item.systemtemplateid,systemName: item.templatename}
+        this.selectFastMirror =  item.systemtemplateid
         var str = item.templatename.substr(0, 1)
         if (str === 'W' || str === 'w') {
           this.systemUsername = 'administrator'
@@ -1093,7 +1104,7 @@
         if (this.createType == 'fast') {
           prod.currentSystem = this.currentSystem
           prod.cost = this.fastCost
-          prod.system = this.selectFastMirror
+          prod.system = this.selectFastMirrorInfo
         } else {
           prod.system = this.currentType == 'public' ? this.system : this.appSystem
           prod.IPConfig = this.IPConfig
@@ -1457,6 +1468,11 @@
           this.queryVpc()
           this.fireList()
           this.getFastMirror()
+          // 费用变化
+          this.queryQuick()
+          this.queryCustomVM()
+          this.queryIPPrice()
+          this.queryDiskPrice()
         },
         deep: true
       },

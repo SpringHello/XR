@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="banner">
-        <img src="../../../../assets/img/active/group-booking/rule-banner.png"/>
+        <img src="../../../../assets/img/active/group-booking/rule-banner.png" alt="描述"/>
       </div>
     </div>
   </div>

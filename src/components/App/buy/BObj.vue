@@ -1,5 +1,6 @@
 <template>
   <div id="bhost">
+    <h1 id="hide-h1">对象储存购买</h1>
     <!--公网IP div-->
     <div id="Peip" style="padding: 30px 40px 40px 40px;">
       <!--两种配置方式公共页面-->
@@ -119,6 +120,13 @@
 
   var debounce = require('throttle-debounce/debounce')
   export default {
+    metaInfo: {
+      title: 'oss对象云存储价格 - 对象存储oss流量费用 - 对象存储oss怎么收费 - 购买 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
+    },
     beforeRouteEnter(to, from, next) {
       axios.get('ruiradosPrice/zoneList.do').then(response => {
         next(vm => {

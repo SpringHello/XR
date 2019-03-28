@@ -1,10 +1,11 @@
 <template>
   <div id="xian-node">
+    <h1 id="hide-h1">新节点上线</h1>
     <div class="banner">
       <div class="wrap">
         <div class="container flex-vertical-center">
           <div class="left">
-            <img src="../../../assets/img/active/xianNode/banner-text.png" alt>
+            <img src="../../../assets/img/active/xianNode/banner-text.png" alt="描述">
             <p>
               新节点云服务器
               <i>折扣特惠</i>，
@@ -12,7 +13,7 @@
             </p>
             <span @click="roll(500)">立即参与</span>
           </div>
-          <img src="../../../assets/img/active/xianNode/xian-node-banner.png" alt>
+          <img src="../../../assets/img/active/xianNode/xian-node-banner.png" alt="描述">
         </div>
       </div>
     </div>
@@ -94,7 +95,7 @@
         <div class="main flex">
           <div class="box" v-for="(item,index) in advantageData" :key="index">
             <div class="img-wrap">
-              <img :src="item.img">
+              <img :src="item.img" alt="描述">
             </div>
             <h3>{{item.title}}</h3>
             <p>{{item.desc}}</p>
@@ -125,7 +126,7 @@
             <i @click.stop="showModal.authErrorModal=false"></i>
           </div>
           <div class="body">
-            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/error-icon.png" style="vertical-align: middle;"> {{authError}}</p>
+            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/error-icon.png" style="vertical-align: middle;" alt="描述"> {{authError}}</p>
             <p v-if="authError != '当前用户已认证，不能重复认证'"> 您也可以通过<span class="red" @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
             <button v-if="authError != '当前用户已认证，不能重复认证'" @click.stop="showModal.authErrorModal=false;showModal.authModal=true" style="margin-top: 35px;" class="modal-btn"><span>再次尝试</span>
             </button>
@@ -156,7 +157,7 @@
             <i @click.stop="showModal.authSucModal=false"></i>
           </div>
           <div class="body">
-            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/success-icon.png" style="vertical-align: middle;">恭喜您！已通过实名认证</p>
+            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/success-icon.png" style="vertical-align: middle;" alt="描述">恭喜您！已通过实名认证</p>
             <p> 您可前往<span class="red" @click="$router.push('/userCenter')"> 个人中心</span>查看您的认证信息</p>
             <button @click.stop="showModal.authSucModal=false" style="margin-top: 35px;" class="modal-btn"><span>返回活动</span></button>
           </div>
@@ -217,7 +218,7 @@
                   <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:224px;">
                   </Input>
                   <img :src="imgSrc" style="height:33px;"
-                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="描述">
                 </div>
               </FormItem>
               <FormItem label="手机号码" prop="tel">
@@ -247,6 +248,17 @@
   import reg from '../../../util/regExp'
 
   export default {
+    metaInfo: {
+      title: '陕西西安云服务器、云主机租用，新节点低至1.7折 - 活动中心 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '西安云服务器,西安云主机,陕西云服务器,陕西云主机,西安云服务器租用,西安云主机租用'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云陕西西安节点正式上线，新节点云服务器折扣优惠，每位用户仅可参与一次活动最多可购3台云服务器，仅限新用户。'
+        }]
+    },
     data() {
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {

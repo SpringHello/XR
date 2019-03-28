@@ -1,21 +1,22 @@
 <template>
   <div class="active-center">
+    <h1 id="hide-h1">活动中心</h1>
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div class="ss-active" @click="push('/activtiy/2019spring/')">
+          <div class="ss-active" @click="push('/activity/2019spring/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
-                  <h1>云产品新春采购季</h1>
+                  <h2>云产品新春采购季</h2>
                   <p>
                     低至
                     <i>1折</i>
                     更有会员折上折
                   </p>
-                  <span @click="push('/activtiy/2019spring/')">立即购买</span>
+                  <span @click="push('/activity/2019spring/')">立即购买</span>
                 </div>
-                <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt>
+                <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt="云产品新春采购季">
               </div>
             </div>
           </div>
@@ -25,7 +26,7 @@
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
-                  <img src="../../assets/img/active/xianNode/banner-text.png" alt>
+                  <img src="../../assets/img/active/xianNode/banner-text.png" alt=" 新节点云服务器">
                   <p>
                      新节点云服务器
                     <i>折扣特惠</i>，
@@ -33,7 +34,7 @@
                   </p>
                   <span @click="$router.push('/activity/xian')">立即参与</span>
                 </div>
-                <img src="../../assets/img/active/xianNode/xian-node-banner.png" alt>
+                <img src="../../assets/img/active/xianNode/xian-node-banner.png" alt="新节点云服务器">
               </div>
             </div>
           </div>
@@ -67,7 +68,7 @@
             <div class="groupBook">
               <div>
                 <div>
-                  <img src="../../assets/img/active/group-booking/gb-banner7.png"/>
+                  <img src="../../assets/img/active/group-booking/gb-banner7.png" alt="云主机特惠计划"/>
                   <p>云主机特惠计划</p>
                   <p>分享赚时长 一年只需<span>59</span>元</p>
                   <p>59元首月开通，<span>0</span>元续费 ，便宜好用尽在新睿云</p>
@@ -81,10 +82,10 @@
           <div @click="push('/activity/zero/')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
-                <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png"></p>
+                <div><p><img style="padding-top: 0" src="../../assets/img/active/active_1/ziti2.png" alt="ziti"></p>
                   <button>立即领取</button>
                 </div>
-                <img src="../../assets/img/home/home-banner4.png"></div>
+                <img src="../../assets/img/home/home-banner4.png" alt="立即领取"></div>
             </div>
           </div>
         </my-carousel-item>
@@ -115,7 +116,7 @@
                   <p v-html="item.desc"></p>
                   <p v-if="item.secDesc">{{item.secDesc}}</p>
                 </div>
-                <img :src="item.textImg" alt="" v-else>
+                <img :src="item.textImg"  v-else>
 
               </div>
               <div class="box-bottom">
@@ -186,7 +187,7 @@
             imgPath: require('../../assets/img/activecenter/bg-card-kaixue.png'),
             time: '2019.3.1-2019.4.30',
             activeObj: '新老用户皆可参与',
-            url: '/activtiy/2019spring/',
+            url: '/activity/2019spring/',
             isStart: true,
             weight: '1',
           },
@@ -611,7 +612,7 @@
     .container {
       height: 400px;
       .left {
-        h1 {
+        h2 {
           font-size: 48px;
           line-height: 64px;
           font-weight: normal;

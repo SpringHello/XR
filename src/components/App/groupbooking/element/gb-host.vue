@@ -41,7 +41,7 @@
       <div class="modal-body">
         <p>赶快分享给你的小伙伴吧！</p>
         <ul>
-          <li v-for="(item,index) in shareGroup" @click="share(index)"><img :src="item.src"/><span>{{ item.text }}</span></li>
+          <li v-for="(item,index) in shareGroup" @click="share(index)"><img :src="item.src" alt="描述"/><span>{{ item.text }}</span></li>
         </ul>
         <div class="link">活动链接：<span>{{ activeLink }}</span></div>
       </div>

@@ -1,5 +1,6 @@
 <template>
   <div class="product">
+    <h1 id="hide-h1">云硬盘</h1>
     <!-- logo -->
     <div class="logo" style="background-image: linear-gradient(225deg,#5f97ff,#4b8aff 62%,#377dff);">
       <div class="logo-wrapper">

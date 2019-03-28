@@ -1,23 +1,24 @@
 <template>
   <div>
+    <h1 id="hide-h1">零元购</h1>
     <div class="head">
       <div class="head-banner">
         <div>
           <div>
             <p>
-              <img src="../../../assets/img/active/active_1/ziti2.png">
+              <img src="../../../assets/img/active/active_1/ziti2.png" alt="描述">
             </p>
             <button @click="roll(600)">立即领取</button>
           </div>
           <transition name="list">
-            <img v-if="img" src="../../../assets/img/active/active_1/baner.png">
+            <img v-if="img" src="../../../assets/img/active/active_1/baner.png" alt="描述">
           </transition>
         </div>
       </div>
       <div class="head-nav">
         <div>
           <div v-for="item in headNav" class="nav">
-            <img :src=item.img>
+            <img :src="item.img" alt="描述">
             <div>
               <p class="title">{{item.title}}</p>
               <span class="desc">{{item.desc}}</span>
@@ -28,7 +29,7 @@
     </div>
     <div class="body">
       <div class="head-headline">
-        <img src="../../../assets/img/active/active_1/headline_1.png" alt="">
+        <img src="../../../assets/img/active/active_1/headline_1.png" alt="描述">
         <span>数量有限，先到先得</span>
       </div>
       <div class="cash-get">
@@ -44,7 +45,7 @@
       <div class="recommend-product">
         <div class="center">
           <div class="head-headline">
-            <img src="../../../assets/img/active/active_1/headline_2.png" alt="">
+            <img src="../../../assets/img/active/active_1/headline_2.png" alt="描述">
             <span>领取38元现金券后免费体验以下及其它产品</span>
           </div>
           <div class="content">
@@ -140,7 +141,7 @@
       </div>
       <div class="activity-rule">
         <div class="head-headline">
-          <img src="../../../assets/img/active/active_1/headline_3.png" alt="">
+          <img src="../../../assets/img/active/active_1/headline_3.png" alt="描述">
         </div>
         <div class="center">
           <div class="rules">
@@ -162,6 +163,17 @@
   import $ from 'jquery'
 
   export default {
+    metaInfo: {
+      title: '0元试用云主机 - 38元云服务器优惠券 - 158元云主机现金券 - 活动中心 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '0元云服务器,0元试用云主机,0元云主机,云服务器优惠券'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云推出0元购活动，可用于免费试用云服务器产品，新用户注册即可领取38元无门槛优惠券，同时注册完成账户可立即获得158元现金红包。'
+        }]
+    },
     data() {
       window.scrollTo(0, 0);
       return {

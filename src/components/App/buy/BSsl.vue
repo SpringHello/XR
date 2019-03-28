@@ -1,5 +1,6 @@
 <template>
   <div id="bhost" class="bssl">
+    <h1 id="hide-h1">SSL证书购买</h1>
     <div class="wrap">
       <div class="box">
         <Steps :current="step">
@@ -12,7 +13,7 @@
       <div class="step-one universal-form-tips-line" v-if="step==0">
         <Form ref="formValidateOne" :model="formValidateOne" :rules="ruleValidateOne" size="large">
           <div class="box">
-            <h1 class="headline">证书类型</h1>
+            <h2 class="headline">证书类型</h2>
             <div class="content">
               <span
                 v-for="(item,index) in type"
@@ -24,7 +25,7 @@
             </div>
           </div>
           <div class="box">
-            <h1 class="headline">输入证书名称</h1>
+            <h2 class="headline">输入证书名称</h2>
             <FormItem prop="sslName" size="large">
               <Input
                 v-model="formValidateOne.sslName"
@@ -35,7 +36,7 @@
             </FormItem>
           </div>
           <div class="box" style="padding-bottom:40px;">
-            <h1 class="headline">输入绑定域名</h1>
+            <h2 class="headline">输入绑定域名</h2>
             <div class="content">
               <Alert type="warning" class="domian-hint">
                 <p>1.第一个域名默认为证书显示的主域名，最多100个域名。</p>
@@ -54,7 +55,7 @@
             </div>
           </div>
           <div class="box">
-            <h1 class="headline">申请年限选择</h1>
+            <h2 class="headline">申请年限选择</h2>
             <div class="content">
               <span
                 style="width:80px;margin-right: 10px;"
@@ -67,7 +68,7 @@
             </div>
           </div>
           <div class="box" v-if="formValidateOne.selectedType=='1'">
-            <h1 class="headline">验证申请</h1>
+            <h2 class="headline">验证申请</h2>
             <div class="content mb30" style="color:#333">
               <div class="vail-gap">
                 <FormItem label="验证方式" prop="vailType" size="large">
@@ -135,7 +136,7 @@
       <div class="step-two universal-form-tips-line" v-if="step==1">
         <Form ref="formValidateTwo" :model="formValidateTwo" :rules="ruleValidateTwo" size="large">
           <div class="box" v-if="formValidateOne.selectedType=='1'">
-            <h1 class="headline">单位信息</h1>
+            <h2 class="headline">单位信息</h2>
             <div class="content mb30" style="color:#333">
               <div>
                 <div class="vail-gap">
@@ -182,7 +183,7 @@
             </div>
           </div>
           <div class="box">
-            <h1 class="headline">被授权人信息</h1>
+            <h2 class="headline">被授权人信息</h2>
             <div class="content mb30" style="color:#333">
               <div>
                 <div class="vail-gap">
@@ -247,6 +248,13 @@ import reg from '@/util/regExp'
 
 var debounce = require('throttle-debounce/debounce')
 export default {
+  metaInfo: {
+    title: '购买沃通ssl证书（ov、dv） - 购买 - 新睿云', // set a title
+    meta: [{                 // set meta
+      name: 'robots',
+      content: 'noindex,nofollow'
+    }]
+  },
   data () {
     // 域名正则批量判断
     const validateDomain = (rule, value, callback) => {

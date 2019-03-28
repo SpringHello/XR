@@ -366,6 +366,11 @@
             this.operatingOrder.splice(index, 1)
             this.closingOrder.push(order)
             this.$Message.success('已关闭工单')
+            if(this.operatingCurrPage !== 1 && this.operatingOrder.length === 0){
+              this.operatingCurrPage -=1
+            }
+            this.getOrders('operating')
+            this.getOrders('closing')
           }
         })
       },
@@ -379,6 +384,11 @@
           if (response.status == 200 && response.data.status == 1) {
             this.closingOrder.splice(index, 1)
             this.$Message.success(response.data.msg)
+            if(this.closingCurrPage !== 1 && this.closingOrder.length === 0){
+              this.closingCurrPage -=1
+            }
+            this.getOrders('closing')
+            this.getOrders('operating')
           }
         })
       },

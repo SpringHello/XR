@@ -1,5 +1,6 @@
 <template>
   <div class="share-page">
+    <h1 id="hide-h1">拼团活动</h1>
     <gb-timelimit :start-time="startTime" :end-time="endTime"></gb-timelimit>
     <gb-host :product-groups="productGroups" :active-link="activeLink" :participation-person-data="participationPersonData"
              :host-duration="hostDuration" :participation-person-columns="participationPersonColumns"></gb-host>
@@ -9,7 +10,7 @@
     </div>
     <Modal v-model="paySuccess" width="500" :scrollable="true">
       <div class="modal-body">
-        <img src="../../../assets/img/active/group-booking/gb-icon12.png"/>
+        <img src="../../../assets/img/active/group-booking/gb-icon12.png" alt="描述"/>
         <p>支付成功啦！</p>
         <p>分享给好友获得免费赠送时长吧。</p>
       </div>
@@ -30,6 +31,13 @@
   import axios from 'axios'
 
   export default {
+    metaInfo: {
+      title: '云服务器拼团 - 云主机团购 - 活动中心 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
+    },
     components: {
       gbHost,
       gbAward,

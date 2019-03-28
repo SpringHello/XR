@@ -140,7 +140,7 @@
       padding: 11px 0px;
       display: block;
       cursor: pointer;
-      >span >a{
+      > span > a {
         cursor: pointer;
       }
     }
@@ -249,7 +249,7 @@
         left: 0px;
         top: 76px;
         width: 480px;
-        h3{
+        h3 {
           font-size: 47px;
           font-weight: normal;
           display: block;
@@ -260,7 +260,7 @@
           display: block;
           margin-bottom: 40px;
         }
-        h3{
+        h3 {
           font-size: 47px;
           font-weight: normal;
           display: block;
@@ -633,7 +633,6 @@
   margin-top: 20px;
 }
 
-
 // 备案系统区域按钮样式
 .recordsArea-but {
   width: 224px;
@@ -754,12 +753,14 @@
     }
   }
 }
-.ivu-tooltip-inner{
+
+.ivu-tooltip-inner {
   max-width: none;
 }
+
 // 底部语音验证样式
 .voice-vail {
-  background:rgba(247,247,247,1);
+  background: rgba(247, 247, 247, 1);
   padding: 10px 20px;
   color: #666;
   font-size: 14px;
@@ -778,32 +779,34 @@
     cursor: not-allowed;
   }
 }
+
 // 底部语音验证样式（没有实名认证）
 .noauth-voice {
-  color:#F10C0C;
+  color: #F10C0C;
   span {
-    color:#4A97EE;
-    cursor:pointer
+    color: #4A97EE;
+    cursor: pointer
   }
   .notallow {
     cursor: not-allowed;
   }
 }
+
 // 上传证件图片的公用样式
 .upload-img {
   margin-top: 20px;
-  width:350px;
-  height:178px;
-  border-radius:4px;
-  border:1px solid rgba(216,216,216,1);
+  width: 350px;
+  height: 178px;
+  border-radius: 4px;
+  border: 1px solid rgba(216, 216, 216, 1);
   background: #fff;
   padding: 16px;
   font-size: 14px;
-  color:rgba(0,0,0,0.43);
+  color: rgba(0, 0, 0, 0.43);
   .content {
     height: 146px;
-    background:rgba(247,247,247,1);
-    border-radius:4px;
+    background: rgba(247, 247, 247, 1);
+    border-radius: 4px;
     padding: 16px 20px 0 20px;
     display: flex;
     justify-content: space-between;
@@ -814,17 +817,17 @@
     }
     .left {
       .icon-wrap {
-        width:110px;
-        height:80px;
-        background:rgba(255,255,255,1);
-        border-radius:4px;
+        width: 110px;
+        height: 80px;
+        background: rgba(255, 255, 255, 1);
+        border-radius: 4px;
         display: flex;
         justify-content: center;
         align-items: center;
       }
       img {
-        width:110px;
-        height:80px;
+        width: 110px;
+        height: 80px;
         display: block;
       }
       p {
@@ -834,7 +837,140 @@
     }
   }
 }
+#hide-h1 {
+  display: none;
+}
+[v-cloak] {
+  display: none !important;
+}
+// 加载中
+.spinner {
+  margin: 100px auto;
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
 
+.container1 > div, .container2 > div, .container3 > div {
+  width: 6px;
+  height: 6px;
+  background-color: #2a99f2;
+
+  border-radius: 100%;
+  position: absolute;
+  -webkit-animation: bouncedelay 1.2s infinite ease-in-out;
+  animation: bouncedelay 1.2s infinite ease-in-out;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.spinner .spinner-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.container2 {
+  -webkit-transform: rotateZ(45deg);
+  transform: rotateZ(45deg);
+}
+
+.container3 {
+  -webkit-transform: rotateZ(90deg);
+  transform: rotateZ(90deg);
+}
+
+.circle1 {
+  top: 0;
+  left: 0;
+}
+.circle2 {
+  top: 0;
+  right: 0;
+}
+.circle3 {
+  right: 0;
+  bottom: 0;
+}
+.circle4 {
+  left: 0;
+  bottom: 0;
+}
+
+.container2 .circle1 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.container3 .circle1 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.container1 .circle2 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.container2 .circle2 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+.container3 .circle2 {
+  -webkit-animation-delay: -0.7s;
+  animation-delay: -0.7s;
+}
+
+.container1 .circle3 {
+  -webkit-animation-delay: -0.6s;
+  animation-delay: -0.6s;
+}
+
+.container2 .circle3 {
+  -webkit-animation-delay: -0.5s;
+  animation-delay: -0.5s;
+}
+
+.container3 .circle3 {
+  -webkit-animation-delay: -0.4s;
+  animation-delay: -0.4s;
+}
+
+.container1 .circle4 {
+  -webkit-animation-delay: -0.3s;
+  animation-delay: -0.3s;
+}
+
+.container2 .circle4 {
+  -webkit-animation-delay: -0.2s;
+  animation-delay: -0.2s;
+}
+
+.container3 .circle4 {
+  -webkit-animation-delay: -0.1s;
+  animation-delay: -0.1s;
+}
+
+@-webkit-keyframes bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0.0)
+  }
+  40% {
+    -webkit-transform: scale(1.0)
+  }
+}
+
+@keyframes bouncedelay {
+  0%, 80%, 100% {
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  }
+  40% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
 // css3下拉显示小图标
 .clock-show.icon {
   margin-left: 10px;

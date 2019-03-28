@@ -1,20 +1,21 @@
 <template>
   <div id="home" style="background: #FFF">
+    <h1 id="hide-h1">新睿云提供云服务器租用、云主机试用等云计算服务</h1>
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div class="ss-active" @click="push('/activtiy/2019spring/')">
+          <div class="ss-active" @click="push('/activity/2019spring/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
                 <div class="left">
-                  <h1>云产品新春采购季</h1>
+                  <h2>云产品新春采购季</h2>
                   <p>
                     低至
                     <i>1折</i>
                     更有会员折上折
                   </p>
-                  <span @click="push('/activtiy/2019spring/')">立即购买</span>
+                  <span @click="push('/activity/2019spring/')">立即购买</span>
                 </div>
                 <img src="../../assets/img/active/schoolSeason/schoolseason_banner.png" alt="云产品新春采购季">
               </div>
@@ -142,7 +143,7 @@
           <div class="east-banner" @click="push('/eastsouth/')">
             <div class="wrap">
               <div class="text">
-                <h1><span><i>华东</i><i>华南</i></span>盛大开服</h1>
+                <h2><span><i>华东</i><i>华南</i></span>盛大开服</h2>
                 <p>万兆光纤极速体验，助力区域企业云上发展</p>
                 <Button>了解详情</Button>
               </div>
@@ -425,7 +426,7 @@
               <dd v-html="showNews.abstracts">
               </dd>
               <dd>
-                <a :href='`https://news.xrcloud.net/essay/${showNews.code}.html`' target="_blank" class="news-btn">
+                <a :href='`https://zschj.xrcloud.net/news/${showNews.code}.html`' target="_blank" class="news-btn">
                   查看详情
                 </a>
               </dd>
@@ -437,16 +438,16 @@
         </div>
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
-            <dt>
+            <!--<dt>
               <a :href="`https://news.xrcloud.net/${item.EnglishName}`" class="moreinfo">
                 <Icon type="chevron-right"></Icon>
                 <span>{{item.typename}}</span>
               </a>
-            </dt>
+            </dt>-->
             <dd>
               <ul>
                 <li v-for="(secitem,i) in item.artile" :key="i">
-                  <a :href="`https://news.xrcloud.net/essay/${secitem.code}.html`" target="_blank">
+                  <a :href="`https://zschj.xrcloud.net/news/${secitem.code}.html`" target="_blank">
                       <div class="alink">
                         <div class="title">{{secitem.title}}</div>
                         <i v-if="secitem.isHot">HOT</i>
@@ -643,7 +644,7 @@
               require('../../assets/img/sceneList/sl-icon4.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/scene/yundiannao/',
+            link: 'yundiannao/',
             hint: '免费使用一年'
           },
           {
@@ -656,7 +657,7 @@
               require('../../assets/img/sceneList/sl-icon8.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/scene/selfhelpbuildingwebsite/',
+            link: 'selfhelpbuildingwebsite/',
             hint: '免费使用一年'
           },
           {
@@ -669,7 +670,7 @@
               require('../../assets/img/sceneList/sl-icon29.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/scene/storagedisk/',
+            link: 'storagedisk/',
             hint: '免费使用一年'
           },
           {
@@ -682,7 +683,7 @@
               require('../../assets/img/sceneList/sl-icon14.png')
             ],
             configure: ['2核4G1M带宽(1个月)', '2核4G1M带宽(3个月)', '2核4G1M带宽(6个月)', '2核4G1M带宽(12个月)'],
-            link: '/scene/softwaredevelopment/',
+            link: 'softwaredevelopment/',
             hint: '免费使用一年'
           },
           {
@@ -693,7 +694,7 @@
               require('../../assets/img/sceneList/sl-icon16.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/scene/gameservice/',
+            link: 'gameservice/',
             hint: '免费使用'
           },
           {
@@ -706,7 +707,7 @@
               require('../../assets/img/sceneList/sl-icon20.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/scene/graphicdesign/',
+            link: 'graphicdesign/',
             hint: '免费使用'
           },
           {
@@ -719,7 +720,7 @@
               require('../../assets/img/sceneList/sl-icon24.png'),
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/scene/ai/',
+            link: 'ai/',
             hint: '免费使用'
           },
           {
@@ -729,7 +730,7 @@
               require('../../assets/img/sceneList/sl-icon25.png')
             ],
             configure: ['8核64GG5500', '16核64G2288H_v5', '16核128GG5500'],
-            link: '/scene/supercomputing/',
+            link: 'supercomputing/',
             hint: '免费使用'
           },
         ],
@@ -1212,9 +1213,8 @@
 
     },
     created() {
-      //this.getnews()
-      //this.getlinkList()
-      //this.getMirror(this.eightsceneIndex)
+      this.getnews()
+      this.getlinkList()
     },
     methods: {
       init() {
@@ -1257,16 +1257,16 @@
         })
       },
       getnews() {
-        axios.get('article/getTopArticle.do').then(response => {
+        axios.get('getTopArticle.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.showNews = response.data.result
           }
         })
       },
       getlinkList() {
-        axios.get('article/getArticleType.do').then(response => {
+        axios.get('getArticleType.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.linkList = response.data.result.slice(0, 3)
+            this.linkList = response.data.result.slice(0, 2)
           }
         })
       },
@@ -2767,7 +2767,7 @@
     .container {
       height: 400px;
       .left {
-        h1 {
+        h2 {
           font-size: 48px;
           line-height: 64px;
           font-weight: normal;
@@ -2925,7 +2925,7 @@
       padding: 78px 0;
       padding-left: 50px;
       width: 600px;
-      h1 {
+      h2 {
         font-size: 48px;
         span {
           display: inline-block;

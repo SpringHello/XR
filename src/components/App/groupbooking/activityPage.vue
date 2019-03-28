@@ -1,5 +1,6 @@
 <template>
   <div class="activity-page">
+    <h1 id="hide-h1">拼团活动</h1>
     <gb-join v-if="isJoin"></gb-join>
     <gb-header v-else></gb-header>
     <gb-product :isCloud="true" v-if="!isBuy" :team-leader-company-id="teamLeaderCompanyId"></gb-product>
@@ -31,6 +32,13 @@
   import gbMyhost from './element/gb-myhost'
 
   export default {
+    metaInfo: {
+      title: '云服务器拼团 - 云主机团购 - 活动中心 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
+    },
     components: {
       gbHeader,
       gbProduct,

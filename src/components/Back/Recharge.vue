@@ -247,7 +247,7 @@
               if (res.data.status == 1 && res.status == 200) {
                 this.serialNum = res.data.serialNum
                 sessionStorage.setItem('serialNum', this.serialNum)
-                window.open(`zfb/alipaypage.do?serialNum=${this.serialNum}`)
+                window.open(`zfb/alipaypage.do?serialNum=${this.serialNum}&route=rechargeResult`)
                 this.showModal.rechargeHint = true
               } else {
                 this.$message.info({

@@ -1685,8 +1685,6 @@
                 this.tab3.firewalData.push(data);
                 this.tab3.rule = '出站规则';
               }
-              //this.loadingMessage = '正在创建规则，请稍候'
-              //this.loading = true
               this.$http.get('network/createNetworkACL.do', {
                 params: {
                   name: this.newRuleForm.name,
@@ -1696,19 +1694,17 @@
                   cdir: this.newRuleForm.cidr,
                   startport: this.newRuleForm.startPort,
                   endport: this.newRuleForm.endPort,
-                  acllistid: sessionStorage.getItem('firewallId'),
+                  acllistid: this.hostInfo.firewallId,
                   access: this.newRuleForm.access
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
-                  //this.loading = false
                   this.$Message.success({
                     content: response.data.message
                   })
                   this.getAclList();
                 } else {
                   this.getAclList();
-                  //this.loading = false
                   this.$message.info({
                     content: response.data.message
                   })
@@ -1770,6 +1766,7 @@
       },
       '$store.state.zone': {
         handler: function () {
+          this.$router.push('host')
         },
         deep: true
       },

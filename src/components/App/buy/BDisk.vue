@@ -1,5 +1,6 @@
 <template>
   <div id="bhost">
+    <h1 id="hide-h1">云硬盘购买</h1>
     <!--云硬盘div-->
     <div id="Pdisk" style="padding: 30px 40px 40px 40px;">
       <!--两种配置方式公共页面-->
@@ -145,6 +146,13 @@
   import regExp from '@/util/regExp'
   var debounce = require('throttle-debounce/debounce')
   export default{
+    metaInfo: {
+      title: '云硬盘租用价格 - 购买 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
+    },
     data(){
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 0

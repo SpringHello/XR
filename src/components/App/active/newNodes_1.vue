@@ -2,16 +2,16 @@
   <div>
     <div class="banner">
       <img style="position: absolute;bottom: 0px;z-index: -1"
-           src="../../../assets/img/active/newNodes/banner_3.png">
+           src="../../../assets/img/active/newNodes/banner_3.png" alt="描述">
       <img style="position: absolute;top: 7%;left: 7%;"
-           src="../../../assets/img/active/newNodes/circle_1.png">
+           src="../../../assets/img/active/newNodes/circle_1.png" alt="描述">
       <div style="width:1200px;margin:0px auto;padding-top: 12%;position: relative">
         <p style="position: relative">北京一区盛大开服<img style="position: absolute;left: -2%;top: -45%;" src="../../../assets/img/active/newNodes/text.png"/></p>
         <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Regular;">布局首都，新购特惠，限时抢购</p>
         <!--<button>立即领取</button>-->
         <transition name="list">
           <img v-if="img_1" style="position:absolute;left: 45%; top: 30%;z-index: -2;"
-               src="../../../assets/img/active/newNodes/banner_4.png">
+               src="../../../assets/img/active/newNodes/banner_4.png" alt="描述">
         </transition>
       </div>
       <ul class="banner_text">
@@ -26,29 +26,29 @@
       <div style="background: rgba(247,163,125,0.5)">
         <div class="center">
           <div class="process">
-            <img style="position: absolute;right: 0; top: -34px;" src="../../../assets/img/active/newNodes/shadow1.png"/>
-            <img style="position: absolute;left: 102%" src="../../../assets/img/active/newNodes/icon_1.png"/>
+            <img style="position: absolute;right: 0; top: -34px;" src="../../../assets/img/active/newNodes/shadow1.png" alt="描述"/>
+            <img style="position: absolute;left: 102%" src="../../../assets/img/active/newNodes/icon_1.png" alt="描述"/>
             <h2 style="margin-bottom: 20px">活动流程</h2>
             <p>活动时间：2018.4.16-2018.5.16</p>
             <div class="items">
               <dl>
-                <dt v-if="isLogin==1"><img src="../../../assets/img/active/newNodes/dl.png"></dt>
-                <dt v-else><img src="../../../assets/img/active/vps/one.png"></dt>
+                <dt v-if="isLogin==1"><img src="../../../assets/img/active/newNodes/dl.png" alt="描述"></dt>
+                <dt v-else><img src="../../../assets/img/active/vps/one.png" alt="描述"></dt>
                 <dd :class="{select:isLogin==1}">① 新用户注册登录<i
                   :class="{select:(companyauth==0&&isLogin==1)||(personalauth==0&&isLogin==1)}"></i>
                 </dd>
               </dl>
               <dl>
-                <dt v-if="companyauth==0||personalauth==0"><img src="../../../assets/img/active/newNodes/zc.png">
+                <dt v-if="companyauth==0||personalauth==0"><img src="../../../assets/img/active/newNodes/zc.png" alt="描述">
                 </dt>
-                <dt v-else><img src="../../../assets/img/active/vps/five.png"></dt>
+                <dt v-else><img src="../../../assets/img/active/vps/five.png" alt="描述"></dt>
                 <dd :class="{select:companyauth==0||personalauth==0}">② 完成实名认证<i
                   :class="{select:(isLogin==1&&companyauth==0&&isReceive!=0)||(isLogin==1&&personalauth==0&&isReceive!=0)}"></i>
                 </dd>
               </dl>
               <dl>
-                <dt v-if="isReceive==0"><img src="../../../assets/img/active/vps/lingquzhuji.png"></dt>
-                <dt v-else><img src="../../../assets/img/active/newNodes/lq.png"></dt>
+                <dt v-if="isReceive==0"><img src="../../../assets/img/active/vps/lingquzhuji.png" alt="描述"></dt>
+                <dt v-else><img src="../../../assets/img/active/newNodes/lq.png" alt="描述"></dt>
                 <dd :class="{select:isReceive!=0}">③ 购买折扣主机</dd>
               </dl>
             </div>
@@ -58,9 +58,9 @@
       <div style="background: rgba(255,248,246,1)">
         <div class="center">
           <div class="active_one">
-            <img style="position: absolute;right: 102%" src="../../../assets/img/active/newNodes/icon_2.png"/>
+            <img style="position: absolute;right: 102%" src="../../../assets/img/active/newNodes/icon_2.png" alt="描述"/>
             <h2 style="margin-bottom: 20px">限时<img style="position: relative;top: 32px;margin: 0 5px"
-                                                   src="../../../assets/img/active/newNodes/threez.png">折秒杀</h2>
+                                                   src="../../../assets/img/active/newNodes/threez.png" alt="描述">折秒杀</h2>
             <p>每天10：00开抢，每款产品限量20台，每人仅限参与一次</p>
             <div class="config_one">
               <div v-for="(item,index) in config_one" class="content">
@@ -74,7 +74,7 @@
                       <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                     <div class="price">
-                      <img src="../../../assets/img/active/newNodes/tag.png">
+                      <img src="../../../assets/img/active/newNodes/tag.png" alt="描述">
                       <span class="s1">{{ item.price}}</span>
                       <span class="s2">{{ item.oldPrice}}</span>
                     </div>
@@ -87,8 +87,8 @@
         </div>
         <div class="center">
           <div class="active_two">
-            <img style="position: absolute;left: 110%;top:20%;" src="../../../assets/img/active/newNodes/icon_3.png"/>
-            <img style="position: absolute;right: 105%;bottom: 15%" src="../../../assets/img/active/newNodes/icon_4.png"/>
+            <img style="position: absolute;left: 110%;top:20%;" src="../../../assets/img/active/newNodes/icon_3.png" alt="描述"/>
+            <img style="position: absolute;right: 105%;bottom: 15%" src="../../../assets/img/active/newNodes/icon_4.png" alt="描述"/>
             <h2 style="margin-bottom: 20px">套餐4折起</h2>
             <p>每人每款限购2台，3个月5折、6个月4折</p>
             <div class="config_two">
@@ -100,10 +100,10 @@
                   <div class="info_left">
                     <div class="info_left_top">
                       <ul>
-                        <li><img src="../../../assets/img/active/newNodes/cpu.png"/>{{ item.cpu }}</li>
-                        <li><img src="../../../assets/img/active/newNodes/memory.png"/>{{ item.memory }}</li>
-                        <li><img src="../../../assets/img/active/newNodes/disc.png"/>{{ item.disk }}</li>
-                        <li><img src="../../../assets/img/active/newNodes/bandWidth.png"/>{{ item.bandWidth}}</li>
+                        <li><img src="../../../assets/img/active/newNodes/cpu.png" alt="描述"/>{{ item.cpu }}</li>
+                        <li><img src="../../../assets/img/active/newNodes/memory.png" alt="描述"/>{{ item.memory }}</li>
+                        <li><img src="../../../assets/img/active/newNodes/disc.png" alt="描述"/>{{ item.disk }}</li>
+                        <li><img src="../../../assets/img/active/newNodes/bandWidth.png" alt="描述"/>{{ item.bandWidth}}</li>
                       </ul>
                     </div>
                     <div class="info_left_bottom">
@@ -194,7 +194,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="描述">
           </div>
         </form>
       </div>

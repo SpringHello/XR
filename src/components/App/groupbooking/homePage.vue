@@ -1,5 +1,6 @@
 <template>
   <div style="background: #FFF">
+    <h1 id="hide-h1">拼团活动</h1>
     <gb-header></gb-header>
     <gb-product :isCloud="false"></gb-product>
     <div class="background">
@@ -25,6 +26,13 @@
   import gbRule from './element/gb-rule'
 
   export default {
+    metaInfo: {
+      title: '云服务器拼团 - 云主机团购 - 活动中心 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
+    },
     components: {
       gbHeader, gbProduct, gbFlow, gbAward, gbAdvantage, gbRule
     },
