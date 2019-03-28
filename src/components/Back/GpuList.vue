@@ -99,8 +99,10 @@
                 </ul>
               </div>
             </div>
-            <div style="width: 100%;height: 80%;">
-              <chart ref="cpu" :options="cpu" ></chart>
+            <div style="width: 528px;height: 291px;position:relative;">
+              <chart ref="cpu" :options="cpu" style="width: 528px;height: 291px;">             
+              </chart>
+                <Spin fix v-if="chartShow.cpu"></Spin>
             </div>
             
           </div>
@@ -121,7 +123,11 @@
                 </ul>
               </div>
             </div>
-            <chart ref="momery" style="width: 100%;height: 80%;" :options="momery"></chart>
+              <div style="width: 528px;height: 291px;position:relative;">
+                <chart ref="momery" style="width: 528px;height: 291px;" :options="momery">
+                </chart>
+                <Spin fix v-if="chartShow.memory"></Spin>
+              </div>
           </div>
 
         </div>
@@ -337,7 +343,24 @@
       </div>
     </Modal>
 
-    
+    <!-- 主机重命名弹窗 -->
+    <Modal v-model="showModal.rename" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">主机重命名</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="renameForm" ref="renameForm" :rules="renameFormRule">
+          <Form-item label="主机名" prop="hostName">
+            <Input v-model="renameForm.hostName" placeholder="请输入新主机名" :maxlength="15"></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.rename = false">取消</Button>
+        <Button type="primary" @click="checkRenameForm">确定
+        </Button>
+      </div>
+    </Modal>  
     </div>
 </template>
 
@@ -347,6 +370,7 @@
   import merge from 'merge'
   import cpuOptions from "@/echarts/cpuUtilization"
   import momeryOptions from  "@/echarts/memory"
+  import regExps from '../../util/regExp'
    var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/;
   var urlList = {
     dayURL: 'alarm/getVmAlarmByHour.do',
@@ -409,6 +433,10 @@
     export default{
       data(){
         return{
+          chartShow:{
+            cpu:false,
+            memory:false
+          },
           isSource:false,
           cpu:JSON.parse(cpu),
           momery:JSON.parse(momery),
@@ -480,6 +508,14 @@
           //主机名称
           companyname:'',
 
+           renameForm: {
+              hostName: ''
+            },
+          renameFormRule: {
+            hostName: [
+              {required: true, validator: regExps.validaRegisteredName, trigger: 'blur'}
+            ]
+          },
           resetPasswordHostData:[],
           resetPasswordForm:{
             password: '',
@@ -546,6 +582,7 @@
             // snapshot:false,
             mirror:false,
             renew:false,
+            rename:false,
             publicIPHint:false,
             ratesChange:false,
             selectAuthType:false,
@@ -749,18 +786,27 @@
               let icon_2 = require('../../assets/img/host/h-icon2.png');
               let icon_3 = require('../../assets/img/host/h-icon3.png');
               let icon_4 = require('../../assets/img/host/h-icon4.png');
+              let icon_5 = require('../../assets/img/host/h-icon5.png')
               let styleInfo = {
                 marginLeft: '5px',
                 lineHeight: '16px'
               }
               switch (params.row.status){
                 case -2:
-                  return h('div', {}, [h('Spin', {
+                  return h('div', {
                     style: {
-                      display: 'inline-block'
+                      display: 'flex'
                     }
-                  }), h('span', {style: styleInfo}, '销毁中')])
-                  break;
+                  }, [
+                    h('img', {
+                      attrs: {
+                        src: icon_5
+                      }
+                    }, ''),
+                    h('span', {
+                      style: styleInfo
+                    }, '删除至回收站')
+                  ])
                 case -1:
                   return h('div',{
                     style: {
@@ -1646,7 +1692,7 @@
 
       //重启主机
       reStartGPU(index){
-        if (val == 1) {
+        if (index == 1) {
           this.hostData.forEach(host => {
             this.selectHostIds.forEach(item => {
               if (host.id == item) {
@@ -1674,7 +1720,7 @@
             if(res.status == 200 && res.data.status == 1){
               this.$Message.success(res.data.message);
               if(index == undefined){
-                    this.timingRefesh(this.selectHostIds+'');
+                  this.timingRefesh(this.selectHostIds+'');
                 }else{
                   this.timingRefesh(this.hostSelectList.id);
                 }
@@ -1877,6 +1923,7 @@
 
       requestClick(name,val){
         if(name == 'cpu'){
+          this.chartShow.cpu = true;
           this.cpuIndex = val;
           switch (this.dayList[val].value) {
             case '今天':
@@ -1891,6 +1938,7 @@
           }
         }else if(name == 'memory'){
           this.momeryIndex = val;
+          this.chartShow.memory = true;
           switch (this.momeryList[val].value) {
             case '今天':
               this.momeryTime = this.getCurrentDate()
@@ -1924,9 +1972,11 @@
            if(name == 'cpu'){
              this.cpu.xAxis.data = res.data.result.xaxis;
              this.cpu.series[0].data =  res.data.result[name + 'Use'];
+              this.chartShow.cpu = false;
            }else {
             this.momery.xAxis.data = res.data.result.xaxis;
              this.momery.series[0].data =  res.data.result[name + 'Use'];
+              this.chartShow.memory = true;
            }
          }
        })
@@ -1947,14 +1997,19 @@
         })
       },
       chartTwoClick(name,val){
+        
         if(name == 'cpu'){
+         this.chartShow.cpu = true;
           this.cpuMapIndex = val;
           this.cpu.series[0].type = this.chartList[val].type;
           this.cpu.xAxis.boundaryGap = this.chartList[val].boundaryGap;
+          this.chartShow.cpu = false;
         }else if(name == 'memory'){
+          this.chartShow.memory = true;
           this.momeryMapIndex = val;
           this.momery.series[0].type = this.momeryMapList[val].type;
           this.momery.xAxis.boundaryGap = this.momeryMapList[val].boundaryGap;
+           this.chartShow.memory = false;
         }
       },
       getCurrentDate() {
@@ -2111,6 +2166,7 @@
               break
             case 'ratesChange':
               if (this.selectLength[0].caseType == 3) {
+                this.ratesChange();
                 this.showModal.ratesChange = true;
               }
               break
@@ -2131,10 +2187,6 @@
               break
           }
         } else {
-          if (this.selectLength.length > 5) {
-            this.$Message.info('重置密码至多选择 5 项')
-            return false
-          }
           this.hostResetPassword(1)
         }
     },
@@ -2161,6 +2213,30 @@
           this.resetPasswordForm.errorMsg = 'passwordHint'
         }
     },
+    checkRenameForm() {
+        this.$refs.renameForm.validate((valid) => {
+          if (valid) {
+            this.showModal.rename = false
+            this.$http.post('information/changeVmName.do', {
+              vmId: this.selectLength[0].computerid,
+              name: this.renameForm.hostName
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+                this.getGpuServerList();
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      toManage(item) {
+          sessionStorage.setItem('uuId', item.computerid);
+          this.$router.push('gpuManageNew');
+        },
   },
     created(){
         this.toggleZone(this.$store.state.zone.zoneid)
@@ -2241,7 +2317,7 @@
           })
         }
       },
-        resetPasswordDisabled() {
+      resetPasswordDisabled() {
           let len = this.selectLength.length
           if (len === 0) {
             return true
@@ -2303,6 +2379,7 @@
         selectLenght(){
           return this.selectLength.length;
         },
+        
     },
     mounted(){
           this.getGpuServerList();
@@ -2322,13 +2399,12 @@
               selectDisk = this.relevanceDisks
             }
           }
-          // console.log(this.relevanceDisks)
           let url = 'information/getYjPrice.do'
           this.$http.get(url, {
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              gpuArr: this.VMId,
+              gpuArr: this.hostSelectList.id,
               ipIdArr: selectIp,
               diskArr: selectDisk
             }
@@ -2366,7 +2442,7 @@
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              gpuArr: this.VMId,
+              gpuArr: this.hostSelectList.id,
               ipIdArr: selectIp,
               diskArr: selectDisk
             }
@@ -2555,5 +2631,134 @@
     width: 0;
     -webkit-transition:all ease-in-out 5s;
     transition:all ease-in-out 5s;
+  }
+   .resetModal-table {
+    margin-top: 14px;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    height: 40px;
+    background: rgba(246, 250, 253, 1);
+    box-shadow: 0px 1px 1px 0px rgba(204, 204, 204, 0.5);
+    > li {
+      width: 30%;
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: rgba(51, 51, 51, 1);
+      padding-left: 20px;
+    }
+    li:nth-child(1) {
+      width: 10%;
+    }
+  }
+  .renewal-info {
+    margin-bottom: 20px;
+    padding: 20px 10px;
+    width: 100%;
+    background: rgba(245, 245, 245, 1);
+    ul {
+      li {
+        font-size: 14px;
+        line-height: 1.5;
+        span {
+          color: #666;
+        }
+      }
+    }
+  }
+
+  .renewal-upgrade {
+    margin-bottom: 20px;
+    width: 100%;
+    font-size: 14px;
+    span {
+      color: #2A99F2;
+      cursor: pointer;
+    }
+  }
+
+  .resetModal-title {
+    font-size: 12px;
+    font-family: MicrosoftYaHei;
+    color: rgba(102, 102, 102, 1);
+    > span {
+      font-weight: bold;
+      color: #333333;
+    }
+  }
+  .data {
+    background: #FFF;
+    margin-top: 0;
+    height: 60px;
+    > li {
+      > input {
+        height: 30px;
+        border: 1px solid rgba(225, 225, 225, 1);
+        border-radius: 4px;
+        padding-left: 5px;
+        outline: none;
+        &.error {
+          border: 1px solid #FF0000;
+          color: #FF0000;
+        }
+      }
+      > p {
+        color: #FF0000;
+        margin-top: 5px
+      }
+    }
+    li:nth-child(3) {
+      color: #2A99F2;
+      cursor: pointer;
+    }
+  }
+
+  .resetModal-import {
+    margin-top: 20px;
+    position: relative;
+    > span {
+      display: inline-block;
+      width: 80px;
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(51, 51, 51, 1);
+    }
+    > img {
+      cursor: pointer;
+      position: absolute;
+      left: 54%;
+      top: 30%;
+    }
+    > input {
+      height: 30px;
+      width: 300px;
+      padding-left: 10px;
+      border-radius: 2px;
+      border: 1px solid rgba(225, 225, 225, 1);
+    }
+  }
+
+  .resetModal-hint {
+    margin-top: 5px;
+    > p {
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: rgba(255, 0, 0, 1);
+      line-height: 16px;
+      padding-left: 82px;
+    }
+  }
+
+  .resetModal-p {
+    margin-top: 20px;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(102, 102, 102, 1);
+      line-height: 20px;
+      span {
+        color: #FF0000;
+      }
+    }
   }
 </style>

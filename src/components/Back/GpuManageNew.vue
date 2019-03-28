@@ -32,7 +32,7 @@
                   <ul>
                     <li><span class="one">镜像系统</span><span class="two">{{ gpuDetail.template}}</span><span class="three" @click="modifyMirror"> [修改]</span></li>
                     <li><span class="one">系统盘容量</span><span class="two">{{ gpuDetail.rootDiskSize}}G</span></li>
-                    <li><span class="one">绑定数据盘</span><span class="two">{{ gpuDetail.diskSize }}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three" > / 卸载]</span></li>
+                    <li><span class="one">绑定数据盘</span><span class="two">{{ gpuDetail.diskSize }}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three" @click="diskUnload"> / 卸载]</span></li>
                     <li><span class="one">登陆密码</span><span class="two"></span><span class="three" v-if="codePlaceholder == '发送密码'" @click="showWindow.lookPassword = true"> [{{codePlaceholder}}]</span>
                       <span class="two" v-else> [{{codePlaceholder}}]</span>
                       <span class="three" @click="resetModifyPassword"> [修改密码]</span></li>
@@ -510,6 +510,31 @@
         </Button>
       </div>
     </Modal>
+    <!-- 卸载硬盘模态框 -->
+    <Modal v-model="showWindow.unloadDisk" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">卸载云硬盘</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="diskUnloadForm" :rules="unloadRuleValidate" ref="unloadDisk">
+          <Form-item label="可卸载磁盘列表" prop="unloadDisk">
+            <Select v-model="diskUnloadForm.unloadDisk" placeholder="请选择">
+              <Option v-for="(item,index) in diskUnloadForm.diskList" :key="index" :value="item.diskid">{{ item.diskname}}
+              </Option>
+            </Select>
+          </Form-item>
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 45%;"
+                @click="$router.push('/buy/disk/')">
+              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
+              购买磁盘
+            </span>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showWindow.unloadDisk = false">取消</Button>
+        <Button type="primary" @click="diskUnload_ok">确认卸载</Button>
+      </div>
+    </Modal>
     </div>
 </template>
 
@@ -566,24 +591,6 @@
           if (regExps.test(value)) {
             this.$refs.resetPasswordForm.validateField('confirmPassword');
           }
-          callback();
-        }
-      }
-      const validatePassCheck = (rule, value, callback) => {
-        if (!value) {
-          callback(new Error('密码不能为空'));
-        } else if (this.resetPasswordForm.newPassword != value) {
-          callback(new Error('两次密码不一致'));
-        } else {
-          callback();
-        }
-      }
-      const validaSinginName = (rule, value, callback) => {
-        if (!value) {
-          callback(new Error('密码不能为空'));
-        } else if (value.length < 8) {
-          callback(new Error('长度至少为8位'));
-        } else {
           callback();
         }
       }
@@ -786,7 +793,15 @@
             {required: true, validator: validateCdir, trigger: 'blur'}
           ]
         },
-
+        diskUnloadForm: {
+          unloadDisk: '',
+          diskList: []
+        },
+        unloadRuleValidate: {
+          unloadDisk: [
+            {required: true, message: '请选择卸载的磁盘', trigger: 'change'}
+          ]
+        },
         //Gpu服务器详情
         gpuDetail:{},
 
@@ -805,7 +820,8 @@
           publicIPHint: false,
           bindIP: false,
           unbindIP: false,
-          adjust:false
+          adjust:false,
+          unloadDisk:false
         },
         mirrorModifyForm: {
           system: [],
@@ -921,9 +937,9 @@
             hostName:''
         },
         renameFormRule:{
-          hostName:[{
-                hostName:{required:'true',message:'请输入主机名称',trigger:'blur'}
-            }]
+          hostName:[
+            {required:'true',message:'请输入主机名称',trigger:'blur'}
+            ]
         },    
         configType: '基础信息',
         configTypes: ['基础信息', '主机监控', '防火墙', '操作日志'],
@@ -1354,13 +1370,14 @@
           if (valid) {
             this.showWindow.rename = false
             this.$http.post('information/changeVmName.do', {
-              vmId: this.hostCurrentSelected.computerId,
+              vmId: this.gpuDetail.computerId,
               name: this.renameForm.hostName
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
                 this.hostSelection = []
-                this.getHostList()
+                this.gpuName = this.renameForm.hostName;
+                this.getGpuHostDetail()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -1755,7 +1772,52 @@
         this.modifyPasswordForm.oldPassword = '';
         this.modifyPasswordForm.newPassword = '';
         this.modifyPasswordForm.confirmPassword = '';
-      }
+      },
+      diskUnload() {
+        this.getDiskListByComputerId()
+        this.showWindow.unloadDisk = true
+      },
+       getDiskListByComputerId() {
+        let url = 'Disk/listDisk.do'
+        this.$http.get(url, {
+          params: {
+            VMId: this.gpuDetail.computerId
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.diskUnloadForm.diskList = res.data.result
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      diskUnload_ok() {
+        this.$refs.unloadDisk.validate((valid) => {
+          if (valid) {
+            this.$Message.info('磁盘正在卸载，请稍候。。。')
+            this.showModal.unloadDisk = false
+            this.$http.get('Disk/detachVolume.do', {
+              params: {
+                diskId: this.diskUnloadForm.unloadDisk,
+                VMId: this.gpuDetail.computerId
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.info({
+                  content: response.data.message,
+                })
+                this.getGpuHostDetail()
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
     },
 
     created(){
