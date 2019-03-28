@@ -1,6 +1,6 @@
 <template>
   <div id="home" style="background: #FFF">
-    <h1 id="hide-h1">新睿云首页</h1>
+    <h1 id="hide-h1">新睿云提供云服务器租用、云主机试用等云计算服务</h1>
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">

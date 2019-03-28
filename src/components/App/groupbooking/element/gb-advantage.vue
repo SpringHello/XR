@@ -3,7 +3,7 @@
     <h2>产品优势</h2>
     <div class="center">
       <ul v-for="item in advantages">
-        <li><img :src="item.src" /></li>
+        <li><img :src="item.src" alt="优势"/></li>
         <li>{{ item.title}}</li>
         <li>{{ item.describe}}</li>
       </ul>
