@@ -253,7 +253,7 @@
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.xrcloud.net&amp;Menu=yes`"
-                   style="color:rgb(73, 80, 96)">
+                   style="color:rgb(73, 80, 96)" rel="nofollow">
                 <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus" alt="人工客服">
                   <img src="./assets/img/app/qq-gray.png" v-else alt="人工客服">
                 <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
@@ -271,7 +271,7 @@
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.xrcloud.net&amp;Menu=yes`"
-                   style="color:rgb(73, 80, 96)">
+                   style="color:rgb(73, 80, 96)" rel="nofollow">
                  <img src="./assets/img/app/qq-red.png" v-if="qq.qqstatus" alt="售前咨询">
                   <img src="./assets/img/app/qq-gray.png" v-else alt="售前咨询">
                 <span >{{qq.servicename}}</span>
@@ -735,7 +735,7 @@
          }*/
       })
       // 设置友情链接
-      this.$http.get('article/friendshipLink.do').then(response => {
+      this.$http.get('friendshipLink.do').then(response => {
         this.links = response.data.result
       })
     },
