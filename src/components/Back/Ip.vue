@@ -857,7 +857,14 @@
       } else {
         this.hide = 'none';
       }
-			this.testjump()
+      this.testjump()
+      axios.get('network/listVpc.do', {
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
+          this.newIPForm.VPCOptions = response.data.result
+        })
     },
     methods: {
 			testjump(){
@@ -977,13 +984,7 @@
       // 打开新建IP模态框
       openNewIPModal() {
         this.showModal.newIPModal = true
-        axios.get('network/listVpc.do', {
-          params: {
-            zoneId: $store.state.zone.zoneid
-          }
-        }).then(response => {
-          this.newIPForm.VPCOptions = response.data.result
-        })
+        
       },
       // 改变购买方式触发函数
       changeTimeType() {
