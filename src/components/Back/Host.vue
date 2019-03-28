@@ -5,7 +5,7 @@
          <span>云主机</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
-        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+        <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
         <div id="header">
@@ -158,10 +158,10 @@
                       </div>
                       <div class="foot">
                         <span>{{item.createtime}}</span>
-                        <Button @click.stop="manage(item,'normal')" style="margin-left:55px;" :disabled="!auth"
-                                :class="{btnnormal:auth,_hover:auth}">管理
+                        <Button @click.stop="manage(item,'normal')" style="margin-left:55px;" :disabled="(!auth)||auth && auth.checkstatus !== 0"
+                                :class="{btnnormal:auth&& auth.checkstatus == 0,_hover:auth&& auth.checkstatus == 0}">管理
                         </Button>
-                        <Button v-if="!auth" :disabled="!auth">连接主机</Button>
+                        <Button v-if="(!auth)||auth && auth.checkstatus !== 0" :disabled="(!auth)||auth && auth.checkstatus !== 0">连接主机</Button>
                         <Button v-else class="btnnormal _hover" @click="link(item)">连接主机
                         </Button>
                         <!--<a v-else :href="item.connecturl" target="_blank"
@@ -298,8 +298,8 @@
                       </div>
                       <div class="foot" style="background-color: #D9D9D9">
                         <span style="color: rgba(17,17,17,0.65);">{{item.createtime}}</span>
-                        <Button @click.stop="manage(item,'close')" style="margin-left:55px;" :disabled="!auth"
-                                :class="{btnnormal:auth,_hover:auth}">管理
+                        <Button @click.stop="manage(item,'close')" style="margin-left:55px;" :disabled="(!auth)||auth && auth.checkstatus !== 0"
+                                :class="{btnnormal:auth&& auth.checkstatus == 0,_hover:auth&& auth.checkstatus == 0}">管理
                         </Button>
                       </div>
                     </div>
@@ -817,7 +817,7 @@
         }
       },
       publicIPHint_ok() {
-        this.$router.push('/ruicloud/buy/bip')
+        this.$router.push('/buy/elasticip/')
       },
       bindRenewal() {
         if (this.cost != '--') {
@@ -1108,7 +1108,7 @@
         })
       },
       toggle(item) {
-        if (!this.auth) {
+        if ((!this.auth) || this.auth && this.auth.checkstatus != 0) {
           return
         }
         this.$set(item, 'select', !item.select)
@@ -1292,7 +1292,7 @@
       },
       gotoNew() {
         this.$store.commit('setSelect', 'new')
-        this.$router.push('buy')
+        this.$router.push('/buy/')
       },
       // 查询续费主机下是否有ip或磁盘
       renewType() {
@@ -1322,16 +1322,16 @@
         })
       },
       renewalUpgrade() {
-/*        localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
-        localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
-        // localStorage.setItem('zoneid', this.currentHost[0].zoneid)
-        sessionStorage.setItem('hostname', this.currentHost[0].computername)
-        sessionStorage.setItem('endtime', this.currentHost[0].endtime)
-        sessionStorage.setItem('rootdiskid', this.currentHost[0].rootdiskid)
-        sessionStorage.setItem('rootdisksize', this.currentHost[0].rootdisksize)
-        this.$router.push({
-          name: 'upgrade'
-        })*/
+        /*        localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
+                localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
+                // localStorage.setItem('zoneid', this.currentHost[0].zoneid)
+                sessionStorage.setItem('hostname', this.currentHost[0].computername)
+                sessionStorage.setItem('endtime', this.currentHost[0].endtime)
+                sessionStorage.setItem('rootdiskid', this.currentHost[0].rootdiskid)
+                sessionStorage.setItem('rootdisksize', this.currentHost[0].rootdisksize)
+                this.$router.push({
+                  name: 'upgrade'
+                })*/
         sessionStorage.setItem('upgradeId', this.currentHost[0].computerid)
         this.$router.push('upgrade')
       },
@@ -1415,17 +1415,17 @@
                       }
                     })
                   } else {
-        /*            localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
-                    localStorage.setItem('disksize', this.currentHost[0].disksize)
-                    localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
-                    localStorage.setItem('zoneid', this.currentHost[0].zoneid)
-                    sessionStorage.setItem('hostname', this.currentHost[0].computername)
-                    sessionStorage.setItem('endtime', this.currentHost[0].endtime)
-                    sessionStorage.setItem('rootdiskid', this.currentHost[0].rootdiskid)
-                    sessionStorage.setItem('rootdisksize', this.currentHost[0].rootdisksize)
-                    this.$router.push({
-                      name: 'upgrade'
-                    })*/
+                    /*            localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
+                                localStorage.setItem('disksize', this.currentHost[0].disksize)
+                                localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
+                                localStorage.setItem('zoneid', this.currentHost[0].zoneid)
+                                sessionStorage.setItem('hostname', this.currentHost[0].computername)
+                                sessionStorage.setItem('endtime', this.currentHost[0].endtime)
+                                sessionStorage.setItem('rootdiskid', this.currentHost[0].rootdiskid)
+                                sessionStorage.setItem('rootdisksize', this.currentHost[0].rootdisksize)
+                                this.$router.push({
+                                  name: 'upgrade'
+                                })*/
                     sessionStorage.setItem('upgradeId', this.currentHost[0].computerid)
                     this.$router.push('upgrade')
                   }
@@ -1709,7 +1709,7 @@
       },
       push(type) {
         sessionStorage.setItem('pane', type)
-        this.$router.push('/ruicloud/usercenter')
+        this.$router.push('/usercenter')
       },
       // 连接主机动作
       link(item) {
@@ -1717,7 +1717,7 @@
         localStorage.setItem('link-vmid', item.computerid)
         localStorage.setItem('link-zoneid', item.zoneid)
         localStorage.setItem('link-phone', this.$store.state.authInfo.phone)
-        window.open('/ruicloud/link')
+        window.open('/link')
         //this.$router.push('link')
         /*this.$http.get('information/connectVm.do', {
          params: {
@@ -1732,7 +1732,7 @@
 
          document.body.appendChild(form);
          form.submit();*!/
-         //window.open('/ruicloud/link')
+         //window.open('/link')
          tempwindow.location = 'https://www.baidu.com';
          } else {
          tempwindow.close()
@@ -1743,12 +1743,12 @@
          })*/
       },
       // open(){
-      //   window.open('/ruicloud/link')
+      //   window.open('/link')
       // }
     },
     computed: {
       auth() {
-        return this.$store.state.authInfo != null
+        return this.$store.state.authInfo
       }
     },
     watch: {
@@ -2120,6 +2120,7 @@
       cursor: pointer;
     }
   }
+
   .guide {
     position: absolute;
     right: 0;

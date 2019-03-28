@@ -27,14 +27,14 @@
           <TabPane label="虚拟私有云VPC" name="VPC">
             <div class="operator-bar">
               <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
-               <Dropdown style="margin-left: 20px" @on-click='vpcClick'>
-                   <Button type="primary">更多操作</Button>
-                   <DropdownMenu slot="list">
-                        <DropdownItem name='add' >添加VPC互通网关</DropdownItem>
-                        <DropdownItem name='delete'>删除VPC</DropdownItem>
-                        <DropdownItem name='reset'>恢复默认</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
+              <Dropdown style="margin-left: 20px" @on-click='vpcClick'>
+                <Button type="primary">更多操作</Button>
+                <DropdownMenu slot="list">
+                  <DropdownItem name='add'>添加VPC互通网关</DropdownItem>
+                  <DropdownItem name='delete'>删除VPC</DropdownItem>
+                  <DropdownItem name='reset'>恢复默认</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </div>
             <div class="card-wrap">
               <div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"
@@ -71,8 +71,8 @@
                 </div>
                 <div class="card-bottom">
                   <div>
-                    <Button   :disabled='item.status==1?false :true'  @click="restartVpc(item)">重启</Button>
-                    <Button type="primary"  :disabled='item.status==1?false :true' @click="manage(item)">管理</Button>
+                    <Button :disabled='item.status==1?false :true' @click="restartVpc(item)">重启</Button>
+                    <Button type="primary" :disabled='item.status==1?false :true' @click="manage(item)">管理</Button>
                   </div>
                 </div>
               </div>
@@ -537,169 +537,177 @@
           {
             title: '源NAT',
             render: (h, object) => {
-              if (object.row._status) {
-                let message = object.row._status == 1 ? '正在添加源NAT...' : '正在删除源NAT...'
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block'
-                  }
-                }), h('span', {}, message)])
-              }
-              if (object.row.sourcenatip) {
-                return h('div', [h('span', {
-                  style: {
-                    marginRight: '10px'
-                  }
-                }, object.row.sourcenatip), h('Icon', {
-                  attrs: {
-                    type: 'close'
-                  },
-                  style: {
-                    cursor: 'pointer'
-                  },
-                  nativeOn: {
-                    click: () => {
-                      this.$Modal.confirm({
-                        render: (h) => {
-                          return h('p', {
-                            class: 'modal-content-s'
-                          }, [h('i', {
-                            class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-                            style: {
-                              color: '#f90'
-                            }
-                          }), '确认解绑该源NAT?'])
-                        },
-                        title: '解绑源NAT',
-                        scrollable: true,
-                        okText: '确定解绑',
-                        cancelText: '取消',
-                        'onOk': () => {
-                          this.natData.forEach(item => {
-                            if (item.id == object.row.id) {
-                              this.$set(item, '_status', 2)
-                            }
-                          })
-                          var url = 'network/natGatewayUnboundTargetIP.do'
-                          this.$http.get(url, {
-                            params: {
-                              natGatewayId: object.row.id,
-                              publicIp: object.row.sourcenatip
-                            }
-                          }).then(response => {
-                            this.refresh()
-                            if (response.status == 200 && response.data.status == 1) {
-                              this.$Message.success({
-                                content: response.data.message
-                              })
-                            } else {
-                              this.$message.info({
-                                content: response.data.message
-                              })
-                            }
-                          })
-                        }
-                      })
+              if (this.auth && this.auth.checkstatus == 0) {
+                if (object.row._status) {
+                  let message = object.row._status == 1 ? '正在添加源NAT...' : '正在删除源NAT...'
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block'
                     }
-                  }
-                }, '')])
+                  }), h('span', {}, message)])
+                }
+                if (object.row.sourcenatip) {
+                  return h('div', [h('span', {
+                    style: {
+                      marginRight: '10px'
+                    }
+                  }, object.row.sourcenatip), h('Icon', {
+                    attrs: {
+                      type: 'close'
+                    },
+                    style: {
+                      cursor: 'pointer'
+                    },
+                    nativeOn: {
+                      click: () => {
+                        this.$Modal.confirm({
+                          render: (h) => {
+                            return h('p', {
+                              class: 'modal-content-s'
+                            }, [h('i', {
+                              class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
+                              style: {
+                                color: '#f90'
+                              }
+                            }), '确认解绑该源NAT?'])
+                          },
+                          title: '解绑源NAT',
+                          scrollable: true,
+                          okText: '确定解绑',
+                          cancelText: '取消',
+                          'onOk': () => {
+                            this.natData.forEach(item => {
+                              if (item.id == object.row.id) {
+                                this.$set(item, '_status', 2)
+                              }
+                            })
+                            var url = 'network/natGatewayUnboundTargetIP.do'
+                            this.$http.get(url, {
+                              params: {
+                                natGatewayId: object.row.id,
+                                publicIp: object.row.sourcenatip
+                              }
+                            }).then(response => {
+                              this.refresh()
+                              if (response.status == 200 && response.data.status == 1) {
+                                this.$Message.success({
+                                  content: response.data.message
+                                })
+                              } else {
+                                this.$message.info({
+                                  content: response.data.message
+                                })
+                              }
+                            })
+                          }
+                        })
+                      }
+                    }
+                  }, '')])
+                } else {
+                  return h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer',
+                    },
+                    on: {
+                      click: () => {
+                        /*        // 绑定sourceNat
+                         if (object.row.prottransip) {
+                         var prottransipArray = object.row.prottransip.split(',')
+                         prottransipArray.splice(0, 1)
+                         this.bindIPForm.IPOptions = prottransipArray
+                         }*/
+                        this.bindIP(object.row)
+                      }
+                    }
+                  }, '绑定源NAT')
+                }
               } else {
-                return h('span', {
-                  style: {
-                    color: '#2A99F2',
-                    cursor: 'pointer',
-                  },
-                  on: {
-                    click: () => {
-                      /*        // 绑定sourceNat
-                       if (object.row.prottransip) {
-                       var prottransipArray = object.row.prottransip.split(',')
-                       prottransipArray.splice(0, 1)
-                       this.bindIPForm.IPOptions = prottransipArray
-                       }*/
-                      this.bindIP(object.row)
-                    }
-                  }
-                }, '绑定源NAT')
+                return h('span', {}, '----')
               }
             }
           },
           {
             title: '目标IP',
             render: (h, object) => {
-              var renderArray = []
-              if (object.row.prottransip) {
-                var prottransipArray = object.row.prottransip.split(',')
-                prottransipArray.splice(0, 1)
-                for (let item of prottransipArray) {
-                  if (item) {
-                    renderArray.push(h('div', [h('span', {
-                      style: {
-                        marginRight: '10px'
-                      }
-                    }, item), h('Icon', {
-                      attrs: {
-                        type: 'close'
-                      },
-                      style: {
-                        cursor: 'pointer'
-                      },
-                      nativeOn: {
-                        click: () => {
-                          this.$Modal.confirm({
-                            render: (h) => {
-                              return h('p', {
-                                class: 'modal-content-s'
-                              }, [h('i', {
-                                class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-                                style: {
-                                  color: '#f90'
-                                }
-                              }), '确认解绑该目标IP?'])
-                            },
-                            title: '解绑目标IP',
-                            scrollable: true,
-                            okText: '确定解绑',
-                            cancelText: '取消',
-                            'onOk': () => {
-                              var url = 'network/unboundElasticIP.do'
-                              this.$http.get(url, {
-                                params: {
-                                  natGatewayId: object.row.id,
-                                  publicIp: item
-                                }
-                              }).then(response => {
-                                if (response.status == 200 && response.data.status == 1) {
-                                  this.$Message.success({
-                                    content: response.data.message
-                                  })
-                                  this.refresh()
-                                } else {
-                                  this.$message.info({
-                                    content: response.data.message
-                                  })
-                                }
-                              })
-                            }
-                          })
+              if (this.auth && this.auth.checkstatus == 0) {
+                var renderArray = []
+                if (object.row.prottransip) {
+                  var prottransipArray = object.row.prottransip.split(',')
+                  prottransipArray.splice(0, 1)
+                  for (let item of prottransipArray) {
+                    if (item) {
+                      renderArray.push(h('div', [h('span', {
+                        style: {
+                          marginRight: '10px'
                         }
-                      }
-                    }, '')]))
+                      }, item), h('Icon', {
+                        attrs: {
+                          type: 'close'
+                        },
+                        style: {
+                          cursor: 'pointer'
+                        },
+                        nativeOn: {
+                          click: () => {
+                            this.$Modal.confirm({
+                              render: (h) => {
+                                return h('p', {
+                                  class: 'modal-content-s'
+                                }, [h('i', {
+                                  class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
+                                  style: {
+                                    color: '#f90'
+                                  }
+                                }), '确认解绑该目标IP?'])
+                              },
+                              title: '解绑目标IP',
+                              scrollable: true,
+                              okText: '确定解绑',
+                              cancelText: '取消',
+                              'onOk': () => {
+                                var url = 'network/unboundElasticIP.do'
+                                this.$http.get(url, {
+                                  params: {
+                                    natGatewayId: object.row.id,
+                                    publicIp: item
+                                  }
+                                }).then(response => {
+                                  if (response.status == 200 && response.data.status == 1) {
+                                    this.$Message.success({
+                                      content: response.data.message
+                                    })
+                                    this.refresh()
+                                  } else {
+                                    this.$message.info({
+                                      content: response.data.message
+                                    })
+                                  }
+                                })
+                              }
+                            })
+                          }
+                        }
+                      }, '')]))
+                    }
                   }
                 }
+                renderArray.push(h('div', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer',
+                  },
+                  on: {
+                    click: () => {
+                      this.bindTargetIP(object.row)
+                    }
+                  }
+                }, '绑定目标IP'))
+                return h('div', renderArray)
+              } else {
+                return h('span', {}, '----')
               }
-              renderArray.push(h('div', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer',
-                },
-                on: {
-                  click: () => {
-                    this.bindTargetIP(object.row)
-                  }
-                }
-              }, '绑定目标IP'))
-              return h('div', renderArray)
             }
           },
           {
@@ -710,22 +718,26 @@
             title: '操作',
             width: 100,
             render: (h, object) => {
-              return h('span', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer'
-                },
-                on: {
-                  click: () => {
-                    sessionStorage.setItem('currentNat', object.row.id)
-                    if (object.row.prottransip) {
-                      sessionStorage.setItem('ip', object.row.prottransip.substring(1))
-                      sessionStorage.setItem('ipId', object.row.prottransipid.substring(1))
+              if (this.auth && this.auth.checkstatus == 0) {
+                return h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      sessionStorage.setItem('currentNat', object.row.id)
+                      if (object.row.prottransip) {
+                        sessionStorage.setItem('ip', object.row.prottransip.substring(1))
+                        sessionStorage.setItem('ipId', object.row.prottransipid.substring(1))
+                      }
+                      this.$router.push('NATManage')
                     }
-                    this.$router.push('NATManage')
                   }
-                }
-              }, '查看详情')
+                }, '查看详情')
+              } else {
+                return h('span', {}, '----')
+              }
             }
           }
         ],
@@ -1109,6 +1121,11 @@
             })
           })
           this.natData = response.data.result
+          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
+            this.natData.forEach(nat => {
+              nat._disabled = true
+            })
+          }
         }
       },
       radio(item) {
@@ -1473,45 +1490,45 @@
         sessionStorage.setItem('pane', 'Peip')
         this.$router.push('buy/bip')
       },
-      restartVpcPlus(){
-           let id = ''
-          this.netData.forEach(item => {
-              if(item.vpcid != undefined)
-              id += item.vpcid+','
-          });
+      restartVpcPlus() {
+        let id = ''
+        this.netData.forEach(item => {
+          if (item.vpcid != undefined)
+            id += item.vpcid + ','
+        });
         this.$message.confirm({
           content: '您确认恢复默认吗',
           onOk: () => {
             this.$http.get('network/restartVpc.do', {
-            params: {
-                vpcId: id.substring(0,id.length-1),
+              params: {
+                vpcId: id.substring(0, id.length - 1),
                 cleanup: true
-            }
+              }
             }).then(res => {
-               if(res.status == 200 && res.data.status == 1){
-                    this.$Message.success({
-                        content: res.data.message
-                    })
-               }else{
-                    this.$Message.info({
-                        content: res.data.message
-                    })
-               }
-           })
+              if (res.status == 200 && res.data.status == 1) {
+                this.$Message.success({
+                  content: res.data.message
+                })
+              } else {
+                this.$Message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
-          
+
         })
       },
-      vpcClick(name){
-          if(name == 'add'){
-              this.createInterconnect();
-          }
-          if(name == 'delete'){
-              this.delVpc();
-          }
-          if(name == 'reset'){
-              this.restartVpcPlus();
-          }
+      vpcClick(name) {
+        if (name == 'add') {
+          this.createInterconnect();
+        }
+        if (name == 'delete') {
+          this.delVpc();
+        }
+        if (name == 'reset') {
+          this.restartVpcPlus();
+        }
       }
     },
     computed: mapState({
