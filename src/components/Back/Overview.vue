@@ -177,7 +177,7 @@
           },
           {
             prod: '云网络',
-            prodUrl: ['vpc#VPC', 'ip', 'balance', 'vpc#NAT', 'vpn#remote', '', 'vpcManage']
+            prodUrl: ['vpc#VPC', 'ip', 'loadbState', 'NatState', 'vpnBlanck', '', 'vpcManage']
           },
           {
             prod: '云存储',
