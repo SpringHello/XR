@@ -33,7 +33,7 @@
               <router-link to="buy" :class="{active:pageInfo.path=='buy'}"><span>创建主机</span></router-link>
             </li>
             <li>
-              <router-link to="document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></router-link>
+              <a href="/support/products/" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></a>
             </li>
             <li>
               <router-link to="recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
