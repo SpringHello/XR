@@ -6,7 +6,7 @@
     <div class="body-bottom">
       <div class="content">
         <h2>备案区域</h2>
-        <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png"/> {{ area }}</p>
+        <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png" alt="区域"/> {{ area }}</p>
         <div>
           <h3>主体单位信息</h3>
           <Form ref="mainUnitInformation" :model="mainUnitInformation" :rules="mainUnitInformationRuleValidate"

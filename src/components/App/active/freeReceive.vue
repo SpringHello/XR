@@ -158,7 +158,7 @@
             <Step title="支付"></Step>
             <Step title="支付失败"></Step>
           </Steps>
-          <p><img src="../../../assets/img/sceneInfo/si-defeated.png" alt="描述"/><span>抱歉，支付失败，请再次尝试！</span></p>
+          <p><img src="../../../assets/img/sceneInfo/si-defeated.png" alt="支付失败"/><span>抱歉，支付失败，请再次尝试！</span></p>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -177,7 +177,7 @@
             <Step title="支付"></Step>
             <Step title="支付成功"></Step>
           </Steps>
-          <p><img src="../../../assets/img/sceneInfo/si-success.png" alt="描述"/><span>恭喜您支付成功！我们即将冻结押金</span><span style="color: #D0021B;margin-left: 0">{{ cashPledge }}</span><span
+          <p><img src="../../../assets/img/sceneInfo/si-success.png" alt="支付成功"/><span>恭喜您支付成功！我们即将冻结押金</span><span style="color: #D0021B;margin-left: 0">{{ cashPledge }}</span><span
             style="margin-left: 0">元</span></p>
         </div>
       </div>
@@ -239,8 +239,8 @@
             </Radio>
             <Radio label="otherPay" class="pw-img" :disabled="balance >= cashPledge">
               <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
-              <img src="../../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null" alt="描述">
-              <img src="../../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null" alt="描述">
+              <img src="../../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null" alt="支付宝">
+              <img src="../../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null" alt="微信">
             </Radio>
 
             <!--            <Radio label="otherPay" class="pw-img">
@@ -276,7 +276,7 @@
               <Input v-model="quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
                      style="width:250px;margin-right: 10px"></Input>
               <img :src="imgSrc" style="height:33px;"
-                   @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="描述">
+                   @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
             </div>
           </FormItem>
           <FormItem label="手机号码" prop="phone" style="width: 100%">
@@ -304,7 +304,7 @@
       </p>
       <div style="text-align:center;padding:40px 0;">
         <img src="../../../assets/img/payresult/paySuccess.png"
-             style="width:36px;vertical-align:middle;margin-right:10px;" alt="描述">
+             style="width:36px;vertical-align:middle;margin-right:10px;" alt="实名认证成功">
         <span style="font-size:14px;line-height:36px">恭喜您，实名认证成功！</span>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -318,7 +318,7 @@
       </p>
       <div style="text-align:center;padding:40px 0;">
         <img src="../../../assets/img/payresult/payFail.png"
-             style="width:36px;vertical-align:middle;margin-right:10px;" alt="描述">
+             style="width:36px;vertical-align:middle;margin-right:10px;" alt="实名认证失败">
         <span style="font-size:14px;line-height:36px">抱歉，实名认证失败，原因：{{authErrorText}}</span>
       </div>
       <div slot="footer" class="modal-footer-border">

@@ -247,7 +247,7 @@
           <p style="font-size: 12px;color: #333;padding-bottom: 10px">请输入验证码</p>
           <p style="display: flex;align-items: center;">
             <Input v-model="codeImg" style="width: 240px;margin-right: 10px;"/>
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
           </p>
         </div>
         <div style="margin: 20px 0">

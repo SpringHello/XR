@@ -4,7 +4,7 @@
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
-        <img :src="logo.img">
+        <img :src="logo.img" alt="描述">
         <div class="info">
           <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
@@ -51,7 +51,7 @@
           <div class="right" style="height:620px;">
             <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex" :key="index">
               <div style="flex: 0 0 70%" v-if="stage.img !=''">
-                <img :src="stage.img">
+                <img :src="stage.img" alt="描述">
               </div>
               <div style="flex: 0 0 0" v-else>
               </div>

@@ -11,7 +11,7 @@
       <li>快照：是指云服务器或云磁盘在某一特定时间点的完整内容及结构的副本。用户可以随时按快照点进行数据恢复，从而实现包括增量备份等各种形式的备份服务。</li>
       <li>防火墙：是对云服务器实例所应用的通信方向、网络协议、端口、源IP规则的集合。</li>
     </ul>
-    <img src="../../../../assets/img/doc/computed2-img1.png">
+    <img src="../../../../assets/img/doc/computed2-img1.png" alt="基本流程">
   </div>
 </template>
 <style lang="less">

@@ -17,7 +17,7 @@
       <div class="content">
         <!--   <img src="../../../assets/img/records/records-icon9.png"/>-->
         <ul v-for="item in flowList" :key="item.step">
-          <img :src="item.src"/>
+          <img :src="item.src" alt="描述"/>
           <p>{{ item.title }}</p>
           <p>{{ item.step }}</p>
           <div></div>
@@ -28,7 +28,7 @@
       <div class="content">
         <h2>备案区域选择</h2>
         <div class="area">
-          <button v-for="item in areaList" :key="item.zoneId" :class="{select: item.zoneId === area }" @click="changeArea(item)"><img :src="item.src"/> {{ item.text }}</button>
+          <button v-for="item in areaList" :key="item.zoneId" :class="{select: item.zoneId === area }" @click="changeArea(item)"><img :src="item.src" alt="描述"/> {{ item.text }}</button>
         </div>
         <button @click="putOnRecord">立即备案</button>
       </div>
@@ -69,7 +69,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
           </div>
         </form>
       </div>

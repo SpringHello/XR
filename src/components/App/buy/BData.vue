@@ -254,7 +254,7 @@
                     </div>
                   </div>
                   <img src="../../../assets/img/buy/across.png" @click="removeDisk(index)"
-                       style="cursor: pointer;height:11px;">
+                       style="cursor: pointer;height:11px;" alt="across">
                 </div>
               </div>
               <div class="item-wrapper">

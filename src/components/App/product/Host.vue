@@ -43,7 +43,7 @@
         <div class="flex">
           <div class="right">
             <div v-for="(stage,index) in stageInfo.stages" :key="index">
-              <div style="border:dashed #fff 1px; padding:64px 75px"><img :src="stage.img"></div>
+              <div style="border:dashed #fff 1px; padding:64px 75px"><img :src="stage.img" alt="描述"></div>
               <div style="display:flex;flex-direction:column;margin-left:20px;">
                 <div style="padding:20px;">
                   <span>企业应用</span>

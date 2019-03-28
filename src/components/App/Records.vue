@@ -2,7 +2,7 @@
   <div>
     <div class="head">
       <div class="content">
-        <img src="../../assets/img/records/records-banner1.png"/>
+        <img src="../../assets/img/records/records-banner1.png" alt="banner"/>
         <div class="enter">
           <button @click="enterSystem">查看备案进度</button>
           <button @click="publicQuery">公共查询</button>
@@ -34,7 +34,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
           </div>
         </form>
       </div>

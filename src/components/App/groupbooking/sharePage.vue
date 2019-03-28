@@ -10,7 +10,7 @@
     </div>
     <Modal v-model="paySuccess" width="500" :scrollable="true">
       <div class="modal-body">
-        <img src="../../../assets/img/active/group-booking/gb-icon12.png" alt="描述"/>
+        <img src="../../../assets/img/active/group-booking/gb-icon12.png" alt="成功"/>
         <p>支付成功啦！</p>
         <p>分享给好友获得免费赠送时长吧。</p>
       </div>

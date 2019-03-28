@@ -2,7 +2,7 @@
   <div id="documentInfo">
     <div id="left">
       <div id="head">
-        <p>产品文档<img src="../../assets/img/document/menu.png" style="float:right;cursor:pointer" ref="toggle"></p>
+        <p>产品文档<img src="../../assets/img/document/menu.png" style="float:right;cursor:pointer" ref="toggle" alt="菜单"></p>
       </div>
       <div id="menu" ref="menu">
         <p>{{title}}</p>

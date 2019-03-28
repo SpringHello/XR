@@ -2,15 +2,15 @@
   <div style="background: #FFF;    position: relative;">
     <h1 id="hide-h1">应用场景</h1>
     <div class="center">
-      <img class="img_1" src="../../assets/img/sceneList/sl-banner10.png"/>
-      <img class="img_2" src="../../assets/img/sceneList/sl-banner11.png"/>
+      <img class="img_1" src="../../assets/img/sceneList/sl-banner10.png" alt="banner"/>
+      <img class="img_2" src="../../assets/img/sceneList/sl-banner11.png" alt="banner"/>
       <div class="content-list">
         <div v-for="(item,index) in sceneList" class="scene" :class="{last: index == 4||index == 5 || index == 6 ||index == 7 }" @click="$router.push('/' + item.link)">
           <div class="scene-top" :style="{'background-image': 'url(' + item.bannerSrc + ')'}">
             {{ item.text}}
           </div>
           <div class="scene-footer" :class="{other: index == 4}">
-            <img v-for="img in item.icons" :src="img.src"/>
+            <img v-for="img in item.icons" :src="img.src" alt="描述"/>
           </div>
         </div>
       </div>

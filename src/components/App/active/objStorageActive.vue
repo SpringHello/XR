@@ -53,7 +53,7 @@
                 <h3>什么是对象存储？</h3>
                 <p>新睿云对象存储OSS聚焦海量、安全、低成本、高可靠的云存储服务，提供99.999999999%的数据可靠性。使用RESTful API 可以在互联网任何位置随时随地存储和访问，与国际标准协议完全兼容最大程度降低用户接入门槛。容量和处理能力弹性扩展，按需付费，无需设施投入和运维，有效降低用户成本，帮助您专注于核心业务。</p>
               </article>
-              <img src="./../../../assets/img/active/objstorage-active/objactive-section1-banner.png" alt="">
+              <img src="./../../../assets/img/active/objstorage-active/objactive-section1-banner.png" alt="banner">
             </div>
           </div>
         </section>
@@ -66,7 +66,7 @@
               <div class="content">
                 <div v-for="(item,index) in advantageData" :key="index">
                   <div class="top">
-                    <img :src="item.img" alt="">
+                    <img :src="item.img" alt="描述">
                     <p>{{item.title}}</p>
                   </div>
                   <p>

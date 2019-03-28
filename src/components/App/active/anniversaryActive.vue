@@ -9,8 +9,8 @@
             <p>{{ day }}<span>天</span>{{ hour }}<span>时</span>{{ minute }}<span>分</span>{{ second }}<span>秒</span></p>
           </div>
           <div class="lottery-title">
-            <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="描述"/>
-            <img style="margin-left: 90px" src="../../../assets/img/active/anniversary/aa-banner14.png" alt="描述"/>
+            <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="11.17"/>
+            <img style="margin-left: 90px" src="../../../assets/img/active/anniversary/aa-banner14.png" alt="抽奖"/>
             <p>见面礼！<span>包含<span style="color:rgba(255, 48, 0, 1); ">戴森、科沃斯</span>爆款奖品，100%中奖率，注册登录即可拥有一次抽奖机会</span></p>
           </div>
         </div>
@@ -298,15 +298,15 @@
       </div>-->
       <div class="active-2">
         <div class="active-2-title">
-          <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon2.png" alt="描述"/>
-          <img style="margin-left: 100px" src="../../../assets/img/active/anniversary/aa-banner15.png" alt="描述"/>
+          <img style="position: absolute;left: 33%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon2.png" alt="11.17"/>
+          <img style="margin-left: 100px" src="../../../assets/img/active/anniversary/aa-banner15.png" alt="优惠"/>
           <p>各类产品<span>1.7折</span>分时抢购，首次购买任意产品均可获得抽奖机会! <span
             style="cursor: pointer;color:rgba(254,254,254,1);font-size:16px;text-decoration: underline;" @click="showModal.discountRuleModal=true">活动规则</span></p>
         </div>
         <div class="productList">
           <div class="products">
             <div class="products-title">
-              <img src="../../../assets/img/active/anniversary/aa-icon3.png" alt="描述"/>
+              <img src="../../../assets/img/active/anniversary/aa-icon3.png" alt="icon"/>
               <span>云服务器特惠专场</span>
             </div>
             <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
@@ -351,7 +351,7 @@
         <div class="productList" style="margin-top: 40px">
           <div class="products">
             <div class="products-title">
-              <img src="../../../assets/img/active/anniversary/aa-icon5.png" alt="描述"/>
+              <img src="../../../assets/img/active/anniversary/aa-icon5.png" alt="icon"/>
               <span style="position: relative;bottom: 20px;">对象存储特惠专场</span>
             </div>
             <div style="height:4px;background:rgba(255,108,62,1);margin-top: 10px"></div>
@@ -387,7 +387,7 @@
         <div class="productList" style="margin-top: 40px">
           <div class="products">
             <div class="products-title">
-              <img src="../../../assets/img/active/anniversary/aa-icon6.png" alt="描述"/>
+              <img src="../../../assets/img/active/anniversary/aa-icon6.png" alt="icon"/>
               <span>云数据库特惠专场</span>
             </div>
             <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
@@ -433,13 +433,13 @@
       <!-- gpu专区-->
       <div class="active-3">
         <div class="active-3-title">
-          <img style="position: absolute;left: 30%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon7.png" alt="描述"/>
-          <img style="margin-left: 145px;" src="../../../assets/img/active/anniversary/aa-banner6.png" alt="描述"/>
+          <img style="position: absolute;left: 30%;top: -50%;" src="../../../assets/img/active/anniversary/aa-icon7.png" alt="11.17"/>
+          <img style="margin-left: 145px;" src="../../../assets/img/active/anniversary/aa-banner6.png" alt="八折"/>
           <p>全网首次<span>GPU服务器折扣活动</span>，7天体验版GPU云服务器，特惠低至<span>1.7折!</span></p>
         </div>
         <div class="gpuList">
           <div class="gpu-title">
-            <img src="../../../assets/img/active/anniversary/aa-icon8.png" alt="描述"/>
+            <img src="../../../assets/img/active/anniversary/aa-icon8.png" alt="icon"/>
             <span>GPU云服务器特惠专区</span>
           </div>
           <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
@@ -488,13 +488,13 @@
       <!-- 0元抢购活动 -->
       <div class="active-4">
         <div class="active-4-title">
-          <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="描述"/>
-          <img style="margin-left: 80px" src="../../../assets/img/active/anniversary/aa-banner16.png" alt="描述"/>
+          <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="11.17"/>
+          <img style="margin-left: 80px" src="../../../assets/img/active/anniversary/aa-banner16.png" alt="免费一年"/>
           <p><span>适用于低负载、低并发、小型开发测试环境、普通数据处理服务等场景</span></p>
         </div>
         <div class="hostList">
           <div class="host-title">
-            <img src="../../../assets/img/active/anniversary/aa-icon3.png" alt="描述"/>
+            <img src="../../../assets/img/active/anniversary/aa-icon3.png" alt="icon"/>
             <span>基础配置云服务器</span>
           </div>
           <div style="height:4px;background:rgba(255,108,62,1);margin-top: 20px"></div>
@@ -537,17 +537,17 @@
       <!-- 消费满送 -->
       <div class="active-5">
         <div class="active-5-title">
-          <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="描述"/>
-          <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner21.png" alt="描述"/>
+          <img style="position: absolute;left: 33%; top: -50%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="11.17"/>
+          <img style="margin-left: 120px" src="../../../assets/img/active/anniversary/aa-banner21.png" alt="回赠"/>
           <p><span>购买云产品获赠好礼，最高额消费可领全部礼品（礼品卡为苏宁卡/京东E卡）<span style="cursor: pointer;text-decoration: underline" @click="showModal.bigFullDeliveryModal=true">活动规则</span> </span></p>
         </div>
         <div class="send-full">
           <ul v-for="(item,index) in sendFullList">
             <li><p :class="{'onStep': index < spentCostNode}">消费满<span> {{ item.text_1}} </span>可领</p></li>
             <li><span :class="{'onStep': index < spentCostNode}">{{ item.text_2 }}</span></li>
-            <li style="margin-top: 30px"><p style="position: relative;right: 18px" v-if="index < spentCostNode"><img src="../../../assets/img/active/anniversary/aa-icon17.png" alt="描述"/>
-              <img src="../../../assets/img/active/anniversary/aa-icon18.png" alt="描述"/></p>
-              <p style="position: relative;right: 18px" v-else><img src="../../../assets/img/active/anniversary/aa-icon19.png" alt="描述"/> <img
+            <li style="margin-top: 30px"><p style="position: relative;right: 18px" v-if="index < spentCostNode"><img src="../../../assets/img/active/anniversary/aa-icon17.png" alt="icon"/>
+              <img src="../../../assets/img/active/anniversary/aa-icon18.png" alt="icon"/></p>
+              <p style="position: relative;right: 18px" v-else><img src="../../../assets/img/active/anniversary/aa-icon19.png" alt="icon"/> <img
                 src="../../../assets/img/active/anniversary/aa-icon20.png" alt="描述"/></p></li>
             <li><img v-if="index < spentCostNode" :src="item.src_2" alt="描述"/><img v-else :src="item.src_1" alt="描述"/></li>
             <div v-if="index !=3" class="send-full-dashed" :class="{'onStep': index < spentCostNode -1 }"></div>
@@ -578,7 +578,7 @@
         <div class="banner">
           <p>登录即可参与抽奖（100%中奖），认证后有机会领取戴森（Dyson），科沃斯等奖品</p>
           <div class="lottery-title">
-            <img style="position: absolute;left: 33%;top: -80%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="描述"/>
+            <img style="position: absolute;left: 33%;top: -80%;" src="../../../assets/img/active/anniversary/aa-icon1.png" alt="11.17"/>
             <h2>11.17周年庆活动获奖记录</h2>
           </div>
         </div>
@@ -644,7 +644,7 @@
         <div class="all-modal modal1" @click.stop="showModal.notPrizeChanceModal=true">
           <div class="header">新睿云11.17周年庆典</div>
           <div class="body">
-            <img src="../../../assets/img/active/anniversary/regret-text.png" style="margin:30px 0 25px 0;" alt="描述"/>
+            <img src="../../../assets/img/active/anniversary/regret-text.png" style="margin:30px 0 25px 0;" alt="很遗憾"/>
             <p style="margin-bottom:38px;"> 您没有抽奖机会了，请返回活动页面购买产品获得抽奖次数！</p>
             <button @click.stop="showModal.notPrizeChanceModal=false" class="button-primary">返回活动</button>
           </div>
@@ -685,7 +685,7 @@
                   <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码"
                          style="width:192px;margin-right: 10px"></Input>
                   <img :src="imgSrc" style="height:33px;"
-                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="描述">
+                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                 </div>
               </FormItem>
               <FormItem label="手机号码" prop="tel">
@@ -875,7 +875,7 @@
             <Step title="支付"></Step>
             <Step title="支付失败"></Step>
           </Steps>
-          <p><img src="../../../assets/img/sceneInfo/si-defeated.png" alt="描述"/><span>抱歉，支付失败，请再次尝试！</span></p>
+          <p><img src="../../../assets/img/sceneInfo/si-defeated.png" alt="抱歉"/><span>抱歉，支付失败，请再次尝试！</span></p>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -894,7 +894,7 @@
             <Step title="支付"></Step>
             <Step title="支付成功"></Step>
           </Steps>
-          <p><img src="../../../assets/img/sceneInfo/si-success.png" alt="描述"/><span>恭喜您支付成功！我们即将冻结押金</span><span style="color: #D0021B;margin-left: 0">{{ cashPledge }}</span><span
+          <p><img src="../../../assets/img/sceneInfo/si-success.png" alt="支付成功"/><span>恭喜您支付成功！我们即将冻结押金</span><span style="color: #D0021B;margin-left: 0">{{ cashPledge }}</span><span
             style="margin-left: 0">元</span></p>
         </div>
       </div>
@@ -956,8 +956,8 @@
             </Radio>
             <Radio label="otherPay" class="pw-img" :disabled="balance >= cashPledge">
               <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
-              <img src="../../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null" alt="描述">
-              <img src="../../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null" alt="描述">
+              <img src="../../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null" alt="支付宝">
+              <img src="../../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null" alt="微信">
             </Radio>
           </RadioGroup>
         </div>
@@ -968,7 +968,7 @@
         </div>
         <div v-show="attestationShow">
           <div v-if="authInfo&&authInfo.checkstatus==0" class="modal-p">
-            <p><img src="../../../assets/img/sceneInfo/si-success.png" alt="描述"/><span>恭喜您，实名认证成功！</span></p>
+            <p><img src="../../../assets/img/sceneInfo/si-success.png" alt="成功"/><span>恭喜您，实名认证成功！</span></p>
           </div>
           <Form :model="quicklyAuthForm" :label-width="100" ref="quicklyAuth"
                 :rules="quicklyAuthFormValidate"
@@ -986,7 +986,7 @@
                   <Input v-model="quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
                          style="width:250px;margin-right: 10px"></Input>
                   <img :src="imgSrc" style="height:33px;"
-                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="描述">
+                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                 </div>
               </FormItem>
               <FormItem label="手机号码" prop="phone" style="width: 100%">

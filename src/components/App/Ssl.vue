@@ -7,7 +7,7 @@
           <p>在云上签发各品牌数字证书，实现网站HTTPS化，使网站可信，防 劫持、防篡改、防监听。并进行统一生命周期管理，简化证书部署， 一键分发到云上产品，实现网站的可信身份认证与安全数据传输。</p>
           <Button @click="$router.push('/buy/ssl/')">立即购买</Button>
         </div>
-        <img src="../../assets/img/ssl/banner.png" alt>
+        <img src="../../assets/img/ssl/banner.png" alt="banner">
       </div>
     </div>
     <div class="nav">
@@ -26,7 +26,7 @@
           </div>
           <div class="container">
             <div class="desc">
-              <img src="../../assets/img/ssl/wosign_logo_mobile.png" alt>
+              <img src="../../assets/img/ssl/wosign_logo_mobile.png" alt="沃通">
               <p>沃通全球著名的SSL证书提供商已经为全球180多个国家和地区超过十万个网站颁发了全球信任的SSL证书。</p>
             </div>
             <dl v-for="(item,index) in certificate" :key="index">
@@ -66,7 +66,7 @@
           </div>
           <div class="container">
             <div class="box" v-for="(item,index) in advantage" :key="index">
-              <img :src="item.img" alt>
+              <img :src="item.img" alt="描述">
               <h2>{{item.title}}</h2>
               <p>{{item.text}}</p>
             </div>

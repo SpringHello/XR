@@ -33,7 +33,7 @@
               </p>
             </div>
             <div class="news-right">
-              <img src="../../assets/img/aboutus/news-banner.png" alt="" />
+              <img src="../../assets/img/aboutus/news-banner.png" alt="banner" />
             </div>
           </div>
         </div>
@@ -63,10 +63,10 @@
             <p class="desc"><span>覆盖中国大陆13个省</span><span>全国设立4个大区</span><span>全国覆盖北京、天津、重庆3个直辖市</span></p>
           </div>
           <div class="section-content map-box">
-            <img src="..\..\assets\img\aboutus\multi-circle.png"/>
-            <img src="..\..\assets\img\aboutus\multi-circle.png"/>
-            <img src="..\..\assets\img\aboutus\multi-circle.png"/>
-            <img src="..\..\assets\img\aboutus\multi-circle.png"/>
+            <img src="..\..\assets\img\aboutus\multi-circle.png" alt="icon"/>
+            <img src="..\..\assets\img\aboutus\multi-circle.png" alt="icon"/>
+            <img src="..\..\assets\img\aboutus\multi-circle.png" alt="icon"/>
+            <img src="..\..\assets\img\aboutus\multi-circle.png" alt="icon"/>
           </div>
         </div>
       </section>
@@ -101,7 +101,7 @@
               <div class="item" :class="{itemright:index%2!=0}">
                 <p class="year">
                   <span>20</span>
-                  <span><img src="..\..\assets\img\aboutus\yearspot.png"/></span>
+                  <span><img src="..\..\assets\img\aboutus\yearspot.png" alt="icon"/></span>
                   <span>{{item.year}}</span>
                 </p>
 
@@ -114,7 +114,7 @@
                     </div>
                   </div>
                   <div>
-                    <img src="..\..\assets\img\aboutus\horizontal-axis.png"/>
+                    <img src="..\..\assets\img\aboutus\horizontal-axis.png" alt="icon"/>
                   </div>
                 </div>
               </div>
@@ -124,7 +124,7 @@
             <div class="circle circle2"></div>
             <div class="circle circle3"></div>
             <div class="circle circle4"></div>
-            <div class="lastspot"><img src="..\..\assets\img\aboutus\yearspot.png"/></div>
+            <div class="lastspot"><img src="..\..\assets\img\aboutus\yearspot.png" alt="icon"/></div>
           </div>
         </div>
       </section>
@@ -138,7 +138,7 @@
           </div>
           <div class="section-content section company">
             <div v-for="(item,index) in company" :key="index">
-              <img :src="item.img"/>
+              <img :src="item.img" alt="描述"/>
               <span>{{item.desc}}</span>
             </div>
           </div>
