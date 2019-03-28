@@ -2606,6 +2606,7 @@
               authInfo: response.data.authInfo,
               userInfo: response.data.result
             })
+            this.getPhone()
           }
         })
       },
@@ -2689,8 +2690,6 @@
               this.keyForm.phone = response.data.data.phone
             }
           })
-        } else {
-          this.$Message.info('请先实名认证')
         }
       },
       // 获取系统头像列表
@@ -2959,7 +2958,6 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
-                this.getPhone()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2989,7 +2987,6 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
-                this.getPhone()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -3056,7 +3053,6 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
-                this.getPhone()
                 this.currentTab = ''
               } else {
                 this.$message.info({

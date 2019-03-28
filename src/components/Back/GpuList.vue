@@ -99,7 +99,10 @@
                 </ul>
               </div>
             </div>
-            <chart ref="cpu" :options="cpu" style="width: 100%;height: 80%;"></chart>
+            <div style="width: 100%;height: 80%;">
+              <chart ref="cpu" :options="cpu" ></chart>
+            </div>
+            
           </div>
 
           <div class="surface-boder">
@@ -790,7 +793,7 @@
                   ]);
                 break;
                 case 1:
-                  if (params.row.computerstate == 1) {
+                  if (params.row.computerstate == 1 && params.row.status == 1) {
                     return h('div',{
                       style:{
                         display:'flex',
@@ -1380,6 +1383,7 @@
        },
 
         timingRefesh(ids){
+          this.selectLength = [];
           let timer = setInterval(() => {
           let url = 'gpuserver/listGpuServer.do'
           this.$http.get(url, {
@@ -1389,7 +1393,7 @@
           }).then(res => {
             if (res.data.status == 1 && res.status == 200) {
               let locality = '';
-              let list = '';
+              let list = [];
                if(Object.keys(res.data.result).length != 0){
                 for(let index in res.data.result){
                     for (let i = 0; i < res.data.result[index].list.length; i++) {
@@ -1541,6 +1545,7 @@
             }
            }else{
              this.$Message.info(res.data.message);
+             this.getGpuServerList();
            }
          })
         },
@@ -1583,6 +1588,7 @@
               }
            }else {
              this.$Message.info(res.data.message);
+             this.getGpuServerList();
            }
          })
         },
@@ -1630,6 +1636,7 @@
                  this.$message.info({
                    content: res.data.message
                  })
+                 this.getGpuServerList();
                }
              })
            }
@@ -2094,7 +2101,6 @@
           if (this.selectLength.length !== 1) {
             return false
           }
-          // this.hostCurrentSelected = this.hostSelection[0]
           switch (name) {
             case 'bindingIP':
               this.showModal.ipShow = true;
@@ -2140,11 +2146,11 @@
           if (this.selectLength.length === 0) {
             return false
           }
-          this.resetPasswordHostData = this.selectLength
+          this.resetPasswordHostData = this.selectLength;
           this.showModal.resetPassword = true
         } else {
           this.resetPasswordHostData = []
-          this.resetPasswordHostData[0] = this.selectLength[0]
+          this.resetPasswordHostData[0] = this.selectLength[0];
           this.showModal.resetPassword = true
         }
     },

@@ -32,7 +32,7 @@
                   <ul>
                     <li><span class="one">镜像系统</span><span class="two">{{ gpuDetail.template}}</span><span class="three" @click="modifyMirror"> [修改]</span></li>
                     <li><span class="one">系统盘容量</span><span class="two">{{ gpuDetail.rootDiskSize}}G</span></li>
-                    <li><span class="one">绑定数据盘</span><span class="two">{{ gpuDetail.disk.join('|') }}</span><span class="three" @click="diskMount"> [挂载</span><span class="three" > / 卸载]</span></li>
+                    <li><span class="one">绑定数据盘</span><span class="two">{{ gpuDetail.diskSize }}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three" > / 卸载]</span></li>
                     <li><span class="one">登陆密码</span><span class="two"></span><span class="three" v-if="codePlaceholder == '发送密码'" @click="showWindow.lookPassword = true"> [{{codePlaceholder}}]</span>
                       <span class="two" v-else> [{{codePlaceholder}}]</span>
                       <span class="three" @click="resetModifyPassword"> [修改密码]</span></li>
@@ -1343,7 +1343,7 @@
       //连接主机
       link() {
         sessionStorage.setItem('link-companyid', this.gpuDetail.companyid);
-        sessionStorage.setItem('link-vmid', this.gpuDetail.computerid);
+        sessionStorage.setItem('link-vmid', this.gpuDetail.computerId);
         sessionStorage.setItem('link-zoneid', this.gpuDetail.zoneid);
         sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone);
         this.$router.push('link');
@@ -1354,7 +1354,7 @@
           if (valid) {
             this.showWindow.rename = false
             this.$http.post('information/changeVmName.do', {
-              vmId: this.hostCurrentSelected.computerid,
+              vmId: this.hostCurrentSelected.computerId,
               name: this.renameForm.hostName
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -1501,7 +1501,7 @@
         this.showWindow.reload = false
         this.mirrorModifyForm.buttonText = '重装中'
         this.$http.post('information/restoreVirtualMachine.do', {
-          VMId: this.gpuDetail.computerid,
+          VMId: this.gpuDetail.computerId,
           templateId: this.mirrorModifyForm.system[1],
           adminPassword: this.mirrorModifyForm.consolePassword
         }).then(response => {
@@ -1551,7 +1551,7 @@
             this.$http.get('Disk/attachVolume.do', {
               params: {
                 diskId: this.diskMountForm.mountDisk,
-                VMId: this.gpuDetail.computerid
+                VMId: this.gpuDetail.computerId
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -1575,7 +1575,7 @@
             let url = 'information/resetPasswordForVirtualMachine.do'
             this.$http.get(url, {
               params: {
-                VMId:this.gpuDetail.computerid,
+                VMId:this.gpuDetail.computerId,
                 password: this.modifyPasswordForm.newPassword,
                 oldPassword: this.modifyPasswordForm.oldPassword
               }
@@ -1672,7 +1672,7 @@
               this.$http.get('network/enableStaticNat.do', {
                 params: {
                   ipId: this.bindForm.publicIP,
-                  VMId: this.gpuDetail.computerid
+                  VMId: this.gpuDetail.computerId
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
@@ -1699,7 +1699,7 @@
         this.$http.get('network/disableStaticNat.do', {
           params: {
             ipId: this.gpuDetail.publicIpId,
-            VMId: this.gpuDetail.computerid
+            VMId: this.gpuDetail.computerId
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
