@@ -847,7 +847,7 @@
         },
         hide: '',
         intervalInstance: null,
-        unbundleResource: {}
+        unbundleResource: {},
       }
     },
     beforeRouteLeave(to, from, next) {
@@ -958,9 +958,9 @@
             }
           })
           this.total = response.data.result.total
-          if (publicipids.length !== 0) {
+    /*      if (publicipids.length !== 0) {
             this.timingRefresh(publicipids + '')
-          }
+          }*/
           this.select.forEach(item => {
             this.ipData.forEach(ip => {
               if (item.id === ip.id) {
@@ -1906,7 +1906,7 @@
 	  padding: 0;
 	  margin-top: -3px;
 	}
-	
+
 	.divall {
 	  background:rgba(42,153,242,0.06);
 	  border-radius:2px;
