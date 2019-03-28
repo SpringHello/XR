@@ -23,13 +23,13 @@ export default {
   xAxis: {
     type: 'category',
     boundaryGap: false,
-    data: ['04/28', '04/28', '04/28', '04/28', '04/28', '04/28', '04/28']
+    data: []
   },
   yAxis: {
     axisLabel: {
       formatter: '{value} %'
     },
-    max:'100'
+    max: '100'
   },
   series: [
     {
@@ -48,7 +48,7 @@ export default {
             offset: 1,
             color: '#ffe'
           }])}},
-      data: [20, 25, 35, 45, 55, 65, 75]
+      data: []
     },
   ]
 }

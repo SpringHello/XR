@@ -2,11 +2,11 @@
   <div class="background">
     <div class="center">
       <div>
-        <img src="../../../../assets/img/active/group-booking/gb-banner4.png"/>
+        <img src="../../../../assets/img/active/group-booking/gb-banner4.png" alt="描述"/>
       </div>
       <p>支付完成，成为云客分享给好友可以赠送免费时长哦！ </p>
       <div class="banner-button">
-        <img src="../../../../assets/img/active/group-booking/gb-banner5.png"/>
+        <img src="../../../../assets/img/active/group-booking/gb-banner5.png" alt="描述"/>
         <span @click="beCommander">成为云客</span>
       </div>
     </div>
