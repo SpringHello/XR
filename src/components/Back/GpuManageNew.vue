@@ -146,7 +146,7 @@
                 </div>
                 <div class="selectMark">
                   <img src="../../assets/img/host/h-icon10.png"/>
-                  <span>共 {{tab3.totalLenght}} 项 | 已选择 <span style="color:#FF624B;">{{selectLenght}}</span>项</span>
+                  <span>共 {{tab3.totalLenght}} 项 | 已选择 <span style="color:#FF624B;">{{tab3.selectLenght}}</span>项</span>
                 </div>
                 <Table :columns='tab3.firewalList' :data='tab3.firewalData' :loading='tab3.firewalLoading' @on-selection-change="firewalSelectionChange"></Table>
               </div>
