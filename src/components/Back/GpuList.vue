@@ -75,7 +75,7 @@
         </div>
       </div>
 
-      <div :class="isSource== false?'right-surface-hidde':'right-surface'">
+      <div class="sright-surface" :class="isSource== false?'sright-surface-hidde':''">
         <div class="tab_box">
           <div class="tab-top">
             <span>{{monitorName}} GPU服务器监控图表</span>
@@ -88,37 +88,37 @@
                 <span>CPU利用率</span>
                 <span style="float: right">{{CPUTime}}</span>
             </div>
-              <div class="chart" >
+            <div class="chart" >
+              <ul class="objectList">
+                  <li :class="cpuIndex == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="requestClick('cpu',item.label)">{{item.value}}</li>
+              </ul>
+              <div class="chart-rig">
+                <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda('cpu')">导出</Button>
                 <ul class="objectList">
-                    <li :class="cpuIndex == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="requestClick('cpu',item.label)">{{item.value}}</li>
+                  <li :class="cpuMapIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartTwoClick('cpu',index)">{{item.value}}</li>
                 </ul>
-                <div class="chart-rig">
-                  <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda('cpu')">导出</Button>
-                  <ul class="objectList">
-                    <li :class="cpuMapIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartTwoClick('cpu',index)">{{item.value}}</li>
-                  </ul>
-                </div>
               </div>
-                <chart  :options="cpu" style="width: 100%;height: 80%;"></chart>
+            </div>
+            <chart ref="cpu" :options="cpu" style="width: 100%;height: 80%;"></chart>
           </div>
 
           <div class="surface-boder">
-                <div class="title-Png">
-                  <span>内存使用率</span>
-                  <span style="float: right">{{momeryTime}}</span>
-                </div>
-                  <div class="chart" >
-                    <ul class="objectList">
-                      <li :class="momeryIndex == item.label? 'objectItems':'objectItem'" v-for="item in momeryList" :key="item.label" @click="requestClick('memory',item.label)">{{item.value}}</li>
-                    </ul>
-                    <div class="chart-rig">
-                      <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda('momery')">导出</Button>
-                      <ul class="objectList">
-                        <li :class="momeryMapIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in momeryMapList" :key="index" @click="chartTwoClick('memory',index)">{{item.value}}</li>
-                      </ul>
-                    </div>
-                  </div>
-                  <chart  style="width: 100%;height: 80%;" :options="momery"></chart>
+            <div class="title-Png">
+              <span>内存使用率</span>
+              <span style="float: right">{{momeryTime}}</span>
+            </div>
+            <div class="chart" >
+              <ul class="objectList">
+                <li :class="momeryIndex == item.label? 'objectItems':'objectItem'" v-for="item in momeryList" :key="item.label" @click="requestClick('memory',item.label)">{{item.value}}</li>
+              </ul>
+              <div class="chart-rig">
+                <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda('momery')">导出</Button>
+                <ul class="objectList">
+                  <li :class="momeryMapIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in momeryMapList" :key="index" @click="chartTwoClick('memory',index)">{{item.value}}</li>
+                </ul>
+              </div>
+            </div>
+            <chart ref="momery" style="width: 100%;height: 80%;" :options="momery"></chart>
           </div>
 
         </div>
@@ -666,6 +666,7 @@
           relevanceIps: false,
           relevanceAlteration:[],
           monitorName:'',
+          hostSelectList:{},
           //table
           hostList:[
             {
@@ -682,6 +683,7 @@
                 ])
               },
               render:(h,params)=> {
+                this.hostSelectList = params.row;
                 if (params.row.status == 1){
                   return h('ul',[
                     h('li',{
@@ -1108,7 +1110,7 @@
                       on: {
                         click: () => {
                           this.deleteList = params.row;
-                          this.deleteHost()
+                          this.deleteHost(params.row._index);
                         }
                       }
                     }, '删除')])
@@ -1133,7 +1135,7 @@
                       on: {
                         click: () => {
                           this.deleteList = params.row;
-                          this.deleteHost()
+                          this.deleteHost(params.row._index);
                         }
                       }
                     }, '删除')])
@@ -1242,7 +1244,7 @@
                                 title:'提示',
                                 content:'确定要重启主机吗',
                                 onOk:()=>{
-                                  this.reStartGPU();
+                                  this.reStartGPU(params.row._index);
                                 }
                               })
                             }
@@ -1289,7 +1291,7 @@
                                 this.$Message.info('请等待主机完成当前操作');
                               }else {
                                 this.deleteList = params.row;
-                                this.deleteHost();
+                                this.deleteHost(params.row._index);
                               }
                             }
                           }
@@ -1377,6 +1379,54 @@
           })
        },
 
+        timingRefesh(ids){
+          let timer = setInterval(() => {
+          let url = 'gpuserver/listGpuServer.do'
+          this.$http.get(url, {
+            params: {
+              ids: ids
+            }
+          }).then(res => {
+            if (res.data.status == 1 && res.status == 200) {
+              let locality = '';
+              let list = '';
+               if(Object.keys(res.data.result).length != 0){
+                for(let index in res.data.result){
+                    for (let i = 0; i < res.data.result[index].list.length; i++) {
+                      list.push(res.data.result[index].list[i]);
+                    }
+                  locality = list;
+                }
+              }else{
+               locality = [];
+              }
+              let flag = locality.some(item => {
+                return item.status == 2 || item.status == -2
+              }) // 操作的主机中是否有过渡状态，没有就清除定时器，取消刷新
+              if (!flag) {
+                this.hostData.forEach((host, index) => {
+                  locality.forEach(item => {
+                    if (host.id == item.id) {
+                      this.hostData.splice(index, 1, item)
+                    }
+                  })
+                })
+                clearInterval(timer)
+              } else {
+                this.hostData.forEach((host, index) => {
+                  locality.forEach(item => {
+                    if (host.id == item.id && item.status == 1) {
+                      this.hostData.splice(index, 1, item)
+                    }
+                  })
+                })
+              }
+            }
+          })
+        }, 3000)
+        },
+
+
         //获取绑定IP
         bindIp(){
          axios.get('network/listPublicIp.do',{
@@ -1415,7 +1465,8 @@
                   }
                 }).then(response => {
                   if (response.status == 200 && response.data.status == 1) {
-                    this.$Message.success(response.data.message)
+                    this.$Message.success(response.data.message);
+                    this.timingRefesh(this.hostSelectList.id);
                   } else {
                     this.$message.info({
                       content: response.data.message
@@ -1440,9 +1491,9 @@
                 VMId:computerid
               }
             }).then(response => {
-              if (response.status == 200 && response.data.status == 1
-              ) {
-                this.$Message.success(response.data.message)
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message);
+                 this.timingRefesh(this.hostSelectList.id);
               }
               else if (response.status == 200 && response.data.status == 2) {
                 this.$message.info({
@@ -1453,14 +1504,28 @@
         },
 
         //主机开机
-       openHost(){
-         if(this.selectLength.length == 0){
-            this.$Message.info({
-              content:'请选择一个主机',
-              duration:5
-            });
-            return;
-          }
+       openHost(index){
+        if (index == undefined) {
+          this.hostData.forEach(host => {
+            this.selectHostIds.forEach(item => {
+              if (host.id == item) {
+                host.status = 2
+                host.computerstate = 0
+                host.bindip = 0
+                host._disabled = true
+              }
+            })
+          })
+        } else {
+          this.hostData.forEach(host => {
+            if (host.id == this.hostSelectList.id) {
+              host.status = 2
+              host.bindip = 0
+              host.computerstate = 0
+              host._disabled = true
+            }
+          })
+        }
          this.$http.get('gpuserver/startGPU.do',{
            params:{
              gpuId :this.uuId,
@@ -1468,8 +1533,12 @@
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
-              this.$Message.success(res.data.message);
-             this.getGpuServerList();
+            this.$Message.success(res.data.message);
+            if(index == undefined){
+              this.timingRefesh(this.selectHostIds+'');
+            }else{
+             this.timingRefesh(this.hostSelectList.id);
+            }
            }else{
              this.$Message.info(res.data.message);
            }
@@ -1478,14 +1547,27 @@
 
       //主机关机
        stopHost(index){
-         if(index ==undefined){
-           if(this.selectLenght == 0){
-            this.$Message.info({
-              content:'请选择一个主机',
-              duration:5
-            });
-          }
-         }
+         if (index == undefined) {
+          this.hostData.forEach(host => {
+            this.selectHostIds.forEach(item => {
+              if (host.id == item) {
+                host.bindip = 0
+                host.status = 2
+                host.computerstate = 1
+                host._disabled = true
+              }
+            })
+          })
+        } else {
+          this.hostData.forEach(host => {
+            if (host.id == this.hostSelectList.id) {
+              host.bindip = 0
+              host.status = 2
+              host.computerstate = 1
+              host._disabled = true
+            }
+          })
+        }
          this.$http.get('gpuserver/stopGPU.do',{
            params:{
              gpuId :this.uuId,
@@ -1494,38 +1576,41 @@
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
              this.$Message.success(res.data.message);
-             this.getGpuServerList();
+              if(index == undefined){
+                this.timingRefesh(this.selectHostIds+'');
+              }else{
+                this.timingRefesh(this.hostSelectList.id);
+              }
            }else {
              this.$Message.info(res.data.message);
-             this.getGpuServerList();
            }
          })
         },
 
       //删除主机
-       deleteHost(){
-          if(this.deleteList !=""){
-
-          }else{
-            if(this.selectLength.length>5){
-              this.$Message.info('删除主机至多选择 5 项')
-            }else{
-              this.selectLength.forEach(item =>{
+       deleteHost(index){
+          if(this.deleteList ==""){
+             this.selectLength.forEach(item =>{
               this.deleteId += item.id+','
             })
-            }
           }
-        //  if(this.deleteList == '' && this.selectLength.length == 0){
-        //     this.$Message.info({
-        //       content:'请选择一个主机',
-        //       duration:5
-        //     })
-        //     return;
-        //   }
-        //  if(this.deleteList.caseType != 3){
-        //    this.$Message.warning('只能删除实时计费主机');
-        //    return
-        //  }
+          if (this.hostDelWay === 1) {
+          this.hostData.forEach(host => {
+            this.selectHostIds.forEach(item => {
+              if (host.id == item) {
+                host.status = -2
+                host._disabled = true
+              }
+            })
+          })
+        } else {
+          this.hostData.forEach(host => {
+            if (host.id == this.hostSelectList.id) {
+              host.status = -2
+              host._disabled = true
+            }
+          })
+        }
          this.$Modal.confirm({
            content:`主机删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
            onOk:()=>{
@@ -1536,7 +1621,11 @@
              }).then(res => {
                if(res.status == 200 && res.data.status == 1){
                  this.$Message.success(res.data.message);
-                 this.getGpuServerList();
+                 if(index == undefined){
+                    this.timingRefesh(this.selectHostIds+'');
+                  }else{
+                    this.timingRefesh(this.hostSelectList.id);
+                  }
                }else {
                  this.$message.info({
                    content: res.data.message
@@ -1550,14 +1639,25 @@
 
       //重启主机
       reStartGPU(index){
-         if(index !=undefined){
-           if(this.selectLength.length == 0){
-            this.$Message.info({
-              content:'请选择一个主机',
-              duration:5
-            });
-          }
-         }
+        if (val == 1) {
+          this.hostData.forEach(host => {
+            this.selectHostIds.forEach(item => {
+              if (host.id == item) {
+                host.status = 2
+                host.restart = 1
+                host._disabled = true
+              }
+            })
+          })
+        } else {
+          this.hostData.forEach(host => {
+            if (host.id == this.hostSelectList.id) {
+              host.status = 2
+              host.restart = 1
+              host._disabled = true
+            }
+          })
+        }
           this.$http.get('gpuserver/reStartGPU.do',{
             params:{
               gpuId :this.uuId,
@@ -1566,7 +1666,11 @@
           }).then(res => {
             if(res.status == 200 && res.data.status == 1){
               this.$Message.success(res.data.message);
-              this.getGpuServerList();
+              if(index == undefined){
+                    this.timingRefesh(this.selectHostIds+'');
+                }else{
+                  this.timingRefesh(this.hostSelectList.id);
+                }
             }else {
               this.$message.info({
                 content: res.data.message
@@ -1943,7 +2047,7 @@
               let ids = this.resetPasswordHostData.map(item => {
                 return item.id
               })
-              this.timingRefresh(ids + '')
+              this.timingRefesh(ids + '')
             } else if (res.status == 200 && res.data.status == 2) {
               if (res.data.result.length != 0) {
                 res.data.result.forEach(name => {
@@ -2075,9 +2179,18 @@
         })
     },
     computed:{
-        auth() {
+      auth() {
           return this.$store.state.authInfo;
-        },
+      },
+      selectHostIds() {
+        let ids = []
+        if (this.selectLength.length !== 0) {
+          ids = this.selectLength.map(item => {
+            return item.id
+          })
+        }
+        return ids
+      },
       shutdownDisabled() {
         let len = this.selectLength.length
         if (len === 0) {
@@ -2266,7 +2379,12 @@
             })
         }
        },
-
+      '$store.state.zone': {
+        handler: function () {
+          this.getGpuServerList();
+        },
+        deep: true
+      }
     }
   }
 </script>
@@ -2409,34 +2527,27 @@
      display: inline-block;
      margin-left:86px
   }
-  .right-surface{
+  .sright-surface{
     position: absolute;
     right: 0;
     top: 56px;
     background: #fff;
     width: 600px;
+    display: block;
     height: 100%;
     z-index: 1000;
     box-shadow:-5px 0px 14px -7px rgba(148,148,148,0.4);
     border-radius:2px;
-    transition: width ease-in-out 0.5s, opacity ease-in-out 0.5s;
+    transition:all ease-in-out 5s;
     opacity: 1;
-    -webkit-transition: width ease-in-out 0.5s, opacity ease-in-out 0.5s;
+    -webkit-transition:all ease-in-out 5s;
   }
 
-  .right-surface-hidde{
-    position: absolute;
-    right: 0;
-    top: 56px;
-    background: #fff;
-    width: 0;
-    height: 100%;
-    z-index: 1000;
-    box-shadow:-5px 0px 14px -7px rgba(148,148,148,0.4);
-    border-radius:2px;
-    opacity: 0;
+  .sright-surface-hidde{
     display: none;
-    transition: width ease-in-out 0.5s, opacity ease-in-out 0.5s;
-    -webkit-transition: width ease-in-out 0.5s, opacity ease-in-out 0.5s;
+    opacity: 0;
+    width: 0;
+    -webkit-transition:all ease-in-out 5s;
+    transition:all ease-in-out 5s;
   }
 </style>

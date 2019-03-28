@@ -27,7 +27,6 @@ export default {
         axisLabel: {
             formatter: '{value} %'
         },
-        max:'100'
     },
     series: [
         {

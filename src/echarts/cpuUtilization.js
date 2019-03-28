@@ -1,6 +1,8 @@
 
 var echarts = require('echarts/lib/echarts')
 export default {
+
+
   tooltip: {
     trigger: 'axis',
     axisPointer: {
@@ -23,14 +25,14 @@ export default {
   xAxis: {
     type: 'category',
     boundaryGap: false,
-    data: []
-  },
-  yAxis: {
-    axisLabel: {
-      formatter: '{value} %'
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     },
-    max: '100'
-  },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        formatter: '{value} %'
+      },
+    },
   series: [
     {
       name: 'CPU利用率',
@@ -50,5 +52,5 @@ export default {
           }])}},
       data: []
     },
-  ]
+  ],
 }
