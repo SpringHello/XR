@@ -24,18 +24,18 @@
                 confirm
                 width="230"
                 placement="right"
-                @on-ok="hostShutdown(1)"
+                @on-ok="stopHost()"
                 title="您确认关闭选中的主机吗？" style="margin: 0 0 0 10px">
-                <Button type="primary" :disabled='disabledList.closeDisbled' style="margin:0 10px;">关机</Button>
+                <Button type="primary" :disabled='shutdownDisabled' style="margin:0 10px;">关机</Button>
               </Poptip>
-            <Button type="primary" :disabled='disabledList.openDisbled' @click="openHost">开机</Button>
+            <Button type="primary" :disabled='startDisabled' @click="openHost">开机</Button>
             <Poptip
               confirm
               width="230"
               placement="right"
               @on-ok="reStartGPU"
               title="您确认重启选中的主机吗？" style="margin: 0 10px">
-              <Button type="primary" :disabled="disabledList.closeDisbled">重启</Button>
+              <Button type="primary" :disabled="restartDisabled">重启</Button>
             </Poptip>
              <Poptip
               confirm
@@ -43,11 +43,10 @@
               placement="right"
               @on-ok="deleteHost"
               title="您确认删除选中的主机吗？">
-              <Button type="primary" :disabled="disabledList.deleteDisbled">删除</Button>
+              <Button type="primary" :disabled="deleteDisabled">删除</Button>
             </Poptip>
-            <!-- <Button type="primary" :disabled='disabledList.deleteDisbled' style="margin:0 10px;" @click="deleteHost">删除</Button> -->
-            <Dropdown>
-              <Button type="primary" style="margin:0 10px;" @click="hideEvent">更多操作
+            <Dropdown @on-click="hideEvent">
+              <Button type="primary" style="margin:0 10px;" >更多操作
                  <Icon type="arrow-down-b"></Icon>
               </Button>
              
@@ -76,7 +75,7 @@
         </div>
       </div>
 
-      <div :class="[isSource== false?'right-surface-hidde':'right-surface']">
+      <div :class="isSource== false?'right-surface-hidde':'right-surface'">
         <div class="tab_box">
           <div class="tab-top">
             <span>{{monitorName}} GPU服务器监控图表</span>
@@ -100,7 +99,7 @@
                   </ul>
                 </div>
               </div>
-                <chart ref="cpu" :options="cpu" style="width: 100%;height: 80%;user-select: none; position: relative; background: transparent;"></chart>
+                <chart  :options="cpu" style="width: 100%;height: 80%;"></chart>
           </div>
 
           <div class="surface-boder">
@@ -119,7 +118,7 @@
                       </ul>
                     </div>
                   </div>
-                  <chart ref="momery" style="width: 100%;height: 80%;user-select: none; position: relative; background: transparent;" :options="momery"></chart>
+                  <chart  style="width: 100%;height: 80%;" :options="momery"></chart>
           </div>
 
         </div>
@@ -414,20 +413,14 @@
           dayList:[
             {
               value:'今天',
-              data:[0,0,0,0,0],
-              day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
               label:0
             },
             {
               value:'最近7天',
-              data:[0,0,0,0,0,0,0],
-              day:['---','---','---','---','---','---','---'],
               label:1
             },
             {
               value:'最近30天',
-              data:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-              day:['---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---'],
               label:2
             }
           ],
@@ -451,20 +444,14 @@
           momeryList:[
             {
               value:'今天',
-              data:[0,0,0,0,0],
-              day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
               label:0
             },
             {
               value:'最近7天',
-              data:[0,0,0,0,0,0,0],
-              day:['---','---','---','---','---','---','---'],
               label:1
             },
             {
               value:'最近30天',
-              data:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-              day:['---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---','---'],
               label:2
             }
           ],
@@ -718,7 +705,7 @@
                           }
                         }
                       }
-                    },params.row.companyname ? params.row.companyname : '----'+'/'),
+                    },params.row.companyname ? params.row.companyname+' /' : '----'+'/'),
                     h('li',{
                       style:{
                         color:'#2A99F2',
@@ -1090,7 +1077,7 @@
               title:'操作',
               width:100,
               render:(h,params)=>{
-                if( this.$store.state.authInfo ==null){
+                if( (!this.auth) || (this.auth && this.auth.checkstatus !== 0)){
                   return h('div',
                     {
                       style:{padding:'8px 0',display:'inline-block'}
@@ -1152,164 +1139,186 @@
                     }, '删除')])
                     break  
                    case 1: 
-                   return h('div',
-                  {
-                    style:{color:'#2A99F2',padding:'8px 0',display:'inline-block'}
-                  },[
-                  h('p',{style:{cursor:'pointer'},on:{click:()=>{ if(params.row.status == 2 || params.row.status == 3){
-                        this.$Message.info('请等待主机完成当前操作');
-                      }else {this.link(params.row)}}}},'远程链接'),
-                  h('p',{style:{cursor:'pointer',margin:'5px 0'},
-                    on:{
-                    click:()=> {
-                        this.uuId = params.row.computerid;
-                        let msg = params.row.computerstate == '0' ?'确定要开机吗':'确定要关机吗'
-                        this.$Modal.confirm({
-                          title:'提示',
-                          content:msg,
-                          onOk:()=>{
-                              if(params.row.status == 2){
-                                  this.$Message.info('请等待主机创建完成');
-                              }else if(params.row.status == 3){
-                                  this.$Message.info('主机正在删除中');
-                              }else {
-                              if(params.row.computerstate == '0'){
-                                 this.openHost(params.row._index);
-                              }else if(params.row.computerstate == '1'){
-                                this.stopHost(params.row._index);
+                    return h('div',
+                      {
+                        style:{color:'#2A99F2',padding:'8px 0',display:'inline-block'}
+                      },[
+                    h('p',{style:{cursor:'pointer'},on:{click:()=>{ if(params.row.status == 2 || params.row.status == 3){
+                          this.$Message.info('请等待主机完成当前操作');
+                        }else {this.link(params.row)}}}},'远程链接'),
+                    h('p',{style:{cursor:'pointer',margin:'5px 0'},
+                      on:{
+                      click:()=> {
+                          this.uuId = params.row.computerid;
+                          let msg = params.row.computerstate == '0' ?'确定要开机吗':'确定要关机吗'
+                          this.$Modal.confirm({
+                            title:'提示',
+                            content:msg,
+                            onOk:()=>{
+                                if(params.row.status == 2){
+                                    this.$Message.info('请等待主机创建完成');
+                                }else if(params.row.status == 3){
+                                    this.$Message.info('主机正在删除中');
+                                }else {
+                                if(params.row.computerstate == '0'){
+                                  this.openHost(params.row._index);
+                                }else if(params.row.computerstate == '1'){
+                                  this.stopHost(params.row._index);
+                                }
                               }
                             }
-                          }
-                      })
-                    }
-                    }
-                  },params.row.computerstate == '0' && params.row.status == '1'?'开机':'关机'),
-                    h('Dropdown', {
-                      props: {
-                        trigger: 'click'
+                        })
                       }
-                    }, [h('a', {
-                      attrs: {
-                        href: 'javascript:void(0)'
                       }
-                    }, '更多操作'), h('DropdownMenu', {
-                      slot: 'list'
-                    }, [h('DropdownItem', {
-                      nativeOn: {
-                        click: () => {
-                          if(params.row.publicip != '' && params.row.publicip != undefined){
-                            this.$Message.info('该主机已绑定IP');
-                          }else {
-                            if(params.row.status == 2 || params.row.status ==3){
-                              this.$Message.info('请等待主机完成当前操作');
-                            }else {
-                              this.uuId = params.row.computerid;
-                              this.vpcId = params.row.vpcid;
-                              this.bindIp();
-                            }
-                          }
+                    },params.row.computerstate == '0' && params.row.status == '1'?'开机':'关机'),
+                      h('Dropdown', {
+                        props: {
+                          trigger: 'click'
                         }
-                      }
-                    }, '绑定IP'),
-                      h('DropdownItem', {
+                      }, [h('a', {
+                        attrs: {
+                          href: 'javascript:void(0)'
+                        }
+                      }, '更多操作'), h('DropdownMenu', {
+                        slot: 'list'
+                      }, [h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                            this.companyname = params.row.companyname;
-                            if(params.row.status == 2 || params.row.status ==3){
-                              this.$Message.info('请等待主机完成当前操作');
+                            if(params.row.publicip != '' && params.row.publicip != undefined){
+                              this.$Message.info('该主机已绑定IP');
                             }else {
-                              this.$Modal.confirm({
-                                title:'解绑IP',
-                                content:'是否解绑该GPU的IP?',
-                                onOk:()=>{
-                                  this.unbind(params.row.publicip,params.row.computerid);
-                                }
-                              })
-                              this.uuId = params.row.computerid;
-                            }
-                          }
-                        }
-                      }, '解绑IP'),
-                      h('DropdownItem', {
-                        nativeOn: {
-                          click: () => {
-                            if(params.row.computerstate == '0' && params.row.status=='1'){
-                              this.uuId = params.row.computerid;
                               if(params.row.status == 2 || params.row.status ==3){
                                 this.$Message.info('请等待主机完成当前操作');
                               }else {
-                                this.showModal.mirror  = true;
-                                this.mirrorValidate.rootdiskid = params.row.rootdiskid;
+                                this.uuId = params.row.computerid;
+                                this.vpcId = params.row.vpcid;
+                                this.bindIp();
                               }
-                            }else{
-                             this.$Message.info('制作镜像前请先关闭主机');
                             }
                           }
                         }
-                      }, '制作镜像'),
-                      h('DropdownItem', {
-                        nativeOn: {
-                          click: () => {
-                            this.uuId = params.row.computerid;
-                            this.$Modal.confirm({
-                              title:'提示',
-                              content:'确定要重启主机吗',
-                              onOk:()=>{
-                                this.reStartGPU();
+                      }, '绑定IP'),
+                        h('DropdownItem', {
+                          nativeOn: {
+                            click: () => {
+                              this.companyname = params.row.companyname;
+                              if(params.row.status == 2 || params.row.status ==3){
+                                this.$Message.info('请等待主机完成当前操作');
+                              }else {
+                                this.$Modal.confirm({
+                                  title:'解绑IP',
+                                  content:'是否解绑该GPU的IP?',
+                                  onOk:()=>{
+                                    this.unbind(params.row.publicip,params.row.computerid);
+                                  }
+                                })
+                                this.uuId = params.row.computerid;
                               }
-                            })
+                            }
                           }
-                        }
-                      }, '重启主机'),
-                         h('DropdownItem', {
-                        nativeOn: {
-                          click: () => {
-                            if(params.row.status == 2 || params.row.status ==3){
-                              this.$Message.info('请等待主机完成当前操作');
-                            }else {
-                              if(params.row.caseType != 3){
-                                this.$Message.info('请选择实时计费的云主机进行资费变更');
-                                return
+                        }, '解绑IP'),
+                        h('DropdownItem', {
+                          nativeOn: {
+                            click: () => {
+                              if(params.row.computerstate == '0' && params.row.status=='1'){
+                                this.uuId = params.row.computerid;
+                                if(params.row.status == 2 || params.row.status ==3){
+                                  this.$Message.info('请等待主机完成当前操作');
+                                }else {
+                                  this.showModal.mirror  = true;
+                                  this.mirrorValidate.rootdiskid = params.row.rootdiskid;
+                                }
+                              }else{
+                              this.$Message.info('制作镜像前请先关闭主机');
                               }
-                              this.VMId = params.row.id;
+                            }
+                          }
+                        }, '制作镜像'),
+                        h('DropdownItem', {
+                          nativeOn: {
+                            click: () => {
                               this.uuId = params.row.computerid;
-                              this.ratesChange();
-                              this.showModal.ratesChange = true;
+                              this.$Modal.confirm({
+                                title:'提示',
+                                content:'确定要重启主机吗',
+                                onOk:()=>{
+                                  this.reStartGPU();
+                                }
+                              })
                             }
                           }
-                        }
-                      }, '资费变更'),
-                      h('DropdownItem', {
-                        nativeOn: {
-                          click: () => {
-                            if(params.row.status == 2 || params.row.status ==3){
-                              this.$Message.info('请等待主机完成当前操作');
-                            }else {
-                              if(params.row.caseType == 3){
-                                this.$Message.info('请选择包年包月主机续费');
-                                return
+                        }, '重启主机'),
+                          h('DropdownItem', {
+                          nativeOn: {
+                            click: () => {
+                              if(params.row.status == 2 || params.row.status ==3){
+                                this.$Message.info('请等待主机完成当前操作');
+                              }else {
+                                if(params.row.caseType != 3){
+                                  this.$Message.info('请选择实时计费的云主机进行资费变更');
+                                  return
+                                }
+                                this.VMId = params.row.id;
+                                this.uuId = params.row.computerid;
+                                this.ratesChange();
+                                this.showModal.ratesChange = true;
                               }
-                              this.VMId = params.row.id;
-                              this.showModal.renew = true;
                             }
                           }
-                        }
-                      }, '主机续费'),
-                      h('DropdownItem', {
-                        nativeOn: {
-                          click: () => {
-                           if(params.row.status == 2 || params.row.status == 3){
-                              this.$Message.info('请等待主机完成当前操作');
-                            }else {
-                              this.deleteList = params.row;
-                              this.deleteHost();
+                        }, '资费变更'),
+                        h('DropdownItem', {
+                          nativeOn: {
+                            click: () => {
+                              if(params.row.status == 2 || params.row.status ==3){
+                                this.$Message.info('请等待主机完成当前操作');
+                              }else {
+                                if(params.row.caseType == 3){
+                                  this.$Message.info('请选择包年包月主机续费');
+                                  return
+                                }
+                                this.VMId = params.row.id;
+                                this.showModal.renew = true;
+                              }
                             }
                           }
-                        }
-                      }, '删除'),])
+                        }, '主机续费'),
+                        h('DropdownItem', {
+                          nativeOn: {
+                            click: () => {
+                            if(params.row.status == 2 || params.row.status == 3){
+                                this.$Message.info('请等待主机完成当前操作');
+                              }else {
+                                this.deleteList = params.row;
+                                this.deleteHost();
+                              }
+                            }
+                          }
+                        }, '删除'),])
+                      ])
                     ])
-                ])
-                break
+                    break
+                  default:
+                    return h('div', {}, [
+                      h('p', {
+                        style: {
+                          lineHeight: '20px',
+                          cursor: 'not-allowed'
+                        },
+                      }, '连接'),
+                      h('p', {
+                        style: {
+                          lineHeight: '30px',
+                          cursor: 'not-allowed'
+                        }
+                      }, '管理'),
+                      h('p', {
+                        style: {
+                          lineHeight: '23px',
+                          cursor: 'not-allowed'
+                        }
+                      }, '更多操作'),
+                    ])
+                    break
                 }
               }
               }
@@ -1318,11 +1327,6 @@
           hostData:[],
           zoneId:'',
           intervalInstance: null,
-          disabledList:{
-            openDisbled:true,
-            closeDisbled:true,
-            deleteDisbled:true,
-          },
           selectLength:[],
           total:0,
           deleteId:'',
@@ -1346,6 +1350,7 @@
         },
         // 获取GPU主机
        getGpuServerList(){
+         this.selectLength = [];
          axios.get('gpuserver/listGpuServer.do',{
             params:{
               num:'',
@@ -1472,14 +1477,15 @@
         },
 
       //主机关机
-       stopHost(){
-         if(this.selectLength.length == 0){
+       stopHost(index){
+         if(index ==undefined){
+           if(this.selectLenght == 0){
             this.$Message.info({
               content:'请选择一个主机',
               duration:5
             });
-            return;
           }
+         }
          this.$http.get('gpuserver/stopGPU.do',{
            params:{
              gpuId :this.uuId,
@@ -1543,14 +1549,15 @@
 
 
       //重启主机
-      reStartGPU(){
-          if(this.selectLength.length == 0){
+      reStartGPU(index){
+         if(index !=undefined){
+           if(this.selectLength.length == 0){
             this.$Message.info({
               content:'请选择一个主机',
               duration:5
             });
-            return;
           }
+         }
           this.$http.get('gpuserver/reStartGPU.do',{
             params:{
               gpuId :this.uuId,
@@ -1571,27 +1578,14 @@
 
       // 选中主机
       selectIndex(selection){
+        this.uuId = '';
         this.selectLength = selection;
         if(selection.length != 0){
           for(let i = 0;i<selection.length;i++){
-          this.uuid += selection[i].computerid+',';
-          this.uuid = this.uuid.substring(0,this.uuid.length-1);
-            if(selection[i].computerstate == 1 && selection[i].status ==1){ //开机状态
-               this.disabledList.closeDisbled = false;
-            }else if(selection[i].computerstate == 0 && selection[i].status ==1){ // 关机状态
-               this.disabledList.openDisbled = false;
-               this.disabledList.deleteDisbled = false;
-            }
-            if(selection[i].status == -1){
-              this.disabledList.deleteDisbled = false;
-            }
+          this.uuId += selection[i].computerid+',';
+          this.uuId = this.uuId.substring(0,this.uuId.length-1);
+          }
         }
-        }else{
-          this.disabledList.deleteDisbled = true;
-          this.disabledList.openDisbled = true;
-          this.disabledList.closeDisbled = true;
-        }
-
       },
 
         //创建镜像
@@ -1937,7 +1931,7 @@
             if (res.status == 200 && res.data.status == 1) {
               this.$Message.success(res.data.message)
               this.showModal.resetPassword = false
-              this.hostListData.forEach(host => {
+              this.hostData.forEach(host => {
                 this.resetPasswordHostData.forEach(item => {
                   if (host.id == item.id) {
                     host.status = 2
@@ -1950,7 +1944,6 @@
                 return item.id
               })
               this.timingRefresh(ids + '')
-              this.hostSelection = []
             } else if (res.status == 200 && res.data.status == 2) {
               if (res.data.result.length != 0) {
                 res.data.result.forEach(name => {
@@ -2066,8 +2059,9 @@
         }
         this.CPUTime = this.getCurrentDate();
         this.momeryTime = this.getCurrentDate();
-        this.$http.get('alarm/getVmAlarmByHour.do', {
+         this.$http.get('alarm/getVmAlarmByHour.do', {
           params: {
+            zoneId:this.$store.state.zone.zoneid,
             vmname: sessionStorage.getItem('instancename'),
             type: 'core',
           }
@@ -2079,12 +2073,55 @@
             this.momery.xAxis.data = response.data.result.xaxis;
           }
         })
-
     },
     computed:{
         auth() {
-          return this.$store.state.authInfo != null
+          return this.$store.state.authInfo;
         },
+      shutdownDisabled() {
+        let len = this.selectLength.length
+        if (len === 0) {
+          return true
+        } else {
+          // 只有开机状态的主机才能关机
+          return !this.selectLength.every(host => {
+            return host.status == 1 && host.computerstate == 1
+          })
+        }
+      },
+      startDisabled() {
+        let len = this.selectLength.length
+        if (len === 0) {
+          return true
+        } else {
+          // 只有关机状态的主机才能开机
+          return !this.selectLength.every(host => {
+            return host.status == 1 && host.computerstate == 0
+          })
+        }
+      },
+      restartDisabled() {
+        let len = this.selectLength.length
+        if (len === 0) {
+          return true
+        } else {
+          // 只有开机状态的主机才能重启
+          return !this.selectLength.every(host => {
+            return host.status == 1 && host.computerstate == 1
+          })
+        }
+      },
+      deleteDisabled() {
+        let len = this.selectLength.length
+        if (len === 0) {
+          return true
+        } else {
+          // 过渡状态主机不能再次删除
+          return this.selectLength.some(host => {
+            return host.status == -2 || host.status == 2
+          })
+        }
+      },
         resetPasswordDisabled() {
           let len = this.selectLength.length
           if (len === 0) {
@@ -2144,6 +2181,9 @@
             return !(this.selectLength[0].status == 1 && this.selectLength[0].computerstate == 0)
           }
         },
+        selectLenght(){
+          return this.selectLength.length;
+        },
     },
     mounted(){
           this.getGpuServerList();
@@ -2188,7 +2228,7 @@
             })
         }
       },
-       relevanceAlteration() {
+      relevanceAlteration() {
         if (this.ratesChangeTime == '') {
           this.ratesChangeCost = '--'
         } else {
@@ -2226,7 +2266,7 @@
             })
         }
        },
-      
+
     }
   }
 </script>
@@ -2360,15 +2400,15 @@
       border:1px solid #2a99f2;
       cursor: pointer;
     }
-  }
+   }
   .chart{
       margin-top:10px;height:30px;
   }
-    .chart-rig{
+  .chart-rig{
      height:30px;
      display: inline-block;
      margin-left:86px
-    }
+  }
   .right-surface{
     position: absolute;
     right: 0;
@@ -2381,6 +2421,7 @@
     border-radius:2px;
     transition: width ease-in-out 0.5s, opacity ease-in-out 0.5s;
     opacity: 1;
+    -webkit-transition: width ease-in-out 0.5s, opacity ease-in-out 0.5s;
   }
 
   .right-surface-hidde{
@@ -2388,7 +2429,7 @@
     right: 0;
     top: 56px;
     background: #fff;
-    width: 600px;
+    width: 0;
     height: 100%;
     z-index: 1000;
     box-shadow:-5px 0px 14px -7px rgba(148,148,148,0.4);
@@ -2396,5 +2437,6 @@
     opacity: 0;
     display: none;
     transition: width ease-in-out 0.5s, opacity ease-in-out 0.5s;
+    -webkit-transition: width ease-in-out 0.5s, opacity ease-in-out 0.5s;
   }
 </style>

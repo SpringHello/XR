@@ -81,7 +81,7 @@
         </p>
         <div class="modal-content-s">
           <div>
-            <p class="lh24">您是否已经完成支付</p>
+            <p class="lh24">请您在新打开的页面进行支付，支付完成前请不要关闭此窗口。</p>
           </div>
         </div>
         <p slot="footer" class="modal-footer-s">

@@ -1257,14 +1257,14 @@
         })
       },
       getnews() {
-        axios.get('article/getTopArticle.do').then(response => {
+        axios.get('getTopArticle.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.showNews = response.data.result
           }
         })
       },
       getlinkList() {
-        axios.get('article/getArticleType.do').then(response => {
+        axios.get('getArticleType.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.linkList = response.data.result.slice(0, 2)
           }

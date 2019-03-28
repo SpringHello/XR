@@ -253,7 +253,7 @@
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.xrcloud.net&amp;Menu=yes`"
-                   style="color:rgb(73, 80, 96)">
+                   style="color:rgb(73, 80, 96)" rel="nofollow">
                 <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus" alt="人工客服">
                   <img src="./assets/img/app/qq-gray.png" v-else alt="人工客服">
                 <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
@@ -271,7 +271,7 @@
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.xrcloud.net&amp;Menu=yes`"
-                   style="color:rgb(73, 80, 96)">
+                   style="color:rgb(73, 80, 96)" rel="nofollow">
                  <img src="./assets/img/app/qq-red.png" v-if="qq.qqstatus" alt="售前咨询">
                   <img src="./assets/img/app/qq-gray.png" v-else alt="售前咨询">
                 <span >{{qq.servicename}}</span>
@@ -510,54 +510,54 @@
           },
           {
             title: '帮助文档',
-            path: 'https://zschj.xrcloud.net/support/products.html',
+            path: 'https://zschj.xrcloud.net/support/products/',
             content: [
               {
                 prod: '产品文档',
-                path: 'https://zschj.xrcloud.net/support/products.html'
+                path: 'https://zschj.xrcloud.net/support/products/'
               },
               {
                 prod: '常见问题',
-                path: 'https://zschj.xrcloud.net/support/asks.html'
+                path: 'https://zschj.xrcloud.net/support/asks/'
               },
               {
                 prod: '快速入门',
-                path: 'https://zschj.xrcloud.net/support/quick.html'
+                path: 'https://zschj.xrcloud.net/support/quick/'
               }
             ]
           },
           {
             title: '新闻动态',
-            path: 'https://zschj.xrcloud.net/homePage/1.html',
+            path: 'https://zschj.xrcloud.net/news/',
             content: [
               {
                 prod: '云服务器',
-                path: 'https://zschj.xrcloud.net/news/yunfuwuqi/1.html'
+                path: 'https://zschj.xrcloud.net/news/yunfuwuqi/'
               },
               {
                 prod: '云计算',
-                path: 'https://zschj.xrcloud.net/news/yunjisuan/1.html'
+                path: 'https://zschj.xrcloud.net/news/yunjisuan/'
               },
               {
                 prod: '云安全',
-                path: 'https://zschj.xrcloud.net/news/yunanquan/1.html'
+                path: 'https://zschj.xrcloud.net/news/yunanquan/'
               },
               {
                 prod: '香港云服务器 ',
-                path: 'https://zschj.xrcloud.net/news/xianggangyunfuwuqi/1.html'
+                path: 'https://zschj.xrcloud.net/news/xianggangyunfuwuqi/'
               },
               {
                 prod: '虚拟主机',
-                path: 'https://zschj.xrcloud.net/news/xunizhuji/1.html'
+                path: 'https://zschj.xrcloud.net/news/xunizhuji/'
               },
               {
                 prod: '服务器虚拟化',
-                path: 'https://zschj.xrcloud.net/news/fuwuqixunihua/1.html'
+                path: 'https://zschj.xrcloud.net/news/fuwuqixunihua/'
               },
 
               {
                 prod: '域名交流',
-                path: 'https://zschj.xrcloud.net/news/yumingjiaoliu/1.html'
+                path: 'https://zschj.xrcloud.net/news/yumingjiaoliu/'
               }
             ]
           },
@@ -625,19 +625,19 @@
           }
         ], // 页尾列表详情
         document: [
-          {title: '云服务器', url: 'https://zschj.xrcloud.net/news/yunfuwuqi/1.html'},
-          {title: '云计算', url: 'https://zschj.xrcloud.net/news/yunjisuan/1.html'},
-          {title: '云安全', url: 'https://zschj.xrcloud.net/news/yunanquan/1.html'},
-          {title: '香港云服务器', url: 'https://zschj.xrcloud.net/news/xianggangyunfuwuqi/1.html'},
-          {title: '虚拟主机', url: 'https://zschj.xrcloud.net/news/xunizhuji/1.html'},
-          {title: '服务器虚拟化', url: 'https://zschj.xrcloud.net/news/fuwuqixunihua/1.html'},
-          {title: '域名交流', url: 'https://zschj.xrcloud.net/news/yumingjiaoliu/1.html'}
+          {title: '云服务器', url: 'https://zschj.xrcloud.net/news/yunfuwuqi/'},
+          {title: '云计算', url: 'https://zschj.xrcloud.net/news/yunjisuan/'},
+          {title: '云安全', url: 'https://zschj.xrcloud.net/news/yunanquan/'},
+          {title: '香港云服务器', url: 'https://zschj.xrcloud.net/news/xianggangyunfuwuqi/'},
+          {title: '虚拟主机', url: 'https://zschj.xrcloud.net/news/xunizhuji/'},
+          {title: '服务器虚拟化', url: 'https://zschj.xrcloud.net/news/fuwuqixunihua/'},
+          {title: '域名交流', url: 'https://zschj.xrcloud.net/news/yumingjiaoliu/'}
         ],
         // 服务与公告
         notice: [
-          {title: '产品文档', url: 'https://zschj.xrcloud.net/support/products.html'},
-          {title: '常见问题', url: 'https://zschj.xrcloud.net/support/asks.html'},
-          {title: '快速入门', url: 'https://zschj.xrcloud.net/support/quick.html'},
+          {title: '产品文档', url: 'https://zschj.xrcloud.net/support/products/'},
+          {title: '常见问题', url: 'https://zschj.xrcloud.net/support/asks/'},
+          {title: '快速入门', url: 'https://zschj.xrcloud.net/support/quick/'},
         ],
         // 友情链接
         links: [
@@ -735,7 +735,7 @@
          }*/
       })
       // 设置友情链接
-      this.$http.get('article/friendshipLink.do').then(response => {
+      this.$http.get('friendshipLink.do').then(response => {
         this.links = response.data.result
       })
     },

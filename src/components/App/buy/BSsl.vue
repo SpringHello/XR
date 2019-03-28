@@ -251,13 +251,9 @@ export default {
   metaInfo: {
     title: '购买沃通ssl证书（ov、dv） - 购买 - 新睿云', // set a title
     meta: [{                 // set meta
-      name: 'keywords',
-      content: 'ssl证书购买,购买ssl证书'
-    },
-      {                 // set meta
-        name: 'description',
-        content: '沃通全球著名的SSL证书提供商已经为全球180多个国家和地区超过十万个网站颁发了全球信任的SSL证书。在云上签发各品牌数字证书，实现网站HTTPS化，使网站可信，防劫持、防篡改、防监听。用户可在新睿云官网直接购买沃通ov和dv的ssl证书。'
-      }]
+      name: 'robots',
+      content: 'noindex,nofollow'
+    }]
   },
   data () {
     // 域名正则批量判断

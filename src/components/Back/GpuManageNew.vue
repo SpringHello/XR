@@ -9,7 +9,7 @@
         <div class="head">
           <div>
             <div class="host-name">
-              <img style="cursor:pointer;" @click="$router.push('GpuListNew')" src="../../assets/img/host/h-icon9.png"/>
+              <img style="cursor:pointer;" @click="$router.push('gpuList')" src="../../assets/img/host/h-icon9.png"/>
               <span >名称:{{gpuName}}</span>
               <img  src="../../assets/img/host/h-icon11.png" @click="showWindow.rename = true" style="height:16px;cursor:pointer;">
             </div>
@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="config-type">
-          <ul v-for="item in configTypes" :class="{selected: configType == item}" @click="changeTabs(item)">{{ item }}</ul>
+          <ul v-for="(item,index) in configTypes" :class="{selected: configType == item}" @click="changeTabs(item)" :key="index">{{ item }}</ul>
         </div>
         <div class="config-info">
           <div class="tab-1" v-if="configType == '基础信息' ">
@@ -32,9 +32,10 @@
                   <ul>
                     <li><span class="one">镜像系统</span><span class="two">{{ gpuDetail.template}}</span><span class="three" @click="modifyMirror"> [修改]</span></li>
                     <li><span class="one">系统盘容量</span><span class="two">{{ gpuDetail.rootDiskSize}}G</span></li>
-                    <li><span class="one">数据盘容量</span><span class="two">{{ gpuDetail.diskSize}}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three" @click="diskUnload"> / 卸载]</span></li>
-                    <li><span class="one">登陆密码</span><span class="two">{{ gpuDetail.template}}</span><span class="three" v-if="codePlaceholder == '发送密码'" @click="showWindow.lookPassword = true"> [{{codePlaceholder}}]</span>
-                      <span class="two" v-else> [{{codePlaceholder}}]</span></li>
+                    <li><span class="one">数据盘容量</span><span class="two">{{ gpuDetail.diskSize?gpuDetail.diskSize:0 }}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three" > / 卸载]</span></li>
+                    <li><span class="one">登陆密码</span><span class="two"></span><span class="three" v-if="codePlaceholder == '发送密码'" @click="showWindow.lookPassword = true"> [{{codePlaceholder}}]</span>
+                      <span class="two" v-else> [{{codePlaceholder}}]</span>
+                      <span class="three" @click="showWindow.modifyPassword = true"> [修改密码]</span></li>
                     <li><span class="one">主机状态</span> <span  class="two">{{ gpuDetail.computerStatus? '开机': '关机' }}</span></li>
                   </ul>
                 </div>
@@ -69,7 +70,7 @@
                   <p>资费信息</p>
                   <ul>
                     <li><span class="four">计费类型</span><span
-                      class="two"> {{ gpuDetail.case_type == 1 ? '包年' : gpuDetail.casetype == 2 ? '包月' : gpuDetail.casetype == 3 ? '实时' : '七天'}}</span></li>
+                      class="two"> {{ gpuDetail.case_type == 1 ? '包年' : gpuDetail.case_type == 2 ? '包月' : gpuDetail.case_type == 3 ? '实时' : '七天'}}</span></li>
                     <li><span class="four">自动续费</span>
                       <i-switch size="small" style="position: relative;top: -2px;" v-model="isAutoRenew" @on-change="changAutoRenew"></i-switch>
                     </li>
@@ -920,11 +921,11 @@
         renameForm:{
             hostName:''
         },
-        renameFormRule:[
-            {
+        renameFormRule:{
+          hostName:[{
                 hostName:{required:'true',message:'请输入主机名称',trigger:'blur'}
-            }
-        ],    
+            }]
+        },    
         configType: '基础信息',
         configTypes: ['基础信息', '主机监控', '防火墙', '操作日志'],
         tab3: {
@@ -1209,13 +1210,14 @@
       getUtilization(){
         axios.get('alarm/getVmAlarmByHour.do',{
           params:{
+            zoneId:this.$store.state.zone.zoneid,
             vmname:sessionStorage.getItem('instancename'),
             type: 'core'
           }
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
-            this.cpu.series[0].data = response.data.result.cpuUse;
-            this.cpu.xAxis.data = response.data.result.xaxis;
+            this.cpu.series[0].data = res.data.result.cpuUse;
+            this.cpu.xAxis.data = res.data.result.xaxis;
           }
         })
       },
@@ -1378,6 +1380,7 @@
         this.tab3.firewalLoading = true;
         this.$http.get('network/listaclListItem.do', {
           params: {
+            // zoneId:this.$store.state.zone.zoneid,
             aclListId: this.gpuDetail.firewallId
           }
         }).then(response => {
@@ -1620,7 +1623,7 @@
         }
       },
       changAutoRenew() {
-        if (this.gpuDetail.casetype != 2 && this.gpuDetail.casetype != 1) {
+        if (this.gpuDetail.case_type != 2 && this.gpuDetail.case_type != 1) {
           this.getGpuHostDetail()
           return
         }
@@ -1759,6 +1762,7 @@
         this.selectOperationLog();
         this.$http.get('alarm/getVmAlarmByHour.do', {
           params: {
+            zoneId:this.$store.state.zone.zoneid,
             vmname: sessionStorage.getItem('instancename'),
             type: 'core',
           }
@@ -2160,5 +2164,19 @@
         margin-bottom: 20px;
       }
     }
+  }
+    .modal-p {
+    font-size: 12px;
+    font-family: MicrosoftYaHei;
+    color: rgba(102, 102, 102, 1);
+    line-height: 20px;
+    margin-bottom: 20px;
+  }
+
+  .modal-img {
+    cursor: pointer;
+    position: absolute;
+    top: 12px;
+    right: 10px;
   }
 </style>
