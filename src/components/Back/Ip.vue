@@ -75,9 +75,6 @@
             <span style="margin-left: 5px;">MB</span>
           </FormItem>
           <div class="modal-content-s divall">
-            <div>
-              VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改<span class="spanaa"></span>
-            </div>
           </div>
 					<div style="margin-top: 20px;">
 						<span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费</span>

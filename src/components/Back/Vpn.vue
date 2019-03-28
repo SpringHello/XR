@@ -1173,7 +1173,7 @@
           },
           {
             title: '状态',
-            key: 'sourcestatus',
+            key: 'connectionstatus',
             render: (h, params) => {
               var text = params.row.connectionstatus == 1 ?'正常':'异常'
               return h('span', {}, text)
@@ -1200,11 +1200,11 @@
                       this.$message.confirm({
                         content: '确认重启连接？',
                         onOk: () => {
-                          if (this.currentTunnel.sourcestatus == 1) {
+                          if (this.currentTunnel.connectionstatus == 1) {
                             this.$http.get('network/resetVpnConnection.do', {
                               params: {
                                 zoneId: $store.state.zone.zoneid,
-                                vpnConnectionId: params.row.id
+                                vpnConnectionId: params.row.vpnconnectionid
                               }
                             }).then(response => {
                               if (response.status == 200 && response.data.status == 1) {
@@ -1454,6 +1454,9 @@
     },
     created() {
       this.testjump()
+      this.$http.get('network/listIsBindSourceIP.do').then(response => {
+          this.formValidateLocalGateway.vpcIdOptions = response.data.result
+      })
     },
     methods: {
       funInput(value,attr) {
@@ -1648,9 +1651,9 @@
       },
       newTunnelVpn1() {
         this.showModal.newLocalGateway = true
-        this.$http.get('network/listIsBindSourceIP.do').then(response => {
-          this.formValidateLocalGateway.vpcIdOptions = response.data.result
-        })
+        // this.$http.get('network/listIsBindSourceIP.do').then(response => {
+        //   this.formValidateLocalGateway.vpcIdOptions = response.data.result
+        // })
       },
       newLocalGatewayOk(name) {
         this.$refs[name].validate((valid) => {
@@ -1716,7 +1719,7 @@
           localgateway,
           targetdestinationipaddress: this.newTunnelVpnForm.IP,
           targetcidr: this.newTunnelVpnForm.CIDR,
-          sourcestatus: '-2',
+          connectionstatus: '-2',
           sourceipsecKey: this.newTunnelVpnForm.key,
           sourcecreatetime: '创建中'
         })
@@ -1769,7 +1772,7 @@
         //   localgateway,
         //   targetdestinationipaddress: this.newTunnelVpnForm.IP,
         //   targetcidr: this.newTunnelVpnForm.CIDR,
-        //   sourcestatus: '-2',
+        //   connectionstatus: '-2',
         //   sourceipsecKey: this.newTunnelVpnForm.key,
         //   sourcecreatetime: '创建中'
         // })
@@ -1941,7 +1944,7 @@
       connect(row) {
         this.tunnelVpnData.forEach(item => {
           if (item.sourcevpnId == row.sourcevpnId) {
-            this.$set(item, 'sourcestatus', '-3')
+            this.$set(item, 'connectionstatus', '-3')
           }
         })
         this.$http.get('network/createVpnConnection.do', {
@@ -1966,7 +1969,7 @@
         this.showModal.FixVPN = false
         this.tunnelVpnData.forEach(item => {
           if (item.customerVPNid == this.modifyTunnelVpnForm.customerVPNid) {
-            this.$set(item, 'sourcestatus', '-5')
+            this.$set(item, 'connectionstatus', '-5')
           }
         })
         this.$http.post('network/updateVpnCustomerGateway.do', {
@@ -2004,7 +2007,7 @@
         this.showModal.FixVPNContent = false
         this.tunnelVpnData.forEach(item => {
           if (item.sourcevpnId == this.modifyForm.sourcevpnId) {
-            this.$set(item, 'sourcestatus', '-4')
+            this.$set(item, 'connectionstatus', '-4')
           }
         })
         this.$http.get('network/updateVpnConnection.do', {
@@ -2037,11 +2040,10 @@
           this.$message.confirm({
             content: '确认重启连接？',
             onOk: () => {
-              if (this.currentTunnel.sourcestatus == 1) {
+              if (this.currentTunnel.connectionstatus == 1) {
                 this.$http.get('network/resetVpnConnection.do', {
                   params: {
                     zoneId: $store.state.zone.zoneid,
-                    // vpnConnectionId: this.currentTunnel.sourcevpnconId
                     vpnConnectionId: this.currentTunnel.id
                   }
                 }).then(response => {
@@ -2056,10 +2058,6 @@
                     })
                     this.refresh()
                   }
-                })
-              } else {
-                this.$Message.info({
-                  content: '请先连接在重启连接'
                 })
               }
             }
