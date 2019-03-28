@@ -32,10 +32,10 @@
                   <ul>
                     <li><span class="one">镜像系统</span><span class="two">{{ gpuDetail.template}}</span><span class="three" @click="modifyMirror"> [修改]</span></li>
                     <li><span class="one">系统盘容量</span><span class="two">{{ gpuDetail.rootDiskSize}}G</span></li>
-                    <li><span class="one">数据盘容量</span><span class="two">{{ gpuDetail.diskSize?gpuDetail.diskSize:0 }}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three" > / 卸载]</span></li>
+                    <li><span class="one">绑定数据盘</span><span class="two">{{ gpuDetail.disk.join('|') }}</span><span class="three" @click="diskMount"> [挂载</span><span class="three" > / 卸载]</span></li>
                     <li><span class="one">登陆密码</span><span class="two"></span><span class="three" v-if="codePlaceholder == '发送密码'" @click="showWindow.lookPassword = true"> [{{codePlaceholder}}]</span>
                       <span class="two" v-else> [{{codePlaceholder}}]</span>
-                      <span class="three" @click="showWindow.modifyPassword = true"> [修改密码]</span></li>
+                      <span class="three" @click="resetModifyPassword"> [修改密码]</span></li>
                     <li><span class="one">主机状态</span> <span  class="two">{{ gpuDetail.computerStatus? '开机': '关机' }}</span></li>
                   </ul>
                 </div>
@@ -54,7 +54,6 @@
                         <span :class="{three: bindForm.bindIpText == '绑定IP' }" v-else @click="bindIP"> [{{ bindForm.bindIpText }}]</span></li>
                       <li><span class="four">带宽</span><span class="two">{{ gpuDetail.bandwith?gpuDetail.bandwith: '0'}}M</span>
                         <span class="three" v-if="gpuDetail.bandwith" @click="adjustIP"> [扩容]</span></li>
-                      <li><span class="four">负载均衡</span><span class="two">{{(gpuDetail.loadbalance + '') ? gpuDetail.loadbalance + '' : '----'}}</span></li>
                       <li><span class="four">NAT网关</span><span class="two">{{ gpuDetail.netGateway? gpuDetail.netGateway : '----'}}</span></li>
                     </ul>
                 </div>
@@ -545,7 +544,7 @@
       const validaRegisteredPassWord = (rule, value, callback) => {
         if (value.length < 8 || value.length > 30) {
           callback(new Error('密码长度8-30字符'));
-        } else if (!regExp.registerPasswordVail(value)) {
+        } else if (!regExps.registerPasswordVail(value)) {
           callback(new Error('密码必须包含数字和字母大小写,不限特殊字符和空格'));
         } else {
           callback()
@@ -561,10 +560,10 @@
       const validatePassword = (rule, value, callback) => {
         if (!value) {
           callback(new Error('密码不能为空'));
-        } else if (!regExp.test(value)) {
+        } else if (!regExps.test(value)) {
           callback(new Error('新密码由6-23位的字母数字组成，必须包含大小写字母、数字'));
         } else {
-          if (regExp.test(value)) {
+          if (regExps.test(value)) {
             this.$refs.resetPasswordForm.validateField('confirmPassword');
           }
           callback();
@@ -1750,6 +1749,13 @@
           }
         })
       }),
+      // 重置修改密码
+      resetModifyPassword(){
+        this.showWindow.modifyPassword = true;
+        this.modifyPasswordForm.oldPassword = '';
+        this.modifyPasswordForm.newPassword = '';
+        this.modifyPasswordForm.confirmPassword = '';
+      }
     },
 
     created(){
