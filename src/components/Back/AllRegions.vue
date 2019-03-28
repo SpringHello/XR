@@ -29,7 +29,7 @@
               <Poptip trigger="hover">
                 <div slot="content" id="ffff">
                   <span>平台所有区域付费资源即将到期提醒，具体提醒政策请参见</br></span>
-                  <span>帮助文档-<a href="https://www.xrcloud.net/documentInfo/kiRWuMFJd/km08mXqRb"
+                  <span>帮助文档-<a href="/support_docs/71s4gzo1x_71s4tYqWy.html"
                                 style="color: #2A99F2FF;text-decoration: underline;">购买指南</a>-到期提醒栏目；</span>
                 </div>
                 <i class="iconfont houtaiicon-bangzhu" id="num4"></i><br/>

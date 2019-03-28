@@ -1,5 +1,6 @@
 <template>
   <div id="bhost">
+    <h1 id="hide-h1">云数据库购买</h1>
     <!--数据库div-->
     <div id="Pdata">
       <div style="padding:40px;">
@@ -198,7 +199,7 @@
                       {{item.acllistname}}
                     </Option>
                   </Select>
-                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/document')">帮助文档</span>
+                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/support/products.html')">帮助文档</span>
                 </div>
               </div>
             </div>
@@ -384,6 +385,13 @@
   import $ from 'jquery'
   var debounce = require('throttle-debounce/debounce')
   export default {
+    metaInfo: {
+      title: '云数据库服务器租用价格 - 云数据库公网流量收费费用 - 购买 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
+    },
     data() {
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 0
@@ -911,6 +919,9 @@
           this.queryVpc()
           this.listDbTemplates()
           this.fireList()
+          this.queryCustomVM()
+          this.queryDiskPrice()
+          this.queryIPPrice()
         },
         deep: true
       },

@@ -21,7 +21,7 @@
             <Step title="绑定源NAT"></Step>
             <Step title="创建本地网关"></Step>
             <Step title="创建客户网关"></Step>
-            <Step title="创建VPN网关"></Step>
+            <Step title="创建VPN连接"></Step>
           </Steps>
           <div>
             <Button type="primary" @click="toPage()">{{stepText}}</Button>

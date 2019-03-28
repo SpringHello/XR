@@ -316,7 +316,7 @@
       </p>
       <div class="modal-content-s">
         <div>
-          <p class="lh24">您正将<span> {{ publicipOnDelete}} </span>移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。
+          <p class="lh24">您正将<span> {{ publicipOnDelete}} </span>等ip移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。
           </p>
         </div>
       </div>
@@ -680,7 +680,7 @@
           {
             title: '操作',
             render: (h, object) => {
-              if (this.auth) {
+              if (this.auth && this.auth.checkstatus == 0) {
                 if (object.row.status == 0) {
                   return h('span', {}, '已欠费')
                 } else if (object.row.status == 2) {
@@ -857,7 +857,14 @@
       } else {
         this.hide = 'none';
       }
-			this.testjump()
+      this.testjump()
+      axios.get('network/listVpc.do', {
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
+          this.newIPForm.VPCOptions = response.data.result
+        })
     },
     methods: {
 			testjump(){
@@ -941,24 +948,23 @@
       setData(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
-          if (!this.auth) {
+          let publicipids = []
+          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
             this.ipData.forEach(item => {
               item._disabled = true
             })
           }
+          let ids =[];
           this.ipData.forEach(item => {
             if (item.status != 1 || item.status == 0) {
               item._disabled = true
-              if (item.publicipid) {
-                this.timingRefresh(item.publicipid)
-              } else {
-                setTimeout(() => {
-                  this.refresh()
-                }, 2000)
-              }
+              ids.push(item.publicipid)
             }
           })
           this.total = response.data.result.total
+          if (publicipids.length !== 0) {
+            this.timingRefresh(publicipids + '')
+          }
           this.select.forEach(item => {
             this.ipData.forEach(ip => {
               if (item.id === ip.id) {
@@ -966,6 +972,9 @@
               }
             })
           })
+          if(ids.length != 0){
+            this.timingRefresh(ids+'');
+          }
         }
       },
       // 选中项变化
@@ -975,13 +984,7 @@
       // 打开新建IP模态框
       openNewIPModal() {
         this.showModal.newIPModal = true
-        axios.get('network/listVpc.do', {
-          params: {
-            zoneId: $store.state.zone.zoneid
-          }
-        }).then(response => {
-          this.newIPForm.VPCOptions = response.data.result
-        })
+        
       },
       // 改变购买方式触发函数
       changeTimeType() {
@@ -1803,6 +1806,7 @@
             this.hide = 'none';
           }
           this.refresh()
+          this.select = []
         },
         deep: true
       },
@@ -1813,13 +1817,14 @@
     },
     computed: {
       auth() {
-        return this.$store.state.authInfo != null
+        return this.$store.state.authInfo
       },
       publicipOnDelete() {
         if (this.select.length !== 0) {
-          let ips = this.select.map(item => {
-            return item.publicip
-          })
+          /*       let ips = this.select.map(item => {
+                   return item.publicip
+                 })*/
+          let ips = this.select[0].publicip // 由于弹窗出现长度错误，只显示1个id地址
           return ips + ''
         } else {
           return ''

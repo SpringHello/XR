@@ -1,5 +1,6 @@
 <template>
   <div id="bhost">
+    <h1 id="hide-h1">云GPU购买</h1>
     <!--数据库div-->
     <div id="Pdata">
       <div style="padding:40px;">
@@ -227,7 +228,7 @@
                       {{item.acllistname}}
                     </Option>
                   </Select>
-                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/document')">帮助文档</span>
+                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/support/products.html')">帮助文档</span>
                 </div>
               </div>
             </div>
@@ -259,22 +260,12 @@
                   <p class="item-title" style="margin-top:0px;">价格</p>
                 </div>
                 <div>
-                  <p style="font-size: 16px;color: #F85E1D;">{{IPConfig.cost.toFixed(2)}}元</p>
-                </div>
-              </div>
-            </div>
-          </div>
-            <!--公网IP价格-->
-            <div class="item-wrapper" style="margin-top: 28px;" v-show="IPConfig.publicIP">
-              <div style="display: flex">
-                <div>
-                  <p class="item-title" style="margin-top:0px;">价格</p>
-                </div>
-                <div>
                   <p style="font-size: 16px;color: #F85E1D;">{{ipCost.toFixed(2)}}元</p>
                 </div>
               </div>
             </div>
+          </div>
+
           </div>
 
           <!--云硬盘-->
@@ -345,7 +336,7 @@
         </div>
 
         <!--登录设置-->
-        <div style="margin-top: 20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px">
+        <div style="margin-top: 20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;padding-left: 40px">
           <h2>登录设置</h2>
           <div class="item-wrapper">
             <div style="display: flex">
@@ -428,9 +419,9 @@
           </div>
         </div>
         <!--费用、以及加入预算清单-->
-        <div style="margin-top: 20px">
-          <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-             @click="$router.push({path:'/document'})">查看计价详情</p>
+        <div style="margin-top: 20px;padding: 0 40px 40px">
+          <a style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+             href="https://kaifa.xrcloud.net/support/products.html">查看计价详情</a>
           <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
             <span v-if="timeForm.currentTimeType == 'annual'&&timeForm.currentTimeValue.type == 'year'">折后费用：</span><span v-else>费用：</span><span
             style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
@@ -462,6 +453,13 @@
 
   var debounce = require('throttle-debounce/debounce')
   export default {
+    metaInfo: {
+      title: '便宜gpu云服务器价格多少钱 - gpu云服务器怎么收费 - gpu云服务器租用费用 - 购买 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
+    },
     /*beforeRouteEnter(to, from, next){
      axios.get('information/zone.do', {
      params: {
@@ -1124,7 +1122,7 @@
       },
       buyData() {
         if (this.userInfo == null) {
-          this.$parent.showModal.login = true
+          this.$LR({type: 'login'})
           return
         }
         if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
@@ -1245,6 +1243,9 @@
           this.setGpuServer()
           this.queryVpc()
           this.fireList()
+          this.queryCustomVM()
+          this.queryDiskPrice()
+          this.queryIPPrice()
         },
         deep: true
       },

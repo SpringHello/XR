@@ -23,7 +23,7 @@
         </div>
         <div class="box1">
 					<span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看
-						<a @click="$router.push('/documentInfo/6bSa9TMxO/6zxZtv8QU')" class="colora">自助提现常见问题</a></span>
+						<a @click="$router.push('/support/6bSa9TMxO.html')" class="colora">自助提现常见问题</a></span>
         </div>
         <p id="idp1">
           <span class="spanall">可提现金额</span>

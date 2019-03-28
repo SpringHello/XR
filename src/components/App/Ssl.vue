@@ -22,7 +22,7 @@
       <div class="brand">
         <div class="wrap">
           <div class="header-a">
-            <h1 class="headline">SSL证书品牌</h1>
+            <h2 class="headline">SSL证书品牌</h2>
           </div>
           <div class="container">
             <div class="desc">
@@ -62,7 +62,7 @@
       <div class="advantage">
         <div class="wrap">
           <div class="header-a">
-            <h1 class="headline">产品优势</h1>
+            <h2 class="headline">产品优势</h2>
           </div>
           <div class="container">
             <div class="box" v-for="(item,index) in advantage" :key="index">
@@ -76,7 +76,7 @@
       <div class="scene">
         <div class="wrap">
           <div class="header-a">
-            <h1 class="headline">使用场景</h1>
+            <h2 class="headline">使用场景</h2>
           </div>
           <div class="container">
             <div class="box" v-for="(item,index) in scene" :key="index">
@@ -327,7 +327,7 @@ export default {
     align-items: center;
     .text {
       width: 480px;
-      h1 {
+      h2 {
         font-size: 36px;
       }
       p {

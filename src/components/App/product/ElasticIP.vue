@@ -1,5 +1,6 @@
 <template>
   <div class="product">
+    <h1 id="hide-h1">弹性公网IP</h1>
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">

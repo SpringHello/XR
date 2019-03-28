@@ -577,7 +577,7 @@
             render: (h, params) => {
               let text_1 = params.row.computername ? params.row.computername : '----'
               let text_2 = params.row.instancename ? params.row.instancename : '----'
-              if (params.row.status == 1) {
+              if (params.row.status == 1 && this.auth && this.auth.checkstatus == 0) {
                 return h('ul', {}, [
                   h('li', {
                     style: {
@@ -983,399 +983,422 @@
           {
             title: '操作',
             render: (h, params) => {
-              switch (params.row.status) {
-                case -1:
-                  return h('div', {}, [h('span', {
+              if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
+                return h('div', {}, [
+                  h('p', {
                     style: {
-                      cursor: 'pointer',
-                      color: '#2A99F2',
-                      marginRight: '10px',
-                      lineHeight: '74px'
+                      lineHeight: '20px',
+                      cursor: 'not-allowed'
                     },
-                    on: {
-                      click: () => {
-                        window.open('tencent://message/?uin=1014172393&amp;Site=www.cloudsoar.com&amp;Menu=yes', '_blank')
-                      }
-                    }
-                  }, '联系客服'), h('span', {
+                  }, '连接'),
+                  h('p', {
                     style: {
-                      cursor: 'pointer',
-                      color: '#2A99F2'
-                    },
-                    on: {
-                      click: () => {
-                        this.hostCurrentSelected = params.row
-                        this.hostDelete(2)
-                      }
+                      lineHeight: '30px',
+                      cursor: 'not-allowed'
                     }
-                  }, '删除')])
-                  break
-                case 0:
-                  return h('div', {}, [h('span', {
+                  }, '管理'),
+                  h('p', {
                     style: {
-                      cursor: 'pointer',
-                      color: '#2A99F2',
-                      marginRight: '10px',
-                      lineHeight: '74px'
-                    },
-                    on: {
-                      click: () => {
-                        this.hostCurrentSelected = params.row
-                        this.renewHost(this.hostCurrentSelected)
-                      }
+                      lineHeight: '23px',
+                      cursor: 'not-allowed'
                     }
-                  }, '续费'), h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: '#2A99F2'
-                    },
-                    on: {
-                      click: () => {
-                        this.hostCurrentSelected = params.row
-                        this.hostDelete(2)
-                      }
-                    }
-                  }, '删除')])
-                  break
-                case 1:
-                  if (params.row.computerstate == 1) {
-                    return h('div', {}, [
-                      h('p', {
-                        style: {
-                          lineHeight: '20px',
-                          cursor: 'pointer',
-                          color: '#2A99F2'
-                        },
-                        on: {
-                          click: () => {
-                            this.linkHost(params.row)
-                          }
-                        }
-                      }, '连接'),
-                      h('p', {
-                        style: {
-                          lineHeight: '30px',
-                          cursor: 'pointer',
-                          color: '#2A99F2'
-                        },
-                        on: {
-                          click: () => {
-                            sessionStorage.setItem('manageId', params.row.computerid)
-                            this.$router.push('manage')
-                          }
-                        }
-                      }, '管理'),
-                      h('Dropdown', {
-                        style: {
-                          marginBottom: '5px'
-                        },
-                        props: {
-                          transfer: true
-                        },
-                        on: {
-                          'on-click': (type) => {
-                            this.hostCurrentSelected = params.row
-                            switch (type) {
-                              case 'resetPassword':
-                                this.hostResetPassword(2)
-                                break
-                              case 'joinLoadBalance':
-                                this.joinBalance()
-                                break
-                              case 'bindingIP':
-                                this.bindIP()
-                                break
-                              case 'rename':
-                                this.renameForm.hostName = ''
-                                this.showModal.rename = true
-                                break
-                              case 'ratesChange':
-                                if (this.hostCurrentSelected.caseType == 3) {
-                                  this.ratesChange()
-                                } else {
-                                  this.$Message.info('资费变更只适用于实时计费的资源')
-                                }
-                                break
-                              case 'hostRenew':
-                                this.renewHost(this.hostCurrentSelected)
-                                break
-                              case 'makeSnapshot':
-                                this.backupForm.backupName = ''
-                                this.backupForm.description = ''
-                                this.currentHostname = this.hostCurrentSelected.computername
-                                this.showModal.backup = true
-                                break
-                              case 'unbindIP':
-                                if (this.hostCurrentSelected.publicip) {
-                                  this.showModal.unbindIP = true
-                                } else {
-                                  this.$Message.warning('该主机没有绑定公网IP')
-                                }
-                                break
-                              case 'shutdown':
-                                this.hostShutdown(2)
-                                break
-                              case 'restart':
-                                this.hostRestart(2)
-                                break
-                              case 'deleteHost':
-                                this.hostDelete(2)
-                                break
-                            }
-                          }
-                        }
-                      }, [h('a', {}, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'resetPassword'
-                          }
-                        }, '重置密码'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'joinLoadBalance'
-                          }
-                        }, '加入负载均衡'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'bindingIP'
-                          }
-                        }, '绑定IP'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'unbindIP'
-                          }
-                        }, '解绑公网IP'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'rename'
-                          }
-                        }, '重命名'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'ratesChange'
-                          }
-                        }, '资费变更'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'hostRenew'
-                          }
-                        }, '主机续费'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'makeSnapshot'
-                          }
-                        }, '制作快照'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'shutdown'
-                          }
-                        }, '关机'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'restart'
-                          }
-                        }, '重启'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'deleteHost'
-                          }
-                        }, '删除')])])
-                    ])
-                  } else {
-                    return h('div', {}, [
-                      h('p', {
-                        style: {
-                          lineHeight: '20px',
-                        }
-                      }, '连接'),
-                      h('p', {
-                        style: {
-                          lineHeight: '30px',
-                          cursor: 'pointer',
-                          color: '#2A99F2'
-                        },
-                        on: {
-                          click: () => {
-                            sessionStorage.setItem('manageId', params.row.computerid)
-                            this.$router.push('manage')
-                          }
-                        }
-                      }, '管理'),
-                      h('Dropdown', {
-                        style: {
-                          marginBottom: '5px'
-                        },
-                        props: {
-                          transfer: true
-                        },
-                        on: {
-                          'on-click': (type) => {
-                            this.hostCurrentSelected = params.row
-                            switch (type) {
-                              case 'resetPassword':
-                                this.hostResetPassword(2)
-                                break
-                              case 'joinLoadBalance':
-                                this.joinBalance()
-                                break
-                              case 'bindingIP':
-                                this.bindIP()
-                                break
-                              case 'rename':
-                                this.renameForm.hostName = ''
-                                this.showModal.rename = true
-                                break
-                              case 'ratesChange':
-                                if (this.hostCurrentSelected.caseType == 3) {
-                                  this.ratesChange()
-                                } else {
-                                  this.$Message.info('资费变更只适用于实时计费的资源')
-                                }
-                                break
-                              case 'hostUpgrade':
-                                this.$http.get('network/VMIsHaveSnapshot.do', {
-                                  params: {
-                                    VMId: this.hostCurrentSelected.computerid
-                                  }
-                                }).then(response => {
-                                  if (response.status == 200 && response.data.status == 1) {
-                                    if (!response.data.result) {
-                                      this.$Modal.confirm({
-                                        title: '提示',
-                                        content: '您的主机有快照，无法升级，请删除快照再试',
-                                        scrollable: true,
-                                        okText: '删除快照',
-                                        onOk: () => {
-                                          this.$router.push('snapshot')
-                                        }
-                                      })
-                                    } else {
-                                      sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
-                                      this.$router.push('upgrade')
-                                    }
-                                  }
-                                })
-                                break
-                              case 'hostRenew':
-                                this.renewHost(this.hostCurrentSelected)
-                                break
-                              case 'makeSnapshot':
-                                this.backupForm.backupName = ''
-                                this.backupForm.description = ''
-                                this.currentHostname = this.hostCurrentSelected.computername
-                                this.showModal.backup = true
-                                break
-                              case 'makeMirror':
-                                this.mirrorForm.mirrorName = ''
-                                this.mirrorForm.description = ''
-                                this.showModal.mirror = true
-                                break
-                              case 'unbindIP':
-                                if (this.hostCurrentSelected.publicip) {
-                                  this.showModal.unbindIP = true
-                                } else {
-                                  this.$Message.warning('该主机没有绑定公网IP')
-                                }
-                                break
-                              case 'startingUp':
-                                this.hostStart(2)
-                                break
-                              case 'deleteHost':
-                                this.hostDelete(2)
-                                break
-                            }
-                          }
-                        }
-                      }, [h('a', {
-                        style: {
-                          marginBottom: '5px'
-                        }
-                      }, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'resetPassword'
-                          }
-                        }, '重置密码'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'joinLoadBalance'
-                          }
-                        }, '加入负载均衡'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'bindingIP'
-                          }
-                        }, '绑定IP'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'unbindIP'
-                          }
-                        }, '解绑公网IP'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'rename'
-                          }
-                        }, '重命名'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'ratesChange'
-                          }
-                        }, '资费变更'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'hostRenew'
-                          }
-                        }, '主机续费'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'hostUpgrade'
-                          }
-                        }, '主机升级'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'makeSnapshot'
-                          }
-                        }, '制作快照'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'makeMirror'
-                          }
-                        }, '制作镜像'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'startingUp'
-                          }
-                        }, '开机'),
-                        h('DropdownItem', {
-                          attrs: {
-                            name: 'deleteHost'
-                          }
-                        }, '删除')])])
-                    ])
-                  }
-                  break
-                default:
-                  return h('div', {}, [
-                    h('p', {
+                  }, '更多操作'),
+                ])
+              } else {
+                switch (params.row.status) {
+                  case -1:
+                    return h('div', {}, [h('span', {
                       style: {
-                        lineHeight: '20px',
-                        cursor: 'not-allowed'
+                        cursor: 'pointer',
+                        color: '#2A99F2',
+                        marginRight: '10px',
+                        lineHeight: '74px'
                       },
-                    }, '连接'),
-                    h('p', {
-                      style: {
-                        lineHeight: '30px',
-                        cursor: 'not-allowed'
+                      on: {
+                        click: () => {
+                          window.open('tencent://message/?uin=1014172393&amp;Site=www.cloudsoar.com&amp;Menu=yes', '_blank')
+                        }
                       }
-                    }, '管理'),
-                    h('p', {
+                    }, '联系客服'), h('span', {
                       style: {
-                        lineHeight: '23px',
-                        cursor: 'not-allowed'
+                        cursor: 'pointer',
+                        color: '#2A99F2'
+                      },
+                      on: {
+                        click: () => {
+                          this.hostCurrentSelected = params.row
+                          this.hostDelete(2)
+                        }
                       }
-                    }, '更多操作'),
-                  ])
-                  break
+                    }, '删除')])
+                    break
+                  case 0:
+                    return h('div', {}, [h('span', {
+                      style: {
+                        cursor: 'pointer',
+                        color: '#2A99F2',
+                        marginRight: '10px',
+                        lineHeight: '74px'
+                      },
+                      on: {
+                        click: () => {
+                          this.hostCurrentSelected = params.row
+                          this.renewHost(this.hostCurrentSelected)
+                        }
+                      }
+                    }, '续费'), h('span', {
+                      style: {
+                        cursor: 'pointer',
+                        color: '#2A99F2'
+                      },
+                      on: {
+                        click: () => {
+                          this.hostCurrentSelected = params.row
+                          this.hostDelete(2)
+                        }
+                      }
+                    }, '删除')])
+                    break
+                  case 1:
+                    if (params.row.computerstate == 1) {
+                      return h('div', {}, [
+                        h('p', {
+                          style: {
+                            lineHeight: '20px',
+                            cursor: 'pointer',
+                            color: '#2A99F2'
+                          },
+                          on: {
+                            click: () => {
+                              this.linkHost(params.row)
+                            }
+                          }
+                        }, '连接'),
+                        h('p', {
+                          style: {
+                            lineHeight: '30px',
+                            cursor: 'pointer',
+                            color: '#2A99F2'
+                          },
+                          on: {
+                            click: () => {
+                              sessionStorage.setItem('manageId', params.row.computerid)
+                              this.$router.push('manage')
+                            }
+                          }
+                        }, '管理'),
+                        h('Dropdown', {
+                          style: {
+                            marginBottom: '5px'
+                          },
+                          props: {
+                            transfer: true
+                          },
+                          on: {
+                            'on-click': (type) => {
+                              this.hostCurrentSelected = params.row
+                              switch (type) {
+                                case 'resetPassword':
+                                  this.hostResetPassword(2)
+                                  break
+                                case 'joinLoadBalance':
+                                  this.joinBalance()
+                                  break
+                                case 'bindingIP':
+                                  this.bindIP()
+                                  break
+                                case 'rename':
+                                  this.renameForm.hostName = ''
+                                  this.showModal.rename = true
+                                  break
+                                case 'ratesChange':
+                                  if (this.hostCurrentSelected.caseType == 3) {
+                                    this.ratesChange()
+                                  } else {
+                                    this.$Message.info('资费变更只适用于实时计费的资源')
+                                  }
+                                  break
+                                case 'hostRenew':
+                                  this.renewHost(this.hostCurrentSelected)
+                                  break
+                                case 'makeSnapshot':
+                                  this.backupForm.backupName = ''
+                                  this.backupForm.description = ''
+                                  this.currentHostname = this.hostCurrentSelected.computername
+                                  this.showModal.backup = true
+                                  break
+                                case 'unbindIP':
+                                  if (this.hostCurrentSelected.publicip) {
+                                    this.showModal.unbindIP = true
+                                  } else {
+                                    this.$Message.warning('该主机没有绑定公网IP')
+                                  }
+                                  break
+                                case 'shutdown':
+                                  this.hostShutdown(2)
+                                  break
+                                case 'restart':
+                                  this.hostRestart(2)
+                                  break
+                                case 'deleteHost':
+                                  this.hostDelete(2)
+                                  break
+                              }
+                            }
+                          }
+                        }, [h('a', {}, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'resetPassword'
+                            }
+                          }, '重置密码'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'joinLoadBalance'
+                            }
+                          }, '加入负载均衡'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'bindingIP'
+                            }
+                          }, '绑定IP'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'unbindIP'
+                            }
+                          }, '解绑公网IP'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'rename'
+                            }
+                          }, '重命名'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'ratesChange'
+                            }
+                          }, '资费变更'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'hostRenew'
+                            }
+                          }, '主机续费'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'makeSnapshot'
+                            }
+                          }, '制作快照'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'shutdown'
+                            }
+                          }, '关机'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'restart'
+                            }
+                          }, '重启'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'deleteHost'
+                            }
+                          }, '删除')])])
+                      ])
+                    } else {
+                      return h('div', {}, [
+                        h('p', {
+                          style: {
+                            lineHeight: '20px',
+                          }
+                        }, '连接'),
+                        h('p', {
+                          style: {
+                            lineHeight: '30px',
+                            cursor: 'pointer',
+                            color: '#2A99F2'
+                          },
+                          on: {
+                            click: () => {
+                              sessionStorage.setItem('manageId', params.row.computerid)
+                              this.$router.push('manage')
+                            }
+                          }
+                        }, '管理'),
+                        h('Dropdown', {
+                          style: {
+                            marginBottom: '5px'
+                          },
+                          props: {
+                            transfer: true
+                          },
+                          on: {
+                            'on-click': (type) => {
+                              this.hostCurrentSelected = params.row
+                              switch (type) {
+                                case 'resetPassword':
+                                  this.hostResetPassword(2)
+                                  break
+                                case 'joinLoadBalance':
+                                  this.joinBalance()
+                                  break
+                                case 'bindingIP':
+                                  this.bindIP()
+                                  break
+                                case 'rename':
+                                  this.renameForm.hostName = ''
+                                  this.showModal.rename = true
+                                  break
+                                case 'ratesChange':
+                                  if (this.hostCurrentSelected.caseType == 3) {
+                                    this.ratesChange()
+                                  } else {
+                                    this.$Message.info('资费变更只适用于实时计费的资源')
+                                  }
+                                  break
+                                case 'hostUpgrade':
+                                  this.$http.get('network/VMIsHaveSnapshot.do', {
+                                    params: {
+                                      VMId: this.hostCurrentSelected.computerid
+                                    }
+                                  }).then(response => {
+                                    if (response.status == 200 && response.data.status == 1) {
+                                      if (!response.data.result) {
+                                        this.$Modal.confirm({
+                                          title: '提示',
+                                          content: '您的主机有快照，无法升级，请删除快照再试',
+                                          scrollable: true,
+                                          okText: '删除快照',
+                                          onOk: () => {
+                                            this.$router.push('snapshot')
+                                          }
+                                        })
+                                      } else {
+                                        sessionStorage.setItem('upgradeId', this.hostCurrentSelected.computerid)
+                                        this.$router.push('upgrade')
+                                      }
+                                    }
+                                  })
+                                  break
+                                case 'hostRenew':
+                                  this.renewHost(this.hostCurrentSelected)
+                                  break
+                                case 'makeSnapshot':
+                                  this.backupForm.backupName = ''
+                                  this.backupForm.description = ''
+                                  this.currentHostname = this.hostCurrentSelected.computername
+                                  this.showModal.backup = true
+                                  break
+                                case 'makeMirror':
+                                  this.mirrorForm.mirrorName = ''
+                                  this.mirrorForm.description = ''
+                                  this.showModal.mirror = true
+                                  break
+                                case 'unbindIP':
+                                  if (this.hostCurrentSelected.publicip) {
+                                    this.showModal.unbindIP = true
+                                  } else {
+                                    this.$Message.warning('该主机没有绑定公网IP')
+                                  }
+                                  break
+                                case 'startingUp':
+                                  this.hostStart(2)
+                                  break
+                                case 'deleteHost':
+                                  this.hostDelete(2)
+                                  break
+                              }
+                            }
+                          }
+                        }, [h('a', {
+                          style: {
+                            marginBottom: '5px'
+                          }
+                        }, ['更多操作 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'resetPassword'
+                            }
+                          }, '重置密码'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'joinLoadBalance'
+                            }
+                          }, '加入负载均衡'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'bindingIP'
+                            }
+                          }, '绑定IP'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'unbindIP'
+                            }
+                          }, '解绑公网IP'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'rename'
+                            }
+                          }, '重命名'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'ratesChange'
+                            }
+                          }, '资费变更'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'hostRenew'
+                            }
+                          }, '主机续费'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'hostUpgrade'
+                            }
+                          }, '主机升级'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'makeSnapshot'
+                            }
+                          }, '制作快照'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'makeMirror'
+                            }
+                          }, '制作镜像'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'startingUp'
+                            }
+                          }, '开机'),
+                          h('DropdownItem', {
+                            attrs: {
+                              name: 'deleteHost'
+                            }
+                          }, '删除')])])
+                      ])
+                    }
+                    break
+                  default:
+                    return h('div', {}, [
+                      h('p', {
+                        style: {
+                          lineHeight: '20px',
+                          cursor: 'not-allowed'
+                        },
+                      }, '连接'),
+                      h('p', {
+                        style: {
+                          lineHeight: '30px',
+                          cursor: 'not-allowed'
+                        }
+                      }, '管理'),
+                      h('p', {
+                        style: {
+                          lineHeight: '23px',
+                          cursor: 'not-allowed'
+                        }
+                      }, '更多操作'),
+                    ])
+                    break
+                }
               }
             }
           },
@@ -1607,16 +1630,24 @@
           if (res.data.status == 1 && res.status == 200) {
             this.hostListData = res.data.result.data
             this.hostPages = res.data.result.total
+            let ids = []
             this.hostListData.forEach(host => {
               if (host.status == 2 || host.status == -2) {
                 host._disabled = true
-                if (host.id) {
-                  this.timingRefresh(host.id)
-                } else {
-                  this.getHostList()
-                }
+                ids.push(host.id)
               }
             })
+            if (ids.length !== 0) {
+              this.timingRefresh(ids + '')
+            }
+            if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
+              this.hostListData.forEach(host => {
+                host._disabled = true
+              })
+            }
+            if(ids.length != 0){
+              this.timingRefresh(ids+'');
+            }
           }
         })
       },
@@ -1812,10 +1843,10 @@
       hostDelete(val) {
         this.hostDelWay = val
         if (val === 1) {
-          if (this.hostSelection.length > 5) {
-            this.$Message.info('删除主机至多选择 5 项')
-            return
-          }
+          /*          if (this.hostSelection.length > 5) {
+                      this.$Message.info('删除主机至多选择 5 项')
+                      return
+                    }*/
           this.showModal.delHost = true
         } else {
           this.showModal.delHost = true
@@ -2650,7 +2681,7 @@
     },
     computed: {
       auth() {
-        return this.$store.state.authInfo != null
+        return this.$store.state.authInfo
       },
       selectHostIds() {
         let ids = []

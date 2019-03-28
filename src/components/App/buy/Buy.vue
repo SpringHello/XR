@@ -47,18 +47,11 @@
                 </div>
                 <!--快速创建主机-->
                 <div v-if="prod.createType=='fast'">
-                  <!--公共镜像-->
-                  <p class="item" v-if="prod.currentType!='custom'">
+                  <p class="item" style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;" :title="prod.system.systemName">
                     <span class="hidden">$</span>
                     <span class="title">镜像</span><span
                     class="hidden">#</span>{{prod.system.systemName}}
                   </p>
-                  <!--自定义镜像-->
-                  <p class="item" v-if="prod.currentType=='custom'">
-                    <span class="hidden">$</span><span class="title">镜像</span><span
-                    class="hidden">#</span>{{prod.customMirror.templatename}}
-                  </p>
-
                   <p class="item"><span class="hidden">$</span><span class="title">配置</span><span
                     class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.publicIP?prod.currentSystem.bandWidth:0}M带宽、${prod.currentSystem.diskSize}G系统盘`}}
                   </p>
@@ -282,8 +275,26 @@
     }
     return buf
   }
-
   export default {
+    beforeRouteEnter(to, from, next) {
+      // 获取用户信息
+      var userInfo = axios.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}})
+      // 获取zone信息
+      var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime()}})
+      Promise.all([userInfo, zoneList]).then(values => {
+          if (values[0].data.status == 1 && values[0].status == 200) {
+            $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+            localStorage.setItem('realname', values[0].data.result.realname)
+          }
+          if (values[1].data.status == 1 && values[1].status == 200) {
+            $store.commit('setZoneList', values[1].data.result)
+          }
+          next()
+        },
+        value => {
+          next()
+        })
+    },
     data() {
       var cart = []
       if (sessionStorage.getItem('cart')) {
@@ -441,7 +452,7 @@
               params.rootDiskType = prod.currentSystem.diskType
               params.networkId = 'no'
               params.vpcId = 'no'
-              params.templateId = prod.system
+              params.templateId = prod.system.systemId
             } else {
               // params.templateId =  prod.currentType == 'public' ? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
               params.cpuNum = prod.vmConfig.kernel

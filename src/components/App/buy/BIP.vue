@@ -1,5 +1,6 @@
 <template>
   <div id="bhost">
+    <h1 id="hide-h1">弹性IP购买</h1>
     <!--公网IP div-->
     <div id="Peip" style="padding: 30px 40px 40px 40px;">
       <!--两种配置方式公共页面-->
@@ -121,6 +122,13 @@
   import regExp from '@/util/regExp'
   var debounce = require('throttle-debounce/debounce')
   export default{
+    metaInfo: {
+      title: '弹性公网ip怎么付费 - 弹性公网ip收费 - 购买 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
+    },
     data(){
       var zoneList = this.$store.state.zoneList.filter(zone => {
         return zone.gpuserver == 0 || zone.gpuserver == 1

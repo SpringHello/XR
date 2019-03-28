@@ -4,7 +4,7 @@
     <div class="center">
       <div v-for="item in types" class="item">
         <div class="item-title">
-          <p><img :src="item.src"/>
+          <p><img :src="item.src" alt="描述"/>
             {{ item.title }}<span>{{ item.describe}}</span></p>
         </div>
         <ul>

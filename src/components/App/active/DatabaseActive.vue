@@ -1,5 +1,6 @@
 <template>
   <div style="background: #FFF">
+    <h1 id="hide-h1">数据库免费领</h1>
     <div class="banner">
       <div class="banner-content">
         <div class="banner-text">
@@ -8,7 +9,7 @@
           <p><span>0元试用 押金闪退</span>每天不限量</p>
         </div>
         <div class="banner-img">
-          <img src="../../../assets/img/active/dbActive/dba-banner2.png"/>
+          <img src="../../../assets/img/active/dbActive/dba-banner2.png" alt="描述"/>
         </div>
       </div>
     </div>
@@ -45,7 +46,7 @@
         <h2>产品优势</h2>
         <div>
           <ul v-for="(item,index) in advantages" @mouseover="advSelect = index" @mouseout="advSelect = 5">
-            <li><img :src="item.src"/></li>
+            <li><img :src="item.src" alt="描述"/></li>
             <li :class="{select: advSelect == index}">{{ item.title }}</li>
             <li> {{ item.desc}}</li>
           </ul>
@@ -139,7 +140,7 @@
             <Step title="支付"></Step>
             <Step title="支付失败"></Step>
           </Steps>
-          <p><img src="../../../assets/img/sceneInfo/si-defeated.png"/><span>抱歉，支付失败，请再次尝试！</span></p>
+          <p><img src="../../../assets/img/sceneInfo/si-defeated.png" alt="描述"/><span>抱歉，支付失败，请再次尝试！</span></p>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -158,7 +159,7 @@
             <Step title="支付"></Step>
             <Step title="支付成功"></Step>
           </Steps>
-          <p><img src="../../../assets/img/sceneInfo/si-success.png"/><span>恭喜您支付成功！我们即将冻结押金</span><span style="color: #D0021B;margin-left: 0">{{ cashPledge }}</span><span
+          <p><img src="../../../assets/img/sceneInfo/si-success.png" alt="描述"/><span>恭喜您支付成功！我们即将冻结押金</span><span style="color: #D0021B;margin-left: 0">{{ cashPledge }}</span><span
             style="margin-left: 0">元</span></p>
         </div>
       </div>
@@ -220,8 +221,8 @@
             </Radio>
             <Radio label="otherPay" class="pw-img" :disabled="balance >= cashPledge">
               <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
-              <img src="../../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null">
-              <img src="../../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null">
+              <img src="../../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null" alt="描述">
+              <img src="../../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null" alt="描述">
             </Radio>
             <!--        <Radio label="otherPay" class="pw-img">
                       <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
@@ -256,7 +257,7 @@
               <Input v-model="quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
                      style="width:250px;margin-right: 10px"></Input>
               <img :src="imgSrc" style="height:33px;"
-                   @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                   @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="描述">
             </div>
           </FormItem>
           <FormItem label="手机号码" prop="phone" style="width: 100%">
@@ -284,7 +285,7 @@
       </p>
       <div style="text-align:center;padding:40px 0;">
         <img src="../../../assets/img/payresult/paySuccess.png"
-             style="width:36px;vertical-align:middle;margin-right:10px;">
+             style="width:36px;vertical-align:middle;margin-right:10px;" alt="描述">
         <span style="font-size:14px;line-height:36px">恭喜您，实名认证成功！</span>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -298,7 +299,7 @@
       </p>
       <div style="text-align:center;padding:40px 0;">
         <img src="../../../assets/img/payresult/payFail.png"
-             style="width:36px;vertical-align:middle;margin-right:10px;">
+             style="width:36px;vertical-align:middle;margin-right:10px;" alt="描述">
         <span style="font-size:14px;line-height:36px">抱歉，实名认证失败，原因：{{authErrorText}}</span>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -315,6 +316,17 @@
   import $ from 'jquery'
 
   export default {
+    metaInfo: {
+      title: '云数据库免费试用60天 - 活动中心 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'keywords',
+        content: '免费云数据库'
+      },
+        {                 // set meta
+          name: 'description',
+          content: '新睿云推出云数据库产品免费试用60天活动，云数据库产品包含：Mysql 单实例、Redis分布式缓存服务、PostgreSQL 单实例、MongoDB 单实例；实例创建完成后请前往控制台使用，试用期结束可正常续订。'
+        }]
+    },
     components: {
       VueQArt
     },

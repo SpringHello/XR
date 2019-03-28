@@ -313,6 +313,13 @@
   import records from './../Records'
 
   export default {
+    metaInfo: {
+      title: '域名备案查询 - 域名备案流程 - 网站域名备案 - 域名与备案 - 新睿云', // set a title
+      meta: [{                 // set meta
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
+    },
     components: {
       step, records, oStep
     },
