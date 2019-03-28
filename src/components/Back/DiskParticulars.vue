@@ -440,7 +440,7 @@
     methods: {
       /* 切换地区刷新页面 */
       refresh () {
-        this.$router.push('disk')
+        this.$router.push('diskList')
       },
       // 验证以备份创建磁盘的表单
       _checkNewForm(){

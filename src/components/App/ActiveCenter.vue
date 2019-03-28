@@ -63,7 +63,7 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('/activity/share')"
+          <div @click="push('/activity/share/')"
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
               <div>
@@ -247,7 +247,7 @@
             desc: '每成功一位即赠送一个月 最多可领12个月',
             time: '2018.07.19开始',
             activeObj: '云主机 新老用户',
-            url: '/activity/share',
+            url: '/activity/share/',
             isStart: true,
             weight: '2'
           }

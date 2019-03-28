@@ -83,11 +83,11 @@
                   <Button class="host_button" :disabled="item.num=='100'" :class="{host_button_not:item.num=='100'}" @click="getDiskcountMv(item,index)" v-else>
                     {{item.num!='100'?'立即抢购':'已抢完'}}
                   </Button>
-                  <div class="progress">
+               <!--   <div class="progress">
                     <Progress class="schoolseason-progress" :percent="item.num" hide-info/>
                     <span v-if="hour >=9&&hour<12||hour >=14&&hour<20">已抢购{{item.num.toFixed(2)}}%</span>
                     <span v-else>已抢购0%</span>
-                  </div>
+                  </div>-->
                 </div>
               </div>
             </div>

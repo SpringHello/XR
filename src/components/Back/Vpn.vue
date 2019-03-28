@@ -148,7 +148,7 @@
       </p>
       <div class="universal-modal-label-14px">
         <Form :model="formValidateLocalGateway" :rules="ruleValidateLocalGateway" ref="formValidateLocalGateway" :label-width="110" style="width:410px;" label-position="left">
-          <FormItem label="本地网关名称" prop="name"> 
+          <FormItem label="本地网关名称" prop="name">
             <Input v-model="formValidateLocalGateway.name" placeholder="请输入10个字符以内的名称"></Input>
           </FormItem>
           <FormItem label="VPC ID" prop="vpcId">
@@ -274,7 +274,7 @@
       </p>
       <div class="universal-modal-label-14px">
         <Form :model="formValidateVpnLink" :rules="ruleValidateVpnLink" ref="formValidateVpnLink" :label-width="80" style="width:380px;" label-position="left">
-          <FormItem label="隧道名称" prop="name"> 
+          <FormItem label="隧道名称" prop="name">
             <Input v-model="formValidateVpnLink.name" placeholder="请输入10个字符以内的名称"></Input>
           </FormItem>
           <FormItem label="本地网关" prop="localGateway">
@@ -322,7 +322,7 @@
           zoneId: $store.state.zone.zoneid
         }
       })
-      
+
       // 隧道VPN
       var customer = axios.get('network/listVpnConnections.do', {
         params: {
@@ -768,7 +768,7 @@
             title: '操作',
             width: 200,
             render: (h, params) => {
-              
+
               return h('div', {}, [
                 h('span',{
                   style: {
@@ -999,7 +999,7 @@
                   },
                 },'删除')
               ])
-              ])          
+              ])
             }
 				  }
 				],
@@ -1046,10 +1046,10 @@
       funInput(value,attr) {
         // console.log(value)
         // console.log(attr)
-        
+
         // console.log(reg.test(value))
-        // var reg = 
-        // this.formCustomerGateway.IP1 = 
+        // var reg =
+        // this.formCustomerGateway.IP1 =
         // this.formCustomerGateway.IP1.replace(/[^\d]/g,'')
         // console.log(value.replace(/[^\d]/g,''))
         var reg = /[^\d]/
@@ -1061,7 +1061,7 @@
             console.log(this.formCustomerGateway.IP1)
           }
         }
-        
+
       },
       opencustomerModal_open(type) {
         this.customerModalType = type
@@ -1187,10 +1187,10 @@
       },
       createNAT() {
         this.paneStatus.vpc = 'NAT'
-        this.$router.push('vpc')
+        this.$router.push('vpcList')
       },
       // 提交远程接入请求
-      newRemoteAccessOk() {
+      newRemoteAccsOk() {
         this.$refs.newRemoteAccessFormValidate.validate(validate => {
           if (validate) {
             this.showModal.newRemoteAccess = false
@@ -1278,11 +1278,11 @@
             name:this.formCustomerGateway.name1,
             cidr: this.formCustomerGateway.CIDR1+'.'+this.formCustomerGateway.CIDR2+'.'+this.formCustomerGateway.CIDR3+'.'+this.formCustomerGateway.CIDR4+'/'+ this.formCustomerGateway.CIDR5,
             ipsecKey: this.formCustomerGateway.key,
-            ikeEncryption: this.formCustomerGateway.IKE,  
+            ikeEncryption: this.formCustomerGateway.IKE,
             ikeHash: this.formCustomerGateway.IKEHash,
             ikeDH: this.formCustomerGateway.IKEDH,
             espEncryption: this.formCustomerGateway.ESP,
-            espHash: this.formCustomerGateway.ESPHash, 
+            espHash: this.formCustomerGateway.ESPHash,
             destinationIpAddress: this.formCustomerGateway.IP1+'.'+this.formCustomerGateway.IP2+'.'+this.formCustomerGateway.IP3+'.'+this.formCustomerGateway.IP4,
             ikelifetime: this.formCustomerGateway.ikelifetime,
             esplifetime: this.formCustomerGateway.esplifetime,
