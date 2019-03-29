@@ -74,8 +74,6 @@
                          style="width: 60px;height: 30px;margin-left: 15px;" @on-change="queryNewIPPrice" :precision="0"></InputNumber>
             <span style="margin-left: 5px;">MB</span>
           </FormItem>
-          <div class="modal-content-s divall">
-          </div>
 					<div style="margin-top: 20px;">
 						<span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费</span>
 						<span style="font-size: 24px;color:#FF624B;line-height: 32px;float:left;margin-left: 10px;">￥{{newIPForm.cost}} <span
@@ -844,7 +842,7 @@
         },
         hide: '',
         intervalInstance: null,
-        unbundleResource: {}
+        unbundleResource: {},
       }
     },
     beforeRouteLeave(to, from, next) {
@@ -962,9 +960,9 @@
             }
           })
           this.total = response.data.result.total
-          if (publicipids.length !== 0) {
+    /*      if (publicipids.length !== 0) {
             this.timingRefresh(publicipids + '')
-          }
+          }*/
           this.select.forEach(item => {
             this.ipData.forEach(ip => {
               if (item.id === ip.id) {
@@ -984,7 +982,6 @@
       // 打开新建IP模态框
       openNewIPModal() {
         this.showModal.newIPModal = true
-        
       },
       // 改变购买方式触发函数
       changeTimeType() {
@@ -1904,7 +1901,7 @@
 	  padding: 0;
 	  margin-top: -3px;
 	}
-	
+
 	.divall {
 	  background:rgba(42,153,242,0.06);
 	  border-radius:2px;
