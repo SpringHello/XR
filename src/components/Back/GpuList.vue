@@ -433,6 +433,9 @@
     export default{
       data(){
         return{
+           regExpObj: {
+              password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,32}$/
+          },
           chartShow:{
             cpu:false,
             memory:false
@@ -1747,13 +1750,17 @@
 
         //创建镜像
       createMrrior(){
+        if(this.selectLength.length != 1){
+          this.$Message.info('一次只能选择一台主机镜像制作');
+          return;
+        }
           this.$refs.mirrorValidate.validate((valid) => {
             if (valid) {
               axios.get('Snapshot/createTemplate.do', {
                 params: {
                   templateName: this.mirrorValidate.name,
                   descript: this.mirrorValidate.descript,
-                  rootDiskId: this.mirrorValidate.rootdiskid,
+                  rootDiskId: this.hostSelectList.rootdiskid,
                   zoneId: this.$store.state.zone.zoneid,
                 }
               }).then(res => {
@@ -1997,7 +2004,6 @@
         })
       },
       chartTwoClick(name,val){
-        
         if(name == 'cpu'){
          this.chartShow.cpu = true;
           this.cpuMapIndex = val;
@@ -2171,6 +2177,10 @@
               }
               break
             case 'renewal':
+             if(this.hostSelectList.caseType == 3){
+                  this.$Message.info('请选择包年包月主机续费');
+                  return;
+             }
               this.showModal.renew = true;
               break
             case 'mirror':
@@ -2187,6 +2197,10 @@
               break
           }
         } else {
+          if (this.selectLength.length > 5) {
+            this.$Message.info('重置密码至多选择 5 项')
+            return false
+          }
           this.hostResetPassword(1)
         }
     },
@@ -2236,7 +2250,10 @@
       toManage(item) {
           sessionStorage.setItem('uuId', item.computerid);
           this.$router.push('gpuManageNew');
-        },
+      },
+      changeResetPasswordType(name) {
+        this.$refs[name].type == 'password' ? this.$refs[name].type = 'text' : this.$refs[name].type = 'password'
+      },
   },
     created(){
         this.toggleZone(this.$store.state.zone.zoneid)
