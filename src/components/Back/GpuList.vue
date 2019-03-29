@@ -2212,6 +2212,9 @@
           if (this.selectLength.length === 0) {
             return false
           }
+          this.resetPasswordHostData.forEach(item =>{
+            item.currentPassword = '';
+          }),
           this.resetPasswordHostData = this.selectLength;
           this.showModal.resetPassword = true
         } else {
