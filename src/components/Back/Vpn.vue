@@ -146,7 +146,7 @@
       </p>
       <div class="universal-modal-label-14px">
         <Form :model="formValidateLocalGateway" :rules="ruleValidateLocalGateway" ref="formValidateLocalGateway" :label-width="110" style="width:410px;" label-position="left">
-          <FormItem label="本地网关名称" prop="name">
+          <FormItem label="本地网关名称" prop="name"> 
             <Input v-model="formValidateLocalGateway.name" placeholder="请输入10个字符以内的名称"></Input>
           </FormItem>
           <FormItem label="VPC ID" prop="vpcId">
@@ -272,7 +272,7 @@
       </p>
       <div class="universal-modal-label-14px">
         <Form :model="formValidateVpnLink" :rules="ruleValidateVpnLink" ref="formValidateVpnLink" :label-width="80" style="width:380px;" label-position="left">
-          <FormItem label="隧道名称" prop="name">
+          <FormItem label="隧道名称" prop="name"> 
             <Input v-model="formValidateVpnLink.name" placeholder="请输入10个字符以内的名称"></Input>
           </FormItem>
           <FormItem label="本地网关" prop="localGateway">
@@ -289,8 +289,8 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="方式" prop="way">
-            <Select v-model="formValidateVpnLink.way">
+          <FormItem label="方式" prop="connType">
+            <Select v-model="formValidateVpnLink.connType">
               <Option v-for="item in formValidateVpnLink.connTypeOptions" :value="item.key" :key="item.key">
                 {{item.label}}
               </Option>
@@ -320,7 +320,7 @@
           zoneId: $store.state.zone.zoneid
         }
       })
-
+      
       // 隧道VPN
       var customer = axios.get('network/listVpnConnections.do', {
         params: {
@@ -540,7 +540,6 @@
           name: '',
           localGateway: '',
           customerGateway: '',
-          way: '',
           connType: 'true',
           connTypeOptions: [
             {label: '被动', key: 'true'},
@@ -559,9 +558,9 @@
           customerGateway: [
               { required: true, message: '请选择客户网关', trigger: 'change' }
           ],
-          way: [
-              { required: true, message: '请选择连接方式', trigger: 'change' }
-          ]
+          // connType: [
+          //     { required: true, message: '请选择连接方式', trigger: 'change' }
+          // ]
         },
         // 远程vpn列表
         remoteVpnColumns: [
@@ -667,7 +666,8 @@
             title: '连接方式',
             key: 'connectionstatus',
             render: (h,params) => {
-              return h('span', params.row.passive?'被动':'主动')
+              var text = params.row.passive === 'true'?'被动':'主动'
+              return h('span', text)
             }
           },
           {
@@ -711,7 +711,7 @@
             title: '操作',
             width: 200,
             render: (h, params) => {
-
+              
               return h('div', {}, [
                 h('span',{
                   style: {
@@ -934,7 +934,7 @@
                   },
                 },'删除')
               ])
-              ])
+              ])          
             }
 				  }
 				],
@@ -981,10 +981,10 @@
       funInput(value,attr) {
         // console.log(value)
         // console.log(attr)
-
+        
         // console.log(reg.test(value))
-        // var reg =
-        // this.formCustomerGateway.IP1 =
+        // var reg = 
+        // this.formCustomerGateway.IP1 = 
         // this.formCustomerGateway.IP1.replace(/[^\d]/g,'')
         // console.log(value.replace(/[^\d]/g,''))
         var reg = /[^\d]/
@@ -996,7 +996,7 @@
             console.log(this.formCustomerGateway.IP1)
           }
         }
-
+        
       },
       opencustomerModal_open(type,data) {
         this.customerModalType = type
@@ -1026,10 +1026,10 @@
           this.formCustomerGateway.IP3 = ipArr[2]
           this.formCustomerGateway.IP4 = ipArr[3]
           this.formCustomerGateway.key = data.ipseckey
-          this.formCustomerGateway.ikelifetime = data.ikelifetime,
-          this.formCustomerGateway.esplifetime = data.esplifetime,
-          this.formCustomerGateway.checkGroup1 = data.failuredetection,
-          this.formCustomerGateway.checkGroup2 = data.forceudpesppackets,
+          this.formCustomerGateway.ikelifetime = parseInt(data.ikelifetime),
+          this.formCustomerGateway.esplifetime = parseInt(data.esplifetime),
+          this.formCustomerGateway.checkGroup1 = data.failuredetection === "false" ? false : true,
+          this.formCustomerGateway.checkGroup2 = data.forceudpesppackets === "false" ? false : true,
           this.formCustomerGateway.IKE = data.ikeencryptionalgorithm,
           this.formCustomerGateway.IKEHash = data.ikehashalgorithm,
           this.formCustomerGateway.ESP = data.espencryptionalgorithm,
@@ -1164,7 +1164,7 @@
         this.$router.push('vpcList')
       },
       // 提交远程接入请求
-      newRemoteAccsOk() {
+      newRemoteAccessOk() {
         this.$refs.newRemoteAccessFormValidate.validate(validate => {
           if (validate) {
             this.showModal.newRemoteAccess = false
@@ -1248,11 +1248,11 @@
             name:this.formCustomerGateway.name,
             cidr: this.formCustomerGateway.CIDR1+'.'+this.formCustomerGateway.CIDR2+'.'+this.formCustomerGateway.CIDR3+'.'+this.formCustomerGateway.CIDR4+'/'+ this.formCustomerGateway.CIDR5,
             ipsecKey: this.formCustomerGateway.key,
-            ikeEncryption: this.formCustomerGateway.IKE,
+            ikeEncryption: this.formCustomerGateway.IKE,  
             ikeHash: this.formCustomerGateway.IKEHash,
             ikeDH: this.formCustomerGateway.IKEDH,
             espEncryption: this.formCustomerGateway.ESP,
-            espHash: this.formCustomerGateway.ESPHash,
+            espHash: this.formCustomerGateway.ESPHash, 
             destinationIpAddress: this.formCustomerGateway.IP1+'.'+this.formCustomerGateway.IP2+'.'+this.formCustomerGateway.IP3+'.'+this.formCustomerGateway.IP4,
             ikelifetime: this.formCustomerGateway.ikelifetime,
             esplifetime: this.formCustomerGateway.esplifetime,
@@ -1368,10 +1368,8 @@
               this.vpnLinkData[this.vpnLinkDataIndex].connectionstatus = 4
               this.$http.get('network/deleteVpnConnection.do', {
                 params: {
-                  s2sVpnGatewayId: this.currentTunnel.sourcevpnId,
-                  vpcId: this.currentTunnel.sourcevpcId,
-                  zoneId: $store.state.zone.zoneid
-
+                  zoneId: $store.state.zone.zoneid,
+                  id: this.currentTunnel.id
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
@@ -1389,75 +1387,9 @@
           })
         }
       },
-      //vpn 删除连接
-      disconnect(sourcevpnconId) {
-        this.$http.get('network/deleteVpnConnection.do', {
-          params: {
-            id: sourcevpnconId
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success({
-              content: response.data.message
-            })
-            this.refresh()
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      },
-      // vpn 重新连接
-      connect(row) {
-        this.vpnLinkData.forEach(item => {
-          if (item.sourcevpnId == row.sourcevpnId) {
-            this.$set(item, 'connectionstatus', '-3')
-          }
-        })
-        this.$http.get('network/createVpnConnection.do', {
-          params: {
-            s2sVpnGatewayid: row.sourcevpnId,
-            s2sCustomerGatewayid: row.customerVPNid,
-            passive: false
-          }
-        }).then(response => {
-          this.refresh()
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message)
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      },
-      // 修改连接方式
-      modifyConnection() {
-        this.showModal.FixVPNContent = false
-        this.vpnLinkData.forEach(item => {
-          if (item.sourcevpnId == this.modifyForm.sourcevpnId) {
-            this.$set(item, 'connectionstatus', '-4')
-          }
-        })
-        this.$http.get('network/updateVpnConnection.do', {
-          params: {
-            vpnconId: this.modifyForm.sourcevpnconId,
-            passive: this.modifyForm.connectType
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success({
-              content: response.data.message
-            })
-            this.refresh()
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      },
+      
+      
+      
       // 重启VPN
       restartVpn() {
         if (this.currentTunnel == null) {
