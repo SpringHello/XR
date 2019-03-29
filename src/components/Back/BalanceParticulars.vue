@@ -263,7 +263,7 @@
             }
           })
         } else {
-          this.showModal.bind = false
+          this.$Message.info('请选择需要绑定的主机')
         }
       }
     },
