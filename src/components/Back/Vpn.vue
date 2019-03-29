@@ -1020,7 +1020,7 @@
           this.formCustomerGateway.CIDR2 = cidrArr[1]
           this.formCustomerGateway.CIDR3 = cidrArr[2]
           this.formCustomerGateway.CIDR4 = cidrArr[3].split('/')[0]
-          this.formCustomerGateway.CIDR5 = cidrArr[3].split('/')[0]
+          this.formCustomerGateway.CIDR5 = cidrArr[3].split('/')[1]
           this.formCustomerGateway.IP1 = ipArr[0]
           this.formCustomerGateway.IP2 = ipArr[1]
           this.formCustomerGateway.IP3 = ipArr[2]
