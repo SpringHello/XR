@@ -137,22 +137,26 @@
         							<!-- <Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
         							</Input> -->
         						</FormItem>
-        						<FormItem label="源端口" prop="frontPort" v-else style="width: 86%;margin-top: 20px;">
+                    <p v-if="creatbalancemodal.formInline.radio=='public'" style="color:rgba(255,98,75,1);position: relative;left: 100px;top:5px;">提醒：只能输入1-65535之间任意数字。</p>
+        						<FormItem label="源端口" prop="frontPort" v-if="creatbalancemodal.formInline.radio=='private'" style="width: 86%;margin-top: 10px;">
                       <InputNumber :max="65535" :min="1" v-model="creatbalancemodal.formInline.frontPort" style="width:300px;float: right;"></InputNumber>
         							<!-- <Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;"> -->
         							</Input>
         						</FormItem>
-        						<FormItem label="服务器端口" prop="frontPort" v-if="creatbalancemodal.formInline.radio=='public'" style="width: 86%;margin-top: 20px;">
+                    <p v-if="creatbalancemodal.formInline.radio=='private'" style="color:rgba(255,98,75,1);position: relative;left: 100px;top:5px;">提醒：只能输入1-65535之间任意数字。</p>
+        						<FormItem label="服务器端口" prop="frontPort" v-if="creatbalancemodal.formInline.radio=='public'" style="width: 86%;margin-top: 15px;">
                        <InputNumber :max="65535" :min="1" v-model="creatbalancemodal.formInline.frontPort" style="width:300px;float: right;"></InputNumber>
         							<!-- <Input type="text" v-model="creatbalancemodal.formInline.frontPort" :maxlength="5" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;"> -->
         							</Input>
         						</FormItem>
-        						<FormItem label="实例端口" prop="rearPort" v-else style="width: 86%;margin-top: 20px;">
+                    <p v-if="creatbalancemodal.formInline.radio=='public'" style="color:rgba(255,98,75,1);position: relative;left: 100px;top:5px;">提醒：只能输入1-65535之间任意数字。</p>
+        						<FormItem label="实例端口" prop="rearPort" v-if="creatbalancemodal.formInline.radio=='private'" style="width: 86%;margin-top: 15px;">
                       <InputNumber :max="65535" :min="1" v-model="creatbalancemodal.formInline.rearPort" style="width:300px;float: right;"></InputNumber>
         							<!-- <Input type="text" :maxlength="5" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字" style="width:300px;float: right;">
         							</Input> -->
         						</FormItem>
-        						<FormItem label="算法" prop="algorithm" style="width: 86%;margin-top: 20px;">
+                    <p v-if="creatbalancemodal.formInline.radio=='private'" style="color:rgba(255,98,75,1);position: relative;left: 100px;top:5px;">提醒：只能输入1-65535之间任意数字。</p>
+        						<FormItem label="算法" prop="algorithm" style="width: 86%;margin-top: 15px;">
         							<Select v-model="creatbalancemodal.formInline.algorithm" style="width:300px;float: right;">
         								<Option v-for="item in creatbalancemodal.formInline.arithmeticList" :value="item.value" :key="item.value">{{ item.label }}
         								</Option>
@@ -161,7 +165,7 @@
         						</FormItem>
         						<div class="modal-content-s divall" v-if="creatbalancemodal.current == 1">
         						  <div>
-        						    当您完成负载均衡创建之后，您可以在负载均衡管理页面修改转发规则与健康检查规则，并管理您的后端服务器。<span class="spanaa"></span>
+        						    当您完成负载均衡创建之后，您可以在负载均衡管理页面修改转发规则与健康检查规则，并管理您的后端服务器。(端口默认65535，如需更改请手动输入)<span class="spanaa"></span>
         						  </div>
         						</div>
         					</Form>
@@ -348,8 +352,8 @@
                 value: 'source'
               }
             ],
-            frontPort: 1,
-            rearPort: 1,
+            frontPort: 65535,
+            rearPort: 65535,
             VPCList: [],
             vpc: '',
             PublicIpList: [],
