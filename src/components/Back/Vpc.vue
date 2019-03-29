@@ -102,7 +102,7 @@
       <div class="universal-modal-content-flex" id="moli2">
         <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate" style="width: 100%">
           <FormItem label="vpc名称" prop="vpcName">
-            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称" style="width:300px;float: right;"></Input>
+            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称(最多可输入十六位)" :maxlength="16" style="width:300px;float: right;"></Input>
           </FormItem>
           <FormItem label="地址范围" prop="vpc">
             <Select v-model="newForm.vpc" placeholder="请选择" style="width:300px;float: right;">

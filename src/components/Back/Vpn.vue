@@ -27,25 +27,23 @@
         <Tabs type="card" :animated="false" v-model="paneStatus.vpn">
           <TabPane label="VPN连接" name="VPN">
             <div class="operator-bar">
-              <!-- <Button type="primary" @click="newTunnelVpn">创建VPN连接old</Button> -->
-              <!--<Button type="primary">重启隧道</Button>-->
               <Button type="primary" @click="newTunnelVpnlink">创建VPN连接</Button>
               <Button type="primary" @click="delTunnelVpn">删除VPN连接</Button>
               <Button type="primary" @click="restartVpn">重启VPN连接</Button>
-              <Table :columns="tunnelVpnColumns" :data="tunnelVpnData" @radio-change="tunnelRadio"
+              <Table :columns="vpnLinkColumns" :data="vpnLinkData" @radio-change="tunnelRadio"
                      style="margin-top:20px;"></Table>
             </div>
           </TabPane>
           <TabPane label="VPN本地网关" name="localGateway">
             <div class="operator-bar">
-              <Button type="primary" @click="newTunnelVpn1">创建VPN本地网关</Button>
+              <Button type="primary" @click="showModal.newLocalGateway = true">创建VPN本地网关</Button>
               <Table :columns="localGatewayColumns" :data="localGatewayData" @radio-change="localGatewayRadio"
                      style="margin-top:20px;"></Table>
             </div>
           </TabPane>
           <TabPane label="VPN客户网关" name="customerGateway">
 						 <Button type="primary" @click="opencustomerModal_open('new')">创建VPN客户网关</Button>
-						 <Table :columns="VpnClientColumns" :data="VpnClientGaData" @radio-change="VpnClientRadio"
+						 <Table :columns="customerGatewayColumns" :data="customerGatewayData" @radio-change="VpnClientRadio"
 						        style="margin-top:10px;"></Table>
           </TabPane>
           <TabPane label="VPN拨入" name="remote">
@@ -169,15 +167,15 @@
       </div>
     </Modal>
     <!-- 新建VPN客户网关-->
-    <Modal v-model="showModal.newTunnelVpntwo" width="500" :scrollable="true">
+    <Modal v-model="showModal.customerGateway" width="500" :scrollable="true">
 		  <p slot="header" class="modal-header-border">
 		    <span class="universal-modal-title">创建VPN客户网关</span>
 		  </p>
 		  <div class="universal-modal-label-14px">
-		    <Form :model="formCustomerGateway" :rules="newTunnelVpnFormValidate"
+		    <Form :model="formCustomerGateway" :rules="formValidateCustomerGateway"
 		          ref="formCustomerGateway" :label-width="120" style="width:420px;" label-position="left">
-		      <FormItem label="客户网关名称" prop="name1">
-		        <Input v-model="formCustomerGateway.name1" placeholder="请输入10个字符以内的名称" ></Input>
+		      <FormItem label="客户网关名称" prop="name">
+		        <Input v-model="formCustomerGateway.name" placeholder="请输入10个字符以内的名称" ></Input>
 		      </FormItem>
 		      <FormItem label="目的IP地址" prop="IP">
             <!-- v-on:input="funInput(formCustomerGateway.IP1,'formCustomerGateway.IP1')" title="请输入0-255内数字" -->
@@ -263,8 +261,8 @@
           </Form>
 		    </div>
 		  <div slot="footer" class="modal-footer-border">
-		    <Button @click="showModal.newTunnelVpntwo = false">取消</Button>
-		    <Button type="primary" @click="testOk('formCustomerGateway', customerModalType)">确定{{customerModalType=='new'?'创建':'修改'}}</Button>
+		    <Button @click="showModal.customerGateway = false">取消</Button>
+		    <Button type="primary" @click="newCustomerOk('formCustomerGateway', customerModalType)">确定{{customerModalType=='new'?'创建':'修改'}}</Button>
 		  </div>
 		</Modal>
     <!-- 新建VPN连接-->
@@ -286,7 +284,7 @@
           </FormItem>
           <FormItem label="客户网关" prop="customerGateway">
             <Select v-model="formValidateVpnLink.customerGateway">
-              <Option v-for="item in VpnClientGaData" :value="item.customergatewayid" :key="item.customergatewayid">
+              <Option v-for="item in customerGatewayData" :value="item.customergatewayid" :key="item.customergatewayid">
                 {{item.name}}
               </Option>
             </Select>
@@ -344,8 +342,8 @@
       Promise.all([remote, customer,coustomerGateway,localGateway]).then(values => {
         next(vm => {
           vm.initRemoteData(values[0])
-          vm.initCustomerData(values[1])
-          vm.initClientData(values[2])
+          vm.initVpnLinkData(values[1])
+          vm.initCustomerData(values[2])
           vm.initLocalGateway(values[3])
         })
       })
@@ -404,6 +402,7 @@
         }
       }
       return {
+        vpnLinkDataIndex: '',
         localGatewayData1: '',
         customergatewayId: '',
         customerModalType: 'new',
@@ -416,8 +415,6 @@
           newLocalGateway: false,
           // 远程VPN
           newRemoteAccess: false,
-          // 隧道VPN
-          newTunnelVpn: false,
           // vpn 修改
           FixVPN: false,
           FixVPN1: false,
@@ -425,7 +422,7 @@
           // 接入点用户管理
           userManage: false,
           notHaveNAT: false,
-					newTunnelVpntwo:false
+					customerGateway:false
         },
         // 新建vpc接入点表单
         newRemoteAccessForm: {
@@ -450,20 +447,11 @@
           ],
         },
         formCustomerGateway: {
-          // 源VPC
-          vpcId1: '',
-          // 目标VPC
-          vpcId2: '',
-          vpcIdOptions: '',
-          // 源VPC对应名称
-          name1: '',
-          // 目标VPC对应名称
-          name2: '',
+          name: '',
           IP1: '',
           IP2: '',
           IP3: '',
           IP4: '',
-          gateway: '',
           CIDR1: '',
           CIDR2: '',
           CIDR3: '',
@@ -514,82 +502,12 @@
           checkGroup1: true,
           checkGroup2: true,
           showDetail: false,
-          step: 0
         },
-        modifyTunnelVpnForm: {
-          customerVPNid: '',
-          // 源VPC
-          vpcId1: '',
-          // 目标VPC
-          vpcId2: '',
-          vpcIdOptions: '',
-          // 源VPC对应名称
-          name1: '',
-          // 目标VPC对应名称
-          name2: '',
-          IP: '',
-          gateway: '',
-          CIDR: '',
-          key: '',
-          connType: 'true',
-          connTypeOptions: [
-            {label: '被动', key: 'true'},
-            {label: '主动', key: 'false'},
-          ],
-          IKE: '3des',
-          IKEOptions: [
-            {label: '3des', key: '3des'},
-            {label: 'aes128', key: 'aes128'},
-            {label: 'aes192', key: 'aes192'},
-            {label: 'aes256', key: 'aes256'}
-          ],
-          IKEHash: 'md5',
-          IKEHashOptions: [
-            {label: 'md5', key: 'md5'},
-            {label: 'sha1', key: 'sha1'}
-          ],
-          ESP: '3des',
-          ESPOptions: [
-            {label: '3des', key: '3des'},
-            {label: 'aes128', key: 'aes128'},
-            {label: 'aes192', key: 'aes192'},
-            {label: 'aes256', key: 'aes256'}
-          ],
-          ESPHash: 'md5',
-          ESPHashOptions: [
-            {label: 'md5', key: 'md5'},
-            {label: 'sha1', key: 'sha1'}
-          ],
-          IKEDH: 'modp1536',
-          IKEDHoptions: [
-            {label: 'modp1024', key: 'modp1024'},
-            {label: 'modp1536', key: 'modp1536'}
-          ],
-          secret: 'modp1536',
-          secretOptions: [
-            {label: 'modp1024', key: 'modp1024'},
-            {label: 'modp1536', key: 'modp1536'}
-          ],
-          ikelifetime: 86400,
-          esplifetime: 3600,
-          checkGroup1: true,
-          checkGroup2: true,
-          showDetail: false,
-        },
-        newTunnelVpnFormValidate: {
-          vpcId1: [
-            {required: true, message: '请选择vpc', trigger: 'change'}
-          ],
-          vpcId2: [
-            {required: true, message: '请选择vpc', trigger: 'change'}
-          ],
-          name1: [
+        formValidateCustomerGateway: {
+          name: [
             {required: true, validator: validaRegisteredName, trigger: 'blur'},
             {required: true, validator: validaRegisteredName, trigger: 'blur'},
             {required: true, validator: validaNamelength, trigger: 'blur'},
-          ],
-          name2: [
-            {required: true, message: '请输入隧道名称', trigger: 'blur'}
           ],
           key: [
             {required: true, message: '请输入预共享密钥', trigger: 'blur'},
@@ -713,7 +631,7 @@
         ],
         remoteVpnData: [],
         // 隧道vpn
-        tunnelVpnColumns: [
+        vpnLinkColumns: [
           {
             type: 'radio',
             align: 'center',
@@ -756,8 +674,33 @@
             title: '状态',
             key: 'connectionstatus',
             render: (h, params) => {
-              var text = params.row.connectionstatus == 1 ?'正常':'异常'
-              return h('span', {}, text)
+              var text = ''
+              switch(params.row.connectionstatus) {
+                case 1: 
+                  text = '正常';
+                  break;
+                case -1: 
+                  text = '异常';
+                  break;
+                case 3: 
+                  text = '重启中';
+                  break;
+                case 4: 
+                  text = '删除中';
+                  break;
+              }
+              if(params.row.connectionstatus == 3  || params.row.connectionstatus == 4 ) {
+                return h('div', {}, [
+                  h('Spin',{
+                    style: {
+                      display: 'inline-block'
+                    }
+                  }),
+                  h('span', {}, text)
+                ])
+              } else {
+                return h('span', {}, text)
+              }
             }
           },
           {
@@ -781,30 +724,24 @@
                       this.$message.confirm({
                         content: '确认重启连接？',
                         onOk: () => {
-                          if (this.currentTunnel.connectionstatus == 1) {
+                            this.vpnLinkData[params.index].connectionstatus = 3
                             this.$http.get('network/resetVpnConnection.do', {
                               params: {
                                 zoneId: $store.state.zone.zoneid,
-                                vpnConnectionId: params.row.vpnconnectionid
+                                vpnConnectionId: params.row.id
                               }
                             }).then(response => {
                               if (response.status == 200 && response.data.status == 1) {
                                 this.$Message.success({
                                   content: response.data.message
                                 })
-                                this.refresh()
+                                this.getVpnLink()
                               } else {
                                 this.$message.info({
                                   content: response.data.message
                                 })
-                                this.refresh()
                               }
                             })
-                          } else {
-                            this.$Message.info({
-                              content: '请先连接在重启连接'
-                            })
-                          }
                         }
                       })
                     }
@@ -818,12 +755,11 @@
                   on: {
                     click: () => {
                         this.$message.confirm({
-                          content: '确定要删除该隧道VPN吗',
+                          content: '确定要删除该隧道VPN吗？',
                           onOk: () => {
+                            this.vpnLinkData[params.index].connectionstatus = 4
                             this.$http.get('network/deleteVpnConnection.do', {
                               params: {
-                                // s2sVpnGatewayId: this.currentTunnel.sourcevpnId,
-                                // vpcId: this.currentTunnel.sourcevpcId,
                                 zoneId: $store.state.zone.zoneid,
                                 id: params.row.id
                               }
@@ -832,12 +768,11 @@
                                 this.$Message.success({
                                   content: response.data.message
                                 })
-                                this.refresh()
+                                this.getVpnLink()
                               } else {
                                 this.$message.info({
                                   content: response.data.message
                                 })
-                                this.refresh()
                               }
                             })
                           }
@@ -914,7 +849,7 @@
           }
         ],
         localGatewayData: [],
-				VpnClientColumns: [
+				customerGatewayColumns: [
 				  {
 				    type: 'radio',
 				    align: 'center',
@@ -965,7 +900,7 @@
                   on: {
                     click: () => {
                       this.customergatewayId = params.row.customergatewayid
-                      this.opencustomerModal_open('modify')
+                      this.opencustomerModal_open('modify',params.row)
                     }
                   }
                 }, '修改'),
@@ -1003,8 +938,8 @@
             }
 				  }
 				],
-        tunnelVpnData: [],
-				VpnClientGaData: [],
+        vpnLinkData: [],
+				customerGatewayData: [],
         // 管理用户列表
         userList: [],
         // 远程VPN id
@@ -1063,20 +998,51 @@
         }
 
       },
-      opencustomerModal_open(type) {
+      opencustomerModal_open(type,data) {
         this.customerModalType = type
-        // this.formCustomerGateway.CIDR1 = ''
-        // this.formCustomerGateway.name1 = ''
-        // this.formCustomerGateway.CIDR2 = ''
-        // this.formCustomerGateway.CIDR4 = ''
-        // this.formCustomerGateway.IP1 = ''
-        // this.formCustomerGateway.IP2 = ''
-        // this.formCustomerGateway.IP3 = ''
-        // this.formCustomerGateway.IP4 = ''
-        // this.formCustomerGateway.key = ''
-        this.showModal.newTunnelVpntwo=true
+        if(type == 'new') {
+          this.formCustomerGateway.name = ''
+          this.formCustomerGateway.CIDR1 = ''
+          this.formCustomerGateway.CIDR2 = ''
+          this.formCustomerGateway.CIDR3 = ''
+          this.formCustomerGateway.CIDR4 = ''
+          this.formCustomerGateway.CIDR5 = ''
+          this.formCustomerGateway.IP1 = ''
+          this.formCustomerGateway.IP2 = ''
+          this.formCustomerGateway.IP3 = ''
+          this.formCustomerGateway.IP4 = ''
+          this.formCustomerGateway.key = ''
+        } else {
+          var cidrArr = data.cidr.split('.')
+          var ipArr = data.destinationipaddress.split('.')
+          this.formCustomerGateway.name = data.name
+          this.formCustomerGateway.CIDR1 = cidrArr[0]
+          this.formCustomerGateway.CIDR2 = cidrArr[1]
+          this.formCustomerGateway.CIDR3 = cidrArr[2]
+          this.formCustomerGateway.CIDR4 = cidrArr[3].split('/')[0]
+          this.formCustomerGateway.CIDR5 = cidrArr[3].split('/')[0]
+          this.formCustomerGateway.IP1 = ipArr[0]
+          this.formCustomerGateway.IP2 = ipArr[1]
+          this.formCustomerGateway.IP3 = ipArr[2]
+          this.formCustomerGateway.IP4 = ipArr[3]
+          this.formCustomerGateway.key = data.ipseckey
+          this.formCustomerGateway.ikelifetime = data.ikelifetime,
+          this.formCustomerGateway.esplifetime = data.esplifetime,
+          this.formCustomerGateway.checkGroup1 = data.failuredetection,
+          this.formCustomerGateway.checkGroup2 = data.forceudpesppackets,
+          this.formCustomerGateway.IKE = data.ikeencryptionalgorithm,
+          this.formCustomerGateway.IKEHash = data.ikehashalgorithm,
+          this.formCustomerGateway.ESP = data.espencryptionalgorithm,
+          this.formCustomerGateway.ESPHash = data.esphashalgorithm,
+          this.formCustomerGateway.IKEDH = data.ikedhalgorithm,
+          this.formCustomerGateway.secret = data.perfectforwardsecrecy
+        }
+          this.showModal.customerGateway=true
       },
       newTunnelVpnlink() {
+        this.$http.get('network/listLocalGateway.do').then(response => {
+            this.localGatewayData1 = response.data.result
+        })
         this.showModal.vpnLink = true
       },
       testjump(){
@@ -1118,8 +1084,8 @@
         })
         Promise.all([remote, customer,coustomerGateway]).then(values => {
           this.initRemoteData(values[0])
-          this.initCustomerData(values[1])
-          this.initClientData(values[2])
+          this.initVpnLinkData(values[1])
+          this.initCustomerData(values[2])
           this.initLocalGateway(values[3])
           this.currentTunnel = null
           this.currentRemote = null
@@ -1131,15 +1097,14 @@
           this.remoteVpnData = response.data.result
         }
       },
-      initCustomerData(response) {
-        // if (response.status == 200 && response.data.status == 1) {
-          if (response.status == 200) {
-          this.tunnelVpnData = response.data.result
+      initVpnLinkData(response) {
+        if (response.status == 200 && response.data.status == 1) {
+          this.vpnLinkData = response.data.result
         }
       },
-			initClientData(response) {
+			initCustomerData(response) {
 			  if (response.status == 200 && response.data.status == 1) {
-			    this.VpnClientGaData = response.data.list
+			    this.customerGatewayData = response.data.list
 			  }
       },
       initLocalGateway(response) {
@@ -1162,7 +1127,16 @@
 				     zoneId: $store.state.zone.zoneid,
 				   }
 				}).then(response => {
-          this.initClientData(response)
+          this.initCustomerData(response)
+        })
+      },
+      getVpnLink() {
+        axios.get('network/listVpnConnections.do', {
+				   params: {
+				     zoneId: $store.state.zone.zoneid,
+				   }
+				}).then(response => {
+          this.initVpnLinkData(response)
         })
       },
       // 打开远程接入modal
@@ -1223,11 +1197,6 @@
             })
           }
         })
-        this.showModal.newTunnelVpn = false
-
-      },
-      newTunnelVpn1() {
-        this.showModal.newLocalGateway = true
       },
       newLocalGatewayOk(name) {
         this.$refs[name].validate((valid) => {
@@ -1251,6 +1220,8 @@
       vpnLinkOk(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
+            this.showModal.vpnLink = false
+            this.$Message.info('vpn连接中，请稍等')
             axios.post('network/createVpnConnections.do', {
               zoneId: $store.state.zone.zoneid,
               s2sVpnGatewayid: this.formValidateVpnLink.localGateway,
@@ -1258,10 +1229,9 @@
               passive: this.formValidateVpnLink.connType,
               name: this.formValidateVpnLink.name
             }).then(response => {
-              this.showModal.vpnLink = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.refresh()
+                this.getVpnLink()
               } else {
                 this.$Message.error(response.data.message)
               }
@@ -1269,13 +1239,13 @@
           }
         })
       },
-			testOk(name,type) {
+			newCustomerOk(name,type) {
         let url = ''
         let params = {}
         if (type == 'new') {
           url = 'network/createVpnCustomer.do'
           params = {
-            name:this.formCustomerGateway.name1,
+            name:this.formCustomerGateway.name,
             cidr: this.formCustomerGateway.CIDR1+'.'+this.formCustomerGateway.CIDR2+'.'+this.formCustomerGateway.CIDR3+'.'+this.formCustomerGateway.CIDR4+'/'+ this.formCustomerGateway.CIDR5,
             ipsecKey: this.formCustomerGateway.key,
             ikeEncryption: this.formCustomerGateway.IKE,
@@ -1297,7 +1267,7 @@
             targetCidr: this.formCustomerGateway.CIDR1+'.'+this.formCustomerGateway.CIDR2+'.'+this.formCustomerGateway.CIDR3+'.'+this.formCustomerGateway.CIDR4+'/'+ this.formCustomerGateway.CIDR5,
             targetIP: this.formCustomerGateway.IP1+'.'+this.formCustomerGateway.IP2+'.'+this.formCustomerGateway.IP3+'.'+this.formCustomerGateway.IP4,
             ipsecKey: this.formCustomerGateway.key,
-            name: this.formCustomerGateway.name1,
+            name: this.formCustomerGateway.name,
             ikeEncryption: this.formCustomerGateway.IKE,
             ikeHash: this.formCustomerGateway.IKEHash,
             espEncryption: this.formCustomerGateway.ESP,
@@ -1313,7 +1283,7 @@
         this.$refs[name].validate((valid) => {
             if (valid) {
                 this.$http.post(url, params).then(response => {
-                this.showModal.newTunnelVpntwo = false
+                this.showModal.customerGateway = false
                 if (response.status == 200 && response.data.status == 1) {
                   this.getCustomerGateway()
                   this.$Message.success({
@@ -1335,6 +1305,11 @@
       // 选中隧道VPN
       tunnelRadio(current) {
         this.currentTunnel = current
+         this.vpnLinkData.forEach((item,index)=> {
+          if(current.id == item.id) {
+            this.vpnLinkDataIndex = index
+          }
+        })
       },
       localGatewayRadio() {
 
@@ -1390,6 +1365,7 @@
           this.$message.confirm({
             content: '确定要删除该隧道VPN吗',
             onOk: () => {
+              this.vpnLinkData[this.vpnLinkDataIndex].connectionstatus = 4
               this.$http.get('network/deleteVpnConnection.do', {
                 params: {
                   s2sVpnGatewayId: this.currentTunnel.sourcevpnId,
@@ -1402,12 +1378,11 @@
                   this.$Message.success({
                     content: response.data.message
                   })
-                  this.refresh()
+                  this.getVpnLink()
                 } else {
                   this.$message.info({
                     content: response.data.message
                   })
-                  this.refresh()
                 }
               })
             }
@@ -1430,13 +1405,12 @@
             this.$message.info({
               content: response.data.message
             })
-            this.refresh()
           }
         })
       },
       // vpn 重新连接
       connect(row) {
-        this.tunnelVpnData.forEach(item => {
+        this.vpnLinkData.forEach(item => {
           if (item.sourcevpnId == row.sourcevpnId) {
             this.$set(item, 'connectionstatus', '-3')
           }
@@ -1458,48 +1432,10 @@
           }
         })
       },
-      // vpn 修改配置
-      fixConfig() {
-        this.showModal.FixVPN = false
-        this.tunnelVpnData.forEach(item => {
-          if (item.customerVPNid == this.modifyTunnelVpnForm.customerVPNid) {
-            this.$set(item, 'connectionstatus', '-5')
-          }
-        })
-        this.$http.post('network/updateVpnCustomerGateway.do', {
-          customerGatewayId: this.modifyTunnelVpnForm.customerVPNid,
-          targetCidr: this.modifyTunnelVpnForm.CIDR,
-          targetIP: this.modifyTunnelVpnForm.IP,
-          ipsecKey: this.modifyTunnelVpnForm.key,
-          name: this.modifyTunnelVpnForm.name1,
-          ikeEncryption: this.modifyTunnelVpnForm.IKE,
-          ikeHash: this.modifyTunnelVpnForm.IKEHash,
-          espEncryption: this.modifyTunnelVpnForm.ESP,
-          espHash: this.modifyTunnelVpnForm.ESPHash,
-          completeSecrecy: this.modifyTunnelVpnForm.secret,
-          ikeDH: this.modifyTunnelVpnForm.IKEDH,
-          ikelifetime: this.modifyTunnelVpnForm.ikelifetime,
-          esplifetime: this.modifyTunnelVpnForm.esplifetime,
-          failureDetection: this.modifyTunnelVpnForm.checkGroup1,
-          forceUdpEspPackets: this.modifyTunnelVpnForm.checkGroup2,
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success({
-              content: response.data.message
-            })
-            this.refresh()
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-            this.refresh()
-          }
-        })
-      },
       // 修改连接方式
       modifyConnection() {
         this.showModal.FixVPNContent = false
-        this.tunnelVpnData.forEach(item => {
+        this.vpnLinkData.forEach(item => {
           if (item.sourcevpnId == this.modifyForm.sourcevpnId) {
             this.$set(item, 'connectionstatus', '-4')
           }
@@ -1519,7 +1455,6 @@
             this.$message.info({
               content: response.data.message
             })
-            this.refresh()
           }
         })
       },
@@ -1534,7 +1469,7 @@
           this.$message.confirm({
             content: '确认重启连接？',
             onOk: () => {
-              if (this.currentTunnel.connectionstatus == 1) {
+              this.vpnLinkData[this.vpnLinkDataIndex].connectionstatus = 3
                 this.$http.get('network/resetVpnConnection.do', {
                   params: {
                     zoneId: $store.state.zone.zoneid,
@@ -1545,15 +1480,13 @@
                     this.$Message.success({
                       content: response.data.message
                     })
-                    this.refresh()
+                    this.getVpnLink()
                   } else {
-                    this.$message.info({
+                    this.$Message.error({
                       content: response.data.message
                     })
-                    this.refresh()
                   }
                 })
-              }
             }
           })
         )
