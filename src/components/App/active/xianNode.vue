@@ -218,7 +218,7 @@
                   <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:224px;">
                   </Input>
                   <img :src="imgSrc" style="height:33px;"
-                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
+                       @click="imgSrc=`https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
                 </div>
               </FormItem>
               <FormItem label="手机号码" prop="tel">
@@ -392,7 +392,7 @@
             {required: true, message: '请输入验证码'}
           ]
         },
-        imgSrc: 'user/getKaptchaImage.do',
+        imgSrc: 'https://www.xrcloud.net/user/getKaptchaImage.do',
       }
     },
     created() {
@@ -409,7 +409,7 @@
       showAuthModal() {
         this.authHintShow = false
         if (this.$store.state.userInfo) {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authModal = true
         } else {
           this.showModal.notAuthModal = true

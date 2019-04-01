@@ -49,7 +49,7 @@
               <Button type="primary" style="margin:0 10px;" >更多操作
                  <Icon type="arrow-down-b"></Icon>
               </Button>
-             
+
               <DropdownMenu slot="list">
                   <DropdownItem name="resetPassword" :disabled="resetPasswordDisabled">重置密码</DropdownItem>
                   <DropdownItem name="bindingIP" :disabled="bindingIPDisabled">绑定IP</DropdownItem>
@@ -100,11 +100,11 @@
               </div>
             </div>
             <div style="width: 528px;height: 291px;position:relative;">
-              <chart ref="cpu" :options="cpu" style="width: 528px;height: 291px;">             
+              <chart ref="cpu" :options="cpu" style="width: 528px;height: 291px;">
               </chart>
                 <Spin fix v-if="chartShow.cpu"></Spin>
             </div>
-            
+
           </div>
 
           <div class="surface-boder">
@@ -298,7 +298,7 @@
           <li>主机名</li>
           <li>当前密码</li>
         </ul>
-        <ul class="resetModal-table data" v-for="(item,index) in resetPasswordHostData" :key="index"> 
+        <ul class="resetModal-table data" v-for="(item,index) in resetPasswordHostData" :key="index">
           <li>{{ index + 1 }}</li>
           <li>{{ item.computername}}</li>
           <li @click="toManage(item)">{{ item.instancename}}</li>
@@ -360,7 +360,7 @@
         <Button type="primary" @click="checkRenameForm">确定
         </Button>
       </div>
-    </Modal>  
+    </Modal>
     </div>
 </template>
 
@@ -1191,8 +1191,8 @@
                         }
                       }
                     }, '删除')])
-                    break  
-                   case 1: 
+                    break
+                   case 1:
                     return h('div',
                       {
                         style:{color:'#2A99F2',padding:'8px 0',display:'inline-block'}
@@ -2165,6 +2165,7 @@
           switch (name) {
             case 'bindingIP':
               this.showModal.ipShow = true;
+              this.bindIp();
               break
             case 'rename':
               this.renameForm.hostName = ''
@@ -2399,7 +2400,7 @@
         selectLenght(){
           return this.selectLength.length;
         },
-        
+
     },
     mounted(){
           this.getGpuServerList();
