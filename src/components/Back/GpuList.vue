@@ -1072,7 +1072,7 @@
               render:(h,params)=>{
                 return h('div',[
                   h('p',{},params.row.publicip ?params.row.publicip+'(公)':'----'),
-                  h('p',{},params.row.publicip ?params.row.publicip+'(内)':'----')
+                  h('p',{},params.row.privateip ?params.row.privateip+'(内)':'----')
                 ])
               }
             },
