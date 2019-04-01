@@ -46,13 +46,14 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="bindHostForm" multiple>
-          <FormItem label="请选择虚拟机" prop="vm">
+          <FormItem label="请选择虚拟机" prop="vm" style="margin-bottom: 0;">
             <Select v-model="bindHostForm.vm" multiple>
               <Option v-for="item in bindHostForm.vmOptions" :value="item.computerid" :key="item.computerid">
                 {{item.computername}}
               </Option>
             </Select>
           </FormItem>
+					<p v-if="bindHostForm.vm.computerid==null" style="margin-top: 5px;color: #FF0000;">该子网下无可选主机，请将主机加入该子网之后在进行操作</p>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">

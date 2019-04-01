@@ -228,6 +228,9 @@
 
 <script type="text/ecmascript-6">
   import timeago from 'timeago.js'
+	import regExp from '../../util/regExp'
+	import axios from 'axios'
+	import $store from '../../vuex'
 
   export default {
     data() {
