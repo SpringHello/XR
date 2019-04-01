@@ -189,7 +189,7 @@
             </div>
             <div class="document">
               <p>新闻动态</p>
-              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank" >
+              <a v-for="(d,index) in document" :key="index" :href="d.url" target="_blank">
                 {{d.title}}
               </a>
             </div>
@@ -223,8 +223,8 @@
             </li>
             <li>
               <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922" rel="nofollow" target="_blank"
-                >
-                <img src="./assets/img/app/record.png"  alt="京公网安备">{{item.desc}}
+              >
+                <img src="./assets/img/app/record.png" alt="京公网安备">{{item.desc}}
               </a>
             </li>
             <li>
@@ -232,7 +232,7 @@
                 B1-20180455</a>
             </li>
             <li>
-              <a href="https://www.xrcloud.net/about/" rel="nofollow" >关于我们</a>
+              <a href="https://www.xrcloud.net/about/" rel="nofollow">关于我们</a>
             </li>
           </ul>
         </div>
@@ -247,7 +247,7 @@
         <div ref="qq" style="overflow: hidden;bottom:-48px;">
           <div class="wrapper" v-if="QQInfo.length>0">
             <div>
-              <span>人工客服</span>
+              <span class="title">人工客服</span>
               <div class="info-wrapper">
                 <div v-for="(qq,index) of QQInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
@@ -265,7 +265,7 @@
           </div>
           <div class="wrapper" v-if="xiaoshouInfo.length>0">
             <div>
-              <span>售前咨询</span>
+              <span class="title">售前咨询</span>
               <div class="info-wrapper">
                 <div v-for="(qq,index) of xiaoshouInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
@@ -274,7 +274,7 @@
                    style="color:rgb(73, 80, 96)" rel="nofollow">
                  <img src="./assets/img/app/qq-red.png" v-if="qq.qqstatus" alt="售前咨询">
                   <img src="./assets/img/app/qq-gray.png" v-else alt="售前咨询">
-                <span >{{qq.servicename}}</span>
+                <span>{{qq.servicename}}</span>
                 <i :class="{inline:qq.qqstatus}"></i>
                 </a>
               </Tooltip>
@@ -284,7 +284,7 @@
           </div>
           <div class="wrapper" v-if="yunweiInfo.length>0">
             <div>
-              <span>技术支持</span>
+              <span class="title">技术支持</span>
               <div class="info-wrapper">
                 <div v-for="(qq,index) of yunweiInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
@@ -293,13 +293,18 @@
                    style="color:rgb(73, 80, 96)" rel="nofollow">
                  <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus" alt="技术支持">
                   <img src="./assets/img/app/qq-gray.png" v-else alt="技术支持">
-                <span >{{qq.servicename}}</span>
+                <span>{{qq.servicename}}</span>
                 <i :class="{inline:qq.qqstatus}"></i>
                 </a>
               </Tooltip>
             </div>
               </div>
             </div>
+          </div>
+          <div class="wrapper">
+            <div>
+            <span class="title">咨询热线 400-0505-565</span>
+              </div>
           </div>
         </div>
       </span>
@@ -308,15 +313,55 @@
         :href="kfURL"
         target="_blank"></a></span>
       </Poptip>-->
-      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left" style="height:48px;">
-        <span class="phone"></span>
-      </Poptip>
+      <!--      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left" style="height:48px;">
+              <span class="phone"></span>
+            </Poptip>-->
+   <!--   <span class="phone" @click="showModal.complaintModal = true"></span>-->
       <div>
         <BackTop :bottom="161" :right="50" :duration="300" :height="1000" style="position: unset">
           <span class="topLink"></span>
         </BackTop>
       </div>
     </div>
+    <!-- 投诉框 -->
+    <Modal v-model="showModal.complaintModal" width="500" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">投诉与建议</span>
+      </p>
+      <div v-show="complaintForm.step==1">
+        <Form label-position="left" :model="complaintForm" ref="complaintForm" :rules="complaintFormRule" :label-width="80">
+          <Form-item label="反馈标题" prop="complaintTitle">
+            <Input v-model="complaintForm.complaintTitle" placeholder="请以1-20个字简单描述一下问题" :maxlength="20"></Input>
+          </Form-item>
+          <Form-item label="问题类型" prop="issueType">
+            <Select v-model="complaintForm.issueType" placeholder="请选择">
+              <Option v-for="(item,index) in complaintForm.typeList" :value="item" :key="index">{{item}}</Option>
+            </Select>
+          </Form-item>
+          <Form-item label="问题描述" prop="issueDesc">
+            <Input v-model="complaintForm.issueDesc" type="textarea" :autosize="{minRows: 5,maxRows: 7}"
+                   placeholder="请输入..."></Input>
+          </Form-item>
+          <Form-item label="联系电话" prop="phone">
+            <Input v-model="complaintForm.phone" placeholder="请留下您的联系电话，方便我们将结果反馈给您。"></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div v-show="complaintForm.step==2" class="complain-modal">
+        <img src="./assets/img/payresult/paySuccess.png"/>
+        <p>—您的烦恼我们已经收到—</p>
+        <p>我们会将处理结果发送至您的手机</p>
+        <p>请耐心等待</p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.complaintModal = false">取消</Button>
+        <Button type="primary" @click="sumbitComplaint('complaintForm')" v-show="complaintForm.step==1">提交反馈
+        </Button>
+        <Button type="primary" @click="showModal.complaintModal = false"v-show="complaintForm.step==2">确定
+        </Button>
+      </div>
+    </Modal>
+
   </div>
 </template>
 
@@ -328,10 +373,19 @@
   import '@/assets/iconfont/frontend/iconfont.css'
   import '@/assets/iconfont/frontend/iconfont.js'
   import uuid from 'uuid'
+  import regExp from './util/regExp'
 
   export default {
     name: 'app',
     data() {
+      const validPhoneNumber = (rule, value, callback) => {
+        let reg = /^1[3|5|7|8|9|6|7]\d{9}$/;
+        if (!reg.test(this.complaintForm.phone)) {
+          return callback(new Error("请输入正确的手机号码"));
+        } else {
+          callback();
+        }
+      };
       return {
         /*titleItem: [
          {
@@ -663,7 +717,32 @@
         second: '00',
         hintShow: false,
         timer: null,
-        UUID: ''
+        UUID: '',
+        showModal: {
+          complaintModal: false
+        },
+        complaintForm: {
+          complaintTitle: '',
+          issueType: '',
+          typeList: ['客服投诉', '违规举报', '功能建议', '产品缺陷', '体验不佳', '价格投诉', '其他'],
+          issueDesc: '',
+          phone: '',
+          step: 1
+        },
+        complaintFormRule: {
+          complaintTitle: [
+            {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
+          ],
+          issueType: [
+            {required: true, message: '请选择问题类型', trigger: 'change'}
+          ],
+          issueDesc: [
+            {required: true, message: '请描述一下您的问题', trigger: 'blur'}
+          ],
+          phone: [
+            {required: true, validator: validPhoneNumber, trigger: 'blur'}
+          ]
+        },
       }
     },
     mounted() {
@@ -819,6 +898,13 @@
       },
       openInfo(href) {
         window.open(href)
+      },
+      sumbitComplaint(name) {
+        this.$refs[name].validate(valid => {
+          if (valid) {
+            this.complaintForm.step = 2
+          }
+        })
       }
     },
     computed: mapState({
@@ -918,8 +1004,8 @@
             background-size: cover;
           }
         }
-        .operate-pdding{
-            padding-left:90px;
+        .operate-pdding {
+          padding-left: 90px;
         }
         .operate {
           > ul {
@@ -1006,7 +1092,7 @@
                           width: 800px;
                           margin: 0 auto;
                         }
-                        &.zx{
+                        &.zx {
                           padding: 10px 0;
                           height: 50px;
                           width: 400px;
@@ -1195,8 +1281,9 @@
                   margin-bottom: 30px;
                 }
               }
-              img{
-                width:100px;height:100px;
+              img {
+                width: 100px;
+                height: 100px;
               }
             }
           }
@@ -1229,7 +1316,7 @@
         }
         .footer-bottom {
           background-color: #1B1B1B;
-          a{
+          a {
             color: #fff;
           }
           ul {
@@ -1250,8 +1337,9 @@
               margin-right: 70px;
               cursor: pointer;
             }
-            img{
-              vertical-align: middle;margin-right: 5px
+            img {
+              vertical-align: middle;
+              margin-right: 5px
             }
           }
         }
@@ -1315,6 +1403,10 @@
               font-family: MicrosoftYaHei;
               color: rgba(102, 102, 102, 1);
               line-height: 16px;
+              &.title {
+                color: rgba(29, 23, 22, 1);
+                font-size: 14px;
+              }
             }
             .info-wrapper {
               margin-top: 10px;
@@ -1327,7 +1419,8 @@
                 }
                 span {
                   vertical-align: middle;
-                  width: 56px;display: inline-block;
+                  width: 56px;
+                  display: inline-block;
                 }
               }
             }
@@ -1364,6 +1457,7 @@
         background-repeat: no-repeat;
         background-position: center;
         background-image: url('./assets/img/app/phone.png');
+        cursor: pointer;
         &:hover {
           background: #2A99F2;
           background-repeat: no-repeat;
@@ -1409,7 +1503,21 @@
     border-radius: 50%;
     background-color: rgb(237, 63, 20, 0.5);
   }
-  .logo-img{
-    position: absolute;left:50%;margin-left:-440px;z-index:1100
+
+  .logo-img {
+    position: absolute;
+    left: 50%;
+    margin-left: -440px;
+    z-index: 1100
+  }
+
+  .complain-modal {
+    text-align: center;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(81, 70, 68, 1);
+      line-height: 24px;
+    }
   }
 </style>
