@@ -228,8 +228,7 @@
               </a>
             </li>
             <li>
-              <a href="javascript:void(0)" target="_blank" style="cursor: auto">增值电信业务经营许可证
-                B1-20180455</a>
+              <a href="javascript:void(0)" target="_blank" style="cursor: auto">增值电信业务经营许可证B1-20180455</a>
             </li>
             <li>
               <a href="https://www.xrcloud.net/about/" rel="nofollow" >关于我们</a>
