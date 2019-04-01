@@ -1750,7 +1750,7 @@
 
         //创建镜像
       createMrrior(){
-        if(this.selectLength.length != 1){
+        if(this.selectLength.length > 1){
           this.$Message.info('一次只能选择一台主机镜像制作');
           return;
         }
@@ -2212,6 +2212,9 @@
           if (this.selectLength.length === 0) {
             return false
           }
+          this.resetPasswordHostData.forEach(item =>{
+            item.currentPassword = '';
+          }),
           this.resetPasswordHostData = this.selectLength;
           this.showModal.resetPassword = true
         } else {

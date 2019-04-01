@@ -1796,8 +1796,8 @@
       diskUnload_ok() {
         this.$refs.unloadDisk.validate((valid) => {
           if (valid) {
-            this.$Message.info('磁盘正在卸载，请稍候。。。')
-            this.showModal.unloadDisk = false
+            this.$Message.info('磁盘正在卸载，请稍候。。。');
+            this.showWindow.unloadDisk = false;
             this.$http.get('Disk/detachVolume.do', {
               params: {
                 diskId: this.diskUnloadForm.unloadDisk,
