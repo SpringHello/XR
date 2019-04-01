@@ -44,6 +44,47 @@
                     <FormItem label="手机号码" prop="phoneNumber">
                       <Input v-model="formItem.phoneNumber" placeholder="请输入手机号码"></Input>
                     </FormItem>
+										<FormItem label="" style="width: 552px;">
+											<p style="color:rgba(0,0,0,0.43);">
+											  可上传5个大小不超过5M的附件，支持格式：jpg,png,gif,txt,doc,docx,eml,pdf, xlsx, xls</p>
+										  <div>
+										    <div style="display: flex;padding:20px;margin-left: -20px;line-height: 0;">
+										      <div>
+										        <div class="demo-upload-list" v-for="item in uploadList">
+															<template v-if="item.status === 'finished'">
+																	<img :src="item.url" style="width: 80px;height: 80px;position: relative;">
+																	<div v-if="file !== null" class="imgzi">{{ file.name }}</div>
+																	<div class="demo-upload-list-cover">
+																			<Icon type="ios-eye-outline" @click.native="showPicture(item.name)"></Icon>
+																			<Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+																	</div>
+															</template>
+															<template v-else>
+																	<Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+															</template>
+													</div>
+													<Upload
+															ref="upload"
+															:show-upload-list="false"
+															:default-file-list="defaultList"
+															:on-success="combine"
+															:format="['jpg','jpeg','png','gif','txt','doc','docx','eml','pdf','xlsx','xls']"
+															:max-size="5120"
+															:on-format-error="handleFormatError"
+															:on-exceeded-size="handleMaxSize"
+															:before-upload="handleUpload"
+															multiple
+															type="drag"
+															action="https://zschj.xrcloud.net/file/upFile.do"
+															style="display: inline-block;">
+															<div style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
+																	<img src="../../assets/img/usercenter/uc-add.png" />
+															</div>
+													</Upload>
+										      </div>
+										    </div>
+										  </div>
+										</FormItem>
                     <span class="submit" @click="submit('workForm')">提交工单</span>
                   </Form>
                 </div>
@@ -171,7 +212,7 @@
               </div>
 
             </Tab-pane>
-            <Tab-pane label="工单详情" :disabled="true" name="工单详情">
+            <Tab-pane label="工单详情" :disabled="false" name="工单详情">
               <div style="display: flex;justify-content: space-between;">
                 <div class="operating detail" style="width:52%;display: block">
                   <div class="item">
@@ -222,6 +263,14 @@
           </Tabs>
         </div>
       </div>
+			 <!--显示图片-->
+			<Modal width="550" v-model="showModal.showPicture" :scrollable="true">
+			  <div class="newPhone">
+			    <img :src="'https://zschj.xrcloud.net/' + imgName " style="margin:0px auto;display:block;background: none;">
+			  </div>
+			  <div slot="footer">
+			  </div>
+			</Modal>
     </div>
   </div>
 </template>
@@ -243,6 +292,14 @@
         }
       };
       return {
+				defaultList: [],
+                imgName: '',
+                visible: false,
+                uploadList: [],
+				showModal:{
+					showPicture:false
+				},
+				file: null,
         formItem: {
           title: '',
           type: '',
@@ -250,6 +307,7 @@
           description: '',
           remainder: 0,
           cost: 10,
+					combine: '',
           phoneNumber: ''
         },
         formItemRules: {
@@ -350,6 +408,66 @@
        }*/
     },
     methods: {
+			handleView (name) {
+                this.imgName = name;
+                this.visible = true;
+            },
+            handleRemove (file) {
+                const fileList = this.$refs.upload.fileList;
+                this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+            },
+            handleSuccess (res, file) {
+                file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
+                file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+            },
+            handleFormatError (file) {
+                this.$Notice.warning({
+                    title: 'The file format is incorrect',
+                    desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+                });
+            },
+            handleMaxSize (file) {
+                this.$Notice.warning({
+                    title: 'Exceeding file size limit',
+                    desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+                });
+            },
+            handleBeforeUpload () {
+                const check = this.uploadList.length < 5;
+                if (!check) {
+                    this.$Notice.warning({
+                        title: 'Up to five pictures can be uploaded.'
+                    });
+                }
+                return check;
+            },
+			//显示原图
+			showPicture(name) {
+				this.imgName = name;
+			  this.showModal.showPicture = true
+			},
+			handleFormatError() {
+			  this.$Message.info({
+			    content: '仅支持jpg,png,gif,txt,doc,docx,eml,pdf, xlsx, xls格式的文件上传'
+			  })
+			},
+			handleMaxSize() {
+			  this.$Message.info({
+			    content: '上传的文件过大'
+			  })
+			},
+			handleUpload (file) {
+          this.file = file;
+      },
+			combine(response,file) {
+			  if (response.status == 1) {
+					file.url = response.result
+					console.log(this.file)
+					//file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+			    //this.uploadList.url = response.result
+					//console.log(this.uploadList.url)
+			  }
+			},
       urge() {
         this.$Message.success({
           content: '提醒成功，我们将为您加紧处理。',
@@ -505,6 +623,9 @@
         this.getOrders('closing')
       }
     },
+        mounted () {
+            this.uploadList = this.$refs.upload.fileList;
+        },
     computed: {
       disabled() {
         return !(this.formItem.title && this.formItem.type && this.formItem.product && this.formItem.description)
@@ -559,7 +680,7 @@
               padding: 5px 15px;
               cursor: pointer;
               user-select: none;
-              float: right;
+              margin-left: 75px;
             }
             .disabled {
               cursor: not-allowed;
@@ -702,4 +823,52 @@
       }
     }
   }
+	.imgzi{
+		width:80px;
+		height:30px;
+		font-size:12px;
+		color:rgba(102,102,102,1);
+		line-height:16px;
+		position: relative;
+		margin-top: -30px;
+	}
+	.demo-upload-list{
+				height: 80px;
+				border:1px solid rgba(217,217,217,1);
+				color: #999;
+				background:rgba(255,255,255,1);
+				width: 80px;
+				margin: 0;
+				line-height: 80px;
+        display: inline-block;
+        text-align: center;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        position: relative;
+        box-shadow: 0 1px 1px rgba(0,0,0,.2);
+        margin-right: 4px;
+				vertical-align: top;
+    }
+    .demo-upload-list img{
+        width: 100%;
+        height: 100%;
+    }
+    .demo-upload-list-cover{
+        display: none;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,.6);
+    }
+    .demo-upload-list:hover .demo-upload-list-cover{
+        display: block;
+    }
+    .demo-upload-list-cover i{
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        margin: 0 5px;
+    }
 </style>
