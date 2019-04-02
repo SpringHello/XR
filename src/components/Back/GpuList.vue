@@ -2164,7 +2164,7 @@
           }
           switch (name) {
             case 'bindingIP':
-            if(this.hostSelectList.publicip != '' && this.hostSelectList.publicip != undefined)){
+            if(this.hostSelectList.publicip != '' && this.hostSelectList.publicip != undefined){
               this.$Message.info('该主机已绑定IP');
               return;
             }

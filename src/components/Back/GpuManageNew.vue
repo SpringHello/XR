@@ -1527,7 +1527,7 @@
             this.mirrorModifyForm.buttonText = '确认重装'
             this.mirrorModifyForm.system = []
             this.mirrorModifyForm.consolePassword = ''
-            this.$Message.success('系统重装成功')
+            this.$Message.success(response.data.message)
             this.getGpuHostDetail()
           } else {
             this.mirrorModifyForm.buttonText = '确认重装'
