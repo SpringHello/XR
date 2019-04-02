@@ -245,7 +245,7 @@
         sessionStorage.setItem('name', this.searchText)
         sessionStorage.setItem('suffix', JSON.stringify(this.suffixList))
         sessionStorage.setItem('suffixChange', JSON.stringify(this.getSuffix))
-        this.$router.push('DomainResult')
+        this.$router.push('/DomainResult')
       },
 
       showBtn(){
