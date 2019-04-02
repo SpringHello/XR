@@ -46,14 +46,18 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="bindHostForm" multiple>
-          <FormItem label="请选择虚拟机" prop="vm" style="margin-bottom: 0;">
+          <FormItem label="请选择虚拟机" prop="vm">
             <Select v-model="bindHostForm.vm" multiple>
               <Option v-for="item in bindHostForm.vmOptions" :value="item.computerid" :key="item.computerid">
                 {{item.computername}}
               </Option>
             </Select>
           </FormItem>
-					<p v-if="bindHostForm.vm.computerid==null" style="margin-top: 5px;color: #FF0000;">该子网下无可选主机，请将主机加入该子网之后在进行操作</p>
+					<span v-if="bindHostForm.vmOptions==''" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 47%;top: 45%;"
+					 @click="buyzhuji">
+						<img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png" />
+						购买主机
+					</span>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -64,6 +68,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+	 import axios from '@/util/axiosInterceptor'
   export default{
     data(){
       return {
@@ -183,6 +188,17 @@
       this.listHostByBalance()
     },
     methods: {
+			buyzhuji() {
+				// 切换默认区域
+				axios.get('user/setDefaultZone.do', {params: {zoneId: this.$store.state.zone.zoneid}}).then(response => {
+				})
+				for (var zone of this.$store.state.zoneList) {
+				  if (zone.zoneid) {
+				    sessionStorage.setItem('pane', 'Peip')
+				    this.$router.push('/buy/')
+				  }
+				}
+			},
       /*  列出该负载均衡下的主机*/
       listHostByBalance () {
         var loadbalanceType = this.balanceInfo._internal ? '0' : '1'

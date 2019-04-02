@@ -53,7 +53,7 @@
 										        <div class="demo-upload-list" v-for="item in uploadList">
 															<template v-if="item.status === 'finished'">
 																	<img :src="item.url" style="width: 80px;height: 80px;position: relative;">
-																	<div v-if="file !== null" class="imgzi">{{ file.name }}</div>
+																	<div v-if="file !== null" class="imgzi">{{ item.name }}</div>
 																	<div class="demo-upload-list-cover">
 																			<Icon type="ios-eye-outline" @click.native="showPicture(item.name)"></Icon>
 																			<Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
@@ -462,7 +462,8 @@
 			combine(response,file) {
 			  if (response.status == 1) {
 					file.url = response.result
-					console.log(this.file)
+					file.name = this.file.name
+					console.log(file.name)
 					//file.name = '7eb99afb9d5f317c912f08b5212fd69a';
 			    //this.uploadList.url = response.result
 					//console.log(this.uploadList.url)
