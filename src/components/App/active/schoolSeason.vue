@@ -499,7 +499,7 @@
                 <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:200px;">
                 </Input>
                 <img :src="imgSrc" style="height:33px;"
-                     @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                     @click="imgSrc=`https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`">
               </FormItem>
               <FormItem prop="tel">
                 <span class="label">手机号码</span>
@@ -1219,7 +1219,7 @@
             {required: true, message: '请输入验证码'}
           ]
         },
-        imgSrc: 'user/getKaptchaImage.do',
+        imgSrc: 'https://www.xrcloud.net/user/getKaptchaImage.do',
       }
     },
     created() {
@@ -1575,7 +1575,7 @@
           this.showModal.notLoginModal = true
         } else {
           if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
-            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+            this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
             this.showModal.authModal = true
             return
           }
@@ -1665,7 +1665,7 @@
           return
         }
         if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authModal = true
           return
         }
@@ -1746,7 +1746,7 @@
           return
         }
         if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authModal = true
           return
         }
@@ -1800,7 +1800,7 @@
           return
         }
         if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authModal = true
           return
         }

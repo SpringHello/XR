@@ -28,7 +28,8 @@
       <div class="content">
         <h2>备案区域选择</h2>
         <div class="area">
-          <button v-for="item in areaList" :key="item.zoneId" :class="{select: item.zoneId === area }" @click="changeArea(item)"><img :src="item.src" alt="描述"/> {{ item.text }}</button>
+          <button v-for="item in areaList" :key="item.zoneId" :class="{select: item.zoneId === area }" @click="changeArea(item)"><img :src="item.src" alt="描述"/> {{ item.text }}
+          </button>
         </div>
         <button @click="putOnRecord">立即备案</button>
       </div>
@@ -69,7 +70,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
+            <img :src="imgSrc" @click="imgSrc=`https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
           </div>
         </form>
       </div>
@@ -174,9 +175,24 @@
       if ($store.state.userInfo && $store.state.userInfo.recordFlag) {
         next({path: '/waitSecondTrial'})
       } else {
-        next()
+        // 获取用户信息
+        var userInfo = axios.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}})
+        // 获取zone信息
+        var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime()}})
+        Promise.all([userInfo, zoneList]).then(values => {
+            if (values[0].data.status == 1 && values[0].status == 200) {
+              $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+              localStorage.setItem('realname', values[0].data.result.realname)
+            }
+            if (values[1].data.status == 1 && values[1].status == 200) {
+              $store.commit('setZoneList', values[1].data.result)
+            }
+            next()
+          },
+          value => {
+            next()
+          })
       }
-
     },
     data() {
       return {
@@ -314,7 +330,7 @@
             warning: false
           },
         },
-        imgSrc: 'user/getKaptchaImage.do',
+        imgSrc: 'https://www.xrcloud.net/user/getKaptchaImage.do',
         isRecords: []
       }
     },
@@ -421,7 +437,7 @@
       // 立即备案
       putOnRecord() {
         if (this.$store.state.userInfo == null) {
-          this.$LR({type:'login'})
+          this.$LR({type: 'login'})
           return
         }
         if (this.type == 4) {
@@ -540,7 +556,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.go(0)
           } else {
-            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+            this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
             this.vailForm.loginname.message = response.data.message
             this.vailForm.loginname.warning = true
           }

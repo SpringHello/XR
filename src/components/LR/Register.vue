@@ -131,7 +131,7 @@
               <p>现在完成<span style="color: #2A99F2;cursor: pointer;text-decoration: underline" @click="$router.push('userCenter')"> 实名认证 </span>即可获得<span
                 style="color: #FF624B"> 196元 </span>专属优惠券，还可参加<span style="color: #FF624B;cursor: pointer" @click="$router.push('fractive')"> 多款主机免费领 </span>活动。<span v-show="registerForm.onStep === 4">请联系您的专属客服小牛获取优惠券</span></p>
               <button @click="$router.push('userCenter')">前往认证</button>
-              <router-link to="/index">返回首页></router-link>
+              <router-link to="/">返回首页></router-link>
             </div>
           </div>
         </div>
