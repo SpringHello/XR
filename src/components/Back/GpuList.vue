@@ -1072,7 +1072,7 @@
               render:(h,params)=>{
                 return h('div',[
                   h('p',{},params.row.publicip ?params.row.publicip+'(公)':'----'),
-                  h('p',{},params.row.publicip ?params.row.publicip+'(内)':'----')
+                  h('p',{},params.row.privateip ?params.row.privateip+'(内)':'----')
                 ])
               }
             },
@@ -1801,7 +1801,7 @@
            params:{
             timeType:this.timeType,
             timeValue:this.timeValue,
-            gpuArr:this.VMId,
+            gpuArr:this.hostSelectList.id,
             zoneId:this.$store.state.zone.zoneid
            }
          }).then(res => {
@@ -1820,7 +1820,7 @@
 
         //主机续费提交
       setGPuMoney(){
-         let gpuList =JSON.stringify([{type:6,id:this.VMId}]);
+         let gpuList =JSON.stringify([{type:6,id:this.hostSelectList.id}]);
           axios.post('continue/continueOrder.do',{
             zoneId:this.$store.state.zone.zoneid,
             timeType:this.timeType,
@@ -1899,7 +1899,7 @@
           })
         }
         var host = [
-          {type: 6, id: this.VMId}
+          {type: 6, id: this.hostSelectList.id}
         ]
         var list = host.concat(iplist, disklist)
         list = JSON.stringify(list)
@@ -2164,6 +2164,10 @@
           }
           switch (name) {
             case 'bindingIP':
+            if(this.hostSelectList.publicip != '' && this.hostSelectList.publicip != undefined){
+              this.$Message.info('该主机已绑定IP');
+              return;
+            }
               this.showModal.ipShow = true;
               this.bindIp();
               break
@@ -2463,7 +2467,7 @@
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              gpuArr: this.hostSelectList.id,
+              gpuArr: this.VMId,
               ipIdArr: selectIp,
               diskArr: selectDisk
             }
