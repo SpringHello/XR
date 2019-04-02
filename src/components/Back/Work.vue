@@ -55,7 +55,7 @@
 																	<img :src="item.url" style="width: 80px;height: 80px;position: relative;">
 																	<div v-if="file !== null" class="imgzi">{{ item.name }}</div>
 																	<div class="demo-upload-list-cover">
-																			<Icon type="ios-eye-outline" @click.native="showPicture(item.name)"></Icon>
+																			<Icon type="ios-eye-outline" @click.native="showPicture(item,item.name)"></Icon>
 																			<Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
 																	</div>
 															</template>
@@ -77,7 +77,7 @@
 															type="drag"
 															action="https://zschj.xrcloud.net/file/upFile.do"
 															style="display: inline-block;">
-															<div style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
+															<div v-if="uploadList.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
 																	<img src="../../assets/img/usercenter/uc-add.png" />
 															</div>
 													</Upload>
@@ -264,9 +264,9 @@
         </div>
       </div>
 			 <!--显示图片-->
-			<Modal width="550" v-model="showModal.showPicture" :scrollable="true">
+			<Modal width="960" v-model="showModal.showPicture" :scrollable="true" id="modelimg">
 			  <div class="newPhone">
-			    <img :src="'https://zschj.xrcloud.net/' + imgName " style="margin:0px auto;display:block;background: none;">
+			    <img :src="imgName" style="display:block;max-height: 600px;max-width: 900px;">
 			  </div>
 			  <div slot="footer">
 			  </div>
@@ -293,7 +293,7 @@
       };
       return {
 				defaultList: [],
-                imgName: '',
+                imgName: [],
                 visible: false,
                 uploadList: [],
 				showModal:{
@@ -442,8 +442,8 @@
                 return check;
             },
 			//显示原图
-			showPicture(name) {
-				this.imgName = name;
+			showPicture(item,name) {
+				this.imgName=item.url
 			  this.showModal.showPicture = true
 			},
 			handleFormatError() {
@@ -458,6 +458,13 @@
 			},
 			handleUpload (file) {
           this.file = file;
+					const check = this.uploadList.length < 5;
+					if (!check) {
+					    this.$Notice.warning({
+					        title: '可上传文件不超过五个！'
+					    });
+					}
+					return check;
       },
 			combine(response,file) {
 			  if (response.status == 1) {

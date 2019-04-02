@@ -492,6 +492,10 @@ div.modal-header-border {
   background: url('../../assets/img/active/smlj/modal-bg.png');
 }
 
+#modelimg .ivu-modal-content{
+	background: none;
+}
+
 /* 公共comfirm弹窗行高设置 */
 .modal-wrapper .modal .modal-body p {
   line-height: 25px;
