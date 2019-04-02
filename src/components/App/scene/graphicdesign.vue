@@ -253,7 +253,7 @@
               <Input v-model="quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
                      style="width:250px;margin-right: 10px"></Input>
               <img :src="imgSrc" style="height:33px;"
-                   @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
+                   @click="imgSrc=`https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
             </div>
           </FormItem>
           <FormItem label="手机号码" prop="phone" style="width: 100%">
@@ -1914,7 +1914,7 @@
             {required: true, message: '请输入验证码'}
           ]
         },
-        imgSrc: `/user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        imgSrc: `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         //定时器
         pageTimer: null,
         serialNum: ''

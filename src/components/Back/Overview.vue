@@ -177,15 +177,15 @@
           },
           {
             prod: '云网络',
-            prodUrl: ['vpc#VPC', 'ip', 'loadbState', 'NatState', 'vpnBlanck', '', 'vpcManage']
+            prodUrl: ['vpcList#VPC', 'ip', 'loadbState', 'NatState', 'vpnBlanck', '', 'vpcManage']
           },
           {
             prod: '云存储',
-            prodUrl: ['disk', 'diskBackup', 'objectStorage', '']
+            prodUrl: ['diskList', 'diskBackupList', 'objectStorage', '']
           },
           {
             prod: '云安全',
-            prodUrl: ['firewall', '']
+            prodUrl: ['firewallList', '']
           },
           {
             prod: '云运维',
@@ -303,7 +303,7 @@
               } else if (content.itemName == '云硬盘') {
                 content.cartUrl = '/buy/disk/#Pdisk'
               } else if (content.itemName == 'NAT网关') {
-                content.cartUrl = 'vpc#NAT'
+                content.cartUrl = 'vpcList#NAT'
               }
               if (content.itemName == '数据库') {
                 content.cartUrl = '/buy/database/#NAT'
