@@ -333,7 +333,7 @@
                       {{item.acllistname}}
                     </Option>
                   </Select>
-                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/support/products.html')">帮助文档</span>
+                  <a style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" href="/support/products/">帮助文档</a>
                 </div>
               </div>
             </div>
@@ -1133,12 +1133,12 @@
           return
         }
         if (this.currentLoginType == 'custom') {
-          if (this.computerName.trim() == '') {
-            this.computerNameWarning = '请输入主机名称'
+          if (!this.computerName||this.computerName.indexOf(" ") != -1) {
+            this.computerNameWarning = '请输入主机名称，不能包含空格'
             return
           }
           if (!regExp.hostPassword(this.password)) {
-            this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
+            this.passwordWarning = '请输入6-23位包含大小写与数字的密码,不能包含@!'
             return
           }
         }

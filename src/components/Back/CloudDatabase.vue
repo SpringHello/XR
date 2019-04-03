@@ -25,7 +25,7 @@
         </div>
         <div class="databases">
           <Table :columns="databaseColumns" :data="dataBaseData"></Table>
-          <p>点击查看<span @click="$router.push('/support_docs/4LlTC3MYo_RjDqVv0ZP.html')">如何连接数据库？</span></p>
+          <p>点击查看<a href="/support_docs/4LlTC3MYo_RjDqVv0ZP.html">如何连接数据库？</a></p>
         </div>
       </div>
     </div>
