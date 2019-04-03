@@ -214,7 +214,9 @@
           if (zone.zoneid == item.zoneId) {
             $store.commit('setZone', zone);
             if (ited.url == 'https://oss-console.xrcloud.net/ruirados/objectStorage') {
-              window.location.href = 'https://oss-console.xrcloud.net/ruirados/objectStorage'
+							window.location.href = "https://oss-console.xrcloud.net/ruirados/objectStorage?zoneId=" +item.zoneId;
+							//console.log(item.zoneId)
+							//window.open(`/${ited.url}?zoneId=${item.zoneId}`)
             }
             else if (ited.url == 'vpc#NAT') {
               this.paneStatus.vpc = ited.url.split('#')[1]
