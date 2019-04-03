@@ -333,8 +333,8 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              //{subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
+              // {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'diskList'},
               {subName: '云硬盘备份', type: 'diskBackupList'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
