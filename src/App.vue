@@ -764,8 +764,8 @@
       // if (sessionStorage.getItem('hintShow') == null) {
       //   sessionStorage.setItem('hintShow', 'true')
       // }
-      let from = window.location.href.split('from')[1] ? window.location.href.split('from')[1] : ''
-      let sellCode = window.location.href.split('sellCode')[1] ? window.location.href.split('sellCode')[1] : ''
+      let from = window.location.href.split('from=')[1] ? window.location.href.split('from=')[1] : ''
+      let sellCode = window.location.href.split('sellCode=')[1] ? window.location.href.split('sellCode=')[1] : ''
       if (from) {
         // 流量来源记录
         localStorage.setItem('comefrom', from)

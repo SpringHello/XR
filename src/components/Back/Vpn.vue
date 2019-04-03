@@ -1082,7 +1082,7 @@
             zoneId: $store.state.zone.zoneid,
           }
         })
-        Promise.all([remote, customer,coustomerGateway]).then(values => {
+        Promise.all([remote, customer,coustomerGateway,localGateway]).then(values => {
           this.initRemoteData(values[0])
           this.initVpnLinkData(values[1])
           this.initCustomerData(values[2])
