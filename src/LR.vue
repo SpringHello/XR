@@ -13,7 +13,7 @@
     <router-view/>
     <div class="foot-bar">
       <div style="width:1200px;height:100%;margin:0px auto;">
-        <span>copyright © 2014-2017</span>
+        <span>copyright © 2019</span>
         <span>北京允睿讯通科技有限公司</span>
         <span style=" cursor:pointer;">京ICP备15035854号</span>
         <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922"

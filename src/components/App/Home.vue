@@ -426,7 +426,7 @@
               <dd v-html="showNews.abstracts">
               </dd>
               <dd>
-                <a :href='`https://zschj.xrcloud.net/news/${showNews.code}.html`' target="_blank" class="news-btn">
+                <a :href='`https://www.xrcloud.net/news/${showNews.code}.html`' target="_blank" class="news-btn">
                   查看详情
                 </a>
               </dd>
@@ -447,7 +447,7 @@
             <dd>
               <ul>
                 <li v-for="(secitem,i) in item.artile" :key="i">
-                  <a :href="`https://zschj.xrcloud.net/news/${secitem.code}.html`" target="_blank">
+                  <a :href="`https://www.xrcloud.net/news/${secitem.code}.html`" target="_blank">
                       <div class="alink">
                         <div class="title">{{secitem.title}}</div>
                         <i v-if="secitem.isHot">HOT</i>
@@ -590,7 +590,7 @@
         otherPayWay: '',
         balance: '0.0',
         attestationShow: false,
-        imgSrc: `/user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        imgSrc: `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         //定时器
         pageTimer: null,
         serialNum: '',

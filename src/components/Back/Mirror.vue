@@ -382,8 +382,12 @@
     created() {
       this.ownMirrorList()
       this.systemMirrorList()
-      this.closeHostList()
       this.inter()
+      if(this.$store.state.zone.gpuserver == 1 && this.$store.state.zone.isdefault == 1){
+        this.closeGpuList()
+      }else{
+         this.closeHostList()
+      }
     },
     methods: {
       checkFormItem(){
@@ -433,6 +437,19 @@
               this.hostName = vmcloselist
             }
           })
+      },
+      //查询已关闭GPU
+      closeGpuList(){
+        var vmcloselist = []
+        this.hostName = []
+        this.$http.get('gpuserver/listGpuServer.do').then(res =>{
+          if (res.status == 200 && res.data.status == 1) {
+              if (res.data.result.close) {
+                vmcloselist = res.data.result.close.list
+              }
+              this.hostName = vmcloselist
+            }
+        })
       },
       // 查询私有镜像
       ownMirrorList() {

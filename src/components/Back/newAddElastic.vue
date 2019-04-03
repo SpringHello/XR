@@ -862,6 +862,12 @@
       },
       bandWidth: function () {
         this.getCapacityPrice();
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.getTemplates();
+        },
+        deep: true
       }
     }
   }

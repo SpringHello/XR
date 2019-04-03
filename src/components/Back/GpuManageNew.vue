@@ -32,10 +32,10 @@
                   <ul>
                     <li><span class="one">镜像系统</span><span class="two">{{ gpuDetail.template}}</span><span class="three" @click="modifyMirror"> [修改]</span></li>
                     <li><span class="one">系统盘容量</span><span class="two">{{ gpuDetail.rootDiskSize}}G</span></li>
-                    <li><span class="one">数据盘容量</span><span class="two">{{ gpuDetail.diskSize?gpuDetail.diskSize:0 }}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three" > / 卸载]</span></li>
+                    <li><span class="one">绑定数据盘</span><span class="two">{{ gpuDetail.diskSize }}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three" @click="diskUnload"> / 卸载]</span></li>
                     <li><span class="one">登陆密码</span><span class="two"></span><span class="three" v-if="codePlaceholder == '发送密码'" @click="showWindow.lookPassword = true"> [{{codePlaceholder}}]</span>
                       <span class="two" v-else> [{{codePlaceholder}}]</span>
-                      <span class="three" @click="showWindow.modifyPassword = true"> [修改密码]</span></li>
+                      <span class="three" @click="resetModifyPassword"> [修改密码]</span></li>
                     <li><span class="one">主机状态</span> <span  class="two">{{ gpuDetail.computerStatus? '开机': '关机' }}</span></li>
                   </ul>
                 </div>
@@ -54,7 +54,6 @@
                         <span :class="{three: bindForm.bindIpText == '绑定IP' }" v-else @click="bindIP"> [{{ bindForm.bindIpText }}]</span></li>
                       <li><span class="four">带宽</span><span class="two">{{ gpuDetail.bandwith?gpuDetail.bandwith: '0'}}M</span>
                         <span class="three" v-if="gpuDetail.bandwith" @click="adjustIP"> [扩容]</span></li>
-                      <li><span class="four">负载均衡</span><span class="two">{{(gpuDetail.loadbalance + '') ? gpuDetail.loadbalance + '' : '----'}}</span></li>
                       <li><span class="four">NAT网关</span><span class="two">{{ gpuDetail.netGateway? gpuDetail.netGateway : '----'}}</span></li>
                     </ul>
                 </div>
@@ -147,7 +146,7 @@
                 </div>
                 <div class="selectMark">
                   <img src="../../assets/img/host/h-icon10.png"/>
-                  <span>共 {{tab3.totalLenght}} 项 | 已选择 <span style="color:#FF624B;">{{selectLenght}}</span>项</span>
+                  <span>共 {{tab3.totalLenght}} 项 | 已选择 <span style="color:#FF624B;">{{tab3.selectLenght}}</span>项</span>
                 </div>
                 <Table :columns='tab3.firewalList' :data='tab3.firewalData' :loading='tab3.firewalLoading' @on-selection-change="firewalSelectionChange"></Table>
               </div>
@@ -511,6 +510,31 @@
         </Button>
       </div>
     </Modal>
+    <!-- 卸载硬盘模态框 -->
+    <Modal v-model="showWindow.unloadDisk" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">卸载云硬盘</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="diskUnloadForm" :rules="unloadRuleValidate" ref="unloadDisk">
+          <Form-item label="可卸载磁盘列表" prop="unloadDisk">
+            <Select v-model="diskUnloadForm.unloadDisk" placeholder="请选择">
+              <Option v-for="(item,index) in diskUnloadForm.diskList" :key="index" :value="item.diskid">{{ item.diskname}}
+              </Option>
+            </Select>
+          </Form-item>
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 45%;"
+                @click="$router.push('/buy/disk/')">
+              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
+              购买磁盘
+            </span>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showWindow.unloadDisk = false">取消</Button>
+        <Button type="primary" @click="diskUnload_ok">确认卸载</Button>
+      </div>
+    </Modal>
     </div>
 </template>
 
@@ -545,7 +569,7 @@
       const validaRegisteredPassWord = (rule, value, callback) => {
         if (value.length < 8 || value.length > 30) {
           callback(new Error('密码长度8-30字符'));
-        } else if (!regExp.registerPasswordVail(value)) {
+        } else if (!regExps.registerPasswordVail(value)) {
           callback(new Error('密码必须包含数字和字母大小写,不限特殊字符和空格'));
         } else {
           callback()
@@ -561,30 +585,12 @@
       const validatePassword = (rule, value, callback) => {
         if (!value) {
           callback(new Error('密码不能为空'));
-        } else if (!regExp.test(value)) {
+        } else if (!regExps.test(value)) {
           callback(new Error('新密码由6-23位的字母数字组成，必须包含大小写字母、数字'));
         } else {
-          if (regExp.test(value)) {
+          if (regExps.test(value)) {
             this.$refs.resetPasswordForm.validateField('confirmPassword');
           }
-          callback();
-        }
-      }
-      const validatePassCheck = (rule, value, callback) => {
-        if (!value) {
-          callback(new Error('密码不能为空'));
-        } else if (this.resetPasswordForm.newPassword != value) {
-          callback(new Error('两次密码不一致'));
-        } else {
-          callback();
-        }
-      }
-      const validaSinginName = (rule, value, callback) => {
-        if (!value) {
-          callback(new Error('密码不能为空'));
-        } else if (value.length < 8) {
-          callback(new Error('长度至少为8位'));
-        } else {
           callback();
         }
       }
@@ -787,7 +793,15 @@
             {required: true, validator: validateCdir, trigger: 'blur'}
           ]
         },
-
+        diskUnloadForm: {
+          unloadDisk: '',
+          diskList: []
+        },
+        unloadRuleValidate: {
+          unloadDisk: [
+            {required: true, message: '请选择卸载的磁盘', trigger: 'change'}
+          ]
+        },
         //Gpu服务器详情
         gpuDetail:{},
 
@@ -806,7 +820,8 @@
           publicIPHint: false,
           bindIP: false,
           unbindIP: false,
-          adjust:false
+          adjust:false,
+          unloadDisk:false
         },
         mirrorModifyForm: {
           system: [],
@@ -922,9 +937,9 @@
             hostName:''
         },
         renameFormRule:{
-          hostName:[{
-                hostName:{required:'true',message:'请输入主机名称',trigger:'blur'}
-            }]
+          hostName:[
+            {required:'true',message:'请输入主机名称',trigger:'blur'}
+            ]
         },    
         configType: '基础信息',
         configTypes: ['基础信息', '主机监控', '防火墙', '操作日志'],
@@ -1344,7 +1359,7 @@
       //连接主机
       link() {
         sessionStorage.setItem('link-companyid', this.gpuDetail.companyid);
-        sessionStorage.setItem('link-vmid', this.gpuDetail.computerid);
+        sessionStorage.setItem('link-vmid', this.gpuDetail.computerId);
         sessionStorage.setItem('link-zoneid', this.gpuDetail.zoneid);
         sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone);
         this.$router.push('link');
@@ -1355,13 +1370,14 @@
           if (valid) {
             this.showWindow.rename = false
             this.$http.post('information/changeVmName.do', {
-              vmId: this.hostCurrentSelected.computerid,
+              vmId: this.gpuDetail.computerId,
               name: this.renameForm.hostName
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
                 this.hostSelection = []
-                this.getHostList()
+                this.gpuName = this.renameForm.hostName;
+                this.getGpuHostDetail()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -1502,7 +1518,7 @@
         this.showWindow.reload = false
         this.mirrorModifyForm.buttonText = '重装中'
         this.$http.post('information/restoreVirtualMachine.do', {
-          VMId: this.gpuDetail.computerid,
+          VMId: this.gpuDetail.computerId,
           templateId: this.mirrorModifyForm.system[1],
           adminPassword: this.mirrorModifyForm.consolePassword
         }).then(response => {
@@ -1511,7 +1527,7 @@
             this.mirrorModifyForm.buttonText = '确认重装'
             this.mirrorModifyForm.system = []
             this.mirrorModifyForm.consolePassword = ''
-            this.$Message.success('系统重装成功')
+            this.$Message.success(response.data.message)
             this.getGpuHostDetail()
           } else {
             this.mirrorModifyForm.buttonText = '确认重装'
@@ -1552,7 +1568,7 @@
             this.$http.get('Disk/attachVolume.do', {
               params: {
                 diskId: this.diskMountForm.mountDisk,
-                VMId: this.gpuDetail.computerid
+                VMId: this.gpuDetail.computerId
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -1576,7 +1592,7 @@
             let url = 'information/resetPasswordForVirtualMachine.do'
             this.$http.get(url, {
               params: {
-                VMId:this.gpuDetail.computerid,
+                VMId:this.gpuDetail.computerId,
                 password: this.modifyPasswordForm.newPassword,
                 oldPassword: this.modifyPasswordForm.oldPassword
               }
@@ -1673,7 +1689,7 @@
               this.$http.get('network/enableStaticNat.do', {
                 params: {
                   ipId: this.bindForm.publicIP,
-                  VMId: this.gpuDetail.computerid
+                  VMId: this.gpuDetail.computerId
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
@@ -1700,7 +1716,7 @@
         this.$http.get('network/disableStaticNat.do', {
           params: {
             ipId: this.gpuDetail.publicIpId,
-            VMId: this.gpuDetail.computerid
+            VMId: this.gpuDetail.computerId
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1750,6 +1766,58 @@
           }
         })
       }),
+      // 重置修改密码
+      resetModifyPassword(){
+        this.showWindow.modifyPassword = true;
+        this.modifyPasswordForm.oldPassword = '';
+        this.modifyPasswordForm.newPassword = '';
+        this.modifyPasswordForm.confirmPassword = '';
+      },
+      diskUnload() {
+        this.getDiskListByComputerId()
+        this.showWindow.unloadDisk = true
+      },
+       getDiskListByComputerId() {
+        let url = 'Disk/listDisk.do'
+        this.$http.get(url, {
+          params: {
+            VMId: this.gpuDetail.computerId
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.diskUnloadForm.diskList = res.data.result
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      diskUnload_ok() {
+        this.$refs.unloadDisk.validate((valid) => {
+          if (valid) {
+            this.$Message.info('磁盘正在卸载，请稍候。。。');
+            this.showWindow.unloadDisk = false;
+            this.$http.get('Disk/detachVolume.do', {
+              params: {
+                diskId: this.diskUnloadForm.unloadDisk,
+                VMId: this.gpuDetail.computerId
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.info({
+                  content: response.data.message,
+                })
+                this.getGpuHostDetail()
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
     },
 
     created(){
