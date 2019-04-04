@@ -239,6 +239,7 @@
       rechargeOk() {
         switch (this.zf) {
           case 'zfb':
+          window.open("about:blank","alipay")
             this.$http.get('zfb/getzfbinfo.do', {
               params: {
                 total_fee: this.input
@@ -247,7 +248,7 @@
               if (res.data.status == 1 && res.status == 200) {
                 this.serialNum = res.data.serialNum
                 sessionStorage.setItem('serialNum', this.serialNum)
-                window.open(`zfb/alipaypage.do?serialNum=${this.serialNum}&route=rechargeResult`)
+                window.open(null,'alipay').location.href = `https://zschj.xrcloud.net/zfb/alipaypage.do?serialNum=${this.serialNum}&route=rechargeResult`
                 this.showModal.rechargeHint = true
               } else {
                 this.$message.info({
