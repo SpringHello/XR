@@ -2307,14 +2307,11 @@
     },
     created() {
       this.getUserVipLevel()
-      if (this.name == 'orderManage') {
-        this.changeOrder()
-      } else {
         this.getBalance()
+        this.changeOrder()
         this.showMoneyByMonth()
         this.search()
         this.getTicketNumber()
-      }
       if (sessionStorage.getItem('beVip')) {
         this.getVipList()
         sessionStorage.removeItem('beVip')
