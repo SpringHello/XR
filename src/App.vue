@@ -85,7 +85,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a href="https://www.xrcloud.net/login" rel="nofollow"><span>登录</span>
+                  <a href="https://zschj.xrcloud.net/login" rel="nofollow"><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -93,7 +93,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a href="https://www.xrcloud.net/register" rel="nofollow"><span>注册</span>
+                  <a href="https://zschj.xrcloud.net/register" rel="nofollow"><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -764,8 +764,8 @@
       // if (sessionStorage.getItem('hintShow') == null) {
       //   sessionStorage.setItem('hintShow', 'true')
       // }
-      let from = window.location.href.split('from')[1] ? window.location.href.split('from')[1] : ''
-      let sellCode = window.location.href.split('sellCode')[1] ? window.location.href.split('sellCode')[1] : ''
+      let from = window.location.href.split('from=')[1] ? window.location.href.split('from=')[1] : ''
+      let sellCode = window.location.href.split('sellCode=')[1] ? window.location.href.split('sellCode=')[1] : ''
       if (from) {
         // 流量来源记录
         localStorage.setItem('comefrom', from)

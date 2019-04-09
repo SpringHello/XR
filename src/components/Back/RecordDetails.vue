@@ -1095,9 +1095,6 @@
         let regCord = /^[0-9]*$/;
         if (value == "") {
           return callback(new Error("请输入证件号码"));
-        }
-        if (!regCord.test(value)) {
-          return callback(new Error("请输入正确的证件号码"));
         } else {
           callback();
         }
