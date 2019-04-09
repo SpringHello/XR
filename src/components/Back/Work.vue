@@ -220,8 +220,8 @@
                     <div>
                       <span style="width:38%;">问题类型 : {{orderDetail[0].description}}</span>
                       <span style="width:38%;">创建时间 : {{new Date(parseInt(orderDetail[2][0].puddate)).format('yyyy-MM-dd')}}</span>
-					  <span style="width:38%;margin-top: 10px;">持续时间 : {{orderDetail[0].timeago}}</span>
-					  <span style="width:38%;margin-top: 10px;">所属产品 : {{orderDetail[0].subdescription}}</span>
+					  <span style="width:38%;margin-top: 10px;">持续时间 : {{Durationtime}}</span>
+					  <span style="width:38%;margin-top: 10px;">所属产品 : {{orderDetail[2][0].subdescription}}</span>
                       <!--span>{{orderDetail[1].description}}</span-->
                     </div>
                     <div class="reply-wrapper" ref="reply">
@@ -240,9 +240,49 @@
 
                     </div>
                   </div>
-                  <div style="margin-top:20px;" v-if="orderDetail[2][0].wcSataus!=4">
+                  <div style="margin-top:10px;" v-if="orderDetail[2][0].wcSataus!=4">
                     <Input v-model="editorValue" type="textarea" :rows="4" placeholder="请输入..."></Input>
-                    <button @click="reply">发送</button>
+					<!-- <div style="width: 552px;margin-top: 10px;">
+						<p style="color:rgba(0,0,0,0.43);">
+						  可上传5个大小不超过5M的附件，支持格式：jpg,png,gif,txt,doc,docx,eml,pdf, xlsx, xls</p>
+					  <div>
+					    <div style="display: flex;padding:20px;margin-left: -20px;line-height: 0;">
+					      <div>
+					        <div class="demo-upload-list" v-for="item,index in uploadList">
+								<template v-if="item.status === 'finished'">
+										<img :src="item.url" :onerror="errorimg" style="width: 80px;height: 80px;position: relative;">
+										<div v-if="file !== null" class="imgzi">{{ item.name }}</div>
+										<div class="demo-upload-list-cover">
+												<Icon type="ios-eye-outline" @click.native="showPicture(item,item.name,index)"></Icon>
+												<Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+										</div>
+								</template>
+								<template v-else>
+										<Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+								</template>
+							</div>
+								<Upload
+										ref="upload"
+										:show-upload-list="false"
+										:default-file-list="defaultList"
+										:on-success="combine"
+										:format="['jpg','jpeg','png','gif','txt','doc','docx','eml','pdf','xlsx','xls']"
+										:max-size="5120"
+										:on-format-error="handleFormatError"
+										:on-exceeded-size="handleMaxSize"
+										:before-upload="handleUpload"
+										type="drag"
+										action="https://zschj.xrcloud.net/file/upFile.do"
+										style="display: inline-block;">
+										<div v-if="uploadList.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
+												<img src="../../assets/img/usercenter/uc-add.png" />
+										</div>
+								</Upload>
+					      </div>
+					    </div>
+					  </div>
+					</div> -->	
+                    <button @click="reply" style="margin-top: 0;float: left;">发送</button>
                   </div>
                 </div>
                 <div class="question">
@@ -295,17 +335,19 @@
         }
       };
       return {
+		  testurl:[],
+		  Durationtime:'',
 		  errorimg: '',
 		  UploadLeix:[],
 		  Leixsta:[],
-				defaultList: [],
-                imgName: [],
-                visible: false,
-                uploadList: [],
-				showModal:{
-					showPicture:false
-				},
-				file: null,
+		  defaultList: [],
+          imgName: [],
+          visible: false,
+          uploadList: [],
+		  showModal:{
+			showPicture:false
+		  },
+		file: null,
         formItem: {
           title: '',
           type: '',
@@ -551,6 +593,7 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.orderDetail = response.data.msg
+			this.Durationtime=timeago().format(this.orderDetail[2][0].puddate, 'zh_CN')
             this.$Loading.finish()
             this.tableName = '工单详情'
           }
@@ -560,7 +603,14 @@
         this.formItem.product = ''
       },
       submit(name) {
-        this.$refs[name].validate(valid => {
+		  this.uploadList.forEach((item, index)=>{
+				//return(this.uploadList, index, item);
+				console.log(item.url)
+				this.testurl.push(item.url)
+				
+			})
+			console.log(this.testurl.value)
+        /**this.$refs[name].validate(valid => {
           if (valid) {
             var url = 'order/createOrder.do'
             let params = {
@@ -568,7 +618,8 @@
               content: this.formItem.description,
               gid: this.orderType[this.formItem.type][0].gid,
               cid: this.formItem.product,
-              phone: this.formItem.phoneNumber
+              phone: this.formItem.phoneNumber,
+			  pictures:
             }
             // 32代表提现，需要多设置一个参数
             if (params.cid == '19') {
@@ -601,7 +652,7 @@
               }
             })
           }
-        })
+        })*/
       },
       reply() {
         if (this.editorValue.trim() == '') {
@@ -761,7 +812,7 @@
             padding: 10px 0px;
             margin-top: 15px;
             .item {
-              width: 80%;
+              //width: 80%;
               margin-top: 40px;
               span {
                 word-wrap: break-word;
