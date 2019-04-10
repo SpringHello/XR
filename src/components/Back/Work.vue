@@ -117,7 +117,9 @@
                         <span style="width:62%">创建时间 : {{item.puddate}}</span>
                         <span style="width:38%;margin-top: 10px;">所属产品 : {{item.subdescription}}</span>
                         <span style="width:62%;margin-top: 10px;">持续时间 : {{item.timeago}}</span>
-						<span style="width:100%;"><img src="../../assets/img/work/txt.png" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" /></span>
+						<span v-if="item.pic!=null" v-for="ited in item.pic">
+							<span style="width:100%;" ><img :src="ited" :onerror="errorimg1" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" /></span>
+						</span>
                       </div>
                       <div class="operating-menu">
                         <span @click="viewDetail(item)">查看详情</span>
@@ -163,13 +165,16 @@
               <div style="display: flex;justify-content: space-between;">
                 <div class="operating" style="width:35%">
                   <div>
-                    <div v-for="(item,index) in closingOrder" :key="item.id" class="item">
+                    <div v-for="(item,index) in closingOrder" :key="item.id" class="item" style="background:rgba(255,255,255,1);box-shadow:0px 2px 8px 0px rgba(0,0,0,0.2);border-radius:10px;padding: 20px;width:561px;margin: 0 0 30px 3px;">
                       <label>{{item.title}}</label>
                       <div style="display: flex; flex-wrap: wrap;">
                         <span style="width:38%">问题类型 : {{item.description}}</span>
                         <span style="width:62%">创建时间 : {{item.puddate}}</span>
-                        <span style="width:38%">所属产品 : {{item.subdescription}}</span>
-                        <span style="width:62%">经过时间 : {{item.timeago}}</span>
+                        <span style="width:38%;margin-top: 10px;">所属产品 : {{item.subdescription}}</span>
+                        <span style="width:62%;margin-top: 10px;">经过时间 : {{item.timeago}}</span>
+						<span v-if="item.pic!=null" v-for="ited in item.pic">
+							<span style="width:100%;" ><img :src="ited" :onerror="errorimg1" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" /></span>
+						</span>
                       </div>
                       <div class="operating-menu">
                         <span @click="viewDetail(item)">查看详情</span>
@@ -221,14 +226,18 @@
                       <span style="width:38%;">问题类型 : {{orderDetail[0].description}}</span>
                       <span style="width:38%;">创建时间 : {{new Date(parseInt(orderDetail[2][0].puddate)).format('yyyy-MM-dd')}}</span>
 					  <span style="width:38%;margin-top: 10px;">持续时间 : {{Durationtime}}</span>
-					  <span style="width:38%;margin-top: 10px;">所属产品 : {{orderDetail[2][0].subdescription}}</span>
+					  <span style="width:38%;margin-top: 10px;">所属产品 : {{orderDetail[0].subdescription}}</span>
                       <!--span>{{orderDetail[1].description}}</span-->
                     </div>
                     <div class="reply-wrapper" ref="reply">
                       <div class="item" style="border-bottom:1px solid #d8d8d8">
-                        <span class="main">问题描述</span>
-                        <span class="mini" style="margin-bottom:13px">{{orderDetail[2][0].issue}}</span>
-						<span style="width:100%;"><img src="../../assets/img/work/txt.png" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
+						  <p><span class="main">问题描述</span>
+                        <span class="mini" style="margin-bottom:13px">{{orderDetail[2][0].issue}}</span></p>
+                        
+						<!-- <span style="width:100%;"><img src="../../assets/img/work/txt.png" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span> -->
+						<span v-if="orderDetail[2][0].pic!=null" v-for="ited in orderDetail[2][0].pic">
+							<span style="width:100%;" ><img :src="ited" :onerror="errorimg1" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
+						</span>
                       </div>
                       <div class="item" v-for="item in orderDetail[3]" style="position: relative">
                         <span v-if="item.uname!=null" class="main">客服工程师</span>
@@ -237,24 +246,26 @@
                         <span
                           style="position: absolute;bottom: -17px;right: 65px;font-size: 12px;color: rgba(153,153,153,0.65);">{{new Date(parseInt(item.repdate)).format('yyyy-MM-dd hh:mm')}}</span>
                       </div>
-
+						<div v-if="orderDetail[3]!=null" style="width: 100%;height: 60px;border-bottom: 1px solid rgba(216,216,216,1);">
+							<span style="font-weight:400;color:rgba(42,153,242,1);margin-top: 35px;">关闭</span>
+						</div>
                     </div>
                   </div>
                   <div style="margin-top:10px;" v-if="orderDetail[2][0].wcSataus!=4">
                     <Input v-model="editorValue" type="textarea" :rows="4" placeholder="请输入..."></Input>
-					<!-- <div style="width: 552px;margin-top: 10px;">
+					<div style="width: 552px;margin-top: 10px;">
 						<p style="color:rgba(0,0,0,0.43);">
 						  可上传5个大小不超过5M的附件，支持格式：jpg,png,gif,txt,doc,docx,eml,pdf, xlsx, xls</p>
 					  <div>
 					    <div style="display: flex;padding:20px;margin-left: -20px;line-height: 0;">
 					      <div>
-					        <div class="demo-upload-list" v-for="item,index in uploadList">
+					        <div class="demo-upload-list" v-for="item,index in uploadList1">
 								<template v-if="item.status === 'finished'">
-										<img :src="item.url" :onerror="errorimg" style="width: 80px;height: 80px;position: relative;">
-										<div v-if="file !== null" class="imgzi">{{ item.name }}</div>
+										<img :src="item.url" :onerror="errorimg3" style="width: 80px;height: 80px;position: relative;">
+										<div v-if="file1 !== null" class="imgzi">{{ item.name }}</div>
 										<div class="demo-upload-list-cover">
-												<Icon type="ios-eye-outline" @click.native="showPicture(item,item.name,index)"></Icon>
-												<Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+												<Icon type="ios-eye-outline" @click.native="showPicture1(item,item.name,index)"></Icon>
+												<Icon type="ios-trash-outline" @click.native="handleRemove1(item)"></Icon>
 										</div>
 								</template>
 								<template v-else>
@@ -264,25 +275,25 @@
 								<Upload
 										ref="upload"
 										:show-upload-list="false"
-										:default-file-list="defaultList"
-										:on-success="combine"
+										:default-file-list="defaultList1"
+										:on-success="combine1"
 										:format="['jpg','jpeg','png','gif','txt','doc','docx','eml','pdf','xlsx','xls']"
 										:max-size="5120"
 										:on-format-error="handleFormatError"
 										:on-exceeded-size="handleMaxSize"
-										:before-upload="handleUpload"
+										:before-upload="handleUpload1"
 										type="drag"
 										action="https://zschj.xrcloud.net/file/upFile.do"
 										style="display: inline-block;">
-										<div v-if="uploadList.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
+										<div v-if="uploadList1.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
 												<img src="../../assets/img/usercenter/uc-add.png" />
 										</div>
 								</Upload>
 					      </div>
 					    </div>
 					  </div>
-					</div> -->	
-                    <button @click="reply" style="margin-top: 0;float: left;">发送</button>
+					</div>	
+                    <button @click="reply" style="margin-top: 20px;float: left;">发送</button>
                   </div>
                 </div>
                 <div class="question">
@@ -314,6 +325,14 @@
 			  <div slot="footer">
 			  </div>
 			</Modal>
+			<!--显示图片-->
+			<Modal width="960" v-model="showModal.showPicture1" :scrollable="true" id="modelimg">
+			  <div class="newPhone">
+			    <img :src="imgName1" style="display:block;max-height: 600px;max-width: 900px;">
+			  </div>
+			  <div slot="footer">
+			  </div>
+			</Modal>
     </div>
   </div>
 </template>
@@ -338,16 +357,24 @@
 		  testurl:[],
 		  Durationtime:'',
 		  errorimg: '',
+		  errorimg1: '',
+		  errorimg3: '',
 		  UploadLeix:[],
+		  UploadLeix1:[],
 		  Leixsta:[],
 		  defaultList: [],
+		  defaultList1: [],
           imgName: [],
+		  imgName1: [],
           visible: false,
           uploadList: [],
+		  uploadList1: [],
 		  showModal:{
-			showPicture:false
+			showPicture:false,
+			showPicture1:false
 		  },
 		file: null,
+		file1: null,
         formItem: {
           title: '',
           type: '',
@@ -355,7 +382,7 @@
           description: '',
           remainder: 0,
           cost: 10,
-					combine: '',
+		combine: '',
           phoneNumber: ''
         },
         formItemRules: {
@@ -460,6 +487,10 @@
                 const fileList = this.$refs.upload.fileList;
                 this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
             },
+			 handleRemove1 (file) {
+			    const fileList = this.$refs.upload.fileList;
+			    this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+			},
 			//显示原图
 			showPicture(item,name,index) {
 			  if(this.UploadLeix[index]==true){
@@ -467,6 +498,18 @@
 				  this.showModal.showPicture = true
 			  }
 			  else if(this.UploadLeix[index]==false){
+				  this.$Message.info({
+				    content: '该文件格式不支持放大查看！'
+				  })
+			  }
+			},
+			//显示原图
+			showPicture1(item,name,index) {
+			  if(this.UploadLeix1[index]==true){
+				  this.imgName1=item.url
+				  this.showModal.showPicture1 = true
+			  }
+			  else if(this.UploadLeix1[index]==false){
 				  this.$Message.info({
 				    content: '该文件格式不支持放大查看！'
 				  })
@@ -483,19 +526,30 @@
 			  })
 			},
 			handleUpload (file) {
-          this.file = file;
-					const check = this.uploadList.length < 5;
-					if (!check) {
-					    this.$Notice.warning({
-					        title: '可上传文件不超过五个！'
-					    });
-					}
-					return check;
-      },
+			  this.file = file;
+			  const check = this.uploadList.length < 5;
+			  if (!check) {
+				  this.$Notice.warning({
+					title: '可上传文件不超过五个！'
+				  });
+			  }
+			  return check;
+			},
+			handleUpload1 (file) {
+			  this.file1 = file;
+			  const check = this.uploadList1.length < 5;
+			  if (!check) {
+				  this.$Notice.warning({
+					title: '可上传文件不超过五个！'
+				  });
+			  }
+			  return check;
+			},
 			combine(response,file) {
 			  if (response.status == 1) {
 					file.url = response.result
-					console.log(file)
+					this.uploadList.push(file)
+					//console.log(this.uploadList)
 					//获取最后一个.的位置
 					var site11 = file.name.lastIndexOf("\.");
 					//截取最后一个.后的值
@@ -535,6 +589,54 @@
 						//截取最后一个.后的值
 						var end=this.file.name.substring(site + 1, this.file.name.length);
 						file.name= this.file.name.slice(0,17)+"..."+berorett+'.'+end;
+					}
+			  }
+			},
+			combine1(response,file) {
+			  if (response.status == 1) {
+					file.url = response.result
+					this.uploadList1.push(file)
+					//console.log(this.uploadList1)
+					//console.log(file)
+					//获取最后一个.的位置
+					var site11 = file.name.lastIndexOf("\.");
+					//截取最后一个.后的值
+					var end11=this.file1.name.substring(site11 + 1, file.name.length);
+					if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
+						this.UploadLeix1.push(true)
+					}
+					else if(end11=='txt'){
+						this.errorimg3='this.src="' + require('../../assets/img/work/txt.png') + '"'
+						this.UploadLeix1.push(false)
+					}
+					else if(end11=='doc'||end11=='docx'){
+						this.errorimg3='this.src="' + require('../../assets/img/work/doc.png') + '"'
+						this.UploadLeix1.push(false)
+					}
+					else if(end11=='eml'){
+						this.errorimg3='this.src="' + require('../../assets/img/work/eml.png') + '"'
+						this.UploadLeix1.push(false)
+					}
+					else if(end11=='pdf'){
+						this.errorimg3='this.src="' + require('../../assets/img/work/pdf.png') + '"'
+						this.UploadLeix1.push(false)
+					}
+					else if(end11=='xlsx'||end11=='xls'){
+						this.errorimg3='this.src="' + require('../../assets/img/work/xlsx.png') + '"'
+						this.UploadLeix1.push(false)
+					}
+					if(this.file1.name.length<=17){
+						file.name = this.file1.name
+					}
+					else{
+						var before=this.file1.name.split('.')[0]
+						var berorett=before.substring(before.length-1);
+						//var enter=this.file1.name.split('.')[1]
+						 //获取最后一个.的位置
+						var site = this.file1.name.lastIndexOf("\.");
+						//截取最后一个.后的值
+						var end=this.file1.name.substring(site + 1, this.file.name.length);
+						file.name= this.file1.name.slice(0,17)+"..."+berorett+'.'+end;
 					}
 			  }
 			},
@@ -604,13 +706,10 @@
       },
       submit(name) {
 		  this.uploadList.forEach((item, index)=>{
-				//return(this.uploadList, index, item);
-				console.log(item.url)
 				this.testurl.push(item.url)
-				
 			})
-			console.log(this.testurl.value)
-        /**this.$refs[name].validate(valid => {
+			var arr=this.testurl.toString(',')
+        this.$refs[name].validate(valid => {
           if (valid) {
             var url = 'order/createOrder.do'
             let params = {
@@ -619,7 +718,7 @@
               gid: this.orderType[this.formItem.type][0].gid,
               cid: this.formItem.product,
               phone: this.formItem.phoneNumber,
-			  pictures:
+							pictures: arr
             }
             // 32代表提现，需要多设置一个参数
             if (params.cid == '19') {
@@ -635,6 +734,7 @@
                 this.formItem.type = ''
                 this.formItem.description = ''
                 this.formItem.product = null
+				this.formItem.phoneNumber = null
                 this.$Message.success({
                   content: response.data.message,
                   top: 150,
@@ -652,7 +752,7 @@
               }
             })
           }
-        })*/
+        })
       },
       reply() {
         if (this.editorValue.trim() == '') {
@@ -689,6 +789,33 @@
               item.timeago = timeago().format(item.puddate, 'zh_CN')
               item.puddate = new Date(item.puddate).format('yyyy年MM月dd日 hh:mm:ss')
               this[type + 'Order'].push(item)
+							if(item.pic){
+								item.pic.forEach((ited, index)=>{
+									  //获取最后一个.的位置
+									  var site11 = ited.lastIndexOf("\.");
+									  //截取最后一个.后的值
+									  var end11=ited.substring(site11 + 1, ited.length);
+									  if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
+									  	
+									  }
+									  else if(end11=='txt'){
+									  	this.errorimg1='this.src="' + require('../../assets/img/work/txt.png') + '"'
+									  }
+									  else if(end11=='doc'||end11=='docx'){
+									  	this.errorimg1='this.src="' + require('../../assets/img/work/doc.png') + '"'
+									  }
+									  else if(end11=='eml'){
+									  	this.errorimg1='this.src="' + require('../../assets/img/work/eml.png') + '"'
+									  }
+									  else if(end11=='pdf'){
+									  	this.errorimg1='this.src="' + require('../../assets/img/work/pdf.png') + '"'
+									  }
+									  else if(end11=='xlsx'||end11=='xls'){
+									  	this.errorimg1='this.src="' + require('../../assets/img/work/xlsx.png') + '"'
+									  }
+								})
+							}
+						
             })
           }
         })
@@ -703,7 +830,6 @@
       }
     },
         mounted () {
-            this.uploadList = this.$refs.upload.fileList;
         },
     computed: {
       disabled() {
