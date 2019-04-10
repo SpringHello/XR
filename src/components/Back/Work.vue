@@ -635,7 +635,7 @@
 						 //获取最后一个.的位置
 						var site = this.file1.name.lastIndexOf("\.");
 						//截取最后一个.后的值
-						var end=this.file1.name.substring(site + 1, this.file.name.length);
+						var end=this.file1.name.substring(site + 1, this.file1.name.length);
 						file.name= this.file1.name.slice(0,17)+"..."+berorett+'.'+end;
 					}
 			  }
