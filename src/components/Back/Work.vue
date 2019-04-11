@@ -44,46 +44,46 @@
                     <FormItem label="手机号码" prop="phoneNumber">
                       <Input v-model="formItem.phoneNumber" placeholder="请输入手机号码"></Input>
                     </FormItem>
-					<FormItem label="" style="width: 552px;">
-						<p style="color:rgba(0,0,0,0.43);">
-						  可上传5个大小不超过5M的附件，支持格式：jpg,png,gif,txt,doc,docx,eml,pdf, xlsx, xls</p>
-					  <div>
-					    <div style="display: flex;padding:20px;margin-left: -20px;line-height: 0;">
-					      <div>
-					        <div class="demo-upload-list" v-for="item,index in uploadList">
-								<template v-if="item.status === 'finished'">
-										<img :src="item.url" :onerror="errorimg" style="width: 80px;height: 80px;position: relative;">
-										<div v-if="file !== null" class="imgzi">{{ item.name }}</div>
-										<div class="demo-upload-list-cover">
-												<Icon type="ios-eye-outline" @click.native="showPicture(item,item.name,index)"></Icon>
-												<Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-										</div>
-								</template>
-								<template v-else>
-										<Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-								</template>
-							</div>
-								<Upload
-										ref="upload"
-										:show-upload-list="false"
-										:default-file-list="defaultList"
-										:on-success="combine"
-										:format="['jpg','jpeg','png','gif','txt','doc','docx','eml','pdf','xlsx','xls']"
-										:max-size="5120"
-										:on-format-error="handleFormatError"
-										:on-exceeded-size="handleMaxSize"
-										:before-upload="handleUpload"
-										type="drag"
-										action="https://zschj.xrcloud.net/file/upFile.do"
-										style="display: inline-block;">
-										<div v-if="uploadList.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
-												<img src="../../assets/img/usercenter/uc-add.png" />
-										</div>
-								</Upload>
-					      </div>
-					    </div>
-					  </div>
-					</FormItem>					
+										<FormItem label="" style="width: 552px;">
+											<p style="color:rgba(0,0,0,0.43);">
+												可上传5个大小不超过5M的附件，支持格式：jpg,png,gif,txt,doc,docx,eml,pdf, xlsx, xls</p>
+											<div>
+												<div style="display: flex;padding:20px;margin-left: -20px;line-height: 0;">
+													<div>
+														<div class="demo-upload-list" v-for="item,index in uploadList">
+													<template v-if="item.status === 'finished'">
+															<img :src="item.url" :onerror="errorimg" style="width: 80px;height: 80px;position: relative;">
+															<div v-if="file !== null" class="imgzi">{{ item.name }}</div>
+															<div class="demo-upload-list-cover">
+																	<Icon type="ios-eye-outline" @click.native="showPicture(item,item.name,index)"></Icon>
+																	<Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+															</div>
+													</template>
+													<template v-else>
+															<Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+													</template>
+												</div>
+													<Upload
+															ref="upload"
+															:show-upload-list="false"
+															:default-file-list="defaultList"
+															:on-success="combine"
+															:format="['jpg','jpeg','png','gif','txt','doc','docx','eml','pdf','xlsx','xls']"
+															:max-size="5120"
+															:on-format-error="handleFormatError"
+															:on-exceeded-size="handleMaxSize"
+															:before-upload="handleUpload"
+															type="drag"
+															action="file/upFile.do"
+															style="display: inline-block;">
+															<div v-if="uploadList.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
+																	<img src="../../assets/img/usercenter/uc-add.png" />
+															</div>
+													</Upload>
+													</div>
+												</div>
+											</div>
+										</FormItem>					
                     <span class="submit" @click="submit('workForm')">提交工单</span>
                   </Form>
                 </div>
@@ -117,9 +117,9 @@
                         <span style="width:62%">创建时间 : {{item.puddate}}</span>
                         <span style="width:38%;margin-top: 10px;">所属产品 : {{item.subdescription}}</span>
                         <span style="width:62%;margin-top: 10px;">持续时间 : {{item.timeago}}</span>
-						<span v-if="item.pic!=null" v-for="ited in item.pic">
-							<span style="width:100%;" ><img :src="ited" :onerror="errorimg1" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" /></span>
-						</span>
+												<span v-if="item.pic!=null" v-for="ited in item.pic">
+													<span style="width:100%;" ><img :src="ited" :onerror="errorimg1" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" /></span>
+												</span>
                       </div>
                       <div class="operating-menu">
                         <span @click="viewDetail(item)">查看详情</span>
@@ -172,9 +172,9 @@
                         <span style="width:62%">创建时间 : {{item.puddate}}</span>
                         <span style="width:38%;margin-top: 10px;">所属产品 : {{item.subdescription}}</span>
                         <span style="width:62%;margin-top: 10px;">经过时间 : {{item.timeago}}</span>
-						<span v-if="item.pic!=null" v-for="ited in item.pic">
-							<span style="width:100%;" ><img :src="ited" :onerror="errorimg1" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" /></span>
-						</span>
+												<span v-if="item.pic!=null" v-for="ited in item.pic">
+													<span style="width:100%;" ><img :src="ited" :onerror="errorimg1" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" /></span>
+												</span>
                       </div>
                       <div class="operating-menu">
                         <span @click="viewDetail(item)">查看详情</span>
@@ -225,75 +225,80 @@
                     <div>
                       <span style="width:38%;">问题类型 : {{orderDetail[0].description}}</span>
                       <span style="width:38%;">创建时间 : {{new Date(parseInt(orderDetail[2][0].puddate)).format('yyyy-MM-dd')}}</span>
-					  <span style="width:38%;margin-top: 10px;">持续时间 : {{Durationtime}}</span>
-					  <span style="width:38%;margin-top: 10px;">所属产品 : {{orderDetail[0].subdescription}}</span>
+											<span style="width:38%;margin-top: 10px;">持续时间 : {{Durationtime}}</span>
+											<span style="width:38%;margin-top: 10px;">所属产品 : {{orderDetail[0].subdescription}}</span>
                       <!--span>{{orderDetail[1].description}}</span-->
                     </div>
                     <div class="reply-wrapper" ref="reply">
                       <div class="item" style="border-bottom:1px solid #d8d8d8">
-						  <p><span class="main">问题描述</span>
-                        <span class="mini" style="margin-bottom:13px">{{orderDetail[2][0].issue}}</span></p>
-                        
-						<!-- <span style="width:100%;"><img src="../../assets/img/work/txt.png" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span> -->
-						<span v-if="orderDetail[2][0].pic!=null" v-for="ited in orderDetail[2][0].pic">
-							<span style="width:100%;" ><img :src="ited" :onerror="errorimg1" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
-						</span>
+											<p>
+												<span class="main">问题描述</span>
+												<span class="mini" style="margin-bottom:13px">{{orderDetail[2][0].issue}}</span>
+											</p>
+											<span v-if="orderDetail[2][0].pic!=null" v-for="ited in orderDetail[2][0].pic">
+												<span style="width:100%;" ><img :src="ited" :onerror="errorimg1" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
+											</span>
                       </div>
                       <div class="item" v-for="item in orderDetail[3]" style="position: relative">
-                        <span v-if="item.uname!=null" class="main">客服工程师</span>
-                        <span v-if="item.uname==null" class="main">您</span>
-                        <span class="mini">{{item.g_reply}}</span>
+												<p>
+													<span v-if="item.uname!=null" class="main">客服工程师</span>
+													<span v-if="item.uname==null" class="main">您</span>
+													<span class="mini">{{item.g_reply}}</span>
+												</p>
+												<span v-if="item.pic!=null" v-for="ited in item.pic"><!--  -->
+													<span style="width:100%;" ><img :src="ited" :onerror="errorimg1" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
+												</span>
                         <span
                           style="position: absolute;bottom: -17px;right: 65px;font-size: 12px;color: rgba(153,153,153,0.65);">{{new Date(parseInt(item.repdate)).format('yyyy-MM-dd hh:mm')}}</span>
                       </div>
-						<div v-if="orderDetail[3]!=null" style="width: 100%;height: 60px;border-bottom: 1px solid rgba(216,216,216,1);">
-							<span style="font-weight:400;color:rgba(42,153,242,1);margin-top: 35px;">关闭</span>
-						</div>
+											<div v-if="orderDetail[3]!==undefined && orderDetail[3].length > 0 " style="width: 100%;height: 60px;border-bottom: 1px solid rgba(216,216,216,1);">
+												<span @click="showModal.CloWorkOrder=true" style="font-weight:400;color:rgba(42,153,242,1);margin-top: 35px;cursor: pointer;">关闭工单</span>
+											</div>
                     </div>
                   </div>
                   <div style="margin-top:10px;" v-if="orderDetail[2][0].wcSataus!=4">
                     <Input v-model="editorValue" type="textarea" :rows="4" placeholder="请输入..."></Input>
-					<div style="width: 552px;margin-top: 10px;">
-						<p style="color:rgba(0,0,0,0.43);">
-						  可上传5个大小不超过5M的附件，支持格式：jpg,png,gif,txt,doc,docx,eml,pdf, xlsx, xls</p>
-					  <div>
-					    <div style="display: flex;padding:20px;margin-left: -20px;line-height: 0;">
-					      <div>
-					        <div class="demo-upload-list" v-for="item,index in uploadList1">
-								<template v-if="item.status === 'finished'">
-										<img :src="item.url" :onerror="errorimg3" style="width: 80px;height: 80px;position: relative;">
-										<div v-if="file1 !== null" class="imgzi">{{ item.name }}</div>
-										<div class="demo-upload-list-cover">
-												<Icon type="ios-eye-outline" @click.native="showPicture1(item,item.name,index)"></Icon>
-												<Icon type="ios-trash-outline" @click.native="handleRemove1(item)"></Icon>
-										</div>
-								</template>
-								<template v-else>
-										<Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-								</template>
-							</div>
-								<Upload
-										ref="upload"
-										:show-upload-list="false"
-										:default-file-list="defaultList1"
-										:on-success="combine1"
-										:format="['jpg','jpeg','png','gif','txt','doc','docx','eml','pdf','xlsx','xls']"
-										:max-size="5120"
-										:on-format-error="handleFormatError"
-										:on-exceeded-size="handleMaxSize"
-										:before-upload="handleUpload1"
-										type="drag"
-										action="https://zschj.xrcloud.net/file/upFile.do"
-										style="display: inline-block;">
-										<div v-if="uploadList1.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
-												<img src="../../assets/img/usercenter/uc-add.png" />
-										</div>
-								</Upload>
-					      </div>
-					    </div>
-					  </div>
-					</div>	
-                    <button @click="reply" style="margin-top: 20px;float: left;">发送</button>
+										<div style="width: 552px;margin-top: 10px;">
+											<p style="color:rgba(0,0,0,0.43);">
+												可上传5个大小不超过5M的附件，支持格式：jpg,png,gif,txt,doc,docx,eml,pdf, xlsx, xls</p>
+											<div>
+												<div style="display: flex;padding:20px;margin-left: -20px;line-height: 0;">
+													<div>
+														<div class="demo-upload-list" v-for="item,index in uploadList1">
+													<template v-if="item.status === 'finished'">
+															<img :src="item.url" :onerror="errorimg3" style="width: 80px;height: 80px;position: relative;">
+															<div v-if="file1 !== null" class="imgzi">{{ item.name }}</div>
+															<div class="demo-upload-list-cover">
+																	<Icon type="ios-eye-outline" @click.native="showPicture1(item,item.name,index)"></Icon>
+																	<Icon type="ios-trash-outline" @click.native="handleRemove1(item)"></Icon>
+															</div>
+													</template>
+													<template v-else>
+															<Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+													</template>
+												</div>
+													<Upload
+															ref="upload"
+															:show-upload-list="false"
+															:default-file-list="defaultList1"
+															:on-success="combine1"
+															:format="['jpg','jpeg','png','gif','txt','doc','docx','eml','pdf','xlsx','xls']"
+															:max-size="5120"
+															:on-format-error="handleFormatError"
+															:on-exceeded-size="handleMaxSize"
+															:before-upload="handleUpload1"
+															type="drag"
+															action="file/upFile.do"
+															style="display: inline-block;">
+															<div v-if="uploadList1.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
+																	<img src="../../assets/img/usercenter/uc-add.png" />
+															</div>
+													</Upload>
+													</div>
+												</div>
+											</div>
+										</div>	
+                    <button @click="reply" style="margin-top: 20px;float: left;cursor: pointer;">发送</button>
                   </div>
                 </div>
                 <div class="question">
@@ -333,6 +338,20 @@
 			  <div slot="footer">
 			  </div>
 			</Modal>
+			<Modal v-model="showModal.CloWorkOrder" :scrollable="true" :closable="true" :width="500">
+				<p slot="header" class="modal-header-border">
+					<span class="universal-modal-title">关闭工单</span>
+				</p>
+				<div class="modal-content-s">
+					<div>
+						尊敬的用户您好，您的问题已通过工单解答完成，确认关闭工单?
+					</div>
+				</div>
+				<p slot="footer" class="modal-footer-s">
+					<Button @click="showModal.CloWorkOrder = false">取消</Button>
+					<Button type="primary" @click="delgdan">确认</Button>
+				</p>
+			</Modal>
     </div>
   </div>
 </template>
@@ -354,79 +373,81 @@
         }
       };
       return {
-		  testurl:[],
-		  Durationtime:'',
-		  errorimg: '',
-		  errorimg1: '',
-		  errorimg3: '',
-		  UploadLeix:[],
-		  UploadLeix1:[],
-		  Leixsta:[],
-		  defaultList: [],
-		  defaultList1: [],
+					testurl:[],
+					testurl1:[],
+					Durationtime:'',
+					errorimg: '',
+					errorimg1: '',
+					errorimg3: '',
+					UploadLeix:[],
+					UploadLeix1:[],
+					Leixsta:[],
+					defaultList: [],
+					defaultList1: [],
           imgName: [],
-		  imgName1: [],
+					imgName1: [],
           visible: false,
           uploadList: [],
-		  uploadList1: [],
-		  showModal:{
-			showPicture:false,
-			showPicture1:false
-		  },
-		file: null,
-		file1: null,
-        formItem: {
-          title: '',
-          type: '',
-          product: null,
-          description: '',
-          remainder: 0,
-          cost: 10,
-		combine: '',
-          phoneNumber: ''
-        },
-        formItemRules: {
-          title: [
-            {required: true, message: "请输入工单标题", trigger: "blur"}
-          ],
-          type: [
-            {required: true, message: "请选择问题类型", trigger: "change"}
-          ],
-          product: [
-            {required: true, message: "请选择产品", trigger: "change"}
-          ],
-          description: [
-            {required: true, message: "请输入问题描述", trigger: "blur"}
-          ],
-          cost: [
-            {required: true, message: "请输入提现金额", trigger: "blur"}
-          ],
-          phoneNumber: [
-            {required: true, message: "请输入手机号码", trigger: "blur"},
-            {validator: validPhoneNumber, tirgger: "blur"}
-          ],
-        },
-        tableName: '发起工单',
-        orderList: [],
-        orderDetail: [{}, {}, [{}], []],
+					uploadList1: [],
+					showModal:{
+						showPicture:false,
+						showPicture1:false,
+						CloWorkOrder:false
+					},
+					file: null,
+					file1: null,
+					formItem: {
+						title: '',
+						type: '',
+						product: null,
+						description: '',
+						remainder: 0,
+						cost: 10,
+						combine: '',
+						phoneNumber: ''
+					},
+					formItemRules: {
+						title: [
+							{required: true, message: "请输入工单标题", trigger: "blur"}
+						],
+						type: [
+							{required: true, message: "请选择问题类型", trigger: "change"}
+						],
+						product: [
+							{required: true, message: "请选择产品", trigger: "change"}
+						],
+						description: [
+							{required: true, message: "请输入问题描述", trigger: "blur"}
+						],
+						cost: [
+							{required: true, message: "请输入提现金额", trigger: "blur"}
+						],
+						phoneNumber: [
+							{required: true, message: "请输入手机号码", trigger: "blur"},
+							{validator: validPhoneNumber, tirgger: "blur"}
+						],
+					},
+					tableName: '发起工单',
+					orderList: [],
+					orderDetail: [{}, {}, [{}], []],
 
-        orderType: [],
+					orderType: [],
 
-        operatingOrder: [],
-        closingOrder: [],
+					operatingOrder: [],
+					closingOrder: [],
 
-        editorValue: '',
+					editorValue: '',
 
-        operatingCurrPage: 1,
-        operatingTotal: 0,
+					operatingCurrPage: 1,
+					operatingTotal: 0,
 
-        closingCurrPage: 1,
-        closingTotal: 0,
+					closingCurrPage: 1,
+					closingTotal: 0,
 
-        pageSize: 4,
+					pageSize: 4,
 
-        loadingMessage: '',
-        loading: false
+					loadingMessage: '',
+					loading: false
       }
     },
     created() {
@@ -484,13 +505,13 @@
     },
     methods: {
             handleRemove (file) {
-                const fileList = this.$refs.upload.fileList;
-                this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+                const fileList = this.uploadList;
+                this.uploadList.splice(fileList.indexOf(file), 1);
             },
-			 handleRemove1 (file) {
-			    const fileList = this.$refs.upload.fileList;
-			    this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-			},
+					 handleRemove1 (file) {
+							const fileList = this.uploadList1;
+							this.uploadList1.splice(fileList.indexOf(file), 1);
+					},
 			//显示原图
 			showPicture(item,name,index) {
 			  if(this.UploadLeix[index]==true){
@@ -527,6 +548,7 @@
 			},
 			handleUpload (file) {
 			  this.file = file;
+				console.log(file)
 			  const check = this.uploadList.length < 5;
 			  if (!check) {
 				  this.$Notice.warning({
@@ -549,7 +571,6 @@
 			  if (response.status == 1) {
 					file.url = response.result
 					this.uploadList.push(file)
-					//console.log(this.uploadList)
 					//获取最后一个.的位置
 					var site11 = file.name.lastIndexOf("\.");
 					//截取最后一个.后的值
@@ -685,6 +706,26 @@
           }
         })
       },
+			delgdan() {
+			  var url = 'order/delOrder.do'
+			  this.$http.get(url, {
+			    params: {
+			      orderid: this.orderDetail[2][0].id
+			    }
+			  }).then(response => {
+			    if (response.status == 200 && response.data.status == 1) {
+			      //this.closingOrder.splice(index, 1)
+						this.showModal.CloWorkOrder=false
+			      this.$Message.success(response.data.msg)
+			      if(this.closingCurrPage !== 1 && this.closingOrder.length === 0){
+			        this.closingCurrPage -=1
+			      }
+			      this.getOrders('closing')
+			      this.getOrders('operating')
+						this.tableName = '已关闭工单'
+			    }
+			  })
+			},
       viewDetail(item) {
         var url = 'order/viewOrder.do'
         this.$Loading.start()
@@ -734,7 +775,8 @@
                 this.formItem.type = ''
                 this.formItem.description = ''
                 this.formItem.product = null
-				this.formItem.phoneNumber = null
+								this.formItem.phoneNumber = null
+								this.uploadList= []
                 this.$Message.success({
                   content: response.data.message,
                   top: 150,
@@ -755,6 +797,11 @@
         })
       },
       reply() {
+				 this.uploadList1.forEach((item, index)=>{
+					this.testurl1.push(item.url)
+				})
+				var arr=this.testurl1.toString(',')
+				//console.log(arr)
         if (this.editorValue.trim() == '') {
           this.$Message.warning('请输入回复内容! ')
           return
@@ -763,13 +810,47 @@
         this.$http.get(url, {
           params: {
             orderid: this.orderDetail[2][0].id,
-            editorValue: this.editorValue
+            editorValue: this.editorValue,
+						pictures: arr
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.orderDetail[3].push({g_reply: response.data.msg.g_reply, uname: null, repdate: new Date().getTime()})
+						if(response.data.msg.pic){
+							response.data.msg.pic.forEach((ited, index)=>{
+								  //获取最后一个.的位置
+								  var site11 = ited.lastIndexOf("\.");
+								  //截取最后一个.后的值
+								  var end11=ited.substring(site11 + 1, ited.length);
+								  if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
+								  	
+								  }
+								  else if(end11=='txt'){
+								  	this.errorimg1='this.src="' + require('../../assets/img/work/txt.png') + '"'
+								  }
+								  else if(end11=='doc'||end11=='docx'){
+								  	this.errorimg1='this.src="' + require('../../assets/img/work/doc.png') + '"'
+								  }
+								  else if(end11=='eml'){
+								  	this.errorimg1='this.src="' + require('../../assets/img/work/eml.png') + '"'
+								  }
+								  else if(end11=='pdf'){
+								  	this.errorimg1='this.src="' + require('../../assets/img/work/pdf.png') + '"'
+								  }
+								  else if(end11=='xlsx'||end11=='xls'){
+								  	this.errorimg1='this.src="' + require('../../assets/img/work/xlsx.png') + '"'
+								  }
+							})
+						}
+            this.orderDetail[3].push({g_reply: response.data.msg.g_reply, uname: null, repdate: new Date().getTime(), pic: response.data.msg.pic})
             this.editorValue = ''
+						this.uploadList1= []
           }
+					else 
+					{
+						this.$message.info({
+						content: response.data.message
+						})
+					}
         })
       },
       getOrders(type) {
