@@ -59,9 +59,9 @@
 																	<Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
 															</div>
 													</template>
-													<template v-else>
-															<Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-													</template>
+													<!-- <template v-else>
+														<Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+													</template> -->
 												</div>
 													<Upload
 															ref="upload"
@@ -77,7 +77,8 @@
 															action="file/upFile.do"
 															style="display: inline-block;">
 															<div v-if="uploadList.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
-																	<img src="../../assets/img/usercenter/uc-add.png" />
+																	<img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" />
+																	<Progress v-show="percent>0" :percent="percent" hide-info style="width: 60px;margin-left: -10px;margin-top: 10px;"></Progress>
 															</div>
 													</Upload>
 													</div>
@@ -273,9 +274,9 @@
 																	<Icon type="ios-trash-outline" @click.native="handleRemove1(item)"></Icon>
 															</div>
 													</template>
-													<template v-else>
+													<!-- <template v-else>
 															<Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-													</template>
+													</template> -->
 												</div>
 													<Upload
 															ref="upload"
@@ -291,7 +292,8 @@
 															action="file/upFile.do"
 															style="display: inline-block;">
 															<div v-if="uploadList1.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
-																	<img src="../../assets/img/usercenter/uc-add.png" />
+																	<img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" />
+																	<Progress v-show="percent>0" :percent="percent" hide-info style="width: 60px;margin-left: -10px;margin-top: 10px;"></Progress>
 															</div>
 													</Upload>
 													</div>
@@ -373,6 +375,7 @@
         }
       };
       return {
+					percent:0,
 					testurl:[],
 					testurl1:[],
 					Durationtime:'',
@@ -548,7 +551,6 @@
 			},
 			handleUpload (file) {
 			  this.file = file;
-				console.log(file)
 			  const check = this.uploadList.length < 5;
 			  if (!check) {
 				  this.$Notice.warning({
@@ -569,96 +571,111 @@
 			},
 			combine(response,file) {
 			  if (response.status == 1) {
-					file.url = response.result
-					this.uploadList.push(file)
-					//获取最后一个.的位置
-					var site11 = file.name.lastIndexOf("\.");
-					//截取最后一个.后的值
-					var end11=this.file.name.substring(site11 + 1, file.name.length);
-					if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
-						this.UploadLeix.push(true)
-					}
-					else if(end11=='txt'){
-						this.errorimg='this.src="' + require('../../assets/img/work/txt.png') + '"'
-						this.UploadLeix.push(false)
-					}
-					else if(end11=='doc'||end11=='docx'){
-						this.errorimg='this.src="' + require('../../assets/img/work/doc.png') + '"'
-						this.UploadLeix.push(false)
-					}
-					else if(end11=='eml'){
-						this.errorimg='this.src="' + require('../../assets/img/work/eml.png') + '"'
-						this.UploadLeix.push(false)
-					}
-					else if(end11=='pdf'){
-						this.errorimg='this.src="' + require('../../assets/img/work/pdf.png') + '"'
-						this.UploadLeix.push(false)
-					}
-					else if(end11=='xlsx'||end11=='xls'){
-						this.errorimg='this.src="' + require('../../assets/img/work/xlsx.png') + '"'
-						this.UploadLeix.push(false)
-					}
-					if(this.file.name.length<=17){
-						file.name = this.file.name
-					}
-					else{
-						var before=this.file.name.split('.')[0]
-						var berorett=before.substring(before.length-1);
-						//var enter=this.file.name.split('.')[1]
-						 //获取最后一个.的位置
-						var site = this.file.name.lastIndexOf("\.");
-						//截取最后一个.后的值
-						var end=this.file.name.substring(site + 1, this.file.name.length);
-						file.name= this.file.name.slice(0,17)+"..."+berorett+'.'+end;
-					}
+					let s = setInterval(() => {
+					  this.percent++
+					  if (this.percent > 100) {
+					    file.url = response.result
+					    this.uploadList.push(file)
+					    this.$Message.info('上传成功');
+					    window.clearInterval(s)
+					    this.percent = 0
+							//获取最后一个.的位置
+							var site11 = file.name.lastIndexOf("\.");
+							//截取最后一个.后的值
+							var end11=this.file.name.substring(site11 + 1, file.name.length);
+							if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
+								this.UploadLeix.push(true)
+							}
+							else if(end11=='txt'){
+								this.errorimg='this.src="' + require('../../assets/img/work/txt.png') + '"'
+								this.UploadLeix.push(false)
+							}
+							else if(end11=='doc'||end11=='docx'){
+								this.errorimg='this.src="' + require('../../assets/img/work/doc.png') + '"'
+								this.UploadLeix.push(false)
+							}
+							else if(end11=='eml'){
+								this.errorimg='this.src="' + require('../../assets/img/work/eml.png') + '"'
+								this.UploadLeix.push(false)
+							}
+							else if(end11=='pdf'){
+								this.errorimg='this.src="' + require('../../assets/img/work/pdf.png') + '"'
+								this.UploadLeix.push(false)
+							}
+							else if(end11=='xlsx'||end11=='xls'){
+								this.errorimg='this.src="' + require('../../assets/img/work/xlsx.png') + '"'
+								this.UploadLeix.push(false)
+							}
+							if(this.file.name.length<=17){
+								file.name = this.file.name
+							}
+							else{
+								var before=this.file.name.split('.')[0]
+								var berorett=before.substring(before.length-1);
+								//var enter=this.file.name.split('.')[1]
+								 //获取最后一个.的位置
+								var site = this.file.name.lastIndexOf("\.");
+								//截取最后一个.后的值
+								var end=this.file.name.substring(site + 1, this.file.name.length);
+								file.name= this.file.name.slice(0,17)+"..."+berorett+'.'+end;
+							}
+					  }
+					}, 25)
+					
 			  }
 			},
 			combine1(response,file) {
 			  if (response.status == 1) {
-					file.url = response.result
-					this.uploadList1.push(file)
-					//console.log(this.uploadList1)
-					//console.log(file)
-					//获取最后一个.的位置
-					var site11 = file.name.lastIndexOf("\.");
-					//截取最后一个.后的值
-					var end11=this.file1.name.substring(site11 + 1, file.name.length);
-					if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
-						this.UploadLeix1.push(true)
-					}
-					else if(end11=='txt'){
-						this.errorimg3='this.src="' + require('../../assets/img/work/txt.png') + '"'
-						this.UploadLeix1.push(false)
-					}
-					else if(end11=='doc'||end11=='docx'){
-						this.errorimg3='this.src="' + require('../../assets/img/work/doc.png') + '"'
-						this.UploadLeix1.push(false)
-					}
-					else if(end11=='eml'){
-						this.errorimg3='this.src="' + require('../../assets/img/work/eml.png') + '"'
-						this.UploadLeix1.push(false)
-					}
-					else if(end11=='pdf'){
-						this.errorimg3='this.src="' + require('../../assets/img/work/pdf.png') + '"'
-						this.UploadLeix1.push(false)
-					}
-					else if(end11=='xlsx'||end11=='xls'){
-						this.errorimg3='this.src="' + require('../../assets/img/work/xlsx.png') + '"'
-						this.UploadLeix1.push(false)
-					}
-					if(this.file1.name.length<=17){
-						file.name = this.file1.name
-					}
-					else{
-						var before=this.file1.name.split('.')[0]
-						var berorett=before.substring(before.length-1);
-						//var enter=this.file1.name.split('.')[1]
-						 //获取最后一个.的位置
-						var site = this.file1.name.lastIndexOf("\.");
-						//截取最后一个.后的值
-						var end=this.file1.name.substring(site + 1, this.file1.name.length);
-						file.name= this.file1.name.slice(0,17)+"..."+berorett+'.'+end;
-					}
+					let s = setInterval(() => {
+					  this.percent++
+					  if (this.percent > 100) {
+							file.url = response.result
+							this.uploadList1.push(file)
+							this.$Message.info('上传成功');
+							window.clearInterval(s)
+							this.percent = 0
+							//获取最后一个.的位置
+							var site11 = file.name.lastIndexOf("\.");
+							//截取最后一个.后的值
+							var end11=this.file1.name.substring(site11 + 1, file.name.length);
+							if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
+								this.UploadLeix1.push(true)
+							}
+							else if(end11=='txt'){
+								this.errorimg3='this.src="' + require('../../assets/img/work/txt.png') + '"'
+								this.UploadLeix1.push(false)
+							}
+							else if(end11=='doc'||end11=='docx'){
+								this.errorimg3='this.src="' + require('../../assets/img/work/doc.png') + '"'
+								this.UploadLeix1.push(false)
+							}
+							else if(end11=='eml'){
+								this.errorimg3='this.src="' + require('../../assets/img/work/eml.png') + '"'
+								this.UploadLeix1.push(false)
+							}
+							else if(end11=='pdf'){
+								this.errorimg3='this.src="' + require('../../assets/img/work/pdf.png') + '"'
+								this.UploadLeix1.push(false)
+							}
+							else if(end11=='xlsx'||end11=='xls'){
+								this.errorimg3='this.src="' + require('../../assets/img/work/xlsx.png') + '"'
+								this.UploadLeix1.push(false)
+							}
+							if(this.file1.name.length<=17){
+								file.name = this.file1.name
+							}
+							else{
+								var before=this.file1.name.split('.')[0]
+								var berorett=before.substring(before.length-1);
+								//var enter=this.file1.name.split('.')[1]
+								 //获取最后一个.的位置
+								var site = this.file1.name.lastIndexOf("\.");
+								//截取最后一个.后的值
+								var end=this.file1.name.substring(site + 1, this.file1.name.length);
+								file.name= this.file1.name.slice(0,17)+"..."+berorett+'.'+end;
+							}
+						}
+					}, 25)
 			  }
 			},
       urge() {
