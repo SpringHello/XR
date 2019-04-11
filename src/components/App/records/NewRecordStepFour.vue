@@ -513,7 +513,7 @@
         } else {
           let addMainCompany = axios.post('recode/addMainCompany.do', params)
           Promise.all([addMainCompany]).then(response => {
-            if ((response[0].status == 200)) {
+            if ((response[0].status == 200&&response[0].data.status == 1)) {
               axios.post('recode/addMainWeb.do', this.siteParams).then(res => {
                 if (res.data.status == 1) {
                   this.$router.push('waitFirstTrial')
