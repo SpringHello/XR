@@ -319,7 +319,7 @@
       },
         {                 // set meta
           name: 'description',
-          content: '新睿云云主机的集成开发环境包含jave的Eclipse、PHP的Sublime、PHPstrom、Python的PyCharm。帮助您快速部署开发环境与依赖包，降低开发前期准备并提升研发效率。'
+          content: '新睿云云主机的集成开发环境包含java的Eclipse、PHP的Sublime、PHPstrom、Python的PyCharm。帮助您快速部署开发环境与依赖包，降低开发前期准备并提升研发效率。'
         }]
     },
     components: {

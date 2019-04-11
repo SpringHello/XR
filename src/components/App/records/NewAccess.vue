@@ -221,7 +221,14 @@
       nextMain() {
         this.$refs.filingInformation.validate((valid) => {
           if (valid) {
-            this.$router.push('newRecordStepOne')
+            let url = 'recode/addMainWeb.do'
+            this.$http.get(url,{params:{
+              mainBelongArea: this.filingInformation.province + '-' + this.filingInformation.city + '-' + this.filingInformation.district,
+              webDomainName: this.filingInformation.websiteDomain,
+              mainRecordNumber: this.filingInformation.websiteRecordNumber,
+              
+            }})
+            this.$router.push('/newRecordStepOne')
           }
         })
       },
@@ -229,7 +236,7 @@
       nextSite() {
         this.$refs.filingInformation.validate((valid) => {
           if (valid) {
-            this.$router.push('newRecordStepTwo')
+            this.$router.push('/newRecordStepTwo')
           }
         })
       },
