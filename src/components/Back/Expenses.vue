@@ -1240,7 +1240,11 @@
             align: 'left',
             width: 110,
             render: (h, params) => {
-              return h('span', params.row.maketicketover == 0 ? '未使用' : params.row.maketicketover == 1 ? '已使用' : '已失效')
+              if (obj.row.tickettype == '2'){
+                return h('span', params.row.maketicketover == 0 ? '未充值' : params.row.maketicketover == 1 ? '已充值' : '已失效')
+              } else{
+                return h('span', params.row.maketicketover == 0 ? '未使用' : params.row.maketicketover == 1 ? '已使用' : '已失效')
+              }
             }
           },
           {
