@@ -30,35 +30,45 @@
               <router-link to="BRecords" :class="{active:pageInfo.path=='BRecords'}"><span>备案</span></router-link>
             </li>
             <li>
-              <router-link to="buy" :class="{active:pageInfo.path=='buy'}"><span>创建主机</span></router-link>
-            </li>
-            <li>
               <router-link to="document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></router-link>
             </li>
-            <li>
+						<li>
+						  <router-link to="operationLog" :class="{active:pageInfo.path=='operationLog'}"><span>操作日志</span></router-link>
+						</li>
+						<li>
+						  <router-link to="expenses" :class="{active:pageInfo.path=='expenses'}">费用</router-link>
+						</li>
+						
+            <!-- <li>
               <router-link to="recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
-            </li>
+            </li> -->
             <li>
               <Dropdown @on-click="go">
                 <a href="javascript:void(0)" style="position:relative">
                   {{userInfo?userInfo.realname:''}}
-                  <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
+                  <!-- <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup> -->
                   <Icon type="arrow-down-b"></Icon>
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem name="userCenter">
-                    <router-link to="/userCenter">用户中心</router-link>
+                  <DropdownItem name="person">
+                    <router-link to="/userCenter">个人信息</router-link>
                   </DropdownItem>
-                  <DropdownItem name="expenses">
+									<DropdownItem name="remainder">
+									  <router-link to="/userCenter">提醒设置</router-link>
+									</DropdownItem>
+									<DropdownItem name="nonrealname">
+									  <router-link to="/userCenter">实名认证</router-link>
+									</DropdownItem>
+									<DropdownItem name="key">
+									  <router-link to="/userCenter">Access Key</router-link>
+									</DropdownItem>
+                  <!-- <DropdownItem name="expenses">
                     <router-link to="/expenses">费用中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="msgCenter" style="position:relative">
                     <router-link to="/msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
                     </router-link>
-                  </DropdownItem>
-                  <DropdownItem name="operationLog">
-                    <router-link to="/operationLog">操作日志</router-link>
-                  </DropdownItem>
+                  </DropdownItem> -->
                   <DropdownItem divided name="exit">
                     <!-- <router-link to="">退出</router-link> -->
                     <span style="color:#666;">退出</span>
@@ -66,6 +76,10 @@
                 </DropdownMenu>
               </Dropdown>
             </li>
+						<li>
+						  <router-link to="msgCenter" :class="{active:pageInfo.path=='msgCenter'}" style="position:relative;"><img src="./assets/img/back/通知.png" /><sup v-if="this.$store.state.Msg>0" class="badge" style="top: 17px;right: -30px;">{{this.$store.state.Msg}}</sup>
+						  </router-link>
+						</li>
           </ul>
         </div>
       </div>
@@ -493,6 +507,10 @@
           this.exit()
           return
         }
+				else{
+					sessionStorage.setItem('pane',path)
+				  return
+				}
         this.$router.push(path)
       },
       pane(pane) {
@@ -508,7 +526,7 @@
         }
         this.$store.commit('setPane', paneStatue)
       },
-
+			
       menuStyle(type) {
         if (this.$refs[type]) {
           var clientWidth = this.$refs[`${type}-sub`][0].clientWidth || this.$refs[`${type}-sub`][0].getBoundingClientRect().width

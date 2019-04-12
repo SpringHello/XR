@@ -1314,12 +1314,16 @@
         currentTab = 'companyInfo'
       } else if (authType == 'person') {
         currentTab = 'personalInfo'
-      } else if (authType == 'nonrealname') {
+      }else if (authType == 'remainder') {
+        currentTab = 'remainder'
+      }else if (authType == 'nonrealname') {
         currentTab = 'certification'
+      }else if (authType == 'key') {
+        currentTab = 'key'
       } else {
         currentTab = authType
       }
-      sessionStorage.removeItem('pane')
+      //sessionStorage.removeItem('pane')
 
       // 校验地区
       const validateArea = (rule, value, callback) => {

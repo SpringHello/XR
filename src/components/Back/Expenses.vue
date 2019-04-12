@@ -14,7 +14,7 @@
               style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>
         <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
               style="margin-top: 20px;min-height: 550px">
-          <Tab-pane label="账户概览" name="accountSummary">
+          <Tab-pane label="财务总览" name="accountSummary">
             <div class="money">
               <div class="item">
                 <span>余额</span>
@@ -99,6 +99,8 @@
               </div>
             </div>
           </Tab-pane>
+					<Tab-pane label="账单" name="bills">
+					</Tab-pane>
           <Tab-pane label="订单管理" name="orderManage">
             <div class="ordertype">
               <span class="order_s1">订单类型</span>
@@ -157,7 +159,7 @@
                    </div>
                  </div>-->
           </Tab-pane>
-          <Tab-pane label="发票申请" name="applyInvoice">
+          <Tab-pane label="发票管理" name="applyInvoice">
             <div v-show="applyChange">
               <div class="invoiceType">
                 <div>
