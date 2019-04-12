@@ -27,14 +27,15 @@
           <TabPane label="虚拟私有云VPC" name="VPC">
             <div class="operator-bar">
               <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
-              <Dropdown style="margin-left: 20px" @on-click='vpcClick'>
-                <Button type="primary">更多操作</Button>
-                <DropdownMenu slot="list">
-                  <DropdownItem name='add'>添加VPC互通网关</DropdownItem>
-                  <DropdownItem name='delete'>删除VPC</DropdownItem>
-                  <DropdownItem name='reset'>恢复默认</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+               <Dropdown style="margin-left: 20px" @on-click='vpcClick'>
+                   <Button type="primary">更多操作</Button>
+                   <DropdownMenu slot="list">
+                        <DropdownItem name='add' >添加VPC互通网关</DropdownItem>
+                        <DropdownItem name='delete'>删除VPC</DropdownItem>
+                        <DropdownItem name='reset'>恢复默认</DropdownItem>
+												<DropdownItem name='rename'>重命名</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
             </div>
             <div class="card-wrap">
               <div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"
@@ -102,7 +103,7 @@
       <div class="universal-modal-content-flex" id="moli2">
         <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate" style="width: 100%">
           <FormItem label="vpc名称" prop="vpcName">
-            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称(最多可输入十六位)" :maxlength="16" style="width:300px;float: right;"></Input>
+            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称(最多可输入二十位)" :maxlength="20" style="width:300px;float: right;"></Input>
           </FormItem>
           <FormItem label="地址范围" prop="vpc">
             <Select v-model="newForm.vpc" placeholder="请选择" style="width:300px;float: right;">
@@ -451,6 +452,23 @@
         <Button type="primary" @click="showModal.createInterconnectByOne = false,showModal.newVpc = true">新建VPC</Button>
       </p>
     </Modal>
+		<Modal v-model="showModal.rename" width="550" :scrollable="true">
+		  <p slot="header" class="modal-header-border">
+		    <span class="universal-modal-title">VPC重命名</span>
+		  </p>
+		  <div class="universal-modal-content-flex">
+		    <Form :model="renameForm" ref="renameForm" :rules="renameFormRule">
+		      <Form-item label="VPC名" prop="hostName">
+		        <Input v-model="renameForm.hostName" placeholder="请输入新VPC名(最多可输入20位)" :maxlength="20" style="width: 300px;"></Input>
+		      </Form-item>
+		    </Form>
+		  </div>
+		  <div slot="footer" class="modal-footer-border">
+		    <Button type="ghost" @click="showModal.rename = false">取消</Button>
+		    <Button type="primary" @click="rename">确定
+		    </Button>
+		  </div>
+		</Modal>
   </div>
 
 </template>
@@ -755,6 +773,7 @@
         select: null,
         // 控制模态框是否关闭
         showModal: {
+					rename:false,
           newVpc: false,
           addGateway: false,
           // 添加nat网关
@@ -771,6 +790,15 @@
           ratesChange: false,
           createInterconnectByOne: false
         },
+				//修改VPC名字
+				renameForm: {
+				  hostName: ''
+				},
+				renameFormRule: {
+				  hostName: [
+				    {required: true, validator: validaRegisteredName, trigger: 'blur'}
+				  ]
+				},
         // 新建vpc表单数据
         newForm: {
           vpcName: '',
@@ -1271,6 +1299,44 @@
           }
         })
       },
+			checkRenameForm() {
+				var select = this.netData.filter(item => item._select)
+				if (select.length == 0) {
+				  this.$Message.info({
+				    content: '请选择一个VPC'
+				  })
+				  return
+				}
+				this.showModal.rename = true
+			},
+			// 重命名VPC
+			rename() {
+				var select = this.netData.filter(item => item._select)
+				this.$refs.renameForm.validate((valid) => {
+				  if (valid) {
+				    // 表单验证通过，调用重命名的方法
+				    this.showModal.rename = false
+				    this.loadingMessage = '正在修改VPC名'
+				    this.loading = true
+				    this.$http.get('network/updateVpc.do', {
+				      params: {
+				        vpcId: select[0].vpcid,
+				    		name: this.renameForm.hostName,
+				    		zoneId: $store.state.zone.zoneid
+				      }
+				    }).then(response => {
+				      this.loading = false
+				      if (response.status == 200 && response.data.status == 1) {
+				        this.refresh()
+				        this.$Message.success('VPC名修改成功')
+				      }
+				    	else{
+				    		this.$Message.error(response.data.message)
+				    	}
+				    })
+				  }
+				})
+			},
       // 重启vpc
       restartVpc(item) {
         this.$message.confirm({
@@ -1543,16 +1609,19 @@
 
         })
       },
-      vpcClick(name) {
-        if (name == 'add') {
-          this.createInterconnect();
-        }
-        if (name == 'delete') {
-          this.delVpc();
-        }
-        if (name == 'reset') {
-          this.restartVpcPlus();
-        }
+      vpcClick(name){
+          if(name == 'add'){
+              this.createInterconnect();
+          }
+          if(name == 'delete'){
+              this.delVpc();
+          }
+          if(name == 'reset'){
+              this.restartVpcPlus();
+          }
+					if(name == 'rename'){
+					    this.checkRenameForm();
+					}
       }
     },
     computed: mapState({

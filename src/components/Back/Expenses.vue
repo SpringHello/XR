@@ -3451,16 +3451,9 @@
         })
         this.refundLastHintDisabled = true
         let url = 'user/returnMoneyOrder.do'
-        let params = {}
-        if (this.refundLastTo == 'account') {
-          params = {
-            orderNumber: orderNumber + ''
-          }
-        } else {
-          params = {
+        let params = {
             orderNumber: orderNumber + '',
             backRemainder: '1'
-          }
         }
         this.$http.get(url, {
           params

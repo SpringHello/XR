@@ -1526,7 +1526,7 @@
                     // style: {
                     //   color: '#EE4545'
                     // }
-                  }, '正常')
+                  }, '异常')
                 case 2:
                   return h('div', {}, [h('Spin', {
                     style: {
@@ -1584,7 +1584,7 @@
             key: 'action',
             width: 100,
             render: (h, params) => {
-              if (params.row.status == 2 || params.row.status == 3) {
+              if (params.row.status != 1) {
                 return h('span', {
                   style: {
                     cursor: 'not-allowed'
