@@ -11,7 +11,7 @@
           </svg>
           <span id="title">用户中心</span>
         </div>
-        <Tabs type="card" :animated="false" v-model="currentTab" @on-click="tabSwitching">
+        <Tabs type="card" :animated="false" v-model="paneStatus.usercenter" @on-click="tabSwitching">
           <!--未认证-->
           <Tab-pane label="个人信息" name="personalInfo">
             <div class="personalInfo">
@@ -44,10 +44,10 @@
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
                     <li v-if="!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
-                      @click="currentTab ='certification' ">马上认证</span></li>
+                      @click="paneStatus.usercenter='certification' ">马上认证</span></li>
                     <li v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"><span>身份证号</span><span>{{authInfo.personalnumber}}</span></li>
                     <li v-if="!(authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0)"><span>认证信息</span><span style="color: #FF9339">未企业认证</span><span
-                      @click="currentTab ='companyInfo'">马上认证</span></li>
+                      @click="paneStatus.usercenter ='companyInfo'">马上认证</span></li>
                   </ul>
                 </div>
               </div>
@@ -603,10 +603,10 @@
       </div>
       <div style="display: flex;margin-top:20px">
         <div style="width:50%;text-align: center">
-          <Button type="primary" @click="showModal.selectAuthType = false;currentTab='certification'">立即认证</Button>
+          <Button type="primary" @click="showModal.selectAuthType = false;paneStatus.usercenter='certification'">立即认证</Button>
         </div>
         <div style="width:50%;text-align: center">
-          <Button type="primary" @click="showModal.selectAuthType = false;currentTab='companyInfo'">立即认证</Button>
+          <Button type="primary" @click="showModal.selectAuthType = false;paneStatus.usercenter='companyInfo'">立即认证</Button>
         </div>
       </div>
       <div slot="footer" style="margin-bottom: 20px;">
@@ -1305,26 +1305,10 @@
   import reg from '../../util/regExp'
   import $store from '../../vuex'
   import throttle from 'throttle-debounce/debounce'
+  import {mapState} from 'vuex'
 
   export default {
     data() {
-      var authType = sessionStorage.getItem('pane')
-      var currentTab = ''
-      if (authType == 'company') {
-        currentTab = 'companyInfo'
-      } else if (authType == 'person') {
-        currentTab = 'personalInfo'
-      }else if (authType == 'remainder') {
-        currentTab = 'remainder'
-      }else if (authType == 'nonrealname') {
-        currentTab = 'certification'
-      }else if (authType == 'key') {
-        currentTab = 'key'
-      } else {
-        currentTab = authType
-      }
-      //sessionStorage.removeItem('pane')
-
       // 校验地区
       const validateArea = (rule, value, callback) => {
         if (
@@ -1413,8 +1397,6 @@
       return {
         vipGrade: '',
         // 当前选中的tab页
-        currentTab: currentTab ? currentTab : 'personalInfo',
-        authType,
         uploadImgDispaly: '',
         uploadImgDispaly1: '',
         uploadImgDispaly2: '',
@@ -2579,14 +2561,14 @@
       }
     },
     created() {
-      if (this.authType == 'person' || this.authType == 'company') {
+      if (this.paneStatus.usercenter == 'personalInfo' || this.paneStatus.usercenter == 'companyInfo'){
         this.showModal.selectAuthType = false
       } else {
         if (this.$store.state.authInfo == null) {
           this.showModal.selectAuthType = true
         }
       }
-      this.tabSwitching(this.currentTab)
+      this.tabSwitching(this.paneStatus.usercenter)
       if ($store.state.authInfo && $store.state.authInfo.companyid) {
         this.getPhone()
       }
@@ -3061,7 +3043,7 @@
                 // 获取用户信息
                 this.init()
                 this.getPhone()
-                this.currentTab = ''
+                this.paneStatus.usercenter = 'personalInfo'
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -4071,7 +4053,8 @@
         })
       }
     },
-    computed: {
+    computed: mapState({
+      paneStatus: state => state.paneStatus,
       userInfo() {
         return $store.state.userInfo
       },
@@ -4153,7 +4136,7 @@
           return false
         }
       }
-    },
+    }),
     watch: {
       '$store.state.zone': {
         handler: function() {
