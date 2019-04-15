@@ -74,7 +74,7 @@
 															:on-exceeded-size="handleMaxSize"
 															:before-upload="handleUpload"
 															type="drag"
-															action="https://zschj.xrcloud.net/file/upFile.do"
+															action="file/upFile.do"
 															style="display: inline-block;">
 															<div v-if="uploadList.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
 																	<img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" style="margin-top: 5px;" />
