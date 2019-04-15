@@ -5,11 +5,11 @@
         <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
         <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在支付，请稍后...</span>
       </Spin>
-      <span>个人中心 / 费用中心</span>
+      <span>费用中心</span>
       <div class="content">
-        <svg class="icon" aria-hidden="true">
+        <!-- <svg class="icon" aria-hidden="true">
           <use xlink:href="#houtaiicon-feiyongzhongxin"></use>
-        </svg>
+        </svg> -->
         <span class="title"
               style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>
         <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
