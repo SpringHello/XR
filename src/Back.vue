@@ -50,16 +50,16 @@
                   <Icon type="arrow-down-b"></Icon>
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem name="person">
+                  <DropdownItem name="personalInfo#usercenter">
                     <router-link to="/userCenter">个人信息</router-link>
                   </DropdownItem>
-									<DropdownItem name="remainder">
+									<DropdownItem name="remainder#usercenter">
 									  <router-link to="/userCenter">提醒设置</router-link>
 									</DropdownItem>
-									<DropdownItem name="nonrealname">
+									<DropdownItem name="certification#usercenter">
 									  <router-link to="/userCenter">实名认证</router-link>
 									</DropdownItem>
-									<DropdownItem name="key">
+									<DropdownItem name="key#usercenter">
 									  <router-link to="/userCenter">Access Key</router-link>
 									</DropdownItem>
                   <!-- <DropdownItem name="expenses">
@@ -472,7 +472,6 @@
 
       // 进入三级路由，记录二级路由入口
       push(pType, sType, pane) {
-				// console.log(pane)
         this.pageInfo.static = true;
         this.pageInfo.selectItem = pType;
         this.pageInfo.sType = sType;
@@ -492,7 +491,6 @@
           //   }
           // })
         } else {
-					//console.log(pane)
 					if(pane==undefined){
 						this.$router.push(sType)
 					} else{
@@ -508,7 +506,7 @@
           return
         }
 				else{
-					sessionStorage.setItem('pane',path)
+          this.pane(path)
 				  return
 				}
         this.$router.push(path)
@@ -516,12 +514,15 @@
       pane(pane) {
         var paneStatue = {
           vpc: 'VPC',
-          vpn: 'remote'
+          vpn: 'remote',
+          usercenter: 'personalInfo'
         }
         let arr = pane.split('#')
         if (arr[1] == '虚拟专网VPN') {
           paneStatue.vpn = arr[0]
-        } else {
+        } else if(arr[1] == 'usercenter') {
+          paneStatue.usercenter = arr[0]
+        }else {
           paneStatue.vpc = arr[0]
         }
         this.$store.commit('setPane', paneStatue)

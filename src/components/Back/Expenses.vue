@@ -3653,7 +3653,7 @@
         }
       },
       goreal() {
-        sessionStorage.setItem('pane', 'nonrealname')
+        this.$store.commit('setPane', {vpc: 'VPC', vpn: 'remote', usercenter: 'certification'})
         this.$router.push('/Usercenter')
       },
       seaWaterN() {

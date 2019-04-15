@@ -312,7 +312,7 @@ export default {
       })
     },
     createdKey () {
-      sessionStorage.setItem('pane', 'key')
+      this.$store.commit('setPane', {vpc: 'VPC', vpn: 'remote', usercenter: 'key'})
       this.$router.push('/userCenter')
     },
     vail (field) {

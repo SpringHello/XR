@@ -28,7 +28,8 @@ const store = new Vuex.Store({
     // 三级pane的状态
     paneStatus: {
       vpc: 'VPC',
-      vpn: 'remote'
+      vpn: 'remote',
+      usercenter: 'personalInfo'
     },
     accessKey: null,
     qq: {}
@@ -55,7 +56,7 @@ const store = new Vuex.Store({
     setZone(state, zone) {
       state.zone = zone
     },
-    setPane(state, paneStatus = {vpc: 'VPC', vpn: 'remote'}) {
+    setPane(state, paneStatus = {vpc: 'VPC', vpn: 'remote', usercenter: 'personalInfo'}) {
       state.paneStatus = paneStatus
     },
     setKey(state, key) {
