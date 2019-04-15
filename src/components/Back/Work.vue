@@ -74,7 +74,7 @@
 															:on-exceeded-size="handleMaxSize"
 															:before-upload="handleUpload"
 															type="drag"
-															action="https://zschj.xrcloud.net/file/upFile.do"
+															action="file/upFile.do"
 															style="display: inline-block;">
 															<div v-if="uploadList.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
 																	<img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" style="margin-top: 5px;" />
@@ -237,7 +237,7 @@
 												<span class="mini" style="margin-bottom:13px">{{orderDetail[2][0].issue}}</span>
 											</p>
 											<span v-if="orderDetail[2][0].pic!=null" v-for="ited,index in orderDetail[2][0].pic">
-												<span style="width:100%;" ><img :src="ited" :onerror="errorimg11[index]" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
+												<span style="width:100%;" ><img :src="ited" :onerror="errorimg2[index]" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
 											</span>
                       </div>
                       <div class="item" v-for="item in orderDetail[3]" style="position: relative">
@@ -247,7 +247,7 @@
 													<span class="mini">{{item.g_reply}}</span>
 												</p>
 												<span v-if="item.pic!=null" v-for="ited,index in item.pic"><!--  -->
-													<span style="width:100%;" ><img :src="ited" :onerror="errorimg111[index]" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
+													<span style="width:100%;" ><img :src="ited" :onerror="errorimg4[index]" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
 												</span>
                         <span
                           style="position: absolute;bottom: -17px;right: 65px;font-size: 12px;color: rgba(153,153,153,0.65);">{{new Date(parseInt(item.repdate)).format('yyyy-MM-dd hh:mm')}}</span>
@@ -289,7 +289,7 @@
 															:on-exceeded-size="handleMaxSize"
 															:before-upload="handleUpload1"
 															type="drag"
-															action="https://zschj.xrcloud.net/file/upFile.do"
+															action="file/upFile.do"
 															style="display: inline-block;">
 															<div v-if="uploadList1.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
 																	<img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" style="margin-top: 5px;" />
@@ -351,7 +351,7 @@
 				</div>
 				<p slot="footer" class="modal-footer-s">
 					<Button @click="showModal.CloWorkOrder = false">取消</Button>
-					<Button type="primary" @click="delgdan">确认</Button>
+					<Button type="primary" @click="closegdan">确认</Button>
 				</p>
 			</Modal>
     </div>
@@ -381,8 +381,8 @@
 					Durationtime:'',
 					errorimg: '',
 					errorimg1: [],
-					errorimg11: [],
-					errorimg111:[],
+					errorimg2: [],
+					errorimg4:[],
 					errorimg3: '',
 					UploadLeix:[],
 					UploadLeix1:[],
@@ -725,7 +725,7 @@
           }
         })
       },
-			delgdan() {
+			closegdan() {
 				var url = 'order/closeOrder.do'
 				this.$http.get(url, {
 				  params: {
@@ -767,19 +767,19 @@
 										
 									}
 									else if(end11=='txt'){
-										this.errorimg11.push('this.src="' + require('../../assets/img/work/txt.png') + '"')
+										this.errorimg2.push('this.src="' + require('../../assets/img/work/txt.png') + '"')
 									}
 									else if(end11=='doc'||end11=='docx'){
-										this.errorimg11.push('this.src="' + require('../../assets/img/work/doc.png') + '"')
+										this.errorimg2.push('this.src="' + require('../../assets/img/work/doc.png') + '"')
 									}
 									else if(end11=='eml'){
-										this.errorimg11.push('this.src="' + require('../../assets/img/work/eml.png') + '"')
+										this.errorimg2.push('this.src="' + require('../../assets/img/work/eml.png') + '"')
 									}
 									else if(end11=='pdf'){
-										this.errorimg11.push('this.src="' + require('../../assets/img/work/pdf.png') + '"')
+										this.errorimg2.push('this.src="' + require('../../assets/img/work/pdf.png') + '"')
 									}
 									else if(end11=='xlsx'||end11=='xls'){
-										this.errorimg11.push('this.src="' + require('../../assets/img/work/xlsx.png') + '"')
+										this.errorimg2.push('this.src="' + require('../../assets/img/work/xlsx.png') + '"')
 									}
 							})
 						}
@@ -873,19 +873,19 @@
 								  	
 								  }
 								  else if(end11=='txt'){
-										this.errorimg111.push('this.src="' + require('../../assets/img/work/txt.png') + '"')
+										this.errorimg4.push('this.src="' + require('../../assets/img/work/txt.png') + '"')
 								  }
 								  else if(end11=='doc'||end11=='docx'){
-										this.errorimg111.push('this.src="' + require('../../assets/img/work/doc.png') + '"')
+										this.errorimg4.push('this.src="' + require('../../assets/img/work/doc.png') + '"')
 								  }
 								  else if(end11=='eml'){
-										this.errorimg111.push('this.src="' + require('../../assets/img/work/eml.png') + '"')
+										this.errorimg4.push('this.src="' + require('../../assets/img/work/eml.png') + '"')
 								  }
 								  else if(end11=='pdf'){
-										this.errorimg111.push('this.src="' + require('../../assets/img/work/pdf.png') + '"')
+										this.errorimg4.push('this.src="' + require('../../assets/img/work/pdf.png') + '"')
 								  }
 								  else if(end11=='xlsx'||end11=='xls'){
-										this.errorimg111.push('this.src="' + require('../../assets/img/work/xlsx.png') + '"')
+										this.errorimg4.push('this.src="' + require('../../assets/img/work/xlsx.png') + '"')
 								  }
 							})
 							
