@@ -511,11 +511,15 @@
     methods: {
             handleRemove (file) {
                 const fileList = this.uploadList;
+                const fileList11 = this.UploadLeix;
                 this.uploadList.splice(fileList.indexOf(file), 1);
+                this.UploadLeix.splice(fileList11.indexOf(file), 1);
             },
 					 handleRemove1 (file) {
-							const fileList = this.uploadList1;
-							this.uploadList1.splice(fileList.indexOf(file), 1);
+              const fileList = this.uploadList1;
+              const fileList11 = this.UploadLeix1;
+              this.uploadList1.splice(fileList.indexOf(file), 1);
+              this.UploadLeix1.splice(fileList11.indexOf(file), 1);
 					},
 			//显示原图
 			showPicture(item,name,index) {
