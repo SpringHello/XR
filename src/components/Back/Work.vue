@@ -74,7 +74,7 @@
 															:on-exceeded-size="handleMaxSize"
 															:before-upload="handleUpload"
 															type="drag"
-															action="file/upFile.do"
+															action="https://zschj.xrcloud.net/file/upFile.do"
 															style="display: inline-block;">
 															<div v-if="uploadList.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
 																	<img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" style="margin-top: 5px;" />
@@ -325,17 +325,17 @@
         </div>
       </div>
 			 <!--显示图片-->
-			<Modal width="960" v-model="showModal.showPicture" :scrollable="true" id="modelimg">
+			<Modal width="960" v-model="showModal.showPicture" :scrollable="true" id="modelimg" >
 			  <div class="newPhone">
-			    <img :src="imgName" style="display:block;max-height: 600px;max-width: 900px;">
+			    <img :src="imgName" style="display:block;max-height: 600px;max-width: 900px;margin:0 auto;">
 			  </div>
 			  <div slot="footer">
 			  </div>
 			</Modal>
 			<!--显示图片-->
-			<Modal width="960" v-model="showModal.showPicture1" :scrollable="true" id="modelimg">
+			<Modal width="960" v-model="showModal.showPicture1" :scrollable="true" id="modelimg" >
 			  <div class="newPhone">
-			    <img :src="imgName1" style="display:block;max-height: 600px;max-width: 900px;">
+			    <img :src="imgName1" style="display:block;max-height: 600px;max-width: 900px;margin:0 auto;">
 			  </div>
 			  <div slot="footer">
 			  </div>
