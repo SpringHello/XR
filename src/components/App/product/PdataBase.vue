@@ -50,7 +50,6 @@
           </div>
           <div class="right">
             <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex" :key="index">
-              <img :src="stage.img" alt="描述">
               <div style="padding:20px;">
                 <span>场景描述</span>
                 <p v-for="(p,i) in stage.desc" :key="i">

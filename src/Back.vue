@@ -203,7 +203,7 @@
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
-  <!--    <span class="phone" @click="showModal.complaintModal = true"></span>-->
+      <span class="phone" @click="showModal.complaintModal = true"></span>
       <div>
         <BackTop :bottom="61" :right="50" :duration="0" :height="1600" style="position: unset">
           <span class="topLink"></span>
@@ -229,7 +229,7 @@
       </p>
     </Modal>
     <!-- 投诉框 -->
-    <Modal v-model="showModal.complaintModal" width="500" :scrollable="true">
+    <Modal v-model="showModal.complaintModal" width="500" :scrollable="true" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">投诉与建议</span>
       </p>
@@ -649,7 +649,22 @@
       sumbitComplaint(name) {
         this.$refs[name].validate(valid => {
           if (valid) {
-            this.complaintForm.step = 2
+            let url = 'order/createSuggestions.do'
+            let params = {
+              phone: this.complaintForm.phone,
+              title: this.complaintForm.complaintTitle,
+              typeDesc: this.complaintForm.issueType,
+              questionDesc: this.complaintForm.issueDesc
+            }
+            this.$http.post(url,params).then(res=>{
+              if(res.status == 200){
+                this.complaintForm.step = 2
+              } else{
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         })
       }

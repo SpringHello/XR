@@ -315,7 +315,7 @@
       <!--      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left" style="height:48px;">
               <span class="phone"></span>
             </Poptip>-->
-   <!--   <span class="phone" @click="showModal.complaintModal = true"></span>-->
+      <span class="phone" @click="showModal.complaintModal = true"></span>
       <div>
         <BackTop :bottom="161" :right="50" :duration="300" :height="1000" style="position: unset">
           <span class="topLink"></span>
@@ -323,7 +323,7 @@
       </div>
     </div>
     <!-- 投诉框 -->
-    <Modal v-model="showModal.complaintModal" width="500" :scrollable="true">
+    <Modal v-model="showModal.complaintModal" width="500" :scrollable="true" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">投诉与建议</span>
       </p>
@@ -542,7 +542,7 @@
                 prod: '云安全',
                 prodItem: [
                   {title: '防火墙', desc: '自定义规则、协议、端口', path: '/firewall/'},
-                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ddos/'},
+                  //{title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ddos/'},
                   {
                     title: 'SSL证书',
                     desc: '网站可信身份认证与安全数据传输',
@@ -666,7 +666,7 @@
             title: '云安全',
             desc: [
               {subTitle: '防火墙', url: '/firewall/'},
-              {subTitle: 'DDOS高防IP', url: '/ddos/'}
+              //{subTitle: 'DDOS高防IP', url: '/ddos/'}
             ]
           },
           {
@@ -901,7 +901,22 @@
       sumbitComplaint(name) {
         this.$refs[name].validate(valid => {
           if (valid) {
-            this.complaintForm.step = 2
+            let url = 'order/createSuggestions.do'
+            let params = {
+              phone: this.complaintForm.phone,
+              title: this.complaintForm.complaintTitle,
+              typeDesc: this.complaintForm.issueType,
+              questionDesc: this.complaintForm.issueDesc
+            }
+            this.$http.post(url,params).then(res=>{
+              if(res.status == 200){
+                this.complaintForm.step = 2
+              } else{
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         })
       }
