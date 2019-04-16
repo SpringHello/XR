@@ -133,7 +133,16 @@
                 <img src="../../assets/img/back/kkfpiao.png"/>
               </div>
             </div>
-            <!-- <h3>交易流水</h3>
+          </Tab-pane>
+					<Tab-pane label="账单" name="bills" class="bill">
+            <ButtonGroup>
+                <Button v-for="(item,index) in billTabs" :key="index" :class="{'select-tab':billBtnSelected == index}" @click="billBtnSelected=index">{{item}}</Button>
+            </ButtonGroup>
+            <div :style="{'display':billBtnSelected==0?'block':'none'}">1</div>
+            <div :style="{'display':billBtnSelected==1?'block':'none'}">2</div>
+            <div :style="{'display':billBtnSelected==2?'block':'none'}">3</div>
+            <div :style="{'display':billBtnSelected==3?'block':'none'}">4</div>      
+            <h3>交易流水</h3>
             <div class="expenses_condition">
               <span>按交易时间</span>
               <Row style="display: inline-block;margin-left: 10px">
@@ -164,9 +173,7 @@
                   <Page :total="total" :current="1" :page-size="7" @on-change="currentChange"></Page>
                 </div>
               </div>
-            </div> -->
-          </Tab-pane>
-					<Tab-pane label="账单" name="bills">
+            </div>
 					</Tab-pane>
           <Tab-pane label="订单管理" name="orderManage">
             <div class="ordertype">
@@ -1182,6 +1189,8 @@
          this.init()*/
       }
       return {
+        billTabs: ['账单概览', '资源详单', '流水详单','导出记录'],
+        billBtnSelected: 0,
         tooltipStatus: true,
         switch1: false,
         vipRule: [
@@ -4540,6 +4549,13 @@
       color: #4B3C3D;
       font-size: 14px;
       font-weight: bold;
+    }
+  }
+  .bill {
+    .select-tab {
+      color:rgba(42,153,242,1);
+      border:1px solid rgba(42,153,242,1);
+      z-index: 2;
     }
   }
 </style>
