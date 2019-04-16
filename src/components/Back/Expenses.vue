@@ -66,6 +66,15 @@
                 </div>
               </div>
             </div>
+          </Tab-pane>
+					<Tab-pane label="账单" name="bills">
+            <ButtonGroup>
+                <Button v-for="(item,index) in billTabs" :key="index">{{item}}</Button>
+            </ButtonGroup>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>      
             <h3>交易流水</h3>
             <div class="expenses_condition">
               <span>按交易时间</span>
@@ -98,8 +107,6 @@
                 </div>
               </div>
             </div>
-          </Tab-pane>
-					<Tab-pane label="账单" name="bills">
 					</Tab-pane>
           <Tab-pane label="订单管理" name="orderManage">
             <div class="ordertype">
@@ -1115,6 +1122,7 @@
          this.init()*/
       }
       return {
+        billTabs: ['账单概览', '资源详单', '流水详单','导出记录'],
         tooltipStatus: true,
         vipRule: [
           {
