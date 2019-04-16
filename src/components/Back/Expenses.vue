@@ -16,30 +16,41 @@
               style="margin-top: 20px;min-height: 550px">
           <Tab-pane label="财务总览" name="accountSummary">
             <div class="money">
-              <div class="item">
-                <span>余额</span>
-                <button @click="torecharge">充值</button>
-                <!-- $router.push('/cashwithdrawal') -->
-                <button @click="Cashwithdrawal"
-                        style="margin-right: 10px;border:1px solid rgba(43,153,242,1);background: white;color:rgba(43,153,242,1);border-radius:2px;width:54px;height:28px;">提现
-                </button>
-                <div>
+              <div class="item1">
+                <div class="div1">
+                   <p>可用额度</p>
+                  <div style="width:440px;">
                   <ul style="width: 50%">
-                    <li>可用余额</li>
-                    <li style="color: #2A99F2;cursor: pointer" @click="getVipList">¥{{ balance }}</li>
-                  </ul>
-                  <ul style="width: 30%">
-                    <li>冻结金额
-                      <span @click="freezeDetails">
-                      <Icon type="ios-help-outline"
-                            style="color:#2A99F2;font-size:16px;margin-left: 10px;cursor: pointer;"></Icon>
-                    </span>
+                    <li>可用余额
+                      <Button type="ghost" shape="circle" size="small" @click="getVipList">转现金券</Button>
                     </li>
-                    <li style="cursor: pointer" @click="freezeDetails">¥{{ freezeDeposit }}</li>
+                    <li>¥{{ balance }}</li><!-- @click="getVipList" -->
                   </ul>
+                  <ul style="width: 50%">
+                    <li class="item-li">现金券额度</li><!-- @click="toMyCard" -->
+                    <li>¥{{ voucher }}</li>
+                  </ul>
+                  </div>
+                </div>
+                <div class="div2">
+                  <div class="right-top">
+                    <p>
+                      <span>余额告警</span>
+                      <i-switch class="switch1" v-model="switch1" @on-change="change"></i-switch>
+                    </p>
+                    <p>(告警额度为¥100.00
+                      <span>修改</span> )
+                    </p>
+                  </div>
+                  <p>
+                    <button @click="torecharge">充值</button>
+                    <button @click="Cashwithdrawal"
+                            style="border:1px solid rgba(43,153,242,1);background: white;color:rgba(43,153,242,1);margin-left:10px;">提现
+                    </button>
+                  </p>
                 </div>
               </div>
-              <div class="item">
+              <!-- <div class="item">
                 <span>消费</span>
                 <div>
                   <ul style="width: 50%">
@@ -51,22 +62,78 @@
                     <li>¥{{ theCumulative }}</li>
                   </ul>
                 </div>
-              </div>
-              <div class="item">
-                <span>代金券</span>
+              </div> -->
+              <div class="item2">
+                <p>本月累计支出</p>
                 <div>
-                  <ul style="width: 50%">
-                    <li class="item-li" @click="toMyCard">现金券额度</li>
-                    <li>¥{{ voucher }}</li>
-                  </ul>
-                  <ul style="width: 50%">
+                  <!-- <ul style="width: 50%">
                     <li class="item-li" @click="toMyCard">优惠券数量</li>
                     <li>{{ couponNumber }}</li>
+                  </ul> -->
+                  <ul style="width: 50%">
+                    <li>消费金额
+                      <Button type="ghost" shape="circle" size="small">查看详情</Button>
+                    </li>
+                    <li @click="getBillAll">¥{{ theCumulative }}</li>
+                  </ul>
+                  <ul style="width: 50%">
+                    <li>冻结金额
+                      <Button type="ghost" shape="circle" size="small" @click="freezeDetails">历史冻结记录</Button>
+                    </li>
+                    <li>¥{{ freezeDeposit }}</li><!-- @click="freezeDetails" -->
                   </ul>
                 </div>
               </div>
+              <div class="item3" @click="name='orderManage'">
+                <p>待支付订单</p>
+                <p>
+                  <span>999</span>
+                  笔
+                </p>
+                <p v-if="">
+                  您的待支付订单较多，可前往<span>订单管理</span>删除
+                </p>
+                <p v-else-if="" style="color:#2A99F2;">
+                  立即支付
+                </p>
+                <p v-else-if="" style="color:#2A99F2;">
+                  查看订单管理
+                </p>
+                <img src="../../assets/img/back/daizhifu.png"/>
+              </div>
+              <div class="item4" @click="name='myCard'">
+                <p>代金券数量</p>
+                <p>
+                  <span>{{ couponNumber }}</span>
+                  张
+                </p>
+                <p v-if="couponNumber<=0" style="color:#2A99F2;">
+                 查看优惠活动
+                </p>
+                <p v-else-if="couponNumber<10" style="color:#2A99F2;">
+                 立即使用
+                </p>
+                <p v-else-if="couponNumber>=10">
+                 您的代金券数量较多，请及时使用以免过期
+                </p>
+                <img src="../../assets/img/back/daijj.png"/>
+              </div>
+              <div class="item5" @click="name='applyInvoice'">
+                <p>可开发票金额</p>
+                <p>
+                  <span>{{ invoice }}</span>
+                  元
+                </p>
+                <p v-if="invoice<=0">
+                  查看发票管理
+                </p>
+                <p v-else-if="invoice>=1">
+                  立即开票
+                </p>
+                <img src="../../assets/img/back/kkfpiao.png"/>
+              </div>
             </div>
-            <h3>交易流水</h3>
+            <!-- <h3>交易流水</h3>
             <div class="expenses_condition">
               <span>按交易时间</span>
               <Row style="display: inline-block;margin-left: 10px">
@@ -97,7 +164,7 @@
                   <Page :total="total" :current="1" :page-size="7" @on-change="currentChange"></Page>
                 </div>
               </div>
-            </div>
+            </div> -->
           </Tab-pane>
 					<Tab-pane label="账单" name="bills">
 					</Tab-pane>
@@ -1116,6 +1183,7 @@
       }
       return {
         tooltipStatus: true,
+        switch1: false,
         vipRule: [
           {
             title: '类目',
@@ -2316,6 +2384,7 @@
         this.showMoneyByMonth()
         this.search()
         this.getTicketNumber()
+        this.invoiceLimit()
       }
       if (sessionStorage.getItem('beVip')) {
         this.getVipList()
@@ -2336,7 +2405,9 @@
       //}
       //})
       //},
-
+      change (status) {
+                this.$Message.info('开关状态：' + status);
+      },
       selectChange(item, index) {
         if (item.startmoney > this.totalCost) {
           this.activeIndex = null
@@ -2366,6 +2437,7 @@
           case 'accountSummary':
             this.getBalance()
             this.showMoneyByMonth()
+            this.invoiceLimit()
             this.search()
             break
           case 'myCard':
@@ -3791,18 +3863,89 @@
         .money {
           display: flex;
           justify-content: space-between;
+          flex-wrap: wrap;
           padding: 0 5px;
-          .item {
-            width: 32%;
-            padding: 20px;
+          .item1 {
+            width:683px;
+            height:200px;
+            padding: 20px 0 20px 20px;
+            background:rgba(255,255,255,1);
             box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
-            > span {
-              font-size: 18px;
+            border-right: 1px solid #E6E6E6;
+            display: flex;
+            justify-content: space-between;
+            .div1 {
+               width: 440px;
+               border-right: 1px solid #E6E6E6;
+            > p {
+              font-size: 20px;
               font-family: MicrosoftYaHei;
-              color: rgba(102, 102, 102, 1);
-              line-height: 24px;
+              color:rgba(51,51,51,1);
+              line-height:26px;
             }
-            > button {
+            
+            > div {
+              display: flex;
+              margin-top: 44px;
+              ul {
+                li {
+                  font-size: 16px;
+                  font-family: MicrosoftYaHei;
+                  color: rgba(102, 102, 102, 1);
+                    > button {
+                      color: #2A99F2;
+                      border:1px solid #2A99F2;
+                      height: 20px;
+                      line-height: 15px;
+                      margin:-4px 0 0 7px;
+                    }
+                }
+                li:nth-child(2) {
+                  font-size: 24px;
+                  margin-top:26px;
+                }
+              }
+            }
+            .item-li {
+            }
+          }
+          .div2 {
+            width: 198px;
+            margin-left: 24px;
+            .right-top{
+              width: 198px;
+              margin-top: 10px;
+              >p{
+                > span{
+                font-size:16px;
+                font-family:MicrosoftYaHei;
+                color:rgba(102,102,102,1);
+                line-height:21px;
+                }
+                .switch1{
+                  margin-top: -5px;
+                  margin-left: 7px;
+                }
+              }
+              > p:nth-child(2){
+                margin-top: 20px;
+                font-size:12px;
+                font-family:MicrosoftYaHei;
+                color:rgba(153,153,153,1);
+                line-height:16px;
+                >span{
+                  color:#2A99F2;
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  line-height:16px;
+                  cursor: pointer;
+                }
+              }
+              
+            }
+            > p {
+              margin-top: 55px;
+              > button {
               font-size: 12px;
               font-family: MicrosoftYaHei;
               color: rgba(255, 255, 255, 1);
@@ -3811,28 +3954,200 @@
               padding: 5px 14px;
               outline: none;
               border: none;
-              float: right;
+              border-radius:4px;
+              width:54px;
+              height:28px;
+             }
+            }
+          }
+
+          }
+          .item2 {
+            width:450px;
+            padding: 20px 0 20px 20px;
+            background:rgba(255,255,255,1);
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+            > p {
+              font-size:20px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:26px;
             }
             > div {
               display: flex;
-              margin-top: 20px;
+              margin-top: 44px;
               ul {
                 li {
                   font-size: 16px;
                   font-family: MicrosoftYaHei;
                   color: rgba(102, 102, 102, 1);
+                  > button {
+                      color: #2A99F2;
+                      border:1px solid #2A99F2;
+                      height: 20px;
+                      line-height: 15px;
+                      margin:-4px 0 0 7px;
+                    }
                 }
                 li:nth-child(2) {
-                  margin-top: 10px;
+                  margin-top: 26px;
                   font-size: 24px;
+                  > button {
+                      color: #2A99F2;
+                      border:1px solid #2A99F2;
+                      height: 20px;
+                      line-height: 15px;
+                      margin:-4px 0 0 7px;
+                    }
                 }
               }
             }
             .item-li {
-              cursor: pointer;
-              &:hover {
-                color: #2A99F2;
+            }
+          }
+          .item3{
+            width:372px;
+            height:170px;
+            background:rgba(255,255,255,1);
+            box-shadow:0px 2px 4px 0px rgba(0,0,0,0.2);
+            margin-top:20px;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 0 20px 20px;
+            > p:nth-child(1){
+              font-size:20px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:26px;
+              z-index:999;
+              position:absolute;
+            }
+            > p:nth-child(2){
+              z-index:999;
+              position:absolute;
+              top: 55px;
+              font-size:24px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:31px;
+              > span {
+                font-size:48px;
+                font-family:MicrosoftYaHei;
+                color:rgba(255,98,75,1);
+                line-height:64px;
               }
+            }
+            > p:nth-child(3){
+              z-index:999;
+              position:absolute;
+              bottom: 22px;
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:#999999;
+              line-height:16px;
+              > span {
+                color: #2A99F2;
+                cursor: pointer;
+              }
+            }
+            > img {
+              position: absolute;
+              right: 0;
+              bottom: 0;
+            }
+          }
+          .item4{
+            width:372px;
+            height:170px;
+            background:rgba(255,255,255,1);
+            box-shadow:0px 2px 4px 0px rgba(0,0,0,0.2);
+            margin-top:20px;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 0 20px 20px;
+            > p:nth-child(1){
+              font-size:20px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:26px;
+              z-index:999;
+              position:absolute;
+            }
+            > p:nth-child(2){
+              z-index:999;
+              position:absolute;
+              top: 55px;
+              font-size:24px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:31px;
+              > span {
+                font-size:48px;
+                font-family:MicrosoftYaHei;
+                color:rgba(255,98,75,1);
+                line-height:64px;
+              }
+            }
+            > p:nth-child(3){
+              z-index:999;
+              position:absolute;
+              bottom: 22px;
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:#999999;
+              line-height:16px;
+            }
+            > img {
+              position: absolute;
+              right: 0;
+              bottom: 0;
+            }
+          }
+          .item5{
+            width:373px;
+            height:170px;
+            background:rgba(255,255,255,1);
+            box-shadow:0px 2px 4px 0px rgba(0,0,0,0.2);
+            margin-top:20px;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 0 20px 20px;
+            > p:nth-child(1){
+              font-size:20px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:26px;
+              z-index:999;
+              position:absolute;
+            }
+            > p:nth-child(2){
+              z-index:999;
+              position:absolute;
+              top: 55px;
+              font-size:24px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:31px;
+              > span {
+                font-size:48px;
+                font-family:MicrosoftYaHei;
+                color:rgba(255,98,75,1);
+                line-height:64px;
+              }
+            }
+            > p:nth-child(3){
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:rgba(42,153,242,1);
+              line-height:16px;
+              z-index:999;
+              position:absolute;
+              bottom: 22px;
+            }
+            > img {
+              position: absolute;
+              right: 0;
+              bottom: 0;
             }
           }
         }
