@@ -1394,6 +1394,7 @@
         background: url('./assets/img/app/regiterTag.png');
         margin-bottom: 10px;
         cursor: pointer;
+        box-shadow: 0px 2px 19px -8px rgba(239,77,54,1);
         >p{
           font-size:14px;
           font-family:MicrosoftYaHei-Bold;
