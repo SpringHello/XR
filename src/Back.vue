@@ -200,9 +200,9 @@
           target="_blank"></a>
        </span>
       </Poptip>-->
-      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
+      <!--<Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
-      </Poptip>
+      </Poptip>-->
       <span class="phone" @click="showModal.complaintModal = true"></span>
       <div>
         <BackTop :bottom="61" :right="50" :duration="0" :height="1600" style="position: unset">
@@ -446,6 +446,9 @@
       })
     },
     created() {
+      if(localStorage.getItem('isLogin')){
+        this.getloginPromptMessage()
+      }
       if (navigator.userAgent.indexOf("Chrome") >= 0) {
         this.hintShow = false
       }
@@ -667,6 +670,18 @@
             })
           }
         })
+      },
+      getloginPromptMessage(){
+        this.$http.get('user/loginPromptMessage.do',{params:{}}).then(res=>{
+          if(res.data.status == 1){
+            localStorage.setItem('isLogin','已提示')
+            this.$Message.info({
+                    content: res.data.message,
+                    duration: 10,
+                    closable: true
+                })
+          }
+        })
       }
     },
     computed: mapState({
@@ -741,7 +756,7 @@
           this.notice()
         },
         deep: true
-      }
+      },
     }
   }
 </script>
@@ -1029,10 +1044,12 @@
     }
     .qq {
       position: relative;
+      background-color: #ffffff;
+      margin-bottom: 10px;
       background-image: url('./assets/img/app/qq.png');
-      &:hover {
+      /*&:hover {
         background: #2A99F2 url('./assets/img/app/qq-hover.png') no-repeat center;
-      }
+      }*/
       > div {
         position: absolute;
         width: 0px;
@@ -1105,16 +1122,17 @@
       height: 48px;
       display: block;
       padding: 10px;
-      background: #E1E1E1;
+      cursor: pointer;
+      background-color: #ffffff;
       background-repeat: no-repeat;
       background-position: center;
       background-image: url('./assets/img/app/phone.png');
-      &:hover {
+      /*&:hover {
         background: #2A99F2;
         background-repeat: no-repeat;
         background-position: center;
         background-image: url('./assets/img/app/phone-hover.png');
-      }
+      }*/
     }
   }
 

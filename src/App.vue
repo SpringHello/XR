@@ -239,7 +239,8 @@
     </div>
     <!-- 客服浮动块 -->
     <div class="affix">
-      <div class="registerImg" @click="$router.push('register')">
+      <div class="registerImg" @click="$router.push('/activity/free/')">
+        <p>免费领主机</p>
       </div>
       <!--<img src="./assets/img/app/regiterTag.png"/>-->
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
@@ -1374,32 +1375,37 @@
         background: #E1E1E1 no-repeat center;
       }
       .registerImg {
-        height: 189px;
-        width: 48px;
-        background: url("./assets/img/app/regiterTag.png") no-repeat;
+        height: 100px;
+        background: url('./assets/img/app/regiterTag.png');
         margin-bottom: 10px;
         cursor: pointer;
-        padding: 154px 10px 9px;
-        > p {
-          font-size: 14px;
-          font-family: MicrosoftYaHei;
-          color: rgba(55, 125, 255, 1);
-          line-height: 19px;
+        >p{
+          font-size:14px;
+          font-family:MicrosoftYaHei-Bold;
+          font-weight:bold;
+          color:rgba(255,255,255,1);
+          line-height:16px;
+          width: 14px;
+          padding: 9px 17px;
         }
       }
       .qq {
         position: relative;
+        background-color: #ffffff;
         background-image: url('./assets/img/app/qq.png');
-        &:hover {
+        margin-bottom: 10px;
+        /*&:hover {
           background: #2A99F2 url('./assets/img/app/qq-hover.png') no-repeat center;
-        }
+        }*/
         > div {
           position: absolute;
           width: 0px;
           background-color: #ffffff;
-          right: 48px;
+          right: 55px;
           top: unset;
           transition: width .3s;
+          box-shadow:0px 2px 16px -5px rgba(130,130,130,0.5);
+          border-radius:15px;
         }
         & > a {
           width: 100%;
@@ -1467,17 +1473,18 @@
         height: 48px;
         display: block;
         padding: 10px;
-        background: #E1E1E1;
+        background: #FFF;
         background-repeat: no-repeat;
         background-position: center;
         background-image: url('./assets/img/app/phone.png');
         cursor: pointer;
-        &:hover {
+        margin-bottom: 10px;
+        /*&:hover {
           background: #2A99F2;
           background-repeat: no-repeat;
           background-position: center;
           background-image: url('./assets/img/app/phone-hover.png');
-        }
+        }*/
       }
       .topLink {
         display: block;
