@@ -22,7 +22,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!-- <my-carousel-item class="carousel-item">
           <div class="xian-active" @click="push('/activity/xian/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
@@ -39,7 +39,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item> -->
         <my-carousel-item class="carousel-item">
           <div @click="push('/activity/zero/')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
