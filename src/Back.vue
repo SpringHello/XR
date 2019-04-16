@@ -446,7 +446,7 @@
       })
     },
     created() {
-      if(localStorage.getItem('isLogin')){
+      if(!localStorage.getItem('isLogin')){
         this.getloginPromptMessage()
       }
       if (navigator.userAgent.indexOf("Chrome") >= 0) {

@@ -136,12 +136,12 @@
           {
             img: 'icon-dianduidianVPN',
             title: '点对点VPN（site2siteVPN）',
-            desc: '基于Internet，在客户本地数据中心、第三方公有云（第三方需支持VPC和VPN）和新睿云虚拟私有云（VPC）之间建立的起IPsec加密通信隧道。'
+            desc: '基于Internet，在客户本地数据中心、第三方公有云（第三方需支持VPC和VPN）和新睿云虚拟私有云（VPC）之间建立起的IPsec加密通信隧道。'
           },
           {
             img: 'icon-dianduiduoVPN',
             title: '点对多VPN（Remote VPN）',
-            desc: '基于Interne，在客户本地主机/第三方公有云主机与新睿云虚拟私有云（VPC）之间建立的起IPsec加密通信隧道。'
+            desc: '基于Interne，在客户本地主机/第三方公有云主机与新睿云虚拟私有云（VPC）之间建立起的IPsec加密通信隧道。'
           }
         ],
         stageInfo: {

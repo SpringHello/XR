@@ -762,6 +762,9 @@
 
     },
     created() {
+      if(!localStorage.getItem('isLogin')){
+        this.getloginPromptMessage()
+      }
       // if (sessionStorage.getItem('hintShow') == null) {
       //   sessionStorage.setItem('hintShow', 'true')
       // }
@@ -918,6 +921,18 @@
                 })
               }
             })
+          }
+        })
+      },
+      getloginPromptMessage(){
+        this.$http.get('user/loginPromptMessage.do',{params:{}}).then(res=>{
+          if(res.data.status == 1){
+            localStorage.setItem('isLogin','已提示')
+            this.$Message.info({
+                    content: res.data.message,
+                    duration: 10,
+                    closable: true
+                })
           }
         })
       }
