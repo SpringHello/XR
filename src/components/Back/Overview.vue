@@ -177,15 +177,15 @@
           },
           {
             prod: '云网络',
-            prodUrl: ['vpc#VPC', 'ip', 'balance', 'vpc#NAT', 'vpn#remote', '', 'vpcManage']
+            prodUrl: ['vpcList#VPC', 'ip', 'loadbState', 'NatState', 'vpnBlanck', '', 'vpcManage']
           },
           {
             prod: '云存储',
-            prodUrl: ['disk', 'diskBackup', 'objectStorage', '']
+            prodUrl: ['diskList', 'diskBackupList', 'objectStorage', '']
           },
           {
             prod: '云安全',
-            prodUrl: ['firewall', '']
+            prodUrl: ['firewallList', '']
           },
           {
             prod: '云运维',
@@ -303,7 +303,7 @@
               } else if (content.itemName == '云硬盘') {
                 content.cartUrl = '/buy/disk/#Pdisk'
               } else if (content.itemName == 'NAT网关') {
-                content.cartUrl = 'vpc#NAT'
+                content.cartUrl = 'vpcList#NAT'
               }
               if (content.itemName == '数据库') {
                 content.cartUrl = '/buy/database/#NAT'
@@ -405,25 +405,25 @@
       auth() {
         return {
           // 未认证
-          'not-auth': this.userInfo.personalauth == 1 && this.userInfo.companyauth == 1 && this.authInfo.checkstatus == undefined,
+          'not-auth': (!this.authInfo) || (this.authInfo && this.authInfo.checkstatus != 0),
           // 个人认证
-          'personal-icon': this.userInfo.personalauth == 0 && this.userInfo.companyauth == 1 && this.authInfo.authtype != 1,
+          'personal-icon': this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0,
           // 企业认证
-          'company-icon': this.authInfo.authtype == 1 && this.authInfo.checkstatus == 0,
-          // 企业认证中
-          'company-authing': (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2)||this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1
+          'company-icon': this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0,
+          // 企业认证中/失败
+          'company-authing': (this.authInfo&&this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2) || this.authInfo&&this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1
         }
       },
       authText() {
-        if (this.userInfo.personalauth == 1 && this.userInfo.companyauth == 1 && this.authInfo.checkstatus == undefined) {
+        if ((!this.authInfo) || (this.authInfo && this.authInfo.checkstatus != 0)) {
           return '未认证'
-        } else if (this.userInfo.personalauth == 0 && this.userInfo.companyauth == 1 && this.authInfo.authtype != 1) {
+        } else if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
           return '个人认证'
-        } else if (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 0) {
+        } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
           return '企业认证'
-        } else if (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2) {
+        } else if (this.authInfo&&this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2) {
           return '企业认证中'
-        } else if (this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1) {
+        } else if (this.authInfo&&this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1) {
           return '企业认证失败'
         }
       }

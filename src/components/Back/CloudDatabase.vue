@@ -25,7 +25,7 @@
         </div>
         <div class="databases">
           <Table :columns="databaseColumns" :data="dataBaseData"></Table>
-          <p>点击查看<span @click="$router.push('/documentInfo/RjCUjfFD7/RjDqVv0ZP')">如何连接数据库？</span></p>
+          <p>点击查看<a href="/support_docs/4LlTC3MYo_RjDqVv0ZP.html">如何连接数据库？</a></p>
         </div>
       </div>
     </div>
@@ -688,52 +688,7 @@
 
                 ])
                 ]),
-                  h('div', [h('span', {
-                    style: {
-                      color: '#2A99F2',
-                      marginRight: '5px',
-                    }
-                  }, '日志记录'),
-                    h('i-Switch', {
-                      props: {
-                        value: true,
-                        size: 'small'
-                      },
-                      style: {
-                        verticalAlign: 'text-top'
-                      },
-                      on: {
-                        input: (event) => {
-                          // 日志开启时调用
-                          if (event) {
-                            this.$http('database/openDatabaseLog.do', {
-                              params: {
-                                DBId: params.row.computerid
-                              }
-                            }).then(response => {
-                              if (response.status == 200 && response.data.status == 1) {
-                                this.$Message.success(response.data.message)
-                              } else {
-                                this.$Message.error(response.data.message)
-                              }
-                            })
-                          } else { // 关闭日志时调用
-                            this.$http('database/closeDataBaseLog.do', {
-                              params: {
-                                DBId: params.row.computerid
-                              }
-                            }).then(response => {
-                              if (response.status == 200 && response.data.status == 1) {
-                                this.$Message.success(response.data.message)
-                              } else {
-                                this.$Message.error(response.data.message)
-                              }
-                            })
-                          }
-                        }
-                      }
-                    })
-                  ])])
+                  ])
               } else {
                 var isShow1 = params.row.caseType != 3 ? 'inline-block' : 'none'
                 return h('div', {}, [h('span', {
@@ -927,25 +882,9 @@
                         }
                       }
                     }
-                  }, '关闭数据库')
+                  }, '关闭数据库2')
                 ])
                 ]),
-                 h('div', [h('span', {
-                  style: {
-                    marginRight: '5px',
-                    cursor: 'not-allowed'
-                  }
-                }, '日志记录'),
-                  h('i-Switch', {
-                    props: {
-                      value: false,
-                      size: 'small',
-                      disabled: true
-                    },
-                    style: {
-                      verticalAlign: 'text-top'
-                    }
-                  })])
                 ])
               }
             }

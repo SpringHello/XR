@@ -6,7 +6,7 @@
     <div class="body-bottom">
       <div class="content">
         <h2>备案区域</h2>
-        <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png"/> {{ area }}</p>
+        <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png" alt="备案区域"/> {{ area }}</p>
         <div class="main-info">
           <h2>主体信息</h2>
           <transition name="list">
@@ -87,7 +87,7 @@
                 </div>
               </FormItem>
               <p v-if="site.basicInformation.newWebsiteDomainList.length<10" class="form-p" @click="addWebsiteDomain(upIndex)"><img
-                src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
+                src="../../../assets/img/records/records-icon19.png" alt="新增网站域名"/> 新增网站域名</p>
               <FormItem label="网站首页URL" prop="websiteHomepage">
                 <Input @on-focus="toolShow('websiteHomepage',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.websiteHomepage" placeholder="请输入网站首页URL"
                        style="width: 500px"></Input>
@@ -295,13 +295,9 @@
     metaInfo: {
       title: '域名备案查询 - 域名备案流程 - 网站域名备案 - 域名与备案 - 新睿云', // set a title
       meta: [{                 // set meta
-        name: 'keywords',
-        content: '域名备案,备案域名,域名备案查询,域名备案流程,网站域名备案'
-      },
-        {                 // set meta
-          name: 'description',
-          content: '新睿云提供专业、高效的域名备案服务，目前支持北京、沈阳、西安等地区的域名备案申请，按域名备案流程进行域名备案，助您快速完成网站备案，以便网站正常访问。'
-        }]
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
     },
     components: {
       step, records, oStep

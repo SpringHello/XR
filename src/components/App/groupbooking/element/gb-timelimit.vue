@@ -1,10 +1,10 @@
 <template>
   <div class="background">
     <div class="center">
-      <img src="../../../../assets/img/active/group-booking/gb-banner3.png"/>
+      <img src="../../../../assets/img/active/group-booking/gb-banner3.png" alt="banner"/>
       <p>分享赠时长进行中</p>
       <div class="banner-button" v-if="d=='00'&&h=='00'&&m=='00'&&s=='00'">
-        <img src="../../../../assets/img/active/group-booking/gb-banner5.png"/>
+        <img src="../../../../assets/img/active/group-booking/gb-banner5.png" alt="banner"/>
         <span @click="openGroup">重新开团</span>
       </div>
       <div class="timer" v-else>

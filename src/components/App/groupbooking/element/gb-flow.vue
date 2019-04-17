@@ -4,7 +4,7 @@
     <ul>
       <li v-for="item in flowGroup">
         <div>
-          <img :src=item.src />
+          <img :src="item.src"  alt="描述"/>
         </div>
         <p>{{ item.step }}</p>
       </li>

@@ -928,7 +928,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.successMsg = false">取消</Button>
-        <Button type="primary" @click="$router.push('activtiy/2019spring/')">查看活动</Button>
+        <Button type="primary" @click="$router.push('activity/2019spring/')">查看活动</Button>
       </p>
     </Modal>
 
@@ -941,7 +941,7 @@
         <p class="cash-coupon-p">总支付金额：<span> ¥{{ payForm.paymentAmount }}</span></p>
         <p class="cash-coupon-p">现金券支付金额：<span>¥{{payForm.cashCoupon }}</span></p>
         <p class="cash-coupon-p">现金券余额：<span>¥{{ payForm.cashCouponBalance}}</span></p>
-        <p class="cash-coupon-p" v-if="voucher <= parseInt(payForm.paymentAmount)">还需支付：<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
+        <p class="cash-coupon-p" v-if="parseInt(payForm.cashCoupon) <= parseInt(payForm.paymentAmount)">还需支付：<span>¥{{ (payForm.paymentAmount - payForm.cashCoupon).toFixed(2)}}</span></p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="payOk">确认支付</Button>
@@ -1240,7 +1240,11 @@
             align: 'left',
             width: 110,
             render: (h, params) => {
-              return h('span', params.row.maketicketover == 0 ? '未使用' : params.row.maketicketover == 1 ? '已使用' : '已失效')
+              if (params.row.tickettype == '2'){
+                return h('span', params.row.maketicketover == 0 ? '未充值' : params.row.maketicketover == 1 ? '已充值' : '已失效')
+              } else{
+                return h('span', params.row.maketicketover == 0 ? '未使用' : params.row.maketicketover == 1 ? '已使用' : '已失效')
+              }
             }
           },
           {
@@ -2307,14 +2311,11 @@
     },
     created() {
       this.getUserVipLevel()
-      if (this.name == 'orderManage') {
-        this.changeOrder()
-      } else {
         this.getBalance()
+        this.changeOrder()
         this.showMoneyByMonth()
         this.search()
         this.getTicketNumber()
-      }
       if (sessionStorage.getItem('beVip')) {
         this.getVipList()
         sessionStorage.removeItem('beVip')
@@ -2587,15 +2588,34 @@
         })
       },
       orderPay() {
-        if (this.orderNumber.length != 0) {
-          this.payForm.paymentAmount = this.orderNumber.map(item => {
-            return item.cost
+      this.payForm.paymentAmount = this.orderNumber.map(item => {
+         return item.cost
           }).reduce((total, num) => {
-            return total + num
-          }, 0).toFixed(2)
-          this.payForm.cashCoupon = this.voucher > parseInt(this.payForm.paymentAmount) ? this.payForm.paymentAmount : this.voucher
-          this.payForm.cashCouponBalance = this.voucher > parseInt(this.payForm.paymentAmount) ? (this.voucher - this.payForm.paymentAmount).toFixed(2) : 0
-          this.showModal.payAffirm = true
+           return total + num
+        }, 0).toFixed(2)
+        if (this.orderNumber.length != 0) {
+          let orderNum = this.orderNumber.map(item => {
+            return item.ordernumber
+            })
+          this.$http.get('information/zfconfirm.do',{params:{
+            order: orderNum + '',
+            money: this.payForm.paymentAmount
+          }}).then(res=>{
+            if(res.data.status == 1){
+              if(res.data.result.isUseVoucher == 1){
+                 this.payForm.cashCoupon = this.voucher > parseInt(this.payForm.paymentAmount) ? this.payForm.paymentAmount : this.voucher
+                 this.payForm.cashCouponBalance = this.voucher > parseInt(this.payForm.paymentAmount) ? (this.voucher - this.payForm.paymentAmount).toFixed(2) : 0
+              } else{
+                 this.payForm.cashCoupon = 0
+                 this.payForm.cashCouponBalance = this.voucher
+              }
+                this.showModal.payAffirm = true
+            } else{
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
         }
       },
       payOk() {
@@ -3431,16 +3451,9 @@
         })
         this.refundLastHintDisabled = true
         let url = 'user/returnMoneyOrder.do'
-        let params = {}
-        if (this.refundLastTo == 'account') {
-          params = {
-            orderNumber: orderNumber + ''
-          }
-        } else {
-          params = {
+        let params = {
             orderNumber: orderNumber + '',
             backRemainder: '1'
-          }
         }
         this.$http.get(url, {
           params

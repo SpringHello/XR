@@ -23,7 +23,7 @@
         </div>
         <div class="box1">
 					<span style="margin-left: 10px;"><span>申请线上提现后您的款项将在</span><span style="color: #FF624B;"> &nbsp;5个工作日&nbsp;</span>内按照后进先出的原则退回您的原线上充值账户（微信、支付宝）。如需帮助，可查看
-						<a @click="$router.push('/documentInfo/6bSa9TMxO/6zxZtv8QU')" class="colora">自助提现常见问题</a></span>
+						<a @click="$router.push('/support/6bSa9TMxO.html')" class="colora">自助提现常见问题</a></span>
         </div>
         <p id="idp1">
           <span class="spanall">可提现金额</span>
@@ -71,13 +71,13 @@
               <th class="thself">提现金额（元）</th>
               <th style="width:510px;text-align:left;">预计到账金额（元）
                 <div class="thdd" id="divself">
-				  <Poptip trigger="hover">
-				  	<div slot="content" id="divself2">
-				  	  <p style="line-height:22px;">银行扣除相应金额的手续费时会导致到账金额和</p>
-				  	  <p style="line-height:22px;">提现金额不一致。</p>
-				  	</div>
-				  	<Icon type="ios-help-outline" id="iconself"></Icon>
-				  </Poptip>
+                  <Poptip trigger="hover">
+                    <div slot="content" id="divself2">
+                      <p style="line-height:22px;">银行扣除相应金额的手续费时会导致到账金额和</p>
+                      <p style="line-height:22px;">提现金额不一致。</p>
+                    </div>
+                    <Icon type="ios-help-outline" id="iconself"></Icon>
+                  </Poptip>
                 </div>
               </th>
               <th style="text-align:left;">到账账户</th>
@@ -347,7 +347,7 @@
         moneyall: 0,
         //本次可提现总金额
         moneysure: 0,
-		minmoney:0,
+        minmoney: 0,
         //提现可输入金额
         Otheramount: 0,
         Actualamount: 0,
@@ -360,9 +360,9 @@
         authModifyPhoneStep: 0,
         disabled11: true,
         disabled12: false,
-		AllseMoney:{},
-		monenymo:'',
-		AcmoneyGG:'',
+        AllseMoney: {},
+        monenymo: '',
+        AcmoneyGG: '',
         authModifyPhoneFormThere: {
           verificationCode: '',
           pictureCode: '',
@@ -458,7 +458,7 @@
       }
     },
     created() {
-        this.money()
+      this.money()
       //this.moneyconfirm()
     },
     methods: {
@@ -468,7 +468,7 @@
       },
       Callpresentation() {
         axios.post('user/balanceWithdrawal.do', {
-		  balance: this.Actualamount,
+          balance: this.Actualamount,
           smsCode: this.formCustom.messagecode,
           username: this.userphone,
           type: this.AllseMoney.type,
@@ -493,28 +493,28 @@
         this.$router.history.go(-1)
       },
       money() {
-		this.AllseMoney=JSON.parse(sessionStorage.getItem('ALLf'))
-		if(this.AllseMoney==null||this.AllseMoney==''){
-			this.$router.push('/cashwithdrawal')
-		}
-		else{
-			sessionStorage.removeItem('ALLf')
-			this.moneyall = parseFloat(this.AllseMoney.balance)
-			axios.get('user/getBalanceWithdrawalLimit.do', {
-				params: {
-					type:this.AllseMoney.type
-				}
-			}).then(response => {
-				if (response.status == 200 && response.data.status == 1) {
-					this.moneysure =  parseFloat(response.data.result.money)
-					this.minmoney = parseFloat(response.data.result.minMoney)
-				}
-			})
-		}
+        this.AllseMoney = JSON.parse(sessionStorage.getItem('ALLf'))
+        if (this.AllseMoney == null || this.AllseMoney == '') {
+          this.$router.push('/cashwithdrawal')
+        }
+        else {
+          sessionStorage.removeItem('ALLf')
+          this.moneyall = parseFloat(this.AllseMoney.balance)
+          axios.get('user/getBalanceWithdrawalLimit.do', {
+            params: {
+              type: this.AllseMoney.type
+            }
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.moneysure = parseFloat(response.data.result.money)
+              this.minmoney = parseFloat(response.data.result.minMoney)
+            }
+          })
+        }
 
       },
       moneyconfirm() {
-		  this.Actualamount = this.monenymo
+        this.Actualamount = this.monenymo
         this.Cashconfirmationdata.money = this.Actualamount
         this.Cashconfirmationdata.Actualmoney = this.AcmoneyGG
         this.Cashconfirmationdata.type = this.AllseMoney.type
@@ -541,14 +541,14 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-			this.AcmoneyGG=response.data.remain
+            this.AcmoneyGG = response.data.remain
             axios.get('user/judgeWithdrawalContidion.do', {
               params: {
                 balance: Lastmoney
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-				this.monenymo=Lastmoney
+                this.monenymo = Lastmoney
                 this.changeTab('content1')
                 //this.money()
                 this.moneyconfirm()
@@ -567,7 +567,11 @@
         this.showModal.cashverification = true
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.userphone = response.data.result.phone
+            if (response.data.authInfo) {
+              this.userphone = response.data.authInfo.phone
+            } else {
+              this.userphone = response.data.result.phone
+            }
           }
         })
       },

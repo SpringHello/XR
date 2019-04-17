@@ -9,7 +9,7 @@
           <Button @click="tobuy('huadong')">立即购买</Button>
         </div>
         <transition name="slide-fade-right">
-          <img v-show="bannershow=='east'" src="../../../assets/img/active/eastsouthnode/east-banner.png"/>
+          <img v-show="bannershow=='east'" src="../../../assets/img/active/eastsouthnode/east-banner.png" alt="banner"/>
         </transition>
       </div>
     </div>
@@ -21,7 +21,7 @@
           <Button @click="tobuy('huanan')">立即购买</Button>
         </div>
         <transition name="slide-fade-left">
-          <img v-show="bannershow=='south'"  src="../../../assets/img/active/eastsouthnode/south-banner.png"/>
+          <img v-show="bannershow=='south'"  src="../../../assets/img/active/eastsouthnode/south-banner.png" alt="banner"/>
         </transition>
       </div>
     </div>
@@ -41,7 +41,7 @@
               </div>
               <div class="main">
                 <div v-for="(item,index) in eastBaseData" :key="index">
-                  <img :src="item.img">
+                  <img :src="item.img" alt="描述">
                   <h3>{{item.title}}</h3>
                   <p>{{item.desc}}</p>
                 </div>
@@ -57,7 +57,7 @@
                 <span>新睿云「华东地区」：高端服务，助力实体经济云上赋能</span>
                 <p>华东地区具备发展集成电路的良好基础，汇聚了丰富的网络骨干资源，同时拥有优越的商业资源优势。在华东地区部署业务，能更好、更便利地服务本地市场，获得更优质的技术支持。新睿云选择在华东地区建立数据中心，将为用户提供更优质的云计算服务，降低IT成本，加速企业发展。</p>
               </div>
-              <img src="../../../assets/img/active/eastsouthnode/east-map.png" alt="">
+              <img src="../../../assets/img/active/eastsouthnode/east-map.png" alt="地图">
             </div>
           </div>
         </div>
@@ -71,7 +71,7 @@
                 <span>新睿云「华南地区」：大规模 高质量 助力企业上云</span>
                 <p>华南地区云计算产业起步早、组建队伍早，有良好的云计算发展建设基础，同时在中科院支持下建立了“云计算产业技术创新与育成中心”，汇聚了一批批云计算领域优秀人才。新睿云在这里建设数据中心，将为用户数据存储、业务发展提供优质服务，推进企业进步。</p>
               </div>
-              <img src="../../../assets/img/active/eastsouthnode/south-map.png" alt="">
+              <img src="../../../assets/img/active/eastsouthnode/south-map.png" alt="地图">
             </div>
           </div>
         </div>
@@ -84,7 +84,7 @@
               </div>
               <div class="main">
                 <div v-for="(item,index) in southBaseData" :key="index">
-                  <img :src="item.img">
+                  <img :src="item.img" alt="描述">
                   <h3>{{item.title}}</h3>
                   <p>{{item.desc}}</p>
                 </div>

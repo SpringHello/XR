@@ -1,8 +1,8 @@
 <template>
   <div class="background">
     <div class="center">
-      <img src="../../../../assets/img/active/group-booking/gb-banner1.png"/>
-      <img src="../../../../assets/img/active/group-booking/gb-banner8.png"/>
+      <img src="../../../../assets/img/active/group-booking/gb-banner1.png" alt="banner"/>
+      <img src="../../../../assets/img/active/group-booking/gb-banner8.png" alt="banner"/>
       <p style="width:100%;left:0px;">云主机特惠计划</p>
       <p>首月购买只需59元，邀请好友上云，</p>
       <p>每成功一位，即赠送一个月，最多可领12个月 </p>

@@ -9,7 +9,7 @@
     <h1>发票申请</h1>
     <ol>
       <li>登录新睿云控制台，进入“费用中心”->“发票申请”页面<br>
-        <img src="../../../../assets/img/doc/uaf/uaf-img8.png">
+        <img src="../../../../assets/img/doc/uaf/uaf-img8.png" alt="发票申请">
       </li>
       <li>发票信息包含“发票类型”和“发票抬头”，具体如下：
         <ul>
@@ -32,11 +32,11 @@
     </ol>
     <h1>增值税专用发票资格认证</h1>
     <p>当您第一次申请增值税专用发票的时候，系统会提示您进行赠票资质认证。</p>
-    <img src="../../../../assets/img/doc/uaf/uaf-img9.png">
+    <img src="../../../../assets/img/doc/uaf/uaf-img9.png" alt=""资质认证>
     <p>赠票资质认证需要您提交开具增值税专用发票的相关信息。如图所示：</p>
-    <img src="../../../../assets/img/doc/uaf/uaf-img10.png">
+    <img src="../../../../assets/img/doc/uaf/uaf-img10.png" alt="提交发票">
     <p>当您通过增值税专用发票申请之后，选择专票申请之后将显示您提交的申请信息。</p>
-    <img src="../../../../assets/img/doc/uaf/uaf-img11.png">
+    <img src="../../../../assets/img/doc/uaf/uaf-img11.png" alt="提交信息">
 
   </div>
 </template>

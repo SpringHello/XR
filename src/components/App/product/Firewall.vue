@@ -4,7 +4,7 @@
     <!-- logo -->
     <div class="logo">
       <div class="logo-wrapper">
-        <img :src="logo.img">
+        <img :src="logo.img" alt="描述">
         <div class="info">
           <h3 >{{logo.title}}</h3>
           <span class="desc">{{logo.desc}}</span>
@@ -44,8 +44,8 @@
                  :class="{active:index == stageInfo.selectIndex}"
                  @click="stageInfo.selectIndex=index">
               <div>
-                <img :src="stage.activeIcon" v-show="index == stageInfo.selectIndex">
-                <img :src="stage.icon" v-show="index != stageInfo.selectIndex">
+                <img :src="stage.activeIcon" v-show="index == stageInfo.selectIndex" >
+                <img :src="stage.icon" v-show="index != stageInfo.selectIndex" >
                 <p v-show="index == stageInfo.selectIndex" style="color: #377DFF;margin-top: 10px;">{{stage.title}}</p>
                 <p v-show="index != stageInfo.selectIndex" style="color: #FFFFFF;margin-top: 10px;">{{stage.title}}</p>
               </div>
@@ -53,7 +53,7 @@
           </div>
           <div class="right">
             <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex">
-              <img :src="stage.img">
+              <img :src="stage.img" alt="场景描述">
               <div style="padding:20px;">
                 <span>场景描述</span>
                 <p v-for="(p,i) in stage.desc" style="font-size: 14px;line-height: 28px;">

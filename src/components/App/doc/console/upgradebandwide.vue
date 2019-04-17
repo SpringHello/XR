@@ -3,15 +3,15 @@
     <h1></h1>
     <ol>
       <li>进入新睿云控制台，点击“网络”。<br>
-        <img src="../../../../assets/img/doc/newyun/upgradebw-img1.png"></li>
+        <img src="../../../../assets/img/doc/newyun/upgradebw-img1.png" alt="网络"></li>
       <li>选中需要调整的带宽，点击“更多操作”——“调整带宽”<br>
-        <img src="../../../../assets/img/doc/newyun/upgradebw-img2.png">
+        <img src="../../../../assets/img/doc/newyun/upgradebw-img2.png" alt="调整宽带">
       </li>
       <li>在弹窗中设置调整带宽大小<br>
-        <img src="../../../../assets/img/doc/newyun/upgradebw-img3.png"></li>
+        <img src="../../../../assets/img/doc/newyun/upgradebw-img3.png" alt="大小"></li>
       <li>确认订单内容</li>
       <li>确认支付，完成配置升级操作<br>
-        <img src="../../../../assets/img/doc/newyun/upgradebw-img4.png"></li>
+        <img src="../../../../assets/img/doc/newyun/upgradebw-img4.png" alt="成功"></li>
     </ol>
   </div>
 </template>

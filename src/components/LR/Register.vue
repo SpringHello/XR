@@ -5,7 +5,7 @@
         <div class="banner">
           <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('activtiy/2019spring/')" class="cc-active">
+              <div @click="$router.push('activity/2019spring/')" class="cc-active">
               </div>
             </my-carousel-item>
             <!-- <my-carousel-item class="carousel-item">
@@ -131,8 +131,32 @@
               <p>现在完成<span style="color: #2A99F2;cursor: pointer;text-decoration: underline" @click="$router.push('userCenter')"> 实名认证 </span>即可获得<span
                 style="color: #FF624B"> 196元 </span>专属优惠券，还可参加<span style="color: #FF624B;cursor: pointer" @click="$router.push('fractive')"> 多款主机免费领 </span>活动。<span v-show="registerForm.onStep === 4">请联系您的专属客服小牛获取优惠券</span></p>
               <button @click="$router.push('userCenter')">前往认证</button>
-              <router-link to="/index">返回首页></router-link>
+              <router-link to="/">返回首页></router-link>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="shade" v-show="onLogin">
+      <div class="shade-center">
+        <div class="spinner">
+          <div class="spinner-container container1">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+          </div>
+          <div class="spinner-container container2">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+          </div>
+          <div class="spinner-container container3">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
           </div>
         </div>
       </div>
@@ -731,6 +755,27 @@
         }
       }
     }
+    .shade {
+      position: fixed;
+      background-color: rgba(55, 55, 55, 0.6);
+      height: 100%;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .shade-center {
+        height: 140px;
+        width: 220px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
+      }
+    }
   }
 
   .rules {
@@ -753,7 +798,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import areaTel from '../../options/area_tel'
-  import throttle from 'throttle-debounce/throttle'
+  var debounce = require('throttle-debounce/debounce')
   import gt from '../../util/gt'
 
   export default {
@@ -786,7 +831,8 @@
           verificationCodeNum: 0, //验证码错误次数,
         },
         codeCaptchaObjStatus: false,
-        codeCaptchaObj: null
+        codeCaptchaObj: null,
+        onLogin: false
       }
     },
     created() {
@@ -795,7 +841,7 @@
     },
     methods: {
       /* 滑动验证初始化 -- 发送验证码*/
-      gtInitCode: throttle(3000, function () {
+      gtInitCode() {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
@@ -811,6 +857,7 @@
             }, function (captchaObj) {
               captchaObj.onReady(function () {
                 captchaObj.verify()
+                _self.onLogin = false
               }).onSuccess(function () {
                 _self.registerForm.errorMsg = ''
                 var result = captchaObj.getValidate()
@@ -832,9 +879,9 @@
             })
           }
         })
-      }),
+      },
       /* 滑动验证初始化 -- 发送语音验证码 */
-      gtInitVoice: throttle(3000, function () {
+      gtInitVoice() {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
@@ -850,6 +897,7 @@
             }, function (captchaObj) {
               captchaObj.onReady(function () {
                 captchaObj.verify()
+                _self.onLogin = false
               }).onSuccess(function () {
                 _self.registerForm.errorMsg = ''
                 var result = captchaObj.getValidate()
@@ -871,7 +919,7 @@
             })
           }
         })
-      }),
+      },
       /* 切换banner */
       change(activeIndex) {
         this.activeBanner = activeIndex + 1
@@ -926,7 +974,7 @@
           }
         }
       },
-      sendRegisterVailCodeCheck() {
+      sendRegisterVailCodeCheck: debounce(200, function() {
         if (this.registerForm.registerType === 'phone') {
           if (!this.registerForm.loginPhone || !this.regExpObj.phone.test(this.registerForm.loginPhone)) {
             this.registerForm.errorMsg = 'formatPhoneError'
@@ -955,12 +1003,13 @@
           params
         }).then(response => {
           if (response.status === 200 && response.data.status === 1) {
+            this.onLogin = true
             this.gtInitCode()
           } else {
             this.registerForm.errorMsg = 'isRegister'
           }
         })
-      },
+      }),
       sendRegisterVailCode() {
         this.registerForm.verificationCodeText = '发送中'
         let url = 'user/code.do'
@@ -1003,13 +1052,14 @@
           }
         )
       },
-      getRegisterVoiceCodeCheck() {
+      getRegisterVoiceCodeCheck: debounce(200, function() {
         if (!this.regExpObj.phone.test(this.registerForm.loginPhone)) {
           this.registerForm.errorMsg = 'formatPhoneError'
           return
         }
+        this.onLogin = true
         this.gtInitVoice()
-      },
+      }),
       getRegisterVoiceCode() {
         let url = 'user/voiceCode.do'
         axios.get(url, {

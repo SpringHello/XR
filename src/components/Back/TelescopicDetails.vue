@@ -116,7 +116,7 @@
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
       <div>
-        <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="https://www.xrcloud.net/documentInfo/wHfINiD0y/wI2GZzD6x" style="color: #2A99F2;" >查看详细统计规则</a></p>
+        <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="/support_docs/wHfINiD0y_o67MOos6.html" style="color: #2A99F2;" >查看详细统计规则</a></p>
         <div>
           <Select @on-change="cpuSelect" v-model="alarmStrategy.cpuValue" style="width:123px" transfer>
             <Option v-for="item in alarmStrategy.cpuList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -184,7 +184,7 @@
           <p style="margin-top:10px;color: #999999;">名称不超过16个字符，可输入中文、字母与数字</p>
         </FormItem>
       <div>
-        <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="https://www.xrcloud.net/documentInfo/wHfINiD0y/wI2GZzD6x" style="color: #2A99F2;">查看详细统计规则</a></p>
+        <p style="margin-bottom: 12px">伸缩组内所有云主机<a href="/support_docs/wHfINiD0y_wI1UAnp9j.html" style="color: #2A99F2;">查看详细统计规则</a></p>
         <div>
           <Select @on-change="cpuSelect" v-model="updateStrategy.cpuValue" style="width:123px" transfer>
             <Option v-for="item in updateStrategy.cpuList" :value="item.value" :key="item.value">{{ item.label }}</Option>

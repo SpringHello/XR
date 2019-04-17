@@ -33,7 +33,7 @@
               <router-link to="buy" :class="{active:pageInfo.path=='buy'}"><span>创建主机</span></router-link>
             </li>
             <li>
-              <router-link to="document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></router-link>
+              <a href="/support/products/" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></a>
             </li>
             <li>
               <router-link to="recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
@@ -106,7 +106,7 @@
              :style="menuStyle(parentItem.type)">
           <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==pageInfo.hoverItem}">
             <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
-                @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">
+                @click="push(parentItem.type,subItem.type,subItem.pane)" :class="{hover:subItem.type==pageInfo.sType}">
               <Dropdown v-if="subItem.thrItem" @on-click="pane">
                 <a href="javascript:void(0)">
                   {{subItem.subName}}
@@ -138,7 +138,7 @@
                 <div v-for="(qq,index) of QQInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
-                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.xrcloud.net&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
                 <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus">
                   <img src="./assets/img/app/qq-gray.png" v-else>
@@ -156,7 +156,7 @@
                 <div v-for="(qq,index) of xiaoshouInfo" :key="index">
                 <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
-                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.xrcloud.net&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
                  <img src="./assets/img/app/qq-red.png" v-if="qq.qqstatus">
                   <img src="./assets/img/app/qq-gray.png" v-else>
@@ -175,7 +175,7 @@
                 <div v-for="(qq,index) of yunweiInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
-                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.xrcloud.net&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
                  <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus">
                   <img src="./assets/img/app/qq-gray.png" v-else>
@@ -187,6 +187,11 @@
               </div>
             </div>
           </div>
+                   <div class="wrapper">
+            <div>
+            <span class="title">咨询热线 400-0505-565</span>
+              </div>
+          </div>
         </div>
       </span>
       <!--<Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
@@ -195,34 +200,72 @@
           target="_blank"></a>
        </span>
       </Poptip>-->
-      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
+      <!--<Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
-      </Poptip>
+      </Poptip>-->
+      <span class="phone" @click="showModal.complaintModal = true"></span>
       <div>
         <BackTop :bottom="61" :right="50" :duration="0" :height="1600" style="position: unset">
           <span class="topLink"></span>
         </BackTop>
       </div>
     </div>
-     <router-view/>
+    <router-view/>
 
-		<!--登录失效弹窗-->
-		<Modal v-model="showModal.WriteAudit" :scrollable="true" :closable="false" :width="380">
-		  <p slot="header" class="modal-header-border">
-		    <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
-		    <span class="universal-modal-title">提示</span>
-		  </p>
-		  <div class="modal-content-s" style="padding: 0;width: 101%;">
-		    <div style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">
-		      您的用户名为“sunquick”的账号正在注销审核中，若需要购买产品，请点击 <span @click="CanCancellation" style="color: #2A99F2;text-decoration: underline;cursor: pointer;">取消注销</span> 。
-		    </div>
-		  </div>
-		  <p slot="footer" class="modal-footer-s">
-		    <Button @click="showModal.WriteAudit = false">关闭弹窗</Button>
-		    <Button type="primary" @click="CanCancellation">取消注销</Button>
-		  </p>
-		</Modal>
-
+    <!--登录失效弹窗-->
+    <Modal v-model="showModal.WriteAudit" :scrollable="true" :closable="false" :width="380">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示</span>
+      </p>
+      <div class="modal-content-s" style="padding: 0;width: 101%;">
+        <div style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:24px;">
+          您的用户名为“sunquick”的账号正在注销审核中，若需要购买产品，请点击 <span @click="CanCancellation" style="color: #2A99F2;text-decoration: underline;cursor: pointer;">取消注销</span> 。
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.WriteAudit = false">关闭弹窗</Button>
+        <Button type="primary" @click="CanCancellation">取消注销</Button>
+      </p>
+    </Modal>
+    <!-- 投诉框 -->
+    <Modal v-model="showModal.complaintModal" width="500" :scrollable="true" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">投诉与建议</span>
+      </p>
+      <div v-show="complaintForm.step==1">
+        <Form label-position="left" :model="complaintForm" ref="complaintForm" :rules="complaintFormRule" :label-width="80">
+          <Form-item label="反馈标题" prop="complaintTitle">
+            <Input v-model="complaintForm.complaintTitle" placeholder="请以1-20个字简单描述一下问题" :maxlength="20"></Input>
+          </Form-item>
+          <Form-item label="问题类型" prop="issueType">
+            <Select v-model="complaintForm.issueType" placeholder="请选择">
+              <Option v-for="(item,index) in complaintForm.typeList" :value="item" :key="index">{{item}}</Option>
+            </Select>
+          </Form-item>
+          <Form-item label="问题描述" prop="issueDesc">
+            <Input v-model="complaintForm.issueDesc" type="textarea" :autosize="{minRows: 5,maxRows: 7}"
+                   placeholder="请输入..."></Input>
+          </Form-item>
+          <Form-item label="联系电话" prop="phone">
+            <Input v-model="complaintForm.phone" placeholder="请留下您的联系电话，方便我们将结果反馈给您。"></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div v-show="complaintForm.step==2" class="complain-modal">
+        <img src="./assets/img/payresult/paySuccess.png"/>
+        <p>—您的烦恼我们已经收到—</p>
+        <p>我们会将处理结果发送至您的手机</p>
+        <p>请耐心等待</p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.complaintModal = false">取消</Button>
+        <Button type="primary" @click="sumbitComplaint('complaintForm')" v-show="complaintForm.step==1">提交反馈
+        </Button>
+        <Button type="primary" @click="showModal.complaintModal = false" v-show="complaintForm.step==2">确定
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -233,14 +276,25 @@
   import debounce from 'throttle-debounce/debounce'
   import '@/assets/iconfont/backend/iconfont.js'
   import '@/assets/iconfont/backend/iconfont.css'
+  import regExp from './util/regExp'
+
   export default {
     name: 'back',
     data() {
+      const validPhoneNumber = (rule, value, callback) => {
+        let reg = /^1[3|5|7|8|9|6|7]\d{9}$/;
+        if (!reg.test(this.complaintForm.phone)) {
+          return callback(new Error("请输入正确的手机号码"));
+        } else {
+          callback();
+        }
+      };
       return {
-				checkStatus:'',
-				showModal: {
-					WriteAudit: false
-				},
+        checkStatus: '',
+        showModal: {
+          WriteAudit: false,
+          complaintModal: false
+        },
         // pageInfo用于存储当前页面信息
         pageInfo: {
           // hover选中的item
@@ -279,8 +333,8 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              //{subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
+              //{subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'diskList'},
               {subName: '云硬盘备份', type: 'diskBackupList'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
@@ -293,14 +347,24 @@
               {
                 subName: '虚拟私有云VPC',
                 type: 'vpcList',
-                thrItem: [{thrName: '虚拟私有云VPC', pane: 'VPC'}, {thrName: 'NAT网关', pane: 'NAT'}]
+                pane: 'VPC'
+              },
+              {
+                subName: 'NAT网关',
+                type: 'natState',
+                pane: 'NAT'
               },
               {subName: '弹性IP', type: 'ip'},
-              {subName: '负载均衡', type: 'balance'},
+              {subName: '负载均衡', type: 'loadbState'},
               {
                 subName: '虚拟专网VPN',
-                type: 'vpnList',
-                thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
+                type: 'vpnBlanck',
+                thrItem: [
+                  {thrName: 'VPN连接', pane: 'VPN'},
+                  {thrName: 'VPN本地网关', pane: 'localGateway'},
+                  {thrName: 'VPN客户网关', pane: 'customerGateway'},
+                  {thrName: 'VPN拨入', pane: 'remote'},
+                ]
               }
             ]
           },
@@ -310,20 +374,20 @@
             subItem: [
               {subName: '防火墙', type: 'firewallList'},
               {subName: '云监控', type: 'CloudMonitor'},
-              {subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
-              //{subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
+              //{subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
+              {subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
             ]
           },
           {
             mainName: '域名服务',
             type: 'domain',
             subItem: [
-              {subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
-              {subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              {subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
-              //{subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
-              //{subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              //{subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
+              //{subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
+              //{subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+              //{subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
+               {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
+               {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+               {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
             ]
           },
           {
@@ -338,7 +402,29 @@
         QQInfo: [],  // QQ客服在线情况
         xiaoshouInfo: [],
         yunweiInfo: [],
-        hintShow: true
+        hintShow: true,
+        complaintForm: {
+          complaintTitle: '',
+          issueType: '',
+          typeList: ['客服投诉', '违规举报', '功能建议', '产品缺陷', '体验不佳', '价格投诉', '其他'],
+          issueDesc: '',
+          phone: '',
+          step: 1
+        },
+        complaintFormRule: {
+          complaintTitle: [
+            {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
+          ],
+          issueType: [
+            {required: true, message: '请选择问题类型', trigger: 'change'}
+          ],
+          issueDesc: [
+            {required: true, message: '请描述一下您的问题', trigger: 'blur'}
+          ],
+          phone: [
+            {required: true, validator: validPhoneNumber, trigger: 'blur'}
+          ]
+        },
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -360,6 +446,9 @@
       })
     },
     created() {
+      if(!localStorage.getItem('isLogin')){
+        this.getloginPromptMessage()
+      }
       if (navigator.userAgent.indexOf("Chrome") >= 0) {
         this.hintShow = false
       }
@@ -374,7 +463,7 @@
         this.yunweiInfo = response.data.yunwei
       })
       this.notice()
-			this.loggedOffState()
+      this.loggedOffState()
       // this.$http.get('user/showUserAcessAll.do').then(response => {
       //   console.log(response)
       // })
@@ -389,6 +478,7 @@
               this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
               this.pageInfo.sType = sItem.type
               this.pageInfo.static = true
+              this.pageInfo.pane = sItem.pane
             }
           }
         }
@@ -446,7 +536,8 @@
       }),
 
       // 进入三级路由，记录二级路由入口
-      push(pType, sType) {
+      push(pType, sType, pane) {
+        // console.log(pane)
         this.pageInfo.static = true;
         this.pageInfo.selectItem = pType;
         this.pageInfo.sType = sType;
@@ -466,7 +557,14 @@
           //   }
           // })
         } else {
-          this.$router.push(sType)
+          //console.log(pane)
+          if (pane == undefined) {
+            this.$router.push(sType)
+          } else {
+            var newpane = pane + '#虚拟私有云VPC'
+            this.pane(newpane)
+            this.$router.push(sType)
+          }
         }
       },
       go(path) {
@@ -518,43 +616,73 @@
           this.$router.push('/login')
         })
       },
-			loggedOffState() {
-				axios.get('user/listClearAccountApplyFor.do', {
-					params: {
-
-					}
-				}).then(response => {
-					if (response.status == 200 && response.data.status == 1) {
-						//response.data.checkstatus
-						this.checkStatus = response.data.checkstatus
-						if (this.checkStatus == 1) {
-							this.showModal.WriteAudit = true
-						}
-					} else {
-						//this.$Message.info(response.data.message)
-					}
-				})
-			},
-			CanCancellation(){
-				axios.get('user/cancelLogout.do', {
-					params: {
-
-					}
-				}).then(response => {
-					if (response.status == 200 && response.data.status == 1) {
-						//response.data.checkstatus
-						this.showModal.WriteAudit = false
-						this.$Message.success({
-                    content: response.data.message,
-                    duration: 5,
+      loggedOffState() {
+        axios.get('user/listClearAccountApplyFor.do', {
+          params: {}
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            //response.data.checkstatus
+            this.checkStatus = response.data.checkstatus
+            if (this.checkStatus == 1) {
+              this.showModal.WriteAudit = true
+            }
+          } else {
+            //this.$Message.info(response.data.message)
+          }
+        })
+      },
+      CanCancellation() {
+        axios.get('user/cancelLogout.do', {
+          params: {}
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            //response.data.checkstatus
+            this.showModal.WriteAudit = false
+            this.$Message.success({
+              content: response.data.message,
+              duration: 5,
+              closable: true
+            });
+          } else {
+            this.showModal.WriteAudit = false
+            this.$Message.error(response.data.message)
+          }
+        })
+      },
+      sumbitComplaint(name) {
+        this.$refs[name].validate(valid => {
+          if (valid) {
+            let url = 'order/createSuggestions.do'
+            let params = {
+              phone: this.complaintForm.phone,
+              title: this.complaintForm.complaintTitle,
+              typeDesc: this.complaintForm.issueType,
+              questionDesc: this.complaintForm.issueDesc
+            }
+            this.$http.post(url,params).then(res=>{
+              if(res.status == 200){
+                this.complaintForm.step = 2
+              } else{
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      getloginPromptMessage(){
+        this.$http.get('user/loginPromptMessage.do',{params:{}}).then(res=>{
+          if(res.data.status == 1){
+            localStorage.setItem('isLogin','已提示')
+            this.$Message.info({
+                    content: res.data.message,
+                    duration: 10,
                     closable: true
-                });
-					} else {
-						this.showModal.WriteAudit = false
-						this.$Message.error(response.data.message)
-					}
-				})
-			}
+                })
+          }
+        })
+      }
     },
     computed: mapState({
       // show代表是否显示three menu,static代表是否固定three menu
@@ -617,6 +745,7 @@
                 this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
                 this.pageInfo.sType = sItem.type
                 this.pageInfo.static = true
+                this.pageInfo.pane = sItem.pane
               }
             }
           }
@@ -627,7 +756,7 @@
           this.notice()
         },
         deep: true
-      }
+      },
     }
   }
 </script>
@@ -915,10 +1044,12 @@
     }
     .qq {
       position: relative;
+      background-color: #ffffff;
+      margin-bottom: 10px;
       background-image: url('./assets/img/app/qq.png');
-      &:hover {
+      /*&:hover {
         background: #2A99F2 url('./assets/img/app/qq-hover.png') no-repeat center;
-      }
+      }*/
       > div {
         position: absolute;
         width: 0px;
@@ -943,6 +1074,10 @@
             font-family: MicrosoftYaHei;
             color: rgba(102, 102, 102, 1);
             line-height: 16px;
+            &.title {
+              color: rgba(29, 23, 22, 1);
+              font-size: 14px;
+            }
           }
           .info-wrapper {
             margin-top: 10px;
@@ -987,17 +1122,27 @@
       height: 48px;
       display: block;
       padding: 10px;
-      background: #E1E1E1;
+      cursor: pointer;
+      background-color: #ffffff;
       background-repeat: no-repeat;
       background-position: center;
       background-image: url('./assets/img/app/phone.png');
-      &:hover {
+      /*&:hover {
         background: #2A99F2;
         background-repeat: no-repeat;
         background-position: center;
         background-image: url('./assets/img/app/phone-hover.png');
-      }
+      }*/
     }
   }
 
+  .complain-modal {
+    text-align: center;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(81, 70, 68, 1);
+      line-height: 24px;
+    }
+  }
 </style>

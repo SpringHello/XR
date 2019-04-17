@@ -228,7 +228,7 @@
                       {{item.acllistname}}
                     </Option>
                   </Select>
-                  <span style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" @click="$router.push('/document')">帮助文档</span>
+                  <a style="margin-left:10px;color:#2A99F2;font-size:14px;cursor:pointer" href="/support/products/">帮助文档</a>
                 </div>
               </div>
             </div>
@@ -260,22 +260,12 @@
                   <p class="item-title" style="margin-top:0px;">价格</p>
                 </div>
                 <div>
-                  <p style="font-size: 16px;color: #F85E1D;">{{IPConfig.cost.toFixed(2)}}元</p>
-                </div>
-              </div>
-            </div>
-          </div>
-            <!--公网IP价格-->
-            <div class="item-wrapper" style="margin-top: 28px;" v-show="IPConfig.publicIP">
-              <div style="display: flex">
-                <div>
-                  <p class="item-title" style="margin-top:0px;">价格</p>
-                </div>
-                <div>
                   <p style="font-size: 16px;color: #F85E1D;">{{ipCost.toFixed(2)}}元</p>
                 </div>
               </div>
             </div>
+          </div>
+
           </div>
 
           <!--云硬盘-->
@@ -295,7 +285,7 @@
                     </div>
                   </div>
                   <img src="../../../assets/img/buy/across.png" @click="removeDisk(index)"
-                       style="cursor: pointer;height:11px;">
+                       style="cursor: pointer;height:11px;" alt="across">
                 </div>
               </div>
               <div class="item-wrapper">
@@ -466,13 +456,9 @@
     metaInfo: {
       title: '便宜gpu云服务器价格多少钱 - gpu云服务器怎么收费 - gpu云服务器租用费用 - 购买 - 新睿云', // set a title
       meta: [{                 // set meta
-        name: 'keywords',
-        content: 'gpu云服务器价格,gpu云服务器多少钱,gpu云服务器怎么收费,gpu云服务器租用费用,便宜gpu云服务器'
-      },
-        {                 // set meta
-          name: 'description',
-          content: '新睿云的GPU云服务器是基于GPU应用的计算服务，多适用于视频解码，图形渲染，深度学习，科学计算等应用场景，该产品具有实时高速，并行计算跟浮点计算能力强等特点。用户可按月、年租用购买，可查看gpu云服务器的租用费用、价格、报价。'
-        }]
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
     },
     /*beforeRouteEnter(to, from, next){
      axios.get('information/zone.do', {

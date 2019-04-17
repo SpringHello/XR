@@ -12,7 +12,7 @@
             </p>
             <span @click="roll(500)">立即购买</span>
           </div>
-          <img src="../../../assets/img/active/schoolSeason/schoolseason_banner.png" alt>
+          <img src="../../../assets/img/active/schoolSeason/schoolseason_banner.png" alt="1折">
         </div>
       </div>
     </div>
@@ -83,11 +83,11 @@
                   <Button class="host_button" :disabled="item.num=='100'" :class="{host_button_not:item.num=='100'}" @click="getDiskcountMv(item,index)" v-else>
                     {{item.num!='100'?'立即抢购':'已抢完'}}
                   </Button>
-                  <div class="progress">
+               <!--   <div class="progress">
                     <Progress class="schoolseason-progress" :percent="item.num" hide-info/>
                     <span v-if="hour >=9&&hour<12||hour >=14&&hour<20">已抢购{{item.num.toFixed(2)}}%</span>
                     <span v-else>已抢购0%</span>
-                  </div>
+                  </div>-->
                 </div>
               </div>
             </div>
@@ -327,7 +327,7 @@
               <div :style="{background:'url('+item.img+')'}" :class="item.class" v-if="userInfo.vipname==item.title" style="padding:0;padding-top:33px;">
                 <div class="flex" style="justify-content: flex-start;align-items: center;margin-left: 60px;">
                   <div>
-                    <img :src="item.imgDiamonds" alt="" style="margin-right:14px;">
+                    <img :src="item.imgDiamonds" alt="描述" style="margin-right:14px;">
                   </div>
                   <div>
                     <p style="font-size:24px;">{{item.title}}</p>
@@ -352,7 +352,7 @@
                 <p><span>{{item.discount}}</span>折</p>
                 <div class="flex" style="padding-right:37px">
                   <span class="font-10px">{{item.time}}</span>
-                  <img :src="item.icon" alt="">
+                  <img :src="item.icon" alt="描述">
                 </div>
               </div>
               <h3><i></i><span>{{item.title}}</span><i></i></h3>
@@ -499,7 +499,7 @@
                 <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:200px;">
                 </Input>
                 <img :src="imgSrc" style="height:33px;"
-                     @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                     @click="imgSrc=`https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`">
               </FormItem>
               <FormItem prop="tel">
                 <span class="label">手机号码</span>
@@ -664,7 +664,7 @@
               @click="changeVipGrade(item,index)">
             <li>{{ item.title }}</li>
             <li class="cash-coupon-p"><span>{{item.money}}</span>元</li>
-            <li><img :src="item.url"/>{{ item.descriptStart}}<span>{{ item.discount * 10}}</span>{{item.descriptEnd}}</li>
+            <li><img :src="item.url" alt="描述"/>{{ item.descriptStart}}<span>{{ item.discount * 10}}</span>{{item.descriptEnd}}</li>
             <li>{{ item.descript2}}</li>
           </ul>
         </div>
@@ -676,11 +676,11 @@
           <Radio-group v-model="zf">
             <Radio label="zfb" style="margin-right: 40px;">
               <img src="../../../assets/img/recharge/pay-icon-ali.png"
-                   style="width: 104px;height: 40px;vertical-align: middle">
+                   style="width: 104px;height: 40px;vertical-align: middle" alt="支付宝">
             </Radio>
             <Radio label="wx">
               <img src="../../../assets/img/recharge/pay-icon-wx.png"
-                   style="width: 122px;height: 40px;vertical-align: middle">
+                   style="width: 122px;height: 40px;vertical-align: middle" alt="微信">
             </Radio>
           </Radio-group>
         </div>
@@ -745,7 +745,7 @@
             <Step title="支付"></Step>
             <Step title="支付失败"></Step>
           </Steps>
-          <p><img src="../../../assets/img/sceneInfo/si-defeated.png"/><span>抱歉，支付失败，请再次尝试！</span></p>
+          <p><img src="../../../assets/img/sceneInfo/si-defeated.png" alt="支付失败"/><span>抱歉，支付失败，请再次尝试！</span></p>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -764,7 +764,7 @@
             <Step title="支付"></Step>
             <Step title="支付成功"></Step>
           </Steps>
-          <p><img src="../../../assets/img/sceneInfo/si-success.png"/><span>恭喜您成为{{selectVipGrade}}</span></p>
+          <p><img src="../../../assets/img/sceneInfo/si-success.png" alt="支付成功"/><span>恭喜您成为{{selectVipGrade}}</span></p>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -1219,7 +1219,7 @@
             {required: true, message: '请输入验证码'}
           ]
         },
-        imgSrc: 'user/getKaptchaImage.do',
+        imgSrc: 'https://www.xrcloud.net/user/getKaptchaImage.do',
       }
     },
     created() {
@@ -1238,7 +1238,7 @@
         this.showModal.cashCoupon = false
         switch (this.zf) {
           case 'zfb':
-            window.open(`zfb/alipayapi.do?total_fee=${this.input}`)
+            window.open(`/zfb/alipayapi.do?total_fee=${this.input}`)
             this.showModal.rechargeHint = true
             break
           case 'wx':
@@ -1575,7 +1575,7 @@
           this.showModal.notLoginModal = true
         } else {
           if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
-            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+            this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
             this.showModal.authModal = true
             return
           }
@@ -1665,7 +1665,7 @@
           return
         }
         if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authModal = true
           return
         }
@@ -1746,7 +1746,7 @@
           return
         }
         if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authModal = true
           return
         }
@@ -1800,7 +1800,7 @@
           return
         }
         if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authModal = true
           return
         }

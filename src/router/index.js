@@ -74,7 +74,7 @@ const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 
 const AnniversaryActive = () => import('@/components/App/active/anniversaryActive')
 //const AnniversaryActiveBefore = () => import('@/components/App/active/AnniversaryActiveBefore')
-const xianNode = () => import('@/components/App/active/xianNode')
+// const xianNode = () => import('@/components/App/active/xianNode')
 const schoolSeason = () => import('@/components/App/active/schoolSeason')
 //域名页面路由
 const Domainname = () =>import('@/components/App/Domain/Domainname')
@@ -138,6 +138,8 @@ const Work = () => import('@/components/Back/Work')
 const Recharge = () => import('@/components/Back/Recharge.vue')
 const RechargeResult = () => import('@/components/Back/RechargeResult.vue')
 const Balance = () =>import('@/components/Back/Balance')
+const LoadbState = () =>import('@/components/Back/LoadbState')
+const NatState = () =>import('@/components/Back/NatState')
 const BalanceParticulars = () =>import('@/components/Back/BalanceParticulars')
 const Renew = () =>import('@/components/Back/Renew')
 const New = () =>import('@/components/Back/New')
@@ -166,6 +168,7 @@ const CloudMonitor = () => import('@/components/Back/CloudMonitor')
 const CloudMonitorCreateStrategy = () => import('@/components/Back/CloudMonitorCreateStrategy')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
+const VpnBlanck = () => import('@/components/Back/VpnBlanck')
 const Vpn = () => import('@/components/Back/Vpn')
 const Ip = () => import('@/components/Back/Ip')
 const Order = () => import('@/components/Back/Order')
@@ -324,8 +327,8 @@ var router = new Router({
         {path: 'activity/hotdatabase', name: 'activity/hotdatabase', component: DBActive},
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
-        {path: 'activity/xian', name: 'activity/xian', component: xianNode},
-        {path: 'activtiy/2019spring', name: 'activtiy/2019spring', component: schoolSeason},
+        // {path: 'activity/xian', name: 'activity/xian', component: xianNode},
+        {path: 'activity/2019spring', name: 'activity/2019spring', component: schoolSeason},
 
         {path: 'eastsouth', name: 'eastsouth', component: EastSouthNode},
         //{path: 'Scene/:type', name: 'Scene', component: SceneInfo},
@@ -382,6 +385,8 @@ var router = new Router({
         {path: 'recharge', name: 'recharge', component: Recharge},
         {path: 'rechargeResult', name: 'rechargeResult', component: RechargeResult},
         {path: 'balance', name: 'balance', component: Balance},
+				{path: 'loadbstate', name: 'loadbstate', component: LoadbState},
+				{path: 'natstate', name: 'natstate', component: NatState},
         {path: 'balanceParticulars', name: 'balanceParticulars', component: BalanceParticulars},
         {path: 'diskList', name: 'diskList', component: Disk},
         {path: 'diskBackupList', name: 'diskBackupList', component: DiskBackup},
@@ -400,7 +405,9 @@ var router = new Router({
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
         {path: 'vpcList', name: 'vpcList', component: Vpc},
+				{path: 'natList', name: 'natList', component: Vpc},
         {path: 'vpnList', name: 'vpnList', component: Vpn},
+        {path: 'VpnBlanck', name: 'VpnBlanck', component: VpnBlanck},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
         // {path: 'orderNew', name: 'orderNew', component: OrderNew},

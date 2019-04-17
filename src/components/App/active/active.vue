@@ -4,7 +4,7 @@
     <div id="banner">
       <div style="width:1200px;height:560px;margin:0px auto;position:relative">
         <transition name="active" >
-          <img v-if="active" src="../../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;">
+          <img v-if="active" src="../../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;" alt="线上">
         </transition>
 
         <div style="position: relative; top: 30%">
@@ -23,7 +23,7 @@
         </div>
         <div id="coupon-flex">
           <div v-for="(item,index) in coupons" :key="index">
-            <img :src="item">
+            <img :src="item" alt="优惠券">
           </div>
         </div>
       </div>

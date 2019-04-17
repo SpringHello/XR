@@ -6,19 +6,19 @@
         <div>
           <div>
             <p>
-              <img src="../../../assets/img/active/active_1/ziti2.png">
+              <img src="../../../assets/img/active/active_1/ziti2.png" alt="0元购">
             </p>
             <button @click="roll(600)">立即领取</button>
           </div>
           <transition name="list">
-            <img v-if="img" src="../../../assets/img/active/active_1/baner.png">
+            <img v-if="img" src="../../../assets/img/active/active_1/baner.png" alt="新睿云">
           </transition>
         </div>
       </div>
       <div class="head-nav">
         <div>
           <div v-for="item in headNav" class="nav">
-            <img :src=item.img>
+            <img :src="item.img" alt="描述">
             <div>
               <p class="title">{{item.title}}</p>
               <span class="desc">{{item.desc}}</span>
@@ -29,7 +29,7 @@
     </div>
     <div class="body">
       <div class="head-headline">
-        <img src="../../../assets/img/active/active_1/headline_1.png" alt="">
+        <img src="../../../assets/img/active/active_1/headline_1.png" alt="免费领取">
         <span>数量有限，先到先得</span>
       </div>
       <div class="cash-get">
@@ -45,7 +45,7 @@
       <div class="recommend-product">
         <div class="center">
           <div class="head-headline">
-            <img src="../../../assets/img/active/active_1/headline_2.png" alt="">
+            <img src="../../../assets/img/active/active_1/headline_2.png" alt="推荐购买产品">
             <span>领取38元现金券后免费体验以下及其它产品</span>
           </div>
           <div class="content">
@@ -141,7 +141,7 @@
       </div>
       <div class="activity-rule">
         <div class="head-headline">
-          <img src="../../../assets/img/active/active_1/headline_3.png" alt="">
+          <img src="../../../assets/img/active/active_1/headline_3.png" alt="活动规则">
         </div>
         <div class="center">
           <div class="rules">

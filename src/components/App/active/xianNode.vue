@@ -5,7 +5,7 @@
       <div class="wrap">
         <div class="container flex-vertical-center">
           <div class="left">
-            <img src="../../../assets/img/active/xianNode/banner-text.png" alt>
+            <img src="../../../assets/img/active/xianNode/banner-text.png" alt="西安节点">
             <p>
               新节点云服务器
               <i>折扣特惠</i>，
@@ -13,7 +13,7 @@
             </p>
             <span @click="roll(500)">立即参与</span>
           </div>
-          <img src="../../../assets/img/active/xianNode/xian-node-banner.png" alt>
+          <img src="../../../assets/img/active/xianNode/xian-node-banner.png" alt="ECS">
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@
         <div class="main flex">
           <div class="box" v-for="(item,index) in advantageData" :key="index">
             <div class="img-wrap">
-              <img :src="item.img">
+              <img :src="item.img" alt="描述">
             </div>
             <h3>{{item.title}}</h3>
             <p>{{item.desc}}</p>
@@ -126,7 +126,7 @@
             <i @click.stop="showModal.authErrorModal=false"></i>
           </div>
           <div class="body">
-            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/error-icon.png" style="vertical-align: middle;"> {{authError}}</p>
+            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/error-icon.png" style="vertical-align: middle;" alt="错误"> {{authError}}</p>
             <p v-if="authError != '当前用户已认证，不能重复认证'"> 您也可以通过<span class="red" @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
             <button v-if="authError != '当前用户已认证，不能重复认证'" @click.stop="showModal.authErrorModal=false;showModal.authModal=true" style="margin-top: 35px;" class="modal-btn"><span>再次尝试</span>
             </button>
@@ -157,7 +157,7 @@
             <i @click.stop="showModal.authSucModal=false"></i>
           </div>
           <div class="body">
-            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/success-icon.png" style="vertical-align: middle;">恭喜您！已通过实名认证</p>
+            <p style="margin-top:40px;margin-bottom:10px;"><img src="../../../assets/img/active/xianNode/success-icon.png" style="vertical-align: middle;" alt="成功">恭喜您！已通过实名认证</p>
             <p> 您可前往<span class="red" @click="$router.push('/userCenter')"> 个人中心</span>查看您的认证信息</p>
             <button @click.stop="showModal.authSucModal=false" style="margin-top: 35px;" class="modal-btn"><span>返回活动</span></button>
           </div>
@@ -218,7 +218,7 @@
                   <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:224px;">
                   </Input>
                   <img :src="imgSrc" style="height:33px;"
-                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                       @click="imgSrc=`https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
                 </div>
               </FormItem>
               <FormItem label="手机号码" prop="tel">
@@ -392,7 +392,7 @@
             {required: true, message: '请输入验证码'}
           ]
         },
-        imgSrc: 'user/getKaptchaImage.do',
+        imgSrc: 'https://www.xrcloud.net/user/getKaptchaImage.do',
       }
     },
     created() {
@@ -409,7 +409,7 @@
       showAuthModal() {
         this.authHintShow = false
         if (this.$store.state.userInfo) {
-          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authModal = true
         } else {
           this.showModal.notAuthModal = true

@@ -17,7 +17,7 @@
       <div class="content">
         <!--   <img src="../../../assets/img/records/records-icon9.png"/>-->
         <ul v-for="item in flowList" :key="item.step">
-          <img :src="item.src"/>
+          <img :src="item.src" alt="描述"/>
           <p>{{ item.title }}</p>
           <p>{{ item.step }}</p>
           <div></div>
@@ -28,7 +28,8 @@
       <div class="content">
         <h2>备案区域选择</h2>
         <div class="area">
-          <button v-for="item in areaList" :key="item.zoneId" :class="{select: item.zoneId === area }" @click="changeArea(item)"><img :src="item.src"/> {{ item.text }}</button>
+          <button v-for="item in areaList" :key="item.zoneId" :class="{select: item.zoneId === area }" @click="changeArea(item)"><img :src="item.src" alt="描述"/> {{ item.text }}
+          </button>
         </div>
         <button @click="putOnRecord">立即备案</button>
       </div>
@@ -40,7 +41,7 @@
       </p>
       <div class="modal-content-s">
         <div>
-          <p class="lh24">您选择的区域未查询到符合要求的公网IP与云服务器，请先购买该资源然后在进行备案。<span style="color: #377dff;cursor: pointer;" @click="$router.push('buy')">立即购买</span></p>
+          <p class="lh24">您选择的区域未查询到符合要求的公网IP与云服务器，请先购买该资源然后在进行备案。<span style="color: #377dff;cursor: pointer;" @click="$router.push('/buy')">立即购买</span></p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -69,7 +70,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
           </div>
         </form>
       </div>
@@ -135,7 +136,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.hasRecord = false">取消</Button>
-        <Button type="primary" @click="$router.push('BRecords')">查看备案进度</Button>
+        <Button type="primary" @click="$router.push('/BRecords')">查看备案进度</Button>
       </p>
     </Modal>
   </div>
@@ -163,13 +164,9 @@
     metaInfo: {
       title: '域名备案查询 - 域名备案流程 - 网站域名备案 - 域名与备案 - 新睿云', // set a title
       meta: [{                 // set meta
-        name: 'keywords',
-        content: '域名备案,备案域名,域名备案查询,域名备案流程,网站域名备案'
-      },
-        {                 // set meta
-          name: 'description',
-          content: '新睿云提供专业、高效的域名备案服务，目前支持北京、沈阳、西安等地区的域名备案申请，按域名备案流程进行域名备案，助您快速完成网站备案，以便网站正常访问。'
-        }]
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
     },
     components: {
       records
@@ -178,9 +175,24 @@
       if ($store.state.userInfo && $store.state.userInfo.recordFlag) {
         next({path: '/waitSecondTrial'})
       } else {
-        next()
+        // 获取用户信息
+        var userInfo = axios.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}})
+        // 获取zone信息
+        var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime()}})
+        Promise.all([userInfo, zoneList]).then(values => {
+            if (values[0].data.status == 1 && values[0].status == 200) {
+              $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+              localStorage.setItem('realname', values[0].data.result.realname)
+            }
+            if (values[1].data.status == 1 && values[1].status == 200) {
+              $store.commit('setZoneList', values[1].data.result)
+            }
+            next()
+          },
+          value => {
+            next()
+          })
       }
-
     },
     data() {
       return {
@@ -318,7 +330,7 @@
             warning: false
           },
         },
-        imgSrc: 'user/getKaptchaImage.do',
+        imgSrc: 'https://www.xrcloud.net/user/getKaptchaImage.do',
         isRecords: []
       }
     },
@@ -394,7 +406,7 @@
               sessionStorage.setItem('zone', this.areaText)
               sessionStorage.setItem('zoneId', this.area)
               sessionStorage.setItem('recordsType', '3')
-              this.$router.push('newAccess')
+              this.$router.push('/newAccess')
             } else {
               this.showModal.recordInfo = true
             }
@@ -425,11 +437,11 @@
       // 立即备案
       putOnRecord() {
         if (this.$store.state.userInfo == null) {
-          this.$LR({type:'login'})
+          this.$LR({type: 'login'})
           return
         }
         if (this.type == 4) {
-          this.$router.push('BRecords')
+          this.$router.push('/BRecords')
           return
         }
         if (this.isRecords.length !== 0) {
@@ -458,13 +470,13 @@
               // 根据选择的备案类型决定跳入哪个起始页面
               switch (this.type) {
                 case 1:
-                  this.$router.push('newRecordStepOne')
+                  this.$router.push('/newRecordStepOne')
                   break
                 case 2:
-                  this.$router.push('newAccess')
+                  this.$router.push('/newAccess')
                   break;
                 case 3:
-                  this.$router.push('newAccess')
+                  this.$router.push('/newAccess')
                   break
               }
             } else {
@@ -544,7 +556,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.go(0)
           } else {
-            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+            this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
             this.vailForm.loginname.message = response.data.message
             this.vailForm.loginname.warning = true
           }

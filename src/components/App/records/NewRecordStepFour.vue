@@ -94,7 +94,7 @@
                   <div class="item-content-text" v-if="upload.photo===''">
                     点击选择文件
                   </div>
-                  <img v-else :src="upload.photo" style="height: 165px;width:270px;">
+                  <img v-else :src="upload.photo" style="height: 165px;width:270px;" alt="上传图片">
                   <Progress v-show="percent>0" :percent="percent"></Progress>
                   <Button type="primary" v-if="upload.photo===''">上传</Button>
                 </Upload>
@@ -104,7 +104,7 @@
         </div>
         <div class="uploadTitle" style="margin: 34px 0 10px 20px;">
           <div class="item" style="text-align: center">
-            <img @click="imageViewShow=true" style="height: 203px;cursor: zoom-in" src="../../../assets/img/records/records-img6.png"/>
+            <img @click="imageViewShow=true" style="height: 203px;cursor: zoom-in" src="../../../assets/img/records/records-img6.png" alt="头像"/>
           </div>
         </div>
       </div>
@@ -206,13 +206,9 @@
     metaInfo: {
       title: '域名备案查询 - 域名备案流程 - 网站域名备案 - 域名与备案 - 新睿云', // set a title
       meta: [{                 // set meta
-        name: 'keywords',
-        content: '域名备案,备案域名,域名备案查询,域名备案流程,网站域名备案'
-      },
-        {                 // set meta
-          name: 'description',
-          content: '新睿云提供专业、高效的域名备案服务，目前支持北京、沈阳、西安等地区的域名备案申请，按域名备案流程进行域名备案，助您快速完成网站备案，以便网站正常访问。'
-        }]
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
     },
     components: {
       step, records, oStep
@@ -517,7 +513,7 @@
         } else {
           let addMainCompany = axios.post('recode/addMainCompany.do', params)
           Promise.all([addMainCompany]).then(response => {
-            if ((response[0].status == 200)) {
+            if ((response[0].status == 200&&response[0].data.status == 1)) {
               axios.post('recode/addMainWeb.do', this.siteParams).then(res => {
                 if (res.data.status == 1) {
                   this.$router.push('waitFirstTrial')

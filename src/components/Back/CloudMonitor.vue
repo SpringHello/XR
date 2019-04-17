@@ -147,7 +147,7 @@
           <TabPane label="告警策略" name="alarmStrategy">
             <div class="as-content">
               <Button type="primary" style="margin-bottom: 10px" @click="$router.push('CloudMonitorCreateStrategy')">新建告警策略</Button>
-              <a href="https://www.xrcloud.net/documentInfo/wbOm1R2ti/wbX7w9BdC" style="float: right;line-height: 30px;" target="_blank">查看帮助文档</a>
+              <a href="/support_docs/wbOm1R2ti_wbXZujokV.html" style="float: right;line-height: 30px;" target="_blank">查看帮助文档</a>
               <Table :columns="alarmStrategyColumns" :data="alarmStrategyData"></Table>
             </div>
           </TabPane>

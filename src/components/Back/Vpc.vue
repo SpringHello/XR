@@ -9,7 +9,7 @@
         云网络 /
          <span>网络私有云VPC</span>
       </span>
-      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
+      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="(!auth)||auth && auth.checkstatus !== 0">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
@@ -33,6 +33,7 @@
                         <DropdownItem name='add' >添加VPC互通网关</DropdownItem>
                         <DropdownItem name='delete'>删除VPC</DropdownItem>
                         <DropdownItem name='reset'>恢复默认</DropdownItem>
+												<DropdownItem name='rename'>重命名</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
             </div>
@@ -71,8 +72,8 @@
                 </div>
                 <div class="card-bottom">
                   <div>
-                    <Button   :disabled='item.status==1?false :true'  @click="restartVpc(item)">重启</Button>
-                    <Button type="primary"  :disabled='item.status==1?false :true' @click="manage(item)">管理</Button>
+                    <Button :disabled='item.status==1?false :true' @click="restartVpc(item)">重启</Button>
+                    <Button type="primary" :disabled='item.status==1?false :true' @click="manage(item)">管理</Button>
                   </div>
                 </div>
               </div>
@@ -95,22 +96,23 @@
     </div>
 
     <!-- 新建vpc modal -->
-    <Modal v-model="showModal.newVpc" width="550" :scrollable="true">
+    <Modal v-model="showModal.newVpc" width="500" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">新建VPC</span>
       </p>
-      <div class="universal-modal-content-flex">
-        <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate">
+      <div class="universal-modal-content-flex" id="moli2">
+        <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate" style="width: 100%">
           <FormItem label="vpc名称" prop="vpcName">
-            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称"></Input>
+            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称(最多可输入二十位)" :maxlength="20" style="width:300px;float: right;"></Input>
           </FormItem>
           <FormItem label="地址范围" prop="vpc">
-            <Select v-model="newForm.vpc" placeholder="请选择">
+            <Select v-model="newForm.vpc" placeholder="请选择" style="width:300px;float: right;">
               <Option v-for="item in newForm.VPCOptions" :key="item" :value="item">{{item}}</Option>
             </Select>
           </FormItem>
-          <FormItem label="vpc描述" prop="desc">
-            <Input v-model="newForm.desc" placeholder="请输入vpc描述"></Input>
+					<span style="color:rgba(255,98,75,1);position: relative;left: 80px;">重要提醒：地址范围选定之后不可更改。</span>
+          <FormItem label="vpc描述" prop="desc" style="margin-top: 10px;">
+            <Input v-model="newForm.desc" placeholder="请输入vpc描述" style="width:300px;float: right;"></Input>
           </FormItem>
           <!--          <FormItem label="购买方式" prop="timeType">
                       <Select v-model="newForm.timeType">
@@ -126,7 +128,11 @@
                         </Option>
                       </Select>
                     </FormItem>-->
-          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+					<div class="modal-content-s divall">
+					  <div>
+					    VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改<span class="spanaa"></span>
+					  </div>
+					</div>
         </Form>
         <!--创建vpc时暂时不绑定公网IP-->
         <!--<div>
@@ -230,66 +236,70 @@
     </Modal>
 
     <!-- 添加NAT 网关 -->
-    <Modal v-model="showModal.addNat" width="550" :scrollable="true">
+    <Modal v-model="showModal.addNat" width="500" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">添加NAT网关</span>
       </p>
-      <div class="universal-modal-content-flex">
-        <Form :model="addNatForm" :rules="addNatRuleValidate" ref="addNatFormValidate">
+      <div class="universal-modal-content-flex" id="moli2">
+        <Form :model="addNatForm" :rules="addNatRuleValidate" ref="addNatFormValidate" style="width: 100%">
           <FormItem label="网关名称" prop="natName">
-            <Input v-model="addNatForm.natName" placeholder="请输入网关名称" style="width: 200px"></Input>
+            <Input v-model="addNatForm.natName" placeholder="请输入网关名称" style="width:300px;float: right;"></Input>
           </FormItem>
           <FormItem label="VPC ID" prop="vpc">
-            <Select v-model="addNatForm.vpc" placeholder="请选择" style="width: 200px" @on-change="listIP">
+            <Select v-model="addNatForm.vpc" placeholder="请选择" style="width:300px;float: right;" @on-change="listIP">
               <Option v-for="item in netData" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}</Option>
             </Select>
           </FormItem>
-          <FormItem label="选择弹性IP">
-            <Select v-model="addNatForm.publicIp" style="width: 200px">
+          <FormItem label="弹性IP">
+            <Select v-model="addNatForm.publicIp" style="width:300px;float: right;">
               <Option v-for="item in addNatForm.publicIpOptions" :value="item.publicipid" :key="item.publicipid">
                 {{item.publicip}}
               </Option>
             </Select>
             <i @click="$router.push('ip')">
-              <Icon type="plus" color="#2A99F2" size="20"
-                    style="position: relative;top: 4px;cursor:pointer;margin-left: 10px;"></Icon>
+              <Icon type="plus" color="#2A99F2" size="17"
+                    style="position: relative;top: 35px;cursor:pointer;left:35px;"></Icon>
+
             </i>
+    		<span style="position: relative;top: 11px;cursor:pointer;left:52px;float: left;color:#2A99F2 ;" @click="$router.push('ip')">新建弹性IP</span>
           </FormItem>
-          <FormItem label="选择计费模式" prop="timeType">
-            <Select v-model="addNatForm.timeType" style="width: 200px">
+          <FormItem label="计费模式" prop="timeType" id="fgfg">
+            <Select v-model="addNatForm.timeType" style="width:145px;float: left;">
               <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
                       :key="item.value">{{ item.label }}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="购买时长" prop="timeValue" v-if="addNatForm.timeType!='current'">
-            <Select v-model="addNatForm.timeValue" style="width: 200px">
+          <FormItem label="" prop="timeValue" v-if="addNatForm.timeType!='current'" id="gfgf">
+            <Select v-model="addNatForm.timeValue" style="width:145px;float: right;">
               <Option v-for="item in customTimeOptions[addNatForm.timeType]" :value="item.value" :key="item.value">
                 {{item.label}}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="新建弹性IP带宽" v-if="addNatForm.publicIp=='新建弹性IP'" style="width:90%">
+          <FormItem label="弹性IP带宽" v-if="addNatForm.publicIp=='新建弹性IP'"  style="width:90%">
             <i-slider v-model="addNatForm.IPSize" :min=1 :max=100 unit="M" :points="[20,50]"
                       style="width:300px;vertical-align: middle;"></i-slider>
             <InputNumber :max="100" :min="1" v-model="addNatForm.IPSize" :editable="false"
-                         style="margin-left: 20px" :precision="0"></InputNumber>
+                         style="margin-top: 10px;" :precision="0"></InputNumber>
             <span style="margin-left: 10px">M</span>
           </FormItem>
-          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+    	  <div>
+    		  <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
+    		  <span style="font-size: 24px;color: #FF624B;line-height: 32px;float:left">￥{{addNatForm.cost}}
+    		  <span v-if="addNatForm.timeValue != ''"> /
+    		  <span v-if="addNatForm.timeType == 'year'"
+    		        style="font-size: 16px; color: #FF624B;">{{addNatForm.timeValue}}年</span>
+    		  <span v-if="addNatForm.timeType == 'month'"
+    		        style="font-size: 16px; color: #FF624B;">{{addNatForm.timeValue}}月</span>
+    		  </span>
+    		  </span>
+    	  </div>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">￥{{addNatForm.cost}}
-        <span v-if="addNatForm.timeValue != ''"> /
-        <span v-if="addNatForm.timeType == 'year'"
-              style="font-size: 16px; color: #2A99F2;">{{addNatForm.timeValue}}年</span>
-        <span v-if="addNatForm.timeType == 'month'"
-              style="font-size: 16px; color: #2A99F2;">{{addNatForm.timeValue}}月</span>
-        </span>
-        </span>
-        <Button type="primary" @click="handleAddNatSubmit">完成配置</Button>
+    	  <Button @click="showModal.addNat=false">取消</Button>
+        <Button type="primary" @click="handleAddNatSubmit">完成</Button>
       </div>
     </Modal>
     <!-- 删除NAT 网关 -->
@@ -442,6 +452,23 @@
         <Button type="primary" @click="showModal.createInterconnectByOne = false,showModal.newVpc = true">新建VPC</Button>
       </p>
     </Modal>
+		<Modal v-model="showModal.rename" width="550" :scrollable="true">
+		  <p slot="header" class="modal-header-border">
+		    <span class="universal-modal-title">VPC重命名</span>
+		  </p>
+		  <div class="universal-modal-content-flex">
+		    <Form :model="renameForm" ref="renameForm" :rules="renameFormRule">
+		      <Form-item label="VPC名" prop="hostName">
+		        <Input v-model="renameForm.hostName" placeholder="请输入新VPC名(最多可输入20位)" :maxlength="20" style="width: 300px;"></Input>
+		      </Form-item>
+		    </Form>
+		  </div>
+		  <div slot="footer" class="modal-footer-border">
+		    <Button type="ghost" @click="showModal.rename = false">取消</Button>
+		    <Button type="primary" @click="rename">确定
+		    </Button>
+		  </div>
+		</Modal>
   </div>
 
 </template>
@@ -537,169 +564,177 @@
           {
             title: '源NAT',
             render: (h, object) => {
-              if (object.row._status) {
-                let message = object.row._status == 1 ? '正在添加源NAT...' : '正在删除源NAT...'
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block'
-                  }
-                }), h('span', {}, message)])
-              }
-              if (object.row.sourcenatip) {
-                return h('div', [h('span', {
-                  style: {
-                    marginRight: '10px'
-                  }
-                }, object.row.sourcenatip), h('Icon', {
-                  attrs: {
-                    type: 'close'
-                  },
-                  style: {
-                    cursor: 'pointer'
-                  },
-                  nativeOn: {
-                    click: () => {
-                      this.$Modal.confirm({
-                        render: (h) => {
-                          return h('p', {
-                            class: 'modal-content-s'
-                          }, [h('i', {
-                            class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-                            style: {
-                              color: '#f90'
-                            }
-                          }), '确认解绑该源NAT?'])
-                        },
-                        title: '解绑源NAT',
-                        scrollable: true,
-                        okText: '确定解绑',
-                        cancelText: '取消',
-                        'onOk': () => {
-                          this.natData.forEach(item => {
-                            if (item.id == object.row.id) {
-                              this.$set(item, '_status', 2)
-                            }
-                          })
-                          var url = 'network/natGatewayUnboundTargetIP.do'
-                          this.$http.get(url, {
-                            params: {
-                              natGatewayId: object.row.id,
-                              publicIp: object.row.sourcenatip
-                            }
-                          }).then(response => {
-                            this.refresh()
-                            if (response.status == 200 && response.data.status == 1) {
-                              this.$Message.success({
-                                content: response.data.message
-                              })
-                            } else {
-                              this.$message.info({
-                                content: response.data.message
-                              })
-                            }
-                          })
-                        }
-                      })
+              if (this.auth && this.auth.checkstatus == 0) {
+                if (object.row._status) {
+                  let message = object.row._status == 1 ? '正在添加源NAT...' : '正在删除源NAT...'
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block'
                     }
-                  }
-                }, '')])
+                  }), h('span', {}, message)])
+                }
+                if (object.row.sourcenatip) {
+                  return h('div', [h('span', {
+                    style: {
+                      marginRight: '10px'
+                    }
+                  }, object.row.sourcenatip), h('Icon', {
+                    attrs: {
+                      type: 'close'
+                    },
+                    style: {
+                      cursor: 'pointer'
+                    },
+                    nativeOn: {
+                      click: () => {
+                        this.$Modal.confirm({
+                          render: (h) => {
+                            return h('p', {
+                              class: 'modal-content-s'
+                            }, [h('i', {
+                              class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
+                              style: {
+                                color: '#f90'
+                              }
+                            }), '确认解绑该源NAT?'])
+                          },
+                          title: '解绑源NAT',
+                          scrollable: true,
+                          okText: '确定解绑',
+                          cancelText: '取消',
+                          'onOk': () => {
+                            this.natData.forEach(item => {
+                              if (item.id == object.row.id) {
+                                this.$set(item, '_status', 2)
+                              }
+                            })
+                            var url = 'network/natGatewayUnboundTargetIP.do'
+                            this.$http.get(url, {
+                              params: {
+                                natGatewayId: object.row.id,
+                                publicIp: object.row.sourcenatip
+                              }
+                            }).then(response => {
+                              this.refresh()
+                              if (response.status == 200 && response.data.status == 1) {
+                                this.$Message.success({
+                                  content: response.data.message
+                                })
+                              } else {
+                                this.$message.info({
+                                  content: response.data.message
+                                })
+                              }
+                            })
+                          }
+                        })
+                      }
+                    }
+                  }, '')])
+                } else {
+                  return h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer',
+                    },
+                    on: {
+                      click: () => {
+                        /*        // 绑定sourceNat
+                         if (object.row.prottransip) {
+                         var prottransipArray = object.row.prottransip.split(',')
+                         prottransipArray.splice(0, 1)
+                         this.bindIPForm.IPOptions = prottransipArray
+                         }*/
+                        this.bindIP(object.row)
+                      }
+                    }
+                  }, '绑定源NAT')
+                }
               } else {
-                return h('span', {
-                  style: {
-                    color: '#2A99F2',
-                    cursor: 'pointer',
-                  },
-                  on: {
-                    click: () => {
-                      /*        // 绑定sourceNat
-                       if (object.row.prottransip) {
-                       var prottransipArray = object.row.prottransip.split(',')
-                       prottransipArray.splice(0, 1)
-                       this.bindIPForm.IPOptions = prottransipArray
-                       }*/
-                      this.bindIP(object.row)
-                    }
-                  }
-                }, '绑定源NAT')
+                return h('span', {}, '----')
               }
             }
           },
           {
             title: '目标IP',
             render: (h, object) => {
-              var renderArray = []
-              if (object.row.prottransip) {
-                var prottransipArray = object.row.prottransip.split(',')
-                prottransipArray.splice(0, 1)
-                for (let item of prottransipArray) {
-                  if (item) {
-                    renderArray.push(h('div', [h('span', {
-                      style: {
-                        marginRight: '10px'
-                      }
-                    }, item), h('Icon', {
-                      attrs: {
-                        type: 'close'
-                      },
-                      style: {
-                        cursor: 'pointer'
-                      },
-                      nativeOn: {
-                        click: () => {
-                          this.$Modal.confirm({
-                            render: (h) => {
-                              return h('p', {
-                                class: 'modal-content-s'
-                              }, [h('i', {
-                                class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-                                style: {
-                                  color: '#f90'
-                                }
-                              }), '确认解绑该目标IP?'])
-                            },
-                            title: '解绑目标IP',
-                            scrollable: true,
-                            okText: '确定解绑',
-                            cancelText: '取消',
-                            'onOk': () => {
-                              var url = 'network/unboundElasticIP.do'
-                              this.$http.get(url, {
-                                params: {
-                                  natGatewayId: object.row.id,
-                                  publicIp: item
-                                }
-                              }).then(response => {
-                                if (response.status == 200 && response.data.status == 1) {
-                                  this.$Message.success({
-                                    content: response.data.message
-                                  })
-                                  this.refresh()
-                                } else {
-                                  this.$message.info({
-                                    content: response.data.message
-                                  })
-                                }
-                              })
-                            }
-                          })
+              if (this.auth && this.auth.checkstatus == 0) {
+                var renderArray = []
+                if (object.row.prottransip) {
+                  var prottransipArray = object.row.prottransip.split(',')
+                  prottransipArray.splice(0, 1)
+                  for (let item of prottransipArray) {
+                    if (item) {
+                      renderArray.push(h('div', [h('span', {
+                        style: {
+                          marginRight: '10px'
                         }
-                      }
-                    }, '')]))
+                      }, item), h('Icon', {
+                        attrs: {
+                          type: 'close'
+                        },
+                        style: {
+                          cursor: 'pointer'
+                        },
+                        nativeOn: {
+                          click: () => {
+                            this.$Modal.confirm({
+                              render: (h) => {
+                                return h('p', {
+                                  class: 'modal-content-s'
+                                }, [h('i', {
+                                  class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
+                                  style: {
+                                    color: '#f90'
+                                  }
+                                }), '确认解绑该目标IP?'])
+                              },
+                              title: '解绑目标IP',
+                              scrollable: true,
+                              okText: '确定解绑',
+                              cancelText: '取消',
+                              'onOk': () => {
+                                var url = 'network/unboundElasticIP.do'
+                                this.$http.get(url, {
+                                  params: {
+                                    natGatewayId: object.row.id,
+                                    publicIp: item
+                                  }
+                                }).then(response => {
+                                  if (response.status == 200 && response.data.status == 1) {
+                                    this.$Message.success({
+                                      content: response.data.message
+                                    })
+                                    this.refresh()
+                                  } else {
+                                    this.$message.info({
+                                      content: response.data.message
+                                    })
+                                  }
+                                })
+                              }
+                            })
+                          }
+                        }
+                      }, '')]))
+                    }
                   }
                 }
+                renderArray.push(h('div', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer',
+                  },
+                  on: {
+                    click: () => {
+                      this.bindTargetIP(object.row)
+                    }
+                  }
+                }, '绑定目标IP'))
+                return h('div', renderArray)
+              } else {
+                return h('span', {}, '----')
               }
-              renderArray.push(h('div', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer',
-                },
-                on: {
-                  click: () => {
-                    this.bindTargetIP(object.row)
-                  }
-                }
-              }, '绑定目标IP'))
-              return h('div', renderArray)
             }
           },
           {
@@ -710,22 +745,26 @@
             title: '操作',
             width: 100,
             render: (h, object) => {
-              return h('span', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer'
-                },
-                on: {
-                  click: () => {
-                    sessionStorage.setItem('currentNat', object.row.id)
-                    if (object.row.prottransip) {
-                      sessionStorage.setItem('ip', object.row.prottransip.substring(1))
-                      sessionStorage.setItem('ipId', object.row.prottransipid.substring(1))
+              if (this.auth && this.auth.checkstatus == 0) {
+                return h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      sessionStorage.setItem('currentNat', object.row.id)
+                      if (object.row.prottransip) {
+                        sessionStorage.setItem('ip', object.row.prottransip.substring(1))
+                        sessionStorage.setItem('ipId', object.row.prottransipid.substring(1))
+                      }
+                      this.$router.push('NATManage')
                     }
-                    this.$router.push('NATManage')
                   }
-                }
-              }, '查看详情')
+                }, '查看详情')
+              } else {
+                return h('span', {}, '----')
+              }
             }
           }
         ],
@@ -734,6 +773,7 @@
         select: null,
         // 控制模态框是否关闭
         showModal: {
+					rename:false,
           newVpc: false,
           addGateway: false,
           // 添加nat网关
@@ -750,6 +790,15 @@
           ratesChange: false,
           createInterconnectByOne: false
         },
+				//修改VPC名字
+				renameForm: {
+				  hostName: ''
+				},
+				renameFormRule: {
+				  hostName: [
+				    {required: true, validator: validaRegisteredName, trigger: 'blur'}
+				  ]
+				},
         // 新建vpc表单数据
         newForm: {
           vpcName: '',
@@ -882,6 +931,7 @@
       }
     },
     beforeRouteEnter(to, from, next) {
+      //console.log(to)
       var zoneId = $store.state.zone.zoneid
       // 获取vpc数据
       var vpcResponse = axios.get('network/listVpc.do', {
@@ -906,12 +956,26 @@
     },
     created() {
       this.intervalInstance = setInterval(this.getVpcData, 10000)
-      if (sessionStorage.getItem('VPN')) {
-        this.paneStatus.vpc = 'NAT'
-        sessionStorage.removeItem('VPN')
-      }
+			this.testjump()
     },
     methods: {
+      testjump(){
+        this.paneStatus.vpc = this.$route.query.pane
+        if (sessionStorage.getItem('modal')) {
+          var modalName = sessionStorage.getItem('modal')
+          if (modalName == 'confirm') {
+            this.$message.confirm({
+                content: '请选择VPC并点击【管理】进入VPC详情页新建新的VPC子网',
+                duration: 1000,
+                top: 150,
+                closable: true
+            })
+          } else {
+            this.showModal[modalName] = true
+          }
+          sessionStorage.removeItem('modal')
+        }
+      },
       // 区域切换刷新数据
       refresh() {
         var zoneId = $store.state.zone.zoneid
@@ -1109,6 +1173,11 @@
             })
           })
           this.natData = response.data.result
+          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
+            this.natData.forEach(nat => {
+              nat._disabled = true
+            })
+          }
         }
       },
       radio(item) {
@@ -1230,6 +1299,44 @@
           }
         })
       },
+			checkRenameForm() {
+				var select = this.netData.filter(item => item._select)
+				if (select.length == 0) {
+				  this.$Message.info({
+				    content: '请选择一个VPC'
+				  })
+				  return
+				}
+				this.showModal.rename = true
+			},
+			// 重命名VPC
+			rename() {
+				var select = this.netData.filter(item => item._select)
+				this.$refs.renameForm.validate((valid) => {
+				  if (valid) {
+				    // 表单验证通过，调用重命名的方法
+				    this.showModal.rename = false
+				    this.loadingMessage = '正在修改VPC名'
+				    this.loading = true
+				    this.$http.get('network/updateVpc.do', {
+				      params: {
+				        vpcId: select[0].vpcid,
+				    		name: this.renameForm.hostName,
+				    		zoneId: $store.state.zone.zoneid
+				      }
+				    }).then(response => {
+				      this.loading = false
+				      if (response.status == 200 && response.data.status == 1) {
+				        this.refresh()
+				        this.$Message.success('VPC名修改成功')
+				      }
+				    	else{
+				    		this.$Message.error(response.data.message)
+				    	}
+				    })
+				  }
+				})
+			},
       // 重启vpc
       restartVpc(item) {
         this.$message.confirm({
@@ -1473,31 +1580,31 @@
         sessionStorage.setItem('pane', 'Peip')
         this.$router.push('/buy/elasticip/')
       },
-      restartVpcPlus(){
-           let id = ''
-          this.netData.forEach(item => {
-              if(item.vpcid != undefined)
-              id += item.vpcid+','
-          });
+      restartVpcPlus() {
+        let id = ''
+        this.netData.forEach(item => {
+          if (item.vpcid != undefined)
+            id += item.vpcid + ','
+        });
         this.$message.confirm({
           content: '您确认恢复默认吗',
           onOk: () => {
             this.$http.get('network/restartVpc.do', {
-            params: {
-                vpcId: id.substring(0,id.length-1),
+              params: {
+                vpcId: id.substring(0, id.length - 1),
                 cleanup: true
-            }
+              }
             }).then(res => {
-               if(res.status == 200 && res.data.status == 1){
-                    this.$Message.success({
-                        content: res.data.message
-                    })
-               }else{
-                    this.$Message.info({
-                        content: res.data.message
-                    })
-               }
-           })
+              if (res.status == 200 && res.data.status == 1) {
+                this.$Message.success({
+                  content: res.data.message
+                })
+              } else {
+                this.$Message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
 
         })
@@ -1512,12 +1619,15 @@
           if(name == 'reset'){
               this.restartVpcPlus();
           }
+					if(name == 'rename'){
+					    this.checkRenameForm();
+					}
       }
     },
     computed: mapState({
       paneStatus: state => state.paneStatus,
       auth() {
-        return this.$store.state.authInfo != null
+        return this.$store.state.authInfo
       }
     }),
     watch: {
@@ -1783,4 +1893,24 @@
       }
     }
   }
+	.spanaa {
+	  color: #2A99F2;
+	  text-decoration: underline;
+	  font-size: 12px;
+	  font-family: MicrosoftYaHei;
+	  cursor: pointer;
+	  border: none;
+	  padding: 0;
+	  margin-top: -3px;
+	}
+
+	.divall {
+	  background:rgba(42,153,242,0.06);
+	  border-radius:2px;
+	  border:1px solid rgba(42,153,242,1);
+	  width: 460px;
+	  height: auto;
+	  padding: 10px;
+	  font-size: 12px;
+	}
 </style>

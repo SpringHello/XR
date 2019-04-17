@@ -123,13 +123,9 @@
     metaInfo: {
       title: 'oss对象云存储价格 - 对象存储oss流量费用 - 对象存储oss怎么收费 - 购买 - 新睿云', // set a title
       meta: [{                 // set meta
-        name: 'keywords',
-        content: '对象云存储价格,oss对象存储价格,对象存储价格,对象存储oss价格,对象存储oss费用,对象存储oss流量费用,对象存储购买,,对象存储收费,对象存储oss怎么收费,对象存储oss收费'
-      },
-        {                 // set meta
-          name: 'description',
-          content: '新睿云对象存储OSS分布式海量数据存取服务。OSS提供标准的对象存储服务，您可以通过网络随时随地方便地存储和获取图片/音频/视频/文本/大文件等各类数据文件。用户可按月、年租用购买，可查看对象存储服务的费用、价格、报价。'
-        }]
+        name: 'robots',
+        content: 'noindex,nofollow'
+      }]
     },
     beforeRouteEnter(to, from, next) {
       axios.get('ruiradosPrice/zoneList.do').then(response => {

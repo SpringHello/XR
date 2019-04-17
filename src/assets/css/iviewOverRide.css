@@ -68,7 +68,14 @@
   float: none;
   font-size: 14px;
 }
-
+/* form表单,label文字14px */
+.universal-modal-label-14px form .ivu-form-item .ivu-form-item-label {
+  font-size: 14px;
+}
+/* form表单, formItem间距10px*/
+.universal-modal-mb-10px form .ivu-form-item, form.universal-modal-mb-10px .ivu-form-item {
+  margin-bottom: 10px;
+}
 /* form表单样式,错误提示不换行 */
 .universal-form-tips-line .ivu-form-item-content {
   display: flex;
@@ -132,6 +139,77 @@
 
 .universal-modal-content form .ivu-form-item .ivu-form-item-label {
   float: none;
+}
+
+/* 新增负载均衡样式修改 */
+#moli .ivu-form-item {
+  width: 81%;
+}
+#moli .ivu-form-item .ivu-form-item-label {
+  float: left;
+}
+#moli .ivu-form-item-error-tip{
+	margin-left: 95px;
+	margin-top: 30px;
+}
+#moli .ivu-form-item{
+	margin-bottom: 0;
+}
+#moli1 .ivu-form-item {
+  width: 81%;
+}
+#moli1 .ivu-form-item .ivu-form-item-label {
+  float: left;
+}
+#moli1 .ivu-form-item-error-tip{
+	margin-left: 75px;
+	margin-top: 30px;
+}
+#moli1 .ivu-form-item{
+	margin-bottom: 0;
+}
+#moli2 .ivu-form-item {
+  width: 83%;
+}
+#moli2 .ivu-form-item .ivu-form-item-label {
+  float: left;
+}
+#moli2 .ivu-form-item-error-tip{
+	margin-left: 85px;
+	margin-top: 30px;
+}
+#moli22 .ivu-form-item {
+  width: 86%;
+}
+#moli22 .ivu-form-item .ivu-form-item-label {
+  float: left;
+}
+#moli22 .ivu-form-item-error-tip{
+	margin-left: 95px;
+	margin-top: 30px;
+}
+#moli2 #gfgf{
+	float: right;
+	width: 145px;
+	margin-right: 78px;
+}
+#moli2 #gfgf1{
+	float: right;
+	width: 145px;
+	margin-right: 78px;
+}
+#moli2 #fgfg{
+	float: left;
+	width: 230px;
+}
+#moli2 #jiakuan{
+	width: 100%;
+}
+#gfgf .ivu-form-item-error-tip{
+	margin-left: 5px;
+}
+#gfgf1 .ivu-form-item-error-tip{
+	margin-left: 5px;
 }
 
 /* 重置modal中header,body,footer的padding */
@@ -414,6 +492,10 @@ div.modal-header-border {
   background: url('../../assets/img/active/smlj/modal-bg.png');
 }
 
+#modelimg .ivu-modal-content{
+	background: none;
+}
+
 /* 公共comfirm弹窗行高设置 */
 .modal-wrapper .modal .modal-body p {
   line-height: 25px;
@@ -425,6 +507,12 @@ div.modal-header-border {
 
 .allnum .ivu-poptip-popper{
 	margin-left: 10px;
+}
+
+/* 所有资源页面提示框修改 */
+.allbox .ivu-steps-vertical .ivu-steps-main .ivu-steps-title{
+	line-height: 21px;
+	font-size: 14px;
 }
 
 /* 拼团活动下拉框 */

@@ -5,7 +5,7 @@
         <div class="banner">
           <my-carousel :interval=5000 class="carousel">
             <my-carousel-item class="carousel-item">
-              <div @click="$router.push('activtiy/2019spring/')" class="cc-active">
+              <div @click="$router.push('activity/2019spring/')" class="cc-active">
               </div>
             </my-carousel-item>
             <!-- <my-carousel-item class="carousel-item">
@@ -102,6 +102,30 @@
               <span v-show="loginForm.loginType === 'vailCode'" @click="changeToPasswordLogin">密码登录</span>
               <span style="float: right" @click="$router.push('resetNew')">忘记密码？</span>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="shade" v-show="onLogin">
+      <div class="shade-center">
+        <div class="spinner">
+          <div class="spinner-container container1">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+          </div>
+          <div class="spinner-container container2">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
+          </div>
+          <div class="spinner-container container3">
+            <div class="circle1"></div>
+            <div class="circle2"></div>
+            <div class="circle3"></div>
+            <div class="circle4"></div>
           </div>
         </div>
       </div>
@@ -347,11 +371,33 @@
         }
       }
     }
+    .shade {
+      position: fixed;
+      background-color: rgba(55, 55, 55, 0.6);
+      height: 100%;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .shade-center {
+        height: 140px;
+        width: 220px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
+        box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
+      }
+    }
   }
 </style>
 <script type="text/ecmascript-6">
   import axios from 'axios'
-  import throttle from 'throttle-debounce/throttle'
+
+  var debounce = require('throttle-debounce/debounce')
   import gt from '../../util/gt'
 
   export default {
@@ -387,6 +433,7 @@
         passwordCaptchaObjStatus: false,
         codeCaptchaObj: null,
         codeCaptchaObjStatus: false,
+        onLogin: false
       }
     },
     created() {
@@ -395,7 +442,7 @@
     },
     methods: {
       /* 滑动验证初始化--密码登录*/
-      gtInitPassword: throttle(3000, function () {
+      gtInitPassword() {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {
@@ -446,6 +493,7 @@
             }, function (captchaObj) {
               captchaObj.onReady(function () {
                 captchaObj.verify()
+                _self.onLogin = false
               }).onSuccess(function () {
                 _self.loginForm.errorMsg = ''
                 var result = captchaObj.getValidate()
@@ -467,9 +515,9 @@
             })
           }
         })
-      }),
+      },
       /* 滑动验证初始化-- 发送验证码*/
-      gtInitCode: throttle(3000, function () {
+      gtInitCode() {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
@@ -519,6 +567,7 @@
             }, function (captchaObj) {
               captchaObj.onReady(function () {
                 captchaObj.verify()
+                _self.onLogin = false
               }).onSuccess(function () {
                 _self.loginForm.errorMsg = ''
                 var result = captchaObj.getValidate()
@@ -540,9 +589,9 @@
             })
           }
         })
-      }),
+      },
       /* 滑动验证初始化 -- 发送语音验证码*/
-      gtInitVoice: throttle(3000, function () {
+      gtInitVoice() {
         let _self = this
         let url = 'user/silpInitialization.do'
         axios.get(url, {params: {}}).then(res => {
@@ -558,6 +607,7 @@
             }, function (captchaObj) {
               captchaObj.onReady(function () {
                 captchaObj.verify()
+                _self.onLogin = false
               }).onSuccess(function () {
                 _self.loginForm.errorMsg = ''
                 var result = captchaObj.getValidate()
@@ -579,7 +629,7 @@
             })
           }
         })
-      }),
+      },
       /* 切换banner */
       change(activeIndex) {
         this.activeBanner = activeIndex + 1
@@ -614,7 +664,7 @@
           this.loginForm.errorMsg = 'formatError'
         }
       },
-      toLogin() {
+      toLogin: debounce(200, function () {
         if (!this.loginForm.loginName) {
           this.loginForm.errorMsg = 'formatError'
           return
@@ -624,6 +674,7 @@
             this.loginForm.errorMsg = 'passwordMistake'
             return
           }
+          this.onLogin = true
           this.gtInitPassword()
         } else {
           if (!this.loginForm.verificationCode) {
@@ -632,7 +683,7 @@
           }
           this.loginByCode()
         }
-      },
+      }),
       loginByPassword() {
         let url = 'user/login.do', params = {
           username: this.loginForm.loginName,
@@ -693,7 +744,7 @@
           }
         })
       },
-      sendLoginVailCodeCheck() {
+      sendLoginVailCodeCheck: debounce(200, function () {
         if (!this.loginForm.loginName || !(this.regExpObj.phone.test(this.loginForm.loginName) || this.regExpObj.email.test(this.loginForm.loginName))) {
           this.loginForm.errorMsg = 'formatError'
           return
@@ -709,10 +760,11 @@
           if (response.status === 200 && response.data.status === 1) {
             this.loginForm.errorMsg = 'notRegister'
           } else {
+            this.onLogin = true
             this.gtInitCode()
           }
         })
-      },
+      }),
       sendLoginVailCode() {
         this.loginForm.verificationCodeText = '发送中'
         let url = 'user/code.do'
@@ -756,13 +808,14 @@
           }
         })
       },
-      getLoginVoicecodeCheck() {
+      getLoginVoicecodeCheck: debounce(200, function () {
         if (!this.regExpObj.phone.test(this.loginForm.loginName)) {
           this.loginForm.errorMsg = 'formatError'
           return
         }
+        this.onLogin = true
         this.gtInitVoice()
-      },
+      }),
       getLoginVoiceCode() {
         let url = 'user/voiceCode.do'
         axios.get(url, {

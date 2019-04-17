@@ -23,7 +23,7 @@
                 </div>
                 <div class="pi-base-info">
                   <ul>
-                    <li><span>用户名称</span><span  @click="showModal.Cancellationaccount = true" style="display: inline;cursor: pointer;">{{(authInfo&&authInfo.name)? authInfo.name:userInfo.realname}}</span>
+                    <li><span>用户名称</span><span @click="showModal.Cancellationaccount = true" style="display: inline;cursor: pointer;">{{(authInfo&&authInfo.name)? authInfo.name:userInfo.realname}}</span>
                       <span v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"
                             style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid rgba(42,153,242,1);margin-left: 20px;font-size: 10px;">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
@@ -207,8 +207,9 @@
                         <div style="width:130px;">
                           <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
                                   :on-success="IDCardFront">
-                            <div v-if="notAuth.cardAuthForm.IDCardFront==''" style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                              <img style="height: 28px;width: 28px;margin: 0 auto;" src="../../assets/img/usercenter/uc-add.png" />
+                            <div v-if="notAuth.cardAuthForm.IDCardFront==''"
+                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                              <img style="height: 28px;width: 28px;margin: 0 auto;" src="../../assets/img/usercenter/uc-add.png"/>
                             </div>
                             <img v-else :src="notAuth.cardAuthForm.IDCardFront">
                             <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
@@ -226,8 +227,9 @@
                         <div style="width:130px;">
                           <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
                                   :on-success="IDCardBack">
-                            <div v-if="notAuth.cardAuthForm.IDCardBack==''" style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                              <img style="height: 28px;width: 28px;margin: 0 auto;" src="../../assets/img/usercenter/uc-add.png" />
+                            <div v-if="notAuth.cardAuthForm.IDCardBack==''"
+                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                              <img style="height: 28px;width: 28px;margin: 0 auto;" src="../../assets/img/usercenter/uc-add.png"/>
                             </div>
                             <img v-else :src="notAuth.cardAuthForm.IDCardBack">
                             <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
@@ -246,8 +248,9 @@
                         <div style="width:130px;">
                           <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
                                   :on-success="IDCardPerson">
-                            <div v-if="notAuth.cardAuthForm.IDCardPerson==''" style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                              <img style="height: 28px;width: 28px;margin: 0 auto;" src="../../assets/img/usercenter/uc-add.png" />
+                            <div v-if="notAuth.cardAuthForm.IDCardPerson==''"
+                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                              <img style="height: 28px;width: 28px;margin: 0 auto;" src="../../assets/img/usercenter/uc-add.png"/>
                             </div>
                             <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
                             <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
@@ -328,12 +331,12 @@
               </Steps>
             </div>
             <div class="certificationResults" v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==2">
-              <img src="../../assets/img/usercenter/uc-img1.png" />
+              <img src="../../assets/img/usercenter/uc-img1.png"/>
               <p>信息正在审核处理中</p>
               <p>- -请耐心等待- -</p>
             </div>
             <div class="certificationResults" v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==1">
-              <img src="../../assets/img/usercenter/uc-img2.png" />
+              <img src="../../assets/img/usercenter/uc-img2.png"/>
               <p style="color: #FF001F">审核未通过</p>
               <p>提交审核资料发现问题，请重新提交</p>
               <Button type="primary" style="margin-top: 20px" @click="resubmit">重新提交</Button>
@@ -369,8 +372,9 @@
                           <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
                                   :format="['jpg','jpeg','png','gif']" :max-size="4096" :on-format-error="handleFormatError"
                                   :on-exceeded-size="handleMaxSize" :on-success="combine">
-                            <div v-if="notAuth.companyAuthForm.combine==''" style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;color: #999;background-color: #FFF">
-                              <img src="../../assets/img/usercenter/uc-add.png" />
+                            <div v-if="notAuth.companyAuthForm.combine==''"
+                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;color: #999;background-color: #FFF">
+                              <img src="../../assets/img/usercenter/uc-add.png"/>
                             </div>
                             <img style="height: 74px" v-else :src="notAuth.companyAuthForm.combine">
                             <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
@@ -387,7 +391,8 @@
                   </FormItem>
                   <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">
                     提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
-                  <p class="info-title" style="margin-top: 70px">企业法人信息<span style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
+                  <p class="info-title" style="margin-top: 70px">企业法人信息<span
+                    style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
                   </p>
                   <FormItem label="企业法人姓名" prop="linkManName">
                     <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入法人姓名" style="width: 300px;"></Input>
@@ -403,8 +408,9 @@
                             <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
                                     :format="['jpg','jpeg','png','gif']" :max-size="4096" :on-format-error="handleFormatError"
                                     :on-exceeded-size="handleMaxSize" :on-success="legalPersonIDFront">
-                              <div v-if="notAuth.companyAuthForm.legalPersonIDFront==''" style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                                <img src="../../assets/img/usercenter/uc-add.png" />
+                              <div v-if="notAuth.companyAuthForm.legalPersonIDFront==''"
+                                   style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                                <img src="../../assets/img/usercenter/uc-add.png"/>
                               </div>
                               <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDFront">
                               <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
@@ -423,8 +429,9 @@
                             <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
                                     :format="['jpg','jpeg','png','gif']" :max-size="4096" :on-format-error="handleFormatError"
                                     :on-exceeded-size="handleMaxSize" :on-success="legalPersonIDBack">
-                              <div v-if="notAuth.companyAuthForm.legalPersonIDBack==''" style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                                <img src="../../assets/img/usercenter/uc-add.png" />
+                              <div v-if="notAuth.companyAuthForm.legalPersonIDBack==''"
+                                   style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                                <img src="../../assets/img/usercenter/uc-add.png"/>
                               </div>
                               <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDBack">
                               <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
@@ -441,7 +448,8 @@
                   </FormItem>
                   <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">
                     提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
-                  <p class="info-title" style="margin-top: 70px">经办人信息<span style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
+                  <p class="info-title" style="margin-top: 70px">经办人信息<span
+                    style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
                   </p>
                   <FormItem label="经办人姓名" prop="agentName">
                     <Input v-model="notAuth.companyAuthForm.agentName" placeholder="请输入经办人姓名" style="width: 300px;"></Input>
@@ -463,8 +471,9 @@
                   </FormItem>
                   <FormItem>
                     <p class="noauth-voice">收不到验证码？请<span :class="{notallow:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}"
-                                                          @click="sendCompanyCode('againCode')">重新获取</span>或<span :class="{notallow:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}"
-                                                                                                                  @click="sendCompanyCode('voice')">接收语音验证码</span></p>
+                                                          @click="sendCompanyCode('againCode')">重新获取</span>或<span
+                      :class="{notallow:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}"
+                      @click="sendCompanyCode('voice')">接收语音验证码</span></p>
                   </FormItem>
                   <FormItem label="身份证号码" prop="agentManID">
                     <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码" style="width: 300px;"></Input>
@@ -477,8 +486,9 @@
                             <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
                                     :format="['jpg','jpeg','png','gif']" :max-size="4096" :on-format-error="handleFormatError"
                                     :on-exceeded-size="handleMaxSize" :on-success="agentIDFront">
-                              <div v-if="notAuth.companyAuthForm.agentIDFront==''" style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                                <img src="../../assets/img/usercenter/uc-add.png" />
+                              <div v-if="notAuth.companyAuthForm.agentIDFront==''"
+                                   style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                                <img src="../../assets/img/usercenter/uc-add.png"/>
                               </div>
                               <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDFront">
                               <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
@@ -497,8 +507,9 @@
                             <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
                                     :format="['jpg','jpeg','png','gif']" :max-size="4096" :on-format-error="handleFormatError"
                                     :on-exceeded-size="handleMaxSize" :on-success="agentIDBack">
-                              <div v-if="notAuth.companyAuthForm.agentIDBack==''" style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                                <img src="../../assets/img/usercenter/uc-add.png" />
+                              <div v-if="notAuth.companyAuthForm.agentIDBack==''"
+                                   style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                                <img src="../../assets/img/usercenter/uc-add.png"/>
                               </div>
                               <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDBack">
                               <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
@@ -517,8 +528,9 @@
                             <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
                                     :format="['jpg','jpeg','png','gif']" :max-size="4096" :on-format-error="handleFormatError"
                                     :on-exceeded-size="handleMaxSize" :on-success="agentIDInHand">
-                              <div v-if="notAuth.companyAuthForm.agentIDInHand==''" style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                                <img src="../../assets/img/usercenter/uc-add.png" />
+                              <div v-if="notAuth.companyAuthForm.agentIDInHand==''"
+                                   style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                                <img src="../../assets/img/usercenter/uc-add.png"/>
                               </div>
                               <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDInHand">
                               <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">
@@ -564,12 +576,12 @@
               </Steps>
             </div>
             <div class="certificationResults" v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==2">
-              <img src="../../assets/img/usercenter/uc-img1.png" />
+              <img src="../../assets/img/usercenter/uc-img1.png"/>
               <p>信息正在审核处理中</p>
               <p>- -请耐心等待- -</p>
             </div>
             <div class="certificationResults" v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==1">
-              <img src="../../assets/img/usercenter/uc-img2.png" />
+              <img src="../../assets/img/usercenter/uc-img2.png"/>
               <p style="color: #FF001F">审核未通过</p>
               <p>提交审核资料发现问题，请重新提交</p>
               <Button type="primary" style="margin-top: 20px" @click="resubmit">重新提交</Button>
@@ -674,15 +686,20 @@
       </div>
       <div class="modal-content-s divall">
         <div style="width: 91%;margin-left: 4%;margin-top: 10px;font-size: 14px;margin-bottom: 20px;">
-          <p style="float: left;line-height:24px;">没有收到验证码？</p><br />
+          <p style="float: left;line-height:24px;">没有收到验证码？</p><br/>
           <p style="line-height:24px;">1、网络异常可能会造成短信丢失，请<span class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}"
-                                                              @click="getPhoneCode('againCode')">重新获取</span>或<span class="spanaa" :class="{notallow:formCustom.newCodeText !='获取验证码'}"
+                                                              @click="getPhoneCode('againCode')">重新获取</span>或<span class="spanaa"
+                                                                                                                   :class="{notallow:formCustom.newCodeText !='获取验证码'}"
                                                                                                                    @click.prevent="getPhoneCode('voice')">接收语音验证码</span>。</p>
-          <p v-if="authInfo&&authInfo.checkstatus==0" style="line-height:24px;">2、如果手机已丢失或停机，请<span class="spanaa" @click="showModal.modifyPhoneID = true;showModal.cashverification=false">通过身份证号码验证</span>或<span
+          <p v-if="authInfo&&authInfo.checkstatus==0" style="line-height:24px;">2、如果手机已丢失或停机，请<span class="spanaa"
+                                                                                                    @click="showModal.modifyPhoneID = true;showModal.cashverification=false">通过身份证号码验证</span>或<span
             class="spanaa" @click="$router.push('/work')">提交工单</span>更改手机号。</p>
           <p v-if="!authInfo||authInfo&&authInfo.checkstatus!=0" style="line-height:24px;">2、如果手机已丢失或停机，请<span class="spanaa"
-                                                                                                               @click="$router.push('/work')">提交工单</span>或<a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
-                                                                                                                                                                      class="spanaa" style="font-size: 13px;">联系客服</a>更改手机号。</p>
+                                                                                                               @click="$router.push('/work')">提交工单</span>或<a target="_blank"
+                                                                                                                                                             :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                                                                                                                                                             class="spanaa"
+                                                                                                                                                             style="font-size: 13px;">联系客服</a>更改手机号。
+          </p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -708,7 +725,7 @@
                 <Upload type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do" :format="['jpg','jpeg','png']"
                         :max-size="2056" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :on-success="uploadHeadPhotoSuccess">
                   <div v-if="uploadHeadPhoto==''" style="padding: 172px 0px;margin-bottom: 32px;height: 374px;color: #999;">
-                    <img src="../../assets/img/usercenter/uc-add.png" />
+                    <img src="../../assets/img/usercenter/uc-add.png"/>
                   </div>
                   <div style="height: 374px;display: flex;justify-content: center;align-items: center" v-else>
                     <img :src="uploadHeadPhoto" style="height: 374px;">
@@ -722,18 +739,18 @@
               <div v-show="headPhotoType == 'system'" style="display: flex;flex-wrap: wrap;">
                 <div class="system-img" :class="{selected: selectedSystemPhoto == item.photourl}" v-for="item in systemPhotoGroup"
                      @click="selectedSystemPhoto = item.photourl">
-                  <img :src="item.photourl" />
+                  <img :src="item.photourl"/>
                 </div>
               </div>
             </div>
             <div class="right">
               <div v-if="headPhotoType == 'system'">
-                <img :src="selectedSystemPhoto" />
+                <img :src="selectedSystemPhoto"/>
                 <p>头像预览</p>
               </div>
               <div v-if="headPhotoType == 'custom'">
-                <img :src="uploadHeadPhoto" v-if="uploadHeadPhoto!= ''" />
-                <img v-else />
+                <img :src="uploadHeadPhoto" v-if="uploadHeadPhoto!= ''"/>
+                <img v-else/>
                 <p>头像预览</p>
               </div>
             </div>
@@ -919,7 +936,8 @@
           <div v-if="bindingMobilePhoneForm.verificationMode == 'phone'&&bindingMobilePhoneForm.step ==0" class="voice-vail">
             <p>没有收到验证码？<span class="blue" @click="bindingMobilePhoneForm.verificationMode = 'email'">更换验证方式</span></p>
             <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码' ||getBindingMobilePhoneDisabled}"
-                                        @click="getBindingMobilePhoneCode('againCode')">重新获取</span>或<span class="blue code" :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码' ||getBindingMobilePhoneDisabled}"
+                                        @click="getBindingMobilePhoneCode('againCode')">重新获取</span>或<span class="blue code"
+                                                                                                          :class="{notallow:bindingMobilePhoneForm.codeText !='获取验证码' ||getBindingMobilePhoneDisabled}"
                                                                                                           @click.prevent="getBindingMobilePhoneCode('voice')">接收语音验证码</span>。</p>
             <p v-if="$store.state.authInfo">2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span
               class="blue" @click="showModal.modifyPhoneID = true;showModal.bindingMobilePhone=false">通过身份证号码验证</span>更改手机号。
@@ -1439,7 +1457,7 @@
             required: true,
             message: '请输入公司营业执照号码',
             trigger: 'blur'
-          }, ]
+          },]
         },
         authModifyPhoneFormThere: {
           verificationCode: '',
@@ -1453,12 +1471,12 @@
             required: true,
             message: '请输入收到的验证码',
             trigger: 'blur'
-          }, ],
+          },],
           pictureCode: [{
             required: true,
             message: '请输入图形验证码',
             trigger: 'blur'
-          }, ],
+          },],
           newPhone: [{
             required: true,
             message: '请输入新手机号码',
@@ -1473,7 +1491,7 @@
             required: true,
             message: '请输入收到的验证码',
             trigger: 'blur'
-          }, ],
+          },],
         },
         showModal: {
           selectAuthType: false,
@@ -1514,7 +1532,7 @@
             required: true,
             message: '请输入收到的验证码',
             trigger: 'blur'
-          }, ]
+          },]
         },
         modifyVailType: [{
           type: 'phone',
@@ -1682,11 +1700,11 @@
             imgCode: [{
               required: true,
               message: '请输入图形验证码'
-            }, ],
+            },],
             verificationCode: [{
               required: true,
               message: '请输入验证码'
-            }, ]
+            },]
           },
           companyAuthForm: {
             name: '',
@@ -1768,7 +1786,7 @@
             industry: [{
               required: true,
               message: '请输入选择所属行业'
-            }, ],
+            },],
             contact: [{
               required: true,
               message: '请输入公司联系方式'
@@ -1837,7 +1855,7 @@
             imgCode: [{
               required: true,
               message: '请输入图形验证码'
-            }, ],
+            },],
             linkManPhone: [{
               required: true,
               message: '请输入经办人联系方式'
@@ -1849,7 +1867,7 @@
             verificationCode: [{
               required: true,
               message: '请输入收到的手机验证码'
-            }, ]
+            },]
           },
         },
         // 设置新密码表单
@@ -1868,12 +1886,12 @@
             required: true,
             message: '请输入收到的验证码',
             trigger: 'blur'
-          }, ],
+          },],
           pictureCode: [{
             required: true,
             message: '请输入图形验证码',
             trigger: 'blur'
-          }, ],
+          },],
           newPassword: [{
             required: true,
             message: '请输入新密码',
@@ -1912,12 +1930,12 @@
             required: true,
             message: '请输入收到的验证码',
             trigger: 'blur'
-          }, ],
+          },],
           pictureCode: [{
             required: true,
             message: '请输入图形验证码',
             trigger: 'blur'
-          }, ],
+          },],
           newPhone: [{
             required: true,
             message: '请输入新手机号码',
@@ -1932,7 +1950,7 @@
             required: true,
             message: '请输入收到的验证码',
             trigger: 'blur'
-          }, ],
+          },],
         },
 
         // 绑定邮箱表单
@@ -1951,12 +1969,12 @@
             required: true,
             message: '请输入收到的验证码',
             trigger: 'blur'
-          }, ],
+          },],
           pictureCode: [{
             required: true,
             message: '请输入图形验证码',
             trigger: 'blur'
-          }, ],
+          },],
           newEmail: [{
             required: true,
             message: '请输入新邮箱',
@@ -1972,7 +1990,7 @@
             required: true,
             message: '请输入收到的验证码',
             trigger: 'blur'
-          }, ],
+          },],
         },
 
         // 重值密码表单
@@ -1986,7 +2004,7 @@
             required: true,
             message: '请输入旧密码',
             trigger: 'blur'
-          }, ],
+          },],
           newPassword: [{
             required: true,
             message: '请输入新密码',
@@ -2137,7 +2155,7 @@
                         },
                       },
                       this.recertify
-                    ), ]),
+                    ),]),
                   ]),
 
                 ])
@@ -2217,7 +2235,7 @@
                           }, 1000)
                         }
                       },
-                    }, this.recertifyEmail), ]),
+                    }, this.recertifyEmail),]),
                   ]),
                 ]);
               } else {
@@ -2307,7 +2325,7 @@
             required: true,
             validator: validaRegisteredEmail,
             trigger: 'blur'
-          }, ],
+          },],
           name: [{
             required: true,
             validator: validaRegisteredName,
@@ -2331,7 +2349,7 @@
             required: true,
             validator: validaRegisteredEmail,
             trigger: 'blur'
-          }, ],
+          },],
           name: [{
             required: true,
             validator: validaRegisteredName,
@@ -2606,6 +2624,7 @@
               authInfo: response.data.authInfo,
               userInfo: response.data.result
             })
+            this.getPhone()
           }
         })
       },
@@ -2681,7 +2700,7 @@
         }
       },
       getPhone() {
-        if ($store.state.authInfo&&$store.state.authInfo.companyid) {
+        if ($store.state.authInfo && $store.state.authInfo.companyid) {
           axios.post('user/getPhone.do', {
             companyId: $store.state.authInfo.companyid
           }).then(response => {
@@ -2689,8 +2708,6 @@
               this.keyForm.phone = response.data.data.phone
             }
           })
-        } else {
-          this.$Message.info('请先实名认证')
         }
       },
       // 获取系统头像列表
@@ -2895,10 +2912,10 @@
       sendCodePersonal(codeType) {
         var validataTel = null
         var validataImgcode = null
-        this.$refs.cardAuth.validateField('tel', function(text) {
+        this.$refs.cardAuth.validateField('tel', function (text) {
           validataTel = text == ''
         })
-        this.$refs.cardAuth.validateField('imgCode', function(text) {
+        this.$refs.cardAuth.validateField('imgCode', function (text) {
           validataImgcode = text == ''
         })
         if (validataTel && validataImgcode) {
@@ -2959,7 +2976,6 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
-                this.getPhone()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2989,7 +3005,6 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
-                this.getPhone()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -3056,7 +3071,6 @@
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
                 this.init()
-                this.getPhone()
                 this.currentTab = ''
               } else {
                 this.$message.info({
@@ -3583,7 +3597,8 @@
       updateNotice() {
         this.updateInform = []
         for (var i = 0; i < this.inform.length; i++) {
-          if (this.inform[i].isLetter == 0 && this.inform[i].isEmail == 0 && this.inform[i].isTel == 0) {} else {
+          if (this.inform[i].isLetter == 0 && this.inform[i].isEmail == 0 && this.inform[i].isTel == 0) {
+          } else {
             this.updateInform.push(this.inform[i])
           }
         }
@@ -4062,7 +4077,11 @@
         this.showModal.cashverification = true
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.userphone = response.data.result.phone
+            if (response.data.authInfo) {
+              this.userphone = response.data.authInfo.phone
+            } else {
+              this.userphone = response.data.result.phone
+            }
           }
         })
       }
@@ -4152,7 +4171,7 @@
     },
     watch: {
       '$store.state.zone': {
-        handler: function() {
+        handler: function () {
           this.getResourceAllocation()
         },
         deep: true
@@ -4195,14 +4214,14 @@
       .pi-base-portrait {
         width: 140px;
 
-        >img {
+        > img {
           cursor: pointer;
           height: 78px;
           width: 78px;
           border-radius: 39px;
         }
 
-        >p {
+        > p {
           font-size: 14px;
           font-family: MicrosoftYaHei;
           color: rgba(42, 153, 242, 1);
@@ -4214,11 +4233,11 @@
       }
 
       .pi-base-info {
-        >ul {
+        > ul {
           li {
             margin-top: 20px;
 
-            >span {
+            > span {
               font-size: 14px;
               font-family: MicrosoftYaHei;
               color: rgba(102, 102, 102, 1);
@@ -4295,13 +4314,13 @@
       border: 1px solid rgba(233, 233, 233, 1);
       padding: 20px;
 
-      >p {
+      > p {
         font-size: 16px;
         font-family: MicrosoftYaHei;
         font-weight: 400;
         color: rgba(51, 51, 51, 1);
 
-        >span {
+        > span {
           height: 14px;
           width: 14px;
           border: 1px solid #2A99F2;
@@ -4313,7 +4332,7 @@
           position: relative;
           top: 2px;
 
-          >i {
+          > i {
             display: inline-block;
             width: 6px;
             height: 6px;
@@ -4437,7 +4456,7 @@
           height: 84px;
           position: relative;
 
-          >img {
+          > img {
             height: 84px;
             width: 84px;
           }
@@ -4463,10 +4482,10 @@
         width: 114px;
         padding-top: 5px;
 
-        >div {
+        > div {
           text-align: center;
 
-          >img {
+          > img {
             display: inline-block;
             width: 82px;
             height: 82px;
@@ -4489,7 +4508,7 @@
     text-align: center;
     margin-top: 60px;
 
-    >p {
+    > p {
       margin-top: 40px;
       font-size: 18px;
       font-family: MicrosoftYaHei;
@@ -4506,13 +4525,13 @@
     padding: 10px 20px;
     background: rgba(247, 247, 247, 1);
 
-    >p {
+    > p {
       font-size: 14px;
       font-family: MicrosoftYaHei;
       color: rgba(0, 0, 0, 0.43);
       line-height: 19px;
 
-      >span {
+      > span {
         cursor: pointer;
         color: #2A99F2;
       }
@@ -4530,7 +4549,7 @@
       align-items: center;
       padding: 15px 20px;
 
-      >p {
+      > p {
         display: inline-flex;
         font-size: 14px;
         color: #666666;
@@ -4569,13 +4588,13 @@
   // 个人认证的css
   .personal {
     .userInfo {
-      >p {
+      > p {
         font-size: 14px;
         color: rgba(17, 17, 17, 0.65);
         letter-spacing: 0.83px;
         margin-bottom: 20px;
 
-        >span {
+        > span {
           margin: 0px 30px;
         }
       }

@@ -38,7 +38,7 @@
         <p><span><<<<<<<<<<</span>域名申请流程<span>>>>>>>>>>></span></p>
         <ul>
           <li v-for="(item,index) in domainList" :key="index">
-            <img :src="item.img">
+            <img :src="item.img" alt="描述">
             <p>{{item.name}}</p>
           </li>
         </ul>
@@ -53,7 +53,7 @@
         <h3><span><<<<<<<<<<</span>平台优势<span>>>>>>>>>>></span></h3>
         <ul>
           <li v-for="(adv,index) in advantage" :key="index">
-            <img :src="adv.img" :alt="adv.title">
+            <img :src="adv.img" :alt="adv.title" alt="标题">
             <h3>{{adv.title}}</h3>
             <span>{{adv.desc}}</span>
           </li>
@@ -245,7 +245,7 @@
         sessionStorage.setItem('name', this.searchText)
         sessionStorage.setItem('suffix', JSON.stringify(this.suffixList))
         sessionStorage.setItem('suffixChange', JSON.stringify(this.getSuffix))
-        this.$router.push('DomainResult')
+        this.$router.push('/DomainResult')
       },
 
       showBtn(){

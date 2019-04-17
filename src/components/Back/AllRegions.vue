@@ -29,7 +29,7 @@
               <Poptip trigger="hover">
                 <div slot="content" id="ffff">
                   <span>平台所有区域付费资源即将到期提醒，具体提醒政策请参见</br></span>
-                  <span>帮助文档-<a href="https://www.xrcloud.net/documentInfo/kiRWuMFJd/km08mXqRb"
+                  <span>帮助文档-<a href="/support_docs/71s4gzo1x_71s4tYqWy.html"
                                 style="color: #2A99F2FF;text-decoration: underline;">购买指南</a>-到期提醒栏目；</span>
                 </div>
                 <i class="iconfont houtaiicon-bangzhu" id="num4"></i><br/>
@@ -164,7 +164,7 @@
   import axios from 'axios'
   import $store from '../../vuex'
   import reg from '../../util/regExp'
-
+  import {mapState} from 'vuex'
   export default {
 
     data() {
@@ -214,10 +214,12 @@
           if (zone.zoneid == item.zoneId) {
             $store.commit('setZone', zone);
             if (ited.url == 'https://oss-console.xrcloud.net/ruirados/objectStorage') {
-              window.location.href = 'https://oss-console.xrcloud.net/ruirados/objectStorage'
+							window.location.href = "https://oss-console.xrcloud.net/ruirados/objectStorage?zoneId=" +item.zoneId;
+							//console.log(item.zoneId)
+							//window.open(`/${ited.url}?zoneId=${item.zoneId}`)
             }
             else if (ited.url == 'vpc#NAT') {
-              sessionStorage.setItem('VPN', ited.url)
+              this.paneStatus.vpc = ited.url.split('#')[1]
               this.$router.push(ited.url)
             }
             else {
@@ -235,7 +237,7 @@
           if (zone.zoneid == item.zoneId) {
             $store.commit('setZone', zone);
             if (ited.buyUrl == 'vpc#NAT') {
-              sessionStorage.setItem('VPN', ited.url)
+              this.paneStatus.vpc = ited.url.split('#')[1]
               this.$router.push(ited.buyUrl)
             }
             else {
@@ -299,7 +301,12 @@
         }
       }
     },
-    computed: {},
+    computed: mapState({
+      paneStatus: state => state.paneStatus,
+      auth () {
+        return this.$store.state.authInfo != null
+      }
+    }),
     watch: {}
   }
 </script>

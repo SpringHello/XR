@@ -4,7 +4,7 @@
     <ol>
       <li>登录控制台，点击网络-vpc；</li>
       <li>选中需要修改的vpc，点击“重启”；<br>
-        <img src="../../../../assets/img/doc/networks/networks-img17.png"></li>
+        <img src="../../../../assets/img/doc/networks/networks-img17.png" alt="重启"></li>
       <li>在弹出的确认操作提示中，点击“确认”确认重启；</li>
       <li>完成vpc重启。</li>
 

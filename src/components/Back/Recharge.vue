@@ -81,7 +81,7 @@
         </p>
         <div class="modal-content-s">
           <div>
-            <p class="lh24">您是否已经完成支付</p>
+            <p class="lh24">请您在新打开的页面进行支付，支付完成前请不要关闭此窗口。</p>
           </div>
         </div>
         <p slot="footer" class="modal-footer-s">
@@ -239,6 +239,7 @@
       rechargeOk() {
         switch (this.zf) {
           case 'zfb':
+          window.open("about:blank","alipay")
             this.$http.get('zfb/getzfbinfo.do', {
               params: {
                 total_fee: this.input
@@ -247,7 +248,7 @@
               if (res.data.status == 1 && res.status == 200) {
                 this.serialNum = res.data.serialNum
                 sessionStorage.setItem('serialNum', this.serialNum)
-                window.open(`zfb/alipaypage.do?serialNum=${this.serialNum}&route=rechargeResult`)
+                window.open(null,'alipay').location.href = `https://zschj.xrcloud.net/zfb/alipaypage.do?serialNum=${this.serialNum}&route=rechargeResult`
                 this.showModal.rechargeHint = true
               } else {
                 this.$message.info({
