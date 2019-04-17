@@ -36,10 +36,10 @@
                   <div class="right-top">
                     <p>
                       <span>余额告警</span>
-                      <i-switch class="switch1" v-model="switch1" @on-change="change"></i-switch>
+                      <i-switch class="switch1" v-model="switch1" @on-change="balanceAlarmSet"></i-switch><!-- :disabled="switch1dis" -->
                     </p>
-                    <p>(告警额度为¥100.00
-                      <span>修改</span> )
+                    <p>(告警额度为¥{{ $store.state.userInfo.balanceAlarmAmount }}
+                      <span @click="SetBalanceopen">修改</span> )
                     </p>
                   </div>
                   <p>
@@ -74,7 +74,7 @@
                     <li>消费金额
                       <Button type="ghost" shape="circle" size="small">查看详情</Button>
                     </li>
-                    <li @click="getBillAll">¥{{ theCumulative }}</li>
+                    <li>¥{{ theCumulative }}</li><!-- @click="getBillAll" -->
                   </ul>
                   <ul style="width: 50%">
                     <li>冻结金额
@@ -84,20 +84,20 @@
                   </ul>
                 </div>
               </div>
-              <div class="item3" @click="name='orderManage'">
+              <div class="item3" @click="test">
                 <p>待支付订单</p>
                 <p>
-                  <span>999</span>
+                  <span>{{ $store.state.userInfo.orderTableNum }}</span>
                   笔
                 </p>
-                <p v-if="">
-                  您的待支付订单较多，可前往<span>订单管理</span>删除
+                <p v-if="$store.state.userInfo.orderTableNum<=0" style="color:#2A99F2;">
+                  查看订单管理
                 </p>
-                <p v-else-if="" style="color:#2A99F2;">
+                <p v-else-if="$store.state.userInfo.orderTableNum<10" style="color:#2A99F2;">
                   立即支付
                 </p>
-                <p v-else-if="" style="color:#2A99F2;">
-                  查看订单管理
+                <p v-else-if="$store.state.userInfo.orderTableNum>=10">
+                  您的待支付订单较多，可前往<span>订单管理</span>删除
                 </p>
                 <img src="../../assets/img/back/daizhifu.png"/>
               </div>
@@ -1040,6 +1040,32 @@
         <Button type="primary" @click="goreal">去实名</Button>
       </p>
     </Modal>
+    <!-- 设置余额告警 -->
+    <Modal v-model="showModal.SetBalanceWarning" :scrollable="true" :closable="true" :width="500">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">设置余额告警</span>
+      </p>
+      <div class="modal-content-s">
+        <div class="SetBalancet">
+          <p>
+            <span>告警对象</span>
+            <RadioGroup v-model="BalanceRepeadio">
+                <Radio label="可用额度"></Radio>
+                <Radio label="可用余额"></Radio>
+            </RadioGroup>
+          </p>
+          <p>仅判断可用余额与现金券余额之和与告警额度大小</p>
+          <p>
+            <span>告警额度</span>
+            <InputNumber :max="999999999" :min="1" v-model="BalanceRepval" style="width: 300px"></InputNumber>
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.SetBalanceWarning = false">取消</Button>
+        <Button type="primary" @click="updateBalanceWarn">确认</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -1193,6 +1219,9 @@
         billBtnSelected: 0,
         tooltipStatus: true,
         switch1: false,
+        switch1dis:false,
+        BalanceRepeadio: '',
+        BalanceRepval:50,
         vipRule: [
           {
             title: '类目',
@@ -2080,6 +2109,7 @@
         actualDelivery: 0,
         cardSelection: null,
         showModal: {
+          SetBalanceWarning:false,
           clipCoupons: false,
           freezeParticulars: false,
           unfreeze: false,
@@ -2414,8 +2444,61 @@
       //}
       //})
       //},
-      change (status) {
-                this.$Message.info('开关状态：' + status);
+      balanceAlarmSet (status) {
+        // this.$Message.info('开关状态：' + status);
+        this.$http.get('/nVersionUser/balanceAlarmSet.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.switch1!=this.switch1
+            console.log(this.switch1)
+          }
+          else{
+            //this.switch1dis=true
+              this.$Message.error({
+                content: response.data.message
+              })
+          }
+        })
+      },
+      SetBalanceopen(){
+        if(this.$store.state.userInfo.balanceAlarmType==1){
+          this.BalanceRepeadio='可用额度'
+        }
+        else if(this.$store.state.userInfo.balanceAlarmType==2){
+          this.BalanceRepeadio='可用余额'
+        }
+        this.showModal.SetBalanceWarning = true
+      },
+      updateBalanceWarn(){
+        var typenum=0
+        if(this.BalanceRepeadio=='可用额度'){
+          typenum=1
+        }
+        else if(this.BalanceRepeadio=='可用余额'){
+          typenum=2
+        }
+        this.$http.get('nVersionUser/balanceAlarmModify.do', {
+          params: {
+            type: typenum,
+            balance: this.BalanceRepval
+          }
+        })
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              console.log(response.data)
+              this.userInfoUpdate()
+              this.showModal.SetBalanceWarning=false
+            }
+            else{
+              this.$Message.error({
+                content: response.data.message
+              })
+            }
+          })
+      },
+      test(){
+        this.order_type == 'notpay'
+         this.changeOrder()
+        this.name='orderManage'
       },
       selectChange(item, index) {
         if (item.startmoney > this.totalCost) {
@@ -2464,6 +2547,12 @@
           if (response.status == 200 && response.data.status == 1) {
             this.billmonth = response.data.result
             this.theCumulative = response.data.total_amount
+            if(this.$store.state.userInfo.balanceAlarmStatus==1){
+              this.switch1=true
+            }
+            else if(this.$store.state.userInfo.balanceAlarmStatus==0){
+              this.switch1=false
+            }
           }
         })
       },
@@ -4556,6 +4645,41 @@
       color:rgba(42,153,242,1);
       border:1px solid rgba(42,153,242,1);
       z-index: 2;
+    }
+  }
+  .modal-content-s{
+    padding-bottom: 20px;
+    border-bottom:1px solid rgba(233,233,233,1);
+    .SetBalancet{
+      > p {
+        > span {
+          font-size:14px;
+          font-family:MicrosoftYaHei;
+          color:rgba(51,51,51,1);
+          line-height:19px;
+        }
+      .ivu-radio-group {
+          margin-left: 10px;
+        }
+      }
+      > p:nth-child(2) {
+        font-size:12px;
+        font-family:MicrosoftYaHei;
+        color:rgba(178,178,178,1);
+        line-height:16px;
+        margin: 10px 0 10px 68px;
+      }
+      > p:nth-child(3) {
+        > span {
+          font-size:14px;
+          font-family:MicrosoftYaHei;
+          color:rgba(51,51,51,1);
+          line-height:19px;
+        }
+        .ivu-input-number {
+          margin-left: 10px;
+        }
+      }
     }
   }
 </style>
