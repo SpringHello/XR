@@ -1526,7 +1526,7 @@
                     // style: {
                     //   color: '#EE4545'
                     // }
-                  }, '正常')
+                  }, '异常')
                 case 2:
                   return h('div', {}, [h('Spin', {
                     style: {
@@ -1584,7 +1584,7 @@
             key: 'action',
             width: 100,
             render: (h, params) => {
-              if (params.row.status == 2 || params.row.status == 3) {
+              if (params.row.status != 1) {
                 return h('span', {
                   style: {
                     cursor: 'not-allowed'
@@ -1784,18 +1784,17 @@
             .then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.total = response.data.total
-                var snapshotData = response.data.result
-                snapshotData.forEach(item => {
+                this.snapshotData = response.data.result
+                this.snapshotData.forEach(item => {
+                  if (item.status == 2 ||item.status == 3 ) {
+                      item._disabled = true
+                  }
                   if (this.snapsSelection) {
                     if (this.snapsSelection.id == item.id) {
                       item._checked = true
                     }
-                    if (item.status == 2) {
-                      item._disabled = true
-                    }
                   }
                 })
-                this.snapshotData = snapshotData
               }
             })
         }, 1000 * 10)
@@ -1828,18 +1827,17 @@
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.total = response.data.total
-              var snapshotData = response.data.result
-              snapshotData.forEach(item => {
+              this.snapshotData = response.data.result
+              this.snapshotData.forEach(item => {
+                 if (item.status == 2 || item.status == 3) {
+                    item._disabled = true
+                  }
                 if (this.snapsSelection) {
                   if (this.snapsSelection.id == item.id) {
                     item._checked = true
                   }
-                  if (item.status == 2) {
-                    item._disabled = true
-                  }
                 }
               })
-              this.snapshotData = snapshotData
             }
           })
       },
@@ -2039,6 +2037,7 @@
         this.snapshotData.forEach(item => {
           if (item.snapshotid == this.snapsSelection.snapshotid) {
             item.status = 3
+            item._disabled = true
           }
         })
         var URL = 'Snapshot/deleteVMSnapshot.do'
@@ -2049,8 +2048,14 @@
           }
         })
           .then(response => {
+            this.snapsSelection = null
             if (response.status == 200 && response.data.status == 1) {
               this.listsnaps()
+            } else{
+              this.$message.info({
+                content: response.data.message
+              })
+               this.listsnaps()
             }
           })
       },

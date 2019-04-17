@@ -247,7 +247,7 @@
           </div>
         </div>
         <h2>请上传网站备案信息真实性核验单</h2>
-        <p class="titleDescription">1、点击<a :href="checkListAddress">下载《网站备案信息真实性核验单》</a>。2、点击查看核验单样例图，填写以下载的核验单，不得涂改。3、请您保存3份签字的核验单原件以备后续环节使用。</p>
+        <p class="titleDescription">1、点击<a :href="checkListAddress">下载《网站备案信息真实性核验单》</a>。2、点击查看核验单样例图，填写已下载的核验单，不得涂改。3、请您保存3份签字的核验单原件以备后续环节使用。</p>
         <div class="upload" v-for="(item,upIndex) in uploadForm.checkGroup">
           <div class="uploadTitle">
             <p>其他文件 (网站{{ upIndex + 1 }})</p>

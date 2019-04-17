@@ -21,7 +21,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!-- <my-carousel-item class="carousel-item">
           <div class="xian-active" @click="push('/activity/xian/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
@@ -38,7 +38,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item> -->
         <my-carousel-item class="carousel-item">
           <div @click="push('/activity/free/')"
                style="cursor: pointer;background: #F56B23;">
@@ -191,14 +191,14 @@
             isStart: true,
             weight: '1',
           },
-          {
-            imgPath: require('../../assets/img/activecenter/bg-card-6.png'),
-            time: '2019.1.28-2019.03.01',
-            activeObj: '仅限新用户',
-            url: '/activity/xian/',
-            isStart: true,
-            weight: '1',
-          },
+          // {
+          //   imgPath: require('../../assets/img/activecenter/bg-card-6.png'),
+          //   time: '2019.1.28-2019.03.01',
+          //   activeObj: '仅限新用户',
+          //   url: '/activity/xian/',
+          //   isStart: true,
+          //   weight: '1',
+          // },
           {
             imgPath: require('../../assets/img/activecenter/bg-card-2.png'),
             name: '免费云主机 不限量领取',

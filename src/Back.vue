@@ -200,10 +200,10 @@
           target="_blank"></a>
        </span>
       </Poptip>-->
-      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
+      <!--<Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
-      </Poptip>
-  <!--    <span class="phone" @click="showModal.complaintModal = true"></span>-->
+      </Poptip>-->
+      <span class="phone" @click="showModal.complaintModal = true"></span>
       <div>
         <BackTop :bottom="61" :right="50" :duration="0" :height="1600" style="position: unset">
           <span class="topLink"></span>
@@ -229,7 +229,7 @@
       </p>
     </Modal>
     <!-- 投诉框 -->
-    <Modal v-model="showModal.complaintModal" width="500" :scrollable="true">
+    <Modal v-model="showModal.complaintModal" width="500" :scrollable="true" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">投诉与建议</span>
       </p>
@@ -333,8 +333,8 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              // {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
+              //{subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'diskList'},
               {subName: '云硬盘备份', type: 'diskBackupList'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
@@ -374,20 +374,20 @@
             subItem: [
               {subName: '防火墙', type: 'firewallList'},
               {subName: '云监控', type: 'CloudMonitor'},
-              {subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
-              // {subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
+              //{subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
+              {subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
             ]
           },
           {
             mainName: '域名服务',
             type: 'domain',
             subItem: [
-              {subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
-              {subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              {subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
-              // {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
-              // {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              // {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
+              //{subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
+              //{subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+              //{subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
+               {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
+               {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+               {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
             ]
           },
           {
@@ -446,6 +446,9 @@
       })
     },
     created() {
+      if(!localStorage.getItem('isLogin')){
+        this.getloginPromptMessage()
+      }
       if (navigator.userAgent.indexOf("Chrome") >= 0) {
         this.hintShow = false
       }
@@ -649,7 +652,34 @@
       sumbitComplaint(name) {
         this.$refs[name].validate(valid => {
           if (valid) {
-            this.complaintForm.step = 2
+            let url = 'order/createSuggestions.do'
+            let params = {
+              phone: this.complaintForm.phone,
+              title: this.complaintForm.complaintTitle,
+              typeDesc: this.complaintForm.issueType,
+              questionDesc: this.complaintForm.issueDesc
+            }
+            this.$http.post(url,params).then(res=>{
+              if(res.status == 200){
+                this.complaintForm.step = 2
+              } else{
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      getloginPromptMessage(){
+        this.$http.get('user/loginPromptMessage.do',{params:{}}).then(res=>{
+          if(res.data.status == 1){
+            localStorage.setItem('isLogin','已提示')
+            this.$Message.info({
+                    content: res.data.message,
+                    duration: 10,
+                    closable: true
+                })
           }
         })
       }
@@ -726,7 +756,7 @@
           this.notice()
         },
         deep: true
-      }
+      },
     }
   }
 </script>
@@ -1014,10 +1044,12 @@
     }
     .qq {
       position: relative;
+      background-color: #ffffff;
+      margin-bottom: 10px;
       background-image: url('./assets/img/app/qq.png');
-      &:hover {
+      /*&:hover {
         background: #2A99F2 url('./assets/img/app/qq-hover.png') no-repeat center;
-      }
+      }*/
       > div {
         position: absolute;
         width: 0px;
@@ -1090,16 +1122,17 @@
       height: 48px;
       display: block;
       padding: 10px;
-      background: #E1E1E1;
+      cursor: pointer;
+      background-color: #ffffff;
       background-repeat: no-repeat;
       background-position: center;
       background-image: url('./assets/img/app/phone.png');
-      &:hover {
+      /*&:hover {
         background: #2A99F2;
         background-repeat: no-repeat;
         background-position: center;
         background-image: url('./assets/img/app/phone-hover.png');
-      }
+      }*/
     }
   }
 

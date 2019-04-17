@@ -160,7 +160,8 @@
               desc: ['为云硬盘提供在线备份，通过备份快速恢复数据，保证业务安全可靠。'],
               pImg: [
                 {icon: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
-                {icon: 'icon-xunisiyouyunVPC', isc: 'VPC'}
+                {icon: 'icon-xunisiyouyunVPC', isc: 'VPC'},
+                {icon: 'icon-yunyingpan', isc: '云硬盘'}
               ],
             }
           ],

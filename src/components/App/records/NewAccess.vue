@@ -221,7 +221,21 @@
       nextMain() {
         this.$refs.filingInformation.validate((valid) => {
           if (valid) {
-            this.$router.push('newRecordStepOne')
+            let url = 'recode/addMainWeb.do'
+            this.$http.get(url,{params:{
+              mainBelongArea: this.filingInformation.province + '-' + this.filingInformation.city + '-' + this.filingInformation.district,
+              webDomainName: this.filingInformation.websiteDomain,
+              mainRecordNumber: this.filingInformation.websiteRecordNumber,
+              ICPRecordPassword: this.filingInformation.IPCPassword
+            }}).then(res=>{
+              if(res.data.status == 1 && res.status == 200){
+                this.$router.push('/newRecordStepOne')
+              } else{
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         })
       },
@@ -229,7 +243,21 @@
       nextSite() {
         this.$refs.filingInformation.validate((valid) => {
           if (valid) {
-            this.$router.push('newRecordStepTwo')
+                 let url = 'recode/addMainWeb.do'
+            this.$http.get(url,{params:{
+              mainBelongArea: this.filingInformation.province + '-' + this.filingInformation.city + '-' + this.filingInformation.district,
+              webDomainName: this.filingInformation.websiteDomain,
+              mainRecordNumber: this.filingInformation.websiteRecordNumber,
+              ICPRecordPassword: this.filingInformation.IPCPassword
+            }}).then(res=>{
+              if(res.data.status == 1 && res.status == 200){
+                  this.$router.push('/newRecordStepTwo')
+              } else{
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })            
           }
         })
       },

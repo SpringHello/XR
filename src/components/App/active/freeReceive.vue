@@ -802,7 +802,7 @@
               this.$Message.info('请选择一个支付方式')
               break
             case 'zfb':
-              window.open(`zfb/alipayapi.do?total_fee=${this.cashPledge}`)
+              window.open(`/zfb/alipayapi.do?total_fee=${this.cashPledge}`)
               this.pageTimer = setInterval(() => {
                 axios.get('activity/compareForMoney.do', {
                   params: {freezeMoney: this.cashPledge}

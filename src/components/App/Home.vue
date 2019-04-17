@@ -22,7 +22,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!-- <my-carousel-item class="carousel-item">
           <div class="xian-active" @click="push('/activity/xian/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
@@ -39,7 +39,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item> -->
         <my-carousel-item class="carousel-item">
           <div @click="push('/activity/zero/')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
@@ -743,7 +743,7 @@
         boxContainer: [
           {title: '10万级IOPS', desc: '高性能SSD硬盘', img: 'icon-wanjiIOPS'},
           {title: '全场景存储', desc: 'SSD、SAS、SATA', img: 'icon-quanchangjingcunchu'},
-          {title: '40G免费防护', desc: '采用华为DDoS硬件', img: 'icon-Gmianfeifanghu'},
+          {title: '新春采购季', desc: '低至一折', img: 'icon-Gmianfeifanghu'},
           {title: '全冗余架构', desc: '高可用保障', img: 'icon-quanrongyujiagou'},
           {title: '虚拟私有云', desc: '网络隔离、子网分配', img: 'icon-xunisiyouyun'}
         ],

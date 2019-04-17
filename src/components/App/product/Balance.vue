@@ -140,7 +140,7 @@
           {
             img: 'icon-gaokeyong1',
             title: '高可用',
-            desc: '可用多种方法对后端服务器进行健康检查，自动屏蔽异常实例，确保业务可用性。'
+            desc: '确保后端服务器业务正常运行。'
           },
           {
             img: 'icon-linghuopeizhi1',

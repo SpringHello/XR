@@ -41,7 +41,7 @@
       </p>
       <div class="modal-content-s">
         <div>
-          <p class="lh24">您选择的区域未查询到符合要求的公网IP与云服务器，请先购买该资源然后在进行备案。<span style="color: #377dff;cursor: pointer;" @click="$router.push('buy')">立即购买</span></p>
+          <p class="lh24">您选择的区域未查询到符合要求的公网IP与云服务器，请先购买该资源然后在进行备案。<span style="color: #377dff;cursor: pointer;" @click="$router.push('/buy')">立即购买</span></p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -136,7 +136,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.hasRecord = false">取消</Button>
-        <Button type="primary" @click="$router.push('BRecords')">查看备案进度</Button>
+        <Button type="primary" @click="$router.push('/BRecords')">查看备案进度</Button>
       </p>
     </Modal>
   </div>
@@ -406,7 +406,7 @@
               sessionStorage.setItem('zone', this.areaText)
               sessionStorage.setItem('zoneId', this.area)
               sessionStorage.setItem('recordsType', '3')
-              this.$router.push('newAccess')
+              this.$router.push('/newAccess')
             } else {
               this.showModal.recordInfo = true
             }
@@ -441,7 +441,7 @@
           return
         }
         if (this.type == 4) {
-          this.$router.push('BRecords')
+          this.$router.push('/BRecords')
           return
         }
         if (this.isRecords.length !== 0) {
@@ -470,13 +470,13 @@
               // 根据选择的备案类型决定跳入哪个起始页面
               switch (this.type) {
                 case 1:
-                  this.$router.push('newRecordStepOne')
+                  this.$router.push('/newRecordStepOne')
                   break
                 case 2:
-                  this.$router.push('newAccess')
+                  this.$router.push('/newAccess')
                   break;
                 case 3:
-                  this.$router.push('newAccess')
+                  this.$router.push('/newAccess')
                   break
               }
             } else {

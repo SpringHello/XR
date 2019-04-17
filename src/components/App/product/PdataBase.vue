@@ -50,7 +50,6 @@
           </div>
           <div class="right">
             <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex" :key="index">
-              <img :src="stage.img" alt="描述">
               <div style="padding:20px;">
                 <span>场景描述</span>
                 <p v-for="(p,i) in stage.desc" :key="i">
@@ -211,7 +210,7 @@
           {
             img: 'icon-chaogaoxingneng',
             title: '超高性能',
-            desc: '全 SSD 本地磁盘存储，支持最大64G 内存、1T 以上磁盘的数据库实例，轻松应对高并发、大规模数据处理需求。'
+            desc: '全 SSD 本地磁盘存储，支持最大64核256G内存、1T 以上磁盘的数据库实例，轻松应对高并发、大规模数据处理需求。'
           }
         ],
         recommendations: [

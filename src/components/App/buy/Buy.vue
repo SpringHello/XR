@@ -687,13 +687,13 @@
       },
       docPath() {
         let map = {
-          host: 'Pecs',
-          disk: 'Pdisk',
-          elasticip: 'Peip',
-          database: 'PdataBase',
-          gpu: 'Pgpu',
-          objectstorage: 'PobjStorage',
-          ssl: 'ssl'
+          'host/': 'ecs',
+          'disk/': 'disk',
+          'elasticip/': 'elasticip',
+          'database/': 'dataBase',
+          'gpu/': 'gpu',
+          'objectstorage/': 'objectstorage',
+          'ssl/': 'ssl'
         }
         return map[this.product.currentProduct]
       }

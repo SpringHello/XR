@@ -1238,7 +1238,7 @@
         this.showModal.cashCoupon = false
         switch (this.zf) {
           case 'zfb':
-            window.open(`zfb/alipayapi.do?total_fee=${this.input}`)
+            window.open(`/zfb/alipayapi.do?total_fee=${this.input}`)
             this.showModal.rechargeHint = true
             break
           case 'wx':

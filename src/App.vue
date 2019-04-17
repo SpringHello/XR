@@ -85,7 +85,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a href="https://www.xrcloud.net/login" rel="nofollow"><span>登录</span>
+                  <a href="https://zschj.xrcloud.net/login" rel="nofollow"><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -93,7 +93,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a href="https://www.xrcloud.net/register" rel="nofollow"><span>注册</span>
+                  <a href="https://zschj.xrcloud.net/register" rel="nofollow"><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -239,7 +239,8 @@
     </div>
     <!-- 客服浮动块 -->
     <div class="affix">
-      <div class="registerImg" @click="$router.push('register')">
+      <div class="registerImg" @click="$router.push('/activity/free/')">
+        <p>免费领主机</p>
       </div>
       <!--<img src="./assets/img/app/regiterTag.png"/>-->
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
@@ -315,7 +316,7 @@
       <!--      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left" style="height:48px;">
               <span class="phone"></span>
             </Poptip>-->
-   <!--   <span class="phone" @click="showModal.complaintModal = true"></span>-->
+      <span class="phone" @click="showModal.complaintModal = true"></span>
       <div>
         <BackTop :bottom="161" :right="50" :duration="300" :height="1000" style="position: unset">
           <span class="topLink"></span>
@@ -323,7 +324,7 @@
       </div>
     </div>
     <!-- 投诉框 -->
-    <Modal v-model="showModal.complaintModal" width="500" :scrollable="true">
+    <Modal v-model="showModal.complaintModal" width="500" :scrollable="true" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">投诉与建议</span>
       </p>
@@ -542,7 +543,7 @@
                 prod: '云安全',
                 prodItem: [
                   {title: '防火墙', desc: '自定义规则、协议、端口', path: '/firewall/'},
-                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ddos/'},
+                  //{title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ddos/'},
                   {
                     title: 'SSL证书',
                     desc: '网站可信身份认证与安全数据传输',
@@ -666,7 +667,7 @@
             title: '云安全',
             desc: [
               {subTitle: '防火墙', url: '/firewall/'},
-              {subTitle: 'DDOS高防IP', url: '/ddos/'}
+              //{subTitle: 'DDOS高防IP', url: '/ddos/'}
             ]
           },
           {
@@ -761,6 +762,9 @@
 
     },
     created() {
+      if(!localStorage.getItem('isLogin')){
+        this.getloginPromptMessage()
+      }
       // if (sessionStorage.getItem('hintShow') == null) {
       //   sessionStorage.setItem('hintShow', 'true')
       // }
@@ -901,7 +905,34 @@
       sumbitComplaint(name) {
         this.$refs[name].validate(valid => {
           if (valid) {
-            this.complaintForm.step = 2
+            let url = 'order/createSuggestions.do'
+            let params = {
+              phone: this.complaintForm.phone,
+              title: this.complaintForm.complaintTitle,
+              typeDesc: this.complaintForm.issueType,
+              questionDesc: this.complaintForm.issueDesc
+            }
+            this.$http.post(url,params).then(res=>{
+              if(res.status == 200){
+                this.complaintForm.step = 2
+              } else{
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      getloginPromptMessage(){
+        this.$http.get('user/loginPromptMessage.do',{params:{}}).then(res=>{
+          if(res.data.status == 1){
+            localStorage.setItem('isLogin','已提示')
+            this.$Message.info({
+                    content: res.data.message,
+                    duration: 10,
+                    closable: true
+                })
           }
         })
       }
@@ -1359,32 +1390,38 @@
         background: #E1E1E1 no-repeat center;
       }
       .registerImg {
-        height: 189px;
-        width: 48px;
-        background: url("./assets/img/app/regiterTag.png") no-repeat;
+        height: 100px;
+        background: url('./assets/img/app/regiterTag.png');
         margin-bottom: 10px;
         cursor: pointer;
-        padding: 154px 10px 9px;
-        > p {
-          font-size: 14px;
-          font-family: MicrosoftYaHei;
-          color: rgba(55, 125, 255, 1);
-          line-height: 19px;
+        box-shadow: 0px 2px 19px -8px rgba(239,77,54,1);
+        >p{
+          font-size:14px;
+          font-family:MicrosoftYaHei-Bold;
+          font-weight:bold;
+          color:rgba(255,255,255,1);
+          line-height:16px;
+          width: 14px;
+          padding: 9px 17px;
         }
       }
       .qq {
         position: relative;
+        background-color: #ffffff;
         background-image: url('./assets/img/app/qq.png');
-        &:hover {
+        margin-bottom: 10px;
+        /*&:hover {
           background: #2A99F2 url('./assets/img/app/qq-hover.png') no-repeat center;
-        }
+        }*/
         > div {
           position: absolute;
           width: 0px;
           background-color: #ffffff;
-          right: 48px;
+          right: 55px;
           top: unset;
           transition: width .3s;
+          box-shadow:0px 2px 16px -5px rgba(130,130,130,0.5);
+          border-radius:15px;
         }
         & > a {
           width: 100%;
@@ -1452,17 +1489,18 @@
         height: 48px;
         display: block;
         padding: 10px;
-        background: #E1E1E1;
+        background: #FFF;
         background-repeat: no-repeat;
         background-position: center;
         background-image: url('./assets/img/app/phone.png');
         cursor: pointer;
-        &:hover {
+        margin-bottom: 10px;
+        /*&:hover {
           background: #2A99F2;
           background-repeat: no-repeat;
           background-position: center;
           background-image: url('./assets/img/app/phone-hover.png');
-        }
+        }*/
       }
       .topLink {
         display: block;
