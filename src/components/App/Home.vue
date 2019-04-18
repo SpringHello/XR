@@ -40,7 +40,7 @@
             </div>
           </div>
         </my-carousel-item> -->
-        <my-carousel-item class="carousel-item">
+        <!-- <my-carousel-item class="carousel-item">
           <div @click="push('/activity/zero/')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
@@ -50,7 +50,7 @@
                 <img src="../../assets/img/home/home-banner4.png" alt="banner"></div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item> -->
         <my-carousel-item class="carousel-item">
           <div class="eightscene" @click="push('/scene/')">
             <div class="wrap">
@@ -120,7 +120,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!-- <my-carousel-item class="carousel-item">
           <div @click="push('/activity/share/')"
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
@@ -149,7 +149,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item> -->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
