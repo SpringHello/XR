@@ -316,7 +316,7 @@
       <!--      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left" style="height:48px;">
               <span class="phone"></span>
             </Poptip>-->
-      <span class="phone" @click="showModal.complaintModal = true"></span>
+      <span class="phone" @click="getOrderType"></span>
       <div>
         <BackTop :bottom="161" :right="50" :duration="300" :height="1000" style="position: unset">
           <span class="topLink"></span>
@@ -335,7 +335,7 @@
           </Form-item>
           <Form-item label="问题类型" prop="issueType">
             <Select v-model="complaintForm.issueType" placeholder="请选择">
-              <Option v-for="(item,index) in complaintForm.typeList" :value="item" :key="index">{{item}}</Option>
+              <Option v-for="(item,index) in complaintForm.typeList" :value="item.id" :key="index">{{item.description}}</Option>
             </Select>
           </Form-item>
           <Form-item label="问题描述" prop="issueDesc">
@@ -724,7 +724,7 @@
         complaintForm: {
           complaintTitle: '',
           issueType: '',
-          typeList: ['客服投诉', '违规举报', '功能建议', '产品缺陷', '体验不佳', '价格投诉', '其他'],
+          typeList: [],
           issueDesc: '',
           phone: '',
           step: 1
@@ -902,6 +902,20 @@
       openInfo(href) {
         window.open(href)
       },
+      getOrderType(){
+        this.$http.get('order/orderType.do',{params:{
+          gid: '5'
+        }}).then(res=>{
+          if(res.data.status == 1 && res.status == 200){
+            this.complaintForm.typeList = res.data.result['投诉建议']
+            this.showModal.complaintModal = true
+          } else{
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
       sumbitComplaint(name) {
         this.$refs[name].validate(valid => {
           if (valid) {
@@ -909,7 +923,8 @@
             let params = {
               phone: this.complaintForm.phone,
               title: this.complaintForm.complaintTitle,
-              typeDesc: this.complaintForm.issueType,
+              gid: '5',
+              cid: this.complaintForm.issueType,
               questionDesc: this.complaintForm.issueDesc
             }
             this.$http.post(url,params).then(res=>{
