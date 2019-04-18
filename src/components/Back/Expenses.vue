@@ -36,7 +36,7 @@
                   <div class="right-top">
                     <p>
                       <span>余额告警</span>
-                      <i-switch class="switch1" v-model="switch1" @on-change="balanceAlarmSet"></i-switch><!-- :disabled="switch1dis" -->
+                      <i-switch class="BalanceAlarmSwitch" v-model="BalanceAlarmSwitch" @on-change="balanceAlarmSet"></i-switch><!-- :disabled="BalanceAlarmSwitchdis" -->
                     </p>
                     <p>(告警额度为¥{{ $store.state.userInfo.balanceAlarmAmount }}
                       <span @click="SetBalanceopen">修改</span> )
@@ -84,33 +84,33 @@
                   </ul>
                 </div>
               </div>
-              <div class="item3" @click="test">
+              <div class="item3" @click="UnpaidJump">
                 <p>待支付订单</p>
                 <p>
                   <span>{{ $store.state.userInfo.orderTableNum }}</span>
                   笔
                 </p>
-                <p v-if="$store.state.userInfo.orderTableNum<=0" style="color:#2A99F2;">
+                <p v-if="$store.state.userInfo.orderTableNum<=0" @click.stop="UnpaidnullJump" style="color:#2A99F2;cursor: pointer;">
                   查看订单管理
                 </p>
-                <p v-else-if="$store.state.userInfo.orderTableNum<10" style="color:#2A99F2;">
+                <p v-else-if="$store.state.userInfo.orderTableNum<10" @click.stop="UnpaidJump" style="color:#2A99F2;cursor: pointer;">
                   立即支付
                 </p>
                 <p v-else-if="$store.state.userInfo.orderTableNum>=10">
-                  您的待支付订单较多，可前往<span>订单管理</span>删除
+                  您的待支付订单较多，可前往<span @click.stop="UnpaidJump" style="cursor: pointer;">订单管理</span>删除
                 </p>
                 <img src="../../assets/img/back/daizhifu.png"/>
               </div>
-              <div class="item4" @click="name='myCard'">
+              <div class="item4" @click="PreferentialJump">
                 <p>代金券数量</p>
                 <p>
                   <span>{{ couponNumber }}</span>
                   张
                 </p>
-                <p v-if="couponNumber<=0" style="color:#2A99F2;">
+                <p v-if="couponNumber<=0" @click.stop="$router.push('activity/')" style="color:#2A99F2;cursor: pointer;">
                  查看优惠活动
                 </p>
-                <p v-else-if="couponNumber<10" style="color:#2A99F2;">
+                <p v-else-if="couponNumber<10" @click.stop="PreferentialJump" style="color:#2A99F2;cursor: pointer;">
                  立即使用
                 </p>
                 <p v-else-if="couponNumber>=10">
@@ -124,10 +124,10 @@
                   <span>{{ invoice }}</span>
                   元
                 </p>
-                <p v-if="invoice<=0">
+                <p v-if="invoice<=0" @click.stop="name='applyInvoice'" style="cursor: pointer;">
                   查看发票管理
                 </p>
-                <p v-else-if="invoice>=1">
+                <p v-else-if="invoice>=1" @click.stop="name='applyInvoice'" style="cursor: pointer;">
                   立即开票
                 </p>
                 <img src="../../assets/img/back/kkfpiao.png"/>
@@ -219,7 +219,7 @@
                 <Option v-for="item in cardTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
               <span style="margin-left: 20px">状态</span>
-              <Select v-model="cardState" style="width:231px;margin-left: 10px">
+              <Select v-model="cardState" @on-change="changedcard" style="width:231px;margin-left: 10px">
                 <Option v-for="item in cardStateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
               <Button type="primary" @click="searchCard">查询</Button>
@@ -1218,8 +1218,10 @@
         billTabs: ['账单概览', '资源详单', '流水详单','导出记录'],
         billBtnSelected: 0,
         tooltipStatus: true,
-        switch1: false,
-        switch1dis:false,
+        //余额告警开关
+        BalanceAlarmSwitch: false,
+        //禁用余额告警开关
+        //BalanceAlarmSwitchdis:false,
         BalanceRepeadio: '',
         BalanceRepval:50,
         vipRule: [
@@ -2448,11 +2450,9 @@
         // this.$Message.info('开关状态：' + status);
         this.$http.get('/nVersionUser/balanceAlarmSet.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.switch1!=this.switch1
-            console.log(this.switch1)
+            this.BalanceAlarmSwitch!=this.BalanceAlarmSwitch
           }
           else{
-            //this.switch1dis=true
               this.$Message.error({
                 content: response.data.message
               })
@@ -2484,7 +2484,6 @@
         })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              console.log(response.data)
               this.userInfoUpdate()
               this.showModal.SetBalanceWarning=false
             }
@@ -2495,10 +2494,37 @@
             }
           })
       },
-      test(){
-        this.order_type == 'notpay'
-         this.changeOrder()
+      UnpaidJump(){
+        this.order_type = 'notpay'
+        this.changeOrder()
         this.name='orderManage'
+      },
+      UnpaidnullJump(){
+        this.order_type = 'all'
+        this.changeOrder()
+        this.name='orderManage'
+      },
+      PreferentialJump(){ 
+        this.cardState = '0'
+        this.changedcard()
+        this.name='myCard'
+      },
+      changedcard() {
+        switch (this.cardState) {
+          case '':
+            this.order_type = ''
+            this.searchCard()
+            break
+          case '1':
+            this.searchCard()
+            break
+          case '0':
+            this.searchCard()
+            break
+        }
+      },
+      test(){
+        alert("ddddd")
       },
       selectChange(item, index) {
         if (item.startmoney > this.totalCost) {
@@ -2548,10 +2574,10 @@
             this.billmonth = response.data.result
             this.theCumulative = response.data.total_amount
             if(this.$store.state.userInfo.balanceAlarmStatus==1){
-              this.switch1=true
+              this.BalanceAlarmSwitch=true
             }
             else if(this.$store.state.userInfo.balanceAlarmStatus==0){
-              this.switch1=false
+              this.BalanceAlarmSwitch=false
             }
           }
         })
@@ -2881,7 +2907,7 @@
             pageSize: this.cardPageSize,
             page: this.card_currentPage,
             ticketType: this.cardType,
-            isuse: this.cardState
+            isuse:  this.cardState == '' ? '' : this.cardState == '1' ? '1' : this.cardState == '0' ? '0'  : '',
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -4020,7 +4046,7 @@
                 color:rgba(102,102,102,1);
                 line-height:21px;
                 }
-                .switch1{
+                .BalanceAlarmSwitch{
                   margin-top: -5px;
                   margin-left: 7px;
                 }
