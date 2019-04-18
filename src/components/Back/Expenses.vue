@@ -177,6 +177,34 @@
 					</Tab-pane>
           <Tab-pane label="订单管理" name="orderManage">
             <div class="ordertype">
+              <p>
+                <RadioGroup v-model="button5" type="button">
+                  <Radio label="包年包月"></Radio>
+                  <Radio label="实时计费"></Radio>
+              </RadioGroup>
+              </p>
+              <p class="order_s1">
+                <Button type="primary" style="" @click="orderPay" :disabled="payDisabled">批量支付</Button>
+              <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
+              </Button>
+              <Button type="primary" style="margin-left: 10px" @click="orderRefundBefore" :disabled="refundDisabled">7天无理由退款</Button>
+              </p>
+              <p class="order_s2">
+                <img src="../../assets/img/expenses/xiangnum.png" class="order_s2span"/>
+                <span class="order_s2span1">共 10 项 | 已选择<span> 0 </span>项 </span>
+                <span class="order_s2span2">总价：<span>¥0.00</span></span>
+                <div class="orderdiv">
+                  <span class="order_s2span3">按交易时间</span>
+                  <Row class="datarow">
+                    <Col span="12">
+                      <Date-picker v-model="timerrrrr" type="daterange" :options="optionsffffff" placement="bottom-start" placeholder="选择日期" style="width: 231px;" @on-change="dataChangedddd"></Date-picker>
+                    </Col>
+                  </Row>
+                  <Button type="primary">查询</Button>
+                </div>
+              </p>
+            </div>
+            <!-- <div class="ordertype">
               <span class="order_s1">订单类型</span>
               <Select v-model="order_type" @on-change="changeOrder" style="width:231px;margin-left: 10px">
                 <Option v-for="item in orderList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -193,7 +221,7 @@
                 </Col>
               </Row>
               <Button type="primary" style="margin-left: 120px" @click="orderRefundBefore" :disabled="refundDisabled">退款</Button>
-              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
+              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button>
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
             </div>
@@ -210,7 +238,7 @@
                   <Page :total="ordertotal" :current="1" :page-size="10" @on-change="order_currentChange"></Page>
                 </div>
               </div>
-            </div>
+            </div> -->
           </Tab-pane>
           <Tab-pane label="我的卡券" name="myCard">
             <div class="searchCard">
@@ -1224,6 +1252,7 @@
         //BalanceAlarmSwitchdis:false,
         BalanceRepeadio: '',
         BalanceRepval:50,
+        button5: '包年包月',
         vipRule: [
           {
             title: '类目',
@@ -1629,6 +1658,7 @@
         ],
         ordertime: '',
         time: '',
+        timerrrrr: '',
         total: 0,
         currentPage: 1,
         order_currentPage: 1,
@@ -1644,6 +1674,7 @@
         value1: 0,
         value2: 10000,
         dateRange: ['', ''],
+        dateRangeffff: ['', ''],
         order_dateRange: ['', ''],
         columns: [
           // {
@@ -1970,6 +2001,37 @@
         order_type,
         orderData: [],
         options: {
+          shortcuts: [
+            {
+              text: '最近一周',
+              value() {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+                return [start, end]
+              }
+            },
+            {
+              text: '最近一个月',
+              value() {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+                return [start, end]
+              }
+            },
+            {
+              text: '最近三个月',
+              value() {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+                return [start, end]
+              }
+            }
+          ]
+        },
+        optionsffffff: {
           shortcuts: [
             {
               text: '最近一周',
@@ -2611,6 +2673,9 @@
       dataChange(time) {
         this.dateRange = time
       },
+      dataChangedddd(time) {
+        this.dateRangeffff = time
+      },
       search() {
         this.$http.get('user/searchWaterNumber.do', {
           params: {
@@ -3188,6 +3253,9 @@
       },
       getBillAll() {
         this.dateRange = ['', '']
+      },
+      getBillAlldddd() {
+        this.dateRangeffff = ['', '']
       },
       toMyCard() {
         this.name = 'myCard'
@@ -3951,6 +4019,9 @@
         this.search()
       }
       ,
+      dateRangeffff() {
+        this.search()
+      }
     }
   }
 </script>
@@ -4294,20 +4365,53 @@
           }
         }
         .ordertype {
-          display: inline-flex;
-          margin-top: 15px;
+          //display: inline-flex;
+          margin-top: 5px;
           .order_s1 {
-            line-height: 30px;
-            font-family: Microsoft Yahei, 微软雅黑;
-            font-size: 12px;
-            color: rgba(17, 17, 17, 0.65);
+            margin-top:10px;
           }
           .order_s2 {
-            line-height: 30px;
-            font-family: Microsoft Yahei, 微软雅黑;
-            font-size: 12px;
-            color: rgba(17, 17, 17, 0.65);
-            margin-left: 20px;
+            margin-top:10px;
+            line-height: 20px;
+           .order_s2span{
+             top: 3px;
+             position: relative;
+            }
+            .order_s2span1{
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: center;
+              margin: auto 0 auto 10px;
+              > span{
+                color: #FF624B;
+              }
+            }
+            .order_s2span2{
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: center;
+              margin: auto 0 auto 10px;
+              > span{
+                font-weight: bold;
+                color: #FF624B;
+              }
+            }
+            .orderdiv{
+              position: relative;
+              right: 0;
+              .order_s2span3{
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              line-height:16px;
+              margin: 0 10px 0 10px;
+              }
+              .datarow{
+                display: inline-block;
+              }
+            }
           }
         }
         .orderdata {
