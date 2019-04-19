@@ -445,7 +445,7 @@ export default {
       }
     }
     return {
-      imgSrc: "/ruicloud/user/getKaptchaImage.do",
+      imgSrc: "https://www.xrcloud.net/ruicloud/user/getKaptchaImage.do",
       //步骤集合
       stepList: [
         {
@@ -659,7 +659,7 @@ export default {
         if(valid){
           axios.get("user/findPassword.do", {
             params: {
-              username: this.dataFroms.phone != '' ? this.dataFroms.phone : this.dataFroms.email,
+              username: this.verPage == 'cphone' ? this.dataFroms.phone : this.dataFroms.email,
               password: this.dataFroms.oldPaw
             }
           })

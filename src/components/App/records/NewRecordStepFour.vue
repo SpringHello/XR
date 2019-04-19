@@ -497,8 +497,27 @@
           zoneId: this.zoneId,
           hostCompanyUrl: this.mainParams.hostCompanyUrl,
         }
+          let addMainCompany = axios.post('recode/addMainCompany.do', params)
+          Promise.all([addMainCompany]).then(response => {
+            if ((response[0].status == 200&&response[0].data.status == 1)) {
+              axios.post('recode/addMainWeb.do', this.siteParams).then(res => {
+                if (res.data.status == 1) {
+                  this.$router.push('waitFirstTrial')
+                  sessionStorage.clear()
+                } else {
+                  this.$message.info({
+                    content: res.data.message
+                  })
+                }
+              })
+            } else {
+              this.$message.info({
+                content: response[0].data.message
+              })
+            }
+          })
         // 有主体信息发送一个请求，没有发送两个请求
-        if (this.isRecord == true) {
+        /*if (this.isRecord == true) {
           let addMainWeb = axios.post('recode/addMainWeb.do', this.siteParams)
           Promise.all([addMainWeb]).then(response => {
             if (response[0].status == 200 && response[0].data.status == 1) {
@@ -530,7 +549,7 @@
               })
             }
           })
-        }
+        }*/
       },
       // 提交幕布
       sumbitApproval() {

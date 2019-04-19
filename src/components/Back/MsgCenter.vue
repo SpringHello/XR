@@ -86,14 +86,16 @@
     </div>
     <Modal
       v-model="showModal.detail"
-      :title="modelInfo.title"
-      width="450"
+      width="420"
       :scrollable="true">
-      <div
-        style="width:90%;margin:0px auto;font-size: 14px;color: rgba(-2147483648,-2147483648,-2147483648,0.65);line-height: 19px;"
-        v-html="modelInfo.content">
+       <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">{{modelInfo.title}}</span>
+      </p>
+        <div>
+      <p style="margin:0px auto;font-size: 14px;color: rgba(-2147483648,-2147483648,-2147483648,0.65);line-height: 19px;">{{modelInfo.content}}
+      </p>
       </div>
-      <div slot="footer" style="display: flex;width:177px;margin-left:350px;">
+      <div slot="footer">
         <Button type="primary" @click="showModal.detail=false">确定</Button>
       </div>
     </Modal>
