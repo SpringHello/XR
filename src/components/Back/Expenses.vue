@@ -138,11 +138,20 @@
             <ButtonGroup>
                 <Button v-for="(item,index) in billTabs" :key="index" :class="{'select-tab':billBtnSelected == index}" @click="billBtnSelected=index">{{item}}</Button>
             </ButtonGroup>
-            <div :style="{'display':billBtnSelected==0?'block':'none'}">1</div>
-            <div :style="{'display':billBtnSelected==1?'block':'none'}">2</div>
-            <div :style="{'display':billBtnSelected==2?'block':'none'}">3</div>
-            <div :style="{'display':billBtnSelected==3?'block':'none'}">4</div>      
+            <div v-if="billBtnSelected==0">1</div>
+            <div v-if="billBtnSelected==1">2</div>
+            <div v-if="billBtnSelected==2">3</div>
+            <div v-if="billBtnSelected==3">4</div>      
+            <Col span="12">
+                <DatePicker type="month" placeholder="Select month" style="width: 200px" @on-change="dataChange1"></DatePicker>
+            </Col>
             <h3>交易流水</h3>
+            <ul class="monthly-tabs">
+              <li v-for="(item,index) in billMonthlyTabs" :key="index" :class="{'select-tab':billTypeSelected == index}" @click="billTypeSelected=index">{{item}}</li>
+            </ul>
+            <Table :columns="columnsProductA" :data="dataProductA" v-if="billTypeSelected==0"></Table>
+            <Table :columns="columnsZoneA" :data="dataZoneA" v-if="billTypeSelected==1"></Table>
+            <Table :columns="columnsDatetypeA" :data="dataDatetypeA" v-if="billTypeSelected==2"></Table>
             <div class="expenses_condition">
               <span>按交易时间</span>
               <Row style="display: inline-block;margin-left: 10px">
@@ -1215,8 +1224,85 @@
          this.init()*/
       }
       return {
+        dataResponse:[],
+        columnsProductA: [
+            {
+                title: '产品名称',
+                key: 'name'
+            },
+            {
+                title: '现金支付',
+                key: 'cashPay'
+            },
+            {
+                title: '现金券支付',
+                key: 'voucherPay'
+            },
+            {
+                title: '优惠券抵扣',
+                key: 'coupon'
+            },
+            {
+                title: '总费用',
+                key: 'totalPay'
+            }
+              
+        ],
+        dataProductA: [
+        ],
+        
+        columnsZoneA: [
+            {
+                title: '区域名称',
+                key: 'zone'
+            },
+            {
+                title: '现金支付',
+                key: 'cashPay'
+            },
+            {
+                title: '现金券支付',
+                key: 'voucherPay'
+            },
+            {
+                title: '优惠券抵扣',
+                key: 'coupon'
+            },
+            {
+                title: '总费用',
+                key: 'totalPay'
+            }
+              
+        ],
+        dataZoneA: [],
+        columnsDatetypeA: [
+            {
+                title: '消费类型',
+                key: 'dataType'
+            },
+            {
+                title: '现金支付',
+                key: 'cashPay'
+            },
+            {
+                title: '现金券支付',
+                key: 'voucherPay'
+            },
+            {
+                title: '优惠券抵扣',
+                key: 'coupon'
+            },
+            {
+                title: '总费用',
+                key: 'totalPay'
+            }
+              
+        ],
+        dataDatetypeA: [],
         billTabs: ['账单概览', '资源详单', '流水详单','导出记录'],
+        billMonthlyTabs: ['按产品汇总', '按区域汇总', '按消费类型汇总'],
         billBtnSelected: 0,
+        billTypeSelected: 0,
         tooltipStatus: true,
         switch1: false,
         switch1dis:false,
@@ -2429,11 +2515,49 @@
         this.getVipList()
         sessionStorage.removeItem('beVip')
       }
+      this.billMonthlyData()
     },
     mounted() {
 
     },
     methods: {
+      billMonthlyData() {
+        this.dataResponse = [
+            {
+                name: "数据库",
+                cashPay: 88.8,
+                value: "host",
+                type: "host",
+                coupon: 88.8,
+                voucherPay: 88.8,
+                totalPay: 266.4,
+                zone: "北京一区",
+                dataType:'month'
+            },
+            {
+                name: "弹性云服务器",
+                cashPay: 88.8,
+                value: "host",
+                type: "host",
+                coupon: 88.8,
+                voucherPay: 88.8,
+                totalPay: 266.4,
+                zone: "北京一区",
+                dataType:'month'
+            },
+            {
+                name: "弹性ip",
+                cashPay: 88.8,
+                value: "host",
+                type: "host",
+                coupon: 88.8,
+                voucherPay: 88.8,
+                totalPay: 266.4,
+                zone: "北京一区",
+                dataType:'month'
+            }
+        ]
+      },
       //Cashforwithdrawa(){
       //axios.get('user/selectValidRefundAmount.do', {
       //}).then(response => {
@@ -2581,6 +2705,9 @@
       currentChange(currentPage) {
         this.currentPage = currentPage
         this.search()
+      },
+      dataChange1(time) {
+        console.log(time)
       },
       dataChange(time) {
         this.dateRange = time
@@ -3923,8 +4050,37 @@
     watch: {
       dateRange() {
         this.search()
+      },
+      // 消费汇总按产品、区域、消费类型类
+      billTypeSelected(val) {
+        let cloneResponse= JSON.parse(JSON.stringify(this.dataResponse));
+        if(val==0) {
+          cloneResponse.forEach(element => {
+            for (var prop in element) {
+              if(prop =='zone' || prop =='dataType')
+              delete element[prop]
+            }
+          });
+          this.dataProductA = cloneResponse
+        } else if(val==1) {
+          cloneResponse.forEach(element => {
+            for (var prop in element) {
+              if(prop =='name' || prop =='dataType')
+              delete element[prop]
+            }
+          });
+          this.dataZoneA = cloneResponse
+         
+        } else if(val==2) {
+           cloneResponse.forEach(element => {
+            for (var prop in element) {
+              if(prop =='zone' || prop =='name')
+              delete element[prop]
+            }
+          });
+          this.dataDatetypeA = cloneResponse
+        }
       }
-      ,
     }
   }
 </script>
@@ -4645,6 +4801,30 @@
       color:rgba(42,153,242,1);
       border:1px solid rgba(42,153,242,1);
       z-index: 2;
+    }
+    .monthly-tabs {
+      display: flex;
+      li {
+        flex-grow:1;
+        height:40px;
+        font-size:14px;
+        color:rgba(42,153,242,1);
+        line-height:38px;
+        background:rgba(255,255,255,1);
+        border:1px solid rgba(217,217,217,1);
+        cursor: pointer;
+        text-align: center;
+        border-bottom: none;
+      }
+      li:nth-of-type(2) {
+        border-left: none;
+        border-right: none; 
+      }
+      .select-tab {
+        color:#fff;
+        background:rgba(42,153,242,1);
+        border:1px solid rgba(42,153,242,1);
+      }
     }
   }
   .modal-content-s{
