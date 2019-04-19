@@ -830,7 +830,7 @@
                 img: '#icon-xunisiyouyunVPC',
                 detailText: '查看详情',
                 useText: '立即购买',
-                detailLink: 'Pvpc',
+                detailLink: '/vpc/',
                 useLink: $store.state.userInfo ? '/buy/' : '/buy/',
                 ME: true
               },

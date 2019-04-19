@@ -649,6 +649,7 @@
               let restore = params.row.restore ? params.row.restore : 0
               let resetpwd = params.row.resetpwd ? params.row.resetpwd : 0
               let bindip = params.row.bindip ? params.row.bindip : 0
+              let createtemplate  = params.row.createtemplate ? params.row.createtemplate : 0
               let icon_1 = require('../../assets/img/host/h-icon1.png')
               let icon_2 = require('../../assets/img/host/h-icon2.png')
               let icon_3 = require('../../assets/img/host/h-icon3.png')
@@ -791,12 +792,12 @@
                         display: 'inline-block'
                       }
                     }), h('span', {style: styleInfo}, '解绑中')])
-                  } else if (params.row.computerstate == 0) {
+                  } else if (createtemplate == 1) {
                     return h('div', {}, [h('Spin', {
                       style: {
                         display: 'inline-block'
                       }
-                    }), h('span', {style: styleInfo}, '开机中')])
+                    }), h('span', {style: styleInfo}, '创建模板中')])
                   } else if (params.row.computerstate == 1) {
                     return h('div', {}, [h('Spin', {
                       style: {
@@ -2485,6 +2486,13 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.mirror = false
+              this.hostListData.forEach(host => {
+                if (host.id == this.hostCurrentSelected.id) {
+                  host.status = 2
+                  host.createtemplate = 1
+                  host._disabled = true
+                }
+              })
             axios.get('Snapshot/createTemplate.do', {
               params: {
                 rootDiskId: this.hostCurrentSelected.rootdiskid,

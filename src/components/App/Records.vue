@@ -34,7 +34,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
+            <img :src="imgSrc" @click="imgSrc=`https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`" alt="验证码">
           </div>
         </form>
       </div>
@@ -95,7 +95,7 @@
             warning: false
           },
         },
-        imgSrc: 'user/getKaptchaImage.do',
+        imgSrc: 'https://www.xrcloud.net/user/getKaptchaImage.do',
       }
     },
     methods: {
@@ -104,7 +104,7 @@
           this.$LR({type:'login'})
           return
         }
-        this.$router.push('BRecords')
+        this.$router.push('/BRecords')
       },
       vail(field) {
         var text = this.form[field];
@@ -178,7 +178,7 @@
               if (response.data.status == 1) {
                 this.$router.go(0)
               } else {
-                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+                this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
                 this.vailForm.loginname.message = response.data.message
                 this.vailForm.loginname.warning = true
               }
