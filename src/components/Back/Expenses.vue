@@ -36,7 +36,7 @@
                   <div class="right-top">
                     <p>
                       <span>余额告警</span>
-                      <i-switch class="switch1" v-model="switch1" @on-change="balanceAlarmSet"></i-switch><!-- :disabled="switch1dis" -->
+                      <i-switch class="BalanceAlarmSwitch" v-model="BalanceAlarmSwitch" @on-change="balanceAlarmSet"></i-switch><!-- :disabled="BalanceAlarmSwitchdis" -->
                     </p>
                     <p>(告警额度为¥{{ $store.state.userInfo.balanceAlarmAmount }}
                       <span @click="SetBalanceopen">修改</span> )
@@ -84,33 +84,33 @@
                   </ul>
                 </div>
               </div>
-              <div class="item3" @click="test">
+              <div class="item3" @click="UnpaidJump">
                 <p>待支付订单</p>
                 <p>
                   <span>{{ $store.state.userInfo.orderTableNum }}</span>
                   笔
                 </p>
-                <p v-if="$store.state.userInfo.orderTableNum<=0" style="color:#2A99F2;">
+                <p v-if="$store.state.userInfo.orderTableNum<=0" @click.stop="UnpaidnullJump" style="color:#2A99F2;cursor: pointer;">
                   查看订单管理
                 </p>
-                <p v-else-if="$store.state.userInfo.orderTableNum<10" style="color:#2A99F2;">
+                <p v-else-if="$store.state.userInfo.orderTableNum<10" @click.stop="UnpaidJump" style="color:#2A99F2;cursor: pointer;">
                   立即支付
                 </p>
                 <p v-else-if="$store.state.userInfo.orderTableNum>=10">
-                  您的待支付订单较多，可前往<span>订单管理</span>删除
+                  您的待支付订单较多，可前往<span @click.stop="UnpaidJump" style="cursor: pointer;">订单管理</span>删除
                 </p>
                 <img src="../../assets/img/back/daizhifu.png"/>
               </div>
-              <div class="item4" @click="name='myCard'">
+              <div class="item4" @click="PreferentialJump">
                 <p>代金券数量</p>
                 <p>
                   <span>{{ couponNumber }}</span>
                   张
                 </p>
-                <p v-if="couponNumber<=0" style="color:#2A99F2;">
+                <p v-if="couponNumber<=0" @click.stop="$router.push('activity/')" style="color:#2A99F2;cursor: pointer;">
                  查看优惠活动
                 </p>
-                <p v-else-if="couponNumber<10" style="color:#2A99F2;">
+                <p v-else-if="couponNumber<10" @click.stop="PreferentialJump" style="color:#2A99F2;cursor: pointer;">
                  立即使用
                 </p>
                 <p v-else-if="couponNumber>=10">
@@ -124,10 +124,10 @@
                   <span>{{ invoice }}</span>
                   元
                 </p>
-                <p v-if="invoice<=0">
+                <p v-if="invoice<=0" @click.stop="name='applyInvoice'" style="cursor: pointer;">
                   查看发票管理
                 </p>
-                <p v-else-if="invoice>=1">
+                <p v-else-if="invoice>=1" @click.stop="name='applyInvoice'" style="cursor: pointer;">
                   立即开票
                 </p>
                 <img src="../../assets/img/back/kkfpiao.png"/>
@@ -186,6 +186,34 @@
 					</Tab-pane>
           <Tab-pane label="订单管理" name="orderManage">
             <div class="ordertype">
+              <p>
+                <RadioGroup v-model="button5" type="button">
+                  <Radio label="包年包月"></Radio>
+                  <Radio label="实时计费"></Radio>
+              </RadioGroup>
+              </p>
+              <p class="order_s1">
+                <Button type="primary" style="" @click="orderPay" :disabled="payDisabled">批量支付</Button>
+              <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
+              </Button>
+              <Button type="primary" style="margin-left: 10px" @click="orderRefundBefore" :disabled="refundDisabled">7天无理由退款</Button>
+              </p>
+              <p class="order_s2">
+                <img src="../../assets/img/expenses/xiangnum.png" class="order_s2span"/>
+                <span class="order_s2span1">共 10 项 | 已选择<span> 0 </span>项 </span>
+                <span class="order_s2span2">总价：<span>¥0.00</span></span>
+                <div class="orderdiv">
+                  <span class="order_s2span3">按交易时间</span>
+                  <Row class="datarow">
+                    <Col span="12">
+                      <Date-picker v-model="timerrrrr" type="daterange" :options="optionsffffff" placement="bottom-start" placeholder="选择日期" style="width: 231px;" @on-change="dataChangedddd"></Date-picker>
+                    </Col>
+                  </Row>
+                  <Button type="primary">查询</Button>
+                </div>
+              </p>
+            </div>
+            <!-- <div class="ordertype">
               <span class="order_s1">订单类型</span>
               <Select v-model="order_type" @on-change="changeOrder" style="width:231px;margin-left: 10px">
                 <Option v-for="item in orderList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -202,7 +230,7 @@
                 </Col>
               </Row>
               <Button type="primary" style="margin-left: 120px" @click="orderRefundBefore" :disabled="refundDisabled">退款</Button>
-              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
+              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button>
               <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
               </Button>
             </div>
@@ -219,7 +247,7 @@
                   <Page :total="ordertotal" :current="1" :page-size="10" @on-change="order_currentChange"></Page>
                 </div>
               </div>
-            </div>
+            </div> -->
           </Tab-pane>
           <Tab-pane label="我的卡券" name="myCard">
             <div class="searchCard">
@@ -228,7 +256,7 @@
                 <Option v-for="item in cardTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
               <span style="margin-left: 20px">状态</span>
-              <Select v-model="cardState" style="width:231px;margin-left: 10px">
+              <Select v-model="cardState" @on-change="changedcard" style="width:231px;margin-left: 10px">
                 <Option v-for="item in cardStateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
               <Button type="primary" @click="searchCard">查询</Button>
@@ -1304,10 +1332,13 @@
         billBtnSelected: 0,
         billTypeSelected: 0,
         tooltipStatus: true,
-        switch1: false,
-        switch1dis:false,
+        //余额告警开关
+        BalanceAlarmSwitch: false,
+        //禁用余额告警开关
+        //BalanceAlarmSwitchdis:false,
         BalanceRepeadio: '',
         BalanceRepval:50,
+        button5: '包年包月',
         vipRule: [
           {
             title: '类目',
@@ -1713,6 +1744,7 @@
         ],
         ordertime: '',
         time: '',
+        timerrrrr: '',
         total: 0,
         currentPage: 1,
         order_currentPage: 1,
@@ -1728,6 +1760,7 @@
         value1: 0,
         value2: 10000,
         dateRange: ['', ''],
+        dateRangeffff: ['', ''],
         order_dateRange: ['', ''],
         columns: [
           // {
@@ -2054,6 +2087,37 @@
         order_type,
         orderData: [],
         options: {
+          shortcuts: [
+            {
+              text: '最近一周',
+              value() {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+                return [start, end]
+              }
+            },
+            {
+              text: '最近一个月',
+              value() {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+                return [start, end]
+              }
+            },
+            {
+              text: '最近三个月',
+              value() {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+                return [start, end]
+              }
+            }
+          ]
+        },
+        optionsffffff: {
           shortcuts: [
             {
               text: '最近一周',
@@ -2572,11 +2636,9 @@
         // this.$Message.info('开关状态：' + status);
         this.$http.get('/nVersionUser/balanceAlarmSet.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.switch1!=this.switch1
-            console.log(this.switch1)
+            this.BalanceAlarmSwitch!=this.BalanceAlarmSwitch
           }
           else{
-            //this.switch1dis=true
               this.$Message.error({
                 content: response.data.message
               })
@@ -2608,7 +2670,6 @@
         })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              console.log(response.data)
               this.userInfoUpdate()
               this.showModal.SetBalanceWarning=false
             }
@@ -2619,10 +2680,37 @@
             }
           })
       },
-      test(){
-        this.order_type == 'notpay'
-         this.changeOrder()
+      UnpaidJump(){
+        this.order_type = 'notpay'
+        this.changeOrder()
         this.name='orderManage'
+      },
+      UnpaidnullJump(){
+        this.order_type = 'all'
+        this.changeOrder()
+        this.name='orderManage'
+      },
+      PreferentialJump(){ 
+        this.cardState = '0'
+        this.changedcard()
+        this.name='myCard'
+      },
+      changedcard() {
+        switch (this.cardState) {
+          case '':
+            this.order_type = ''
+            this.searchCard()
+            break
+          case '1':
+            this.searchCard()
+            break
+          case '0':
+            this.searchCard()
+            break
+        }
+      },
+      test(){
+        alert("ddddd")
       },
       selectChange(item, index) {
         if (item.startmoney > this.totalCost) {
@@ -2672,10 +2760,10 @@
             this.billmonth = response.data.result
             this.theCumulative = response.data.total_amount
             if(this.$store.state.userInfo.balanceAlarmStatus==1){
-              this.switch1=true
+              this.BalanceAlarmSwitch=true
             }
             else if(this.$store.state.userInfo.balanceAlarmStatus==0){
-              this.switch1=false
+              this.BalanceAlarmSwitch=false
             }
           }
         })
@@ -2711,6 +2799,9 @@
       },
       dataChange(time) {
         this.dateRange = time
+      },
+      dataChangedddd(time) {
+        this.dateRangeffff = time
       },
       search() {
         this.$http.get('user/searchWaterNumber.do', {
@@ -3008,7 +3099,7 @@
             pageSize: this.cardPageSize,
             page: this.card_currentPage,
             ticketType: this.cardType,
-            isuse: this.cardState
+            isuse:  this.cardState == '' ? '' : this.cardState == '1' ? '1' : this.cardState == '0' ? '0'  : '',
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -3289,6 +3380,9 @@
       },
       getBillAll() {
         this.dateRange = ['', '']
+      },
+      getBillAlldddd() {
+        this.dateRangeffff = ['', '']
       },
       toMyCard() {
         this.name = 'myCard'
@@ -4081,6 +4175,10 @@
           this.dataDatetypeA = cloneResponse
         }
       }
+      ,
+      dateRangeffff() {
+        this.search()
+      }
     }
   }
 </script>
@@ -4176,7 +4274,7 @@
                 color:rgba(102,102,102,1);
                 line-height:21px;
                 }
-                .switch1{
+                .BalanceAlarmSwitch{
                   margin-top: -5px;
                   margin-left: 7px;
                 }
@@ -4424,20 +4522,53 @@
           }
         }
         .ordertype {
-          display: inline-flex;
-          margin-top: 15px;
+          //display: inline-flex;
+          margin-top: 5px;
           .order_s1 {
-            line-height: 30px;
-            font-family: Microsoft Yahei, 微软雅黑;
-            font-size: 12px;
-            color: rgba(17, 17, 17, 0.65);
+            margin-top:10px;
           }
           .order_s2 {
-            line-height: 30px;
-            font-family: Microsoft Yahei, 微软雅黑;
-            font-size: 12px;
-            color: rgba(17, 17, 17, 0.65);
-            margin-left: 20px;
+            margin-top:10px;
+            line-height: 20px;
+           .order_s2span{
+             top: 3px;
+             position: relative;
+            }
+            .order_s2span1{
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: center;
+              margin: auto 0 auto 10px;
+              > span{
+                color: #FF624B;
+              }
+            }
+            .order_s2span2{
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: center;
+              margin: auto 0 auto 10px;
+              > span{
+                font-weight: bold;
+                color: #FF624B;
+              }
+            }
+            .orderdiv{
+              position: relative;
+              right: 0;
+              .order_s2span3{
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              line-height:16px;
+              margin: 0 10px 0 10px;
+              }
+              .datarow{
+                display: inline-block;
+              }
+            }
           }
         }
         .orderdata {
