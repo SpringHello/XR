@@ -1034,7 +1034,7 @@
       }
     },
     created() {
-      this.testjump()
+      this.defaultOpen()
       this.$http.get('network/listIsBindSourceIP.do').then(response => {
           this.formValidateLocalGateway.vpcIdOptions = response.data.result
       })
@@ -1079,7 +1079,7 @@
       newTunnelVpnlink() {
         this.showModal.vpnLink = true
       },
-      testjump(){
+      defaultOpen(){
         this.paneStatus.vpn = this.$route.query.pane
         if (sessionStorage.getItem('modal')) {
           var modalName = sessionStorage.getItem('modal')

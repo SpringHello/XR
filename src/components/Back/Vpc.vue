@@ -944,10 +944,10 @@
     },
     created() {
       this.intervalInstance = setInterval(this.getVpcData, 10000)
-			this.testjump()
+			this.defaultOpen()
     },
     methods: {
-      testjump(){
+      defaultOpen(){
         this.paneStatus.vpc = this.$route.query.pane
         if (sessionStorage.getItem('modal')) {
           var modalName = sessionStorage.getItem('modal')

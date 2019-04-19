@@ -857,7 +857,7 @@
       } else {
         this.hide = 'none';
       }
-      this.testjump()
+      this.defaultOpen()
       axios.get('network/listVpc.do', {
           params: {
             zoneId: $store.state.zone.zoneid
@@ -867,7 +867,7 @@
         })
     },
     methods: {
-			testjump(){
+			defaultOpen(){
 			  if (sessionStorage.getItem('modal')) {
 			    var modalName = sessionStorage.getItem('modal')
 					if(modalName == 'newIPModal')
