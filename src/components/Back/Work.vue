@@ -119,10 +119,9 @@
                         <span style="width:38%;margin-top: 10px;">所属产品 : {{item.subdescription}}</span>
                         <span style="width:62%;margin-top: 10px;">持续时间 : {{item.timeago}}</span>
 												<span v-if="item.pic!=null" v-for="ited in item.pic">
-													<span style="width:100%;" >
-                            <img v-if="(ited.substring(ited.lastIndexOf("\.") + 1, ited.length))=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'" :src="ited" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" />
-                            <img v-if="(ited.substring(ited.lastIndexOf("\.") + 1, ited.length))=='txt'" src="../../assets/img/work/txt.png" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" />
-                          </span>
+                            <span v-if="JudgingPicName(ited)" style="width:100%;" >
+                              <img :src="ited" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" />
+                            </span>
 												</span>
                       </div>
                       <div class="operating-menu">
@@ -382,7 +381,6 @@
           disabledupload:false,
           disbtnsent:false,
           disableduploadsent:false,
-          gggggg:'',
 					percent:0,
 					testurl:[],
 					testurl1:[],
@@ -957,41 +955,45 @@
               item.timeago = timeago().format(item.puddate, 'zh_CN')
               item.puddate = new Date(item.puddate).format('yyyy年MM月dd日 hh:mm:ss')
               this[type + 'Order'].push(item)
-							if(item.pic){
-								item.pic.forEach((ited, itindex)=>{
-                  //console.log(ited)
-									  //获取最后一个.的位置
-									  var site11 = ited.lastIndexOf("\.");
-                    //截取最后一个.后的值
-                    var end11=ited.substring(site11 + 1, ited.length);
-                    this.gggggg=end11
-                    //console.log(end11)
-                     if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
-                    }
-                    else if(end11=='xlsx'||end11=='xls'){
-                      ited='this.src="' + require('../../assets/img/work/xlsx.png') + '"'
-                    }
-                    else if(end11=='txt'){
-                
-                     ited='this.src="' + require('../../assets/img/work/txt.png') + '"'
-                    
-                    
-                    }
-                    else if(end11=='doc'||end11=='docx'){
-                       ited='this.src="' + require('../../assets/img/work/doc.png') + '"'
-                    }
-                    else if(end11=='eml'){
-                       ited='this.src="' + require('../../assets/img/work/eml.png') + '"'
-                    }
-                    else if(end11=='pdf'){
-                       ited='this.src="' + require('../../assets/img/work/pdf.png') + '"'
-                    }              
-                })
-                
-							}
             })
           }
         })
+      },
+      JudgingPicName(ited){
+        //获取最后一个.的位置
+				 var site11 = ited.lastIndexOf("\.");
+        //截取最后一个.后的值
+        var end11=ited.substring(site11 + 1, ited.length);
+        if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
+            console.log(ited)
+            return ited;
+         }
+        else if(end11=='xlsx'||end11=='xls'){
+             ited='../../assets/img/work/xlsx.png'
+             console.log(ited)
+             return ited;
+        }
+         else if(end11=='txt'){
+              ited='../../assets/img/work/txt.png'
+              console.log(ited)
+              return ited;
+          }
+          else if(end11=='doc'||end11=='docx'){
+              ited='../../assets/img/work/doc.png'
+              console.log(ited)
+              return ited;
+           }
+          else if(end11=='eml'){
+              ited='../../assets/img/work/eml.png'
+              console.log(ited)
+              return ited;
+          }
+          else if(end11=='pdf'){
+              ited='../../assets/img/work/pdf.png'
+              console.log(ited)
+              return ited;
+          }  
+          
       },
       changeOperatingPage(page) {
         this.operatingCurrPage = page
