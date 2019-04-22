@@ -757,6 +757,7 @@
           return
         }
         let mainCompanyArea = this.mainUnitInformation.maincompanyarea ? this.mainUnitInformation.maincompanyarea : (this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district)
+        let accessInfo = sessionStorage.getItem('accessInfo') ? JSON.parse(sessionStorage.getItem('accessInfo')) : null
         let list_web_message = this.siteListStr.map(item => {
           let param = {
             webResponsibilityLinkName: item.basicInformation.principalName,
@@ -776,6 +777,10 @@
             webName: item.basicInformation.siteName,
             webServerContent: item.basicInformation.serviceContent + '',
             webUrl: item.basicInformation.websiteHomepage,
+            mainBelongArea: accessInfo ? accessInfo.mainBelongArea : '',   
+            webDomainName: accessInfo ? accessInfo.webDomainName : '',
+            mainRecordNumber: accessInfo ? accessInfo.mainRecordNumber : '',
+            ICPRecordPassword: accessInfo ? accessInfo.ICPRecordPassword : ''
           }
           return param
         })

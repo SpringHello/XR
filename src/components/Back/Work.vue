@@ -74,18 +74,18 @@
 															:on-exceeded-size="handleMaxSize"
 															:before-upload="handleUpload"
 															type="drag"
-															action="file/upFile.do"
+															action="https://zschj.xrcloud.net/file/upFile.do"
 															style="display: inline-block;">
-															<div v-if="uploadList.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
-																	<img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" style="margin-top: 5px;" />
+                              <Button :disabled="disabledupload" v-if="uploadList.length < 5" type="ghost" class="btnupload">
+                                <img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" style="margin-top: 5px;" />
 																	<Progress v-show="percent>0" :percent="percent" hide-info style="width: 60px;margin-left: -10px;margin-top: 10px;"></Progress>
-															</div>
-													</Upload>
+                              </Button>
+													  </Upload>
 													</div>
 												</div>
 											</div>
-										</FormItem>					
-                    <span class="submit" @click="submit('workForm')">提交工单</span>
+										</FormItem>			
+                    <Button class="submit" type="primary"  @click="submit('workForm')" :disabled="disbuttom">提交工单</Button>
                   </Form>
                 </div>
 
@@ -118,8 +118,11 @@
                         <span style="width:62%">创建时间 : {{item.puddate}}</span>
                         <span style="width:38%;margin-top: 10px;">所属产品 : {{item.subdescription}}</span>
                         <span style="width:62%;margin-top: 10px;">持续时间 : {{item.timeago}}</span>
-												<span v-if="item.pic!=null" v-for="ited,index in item.pic">
-													<span style="width:100%;" ><img :src="ited" :onerror="errorimg1[index]" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" /></span>
+												<span v-if="item.pic!=null" v-for="ited in item.pic">
+													<span style="width:100%;" >
+                            <img v-if="(ited.substring(ited.lastIndexOf("\.") + 1, ited.length))=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'" :src="ited" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" />
+                            <img v-if="(ited.substring(ited.lastIndexOf("\.") + 1, ited.length))=='txt'" src="../../assets/img/work/txt.png" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" />
+                          </span>
 												</span>
                       </div>
                       <div class="operating-menu">
@@ -289,18 +292,18 @@
 															:on-exceeded-size="handleMaxSize"
 															:before-upload="handleUpload1"
 															type="drag"
-															action="file/upFile.do"
+															action="https://zschj.xrcloud.net/file/upFile.do"
 															style="display: inline-block;">
-															<div v-if="uploadList1.length < 5" style="padding: 20px;height: 80px;border:1px solid rgba(217,217,217,1);color: #999;background:rgba(255,255,255,1);width: 80px;">
-																	<img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" style="margin-top: 5px;" />
+                              <Button :disabled="disableduploadsent" v-if="uploadList1.length < 5" type="ghost" class="btnuploadsent">
+                                <img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" style="margin-top: 5px;" />
 																	<Progress v-show="percent>0" :percent="percent" hide-info style="width: 60px;margin-left: -10px;margin-top: 10px;"></Progress>
-															</div>
+                              </Button>
 													</Upload>
 													</div>
 												</div>
 											</div>
 										</div>	
-                    <button @click="reply" style="margin-top: 20px;float: left;cursor: pointer;">发送</button>
+                    <button @click="reply" :disabled="disbtnsent" style="margin-top: 20px;float: left;cursor: pointer;">发送</button>
                   </div>
                 </div>
                 <div class="question">
@@ -375,6 +378,11 @@
         }
       };
       return {
+          disbuttom:false,
+          disabledupload:false,
+          disbtnsent:false,
+          disableduploadsent:false,
+          gggggg:'',
 					percent:0,
 					testurl:[],
 					testurl1:[],
@@ -511,15 +519,15 @@
     methods: {
             handleRemove (file) {
                 const fileList = this.uploadList;
-                const fileList11 = this.UploadLeix;
+                var fileList11=fileList.indexOf(file)
                 this.uploadList.splice(fileList.indexOf(file), 1);
-                this.UploadLeix.splice(fileList11.indexOf(file), 1);
+                this.UploadLeix.splice(fileList11,1);
             },
 					 handleRemove1 (file) {
               const fileList = this.uploadList1;
-              const fileList11 = this.UploadLeix1;
+              var fileList11=fileList.indexOf(file)
               this.uploadList1.splice(fileList.indexOf(file), 1);
-              this.UploadLeix1.splice(fileList11.indexOf(file), 1);
+              this.UploadLeix1.splice(fileList11, 1);
 					},
 			//显示原图
 			showPicture(item,name,index) {
@@ -578,54 +586,68 @@
 			combine(response,file) {
 			  if (response.status == 1) {
 					let s = setInterval(() => {
-					  this.percent++
-					  if (this.percent > 100) {
-					    file.url = response.result
-					    this.uploadList.push(file)
-					    this.$Message.info('上传成功');
-					    window.clearInterval(s)
-					    this.percent = 0
-							//获取最后一个.的位置
-							var site11 = file.name.lastIndexOf("\.");
-							//截取最后一个.后的值
-							var end11=this.file.name.substring(site11 + 1, file.name.length);
-							if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
-								this.UploadLeix.push(true)
-							}
-							else if(end11=='txt'){
-								this.errorimg='this.src="' + require('../../assets/img/work/txt.png') + '"'
-								this.UploadLeix.push(false)
-							}
-							else if(end11=='doc'||end11=='docx'){
-								this.errorimg='this.src="' + require('../../assets/img/work/doc.png') + '"'
-								this.UploadLeix.push(false)
-							}
-							else if(end11=='eml'){
-								this.errorimg='this.src="' + require('../../assets/img/work/eml.png') + '"'
-								this.UploadLeix.push(false)
-							}
-							else if(end11=='pdf'){
-								this.errorimg='this.src="' + require('../../assets/img/work/pdf.png') + '"'
-								this.UploadLeix.push(false)
-							}
-							else if(end11=='xlsx'||end11=='xls'){
-								this.errorimg='this.src="' + require('../../assets/img/work/xlsx.png') + '"'
-								this.UploadLeix.push(false)
-							}
-							if(this.file.name.length<=17){
-								file.name = this.file.name
-							}
-							else{
-								var before=this.file.name.split('.')[0]
-								var berorett=before.substring(before.length-1);
-								//var enter=this.file.name.split('.')[1]
-								 //获取最后一个.的位置
-								var site = this.file.name.lastIndexOf("\.");
-								//截取最后一个.后的值
-								var end=this.file.name.substring(site + 1, this.file.name.length);
-								file.name= this.file.name.slice(0,17)+"..."+berorett+'.'+end;
-							}
-					  }
+            this.percent++
+            if(this.percent <= 100){
+              this.disbuttom=true
+              this.disabledupload=true
+            }
+					  else if (this.percent > 100) {
+              this.disbuttom=false
+              this.disabledupload=false
+              file.url = response.result
+              if(this.uploadList.length > 5){
+                this.$Notice.warning({
+                  title: '可上传文件不超过五个！'
+                });
+              }
+              else{
+                 this.uploadList.push(file)
+                this.$Message.info('上传成功');
+                window.clearInterval(s)
+                this.percent = 0
+                //获取最后一个.的位置
+                var site11 = file.name.lastIndexOf("\.");
+                //截取最后一个.后的值
+                var end11=this.file.name.substring(site11 + 1, file.name.length);
+                if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
+                  this.UploadLeix.push(true)
+                }
+                else if(end11=='txt'){
+                  this.errorimg='this.src="' + require('../../assets/img/work/txt.png') + '"'
+                  this.UploadLeix.push(false)
+                }
+                else if(end11=='doc'||end11=='docx'){
+                  this.errorimg='this.src="' + require('../../assets/img/work/doc.png') + '"'
+                  this.UploadLeix.push(false)
+                }
+                else if(end11=='eml'){
+                  this.errorimg='this.src="' + require('../../assets/img/work/eml.png') + '"'
+                  this.UploadLeix.push(false)
+                }
+                else if(end11=='pdf'){
+                  this.errorimg='this.src="' + require('../../assets/img/work/pdf.png') + '"'
+                  this.UploadLeix.push(false)
+                }
+                else if(end11=='xlsx'||end11=='xls'){
+                  this.errorimg='this.src="' + require('../../assets/img/work/xlsx.png') + '"'
+                  this.UploadLeix.push(false)
+                }
+                if(this.file.name.length<=17){
+                  file.name = this.file.name
+                }
+                else{
+                  var before=this.file.name.split('.')[0]
+                  var berorett=before.substring(before.length-1);
+                  //var enter=this.file.name.split('.')[1]
+                  //获取最后一个.的位置
+                  var site = this.file.name.lastIndexOf("\.");
+                  //截取最后一个.后的值
+                  var end=this.file.name.substring(site + 1, this.file.name.length);
+                  file.name= this.file.name.slice(0,17)+"..."+berorett+'.'+end;
+                }
+              }
+					    
+            }
 					}, 25)
 					
 			  }
@@ -633,10 +655,22 @@
 			combine1(response,file) {
 			  if (response.status == 1) {
 					let s = setInterval(() => {
-					  this.percent++
-					  if (this.percent > 100) {
-							file.url = response.result
-							this.uploadList1.push(file)
+            this.percent++
+            if(this.percent <= 100){
+              this.disbtnsent=true
+              this.disableduploadsent=true
+            }
+					 else if (this.percent > 100) {
+             this.disbtnsent=false
+              this.disableduploadsent=false
+              file.url = response.result
+              if(this.uploadList1.length > 5){
+                this.$Notice.warning({
+                  title: '可上传文件不超过五个！'
+                });
+              }
+              else{
+                this.uploadList1.push(file)
 							this.$Message.info('上传成功');
 							window.clearInterval(s)
 							this.percent = 0
@@ -680,6 +714,8 @@
 								var end=this.file1.name.substring(site + 1, this.file1.name.length);
 								file.name= this.file1.name.slice(0,17)+"..."+berorett+'.'+end;
 							}
+              }
+							
 						}
 					}, 25)
 			  }
@@ -766,25 +802,24 @@
 									//获取最后一个.的位置
 									var site11 = ited.lastIndexOf("\.");
 									//截取最后一个.后的值
-									var end11=ited.substring(site11 + 1, ited.length);
-									if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
-										
-									}
-									else if(end11=='txt'){
-										this.errorimg2.push('this.src="' + require('../../assets/img/work/txt.png') + '"')
-									}
-									else if(end11=='doc'||end11=='docx'){
-										this.errorimg2.push('this.src="' + require('../../assets/img/work/doc.png') + '"')
-									}
-									else if(end11=='eml'){
-										this.errorimg2.push('this.src="' + require('../../assets/img/work/eml.png') + '"')
-									}
-									else if(end11=='pdf'){
-										this.errorimg2.push('this.src="' + require('../../assets/img/work/pdf.png') + '"')
-									}
-									else if(end11=='xlsx'||end11=='xls'){
-										this.errorimg2.push('this.src="' + require('../../assets/img/work/xlsx.png') + '"')
-									}
+                  var end11=ited.substring(site11 + 1, ited.length);
+                   if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
+                  }
+                  else if(end11=='txt'){
+                    this.errorimg2.push('this.src="' + require('../../assets/img/work/txt.png') + '"')
+                  }
+                  else if(end11=='doc'||end11=='docx'){
+                    this.errorimg2.push('this.src="' + require('../../assets/img/work/doc.png') + '"')
+                  }
+                  else if(end11=='eml'){
+                    this.errorimg2.push('this.src="' + require('../../assets/img/work/eml.png') + '"')
+                  }
+                  else if(end11=='pdf'){
+                    this.errorimg2.push('this.src="' + require('../../assets/img/work/pdf.png') + '"')
+                  }
+                  else if(end11=='xlsx'||end11=='xls'){
+                    this.errorimg2.push('this.src="' + require('../../assets/img/work/xlsx.png') + '"')
+                  }
 							})
 						}
             this.$Loading.finish()
@@ -917,38 +952,43 @@
           if (response.status == 200 && response.data.status == 1) {
             this[type + 'Order'] = []
             this[type + 'Total'] = Number(response.data.count)
-            response.data.result.forEach(item => {
+            response.data.result.forEach((item,index) => {
               item.puddate = parseInt(item.puddate)
               item.timeago = timeago().format(item.puddate, 'zh_CN')
               item.puddate = new Date(item.puddate).format('yyyy年MM月dd日 hh:mm:ss')
               this[type + 'Order'].push(item)
 							if(item.pic){
-								item.pic.forEach((ited, index)=>{
+								item.pic.forEach((ited, itindex)=>{
+                  //console.log(ited)
 									  //获取最后一个.的位置
 									  var site11 = ited.lastIndexOf("\.");
-									  //截取最后一个.后的值
-									  var end11=ited.substring(site11 + 1, ited.length);
-									  if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
-									  	
-									  }
-									  else if(end11=='txt'){
-									  	this.errorimg1.push('this.src="' + require('../../assets/img/work/txt.png') + '"')
-									  }
-									  else if(end11=='doc'||end11=='docx'){
-									  	this.errorimg1.push('this.src="' + require('../../assets/img/work/doc.png') + '"')
-									  }
-									  else if(end11=='eml'){
-									  	this.errorimg1.push('this.src="' + require('../../assets/img/work/eml.png') + '"')
-									  }
-									  else if(end11=='pdf'){
-									  	this.errorimg1.push('this.src="' + require('../../assets/img/work/pdf.png') + '"')
-									  }
-									  else if(end11=='xlsx'||end11=='xls'){
-									  	this.errorimg1.push('this.src="' + require('../../assets/img/work/xlsx.png') + '"')
-									  }
-								})
+                    //截取最后一个.后的值
+                    var end11=ited.substring(site11 + 1, ited.length);
+                    this.gggggg=end11
+                    //console.log(end11)
+                     if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
+                    }
+                    else if(end11=='xlsx'||end11=='xls'){
+                      ited='this.src="' + require('../../assets/img/work/xlsx.png') + '"'
+                    }
+                    else if(end11=='txt'){
+                
+                     ited='this.src="' + require('../../assets/img/work/txt.png') + '"'
+                    
+                    
+                    }
+                    else if(end11=='doc'||end11=='docx'){
+                       ited='this.src="' + require('../../assets/img/work/doc.png') + '"'
+                    }
+                    else if(end11=='eml'){
+                       ited='this.src="' + require('../../assets/img/work/eml.png') + '"'
+                    }
+                    else if(end11=='pdf'){
+                       ited='this.src="' + require('../../assets/img/work/pdf.png') + '"'
+                    }              
+                })
+                
 							}
-						
             })
           }
         })
@@ -1111,6 +1151,15 @@
             outline: none;
             border: none;
           }
+          .btnuploadsent{
+            padding: 20px;
+            height: 80px;
+            border:1px solid rgba(217,217,217,1);
+            color: #999;
+            background: #ffffff;
+            width: 80px;
+            margin-top: 0;
+          }
           .logo {
             width: 113px;
             height: 80px;
@@ -1211,4 +1260,13 @@
         cursor: pointer;
         margin: 0 5px;
     }
+    .btnupload{
+      padding: 20px;
+      height: 80px;
+      border:1px solid rgba(217,217,217,1);
+      color: #999;
+      background:rgba(255,255,255,1);
+      width: 80px;
+    }
+    
 </style>
