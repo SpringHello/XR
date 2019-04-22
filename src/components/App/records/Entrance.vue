@@ -427,7 +427,7 @@
               sessionStorage.setItem('zone', this.areaText)
               sessionStorage.setItem('zoneId', this.area)
               sessionStorage.setItem('recordsType', '1')
-              this.$router.push('newRecordStepOne')
+              this.$router.push('/newRecordStepOne')
             } else {
               this.showModal.recordInfo = true
             }

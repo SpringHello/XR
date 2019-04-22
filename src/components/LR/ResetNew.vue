@@ -445,7 +445,7 @@ export default {
       }
     }
     return {
-      imgSrc: "https://www.xrcloud.net/ruicloud/user/getKaptchaImage.do",
+      imgSrc: "https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do",
       //步骤集合
       stepList: [
         {
@@ -597,7 +597,8 @@ export default {
       userInfo:'',
       errorCard:'',
       newPhone:'',
-      backEmail:0
+      backEmail:0,
+      isPhone:true
     };
   },
   components: {
@@ -659,7 +660,7 @@ export default {
         if(valid){
           axios.get("user/findPassword.do", {
             params: {
-              username: this.verPage == 'cphone' ? this.dataFroms.phone : this.dataFroms.email,
+              username: this.isPhone ? this.dataFroms.phone : this.dataFroms.email,
               password: this.dataFroms.oldPaw
             }
           })
@@ -777,6 +778,7 @@ export default {
         if(this.userInfo){
           this.verPage = "email";
           this.index = 3;
+          this.isPhone = false;
         }else{
           this.$Message.info({
             content:'您的账号还没有绑定邮箱',
@@ -786,6 +788,7 @@ export default {
       } else if (index == 1) {
         this.verPage = "phone";
         this.index = 3;
+        this.isPhone = true;
       }
     },
 
