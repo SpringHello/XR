@@ -203,7 +203,7 @@
       <!--<Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>-->
-      <span class="phone" @click="showModal.complaintModal = true"></span>
+      <span class="phone" @click="getOrderType"></span>
       <div>
         <BackTop :bottom="61" :right="50" :duration="0" :height="1600" style="position: unset">
           <span class="topLink"></span>
@@ -240,7 +240,7 @@
           </Form-item>
           <Form-item label="问题类型" prop="issueType">
             <Select v-model="complaintForm.issueType" placeholder="请选择">
-              <Option v-for="(item,index) in complaintForm.typeList" :value="item" :key="index">{{item}}</Option>
+              <Option v-for="(item,index) in complaintForm.typeList" :value="item.id" :key="index">{{item.description}}</Option>
             </Select>
           </Form-item>
           <Form-item label="问题描述" prop="issueDesc">
@@ -333,8 +333,8 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              //{subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
+              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              // {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'diskList'},
               {subName: '云硬盘备份', type: 'diskBackupList'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
@@ -374,20 +374,20 @@
             subItem: [
               {subName: '防火墙', type: 'firewallList'},
               {subName: '云监控', type: 'CloudMonitor'},
-              //{subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
-              {subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
+              {subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
+              // {subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
             ]
           },
           {
             mainName: '域名服务',
             type: 'domain',
             subItem: [
-              //{subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
-              //{subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              //{subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
-               {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
-               {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-               {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
+              {subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
+              {subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+              {subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
+              //  {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
+              //  {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+              //  {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
             ]
           },
           {
@@ -406,7 +406,7 @@
         complaintForm: {
           complaintTitle: '',
           issueType: '',
-          typeList: ['客服投诉', '违规举报', '功能建议', '产品缺陷', '体验不佳', '价格投诉', '其他'],
+          typeList: [],
           issueDesc: '',
           phone: '',
           step: 1
@@ -649,6 +649,20 @@
           }
         })
       },
+      getOrderType(){
+        this.$http.get('order/orderType.do',{params:{
+          gid: '5'
+        }}).then(res=>{
+          if(res.data.status == 1 && res.status == 200){
+            this.complaintForm.typeList = res.data.result['投诉建议']
+            this.showModal.complaintModal = true
+          } else{
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
       sumbitComplaint(name) {
         this.$refs[name].validate(valid => {
           if (valid) {
@@ -656,7 +670,8 @@
             let params = {
               phone: this.complaintForm.phone,
               title: this.complaintForm.complaintTitle,
-              typeDesc: this.complaintForm.issueType,
+              gid: '5',
+              cid: this.complaintForm.issueType,
               questionDesc: this.complaintForm.issueDesc
             }
             this.$http.post(url,params).then(res=>{

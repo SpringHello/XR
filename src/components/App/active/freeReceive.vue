@@ -510,12 +510,7 @@
             label: 'Windows',
             value: 'windows'
           },],
-        advantages: [
-          {
-            src: require('../../../assets/img/active/freeToReceive/fr-icon12.png'),
-            title: '安全稳定',
-            describe: '40G超大流量免费防护，高性能DDoS硬件，秒级防护，专业漏洞检测，流量清洗，用户100%网络隔离 '
-          }, {
+        advantages: [{
             src: require('../../../assets/img/active/freeToReceive/fr-icon13.png'),
             title: '性价比高',
             describe: '0基础设施建设投入，企业级云产品便捷采购，0门槛上云，专家团队免费在线咨询，享受云网超顶级硬件与超大带宽'

@@ -74,7 +74,7 @@ const EastSouthNode = () =>import('@/components/App/active/EastSouthNode')
 
 const AnniversaryActive = () => import('@/components/App/active/anniversaryActive')
 //const AnniversaryActiveBefore = () => import('@/components/App/active/AnniversaryActiveBefore')
-// const xianNode = () => import('@/components/App/active/xianNode')
+const xianNode = () => import('@/components/App/active/xianNode')
 const schoolSeason = () => import('@/components/App/active/schoolSeason')
 //域名页面路由
 const Domainname = () =>import('@/components/App/Domain/Domainname')
@@ -327,7 +327,7 @@ var router = new Router({
         {path: 'activity/hotdatabase', name: 'activity/hotdatabase', component: DBActive},
         {path: 'AnniversaryActive', name: 'AnniversaryActive', component: AnniversaryActive},
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
-        // {path: 'activity/xian', name: 'activity/xian', component: xianNode},
+        {path: 'activity/xian', name: 'activity/xian', component: xianNode},
         {path: 'activity/2019spring', name: 'activity/2019spring', component: schoolSeason},
 
         {path: 'eastsouth', name: 'eastsouth', component: EastSouthNode},

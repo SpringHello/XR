@@ -62,7 +62,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!-- <my-carousel-item class="carousel-item">
           <div @click="push('/activity/share/')"
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
@@ -77,8 +77,8 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        </my-carousel-item> -->
+        <!-- <my-carousel-item class="carousel-item">
           <div @click="push('/activity/zero/')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
@@ -88,7 +88,7 @@
                 <img src="../../assets/img/home/home-banner4.png" alt="立即领取"></div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item> -->
        <!-- <my-carousel-item class="carousel-item">
           <div @click="push('/anniversaryActive')"
                style="cursor: pointer;background: #F56B23;">
@@ -209,15 +209,15 @@
             isStart: true,
             weight: '1'
           },
-          {
-            imgPath: require('../../assets/img/activecenter/bg-card-1.png'),
-            textImg: require('../../assets/img/activecenter/text-1.png'),
-            time: '2018年12月7日开始',
-            activeObj: '新老用户',
-            url: '/activity/zero/',
-            isStart: true,
-            weight: '1',
-          },
+          // {
+          //   imgPath: require('../../assets/img/activecenter/bg-card-1.png'),
+          //   textImg: require('../../assets/img/activecenter/text-1.png'),
+          //   time: '2018年12月7日开始',
+          //   activeObj: '新老用户',
+          //   url: '/activity/zero/',
+          //   isStart: true,
+          //   weight: '1',
+          // },
           {
             imgPath: require('../../assets/img/activecenter/bg-card-3.png'),
             name: '对象存储 重磅上线',
@@ -241,16 +241,16 @@
             weight: '1',
             color: 'black'
           },
-          {
-            imgPath: require('../../assets/img/activecenter/bg-card-onsale.png'),
-            name: '分享好“云” 你赚时长',
-            desc: '每成功一位即赠送一个月 最多可领12个月',
-            time: '2018.07.19开始',
-            activeObj: '云主机 新老用户',
-            url: '/activity/share/',
-            isStart: true,
-            weight: '2'
-          }
+          // {
+          //   imgPath: require('../../assets/img/activecenter/bg-card-onsale.png'),
+          //   name: '分享好“云” 你赚时长',
+          //   desc: '每成功一位即赠送一个月 最多可领12个月',
+          //   time: '2018.07.19开始',
+          //   activeObj: '云主机 新老用户',
+          //   url: '/activity/share/',
+          //   isStart: true,
+          //   weight: '2'
+          // }
         ]
       }
     },
