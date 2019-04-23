@@ -2974,6 +2974,7 @@
               type: '1'
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                window._agl && window._agl.push(['track', ['success', {t: 3}]])
                 // 获取用户信息
                 this.init()
               } else {
@@ -3003,6 +3004,7 @@
               type: '0'
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                window._agl && window._agl.push(['track', ['success', {t: 3}]])
                 // 获取用户信息
                 this.init()
               } else {
@@ -3069,6 +3071,7 @@
             }
             axios.post('user/enterpriseAttest.do', params).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                window._agl && window._agl.push(['track', ['success', {t: 3}]])
                 // 获取用户信息
                 this.init()
                 this.currentTab = ''

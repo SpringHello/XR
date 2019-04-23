@@ -126,6 +126,7 @@
               sessionStorage.setItem('rechargeSuccessMsg', response.data.message)
               sessionStorage.setItem('vipMsg', response.data.vipMessage)
             } else {
+              window._agl && window._agl.push(['track', ['success', {t: 3}]])
               sessionStorage.setItem('payResult', 'success')
               sessionStorage.setItem('successMsg', response.data.message)
               this.$router.push('resultNew');
