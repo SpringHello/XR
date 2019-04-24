@@ -1759,11 +1759,16 @@
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            this.gpuConfigListHot = res.data.result.filter(item => {
-              return item.gpu == '100'
-            })
+            if (window.location.origin == 'http://localhost:8088'||window.location.origin == 'https://zschj.xrcloud.net') {
+              this.gpuConfigListHot = res.data.result.filter((item,index) => {
+                return index < 4
+              })
+            } else{
+              this.gpuConfigListHot = res.data.result.filter(item => {
+                return item.gpu == '100'
+              })
+            }
             this.gpuProductHot.cpuMemory = this.gpuConfigListHot[0]
-            // console.log(this.gpuConfigListHot)
           }
         })
       },
