@@ -2630,8 +2630,8 @@
               ticket: this.operatorid
             }
           }).then(res => {
-            this.$router.push('resultNew')
             if (res.status == 200 && res.data.status == 1) {
+              window._agl && window._agl.push(['track', ['success', {t: 3}]])
               sessionStorage.setItem('payResult', 'success')
               sessionStorage.setItem('successMsg', res.data.message)
               if (res.data.giftNumMessage) {
@@ -2639,9 +2639,11 @@
               } else {
                 sessionStorage.setItem('firstMsg', '')
               }
+              this.$router.push('resultNew')
             } else {
               sessionStorage.setItem('payResult', 'fail');
               sessionStorage.setItem('errMsg', res.data.message);
+              this.$router.push('resultNew')
             }
           })
         } else {
@@ -2755,7 +2757,8 @@
                 title: this.formInvoiceDate.invoiceTitle,
                 recipients: this.formInvoiceDate.recipients,
                 address: this.formInvoiceDate.consigneeAddress,
-                phone: this.formInvoiceDate.phone
+                phone: this.formInvoiceDate.phone,
+                identiCode: this.formInvoiceDate.taxpayerId
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success({
