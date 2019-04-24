@@ -202,16 +202,17 @@
                 <img src="../../assets/img/expenses/xiangnum.png" class="order_s2span"/>
                 <span class="order_s2span1">共 10 项 | 已选择<span> 0 </span>项 </span>
                 <span class="order_s2span2">总价：<span>¥0.00</span></span>
-                <div class="orderdiv">
-                  <span class="order_s2span3">按交易时间</span>
+                <span class="orderdiv">
+                  <span class="order_s2span3">按创建时间</span>
                   <Row class="datarow">
                     <Col span="12">
-                      <Date-picker v-model="timerrrrr" type="daterange" :options="optionsffffff" placement="bottom-start" placeholder="选择日期" style="width: 231px;" @on-change="dataChangedddd"></Date-picker>
+                      <Date-picker v-model="timeOrder" type="daterange" :options="optionsOrder" placement="bottom-start" placeholder="选择日期" style="width: 231px;" @on-change="dataChangeOrder"></Date-picker>
                     </Col>
                   </Row>
                   <Button type="primary">查询</Button>
-                </div>
+                </span>
               </p>
+              <Table :columns="columns5" :data="data5" style="margin-top:20px;"></Table>
             </div>
             <!-- <div class="ordertype">
               <span class="order_s1">订单类型</span>
@@ -1252,6 +1253,291 @@
          this.init()*/
       }
       return {
+        columns5: [
+            {
+              title: '订单编号',
+              key: 'OrderNumber',
+              width:176,
+              render: (h, params) => {
+                return h('div', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      //this.$router.push('CloudDataManage')
+                      alert(params.row.OrderNumber)
+                    }
+                  }
+                }, params.row.OrderNumber)
+            }
+          },
+            {
+              title: '资源类型',
+              key: 'ResourceType',
+              render: (h, params) => {
+                return h('span', params.row.ResourceType == 0 ? '弹性公网IP' : params.row.ResourceType == 1 ? '弹性云服务器' : params.row.ResourceType == 2 ? '对象存储' : params.row.ResourceType == 3 ? 'GPU云服务器' : params.row.ResourceType == 4 ? '云数据库' : params.row.ResourceType == 5 ? '云硬盘' : params.row.ResourceType == 6 ? 'NAT网关' : params.row.ResourceType == 7 ? 'SSL证书' : params.row.ResourceType == 8 ? '域名' : '云市场')
+              },
+              filters: [
+                  {
+                      label: '弹性公网IP',
+                      value: 0
+                  },
+                  {
+                      label: '弹性云服务器',
+                      value: 1
+                  },
+                  {
+                      label: '对象存储',
+                      value: 2
+                  },
+                  {
+                      label: 'GPU云服务器',
+                      value: 3
+                  },
+                  {
+                      label: '云数据库',
+                      value: 4
+                  },
+                  {
+                      label: '云硬盘',
+                      value: 5
+                  },
+                  {
+                      label: 'NAT网关',
+                      value: 6
+                  },
+                  {
+                      label: 'SSL证书',
+                      value: 7
+                  },
+                  {
+                      label: '域名',
+                      value: 8
+                  },
+                  {
+                      label: '云市场',
+                      value: 9
+                  }
+              ],
+              filterMultiple: false,
+                  filterMethod (value, row) {
+                    var rownum=row.ResourceType;
+                    if(value===rownum){
+                      return row.ResourceType==rownum;
+                    }
+                      // if (value===0) {
+                      //     return row.ResourceType==0;
+                      // } 
+                      // else if(value===1){
+                      //     return row.ResourceType==1;
+                      // }
+                      // else if(value===2){
+                      //     return row.ResourceType==2;
+                      // }
+                      // else if(value===3){
+                      //     return row.ResourceType==3;
+                      // } 
+                      // else if(value===4){
+                      //     return row.ResourceType==4;
+                      // }
+                      // else if(value===5){
+                      //     return row.ResourceType==5;
+                      // }
+                      // else if(value===6){
+                      //     return row.ResourceType==6;
+                      // }
+                      // else if(value===7){
+                      //     return row.ResourceType==7;
+                      // }
+                      // else if(value===8){
+                      //     return row.ResourceType==8;
+                      // }
+                      // else if(value===9){
+                      //     return row.ResourceType==9;
+                      // }
+                  }
+            },
+            {
+              title: '订单类型',
+              key: 'Ordertype',
+              render: (h, params) => {
+                return h('span', params.row.Ordertype == 0 ? '资源新购' : params.row.Ordertype == 1 ? '资源升级' : '资源续费')
+              },
+              filters: [
+                  {
+                      label: '资源新购',
+                      value: 0
+                  },
+                  {
+                      label: '资源升级',
+                      value: 1
+                  },
+                  {
+                      label: '资源续费',
+                      value: 2
+                  }
+              ],
+              filterMultiple: false,
+                  filterMethod (value, row) {
+                      var rownum=row.Ordertype;
+                      if(value===rownum){
+                        return row.Ordertype==rownum;
+                      }
+                      // if (value===0) {
+                      //      return row.Ordertype==0;
+                      // } 
+                      // else if(value===1){
+                      //      return row.Ordertype==1;
+                      //  }
+                      //  else if(value===2){
+                      //     return row.Ordertype==2;
+                      // }
+                  }
+            },
+            {
+              title: '交易金额',
+              key: 'TransactionAmount',
+              sortable: true,
+              render: (h, params) => {
+                   return h('div', {}, [
+                       h('span', {}, '¥'),
+                       h('span', {}, params.row.TransactionAmount)
+                    ])
+              }
+            },
+            {
+              title: '订单状态',
+              key: 'OrderStatus',
+              render: (h, params) => {
+                return h('span', params.row.OrderStatus == 0 ? '待支付' : params.row.OrderStatus == 1 ? '已支付' : params.row.OrderStatus == 2 ? '已退款' : '已超时失效')
+              },
+              filters: [
+                  {
+                      label: '待支付',
+                      value: 0
+                  },
+                  {
+                      label: '已支付',
+                      value: 1
+                  },
+                  {
+                      label: '已退款',
+                      value: 2
+                  },
+                  {
+                      label: '已超时失效',
+                      value: 3
+                  }
+              ],
+              filterMultiple: false,
+                  filterMethod (value, row) {
+                      var rownum=row.OrderStatus;
+                      if(value===rownum){
+                        return row.OrderStatus==rownum;
+                      }
+                      // if (value===0) {
+                      //     return row.OrderStatus==0;
+                      // } 
+                      // else if(value===1){
+                      //     return row.OrderStatus==1;
+                      // }
+                      // else if(value===2){
+                      //     return row.OrderStatus==2;
+                      // }
+                      // else if(value===3){
+                      //     return row.OrderStatus==3;
+                      // }
+                  }
+            },
+            {
+              title: '创建日期',
+              key: 'creatData',
+              sortable: true
+            },
+            {
+              title: '支付日期',
+              key: 'payData',
+              sortable: true
+            },
+            {
+              title: '操作',
+              render: (h, params) => {
+                 if(params.row.OrderStatus === 0){
+                   return h('div', {}, [
+                       h('span', {
+                        style: {
+                          marginRight: '10px',
+                          color: '#2A99F2',
+                          cursor: 'pointer'
+                        },
+                        on: {
+                          click: () => {
+                            alert("这是删除");
+                          }
+                        }
+                      }, '删除'),
+                       h('span', {
+                        style: {
+                          color: '#2A99F2',
+                          cursor: 'pointer'
+                        },
+                        on: {
+                          click: () => {
+                            alert("这是支付");
+                          }
+                        }
+                      }, '支付')
+                    ])
+                 }
+                 else{
+                   return h('div', {}, [
+                       h('span', {
+                        style: {
+                          color: '#2A99F2',
+                          cursor: 'pointer'
+                        },
+                        on: {
+                          click: () => {
+                            alert("这是删除");
+                          }
+                        }
+                      }, '删除')
+                    ])
+                 }
+            }
+          }
+        ],
+          data5: [
+            {
+                OrderNumber: '2019023101240915',
+                ResourceType: 0,
+                Ordertype: 0,
+                TransactionAmount: '50,000.00',
+                OrderStatus: 0,
+                creatData:'2019/3/25 21:29',
+                payData:'2019/3/25 21:29'
+            },
+            {
+                OrderNumber: '2019023101240914',
+                ResourceType: 1,
+                Ordertype: 1,
+                TransactionAmount: '30,000.00',
+                OrderStatus: 0,
+                creatData:'2019/3/21 21:29',
+                payData:'2019/3/20 21:29'
+            },
+            {
+                OrderNumber: '2019023101240913',
+                ResourceType: 9,
+                Ordertype: 2,
+                TransactionAmount: '10,000.00',
+                OrderStatus: 3,
+                creatData:'2019/3/24 21:29',
+                payData:'2019/3/29 21:29'
+            }
+        ],
         dataResponse:[],
         columnsProductA: [
             {
@@ -1744,7 +2030,7 @@
         ],
         ordertime: '',
         time: '',
-        timerrrrr: '',
+        timeOrder: '',
         total: 0,
         currentPage: 1,
         order_currentPage: 1,
@@ -1760,7 +2046,7 @@
         value1: 0,
         value2: 10000,
         dateRange: ['', ''],
-        dateRangeffff: ['', ''],
+        dateRangeOrder: ['', ''],
         order_dateRange: ['', ''],
         columns: [
           // {
@@ -2117,7 +2403,7 @@
             }
           ]
         },
-        optionsffffff: {
+        optionsOrder: {
           shortcuts: [
             {
               text: '最近一周',
@@ -2800,8 +3086,8 @@
       dataChange(time) {
         this.dateRange = time
       },
-      dataChangedddd(time) {
-        this.dateRangeffff = time
+      dataChangeOrder(time) {
+        this.dateRangeOrder = time
       },
       search() {
         this.$http.get('user/searchWaterNumber.do', {
@@ -2821,6 +3107,9 @@
               this.total = response.data.result.totle
             }
           })
+      },
+      searchOrderfunc() {
+        
       },
       deleteOrder() {
         if (this.orderNumber.length != 0) {
@@ -3381,8 +3670,8 @@
       getBillAll() {
         this.dateRange = ['', '']
       },
-      getBillAlldddd() {
-        this.dateRangeffff = ['', '']
+      getBillAllOrder() {
+        this.dateRangeOrder = ['', '']
       },
       toMyCard() {
         this.name = 'myCard'
@@ -4145,6 +4434,9 @@
       dateRange() {
         this.search()
       },
+      dateRangeOrder() {
+        this.searchOrderfunc()
+      },
       // 消费汇总按产品、区域、消费类型类
       billTypeSelected(val) {
         let cloneResponse= JSON.parse(JSON.stringify(this.dataResponse));
@@ -4175,10 +4467,7 @@
           this.dataDatetypeA = cloneResponse
         }
       }
-      ,
-      dateRangeffff() {
-        this.search()
-      }
+      
     }
   }
 </script>
@@ -4530,6 +4819,7 @@
           .order_s2 {
             margin-top:10px;
             line-height: 20px;
+            position: relative;
            .order_s2span{
              top: 3px;
              position: relative;
@@ -4556,17 +4846,22 @@
               }
             }
             .orderdiv{
-              position: relative;
+              position: absolute;
               right: 0;
+              top:-14px;
               .order_s2span3{
               font-size:12px;
               font-family:MicrosoftYaHei;
               color:rgba(102,102,102,1);
-              line-height:16px;
               margin: 0 10px 0 10px;
               }
               .datarow{
                 display: inline-block;
+                top:10px;
+              }
+              > button{
+                margin-top:-5px;
+                margin-left: 10px;
               }
             }
           }
