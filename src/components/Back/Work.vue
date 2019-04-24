@@ -74,7 +74,7 @@
 															:on-exceeded-size="handleMaxSize"
 															:before-upload="handleUpload"
 															type="drag"
-															action="https://zschj.xrcloud.net/file/upFile.do"
+															action="file/upFile.do"
 															style="display: inline-block;">
                               <Button :disabled="disabledupload" v-if="uploadList.length < 5" type="ghost" class="btnupload">
                                 <img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" style="margin-top: 5px;" />
@@ -118,8 +118,8 @@
                         <span style="width:62%">创建时间 : {{item.puddate}}</span>
                         <span style="width:38%;margin-top: 10px;">所属产品 : {{item.subdescription}}</span>
                         <span style="width:62%;margin-top: 10px;">持续时间 : {{item.timeago}}</span>
-												<span v-if="item.pic!=null" v-for="ited in item.pic">
-                            <span v-if="JudgingPicName(ited)" style="width:100%;" >
+												<span v-if="item.pictureMap!=null" v-for="ited in item.pictureMap">
+                            <span style="width:100%;" >
                               <img :src="ited" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" />
                             </span>
 												</span>
@@ -175,8 +175,8 @@
                         <span style="width:62%">创建时间 : {{item.puddate}}</span>
                         <span style="width:38%;margin-top: 10px;">所属产品 : {{item.subdescription}}</span>
                         <span style="width:62%;margin-top: 10px;">经过时间 : {{item.timeago}}</span>
-												<span v-if="item.pic!=null" v-for="ited,index in item.pic">
-													<span style="width:100%;" ><img :src="ited" :onerror="errorimg1[index]" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" /></span>
+												<span v-if="item.pictureMap!=null" v-for="ited,index in item.pictureMap">
+													<span style="width:100%;" ><img :src="ited" style="width: 80px;height: 80px;margin: 20px 20px 0 0;" /></span>
 												</span>
                       </div>
                       <div class="operating-menu">
@@ -238,8 +238,8 @@
 												<span class="main">问题描述</span>
 												<span class="mini" style="margin-bottom:13px">{{orderDetail[2][0].issue}}</span>
 											</p>
-											<span v-if="orderDetail[2][0].pic!=null" v-for="ited,index in orderDetail[2][0].pic">
-												<span style="width:100%;" ><img :src="ited" :onerror="errorimg2[index]" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
+											<span v-if="orderDetail[2][0].pictureMap!=null" v-for="ited,index in orderDetail[2][0].pictureMap">
+												<span style="width:100%;" ><img :src="ited" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
 											</span>
                       </div>
                       <div class="item" v-for="item in orderDetail[3]" style="position: relative">
@@ -248,8 +248,8 @@
 													<span v-if="item.uname==null" class="main">您</span>
 													<span class="mini">{{item.g_reply}}</span>
 												</p>
-												<span v-if="item.pic!=null" v-for="ited,index in item.pic"><!--  -->
-													<span style="width:100%;" ><img :src="ited" :onerror="errorimg4[index]" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
+												<span v-if="item.pictureMap!=null" v-for="ited,index in item.pictureMap"><!--  -->
+													<span style="width:100%;" ><img :src="ited" style="width: 80px;height: 80px;margin: 7px 20px 15px 0;" /></span>
 												</span>
                         <span
                           style="position: absolute;bottom: -17px;right: 65px;font-size: 12px;color: rgba(153,153,153,0.65);">{{new Date(parseInt(item.repdate)).format('yyyy-MM-dd hh:mm')}}</span>
@@ -291,7 +291,7 @@
 															:on-exceeded-size="handleMaxSize"
 															:before-upload="handleUpload1"
 															type="drag"
-															action="https://zschj.xrcloud.net/file/upFile.do"
+															action="file/upFile.do"
 															style="display: inline-block;">
                               <Button :disabled="disableduploadsent" v-if="uploadList1.length < 5" type="ghost" class="btnuploadsent">
                                 <img v-if="percent==0" src="../../assets/img/usercenter/uc-add.png" style="margin-top: 5px;" />
@@ -386,9 +386,6 @@
 					testurl1:[],
 					Durationtime:'',
 					errorimg: '',
-					errorimg1: [],
-					errorimg2: [],
-					errorimg4:[],
 					errorimg3: '',
 					UploadLeix:[],
 					UploadLeix1:[],
@@ -795,31 +792,6 @@
           if (response.status == 200 && response.data.status == 1) {
             this.orderDetail = response.data.msg
 						this.Durationtime=timeago().format(this.orderDetail[2][0].puddate, 'zh_CN')
-						if(this.orderDetail[2][0].pic){
-							item.pic.forEach((ited, index)=>{
-									//获取最后一个.的位置
-									var site11 = ited.lastIndexOf("\.");
-									//截取最后一个.后的值
-                  var end11=ited.substring(site11 + 1, ited.length);
-                   if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
-                  }
-                  else if(end11=='txt'){
-                    this.errorimg2.push('this.src="' + require('../../assets/img/work/txt.png') + '"')
-                  }
-                  else if(end11=='doc'||end11=='docx'){
-                    this.errorimg2.push('this.src="' + require('../../assets/img/work/doc.png') + '"')
-                  }
-                  else if(end11=='eml'){
-                    this.errorimg2.push('this.src="' + require('../../assets/img/work/eml.png') + '"')
-                  }
-                  else if(end11=='pdf'){
-                    this.errorimg2.push('this.src="' + require('../../assets/img/work/pdf.png') + '"')
-                  }
-                  else if(end11=='xlsx'||end11=='xls'){
-                    this.errorimg2.push('this.src="' + require('../../assets/img/work/xlsx.png') + '"')
-                  }
-							})
-						}
             this.$Loading.finish()
             this.tableName = '工单详情'
           }
@@ -900,34 +872,7 @@
           if (response.status == 200 && response.data.status == 1) {
 						this.testurl1= []
 						this.uploadList1=[]
-						if(response.data.msg.pic){
-							response.data.msg.pic.forEach((ited, index)=>{
-								  //获取最后一个.的位置
-								  var site11 = ited.lastIndexOf("\.");
-								  //截取最后一个.后的值
-								  var end11=ited.substring(site11 + 1, ited.length);
-								  if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
-								  	
-								  }
-								  else if(end11=='txt'){
-										this.errorimg4.push('this.src="' + require('../../assets/img/work/txt.png') + '"')
-								  }
-								  else if(end11=='doc'||end11=='docx'){
-										this.errorimg4.push('this.src="' + require('../../assets/img/work/doc.png') + '"')
-								  }
-								  else if(end11=='eml'){
-										this.errorimg4.push('this.src="' + require('../../assets/img/work/eml.png') + '"')
-								  }
-								  else if(end11=='pdf'){
-										this.errorimg4.push('this.src="' + require('../../assets/img/work/pdf.png') + '"')
-								  }
-								  else if(end11=='xlsx'||end11=='xls'){
-										this.errorimg4.push('this.src="' + require('../../assets/img/work/xlsx.png') + '"')
-								  }
-							})
-							
-						}
-            this.orderDetail[3].push({g_reply: response.data.msg.g_reply, uname: null, repdate: new Date().getTime(), pic: response.data.msg.pic})
+            this.orderDetail[3].push({g_reply: response.data.msg.g_reply, uname: null, repdate: new Date().getTime(), pic: response.data.msg.pic,pictureMap:response.data.msg.pictureMap})
             this.editorValue = ''
           }
 					else 
@@ -958,42 +903,6 @@
             })
           }
         })
-      },
-      JudgingPicName(ited){
-        //获取最后一个.的位置
-				 var site11 = ited.lastIndexOf("\.");
-        //截取最后一个.后的值
-        var end11=ited.substring(site11 + 1, ited.length);
-        if(end11=='jpg'||end11=='jpeg'||end11=='png'||end11=='gif'){
-            console.log(ited)
-            return ited;
-         }
-        else if(end11=='xlsx'||end11=='xls'){
-             ited='../../assets/img/work/xlsx.png'
-             console.log(ited)
-             return ited;
-        }
-         else if(end11=='txt'){
-              ited='../../assets/img/work/txt.png'
-              console.log(ited)
-              return ited;
-          }
-          else if(end11=='doc'||end11=='docx'){
-              ited='../../assets/img/work/doc.png'
-              console.log(ited)
-              return ited;
-           }
-          else if(end11=='eml'){
-              ited='../../assets/img/work/eml.png'
-              console.log(ited)
-              return ited;
-          }
-          else if(end11=='pdf'){
-              ited='../../assets/img/work/pdf.png'
-              console.log(ited)
-              return ited;
-          }  
-          
       },
       changeOperatingPage(page) {
         this.operatingCurrPage = page
