@@ -9,7 +9,7 @@
         <div style="border-bottom: 1px solid #D9D9D9;">
           <h2>区域选择</h2>
           <div class="item-wrapper">
-            <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
+            <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"  v-if="item.zoneid !== 'd31ab294-8950-4b00-ad1d-0496fa742b91'"
                  :class="{zoneSelect:zone.zoneid==item.zoneid}"
                  @click="zone=item">{{item.zonename}}
             </div>
@@ -482,7 +482,7 @@
         return i.zoneid == zone.zoneid
       })) {
         // 默认选中zoneList中第一个区域
-        zone = zoneList[0]
+        zone = zoneList[1]
       }
       return {
         mirrorShow: false,
