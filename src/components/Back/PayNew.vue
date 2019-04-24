@@ -127,7 +127,7 @@
         s: '--',
         intervalInstance: null,
         payText: '确认支付',
-        orderStatus: 0
+        orderStatus: -1
       }
     },
     beforeRouteEnter(to, from, next) {
