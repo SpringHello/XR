@@ -135,21 +135,79 @@
             </div>
           </Tab-pane>
 					<Tab-pane label="账单" name="bills" class="bill">
-            <Row type="flex" justify="space-between" class="code-row-bg">
-              <!-- <Col span="4">2019年3月账单概览</Col>
-              
-              <Col span="8">选择账期
-                
-              </Col> -->
-            </Row>
             <ButtonGroup>
                 <Button v-for="(item,index) in billTabs" :key="index" :class="{'select-tab':billBtnSelected == index}" @click="billBtnSelected=index">{{item}}</Button>
             </ButtonGroup>
-            <div v-if="billBtnSelected==0">
-              <DatePicker type="month" placeholder="Select month" style="width: 200px" @on-change="dataChange1"></DatePicker>
-              <ul class="monthly-tabs">
-                <li v-for="(item,index) in billMonthlyTabs" :key="index" :class="{'select-tab':billTypeSelected == index}" @click="billTypeSelected=index">{{item}}</li>
-              </ul>
+            <div v-if="billBtnSelected==0" class="bill-overview">
+              <div class="overview">
+                <div class="flex-vertical-center content-header">
+                  <span>2019年3月账单概览</span>
+                  <div>
+                    <span>选择账期</span>
+                    <DatePicker type="month" placeholder="Select month" style="width: 200px" @on-change="dataChange1"></DatePicker>
+                    <Button type="primary">导出本月账单</Button>
+                  </div>
+                </div>
+                <div class="show-panel">
+                  <div>
+                    <div class="title">
+                      <span>账单金额（元）</span>
+                      <Poptip trigger="hover" content="账单金额是指用户在新睿云平台的实际消费金额" placement="right-end">
+                          <Icon type="ios-help-outline"></Icon>
+                      </Poptip>
+                    </div>
+                    <div class="count">
+                      <div>999999999.00</div>
+                      <span>=</span>
+                      <div>
+                        <span>余额支付</span>
+                        <p>333333333.00</p>
+                      </div>
+                      <span>+</span>
+                      <div>
+                        <span>第三方支付</span>
+                        <p>333333333.00</p>
+                      </div>
+                      <span>+</span>
+                      <div>
+                        <span>现金券支付</span>
+                        <p>333333333.00</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="title">
+                      <span>订单金额（元）</span>
+                      <Poptip trigger="hover" content="订单金额是指用户在账期内所有已支付的订单总额" placement="right-end">
+                          <Icon type="ios-help-outline"></Icon>
+                      </Poptip>
+                    </div>
+                    <div class="count">
+                      <div>999999999.00</div>
+                      <span>=</span>
+                      <div>
+                        <span>账单金额</span>
+                        <p>333333333.00</p>
+                      </div>
+                      <span>+</span>
+                      <div>
+                        <span>优惠券抵扣支付</span>
+                        <p>333333333.00</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list">
+                <div class="flex-vertical-center content-header">
+                  <span>2019年3月账单汇总</span>
+                  <Button type="primary">导出当前账单</Button>
+                </div>
+                <ul class="monthly-tabs">
+                  <li v-for="(item,index) in billMonthlyTabs" :key="index" :class="{'select-tab':billTypeSelected == index}" @click="billTypeSelected=index">{{item}}</li>
+                </ul>
+              </div>
+              
               <Table :columns="columnsProductA" :data="dataProductA" v-if="billTypeSelected==0"></Table>
               <Table :columns="columnsZoneA" :data="dataZoneA" v-if="billTypeSelected==1"></Table>
               <Table :columns="columnsDatetypeA" :data="dataDatetypeA" v-if="billTypeSelected==2"></Table>
@@ -1282,7 +1340,6 @@
                 title: '总费用',
                 key: 'totalPay'
             }
-              
         ],
         dataProductA: [
         ],
@@ -4197,6 +4254,7 @@
   }
 
   .background {
+    font-family:MicrosoftYaHei;
     background-color: #f5f5f5;
     width: 100%;
     @diff: 101px;
@@ -4936,6 +4994,7 @@
     }
   }
   .bill {
+    color: #333;
     .select-tab {
       color:rgba(42,153,242,1);
       border:1px solid rgba(42,153,242,1);
@@ -4963,6 +5022,60 @@
         color:#fff;
         background:rgba(42,153,242,1);
         border:1px solid rgba(42,153,242,1);
+      }
+    }
+    .bill-overview {
+      margin-top: 20px;
+      font-size: 14px;
+      .content-header {
+        margin-bottom: 10px;
+        div {
+          span {
+            font-size: 12px;
+            color: #666666;
+            margin-right: 10px;
+          }
+          button {
+            margin-left: 20px;
+          }
+        }
+      }
+      .overview {
+        margin-bottom: 10px;
+      }
+      .show-panel {
+        display: flex;
+        justify-content: space-between;
+        >div {
+          width:570px;
+          height:161px;
+          padding: 20px;
+          background:rgba(255,255,255,1);
+          box-shadow:0px 2px 4px 0px rgba(0,0,0,0.2);
+          .title {
+            font-size:14px;
+            i {
+              color:#2B99F2
+            }
+          }
+          .count {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size:14px;
+            text-align: center;
+            span {
+              color:rgba(153,153,153,1);
+            }
+            div:first-child{
+              font-size: 18px;
+            }
+            p {
+              margin-top: 5px;
+            }
+          }
+        }
       }
     }
   }
