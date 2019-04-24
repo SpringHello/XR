@@ -135,54 +135,62 @@
             </div>
           </Tab-pane>
 					<Tab-pane label="账单" name="bills" class="bill">
+            <Row type="flex" justify="space-between" class="code-row-bg">
+              <!-- <Col span="4">2019年3月账单概览</Col>
+              
+              <Col span="8">选择账期
+                
+              </Col> -->
+            </Row>
             <ButtonGroup>
                 <Button v-for="(item,index) in billTabs" :key="index" :class="{'select-tab':billBtnSelected == index}" @click="billBtnSelected=index">{{item}}</Button>
             </ButtonGroup>
-            <div v-if="billBtnSelected==0">1</div>
+            <div v-if="billBtnSelected==0">
+              <DatePicker type="month" placeholder="Select month" style="width: 200px" @on-change="dataChange1"></DatePicker>
+              <ul class="monthly-tabs">
+                <li v-for="(item,index) in billMonthlyTabs" :key="index" :class="{'select-tab':billTypeSelected == index}" @click="billTypeSelected=index">{{item}}</li>
+              </ul>
+              <Table :columns="columnsProductA" :data="dataProductA" v-if="billTypeSelected==0"></Table>
+              <Table :columns="columnsZoneA" :data="dataZoneA" v-if="billTypeSelected==1"></Table>
+              <Table :columns="columnsDatetypeA" :data="dataDatetypeA" v-if="billTypeSelected==2"></Table>
+            </div>
             <div v-if="billBtnSelected==1">2</div>
-            <div v-if="billBtnSelected==2">3</div>
-            <div v-if="billBtnSelected==3">4</div>      
-            <Col span="12">
-                <DatePicker type="month" placeholder="Select month" style="width: 200px" @on-change="dataChange1"></DatePicker>
-            </Col>
-            <h3>交易流水</h3>
-            <ul class="monthly-tabs">
-              <li v-for="(item,index) in billMonthlyTabs" :key="index" :class="{'select-tab':billTypeSelected == index}" @click="billTypeSelected=index">{{item}}</li>
-            </ul>
-            <Table :columns="columnsProductA" :data="dataProductA" v-if="billTypeSelected==0"></Table>
-            <Table :columns="columnsZoneA" :data="dataZoneA" v-if="billTypeSelected==1"></Table>
-            <Table :columns="columnsDatetypeA" :data="dataDatetypeA" v-if="billTypeSelected==2"></Table>
-            <div class="expenses_condition">
-              <span>按交易时间</span>
-              <Row style="display: inline-block;margin-left: 10px">
-                <Col span="12">
-                  <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
-                               placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
-                </Col>
-              </Row>
-              <span style="margin-left: 20px">按交易类型</span>
-              <Select v-model="types" style="width:231px;margin-left: 10px;position: relative;bottom: 12px">
-                <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-              <span style="margin-left: 20px">按交易金额</span>
-              <Input-number :min="0" v-model="value1"
-                            style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
-              &nbsp;&nbsp;
-              <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
-              &nbsp;&nbsp;
-              <Input-number :min="0" v-model="value2"
-                            style="width: 116px;position: relative;bottom: 12px"></Input-number>
-              <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
-              </Button>
-              <Button type="primary" style="bottom: 12px;position: relative" @click="seaWaterN">导出流水
-              </Button>
-              <Table highlight-row :columns="columns" :data="tabledata"></Table>
-              <div style="margin: 10px;overflow: hidden">
-                <div style="float: right;">
-                  <Page :total="total" :current="1" :page-size="7" @on-change="currentChange"></Page>
+            <div v-if="billBtnSelected==2">
+              <h3>交易流水</h3>
+              <div class="expenses_condition">
+                <span>按交易时间</span>
+                <Row style="display: inline-block;margin-left: 10px">
+                  <Col span="12">
+                    <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
+                                placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
+                  </Col>
+                </Row>
+                <span style="margin-left: 20px">按交易类型</span>
+                <Select v-model="types" style="width:231px;margin-left: 10px;position: relative;bottom: 12px">
+                  <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+                <span style="margin-left: 20px">按交易金额</span>
+                <Input-number :min="0" v-model="value1"
+                              style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
+                &nbsp;&nbsp;
+                <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
+                &nbsp;&nbsp;
+                <Input-number :min="0" v-model="value2"
+                              style="width: 116px;position: relative;bottom: 12px"></Input-number>
+                <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
+                </Button>
+                <Button type="primary" style="bottom: 12px;position: relative" @click="seaWaterN">导出流水
+                </Button>
+                <Table highlight-row :columns="columns" :data="tabledata"></Table>
+                <div style="margin: 10px;overflow: hidden">
+                  <div style="float: right;">
+                    <Page :total="total" :current="1" :page-size="7" @on-change="currentChange"></Page>
+                  </div>
                 </div>
               </div>
             </div>
+            <div v-if="billBtnSelected==3">4</div>      
+            
 					</Tab-pane>
           <Tab-pane label="订单管理" name="orderManage">
             <div class="ordertype">
