@@ -609,6 +609,7 @@
         }).then(res => {
           this.$router.push('resultNew')
           if (res.status == 200 && res.data.status == 1) {
+            window._agl && window._agl.push(['track', ['success', {t: 3}]])
             sessionStorage.setItem('payResult', 'success')
             sessionStorage.setItem('successMsg', res.data.message)
             if (res.data.giftNumMessage) {

@@ -127,7 +127,7 @@
         s: '--',
         intervalInstance: null,
         payText: '确认支付',
-        orderStatus: 0
+        orderStatus: -1
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -210,6 +210,7 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
+              window._agl && window._agl.push(['track', ['success', {t: 3}]])
               sessionStorage.setItem('payResult', 'success')
               sessionStorage.setItem('successMsg', response.data.message)
               if (response.data.giftNumMessage) {
@@ -292,6 +293,7 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            window._agl && window._agl.push(['track', ['success', {t: 3}]])
             sessionStorage.setItem('payResult', 'success')
             this.$router.push('resultNew')
           } else {

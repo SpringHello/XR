@@ -64,6 +64,7 @@
 
 <script type="text/ecmascript-6">
   import {initRecycle} from '../../util/publicMethod'
+  import $store from '@/vuex'
   export default{
     data(){
       return {
@@ -343,7 +344,7 @@
       }
     },
     watch:{
-      "$stroe.state.zone":{
+      "$store.state.zone":{
         handler:function(){
           this.fetchData();
         },
