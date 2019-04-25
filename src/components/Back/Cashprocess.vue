@@ -99,7 +99,7 @@
         </p>
         <div class="modal-content-s">
           <div>
-            <p class="lh24" id="pself1">为保障您的资金安全，我们将向您的实名认证手机号码 <span style="color: #FF624B">{{userphone}}</span>
+            <p class="lh24" id="pself1">为保障您的资金安全，我们将向您的实名认证手机号码 <span style="color: #FF624B">{{userphone.substr(0,3) + '****' + userphone.substr(7)}}</span>
               发送一条验证短信，请收到验证信息之后将验证码填入下方。
             </p>
           </div>

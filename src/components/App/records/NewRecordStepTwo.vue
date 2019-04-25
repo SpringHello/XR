@@ -86,8 +86,8 @@
                   </transition>
                 </div>
               </FormItem>
-              <p v-if="site.basicInformation.newWebsiteDomainList.length<10" class="form-p" @click="addWebsiteDomain(upIndex)"><img
-                src="../../../assets/img/records/records-icon19.png" alt="新增网站域名"/> 新增网站域名</p>
+              <!--<p v-if="site.basicInformation.newWebsiteDomainList.length<10" class="form-p" @click="addWebsiteDomain(upIndex)"><img
+                src="../../../assets/img/records/records-icon19.png" alt="新增网站域名"/> 新增网站域名</p>-->
               <FormItem label="网站首页URL" prop="websiteHomepage">
                 <Input @on-focus="toolShow('websiteHomepage',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.websiteHomepage" placeholder="请输入网站首页URL"
                        style="width: 500px"></Input>
@@ -276,7 +276,9 @@
           </div>
         </div>
       </div>
-      <p style="width: 1200px; margin: 20px auto 0 auto;font-size: 18px;color: #377dff;cursor: pointer;" @click="addSite" v-if="siteList.length<3">添加网站</p>
+      <p style="width: 1200px; margin: 20px auto 0 auto;font-size: 18px;color: #377dff;cursor: pointer;" @click="addSite" v-if="siteList.length<31 && mainUnitInformation.province == '广东省' && mainUnitInformation.unitProperties == '企业'">添加网站</p>
+       <p style="width: 1200px; margin: 20px auto 0 auto;font-size: 18px;color: #377dff;cursor: pointer;" @click="addSite" v-if="siteList.length<5 && mainUnitInformation.province == '广东省' && mainUnitInformation.unitProperties == '个人'">添加网站</p>
+       <p style="width: 1200px; margin: 20px auto 0 auto;font-size: 18px;color: #377dff;cursor: pointer;" @click="addSite"  v-if="mainUnitInformation.province != '广东省'" >添加网站</p>
       <div class="content-footer">
         <button @click="$router.go(-1)">上一步，填写主体信息</button>
         <button style="margin-left: 20px" @click="nextStep">下一步，上传资料</button>

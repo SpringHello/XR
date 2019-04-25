@@ -903,6 +903,7 @@
         window.open(href)
       },
       getOrderType(){
+        this.complaintForm.step = 1
         this.$http.get('order/orderType.do',{params:{
           gid: '5'
         }}).then(res=>{

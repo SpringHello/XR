@@ -822,11 +822,9 @@
               let textArr = params.row.serviceoffername.split('+')
               let text_1 = 'CPU:' + textArr[0]
               let text_2 = '内存:' + textArr[2]
-              let text_3 = '频率:' + textArr[1]
               return h('ul', {}, [
                 h('li', {}, text_1),
-                h('li', {}, text_2),
-                h('li', {}, text_3)
+                h('li', {}, text_2)
               ])
             }
           },

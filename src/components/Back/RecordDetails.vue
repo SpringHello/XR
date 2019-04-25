@@ -849,7 +849,7 @@
           <p style="margin:10px">法人证件号码</p>
           <Input type="text" v-model="updateHostUnitList.legalcertificatesnumber"></Input>
         </FormItem>
-        <FormItem prop="officenumber">
+        <FormItem>
           <p style="margin:10px">办公室电话</p>
           <Input type="text" v-model="updateHostUnitList.officenumber"></Input>
         </FormItem>
@@ -921,7 +921,7 @@
           <p style="margin:10px">有效证件号码</p>
           <Input type="text" v-model="updateHostUnitList.webresponsibilitycertificatesnumber"></Input>
         </FormItem>
-        <FormItem prop="offacenumber">
+        <FormItem>
           <p style="margin:10px">办公室电话号码</p>
           <Input type="text" v-model="updateHostUnitList.offacenumber"></Input>
         </FormItem>
