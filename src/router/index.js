@@ -129,6 +129,9 @@ const Reset = () =>import('@/components/LR/Reset')
 const RegisterSuccess = () =>import('@/components/LR/RegisterSuccess')
 const ResetNew = () =>import('@/components/LR/ResetNew')
 
+//云市场页面路由
+const market = () =>import('@/components/App/market/Market')
+
 // 后台页面子路由
 // import Overview from '@/components/Back/Overview'
 // import Host from '@/components/Back/Host'
@@ -369,7 +372,8 @@ var router = new Router({
         {path: 'gpu', component: Pgpu},
         {path: 'elasticscalable',component: Pelastic},
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
-        {path: 'hotQuestion/:parentId/:id', component: hotQuestion}
+        {path: 'hotQuestion/:parentId/:id', component: hotQuestion},
+        {path: 'market', component: market}
       ]
     },
     {

@@ -674,3 +674,17 @@ box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
 .ss-anth-modal .ivu-form-item-error-tip {
   margin-left: 80px;
 }
+
+/*云市场-合作伙伴*/
+#market .ivu-carousel>button{
+  width: 70px;
+  height: 70px;
+  font-size: 40px;
+  background: #ececef;
+}
+#market .ivu-carousel .left{
+  left: -90px;
+}
+#market .ivu-carousel .right{
+  right: -90px;
+}
