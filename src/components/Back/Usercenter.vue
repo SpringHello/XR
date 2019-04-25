@@ -39,7 +39,7 @@
                       @click="modifyEmail">修改</span></li>
                     <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span
                       @click="modifyTelphone">去绑定</span></li>
-                    <li v-else><span>手机号码</span><span>{{ userInfo.phone}}</span><span
+                    <li v-else><span>手机号码</span><span>{{ userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7)}}</span><span
                       @click="telModify_btn()">修改</span></li>
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
@@ -199,13 +199,18 @@
                     <p class="noauth-voice">收不到验证码？请<span :class="{notallow:notAuth.cardAuthForm.sendCodeText !='获取验证码'}" @click="sendCodePersonal('againCode')">重新获取</span>或<span
                       :class="{notallow:notAuth.cardAuthForm.sendCodeText !='获取验证码'}" @click="sendCodePersonal('voice')">接收语音验证码</span></p>
                   </FormItem>
-                  <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">请上传实名认证图片
+                  <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">1、请上传实名认证图片
                     上传文件支持jpg/png/gif/pdf，单个文件最大不超过4MB。</p>
+                     <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">2、请将真实姓名及“仅用于新睿云身份验证“手写在白纸上，与证件正面一起拍照上传，手写内容请保证清晰可辨认</p>
                   <div class="IDCard">
                     <FormItem label="身份证人像面" style="margin-left:0px;">
                       <div style="display: flex;padding:20px;background-color: #f7f7f7">
                         <div style="width:130px;">
                           <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
+                                     :format="['jpg','jpeg','png','gif']"
+                                  :max-size="4096"
+                                   :on-format-error="handleFormatError"
+                                  :on-exceeded-size="handleMaxSize" 
                                   :on-success="IDCardFront">
                             <div v-if="notAuth.cardAuthForm.IDCardFront==''"
                                  style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
@@ -226,6 +231,10 @@
                       <div style="display: flex;padding:20px;background-color: #f7f7f7">
                         <div style="width:130px;">
                           <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
+                                     :format="['jpg','jpeg','png','gif']"
+                                  :max-size="4096"
+                                   :on-format-error="handleFormatError"
+                                  :on-exceeded-size="handleMaxSize" 
                                   :on-success="IDCardBack">
                             <div v-if="notAuth.cardAuthForm.IDCardBack==''"
                                  style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
@@ -247,6 +256,10 @@
                       <div style="display: flex;padding:20px;background-color: #f7f7f7">
                         <div style="width:130px;">
                           <Upload multiple type="drag" :show-upload-list="false" :with-credentials="true" action="file/upFile.do"
+                                  :format="['jpg','jpeg','png','gif']"
+                                  :max-size="4096"
+                                   :on-format-error="handleFormatError"
+                                  :on-exceeded-size="handleMaxSize" 
                                   :on-success="IDCardPerson">
                             <div v-if="notAuth.cardAuthForm.IDCardPerson==''"
                                  style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
@@ -257,8 +270,8 @@
                               上传文件</p>
                           </Upload>
                         </div>
-                        <div style="width:130px;margin-left:20px;">
-                          <img src="../../assets/img/usercenter/card-person.png" style="width:130px;height:74px;margin-bottom: 20px;">
+                        <div style="width:130px;margin-left:20px;cursor: zoom-in" @click="showModal.showPersonPicture = true">
+                          <img src="../../assets/img/usercenter/card-person.png" style="margin: 0 15px 10px;">
                           <p style="line-height: 32px;text-align: center">示例图</p>
                         </div>
                       </div>
@@ -317,7 +330,7 @@
             <div v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0" class="personalAuthInfo">
               <ol>
                 <li>真实姓名<span>{{ authInfo.name}}</span><span>个人认证</span></li>
-                <li>手机号码<span>{{ authInfo.phone}}</span></li>
+                <li>手机号码<span>{{ authInfo.phone.substr(0,3) + '****' + authInfo.phone.substr(7)}}</span></li>
                 <li>身份证号<span>{{ authInfo.personalnumber}}</span></li>
               </ol>
             </div>
@@ -537,8 +550,8 @@
                                 上传文件</p>
                             </Upload>
                           </div>
-                          <div style="width:130px;margin-left:20px;">
-                            <img src="../../assets/img/usercenter/card-person.png" style="width:130px;height:74px;margin-bottom: 10px;">
+                          <div style="width:130px;margin-left:20px;cursor: zoom-in;" @click="showModal.showPersonPicture = true">
+                            <img src="../../assets/img/usercenter/card-person.png" style="margin: 0 15px 10px;">
                             <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">手持身份证人像面照片</p>
                           </div>
                         </div>
@@ -547,6 +560,7 @@
                   </FormItem>
                   <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">
                     提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                   <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">2、请将真实姓名及“仅用于新睿云身份验证“手写在白纸上，与证件正面一起拍照上传，手写内容请保证清晰可辨认</p> 
                 </div>
                 <div style="margin-left: 100px;">
                   <Button type="primary" @click="enterpriseAttest" style="font-size: 12px;color: #FFFFFF;">确认提交</Button>
@@ -667,7 +681,7 @@
       <div class="modal-content-s">
         <div>
           <p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:24px;">为保障您的账户安全，我们将向您的实名认证手机号码
-            <span style="color: #FF624B">{{userphone}}</span> 发送一条验证短信，请收到验证信息之后将验证码填入下方。
+            <span style="color: #FF624B">{{userphone.substr(0,3) + '****' + userphone.substr(7)}}</span> 发送一条验证短信，请收到验证信息之后将验证码填入下方。
           </p>
         </div>
       </div>
@@ -779,7 +793,7 @@
           <Form :model="setNewPasswordForm" :rules="setNewPasswordRuleValidate" ref="setNewPassword">
             <div v-show="setNewPasswordForm.step == 0">
               <Form-item label="手机号" style="width: 100%;margin-top: 10px" v-if="setNewPasswordForm.verificationMode == 'phone'">
-                <span>{{ userInfo.phone}}</span>
+                <span>{{ userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7)}}</span>
               </Form-item>
               <Form-item label="邮箱" style="width: 100%;margin-top: 10px" v-if="setNewPasswordForm.verificationMode == 'email'">
                 <span>{{ userInfo.loginname}}</span>
@@ -888,7 +902,7 @@
           <Form :model="bindingMobilePhoneForm" :rules="bindingMobilePhoneRuleValidate" ref="bindingMobilePhone">
             <div v-show="bindingMobilePhoneForm.step == 0">
               <Form-item label="手机号" style="width: 100%;margin-top: 10px" v-if="bindingMobilePhoneForm.verificationMode == 'phone'">
-                <span>{{ userInfo.phone}}</span>
+                <span>{{ userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7)}}</span>
               </Form-item>
               <Form-item label="邮箱" style="width: 100%;margin-top: 10px" v-if="bindingMobilePhoneForm.verificationMode == 'email'">
                 <span>{{ userInfo.loginname}}</span>
@@ -975,7 +989,7 @@
           <Form :model="bindingEmailForm" :rules="bindingEmailRuleValidate" ref="bindingEmail">
             <div v-show="bindingEmailForm.step == 0">
               <Form-item label="手机号" style="width: 100%;margin-top: 10px" v-if="bindingEmailForm.verificationMode == 'phone'">
-                <span>{{ userInfo.phone}}</span>
+                <span>{{ userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7)}}</span>
               </Form-item>
               <Form-item label="邮箱" style="width: 100%;margin-top: 10px" v-if="bindingEmailForm.verificationMode == 'email'">
                 <span>{{ userInfo.loginname}}</span>
@@ -1080,7 +1094,7 @@
       </p>
       <div class="keyPhoneVal" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p>为保障您的账户安全，请进行手机验证：</p>
-        <p>手机号码： <span>{{keyForm.phone}}</span></p>
+        <p>手机号码： <span>{{keyForm.phone.substr(0,3) + '****' + keyForm.phone.substr(7)}}</span></p>
         <p> 图形验证码
           <Input v-model="keyForm.imgCode" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
           <img :src="imgSrc" style="width:80px;height:30px;vertical-align: middle" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
@@ -1157,6 +1171,7 @@
               <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
                 提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
               </p>
+              <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">请将真实姓名及“仅用于新睿云身份验证“手写在白纸上，与证件正面一起拍照上传，手写内容请保证清晰可辨认</p>
               <div class="upload-img" style="margin-top:10px">
                 <div class="content">
                   <div class="left">
@@ -1170,8 +1185,8 @@
                       <p>上传图片</p>
                     </Upload>
                   </div>
-                  <div class="right">
-                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+                  <div class="right" @click="showModal.showPersonPicture = true">
+                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;cursor:zoom-in">
                     <p>手持身份证人像照片</p>
                   </div>
                 </div>
@@ -1195,7 +1210,7 @@
                     </Upload>
                   </div>
                   <div class="right">
-                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+                    <img src="../../assets/img/usercenter/card-font.png" style="display:block;">
                     <p>法人身份证正面照片</p>
                   </div>
                 </div>
@@ -1213,8 +1228,8 @@
                       <p>上传图片</p>
                     </Upload>
                   </div>
-                  <div class="right">
-                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto">
+                  <div class="right" @click="showModal.showPersonPicture = true">
+                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto;cursor:zoom-in">
                     <p style="width:168px">经办人手持身份证人像照片</p>
                   </div>
                 </div>
@@ -1257,6 +1272,14 @@
     <Modal width="550" v-model="showModal.showPicture" :scrollable="true">
       <div class="newPhone">
         <img src="../../assets/img/usercenter/combine.jpg" style="width:330px;height:450px;margin:0px auto;display:block">
+      </div>
+      <div slot="footer">
+      </div>
+    </Modal>
+
+     <Modal width="550" v-model="showModal.showPersonPicture" :scrollable="true">
+      <div class="newPhone">
+        <img src="../../assets/img/usercenter/person-hand.png" style="width:349px;height:369px;margin:0px auto;display:block">
       </div>
       <div slot="footer">
       </div>
@@ -1499,6 +1522,7 @@
           updateLinkman: false,
           keyPhoneVal: false,
           showPicture: false,
+          showPersonPicture: false,
           setNewPassword: false,
           ModifyTelVail: false,
           bindingMobilePhone: false,

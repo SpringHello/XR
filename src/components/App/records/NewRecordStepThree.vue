@@ -63,6 +63,67 @@
             </div>
           </transition>
         </div>
+        <h2 v-if="mainPersonIDShow">请上传主体负责人相关资料</h2>
+         <div class="upload" v-if="mainPersonIDShow">
+          <div class="uploadTitle">
+            <p>证件人像面 ( 证件号：{{mainUnitInformation.certificateNumber}})</p>
+            <div class="item">
+              <div class="item-content">
+                <div style="width:50%;">
+                  <Upload
+                    type="drag"
+                    :with-credentials="true"
+                    :show-upload-list="false"
+                    action="file/upFile.do"
+                    :format="['jpg','gif','png']"
+                    :on-format-error="handleFormatJpg"
+                    :max-size="2048"
+                    :on-exceeded-size="handleMaxSize"
+                    :on-success="mainIDCardFront">
+                    <div class="item-content-text" v-if="!uploadForm.lpIdIDPhotoList.idFont">
+                      点击上传图片
+                    </div>
+                    <img v-else  :src="uploadForm.lpIdIDPhotoList.idFont" style="height: 120px;width:164px;">
+                    <Progress v-show="mainfontpercent>0" :percent="mainfontpercent"></Progress>
+                  </Upload>
+                </div>
+                <div class="item-img">
+                  <img src="../../../assets/img/records/records-img1.png" alt="示例图">
+                  <p>示例图</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="uploadTitle">
+            <p style="margin-left: 20px">证件国徽面 ( 证件号：{{mainUnitInformation.certificateNumber}})</p>
+            <div class="item" style="margin-left: 20px">
+              <div class="item-content">
+                <div style="width:50%;">
+                  <Upload
+                    type="drag"
+                    :with-credentials="true"
+                    :show-upload-list="false"
+                    action="file/upFile.do"
+                    :format="['jpg','gif','png']"
+                    :on-format-error="handleFormatJpg"
+                    :max-size="2048"
+                    :on-exceeded-size="handleMaxSize"
+                    :on-success="mainIDCardBack">
+                    <div class="item-content-text" v-if="!uploadForm.lpIdIDPhotoList.idBack">
+                      点击上传图片
+                    </div>
+                    <img v-else :src="uploadForm.lpIdIDPhotoList.idBack" style="height: 120px;width:164px;" alt="上传图片">
+                    <Progress v-show="mainbackpercent>0" :percent="mainbackpercent"></Progress>
+                  </Upload>
+                </div>
+                <div class="item-img">
+                  <img src="../../../assets/img/records/records-img2.png" alt="示例图">
+                  <p>示例图</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <h2>请上传网站负责人相关资料</h2>
         <p class="titleDescription">温馨提示：如网站负责人和主体负责人不是同一人，请在其他资料中上传法人授权委托书</p>
         <div class="upload" v-for="(item,index) in uploadForm.IDPhotoList">
@@ -125,10 +186,10 @@
                 </div>
               </div>
             </div>
-            <!--<p style="color: #377dff;cursor: pointer;margin-top: 10px;text-align: right" v-if="index>0" @click="deleteIDPhoto(index)">删除新负责人证件照</p>-->
+          <!--<p style="color: #377dff;cursor: pointer;margin-top: 10px;text-align: right" v-if="index>0" @click="deleteIDPhoto(index)">删除新负责人证件照</p>-->
           </div>
         </div>
-        <!--  <p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px;" v-if="uploadForm.IDPhotoList.length<principalNumber">添加新负责人证件照</p>-->
+       <!--<p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px;" v-if="uploadForm.IDPhotoList.length<principalNumber">添加新负责人证件照</p>-->
         <h2 v-show="!isPersonage">请上传主体单位相关资料</h2>
         <div v-show="!isPersonage" class="upload">
           <div class="uploadTitle">
@@ -336,6 +397,8 @@
     },
     data() {
       return {
+        // 主体负责人id是否显示
+        mainPersonIDShow: false,
         // 用与标记正在操作的身份证件照
         IDCardIndex: '',
         // 标记正在操作的域名证书
@@ -360,6 +423,12 @@
         recordsTypeDesc: '',
         // 上传资料标记表单
         uploadForm: {
+          // 法人相关资料
+          lpIdIDPhotoList:{
+            idFont:'',
+            idBack:''
+          },
+          // 网站负责人资料
           IDPhotoList: [],
           // 相关资料
           combine: '',
@@ -375,6 +444,8 @@
         imageViewShow: false,
         checkSrc: '',
         isPersonage: false,
+        mainfontpercent: 0,
+        mainbackpercent: 0,
         percent: 0,
         percentBack: 0,
         percentCombine: 0,
@@ -546,6 +617,14 @@
             this.uploadForm.checkGroup.push(checkList)
           }
         }
+        if(this.mainUnitInformation.unitProperties === '企业' &&(this.mainUnitInformation.legalPersonName !== this.siteListStr[0].basicInformation.principalName)){
+           this.mainPersonIDShow = true
+           this.$nextTick(()=>{
+           this.uploadForm.lpIdIDPhotoList.idFont = this.mainUnitInformation.mark2
+           this.uploadForm.lpIdIDPhotoList.idBack = this.mainUnitInformation.mark3
+           })
+           
+        }
         sessionStorage.removeItem('siteParamsStr')
       },
       // 移除上传的域名证书
@@ -562,6 +641,36 @@
       },
       /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
  暂时没有找到更好的方法解决图片标记问题 */
+       mainIDCardFront(response) {
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.mainfontpercent++
+            if (this.mainfontpercent > 100) {
+              this.uploadForm.lpIdIDPhotoList.idFont = response.result
+              this.$Message.info('上传成功');
+              window.clearInterval(s)
+              this.mainfontpercent = 0
+            }
+          }, 20)
+        } else {
+          this.$Message.info('上传失败');
+        }
+      },
+      mainIDCardBack(response) {
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.mainbackpercent++
+            if (this.mainbackpercent > 100) {
+              this.uploadForm.lpIdIDPhotoList.idBack = response.result
+              this.$Message.info('上传成功');
+              window.clearInterval(s)
+              this.mainbackpercent = 0
+            }
+          }, 20)
+        } else {
+          this.$Message.info('上传失败');
+        }
+      },
       IDCardFront(response) {
         if (response.status == 1) {
           let s = setInterval(() => {
@@ -703,6 +812,18 @@
       },
       // 提交资料
       netStep() {
+        if(this.mainPersonIDShow&&!this.uploadForm.lpIdIDPhotoList.idFont){
+          this.$Message.info({
+            content: '请上传法人身份证正面照'
+          })
+          return
+        }
+        if(this.mainPersonIDShow&&!this.uploadForm.lpIdIDPhotoList.idBack){
+          this.$Message.info({
+            content: '请上传法人身份证反面照'
+          })
+          return
+        }
         let flag = this.uploadForm.IDPhotoList.some(item => {
           return item.IDCardFront === ''
         })
@@ -837,7 +958,9 @@
           phone: this.mainUnitInformation.phoneNumber,
           email: this.mainUnitInformation.emailAddress,
           zoneId: this.zoneId,
-          hostCompanyUrl: this.uploadForm.combine
+          hostCompanyUrl: this.uploadForm.combine,
+          mark2: this.uploadForm.lpIdIDPhotoList.idFont,
+          mark3: this.uploadForm.lpIdIDPhotoList.idBack
         }
         sessionStorage.setItem('mainParamsStr', JSON.stringify(mainParams))
         sessionStorage.setItem('siteParamsStr', JSON.stringify(siteParams))

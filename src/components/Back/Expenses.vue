@@ -384,7 +384,7 @@
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
           <p style="line-height: 20px;font-size: 14px;">
-            为保障您的资金安全，我们将向您的实名认证手机号码（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+            为保障您的资金安全，我们将向您的实名认证手机号码（{{withdrawConfirm.number.substr(0,3) + '****' + withdrawConfirm.number.substr(7)}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
           <Form-item label="图片验证码">
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
@@ -695,7 +695,7 @@
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
           <p style="line-height: 20px;font-size: 14px;">
-            为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+            为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number.substr(0,3) + '****' + withdrawConfirm.number.substr(7)}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
           <Form-item label="图片验证码">
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
@@ -2623,6 +2623,11 @@
         this.orderNumber.forEach(item => {
           order += ',' + item.ordernumber
         })
+        let orderStatus = ''
+        this.orderNumber.forEach(item=>{
+          orderStatus += JSON.parse(item.display)['类型']
+        }) // 判断是否实时订单资源确定能否显示第三方支付
+        sessionStorage.setItem('orderStatus', orderStatus)
         if (this.voucher > parseInt(this.payForm.paymentAmount)) {
           axios.get('information/payOrder.do', {
             params: {

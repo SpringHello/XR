@@ -1460,7 +1460,9 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            this.hostZoneList = res.data.result.optionalArea
+            this.hostZoneList = res.data.result.optionalArea.filter(item=> {
+              return item.name!='华东一区(绍兴)'
+            })
             this.defaultZone = res.data.result.optionalArea[0].value
 
             // 默认选择区域
@@ -1472,7 +1474,9 @@
                 item.zoneId = res.data.result.optionalArea[0].value
               }
             })
-            this.gpuZoneList = res.data.result.unoptionalRegion
+            this.gpuZoneList = res.data.result.unoptionalRegion.filter(item=> {
+              return item.name!='华东一区(GPU)'
+            })
             // 赋值配置id,初始化价格和抢购数量
             this.discountProduct.forEach((item, index) => {
               item.id = res.data.result.freevmconfigs[index].id
@@ -1519,7 +1523,7 @@
       },
       // 系统编辑成级联选择组件需要的数据
       cascaderSystemM(responseData, obj, selectobj) {
-        var x
+        var x;
         for (x in responseData) {
           obj.forEach(item => {
             if (item.value == x) {
@@ -1622,7 +1626,9 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            this.hostZoneListHot = res.data.result.optionalArea
+            this.hostZoneListHot = res.data.result.optionalArea.filter(item=> {
+              return item.name!='华东一区(绍兴)'
+            })
             this.hostProductHot.zoneId = res.data.result.optionalArea[0].value
           }
         })
@@ -1669,23 +1675,43 @@
           this.showModal.authModal = true
           return
         }
-        var params = {
-          zoneId: this.hostProductHot.zoneId,
-          timeType: this.hostProductHot.timeTimetype.type,
-          timeValue: this.hostProductHot.timeTimetype.value,
-          templateId: this.hostProductHot.system[1],
-          isAutoRenew: 1,
-          count: this.hostProductHot.count,
-          cpuNum: this.hostProductHot.cpuMemory.cpunum,
-          memory: this.hostProductHot.cpuMemory.memory,
-          bandWidth: this.hostProductHot.bandwith,
-          rootDiskType: 'ssd',
-          rootDiskSize: '40',
-          diskType: 'ssd',
-          diskSize: this.hostProductHot.disksize,
-          networkId: 'no',
-          vpcId: 'no',
-          discountForActivity: '38'
+        var params = {}
+        if (this.hostProductHot.disksize) {
+            params = {
+              zoneId: this.hostProductHot.zoneId,
+              timeType: this.hostProductHot.timeTimetype.type,
+              timeValue: this.hostProductHot.timeTimetype.value,
+              templateId: this.hostProductHot.system[1],
+              isAutoRenew: 1,
+              count: this.hostProductHot.count,
+              cpuNum: this.hostProductHot.cpuMemory.cpunum,
+              memory: this.hostProductHot.cpuMemory.memory,
+              bandWidth: this.hostProductHot.bandwith,
+              rootDiskType: 'ssd',
+              rootDiskSize: '40',
+              diskType: 'ssd',
+              diskSize: this.hostProductHot.disksize,
+              networkId: 'no',
+              vpcId: 'no',
+              discountForActivity: '38'
+          }
+        } else {
+            params = {
+              zoneId: this.hostProductHot.zoneId,
+              timeType: this.hostProductHot.timeTimetype.type,
+              timeValue: this.hostProductHot.timeTimetype.value,
+              templateId: this.hostProductHot.system[1],
+              isAutoRenew: 1,
+              count: this.hostProductHot.count,
+              cpuNum: this.hostProductHot.cpuMemory.cpunum,
+              memory: this.hostProductHot.cpuMemory.memory,
+              bandWidth: this.hostProductHot.bandwith,
+              rootDiskType: 'ssd',
+              rootDiskSize: '40',
+              networkId: 'no',
+              vpcId: 'no',
+              discountForActivity: '38'
+          }
         }
         axios.get('information/deployVirtualMachine.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1704,7 +1730,9 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            this.gpuZoneListHot = res.data.result.optionalArea
+            this.gpuZoneListHot = res.data.result.optionalArea.filter(item=> {
+              return item.name!='华东一区(GPU)'
+            })
             this.gpuProductHot.zoneId = res.data.result.optionalArea[0].value
           }
         })
@@ -1731,11 +1759,16 @@
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            this.gpuConfigListHot = res.data.result.filter(item => {
-              return item.gpu == '100'
-            })
+            if (window.location.origin == 'http://localhost:8088'||window.location.origin == 'https://zschj.xrcloud.net') {
+              this.gpuConfigListHot = res.data.result.filter((item,index) => {
+                return index < 4
+              })
+            } else{
+              this.gpuConfigListHot = res.data.result.filter(item => {
+                return item.gpu == '100'
+              })
+            }
             this.gpuProductHot.cpuMemory = this.gpuConfigListHot[0]
-            // console.log(this.gpuConfigListHot)
           }
         })
       },
