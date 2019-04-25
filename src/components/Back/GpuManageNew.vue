@@ -19,7 +19,7 @@
             </div>
           </div>
           <div class="host-details">
-              <p>{{gpuDetail.cpuNum}}CPU ,{{gpuDetail.memory}}G内存 ,{{gpuDetail.bandwith}}M宽带 </p>
+              <p>{{gpuDetail.cpuNum}}CPU ,{{gpuDetail.memory}}G内存 ,{{gpuDetail.bandwith+'M宽带'}} </p>
           </div>
         </div>
         <div class="config-type">
@@ -1524,11 +1524,12 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.showWindow.mirrorModify = false
-            this.mirrorModifyForm.buttonText = '确认重装'
+            this.mirrorModifyForm.buttonText = '确认重装';
             this.mirrorModifyForm.system = []
             this.mirrorModifyForm.consolePassword = ''
             this.$Message.success(response.data.message)
-            this.getGpuHostDetail()
+            this.getGpuHostDetail();
+            this.$router.push('gpuList');
           } else {
             this.mirrorModifyForm.buttonText = '确认重装'
             this.$message.info({
