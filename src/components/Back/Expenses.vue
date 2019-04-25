@@ -212,7 +212,35 @@
               <Table :columns="columnsZoneA" :data="dataZoneA" v-if="billTypeSelected==1"></Table>
               <Table :columns="columnsDatetypeA" :data="dataDatetypeA" v-if="billTypeSelected==2"></Table>
             </div>
-            <div v-if="billBtnSelected==1">2</div>
+            <div v-if="billBtnSelected==1">
+              <div class="expenses_condition">
+                <span>按交易时间</span>
+                <Row style="display: inline-block;margin-left: 10px">
+                  <Col span="12">
+                    <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
+                                placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
+                  </Col>
+                </Row>
+                <span style="margin-left: 20px">按交易金额</span>
+                <Input-number :min="0" v-model="value1"
+                              style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
+                &nbsp;&nbsp;
+                <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
+                &nbsp;&nbsp;
+                <Input-number :min="0" v-model="value2"
+                              style="width: 116px;position: relative;bottom: 12px"></Input-number>
+                <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
+                </Button>
+                <Button type="primary" style="bottom: 12px;position: relative" @click="seaWaterN">导出流水
+                </Button>
+                <Table highlight-row :columns="columnsResources" :data="resourcesTable"></Table>
+                <div style="margin: 10px;overflow: hidden">
+                  <div style="float: right;">
+                    <Page :total="resouresTotal" :current="1" :page-size="5" @on-change="resourcesPageChange"></Page>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div v-if="billBtnSelected==2">
               <h3>交易流水</h3>
               <div class="expenses_condition">
@@ -1319,6 +1347,107 @@
          this.init()*/
       }
       return {
+        columnsResources: [
+            {
+                title: '资源ID',
+                key: 'resourceid'
+            },
+            {
+                title: '计费模式',
+                key: 'billtype'
+            },
+            {
+                title: '地域',
+                key: 'zonename'
+            },
+            {
+                title: '产品类型',
+                key: 'type',
+                // 0 主机，1 磁盘 2 公网 3 数据库 4 GPU 5 NAT网关  6 对象存储  7 域名  8 ssl证书  9 云市场',
+                filters: [
+                  {
+                    label: '弹性公网IP',
+                    value: 2
+                  }, 
+                  {
+                    label: '弹性云服务器',
+                    value: 0
+                  }, 
+                  {
+                    label: '对象存储',
+                    value: 6
+                  },
+                  {
+                    label: 'GPU云服务器',
+                    value: 4
+                  }, 
+                  {
+                    label: '云数据库',
+                    value: 3
+                  }, 
+                  {
+                    label: '云硬盘',
+                    value: 1
+                  },
+                  {
+                    label: 'NAT网关',
+                    value: 5
+                  }, 
+                  {
+                    label: 'SSL证书',
+                    value: 8
+                  },
+                  {
+                    label: '域名',
+                    value: 7
+                  }, 
+                  {
+                    label: '云市场',
+                    value: 9
+                  },
+                ],
+                filterMultiple: false,
+                filteredValue: 8,
+                filterMethod(value, row) {
+                  console.log(value)
+                  console.log(this)
+                  return row.type = value
+                },
+              },
+            {
+                title: '扣费时间',
+                key: 'updatetime'
+            },
+            {
+                title: '配置描述',
+                key: 'remark111'
+            },
+            {
+                title: '原价',
+                key: 'cost'
+            },
+            {
+                title: '现金支付',
+                key: 'cashpay'
+            },
+            {
+                title: '现金券支付',
+                key: 'voucherpay'
+            },
+            {
+                title: '优惠券抵扣',
+                key: 'coupon'
+            },
+            {
+                title: '折扣优惠',
+                key: 'discountpay'
+            },
+            {
+                title: '流水号',
+                key: 'trnobuy'
+            }
+        ],
+        resourcesTable: [],
         columns5: [
             {
               title: '订单编号',
@@ -2933,7 +3062,6 @@
       this.billMonthlyData()
     },
     mounted() {
-
     },
     methods: {
       billMonthlyData() {
@@ -2972,6 +3100,30 @@
                 dataType:'month'
             }
         ]
+      },
+      getResourcesTable(currentPage) {
+        this.$http.get('/nVersionUser/resourceDetails.do', {
+          params: {
+            pageSize: '5',
+            page: currentPage?currentPage:'1',
+            minTime: '',
+            maxTime: '',
+            billingMode: '',
+            resourceType: 'host',
+            minCashPay: '',
+            mmxCashPay:''
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              // this.tabledata = response.data.result.data
+              // this.total = response.data.result.totle
+              this.resouresTotal = response.data.result.count
+              this.resourcesTable = response.data.result.info
+            }
+          })
+      },
+      resourcesPageChange(currentPage) {
+        this.getResourcesTable(currentPage)
       },
       //Cashforwithdrawa(){
       //axios.get('user/selectValidRefundAmount.do', {
@@ -3093,7 +3245,6 @@
             this.getBalance()
             this.showMoneyByMonth()
             this.invoiceLimit()
-            this.search()
             break
           case 'myCard':
             this.searchCard()
@@ -3103,6 +3254,9 @@
             this.getInvoiceList()
             this.invoiceLimit()
             break
+          case 'bills':
+            this.getResourcesTable()
+            this.search()
         }
       },
       showMoneyByMonth() {
@@ -3146,7 +3300,7 @@
         this.search()
       },
       dataChange1(time) {
-        console.log(time)
+        // console.log(time)
       },
       dataChange(time) {
         this.dateRange = time
