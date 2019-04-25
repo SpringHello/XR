@@ -278,7 +278,12 @@
                   <Button type="primary">查询</Button>
                 </span>
               </p>
-              <Table :columns="columns5" :data="data5" style="margin-top:20px;"></Table>
+              <Table :columns="columns5" :data="data5" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
+              <div style="margin: 10px;overflow: hidden">
+                <div style="float: right;">
+                  <Page :total="OrderPages" :current="currentORderPage" :page-size="OrderpageSize" @on-change="OrderchangePage"></Page>
+                </div>
+              </div>
             </div>
             <!-- <div class="ordertype">
               <span class="order_s1">订单类型</span>
@@ -1176,7 +1181,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import reg from '../../util/regExp'
-
+  import $store from '../../vuex'
   export default {
     data() {
       const validateInvoice = (rule, value, callback) => {
@@ -1319,7 +1324,15 @@
          this.init()*/
       }
       return {
+        OrderPages: 0,
+        currentORderPage: 1,
+        OrderpageSize: 10,
         columns5: [
+            {
+              type: 'selection',
+              width: 60,
+              align: 'center'
+            },
             {
               title: '订单编号',
               key: 'OrderNumber',
@@ -1333,7 +1346,9 @@
                   on: {
                     click: () => {
                       //this.$router.push('CloudDataManage')
-                      alert(params.row.OrderNumber)
+                      alert(params.row.OrderNumber);
+                      sessionStorage.setItem('orderid',params.row.OrderNumber)
+                      this.$router.push('OrderDetails');
                     }
                   }
                 }, params.row.OrderNumber)
@@ -1343,8 +1358,9 @@
               title: '资源类型',
               key: 'ResourceType',
               render: (h, params) => {
-                return h('span', params.row.ResourceType == 0 ? '弹性公网IP' : params.row.ResourceType == 1 ? '弹性云服务器' : params.row.ResourceType == 2 ? '对象存储' : params.row.ResourceType == 3 ? 'GPU云服务器' : params.row.ResourceType == 4 ? '云数据库' : params.row.ResourceType == 5 ? '云硬盘' : params.row.ResourceType == 6 ? 'NAT网关' : params.row.ResourceType == 7 ? 'SSL证书' : params.row.ResourceType == 8 ? '域名' : '云市场')
-              },
+                return h('span', params.row.ResourceType == 0 ? '弹性公网IP' : params.row.ResourceType == 1 ? '弹性云服务器' : params.row.ResourceType == 2 ? '对象存储' : params.row.ResourceType == 3 ? 'GPU云服务器' : params.row.ResourceType == 4 ? '云数据库' : params.row.ResourceType == 5 ? '云硬盘' : params.row.ResourceType == 6 ? 'NAT网关' : params.row.ResourceType == 7 ? 'SSL证书' : params.row.ResourceType == 8 ? '域名' :
+                params.row.ResourceType == 9 ? '云市场' : '')
+              },//this.columns5[index].filters = res;
               filters: [
                   {
                       label: '弹性公网IP',
@@ -1429,7 +1445,8 @@
               title: '订单类型',
               key: 'Ordertype',
               render: (h, params) => {
-                return h('span', params.row.Ordertype == 0 ? '资源新购' : params.row.Ordertype == 1 ? '资源升级' : '资源续费')
+                return h('span', params.row.Ordertype == 0 ? '资源新购' : params.row.Ordertype == 1 ? '资源升级' :
+                params.row.Ordertype == 2 ? '资源续费' : '')
               },
               filters: [
                   {
@@ -1477,7 +1494,9 @@
               title: '订单状态',
               key: 'OrderStatus',
               render: (h, params) => {
-                return h('span', params.row.OrderStatus == 0 ? '待支付' : params.row.OrderStatus == 1 ? '已支付' : params.row.OrderStatus == 2 ? '已退款' : '已超时失效')
+                return h('span', params.row.OrderStatus == 0 ? '待支付' : params.row.OrderStatus == 1 ? '已支付' :
+                params.row.OrderStatus == 2 ? '已退款' :
+                params.row.OrderStatus == 3 ? '已超时失效' : '')
               },
               filters: [
                   {
@@ -2936,6 +2955,9 @@
 
     },
     methods: {
+      OrderchangePage(page) {
+        this.currentORderPage = page
+      },
       billMonthlyData() {
         this.dataResponse = [
             {

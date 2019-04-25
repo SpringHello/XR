@@ -179,6 +179,7 @@ const Result = () => import('@/components/Back/Result')
 const ResultNew = () => import('@/components/Back/ResultNew')
 const PayNew = () => import('@/components/Back/PayNew')
 const Expenses = () => import('@/components/Back/Expenses')
+const OrderDetails = () => import('@/components/Back/OrderDetails')
 const UserCenter = () => import('@/components/Back/UserCenter')
 const MemberInfo = () => import('@/components/Back/MemberInfo')
 const UserInfo = () => import('@/components/Back/UserInfo')
@@ -417,6 +418,7 @@ var router = new Router({
         {path: 'resultNew', name:'resultNew', component:ResultNew},
         {path: 'payNew', name:'payNew', component: PayNew},
         {path: 'expenses', name: 'expenses', component: Expenses},
+        {path: 'orderdetails', name: 'orderdetails', component: OrderDetails},
 		    {path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
 		    {path: 'cashprocess', name: 'cashprocess', component: Cashprocess},
 		    {path: 'cancellationaccount', name: 'cancellationaccount', component: CancellationAccount},
