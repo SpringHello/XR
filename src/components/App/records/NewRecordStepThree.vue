@@ -74,7 +74,7 @@
                     type="drag"
                     :with-credentials="true"
                     :show-upload-list="false"
-                    action="https://zschj.xrcloud.net/file/upFile.do"
+                    action="file/upFile.do"
                     :format="['jpg','gif','png']"
                     :on-format-error="handleFormatJpg"
                     :max-size="2048"
@@ -103,7 +103,7 @@
                     type="drag"
                     :with-credentials="true"
                     :show-upload-list="false"
-                    action="https://zschj.xrcloud.net/file/upFile.do"
+                    action="file/upFile.do"
                     :format="['jpg','gif','png']"
                     :on-format-error="handleFormatJpg"
                     :max-size="2048"
@@ -619,8 +619,11 @@
         }
         if(this.mainUnitInformation.unitProperties === '企业' &&(this.mainUnitInformation.legalPersonName !== this.siteListStr[0].basicInformation.principalName)){
            this.mainPersonIDShow = true
+           this.$nextTick(()=>{
            this.uploadForm.lpIdIDPhotoList.idFont = this.mainUnitInformation.mark2
            this.uploadForm.lpIdIDPhotoList.idBack = this.mainUnitInformation.mark3
+           })
+           
         }
         sessionStorage.removeItem('siteParamsStr')
       },
@@ -809,6 +812,18 @@
       },
       // 提交资料
       netStep() {
+        if(this.mainPersonIDShow&&!this.uploadForm.lpIdIDPhotoList.idFont){
+          this.$Message.info({
+            content: '请上传法人身份证正面照'
+          })
+          return
+        }
+        if(this.mainPersonIDShow&&!this.uploadForm.lpIdIDPhotoList.idBack){
+          this.$Message.info({
+            content: '请上传法人身份证反面照'
+          })
+          return
+        }
         let flag = this.uploadForm.IDPhotoList.some(item => {
           return item.IDCardFront === ''
         })

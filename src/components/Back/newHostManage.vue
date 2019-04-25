@@ -15,14 +15,10 @@
             <button @click="$router.go(0)">刷新</button>
             <button style="margin-right: 10px;background: #2A99F2;color: #FFF" @click="linkHost" v-if="hostInfo.computerStatus == 1">连接主机</button>
           </p>
-<<<<<<< HEAD
           <p v-if="hostInfo.bandwith">{{ hostInfo.cpuNum }}核CPU，{{ hostInfo.memory}}G内存，{{ hostInfo.rootDiskSize}}G硬盘，{{ hostInfo.bandwith}}M带宽 | {{ hostInfo.zoneName}} <span
             @click="hostUpgrade">[升级]</span>
           </p>
             <p v-else>{{ hostInfo.cpuNum }}核CPU，{{ hostInfo.memory}}G内存，{{ hostInfo.rootDiskSize}}G硬盘 | {{ hostInfo.zoneName}} <span
-=======
-          <p>{{ hostInfo.cpuNum }}核CPU，{{ hostInfo.memory}}G内存，{{ hostInfo.rootDiskSize}}G硬盘，{{ hostInfo.bandwith}} | {{ hostInfo.zoneName}} <span
->>>>>>> 07d202fce27889d70f1fde14873e88f9083b9d81
             @click="hostUpgrade">[升级]</span>
           </p>
         </div>
