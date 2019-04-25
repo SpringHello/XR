@@ -191,7 +191,7 @@
                       </Upload>
                   </div>
                   <div class="up_photo">
-                      <img src="../../assets/img/usercenter/card-person.png">
+                      <img style=" cursor: pointer;" src="../../assets/img/usercenter/iDCardSmall.png" @click="idCardShow = true">
                       <p>手持身份证人像照片</p>
                   </div>
                 </div>
@@ -382,6 +382,14 @@
         </div>
       </div>
     </div>
+    <Modal v-model="idCardShow">
+      <div style="text-align:center;">
+        <img src="../../assets/img/usercenter/iDCardBig.png">
+      </div>
+      <div slot="footer">
+
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -415,14 +423,7 @@ const IDCardValid = (rule, value, callback) =>{
     callback();
   }
 }
-
-
-
-
-
-export default {
-  data() {
-    const newPawValid =(rule, value, callback) =>{
+ const newPawValid =(rule, value, callback) =>{
       let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
       if(value == ''){
         return callback(new Error('请输入新密码'));
@@ -431,7 +432,14 @@ export default {
       }else{
         callback();
       }
-    }
+    };
+
+
+
+
+export default {
+  data() {
+   
     const passwordValid = (rule,value, callback)=>{
       let reg = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,}$/;
       if(value == ''){
@@ -446,6 +454,7 @@ export default {
     }
     return {
       imgSrc: "https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do",
+      idCardShow:false,
       //步骤集合
       stepList: [
         {
@@ -528,10 +537,10 @@ export default {
           {required:true,validator: vailAucct,trigger: 'blur'}
         ],
         newPaw:[
-          { validator:newPawValid,trigger:'change'}
+          {required:true, validator:newPawValid,trigger:'blur'}
         ],
         oldPaw:[
-          { validator:passwordValid}
+          {required:true, validator:passwordValid,trigger:'blur'}
         ],
         vCode:[
           {required:true, message:'请输入图形验证码',trigger: 'blur'}
@@ -549,7 +558,7 @@ export default {
 
 
       // 步骤
-      index: 1,
+      index:1,
 
       //验证
       verPage: "",
@@ -1448,11 +1457,12 @@ export default {
 
 }
   .up_photo{
-    width:150px;height:110px;display:inline-block;vertical-align:top;margin-left:21px;
-    img{
-      width: inherit;
-      height: inherit;
-    }
+    width:150px;height:110px;
+    display:inline-block;
+    vertical-align:top;
+    margin-left:21px;
+    text-align: center;
+  
     p{
       margin-top:26px;
       color: #666666;

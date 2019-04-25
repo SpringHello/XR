@@ -127,7 +127,7 @@
         s: '--',
         intervalInstance: null,
         payText: '确认支付',
-        orderStatus: 0
+        orderStatus: -1
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -143,7 +143,7 @@
     },
     created() {
       this.overTime = sessionStorage.getItem('overtime')
-      this.orderInfo = JSON.parse(sessionStorage.getItem('payInfo')) ? JSON.parse(sessionStorage.getItem('payInfo')) : this.$route.params
+      this.orderInfo = JSON.parse(sessionStorage.getItem('payInfo')) ? JSON.parse(sessionStorage.getItem('payInfo')) : this.$route.params;
       this.orderStatus = sessionStorage.getItem('orderStatus').indexOf('实时');
       // 充值有限制  不能少于10元
       if (this.orderInfo.isNilNorm == 0) {

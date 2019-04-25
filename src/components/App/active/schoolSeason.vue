@@ -1519,7 +1519,7 @@
       },
       // 系统编辑成级联选择组件需要的数据
       cascaderSystemM(responseData, obj, selectobj) {
-        var x
+        var x;
         for (x in responseData) {
           obj.forEach(item => {
             if (item.value == x) {

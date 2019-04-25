@@ -343,8 +343,8 @@
       }
     },
     watch:{
-      "$stroe.state.zone":{
-        handler:function(){
+      "$store.state.zone": {
+        handler: function () {
           this.fetchData();
         },
         deep:true
