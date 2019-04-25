@@ -15,7 +15,10 @@
             <button @click="$router.go(0)">刷新</button>
             <button style="margin-right: 10px;background: #2A99F2;color: #FFF" @click="linkHost" v-if="hostInfo.computerStatus == 1">连接主机</button>
           </p>
-          <p>{{ hostInfo.cpuNum }}核CPU，{{ hostInfo.memory}}G内存，{{ hostInfo.rootDiskSize}}G硬盘，{{ hostInfo.bandwith}}M带宽 | {{ hostInfo.zoneName}} <span
+          <p v-if="hostInfo.bandwith">{{ hostInfo.cpuNum }}核CPU，{{ hostInfo.memory}}G内存，{{ hostInfo.rootDiskSize}}G硬盘，{{ hostInfo.bandwith}}M带宽 | {{ hostInfo.zoneName}} <span
+            @click="hostUpgrade">[升级]</span>
+          </p>
+            <p v-else>{{ hostInfo.cpuNum }}核CPU，{{ hostInfo.memory}}G内存，{{ hostInfo.rootDiskSize}}G硬盘 | {{ hostInfo.zoneName}} <span
             @click="hostUpgrade">[升级]</span>
           </p>
         </div>
@@ -78,7 +81,7 @@
               <li><span class="four">外网IP</span><span class="two">{{ hostInfo.publicIp? hostInfo.publicIp : '----'}}</span>
                 <span :class="{three: bindForm.unbindText == '解绑IP'}" v-if="hostInfo.publicIp" @click="unbindIp"> [{{ bindForm.unbindText}}]</span>
                 <span :class="{three: bindForm.bindIpText == '绑定IP' }" v-else @click="bindIP"> [{{ bindForm.bindIpText }}]</span></li>
-              <li><span class="four">带宽</span><span class="two">{{ hostInfo.bandwith?hostInfo.bandwith: '0'}}M</span>
+              <li><span class="four">带宽</span><span class="two">{{ hostInfo.bandwith?hostInfo.bandwith: '--'}}M</span>
                 <span class="three" v-if="hostInfo.bandwith" @click="adjustIP"> [扩容]</span></li>
               <li><span class="four">负载均衡</span><span class="two">{{(hostInfo.loadbalance + '') ? hostInfo.loadbalance + '' : '----'}}</span></li>
               <li><span class="four">NAT网关</span><span class="two">{{ hostInfo.netGateway? hostInfo.netGateway : '----'}}</span></li>
