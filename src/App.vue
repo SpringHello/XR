@@ -263,6 +263,11 @@
               </div>
             </div>
           </div>
+            <div class="wrapper">
+            <div style="padding:0 20px;cursor:pointer" @click="linkService">
+            <span class="title">在线客服&nbsp&nbsp&nbsp<img src="./assets/img/app/kefu-icon.png" /></span>
+              </div>
+          </div>
           <div class="wrapper" v-if="xiaoshouInfo.length>0">
             <div>
               <span class="title">售前咨询</span>
@@ -303,7 +308,7 @@
           </div>
           <div class="wrapper">
             <div>
-            <span class="title">咨询热线 400-0505-565</span>
+            <span class="title">咨询热线 <span>400-0505-565</span></span>
               </div>
           </div>
         </div>
@@ -951,6 +956,13 @@
                 })
           }
         })
+      },
+      linkService(){
+        if(this.userInfo){
+          window.open(`https://im.xrcloud.net/im/text/0Jck1w.html?companyId=${this.userInfo.companyid}`)
+        } else{
+          window.open('https://im.xrcloud.net/im/text/0Jck1w.html')
+        }       
       }
     },
     computed: mapState({
@@ -1437,7 +1449,7 @@
           top: unset;
           transition: width .3s;
           box-shadow:0px 2px 16px -5px rgba(130,130,130,0.5);
-          border-radius:15px;
+          border-radius:10px;
         }
         & > a {
           width: 100%;
@@ -1449,7 +1461,7 @@
           right: 0px;
           top: 0px;
           > div {
-            padding: 10px;
+            padding: 20px 20px 10px;
             > span {
               font-size: 12px;
               font-family: MicrosoftYaHei;
@@ -1458,6 +1470,10 @@
               &.title {
                 color: rgba(29, 23, 22, 1);
                 font-size: 14px;
+                span{
+                  font-family:MicrosoftYaHei-Bold;
+                  font-weight:bold;
+                }
               }
             }
             .info-wrapper {
@@ -1522,10 +1538,8 @@
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('./assets/img/app/top.png');
-        &:hover {
-          background: #2A99F2 url('./assets/img/app/top-hover.png') no-repeat center;
-        }
+        box-shadow: 0px 2px 16px -5px rgba(255,98,75,1);
+        background: #FF624B url(/static/img/top.png) no-repeat center;
       }
     }
     .backtop {

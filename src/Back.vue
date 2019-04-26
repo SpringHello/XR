@@ -149,6 +149,11 @@
               </div>
             </div>
           </div>
+            <div class="wrapper">
+            <div style="padding:0 20px;cursor:pointer" @click="linkService">
+            <span class="title">在线客服&nbsp&nbsp&nbsp<img src="./assets/img/app/kefu-icon.png" /></span>
+              </div>
+          </div>
           <div class="wrapper" v-if="xiaoshouInfo.length>0">
             <div>
               <span>售前咨询</span>
@@ -333,8 +338,8 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              //{subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
+              //{subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'diskList'},
               {subName: '云硬盘备份', type: 'diskBackupList'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
@@ -374,20 +379,20 @@
             subItem: [
               {subName: '防火墙', type: 'firewallList'},
               {subName: '云监控', type: 'CloudMonitor'},
-              {subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
-              //{subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
+              //{subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
+              {subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
             ]
           },
           {
             mainName: '域名服务',
             type: 'domain',
             subItem: [
-              {subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
-              {subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              {subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
-               //{subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
-               //{subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-               //{subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
+              //{subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
+              //{subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+              //{subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
+               {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
+               {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+               {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
             ]
           },
           {
@@ -698,6 +703,13 @@
                 })
           }
         })
+      },
+      linkService(){
+        if(this.userInfo){
+          window.open(`https://im.xrcloud.net/im/text/0Jck1w.html?companyId=${this.userInfo.companyid}`)
+        } else{
+          window.open('https://im.xrcloud.net/im/text/0Jck1w.html')
+        }       
       }
     },
     computed: mapState({
@@ -1084,7 +1096,7 @@
         right: 0px;
         top: 0px;
         > div {
-          padding: 10px;
+           padding: 20px 20px 10px;
           > span {
             font-size: 12px;
             font-family: MicrosoftYaHei;
@@ -1093,6 +1105,10 @@
             &.title {
               color: rgba(29, 23, 22, 1);
               font-size: 14px;
+              span{
+                  font-family:MicrosoftYaHei-Bold;
+                  font-weight:bold;
+                }
             }
           }
           .info-wrapper {
