@@ -674,7 +674,7 @@
       </p>
     </Modal>
     <!-- 身份验证弹窗 -->
-    <Modal v-model="showModal.cashverification" :scrollable="true" :closable="true" :width="520">
+    <Modal v-model="showModal.cashverification" :scrollable="true" :closable="true" :width="520" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">身份验证</span>
       </p>
