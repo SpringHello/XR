@@ -242,7 +242,6 @@
               </div>
             </div>
             <div v-if="billBtnSelected==2">
-              <h3>交易流水</h3>
               <div class="expenses_condition">
                 <span>按交易时间</span>
                 <Row style="display: inline-block;margin-left: 10px">
@@ -251,10 +250,6 @@
                                 placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
                   </Col>
                 </Row>
-                <span style="margin-left: 20px">按交易类型</span>
-                <Select v-model="types" style="width:231px;margin-left: 10px;position: relative;bottom: 12px">
-                  <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
                 <span style="margin-left: 20px">按交易金额</span>
                 <Input-number :min="0" v-model="value1"
                               style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
@@ -275,8 +270,14 @@
                 </div>
               </div>
             </div>
-            <div v-if="billBtnSelected==3">4</div>      
-            
+            <div v-if="billBtnSelected==3" style="padding-top:20px">
+              <Table highlight-row :columns="columnsExport" :data="exportTable"></Table>
+                <div style="margin: 10px;overflow: hidden">
+                  <div style="float: right;">
+                    <Page :total="exportTotal" :current="1" :page-size="7" @on-change="exportPageChange"></Page>
+                  </div>
+                </div>
+            </div>      
 					</Tab-pane>
           <Tab-pane label="订单管理" name="orderManage">
             <div class="ordertype">
@@ -1355,20 +1356,86 @@
         columnsResources: [
             {
                 title: '资源ID',
-                key: 'resourceid'
+                key: 'resourceid',
+                width: 160
             },
             {
                 title: '计费模式',
-                key: 'billtype'
+                key: 'billtype',
+                width: 160,
+                render:(h,params)=>{
+                  // 计费类型 1 包年 2 包月 3 实时计费',
+                  let text = params.row.billtype==='1'?'包年':(params.row.billtype==='2'?'包月':'实时计费')
+                  return h('span',text)
+                },
+                filters: [
+                  {
+                    label: '包年',
+                    value: 1
+                  }, 
+                  {
+                    label: '包月',
+                    value: 2
+                  }, 
+                  {
+                    label: '实时计费',
+                    value: 3
+                  }
+                ],
+                filterMultiple: false,
+                filteredValue: 8,
+                filterRemote:(value,row)=>{
+                  this.resourcesDataType = value[0]
+                  this.getResourcesTable('1')
+                }
             },
             {
                 title: '地域',
-                key: 'zonename'
+                key: 'zonename',
+                width: 160
             },
             {
                 title: '产品类型',
                 key: 'type',
-                // 0 主机，1 磁盘 2 公网 3 数据库 4 GPU 5 NAT网关  6 对象存储  7 域名  8 ssl证书  9 云市场',
+                width: 120,
+                render:(h,params)=>{
+                  // 0 主机，1 云硬盘 2 弹性公网IP 3 云数据库 4 GPU云服务器 5 NAT网关  6 对象存储  7 域名  8 ssl证书  9 云市场',
+                  let text = ''
+                  switch(params.row.type)
+                    {
+                    case 0:
+                      text = '主机'
+                      break;
+                    case 1:
+                      text = '云硬盘'
+                      break;
+                    case 2:
+                      text = '弹性公网IP'
+                      break;
+                    case 3:
+                      text = '云数据库'
+                      break;
+                    case 4:
+                      text = 'GPU云服务器'
+                      break;
+                    case 5:
+                      text = 'NAT网关'
+                      break;
+                    case 6:
+                      text = '对象存储'
+                      break;
+                    case 7:
+                      text = '域名'
+                      break;
+                    case 8:
+                      text = 'ssl证书'
+                      break;
+                    case 9:
+                      text = '云市场'
+                      break;
+                    }
+                  return h('span',text)
+                },
                 filters: [
                   {
                     label: '弹性公网IP',
@@ -1413,46 +1480,90 @@
                 ],
                 filterMultiple: false,
                 filteredValue: 8,
-                filterMethod(value, row) {
-                  console.log(value)
-                  console.log(this)
-                  return row.type = value
-                },
+                filterRemote:(value,row)=>{
+                  console.log(value[0])
+                  console.log(row)
+                  this.resourcesType = value[0]
+                  this.getResourcesTable('1')
+                }
               },
             {
                 title: '扣费时间',
-                key: 'updatetime'
+                key: 'updatetime',
+                width: 160
             },
             {
                 title: '配置描述',
-                key: 'remark111'
+                key: 'remark111',
+                width: 200
             },
             {
                 title: '原价',
-                key: 'cost'
+                key: 'cost',
+                width: 100
             },
             {
                 title: '现金支付',
-                key: 'cashpay'
+                key: 'cashpay',
+                width: 100
             },
             {
                 title: '现金券支付',
-                key: 'voucherpay'
+                key: 'voucherpay',
+                width: 100
             },
             {
                 title: '优惠券抵扣',
-                key: 'coupon'
+                key: 'coupon',
+                width: 100
             },
             {
                 title: '折扣优惠',
-                key: 'discountpay'
+                key: 'discountpay',
+                width: 100
             },
             {
                 title: '流水号',
-                key: 'trnobuy'
+                key: 'trnobuy',
+                width: 180
             }
         ],
         resourcesTable: [],
+        resouresTotal: 1,
+        resourcesType: '',
+        columnsExport: [
+            {
+                title: '最近下载时间',
+                key: 'name'
+            },
+            {
+                title: '内容',
+                key: 'age'
+            },
+            {
+                title: '状态',
+                key: 'address'
+            },
+            {
+                title: '操作',
+                key: 'address',
+                render: (h,params)=> {
+                  return h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        alert('这是下载')
+                      }
+                    }
+                  }, '下载')
+                }
+            }
+        ],
+        exportTable: [],
+        exportTotal: 1,
         OrderPages: 0,
         currentORderPage: 1,
         OrderpageSize: 10,
@@ -3087,6 +3198,9 @@
             }
         ]
       },
+      resourcesPageChange(currentPage) {
+        this.getResourcesTable(currentPage)
+      },
       getResourcesTable(currentPage) {
         this.$http.get('/nVersionUser/resourceDetails.do', {
           params: {
@@ -3095,21 +3209,27 @@
             minTime: '',
             maxTime: '',
             billingMode: '',
-            resourceType: 'host',
+            resourceType: this.resourcesType,
             minCashPay: '',
             mmxCashPay:''
           }
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              // this.tabledata = response.data.result.data
-              // this.total = response.data.result.totle
               this.resouresTotal = response.data.result.count
               this.resourcesTable = response.data.result.info
             }
           })
       },
-      resourcesPageChange(currentPage) {
+      exportPageChange(currentPage) {
         this.getResourcesTable(currentPage)
+      },
+      getExportTable(currentPage,type) {
+        this.exportTable = [{}]
+        // this.$http.get('/nVersionUser/findExportInfo.do').then(response => {
+        //     if (response.status == 200 && response.data.status == 1) {
+        //       console.log(response.data.result)
+        //     }
+        //   })
       },
       //Cashforwithdrawa(){
       //axios.get('user/selectValidRefundAmount.do', {
@@ -3242,6 +3362,7 @@
             break
           case 'bills':
             this.getResourcesTable()
+            this.getExportTable()
             this.search()
         }
       },
