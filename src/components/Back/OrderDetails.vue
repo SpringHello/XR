@@ -12,11 +12,23 @@
           <p>
             <span>订单编号：{{orderId}}</span>
             <span style="margin-left:20px;">订单创建时间：2019/3/24 23:24</span>
-            <span style="margin-left:20px;">订单支付时间：2019/3/24 23:24</span>
-            <span style="margin-left:20px;">订单状态：已支付</span>
-            <span style="color:rgba(42,153,242,1);float: right;">删除订单</span>
+            <span style="margin-left:20px;">订单支付时间：{{ testtime ? testtime : '——'}}</span>
+            <span style="margin-left:20px;">订单状态：{{ teststatus == 0 ? '未支付' : '已支付'}}</span>
+            <Poptip
+              confirm
+              title="您确认删除该订单？"
+              @on-ok="deteleOrder"
+              @on-cancel="cancelOrder" style="float: right;">
+              <span style="color:rgba(42,153,242,1);cursor: pointer;font-size:14px;line-height: 18px;">删除订单</span>
+          </Poptip>
           </p>
           <Table :columns="columns1" :data="data1"></Table>
+            <p class="p4">
+              <span class="leftspan">总计支付：</span>
+              <span class="rightspan">¥600.00</span>
+              <Button type="error" v-if="teststatus==0">立即付款</Button>
+            </p>
+            <div style="clear: both;"></div>
         </div>
      </div>
   </div>
@@ -32,6 +44,8 @@
 
       return {
         orderId:0,
+        teststatus:0,
+        testtime:'2019/3/24 23:24',
         columns1: [
                     {
                         title: '产品名称',
@@ -98,6 +112,13 @@
         //获取订单详情的ID
         this.orderId=sessionStorage.getItem('orderid');
         console.log(this.orderId);
+      },
+      deteleOrder () {
+         this.$Message.success('订单删除成功');
+         this.$router.push('/expenses')
+      },
+      cancelOrder () {
+          
       }
     },
     computed: {
@@ -157,6 +178,28 @@
             font-family:MicrosoftYaHei;
             color:rgba(102,102,102,1);
             line-height:18px;
+          }
+        }
+        .p4{
+          float: right;
+          margin-top: 25px;
+          .leftspan {
+            font-size:14px;
+            font-family:MicrosoftYaHei;
+            color:rgba(102,102,102,1);
+          }
+          .rightspan {
+            font-size:24px;
+            font-family:MicrosoftYaHei-Bold;
+            font-weight:bold;
+            color:rgba(255,98,75,1);
+            position: relative;
+            top:3px;
+          }
+          > Button {
+            position: relative;
+            top:-5px;
+            margin-left: 20px;
           }
         }
       }
