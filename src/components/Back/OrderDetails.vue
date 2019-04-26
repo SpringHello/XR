@@ -16,6 +16,7 @@
             <span style="margin-left:20px;">订单状态：已支付</span>
             <span style="color:rgba(42,153,242,1);float: right;">删除订单</span>
           </p>
+          <Table :columns="columns1" :data="data1"></Table>
         </div>
      </div>
   </div>
@@ -31,6 +32,59 @@
 
       return {
         orderId:0,
+        columns1: [
+                    {
+                        title: '产品名称',
+                        key: 'ProductName',
+                        width: 134
+                    },
+                    {
+                        title: '资源类型',
+                        key: 'ResourceType',
+                        width: 290
+                    },
+                    {
+                        title: '类型',
+                        key: 'type'
+                    },
+                    {
+                        title: '数量',
+                        key: 'Number'
+                    },
+                    {
+                        title: '原价',
+                        key: 'OriginalPrice'
+                    },
+                    {
+                        title: '优惠价',
+                        key: 'ConcessionalRate'
+                    },
+                    {
+                        title: '优惠券抵扣',
+                        key: 'CouponDeduction'
+                    },
+                    {
+                        title: '现金券支付',
+                        key: 'CashCouponPayment'
+                    },
+                    {
+                        title: '现金支付',
+                        key: 'CashPayment'
+                    }
+                ],
+                data1: [
+                    {
+                        ProductName: '弹性云服务器',
+                        ResourceType: '地域：华北二区',
+                        type: '包年',
+                        Number: '1台／1年',
+                        OriginalPrice:600,
+                        ConcessionalRate:'---',
+                        CouponDeduction:0,
+                        CashCouponPayment:0,
+                        CashPayment:600,
+                    }
+                ]
       }
     },
     created() {
@@ -97,6 +151,7 @@
           margin: 20px 0;
         }
         > p:nth-child(3){
+          margin-bottom: 10px;
           > span{
             font-size:14px;
             font-family:MicrosoftYaHei;
