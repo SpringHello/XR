@@ -85,7 +85,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a href="https://www.xrcloud.net/login" rel="nofollow"><span>登录</span>
+                  <a href="https://zschj.xrcloud.net/login" rel="nofollow"><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -93,7 +93,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a href="https://www.xrcloud.net/register" rel="nofollow"><span>注册</span>
+                  <a href="https://zschj.xrcloud.net/register" rel="nofollow"><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -222,7 +222,7 @@
               <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">{{item.preparation}}</a>
             </li>
             <li>
-              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922" rel="nofollow" target="_blank"
+              <a href="http://www.beian.miit.gov.cn" rel="nofollow" target="_blank"
               >
                 <img src="./assets/img/app/record.png" alt="京公网安备">{{item.desc}}
               </a>
