@@ -3195,19 +3195,28 @@
           this.TransactionAmountsort=column.order
           this.CreatTimesort=''
           this.PayTimesort=''
-          this.getOrder()
+          console.log(this.TransactionAmountsort)
+          console.log(this.CreatTimesort)
+          console.log(this.PayTimesort)
+          //this.getOrder()
         }
         else if(column.key=="creatData"){
           this.CreatTimesort=column.order
           this.TransactionAmountsort=''
           this.PayTimesort=''
-          this.getOrder()
+          console.log(this.TransactionAmountsort)
+          console.log(this.CreatTimesort)
+          console.log(this.PayTimesort)
+          //this.getOrder()
         }
         else if(column.key=="payData"){
           this.PayTimesort=column.order
           this.CreatTimesort=''
           this.TransactionAmountsort=''
-          this.getOrder()
+          console.log(this.TransactionAmountsort)
+          console.log(this.CreatTimesort)
+          console.log(this.PayTimesort)
+          //this.getOrder()
         }
       },
       OrderchangePage(currentPage) {
