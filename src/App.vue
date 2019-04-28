@@ -265,7 +265,7 @@
           </div>
             <div class="wrapper">
             <div style="padding:0 20px;cursor:pointer" @click="linkService">
-            <span class="title">在线客服&nbsp&nbsp&nbsp<img src="./assets/img/app/kefu-icon.png" /></span>
+            <span class="title">在线客服&nbsp&nbsp&nbsp<img style="vertical-align: bottom;" src="./assets/img/app/kefu-icon.png" /></span>
               </div>
           </div>
           <div class="wrapper" v-if="xiaoshouInfo.length>0">
@@ -840,7 +840,7 @@
         }
       }),
       QME() {
-        this.$refs.qq.style.width = '231px'
+        this.$refs.qq.style.width = '200px'
       },
       QML() {
         this.$refs.qq.style.width = '0px'
@@ -1457,7 +1457,7 @@
           display: block;
         }
         .wrapper {
-          width: 231px;
+          width: 200px;
           right: 0px;
           top: 0px;
           > div {

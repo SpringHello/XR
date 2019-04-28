@@ -8,7 +8,7 @@
       <div style="border-bottom: 1px solid #D9D9D9;">
         <h2>区域选择</h2>
         <div class="item-wrapper">
-          <div v-for="item in zoneList" :key="item.zoneid" v-if="item.zoneid !== '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c' && item.zoneid !== 'c6dcb310-3e37-4431-87f3-d8ada0cf3d91'&& item.zoneid !== 'd31ab294-8950-4b00-ad1d-0496fa742b91'" class="zoneItem"
+          <div v-for="item in zoneList" :key="item.zoneid" v-if="item.zoneid !== '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'" class="zoneItem"
                :class="{zoneSelect:zone.zoneid==item.zoneid}"
                @click="zone=item">{{item.zonename}}
           </div>
@@ -42,7 +42,7 @@
       <div style="margin-top:20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
         <h2>网络与带宽</h2>
         <!--虚拟私有云-->
-        <div class="item-wrapper">
+        <div class="item-wrapperr">
           <div style="display: flex">
             <div>
               <p class="item-title" style="margin-top: 7px;">虚拟私有云</p>
@@ -137,7 +137,7 @@
       // 如果默认区域在该资源下不存在
       if(!zoneList.some(i=>{
         return i.zoneid == zone.zoneid
-        })|| this.$store.state.zone.zoneid == 'c6dcb310-3e37-4431-87f3-d8ada0cf3d91'){
+        })){
         // 默认选中zoneList中第一个区域
         zone = zoneList[0]
       }

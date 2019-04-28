@@ -9,7 +9,7 @@
         <div style="border-bottom: 1px solid #D9D9D9;">
           <h2>区域选择</h2>
           <div class="item-wrapper">
-            <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"  v-if="item.zoneid !== 'd31ab294-8950-4b00-ad1d-0496fa742b91'"
+            <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem" 
                  :class="{zoneSelect:zone.zoneid==item.zoneid}"
                  @click="zone=item">{{item.zonename}}
             </div>
