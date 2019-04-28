@@ -1460,9 +1460,7 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            this.hostZoneList = res.data.result.optionalArea.filter(item=> {
-              return item.name!='华东一区(绍兴)'
-            })
+            this.hostZoneList = res.data.result.optionalArea
             this.defaultZone = res.data.result.optionalArea[0].value
 
             // 默认选择区域
@@ -1474,9 +1472,7 @@
                 item.zoneId = res.data.result.optionalArea[0].value
               }
             })
-            this.gpuZoneList = res.data.result.unoptionalRegion.filter(item=> {
-              return item.name!='华东一区(GPU)'
-            })
+            this.gpuZoneList = res.data.result.unoptionalRegion
             // 赋值配置id,初始化价格和抢购数量
             this.discountProduct.forEach((item, index) => {
               item.id = res.data.result.freevmconfigs[index].id
@@ -1626,9 +1622,7 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            this.hostZoneListHot = res.data.result.optionalArea.filter(item=> {
-              return item.name!='华东一区(绍兴)'
-            })
+            this.hostZoneListHot = res.data.result.optionalArea
             this.hostProductHot.zoneId = res.data.result.optionalArea[0].value
           }
         })
@@ -1730,9 +1724,7 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            this.gpuZoneListHot = res.data.result.optionalArea.filter(item=> {
-              return item.name!='华东一区(GPU)'
-            })
+            this.gpuZoneListHot = res.data.result.optionalArea
             this.gpuProductHot.zoneId = res.data.result.optionalArea[0].value
           }
         })
