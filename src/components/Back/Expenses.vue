@@ -1613,127 +1613,100 @@
           },
             {
               title: '资源类型',
-              key: 'ResourceType',
+              key: 'sourceType',
               render: (h, params) => {
-                return h('span', params.row.ResourceType == 0 ? '弹性公网IP' : params.row.ResourceType == 1 ? '弹性云服务器' : params.row.ResourceType == 2 ? '对象存储' : params.row.ResourceType == 3 ? 'GPU云服务器' : params.row.ResourceType == 4 ? '云数据库' : params.row.ResourceType == 5 ? '云硬盘' : params.row.ResourceType == 6 ? 'NAT网关' : params.row.ResourceType == 7 ? 'SSL证书' : params.row.ResourceType == 8 ? '域名' :
-                params.row.ResourceType == 9 ? '云市场' : '')
-              },//this.columns5[index].filters = res;
-              filters: [
+                return h('span', params.row.sourceType == 2 ? '弹性公网IP' : params.row.sourceType == 0 ? '弹性云服务器' : params.row.sourceType == 6 ? '对象存储' : 
+                params.row.sourceType == 4 ? 'GPU云服务器' : params.row.sourceType == 3 ? '云数据库' : 
+                params.row.sourceType == 1 ? '云硬盘' : 
+                params.row.sourceType == 5 ? 'NAT网关' : 
+                params.row.sourceType == 8 ? 'SSL证书' : 
+                params.row.sourceType == 7 ? '域名' :
+                params.row.sourceType == 9 ? '云市场' : '')
+              },
+              //this.columns5[index].filters = res;
+              // 0 主机，1 磁盘 2 公网 3 数据库 4 GPU 5 NAT网关  6 对象存储  7 域名  8 ssl证书  9 云市场',
+                filters: [
                   {
-                      label: '弹性公网IP',
-                      value: 0
+                    label: '弹性公网IP',
+                    value: 2
+                  }, 
+                  {
+                    label: '弹性云服务器',
+                    value: 0
+                  }, 
+                  {
+                    label: '对象存储',
+                    value: 6
                   },
                   {
-                      label: '弹性云服务器',
-                      value: 1
+                    label: 'GPU云服务器',
+                    value: 4
+                  }, 
+                  {
+                    label: '云数据库',
+                    value: 3
+                  }, 
+                  {
+                    label: '云硬盘',
+                    value: 1
                   },
                   {
-                      label: '对象存储',
-                      value: 2
+                    label: 'NAT网关',
+                    value: 5
+                  }, 
+                  {
+                    label: 'SSL证书',
+                    value: 8
                   },
                   {
-                      label: 'GPU云服务器',
-                      value: 3
-                  },
+                    label: '域名',
+                    value: 7
+                  }, 
                   {
-                      label: '云数据库',
-                      value: 4
+                    label: '云市场',
+                    value: 9
                   },
-                  {
-                      label: '云硬盘',
-                      value: 5
-                  },
-                  {
-                      label: 'NAT网关',
-                      value: 6
-                  },
-                  {
-                      label: 'SSL证书',
-                      value: 7
-                  },
-                  {
-                      label: '域名',
-                      value: 8
-                  },
-                  {
-                      label: '云市场',
-                      value: 9
-                  }
-              ],
-              filterMultiple: false,
+                ],
+                filterMultiple: false,
                   filterMethod (value, row) {
-                    var rownum=row.ResourceType;
-                    if(value===rownum){
-                      return row.ResourceType==rownum;
-                    }
-                      // if (value===0) {
-                      //     return row.ResourceType==0;
-                      // } 
-                      // else if(value===1){
-                      //     return row.ResourceType==1;
-                      // }
-                      // else if(value===2){
-                      //     return row.ResourceType==2;
-                      // }
-                      // else if(value===3){
-                      //     return row.ResourceType==3;
-                      // } 
-                      // else if(value===4){
-                      //     return row.ResourceType==4;
-                      // }
-                      // else if(value===5){
-                      //     return row.ResourceType==5;
-                      // }
-                      // else if(value===6){
-                      //     return row.ResourceType==6;
-                      // }
-                      // else if(value===7){
-                      //     return row.ResourceType==7;
-                      // }
-                      // else if(value===8){
-                      //     return row.ResourceType==8;
-                      // }
-                      // else if(value===9){
-                      //     return row.ResourceType==9;
-                      // }
+                      return row.sourceType==value;
                   }
             },
             {
               title: '订单类型',
               key: 'Ordertype',
               render: (h, params) => {
-                return h('span', params.row.Ordertype == 0 ? '资源新购' : params.row.Ordertype == 1 ? '资源升级' :
-                params.row.Ordertype == 2 ? '资源续费' : '')
+                return h('span', params.row.Ordertype == 1 ? '资源新购' : params.row.Ordertype == 2 ? '资源升级' :
+                params.row.Ordertype == 3 ? '资源续费' :
+                params.row.Ordertype == 4 ? '资费变更' :
+                params.row.Ordertype == 5 ? '域名转入' : '')
               },
+              //1  资源新购 ， 2 资源升级 ，3 资源续费  ，4 资费变更， 5 域名转入
               filters: [
                   {
                       label: '资源新购',
-                      value: 0
-                  },
-                  {
-                      label: '资源升级',
                       value: 1
                   },
                   {
-                      label: '资源续费',
+                      label: '资源升级',
                       value: 2
+                  },
+                  {
+                      label: '资源续费',
+                      value: 3
+                  },
+                  {
+                      label: '资费变更',
+                      value: 4
+                  },
+                  {
+                      label: '域名转入',
+                      value: 5
                   }
               ],
               filterMultiple: false,
                   filterMethod (value, row) {
-                      var rownum=row.Ordertype;
-                      if(value===rownum){
-                        return row.Ordertype==rownum;
-                      }
-                      // if (value===0) {
-                      //      return row.Ordertype==0;
-                      // } 
-                      // else if(value===1){
-                      //      return row.Ordertype==1;
-                      //  }
-                      //  else if(value===2){
-                      //     return row.Ordertype==2;
-                      // }
+                        return row.Ordertype==value;
                   }
             },
             {
@@ -1749,12 +1722,14 @@
             },
             {
               title: '订单状态',
-              key: 'OrderStatus',
+              key: 'paymentStatus',
               render: (h, params) => {
-                return h('span', params.row.OrderStatus == 0 ? '待支付' : params.row.OrderStatus == 1 ? '已支付' :
-                params.row.OrderStatus == 2 ? '已退款' :
-                params.row.OrderStatus == 3 ? '已超时失效' : '')
+                return h('span', params.row.paymentStatus == 0 ? '待支付' : params.row.paymentStatus == 1 ? '已支付' :
+                params.row.paymentStatus == 4 ? '已退款' :
+                params.row.paymentStatus == 3 ? '退款中' :
+                params.row.paymentStatus == 5 ? '已超时失效' : '')
               },
+              //0 未支付 1 支付成功 2 支付异常  3退款中   4已退款 5 失效
               filters: [
                   {
                       label: '待支付',
@@ -1766,31 +1741,20 @@
                   },
                   {
                       label: '已退款',
-                      value: 2
+                      value: 4
+                  },
+                  {
+                      label: '退款中',
+                      value: 3
                   },
                   {
                       label: '已超时失效',
-                      value: 3
+                      value: 5
                   }
               ],
               filterMultiple: false,
                   filterMethod (value, row) {
-                      var rownum=row.OrderStatus;
-                      if(value===rownum){
-                        return row.OrderStatus==rownum;
-                      }
-                      // if (value===0) {
-                      //     return row.OrderStatus==0;
-                      // } 
-                      // else if(value===1){
-                      //     return row.OrderStatus==1;
-                      // }
-                      // else if(value===2){
-                      //     return row.OrderStatus==2;
-                      // }
-                      // else if(value===3){
-                      //     return row.OrderStatus==3;
-                      // }
+                        return row.paymentStatus==value;
                   }
             },
             {
@@ -1806,7 +1770,7 @@
             {
               title: '操作',
               render: (h, params) => {
-                 if(params.row.OrderStatus === 0){
+                 if(params.row.paymentStatus === 0){
                    return h('div', {}, [
                        h('span', {
                         style: {
@@ -1854,28 +1818,28 @@
           data5: [
             {
                 OrderNumber: '2019023101240915',
-                ResourceType: 0,
-                Ordertype: 0,
+                sourceType: 0,
+                Ordertype: 5,
                 TransactionAmount: '50,000.00',
-                OrderStatus: 0,
+                paymentStatus: 0,
                 creatData:'2019/3/25 21:29',
                 payData:'2019/3/25 21:29'
             },
             {
                 OrderNumber: '2019023101240914',
-                ResourceType: 1,
+                sourceType: 1,
                 Ordertype: 1,
                 TransactionAmount: '30,000.00',
-                OrderStatus: 0,
+                paymentStatus: 0,
                 creatData:'2019/3/21 21:29',
                 payData:'2019/3/20 21:29'
             },
             {
                 OrderNumber: '2019023101240913',
-                ResourceType: 9,
+                sourceType: 9,
                 Ordertype: 2,
                 TransactionAmount: '10,000.00',
-                OrderStatus: 3,
+                paymentStatus: 3,
                 creatData:'2019/3/24 21:29',
                 payData:'2019/3/29 21:29'
             }
