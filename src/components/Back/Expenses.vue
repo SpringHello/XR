@@ -283,8 +283,8 @@
             <div class="ordertype">
               <p>
                 <RadioGroup v-model="button5" type="button">
-                  <Radio label="包年包月"></Radio>
-                  <Radio label="实时计费"></Radio>
+                  <Radio label="1">包年包月</Radio>
+                  <Radio label="3">实时计费</Radio>
               </RadioGroup>
               </p>
               <p class="order_s1">
@@ -307,7 +307,7 @@
                   <Button type="primary">查询</Button>
                 </span>
               </p>
-              <Table :columns="columns5" :data="data5" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
+              <Table :columns="columns5" :data="data5" @on-sort-change="testasc" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;overflow: hidden">
                 <div style="float: right;">
                   <Page :total="OrderPages" :current="currentORderPage" :page-size="OrderpageSize" @on-change="OrderchangePage"></Page>
@@ -1353,6 +1353,12 @@
          this.init()*/
       }
       return {
+        OrdersourceType: '',
+        Ordertypevalue:'',
+        paymentStatusValue:'',
+        TransactionAmountsort:'',
+        CreatTimesort:'',
+        PayTimesort:'',
         columnsResources: [
             {
                 title: '资源ID',
@@ -1564,9 +1570,9 @@
         ],
         exportTable: [],
         exportTotal: 1,
-        OrderPages: 0,
+        OrderPages: 1,
         currentORderPage: 1,
-        OrderpageSize: 10,
+        OrderpageSize: 5,
         columns5: [
             {
               type: 'selection',
@@ -1651,9 +1657,12 @@
                   },
                 ],
                 filterMultiple: false,
-                  filterMethod (value, row) {
-                      return row.sourceType==value;
-                  }
+                filterRemote:(value,row)=>{
+                  console.log(value)
+                  console.log(row)
+                  this.OrdersourceType=value[0]
+                  this.getOrder()
+                }
             },
             {
               title: '订单类型',
@@ -1688,14 +1697,17 @@
                   }
               ],
               filterMultiple: false,
-                  filterMethod (value, row) {
-                        return row.Ordertype==value;
-                  }
+              filterRemote:(value,row)=>{
+                  console.log(value)
+                  console.log(row)
+                  this.Ordertypevalue=value[0]
+                  this.getOrder()
+                }
             },
             {
               title: '交易金额',
               key: 'TransactionAmount',
-              sortable: true,
+              sortable: 'custom',
               render: (h, params) => {
                    return h('div', {}, [
                        h('span', {}, '¥'),
@@ -1736,19 +1748,22 @@
                   }
               ],
               filterMultiple: false,
-                  filterMethod (value, row) {
-                        return row.paymentStatus==value;
-                  }
+              filterRemote:(value,row)=>{
+                  console.log(value)
+                  console.log(row)
+                  this.paymentStatusValue=value[0]
+                  this.getOrder()
+                }
             },
             {
               title: '创建日期',
               key: 'creatData',
-              sortable: true
+              sortable: 'custom'
             },
             {
               title: '支付日期',
               key: 'payData',
-              sortable: true
+              sortable: 'custom'
             },
             {
               title: '操作',
@@ -1912,7 +1927,7 @@
         //BalanceAlarmSwitchdis:false,
         BalanceRepeadio: '',
         BalanceRepval:50,
-        button5: '包年包月',
+        button5: '1',
         vipRule: [
           {
             title: '类目',
@@ -3158,8 +3173,49 @@
     mounted() {
     },
     methods: {
-      OrderchangePage(page) {
-        this.currentORderPage = page
+      testasc(column){
+        if(column.key=="TransactionAmount"){
+          this.TransactionAmountsort=column.order
+          this.CreatTimesort=''
+          this.PayTimesort=''
+          this.getOrder()
+        }
+        else if(column.key=="creatData"){
+          this.CreatTimesort=column.order
+          this.TransactionAmountsort=''
+          this.PayTimesort=''
+          this.getOrder()
+        }
+        else if(column.key=="payData"){
+          this.PayTimesort=column.order
+          this.CreatTimesort=''
+          this.TransactionAmountsort=''
+          this.getOrder()
+        }
+      },
+      OrderchangePage(currentPage) {
+        this.getOrder(currentPage)
+      },
+      getOrder(currentPage) {
+        this.$http.get('/nVersionUser/findOrderByType.do', {
+          params: {
+            page: currentPage,
+            pageSize: this.OrderpageSize,
+            paymentStatus: this.paymentStatusValue,
+            startTime: this.dateRangeOrder[0],
+            endTime: this.dateRangeOrder[1],
+            sourceType: this.OrdersourceType,
+            orderType: this.Ordertypevalue,
+            payType: this.button5,
+            balanceOrder: this.TransactionAmountsort,
+            createTimeOrder: this.CreatTimesort,
+            payOrder: this.PayTimesort
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              console.log(response.data)
+            }
+          })
       },
       billMonthlyData() {
         this.dataResponse = [
@@ -3412,8 +3468,8 @@
       dataChange(time) {
         this.dateRange = time
       },
-      dataChangeOrder(time) {
-        this.dateRangeOrder = time
+      dataChangeOrder(timeOrder) {
+        this.dateRangeOrder = timeOrder
       },
       search() {
         this.$http.get('user/searchWaterNumber.do', {
