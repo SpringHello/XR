@@ -1365,7 +1365,7 @@
                 width: 160,
                 render:(h,params)=>{
                   // 计费类型 1 包年 2 包月 3 实时计费',
-                  let text = params.row.billtype==='1'?'包年':(params.row.billtype==='2'?'包月':'实时计费')
+                  let text = params.row.billtype===1?'包年':(params.row.billtype===2?'包月':'实时计费')
                   return h('span',text)
                 },
                 filters: [
@@ -1383,16 +1383,28 @@
                   }
                 ],
                 filterMultiple: false,
-                filteredValue: 8,
                 filterRemote:(value,row)=>{
-                  this.resourcesDataType = value[0]
+                  if (!value.length) {
+                    this.resourcesDataType = ''
+                  } else {
+                    this.resourcesDataType = value[0]
+                  }
                   this.getResourcesTable('1')
                 }
             },
             {
                 title: '地域',
                 key: 'zonename',
-                width: 160
+                width: 160,
+                filterMultiple: false,
+                filterRemote:(value,row)=>{
+                  if (!value.length) {
+                    this.resourcesZoneId = ' '
+                  } else {
+                    this.resourcesZoneId = value[0]
+                  }
+                  this.getResourcesTable('1')
+                }
             },
             {
                 title: '产品类型',
@@ -1404,7 +1416,7 @@
                   switch(params.row.type)
                     {
                     case 0:
-                      text = '主机'
+                      text = '弹性云服务器'
                       break;
                     case 1:
                       text = '云硬盘'
@@ -1481,9 +1493,11 @@
                 filterMultiple: false,
                 filteredValue: 8,
                 filterRemote:(value,row)=>{
-                  console.log(value[0])
-                  console.log(row)
-                  this.resourcesType = value[0]
+                  if(!value.length) {
+                    this.resourcesType = ''
+                  } else {
+                    this.resourcesType = value[0]
+                  }
                   this.getResourcesTable('1')
                 }
               },
@@ -1529,8 +1543,11 @@
             }
         ],
         resourcesTable: [],
+        resourcesList: [],
         resouresTotal: 1,
         resourcesType: '',
+        resourcesZoneId: '',
+        resourcesDataType: '',
         columnsExport: [
             {
                 title: '最近下载时间',
@@ -3238,21 +3255,27 @@
         this.getResourcesTable(currentPage)
       },
       getResourcesTable(currentPage) {
-        this.$http.get('/nVersionUser/resourceDetails.do', {
+        axios.get('/nVersionUser/resourceDetails.do', {
           params: {
             pageSize: '5',
-            page: currentPage?currentPage:'1',
+            page: currentPage,
             minTime: '',
             maxTime: '',
-            billingMode: '',
+            billingMode: this.resourcesDataType,
             resourceType: this.resourcesType,
             minCashPay: '',
-            mmxCashPay:''
+            mmxCashPay:'',
+            zoneId: this.resourcesZoneId
           }
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.resouresTotal = response.data.result.count
               this.resourcesTable = response.data.result.info
+              let filtersData = []
+              this.$store.state.zoneList.forEach((item,index) => {
+                    filtersData[index]={'label':item.zonename,'value':item.zoneid}
+              })
+              this.columnsResources[2].filters = filtersData
             }
           })
       },
@@ -3397,7 +3420,7 @@
             this.invoiceLimit()
             break
           case 'bills':
-            this.getResourcesTable()
+            this.getResourcesTable('1')
             this.getExportTable()
             this.search()
         }
