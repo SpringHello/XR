@@ -1539,7 +1539,7 @@
         width: 48px;
         height: 48px;
         box-shadow: 0px 2px 16px -5px rgba(255,98,75,1);
-        background: #FF624B url(/static/img/top.png) no-repeat center;
+        background: #FF624B url(./assets/img/app/top.png) no-repeat center;
       }
     }
     .backtop {

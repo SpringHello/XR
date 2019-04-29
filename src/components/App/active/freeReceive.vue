@@ -1,18 +1,18 @@
 <template>
-  <div style="background: #FFF">
+  <div style="background: rgba(255,242,230,1);">
     <h1 id="hide-h1">云主机免费领</h1>
     <div class="banner">
     </div>
     <div class="center">
       <div class="fr-host">
-        <h2>活动主机</h2>
-        <p>本活动所有主机均免费试用，每天随时可领，押金随时可退<span @click="roll(2800)">活动规则></span></p>
-        <div v-for="(config,configIndex) in configGroup" class="fr-config">
+        <h2>免费活动主机</h2>
+        <p>新用户专享，云服务器交押金免费试用，押金闪退 <span @click="roll(2800)">活动规则></span></p>
+        <!--<div v-for="(config,configIndex) in configGroup" class="fr-config" :key="configIndex">
           <div class="config-title" :class="{configIndex:configIndex ==1 }">
             <span>{{ config.headline }}</span>
             <span>{{ config.subtitle}}</span>
           </div>
-          <div class="config-content" v-for="(host,hostIndex) in config.hostGroup">
+          <div class="config-content" v-for="(host,hostIndex) in config.hostGroup" :key="hostIndex">
             <ul>
               <li>{{host.time}}</li>
               <li>{{host.bandwidth}}</li>
@@ -36,26 +36,62 @@
               </div>
             </div>
           </div>
+        </div>-->
+        <div class="fr-config">
+         <div v-for="(config,configIndex) in configGroup" :key="configIndex" class="fr-item">
+           <div class="item-title" :class="{second: configIndex=== 1}">
+             <p>包月云服务器</p>
+             <p>适用于：日常运营活动、小型开发测试环境、普通数据处理服务等场景。</p>
+           </div>
+           <div class="item-content"> 
+              <div class="item-config">
+                <ul v-for="(item,index) in config.config" :key="index">
+                  <li>CPU</li>
+                  <li>2核</li>
+                </ul>
+              </div>
+              <div class="item-area">
+                <div class="left">
+                <p>选择区域：</p>
+                </div>
+                <div class="area-group">
+                  <div v-for="(item,index) in areaGroup" :key="index" class="area-item" :class="{selected: config.zoneId == item.value}" @click="config.zoneId = item.value">
+                        {{item.name}}
+                  </div>
+                </div>
+              </div>
+              <div class="item-system">
+                <div class="left">
+                <p>选择系统：</p>
+                </div>
+                <Select v-model="config.system" class="fr-select" style="width:250px;margin-left: 10px;margin-right: 40px">
+                <Option v-for="item in systemGroup" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                
+                </Select>
+              </div>
+           </div>
+         </div>
         </div>
+        <p>温馨提示：使用期间若到“百度口碑”发布使用体验等相关评论，截图联系发送至在线客服，可领取满XX减XX优惠券。<a href="https://koubei.baidu.com/s/510a4f5f6316c2d0f81b3e63bc75b537?fr=search" target="blank">点击发布评论></a></p>
       </div>
       <div class="fr-flow">
         <h2>活动流程</h2>
         <p>新用户注册登录账号并且完成实名认证就可参与此活动</p>
-        <div class="flow">
-          <ul v-for="(item,index) in flowGroup">
+        <!--<div class="flow">
+          <ul v-for="(item,index) in flowGroup" :key="index">
             <img v-if="onStep <= index" :src="item.src" alt="描述">
             <img v-else :src="item.onSrc" alt="描述"/>
             <p :class="{onStep: onStep > index}">{{item.text}}</p>
             <div class="link" :class="{onStep: onStep > index +1}"></div>
           </ul>
-        </div>
+        </div>-->
       </div>
     </div>
-    <div style="background:rgba(255,243,237,1);">
+    <div>
       <div class="fr-advantage">
         <h2>产品优势</h2>
         <div>
-          <ul v-for="item in advantages">
+          <ul v-for="(item,index) in advantages" :key="index">
             <li><img :src="item.src" alt="描述"/></li>
             <li>{{ item.title}}</li>
             <li>{{ item.describe}}</li>
@@ -63,30 +99,32 @@
         </div>
       </div>
     </div>
+    <div style="background:rgba(255,255,255,1);">
     <div class="center">
       <div class="fr-rule">
         <h2>活动规则</h2>
         <dl>
           <dd>活动时间：</dd>
-          <dt>2018年8月3日开始，总量有限，先到先得！</dt>
+          <dt>2019年4月30日开始，总量有限，先到先得！</dt>
           <dd>活动对象：</dd>
-          <dt>新注册或者一直未使用过平台资源及未参加过其他免费活动并已通过个人／企业认证的用户。</dt>
+          <dt>新注册或者一直未使用过平台资源（第三方产品除外）及未参加过其他免费活动并已通过实名认证的用户。</dt>
           <dd>活动内容：</dd>
-          <dt>所有符合活动要求的用户可随时领取，每天不限量，若领取不成功可联系客服。</dt>
+          <dt>活动产品需充值对应的押金后方可使用；主机未到期可自行删除，删除后或者主机使用到期后，用户可解冻押金。</dt>
+          <dt>若您需要续费押金主机，可选择在主机未到期之前将押金转换为主机续费费用，最多可延长主机使用时间1年。</dt>
+          <dt>押金转续费时间说明：用户A在2019年4月30日选择押金主机2核4G，一年的配置，冻结押金569元，主机到期时间为2020年4月30日，若用户在2019年4月30日当天操作押金转续费，则主机到期时间仍为2020年4月30日，如用户在2020年4月29日操作押金转续费，则主机实际到期时间为2021年4月29日，可低价续费一年时间。续费时间根据用户之前选择的主机规格时间为准，一月期续费一月，一年期续费一年。</dt>
+          <dd>解冻操作流程：</dd>
+          <dt>解冻操作流程：进入控制台，点击右上角用户名，选择【费用中心】，在账户概览中点击【冻结押金】，在弹出的弹窗中选择需要解冻的押金，点击【申请解冻】，根据弹窗提示完成操作。 </dt>
           <dd>活动细则：</dd>
-          <dt>ECS弹性云服务器免费试用需充值对应的押金后才可使用，领取后宽限期（主机领取后到实名认证前）为<span>3</span>天，保留期（主机到期或者用户主动删除后回收站保留时间）为<span>7</span>天；主机未到期可自行删除，删除后或者主机使用到期后押金可选择转为续费，或者转到余额用于购买；或者可以向客服申请退还余额，七个工作日即可到账。解冻操作流程：进入控制台，点击右上角用户名，选择【费用中心】，在账户概览中点击【冻结押金】，在弹出的弹窗中选择需要解冻的押金，点击【申请解冻】，根据弹窗提示完成操作。
-          </dt>
           <dt>每个用户只能参与一次，同一手机号对应的多个账号、同一实名认证用户等满足同一条件的均视为一个用户。</dt>
-          <dd>免费产品使用规则：</dd>
           <dt>免费产品中的资源可随时进行升级，升级费用按新睿云标准收费进行收取。</dt>
           <dt>在各产品免费使用期间，若对免费资源进行了销毁，则视为放弃免费使用权。</dt>
           <dd>活动声明：</dd>
           <dt>为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源，领取后3天内未使用资源、利用资源从事违法违规行为的用户收回免费套餐使用资格。因此造成任何损失的，由该用户自行负责。</dt>
-          <dt>活动最终解释权在法律范围内归新睿云所有。</dt>
         </dl>
       </div>
     </div>
-    <div class="fr-suspension">
+    </div>
+    <!--<div class="fr-suspension">
       <ul>
         <li :class="{select: 1500>=fr_scrollTop}" @click="roll(500)">活动主机</li>
         <li :class="{select: 2000>fr_scrollTop&&fr_scrollTop>1500}" @click="roll(1600)">活动流程</li>
@@ -94,7 +132,7 @@
         <li :class="{select: fr_scrollTop>2700}" @click="roll(2800)">活动规则</li>
         <li @click="roll(0)">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</li>
       </ul>
-    </div>
+    </div>-->
 
     <!-- 领取提示 -->
     <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390">
@@ -422,7 +460,7 @@
             text: '5.领取完成'
           }],
         onStep: 0,
-        configGroup: [
+        /*configGroup: [
           {
             headline: '1核 2G 云服务器专区',
             subtitle: '适用于低负载、低并发、流量适中的网站应用、简单开发环境等场景。',
@@ -499,7 +537,37 @@
                 originalCost: '2120.64'
               },
             ]
-          }],
+          }],*/
+        configGroup:[
+          { 
+            headline: '1核 2G 云服务器专区',
+            subtitle: '适用于低负载、低并发、流量适中的网站应用、简单开发环境等场景。',
+            config:[
+              {},
+              {},
+              {},
+              {}
+            ],
+            system: 'windows',
+            zoneId: '',
+            cashPledge: '69',
+            originalCost: '176.72'
+          },
+          {
+            headline: '1核 2G 云服务器专区',
+            subtitle: '适用于低负载、低并发、流量适中的网站应用、简单开发环境等场景。',
+            config:[
+              {},
+              {},
+              {},
+              {}
+            ],
+            system: 'windows',
+            zoneId: '',
+            cashPledge: '569',
+            originalCost: '2120.64'
+          }
+        ],
         areaGroup: [],
         systemGroup: [
           {
@@ -714,14 +782,7 @@
           if (res.data.status == 1) {
             this.areaGroup = res.data.result.optionalArea
             this.configGroup.forEach(config => {
-              config.hostGroup.forEach(host => {
-                host.zoneId = this.areaGroup[0].value
-              })
-            })
-            this.areaGroup.forEach((item, index) => {
-              if (item.value === '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
-                this.areaGroup.splice(index, 1)
-              }
+              config.zoneId = this.areaGroup[0].value
             })
           }
         })
@@ -1092,8 +1153,8 @@
     }
     .fr-host {
       > p {
-        margin-top: 30px;
-        margin-bottom: 60px;
+        margin-top: 20px;
+        margin-bottom: 50px;
         font-size: 20px;
         font-family: "Microsoft YaHei", "微软雅黑";
         color: rgba(51, 51, 51, 1);
@@ -1105,7 +1166,17 @@
           border-bottom: 1px solid #FF881C;
         }
       }
-      .fr-config {
+      p:last-child{
+        text-align: left;
+        font-size:16px;
+        font-family:"Microsoft YaHei", "微软雅黑";
+        font-weight:400;
+        color:rgba(139,87,42,1);
+        >a{
+          color: #FF881C;
+        }
+      }
+      /*.fr-config {
         margin-bottom: 40px;
         .config-title {
           height: 60px;
@@ -1183,6 +1254,112 @@
                   background: #999999;
                   cursor: not-allowed;
                 }
+              }
+            }
+          }
+        }
+      }*/
+      .fr-config{
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 22px;
+        .fr-item{
+          width:534px;
+          background:rgba(255,255,255,1);
+          box-shadow:0px 3px 10px -3px rgba(229,194,194,1);
+          border-radius:4px;
+          .item-title{
+            height: 90px;
+            padding: 20px 30px;
+            background: url('../../../assets/img/active/freeToReceive/fr-banner10.png') no-repeat;
+            border-radius:4px 4px 0px 0px;
+            &.second{
+            background: url('../../../assets/img/active/freeToReceive/fr-banner11.png') no-repeat;
+            }
+            >p{
+              text-align: left;
+              font-size:18px;
+              font-family:MicrosoftYaHei-Bold;
+              font-weight:bold;
+              color:rgba(255,255,255,1);
+              line-height:24px;
+            }
+            p:last-child{
+              margin-top: 6px;
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              font-weight:normal;
+              color:rgba(255,255,255,1);
+              line-height:19px;
+            }
+          }
+          .item-content{
+            padding: 24px;
+            .item-config{
+              display: flex;
+              justify-content: space-between;
+              >ul{
+                width: 25%;
+                text-align: center;
+                li{
+                  font-size:16px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(153,153,153,1);
+                }
+                li:last-child{
+                  font-size:20px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(51,51,51,1);
+                }
+              }
+            }
+            .item-area{
+              margin-top: 30px;
+              padding: 0 40px;
+              display: flex;
+              .left{
+                padding-top: 12px;
+                  >p{
+                white-space: nowrap; 
+                font-size:14px;
+                font-family:MicrosoftYaHei;
+                color:rgba(64,64,64,1);
+                 }
+              }
+              .area-group{
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+                .area-item{
+                  font-size:14px;
+                  cursor: pointer;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(75,60,61,1);
+                  padding: 8px 27px;
+                  background:rgba(255,255,255,1);
+                  border-radius:2px;
+                  border:1px solid rgba(229,194,194,1);
+                  margin-bottom: 10px;
+                  &.selected{
+                    color: rgba(255,255,255,1);
+                    background:rgba(225,33,42,1);
+                    border:1px solid rgba(225,33,42,1);
+                  }
+                }
+              }
+            }
+            .item-system{
+              margin-top: 10px;
+              padding: 0 40px;
+              display: flex;
+              .left{
+                padding-top: 8px;
+                  >p{
+                white-space: nowrap; 
+                font-size:14px;
+                font-family:MicrosoftYaHei;
+                color:rgba(64,64,64,1);
+                 }
               }
             }
           }

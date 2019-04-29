@@ -1884,7 +1884,7 @@
             })
           })
           params = {
-            id: this.selectHostComputerIds + ''
+            computerId: this.selectHostComputerIds + ''
           }
         } else {
           this.hostListData.forEach(host => {
@@ -1894,7 +1894,7 @@
             }
           })
           params = {
-            id: this.hostCurrentSelected.computerid,
+            computerId: this.hostCurrentSelected.computerid,
           }
         }
         this.$http.get(url,{params}).then(res=>{
