@@ -84,24 +84,24 @@
                   </ul>
                 </div>
               </div>
-              <div class="item3" @click="UnpaidJump">
+              <div class="item3" @click="UnpaidJump('orderManage')">
                 <p>待支付订单</p>
                 <p>
                   <span>{{ $store.state.userInfo.orderTableNum }}</span>
                   笔
                 </p>
-                <p v-if="$store.state.userInfo.orderTableNum<=0" @click.stop="UnpaidnullJump" style="color:#2A99F2;cursor: pointer;">
+                <p v-if="$store.state.userInfo.orderTableNum<=0" @click.stop="UnpaidJump('orderManage')" style="color:#2A99F2;cursor: pointer;">
                   查看订单管理
                 </p>
-                <p v-else-if="$store.state.userInfo.orderTableNum<10" @click.stop="UnpaidJump" style="color:#2A99F2;cursor: pointer;">
+                <p v-else-if="$store.state.userInfo.orderTableNum<10" @click.stop="UnpaidJump('orderManagepay')" style="color:#2A99F2;cursor: pointer;">
                   立即支付
                 </p>
                 <p v-else-if="$store.state.userInfo.orderTableNum>=10">
-                  您的待支付订单较多，可前往<span @click.stop="UnpaidJump" style="cursor: pointer;">订单管理</span>删除
+                  您的待支付订单较多，可前往<span @click.stop="UnpaidJump('orderManage')" style="cursor: pointer;">订单管理</span>删除
                 </p>
                 <img src="../../assets/img/back/daizhifu.png"/>
               </div>
-              <div class="item4" @click="PreferentialJump">
+              <div class="item4" @click="UnpaidJump('myCard')">
                 <p>代金券数量</p>
                 <p>
                   <span>{{ couponNumber }}</span>
@@ -110,7 +110,7 @@
                 <p v-if="couponNumber<=0" @click.stop="$router.push('activity/')" style="color:#2A99F2;cursor: pointer;">
                  查看优惠活动
                 </p>
-                <p v-else-if="couponNumber<10" @click.stop="PreferentialJump" style="color:#2A99F2;cursor: pointer;">
+                <p v-else-if="couponNumber<10" @click.stop="UnpaidJump('myCardnot')" style="color:#2A99F2;cursor: pointer;">
                  立即使用
                 </p>
                 <p v-else-if="couponNumber>=10">
@@ -3369,21 +3369,43 @@
             }
           })
       },
-      UnpaidJump(){
-        this.order_type = 'notpay'
-        this.changeOrder()
-        this.name='orderManage'
+      UnpaidJump(value){
+        //this.order_type = 'notpay'
+        //this.changeOrder()
+        console.log(value)
+        if(value=='orderManage'){
+          this.paymentStatusValue=''
+          this.name='orderManage'
+          this.changecard()
+        }
+        else if(value=='orderManagepay'){
+          this.paymentStatusValue='0'
+          this.name='orderManage'
+          this.changecard()
+        }
+        else if(value=='myCard'){
+          this.cardState=''
+          this.name='myCard'
+          this.changecard()
+        }
+        else if(value=='myCardnot'){
+          this.cardState='0'
+          this.name='myCard'
+          this.changecard()
+        }
       },
-      UnpaidnullJump(){
-        this.order_type = 'all'
-        this.changeOrder()
-        this.name='orderManage'
-      },
-      PreferentialJump(){ 
-        this.cardState = '0'
-        this.changedcard()
-        this.name='myCard'
-      },
+      // UnpaidnullJump(){
+      //   //this.order_type = 'all'
+      //   //this.changeOrder()
+      //   this.name='orderManage'
+      //   this.changecard()
+      // },
+      // PreferentialJump(){ 
+      //   //this.cardState = '0'
+      //   //this.changedcard()
+      //   this.name='myCard'
+      //   this.changecard()
+      // },
       changedcard() {
         switch (this.cardState) {
           case '':
