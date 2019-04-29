@@ -304,7 +304,7 @@
                       <Date-picker v-model="timeOrder" type="daterange" :options="optionsOrder" placement="bottom-start" placeholder="选择日期" style="width: 231px;" @on-change="dataChangeOrder"></Date-picker>
                     </Col>
                   </Row>
-                  <Button type="primary">查询</Button>
+                  <Button type="primary" @click="getOrder('1')">查询</Button>
                 </span>
               </p>
               <Table :columns="columns5" :data="data5" @on-sort-change="testasc" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
@@ -352,7 +352,7 @@
           </Tab-pane>
           <Tab-pane label="我的卡券" name="myCard">
             <div class="searchCard">
-              <span>类型</span>
+              <!-- <span>类型</span>
               <Select v-model="cardType" style="width:231px;margin-left: 10px">
                 <Option v-for="item in cardTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
@@ -361,15 +361,45 @@
                 <Option v-for="item in cardStateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
               <Button type="primary" @click="searchCard">查询</Button>
-              <Button type="primary" style="float: right" @click="showModal.exchangeCard=true">兑换优惠券</Button>
+              <Button type="primary" style="float: right" @click="showModal.exchangeCard=true">兑换优惠券</Button> -->
+              <p>
+                <span class="spana">适用产品：</span>
+                <RadioGroup v-model="ApplicableProducts" type="button" class="rideo">
+                  <Radio label="0">全部</Radio>
+                  <Radio label="1">全产品通用</Radio>
+                  <Radio label="2">包年包月可用</Radio>
+                  <Radio label="3">弹性云服务器可用</Radio>
+                  <Radio label="4">云数据库可用</Radio>
+                  <Radio label="5">网络产品可用</Radio>
+                  <Radio label="6">对象存储可用</Radio>
+                  <Radio label="7">云市场</Radio>
+                </RadioGroup>
+              </p>
+              <p>
+                <span class="spana">代金券状态：</span>
+                <RadioGroup v-model="VoucherStatus" type="button" class="rideo">
+                  <Radio label="0">全部</Radio>
+                  <Radio label="1">待使用</Radio>
+                  <Radio label="2">已使用</Radio>
+                  <Radio label="3">已过期</Radio>
+                </RadioGroup>
+              </p>
+              <p>
+                <span class="spana">到期时间：</span>
+                <RadioGroup v-model="DueTime" type="button" class="rideo">
+                  <Radio label="0">全部</Radio>
+                  <Radio label="1">7天内到期</Radio>
+                </RadioGroup>
+                <Button type="primary" style="float: right;margin-top:10px;" @click="showModal.exchangeCard=true">获取优惠券</Button>
+              </p>
             </div>
-            <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" style="margin-top:10px">
+            <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" no-data-text="您还没有优惠券" style="margin-top:20px">
             </Table>
-            <!--     <div style="margin: 10px;overflow: hidden">
+                <div style="margin: 10px;overflow: hidden">
                    <div style="float: right;">
-                     <Page :total="cardTotal" :current="1" @on-change="cardCurrentChange"></Page>
+                     <Page :total="cardTotal" :page-size="cardPageSize" :current="1" @on-change="cardCurrentChange"></Page>
                    </div>
-                 </div>-->
+                 </div>
           </Tab-pane>
           <Tab-pane label="发票管理" name="applyInvoice">
             <div v-show="applyChange">
@@ -1353,6 +1383,9 @@
          this.init()*/
       }
       return {
+        ApplicableProducts: '0',
+        VoucherStatus: '0',
+        DueTime: '0',
         OrdersourceType: '',
         Ordertypevalue:'',
         paymentStatusValue:'',
@@ -1598,7 +1631,7 @@
             },
             {
               title: '订单编号',
-              key: 'OrderNumber',
+              key: 'ordernumber',
               width:176,
               render: (h, params) => {
                 return h('div', {
@@ -1609,12 +1642,12 @@
                   on: {
                     click: () => {
                       //this.$router.push('CloudDataManage')
-                      alert(params.row.OrderNumber);
-                      sessionStorage.setItem('orderid',params.row.OrderNumber)
+                      alert(params.row.ordernumber);
+                      sessionStorage.setItem('orderid',params.row.ordernumber)
                       this.$router.push('OrderDetails');
                     }
                   }
-                }, params.row.OrderNumber)
+                }, params.row.ordernumber)
             }
           },
             {
@@ -1675,20 +1708,18 @@
                 ],
                 filterMultiple: false,
                 filterRemote:(value,row)=>{
-                  console.log(value)
-                  console.log(row)
                   this.OrdersourceType=value[0]
-                  this.getOrder()
+                  this.getOrder('1')
                 }
             },
             {
               title: '订单类型',
-              key: 'Ordertype',
+              key: 'orderType',
               render: (h, params) => {
-                return h('span', params.row.Ordertype == 1 ? '资源新购' : params.row.Ordertype == 2 ? '资源升级' :
-                params.row.Ordertype == 3 ? '资源续费' :
-                params.row.Ordertype == 4 ? '资费变更' :
-                params.row.Ordertype == 5 ? '域名转入' : '')
+                return h('span', params.row.orderType == 1 ? '资源新购' : params.row.orderType == 2 ? '资源升级' :
+                params.row.orderType == 3 ? '资源续费' :
+                params.row.orderType == 4 ? '资费变更' :
+                params.row.orderType == 5 ? '域名转入' : '')
               },
               //1  资源新购 ， 2 资源升级 ，3 资源续费  ，4 资费变更， 5 域名转入
               filters: [
@@ -1715,31 +1746,29 @@
               ],
               filterMultiple: false,
               filterRemote:(value,row)=>{
-                  console.log(value)
-                  console.log(row)
                   this.Ordertypevalue=value[0]
-                  this.getOrder()
+                  this.getOrder('1')
                 }
             },
             {
               title: '交易金额',
-              key: 'TransactionAmount',
+              key: 'cost',
               sortable: 'custom',
               render: (h, params) => {
                    return h('div', {}, [
                        h('span', {}, '¥'),
-                       h('span', {}, params.row.TransactionAmount)
+                       h('span', {}, params.row.cost)
                     ])
               }
             },
             {
               title: '订单状态',
-              key: 'paymentStatus',
+              key: 'paymentstatus',
               render: (h, params) => {
-                return h('span', params.row.paymentStatus == 0 ? '待支付' : params.row.paymentStatus == 1 ? '已支付' :
-                params.row.paymentStatus == 4 ? '已退款' :
-                params.row.paymentStatus == 3 ? '退款中' :
-                params.row.paymentStatus == 5 ? '已超时失效' : '')
+                return h('span', params.row.paymentstatus == 0 ? '待支付' : params.row.paymentstatus == 1 ? '已支付' :
+                params.row.paymentstatus == 4 ? '已退款' :
+                params.row.paymentstatus == 3 ? '退款中' :
+                params.row.paymentstatus == 5 ? '已超时失效' : '')
               },
               //0 未支付 1 支付成功 2 支付异常  3退款中   4已退款 5 失效
               filters: [
@@ -1766,26 +1795,26 @@
               ],
               filterMultiple: false,
               filterRemote:(value,row)=>{
-                  console.log(value)
-                  console.log(row)
                   this.paymentStatusValue=value[0]
-                  this.getOrder()
+                  this.getOrder('1')
                 }
             },
             {
               title: '创建日期',
-              key: 'creatData',
+              key: 'ordercreatetime',
+              width:160,
               sortable: 'custom'
             },
             {
               title: '支付日期',
-              key: 'payData',
+              key: 'orderendtime',
+              width:160,
               sortable: 'custom'
             },
             {
               title: '操作',
               render: (h, params) => {
-                 if(params.row.paymentStatus === 0){
+                 if(params.row.paymentstatus === 0 && params.row.overTimeStatus === '0'){
                    return h('div', {}, [
                        h('span', {
                         style: {
@@ -1830,35 +1859,7 @@
             }
           }
         ],
-          data5: [
-            {
-                OrderNumber: '2019023101240915',
-                sourceType: 0,
-                Ordertype: 5,
-                TransactionAmount: '50,000.00',
-                paymentStatus: 0,
-                creatData:'2019/3/25 21:29',
-                payData:'2019/3/25 21:29'
-            },
-            {
-                OrderNumber: '2019023101240914',
-                sourceType: 1,
-                Ordertype: 1,
-                TransactionAmount: '30,000.00',
-                paymentStatus: 0,
-                creatData:'2019/3/21 21:29',
-                payData:'2019/3/20 21:29'
-            },
-            {
-                OrderNumber: '2019023101240913',
-                sourceType: 9,
-                Ordertype: 2,
-                TransactionAmount: '10,000.00',
-                paymentStatus: 3,
-                creatData:'2019/3/24 21:29',
-                payData:'2019/3/29 21:29'
-            }
-        ],
+          data5: [],
         dataResponse:[],
         columnsProductA: [
             {
@@ -2348,7 +2349,7 @@
             value: '2'
           }
         ],
-        ordertime: '',
+        // ordertime: '',
         time: '',
         timeOrder: '',
         total: 0,
@@ -2497,232 +2498,232 @@
             label: '退款中订单'
           }
         ],
-        columns_order: [
-          {
-            type: 'selection',
-            width: 60,
-          },
-          {
-            title: '交易明细',
-            width: 250,
-            render: (h, params) => {
-              var data = JSON.parse(params.row.display)
-              var type = ''
-              var arr = []
-              switch (data.订单类型) {
-                case 'host':
-                  type = '云主机'
-                  break
-                case 'vpc':
-                  type = 'vpc'
-                  break
-                case 'disk':
-                  type = '云磁盘'
-                  break
-                case 'ruirados':
-                  type = '对象存储'
-                  break
-                case 'gpu':
-                  type = 'GPU服务器'
-                  break
-                case 'database':
-                  type = '数据库'
-                  break
-                case 'publicIp':
-                  type = '网络'
-                  break
-                case 'continue':
-                  type = '续费'
-                  break
-                case 'upconfig':
-                  type = '升级'
-                  break
-                case 'nat' :
-                  type = '网络'
-                  break
-                case'domain':
-                  type = '域名'
-                  break
-                case'domaintransfer':
-                  type = '域名转入'
-                  break
-              }
-              for (var index in data.资源) {
-                for (var key in data.资源[index]) {
-                  if (key != '地域') {
-                    arr.push(h('p', {style: {lineHeight: '1.5'}}, `${key}:${data.资源[index][key]}`))
-                  } else {
-                    arr.unshift(h('p', {style: {lineHeight: '1.5'}}, `${key}:${data.资源[index][key]}`))
-                  }
-                }
-              }
-              return h('div', [
-                h('Collapse', {
-                  props: {
-                    accordion: true,
-                    value: '0'
-                  },
-                }, [h('Panel', {
-                    props: {
-                      name: params.row._index.toString()
-                    },
-                  },
-                  [type, h('div', {
-                    slot: 'content'
-                  }, arr)])]),
-              ])
-            }
-          },
-          {
-            title: '交易金额',
-            width: 108,
-            key: 'cost',
-            render: (h, params) => {
-              return h('div', [
-                h('span', '￥'),
-                h('strong', params.row.cost)
-              ])
-            }
-          },
-          {
-            title: '订单创建时间',
-            width: 180,
-            key: 'ordercreatetime'
-          },
-          {
-            title: '订单结束时间',
-            width: 180,
-            key: 'orderendtime',
-            render: (h, params) => {
-              return h('span', params.row.orderendtime == null ? '--' : params.row.orderendtime)
-            }
-          },
-          {
-            title: '订单状态',
-            width: 140,
-            align: 'center',
-            key: 'paymentstatus',
-            render: (h, params) => {
-              if (params.row.paymentstatus == '1') {
-                return h('span', {}, '已支付')
-              } else if (params.row.paymentstatus == '3') {
-                return h('span', {}, '退款中')
-              } else if (params.row.paymentstatus == '4') {
-                return h('span', {}, '已退款')
-              } else {
-                if (params.row.overTimeStatus == '1') {
-                  return h('div', {}, [h('p', {}, '未支付'), h('p', {}, '（超时关闭订单）')])
-                } else {
-                  return h('span', {}, '未支付')
-                }
-              }
-            }
-          },
-          {
-            title: '订单编号',
-            width: 150,
-            key: 'ordernumber'
-          },
-          {
-            title: '操作',
-            key: 'handle',
-            width: 90,
-            render: (h, params) => {
-              if (params.row.paymentstatus == '3') {
-                return h('div', [
-                  h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: ' #2A99F2'
-                    },
-                    on: {
-                      click: () => {
-                        let index = params.index
-                        let data = JSON.parse(this.orderData[index].display)
-                        this.$Modal.info({
-                          title: '订单信息',
-                          scrollable: true,
-                          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
-                   <br>订单状态：退款中<br>退款金额：￥${this.orderData[index].returnmoney}<br>预计到账时间：订单提交过后的3-5日<br>退款渠道：原支付渠道
-                 <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
-                        })
-                      }
-                    }
-                  }, '详情')
-                ])
-              } else if (params.row.paymentstatus == '4') {
-                return h('div', [
-                  h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: ' #2A99F2'
-                    },
-                    on: {
-                      click: () => {
-                        let index = params.index
-                        let data = JSON.parse(this.orderData[index].display)
-                        this.$Modal.info({
-                          title: '订单信息',
-                          scrollable: true,
-                          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
-                   <br>订单状态：已退款<br>退款金额：￥${this.orderData[index].returnmoney}<br>退款渠道：原支付渠道
-                 <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
-                        })
-                      }
-                    }
-                  }, '详情')
-                ])
-              } else {
-                return h('div', [
-                  h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: ' #2A99F2'
-                    },
-                    on: {
-                      click: () => {
-                        this.show(params.index)
-                      }
-                    }
-                  }, '详情')
-                ])
-              }
-            }
-          }
-        ],
+        // columns_order: [
+        //   {
+        //     type: 'selection',
+        //     width: 60,
+        //   },
+        //   {
+        //     title: '交易明细',
+        //     width: 250,
+        //     render: (h, params) => {
+        //       var data = JSON.parse(params.row.display)
+        //       var type = ''
+        //       var arr = []
+        //       switch (data.订单类型) {
+        //         case 'host':
+        //           type = '云主机'
+        //           break
+        //         case 'vpc':
+        //           type = 'vpc'
+        //           break
+        //         case 'disk':
+        //           type = '云磁盘'
+        //           break
+        //         case 'ruirados':
+        //           type = '对象存储'
+        //           break
+        //         case 'gpu':
+        //           type = 'GPU服务器'
+        //           break
+        //         case 'database':
+        //           type = '数据库'
+        //           break
+        //         case 'publicIp':
+        //           type = '网络'
+        //           break
+        //         case 'continue':
+        //           type = '续费'
+        //           break
+        //         case 'upconfig':
+        //           type = '升级'
+        //           break
+        //         case 'nat' :
+        //           type = '网络'
+        //           break
+        //         case'domain':
+        //           type = '域名'
+        //           break
+        //         case'domaintransfer':
+        //           type = '域名转入'
+        //           break
+        //       }
+        //       for (var index in data.资源) {
+        //         for (var key in data.资源[index]) {
+        //           if (key != '地域') {
+        //             arr.push(h('p', {style: {lineHeight: '1.5'}}, `${key}:${data.资源[index][key]}`))
+        //           } else {
+        //             arr.unshift(h('p', {style: {lineHeight: '1.5'}}, `${key}:${data.资源[index][key]}`))
+        //           }
+        //         }
+        //       }
+        //       return h('div', [
+        //         h('Collapse', {
+        //           props: {
+        //             accordion: true,
+        //             value: '0'
+        //           },
+        //         }, [h('Panel', {
+        //             props: {
+        //               name: params.row._index.toString()
+        //             },
+        //           },
+        //           [type, h('div', {
+        //             slot: 'content'
+        //           }, arr)])]),
+        //       ])
+        //     }
+        //   },
+        //   {
+        //     title: '交易金额',
+        //     width: 108,
+        //     key: 'cost',
+        //     render: (h, params) => {
+        //       return h('div', [
+        //         h('span', '￥'),
+        //         h('strong', params.row.cost)
+        //       ])
+        //     }
+        //   },
+        //   {
+        //     title: '订单创建时间',
+        //     width: 180,
+        //     key: 'ordercreatetime'
+        //   },
+        //   {
+        //     title: '订单结束时间',
+        //     width: 180,
+        //     key: 'orderendtime',
+        //     render: (h, params) => {
+        //       return h('span', params.row.orderendtime == null ? '--' : params.row.orderendtime)
+        //     }
+        //   },
+        //   {
+        //     title: '订单状态',
+        //     width: 140,
+        //     align: 'center',
+        //     key: 'paymentstatus',
+        //     render: (h, params) => {
+        //       if (params.row.paymentstatus == '1') {
+        //         return h('span', {}, '已支付')
+        //       } else if (params.row.paymentstatus == '3') {
+        //         return h('span', {}, '退款中')
+        //       } else if (params.row.paymentstatus == '4') {
+        //         return h('span', {}, '已退款')
+        //       } else {
+        //         if (params.row.overTimeStatus == '1') {
+        //           return h('div', {}, [h('p', {}, '未支付'), h('p', {}, '（超时关闭订单）')])
+        //         } else {
+        //           return h('span', {}, '未支付')
+        //         }
+        //       }
+        //     }
+        //   },
+        //   {
+        //     title: '订单编号',
+        //     width: 150,
+        //     key: 'ordernumber'
+        //   },
+        //   {
+        //     title: '操作',
+        //     key: 'handle',
+        //     width: 90,
+        //     render: (h, params) => {
+        //       if (params.row.paymentstatus == '3') {
+        //         return h('div', [
+        //           h('span', {
+        //             style: {
+        //               cursor: 'pointer',
+        //               color: ' #2A99F2'
+        //             },
+        //             on: {
+        //               click: () => {
+        //                 let index = params.index
+        //                 let data = JSON.parse(this.orderData[index].display)
+        //                 this.$Modal.info({
+        //                   title: '订单信息',
+        //                   scrollable: true,
+        //                   content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
+        //            <br>订单状态：退款中<br>退款金额：￥${this.orderData[index].returnmoney}<br>预计到账时间：订单提交过后的3-5日<br>退款渠道：原支付渠道
+        //          <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
+        //                 })
+        //               }
+        //             }
+        //           }, '详情')
+        //         ])
+        //       } else if (params.row.paymentstatus == '4') {
+        //         return h('div', [
+        //           h('span', {
+        //             style: {
+        //               cursor: 'pointer',
+        //               color: ' #2A99F2'
+        //             },
+        //             on: {
+        //               click: () => {
+        //                 let index = params.index
+        //                 let data = JSON.parse(this.orderData[index].display)
+        //                 this.$Modal.info({
+        //                   title: '订单信息',
+        //                   scrollable: true,
+        //                   content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
+        //            <br>订单状态：已退款<br>退款金额：￥${this.orderData[index].returnmoney}<br>退款渠道：原支付渠道
+        //          <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
+        //                 })
+        //               }
+        //             }
+        //           }, '详情')
+        //         ])
+        //       } else {
+        //         return h('div', [
+        //           h('span', {
+        //             style: {
+        //               cursor: 'pointer',
+        //               color: ' #2A99F2'
+        //             },
+        //             on: {
+        //               click: () => {
+        //                 this.show(params.index)
+        //               }
+        //             }
+        //           }, '详情')
+        //         ])
+        //       }
+        //     }
+        //   }
+        // ],
         order_type,
-        orderData: [],
-        options: {
-          shortcuts: [
-            {
-              text: '最近一周',
-              value() {
-                const end = new Date()
-                const start = new Date()
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-                return [start, end]
-              }
-            },
-            {
-              text: '最近一个月',
-              value() {
-                const end = new Date()
-                const start = new Date()
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-                return [start, end]
-              }
-            },
-            {
-              text: '最近三个月',
-              value() {
-                const end = new Date()
-                const start = new Date()
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-                return [start, end]
-              }
-            }
-          ]
-        },
+        // orderData: [],
+        // options: {
+        //   shortcuts: [
+        //     {
+        //       text: '最近一周',
+        //       value() {
+        //         const end = new Date()
+        //         const start = new Date()
+        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+        //         return [start, end]
+        //       }
+        //     },
+        //     {
+        //       text: '最近一个月',
+        //       value() {
+        //         const end = new Date()
+        //         const start = new Date()
+        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+        //         return [start, end]
+        //       }
+        //     },
+        //     {
+        //       text: '最近三个月',
+        //       value() {
+        //         const end = new Date()
+        //         const start = new Date()
+        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+        //         return [start, end]
+        //       }
+        //     }
+        //   ]
+        // },
         optionsOrder: {
           shortcuts: [
             {
@@ -2792,7 +2793,7 @@
         cardType: '',
         cardTotal: 0,
         card_currentPage: 1,
-        cardPageSize: 10,
+        cardPageSize: 5,
         invoice: 0,
         formInvoiceDate: {
           invoiceAmount: '',
@@ -3042,8 +3043,6 @@
           '',
         operatorid:
           '',
-        card_pageSize:
-          5,
         costSeen:
           false,
         activeIndex:
@@ -3191,32 +3190,23 @@
     },
     methods: {
       testasc(column){
-        if(column.key=="TransactionAmount"){
+        if(column.key=="cost"){
           this.TransactionAmountsort=column.order
           this.CreatTimesort=''
           this.PayTimesort=''
-          console.log(this.TransactionAmountsort)
-          console.log(this.CreatTimesort)
-          console.log(this.PayTimesort)
-          //this.getOrder()
+          this.getOrder('1')
         }
-        else if(column.key=="creatData"){
+        else if(column.key=="ordercreatetime"){
           this.CreatTimesort=column.order
           this.TransactionAmountsort=''
           this.PayTimesort=''
-          console.log(this.TransactionAmountsort)
-          console.log(this.CreatTimesort)
-          console.log(this.PayTimesort)
-          //this.getOrder()
+          this.getOrder('1')
         }
-        else if(column.key=="payData"){
+        else if(column.key=="orderendtime"){
           this.PayTimesort=column.order
           this.CreatTimesort=''
           this.TransactionAmountsort=''
-          console.log(this.TransactionAmountsort)
-          console.log(this.CreatTimesort)
-          console.log(this.PayTimesort)
-          //this.getOrder()
+          this.getOrder('1')
         }
       },
       OrderchangePage(currentPage) {
@@ -3240,6 +3230,8 @@
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               console.log(response.data)
+              this.data5=response.data.result.info
+              this.OrderPages=response.data.result.count
             }
           })
       },
@@ -3432,7 +3424,8 @@
       changecard() {
         switch (this.name) {
           case 'orderManage':
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             this.init()
             break
           case 'accountSummary':
@@ -3546,7 +3539,8 @@
                     content: '订单删除成功',
                     duration: 3
                   })
-                  this.searchOrderByType()
+                  //this.searchOrderByType()
+                  this.getOrder('1')
                   this.init()
                 }
               })
@@ -3571,7 +3565,8 @@
                 value: '2'
               }
             ]
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             break
           case 'pay':
             this.init()
@@ -3587,7 +3582,8 @@
               }
             ]
             this.timeType = '1'
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             break
           case 'notpay':
             this.init()
@@ -3599,7 +3595,8 @@
               }
             ]
             this.timeType = '1'
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             break
           case 'refund':
             this.init()
@@ -3615,7 +3612,8 @@
               }
             ]
             this.timeType = '1'
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             break
           case 'refunding':
             this.init()
@@ -3631,7 +3629,8 @@
               }
             ]
             this.timeType = '1'
-            this.searchOrderByType()
+           // this.searchOrderByType()
+            this.getOrder('1')
             break
         }
       },
@@ -3662,14 +3661,15 @@
       },
       order_currentChange(order_currentPage) {
         this.order_currentPage = order_currentPage
-        this.searchOrderByType()
+        //this.searchOrderByType()
+        this.getOrder('1')
         this.init()
       },
-      order_dataChange(ordertime) {
-        this.order_dateRange = ordertime
-        this.init()
-        this.searchOrderByType()
-      },
+      // order_dataChange(ordertime) {
+      //   this.order_dateRange = ordertime
+      //   this.init()
+      //   this.searchOrderByType()
+      // },
       show(index) {
         var data = JSON.parse(this.orderData[index].display)
         this.$Modal.info({
@@ -3773,29 +3773,29 @@
         var time = year + '-' + month + '-' + date + ' ' + hour + ':' + minutes + ':' + second
         return time
       },
-      select(selection) {
-        this.orderNumber = []
-        this.totalCost = 0
-        this.orderNumber = selection
-        if (this.orderNumber.length != 0) {
-          this.costSeen = true
-          var cost = 0
-          this.orderNumber.forEach(item => {
-            if (item && item.paymentstatus == 0) {
-              cost += Number.parseFloat(item.cost)
-            }
-          })
-          this.totalCost = Math.round(cost * 100) / 100
-          this.actualDelivery = this.totalCost
-          if (this.totalCost == 0) {
-            this.costSeen = false
-          }
-          this.cardSelection = null
-          this.activeIndex = null
-        } else {
-          this.costSeen = false
-        }
-      },
+      // select(selection) {
+      //   this.orderNumber = []
+      //   this.totalCost = 0
+      //   this.orderNumber = selection
+      //   if (this.orderNumber.length != 0) {
+      //     this.costSeen = true
+      //     var cost = 0
+      //     this.orderNumber.forEach(item => {
+      //       if (item && item.paymentstatus == 0) {
+      //         cost += Number.parseFloat(item.cost)
+      //       }
+      //     })
+      //     this.totalCost = Math.round(cost * 100) / 100
+      //     this.actualDelivery = this.totalCost
+      //     if (this.totalCost == 0) {
+      //       this.costSeen = false
+      //     }
+      //     this.cardSelection = null
+      //     this.activeIndex = null
+      //   } else {
+      //     this.costSeen = false
+      //   }
+      // },
       searchCard() {
         this.$http.get('ticket/getUserTicket.do', {
           params: {
@@ -3980,7 +3980,7 @@
             })
             this.$http.get('ticket/getUserTicket.do', {
               params: {
-                pageSize: this.card_pageSize,
+                pageSize: this.cardPageSize,
                 page: this.card_currentPage,
                 ticketType: this.card_type,
                 orderNumber: orderNumber + '',
@@ -4490,7 +4490,8 @@
               this.showModal.refundNextHint = false
               this.showModal.refundHint = false
               this.returnMoneyDisabled = false
-              this.searchOrderByType()
+              //this.searchOrderByType()
+              this.getOrder('1')
               this.init()
               this.$Message.success(res.data.message)
             } else {
@@ -4544,7 +4545,8 @@
           if (res.status == 200 && res.data.status == 1) {
             this.showModal.refundHint = false
             this.showModal.refundLastHint = false
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             this.init()
             this.refundLastHintDisabled = false
             this.$Message.success(res.data.message)
@@ -5286,10 +5288,42 @@
         }
         .searchCard {
           margin-top: 20px;
-          & > span {
-            font-family: Microsoft Yahei, 微软雅黑;
-            font-size: 12px;
-            color: rgba(17, 17, 17, 0.65);
+          > p:nth-child(1){
+            .spana{
+              margin-left: 14px;
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: right;
+            }
+            .rideo{
+              margin-left: 15px;
+            }
+          }
+          > p:nth-child(2){
+            margin-top: 10px;
+            .spana{
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: right;
+            }
+            .rideo{
+              margin-left: 15px;
+            }
+          }
+          > p:nth-child(3){
+            margin-top: 10px;
+            .spana{
+               margin-left: 14px;
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: right;
+            }
+            .rideo{
+              margin-left: 15px;
+            }
           }
         }
         .invoiceType {
