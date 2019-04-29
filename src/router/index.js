@@ -131,6 +131,7 @@ const ResetNew = () =>import('@/components/LR/ResetNew')
 
 //云市场页面路由
 const market = () =>import('@/components/App/market/Market')
+const mtest = () =>import('@/components/App/market/test')
 
 // 后台页面子路由
 // import Overview from '@/components/Back/Overview'
@@ -373,7 +374,8 @@ var router = new Router({
         {path: 'elasticscalable',component: Pelastic},
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
         {path: 'hotQuestion/:parentId/:id', component: hotQuestion},
-        {path: 'market', component: market}
+        {path: 'market', component: market},
+        {path: 'mtest', component: mtest},
       ]
     },
     {
