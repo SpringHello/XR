@@ -14,92 +14,10 @@
           <h1>申请发票</h1>
         </header>
         <div class="alert-warning">
-          <p>1.您选择的增值税专票金额不能小于1000元，请累计之后一并申请。</p>
-          <p>2.开票时间为每月10-25日，在申请期限内的发票申请将在三个工作日内寄出，25号之后的发票申请将在下月10号以后寄出。</p>
+          <p>1.我们会在一个工作日内完成审核工作。</p>
+          <p>2.注意有效增值税发票开票资质仅为一个；发票常见问题查看 <span>增票资质帮助</span></p>
         </div>
-        <div class="invoice-money">
-          <p>实际可开金额发票：<span>￥{{ invoice }}</span></p>
-          <p>开票口径：按充值金额开票，已开票金额将<span>无法操作提现</span></p>
-        </div>
-        <div v-if="applyChange">
-          <div class="invoiceInformation">
-            <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="100"F
-                  label-position="left">
-              <Form-item label="开票金额" prop="invoiceAmount">
-                <Input :maxlength="10" v-model="formInvoiceDate.invoiceAmount" placeholder="请输入开票金额"
-                        style="width: 317px"
-                        number></Input>
-              </Form-item>
-              <Form-item label="发票类型" prop="InvoiceType">
-                <Select v-model="formInvoiceDate.InvoiceType" placeholder="请选择发票类型" style="width: 317px"
-                        @on-change="changeInvoiceType">
-                  <Option value="1">增值税专用发票</Option>
-                  <Option value="0">普通发票</Option>
-                </Select>
-                <!-- <RadioGroup v-model="formInvoiceDate.InvoiceType">
-                    <Radio label="0">增值税普通发票</Radio>
-                    <Radio label="1">增值税专用发票</Radio>
-                </RadioGroup> -->
-              </Form-item>
-              <Form-item label="发票抬头" prop="invoiceTitle">
-                <Input :maxlength="32" v-model="formInvoiceDate.invoiceTitle" placeholder="请输入发票抬头"
-                        style="width: 317px"></Input>
-                <!-- <span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的抬头名称默认为认证企业，无需填写，但是可以修改。</span>-->
-              </Form-item>
-              <Form-item label="纳税人识别码" prop="taxpayerId" v-if="formInvoiceDate.InvoiceType == 0">
-                <Input :maxlength="32" v-model="formInvoiceDate.taxpayerId" placeholder="请输入纳税人识别码"
-                        style="width: 317px"></Input>
-              </Form-item>
-              <Form-item label="发票信息" v-show="authenticationShow">
-                <div class="invoiceInformationShow">
-                  <span>单位：{{ formAppreciationDate.companyName }}</span>
-                  <span>纳税人识别码：{{ formAppreciationDate.taxpayerID }}</span>
-                  <span>注册电话：{{ formAppreciationDate.registeredPhone }}</span>
-                  <span>开户银行：{{ formAppreciationDate.depositBank }}</span>
-                  <span>银行账号：{{ formAppreciationDate.bankAccount }}</span>
-                </div>
-              </Form-item>
-              <Form-item label="发票信息" v-show="invoiceInformationShow">
-                <p v-if="certificateStatus" style="line-height: 2.5;">您需要通过<span
-                  style="color: dodgerblue;cursor:pointer;"
-                  @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
-                <Button type="primary" style="margin-left: 237px" @click="invoiceCertification"
-                        v-if="certificateStatus">点击认证
-                </Button>
-                <p v-if="underReview" style="line-height: 2.5;">您的增票资质正在<span style="color: #FF8B22;">审核中</span>，请耐心等待
-                </p>
-                <p v-if="failureAudit" style="line-height: 2.5;">您的增票资质<span
-                  style="color: #FF3366;">审核失败</span>，点击<span style="color: dodgerblue;cursor:pointer;"
-                                                              @click="invoiceCertification">增票资质认证</span>进行修改</p>
-              </Form-item>
-              <Form-item label="收件人" prop="recipients">
-                <Input :maxlength="10" v-model="formInvoiceDate.recipients" placeholder="请输入收件人姓名"
-                        style="width: 317px"></Input>
-              </Form-item>
-              <Form-item label="收件地址" prop="consigneeAddress">
-                <Input :maxlength="64" v-model="formInvoiceDate.consigneeAddress" placeholder="请输入收件地址"
-                        style="width: 317px"></Input>
-                <!--<span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的收件地址默认为认证企业地址，无需填写，但是可以修改。</span>-->
-              </Form-item>
-              <Form-item label="联系电话" prop="phone">
-                <Input :maxlength="20" v-model="formInvoiceDate.phone" placeholder="请输入联系电话"
-                        style="width: 317px"></Input>
-              </Form-item>
-              <Form-item>
-                <Button type="primary" style="font-size: 12px;margin-left: 237px"
-                        @click="invoiceMake('formInvoiceDate')">确认开票
-                </Button>
-              </Form-item>
-            </Form>
-          </div>
-        </div>
-        <div v-if="appreciation">
-          <span class="appreciation_s1">增值资质认证</span>
-          <div style="margin-top: 15px;padding: 13px 11px;background: #F7FBFF">
-            <p class="appreciation_p">我们会在一个工作日内审核完成。</p>
-            <p class="appreciation_p">1、注意有效增值税发票开票资质仅为一个。</p>
-            <p class="appreciation_p">2、发票常见问题查看增票资质帮助。</p>
-          </div>
+        <div>
           <div style="margin-top: 20px">
             <Form ref="formAppreciationDate" :model="formAppreciationDate" :rules="ruleValidate"
                   :label-width="100" label-position="left">
@@ -275,7 +193,6 @@ export default {
     return {
       invoice: 0,
       applyChange: true,
-      appreciation: false,
       authenticationShow: false, // 增值税信息
       invoiceInformationShow: false, // 增值税认证
       certificateStatus: true, // 点击认证
@@ -360,7 +277,7 @@ export default {
       switch (value) {
         case '1':
           this.$http.get('user/getExamine.do').then(response => {
-            if (response.status == 200 && response.data.status == 1) {
+            if (response.status == 200 && response.data.status == 2) {
               this.aptitudeStatus = response.data.result.result['status']
               this.formAppreciationDate.companyName = response.data.result.result['companyname']
               this.formAppreciationDate.registeredAddress = response.data.result.result['address']
@@ -532,30 +449,6 @@ header {
     vertical-align: middle;
   }
 }
-.invoice-money {
-    margin-top: 10px;
-    p:first-child{
-      font-size:14px;
-      color: #333333;
-      line-height:19px;
-      span {
-        font-size:24px;
-        font-weight:bold;
-        color:rgba(255,98,75,1);
-        line-height:31px;
-        vertical-align: sub;
-      }
-    }
-    p:last-child{
-      margin-top: 5px;
-      font-size:12px;
-      color:rgba(102,102,102,1);
-      line-height:16px;
-      span {
-        color:rgba(255,98,75,1);
-      }
-    }
-  }
 .invoiceInformation {
     margin-top: 20px;
     .invoiceInformationShow {
@@ -572,20 +465,5 @@ header {
       line-height: 18px;
       margin-left: 10px;
     }
-    .appreciation_s1 {
-        font-family: Microsoft Yahei, 微软雅黑;
-        font-size: 22px;
-        color: rgba(17, 17, 17, 0.75);
-        letter-spacing: 1.31px;
-        margin-top: 20px;
-        display: block;
-      }
-      .appreciation_p {
-        font-family: Microsoft Yahei, 微软雅黑;
-        font-size: 12px;
-        color: rgba(0, 0, 0, 0.43);
-        letter-spacing: 0.71px;
-        line-height: 18px;
-      }
   }
 </style>

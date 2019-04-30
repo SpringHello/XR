@@ -412,7 +412,7 @@
               </div>
               <div class="invoice-records" v-if="invoiceList">
                 <Button type="primary" style="margin-right: 10px" @click="toAppllyInvoice()">申请发票</Button>
-                <Button>发票信息&收件人</Button>
+                <Button @click="toAdressee()">发票信息&收件人</Button>
                 <Table highlight-row :columns="billColumns" :data="billTabledata" style="margin-top: 10px"></Table>
               </div>
             </div>
@@ -2907,6 +2907,9 @@
       },
       toAppllyInvoice() {
         this.$router.push('invoiceManage')
+      },
+      toAdressee() {
+        this.$router.push('invoiceAddressee')
       },
       testasc(column){
         if(column.key=="cost"){
