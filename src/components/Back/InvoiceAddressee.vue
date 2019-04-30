@@ -193,15 +193,30 @@ export default {
     }
   },
   created () {
-
+    this.getInvoiceList()
   },
   mounted () {
   },
   methods: {
-    invoiceLimit () {
-      this.$http.get('user/invoiceLimit.do').then(response => {
+    getInvoiceList () {
+      this.$http.get('nVersionUser/getExamine.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
-          this.invoice = response.data.result.result
+          // this.invoice = response.data.result.result
+        }
+      })
+    },
+    invoiceLimit () {
+      this.$http.post('user/invoiceExamine.do',{
+        type: '0',
+        companyName: '新锐云公司',
+        identicode: '123456789',
+        // address: '',
+        // phone: '',
+        // bankName: '',
+        // bankNum: ''
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          // this.invoice = response.data.result.result
         }
       })
     },
