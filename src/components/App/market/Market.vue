@@ -45,9 +45,13 @@
           <div class="partner-boxs">
             <div class="partner-box-n">
               <div class="item" v-for="(item, index) in partnerList" :key="index">
-                <div class="item-url"><img :src="item.url" /></div>
-                <div class="item-content">{{ item.content }}</div>
-                <div class="item-icon"><img :src="item.icon" /></div>
+                <div class="item-url">
+                  <img :src="item.pictureUrl" />
+                </div>
+                <div class="item-content">{{ item.description }}</div>
+                <div class="item-icon">
+                  <img :src="item.iconUrl" />
+                </div>
                 <div class="item-name">{{ item.name }}</div>
               </div>
             </div>
@@ -61,16 +65,20 @@
       <div class="product" v-for="(item, index) in productList" :key="index">
         <div class="product-title">{{ item.name }}</div>
         <div class="product-list">
-          <div class="product-list-head">
+          <div class="product-list-head"  @click="goList">
             <div class="product-list-head-title">
               <span>{{ item.name }}</span>
               <img :src="item.toUrl" />
             </div>
             <div class="line-icon"><img :src="item.iconUrl" /></div>
-            <div class="product-list-head-icon"><img :src="item.nameUrl" /></div>
+            <div class="product-list-head-icon">
+              <img :src="item.nameUrl" />
+            </div>
           </div>
           <div class="product-list-item" v-for="(items, index) in item.platform" :key="index">
-            <div class="product-list-item-icon"><img :src="items.url" /></div>
+            <div class="product-list-item-icon">
+              <img :src="items.url" />
+            </div>
             <div class="product-list-item-name">{{ items.name }}</div>
             <p>{{ items.company }}</p>
             <router-link to="">查看详情</router-link>
@@ -82,48 +90,12 @@
 </template>
 
 <script type="text/ecmascript-6">
+import axios from '@/util/axiosInterceptor'
 export default {
   data () {
     return {
       // 合作伙伴
-      partnerList: [
-        {
-          url: require('../../../assets/img/market/Bitmap.png'),
-          content: '软谷平台实现在线软件研发模式，使全球软件服务电子商务化成为了可能。',
-          icon: require('../../../assets/img/market/Image.png'),
-          name: '软谷（成都）信息技术有限公司'
-        },
-        {
-          url: require('../../../assets/img/market/Bitmap.png'),
-          content: '软谷平台实现在线软件研发模式，使全球软件服务电子商务化成为了可能。',
-          icon: require('../../../assets/img/market/Image.png'),
-          name: '软谷（成都）信息技术有限公司'
-        },
-        {
-          url: require('../../../assets/img/market/Bitmap.png'),
-          content: '软谷平台实现在线软件研发模式，使全球软件服务电子商务化成为了可能。',
-          icon: require('../../../assets/img/market/Image.png'),
-          name: '软谷（成都）信息技术有限公司'
-        },
-        {
-          url: require('../../../assets/img/market/Bitmap.png'),
-          content: '软谷平台实现在线软件研发模式，使全球软件服务电子商务化成为了可能。',
-          icon: require('../../../assets/img/market/Image.png'),
-          name: '软谷（成都）信息技术有限公司'
-        },
-        {
-          url: require('../../../assets/img/market/Bitmap.png'),
-          content: '软谷平台实现在线软件研发模式，使全球软件服务电子商务化成为了可能。',
-          icon: require('../../../assets/img/market/Image.png'),
-          name: '软谷（成都）信息技术有限公司'
-        },
-        {
-          url: require('../../../assets/img/market/Bitmap.png'),
-          content: '软谷平台实现在线软件研发模式，使全球软件服务电子商务化成为了可能。',
-          icon: require('../../../assets/img/market/Image.png'),
-          name: '软谷（成都）信息技术有限公司'
-        }
-      ],
+      partnerList: [],
       // 产品列表
       productList: [
         {
@@ -244,7 +216,8 @@ export default {
     }
   },
   methods: {
-    right (e) {
+    // 合作伙伴左右切换
+    right () {
       // 获取显示宽度
       let sumDistance = this.partnerList.length * 305 - 4*305
       if (this.distance < sumDistance) {
@@ -252,14 +225,27 @@ export default {
         document.querySelector('.partner-box-n').style.transform = 'translateX(-'+ this.distance +'px)'
       }
     },
-    left (e) {
+    left () {
       if (this.distance > 0) {
         this.distance -= 305
         document.querySelector('.partner-box-n').style.transform = 'translateX(-'+ this.distance +'px)'
       }
+    },
+    goList () {
+      this.$router.push('list')
     }
   },
   created () {
+    // 合作伙伴
+    axios.get('cloudMarket/getPartner.do', {}).then(res => {
+      if (res.status === 200 && res.data.status === 1) {
+        this.partnerList = res.data.result
+      }
+    })
+    // 产品分类
+    axios.get('cloudMarket/getClassificationAndProduct.do').then(res => {
+      console.log(res)
+    })
   }
 }
 </script>
@@ -377,6 +363,13 @@ export default {
           height: 20px;
           background: rgba(153, 153, 153, 1);
         }
+        .title-t{
+          width: 253px;
+          height: 20px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
         .content {
           width: 137px;
           height: 20px;
@@ -457,14 +450,22 @@ export default {
               }
               img {
                 width: 100%;
+                height: 191px;
                 border-radius: 4px 4px 0 0;
               }
               .item-content {
-                padding: 9px 20px;
+                margin: 9px 20px;
+                width: 245px;
+                height: 40px;
                 box-sizing: border-box;
                 font-size: 14px;
                 color: rgba(51, 51, 51, 1);
                 white-space: normal;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                overflow: hidden;
+                text-overflow: ellipsis;
               }
               .item-icon {
                 text-align: center;
@@ -521,6 +522,7 @@ export default {
           height: 300px;
           background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(225, 229, 255, 1) 100%);
           border-radius: 4px 0px 0px 4px;
+          cursor: pointer;
           .product-list-head-title {
             padding: 20px 20px 0 20px;
             font-size: 18px;
