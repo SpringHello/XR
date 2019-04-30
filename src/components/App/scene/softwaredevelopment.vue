@@ -925,7 +925,7 @@
           },
           {
             currentScene: '软件研发',
-            disc: '基于新睿云云主机的集成开发环境包含jave的Eclipse、PHP的Sublime、PHPstrom、Python的PyCharm。帮助您快速部署开发环境与依赖包，降低开发前期准备并提升研发效率。借助新睿云成熟的云计算基础服务能力，开发人员可以随时创建与释放所需的开发环境与相关计算资源，主机信息可自动与手动备份，多种方式保障您的数据安全。',
+            disc: '基于新睿云云主机的集成开发环境包含java的Eclipse、PHP的Sublime、PHPstrom、Python的PyCharm。帮助您快速部署开发环境与依赖包，降低开发前期准备并提升研发效率。借助新睿云成熟的云计算基础服务能力，开发人员可以随时创建与释放所需的开发环境与相关计算资源，主机信息可自动与手动备份，多种方式保障您的数据安全。',
             configGroup: [
               {
                 title: '一个月',
@@ -2061,7 +2061,7 @@
           if (res.data.status == 1) {
             this.areaGroup = res.data.result.optionalArea
             this.areaGroup.forEach((item, index) => {
-              if (item.value === '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c' || item.value === 'c6dcb310-3e37-4431-87f3-d8ada0cf3d91') {
+              if (item.value === '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
                 this.areaGroup.splice(index, 1)
               }
             })
