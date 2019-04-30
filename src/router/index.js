@@ -180,6 +180,8 @@ const ResultNew = () => import('@/components/Back/ResultNew')
 const PayNew = () => import('@/components/Back/PayNew')
 const Expenses = () => import('@/components/Back/Expenses')
 const InvoiceManage = () => import('@/components/Back/InvoiceManage')
+const InvoiceAuthentication = () => import('@/components/Back/InvoiceAuthentication')
+const InvoiceAddressee = () => import('@/components/Back/InvoiceAddressee')
 const OrderDetails = () => import('@/components/Back/OrderDetails')
 const UserCenter = () => import('@/components/Back/UserCenter')
 const MemberInfo = () => import('@/components/Back/MemberInfo')
@@ -420,6 +422,8 @@ var router = new Router({
         {path: 'payNew', name:'payNew', component: PayNew},
         {path: 'expenses', name: 'expenses', component: Expenses},
         {path: 'invoiceManage', name: 'invoiceManage', component: InvoiceManage},
+        {path: 'invoiceAuthentication', name: 'invoiceAuthentication', component: InvoiceAuthentication},
+        {path: 'invoiceAddressee', name: 'invoiceAddressee', component: InvoiceAddressee},
         {path: 'orderdetails', name: 'orderdetails', component: OrderDetails},
 		    {path: 'cashwithdrawal', name: 'cashwithdrawal', component: Cashwithdrawal},
 		    {path: 'cashprocess', name: 'cashprocess', component: Cashprocess},
