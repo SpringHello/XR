@@ -402,7 +402,7 @@ import popk from "../../myView/input/main";
 import md5 from 'md5'
 let val = '/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/'; //营业执照格式
 const vailAucct = (rule, value, callback) => {
-  let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+  let reg = /^1[4|3|5|8|9|6|7]\d{9}$/;
   let email = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
   if (value == "") {
     return callback(new Error("请输入账号"));
