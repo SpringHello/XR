@@ -5,7 +5,7 @@
         <p><span >费用中心</span> / <span>订单管理</span> / <span  style="color:#666666;">订单详情</span></p>
         <div class="content">
           <p>
-            <img @click="$router.push('Expenses')" src="../../assets/img/host/h-icon9.png" alt="back to Expenses"/>
+            <img @click="ReturnPage" src="../../assets/img/host/h-icon9.png" alt="back to Expenses"/>
             订单详情
           </p>
           <p></p>
@@ -119,6 +119,11 @@
       },
       cancelOrder () {
           
+      },
+      ReturnPage(){
+        sessionStorage.setItem('expensesTab','orderManage')
+        sessionStorage.removeItem('orderid')
+        this.$router.push('Expenses')
       }
     },
     computed: {

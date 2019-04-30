@@ -306,7 +306,7 @@
                   <Button type="primary" @click="getOrder('1')">查询</Button>
                 </span>
               </p>
-              <Table :columns="columns5" :data="data5" @on-sort-change="testasc" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
+              <Table :columns="columns5" :data="data5" @on-sort-change="SortField" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;overflow: hidden">
                 <div style="float: right;">
                   <Page :total="OrderPages" :current="currentORderPage" :page-size="OrderpageSize" @on-change="OrderchangePage"></Page>
@@ -363,7 +363,7 @@
               <Button type="primary" style="float: right" @click="showModal.exchangeCard=true">兑换优惠券</Button> -->
               <p>
                 <span class="spana">适用产品：</span>
-                <RadioGroup v-model="ApplicableProducts" type="button" class="rideo">
+                <RadioGroup v-model="ApplicableProducts" type="button" class="rideo" @on-change="ProductChange">
                   <Radio label="0">全部</Radio>
                   <Radio label="1">全产品通用</Radio>
                   <Radio label="2">包年包月可用</Radio>
@@ -375,24 +375,26 @@
                 </RadioGroup>
               </p>
               <p>
+                <!-- @on-change="VoucherChange" -->
                 <span class="spana">代金券状态：</span>
-                <RadioGroup v-model="VoucherStatus" type="button" class="rideo">
-                  <Radio label="0">全部</Radio>
-                  <Radio label="1">待使用</Radio>
-                  <Radio label="2">已使用</Radio>
-                  <Radio label="3">已过期</Radio>
+                <RadioGroup v-model="VoucherStatus" type="button" class="rideo" >
+                  <Radio label="">全部</Radio>
+                  <Radio label="0">待使用</Radio>
+                  <Radio label="1">已使用</Radio>
+                  <Radio label="2">已过期</Radio>
                 </RadioGroup>
               </p>
               <p>
+                <!-- @on-change="DueTimeChange" -->
                 <span class="spana">到期时间：</span>
-                <RadioGroup v-model="DueTime" type="button" class="rideo">
+                <RadioGroup v-model="DueTime" type="button" class="rideo" >
                   <Radio label="0">全部</Radio>
                   <Radio label="1">7天内到期</Radio>
                 </RadioGroup>
                 <Button type="primary" style="float: right;margin-top:10px;" @click="showModal.exchangeCard=true">获取优惠券</Button>
               </p>
             </div>
-            <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" no-data-text="您还没有优惠券" style="margin-top:20px">
+            <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" @on-sort-change="cardVolumeField" no-data-text="您还没有优惠券" style="margin-top:20px">
             </Table>
                 <div style="margin: 10px;overflow: hidden">
                    <div style="float: right;">
@@ -1243,7 +1245,7 @@
       return {
         billInfo: {},
         ApplicableProducts: '0',
-        VoucherStatus: '0',
+        VoucherStatus: '',
         DueTime: '0',
         OrdersourceType: '',
         Ordertypevalue:'',
@@ -1940,6 +1942,7 @@
             width: 175,
             title: '生效/失效时间',
             key: 'starttime',
+            sortable: 'custom',
             render: (h, params) => {
               return h('span', params.row.starttime + '/' + params.row.endtime)
             }
@@ -2074,8 +2077,8 @@
                   ])
                 }
               } else {
-                return h('span', {}, '--')
-                /*return h('span', {
+                //return h('span', {}, '--')
+                return h('span', {
                   style: {
                     color: '#2d8cf0',
                     cursor: 'pointer'
@@ -2104,7 +2107,7 @@
                       })
                     }
                   }
-                }, '删除')*/
+                }, '删除')
               }
             }
           }
@@ -2619,21 +2622,21 @@
             label: '优惠券'
           }
         ],
-        cardStateList: [
-          {
-            value: '',
-            label: '全部'
-          },
-          {
-            value: '1',
-            label: '已使用'
-          },
-          {
-            value: '0',
-            label: '未使用'
-          }
-        ],
-        cardState: '',
+        // cardStateList: [
+        //   {
+        //     value: '',
+        //     label: '全部'
+        //   },
+        //   {
+        //     value: '1',
+        //     label: '已使用'
+        //   },
+        //   {
+        //     value: '0',
+        //     label: '未使用'
+        //   }
+        // ],
+        // cardState: '',
         cardType: '',
         cardTotal: 0,
         card_currentPage: 1,
@@ -3010,7 +3013,7 @@
       toAdressee() {
         this.$router.push('invoiceAddressee')
       },
-      testasc(column){
+      SortField(column){
         if(column.key=="cost"){
           this.TransactionAmountsort=column.order
           this.CreatTimesort=''
@@ -3029,6 +3032,14 @@
           this.TransactionAmountsort=''
           this.getOrder('1')
         }
+      },
+      cardVolumeField(column){
+        console.log(column)
+        console.log(column.order)
+      },
+      ProductChange(label){
+        console.log(label)
+        console.log(this.ApplicableProducts)
       },
       OrderchangePage(currentPage) {
         this.getOrder(currentPage)
@@ -3205,12 +3216,12 @@
           this.changecard()
         }
         else if(value=='myCard'){
-          this.cardState=''
+          this.VoucherStatus=''
           this.name='myCard'
           this.changecard()
         }
         else if(value=='myCardnot'){
-          this.cardState='0'
+          this.VoucherStatus='0'
           this.name='myCard'
           this.changecard()
         }
@@ -3227,23 +3238,20 @@
       //   this.name='myCard'
       //   this.changecard()
       // },
-      changedcard() {
-        switch (this.cardState) {
-          case '':
-            this.order_type = ''
-            this.searchCard()
-            break
-          case '1':
-            this.searchCard()
-            break
-          case '0':
-            this.searchCard()
-            break
-        }
-      },
-      test(){
-        alert("ddddd")
-      },
+      // changedcard() {
+      //   switch (this.cardState) {
+      //     case '':
+      //       this.order_type = ''
+      //       this.searchCard()
+      //       break
+      //     case '1':
+      //       this.searchCard()
+      //       break
+      //     case '0':
+      //       this.searchCard()
+      //       break
+      //   }
+      // },
       selectChange(item, index) {
         if (item.startmoney > this.totalCost) {
           this.activeIndex = null
@@ -3647,7 +3655,7 @@
             pageSize: this.cardPageSize,
             page: this.card_currentPage,
             ticketType: this.cardType,
-            isuse:  this.cardState == '' ? '' : this.cardState == '1' ? '1' : this.cardState == '0' ? '0'  : '',
+            isuse:  this.VoucherStatus == '' ? '' : this.VoucherStatus == '1' ? '1' : this.VoucherStatus == '0' ? '0'  : '',
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
