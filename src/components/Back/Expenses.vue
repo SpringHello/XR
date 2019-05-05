@@ -141,10 +141,10 @@
             <div v-if="billBtnSelected==0" class="bill-overview">
               <div class="overview">
                 <div class="flex-vertical-center content-header">
-                  <span>2019年3月账单概览</span>
+                  <span>{{defaultMonth}}账单概览</span>
                   <div>
                     <span>选择账期</span>
-                    <DatePicker type="month" placeholder="Select month" style="width: 200px" @on-change="dataChange1"></DatePicker>
+                    <DatePicker type="month" :value="valueBill" format="yyyy年M月" placeholder="请选择月份" :clearable="false" style="width: 200px" @on-change="dataChangeBill"></DatePicker>
                     <Button type="primary">导出本月账单</Button>
                   </div>
                 </div>
@@ -200,16 +200,36 @@
               </div>
               <div class="list">
                 <div class="flex-vertical-center content-header">
-                  <span>2019年3月账单汇总</span>
+                  <span>{{defaultMonth}}账单汇总</span>
                   <Button type="primary">导出当前账单</Button>
                 </div>
                 <ul class="monthly-tabs">
-                  <li v-for="(item,index) in billMonthlyTabs" :key="index" :class="{'select-tab':billTypeSelected == index}" @click="billTypeSelected=index">{{item}}</li>
+                  <li v-for="(item,index) in billMonthlyTabs" :key="index" :class="{'select-tab':billTypeSelected == index}" @click="changetabs(index)">{{item}}</li>
                 </ul>
               </div>
-              <Table :columns="columnsProductA" :data="dataProductA" v-if="billTypeSelected==0"></Table>
-              <Table :columns="columnsZoneA" :data="dataZoneA" v-if="billTypeSelected==1"></Table>
-              <Table :columns="columnsDatetypeA" :data="dataDatetypeA" v-if="billTypeSelected==2"></Table>
+              <div class="table-container">
+                <div v-if="billTypeSelected==0"> 
+                  <Table :columns="columnsProductA" :data="dataProductA"></Table>
+                  <ul class="table-end">
+                    <li>总计</li>
+                    <li>¥{{billProductTotal}}</li>
+                  </ul>
+                </div>
+                <div v-if="billTypeSelected==1">
+                  <Table :columns="columnsZoneA" :data="dataZoneA"></Table>
+                  <ul class="table-end">
+                    <li>总计</li>
+                    <li>¥{{billZoneTotal}}</li>
+                  </ul>
+                </div>
+                <div v-if="billTypeSelected==2">
+                  <Table :columns="columnsDatetypeA" :data="dataDatetypeA"></Table>
+                  <ul class="table-end">
+                    <li>总计</li>
+                    <li>¥{{billDatetypeTotal}}</li>
+                  </ul>
+                </div>
+              </div>
             </div>
             <div v-if="billBtnSelected==1">
               <div class="expenses_condition">
@@ -1209,6 +1229,33 @@
         <Button type="primary" @click="showModal.invoiceDetailP = false">知道了</Button>
       </p>
     </Modal>
+    <Modal v-model="showModal.billExport" :scrollable="true" :closable="true" :width="500">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">导出账单</span>
+      </p>
+      <div class="modal-content-s">
+        
+        <div class="SetBalancet">
+          <p>
+            <span>3月账单文件</span>
+            <p>账单于次月3日统计完成</p>
+          </p>
+          <p>仅判断可用余额与现金券余额之和与告警额度大小</p>
+          <p>
+            <span>账单自动发送</span>
+            <Switch v-model="switch1" @on-change="changeSwitch"></Switch>
+          </p>
+          <p>
+            <span>告警额度</span>
+            <InputNumber :max="999999999" :min="1" v-model="BalanceRepval" style="width: 300px"></InputNumber>
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.billExport = false">取消</Button>
+        <Button type="primary" @click="updateBalanceWarn">确认</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -1243,6 +1290,9 @@
          this.init()*/
       }
       return {
+        switch1: false,
+        valueBill: '2019-03',
+        defaultMonth: '',
         billInfo: {},
         ApplicableProducts: '0',
         VoucherStatus: '',
@@ -1745,11 +1795,10 @@
         ],
         dataProductA: [
         ],
-        
         columnsZoneA: [
             {
                 title: '区域名称',
-                key: 'zone'
+                key: 'name'
             },
             {
                 title: '现金支付',
@@ -1773,7 +1822,7 @@
         columnsDatetypeA: [
             {
                 title: '消费类型',
-                key: 'dataType'
+                key: 'name'
             },
             {
                 title: '现金支付',
@@ -1794,6 +1843,9 @@
               
         ],
         dataDatetypeA: [],
+        billProductTotal: '',
+        billZoneTotal: '',
+        billDatetypeTotal: '',
         billTabs: ['账单概览', '资源详单', '流水详单','导出记录'],
         billMonthlyTabs: ['按产品汇总', '按区域汇总', '按消费类型汇总'],
         billBtnSelected: 0,
@@ -2650,6 +2702,7 @@
         actualDelivery: 0,
         cardSelection: null,
         showModal: {
+          billExport: false,
           invoiceDetail: false,
           invoiceDetailP: false,
           SetBalanceWarning:false,
@@ -2970,7 +3023,6 @@
         this.getVipList()
         sessionStorage.removeItem('beVip')
       }
-      this.billMonthlyData()
       this.defaultTab()
     },
     mounted() {
@@ -2985,10 +3037,23 @@
           sessionStorage.removeItem('expensesTab')
         }
       },
-      getBillOverview() {
+      initOverview() {
+        let now = new Date()
+        this.valueBill = now.getFullYear()+'-'+now.getMonth()
+        this.defaultMonth = now.getFullYear()+'年'+now.getMonth()+'月'
+        this.getBillOverview(this.valueBill)
+        this.getBillInfo(this.valueBill)
+      },
+      dataChangeBill(time) {
+        let timerFormat = time.replace(/(\d{4})年(\d{1,})月/g, '$1-$2')
+        this.defaultMonth = time
+        this.getBillOverview(timerFormat)
+        this.getBillInfo(timerFormat)
+      },
+      getBillOverview(time) {
         this.$http.get('nVersionUser/billOverview.do', {
           params: {
-            times: '2019-02'
+            times: time
           }
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -2996,16 +3061,49 @@
             }
           })
       },
-      getBillInfo() {
+      getBillInfo(time) {
         this.$http.get('nVersionUser/consumptionSummary.do', {
           params: {
-            times: '2019-02'
+            times: time
           }
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              // this.billInfo = response.data.result
+              this.dataResponse = response.data.result.list
+              this.changetabs(this.billTypeSelected)
             }
           })
+      },
+      changetabs(val) {
+        this.billTypeSelected=val
+        let filterData = []
+        if(val==0) {
+          filterData = this.dataResponse.filter(item=>{
+            return item.type == '1'
+          })
+          this.dataProductA = filterData[0].info
+          this.billProductTotal = this.dataProductA.reduce(function(sum2,number2){
+            return sum2 + number2.totalPay;
+          },0)
+        } else if(val==1) {
+          filterData = this.dataResponse.filter(item=>{
+            return item.type == '2'
+          })
+          this.dataZoneA = filterData[0].info
+          this.billZoneTotal = this.dataZoneA.reduce(function(sum2,number2){
+            return sum2 + number2.totalPay;
+          },0)
+        } else if(val==2) {
+           filterData = this.dataResponse.filter(item=>{
+            return item.type == '3'
+          })
+          this.dataDatetypeA = filterData[0].info
+          this.billDatetypeTotal = this.dataDatetypeA.reduce(function(sum2,number2){
+            return sum2 + number2.totalPay;
+          },0)
+        }
+      },
+      changeSwitch() {
+
       },
       toAppllyInvoice() {
         this.$router.push('invoiceManage')
@@ -3066,43 +3164,6 @@
               this.OrderPages=response.data.result.count
             }
           })
-      },
-      billMonthlyData() {
-        this.dataResponse = [
-            {
-                name: "数据库",
-                cashPay: 88.8,
-                value: "host",
-                type: "host",
-                coupon: 88.8,
-                voucherPay: 88.8,
-                totalPay: 266.4,
-                zone: "北京一区",
-                dataType:'month'
-            },
-            {
-                name: "弹性云服务器",
-                cashPay: 88.8,
-                value: "host",
-                type: "host",
-                coupon: 88.8,
-                voucherPay: 88.8,
-                totalPay: 266.4,
-                zone: "北京一区",
-                dataType:'month'
-            },
-            {
-                name: "弹性ip",
-                cashPay: 88.8,
-                value: "host",
-                type: "host",
-                coupon: 88.8,
-                voucherPay: 88.8,
-                totalPay: 266.4,
-                zone: "北京一区",
-                dataType:'month'
-            }
-        ]
       },
       resourcesPageChange(currentPage) {
         this.getResourcesTable(currentPage)
@@ -3296,8 +3357,7 @@
             this.getResourcesTable('1')
             this.getExportTable()
             this.search()
-            this.getBillOverview()
-            this.getBillInfo()
+            this.initOverview()
         }
       },
       showMoneyByMonth() {
@@ -3340,9 +3400,7 @@
         this.currentPage = currentPage
         this.search()
       },
-      dataChange1(time) {
-        console.log(time)
-      },
+      
       dataChange(time) {
         this.dateRange = time
       },
@@ -4580,37 +4638,6 @@
       dateRangeOrder() {
         this.searchOrderfunc()
       },
-      // 消费汇总按产品、区域、消费类型类
-      billTypeSelected(val) {
-        let cloneResponse= JSON.parse(JSON.stringify(this.dataResponse));
-        if(val==0) {
-          cloneResponse.forEach(element => {
-            for (var prop in element) {
-              if(prop =='zone' || prop =='dataType')
-              delete element[prop]
-            }
-          });
-          this.dataProductA = cloneResponse
-        } else if(val==1) {
-          cloneResponse.forEach(element => {
-            for (var prop in element) {
-              if(prop =='name' || prop =='dataType')
-              delete element[prop]
-            }
-          });
-          this.dataZoneA = cloneResponse
-         
-        } else if(val==2) {
-           cloneResponse.forEach(element => {
-            for (var prop in element) {
-              if(prop =='zone' || prop =='name')
-              delete element[prop]
-            }
-          });
-          this.dataDatetypeA = cloneResponse
-        }
-      }
-      
     }
   }
 </script>
@@ -5413,6 +5440,23 @@
             p {
               margin-top: 5px;
             }
+          }
+        }
+      }
+      .table-container {
+        .table-end {
+          display: flex;
+          justify-content: space-between;
+          border: 1px solid #d9d9d9;
+          border-top: none;
+          li {
+            height: 47px;
+            line-height: 45px;
+            padding-left: 18px;
+          }
+          li:last-child{
+            width: 232px;
+            color:#FF624B;
           }
         }
       }
