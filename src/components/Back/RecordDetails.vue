@@ -437,15 +437,10 @@
               </div>
               <div class="tables">
                 <ul class="nav_list">
-                <li class="nav_item">网站域名</li>
+                <!-- <li class="nav_item">网站域名</li> -->
                 <li class="nav_item">主体备案号</li>
               </ul>
                 <ul class="nav_list">
-                    <li class="nav_item">
-                      <p>{{hostUnitList.webname}}</p>
-                      <div v-if="mark3Hide == 'mark3'" class="text_block"><span style="color:red">信息有误</span> <span
-                        style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span></div>
-                    </li>
                     <li class="nav_item">
                       <p>{{hostUnitList.webname}}</p>
                       <div v-if="mark4Hide == 'mark4'" class="text_block"><span style="color:red">信息有误</span> <span
@@ -457,8 +452,12 @@
                   </ul>
                   <ul class="nav_list">
                      <li class="nav_item">
-                      <p>{{hostUnitList.icprecordpassword}}</p>
-                      <div v-if="mark4Hide == 'mark4'" class="text_block"><span style="color:red">信息有误</span> <span
+                     <p v-if='hostUnitList.icprecordpassword == ""'>暂无ICP备案密码</p>
+                      <p v-else>{{navItem.passHideTrue?'*********':hostUnitList.icprecordpassword}}</p>
+                      <div class="nav-img" @click='navItem.passHideTrue =! navItem.passHideTrue' v-if='hostUnitList.icprecordpassword != ""'>
+                        <img :src="navItem.passHideTrue?navItem.img2:navItem.img">
+                      </div>
+                      <div  class="text_block" v-if='icprecordpasswordHide'><span style="color:red">信息有误</span> <span
                         style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span></div>
                     </li>
                 </ul>
@@ -1177,6 +1176,11 @@ export default {
       }
     };
     return {
+      navItem:{
+        img:require("../../assets/img/login/lr-icon3.png"),
+        img2:require("../../assets/img/updatePaw/paw_closeEye.png"),
+        passHideTrue:true
+      },
       id: "",
       //网站核验单大图
       visibleWeb: false,
@@ -1221,6 +1225,7 @@ export default {
       mark2Hide: null,
       mark3Hide: null,
       mark4Hide: null,
+      icprecordpasswordHide:false,
       //主办单位弹窗
       host: false,
       //主体单位负责人弹窗
@@ -1821,6 +1826,9 @@ export default {
                   case "mark4":
                     this.mark4Hide = "mark4";
                     break;
+                  case "icprecordpassword":
+                    this.icprecordpasswordHide = true;
+                    break;  
                 }
               });
             } else {
@@ -2506,8 +2514,9 @@ export default {
       .nav_list {
         width: 280px;
         .text_block {
-          width: 100px;
-          float: right;
+          // width: 100px;
+          // float: right;
+          display:inline-block;
         }
         .nav_item {
           padding: 5px 10px 5px 10px;
@@ -2515,8 +2524,16 @@ export default {
           border-right: 1px solid #e9e9e9;
           border-bottom: 1px solid #e9e9e9;
         }
+        .nav-img{
+          display:inline-block;
+          img{
+            width:14px;
+            margin-right:2px;
+            cursor:pointer;
+          }
+        }
         p {
-          width: 145px;
+          width: 135px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
