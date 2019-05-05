@@ -272,7 +272,7 @@
                         </div>
                         <div style="width:130px;margin-left:20px;cursor: zoom-in" @click="showModal.showPersonPicture = true">
                           <img src="../../assets/img/usercenter/card-person.png" style="margin: 0 15px 10px;">
-                          <p style="line-height: 32px;text-align: center">示例图</p>
+                          <p style="line-height: 32px;text-align: center">请上传手持新睿云验证信息与身份证人像面照片，上传之前请务必查看范例</p>
                         </div>
                       </div>
                     </FormItem>
@@ -552,7 +552,7 @@
                           </div>
                           <div style="width:130px;margin-left:20px;cursor: zoom-in;" @click="showModal.showPersonPicture = true">
                             <img src="../../assets/img/usercenter/card-person.png" style="margin: 0 15px 10px;">
-                            <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">手持身份证人像面照片</p>
+                            <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">请上传手持新睿云验证信息与身份证人像面照片，上传之前请务必查看范例</p>
                           </div>
                         </div>
                       </div>
@@ -1187,7 +1187,7 @@
                   </div>
                   <div class="right" @click="showModal.showPersonPicture = true">
                     <img src="../../assets/img/usercenter/card-person.png" style="display:block;cursor:zoom-in">
-                    <p>手持身份证人像照片</p>
+                    <p>请上传手持新睿云验证信息与身份证人像面照片，上传之前请务必查看范例</p>
                   </div>
                 </div>
               </div>
@@ -1230,7 +1230,7 @@
                   </div>
                   <div class="right" @click="showModal.showPersonPicture = true">
                     <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto;cursor:zoom-in">
-                    <p style="width:168px">经办人手持身份证人像照片</p>
+                    <p style="width:168px">请上传手持新睿云验证信息与身份证人像面照片，上传之前请务必查看范例</p>
                   </div>
                 </div>
               </div>

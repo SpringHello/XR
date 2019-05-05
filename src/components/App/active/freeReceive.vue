@@ -1,7 +1,17 @@
 <template>
-  <div style="background: rgba(255,242,230,1);">
+  <div style="background: rgba(255,255,255,1);">
     <h1 id="hide-h1">云主机免费领</h1>
     <div class="banner">
+      <div class="wrap">
+        <div class="text">
+        <p>0元使用</p>
+        <p>爆款云服务器免费使用一年</p>
+        <p>押金随时可退</p>
+        </div>
+        <div class="img">
+          <img src="../../../assets/img/active/freeToReceive/fr-banner19.png" />
+        </div>
+      </div>
     </div>
     <div class="center">
       <div class="fr-host">
@@ -80,8 +90,9 @@
         <p>温馨提示：使用期间若到“百度口碑”发布使用体验等相关评论，截图联系发送至在线客服，可领取满XX减XX优惠券。<a href="https://koubei.baidu.com/s/510a4f5f6316c2d0f81b3e63bc75b537?fr=search" target="blank">点击发布评论></a></p>
       </div>
     </div>
+    <div style="background:rgba(37,65,158,1);">
       <div class="fr-flow">
-        <h2>活动流程</h2>
+        <h2 style="color:#50E3C2;">活动流程</h2>
         <p>新用户注册登录账号并且完成实名认证就可参与此活动</p>
         <!--<div class="flow">
           <ul v-for="(item,index) in flowGroup" :key="index">
@@ -92,7 +103,7 @@
           </ul>
         </div>-->
         <div class="flow">
-          <div v-for="(item,index) in flowGroup" :key="index" class="item" :class="{isLogin: false,notLogin: true}">
+          <div v-for="(item,index) in flowGroup" :key="index" class="item" :class="{onStep:onStep > index,outStep: onStep <= index }" :style="{right: index * 30 + 'px'}">
             <div class="item-img">
               <img v-if="onStep <= index" :src="item.src" />
                <img v-else :src="item.onSrc" alt="描述"/>
@@ -103,7 +114,8 @@
           </div>
         </div>
       </div>
-    <div>
+  </div>
+    <div style="background:linear-gradient(360deg,rgba(233,244,255,1) 0%,rgba(255,254,255,1) 100%);">
       <div class="fr-advantage">
         <h2>产品优势</h2>
         <div>
@@ -115,10 +127,9 @@
         </div>
       </div>
     </div>
-    <div style="background:rgba(255,255,255,1);">
-    <div class="center">
+    <div style="background:rgba(37,65,158,1);">
       <div class="fr-rule">
-        <h2>活动规则</h2>
+        <h2 style="text-align: center;color:#50E3C2;">活动规则</h2>
         <dl>
           <dd>活动时间：</dd>
           <dt>2019年4月30日开始，总量有限，先到先得！</dt>
@@ -138,7 +149,6 @@
           <dt>为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源，领取后3天内未使用资源、利用资源从事违法违规行为的用户收回免费套餐使用资格。因此造成任何损失的，由该用户自行负责。</dt>
         </dl>
       </div>
-    </div>
     </div>
     <!--<div class="fr-suspension">
       <ul>
@@ -834,20 +844,13 @@
         })
       },
       judgeUserFlow() {
-        if (!this.$store.state.userInfo) {
-          this.onStep = 0
-        } else {
-          if (this.$store.state.authInfo && this.$store.state.authInfo.flag) {
-            this.flag = true
-            if (this.$store.state.authInfo.checkstatus == 0) {
-              this.onStep = 5
-            } else {
-              this.onStep = 3
-            }
-          } else {
-            this.onStep = 1
+        this.$http.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}}).then(res=>{
+          if(res.data.status === 1){
+            this.onStep = res.data.authInfo.status
+          } else{
+            this.onStep = 0
           }
-        }
+        })
       },
       getRegion() {
         let url = 'activity/getTemActInfo.do'
@@ -1208,14 +1211,35 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .banner {
     height: 400px;
-    background: #FF6C4C url("../../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
-    .text {
+    background: #8ADDFD url("../../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
+    .wrap{
       width: 1200px;
-      padding-top: 54px;
-      text-align: center;
-      margin: 0 auto;
-      > img {
-        height: 260px;
+      margin:0 auto;
+      display: flex;
+      justify-content: space-between;
+      .text{
+      >p{
+        font-size:50px;
+        font-family:"Microsoft YaHei", "微软雅黑";
+        font-weight:600;
+        color:rgba(255,255,255,1);
+      }
+      p:nth-child(1){
+        padding-top: 84px;
+      }
+      p:nth-child(2){
+        margin-top: 30px;
+        font-size:48px;
+        font-weight:400;
+      }
+      p:nth-child(3){
+        font-size:24px;
+        margin-top: 25px;
+        font-weight: normal;
+      }
+      }
+      .img{
+        padding-top: 30px;
       }
     }
   }
@@ -1225,7 +1249,7 @@
     font-family: "Microsoft YaHei", "微软雅黑";
     color: rgba(67, 66, 66, 1);
     font-weight: normal;
-    &:before {
+    /*&:before {
       display: inline-block;
       margin-right: 30px;
       content: '';
@@ -1240,7 +1264,7 @@
       height: 18px;
       width: 85px;
       background: url("../../../assets/img/active/freeToReceive/fr-icon1.png") no-repeat;
-    }
+    }*/
   }
 
   .center {
@@ -1269,7 +1293,7 @@
         font-size:16px;
         font-family:"Microsoft YaHei", "微软雅黑";
         font-weight:400;
-        color:rgba(139,87,42,1);
+        color:rgba(51,51,51,1);
         >a{
           color: #FF881C;
         }
@@ -1364,7 +1388,7 @@
         .fr-item{
           width:534px;
           background:rgba(255,255,255,1);
-          box-shadow:0px 3px 10px -3px rgba(229,194,194,1);
+          box-shadow:0px 3px 10px -3px rgba(195,205,230,1);
           border-radius:4px;
           .item-title{
             height: 90px;
@@ -1425,8 +1449,9 @@
               }
               .area-group{
                 display: flex;
-                justify-content: space-around;
+                justify-content: space-between;
                 flex-wrap: wrap;
+                padding: 0 18px;
                 .area-item{
                   font-size:14px;
                   cursor: pointer;
@@ -1435,12 +1460,12 @@
                   padding: 8px 27px;
                   background:rgba(255,255,255,1);
                   border-radius:2px;
-                  border:1px solid rgba(229,194,194,1);
+                  border:1px solid rgba(125,161,217,1);
                   margin-bottom: 10px;
                   &.selected{
                     color: rgba(255,255,255,1);
-                    background:rgba(225,33,42,1);
-                    border:1px solid rgba(225,33,42,1);
+                    background:rgba(56,125,255,1);
+                    border:1px solid rgba(56,125,255,1);
                   }
                 }
               }
@@ -1502,48 +1527,17 @@
         }
       }
     }
-    .fr-rule {
-      dl {
-        text-align: left;
-        width: 870px;
-        margin: 60px auto 0;
-        dd {
-          margin-top: 30px;
-          font-size: 20px;
-          font-family: "Microsoft YaHei", "微软雅黑";
-          color: rgba(255, 136, 28, 1);
-        }
-        dt {
-          margin-top: 10px;
-          font-size: 14px;
-          font-family: "Microsoft YaHei", "微软雅黑";
-          color: rgba(102, 102, 102, 1);
-          line-height: 20px;
-          &:before {
-            display: inline-block;
-            content: '';
-            width: 8px;
-            height: 8px;
-            border-radius: 4px;
-            background: linear-gradient(180deg, rgba(250, 217, 97, 1), rgba(247, 107, 28, 1));
-            margin-right: 10px;
-          }
-          span {
-            color: #FF881C;
-          }
-        }
-      }
-    }
   }
-    .fr-flow {
+  .fr-flow {
       text-align: center;
       width: 1344px;
       margin: 0 auto;
+      padding: 90px 0 100px;
       > p {
         font-family: "Microsoft YaHei", "微软雅黑";
         margin-top: 30px;
         font-size: 18px;
-        color: rgba(51, 51, 51, 1);
+        color:rgba(255,255,255,1);
       }
       /*.flow {
         margin-top: 60px;
@@ -1584,28 +1578,21 @@
         display: flex;
         margin-top: 50px;
         height:120px;
-        background:rgba(255,255,255,1);
+        position: relative;
+        left: 75px;
         .item{
           display: flex;
           justify-content: center;
           align-items: center;
           width: 224px;
           height: 100%;
-          &.notLogin {
-            &::before{
-            content: '';
-            display: inline-block;
-            background: red;
-            width: 60px;
-            height: 60px;
+          position: relative;
+          padding-left: 20px;
+          &.onStep{
+            background: url('../../../assets/img/active/freeToReceive/fr-banner14.png');
           }
-          }
-          &.isLogin ::before{
-            content: '';
-            display: inline-block;
-            background: red;
-            width: 60px;
-            height: 60px;
+          &.outStep{
+            background: url('../../../assets/img/active/freeToReceive/fr-banner17.png');
           }
           .item-img{
             margin-right: 10px;
@@ -1618,11 +1605,28 @@
               font-size:20px;
               font-family:MicrosoftYaHei-Bold;
               font-weight:bold;
-              color:rgba(74,74,74,1);
+              color:rgba(25,18,117,1);
               &.onStep{
                 color:rgba(255,255,255,1);
               }
             }
+          }
+        }
+        .item:first-child{
+          padding-left: 0;
+          &.onStep{
+            background: url('../../../assets/img/active/freeToReceive/fr-banner13.png');
+          }
+          &.outStep{
+            background: url('../../../assets/img/active/freeToReceive/fr-banner16.png');
+          }
+        }
+        .item:last-child{
+          &.onStep{
+            background: url('../../../assets/img/active/freeToReceive/fr-banner15.png');
+          }
+          &.outStep{
+            background: url('../../../assets/img/active/freeToReceive/fr-banner18.png');
           }
         }
       }
@@ -1644,18 +1648,52 @@
         li:nth-child(2) {
           font-size: 36px;
           font-family: "Microsoft YaHei", "微软雅黑";
-          color: rgba(51, 51, 51, 1);
+          color: rgba(15,15,104,1);
           margin-top: 40px;
         }
         li:nth-child(3) {
           font-size: 14px;
           font-family: "Microsoft YaHei", "微软雅黑";
-          color: rgba(102, 102, 102, 1);
+          color:rgba(51,51,51,1);
           margin-top: 20px;
         }
       }
     }
   }
+ .fr-rule {
+      width: 1200px;
+      margin: 0 auto;
+      padding: 100px 0; 
+      dl {
+        text-align: left;
+        width: 870px;
+        dd {
+          margin-top: 30px;
+          font-size: 20px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(80,227,194,1);
+        }
+        dt {
+          margin-top: 10px;
+          font-size: 14px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(255,255,255,1);
+          line-height: 20px;
+          &:before {
+            display: inline-block;
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(80,227,194,1);
+            margin-right: 10px;
+          }
+          span {
+            color: rgba(80,227,194,1);
+          }
+        }
+      }
+    }
 
   @media screen and (max-width: 1600px) {
     .fr-suspension {
