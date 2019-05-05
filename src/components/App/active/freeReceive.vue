@@ -846,7 +846,11 @@
       judgeUserFlow() {
         this.$http.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}}).then(res=>{
           if(res.data.status === 1){
-            this.onStep = res.data.authInfo.status
+            if(res.data.authInfo&&res.data.authInfo.status){
+              this.onStep = res.data.authInfo.status
+            } else{
+              this.onStep = 0
+            }
           } else{
             this.onStep = 0
           }
