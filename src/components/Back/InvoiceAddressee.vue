@@ -270,35 +270,43 @@ export default {
       columnsInvoice: [
         {
           title: "发票抬头",
-          key: "title"
+          key: "companyname"
         },
         {
           title: "发票种类",
-          key: "invoiceType"
+          key: "type",
+          render: (h, params) => {
+            // 0  普通发票 企业  1  增值税专用发票  2 普通发票 个人
+            return h('span',params.row.type==0?'增值税普通发票(企业)':(params.row.type==1?'增值税专用发票':'增值税普通发票(个人)'))
+          }
         },
         {
           title: "税号",
-          key: "taxNum"
+          key: "identicode"
         },
         {
           title: "单位地址",
-          key: "companyAddr"
+          key: "address"
         },
         {
           title: "开户行",
-          key: "bank"
+          key: "bankname"
         },
         {
           title: "银行账户",
-          key: "bankAccount"
+          key: "banknum"
         },
         {
           title: "联系电话",
-          key: "tel"
+          key: "phone"
         },
         {
           title: "状态",
-          key: "status"
+          key: "status",
+          render: (h, params) => {
+            //0 审核通过  1  审核失败  2 审核中
+            return h('span',params.row.type==0?'可用':(params.row.type==1?'审核失败':'审核中'))
+          }
         },
         {
           title: "操作",
@@ -470,7 +478,7 @@ export default {
         desc: "",
         code:'',
       },
-      
+
        // 修改收件信息
       ruleModifyReceipt: {
         name:[
@@ -567,13 +575,14 @@ export default {
     });
     this.changeProvince('北京市');
     this.changeArea('北京市');
+    this.getInvoiceList()
   },
   mounted() {},
   methods: {
     getInvoiceList () {
       this.$http.get('nVersionUser/getExamine.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
-          // this.invoice = response.data.result.result
+          this.invoiceList = response.data.result.result
         }
       })
     },

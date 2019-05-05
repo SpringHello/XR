@@ -157,21 +157,21 @@
                       </Poptip>
                     </div>
                     <div class="count">
-                      <div>999999999.00</div>
+                      <div>{{billInfo.billAmount}}</div>
                       <span>=</span>
                       <div>
                         <span>余额支付</span>
-                        <p>333333333.00</p>
+                        <p>{{billInfo.balancePay}}</p>
                       </div>
                       <span>+</span>
                       <div>
                         <span>第三方支付</span>
-                        <p>333333333.00</p>
+                        <p>{{billInfo.thirdPay}}</p>
                       </div>
                       <span>+</span>
                       <div>
                         <span>现金券支付</span>
-                        <p>333333333.00</p>
+                        <p>{{billInfo.voucherPay}}</p>
                       </div>
                     </div>
                   </div>
@@ -183,16 +183,16 @@
                       </Poptip>
                     </div>
                     <div class="count">
-                      <div>999999999.00</div>
+                      <div>{{billInfo.orderAmount}}</div>
                       <span>=</span>
                       <div>
                         <span>账单金额</span>
-                        <p>333333333.00</p>
+                        <p>{{billInfo.billAmount}}</p>
                       </div>
                       <span>+</span>
                       <div>
                         <span>优惠券抵扣支付</span>
-                        <p>333333333.00</p>
+                        <p>{{billInfo.coupon}}</p>
                       </div>
                     </div>
                   </div>
@@ -1125,6 +1125,90 @@
         <Button type="primary" @click="updateBalanceWarn">确认</Button>
       </p>
     </Modal>
+    <Modal v-model="showModal.invoiceDetail" :scrollable="true" :closable="true" :width="500">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">发票详情</span>
+      </p>
+      <div class="invoice-detail">
+        <dl>
+          <dt>开票金额</dt>
+          <dd>{{invoiceDetailShow.amount}}</dd>
+          <dt>发票类型</dt>
+          <dd>{{invoiceDetailShow.type==1?'增值税专用发票':'增值税普通发票'}}</dd>
+        </dl>
+        <dl>
+          <dt>收件人</dt>
+          <dd>{{invoiceDetailShow.recipients}}</dd>
+          <dt>联系电话</dt>
+          <dd>{{invoiceDetailShow.phone}}</dd>
+        </dl>
+        <dl>
+          <dt>纳税人识别码</dt>
+          <dd class="w">{{invoiceDetailShow.identicode}}</dd>
+        </dl>
+        <dl>
+          <dt>发票抬头</dt>
+          <dd class="w">{{invoiceDetailShow.title}}</dd>
+        </dl>
+        <dl>
+          <dt>收件地址</dt>
+          <dd class="w">{{invoiceDetailShow.address}}</dd>
+        </dl>
+        
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button type="primary" @click="showModal.invoiceDetail = false">知道了</Button>
+      </p>
+    </Modal>
+    <Modal v-model="showModal.invoiceDetailP" :scrollable="true" :closable="true" :width="500">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">发票详情</span>
+      </p>
+      <div class="invoice-detail">
+        <dl>
+          <dt>开票金额</dt>
+          <dd>{{invoiceDetailShow.amount}}</dd>
+          <dt>发票类型</dt>
+          <dd>{{invoiceDetailShow.type==1?'增值税专用发票':'增值税普通发票'}}</dd>
+        </dl>
+        <dl>
+          <dt>收件人</dt>
+          <dd>{{invoiceDetailShow.recipients}}</dd>
+          <dt>联系电话</dt>
+          <dd>{{invoiceDetailShow.phone}}</dd>
+        </dl>
+        <dl>
+          <dt>开户银行</dt>
+          <dd>{{invoiceDetailShow.bankname}}</dd>
+          <dt>银行账户</dt>
+          <dd>{{invoiceDetailShow.banknum}}</dd>
+        </dl>
+        <dl>
+          <dt>纳税人识别码</dt>
+          <dd class="w">{{invoiceDetailShow.identicode}}</dd>
+        </dl>
+        <dl>
+          <dt>发票抬头</dt>
+          <dd class="w">{{invoiceDetailShow.title}}</dd>
+        </dl>
+        
+        <dl>
+          <dt>注册地址</dt>
+          <dd class="w">{{invoiceDetailShow.address}}</dd>
+        </dl>
+        <dl>
+          <dt>注册电话</dt>
+          <dd class="w">{{invoiceDetailShow.phone}}</dd>
+        </dl>
+        <dl>
+          <dt>收件地址</dt>
+          <dd class="w">{{invoiceDetailShow.address}}</dd>
+        </dl>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button type="primary" @click="showModal.invoiceDetailP = false">知道了</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -1159,6 +1243,7 @@
          this.init()*/
       }
       return {
+        billInfo: {},
         ApplicableProducts: '0',
         VoucherStatus: '',
         DueTime: '0',
@@ -2030,33 +2115,22 @@
         cardVolumeTabledata: [],
         billColumns: [
           {
-            title: '发票状态',
-            key: 'status',
+            title: '发票申请时间',
+            key: 'createtime',
             align: 'left',
-            render: (h, params) => {
-              const row = params.row
-              const statusColor = row.status === 0 ? '#14B278' : row.status === 1 ? 'red' : row.status === 2 ? '#F56B23' : '#4A90E2'
-              const text = row.status === 0 ? '已签收' : row.status === 1 ? '已驳回' : row.status === 2 ? '审核中' : '物流中'
-              return h('span', {
-              }, text)
-            }
           },
           {
             title: '发票种类',
             key: 'type',
             align: 'left',
             render: (h, params) => {
-              return h('span', params.row.type == 0 ? '普通发票' : '增值税专用发票')
+              // 0  普通发票 企业  1  增值税专用发票  2 普通发票 个人
+              return h('span',params.row.type==0?'增值税普通发票(企业)':(params.row.type==1?'增值税专用发票':'增值税普通发票(个人)'))
             }
           },
           {
             title: '发票抬头',
             key: 'title',
-            align: 'left',
-          },
-          {
-            title: '发票申请时间',
-            key: 'createtime',
             align: 'left',
           },
           {
@@ -2068,21 +2142,20 @@
             title: '物流信息',
             key: 'status',
             render: (h, params) => {
+              let text = params.row.logisticsName + ' / ' + params.row.logistics
+              return h('span', text)
+            }
+          },
+          {
+            title: '发票状态',
+            key: 'status',
+            align: 'left',
+            render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '查看' : row.status === 3 ? '查看' : ''
-              return h('div', [
-                h('span', {
-                  style: {
-                    cursor: 'pointer',
-                    color: ' #2A99F2'
-                  },
-                  on: {
-                    click: () => {
-                      this.showlogistics(params.index)
-                    }
-                  }
-                }, text)
-              ])
+              const statusColor = row.status === 0 ? '#14B278' : row.status === 1 ? 'red' : row.status === 2 ? '#F56B23' : '#4A90E2'
+              const text = row.status === 0 ? '已签收' : row.status === 1 ? '已驳回' : row.status === 2 ? '审核中' : '物流中'
+              return h('span', {
+              }, text)
             }
           },
           {
@@ -2099,7 +2172,8 @@
                   },
                   on: {
                     click: () => {
-                      this.showInvoice(params.index)
+                      this.invoiceDetailShow = params.row
+                      params.row.type==1?this.showModal.invoiceDetailP = true:this.showModal.invoiceDetail = true
                     }
                   }
                 }, '详情')
@@ -2107,6 +2181,7 @@
             }
           }
         ],
+        invoiceDetailShow: {},
         billTabledata: [],
         name,
         ordertotal: 0,
@@ -2575,6 +2650,8 @@
         actualDelivery: 0,
         cardSelection: null,
         showModal: {
+          invoiceDetail: false,
+          invoiceDetailP: false,
           SetBalanceWarning:false,
           clipCoupons: false,
           freezeParticulars: false,
@@ -2908,6 +2985,28 @@
           sessionStorage.removeItem('expensesTab')
         }
       },
+      getBillOverview() {
+        this.$http.get('nVersionUser/billOverview.do', {
+          params: {
+            times: '2019-02'
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.billInfo = response.data.result
+            }
+          })
+      },
+      getBillInfo() {
+        this.$http.get('nVersionUser/consumptionSummary.do', {
+          params: {
+            times: '2019-02'
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              // this.billInfo = response.data.result
+            }
+          })
+      },
       toAppllyInvoice() {
         this.$router.push('invoiceManage')
       },
@@ -3197,6 +3296,8 @@
             this.getResourcesTable('1')
             this.getExportTable()
             this.search()
+            this.getBillOverview()
+            this.getBillInfo()
         }
       },
       showMoneyByMonth() {
@@ -3240,7 +3341,7 @@
         this.search()
       },
       dataChange1(time) {
-        // console.log(time)
+        console.log(time)
       },
       dataChange(time) {
         this.dateRange = time
@@ -3598,57 +3699,41 @@
         this.formAppreciationDate.bankAccount = this.formAppreciationDate.bankAccount.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
         this.bank_account = this.formAppreciationDate.bankAccount
       },
-      showlogistics(index) {
-        this.$http.get('user/getInvoice.do', {
-          params: {
-            invoiceId: this.billTabledata[index].id
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Modal.info({
-              title: '发票物流信息',
-              scrollable: true,
-              content: `物流公司：${response.data.result.logisticsName}<br>
-                    物流单号：${response.data.result.logistics}<br>
-                    查询网址：<a href="${response.data.result.kdurl}" target="_blank">${response.data.result.kdurl}</a>`
+      clipCoupons() {
+        if (this.orderNumber.length != 0) {
+          if (!this.orderNumber.some(checkPaymentStatus)) {
+            this.showModal.clipCoupons = true
+            let orderNumber = this.orderNumber.map(item => {
+              return item.ordernumber
+            })
+            this.$http.get('ticket/getUserTicket.do', {
+              params: {
+                pageSize: this.cardPageSize,
+                page: this.card_currentPage,
+                ticketType: this.card_type,
+                orderNumber: orderNumber + '',
+                isuse: 0,
+                notOverTime: '1',
+                totalCost: this.totalCost
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.cardVolumeTableData = response.data.result
+                for (var a = 0; a < this.cardVolumeTableData.length; a++) {
+                  if (this.cardSelection && this.cardSelection.operatorid == this.cardVolumeTableData[a].operatorid) {
+                    this.activeIndex = a
+                  }
+                }
+                this.cardTotal = response.data.result.total
+              }
+            })
+          } else {
+            this.$message.info({
+              content: '请选择未支付的订单'
             })
           }
-        })
+        }
       },
-      // clipCoupons() {
-      //   if (this.orderNumber.length != 0) {
-      //     if (!this.orderNumber.some(checkPaymentStatus)) {
-      //       this.showModal.clipCoupons = true
-      //       let orderNumber = this.orderNumber.map(item => {
-      //         return item.ordernumber
-      //       })
-      //       this.$http.get('ticket/getUserTicket.do', {
-      //         params: {
-      //           pageSize: this.cardPageSize,
-      //           page: this.card_currentPage,
-      //           ticketType: this.card_type,
-      //           orderNumber: orderNumber + '',
-      //           isuse: 0,
-      //           notOverTime: '1',
-      //           totalCost: this.totalCost
-      //         }
-      //       }).then(response => {
-      //         if (response.status == 200 && response.data.status == 1) {
-      //           this.cardVolumeTableData = response.data.result
-      //           for (var a = 0; a < this.cardVolumeTableData.length; a++) {
-      //             if (this.cardSelection && this.cardSelection.operatorid == this.cardVolumeTableData[a].operatorid) {
-      //               this.activeIndex = a
-      //             }
-      //           }
-      //           this.cardTotal = response.data.result.total
-      //         }
-      //       })
-      //     } else {
-      //       this.$message.info({
-      //         content: '请选择未支付的订单'
-      //       })
-      //     }
-
       //     function checkPaymentStatus(orderNumber) {
       //       return orderNumber.paymentstatus == 1
       //     }
@@ -5399,6 +5484,31 @@
         .ivu-input-number {
           margin-left: 10px;
         }
+      }
+    }
+  }
+  .invoice-detail{
+    dl {
+      display: flex;
+      background:rgba(255,255,255,1);
+      border:1px solid rgba(229,233,237,1);
+      color:rgba(51,51,51,1);
+      font-size:12px;
+      border-bottom: none;
+      dt {
+        width: 92px;
+        padding: 10px;
+        background:rgba(247,247,247,1);
+      }
+      dd {
+        width: 138px;
+        padding: 10px;
+      }
+      .w {
+        flex-grow: 1; 
+      }
+      &:last-child {
+        border-bottom: 1px solid rgba(229,233,237,1);
       }
     }
   }
