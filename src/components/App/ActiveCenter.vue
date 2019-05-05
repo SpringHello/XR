@@ -330,7 +330,7 @@
           }
           .free-receive {
             height: 400px;
-            background:  url("../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
+            background:  url("../../assets/img/active/freeToReceive/fr-banner20.png") center no-repeat;
           }
           .obj-storage {
             background: linear-gradient(

@@ -849,7 +849,7 @@
             if(res.data.authInfo&&res.data.authInfo.status){
               this.onStep = res.data.authInfo.status
             } else{
-              this.onStep = 0
+              this.onStep = 1
             }
           } else{
             this.onStep = 0
