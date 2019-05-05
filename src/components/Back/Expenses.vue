@@ -326,7 +326,7 @@
                   <Button type="primary" @click="getOrder('1')">查询</Button>
                 </span>
               </p>
-              <Table :columns="columns5" :data="data5" @on-sort-change="SortField" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
+              <Table :columns="columns5" :data="data5" @on-sort-change="SortField" @on-selection-change="select" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;overflow: hidden">
                 <div style="float: right;">
                   <Page :total="OrderPages" :current="currentORderPage" :page-size="OrderpageSize" @on-change="OrderchangePage"></Page>
@@ -2882,8 +2882,8 @@
           '',
         operatorid:
           '',
-        costSeen:
-          false,
+        // costSeen:
+        //   false,
         activeIndex:
           null,
         freezeParticularsColumns:
@@ -3330,7 +3330,7 @@
         this.totalCost = 0
         this.actualDelivery = 0
         this.cardSelection = null
-        this.costSeen = false
+        // this.costSeen = false
         this.activeIndex = null
       },
       changecard() {
@@ -3545,31 +3545,31 @@
             break
         }
       },
-      searchOrderByType() {
-        var url = 'user/searchOrderByType.do'
-        var params = {
-          pageSize: this.pageSize,
-          page: this.order_currentPage,
-          paymentStatus: this.order_type == 'pay' ? '1' : this.order_type == 'notpay' ? '0' : this.order_type == 'refund' ? '4' : this.order_type == 'refunding' ? '3' : '',
-        }
-        switch (this.timeType) {
-          case '':
-          case '1':
-            params.startTime = this.order_dateRange[0]
-            params.endTime = this.order_dateRange[1]
-            break
-          case'2':
-            params.aleradyStartTime = this.order_dateRange[0]
-            params.alreadyEndTime = this.order_dateRange[1]
-            break
-        }
-        this.$http.get(url, {params}).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.orderData = response.data.result.data
-            this.ordertotal = response.data.result.totle
-          }
-        })
-      },
+      // searchOrderByType() {
+      //   var url = 'user/searchOrderByType.do'
+      //   var params = {
+      //     pageSize: this.pageSize,
+      //     page: this.order_currentPage,
+      //     paymentStatus: this.order_type == 'pay' ? '1' : this.order_type == 'notpay' ? '0' : this.order_type == 'refund' ? '4' : this.order_type == 'refunding' ? '3' : '',
+      //   }
+      //   switch (this.timeType) {
+      //     case '':
+      //     case '1':
+      //       params.startTime = this.order_dateRange[0]
+      //       params.endTime = this.order_dateRange[1]
+      //       break
+      //     case'2':
+      //       params.aleradyStartTime = this.order_dateRange[0]
+      //       params.alreadyEndTime = this.order_dateRange[1]
+      //       break
+      //   }
+      //   this.$http.get(url, {params}).then(response => {
+      //     if (response.status == 200 && response.data.status == 1) {
+      //       this.orderData = response.data.result.data
+      //       this.ordertotal = response.data.result.totle
+      //     }
+      //   })
+      // },
       order_currentChange(order_currentPage) {
         this.order_currentPage = order_currentPage
         //this.searchOrderByType()
@@ -3684,29 +3684,30 @@
         var time = year + '-' + month + '-' + date + ' ' + hour + ':' + minutes + ':' + second
         return time
       },
-      // select(selection) {
-      //   this.orderNumber = []
-      //   this.totalCost = 0
-      //   this.orderNumber = selection
-      //   if (this.orderNumber.length != 0) {
-      //     this.costSeen = true
-      //     var cost = 0
-      //     this.orderNumber.forEach(item => {
-      //       if (item && item.paymentstatus == 0) {
-      //         cost += Number.parseFloat(item.cost)
-      //       }
-      //     })
-      //     this.totalCost = Math.round(cost * 100) / 100
-      //     this.actualDelivery = this.totalCost
-      //     if (this.totalCost == 0) {
-      //       this.costSeen = false
-      //     }
-      //     this.cardSelection = null
-      //     this.activeIndex = null
-      //   } else {
-      //     this.costSeen = false
-      //   }
-      // },
+      select(selection) {
+        this.orderNumber = []
+        this.totalCost = 0
+        this.orderNumber = selection
+        if (this.orderNumber.length != 0) {
+          // this.costSeen = true
+          var cost = 0
+          this.orderNumber.forEach(item => {
+            if (item && item.paymentstatus == 0) {
+              cost += Number.parseFloat(item.cost)
+            }
+          })
+          this.totalCost = Math.round(cost * 100) / 100
+          this.actualDelivery = this.totalCost
+          if (this.totalCost == 0) {
+            // this.costSeen = false
+          }
+          this.cardSelection = null
+          this.activeIndex = null
+        } else {
+          // this.costSeen = false
+        }
+        console.log(this.orderNumber)
+      },
       searchCard() {
         this.$http.get('ticket/getUserTicket.do', {
           params: {
@@ -3789,19 +3790,20 @@
               content: '请选择未支付的订单'
             })
           }
-
-          function checkPaymentStatus(orderNumber) {
-            return orderNumber.paymentstatus == 1
-          }
-        } else {
-          this.$message.info({
-            content: '请选择需要支付的订单'
-          })
         }
       },
-      cardSelect(item) {
-        this.cardSelection = item
-      },
+      //     function checkPaymentStatus(orderNumber) {
+      //       return orderNumber.paymentstatus == 1
+      //     }
+      //   } else {
+      //     this.$message.info({
+      //       content: '请选择需要支付的订单'
+      //     })
+      //   }
+      // },
+      // cardSelect(item) {
+      //   this.cardSelection = item
+      // },
       clipCoupons_ok() {
         var cost = 0
         if (this.activeIndex == null && this.cardSelection == null) {
@@ -3828,7 +3830,7 @@
         this.actualDelivery = this.totalCost
         this.operatorid = ''
         this.cardVolumeTableData = []
-        this.clipCoupons()
+        // this.clipCoupons()
       },
       freezeDetails() {
         let url = 'user/depositDetails.do'
@@ -4587,7 +4589,7 @@
         } else {
           return false
         }
-
+        //不知道什么字段和意思
         function checkReturnMoneyFlag(orderNumber) {
           return orderNumber.returnMoneyFlag == 0
         }
