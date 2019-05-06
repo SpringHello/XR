@@ -624,16 +624,16 @@
               return h('span', `${params.row.gpusize}*${params.row.gputype}`)
             }
           },
-          {
-            title:'是否售罄',
-            render: (h,params) => {
-              return h('span',{
-                style:{
-                  color:params.row.serviceid == '1'?'#FF0000':''
-                }
-              },params.row.serviceid == '1'?'已售罄':'');
-            }
-          }
+          // {
+          //   title:'是否售罄',
+          //   render: (h,params) => {
+          //     return h('span',{
+          //       style:{
+          //         color:params.row.serviceid == '1'?'#FF0000':''
+          //       }
+          //     },params.row.serviceid == '1'?'已售罄':'');
+          //   }
+          // }
         ],
         gpuSelection: null,
         vpcList: [],
@@ -833,9 +833,9 @@
         }).then(response => {
           response.data.result[0]._checked = true;
           this.serverOfferList = response.data.result
-          this.serverOfferList.forEach(item =>{
-            item._disabled = item.serviceid == '1' ?true:false;
-          })
+          // this.serverOfferList.forEach(item =>{
+          //   item._disabled = item.serviceid == '1' ?true:false;
+          // })
        
           this.gpuSelection = this.serverOfferList[0]
         })
