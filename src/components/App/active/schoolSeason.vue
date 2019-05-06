@@ -28,14 +28,18 @@
           </p>
         </div>
         <div class="main">
-          <div class="tabs  flex" style="justify-content: center" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
+          <div class="tabs  flex" style="justify-content: center">
+            <div>9:00~12:00</div>
+            <div>14:00~20:00</div>
+          </div>
+          <!-- <div class="tabs  flex" style="justify-content: center" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
             <div :class="{started: hour >=9&&hour<12}">9:00~12:00</div>
             <div :class="{started: hour >=14&&hour<20}">14:00~20:00</div>
-          </div>
-          <div class="tabs  flex" style="justify-content: center" v-else>
+          </div> -->
+          <!-- <div class="tabs  flex" style="justify-content: center" v-else>
             <div style="width:800px;background:#E1212A" v-if="hour >=12&&hour <14">下场秒杀时间14:00~20:00</div>
             <div style="width:800px;background:#E1212A" v-else>下场秒杀时间9:00～12:00</div>
-          </div>
+          </div> -->
           <div class="box" :class="[hour >=9&&hour<12 || hour >=14&&hour<20?'box_bg_long':'box_bg_short']">
             <div class="box_time" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
               <p>本场秒杀倒计时</p>
@@ -1227,7 +1231,7 @@
       this.getHostZoneListHot()
       this.getGpuZoneListHot()
       this.getobjZoneListHot()
-      this.setTime()
+      // this.setTime()
       this.getUserVipLevel()
       this.getBalance()
     },

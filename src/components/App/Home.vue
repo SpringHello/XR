@@ -4,7 +4,7 @@
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
-        <my-carousel-item class="carousel-item">
+        <!-- <my-carousel-item class="carousel-item">
           <div class="ss-active" @click="push('/activity/2019spring/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
@@ -21,7 +21,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item> -->
         <!-- <my-carousel-item class="carousel-item">
           <div class="xian-active" @click="push('/activity/xian/')">
             <div class="wrap">
