@@ -358,10 +358,10 @@
         <p style="font-size:14px;color:rgba(102,102,102,1);">解冻条件已达到，可以解冻</p>
         <RadioGroup v-model="unfreezeTo">
           <Radio label="account" style="margin:20px 0px">
-            <span>解冻到充值账户（需3-5个工作日）</span>
+            <span>解冻到原支付账户（需3-5个工作日）</span>
           </Radio>
           <Radio label="yue" style="display: block;margin-bottom:20px">
-            <span>解冻到余额<span style="color: #FF1E39;margin-left: 15px">{{ unfreezeToBalanceHintText }}</span></span>
+            <span>解冻到余额</span>
           </Radio>
         </RadioGroup>
         <div v-if="unfreezeTo=='account'" style="border-top:1px dashed rgba(151,151,151,1);padding: 20px 0 10px;">
@@ -384,7 +384,7 @@
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
           <p style="line-height: 20px;font-size: 14px;">
-            为保障您的资金安全，我们将向您的实名认证手机号码（{{withdrawConfirm.number.substr(0,3) + '****' + withdrawConfirm.number.substr(7)}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+            为保障您的资金安全，我们将向您的实名认证手机号码（{{withdrawConfirm.number?withdrawConfirm.number.substr(0,3) + '****' + withdrawConfirm.number.substr(7):''}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
           <Form-item label="图片验证码">
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
@@ -421,7 +421,7 @@
         <p style="font-size:14px;color:rgba(102,102,102,1);">解冻条件未达成，可以押金转续费</p>
         <RadioGroup v-model="freezeToRenew">
           <Radio label="account" style="margin:20px 0px" disabled>
-            <span>解冻到充值账户（需3-5个工作日）</span>
+            <span>解冻到原支付账户（需3-5个工作日）</span>
           </Radio>
           <Radio label="yue" style="display: block;margin-bottom:20px" disabled>
             <span>解冻到余额</span>
@@ -695,7 +695,7 @@
             <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
           </Form-item>
           <p style="line-height: 20px;font-size: 14px;">
-            为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number.substr(0,3) + '****' + withdrawConfirm.number.substr(7)}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+            为保障您的资金安全，我们将向您的注册账号（{{withdrawConfirm.number?withdrawConfirm.number.substr(0,3) + '****' + withdrawConfirm.number.substr(7):''}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
           <Form-item label="图片验证码">
             <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
             <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
@@ -722,11 +722,11 @@
       </p>
       <div class="modal-content-s">
         <div>
-          <p class="lh24" style="margin-bottom: 20px">选择“解冻到余额”后，将无法进行提现操作，请您谨慎操作！
-          </p>
+          <!--<p class="lh24" style="margin-bottom: 20px">选择“解冻到余额”后，将无法进行提现操作，请您谨慎操作！
+          </p>-->
           <RadioGroup v-model="unfreezeToHint" vertical>
             <Radio label="account">
-              <span>解冻到充值账户（需3-5个工作日）</span>
+              <span>解冻到原支付账户（需3-5个工作日）</span>
             </Radio>
             <Radio label="yue">
               <span>解冻到余额</span>
@@ -802,8 +802,8 @@
       </p>
       <div class="modal-content-s">
         <div>
-          <p class="lh24" style="margin-bottom: 20px">选择“退款到余额”后，将无法进行提现操作，请您谨慎操作！
-          </p>
+          <!--<p class="lh24" style="margin-bottom: 20px">选择“退款到余额”后，将无法进行提现操作，请您谨慎操作！
+          </p>-->
           <RadioGroup v-model="refundLastTo" vertical>
             <Radio label="account">
               <span>退款到充值账户（需3-5个工作日）</span>

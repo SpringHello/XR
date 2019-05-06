@@ -465,11 +465,15 @@
         }).then(res => {
           if (res.data.status == 1) {
             if (res.data.data.templates.length != 0) {
-              this.btns = 'templated'
-              this.templateds = res.data.data.templates
-              this.templateName = res.data.data.templates[0].id
+              res.data.data.templates.forEach(item => {
+                if(item.userStatus == 1){
+                   this.btns = 'templated'
+                    this.templateds.push(item);
+                    this.templateName = this.templateds[0].id
+                }
+              })
             } else {
-              return this.$Message.info('暂没有模板，请直接创建')
+              return this.$Message.info('暂没有可用模板，请直接创建')
             }
           }
         })

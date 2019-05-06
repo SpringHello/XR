@@ -192,10 +192,11 @@
                   </div>
                   <div class="up_photo">
                       <img style=" cursor: pointer;" src="../../assets/img/usercenter/iDCardSmall.png" @click="idCardShow = true">
-                      <p>手持身份证人像照片</p>
+                      <p >请上传手持新睿云验证信息与身份证人像面照片，上传之前请务必查看范例</p>
                   </div>
                 </div>
-                  <p style="margin:10px 0 20px 0;color:#666666;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p>
+                  <p style="margin:10px 0 0 0;color:#666666;">提示：1.上传文件支持jpg、png格式，单个文件最大不超过4MB。</p>
+                  <p style="margin:10px 0 20px 0;color:#666666;padding-left: 35px;line-height:17px;">2、请将真实姓名及“仅用于新睿云身份验证“手写在白纸上，与证件正面一起拍照上传，手写内容请保证清晰可辨认</p>
                   <div style="float:right;">
                     <div class="v_top" @click="absc = !absc">上一步</div>
                     <Button type="primary" class="ive_button" @click="legalNext('personal')">下一步</Button>
@@ -252,8 +253,8 @@
                     </Upload>
                   </div>
                   <div class="up_photo">
-                    <img src="../../assets/img/usercenter/card-font.png">
-                    <p>法人身份证正面照片</p>
+                   <img src="../../assets/img/usercenter/card-back.png">
+                    <p style='text-align:center;'>法人身份证正面照片</p>
                   </div>
                 </div>
                 <div class='up_coPhoto' style="">
@@ -285,12 +286,13 @@
                     </Upload>
                   </div>
                   <div class="up_photo">
-                    <img src="../../assets/img/usercenter/card-person.png">
-                    <p>经办人手持身份证照片</p>
+                   <img style=" cursor: pointer;" src="../../assets/img/usercenter/iDCardSmall.png" @click="idCardShow = true">
+                    <p>请上传手持新睿云验证信息与经办人身份证人像面照片，上传之前请务必查看范例</p>
                   </div>
                 </div>
                 <div>
                     <p style="margin:19px 0 20px 0;color:#666666;">提示：上传文件支持jpg、png格式，单个文件最大不超过4MB。</p>
+                    <p style="margin:10px 0 20px 0;color:#666666;padding-left: 35px;line-height:17px;">2、请将真实姓名及“仅用于新睿云身份验证“手写在白纸上，与证件正面一起拍照上传，手写内容请保证清晰可辨认</p>
                     <div style="float:right;">
                       <div class="v_top" @click="absc = !absc">上一步</div>
                       <Button type="primary" style="float:right;" class="ive_button" @click="legalNext('company')">下一步</Button>
@@ -401,7 +403,7 @@ import popk from "../../myView/input/main";
 import md5 from 'md5'
 let val = '/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/'; //营业执照格式
 const vailAucct = (rule, value, callback) => {
-  let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+  let reg = /^1[4|3|5|8|9|6|7]\d{9}$/;
   let email = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
   if (value == "") {
     return callback(new Error("请输入账号"));
@@ -453,7 +455,7 @@ export default {
       }
     }
     return {
-      imgSrc: "https://zschj.xrcloud.net/ruicloud/user/getKaptchaImage.do",
+      imgSrc: "https://www.xrcloud.net/ruicloud/user/getKaptchaImage.do",
       idCardShow:false,
       //步骤集合
       stepList: [
@@ -1466,7 +1468,9 @@ export default {
     p{
       margin-top:26px;
       color: #666666;
-      font-size: 14px;text-align: center;
+      font-size: 12px;
+      text-align: left;
+      line-height: 15px
     }
   }
   .up_button{

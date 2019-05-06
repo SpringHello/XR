@@ -14,8 +14,8 @@
         <a href="/" class="logo" alt='新睿云'>
           <div></div>
         </a>
-        <img class="logo-img" src="./assets/img/active/schoolSeason/nav_logo_cc.png"
-             @click="$router.push('/activity/2019spring/')" alt="新春采购季">
+        <!-- <img class="logo-img" src="./assets/img/active/schoolSeason/nav_logo_cc.png"
+             @click="$router.push('/activity/2019spring/')" alt="新春采购季"> -->
         <div class="operate operate-pdding">
           <ul @mouseleave="ME(-1)">
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
@@ -85,7 +85,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a href="https://www.xrcloud.net/login" rel="nofollow"><span>登录</span>
+                  <a href="https://zschj.xrcloud.net/login" rel="nofollow"><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -93,7 +93,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a href="https://www.xrcloud.net/register" rel="nofollow"><span>注册</span>
+                  <a href="https://zschj.xrcloud.net/register" rel="nofollow"><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -222,7 +222,7 @@
               <a href="http://www.miitbeian.gov.cn/" target="_blank" rel="nofollow">{{item.preparation}}</a>
             </li>
             <li>
-              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922" rel="nofollow" target="_blank"
+              <a href="http://www.beian.miit.gov.cn" rel="nofollow" target="_blank"
               >
                 <img src="./assets/img/app/record.png" alt="京公网安备">{{item.desc}}
               </a>
@@ -262,6 +262,11 @@
             </div>
               </div>
             </div>
+          </div>
+            <div class="wrapper">
+            <div style="padding:0 20px;cursor:pointer" @click="linkService">
+            <span class="title">在线客服&nbsp&nbsp&nbsp<img style="vertical-align: bottom;" src="./assets/img/app/kefu-icon.png" /></span>
+              </div>
           </div>
           <div class="wrapper" v-if="xiaoshouInfo.length>0">
             <div>
@@ -303,7 +308,7 @@
           </div>
           <div class="wrapper">
             <div>
-            <span class="title">咨询热线 400-0505-565</span>
+            <span class="title">咨询热线 <span>400-0505-565</span></span>
               </div>
           </div>
         </div>
@@ -843,7 +848,7 @@
         }
       }),
       QME() {
-        this.$refs.qq.style.width = '231px'
+        this.$refs.qq.style.width = '200px'
       },
       QML() {
         this.$refs.qq.style.width = '0px'
@@ -965,6 +970,13 @@
                 })
           }
         })
+      },
+      linkService(){
+        if(this.userInfo){
+          window.open(`https://im.xrcloud.net/im/text/0Jck1w.html?companyId=${this.userInfo.companyid}`)
+        } else{
+          window.open('https://im.xrcloud.net/im/text/0Jck1w.html')
+        }       
       }
     },
     computed: mapState({
@@ -1064,9 +1076,9 @@
             background-size: cover;
           }
         }
-        .operate-pdding {
-          padding-left: 90px;
-        }
+        // .operate-pdding {
+        //   padding-left: 90px;
+        // }
         .operate {
           > ul {
             display: inline-block;
@@ -1451,7 +1463,7 @@
           top: unset;
           transition: width .3s;
           box-shadow:0px 2px 16px -5px rgba(130,130,130,0.5);
-          border-radius:15px;
+          border-radius:10px;
         }
         & > a {
           width: 100%;
@@ -1459,11 +1471,11 @@
           display: block;
         }
         .wrapper {
-          width: 231px;
+          width: 200px;
           right: 0px;
           top: 0px;
           > div {
-            padding: 10px;
+            padding: 20px 20px 10px;
             > span {
               font-size: 12px;
               font-family: MicrosoftYaHei;
@@ -1472,6 +1484,10 @@
               &.title {
                 color: rgba(29, 23, 22, 1);
                 font-size: 14px;
+                span{
+                  font-family:MicrosoftYaHei-Bold;
+                  font-weight:bold;
+                }
               }
             }
             .info-wrapper {
@@ -1564,10 +1580,8 @@
         display: block;
         width: 48px;
         height: 48px;
-        background-image: url('./assets/img/app/top.png');
-        &:hover {
-          background: #2A99F2 url('./assets/img/app/top-hover.png') no-repeat center;
-        }
+        box-shadow: 0px 2px 16px -5px rgba(255,98,75,1);
+        background: #FF624B url(./assets/img/app/top.png) no-repeat center;
       }
     }
     .backtop {

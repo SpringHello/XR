@@ -4,7 +4,7 @@
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
-        <my-carousel-item class="carousel-item">
+        <!-- <my-carousel-item class="carousel-item">
           <div class="ss-active" @click="push('/activity/2019spring/')">
             <div class="wrap">
               <div class="container flex-vertical-center">
@@ -21,7 +21,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item> -->
         <!-- <my-carousel-item class="carousel-item">
           <div class="xian-active" @click="push('/activity/xian/')">
             <div class="wrap">
@@ -675,7 +675,7 @@
           },
           {
             title: '软件研发',
-            scene: '基于新睿云云主机的集成开发环境包含jave的Eclipse、PHP的Sublime、PHPstrom、Python的PyCharm。帮助您快速部署开发环境与依赖包，降低开发前期准备并提升研发效率。借助新睿云成熟的云计算基础服务能力，开发人员可以随时创建与释放所需的开发环境与相关计算资源，主机信息可自动与手动备份，多种方式保障您的数据安全。',
+            scene: '基于新睿云云主机的集成开发环境包含java的Eclipse、PHP的Sublime、PHPstrom、Python的PyCharm。帮助您快速部署开发环境与依赖包，降低开发前期准备并提升研发效率。借助新睿云成熟的云计算基础服务能力，开发人员可以随时创建与释放所需的开发环境与相关计算资源，主机信息可自动与手动备份，多种方式保障您的数据安全。',
             software: [
               require('../../assets/img/sceneList/sl-icon11.png'),
               require('../../assets/img/sceneList/sl-icon12.png'),

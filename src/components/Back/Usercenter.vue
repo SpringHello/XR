@@ -39,7 +39,7 @@
                       @click="modifyEmail">修改</span></li>
                     <li v-if="!userInfo.phone"><span>手机号码</span><span>尚未绑定</span><span
                       @click="modifyTelphone">去绑定</span></li>
-                    <li v-else><span>手机号码</span><span>{{ userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7)}}</span><span
+                    <li v-else><span>手机号码</span><span>{{ userInfo.phone?userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7): ''}}</span><span
                       @click="telModify_btn()">修改</span></li>
                     <!--<li><span>账号密码</span><span>尚未设置</span><span @click="showModal.setNewPassword = true">去设置</span></li>-->
                     <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
@@ -272,7 +272,7 @@
                         </div>
                         <div style="width:130px;margin-left:20px;cursor: zoom-in" @click="showModal.showPersonPicture = true">
                           <img src="../../assets/img/usercenter/card-person.png" style="margin: 0 15px 10px;">
-                          <p style="line-height: 32px;text-align: center">示例图</p>
+                          <p style="line-height: 18px;text-align: center">请上传手持新睿云验证信息与身份证人像面照片，上传之前请务必查看范例</p>
                         </div>
                       </div>
                     </FormItem>
@@ -330,7 +330,7 @@
             <div v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0" class="personalAuthInfo">
               <ol>
                 <li>真实姓名<span>{{ authInfo.name}}</span><span>个人认证</span></li>
-                <li>手机号码<span>{{ authInfo.phone.substr(0,3) + '****' + authInfo.phone.substr(7)}}</span></li>
+                <li>手机号码<span>{{ authInfo.phone?authInfo.phone.substr(0,3) + '****' + authInfo.phone.substr(7):''}}</span></li>
                 <li>身份证号<span>{{ authInfo.personalnumber}}</span></li>
               </ol>
             </div>
@@ -552,7 +552,7 @@
                           </div>
                           <div style="width:130px;margin-left:20px;cursor: zoom-in;" @click="showModal.showPersonPicture = true">
                             <img src="../../assets/img/usercenter/card-person.png" style="margin: 0 15px 10px;">
-                            <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">手持身份证人像面照片</p>
+                            <p style="line-height: 18px;text-align: center;color:rgba(0,0,0,0.43);">请上传经办人手持新睿云验证信息与经办人身份证人像面照片，上传之前请务必查看范例</p>
                           </div>
                         </div>
                       </div>
@@ -681,7 +681,7 @@
       <div class="modal-content-s">
         <div>
           <p class="lh24" style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);line-height:24px;">为保障您的账户安全，我们将向您的实名认证手机号码
-            <span style="color: #FF624B">{{userphone.substr(0,3) + '****' + userphone.substr(7)}}</span> 发送一条验证短信，请收到验证信息之后将验证码填入下方。
+            <span style="color: #FF624B">{{userphone?userphone.substr(0,3) + '****' + userphone.substr(7):''}}</span> 发送一条验证短信，请收到验证信息之后将验证码填入下方。
           </p>
         </div>
       </div>
@@ -793,7 +793,7 @@
           <Form :model="setNewPasswordForm" :rules="setNewPasswordRuleValidate" ref="setNewPassword">
             <div v-show="setNewPasswordForm.step == 0">
               <Form-item label="手机号" style="width: 100%;margin-top: 10px" v-if="setNewPasswordForm.verificationMode == 'phone'">
-                <span>{{ userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7)}}</span>
+                <span>{{ userInfo.phone?userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7):''}}</span>
               </Form-item>
               <Form-item label="邮箱" style="width: 100%;margin-top: 10px" v-if="setNewPasswordForm.verificationMode == 'email'">
                 <span>{{ userInfo.loginname}}</span>
@@ -902,7 +902,7 @@
           <Form :model="bindingMobilePhoneForm" :rules="bindingMobilePhoneRuleValidate" ref="bindingMobilePhone">
             <div v-show="bindingMobilePhoneForm.step == 0">
               <Form-item label="手机号" style="width: 100%;margin-top: 10px" v-if="bindingMobilePhoneForm.verificationMode == 'phone'">
-                <span>{{ userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7)}}</span>
+                <span>{{ userInfo.phone?userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7):''}}</span>
               </Form-item>
               <Form-item label="邮箱" style="width: 100%;margin-top: 10px" v-if="bindingMobilePhoneForm.verificationMode == 'email'">
                 <span>{{ userInfo.loginname}}</span>
@@ -989,7 +989,7 @@
           <Form :model="bindingEmailForm" :rules="bindingEmailRuleValidate" ref="bindingEmail">
             <div v-show="bindingEmailForm.step == 0">
               <Form-item label="手机号" style="width: 100%;margin-top: 10px" v-if="bindingEmailForm.verificationMode == 'phone'">
-                <span>{{ userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7)}}</span>
+                <span>{{ userInfo.phone?userInfo.phone.substr(0,3) + '****' + userInfo.phone.substr(7):''}}</span>
               </Form-item>
               <Form-item label="邮箱" style="width: 100%;margin-top: 10px" v-if="bindingEmailForm.verificationMode == 'email'">
                 <span>{{ userInfo.loginname}}</span>
@@ -1094,7 +1094,7 @@
       </p>
       <div class="keyPhoneVal" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p>为保障您的账户安全，请进行手机验证：</p>
-        <p>手机号码： <span>{{keyForm.phone.substr(0,3) + '****' + keyForm.phone.substr(7)}}</span></p>
+        <p>手机号码： <span>{{keyForm.phone?keyForm.phone.substr(0,3) + '****' + keyForm.phone.substr(7):''}}</span></p>
         <p> 图形验证码
           <Input v-model="keyForm.imgCode" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
           <img :src="imgSrc" style="width:80px;height:30px;vertical-align: middle" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
@@ -1187,7 +1187,7 @@
                   </div>
                   <div class="right" @click="showModal.showPersonPicture = true">
                     <img src="../../assets/img/usercenter/card-person.png" style="display:block;cursor:zoom-in">
-                    <p>手持身份证人像照片</p>
+                    <p style="line-height: 18px;">请上传手持新睿云验证信息与身份证人像面照片，上传之前请务必查看范例</p>
                   </div>
                 </div>
               </div>
@@ -1230,7 +1230,7 @@
                   </div>
                   <div class="right" @click="showModal.showPersonPicture = true">
                     <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto;cursor:zoom-in">
-                    <p style="width:168px">经办人手持身份证人像照片</p>
+                    <p style="width:168px;line-height: 18px;">请上传法人手持新睿云验证信息与法人身份证人像面照片，上传之前请务必查看范例</p>
                   </div>
                 </div>
               </div>

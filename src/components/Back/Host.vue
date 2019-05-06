@@ -614,6 +614,23 @@
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：400-050-5565</p>
       </div>
     </Modal>
+        <!-- 删除主机关联其他资源确认弹窗 -->
+      <Modal v-model="showModal.delHostHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">{{ delHostMessage }}
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.delHostHint = false">取消</Button>
+        <Button type="primary" @click="del">确认删除</Button>
+      </p>
+    </Modal>
 
     <!--远程连接密码提示框-->
     <!--<Modal v-model="showModal.linkPassword" width="360" :scrollable="true">-->
@@ -703,7 +720,9 @@
           linkPassword: false,
           ratesChange: false,
           publicIPHint: false,
+          delHostHint: false
         },
+        delHostMessage: '',
         ratesChangeType: '',
         ratesChangeTime: '',
         originRatesChangeCost: '--',
@@ -1339,7 +1358,7 @@
         switch (name) {
           case 'delhost':
             if (this.checkSelect()) {
-              this.del()
+              this.delBefore()
             }
             break
           case 'rename':
@@ -1652,6 +1671,20 @@
       toMirror() {
         this.$store.commit('setSelect', 'mirror')
         this.$router.push('mirror')
+      },
+      delBefore(){
+        let url = 'information/delVMHint.do'
+        let params = {
+          computerId: this.currentHost[0].computerid
+        }
+        this.$http.get(url,{params}).then(res=>{
+          if(res.status === 200 && res.data.status === 1){
+            this.del()
+          } else{
+            this.delHostMessage = res.data.message
+            this.showModal.delHostHint = true
+          }
+        })
       },
       del() {
         if (this.checkSelect()) {

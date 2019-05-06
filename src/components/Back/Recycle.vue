@@ -93,10 +93,22 @@
             title: '操作',
             width: 180,
             render: (h, params) => {
-              if (params.row.loading) {
-                return h('Spin', {})
-              }
-              return h('div', {}, [h('Poptip', {
+              if (params.row.status === 3) {
+                  return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, '删除中')])
+              }else if (params.row.status === 4) {
+                  return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, '还原中')])
+              }else{
+                return h('div', {}, [h('Poptip', {
                 style: {
                   marginRight: '20px'
                 },
@@ -131,6 +143,7 @@
                   color: '#2A99F2'
                 }
               }, '删除')])])
+              }
             }
           }],
         allList: [],
@@ -169,7 +182,6 @@
               item.remainingMinute = Math.floor((item.remainTime % mSecInHour) / mSecInMinute)
               item.deleteTime = new Date(item.deleteTime).format('yyyy年MM月dd日 hh:mm:ss')
               item.createTime = new Date(item.createTime).format('yyyy年MM月dd日 hh:mm:ss')
-              item.loading = false
             })
             var host = [], ip = [], disk = [], nat = []
             response.data.result.forEach(item => {
@@ -253,7 +265,7 @@
         }
         var arr = []
         operatingList.forEach(item => {
-          item.loading = true
+          item.status = 4
           arr.push({id: item.id, type: item.type})
         })
         if (arr.length == 0) {
@@ -277,6 +289,11 @@
       del(item){
         var arr = [{id: item.id, type: item.type}]
         var param = JSON.stringify(arr)
+        this.allList.forEach(i => {
+            if (i.id == item.id) {
+              i.status = 3
+            }
+          })
         this.$http.post("information/deleteRecover.do", {
           list: param
         }).then(response => {
@@ -314,7 +331,7 @@
           arr.push({id: item.id, type: item.type})
           this.allList.forEach(i => {
             if (i.id == item.id) {
-              i.loading = true
+              i.status = 3
             }
           })
         })
