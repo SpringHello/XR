@@ -166,11 +166,12 @@
                 <span>网站基本信息</span>
               </div>
             </div>
-            <div class="tables" v-show="!isIconInfo">
+            <div class="tables" v-show="isIconInfo">
               <ul class="nav_list">
                 <li class="nav_item">网站名称</li>
                 <li class="nav_item">网站域名</li>
                 <li class="nav_item">网站首页URL</li>
+                 <li class="nav_item">ICP备案密码</li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
@@ -188,11 +189,20 @@
                   <div v-if="webUrlHide == 'webUrl'" class="text_block"><span style="color:red">信息有误</span> <span
                     style="color:#2a99f2;cursor:pointer;" @click="website = true">重新输入</span></div>
                 </li>
+                 <li class="nav_item">
+                     <p v-if='hostUnitList.icprecordpassword == "" || hostUnitList.icprecordpassword == undefined'>暂无ICP备案密码</p>
+                      <p v-else>{{navItem.passHideTrue?'*********':hostUnitList.icprecordpassword}}</p>
+                      <div class="nav-img" @click='navItem.passHideTrue =! navItem.passHideTrue' v-if='hostUnitList.icprecordpassword != ""'>
+                        <img :src="navItem.passHideTrue?navItem.img2:navItem.img">
+                      </div>
+                      <div  class="text_block" v-if='icprecordpasswordHide'><span style="color:red">信息有误</span> <span
+                        style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span></div>
+                    </li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">网站服务内容</li>
                 <li class="nav_item">网站语言</li>
-                <li class="nav_item"></li>
+                <li class="nav_item">主体备案号</li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
@@ -206,7 +216,12 @@
                   <div v-if="webMessageHide == 'webmessage'" class="text_block"><span style="color:red">信息有误</span>
                     <span style="color:#2a99f2;cursor:pointer;" @click=" website = true">重新输入</span></div>
                 </li>
-                <li class="nav_item"></li>
+                <li class="nav_item">
+                      <p v-if="hostUnitList.mainrecordnumber != ''">{{hostUnitList.mainrecordnumber}}</p>
+                      <p v-else>暂无主体备案号</p>
+                      <div v-if="mainrecordnumberHide" class="text_block"><span style="color:red">信息有误</span> <span
+                        style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span></div>
+                </li>
               </ul>
             </div>
           </div>
@@ -362,6 +377,7 @@
               </ul>
             </div>
           </div>
+
           <div class="info_box">
             <div>
               <div style="margin-bottom:10px;">
@@ -423,43 +439,6 @@
                     <div v-if="curtainInfoHide =='curtainInfo'" class="text_block"><span style="color:red">信息有误</span>
                     </div>
                   </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="info_box">
-            <div>
-              <div style="margin-bottom:10px;">
-                <div style="margin-left:5px;">
-                  <span>网站信息</span>
-                </div>
-              </div>
-              <div class="tables">
-                <ul class="nav_list">
-                <!-- <li class="nav_item">网站域名</li> -->
-                <li class="nav_item">主体备案号</li>
-              </ul>
-                <ul class="nav_list">
-                    <li class="nav_item">
-                      <p>{{hostUnitList.webname}}</p>
-                      <div v-if="mark4Hide == 'mark4'" class="text_block"><span style="color:red">信息有误</span> <span
-                        style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span></div>
-                    </li>
-                  </ul>
-                  <ul class="nav_list">
-                    <li class="nav_item">ICP备案密码</li>
-                  </ul>
-                  <ul class="nav_list">
-                     <li class="nav_item">
-                     <p v-if='hostUnitList.icprecordpassword == ""'>暂无ICP备案密码</p>
-                      <p v-else>{{navItem.passHideTrue?'*********':hostUnitList.icprecordpassword}}</p>
-                      <div class="nav-img" @click='navItem.passHideTrue =! navItem.passHideTrue' v-if='hostUnitList.icprecordpassword != ""'>
-                        <img :src="navItem.passHideTrue?navItem.img2:navItem.img">
-                      </div>
-                      <div  class="text_block" v-if='icprecordpasswordHide'><span style="color:red">信息有误</span> <span
-                        style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span></div>
-                    </li>
                 </ul>
               </div>
             </div>
@@ -925,6 +904,14 @@
           <p style="margin:10px">网站语言</p>
           <Input type="text" v-model="updateHostUnitList.webmessage"></Input>
         </FormItem>
+        <FormItem prop="webmessage">
+          <p style="margin:10px">主体备案号</p>
+          <Input type="text" v-model="updateHostUnitList.mainrecordnumber"></Input>
+        </FormItem>
+        <FormItem prop="webmessage">
+          <p style="margin:10px">主体备案号</p>
+          <Input type="text" v-model="updateHostUnitList.icprecordpassword"></Input>
+        </FormItem>
       </Form>
       <div slot="footer">
         <Button @click="website = false">取消</Button>
@@ -1030,6 +1017,31 @@
     </Modal>
 
     <!-- 网站信息修改 -->
+    <Modal
+      v-model="website"
+      title="网站基本信息"
+      :scrollable="true"
+    >
+      <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+        <FormItem prop="webdomian">
+          <p style="margin:10px">网站域名</p>
+          <Input type="text" v-model="updateHostUnitList.webdomian"></Input>
+        </FormItem>
+        <FormItem prop="weburl">
+          <p style="margin:10px">ICP备案密码</p>
+          <Input type="text" v-model="updateHostUnitList.weburl"></Input>
+        </FormItem>
+        <FormItem prop="webname">
+          <p style="margin:10px">主体备案号</p>
+          <Input type="text" v-model="updateHostUnitList.webname"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button @click="website = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('website')">确定</Button>
+      </div>
+    </Modal>
+
     <Modal
       v-model="website"
       title="网站基本信息"
@@ -1226,6 +1238,7 @@ export default {
       mark3Hide: null,
       mark4Hide: null,
       icprecordpasswordHide:false,
+      mainrecordnumberHide:false,
       //主办单位弹窗
       host: false,
       //主体单位负责人弹窗
@@ -1829,6 +1842,9 @@ export default {
                   case "icprecordpassword":
                     this.icprecordpasswordHide = true;
                     break;  
+                  case "mainrecordnumber":
+                  this.mainrecordnumberHide = true;
+                  break;  
                 }
               });
             } else {
@@ -2277,7 +2293,9 @@ export default {
         backgroundUrl: backgroundUrl,
         backgroundAddress: this.hostUnitList.mark2,
         backgroundName: this.hostUnitList.mark3,
-        backgroundPhone: this.hostUnitList.mark4
+        backgroundPhone: this.hostUnitList.mark4,
+        mainrecordnumber:this.hostUnitList.mainrecordnumber,
+        icprecordpassword:this.hostUnitList.icprecordpassword
       };
       let update = this.$http.post("recode/updateMainWeb.do", web);
       let main = {
