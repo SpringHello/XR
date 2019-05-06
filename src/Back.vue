@@ -203,7 +203,15 @@
       <!--<Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>-->
-      <span class="phone" @click="getOrderType"></span>
+      <span class="phone" @click="getOrderType" @mouseenter="PME" @mouseleave="PML">
+        <div ref="phoneE" style="overflow: hidden;bottom:45px;">
+          <div class="wrapper">
+            <div>
+              <span class="title">投诉与建议</span>
+            </div>
+          </div>
+        </div>
+      </span>
       <div>
         <BackTop :bottom="61" :right="50" :duration="0" :height="1600" style="position: unset">
           <span class="topLink"></span>
@@ -490,6 +498,12 @@
       },
       QML() {
         this.$refs.qq.style.width = '0px'
+      },
+      PME() {
+        this.$refs.phoneE.style.width = '95px'
+      },
+      PML() {
+        this.$refs.phoneE.style.width = '0px'
       },
       notice() {
         this.$http.get('user/getEventNum.do', {
@@ -1149,6 +1163,34 @@
         background-position: center;
         background-image: url('./assets/img/app/phone-hover.png');
       }*/
+      > div {
+          position: absolute;
+          width: 0px;
+          background-color: #ffffff;
+          right: 55px;
+          top: unset;
+          transition: width .3s;
+          box-shadow:0px 2px 16px -5px rgba(130,130,130,0.5);
+          border-radius:15px;
+        }
+        .wrapper {
+          width: 95px;
+          right: 0px;
+          top: 0px;
+          > div {
+            padding: 10px ;
+            > span {
+              font-size: 12px;
+              font-family: MicrosoftYaHei;
+              color: rgba(102, 102, 102, 1);
+              line-height: 16px;
+              &.title {
+                color:rgba(255,98,75,1);
+                font-size: 14px;
+              }
+            }
+          }
+        }
     }
   }
 
