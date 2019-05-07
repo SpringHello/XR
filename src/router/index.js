@@ -132,6 +132,10 @@ const ResetNew = () =>import('@/components/LR/ResetNew')
 //云市场页面路由
 const market = () =>import('@/components/App/market/Market')
 const mtest = () =>import('@/components/App/market/test')
+const details = () =>import('@/components/App/market/Details')
+const list = () =>import('@/components/App/market/List')
+const supplier = () =>import('@/components/App/market/Supplier')
+
 
 // 后台页面子路由
 // import Overview from '@/components/Back/Overview'
@@ -376,6 +380,9 @@ var router = new Router({
         {path: 'hotQuestion/:parentId/:id', component: hotQuestion},
         {path: 'market', component: market},
         {path: 'mtest', component: mtest},
+        {path: 'details', component: details},
+        {path: 'list', component: list},
+        {path: 'supplier', component: supplier}
       ]
     },
     {
