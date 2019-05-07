@@ -166,11 +166,12 @@
                 <span>网站基本信息</span>
               </div>
             </div>
-            <div class="tables" v-show="!isIconInfo">
+            <div class="tables" v-show="isIconInfo">
               <ul class="nav_list">
                 <li class="nav_item">网站名称</li>
                 <li class="nav_item">网站域名</li>
                 <li class="nav_item">网站首页URL</li>
+                 <li class="nav_item">ICP备案密码</li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
@@ -188,11 +189,20 @@
                   <div v-if="webUrlHide == 'webUrl'" class="text_block"><span style="color:red">信息有误</span> <span
                     style="color:#2a99f2;cursor:pointer;" @click="website = true">重新输入</span></div>
                 </li>
+                 <li class="nav_item">
+                     <p v-if='hostUnitList.icprecordpassword == "" || hostUnitList.icprecordpassword == undefined'>暂无ICP备案密码</p>
+                      <p v-else>{{navItem.passHideTrue?'*********':hostUnitList.icprecordpassword}}</p>
+                      <div class="nav-img" @click='navItem.passHideTrue =! navItem.passHideTrue' v-if='hostUnitList.icprecordpassword != ""'>
+                        <img :src="navItem.passHideTrue?navItem.img2:navItem.img">
+                      </div>
+                      <div  class="text_block" v-if='icprecordpasswordHide'><span style="color:red">信息有误</span> <span
+                        style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span></div>
+                    </li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">网站服务内容</li>
                 <li class="nav_item">网站语言</li>
-                <li class="nav_item"></li>
+                <li class="nav_item">主体备案号</li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
@@ -206,7 +216,12 @@
                   <div v-if="webMessageHide == 'webmessage'" class="text_block"><span style="color:red">信息有误</span>
                     <span style="color:#2a99f2;cursor:pointer;" @click=" website = true">重新输入</span></div>
                 </li>
-                <li class="nav_item"></li>
+                <li class="nav_item">
+                      <p v-if="hostUnitList.mainrecordnumber != ''">{{hostUnitList.mainrecordnumber}}</p>
+                      <p v-else>暂无主体备案号</p>
+                      <div v-if="mainrecordnumberHide" class="text_block"><span style="color:red">信息有误</span> <span
+                        style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span></div>
+                </li>
               </ul>
             </div>
           </div>
@@ -289,8 +304,8 @@
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
-                  <p>{{hostUnitList.ispname}}</p>
-                  <div v-if="ISPNameHide == 'ISPName'" class="text_block"><span style="color:red">信息有误</span> <span
+                  <p :title="hostUnitList.ispname">{{hostUnitList.ispname}}</p>
+                  <div v-if="ISPNameHide == 'ISPName'" class="text_block" ><span style="color:red">信息有误</span> <span
                     style="color:#2a99f2;cursor:pointer;" @click="webIsp = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
@@ -362,6 +377,7 @@
               </ul>
             </div>
           </div>
+
           <div class="info_box">
             <div>
               <div style="margin-bottom:10px;">
@@ -449,10 +465,10 @@
           <div style="width:53%;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝' ">
             <div style="min-height: 197px;">
               <p class="hide-text" v-if="addy.webRecordData==0">暂无网站备案信息核验单</p>
-              <div style="text-align: center;margin-top:10px;" v-for="(item,index) in webRecordData">
-                <img style="width: 38px;height: 42px;" :src="item.img">
+              <div style="text-align: center;margin-top:10px;">
+                <img style="width: 100%;height: 100%;" :src="hostUnitList.webrecordauthenticityurl">
                 <p style="line-height: 20px;">
-                  <span>{{item.name}}</span>
+                  <!-- <span>{{item.name}}</span> -->
                   <Icon type="ios-trash-outline" @click.native="deletePhoto('web',index)"></Icon>
                 </p>
               </div>
@@ -476,11 +492,11 @@
           </div>
           <div style="width:50%;min-height: 197px;" v-else>
             <p class="hide-text" v-if="webRecordData.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-else v-for="item in webRecordData">
-              <img style="width: 38px;height: 42px;" :src="item.img">
-              <p style="line-height: 20px;">
+            <div style="text-align: center;margin-top:10px;">
+              <img style="width: 100%;height: 100%;" :src="hostUnitList.webrecordauthenticityurl">
+              <!-- <p style="line-height: 20px;">
                 <span>{{item.name}}</span>
-              </p>
+              </p> -->
             </div>
           </div>
           <div style="width:50%;">
@@ -605,7 +621,7 @@
               :on-format-error="organizerFormatError"
             >
               <div class="sponsor-text" v-if="hostUnitList.hostcompanyurl==''">
-
+                <p>暂无营业执照照片</p>
               </div>
               <div style="min-height:203px;" v-else>
                 <div style="text-align: center">
@@ -617,7 +633,7 @@
             </Upload>
           </div>
           <div style="width:50%;text-align: center;" v-else>
-            <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''"></p>
+            <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无营业执照照片</p>
             <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
           </div>
           <div style="width:50%;min-height:203px;">
@@ -650,20 +666,20 @@
               :on-success="curtainSuccess"
               :on-format-error="organizerFormatError"
             >
-              <div class="sponsor-text" v-if="hostUnitList.mark5==''">
-
+              <div class="sponsor-text" v-if="hostUnitList.mark5=='' || hostUnitList.mark5 == undefined">
+                <p>暂无幕布照片</p>
               </div>
               <div style="min-height:203px;" v-else>
                 <div style="text-align: center">
                   <img style="height:144px;" :src="hostUnitList.mark5">
                   <Progress v-show="percentCurtain>0&&percentCurtain<=100" :percent="percentCurtain"></Progress>
-                  <p style="">点击选择文件</p>
+                  <p >点击选择文件</p>
                 </div>
               </div>
             </Upload>
           </div>
           <div style="width:50%;text-align: center;" v-else>
-            <p class="hide-text" v-if="hostUnitList.mark5==''"></p>
+            <p class="hide-text" v-if="hostUnitList.mark5==''|| hostUnitList.mark5 == undefined">暂无幕布照片</p>
             <img style="width:198px;height:144px;" :src="hostUnitList.mark5" v-else>
           </div>
           <div style="width:50%;min-height:203px;">
@@ -694,10 +710,9 @@
         <div class="updates">
           <div style="width:100%;min-height: 197px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
             <p class="hide-text" v-if="addy.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-for="(item,index) in addy">
-              <img style="width: 38px;height: 42px;" :src="item.img">
+            <div style="text-align: center;margin-top:10px;">
+              <img style="width: auto;height:auto;max-height:100%;max-width:100%;" :src="hostUnitList.domaincertificateurl">
               <p style="line-height: 20px;">
-                <span>{{item.name}}</span>
                 <Icon type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
               </p>
             </div>
@@ -716,10 +731,9 @@
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
             <p class="hide-text" v-if="addy.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-else v-for="(item,index) in addy">
-              <img style="width: 38px;height: 42px;" :src="item.img">
+            <div style="text-align: center;margin-top:10px;" v-else>
+              <img style="width: auto;height:auto;max-height:100%;max-width:100%;" :src="hostUnitList.domaincertificateurl">
               <p style="line-height: 20px;">
-                <span>{{item.name}}</span>
                 <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
               </p>
             </div>
@@ -738,10 +752,9 @@
         <div class="updates">
           <div style="width:100%;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
             <p class="hide-text" v-if="otherData.length==0">暂无其他文件信息</p>
-            <div style="text-align: center;margin-top:10px;" v-for="(item,index) in otherData">
-              <img style="width: 38px;height: 42px;" :src="item.img">
+            <div style="text-align: center;margin-top:10px;width:300px;height:300px;">
               <p style="line-height: 20px;">
-                <span>{{item.name}}</span>
+                  <img style="width:100%;height:100%;" :src="hostUnitList.otherdataurl">
                 <Icon type="ios-trash-outline" @click.native="deletePhoto('onther',index)"></Icon>
               </p>
             </div>
@@ -758,13 +771,10 @@
               <span class="item-content-text">点击选择文件</span>
             </Upload>
           </div>
-          <div style="width:100%;" v-else>
+          <div style="width:100%;text-align: center;" v-else>
             <p class="item-content" v-if="otherData.length==0">暂无其他文件信息</p>
-            <div style="text-align: center;margin-top:10px;" v-else v-for="item in otherData">
-              <img style="width: 38px;height: 42px;" :src="item.img">
-              <p style="line-height: 20px;">
-                <span>{{item.name}}</span>
-              </p>
+            <div style="margin-top:10px;width:300px;height:300px;display: inline-block;" v-else>
+              <img style="width:100%;height:100%;" :src='hostUnitList.otherdataurl'>
             </div>
           </div>
         </div>
@@ -849,7 +859,7 @@
           <p style="margin:10px">法人证件号码</p>
           <Input type="text" v-model="updateHostUnitList.legalcertificatesnumber"></Input>
         </FormItem>
-        <FormItem prop="officenumber">
+        <FormItem>
           <p style="margin:10px">办公室电话</p>
           <Input type="text" v-model="updateHostUnitList.officenumber"></Input>
         </FormItem>
@@ -894,6 +904,14 @@
           <p style="margin:10px">网站语言</p>
           <Input type="text" v-model="updateHostUnitList.webmessage"></Input>
         </FormItem>
+        <FormItem prop="webmessage">
+          <p style="margin:10px">主体备案号</p>
+          <Input type="text" v-model="updateHostUnitList.mainrecordnumber"></Input>
+        </FormItem>
+        <FormItem prop="webmessage">
+          <p style="margin:10px">主体备案号</p>
+          <Input type="text" v-model="updateHostUnitList.icprecordpassword"></Input>
+        </FormItem>
       </Form>
       <div slot="footer">
         <Button @click="website = false">取消</Button>
@@ -921,7 +939,7 @@
           <p style="margin:10px">有效证件号码</p>
           <Input type="text" v-model="updateHostUnitList.webresponsibilitycertificatesnumber"></Input>
         </FormItem>
-        <FormItem prop="offacenumber">
+        <FormItem>
           <p style="margin:10px">办公室电话号码</p>
           <Input type="text" v-model="updateHostUnitList.offacenumber"></Input>
         </FormItem>
@@ -997,1447 +1015,1596 @@
         <Button type="primary" @click="hostUpdate('address')">确定</Button>
       </div>
     </Modal>
+
+    <!-- 网站信息修改 -->
+    <Modal
+      v-model="website"
+      title="网站基本信息"
+      :scrollable="true"
+    >
+      <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+        <FormItem prop="webdomian">
+          <p style="margin:10px">网站域名</p>
+          <Input type="text" v-model="updateHostUnitList.webdomian"></Input>
+        </FormItem>
+        <FormItem prop="weburl">
+          <p style="margin:10px">ICP备案密码</p>
+          <Input type="text" v-model="updateHostUnitList.weburl"></Input>
+        </FormItem>
+        <FormItem prop="webname">
+          <p style="margin:10px">主体备案号</p>
+          <Input type="text" v-model="updateHostUnitList.webname"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button @click="website = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('website')">确定</Button>
+      </div>
+    </Modal>
+
+    <Modal
+      v-model="website"
+      title="网站基本信息"
+      :scrollable="true"
+    >
+      <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+        <FormItem prop="webdomian">
+          <p style="margin:10px">网站域名</p>
+          <Input type="text" v-model="updateHostUnitList.webdomian"></Input>
+        </FormItem>
+        <FormItem prop="weburl">
+          <p style="margin:10px">ICP备案密码</p>
+          <Input type="text" v-model="updateHostUnitList.weburl"></Input>
+        </FormItem>
+        <FormItem prop="webname">
+          <p style="margin:10px">主体备案号</p>
+          <Input type="text" v-model="updateHostUnitList.webname"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button @click="website = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('website')">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import area from "../../options/area.json";
-  import certificates from "../../options/certificates.json";
-  import throttle from 'throttle-debounce/debounce'
-  //备案ID
-  const imgPdf = require('../../assets/img/records/records-pdf.png');
-  const imgJpg = require('../../assets/img/records/records-img.png');
-  const imgDoc = require('../../assets/img/records/records-doc.png');
-  export default {
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-      });
-    },
-    data() {
-      // 校验地区
-      const validateArea = (rule, value, callback) => {
-        if (
-          this.province == "" ||
-          this.city == "" ||
-          this.district == ""
-        ) {
-          return callback(new Error("请选择所属区域"));
-        } else {
-          callback();
-        }
-      };
-      //校验座机号码
-      const validOfficePhone = (rule, value, callback) => {
-        let reg = /^0\d{2,3}-?\d{7,8}$/;
-        let regNumber = /^[0-9]+$/;
-        if (!reg.test(this.updateHostUnitList.officenumber)) {
-          return callback(new Error("请输入正确的座机号码"));
-        } else {
-          callback();
-        }
-      };
-      const validOffacePhone = (rule, value, callback) => {
-        let reg = /^0\d{2,3}-?\d{7,8}$/;
-        let regNumber = /^[0-9]+$/;
-        if (!reg.test(this.updateHostUnitList.offacenumber)) {
-          return callback(new Error("请输入正确的座机号码"));
-        } else {
-          callback();
-        }
-      };
-      //校验手机号码
-      const validPhoneNumber = (rule, value, callback) => {
-        let reg = /^1[3|5|8|9|6|7]\d{9}$/;
-        if (!reg.test(this.updateHostUnitList.phone)) {
-          return callback(new Error("请输入正确的手机号码"));
-        } else {
-          callback();
-        }
-      };
-      const validCompanyPhoneNumber = (rule, value, callback) => {
-        let reg = /^1[3|5|8|9|6|7]\d{9}$/;
-        if (!reg.test(this.updateHostUnitList.companyphone)) {
-          return callback(new Error("请输入正确的手机号码"));
-        } else {
-          callback();
-        }
-      };
-      const validConsigneePhoneNumber = (rule, value, callback) => {
-        let reg = /^1[3|5|8|9|6|7]\d{9}$/;
-        if (!reg.test(this.updateHostUnitList.mark4)) {
-          return callback(new Error("请输入正确的手机号码"));
-        } else {
-          callback();
-        }
-      };
-      //校验不能为数字
-      const validLegalPersonName = (rule, value, callback) => {
-        let regNumber = /^[0-9]+$/;
-        if (regNumber.test(this.updateHostUnitList.legalname)) {
-          return callback(new Error("姓名不能输入数字"));
-        } else {
-          callback();
-        }
-      };
-      //校验网站域名
-      const validWebsiteDomain = (rule, value, callback) => {
-        var reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
-        if (value == "") {
+import area from "../../options/area.json";
+import certificates from "../../options/certificates.json";
+import throttle from "throttle-debounce/debounce";
+//备案ID
+const imgPdf = require("../../assets/img/records/records-pdf.png");
+const imgJpg = require("../../assets/img/records/records-img.png");
+const imgDoc = require("../../assets/img/records/records-doc.png");
+export default {
+  beforeRouteEnter(to, from, next) {
+    next(vm => {});
+  },
+  data() {
+    // 校验地区
+    const validateArea = (rule, value, callback) => {
+      if (this.province == "" || this.city == "" || this.district == "") {
+        return callback(new Error("请选择所属区域"));
+      } else {
+        callback();
+      }
+    };
+    //校验座机号码
+    const validOfficePhone = (rule, value, callback) => {
+      let reg = /^0\d{2,3}-?\d{7,8}$/;
+      let regNumber = /^[0-9]+$/;
+      if (!reg.test(this.updateHostUnitList.officenumber)) {
+        return callback(new Error("请输入正确的座机号码"));
+      } else {
+        callback();
+      }
+    };
+    const validOffacePhone = (rule, value, callback) => {
+      let reg = /^0\d{2,3}-?\d{7,8}$/;
+      let regNumber = /^[0-9]+$/;
+      if (!reg.test(this.updateHostUnitList.offacenumber)) {
+        return callback(new Error("请输入正确的座机号码"));
+      } else {
+        callback();
+      }
+    };
+    //校验手机号码
+    const validPhoneNumber = (rule, value, callback) => {
+      let reg = /^1[4|3|5|8|9|6|7]\d{9}$/;
+      if (!reg.test(this.updateHostUnitList.phone)) {
+        return callback(new Error("请输入正确的手机号码"));
+      } else {
+        callback();
+      }
+    };
+    const validCompanyPhoneNumber = (rule, value, callback) => {
+      let reg = /^1[4|3|5|8|9|6|7]\d{9}$/;
+      if (!reg.test(this.updateHostUnitList.companyphone)) {
+        return callback(new Error("请输入正确的手机号码"));
+      } else {
+        callback();
+      }
+    };
+    const validConsigneePhoneNumber = (rule, value, callback) => {
+      let reg = /^1[4|3|5|8|9|6|7]\d{9}$/;
+      if (!reg.test(this.updateHostUnitList.mark4)) {
+        return callback(new Error("请输入正确的手机号码"));
+      } else {
+        callback();
+      }
+    };
+    //校验不能为数字
+    const validLegalPersonName = (rule, value, callback) => {
+      let regNumber = /^[0-9]+$/;
+      if (regNumber.test(this.updateHostUnitList.legalname)) {
+        return callback(new Error("姓名不能输入数字"));
+      } else {
+        callback();
+      }
+    };
+    //校验网站域名
+    const validWebsiteDomain = (rule, value, callback) => {
+      var reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+      if (value == "") {
+        return callback(new Error("请输入网站域名"));
+      } else if (!reg.test(value)) {
+        return callback(new Error("域名不正确"));
+      } else {
+        callback();
+      }
+    };
+    //校验网站负责人证件号码
+    const validCertificateNumber = (rule, value, callback) => {
+      let regCord = /^[0-9]*$/;
+      if (value == "") {
+        return callback(new Error("请输入证件号码"));
+      } else {
+        callback();
+      }
+    };
+    //校验新增域名
+    const validNewWebsiteDomain = (rule, value, callback) => {
+      let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+      for (let i = 0; i <= value.length; i++) {
+        if (value.length == 0 || value[i] == "") {
           return callback(new Error("请输入网站域名"));
-        } else if (!reg.test(value)) {
-          return callback(new Error("域名不正确"));
+        } else if (!reg.test(value[i]) && value[i] !== "") {
+          return callback(new Error("请输入正确的网站域名"));
         } else {
           callback();
         }
-      };
-      //校验网站负责人证件号码
-      const validCertificateNumber = (rule, value, callback) => {
-        let regCord = /^[0-9]*$/;
-        if (value == "") {
-          return callback(new Error("请输入证件号码"));
-        } else {
-          callback();
-        }
-      };
-      //校验新增域名
-      const validNewWebsiteDomain = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
-        for (let i = 0; i <= value.length; i++) {
-          if (value.length == 0 || value[i] == "") {
-            return callback(new Error("请输入网站域名"));
-          } else if (!reg.test(value[i]) && value[i] !== "") {
-            return callback(new Error("请输入正确的网站域名"));
-          } else {
-            callback();
-          }
-        }
-      };
-      //校验网站首页URL
-      const validWebsiteHomepage = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
-        if (value == "") {
-          return callback(new Error("请输入网站首页URL"));
-        } else if (!reg.test(value)) {
-          return callback(new Error("请输入正确的网站首页URL"));
-        } else {
-          callback();
-        }
-      };
-      return {
-        id: '',
-        //网站核验单大图
-        visibleWeb: false,
-        //营业执照大图
-        visible: false,
-        //是否显示重新输入
-        mainCompanyAreaHide: null,
-        mainCompanyCertificatesTypeHide: null,
-        mainCompanyNatureHide: null,
-        mainCompanyNumberHide: null,
-        mainCompanyNameHide: null,
-        mainCompanyCertificatesLoactionHide: null,
-        mainCompanyCommunicatLocationHide: null,
-        investorNameHide: null,
-        legalNameHide: null,
-        legalCertificatesTypeHide: null,
-        legalCertificatesNumberHide: null,
-        officeNumberHide: null,
-        phoneHide: null,
-        emailHide: null,
-        webNameHide: null,
-        webDomianHide: null,
-        webUrlHide: null,
-        webServerContentHide: null,
-        webMessageHide: null,
-        webResponsibilityLinkNameHide: null,
-        webResponsibilityCertificatesTypeHide: null,
-        webResponsibilityCertificatesNumberHide: null,
-        offaceNumberHide: null,
-        companyPhoneHide: null,
-        companyEmailHide: null,
-        ISPNameHide: null,
-        webIpHide: null,
-        webAccessTypeHide: null,
-        webServerAddressHide: null,
-        domainNameCertificateHide: null,
-        checkListHide: null,
-        sponsorPhotoHide: null,
-        organizerPhotoHide: null,
-        otherInfoHide: null,
-        curtainInfoHide: null,
-        mark2Hide: null,
-        mark3Hide: null,
-        mark4Hide: null,
-        //主办单位弹窗
-        host: false,
-        //主体单位负责人弹窗
-        legal: false,
-        //网站基本信息弹窗
-        website: false,
-        //网站负责人弹窗
-        websitePerson: false,
-        //ISP备案网站接入信息弹窗
-        webIsp: false,
-        addressModal: false,
-        //备案区域
-        area: "",
-        // 备案类型
-        recordsType: "",
-        //图标切换
-        // isIcon: true,
-        //主办单位信息详情隐藏与否
-        isIconSon: true,
-        //主办单位负责人详情隐藏与否
-        isIconPerson: true,
-        //网站基本信息详情隐藏与否
-        isIconInfo: true,
-        //网站负责人基本信息详情隐藏与否
-        isIconWebPerson: true,
-        //ISP备案网站接入详情隐藏与否
-        isIconISP: true,
-        // 收件地址隐藏与否
-        consigneeAddress: true,
-        //网站核验单
-        checkList: false,
-        //主板单位负责人照片
-        sponsorPhoto: false,
-        //主办单位照片
-        organizerPhoto: false,
-        //域名证书
-        domainNameCertificate: false,
-        //其他资料
-        otherInfo: false,
-        curtainInfo: false,
-        //备案详情数据
-        hostUnitList: {},
-        //主体单位证件类型选项
-        maincompanycertificatestypeList: [],
-        // 上传资料标记表单
-        uploadForm: {
-          IDPhotoList: [
-            {
-              // 身份证正面
-              IDCardFront: "",
-              // 身份证反面
-              IDCardBack: ""
-            }
-          ],
-          // 相关资料
-          combine: "",
-          // 域名证书
-          certifiedDomainNoCertification: "",
-          // 其他文件
-          otherFile: "",
-          // 核验单
-          CheckList: ""
-        },
-        // 省
-        provinceList: area,
-        province: "",
-        // 市
-        city: "",
-        cityList: [],
-        // 区
-        district: "",
-        districtList: [],
-        //接收修改的数据
-        updateHostUnitList: {},
-        //主体单位性质
-        unitProperties: "",
-        unitPropertiesList: certificates,
-        //主体单位证件类型
-        certificateTypeList: [],
-        //法人证件类型
-        legalPersonCertificateTypeList: ["身份证", "护照", "军官证", "台胞证"],
-        //弹窗验证
-        updateHostUnitListValidate: {
-          district: [
-            {required: true, validator: validateArea, trigger: "blur"}
-          ],
-          maincompanynature: [
-            {required: true, message: "请选择单位性质", trigger: "change"}
-          ],
-          maincompanycertificatestype: [
-            {required: true, message: "请选择证件类型", trigger: "change"}
-          ],
-          maincompanynumber: [
-            {required: true, message: "请输入单位证件号码", trigger: "blur"},
-            {validator: validCertificateNumber, trigger: "blur"}
-          ],
-          maincompanyname: [
-            {required: true, message: "请输入主体单位名称", trigger: "blur"},
-            {type: "string", max: 20, message: "最多只能输入20个字"}
-          ],
-          maincompanycertificatesloaction: [
-            {required: true, message: "请输入主体单位证件住所", trigger: "blur"}
-          ],
-          maincompanycommunicatlocation: [
-            {required: true, message: "请输入主体单位通信地址", trigger: "blur"}
-          ],
-          investorname: [
-            {
-              required: true,
-              message: "请输入投资人或主管单位姓名",
-              trigger: "blur"
-            }
-          ],
-          legalname: [
-            {required: true, message: "请输入法人姓名", trigger: "blur"},
-            {validator: validLegalPersonName, trigger: "blur"}
-          ],
-          legalcertificatestype: [
-            {required: true, message: "请选择法人证件类型", trigger: "change"}
-          ],
-          legalcertificatesnumber: [
-            {required: true, validator: validCertificateNumber, trigger: "blur"}
-          ],
-          officenumber: [
-            {required: true, message: "请输入办公室电话", trigger: "blur"},
-            {validator: validOfficePhone, trigger: "blur"}
-          ],
-          phone: [
-            {required: true, message: "请输入手机号码", trigger: "blur"},
-            {validator: validPhoneNumber, tirgger: "blur"}
-          ],
-          email: [
-            {required: true, message: "请输入电子邮箱地址", trigger: "blur"},
-            {
-              type: "email",
-              message: "请输入正确的电子邮箱地址",
-              tirgger: "blur"
-            }
-          ],
-          webname: [
-            {required: true, message: "请输入网站名称", trigger: "blur"}
-          ],
-          webdomian: [
-            {required: true, validator: validWebsiteDomain, trigger: "blur"}
-          ],
-          newWebsiteDomain: [
-            {required: true, validator: validNewWebsiteDomain, trigger: "blur"}
-          ],
-          webservercontent: [
-            {required: true, message: "请输入网站服务内容", trigger: "blur"}
-          ],
-          webmessage: [
-            {required: true, message: "请输入网站语言", trigger: "blur"}
-          ],
-          remark: [{type: "string", max: 50, message: "最多输入五十个字"}],
-          webresponsibilitylinkname: [
-            {required: true, message: "请输入负责人姓名", trigger: "blur"}
-          ],
-          webresponsibilitycertificatestype: [
-            {required: true, message: "请选择证件类型", trigger: "change"}
-          ],
-          webresponsibilitycertificatesnumber: [
-            {required: true, validator: validCertificateNumber, trigger: "blur"}
-          ],
-          offacenumber: [
-            {required: true, validator: validOffacePhone, trigger: "blur"}
-          ],
-          companyphone: [
-            {required: true, message: "请输入手机号码", trigger: "blur"},
-            {required: true, validator: validCompanyPhoneNumber, trigger: "blur"}
-          ],
-          companyemail: [
-            {required: true, message: "请输入邮箱地址", trigger: "blur"},
-            {type: "email", message: "请输入正确的邮箱地址", trigger: "blur"}
-          ],
-          weburl: [
-            {required: true, validator: validWebsiteHomepage, trigger: "blur"}
-          ],
-          webaccesstype: [
-            {required: true, message: "请选网站接入方式", trigger: 'blur'}
-          ],
-          webip: [
-            {required: true, message: "请选择网站ip", trigger: "blur"}
-          ],
-          mark2: [
-            {required: true, message: "请输入收件地址", trigger: "blur"}
-          ],
-          mark3: [
-            {required: true, message: "请输入收件人姓名", trigger: "blur"}
-          ],
-          mark4: [
-            {required: true, message: "请输入收件人联系方式", trigger: "blur"},
-            {required: true, validator: validConsigneePhoneNumber, trigger: "blur"}
-          ]
-        },
-        //获取域名证书文件
-        addy: [],
-        imgUrl: '',
-        //获取其他文件
-        otherData: [],
-        //获取网站核验单
-        webRecordData: [],
-        //重新提交按钮是否禁用
-        isAllUpate: true,
-        //委托书路径
-        keep: '',
-        //网站核验单路径
-        single: '',
-        //网站核验单示例图路径
-        examples: '',
-        //ISP网站ip
-        webip: [],
-        webipList: [],
-        //ISP服务器接入方式
-        webaccessList: [
+      }
+    };
+    //校验网站首页URL
+    const validWebsiteHomepage = (rule, value, callback) => {
+      let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+      if (value == "") {
+        return callback(new Error("请输入网站首页URL"));
+      } else if (!reg.test(value)) {
+        return callback(new Error("请输入正确的网站首页URL"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      navItem:{
+        img:require("../../assets/img/login/lr-icon3.png"),
+        img2:require("../../assets/img/updatePaw/paw_closeEye.png"),
+        passHideTrue:true
+      },
+      id: "",
+      //网站核验单大图
+      visibleWeb: false,
+      //营业执照大图
+      visible: false,
+      //是否显示重新输入
+      mainCompanyAreaHide: null,
+      mainCompanyCertificatesTypeHide: null,
+      mainCompanyNatureHide: null,
+      mainCompanyNumberHide: null,
+      mainCompanyNameHide: null,
+      mainCompanyCertificatesLoactionHide: null,
+      mainCompanyCommunicatLocationHide: null,
+      investorNameHide: null,
+      legalNameHide: null,
+      legalCertificatesTypeHide: null,
+      legalCertificatesNumberHide: null,
+      officeNumberHide: null,
+      phoneHide: null,
+      emailHide: null,
+      webNameHide: null,
+      webDomianHide: null,
+      webUrlHide: null,
+      webServerContentHide: null,
+      webMessageHide: null,
+      webResponsibilityLinkNameHide: null,
+      webResponsibilityCertificatesTypeHide: null,
+      webResponsibilityCertificatesNumberHide: null,
+      offaceNumberHide: null,
+      companyPhoneHide: null,
+      companyEmailHide: null,
+      ISPNameHide: null,
+      webIpHide: null,
+      webAccessTypeHide: null,
+      webServerAddressHide: null,
+      domainNameCertificateHide: null,
+      checkListHide: null,
+      sponsorPhotoHide: null,
+      organizerPhotoHide: null,
+      otherInfoHide: null,
+      curtainInfoHide: null,
+      mark2Hide: null,
+      mark3Hide: null,
+      mark4Hide: null,
+      icprecordpasswordHide:false,
+      mainrecordnumberHide:false,
+      //主办单位弹窗
+      host: false,
+      //主体单位负责人弹窗
+      legal: false,
+      //网站基本信息弹窗
+      website: false,
+      //网站负责人弹窗
+      websitePerson: false,
+      //ISP备案网站接入信息弹窗
+      webIsp: false,
+      addressModal: false,
+      //备案区域
+      area: "",
+      // 备案类型
+      recordsType: "",
+      //图标切换
+      // isIcon: true,
+      //主办单位信息详情隐藏与否
+      isIconSon: true,
+      //主办单位负责人详情隐藏与否
+      isIconPerson: true,
+      //网站基本信息详情隐藏与否
+      isIconInfo: true,
+      //网站负责人基本信息详情隐藏与否
+      isIconWebPerson: true,
+      //ISP备案网站接入详情隐藏与否
+      isIconISP: true,
+      // 收件地址隐藏与否
+      consigneeAddress: true,
+      //网站核验单
+      checkList: false,
+      //主板单位负责人照片
+      sponsorPhoto: false,
+      //主办单位照片
+      organizerPhoto: false,
+      //域名证书
+      domainNameCertificate: false,
+      //其他资料
+      otherInfo: false,
+      curtainInfo: false,
+      //备案详情数据
+      hostUnitList: {},
+      //主体单位证件类型选项
+      maincompanycertificatestypeList: [],
+      // 上传资料标记表单
+      uploadForm: {
+        IDPhotoList: [
           {
-            label: '专线',
-            value: '专线'
-          },
-          {
-            label: '主机托管',
-            value: '主机托管'
-          },
-          {
-            label: '虚拟主机',
-            value: '虚拟主机'
-          },
-          {
-            label: '其他',
-            value: '其他'
+            // 身份证正面
+            IDCardFront: "",
+            // 身份证反面
+            IDCardBack: ""
           }
         ],
-        percent: 0,
-        percentBack: 0,
-        percentCombine: 0,
-        percentCertification: 0,
-        percentOtherFile: 0,
-        percentCheckList: 0,
-        percentCurtain: 0
-      };
-    },
-    created() {
-      this.id = sessionStorage.getItem("id");
-    },
-    methods: {
-      //图标切换方法
-      // toolShow(isIcon) {
-      //   this.isIcon = !isIcon;
-      // },
-      infoBoxShow(value) {
-        value == "information"
-          ? (this.isIconSon = !this.isIconSon)
-          : value == "personInfo"
+        // 相关资料
+        combine: "",
+        // 域名证书
+        certifiedDomainNoCertification: "",
+        // 其他文件
+        otherFile: "",
+        // 核验单
+        CheckList: ""
+      },
+      // 省
+      provinceList: area,
+      province: "",
+      // 市
+      city: "",
+      cityList: [],
+      // 区
+      district: "",
+      districtList: [],
+      //接收修改的数据
+      updateHostUnitList: {},
+      //主体单位性质
+      unitProperties: "",
+      unitPropertiesList: certificates,
+      //主体单位证件类型
+      certificateTypeList: [],
+      //法人证件类型
+      legalPersonCertificateTypeList: ["身份证", "护照", "军官证", "台胞证"],
+      //弹窗验证
+      updateHostUnitListValidate: {
+        district: [
+          { required: true, validator: validateArea, trigger: "blur" }
+        ],
+        maincompanynature: [
+          { required: true, message: "请选择单位性质", trigger: "change" }
+        ],
+        maincompanycertificatestype: [
+          { required: true, message: "请选择证件类型", trigger: "change" }
+        ],
+        maincompanynumber: [
+          { required: true, message: "请输入单位证件号码", trigger: "blur" },
+          { validator: validCertificateNumber, trigger: "blur" }
+        ],
+        maincompanyname: [
+          { required: true, message: "请输入主体单位名称", trigger: "blur" },
+          { type: "string", max: 20, message: "最多只能输入20个字" }
+        ],
+        maincompanycertificatesloaction: [
+          { required: true, message: "请输入主体单位证件住所", trigger: "blur" }
+        ],
+        maincompanycommunicatlocation: [
+          { required: true, message: "请输入主体单位通信地址", trigger: "blur" }
+        ],
+        investorname: [
+          {
+            required: true,
+            message: "请输入投资人或主管单位姓名",
+            trigger: "blur"
+          }
+        ],
+        legalname: [
+          { required: true, message: "请输入法人姓名", trigger: "blur" },
+          { validator: validLegalPersonName, trigger: "blur" }
+        ],
+        legalcertificatestype: [
+          { required: true, message: "请选择法人证件类型", trigger: "change" }
+        ],
+        legalcertificatesnumber: [
+          { required: true, validator: validCertificateNumber, trigger: "blur" }
+        ],
+        officenumber: [
+          { required: true, message: "请输入办公室电话", trigger: "blur" },
+          { validator: validOfficePhone, trigger: "blur" }
+        ],
+        phone: [
+          { required: true, message: "请输入手机号码", trigger: "blur" },
+          { validator: validPhoneNumber, tirgger: "blur" }
+        ],
+        email: [
+          { required: true, message: "请输入电子邮箱地址", trigger: "blur" },
+          {
+            type: "email",
+            message: "请输入正确的电子邮箱地址",
+            tirgger: "blur"
+          }
+        ],
+        webname: [
+          { required: true, message: "请输入网站名称", trigger: "blur" }
+        ],
+        webdomian: [
+          { required: true, validator: validWebsiteDomain, trigger: "blur" }
+        ],
+        newWebsiteDomain: [
+          { required: true, validator: validNewWebsiteDomain, trigger: "blur" }
+        ],
+        webservercontent: [
+          { required: true, message: "请输入网站服务内容", trigger: "blur" }
+        ],
+        webmessage: [
+          { required: true, message: "请输入网站语言", trigger: "blur" }
+        ],
+        remark: [{ type: "string", max: 50, message: "最多输入五十个字" }],
+        webresponsibilitylinkname: [
+          { required: true, message: "请输入负责人姓名", trigger: "blur" }
+        ],
+        webresponsibilitycertificatestype: [
+          { required: true, message: "请选择证件类型", trigger: "change" }
+        ],
+        webresponsibilitycertificatesnumber: [
+          { required: true, validator: validCertificateNumber, trigger: "blur" }
+        ],
+        offacenumber: [
+          { required: true, validator: validOffacePhone, trigger: "blur" }
+        ],
+        companyphone: [
+          { required: true, message: "请输入手机号码", trigger: "blur" },
+          {
+            required: true,
+            validator: validCompanyPhoneNumber,
+            trigger: "blur"
+          }
+        ],
+        companyemail: [
+          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          { type: "email", message: "请输入正确的邮箱地址", trigger: "blur" }
+        ],
+        weburl: [
+          { required: true, validator: validWebsiteHomepage, trigger: "blur" }
+        ],
+        webaccesstype: [
+          { required: true, message: "请选网站接入方式", trigger: "blur" }
+        ],
+        webip: [{ required: true, message: "请选择网站ip", trigger: "blur" }],
+        mark2: [{ required: true, message: "请输入收件地址", trigger: "blur" }],
+        mark3: [
+          { required: true, message: "请输入收件人姓名", trigger: "blur" }
+        ],
+        mark4: [
+          { required: true, message: "请输入收件人联系方式", trigger: "blur" },
+          {
+            required: true,
+            validator: validConsigneePhoneNumber,
+            trigger: "blur"
+          }
+        ]
+      },
+      //获取域名证书文件
+      addy: [],
+      imgUrl: "",
+      //获取其他文件
+      otherData: [],
+      //获取网站核验单
+      webRecordData: [],
+      //重新提交按钮是否禁用
+      isAllUpate: true,
+      //委托书路径
+      keep: "",
+      //网站核验单路径
+      single: "",
+      //网站核验单示例图路径
+      examples: "",
+      //ISP网站ip
+      webip: [],
+      webipList: [],
+      //ISP服务器接入方式
+      webaccessList: [
+        {
+          label: "专线",
+          value: "专线"
+        },
+        {
+          label: "主机托管",
+          value: "主机托管"
+        },
+        {
+          label: "虚拟主机",
+          value: "虚拟主机"
+        },
+        {
+          label: "其他",
+          value: "其他"
+        }
+      ],
+      percent: 0,
+      percentBack: 0,
+      percentCombine: 0,
+      percentCertification: 0,
+      percentOtherFile: 0,
+      percentCheckList: 0,
+      percentCurtain: 0
+    };
+  },
+  created() {
+    this.id = sessionStorage.getItem("id");
+  },
+  methods: {
+    //图标切换方法
+    // toolShow(isIcon) {
+    //   this.isIcon = !isIcon;
+    // },
+    infoBoxShow(value) {
+      value == "information"
+        ? (this.isIconSon = !this.isIconSon)
+        : value == "personInfo"
           ? (this.isIconPerson = !this.isIconPerson)
           : value == "webInfo"
             ? (this.isIconInfo = !this.isIconInfo)
             : value == "webPersonInfo"
               ? (this.isIconWebPerson = !this.isIconWebPerson)
-              : value == "inforISP" ? (this.isIconISP = !this.isIconISP) : value == "consigneeAddress" ? (this.consigneeAddress = !this.consigneeAddress) : "";
-      },
-      //查看备案详情
-      details() {
-        this.$Loading.start();
-        this.$http
-          .get("recode/listMainWeb.do", {
-            params: {
-              id: this.id,
-              recordtype: "",
-              status: ""
+              : value == "inforISP"
+                ? (this.isIconISP = !this.isIconISP)
+                : value == "consigneeAddress"
+                  ? (this.consigneeAddress = !this.consigneeAddress)
+                  : "";
+    },
+    //查看备案详情
+    details() {
+      this.$Loading.start();
+      this.$http
+        .get("recode/listMainWeb.do", {
+          params: {
+            id: this.id,
+            recordtype: "",
+            status: ""
+          }
+        })
+        .then(res => {
+          if (res.data.status == 1) {
+            this.hostUnitList = res.data.result[0];
+            this.$Loading.finish();
+            //JSON对象深拷贝，只能用在可以转换为JSon对象的上面
+            this.updateHostUnitList = JSON.parse(
+              JSON.stringify(res.data.result[0])
+            );
+            this.webip.push(this.updateHostUnitList.webip.slice(","));
+            let arr = new Array();
+            arr = this.updateHostUnitList.maincompanyarea.split("-");
+            this.province = arr[0];
+            this.city = arr[1];
+            this.district = arr[2];
+            //委托书路径
+            let region = this.hostUnitList.maincompanyarea.substring(
+              0,
+              this.hostUnitList.maincompanyarea.indexOf("-")
+            );
+            if (region == "湖北省") {
+              this.keep = "keepOnRecord/attorney_hubei.doc";
+            } else if (region == "湖南省") {
+              this.keep = "keepOnRecord/attorney_hunan.doc";
+            } else if (region == "上海市") {
+              this.keep = "keepOnRecord/attorney_shanghai.doc";
+            } else {
+              this.keep = "keepOnRecord/attorney.doc";
             }
-          })
-          .then(res => {
-            if (res.data.status == 1) {
-              this.hostUnitList = res.data.result[0];
-              this.$Loading.finish();
-              //JSON对象深拷贝，只能用在可以转换为JSon对象的上面
-              this.updateHostUnitList = JSON.parse(JSON.stringify(res.data.result[0]));
-              this.webip.push(this.updateHostUnitList.webip.slice(','));
-              let arr = new Array();
-              arr = this.updateHostUnitList.maincompanyarea.split("-");
-              this.province = arr[0];
-              this.city = arr[1];
-              this.district = arr[2];
-              //委托书路径
-              let region = this.hostUnitList.maincompanyarea.substring(0, this.hostUnitList.maincompanyarea.indexOf('-'));
-              if (region == '湖北省') {
-                this.keep = 'keepOnRecord/attorney_hubei.doc';
-              } else if (region == '湖南省') {
-                this.keep = 'keepOnRecord/attorney_hunan.doc';
-              } else if (region == '上海市') {
-                this.keep = 'keepOnRecord/attorney_shanghai.doc';
-              } else {
-                this.keep = 'keepOnRecord/attorney.doc';
-              }
-              //核验单路径
-              if (region == '广东省' && this.hostUnitList.maincompanynature == '个人') {
-                this.single = 'keepOnRecord/hyd_for_gd_business.doc';
-              } else if (region == '广东省' && this.hostUnitList.maincompanynature == '企业') {
-                this.single = 'keepOnRecord/hyd_for_gd_person.doc';
-              } else if (region == '浙江省') {
-                this.single = 'keepOnRecord/hyd_for_zj.doc';
-              } else {
-                this.single = 'keepOnRecord/check.doc';
-              }
-              //网站核验单示例图
-              const gd = require('../../assets/img/records/records-check1.jpg');
-              const qt = require('../../assets/img/records/records-check2.jpg');
-              region == '广东省' ? (this.examples = gd) : (this.examples = qt);
+            //核验单路径
+            if (
+              region == "广东省" &&
+              this.hostUnitList.maincompanynature == "个人"
+            ) {
+              this.single = "keepOnRecord/hyd_for_gd_business.doc";
+            } else if (
+              region == "广东省" &&
+              this.hostUnitList.maincompanynature == "企业"
+            ) {
+              this.single = "keepOnRecord/hyd_for_gd_person.doc";
+            } else if (region == "浙江省") {
+              this.single = "keepOnRecord/hyd_for_zj.doc";
+            } else {
+              this.single = "keepOnRecord/check.doc";
+            }
+            //网站核验单示例图
+            const gd = require("../../assets/img/records/records-check1.jpg");
+            const qt = require("../../assets/img/records/records-check2.jpg");
+            region == "广东省" ? (this.examples = gd) : (this.examples = qt);
 
-
-              //分割图片路径取出后缀名显示响应的文件类型图片
-              if (this.hostUnitList.domaincertificateurl.indexOf(',') > 0) {
-                let addy = this.hostUnitList.domaincertificateurl.split(",");
-                for (let i = 0; i < addy.length; i++) {
-                  let object = new Object();
-                  object.url = addy[i]
-                  addy[i].substring(addy[i].lastIndexOf('/') + 1);
-                  object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
-                  this.addy.push(object);
-                  switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
-                    case 'pdf' :
-                      this.addy[i].img = imgPdf;
-                      break;
-                    case 'jpg' :
-                      this.addy[i].img = imgJpg;
-                      break;
-                    case 'doc' :
-                      this.addy[i].img = imgDoc;
-                      break;
-                  }
-                }
-              } else {
-                let addy = this.hostUnitList.domaincertificateurl;
+            //分割图片路径取出后缀名显示响应的文件类型图片
+            if (this.hostUnitList.domaincertificateurl.indexOf(",") > 0) {
+              let addy = this.hostUnitList.domaincertificateurl.split(",");
+              for (let i = 0; i < addy.length; i++) {
                 let object = new Object();
-                object.url = addy
-                addy.substring(addy.lastIndexOf('/') + 1);
-                object.name = (addy.substring(addy.lastIndexOf('/') + 1));
+                object.url = addy[i];
+                addy[i].substring(addy[i].lastIndexOf("/") + 1);
+                object.name = addy[i].substring(addy[i].lastIndexOf("/") + 1);
                 this.addy.push(object);
-                switch (this.addy[0].name.substring(this.addy[0].name.length - 3)) {
-                  case 'pdf' :
-                    this.addy[0].img = imgPdf;
+                switch (this.addy[i].name.substring(
+                  this.addy[i].name.length - 3
+                )) {
+                  case "pdf":
+                    this.addy[i].img = imgPdf;
                     break;
-                  case 'jpg' :
-                    this.addy[0].img = imgJpg;
+                  case "jpg":
+                    this.addy[i].img = imgJpg;
                     break;
-                  case 'doc' :
-                    this.addy[0].img = imgDoc;
-                    break;
-                }
-              }
-              if (this.hostUnitList.otherdataurl.indexOf(',') > 0) {
-                let onther = this.hostUnitList.otherdataurl.split(",");
-                for (let j = 0; j < onther.length; j++) {
-                  let obj = new Object();
-                  obj.url = onther[j]
-                  onther[j].substring(onther[j].lastIndexOf('/') + 1);
-                  obj.name = (onther[j].substring(onther[j].lastIndexOf('/') + 1));
-                  this.otherData.push(obj);
-                  switch (this.otherData[j].name.substring(this.otherData[j].name.length - 3)) {
-                    case 'pdf' :
-                      this.otherData[j].img = imgPdf;
-                      break;
-                    case 'jpg' :
-                      this.otherData[j].img = imgJpg;
-                      break;
-                    case 'doc' :
-                      this.otherData[j].img = imgDoc;
-                      break;
-                  }
-                }
-              } else {
-                let onther = this.hostUnitList.otherdataurl
-                let obj = new Object();
-                obj.url = onther
-                onther.substring(onther.lastIndexOf('/') + 1);
-                obj.name = (onther.substring(onther.lastIndexOf('/') + 1));
-                this.otherData.push(obj);
-                switch (this.otherData[0].name.substring(this.otherData[0].name.length - 3)) {
-                  case 'pdf' :
-                    this.otherData[0].img = imgPdf;
-                    break;
-                  case 'jpg' :
-                    this.otherData[0].img = imgJpg;
-                    break;
-                  case 'doc' :
-                    this.otherData[0].img = imgDoc;
+                  case "doc":
+                    this.addy[i].img = imgDoc;
                     break;
                 }
-              }
-
-              if (this.hostUnitList.webrecordauthenticityurl.indexOf(',') > 0) {
-                let webRecord = this.hostUnitList.webrecordauthenticityurl.split(",");
-                for (let j = 0; j < onther.length; j++) {
-                  let objc = new Object();
-                  objc.url = webRecord[j]
-                  webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1);
-                  objc.name = (webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1));
-                  this.webRecordData.push(objc);
-                  switch (this.webRecordData[j].name.substring(this.webRecordData[j].name.length - 3)) {
-                    case 'pdf' :
-                      this.webRecordData[j].img = imgPdf;
-                      break;
-                    case 'jpg' :
-                      this.webRecordData[j].img = imgJpg;
-                      break;
-                    case 'doc' :
-                      this.webRecordData[j].img = imgDoc;
-                      break;
-                  }
-                }
-              } else {
-                let webRecord = this.hostUnitList.webrecordauthenticityurl
-                let obj = new Object();
-                obj.url = webRecord
-                webRecord.substring(webRecord.lastIndexOf('/') + 1);
-                obj.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
-                this.webRecordData.push(obj);
-                switch (this.webRecordData[0].name.substring(this.webRecordData[0].name.length - 3)) {
-                  case 'pdf' :
-                    this.webRecordData[0].img = imgPdf;
-                    break;
-                  case 'jpg' :
-                    this.webRecordData[0].img = imgJpg;
-                    break;
-                  case 'doc' :
-                    this.webRecordData[0].img = imgDoc;
-                    break;
-                }
-              }
-              //查询错误的备案信息然后显示出来重新输入
-              if (typeof (this.hostUnitList.errorMessage) != 'undefined' && (this.hostUnitList.status == '初审拒绝' || this.hostUnitList.status == '管局审核拒绝')) {
-                this.isIconInfo = false;
-                this.isAllUpate = false;
-                this.hostUnitList.errorMessage.forEach(item => {
-                  switch (item) {
-                    case 'webresponsibilitylinkname':
-                      this.webResponsibilityLinkNameHide = 'webResponsibilityLinkName'
-                      break
-                    case 'phone':
-                      this.phoneHide = 'phone'
-                      break
-                    case 'offacenumber':
-                      this.offaceNumberHide = 'offaceNumber'
-                      break
-                    case 'webresponsibilitycertificatestype':
-                      this.webResponsibilityCertificatesTypeHide = 'webResponsibilityCertificatesType'
-                      break
-                    case 'maincompanyarea':
-                      this.mainCompanyAreaHide = 'mainCompanyArea'
-                      break
-                    case 'maincompanycertificatestype':
-                      this.mainCompanyCertificatesTypeHide = 'mainCompanyCertificatesType'
-                      break
-                    case 'maincompanynature':
-                      this.mainCompanyNatureHide = 'mainCompanyNature'
-                      break
-                    case 'maincompanynumber':
-                      this.mainCompanyNumberHide = 'mainCompanyNumber'
-                      break
-                    case 'maincompanyname':
-                      this.mainCompanyNameHide = 'mainCompanyName'
-                      break
-                    case 'maincompanycertificatesloaction':
-                      this.mainCompanyCertificatesLoactionHide = 'mainCompanyCertificatesLoaction'
-                      break
-                    case 'investorname':
-                      this.investorNameHide = 'investorName'
-                      break
-                    case 'legalname':
-                      this.legalNameHide = 'legalName'
-                      break
-                    case 'legalcertificatestype':
-                      this.legalCertificatesTypeHide = 'legalCertificatesType'
-                      break
-                    case 'legalcertificatesnumber':
-                      this.legalCertificatesNumberHide = 'legalCertificatesNumber'
-                      break
-                    case 'officenumber':
-                      this.officeNumberHide = 'officeNumber'
-                      break
-                    case 'phone':
-                      this.phoneHide = 'phone'
-                      break
-                    case 'email':
-                      this.emailHide = 'email'
-                      break
-                    case 'webname':
-                      this.webNameHide = 'webName'
-                      break
-                    case 'webdomian':
-                      this.webDomianHide = 'webDomian'
-                      break
-                    case 'weburl':
-                      this.webUrlHide = 'webUrl'
-                      break
-                    case 'webservercontent':
-                      this.webServerContentHide = 'webServerContent'
-                      break
-                    case 'webmessage':
-                      this.webMessageHide = 'webMessage'
-                      break
-                    case 'webresponsibilitycertificatesnumber':
-                      this.webResponsibilityCertificatesNumberHide = 'webResponsibilityCertificatesNumber'
-                      break
-                    case 'companyemail':
-                      this.companyEmailHide = 'companyEmail'
-                      break
-                    case 'companyphone':
-                      this.companyPhoneHide = 'companyPhone'
-                      break
-                    case 'ispname':
-                      this.ISPNameHide = 'ISPName'
-                      break
-                    case 'webip':
-                      this.webIpHide = 'webIp'
-                      break
-                    case 'webaccesstype':
-                      this.webAccessTypeHide = 'webAccessType'
-                      break
-                    case 'webserveraddress':
-                      this.webServerAddressHide = 'webServerAddress'
-                      break
-                    case 'maincompanycommunicatlocation':
-                      this.mainCompanyCommunicatLocationHide = 'mainCompanyCommunicatLocation'
-                      break
-                    case 'webresponsibilityurlpositive':
-                      this.sponsorPhotoHide = 'sponsorPhoto'
-                      break
-                    case 'webresponsibilityurlback':
-                      this.sponsorPhotoHide = 'sponsorPhoto'
-                      break
-                    case 'hostcompanyurl':
-                      this.organizerPhotoHide = 'organizerPhoto'
-                      break
-                    case 'domaincertificateurl':
-                      this.domainNameCertificateHide = 'domainNameCertificate'
-                      break
-                    case 'otherdataurl':
-                      this.otherInfoHide = 'otherInfo'
-                      break
-                    case 'webrecordauthenticityurl':
-                      this.checkListHide = 'checkList'
-                      break
-                    case 'mark5':
-                      this.curtainInfoHide = 'curtainInfo'
-                      break
-                    case 'mark2':
-                      this.mark2Hide = 'mark2'
-                      break
-                    case 'mark3':
-                      this.mark3Hide = 'mark3'
-                      break
-                    case 'mark4':
-                      this.mark4Hide = 'mark4'
-                      break
-                  }
-                })
-              } else {
-                this.isAllUpate = true;
               }
             } else {
-              this.$Loading.finish();
-              this.$Message.info('平台出小差了');
+              let addy = this.hostUnitList.domaincertificateurl;
+              let object = new Object();
+              object.url = addy;
+              addy.substring(addy.lastIndexOf("/") + 1);
+              object.name = addy.substring(addy.lastIndexOf("/") + 1);
+              this.addy.push(object);
+              switch (this.addy[0].name.substring(
+                this.addy[0].name.length - 3
+              )) {
+                case "pdf":
+                  this.addy[0].img = imgPdf;
+                  break;
+                case "jpg":
+                  this.addy[0].img = imgJpg;
+                  break;
+                case "doc":
+                  this.addy[0].img = imgDoc;
+                  break;
+              }
             }
-          });
-      },
-      //获取公网ip
-      getPublicIP() {
-        let url = 'network/listPublicIp.do'
-        this.$http.get(url, {
+            if (this.hostUnitList.otherdataurl.indexOf(",") > 0) {
+              let onther = this.hostUnitList.otherdataurl.split(",");
+              for (let j = 0; j < onther.length; j++) {
+                let obj = new Object();
+                obj.url = onther[j];
+                onther[j].substring(onther[j].lastIndexOf("/") + 1);
+                obj.name = onther[j].substring(onther[j].lastIndexOf("/") + 1);
+                this.otherData.push(obj);
+                switch (this.otherData[j].name.substring(
+                  this.otherData[j].name.length - 3
+                )) {
+                  case "pdf":
+                    this.otherData[j].img = imgPdf;
+                    break;
+                  case "jpg":
+                    this.otherData[j].img = imgJpg;
+                    break;
+                  case "doc":
+                    this.otherData[j].img = imgDoc;
+                    break;
+                }
+              }
+            } else {
+              let onther = this.hostUnitList.otherdataurl;
+              let obj = new Object();
+              obj.url = onther;
+              onther.substring(onther.lastIndexOf("/") + 1);
+              obj.name = onther.substring(onther.lastIndexOf("/") + 1);
+              this.otherData.push(obj);
+              switch (this.otherData[0].name.substring(
+                this.otherData[0].name.length - 3
+              )) {
+                case "pdf":
+                  this.otherData[0].img = imgPdf;
+                  break;
+                case "jpg":
+                  this.otherData[0].img = imgJpg;
+                  break;
+                case "doc":
+                  this.otherData[0].img = imgDoc;
+                  break;
+              }
+            }
+
+            if (this.hostUnitList.webrecordauthenticityurl.indexOf(",") > 0) {
+              let webRecord = this.hostUnitList.webrecordauthenticityurl.split(
+                ","
+              );
+              for (let j = 0; j < onther.length; j++) {
+                let objc = new Object();
+                objc.url = webRecord[j];
+                webRecord[j].substring(webRecord[j].lastIndexOf("/") + 1);
+                objc.name = webRecord[j].substring(
+                  webRecord[j].lastIndexOf("/") + 1
+                );
+                this.webRecordData.push(objc);
+                switch (this.webRecordData[j].name.substring(
+                  this.webRecordData[j].name.length - 3
+                )) {
+                  case "pdf":
+                    this.webRecordData[j].img = imgPdf;
+                    break;
+                  case "jpg":
+                    this.webRecordData[j].img = imgJpg;
+                    break;
+                  case "doc":
+                    this.webRecordData[j].img = imgDoc;
+                    break;
+                }
+              }
+            } else {
+              let webRecord = this.hostUnitList.webrecordauthenticityurl;
+              let obj = new Object();
+              obj.url = webRecord;
+              webRecord.substring(webRecord.lastIndexOf("/") + 1);
+              obj.name = webRecord.substring(webRecord.lastIndexOf("/") + 1);
+              this.webRecordData.push(obj);
+              switch (this.webRecordData[0].name.substring(
+                this.webRecordData[0].name.length - 3
+              )) {
+                case "pdf":
+                  this.webRecordData[0].img = imgPdf;
+                  break;
+                case "jpg":
+                  this.webRecordData[0].img = imgJpg;
+                  break;
+                case "doc":
+                  this.webRecordData[0].img = imgDoc;
+                  break;
+              }
+            }
+            //查询错误的备案信息然后显示出来重新输入
+            if (
+              typeof this.hostUnitList.errorMessage != "undefined" &&
+              (this.hostUnitList.status == "初审拒绝" ||
+                this.hostUnitList.status == "管局审核拒绝")
+            ) {
+              this.isIconInfo = false;
+              this.isAllUpate = false;
+              this.hostUnitList.errorMessage.forEach(item => {
+                switch (item) {
+                  case "webresponsibilitylinkname":
+                    this.webResponsibilityLinkNameHide =
+                      "webResponsibilityLinkName";
+                    break;
+                  case "phone":
+                    this.phoneHide = "phone";
+                    break;
+                  case "offacenumber":
+                    this.offaceNumberHide = "offaceNumber";
+                    break;
+                  case "webresponsibilitycertificatestype":
+                    this.webResponsibilityCertificatesTypeHide =
+                      "webResponsibilityCertificatesType";
+                    break;
+                  case "maincompanyarea":
+                    this.mainCompanyAreaHide = "mainCompanyArea";
+                    break;
+                  case "maincompanycertificatestype":
+                    this.mainCompanyCertificatesTypeHide =
+                      "mainCompanyCertificatesType";
+                    break;
+                  case "maincompanynature":
+                    this.mainCompanyNatureHide = "mainCompanyNature";
+                    break;
+                  case "maincompanynumber":
+                    this.mainCompanyNumberHide = "mainCompanyNumber";
+                    break;
+                  case "maincompanyname":
+                    this.mainCompanyNameHide = "mainCompanyName";
+                    break;
+                  case "maincompanycertificatesloaction":
+                    this.mainCompanyCertificatesLoactionHide =
+                      "mainCompanyCertificatesLoaction";
+                    break;
+                  case "investorname":
+                    this.investorNameHide = "investorName";
+                    break;
+                  case "legalname":
+                    this.legalNameHide = "legalName";
+                    break;
+                  case "legalcertificatestype":
+                    this.legalCertificatesTypeHide = "legalCertificatesType";
+                    break;
+                  case "legalcertificatesnumber":
+                    this.legalCertificatesNumberHide =
+                      "legalCertificatesNumber";
+                    break;
+                  case "officenumber":
+                    this.officeNumberHide = "officeNumber";
+                    break;
+                  case "phone":
+                    this.phoneHide = "phone";
+                    break;
+                  case "email":
+                    this.emailHide = "email";
+                    break;
+                  case "webname":
+                    this.webNameHide = "webName";
+                    break;
+                  case "webdomian":
+                    this.webDomianHide = "webDomian";
+                    break;
+                  case "weburl":
+                    this.webUrlHide = "webUrl";
+                    break;
+                  case "webservercontent":
+                    this.webServerContentHide = "webServerContent";
+                    break;
+                  case "webmessage":
+                    this.webMessageHide = "webMessage";
+                    break;
+                  case "webresponsibilitycertificatesnumber":
+                    this.webResponsibilityCertificatesNumberHide =
+                      "webResponsibilityCertificatesNumber";
+                    break;
+                  case "companyemail":
+                    this.companyEmailHide = "companyEmail";
+                    break;
+                  case "companyphone":
+                    this.companyPhoneHide = "companyPhone";
+                    break;
+                  case "ispname":
+                    this.ISPNameHide = "ISPName";
+                    break;
+                  case "webip":
+                    this.webIpHide = "webIp";
+                    break;
+                  case "webaccesstype":
+                    this.webAccessTypeHide = "webAccessType";
+                    break;
+                  case "webserveraddress":
+                    this.webServerAddressHide = "webServerAddress";
+                    break;
+                  case "maincompanycommunicatlocation":
+                    this.mainCompanyCommunicatLocationHide =
+                      "mainCompanyCommunicatLocation";
+                    break;
+                  case "webresponsibilityurlpositive":
+                    this.sponsorPhotoHide = "sponsorPhoto";
+                    break;
+                  case "webresponsibilityurlback":
+                    this.sponsorPhotoHide = "sponsorPhoto";
+                    break;
+                  case "hostcompanyurl":
+                    this.organizerPhotoHide = "organizerPhoto";
+                    break;
+                  case "domaincertificateurl":
+                    this.domainNameCertificateHide = "domainNameCertificate";
+                    break;
+                  case "otherdataurl":
+                    this.otherInfoHide = "otherInfo";
+                    break;
+                  case "webrecordauthenticityurl":
+                    this.checkListHide = "checkList";
+                    break;
+                  case "mark5":
+                    this.curtainInfoHide = "curtainInfo";
+                    break;
+                  case "mark2":
+                    this.mark2Hide = "mark2";
+                    break;
+                  case "mark3":
+                    this.mark3Hide = "mark3";
+                    break;
+                  case "mark4":
+                    this.mark4Hide = "mark4";
+                    break;
+                  case "icprecordpassword":
+                    this.icprecordpasswordHide = true;
+                    break;  
+                  case "mainrecordnumber":
+                  this.mainrecordnumberHide = true;
+                  break;  
+                }
+              });
+            } else {
+              this.isAllUpate = true;
+            }
+          } else {
+            this.$Loading.finish();
+            this.$Message.info("平台出小差了");
+          }
+        });
+    },
+    //获取公网ip
+    getPublicIP() {
+      let url = "network/listPublicIp.do";
+      this.$http
+        .get(url, {
           params: {
             status: 1
           }
-        }).then(response => {
+        })
+        .then(response => {
           if (response.status == 200 && response.data.status == 1) {
             for (let i = 0; i < response.data.result.length; i++) {
               this.webipList.push(response.data.result[i].publicip);
             }
           }
-        })
-      },
-      webRecordFormatError() {
-        this.$Message.info('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
-      },
-      //网站核验单上传成功
-      webRecordSuccess(response) {
-        if (response.status == 1) {
-          let s = setInterval(() => {
-            this.percentCheckList++
-            if (this.percentCheckList > 100) {
-              this.updateHostUnitList.webrecordauthenticityurl = response.result;
-              if (this.updateHostUnitList.webrecordauthenticityurl.indexOf(',') > 0) {
-                let webRecord = this.updateHostUnitList.webrecordauthenticityurl.split(",");
-                for (let j = 0; j < onther.length; j++) {
-                  let objc = new Object();
-                  objc.url = webRecord[j]
-                  webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1);
-                  objc.name = (webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1));
-                  this.webRecordData.push(objc);
-                  switch (this.webRecordData[j].name.substring(this.webRecordData[j].name.length - 3)) {
-                    case 'pdf' :
-                      this.webRecordData[j].img = imgPdf;
-                      break;
-                    case 'jpg' :
-                      this.webRecordData[j].img = imgJpg;
-                      break;
-                    case 'doc' :
-                      this.webRecordData[j].img = imgDoc;
-                      break;
-                  }
-                }
-              } else {
-                let webRecord = this.updateHostUnitList.webrecordauthenticityurl;
+        });
+    },
+    webRecordFormatError() {
+      this.$Message.info(
+        "网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件"
+      );
+    },
+    //网站核验单上传成功
+    webRecordSuccess(response) {
+      if (response.status == 1) {
+        let s = setInterval(() => {
+          this.percentCheckList++;
+          if (this.percentCheckList > 100) {
+            this.updateHostUnitList.webrecordauthenticityurl = response.result;
+            if (
+              this.updateHostUnitList.webrecordauthenticityurl.indexOf(",") > 0
+            ) {
+              let webRecord = this.updateHostUnitList.webrecordauthenticityurl.split(
+                ","
+              );
+              for (let j = 0; j < onther.length; j++) {
                 let objc = new Object();
-                objc.url = webRecord
-                webRecord.substring(webRecord.lastIndexOf('/') + 1);
-                objc.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
+                objc.url = webRecord[j];
+                webRecord[j].substring(webRecord[j].lastIndexOf("/") + 1);
+                objc.name = webRecord[j].substring(
+                  webRecord[j].lastIndexOf("/") + 1
+                );
                 this.webRecordData.push(objc);
-                for (let i = 0; i < this.webRecordData.length; i++) {
-                  switch (this.webRecordData[i].name.substring(this.webRecordData[0].name.length - 3)) {
-                    case 'pdf' :
-                      this.webRecordData[i].img = imgPdf;
-                      break;
-                    case 'jpg' :
-                      this.webRecordData[i].img = imgJpg;
-                      break;
-                    case 'doc' :
-                      this.webRecordData[i].img = imgDoc;
-                      break;
-                  }
+                switch (this.webRecordData[j].name.substring(
+                  this.webRecordData[j].name.length - 3
+                )) {
+                  case "pdf":
+                    this.webRecordData[j].img = imgPdf;
+                    break;
+                  case "jpg":
+                    this.webRecordData[j].img = imgJpg;
+                    break;
+                  case "doc":
+                    this.webRecordData[j].img = imgDoc;
+                    break;
                 }
               }
-              this.$Message.success('上传成功');
-              window.clearInterval(s)
-              this.percentCheckList = 0
-            }
-          }, 20)
-        } else {
-          this.$Message.info('上传失败');
-        }
-      },
-      webRecordBeforeUpload() {
-        if (this.webRecordData.length > 0) {
-          this.$Message.info('网站核验单最多只能上传一张');
-          return false;
-        }
-      },
-      //身份证正面上传格式错误
-      cardFormatError() {
-        this.$Message.info('身份证正面只能上传jpg,jpeg,png类型的文件');
-      },
-      //身份证正面上传成功
-      cardSuccess(response) {
-        if (response.status == 1) {
-          let s = setInterval(() => {
-            this.percent++
-            if (this.percent > 100) {
-              this.hostUnitList.webresponsibilityurlpositive = response.result;
-              this.$Message.success('上传成功');
-              window.clearInterval(s)
-              this.percent = 0
-            }
-          }, 20)
-        } else {
-          this.$Message.info('上传失败');
-        }
-      },
-      //身份证背面上传格式错误
-      cardBackFormatError() {
-        this.$Message.info('身份证背面只能上传jpg,jpeg,png类型的文件');
-      },
-      cardBackSuccess(response) {
-        if (response.status == 1) {
-          let s = setInterval(() => {
-            this.percentBack++
-            if (this.percentBack > 100) {
-              this.hostUnitList.webresponsibilityurlback = response.result;
-              this.$Message.success('上传成功');
-              window.clearInterval(s)
-              this.percentBack = 0
-            }
-          }, 20)
-        } else {
-          this.$Message.info('上传失败');
-        }
-      },
-      //营业执照上传格式错误
-      organizerFormatError() {
-        this.$Message.info('只能上传jpg,jpeg,png类型的文件');
-      },
-      organizerSuccess(response) {
-        if (response.status == 1) {
-          let s = setInterval(() => {
-            this.percentCombine++
-            if (this.percentCombine > 100) {
-              this.hostUnitList.hostcompanyurl = response.result;
-              this.$Message.success('上传成功');
-              window.clearInterval(s)
-              this.percentCombine = 0
-            }
-          }, 20)
-        } else {
-          this.$Message.info('上传失败');
-        }
-      },
-      curtainSuccess(response) {
-        if (response.status == 1) {
-          let s = setInterval(() => {
-            this.percentCurtain++
-            if (this.percentCurtain > 100) {
-              this.hostUnitList.mark5 = response.result;
-              this.$Message.success('上传成功');
-              window.clearInterval(s)
-              this.percentCurtain = 0
-            }
-          }, 20)
-        } else {
-          this.$Message.info('上传失败');
-        }
-      },
-      //上传域名证书格式错误
-      domainNameFormatError() {
-        this.$Message.info('域名证书只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
-      },
-      domainNameSuccess(response) {
-        if (response.status == 1) {
-          let s = setInterval(() => {
-            this.percentCertification++
-            if (this.percentCertification > 100) {
-              this.updateHostUnitList.domaincertificateurl = response.result;
-              if (this.updateHostUnitList.domaincertificateurl.indexOf(',') > 0) {
-                let addy = this.updateHostUnitList.domaincertificateurl.split(",");
-                for (let i = 0; i < addy.length; i++) {
-                  let object = new Object();
-                  object.url = addy[i]
-                  addy[i].substring(addy[i].lastIndexOf('/') + 1);
-                  object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
-                  this.addy.push(object);
-                  switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
-                    case 'pdf' :
-                      this.addy[i].img = imgPdf;
-                      break;
-                    case 'jpg' :
-                      this.addy[i].img = imgJpg;
-                      break;
-                    case 'doc' :
-                      this.addy[i].img = imgDoc;
-                      break;
-                  }
+            } else {
+              let webRecord = this.updateHostUnitList.webrecordauthenticityurl;
+              let objc = new Object();
+              objc.url = webRecord;
+              webRecord.substring(webRecord.lastIndexOf("/") + 1);
+              objc.name = webRecord.substring(webRecord.lastIndexOf("/") + 1);
+              this.webRecordData.push(objc);
+              for (let i = 0; i < this.webRecordData.length; i++) {
+                switch (this.webRecordData[i].name.substring(
+                  this.webRecordData[0].name.length - 3
+                )) {
+                  case "pdf":
+                    this.webRecordData[i].img = imgPdf;
+                    break;
+                  case "jpg":
+                    this.webRecordData[i].img = imgJpg;
+                    break;
+                  case "doc":
+                    this.webRecordData[i].img = imgDoc;
+                    break;
                 }
-              } else {
-                let addy = this.updateHostUnitList.domaincertificateurl;
+              }
+            }
+            this.$Message.success("上传成功");
+            window.clearInterval(s);
+            this.percentCheckList = 0;
+          }
+        }, 20);
+      } else {
+        this.$Message.info("上传失败");
+      }
+    },
+    webRecordBeforeUpload() {
+      if (this.webRecordData.length > 0) {
+        this.$Message.info("网站核验单最多只能上传一张");
+        return false;
+      }
+    },
+    //身份证正面上传格式错误
+    cardFormatError() {
+      this.$Message.info("身份证正面只能上传jpg,jpeg,png类型的文件");
+    },
+    //身份证正面上传成功
+    cardSuccess(response) {
+      if (response.status == 1) {
+        let s = setInterval(() => {
+          this.percent++;
+          if (this.percent > 100) {
+            this.hostUnitList.webresponsibilityurlpositive = response.result;
+            this.$Message.success("上传成功");
+            window.clearInterval(s);
+            this.percent = 0;
+          }
+        }, 20);
+      } else {
+        this.$Message.info("上传失败");
+      }
+    },
+    //身份证背面上传格式错误
+    cardBackFormatError() {
+      this.$Message.info("身份证背面只能上传jpg,jpeg,png类型的文件");
+    },
+    cardBackSuccess(response) {
+      if (response.status == 1) {
+        let s = setInterval(() => {
+          this.percentBack++;
+          if (this.percentBack > 100) {
+            this.hostUnitList.webresponsibilityurlback = response.result;
+            this.$Message.success("上传成功");
+            window.clearInterval(s);
+            this.percentBack = 0;
+          }
+        }, 20);
+      } else {
+        this.$Message.info("上传失败");
+      }
+    },
+    //营业执照上传格式错误
+    organizerFormatError() {
+      this.$Message.info("只能上传jpg,jpeg,png类型的文件");
+    },
+    organizerSuccess(response) {
+      if (response.status == 1) {
+        let s = setInterval(() => {
+          this.percentCombine++;
+          if (this.percentCombine > 100) {
+            this.hostUnitList.hostcompanyurl = response.result;
+            this.$Message.success("上传成功");
+            window.clearInterval(s);
+            this.percentCombine = 0;
+          }
+        }, 20);
+      } else {
+        this.$Message.info("上传失败");
+      }
+    },
+    curtainSuccess(response) {
+      if (response.status == 1) {
+        let s = setInterval(() => {
+          this.percentCurtain++;
+          if (this.percentCurtain > 100) {
+            this.hostUnitList.mark5 = response.result;
+            this.$Message.success("上传成功");
+            window.clearInterval(s);
+            this.percentCurtain = 0;
+          }
+        }, 20);
+      } else {
+        this.$Message.info("上传失败");
+      }
+    },
+    //上传域名证书格式错误
+    domainNameFormatError() {
+      this.$Message.info("域名证书只能上传jpg,jpeg,png,doc,docx,pdf类型的文件");
+    },
+    domainNameSuccess(response) {
+      if (response.status == 1) {
+        let s = setInterval(() => {
+          this.percentCertification++;
+          if (this.percentCertification > 100) {
+            this.updateHostUnitList.domaincertificateurl = response.result;
+            if (this.updateHostUnitList.domaincertificateurl.indexOf(",") > 0) {
+              let addy = this.updateHostUnitList.domaincertificateurl.split(
+                ","
+              );
+              for (let i = 0; i < addy.length; i++) {
                 let object = new Object();
-                object.url = addy
-                addy.substring(addy.lastIndexOf('/') + 1);
-                object.name = (addy.substring(addy.lastIndexOf('/') + 1));
+                object.url = addy[i];
+                addy[i].substring(addy[i].lastIndexOf("/") + 1);
+                object.name = addy[i].substring(addy[i].lastIndexOf("/") + 1);
                 this.addy.push(object);
-                for (let i = 0; i < this.addy.length; i++) {
-                  switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
-                    case 'pdf' :
-                      this.addy[i].img = imgPdf;
-                      break;
-                    case 'jpg' :
-                      this.addy[i].img = imgJpg;
-                      break;
-                    case 'doc' :
-                      this.addy[i].img = imgDoc;
-                      break;
-                  }
+                switch (this.addy[i].name.substring(
+                  this.addy[i].name.length - 3
+                )) {
+                  case "pdf":
+                    this.addy[i].img = imgPdf;
+                    break;
+                  case "jpg":
+                    this.addy[i].img = imgJpg;
+                    break;
+                  case "doc":
+                    this.addy[i].img = imgDoc;
+                    break;
                 }
               }
-              this.$Message.success('上传成功');
-              window.clearInterval(s)
-              this.percentCertification = 0
-            }
-          }, 20)
-        } else {
-          this.$Message.info('上传失败');
-        }
-      },
-      domainNameBeforeUpload() {
-        if (this.addy.length > 2) {
-          this.$Message.info('只能上传三个域名证书信息');
-          return false;
-        }
-      },
-      //其他文件上传
-      otherFileSuccess(response) {
-        if (response.status == 1) {
-          let s = setInterval(() => {
-            this.percentOtherFile++
-            if (this.percentOtherFile > 100) {
-              this.updateHostUnitList.otherdataurl = response.result;
-              if (this.updateHostUnitList.otherdataurl.indexOf(',') > 0) {
-                let addy = this.updateHostUnitList.otherdataurl.split(",");
-                for (let i = 0; i < addy.length; i++) {
-                  let object = new Object();
-                  object.url = addy[i]
-                  addy[i].substring(addy[i].lastIndexOf('/') + 1);
-                  object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
-                  this.otherData.push(object);
-                  switch (this.otherData[i].name.substring(this.otherData[i].name.length - 3)) {
-                    case 'pdf' :
-                      this.otherData[i].img = imgPdf;
-                      break;
-                    case 'jpg' :
-                      this.otherData[i].img = imgJpg;
-                      break;
-                    case 'doc' :
-                      this.otherData[i].img = imgDoc;
-                      break;
-                  }
+            } else {
+              let addy = this.updateHostUnitList.domaincertificateurl;
+              let object = new Object();
+              object.url = addy;
+              addy.substring(addy.lastIndexOf("/") + 1);
+              object.name = addy.substring(addy.lastIndexOf("/") + 1);
+              this.addy.push(object);
+              for (let i = 0; i < this.addy.length; i++) {
+                switch (this.addy[i].name.substring(
+                  this.addy[0].name.length - 3
+                )) {
+                  case "pdf":
+                    this.addy[i].img = imgPdf;
+                    break;
+                  case "jpg":
+                    this.addy[i].img = imgJpg;
+                    break;
+                  case "doc":
+                    this.addy[i].img = imgDoc;
+                    break;
                 }
-              } else {
-                let addy = this.updateHostUnitList.otherdataurl;
+              }
+            }
+            this.$Message.success("上传成功");
+            window.clearInterval(s);
+            this.percentCertification = 0;
+          }
+        }, 20);
+      } else {
+        this.$Message.info("上传失败");
+      }
+    },
+    domainNameBeforeUpload() {
+      if (this.addy.length > 1) {
+        this.$Message.info("只能上传一个域名证书信息");
+        return false;
+      }
+    },
+    //其他文件上传
+    otherFileSuccess(response) {
+      if (response.status == 1) {
+        let s = setInterval(() => {
+          this.percentOtherFile++;
+          if (this.percentOtherFile > 100) {
+            this.updateHostUnitList.otherdataurl = response.result;
+            if (this.updateHostUnitList.otherdataurl.indexOf(",") > 0) {
+              let addy = this.updateHostUnitList.otherdataurl.split(",");
+              for (let i = 0; i < addy.length; i++) {
                 let object = new Object();
-                object.url = addy
-                addy.substring(addy.lastIndexOf('/') + 1);
-                object.name = (addy.substring(addy.lastIndexOf('/') + 1));
+                object.url = addy[i];
+                addy[i].substring(addy[i].lastIndexOf("/") + 1);
+                object.name = addy[i].substring(addy[i].lastIndexOf("/") + 1);
                 this.otherData.push(object);
-                for (let i = 0; i < this.otherData.length; i++) {
-                  switch (this.otherData[i].name.substring(this.otherData[0].name.length - 3)) {
-                    case 'pdf' :
-                      this.otherData[i].img = imgPdf;
-                      break;
-                    case 'jpg' :
-                      this.otherData[i].img = imgJpg;
-                      break;
-                    case 'doc' :
-                      this.otherData[i].img = imgDoc;
-                      break;
-                  }
+                switch (this.otherData[i].name.substring(
+                  this.otherData[i].name.length - 3
+                )) {
+                  case "pdf":
+                    this.otherData[i].img = imgPdf;
+                    break;
+                  case "jpg":
+                    this.otherData[i].img = imgJpg;
+                    break;
+                  case "doc":
+                    this.otherData[i].img = imgDoc;
+                    break;
                 }
               }
-              this.$Message.success('上传成功');
-              window.clearInterval(s)
-              this.percentOtherFile = 0
+            } else {
+              let addy = this.updateHostUnitList.otherdataurl;
+              let object = new Object();
+              object.url = addy;
+              addy.substring(addy.lastIndexOf("/") + 1);
+              object.name = addy.substring(addy.lastIndexOf("/") + 1);
+              this.otherData.push(object);
+              for (let i = 0; i < this.otherData.length; i++) {
+                switch (this.otherData[i].name.substring(
+                  this.otherData[0].name.length - 3
+                )) {
+                  case "pdf":
+                    this.otherData[i].img = imgPdf;
+                    break;
+                  case "jpg":
+                    this.otherData[i].img = imgJpg;
+                    break;
+                  case "doc":
+                    this.otherData[i].img = imgDoc;
+                    break;
+                }
+              }
             }
-          }, 20)
+            this.$Message.success("上传成功");
+            window.clearInterval(s);
+            this.percentOtherFile = 0;
+          }
+        }, 20);
+      } else {
+        this.$Message.info("上传失败");
+      }
+    },
+    otherBeforeUpload() {
+      if (this.otherData.length > 1) {
+        this.$Message.info("只能上传一个其他文件信息");
+        return false;
+      }
+    },
+    otherFormatError() {
+      this.$Message.info("其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件");
+    },
+    //删除上传文件
+    deletePhoto(val, index) {
+      if (val == "aunthen") {
+        this.addy.splice(index, 1);
+      } else if (val == "web") {
+        this.webRecordData.splice(index, 1);
+      } else if (val == "onther") {
+        this.otherData.splice(index, 1);
+      }
+    },
+    // 重新选择省份
+    changeProvince(val) {
+      area.forEach(item => {
+        if (item.name == val) {
+          this.cityList = item.city;
+        }
+      });
+    },
+    // 重新选择市
+    changeCity(val) {
+      this.cityList.forEach(item => {
+        if (item.name == val) {
+          this.districtList = item.area;
+        }
+      });
+    },
+    changeUnitProperties(val) {
+      this.unitPropertiesList.forEach(item => {
+        if (item.name == val) {
+          this.certificateTypeList = item.certificate;
+        }
+      });
+    },
+    hostUpdate(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          name == "hostUpdate"
+            ? (this.host = false)
+            : name == "legal"
+              ? (this.legal = false)
+              : name == "website"
+                ? (this.website = false)
+                : name == "websitePerson"
+                  ? (this.websitePerson = false)
+                  : name == "webIsp"
+                    ? (this.webIsp = false)
+                    : name == "address" ? (this.addressModal = false) : "";
+          this.hostUnitList = JSON.parse(
+            JSON.stringify(this.updateHostUnitList)
+          );
+          this.hostUnitList.maincompanyarea =
+            this.province + "-" + this.city + "-" + this.district;
+          this.hostUnitList.webip = this.webip.join(" ");
         } else {
-          this.$Message.info('上传失败');
+          return;
         }
-      },
-      otherBeforeUpload() {
-        if (this.otherData.length > 2) {
-          this.$Message.info('只能上传三个其他文件信息');
-          return false;
-        }
-      },
-      otherFormatError() {
-        this.$Message.info('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
-      },
-      //删除上传文件
-      deletePhoto(val, index) {
-        if (val == 'aunthen') {
-          this.addy.splice(index, 1);
-        } else if (val == 'web') {
-          this.webRecordData.splice(index, 1);
-        } else if (val == 'onther') {
-          this.otherData.splice(index, 1);
-        }
-      },
-      // 重新选择省份
-      changeProvince(val) {
-        area.forEach(item => {
-          if (item.name == val) {
-            this.cityList = item.city;
-          }
-        });
-      },
-      // 重新选择市
-      changeCity(val) {
-        this.cityList.forEach(item => {
-          if (item.name == val) {
-            this.districtList = item.area;
-          }
-        });
-      },
-      changeUnitProperties(val) {
-        this.unitPropertiesList.forEach(item => {
-          if (item.name == val) {
-            this.certificateTypeList = item.certificate;
-          }
-        });
-      },
-      hostUpdate(name) {
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            name == 'hostUpdate' ? this.host = false :
-              name == 'legal' ? this.legal = false :
-                name == 'website' ? this.website = false :
-                  name == 'websitePerson' ? this.websitePerson = false :
-                    name == 'webIsp' ? this.webIsp = false :
-                      name == 'address'? this.addressModal = false:'';
-            this.hostUnitList = JSON.parse(JSON.stringify(this.updateHostUnitList));
-            this.hostUnitList.maincompanyarea = this.province + '-' + this.city + '-' + this.district;
-            this.hostUnitList.webip = this.webip.join(' ');
-          } else {
-            return;
-          }
-        })
-      },
-      //
-      // 重新选择区，重新校验
-      // changeDistrict() {
-      //   this.$refs.mainUnitInformation.validateField("district", valid => {
-      //   });
-      // },
-      allUpdate() {
-        let webcompany_Id = sessionStorage.getItem('webcompany_Id');
-        this.updateHostUnitList.id = this.id;
-        if (this.addy.length == 0) {
-          this.$Message.info('请上传相关域名证书')
-          return
-        }
-        if (this.webRecordData.length == 0) {
-          this.$Message.info('请上传相关网站核验单')
-          return
-        }
-        if (this.otherData.length == 0) {
-          this.$Message.info('请上传委托书等其他相关资料')
-          return
-        }
-        let domaincertificateurl = this.addy.map(item => {
-          return item.url
-        })
-        this.updateHostUnitList.domaincertificateurl = domaincertificateurl + ''
-        let webrecordauthenticityurl = this.webRecordData.map(item => {
-          return item.url
-        })
-        this.updateHostUnitList.webrecordauthenticityurl = webrecordauthenticityurl + '';
-        let otherdataurl = this.otherData.map(item => {
-          return item.url
-        })
-        this.updateHostUnitList.otherdataurl = otherdataurl + '';
-        let backgroundUrl = typeof(this.hostUnitList.mark5) == 'undefined' ? '' : this.hostUnitList.mark5
-        let web = {
-          id: this.id,
-          status: '初审中',
-          ISPName: this.hostUnitList.ispname,
-          webIp: this.hostUnitList.webip,
-          webAccessType: this.hostUnitList.webaccesstype,
-          webServerAddress: this.hostUnitList.webserveraddress,
-          webResponsibilityLinkName: this.hostUnitList
-            .webresponsibilitylinkname,
-          webResponsibilityCertificatesType: this.hostUnitList
-            .webresponsibilitycertificatestype,
-          webResponsibilityCertificatesNumber: this.hostUnitList
-            .webresponsibilitycertificatesnumber,
-          offaceNumber: this.hostUnitList.offacenumber,
-          webName: this.hostUnitList.webname,
-          webDomian: this.hostUnitList.webdomian,
-          webUrl: this.hostUnitList.weburl,
-          webServerContent: this.hostUnitList.webservercontent,
-          webMessage: this.hostUnitList.webmessage,
-          phone: this.hostUnitList.phone,
-          email: this.hostUnitList.email,
-          webRecordAuthenticityUrl: this.updateHostUnitList.webrecordauthenticityurl,
-          companyResponsibilityUrlPositive: this.updateHostUnitList.webresponsibilityurlpositive,
-          companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
-          domainCertificateUrl: this.updateHostUnitList.domaincertificateurl,
-          otherDataUrl: this.updateHostUnitList.otherdataurl,
-          backgroundUrl: backgroundUrl,
-          backgroundAddress: this.hostUnitList.mark2,
-          backgroundName: this.hostUnitList.mark3,
-          backgroundPhone: this.hostUnitList.mark4,
-
-        }
-        let update = this.$http.post("recode/updateMainWeb.do", web);
-        let main = {
-          id: webcompany_Id,
-          phone: this.hostUnitList.companyphone,
-          email: this.hostUnitList.companyemail,
-          legalName: this.hostUnitList.legalname,
-          legalCertificatesType: this.hostUnitList
-            .legalcertificatestype,
-          legalCertificatesNumber: this.hostUnitList
-            .legalcertificatesnumber,
-          mainCompanyCertificatesType: this.hostUnitList
-            .maincompanycertificatestype,
-          mainCompanyNature: this.hostUnitList.maincompanynature,
-          mainCompanyName: this.hostUnitList.maincompanyname,
-          mainCompanyNumber: this.hostUnitList.maincompanynumber,
-          mainCompanyCertificatesLoaction: this.hostUnitList
-            .maincompanycertificatesloaction,
-          mainCompanyCommunicatLocation: this.hostUnitList
-            .maincompanycommunicatlocation,
-          InvestorName: this.hostUnitList.investorname,
-          /*
+      });
+    },
+    //
+    // 重新选择区，重新校验
+    // changeDistrict() {
+    //   this.$refs.mainUnitInformation.validateField("district", valid => {
+    //   });
+    // },
+    allUpdate() {
+      let webcompany_Id = sessionStorage.getItem("webcompany_Id");
+      this.updateHostUnitList.id = this.id;
+      if (this.addy.length == 0) {
+        this.$Message.info("请上传相关域名证书");
+        return;
+      }
+      if (this.webRecordData.length == 0) {
+        this.$Message.info("请上传相关网站核验单");
+        return;
+      }
+      if (this.otherData.length == 0) {
+        this.$Message.info("请上传委托书等其他相关资料");
+        return;
+      }
+      let domaincertificateurl = this.addy.map(item => {
+        return item.url;
+      });
+      this.updateHostUnitList.domaincertificateurl = domaincertificateurl + "";
+      let webrecordauthenticityurl = this.webRecordData.map(item => {
+        return item.url;
+      });
+      this.updateHostUnitList.webrecordauthenticityurl =
+        webrecordauthenticityurl + "";
+      let otherdataurl = this.otherData.map(item => {
+        return item.url;
+      });
+      this.updateHostUnitList.otherdataurl = otherdataurl + "";
+      let backgroundUrl =
+        typeof this.hostUnitList.mark5 == "undefined"
+          ? ""
+          : this.hostUnitList.mark5;
+      let web = {
+        id: this.id,
+        status: "初审中",
+        ISPName: this.hostUnitList.ispname,
+        webIp: this.hostUnitList.webip,
+        webAccessType: this.hostUnitList.webaccesstype,
+        webServerAddress: this.hostUnitList.webserveraddress,
+        webResponsibilityLinkName: this.hostUnitList.webresponsibilitylinkname,
+        webResponsibilityCertificatesType: this.hostUnitList
+          .webresponsibilitycertificatestype,
+        webResponsibilityCertificatesNumber: this.hostUnitList
+          .webresponsibilitycertificatesnumber,
+        offaceNumber: this.hostUnitList.offacenumber,
+        webName: this.hostUnitList.webname,
+        webDomian: this.hostUnitList.webdomian,
+        webUrl: this.hostUnitList.weburl,
+        webServerContent: this.hostUnitList.webservercontent,
+        webMessage: this.hostUnitList.webmessage,
+        phone: this.hostUnitList.phone,
+        email: this.hostUnitList.email,
+        webRecordAuthenticityUrl: this.updateHostUnitList
+          .webrecordauthenticityurl,
+        companyResponsibilityUrlPositive: this.updateHostUnitList
+          .webresponsibilityurlpositive,
+        companyResponsibilityUrlBack: this.updateHostUnitList
+          .webresponsibilityurlback,
+        domainCertificateUrl: this.updateHostUnitList.domaincertificateurl,
+        otherDataUrl: this.updateHostUnitList.otherdataurl,
+        backgroundUrl: backgroundUrl,
+        backgroundAddress: this.hostUnitList.mark2,
+        backgroundName: this.hostUnitList.mark3,
+        backgroundPhone: this.hostUnitList.mark4,
+        mainrecordnumber:this.hostUnitList.mainrecordnumber,
+        icprecordpassword:this.hostUnitList.icprecordpassword
+      };
+      let update = this.$http.post("recode/updateMainWeb.do", web);
+      let main = {
+        id: webcompany_Id,
+        phone: this.hostUnitList.companyphone,
+        email: this.hostUnitList.companyemail,
+        legalName: this.hostUnitList.legalname,
+        legalCertificatesType: this.hostUnitList.legalcertificatestype,
+        legalCertificatesNumber: this.hostUnitList.legalcertificatesnumber,
+        mainCompanyCertificatesType: this.hostUnitList
+          .maincompanycertificatestype,
+        mainCompanyNature: this.hostUnitList.maincompanynature,
+        mainCompanyName: this.hostUnitList.maincompanyname,
+        mainCompanyNumber: this.hostUnitList.maincompanynumber,
+        mainCompanyCertificatesLoaction: this.hostUnitList
+          .maincompanycertificatesloaction,
+        mainCompanyCommunicatLocation: this.hostUnitList
+          .maincompanycommunicatlocation,
+        InvestorName: this.hostUnitList.investorname,
+        /*
 
           照片
         */
-          hostCompanyUrl: this.hostUnitList.hostcompanyurl,
-          officeNumber: this.hostUnitList.officenumber,
-          mainCompanyArea: this.hostUnitList.maincompanyarea
+        hostCompanyUrl: this.hostUnitList.hostcompanyurl,
+        officeNumber: this.hostUnitList.officenumber,
+        mainCompanyArea: this.hostUnitList.maincompanyarea
+      };
+      let addMian = this.$http.post("recode/addMainCompany.do", main);
+      Promise.all([update, addMian]).then(res => {
+        if (res[0].data.status == 1 && res[1].data.status == 1) {
+          this.$router.push({ path: "BRecords" });
+          this.$Message.success("修改成功");
+        } else {
+          this.$message.info(res.data.message);
         }
-        let addMian = this.$http.post('recode/addMainCompany.do', main)
-        Promise.all([update, addMian]).then(res => {
-          if (res[0].data.status == 1 && res[1].data.status == 1) {
-            this.$router.push({path: 'BRecords'});
-            this.$Message.success("修改成功");
-          } else {
-            this.$message.info(res.data.message);
-          }
-        })
-      },
-    },
-    mounted() {
-      this.details();
-      this.getPublicIP();
-    },
-  };
+      });
+    }
+  },
+  mounted() {
+    this.details();
+    this.getPublicIP();
+  }
+};
 </script>
 
 <style lang="less" rel="stylesheet/less" scoped>
-  .ivu-form-item {
-    margin-bottom: 15px;
-  }
+.ivu-form-item {
+  margin-bottom: 15px;
+}
 
-  .updatePhoto {
-    width: 490px;
+.updatePhoto {
+  width: 490px;
 
-    margin-top: 10px;
-    border: 1px solid #d8d8d8;
-    padding: 5px 20px;
-    background-color: #ffffff;
-    .updates {
-      display: flex;
-      background: #f7f7f7;
-      padding: 15px 10px;
-      font-family: MicrosoftYaHei;
-      .item-content {
-        padding: 50px 0px;
-        margin-bottom: 20px;
-        border: 1px solid #ffffff;
-        background-color: #ffffff;
-        color: #999;
-        line-height: 138px;
-        text-align: center;
-      }
-      .item-content-text {
-        font-size: 14px;
-        line-height: 20px;
-        color: #999;
-      }
-      button {
-        outline: none;
-        cursor: pointer;
-        border: none;
-        background: rgba(255, 231, 119, 1);
-        padding: 5px 15px;
-        border-radius: 4px;
-      }
-      .sponsor-text {
-        width: 186px;
-        height: 140px;
-        padding: 50px 0px;
-        margin-bottom: 20px;
-        border: 1px solid #ffffff;
-        background-color: #ffffff;
-        color: #999;
-        line-height: 42px;
-      }
-      .hide-text {
-        margin-bottom: 20px;
-        border: 1px solid #ffffff;
-        color: #999;
-        line-height: 42px;
-        text-align: center;
-      }
-    }
-  }
-
-  .background {
-    background-color: #f5f5f5;
-    width: 100%;
-    // height: 100%;
+  margin-top: 10px;
+  border: 1px solid #d8d8d8;
+  padding: 5px 20px;
+  background-color: #ffffff;
+  .updates {
+    display: flex;
+    background: #f7f7f7;
+    padding: 15px 10px;
     font-family: MicrosoftYaHei;
-    input {
-      border: none;
-      background: rgba(225, 225, 225, 0.1);
-      width: 195px;
-      margin-right: 5px;
+    .item-content {
+      padding: 50px 0px;
+      margin-bottom: 20px;
+      border: 1px solid #ffffff;
+      background-color: #ffffff;
+      color: #999;
+      line-height: 138px;
+      text-align: center;
     }
-    //图标箭头向下样式
-    .click_icon.icons {
-      width: 13px !important;
-      height: 13px !important;
-      border: 1px solid #2a99f2;
-      border-radius: 50%;
-      transform: rotate(-45deg);
-      -ms-transform: rotate(-45deg);
-      -webkit-transform: rotate(-45deg);
-      transition: all 0.5s;
+    .item-content-text {
+      font-size: 14px;
+      line-height: 20px;
+      color: #999;
+    }
+    button {
+      outline: none;
       cursor: pointer;
-      margin-left: 10px;
-      margin-top: 3px;
+      border: none;
+      background: rgba(255, 231, 119, 1);
+      padding: 5px 15px;
+      border-radius: 4px;
     }
-    .click_icon.icons::before {
-      content: "";
-      position: absolute;
-      top: 2px;
-      left: 3px;
-      width: 7px !important;
-      height: 6px !important;
-      border: #2a99f2 solid 1px;
-      border-top-style: none;
-      border-right-style: none;
+    .sponsor-text {
+      width: 186px;
+      height: 140px;
+      padding: 50px 0px;
+      margin-bottom: 20px;
+      border: 1px solid #ffffff;
+      background-color: #ffffff;
+      color: #999;
+      line-height: 42px;
     }
-    //图标向上样式
-    .hide_icon.icons {
-      transform: rotate(-225deg);
-      -ms-transform: rotate(-225deg);
-      -webkit-transform: rotate(-225deg);
+    .hide-text {
+      margin-bottom: 20px;
+      border: 1px solid #ffffff;
+      color: #999;
+      line-height: 42px;
+      text-align: center;
     }
-    .card {
+  }
+}
+
+.background {
+  background-color: #f5f5f5;
+  width: 100%;
+  // height: 100%;
+  font-family: MicrosoftYaHei;
+  input {
+    border: none;
+    background: rgba(225, 225, 225, 0.1);
+    width: 195px;
+    margin-right: 5px;
+  }
+  //图标箭头向下样式
+  .click_icon.icons {
+    width: 13px !important;
+    height: 13px !important;
+    border: 1px solid #2a99f2;
+    border-radius: 50%;
+    transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transition: all 0.5s;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-top: 3px;
+  }
+  .click_icon.icons::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    width: 7px !important;
+    height: 6px !important;
+    border: #2a99f2 solid 1px;
+    border-top-style: none;
+    border-right-style: none;
+  }
+  //图标向上样式
+  .hide_icon.icons {
+    transform: rotate(-225deg);
+    -ms-transform: rotate(-225deg);
+    -webkit-transform: rotate(-225deg);
+  }
+  .card {
+    width: 1200px;
+    margin: 0 auto;
+    & > span {
+      font-family: Microsoft Yahei, 微软雅黑;
+      font-size: 12px;
+      color: rgba(17, 17, 17, 0.43);
+      line-height: 22px;
+      padding: 11px 0px;
+      display: block;
+    }
+    .center {
       width: 1200px;
-      margin: 0 auto;
-      & > span {
-        font-family: Microsoft Yahei, 微软雅黑;
-        font-size: 12px;
-        color: rgba(17, 17, 17, 0.43);
-        line-height: 22px;
-        padding: 11px 0px;
-        display: block;
-      }
-      .center {
-        width: 1200px;
-        background: #ffffff;
-        min-height: 1529px;
-        padding: 20px 20px;
-        .center_title {
-          border-bottom: 1px solid #d8d8d8;
-          height: 64px;
-          display: flex;
-          .back_button {
-            width: 58px;
-            height: 30px;
-            margin-right: 10px;
-            border: 1px solid #2a99f2;
-            border-radius: 2px;
-            display: inline-block;
-            cursor: pointer;
-            > span {
-              display: block;
-              height: inherit;
-              text-align: center;
-              line-height: 30px;
-              font-size: 14px;
-              color: #2a99f2;
-            }
-          }
-          .refresh_button {
-            width: 58px;
-            height: 30px;
-            border: 1px solid #2a99f2;
-            border-radius: 2px;
-            background-color: #2a99f2;
-            display: inline-block;
-            cursor: pointer;
-            > span {
-              display: block;
-              height: inherit;
-              text-align: center;
-              line-height: 30px;
-              font-size: 14px;
-              color: #ffffff;
-            }
-          }
-        }
-      }
-      li {
-        list-style: none;
-      }
-      .list_item {
-        display: inline-block;
-        line-height: 40px;
-        margin-right: 24px;
-        font-size: 14px;
-      }
-      .list_item:nth-child(1) {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 180px;
-      }
-
-      .info_box {
-        width: 1160px;
-        border: 1px solid #d8d8d8;
-        border-radius: 4px;
-        padding: 20px 20px;
-        margin-top: 20px;
-        > span {
-          color: #333333;
-        }
-        .tables {
-          border: 1px solid #e9e9e9;
-          border-radius: 4px;
-          display: flex;
-          display: -webkit-flex;
-        }
-        .nav_list {
-          width: 280px;
-          .text_block {
-            width: 100px;
-            float: right;
-          }
-          .nav_item {
-            padding: 5px 10px 5px 10px;
-            height: 38px;
-            border-right: 1px solid #e9e9e9;
-            border-bottom: 1px solid #e9e9e9;
-          }
-          p {
-            width: 145px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            display: inline-block;
-          }
-          .nav_item:nth-child(odd) {
-            background-color: #f7f7f7;
-          }
-        }
-        .tab_list {
-          height: 39px;
-
-          .tab_item {
-            padding: 5px 10px 5px 10px;
-            float: left;
-            width: 279px;
-            height: 39px;
-            border-right: 1px solid #e9e9e9;
-          }
-          .tab_item:last-child {
-            border: none;
-          }
-          .tab_item:nth-child(even) {
+      background: #ffffff;
+      min-height: 1529px;
+      padding: 20px 20px;
+      .center_title {
+        border-bottom: 1px solid #d8d8d8;
+        height: 64px;
+        display: flex;
+        .back_button {
+          width: 58px;
+          height: 30px;
+          margin-right: 10px;
+          border: 1px solid #2a99f2;
+          border-radius: 2px;
+          display: inline-block;
+          cursor: pointer;
+          > span {
+            display: block;
+            height: inherit;
+            text-align: center;
+            line-height: 30px;
+            font-size: 14px;
             color: #2a99f2;
-            cursor: pointer;
+          }
+        }
+        .refresh_button {
+          width: 58px;
+          height: 30px;
+          border: 1px solid #2a99f2;
+          border-radius: 2px;
+          background-color: #2a99f2;
+          display: inline-block;
+          cursor: pointer;
+          > span {
+            display: block;
+            height: inherit;
+            text-align: center;
+            line-height: 30px;
+            font-size: 14px;
+            color: #ffffff;
           }
         }
       }
+    }
+    li {
+      list-style: none;
+    }
+    .list_item {
+      display: inline-block;
+      line-height: 40px;
+      margin-right: 24px;
+      font-size: 14px;
+    }
+    .list_item:nth-child(1) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 180px;
+    }
 
+    .info_box {
+      width: 1160px;
+      border: 1px solid #d8d8d8;
+      border-radius: 4px;
+      padding: 20px 20px;
+      margin-top: 20px;
+      > span {
+        color: #333333;
+      }
+      .tables {
+        border: 1px solid #e9e9e9;
+        border-radius: 4px;
+        display: flex;
+        display: -webkit-flex;
+      }
+      .nav_list {
+        width: 280px;
+        .text_block {
+          // width: 100px;
+          // float: right;
+          display:inline-block;
+        }
+        .nav_item {
+          padding: 5px 10px 5px 10px;
+          height: 38px;
+          border-right: 1px solid #e9e9e9;
+          border-bottom: 1px solid #e9e9e9;
+        }
+        .nav-img{
+          display:inline-block;
+          img{
+            width:14px;
+            margin-right:2px;
+            cursor:pointer;
+          }
+        }
+        p {
+          width: 135px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: inline-block;
+        }
+        .nav_item:nth-child(odd) {
+          background-color: #f7f7f7;
+        }
+      }
+      .tab_list {
+        height: 39px;
+
+        .tab_item {
+          padding: 5px 10px 5px 10px;
+          float: left;
+          width: 279px;
+          height: 39px;
+          border-right: 1px solid #e9e9e9;
+        }
+        .tab_item:last-child {
+          border: none;
+        }
+        .tab_item:nth-child(even) {
+          color: #2a99f2;
+          cursor: pointer;
+        }
+      }
     }
   }
+}
 
-  .outImg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transition: background-color .3s ease-in-out;
-    z-index: 9999;
-  }
+.outImg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: background-color 0.3s ease-in-out;
+  z-index: 9999;
+}
 
-  .bigImg {
-    position: fixed;
-    top: 50%;
-    left: 50%;
+.bigImg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
 
-    transition: transform .3s ease-in-out;
-    width: 627px;
-    height: 866px;
-  }
+  transition: transform 0.3s ease-in-out;
+  width: 627px;
+  height: 866px;
+}
 
-  .is_activ {
-    background-color: rgba(55, 55, 55, .6);
-  }
+.is_activ {
+  background-color: rgba(55, 55, 55, 0.6);
+}
 </style>
 

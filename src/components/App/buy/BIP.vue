@@ -42,7 +42,7 @@
       <div style="margin-top:20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
         <h2>网络与带宽</h2>
         <!--虚拟私有云-->
-        <div class="item-wrapper">
+        <div class="item-wrapperr">
           <div style="display: flex">
             <div>
               <p class="item-title" style="margin-top: 7px;">虚拟私有云</p>

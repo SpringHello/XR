@@ -149,6 +149,11 @@
               </div>
             </div>
           </div>
+            <div class="wrapper">
+            <div style="padding:0 20px;cursor:pointer" @click="linkService">
+            <span class="title">在线客服&nbsp&nbsp&nbsp<img style="vertical-align: bottom;" src="./assets/img/app/kefu-icon.png" /></span>
+              </div>
+          </div>
           <div class="wrapper" v-if="xiaoshouInfo.length>0">
             <div>
               <span>售前咨询</span>
@@ -203,7 +208,15 @@
       <!--<Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>-->
-      <span class="phone" @click="getOrderType"></span>
+      <span class="phone" @click="getOrderType" @mouseenter="PME" @mouseleave="PML">
+        <div ref="phoneE" style="overflow: hidden;bottom:45px;">
+          <div class="wrapper">
+            <div>
+              <span class="title">投诉与建议</span>
+            </div>
+          </div>
+        </div>
+      </span>
       <div>
         <BackTop :bottom="61" :right="50" :duration="0" :height="1600" style="position: unset">
           <span class="topLink"></span>
@@ -333,8 +346,8 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              // {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
+              //{subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              {subName: '对象存储', type: 'https://testoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'diskList'},
               {subName: '云硬盘备份', type: 'diskBackupList'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
@@ -374,20 +387,20 @@
             subItem: [
               {subName: '防火墙', type: 'firewallList'},
               {subName: '云监控', type: 'CloudMonitor'},
-              {subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
-              // {subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
+              //{subName: 'SSL证书', type: 'https://domain.xrcloud.net/xrdomain/domainSSL'}
+              {subName: 'SSL证书', type: 'https://test-domain.xrcloud.net/xrdomain/domainSSL'},
             ]
           },
           {
             mainName: '域名服务',
             type: 'domain',
             subItem: [
-              {subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
-              {subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              {subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
-              //  {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
-              //  {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
-              //  {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
+              //{subName: '域名管理', type: 'https://domain.xrcloud.net/xrdomain/domainGroup'},
+              //{subName: '信息模版', type: 'https://domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+              //{subName: '域名转入', type: 'https://domain.xrcloud.net/xrdomain/domainTransfer'}
+               {subName: '域名管理', type: 'https://test-domain.xrcloud.net/xrdomain/domainGroup'},
+               {subName: '信息模版', type: 'https://test-domain.xrcloud.net/xrdomain/domainInfoTemplate'},
+               {subName: '域名转入', type: 'https://test-domain.xrcloud.net/xrdomain/domainTransfer'},
             ]
           },
           {
@@ -486,10 +499,16 @@
     },
     methods: {
       QME() {
-        this.$refs.qq.style.width = '231px'
+        this.$refs.qq.style.width = '200px'
       },
       QML() {
         this.$refs.qq.style.width = '0px'
+      },
+      PME() {
+        this.$refs.phoneE.style.width = '95px'
+      },
+      PML() {
+        this.$refs.phoneE.style.width = '0px'
       },
       notice() {
         this.$http.get('user/getEventNum.do', {
@@ -650,6 +669,7 @@
         })
       },
       getOrderType(){
+        this.complaintForm.step = 1
         this.$http.get('order/orderType.do',{params:{
           gid: '5'
         }}).then(res=>{
@@ -697,6 +717,13 @@
                 })
           }
         })
+      },
+      linkService(){
+        if(this.userInfo){
+          window.open(`https://im.xrcloud.net/im/text/0Jck1w.html?companyId=${this.userInfo.companyid}`)
+        } else{
+          window.open('https://im.xrcloud.net/im/text/0Jck1w.html')
+        }       
       }
     },
     computed: mapState({
@@ -1079,11 +1106,11 @@
         display: block;
       }
       .wrapper {
-        width: 231px;
+        width: 200px;
         right: 0px;
         top: 0px;
         > div {
-          padding: 10px;
+           padding: 20px 20px 10px;
           > span {
             font-size: 12px;
             font-family: MicrosoftYaHei;
@@ -1092,6 +1119,10 @@
             &.title {
               color: rgba(29, 23, 22, 1);
               font-size: 14px;
+              span{
+                  font-family:MicrosoftYaHei-Bold;
+                  font-weight:bold;
+                }
             }
           }
           .info-wrapper {
@@ -1148,6 +1179,34 @@
         background-position: center;
         background-image: url('./assets/img/app/phone-hover.png');
       }*/
+      > div {
+          position: absolute;
+          width: 0px;
+          background-color: #ffffff;
+          right: 55px;
+          top: unset;
+          transition: width .3s;
+          box-shadow:0px 2px 16px -5px rgba(130,130,130,0.5);
+          border-radius:15px;
+        }
+        .wrapper {
+          width: 95px;
+          right: 0px;
+          top: 0px;
+          > div {
+            padding: 10px ;
+            > span {
+              font-size: 12px;
+              font-family: MicrosoftYaHei;
+              color: rgba(102, 102, 102, 1);
+              line-height: 16px;
+              &.title {
+                color:rgba(255,98,75,1);
+                font-size: 14px;
+              }
+            }
+          }
+        }
     }
   }
 

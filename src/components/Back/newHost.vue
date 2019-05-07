@@ -183,6 +183,23 @@
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：400-050-5565</p>
       </div>
     </Modal>
+    <!-- 删除主机关联其他资源确认弹窗 -->
+      <Modal v-model="showModal.delHostHint" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">{{ delHostMessage }}
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.delHostHint = false">取消</Button>
+        <Button type="primary" @click="delHostOk">确认删除</Button>
+      </p>
+    </Modal>
     <!-- 删除主机弹窗 -->
     <Modal v-model="showModal.delHost" :scrollable="true" :closable="false" :width="390">
       <p slot="header" class="modal-header-border">
@@ -197,7 +214,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.delHost = false">取消</Button>
-        <Button type="primary" @click="delHostOk">确认删除</Button>
+        <Button type="primary" @click="delHostOkBefore">确认删除</Button>
       </p>
     </Modal>
     <!-- 加入负载均衡弹窗 -->
@@ -503,7 +520,7 @@
           </div>
           <div class="resetModal-hint">
             <p v-show="resetPasswordForm.errorMsg=='passwordUndercapacity'">您输入的密码强度不足</p>
-            <p v-show="resetPasswordForm.errorMsg=='passwordHint'">提醒：密码必须是8-32个包含数字和大小写字母的字符，不能包含@!</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordHint'">提醒：密码必须是8-32个包含数字和大小写字母的字符，不能包含@!#&lt&gt(){}[]%</p>
             <p v-show="resetPasswordForm.errorMsg=='passwordHintTwo'">注意：您的密码已经符合设置密码规则，但密码需要具备一定的强度，建议您设置12位以上，至少包括4项（：，-（）；）的特殊字符，每种字符大于等于2位</p>
           </div>
           <div class="resetModal-import">
@@ -543,7 +560,7 @@
       return {
         guideStep: 1,
         regExpObj: {
-          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~#$%_()^&*,-<>?.+=]{8,32}$/
+          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~$_^&*,-?.+=]{8,32}$/
         },
         showModal: {
           selectAuthType: false,
@@ -557,6 +574,7 @@
           backup: false,
           mirror: false,
           unbindIP: false,
+          delHostHint: false,
           delHost: false,
           resetPassword: false
         },
@@ -821,12 +839,10 @@
             render: (h, params) => {
               let textArr = params.row.serviceoffername.split('+')
               let text_1 = 'CPU:' + textArr[0]
-              let text_2 = '内存:' + textArr[2]
-              let text_3 = '频率:' + textArr[1]
+              let text_2 = '内存:' + textArr[1]
               return h('ul', {}, [
                 h('li', {}, text_1),
-                h('li', {}, text_2),
-                h('li', {}, text_3)
+                h('li', {}, text_2)
               ])
             }
           },
@@ -1412,6 +1428,7 @@
         hostCurrentSelected: null,
 
         hostDelWay: 1, // 1：点击按钮删除主机 2： 点击更多操作删除；原因是参数传的不同
+        delHostMessage: '',
         resetPasswordWay: 1, // 1：点击顶部更多操作重置 2： 点击行内更多操作重置；原因是参数传的不同,
         resetPasswordHostData: [],
         resetPasswordForm: {
@@ -1842,6 +1859,7 @@
         })
       },
       hostDelete(val) {
+        this.delHostMessage = ''
         this.hostDelWay = val
         if (val === 1) {
           /*          if (this.hostSelection.length > 5) {
@@ -1852,6 +1870,41 @@
         } else {
           this.showModal.delHost = true
         }
+      },
+      delHostOkBefore(){
+        let url = 'information/delVMHint.do'
+        let params = {}
+        if (this.hostDelWay === 1) {
+          this.hostListData.forEach(host => {
+            this.selectHostIds.forEach(item => {
+              if (host.id == item) {
+                host.status = -2
+                host._disabled = true
+              }
+            })
+          })
+          params = {
+            computerId: this.selectHostComputerIds + ''
+          }
+        } else {
+          this.hostListData.forEach(host => {
+            if (host.id == this.hostCurrentSelected.id) {
+              host.status = -2
+              host._disabled = true
+            }
+          })
+          params = {
+            computerId: this.hostCurrentSelected.computerid,
+          }
+        }
+        this.$http.get(url,{params}).then(res=>{
+          if(res.status === 200 && res.data.status === 1){
+            this.delHostOk()
+          } else{
+            this.delHostMessage = res.data.message
+            this.showModal.delHostHint = true
+          }
+        })
       },
       delHostOk() {
         let params = {}

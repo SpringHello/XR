@@ -73,7 +73,7 @@
     <div class="footer" v-show="photograph === 2 && nextStep  && curtainStatus ">
       <div class="content">
         <h2>收到幕布后请按照要求拍照上传</h2>
-        <p>请仔细阅读拍照要求，以幕布为背景，拍摄网站负责人的上半身免冠照片。请保持光线充足，照片效果清晰</p>
+        <p>请仔细阅读拍照要求，以幕布为背景，拍摄网站负责人的上半身免冠照片。请保持光线充足，照片效果清晰。若拍照不符合要求，备案申请会被驳回</p>
       </div>
       <div class="upload">
         <div class="uploadTitle">
@@ -496,6 +496,8 @@
           email: this.mainParams.email,
           zoneId: this.zoneId,
           hostCompanyUrl: this.mainParams.hostCompanyUrl,
+          mark2: this.mainParams.mark2,
+          mark3: this.mainParams.mark3
         }
           let addMainCompany = axios.post('recode/addMainCompany.do', params)
           Promise.all([addMainCompany]).then(response => {

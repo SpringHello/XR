@@ -50,9 +50,9 @@
     <!--修改远程连接密码-->
     <Modal v-model="contentPassword" width="550" scrollable :mask-closable="false">
       <p slot="header" class="modal-header-border">
-        <span style="font-size: 16px;">重置远程接入密码</span>
+        <span style="font-size: 16px;" class="universal-modal-title">重置远程接入密码</span>
       </p>
-      <p style="font-size: 14px;margin-bottom: 20px">我们将把新密码发送至您的认证手机号：{{formInline.userPhone}}</p>
+      <p style="font-size: 14px;margin-bottom: 20px">我们将把新密码发送至您的认证手机号：{{formInline.userPhone.substr(0,3) + '****' + formInline.userPhone.substr(7)}}</p>
       <div class="universal-modal-content-flex">
         <Form ref="formInline" :model="formInline" :rules="ruleInline">
           <FormItem label="验证码" prop="code">

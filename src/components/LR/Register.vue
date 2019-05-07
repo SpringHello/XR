@@ -805,7 +805,7 @@
     data() {
       return {
         regExpObj: {
-          phone: /^1[3|5|8|9|6|7]\d{9}$/,
+          phone: /^1[3|4|5|8|9|6|7]\d{9}$/,
           email: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
           password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%_()^&*,-<>?@.+=]{8,32}$/
         },
@@ -1196,8 +1196,10 @@
           params
         }).then(response => {
           if (response.status === 200 && response.data.status === 1) {
+            window._agl && window._agl.push(['track', ['success', {t: 3}]])
             this.registerForm.onStep = 3
           } else if (response.status === 200 && response.data.status === 3) {
+            window._agl && window._agl.push(['track', ['success', {t: 3}]])
             this.registerForm.onStep = 4
           } else {
             this.$message.info({

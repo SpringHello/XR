@@ -13,6 +13,7 @@
                 </div>
              </transition>
         </div>
+        <input type='text' style='display:none'>
         <input :value='account'  :style="style" 
         :id="elementId"
          autocomplete="new-password"
@@ -109,10 +110,12 @@ export default {
             let value = e.target.value;
             this.$emit('input',value);
             this.setInputValue(value);
-            this.$emit('on-change', e);
+            // this.$emit('on-change', e);
         },
         inputChange(e){   
             this.$emit('on-change',e);
+          
+            this.dispatch('FormItem', 'on-form-change', this.account);
         },
         inputBlur(e){
             this.$refs.xInput.setAttribute('readonly',true); // 添加只读

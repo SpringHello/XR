@@ -63,6 +63,67 @@
             </div>
           </transition>
         </div>
+        <h2 v-if="mainPersonIDShow">请上传主体负责人相关资料</h2>
+         <div class="upload" v-if="mainPersonIDShow">
+          <div class="uploadTitle">
+            <p>证件人像面 ( 证件号：{{mainUnitInformation.certificateNumber}})</p>
+            <div class="item">
+              <div class="item-content">
+                <div style="width:50%;">
+                  <Upload
+                    type="drag"
+                    :with-credentials="true"
+                    :show-upload-list="false"
+                    action="file/upFile.do"
+                    :format="['jpg','gif','png']"
+                    :on-format-error="handleFormatJpg"
+                    :max-size="4096"
+                    :on-exceeded-size="handleMaxSize"
+                    :on-success="mainIDCardFront">
+                    <div class="item-content-text" v-if="!uploadForm.lpIdIDPhotoList.idFont">
+                      点击上传图片
+                    </div>
+                    <img v-else  :src="uploadForm.lpIdIDPhotoList.idFont" style="height: 120px;width:164px;">
+                    <Progress v-show="mainfontpercent>0" :percent="mainfontpercent"></Progress>
+                  </Upload>
+                </div>
+                <div class="item-img">
+                  <img src="../../../assets/img/records/records-img1.png" alt="示例图">
+                  <p>示例图</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="uploadTitle">
+            <p style="margin-left: 20px">证件国徽面 ( 证件号：{{mainUnitInformation.certificateNumber}})</p>
+            <div class="item" style="margin-left: 20px">
+              <div class="item-content">
+                <div style="width:50%;">
+                  <Upload
+                    type="drag"
+                    :with-credentials="true"
+                    :show-upload-list="false"
+                    action="file/upFile.do"
+                    :format="['jpg','gif','png']"
+                    :on-format-error="handleFormatJpg"
+                    :max-size="4096"
+                    :on-exceeded-size="handleMaxSize"
+                    :on-success="mainIDCardBack">
+                    <div class="item-content-text" v-if="!uploadForm.lpIdIDPhotoList.idBack">
+                      点击上传图片
+                    </div>
+                    <img v-else :src="uploadForm.lpIdIDPhotoList.idBack" style="height: 120px;width:164px;" alt="上传图片">
+                    <Progress v-show="mainbackpercent>0" :percent="mainbackpercent"></Progress>
+                  </Upload>
+                </div>
+                <div class="item-img">
+                  <img src="../../../assets/img/records/records-img2.png" alt="示例图">
+                  <p>示例图</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <h2>请上传网站负责人相关资料</h2>
         <p class="titleDescription">温馨提示：如网站负责人和主体负责人不是同一人，请在其他资料中上传法人授权委托书</p>
         <div class="upload" v-for="(item,index) in uploadForm.IDPhotoList">
@@ -78,7 +139,7 @@
                     action="file/upFile.do"
                     :format="['jpg','gif','png']"
                     :on-format-error="handleFormatJpg"
-                    :max-size="2048"
+                    :max-size="4096"
                     :on-exceeded-size="handleMaxSize"
                     :on-success="IDCardFront"
                     :before-upload="markIDCard(index)">
@@ -108,7 +169,7 @@
                     action="file/upFile.do"
                     :format="['jpg','gif','png']"
                     :on-format-error="handleFormatJpg"
-                    :max-size="2048"
+                    :max-size="4096"
                     :on-exceeded-size="handleMaxSize"
                     :on-success="IDCardBack"
                     :before-upload="markIDCard(index)">
@@ -125,10 +186,10 @@
                 </div>
               </div>
             </div>
-            <!--<p style="color: #377dff;cursor: pointer;margin-top: 10px;text-align: right" v-if="index>0" @click="deleteIDPhoto(index)">删除新负责人证件照</p>-->
+          <!--<p style="color: #377dff;cursor: pointer;margin-top: 10px;text-align: right" v-if="index>0" @click="deleteIDPhoto(index)">删除新负责人证件照</p>-->
           </div>
         </div>
-        <!--  <p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px;" v-if="uploadForm.IDPhotoList.length<principalNumber">添加新负责人证件照</p>-->
+       <!--<p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px;" v-if="uploadForm.IDPhotoList.length<principalNumber">添加新负责人证件照</p>-->
         <h2 v-show="!isPersonage">请上传主体单位相关资料</h2>
         <div v-show="!isPersonage" class="upload">
           <div class="uploadTitle">
@@ -143,7 +204,7 @@
                     :format="['jpg','jpeg','png']"
                     :on-format-error="handleFormatJpg"
                     action="file/upFile.do"
-                    :max-size="2048"
+                    :max-size="4096"
                     :on-exceeded-size="handleMaxSize"
                     :on-success="combine">
                     <div class="item-content-text" v-if="uploadForm.combine==''">
@@ -169,7 +230,8 @@
               <div class="item">
                 <div class="item-content" style="height: 100%">
                   <div style="width:100%;background: #FFF;padding-top: 12px">
-                    <p v-for="(file,index) in item.certifiedDomainNoCertificationDefaultList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
+                    <!-- 老版备案 -->
+                    <!--<p v-for="(file,index) in item.certifiedDomainNoCertificationDefaultList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
                       <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')||(file.suffix == 'gif')"
                            :class="{one:item.certifiedDomainNoCertificationDefaultList.length==1,two:item.certifiedDomainNoCertificationDefaultList.length==2,three:item.certifiedDomainNoCertificationDefaultList.length==3}"
                            src="../../../assets/img/records/records-img.png" alt="records"/>
@@ -185,16 +247,32 @@
                     <Upload v-if="item.certifiedDomainNoCertificationDefaultList.length<3"
                             class="my-upload"
                             type="drag"
-                            :format="['jpg','jpeg','png','doc','pdf','docx','gif']"
+                            :format="['jpg','jpeg','png']"
                             :on-format-error="handleFormatError"
                             :with-credentials="true"
                             :show-upload-list="false"
-                            :max-size="2048"
+                            :max-size="4096"
                             :on-exceeded-size="handleMaxSize"
                             action="file/upFile.do"
                             :before-upload="markCertifiedDomainNoCertification(upIndex)"
                             :on-success="certifiedDomainNoCertification">
                       <Progress v-show="percentCertification>0" :percent="percentCertification"></Progress>
+                      <span v-show="percentCertification == 0" style="font-size: 14px">点击选择文件</span>
+                    </Upload>-->
+                      <Upload
+                            class="my-upload"
+                            type="drag"
+                            :format="['jpg','jpeg','png']"
+                            :on-format-error="handleFormatError"
+                            :with-credentials="true"
+                            :show-upload-list="false"
+                            :max-size="4096"
+                            :on-exceeded-size="handleMaxSize"
+                            action="file/upFile.do"
+                            :before-upload="markCertifiedDomainNoCertification(upIndex)"
+                            :on-success="certifiedDomainNoCertification">
+                        <img v-if="item.certifiedDomainNoCertificationDefaultList[0].url" :src="item.certifiedDomainNoCertificationDefaultList[0].url" style="height: 120px;width:164px;">
+                      <Progress v-show="percentCertification>0&&certifiedDomainNoCertificationIndex == upIndex" :percent="percentCertification"></Progress>
                       <span v-show="percentCertification == 0" style="font-size: 14px">点击选择文件</span>
                     </Upload>
                   </div>
@@ -233,12 +311,12 @@
                             :on-format-error="handleFormatError"
                             :with-credentials="true"
                             action="file/upFile.do"
-                            :max-size="2048"
+                            :max-size="4096"
                             :on-exceeded-size="handleMaxSize"
                             :before-upload="markOtherFile(upIndex)"
                             :on-success="otherFile">
-                      <Progress v-show="percentOtherFile>0" :percent="percentOtherFile"></Progress>
-                      <span v-show="percentOtherFile == 0" style="font-size: 14px">点击选择文件</span>
+                      <Progress v-show="percentOtherFile>0 && otherFileIndex == upIndex" :percent="percentOtherFile"></Progress>
+                      <span v-show="percentOtherFile == 0 " style="font-size: 14px">点击选择文件</span>
                     </Upload>
                   </div>
                 </div>
@@ -253,8 +331,8 @@
             <p>其他文件 (网站{{ upIndex + 1 }})</p>
             <div class="item">
               <div class="item-content" style="height: 100%">
-                <div style="width:100%;background: #FFF;padding-top: 12px">
-                  <p v-for="(file,index) in item.checkList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
+               <div style="width:100%;background: #FFF;padding-top: 12px">
+                   <!--<p v-for="(file,index) in item.checkList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
                     <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')||(file.suffix == 'gif')"
                          :class="{one:item.checkList.length==1,two:item.checkList.length==2}"
                          src="../../../assets/img/records/records-img.png" alt="records"/>
@@ -274,12 +352,28 @@
                           :on-format-error="handleFormatError"
                           :with-credentials="true"
                           :show-upload-list="false"
-                          :max-size="2048"
+                          :max-size="4096"
                           :on-exceeded-size="handleMaxSize"
                           action="file/upFile.do"
                           :before-upload="markCheckList(upIndex)"
                           :on-success="checkList">
                     <Progress v-show="percentCheckList>0" :percent="percentCheckList"></Progress>
+                    <span v-show="percentCheckList == 0" style="font-size: 14px">点击选择文件</span>
+                  </Upload> -->
+                        <Upload
+                          class="my-upload"
+                          type="drag"
+                          :format="['jpg','jpeg','png']"
+                          :on-format-error="handleFormatError"
+                          :with-credentials="true"
+                          :show-upload-list="false"
+                          :max-size="4096"
+                          :on-exceeded-size="handleMaxSize"
+                          action="file/upFile.do"
+                          :before-upload="markCheckList(upIndex)"
+                          :on-success="checkList">
+                    <img v-if="item.checkList[0].url" :src="item.checkList[0].url" style="height: 120px;width:164px;">
+                    <Progress v-show="percentCheckList>0 &&checkListIndex == upIndex" :percent="percentCheckList"></Progress>
                     <span v-show="percentCheckList == 0" style="font-size: 14px">点击选择文件</span>
                   </Upload>
                 </div>
@@ -336,6 +430,8 @@
     },
     data() {
       return {
+        // 主体负责人id是否显示
+        mainPersonIDShow: false,
         // 用与标记正在操作的身份证件照
         IDCardIndex: '',
         // 标记正在操作的域名证书
@@ -360,6 +456,12 @@
         recordsTypeDesc: '',
         // 上传资料标记表单
         uploadForm: {
+          // 法人相关资料
+          lpIdIDPhotoList:{
+            idFont:'',
+            idBack:''
+          },
+          // 网站负责人资料
           IDPhotoList: [],
           // 相关资料
           combine: '',
@@ -375,6 +477,8 @@
         imageViewShow: false,
         checkSrc: '',
         isPersonage: false,
+        mainfontpercent: 0,
+        mainbackpercent: 0,
         percent: 0,
         percentBack: 0,
         percentCombine: 0,
@@ -531,7 +635,11 @@
           for (let i = 0, len = this.siteListStr.length; i < len; i++) {
             // 初始化域名证书上传框
             let certifiedDomainNoCertificationDefault = {
-              certifiedDomainNoCertificationDefaultList: []
+              certifiedDomainNoCertificationDefaultList: [{
+                name: '',
+                url: '',
+                suffix: ''
+              }]
             }
             this.uploadForm.certifiedDomainNoCertificationDefault.push(certifiedDomainNoCertificationDefault)
             // 初始化其他资料上传框
@@ -541,10 +649,25 @@
             this.uploadForm.otherFileGroup.push(otherFile)
             // 初始化核验单上传框
             let checkList = {
-              checkList: []
+              checkList: [
+                {
+                name: '',
+                url: '',
+                suffix: ''
+              }
+              ]
             }
             this.uploadForm.checkGroup.push(checkList)
           }
+        }
+        if(this.mainUnitInformation.unitProperties === '企业' &&(this.mainUnitInformation.legalPersonName !== this.siteListStr[0].basicInformation.principalName)){
+           this.mainPersonIDShow = true
+           if(this.mainUnitInformation.mark2){
+            this.$nextTick(()=>{
+           this.uploadForm.lpIdIDPhotoList.idFont = this.mainUnitInformation.mark2
+           this.uploadForm.lpIdIDPhotoList.idBack = this.mainUnitInformation.mark3
+           })
+           }
         }
         sessionStorage.removeItem('siteParamsStr')
       },
@@ -562,6 +685,36 @@
       },
       /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
  暂时没有找到更好的方法解决图片标记问题 */
+       mainIDCardFront(response) {
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.mainfontpercent++
+            if (this.mainfontpercent > 100) {
+              this.uploadForm.lpIdIDPhotoList.idFont = response.result
+              this.$Message.info('上传成功');
+              window.clearInterval(s)
+              this.mainfontpercent = 0
+            }
+          }, 20)
+        } else {
+          this.$Message.info('上传失败');
+        }
+      },
+      mainIDCardBack(response) {
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.mainbackpercent++
+            if (this.mainbackpercent > 100) {
+              this.uploadForm.lpIdIDPhotoList.idBack = response.result
+              this.$Message.info('上传成功');
+              window.clearInterval(s)
+              this.mainbackpercent = 0
+            }
+          }, 20)
+        } else {
+          this.$Message.info('上传失败');
+        }
+      },
       IDCardFront(response) {
         if (response.status == 1) {
           let s = setInterval(() => {
@@ -608,7 +761,7 @@
         }
       },
       certifiedDomainNoCertification(response) {
-        if (response.status == 1) {
+        /*if (response.status == 1) {
           let s = setInterval(() => {
             this.percentCertification++
             if (this.percentCertification > 100) {
@@ -624,6 +777,28 @@
               if (this.uploadForm.certifiedDomainNoCertificationDefault[this.certifiedDomainNoCertificationIndex].certifiedDomainNoCertificationDefaultList.length < 3) {
                 this.uploadForm.certifiedDomainNoCertificationDefault[this.certifiedDomainNoCertificationIndex].certifiedDomainNoCertificationDefaultList.push(param)
               }
+              this.$Message.info('上传成功');
+              window.clearInterval(s)
+              this.percentCertification = 0
+            }
+          }, 20)
+        } else {
+          this.$Message.info('上传失败');
+        }*/
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.percentCertification++
+            if (this.percentCertification > 100) {
+              let array = response.result.split('/')
+              let index = array.length - 1
+              let len = array[index].length
+              let suffix = array[index].substring(len - 3)
+              let param = {
+                name: array[index],
+                url: response.result,
+                suffix: suffix
+              }
+              this.uploadForm.certifiedDomainNoCertificationDefault[this.certifiedDomainNoCertificationIndex].certifiedDomainNoCertificationDefaultList[0] = param
               this.$Message.info('上传成功');
               window.clearInterval(s)
               this.percentCertification = 0
@@ -660,7 +835,7 @@
         }
       },
       checkList(response) {
-        if (response.status == 1) {
+        /*if (response.status == 1) {
           let s = setInterval(() => {
             this.percentCheckList++
             if (this.percentCheckList > 100) {
@@ -676,6 +851,28 @@
               if (this.uploadForm.checkGroup[this.checkListIndex].checkList.length < 1) {
                 this.uploadForm.checkGroup[this.checkListIndex].checkList.push(param)
               }
+              this.$Message.info('上传成功');
+              window.clearInterval(s)
+              this.percentCheckList = 0
+            }
+          }, 20)
+        } else {
+          this.$Message.info('上传失败');
+        }*/
+          if (response.status == 1) {
+          let s = setInterval(() => {
+            this.percentCheckList++
+            if (this.percentCheckList > 100) {
+              let array = response.result.split('/')
+              let index = array.length - 1
+              let len = array[index].length
+              let suffix = array[index].substring(len - 3)
+              let param = {
+                name: array[index],
+                url: response.result,
+                suffix: suffix
+              }
+              this.uploadForm.checkGroup[this.checkListIndex].checkList[0] = param
               this.$Message.info('上传成功');
               window.clearInterval(s)
               this.percentCheckList = 0
@@ -703,6 +900,18 @@
       },
       // 提交资料
       netStep() {
+        if(this.mainPersonIDShow&&!this.uploadForm.lpIdIDPhotoList.idFont){
+          this.$Message.info({
+            content: '请上传法人身份证正面照'
+          })
+          return
+        }
+        if(this.mainPersonIDShow&&!this.uploadForm.lpIdIDPhotoList.idBack){
+          this.$Message.info({
+            content: '请上传法人身份证反面照'
+          })
+          return
+        }
         let flag = this.uploadForm.IDPhotoList.some(item => {
           return item.IDCardFront === ''
         })
@@ -730,7 +939,7 @@
           }
         }
         let flag2 = this.uploadForm.certifiedDomainNoCertificationDefault.some(item => {
-          return item.certifiedDomainNoCertificationDefaultList.length === 0
+          return item.certifiedDomainNoCertificationDefaultList[0].url === ''
         })
         if (flag2) {
           this.$Message.info({
@@ -738,7 +947,7 @@
           })
           return
         }
-        /*let flag3 = this.uploadForm.otherFileGroup.some(item => {
+        let flag3 = this.uploadForm.otherFileGroup.some(item => {
           return item.otherFile.length === 0
         })
         if (flag3) {
@@ -746,9 +955,9 @@
             content: '请上传其他资料（委托书等）'
           })
           return
-        }*/
+        }
         let flag4 = this.uploadForm.checkGroup.some(item => {
-          return item.checkList.length === 0
+          return item.checkList[0].url === ''
         })
         if (flag4) {
           this.$Message.info({
@@ -837,7 +1046,9 @@
           phone: this.mainUnitInformation.phoneNumber,
           email: this.mainUnitInformation.emailAddress,
           zoneId: this.zoneId,
-          hostCompanyUrl: this.uploadForm.combine
+          hostCompanyUrl: this.uploadForm.combine,
+          mark2: this.uploadForm.lpIdIDPhotoList.idFont,
+          mark3: this.uploadForm.lpIdIDPhotoList.idBack
         }
         sessionStorage.setItem('mainParamsStr', JSON.stringify(mainParams))
         sessionStorage.setItem('siteParamsStr', JSON.stringify(siteParams))

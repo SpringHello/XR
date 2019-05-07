@@ -15,7 +15,7 @@
         <div style="border-bottom: 1px solid #D9D9D9;">
           <h2>区域选择</h2>
           <div class="item-wrapper">
-            <div v-for="item in zoneList" :key="item.zoneid" v-if="item.zoneid !== '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'" class="zoneItem"
+            <div v-for="item in zoneList" :key="item.zoneid" v-if="item.zoneid !== '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'"  class="zoneItem"
                  :class="{zoneSelect:zone.zoneid==item.zoneid}"
                  @click="zone=item">{{item.zonename}}
             </div>
@@ -1138,7 +1138,7 @@
             return
           }
           if (!regExp.hostPassword(this.password)) {
-            this.passwordWarning = '请输入6-23位包含大小写与数字的密码,不能包含@!'
+            this.passwordWarning = '请输入6-23位包含大小写与数字的密码,不能包含@!#'
             return
           }
         }

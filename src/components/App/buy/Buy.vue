@@ -312,7 +312,7 @@
         product: {
           currentProduct: this.$route.name,
           productList: [
-            {label: '云主机', value: 'host/'},
+            {label: '云服务器', value: 'host/'},
             {label: '云硬盘', value: 'disk/'},
             {label: '公网IP', value: 'elasticip/'},
             {label: '数据库', value: 'database/'},
