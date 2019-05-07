@@ -145,7 +145,7 @@
                   <div>
                     <span>选择账期</span>
                     <DatePicker type="month" :value="valueBill" format="yyyy年M月" placeholder="请选择月份" :clearable="false" style="width: 200px" @on-change="dataChangeBill"></DatePicker>
-                    <Button type="primary">导出本月账单</Button>
+                    <Button type="primary" @click="exportBillMonth">导出本月账单</Button>
                   </div>
                 </div>
                 <div class="show-panel">
@@ -235,10 +235,10 @@
               <div class="expenses_condition">
                 <span>按交易时间</span>
                 <Row style="display: inline-block;margin-left: 10px">
-                  <Col span="12">
+                  <!-- <Col span="12">
                     <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
                                 placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
-                  </Col>
+                  </Col> -->
                 </Row>
                 <span style="margin-left: 20px">按交易金额</span>
                 <Input-number :min="0" v-model="value1"
@@ -1234,21 +1234,31 @@
         <span class="universal-modal-title">导出账单</span>
       </p>
       <div class="modal-content-s">
-        
-        <div class="SetBalancet">
-          <p>
-            <span>3月账单文件</span>
-            <p>账单于次月3日统计完成</p>
-          </p>
-          <p>仅判断可用余额与现金券余额之和与告警额度大小</p>
-          <p>
-            <span>账单自动发送</span>
-            <Switch v-model="switch1" @on-change="changeSwitch"></Switch>
-          </p>
-          <p>
-            <span>告警额度</span>
-            <InputNumber :max="999999999" :min="1" v-model="BalanceRepval" style="width: 300px"></InputNumber>
-          </p>
+        <div class="export-bill-modal">
+          <div class="row">
+            <i class="lable">{{currentMonth}}月账单文件</i>
+            <span class="btn" v-if="checkExport">点击生成</span>
+            <span v-else>账单于次月3日统计完成</span>
+          </div>
+          <div class="row">
+            <i class="lable">账单自动发送</i>
+            <i-switch v-model="switchBill" size="default" @on-change="changeSwitch"></i-switch>
+          </div>
+          <div class="row" v-if="switchBill">
+            <span style="color:#B2B2B2">开启账单自动发送之后，将在每月3号自动产生上月账单并发送至账单接收人</span>
+          </div>
+          <div class="row" v-if="switchBill">
+            <i class="lable">账单接收人</i>
+            <Select v-model="selectLinkMan" style="width:280px;">
+              <Option value="item.id" v-for="(item,index) in linkManData" :key="index">{{item.username}}</Option>
+            </Select>
+            <Poptip trigger="hover" placement="top" style="margin-left:8px;color:#2B99F2;font-size:18px;">
+                <Icon type="ios-help-outline"></Icon>
+                <div class="api" slot="content" style="width:145px;white-space: normal;line-height:16px;">若您需要将账单发送至其他联系人，可以通过操作
+                  <span style="color:#FF881C;line-height:16px">个人中心-提现管理-添加联系人</span>，添加您需要的联系人。
+                </div>
+            </Poptip>
+          </div>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -1290,9 +1300,12 @@
          this.init()*/
       }
       return {
-        switch1: false,
+        switchBill: false,
+        linkManData: [],
+        selectLinkMan: '',
         valueBill: '2019-03',
         defaultMonth: '',
+        monthFormat: '',
         billInfo: {},
         ApplicableProducts: '0',
         VoucherStatus: '',
@@ -1457,8 +1470,21 @@
             },
             {
                 title: '配置描述',
-                key: 'remark111',
-                width: 200
+                key: 'typedesc',
+                width: 200,
+                render:(h,params)=>{
+                  // let typedesc = JSON.parse(params.row.typedesc)
+                  // console.log(typedesc)
+                  // let x = ''
+                  // let array = []
+
+                  // for(x in typedesc) {
+                  //   array.push()
+                  // }
+                  return h('div',[  
+                    h('p','你好')
+                  ] )
+                }
             },
             {
                 title: '原价',
@@ -3045,10 +3071,10 @@
         this.getBillInfo(this.valueBill)
       },
       dataChangeBill(time) {
-        let timerFormat = time.replace(/(\d{4})年(\d{1,})月/g, '$1-$2')
+        this.valueBill = time.replace(/(\d{4})年(\d{1,})月/g, '$1-$2')
         this.defaultMonth = time
-        this.getBillOverview(timerFormat)
-        this.getBillInfo(timerFormat)
+        this.getBillOverview(this.valueBill)
+        this.getBillInfo(this.valueBill)
       },
       getBillOverview(time) {
         this.$http.get('nVersionUser/billOverview.do', {
@@ -3102,8 +3128,22 @@
           },0)
         }
       },
-      changeSwitch() {
-
+      changeSwitch(status) {
+        console.log(status)
+      },
+      // 列出联系人
+      getContacts() {
+        var url = `user/getcontacts.do`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.linkManData = response.data.result
+            // console.log(this.linkManData)
+          }
+        })
+      },
+      exportBillMonth() {
+        this.showModal.billExport = true
+        this.getContacts()
       },
       toAppllyInvoice() {
         this.$router.push('invoiceManage')
@@ -3198,11 +3238,17 @@
       },
       getExportTable(currentPage,type) {
         this.exportTable = [{}]
-        // this.$http.get('/nVersionUser/findExportInfo.do').then(response => {
-        //     if (response.status == 200 && response.data.status == 1) {
-        //       console.log(response.data.result)
-        //     }
-        //   })
+        this.$http.get('nVersionUser/getExport.do',{
+          params: {
+            page: '1',
+            pageSize: '7'
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              console.log(response.data.result)
+            }
+          })
+        
       },
       //Cashforwithdrawa(){
       //axios.get('user/selectValidRefundAmount.do', {
@@ -4630,6 +4676,20 @@
       remainingBalance() {
         let cost = parseInt(this.balance - this.cashCouponForm.upVipCost)
         return cost >= 0 ? cost : 0
+      },
+      // 获取当前导出账单月份
+      currentMonth() {
+        return this.valueBill.split('-')[1]
+      },
+      // 判断是否可以导出账单
+      checkExport() {
+        let now = new Date()
+        let year = now.getFullYear()
+        let month = now.getMonth()
+        let day = now.getDate()
+        let currentYear = this.valueBill.split('-')[0]
+        let currentMonth = this.valueBill.split('-')[1]
+        return (currentYear <= year && currentMonth<month) || (currentYear <= year && currentMonth == month && day >= 3)?true:false
       }
     }
     ,
@@ -5554,6 +5614,37 @@
       &:last-child {
         border-bottom: 1px solid rgba(229,233,237,1);
       }
+    }
+  }
+  .export-bill-modal {
+    .row {
+      display: flex;
+      margin-bottom: 10px;
+      .lable {
+        display: inline-block;
+        width: 84px;
+        margin-right: 10px;
+        text-align: right;
+        font-style: normal;
+        font-size:14px;
+        color:rgba(51,51,51,1);
+      }
+      span {
+        line-height: 24px;
+        font-size: 12px;
+      }
+      .btn {
+        color: #2A99F2;
+      }
+    }
+    .row:nth-of-type(3) {
+      span {
+        margin-left:94px;
+        line-height: 16px;
+      }
+    }
+    .row:last-of-type {
+      margin-bottom: 0
     }
   }
 </style>

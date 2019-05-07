@@ -370,11 +370,11 @@ export default {
       columnsAddressee: [
         {
           title: "收件人",
-          key: "name"
+          key: "recipient"
         },
         {
           title: "联系电话",
-          key: "age"
+          key: "phone"
         },
         {
           title: "收件地址",
@@ -382,12 +382,17 @@ export default {
         },
         {
           title: "状态",
-          key: "name"
+          key: "status",
+          render: (h,params)=>{
+            return h('span',params.row.status?'可用':'默认')
+          }
         },
         {
           title: "操作",
           key: "age",
           render: (h, params) => {
+            let color = params.row.status?'#2A99F2':'#999999'
+            
             return h("div", [
               h(
                 "span",
@@ -400,6 +405,7 @@ export default {
                   on: {
                     click: () => {
                       alert(params.index);
+                      
                     }
                   }
                 },
@@ -425,12 +431,14 @@ export default {
                 "span",
                 {
                   style: {
-                    color: "#2A99F2",
+                    color: color,
                     cursor: "pointer"
                   },
                   on: {
                     click: () => {
-                      alert(params.index);
+                      if(params.row.status){
+                        alert(params.index);
+                      }
                     }
                   }
                 },
@@ -576,6 +584,7 @@ export default {
     this.changeProvince('北京市');
     this.changeArea('北京市');
     this.getInvoiceList()
+    this.getInvoiceAddressee()
   },
   mounted() {},
   methods: {
@@ -600,6 +609,14 @@ export default {
           // this.invoice = response.data.result.result
         }
       });
+    },
+    getInvoiceAddressee() {
+      this.$http.get('nVersionUser/getReciveinfo.do').then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.addresseeList = response.data.result.data
+          // console.log(response.data.result.data)
+        }
+      })
     },
     toExpenses() {
       sessionStorage.setItem("expensesTab", "applyInvoice");
