@@ -384,20 +384,21 @@
               <p>
                 <span class="spana">适用产品：</span>
                 <RadioGroup v-model="ApplicableProducts" type="button" class="rideo" @on-change="ProductChange">
-                  <Radio label="0">全部</Radio>
-                  <Radio label="1">全产品通用</Radio>
-                  <Radio label="2">包年包月可用</Radio>
-                  <Radio label="3">弹性云服务器可用</Radio>
-                  <Radio label="4">云数据库可用</Radio>
-                  <Radio label="5">网络产品可用</Radio>
-                  <Radio label="6">对象存储可用</Radio>
-                  <Radio label="7">云市场</Radio>
+                  <!-- 适用产品类型 默认(包括老数据)0 全产品通用; 1  包年包月可用;  2  弹性云服务器可用;  3 云数据库可用;  4 网络产品可用;  5 对象存储可用;  6 云市场 -->
+                  <Radio label="">全部</Radio>
+                  <Radio label="0">全产品通用</Radio>
+                  <Radio label="1">包年包月可用</Radio>
+                  <Radio label="2">弹性云服务器可用</Radio>
+                  <Radio label="3">云数据库可用</Radio>
+                  <Radio label="4">网络产品可用</Radio>
+                  <Radio label="5">对象存储可用</Radio>
+                  <Radio label="6">云市场</Radio>
                 </RadioGroup>
               </p>
               <p>
-                <!-- @on-change="VoucherChange" -->
                 <span class="spana">代金券状态：</span>
-                <RadioGroup v-model="VoucherStatus" type="button" class="rideo" >
+                <RadioGroup v-model="VoucherStatus" type="button" @on-change="VoucherChange" class="rideo" >
+                  <!-- 是否使用  0未使用  1已使用   2已过期 -->
                   <Radio label="">全部</Radio>
                   <Radio label="0">待使用</Radio>
                   <Radio label="1">已使用</Radio>
@@ -405,11 +406,10 @@
                 </RadioGroup>
               </p>
               <p>
-                <!-- @on-change="DueTimeChange" -->
                 <span class="spana">到期时间：</span>
-                <RadioGroup v-model="DueTime" type="button" class="rideo" >
-                  <Radio label="0">全部</Radio>
-                  <Radio label="1">7天内到期</Radio>
+                <RadioGroup v-model="DueTime" @on-change="DueTimeChange" type="button" class="rideo" >
+                  <Radio label="">全部</Radio>
+                  <Radio label="0">7天内到期</Radio>
                 </RadioGroup>
                 <Button type="primary" style="float: right;margin-top:10px;" @click="showModal.exchangeCard=true">获取优惠券</Button>
               </p>
@@ -1307,15 +1307,16 @@
         defaultMonth: '',
         monthFormat: '',
         billInfo: {},
-        ApplicableProducts: '0',
+        ApplicableProducts: '',
         VoucherStatus: '',
-        DueTime: '0',
+        DueTime: '',
         OrdersourceType: '',
         Ordertypevalue:'',
         paymentStatusValue:'',
         TransactionAmountsort:'',
         CreatTimesort:'',
         PayTimesort:'',
+        PreferentialOrder:'',
         columnsResources: [
             {
                 title: '资源ID',
@@ -1983,59 +1984,69 @@
         cardVolumeColumns: [
           {
             title: '类型',
-            key: 'operator',
+            key: 'ticketType',
             align: 'left',
-            width: 120
+            width: 120,
+            render: (h, params) => {
+                return h('span', params.row.ticketType == 0 ? '满减券' : params.row.ticketType == 1 ? '折扣券' :
+                params.row.ticketType == 2 ? '现金券' : '')
+              }
           },
           {
             title: '面值/折扣',
             align: 'left',
             render: (h, params) => {
               return h('span', params.row.tickettype == '1' ? `${params.row.money}折` : `${params.row.money}元`)
-            },
-            width: 110
-          },
-          {
-            title: '适用产品',
-            key: 'tickettype',
-            align: 'left',
-            width: 140,
-            render: (h, params) => {
-              return h('span', {}, '全区')
             }
           },
           {
+            title: '余额',
+            align: 'left',
+            render: (h, params) => {
+              return h('span', params.row.tickettype == '1' ? `${params.row.money}折` : `${params.row.money}元`)
+            }
+          },
+          {
+            title: '适用产品',
+            key: 'useType',
+            align: 'left',
+            width: 140,
+            // 默认(包括老数据)0 全产品通用; 1  包年包月可用;  2  弹性云服务器可用;  3 云数据库可用;  4 网络产品可用;  5 对象存储可用;  6 云市场 ;
+            render: (h, params) => {
+                return h('span', params.row.useType == 0 ? '全产品' : params.row.useType == 1 ? '包年包月' :
+                params.row.useType == 2 ? '弹性云服务器' :
+                params.row.useType == 3 ? '云数据库' :
+                params.row.useType == 4 ? '网络产品' :
+                params.row.useType == 5 ? '对象存储' :
+                params.row.useType == 6 ? '云市场' : '')
+              }
+          },
+          {
             title: '状态',
-            key: 'maketicketover',
+            key: 'isuse',
             align: 'left',
             width: 110,
             render: (h, params) => {
-              return h('span', params.row.maketicketover == 0 ? '未使用' : params.row.maketicketover == 1 ? '已使用' : '已失效')
+              return h('span', params.row.isuse == 0 ? '未使用' : params.row.isuse == 1 ? '已使用' : '已失效')
             }
           },
           {
             title: '失效时间',
-            key: 'endtime',
+            key: 'usetime',
             align: 'left',
             width: 175,
             title: '生效/失效时间',
-            key: 'starttime',
+            key: 'taketime',
             sortable: 'custom',
             render: (h, params) => {
-              return h('span', params.row.starttime + '/' + params.row.endtime)
+              return h('span', params.row.taketime + '/' + params.row.usetime)
             }
-          },
-          {
-            title: '描述',
-            key: 'ticketdescript',
-            align: 'left',
-            ellipsis: true
           },
           {
             title: '备注',
             key: 'remark',
             align: 'left',
-            width: 250,
+            width: 210,
             ellipsis: true,
             render: (h, params) => {
               return h('span', params.row.remark == null ? '--' : params.row.remark)
@@ -3172,12 +3183,20 @@
         }
       },
       cardVolumeField(column){
-        console.log(column)
-        console.log(column.order)
+        this.PreferentialOrder=column.order
+        this.searchCard()
       },
       ProductChange(label){
-        console.log(label)
-        console.log(this.ApplicableProducts)
+        this.ApplicableProducts=label
+        this.searchCard()
+      },
+      VoucherChange(label){
+        this.VoucherStatus=label
+        this.searchCard()
+      },
+      DueTimeChange(label){
+        this.DueTime=label
+        this.searchCard()
       },
       OrderchangePage(currentPage) {
         this.getOrder(currentPage)
@@ -3755,16 +3774,20 @@
         console.log(this.orderNumber)
       },
       searchCard() {
-        this.$http.get('ticket/getUserTicket.do', {
+        this.$http.get('/nVersionUser/getTicketInfo.do', {
           params: {
             pageSize: this.cardPageSize,
             page: this.card_currentPage,
-            ticketType: this.cardType,
-            isuse:  this.VoucherStatus == '' ? '' : this.VoucherStatus == '1' ? '1' : this.VoucherStatus == '0' ? '0'  : '',
+            orderTime : this.PreferentialOrder,
+            expireDate : this.DueTime,
+            status : this.VoucherStatus,
+            type : this.ApplicableProducts
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.cardVolumeTabledata = response.data.result
+            this.cardVolumeTabledata = response.data.result.info
+            this.cardTotal=response.data.result.count
+            console.log("这是第一个方法")
           }
         })
       },
@@ -3823,6 +3846,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cardVolumeTableData = response.data.result
+                console.log("这时候第二个方法")
                 for (var a = 0; a < this.cardVolumeTableData.length; a++) {
                   if (this.cardSelection && this.cardSelection.operatorid == this.cardVolumeTableData[a].operatorid) {
                     this.activeIndex = a
