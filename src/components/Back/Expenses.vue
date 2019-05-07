@@ -289,10 +289,9 @@
     </div>
 
     <Modal v-model="showModal.clipCoupons" width="690" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        可用优惠券（请选择一张优惠券）
-      </div>
+        <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title"> 可用优惠券（请选择一张优惠券）</span>
+      </p>
       <div>
         <!--Table :columns="cardVolumeColumns" :data="cardVolumeTabledata" @on-selection-change="cardSelect"></Table-->
         <table style="width:100%;border: 1px solid #e9eaec;">
@@ -2588,11 +2587,12 @@
         })
       },
       orderPay() {
-      this.payForm.paymentAmount = this.orderNumber.map(item => {
+      /*this.payForm.paymentAmount = this.orderNumber.map(item => {
          return item.cost
           }).reduce((total, num) => {
            return total + num
-        }, 0).toFixed(2)
+        }, 0).toFixed(2)*/
+        this.payForm.paymentAmount = this.actualDelivery
         if (this.orderNumber.length != 0) {
           let orderNum = this.orderNumber.map(item => {
             return item.ordernumber

@@ -79,7 +79,7 @@
                 </Select>
               </div>
               <div class="item-price">
-                <p>押金：<span>¥{{config.cashPledge}}</span><span>原价：¥{{ config.originalCost}}</span></p>
+                <p>押金：<span>¥{{config.cashPledge}}</span><span v-if="configIndex===0" style="font-size:14px">/月</span><span v-else style="font-size:14px">/年</span><span>原价：¥{{ config.originalCost}}</span></p>
               </div>
               <div class="item-button">
                 <button @click="getHost(configIndex)" :disabled="flag" :class="{disabled: flag}">免费领取</button>
@@ -87,7 +87,7 @@
            </div>
          </div>
         </div>
-        <p>温馨提示：使用期间若到“百度口碑”发布使用体验等相关评论，截图联系发送至在线客服，可领取满XX减XX优惠券。<a href="https://koubei.baidu.com/s/510a4f5f6316c2d0f81b3e63bc75b537?fr=search" target="blank">点击发布评论></a></p>
+        <p>温馨提示：使用期间若到“百度口碑”发布使用体验等相关评论，截图联系发送至在线客服，可领取满200减100优惠券。<a href="https://koubei.baidu.com/s/510a4f5f6316c2d0f81b3e63bc75b537?fr=search" target="blank">点击发布评论></a></p>
       </div>
     </div>
     <div style="background:rgba(37,65,158,1);">
@@ -340,7 +340,7 @@
               <Input v-model="quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
                      style="width:250px;margin-right: 10px"></Input>
               <img :src="imgSrc" style="height:33px;"
-                   @click="imgSrc=`https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                   @click="imgSrc=`https://zschj.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`">
             </div>
           </FormItem>
           <FormItem label="手机号码" prop="phone" style="width: 100%">
@@ -771,7 +771,7 @@
             {required: true, message: '请输入验证码'}
           ]
         },
-        imgSrc: 'https://www.xrcloud.net/user/getKaptchaImage.do',
+        imgSrc: 'https://zschj.xrcloud.net/user/getKaptchaImage.do',
         index1: '',
         index2: ''
       }

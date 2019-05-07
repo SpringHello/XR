@@ -1138,7 +1138,7 @@
             return
           }
           if (!regExp.hostPassword(this.password)) {
-            this.passwordWarning = '请输入6-23位包含大小写与数字的密码,不能包含@!'
+            this.passwordWarning = '请输入6-23位包含大小写与数字的密码,不能包含@!#'
             return
           }
         }
