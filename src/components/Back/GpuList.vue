@@ -41,7 +41,7 @@
               confirm
               width="230"
               placement="right"
-              @on-ok="deleteHost"
+              @on-ok="delBefore"
               title="您确认删除选中的主机吗？">
               <Button type="primary" :disabled="deleteDisabled">删除</Button>
             </Poptip>
@@ -1162,7 +1162,7 @@
                       on: {
                         click: () => {
                           this.deleteList = params.row;
-                          this.deleteHost(params.row._index);
+                          this.delBefore(params.row._index);
                         }
                       }
                     }, '删除')])
@@ -1187,7 +1187,7 @@
                       on: {
                         click: () => {
                           this.deleteList = params.row;
-                          this.deleteHost(params.row._index);
+                          this.delBefore(params.row._index);
                         }
                       }
                     }, '删除')])
@@ -1343,7 +1343,7 @@
                                 this.$Message.info('请等待主机完成当前操作');
                               }else {
                                 this.deleteList = params.row;
-                                this.deleteHost(params.row._index);
+                                this.delBefore(params.row._index);
                               }
                             }
                           }
@@ -1641,7 +1641,21 @@
            }
          })
         },
-
+      delBefore(index){
+        this.$http.get('information/delVMHint.do',{
+          params:{
+            type:3,
+            computerId:this.uuId,
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.deleteHost(index);
+          }else{
+            this.delHostMessage = res.data.message
+            this.showModal.delHostHint = true
+          }
+        })
+      },
       //删除主机
        deleteHost(index){
           if(this.deleteList ==""){
