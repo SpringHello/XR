@@ -314,7 +314,7 @@
               </p>
               <p class="order_s2">
                 <img src="../../assets/img/expenses/xiangnum.png" class="order_s2span"/>
-                <span class="order_s2span1">共 10 项 | 已选择<span> 0 </span>项 </span>
+                <span class="order_s2span1">共 {{OrderPages}} 项 | 已选择<span> 0 </span>项 </span>
                 <span class="order_s2span2">总价：<span>¥0.00</span></span>
                 <span class="orderdiv">
                   <span class="order_s2span3">按创建时间</span>
@@ -409,7 +409,7 @@
                 <span class="spana">到期时间：</span>
                 <RadioGroup v-model="DueTime" @on-change="DueTimeChange" type="button" class="rideo" >
                   <Radio label="">全部</Radio>
-                  <Radio label="0">7天内到期</Radio>
+                  <Radio label="7">7天内到期</Radio>
                 </RadioGroup>
                 <Button type="primary" style="float: right;margin-top:10px;" @click="showModal.exchangeCard=true">获取优惠券</Button>
               </p>
@@ -1290,6 +1290,7 @@
          this.init()*/
       }
       return {
+        ordernumS:'',
         switch1: false,
         valueBill: '2019-03',
         defaultMonth: '',
@@ -1553,7 +1554,6 @@
                   on: {
                     click: () => {
                       //this.$router.push('CloudDataManage')
-                      alert(params.row.ordernumber);
                       sessionStorage.setItem('orderid',params.row.ordernumber)
                       this.$router.push('OrderDetails');
                     }
@@ -1987,12 +1987,17 @@
             width: 140,
             // 默认(包括老数据)0 全产品通用; 1  包年包月可用;  2  弹性云服务器可用;  3 云数据库可用;  4 网络产品可用;  5 对象存储可用;  6 云市场 ;
             render: (h, params) => {
-                return h('span', params.row.useType == 0 ? '全产品' : params.row.useType == 1 ? '包年包月' :
-                params.row.useType == 2 ? '弹性云服务器' :
-                params.row.useType == 3 ? '云数据库' :
-                params.row.useType == 4 ? '网络产品' :
-                params.row.useType == 5 ? '对象存储' :
-                params.row.useType == 6 ? '云市场' : '')
+                if(params.row.useType){
+                  return h('span', params.row.useType == 0 ? '全产品通用' : params.row.useType == 1 ? '包年包月' :
+                  params.row.useType == 2 ? '弹性云服务器' :
+                  params.row.useType == 3 ? '云数据库' :
+                  params.row.useType == 4 ? '网络产品' :
+                  params.row.useType == 5 ? '对象存储' :
+                  params.row.useType == 6 ? '云市场' : '')
+                }
+                else{
+                  return h('span', '全产品通用')
+                }
               }
           },
           {
@@ -2006,14 +2011,14 @@
           },
           {
             title: '失效时间',
-            key: 'usetime',
+            key: 'endDate',
             align: 'left',
             width: 175,
             title: '生效/失效时间',
-            key: 'taketime',
+            key: 'startDate',
             sortable: 'custom',
             render: (h, params) => {
-              return h('span', params.row.taketime + '/' + params.row.usetime)
+              return h('span', params.row.startDate + '/' + params.row.endDate)
             }
           },
           {
@@ -2029,7 +2034,7 @@
           {
             title: '操作',
             render: (h, obj) => {
-              if (obj.row.maketicketover == 0) {
+              if (obj.row.isuse == 0) {
                 // 现金券
                 if (obj.row.tickettype == '2') {
                   return h('div', {}, [
@@ -2046,7 +2051,7 @@
                               // 调用使用现金券接口
                               this.$http.get('ticket/useMoneyTicket.do', {
                                 params: {
-                                  moneyTicketId: obj.row.id
+                                  moneyTicketId: obj.row.ticketnumber
                                 }
                               }).then(response => {
                                 if (response.status == 200 && response.data.status == 1) {
@@ -2080,7 +2085,7 @@
                               // 调删除现金券接口
                               this.$http.get('ticket/delUserTicket.do', {
                                 params: {
-                                  id: obj.row.id
+                                  id: obj.row.ticketnumber
                                 }
                               }).then(response => {
                                 if (response.status == 200 && response.data.status == 1) {
@@ -2117,10 +2122,11 @@
                           this.$message.confirm({
                             content: '确认删除该优惠券吗？',
                             onOk: () => {
+                              console.log(obj.row.ticketnumber)
                               // 调删除现金券接口
                               this.$http.get('ticket/delUserTicket.do', {
                                 params: {
-                                  id: obj.row.id
+                                  id: obj.row.ticketnumber
                                 }
                               }).then(response => {
                                 if (response.status == 200 && response.data.status == 1) {
@@ -2154,7 +2160,7 @@
                           // 调删除现金券接口
                           this.$http.get('ticket/delUserTicket.do', {
                             params: {
-                              id: obj.row.id
+                              id: obj.row.ticketnumber
                             }
                           }).then(response => {
                             if (response.status == 200 && response.data.status == 1) {
@@ -3706,17 +3712,21 @@
       select(selection) {
         this.orderNumber = []
         this.totalCost = 0
+        var arr = []
         this.orderNumber = selection
         if (this.orderNumber.length != 0) {
           // this.costSeen = true
           var cost = 0
           this.orderNumber.forEach(item => {
+            arr.push(item.ordernumber)
             if (item && item.paymentstatus == 0) {
               cost += Number.parseFloat(item.cost)
             }
           })
+          this.ordernumS=arr.toString(',')
           this.totalCost = Math.round(cost * 100) / 100
           this.actualDelivery = this.totalCost
+          this.InquiryPrice()
           if (this.totalCost == 0) {
             // this.costSeen = false
           }
@@ -3725,7 +3735,17 @@
         } else {
           // this.costSeen = false
         }
-        console.log(this.orderNumber)
+      },
+      InquiryPrice(){
+        this.$http.get('/nVersionUser/getTotalOrderCost.do', {
+          params: {
+            orderNumbers: this.ordernumS
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            console.log(response.data)
+          }
+        })
       },
       searchCard() {
         this.$http.get('/nVersionUser/getTicketInfo.do', {
@@ -3800,7 +3820,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cardVolumeTableData = response.data.result
-                console.log("这时候第二个方法")
+                console.log("这是第二个方法")
                 for (var a = 0; a < this.cardVolumeTableData.length; a++) {
                   if (this.cardSelection && this.cardSelection.operatorid == this.cardVolumeTableData[a].operatorid) {
                     this.activeIndex = a

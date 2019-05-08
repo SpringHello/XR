@@ -41,10 +41,24 @@
         <p class="p4">
           <span class="leftspan">总计支付：</span>
           <span class="rightspan">¥{{cost}}</span>
-          <Button type="error" v-if="paymentStatus == 0">立即付款</Button>
+          <Button type="error" v-if="paymentStatus == 0" @click="showModal.payAffirm=true">立即付款</Button>
         </p>
         <div style="clear: both;"></div>
       </div>
+        <Modal v-model="showModal.payAffirm" :scrollable="true" :width="640">
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">支付确认</span>
+        </p>
+        <div class="universal-modal-content-flex">
+          <p class="cash-coupon-p">总支付金额：<span> ¥{{cost}}</span></p>
+          <p class="cash-coupon-p">现金券支付金额：<span> ¥{{voucherPay}}</span></p>
+          <p class="cash-coupon-p">现金券余额：<span> ¥{{voucherS}}</span></p>
+          <p class="cash-coupon-p" v-if="">现金支付金额：<span> ¥{{cashPay}}</span></p>
+        </div>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="primary" @click="payorder">确认支付</Button>
+        </div>
+      </Modal>
     </div>
   </div>
 </template>
@@ -62,6 +76,12 @@ export default {
       orderEndTime: "",
       paymentStatus: "",
       cost: "",
+      voucherPay:'',
+      cashPay:'',
+      voucherS:'',
+      showModal:{
+        payAffirm:false
+      },
       columns1: [
         {
           title: "产品名称",
@@ -173,6 +193,7 @@ export default {
   },
   created() {
     this.load();
+    this.getBalance()
   },
   mounted() {},
   methods: {
@@ -192,6 +213,8 @@ export default {
             this.orderEndTime = response.data.result[0].orderEndTime;
             this.paymentStatus = response.data.result[0].paymentStatus;
             this.cost = response.data.result[0].cost;
+            this.voucherPay = response.data.result[0].voucherPay;
+            this.cashPay = response.data.result[0].cashPay;
           } else {
             this.$message.info({
               content: response.data.message
@@ -199,15 +222,51 @@ export default {
           }
         });
     },
+    getBalance() {
+        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            this.voucherS = response.data.data.voucher
+          }
+        })
+      },
     deteleOrder() {
-      this.$Message.success("订单删除成功");
-      this.$router.push("/expenses");
+      this.$http.get('continue/delOrderpay.do', {
+                params: {
+                  order: this.orderId
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success("订单删除成功");
+                  this.$router.push("/expenses");
+                }
+              })
     },
     cancelOrder() {},
     ReturnPage() {
       sessionStorage.setItem("expensesTab", "orderManage");
       sessionStorage.removeItem("orderid");
       this.$router.push("Expenses");
+    },
+    payorder(){
+      axios.get('information/payOrder.do', {
+            params: {
+              order: this.orderId
+            }
+          }).then(res => {
+            this.$router.push('resultNew')
+            if (res.status == 200 && res.data.status == 1) {
+              sessionStorage.setItem('payResult', 'success')
+              sessionStorage.setItem('successMsg', res.data.message)
+              if (res.data.giftNumMessage) {
+                sessionStorage.setItem('firstMsg', res.data.giftNumMessage)
+              } else {
+                sessionStorage.setItem('firstMsg', '')
+              }
+            } else {
+              sessionStorage.setItem('payResult', 'fail');
+              sessionStorage.setItem('errMsg', res.data.message);
+            }
+          })
     }
   },
   computed: {},
@@ -287,7 +346,20 @@ export default {
           margin-left: 20px;
         }
       }
+      
     }
   }
 }
+.cash-coupon-p {
+          font-size: 16px;
+          font-family: MicrosoftYaHei;
+          font-weight: 400;
+          color: rgba(102, 102, 102, 1);
+          margin-bottom: 20px;
+          > span {
+            font-size: 24px;
+            font-weight: 600;
+            color: rgba(51, 51, 51, 1);
+          }
+        }
 </style>
