@@ -257,7 +257,7 @@
       }
     },
     created(){
-      axios.post('https://zschj.xrcloud.net/domain/getSuffix.do', {}).then(res => {
+      axios.post('https://www.xrcloud.net/domain/getSuffix.do', {}).then(res => {
         this.getSuffix = res.data.data
         this.showSuffix = []
         var arry = this.getSuffix.en
