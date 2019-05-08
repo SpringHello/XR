@@ -4,8 +4,7 @@
     <div class="banner">
       <div class="wrap">
         <div class="text">
-        <p>0元使用</p>
-        <p>爆款云服务器免费使用一年</p>
+        <p>爆款云服务器免费用一年</p>
         <p>押金随时可退</p>
         </div>
         <div class="img">
@@ -16,7 +15,7 @@
     <div class="center">
       <div class="fr-host">
         <h2>免费活动主机</h2>
-        <p>新用户专享，云服务器交押金免费试用，押金闪退 <span @click="roll(2800)">活动规则></span></p>
+        <p>新用户专享，云服务器交押金免费试用，押金闪退 <span @click="roll(2400)">活动规则></span></p>
         <!--<div v-for="(config,configIndex) in configGroup" class="fr-config" :key="configIndex">
           <div class="config-title" :class="{configIndex:configIndex ==1 }">
             <span>{{ config.headline }}</span>
@@ -862,10 +861,12 @@
           activityName: '免费领主机'
         }).then(res => {
           if (res.data.status == 1) {
+            if(res.data.result.optionalArea.length !==0){
             this.areaGroup = res.data.result.optionalArea
             this.configGroup.forEach(config => {
               config.zoneId = this.areaGroup[0].value
             })
+            }
           }
         })
       },
@@ -1229,14 +1230,11 @@
         color:rgba(255,255,255,1);
       }
       p:nth-child(1){
-        padding-top: 84px;
-      }
-      p:nth-child(2){
-        margin-top: 30px;
+        margin-top: 140px;
         font-size:48px;
         font-weight:400;
       }
-      p:nth-child(3){
+      p:nth-child(2){
         font-size:24px;
         margin-top: 25px;
         font-weight: normal;
