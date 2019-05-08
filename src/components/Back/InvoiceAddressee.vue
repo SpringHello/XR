@@ -30,7 +30,7 @@
         <div class="invoice-info">
           <div class="title-row">
             <h2>收件信息</h2>
-            <Button size="large" @click="showModal.receiptInfoAdd = true">新增收件信息</Button>
+            <Button size="large" @click="receiptInfoAdd_open()">新增收件信息</Button>
           </div>
           <Table :columns="columnsAddressee" :data="addresseeList"></Table>
         </div>
@@ -38,87 +38,52 @@
     </div>
 
     <!-- 新增收件信息 -->
-    <Modal v-model="showModal.receiptInfoAdd" title="新增收件信息" width='500'>
+    <Modal v-model="showModal.receiptInfoAdd" width='500'>
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">{{addresseeTitleModal}}收件信息</span>
+        </p>
         <Form ref="formReceipt" :model="formReceipt" :rules="ruleReceipt" :label-width="90">
-          <FormItem prop="name" label="收件人信息">
-              <Input type="text" v-model="formReceipt.name" placeholder="请输入收件人姓名" style="width:300px;">
+          <FormItem prop="recipient" label="收件人姓名">
+              <Input type="text" v-model="formReceipt.recipient" placeholder="请输入收件人姓名" style="width:300px;">
               </Input>
           </FormItem>
           <FormItem prop="phone" label="收件人电话">
               <Input type="text" v-model="formReceipt.phone" placeholder="请输入收件人电话" style="width:300px;">
               </Input>
           </FormItem>
-          <FormItem label="验证码" prop="code">
+          <!-- <FormItem label="验证码" prop="code">
               <Input type="text" v-model="formReceipt.code" placeholder="请输入验证码" style="width:107px;">
               </Input>
               <Button type="primary" style="margin-left:10px;"  @click="getVerificationCode" v-if="timeBoo" >获取验证码</Button>
-              <Button disabled style="margin-left:10px;" v-else>{{count+'分'}}</Button>
+              <Button disabled style="margin-left:10px;" v-else>{{count+'分'}}</Button> -->
           </FormItem>
           <FormItem label="区域">
             <Select v-model="formReceipt.province" style="width:93px;" @on-change='changeProvince'>
                 <Option  v-for="item in area" :value="item.name" :key="item.name">{{item.name}}</Option>
             </Select>
-            <Select v-model="formReceipt.area" style="width:93px;" @on-change='changeArea'>
+            <Select v-model="formReceipt.city" style="width:93px;" @on-change='changeArea'>
                 <Option v-for="item in areaList" :value="item.name"  :key="item.name">{{item.name}}</Option>
             </Select>
-            <Select v-model="formReceipt.county" style="width:93px;">
+            <Select v-model="formReceipt.district" style="width:93px;">
                 <Option v-for="item in countyList" :value="item" :key="item">{{item}}</Option>
             </Select>
           </FormItem>
-          <FormItem label="详细地址" prop="desc">
-             <Input v-model="formReceipt.desc" type="textarea" :autosize="{minRows: 5,maxRows: 8}" placeholder="请详细填写便于快递投递无误，例如：重庆市 渝北区洪湖西路 智慧大厦A栋5-D"></Input>
+          <FormItem label="详细地址" prop="address">
+             <Input v-model="formReceipt.address" type="textarea" :autosize="{minRows: 5,maxRows: 8}" placeholder="请详细填写便于快递投递无误，例如：重庆市 渝北区洪湖西路 智慧大厦A栋5-D"></Input>
           </FormItem>
       </Form>
-      <div class="v_box">
+      <!-- <div class="v_box">
         <p>没有收到验证码？</p>
         <p>1、网络异常可能会造成短信丢失，请<span @click="getVerificationCode">重新获取</span>或<span @click="getVoiceCode">接受语音验证码</span>。</p>
         <p>2、如果手机已丢失或停机，请<a href="https://www.xrcloud.net/work" target="_blank">提交工单</a>或<a class="box_a" target="_blank"
         :href="`tencent://message/?uin=${QQInfo}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
         >联系客服</a>更改手机号。</p>
-      </div>
+      </div> -->
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.receiptInfoAdd = false">取消</Button>
+        <Button type="primary" @click="addAdrressOk('formReceipt')">确定</Button>
+      </p>
     </Modal>
-
-    <!-- 修改收件信息 -->
-    <Modal v-model="showModal.modifyReceiptInfoAdd" title="新增收件信息" width='500'>
-        <Form ref="formModifyReceipt" :model="formModifyReceipt" :rules="ruleModifyReceipt" :label-width="90">
-          <FormItem prop="name" label="收件人信息">
-              <Input type="text" v-model="formModifyReceipt.name" placeholder="请输入收件人姓名" style="width:300px;">
-              </Input>
-          </FormItem>
-          <FormItem prop="phone" label="收件人电话">
-              <Input type="text" v-model="formModifyReceipt.phone" placeholder="请输入收件人电话" style="width:300px;">
-              </Input>
-          </FormItem>
-          <FormItem label="验证码" prop="code">
-              <Input type="text" v-model="formModifyReceipt.code" placeholder="请输入验证码" style="width:107px;">
-              </Input>
-              <Button type="primary" style="margin-left:10px;"  @click="getVerificationCode" v-if="timeBoo" >获取验证码</Button>
-              <Button disabled style="margin-left:10px;" v-else>{{count+'分'}}</Button>
-          </FormItem>
-          <FormItem label="区域">
-            <Select v-model="formModifyReceipt.province" style="width:93px;" @on-change='changeProvince'>
-                <Option  v-for="item in area" :value="item.name" :key="item.name">{{item.name}}</Option>
-            </Select>
-            <Select v-model="formModifyReceipt.area" style="width:93px;" @on-change='changeArea'>
-                <Option v-for="item in areaList" :value="item.name"  :key="item.name">{{item.name}}</Option>
-            </Select>
-            <Select v-model="formModifyReceipt.county" style="width:93px;">
-                <Option v-for="item in countyList" :value="item" :key="item">{{item}}</Option>
-            </Select>
-          </FormItem>
-          <FormItem label="详细地址" prop="desc">
-             <Input v-model="formModifyReceipt.desc" type="textarea" :autosize="{minRows: 5,maxRows: 8}" placeholder="请详细填写便于快递投递无误，例如：重庆市 渝北区洪湖西路 智慧大厦A栋5-D"></Input>
-          </FormItem>
-      </Form>
-      <div class="v_box">
-        <p>没有收到验证码？</p>
-        <p>1、网络异常可能会造成短信丢失，请<span @click="getVerificationCode">重新获取</span>或<span @click="getVoiceCode">接受语音验证码</span>。</p>
-        <p>2、如果手机已丢失或停机，请<a href="https://www.xrcloud.net/work" target="_blank">提交工单</a>或<a class="box_a" target="_blank"
-        :href="`tencent://message/?uin=${QQInfo}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
-        >联系客服</a>更改手机号。</p>
-      </div>
-    </Modal>
-
 
     <!-- 新增开票信息 -->
     <Modal v-model="showModal.invoiceInfo" title="新增收件信息" width='500'>
@@ -265,6 +230,7 @@ const validTaxpayer = (rule, value, callback) =>{
 export default {
   data() {
     return {
+      addresseeTitleModal: '新增',
       area: area,
       QQInfo: "",
       columnsInvoice: [
@@ -370,11 +336,11 @@ export default {
       columnsAddressee: [
         {
           title: "收件人",
-          key: "name"
+          key: "recipient"
         },
         {
           title: "联系电话",
-          key: "age"
+          key: "phone"
         },
         {
           title: "收件地址",
@@ -382,12 +348,17 @@ export default {
         },
         {
           title: "状态",
-          key: "name"
+          key: "status",
+          render: (h,params)=>{
+            return h('span',params.row.status?'可用':'默认')
+          }
         },
         {
           title: "操作",
           key: "age",
           render: (h, params) => {
+            let color = params.row.status?'#2A99F2':'#999999'
+            
             return h("div", [
               h(
                 "span",
@@ -399,7 +370,9 @@ export default {
                   },
                   on: {
                     click: () => {
-                      alert(params.index);
+                      this.formReceipt = params.row
+                      this.addresseeTitleModal = '修改'
+                      this.showModal.receiptInfoAdd = true
                     }
                   }
                 },
@@ -415,7 +388,20 @@ export default {
                   },
                   on: {
                     click: () => {
-                      alert(params.index);
+                      this.$message.confirm({
+                          content: '你是否确认删除？',
+                          onOk: () => {
+                            this.$http.get('nVersionUser/deleteReciveinfo.do', {
+                              params: {
+                                id: params.row.id,
+                              }
+                            }).then(response => {
+                              if (response.status == 200 && response.data.status == 1) {
+                                this.getInvoiceAddressee()
+                              }
+                            })
+                          }
+                        })
                     }
                   }
                 },
@@ -425,12 +411,27 @@ export default {
                 "span",
                 {
                   style: {
-                    color: "#2A99F2",
+                    color: color,
                     cursor: "pointer"
                   },
                   on: {
                     click: () => {
-                      alert(params.index);
+                      if(params.row.status){
+                        this.$message.confirm({
+                          content: '你确定设置为默认？',
+                          onOk: () => {
+                            this.$http.get('nVersionUser/setDefoultAddress.do', {
+                              params: {
+                                id: params.row.id,
+                              }
+                            }).then(response => {
+                              if (response.status == 200 && response.data.status == 1) {
+                                this.getInvoiceAddressee()
+                              }
+                            })
+                          }
+                        })
+                      }
                     }
                   }
                 },
@@ -452,7 +453,6 @@ export default {
         receiptInfoAdd: false,
         invoiceInfo: false,
         modifyInvoiceInfo:false,
-        modifyReceiptInfoAdd:false
       },
       // 收件信息
       ruleReceipt: {
@@ -470,37 +470,12 @@ export default {
         ]
       },
       formReceipt: {
-        name: "",
+        recipient: "",
         phone: "",
         province: "北京市",
-        area: "",
-        county: "",
-        desc: "",
-        code:'',
-      },
-
-       // 修改收件信息
-      ruleModifyReceipt: {
-        name:[
-          {required:true,message:'请输入收件人姓名',trigger:'blur'}
-        ],
-        phone:[ 
-          {required:true,validator:vailAucct,trigger:'blur'}
-        ],
-        code:[
-          {required:true,message:'请输入验证码',trigger:'blur'}
-        ],
-        desc:[
-          {required:true,message:'请输入详细地址',trigger:'blur'}
-        ]
-      },
-      formModifyReceipt: {
-        name: "",
-        phone: "",
-        province: "北京市",
-        area: "",
-        county: "",
-        desc: "",
+        city: "",
+        district: "",
+        address: "",
         code:'',
       },
 
@@ -532,7 +507,6 @@ export default {
         deposit:'',
         bankAccount:''
       },
-
       // 修改开票信息
       ruleModifyInvoice: {
         rise:[
@@ -576,6 +550,7 @@ export default {
     this.changeProvince('北京市');
     this.changeArea('北京市');
     this.getInvoiceList()
+    this.getInvoiceAddressee()
   },
   mounted() {},
   methods: {
@@ -601,16 +576,27 @@ export default {
         }
       });
     },
+    getInvoiceAddressee() {
+      this.$http.get('nVersionUser/getReciveinfo.do').then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.addresseeList = response.data.result.data
+        }
+      })
+    },
     toExpenses() {
       sessionStorage.setItem("expensesTab", "applyInvoice");
       this.$router.push("expenses");
     },
-
+    receiptInfoAdd_open() {
+      this.addresseeTitleModal='新增'
+      this.formReceipt = {}
+      this.showModal.receiptInfoAdd = true
+    },
     // 切换省份
     changeProvince(val) {
       this.area.forEach(item => {
         if (item.name == val) {
-          this.formReceipt.area =  item.city[0].name;
+          this.formReceipt.city =  item.city[0].name;
           this.areaList = item.city;
         }
       });
@@ -620,7 +606,7 @@ export default {
     changeArea(val) {
       this.areaList.forEach(item => {
         if (item.name == val) {
-          this.formReceipt.county = item.area[0];
+          this.formReceipt.district = item.area[0];
           this.countyList = item.area;
         }
       });
@@ -702,6 +688,33 @@ export default {
             });
       //   }
       // });
+    },
+    addAdrressOk(name) {
+      this.$refs[name].validate((valid) => {
+          if (valid) {
+            let params = {
+                  recipient: this.formReceipt.recipient,
+                  phone: this.formReceipt.phone,
+                  province: this.formReceipt.province,
+                  city: this.formReceipt.city,
+                  district: this.formReceipt.district,
+                  address: this.formReceipt.address,
+                  // code: this.formReceipt.code
+                }
+          if(this.addresseeTitleModal == '修改'){
+            params.id = this.formReceipt.id
+          }
+            this.$http.post('nVersionUser/addReciveinfo.do',params).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(`${this.addresseeTitleModal}收件信息成功`)
+              this.showModal.receiptInfoAdd = false
+              this.getInvoiceAddressee()
+            } else {
+              this.$Message.error(`${this.addresseeTitleModal}收件信息失败`)
+            }
+          })
+        }
+      })
     }
   },
   computed: {},
