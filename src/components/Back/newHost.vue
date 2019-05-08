@@ -1872,6 +1872,7 @@
         }
       },
       delHostOkBefore(){
+        this.showModal.delHost = false
         let url = 'information/delVMHint.do'
         let params = {}
         if (this.hostDelWay === 1) {
