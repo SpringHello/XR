@@ -837,7 +837,7 @@
           //   item._disabled = item.serviceid == '1' ?true:false;
           // })
        
-          this.gpuSelection = this.serverOfferList[0]
+          this.gpuSelection = this.serverOfferList[0];
         })
       },
       // 选中表中的一项
