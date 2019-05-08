@@ -1069,11 +1069,11 @@
             break
         }*/
         switch (this.index1) {
-          case '0':
+          case 0:
             vmConfigId = '39'
             this.time = '1'
             break
-          case '1':
+          case 1:
             vmConfigId = '42'
             this.time = '12'
             break

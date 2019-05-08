@@ -1884,7 +1884,8 @@
             })
           })
           params = {
-            computerId: this.selectHostComputerIds + ''
+            computerId: this.selectHostComputerIds + '',
+            type: '1'
           }
         } else {
           this.hostListData.forEach(host => {
