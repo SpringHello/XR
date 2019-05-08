@@ -478,11 +478,11 @@
       },
       // 校验手机/邮箱是否注册
       checkUserName(){
-        if (this.Q == 'phone' && registerForm.phoneLogin.trim() != '' && !regExp.phoneVail(this.registerForm.phoneLogin)) {
+        if (this.Q == 'phone' && this.registerForm.phoneLogin.trim() != '' && !regExp.phoneVail(this.registerForm.phoneLogin)) {
           this.registerWarning = '请输入正确手机号'
           return
         }
-        if (this.Q == 'email' && registerForm.emailLogin.trim() != '' && !regExp.emailVail(this.registerForm.emailLogin)) {
+        if (this.Q == 'email' && this.registerForm.emailLogin.trim() != '' && !regExp.emailVail(this.registerForm.emailLogin)) {
           this.registerWarning = '请输入正确邮箱'
           return
         }

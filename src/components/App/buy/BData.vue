@@ -9,9 +9,9 @@
         <div style="border-bottom: 1px solid #D9D9D9;">
           <h2>区域选择</h2>
           <div class="item-wrapper">
-            <div v-for="item in zoneList" :key="item.zoneid" v-if="item.zoneid !== '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'" class="zoneItem"
-                 :class="{zoneSelect:zone.zoneid==item.zoneid}"
-                 @click="zone=item">{{item.zonename}}
+         <div v-for="item in zoneList" :key="item.zoneid"  class="zoneItem"
+                 :class="{zoneSelect:zone.zoneid==item.zoneid&& item.buyover != 1, zoneDisabled:item.buyover == 1}"
+                 @click="zoneChange(item)">{{item.zonename}}<span v-show="item.buyover == 1">（已售罄）</span>
             </div>
           </div>
           <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
@@ -754,10 +754,11 @@
       }),
       // 数据库加入购物车
       addDataCart() {
-        if (this.zone.zoneid == '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
-          this.$message.info({
-            content: '请选择一个区域'
+      if (this.zone.buyover == 1) {
+          this.$Message.info({
+            content: '请选择需要购买的区域'
           })
+          this.roll(100)
           return
         }
         if (this.$parent.cart.length > 4) {
@@ -804,10 +805,11 @@
           this.$LR({type: 'login'})
           return
         }
-        if (this.zone.zoneid == '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
-          this.$message.info({
-            content: '请选择一个地区'
+       if (this.zone.buyover == 1) {
+          this.$Message.info({
+            content: '请选择需要购买的区域'
           })
+          this.roll(100)
           return
         }
         if (this.system.systemName == undefined) {
@@ -875,6 +877,11 @@
             })
           }
         })
+      },
+      zoneChange(item){
+        if(item.buyover != 1){
+         this.zone = item
+        }
       }
     },
     computed: {
@@ -1064,6 +1071,12 @@
           border-color: #377dff;
           background-color: #377dff;
           color: #ffffff;
+        }
+        .zoneDisabled{
+              background: #666666;
+              border: 1px solid #666666;
+              cursor: not-allowed;
+              color: #fff;
         }
         .item-wrapper {
           margin-top: 20px;

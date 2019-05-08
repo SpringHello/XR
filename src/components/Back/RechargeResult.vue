@@ -49,7 +49,7 @@
     },
     beforeRouteEnter(to, from, next) {
       if (window.location.href.indexOf('serialNum') !== -1) {
-        let serialNum = sessionStorage.getItem('serialNum')
+        let serialNum = localStorage.getItem('serialNum')
         axios.get('user/payStatus.do', {
           params: {
             serialNum: serialNum
