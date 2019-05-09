@@ -313,20 +313,12 @@
           </div>
         </div>
       </span>
-      <!--<Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
-      <span class="service"><a
-        :href="kfURL"
-        target="_blank"></a></span>
-      </Poptip>-->
-      <!--      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left" style="height:48px;">
-              <span class="phone"></span>
-            </Poptip>-->
       <span class="phone" @click="getOrderType" @mouseenter="PME" @mouseleave="PML">
-        <div ref="phoneE" style="overflow: hidden;bottom:45px;">
+        <div ref="phoneE" style="overflow: hidden;bottom:5px;">
           <div class="wrapper">
             <div>
-              <span class="title">投诉与建议</span>
-            </div>
+            <span class="title">投诉与建议</span>
+              </div>
           </div>
         </div>
       </span>
@@ -1536,6 +1528,7 @@
         display: block;
         padding: 10px;
         background: #FFF;
+        position: relative;
         background-repeat: no-repeat;
         background-position: center;
         background-image: url('./assets/img/app/phone.png');
