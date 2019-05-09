@@ -314,8 +314,8 @@
               </p>
               <p class="order_s2">
                 <img src="../../assets/img/expenses/xiangnum.png" class="order_s2span"/>
-                <span class="order_s2span1">共 {{OrderPages}} 项 | 已选择<span> 0 </span>项 </span>
-                <span class="order_s2span2">总价：<span>¥0.00</span></span>
+                <span class="order_s2span1">共 {{OrderPages}} 项 | 已选择<span> {{AllMpneylength}} </span>项 </span>
+                <span class="order_s2span2">总价：<span>¥{{AllMpney}}</span></span>
                 <span class="orderdiv">
                   <span class="order_s2span3">按创建时间</span>
                   <Row class="datarow">
@@ -1096,7 +1096,7 @@
         <p class="cash-coupon-p">总支付金额：<span> ¥{{ payForm.paymentAmount }}</span></p>
         <p class="cash-coupon-p">现金券支付金额：<span>¥{{payForm.cashCoupon }}</span></p>
         <p class="cash-coupon-p">现金券余额：<span>¥{{ payForm.cashCouponBalance}}</span></p>
-        <p class="cash-coupon-p" v-if="voucher <= parseInt(payForm.paymentAmount)">还需支付：<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
+        <p class="cash-coupon-p" v-if="voucher <= parseInt(payForm.paymentAmount)">现金支付金额：<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="payOk">确认支付</Button>
@@ -1300,6 +1300,8 @@
          this.init()*/
       }
       return {
+        AllMpney:'0.0',
+        AllMpneylength:'0',
         ordernumS:'',
         switchBill: false,
         linkManData: [],
@@ -1746,52 +1748,103 @@
               title: '支付日期',
               key: 'orderendtime',
               width:160,
-              sortable: 'custom'
+              sortable: 'custom',
+              render: (h, params) => {
+                return h('span', params.row.orderendtime == null ? '--' : params.row.orderendtime)
+              }
             },
             {
               title: '操作',
               render: (h, params) => {
                  if(params.row.paymentstatus === 0 && params.row.overTimeStatus === '0'){
-                   return h('div', {}, [
-                       h('span', {
-                        style: {
-                          marginRight: '10px',
-                          color: '#2A99F2',
-                          cursor: 'pointer'
-                        },
-                        on: {
-                          click: () => {
-                            alert("这是删除");
-                          }
-                        }
-                      }, '删除'),
-                       h('span', {
-                        style: {
-                          color: '#2A99F2',
-                          cursor: 'pointer'
-                        },
-                        on: {
-                          click: () => {
-                            alert("这是支付");
-                          }
-                        }
-                      }, '支付')
-                    ])
+                   return h('div', [
+                          h('Poptip', {
+                              props: {
+                                title: '您确认要删除订单吗？',
+                                confirm: true,
+                                okText: "确定"
+                              },
+                              on: {
+                                'on-ok': () => {
+                                  this.$http.get('continue/delOrderpay.do', {
+                                    params: {
+                                      order: params.row.ordernumber
+                                    }
+                                  }).then(response => {
+                                    if (response.status == 200 && response.data.status == 1) {
+                                      this.$Message.success({
+                                        content: '订单删除成功',
+                                        duration: 3
+                                      })
+                                      //this.searchOrderByType()
+                                      this.getOrder('1')
+                                      this.init()
+                                    }
+                                  })
+                                }
+                              },
+                            },
+                            [h('span', {
+                              style: {
+                                cursor: 'pointer',
+                                color: '#2A99F2'
+                              }
+                            }, '删除')]
+                          ),
+                          h('span', {
+                              style: {
+                                cursor: 'pointer',
+                                color: ' #2A99F2',
+                                marginLeft: '10px',
+                              },
+                              on: {
+                                click: () => {
+                                  this.orderNumber=[]
+                                  this.orderNumber.push(params.row)
+                                  this.orderPay()
+                                }
+                              }
+                            },
+                            '支付'
+                          )
+                        ]);
                  }
                  else{
-                   return h('div', {}, [
-                       h('span', {
-                        style: {
-                          color: '#2A99F2',
-                          cursor: 'pointer'
-                        },
-                        on: {
-                          click: () => {
-                            alert("这是删除");
-                          }
-                        }
-                      }, '删除')
-                    ])
+                        return h('div', [
+                          h('Poptip', {
+                              props: {
+                                title: '您确认要删除订单吗？',
+                                confirm: true,
+                                okText: "确定"
+                              },
+                              on: {
+                                'on-ok': () => {
+                                  this.$http.get('continue/delOrderpay.do', {
+                                    params: {
+                                      order: params.row.ordernumber
+                                    }
+                                  }).then(response => {
+                                    if (response.status == 200 && response.data.status == 1) {
+                                      this.$Message.success({
+                                        content: '订单删除成功',
+                                        duration: 3
+                                      })
+                                      //this.searchOrderByType()
+                                      this.getOrder('1')
+                                      this.init()
+                                    }
+                                  })
+                                }
+                              },
+                            },
+                            [h('span', {
+                              style: {
+                                cursor: 'pointer',
+                                color: '#2A99F2'
+                              }
+                            }, '删除')]
+                          )
+                        ]);
                  }
             }
           }
@@ -3763,13 +3816,14 @@
         if (this.orderNumber.length != 0) {
           // this.costSeen = true
           var cost = 0
-          this.orderNumber.forEach(item => {
+          this.orderNumber.forEach((item,index) => {
             arr.push(item.ordernumber)
             if (item && item.paymentstatus == 0) {
               cost += Number.parseFloat(item.cost)
             }
           })
           this.ordernumS=arr.toString(',')
+          this.AllMpneylength=arr.length
           this.totalCost = Math.round(cost * 100) / 100
           this.actualDelivery = this.totalCost
           this.InquiryPrice()
@@ -3780,6 +3834,8 @@
           this.activeIndex = null
         } else {
           // this.costSeen = false
+          this.AllMpney='0.0'
+          this.AllMpneylength='0'
         }
       },
       InquiryPrice(){
@@ -3789,7 +3845,7 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            console.log(response.data)
+            this.AllMpney=response.data.result
           }
         })
       },
@@ -4654,6 +4710,7 @@
     },
     computed: {
       payDisabled() {
+        console.log(this.orderNumber)
         if (this.orderNumber.some(checkPaymentStatus) || this.orderNumber.length === 0) {
           return true
         } else {
@@ -4666,6 +4723,7 @@
       }
       ,
       deleteDisabled() {
+        console.log(this.orderNumber)
         if (this.orderNumber.length === 0) {
           return true
         } else {
@@ -4674,12 +4732,12 @@
       }
       ,
       refundDisabled() {
+        console.log(this.orderNumber)
         if (this.orderNumber.some(checkReturnMoneyFlag) || this.orderNumber.length === 0) {
           return true
         } else {
           return false
         }
-        //不知道什么字段和意思
         function checkReturnMoneyFlag(orderNumber) {
           return orderNumber.returnMoneyFlag == 0
         }

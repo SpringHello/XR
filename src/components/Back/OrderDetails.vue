@@ -53,7 +53,7 @@
           <p class="cash-coupon-p">总支付金额：<span> ¥{{cost}}</span></p>
           <p class="cash-coupon-p">现金券支付金额：<span> ¥{{voucherPay}}</span></p>
           <p class="cash-coupon-p">现金券余额：<span> ¥{{voucherS}}</span></p>
-          <p class="cash-coupon-p" v-if="">现金支付金额：<span> ¥{{cashPay}}</span></p>
+          <p class="cash-coupon-p">现金支付金额：<span> ¥{{cashPay}}</span></p>
         </div>
         <div slot="footer" class="modal-footer-border">
           <Button type="primary" @click="payorder">确认支付</Button>
