@@ -23,14 +23,14 @@
         <div class="invoice-info">
           <div class="title-row">
             <h2>开票信息</h2>
-            <Button size="large" @click="showModal.invoiceInfo = true">新增开票信息</Button>
+            <Button size="large" @click="invoiceInfoAdd_open('formInvoice')">新增开票信息</Button>
           </div>
           <Table :columns="columnsInvoice" :data="invoiceList"></Table>
         </div>
         <div class="invoice-info">
           <div class="title-row">
             <h2>收件信息</h2>
-            <Button size="large" @click="receiptInfoAdd_open()">新增收件信息</Button>
+            <Button size="large" @click="receiptInfoAdd_open('formReceipt')">新增收件信息</Button>
           </div>
           <Table :columns="columnsAddressee" :data="addresseeList"></Table>
         </div>
@@ -86,31 +86,34 @@
     </Modal>
 
     <!-- 新增开票信息 -->
-    <Modal v-model="showModal.invoiceInfo" title="新增收件信息" width='500'>
+    <Modal v-model="showModal.invoiceInfo" width='500'>
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">{{addresseeTitleModal}}开票信息</span>
+        </p>
         <Form ref="formInvoice" :model="formInvoice" :rules="ruleInvoice" :label-width="100">
           <FormItem prop="invoiceSelect" label="发票类型">
             <RadioGroup v-model="formInvoice.invoiceSelect" type="button">
-                <Radio label="增值税普通发票"></Radio>
-                <Radio label="增值税专用发票"></Radio>
+                <Radio label="normal">增值税普通发票</Radio>
+                <Radio label="personal">增值税专用发票</Radio>
             </RadioGroup>
           </FormItem>
-          <div v-if="formInvoice.invoiceSelect === '增值税普通发票'">
+          <div v-if="formInvoice.invoiceSelect == 'normal'">
             <FormItem prop="personal" label="开具类型">
               <RadioGroup v-model="formInvoice.personal" type="button">
-                  <Radio label="个人"></Radio>
-                  <Radio label="企业"></Radio>
+                  <Radio label="2">个人</Radio>
+                  <Radio label="0">企业</Radio>
               </RadioGroup>
             </FormItem> 
             <FormItem prop="rise" label="发票抬头">
                 <Input type="text" v-model="formInvoice.rise" placeholder="您公司营业执照上的全称" style="width:300px;">
                 </Input>
             </FormItem>
-            <FormItem prop="taxpayer" label="纳税人识别码" v-if="formInvoice.personal === '企业'">
+            <FormItem prop="taxpayer" label="纳税人识别码" v-if="formInvoice.personal == '0'">
                 <Input type="text" v-model="formInvoice.taxpayer" placeholder="15位或18位的英文字符、数字" style="width:300px;">
                 </Input>
             </FormItem>
           </div>
-          <div v-if="formInvoice.invoiceSelect === '增值税专用发票'">
+          <div v-if="formInvoice.invoiceSelect == 'personal'">
             <FormItem prop="rise" label="发票抬头">
                 <Input type="text" v-model="formInvoice.rise" placeholder="您公司营业执照上的全称" style="width:300px;">
                 </Input>
@@ -119,15 +122,15 @@
                 <Input type="text" v-model="formInvoice.taxpayer" placeholder="15位或18位的英文字符、数字" style="width:300px;">
                 </Input>
             </FormItem>
-            <FormItem prop="addres" label="单位地址">
-                <Input type="text" v-model="formInvoice.addres" placeholder="您公司营业执照上的注册地址" style="width:300px;">
+            <FormItem prop="address" label="单位地址">
+                <Input type="text" v-model="formInvoice.address" placeholder="您公司营业执照上的注册地址" style="width:300px;">
                 </Input>
             </FormItem>
             <FormItem prop="rPhone" label="注册电话">
                 <Input type="text" v-model="formInvoice.rPhone" placeholder="区号" style="width:90px;">
                 </Input>
                 ——
-                <Input type="text" v-model="formInvoice.taxpayer" placeholder="电话号" style="width:180px;">
+                <Input type="text" v-model="formInvoice.rPhone" placeholder="电话号" style="width:180px;">
                 </Input>
             </FormItem>
             <FormItem prop="deposit" label="开户银行">
@@ -140,63 +143,10 @@
             </FormItem>
           </div>
       </Form>
-    </Modal>
-
-     <!-- 修改开票信息 -->
-    <Modal v-model="showModal.modifyInvoiceInfo" title="新增收件信息" width='500'>
-        <Form ref="formModifyInvoice" :model="formModifyInvoice" :rules="ruleModifyInvoice" :label-width="100">
-          <FormItem prop="invoiceSelect" label="发票类型">
-            <RadioGroup v-model="formModifyInvoice.invoiceSelect" type="button">
-                <Radio label="增值税普通发票"></Radio>
-                <Radio label="增值税专用发票"></Radio>
-            </RadioGroup>
-          </FormItem>
-          <div v-if="formModifyInvoice.invoiceSelect === '增值税普通发票'">
-            <FormItem prop="personal" label="开具类型">
-              <RadioGroup v-model="formModifyInvoice.personal" type="button">
-                  <Radio label="个人"></Radio>
-                  <Radio label="企业"></Radio>
-              </RadioGroup>
-            </FormItem> 
-            <FormItem prop="rise" label="发票抬头">
-                <Input type="text" v-model="formModifyInvoice.rise" placeholder="您公司营业执照上的全称" style="width:300px;">
-                </Input>
-            </FormItem>
-            <FormItem prop="taxpayer" label="纳税人识别码" v-if="formModifyInvoice.personal === '企业'">
-                <Input type="text" v-model="formModifyInvoice.taxpayer" placeholder="15位或18位的英文字符、数字" style="width:300px;">
-                </Input>
-            </FormItem>
-          </div>
-          <div v-if="formModifyInvoice.invoiceSelect === '增值税专用发票'">
-            <FormItem prop="rise" label="发票抬头">
-                <Input type="text" v-model="formModifyInvoice.rise" placeholder="您公司营业执照上的全称" style="width:300px;">
-                </Input>
-            </FormItem>
-            <FormItem prop="taxpayer" label="纳税人识别码">
-                <Input type="text" v-model="formModifyInvoice.taxpayer" placeholder="15位或18位的英文字符、数字" style="width:300px;">
-                </Input>
-            </FormItem>
-            <FormItem prop="addres" label="单位地址">
-                <Input type="text" v-model="formModifyInvoice.addres" placeholder="您公司营业执照上的注册地址" style="width:300px;">
-                </Input>
-            </FormItem>
-            <FormItem prop="" label="注册电话">
-                <Input type="text" v-model="formModifyInvoice.rPhone" placeholder="区号" style="width:90px;">
-                </Input>
-                ——
-                <Input type="text" v-model="formModifyInvoice.taxpayer" placeholder="电话号" style="width:180px;">
-                </Input>
-            </FormItem>
-            <FormItem prop="" label="开户银行">
-                <Input type="text" v-model="formModifyInvoice.taxpayer" placeholder="请精确到支行，如‘招商银行重庆靖城路支行’" style="width:300px;">
-                </Input>
-            </FormItem>
-            <FormItem prop="" label="银行账户">
-                <Input type="text" v-model="formModifyInvoice.taxpayer" placeholder="您公司开户许可证上的银行账号" style="width:300px;">
-                </Input>
-            </FormItem>
-          </div>
-      </Form>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.invoiceInfo = false">取消</Button>
+        <Button type="primary" @click="addInvoiceOk('formInvoice')">确定</Button>
+      </p>
     </Modal>
   </div>
 </template>
@@ -295,7 +245,21 @@ export default {
                     },
                     on: {
                       click: () => {
-                        alert(params.index);
+                        this.$refs['formInvoice'].resetFields()
+                        this.addresseeTitleModal = '修改'
+                        this.formInvoice = {
+                          personal: params.row.type+'',
+                          id: params.row.id,
+                          rise: params.row.companyname,
+                          taxpayer: params.row.identicode,
+                          address: params.row.address,
+                          rPhone: params.row.phone,
+                          deposit: params.row.bankname,
+                          bankAccount: params.row.banknum,
+                          invoiceSelect:params.row.type+'' == '1'?'personal':'normal'
+                        }
+                        console.log(this.formInvoice)
+                        this.showModal.invoiceInfo = true;
                       }
                     }
                   },
@@ -309,7 +273,20 @@ export default {
                     },
                     on: {
                       click: () => {
-                        alert(params.index);
+                        this.$message.confirm({
+                          content: '你是否确认删除？',
+                          onOk: () => {
+                            this.$http.get('nVersionUser/deleteExamine.do', {
+                              params: {
+                                id: params.row.id,
+                              }
+                            }).then(response => {
+                              if (response.status == 200 && response.data.status == 1) {
+                                this.getInvoiceList()
+                              }
+                            })
+                          }
+                        })
                       }
                     }
                   },
@@ -370,6 +347,7 @@ export default {
                   },
                   on: {
                     click: () => {
+                      this.$refs['formReceipt'].resetFields()
                       this.formReceipt = params.row
                       this.addresseeTitleModal = '修改'
                       this.showModal.receiptInfoAdd = true
@@ -452,7 +430,6 @@ export default {
       showModal: {
         receiptInfoAdd: false,
         invoiceInfo: false,
-        modifyInvoiceInfo:false,
       },
       // 收件信息
       ruleReceipt: {
@@ -487,7 +464,7 @@ export default {
         taxpayer:[
           {required:true,validator:validTaxpayer,trigger:'blur'}
         ],
-        addres:[
+        address:[
           {required:true,message:'请输入单位地址',trigger:'blur'}
         ],
         deposit:[
@@ -498,44 +475,15 @@ export default {
         ]
       },
       formInvoice: {
-        invoiceSelect: "增值税普通发票",
-        personal: "个人",
+        invoiceSelect: "normal",
+        personal: "2",
         rise: "",
         taxpayer: "",
-        addres:'',
+        address:'',
         rPhone:'',
         deposit:'',
         bankAccount:''
       },
-      // 修改开票信息
-      ruleModifyInvoice: {
-        rise:[
-          {required:true,message:'请输入发票抬头',trigger:'blur'}
-        ],
-        taxpayer:[
-          {required:true,validator:validTaxpayer,trigger:'blur'}
-        ],
-        addres:[
-          {required:true,message:'请输入单位地址',trigger:'blur'}
-        ],
-        deposit:[
-          {required:true,message:'请输入开户银行',trigger:'blur'}
-        ],
-        bankAccount:[
-          {required:true,message:'请输入银行账号',trigger:'blur'}
-        ]
-      },
-      formModifyInvoice: {
-        invoiceSelect: "增值税普通发票",
-        personal: "个人",
-        rise: "",
-        taxpayer: "",
-        addres:'',
-        rPhone:'',
-        deposit:'',
-        bankAccount:''
-      },
-
       //区列表
       areaList: [],
       countyList: [],
@@ -561,21 +509,6 @@ export default {
         }
       })
     },
-    invoiceLimit () {
-      this.$http.post('user/invoiceExamine.do',{
-        type: '0',
-        companyName: '新锐云公司',
-        identicode: '123456789',
-        // address: '',
-        // phone: '',
-        // bankName: '',
-        // bankNum: ''
-      }).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          // this.invoice = response.data.result.result
-        }
-      });
-    },
     getInvoiceAddressee() {
       this.$http.get('nVersionUser/getReciveinfo.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
@@ -587,10 +520,20 @@ export default {
       sessionStorage.setItem("expensesTab", "applyInvoice");
       this.$router.push("expenses");
     },
-    receiptInfoAdd_open() {
+    receiptInfoAdd_open(name) {
+      this.$refs[name].resetFields()
       this.addresseeTitleModal='新增'
-      this.formReceipt = {}
+      // this.formReceipt = {}
       this.showModal.receiptInfoAdd = true
+    },
+    invoiceInfoAdd_open(name) {
+      this.$refs[name].resetFields()
+      this.addresseeTitleModal='新增'
+      this.formInvoice = {
+        invoiceSelect: 'normal',
+        personal: '2'
+      }
+      this.showModal.invoiceInfo = true
     },
     // 切换省份
     changeProvince(val) {
@@ -701,18 +644,69 @@ export default {
                   address: this.formReceipt.address,
                   // code: this.formReceipt.code
                 }
-          if(this.addresseeTitleModal == '修改'){
-            params.id = this.formReceipt.id
-          }
+            let url = 'nVersionUser/addReciveinfo.do'
+            if(this.addresseeTitleModal == '修改'){
+              params.id = this.formReceipt.id
+              url = 'nVersionUser/modifyReciveinfo.do'
+            }
             this.$http.post('nVersionUser/addReciveinfo.do',params).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(`${this.addresseeTitleModal}收件信息成功`)
               this.showModal.receiptInfoAdd = false
               this.getInvoiceAddressee()
             } else {
-              this.$Message.error(`${this.addresseeTitleModal}收件信息失败`)
+              this.$Message.error(response.data.message)
             }
           })
+        }
+      })
+    },
+    addInvoiceOk(name) {
+      this.$refs[name].validate((valid) => {
+          if (valid) {
+            // 发票类型判断 2个人 0企业 3专用
+            let type = this.formInvoice.personal
+            if(this.formInvoice.invoiceSelect == 'personal') {
+              type = '1'
+            }
+            let params = {}
+            switch (type) {
+              case '2':
+                params.type = type
+                params.companyName = this.formInvoice.rise
+                break;
+              case '0':
+                params.type = type
+                params.companyName = this.formInvoice.rise
+                params.identicode = this.formInvoice.taxpayer
+                break;
+              case '1':
+                params.type = type
+                params.companyName = this.formInvoice.rise
+                params.identicode = this.formInvoice.taxpayer
+                params.address = this.formInvoice.address
+                params.phone = this.formInvoice.rPhone
+                params.bankName = this.formInvoice.deposit
+                params.bankNum = this.formInvoice.bankAccount
+                break;
+              default:
+                break;
+            }
+            let url = 'user/invoiceExamine.do'
+            if(this.addresseeTitleModal == '修改'){
+              params.id = this.formInvoice.id
+              url = 'nVersionUser/modifyExamine.do'
+            }
+            console.log(params)
+            this.$http.post(url,params).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(`${this.addresseeTitleModal}收件开票成功`)
+                this.showModal.invoiceInfo = false
+                this.getInvoiceList()
+              } else {
+                this.$Message.error(response.data.message)
+              }
+            })
         }
       })
     }
