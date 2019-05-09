@@ -5,6 +5,7 @@ import Router from 'vue-router'
 // 主路由
 import App from '@/App'
 import Back from '@/Back'
+import HMarket from '@/HMarket'
 import LR from '@/LR'
 
 // 前台页面子路由
@@ -134,6 +135,9 @@ const market = () =>import('@/components/App/market/Market')
 const details = () =>import('@/components/App/market/Details')
 const list = () =>import('@/components/App/market/List')
 const supplier = () =>import('@/components/App/market/Supplier')
+const provider = () =>import('@/components/App/market/Provider')
+const apply1 = () =>import('@/components/App/market/Apply1')
+const apply2 = () =>import('@/components/App/market/Apply2')
 
 // 后台页面子路由
 // import Overview from '@/components/Back/Overview'
@@ -375,11 +379,7 @@ var router = new Router({
         {path: 'gpu', component: Pgpu},
         {path: 'elasticscalable',component: Pelastic},
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
-        {path: 'hotQuestion/:parentId/:id', component: hotQuestion},
-        {path: 'market', component: market},
-        {path: 'details', component: details},
-        {path: 'list', component: list},
-        {path: 'supplier', component: supplier}
+        {path: 'hotQuestion/:parentId/:id', component: hotQuestion}
       ]
     },
     {
@@ -473,6 +473,20 @@ var router = new Router({
         {path: 'reset', name: 'reset', component: Reset},
         {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess},
         {path: 'resetNew', name: 'resetNew', component: ResetNew}
+      ]
+    },
+    {
+      path: '',
+      name: HMarket.name,
+      component: HMarket,
+      children: [
+          {path: 'market', component: market},
+          {path: 'details', component: details},
+          {path: 'list', component: list},
+          {path: 'supplier', component: supplier},
+          {path: 'provider', component: provider},
+          {path: 'apply1', component: apply1},
+          {path: 'apply2', component: apply2}
       ]
     },
     {path: '/link', name: 'link', component: Link},

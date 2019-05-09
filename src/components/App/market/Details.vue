@@ -139,29 +139,6 @@
         </div>
         <div class="other">
           <div class="other-title">合作伙伴其他服务</div>
-          <div class="other-list" style="display: none;">
-            <div class="other-list-item">
-              <div class="other-list-item-img"></div>
-              <p>电商网站定制开发-购物网站-分销商城</p>
-              <div class="other-list-item-price">
-                <span>￥415</span>/月
-              </div>
-            </div>
-            <div class="other-list-item">
-              <div class="other-list-item-img"></div>
-              <p>电商网站定制开发-购物网站-分销商城</p>
-              <div class="other-list-item-price">
-                <span>￥415</span>/月
-              </div>
-            </div>
-            <div class="other-list-item">
-              <div class="other-list-item-img"></div>
-              <p>电商网站定制开发-购物网站-分销商城</p>
-              <div class="other-list-item-price">
-                <span>￥415</span>/月
-              </div>
-            </div>
-          </div>
           <div class="other-advisory">
             <div class="other-advisory-item">
               <div class="other-advisory-item-icon">
@@ -286,7 +263,7 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          // this.$Message.success('Success!');
+          this.$Message.success('Success!');
         } else {
           // this.$Message.error('Fail!');
         }
