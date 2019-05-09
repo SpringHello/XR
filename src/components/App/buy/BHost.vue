@@ -52,10 +52,10 @@
             <h2>主机规格选择</h2>
             <!--镜像选择-->
             <div class="item-wrapper">
-              <div style="display: flex;justify-content: space-between;">
+              <div style="display: flex;">
                 <div v-for="(item,index) in mirrorListQ" :key="index" class="fast-mirror" :class="{'select-fast-mirror':FastMirrorIndex==index}" @click="setOSQ(item,index)">
                   <img :src="item.img" alt="描述">
-                  <span>{{item.templatename}}</span>
+                  <span :title="item.templatename">{{item.templatename}}</span>
                 </div>
               </div>
             </div>
@@ -815,13 +815,6 @@
         fastCoupon: 0,
         mirrorQuery: this.$route.query.mirror,
         mirrorListQ: [],
-        mirrorListQImg: [
-          {img: require('../../../assets/img/host/h-icon12.png')},
-          {img: require('../../../assets/img/host/h-icon12.png')},
-          {img: require('../../../assets/img/host/h-icon6.png')},
-          {img: require('../../../assets/img/host/h-icon6.png')},
-          {img: require('../../../assets/img/host/h-icon7.png')},
-        ],
       }
     },
     created() {
@@ -851,7 +844,14 @@
           if (response.status == 200 && response.data.status == 1) {
             this.mirrorListQ = response.data.result
             this.mirrorListQ.forEach((item,index) => {
-              item.img = this.mirrorListQImg[index].img
+              if(item.templatename.substring(0, 1) == 'W') {
+                item.img = require('../../../assets/img/host/h-icon12.png')
+              } else if(item.templatename.substring(0, 1) == 'C') {
+                item.img = require('../../../assets/img/host/h-icon6.png')
+              } else if(item.templatename.substring(0, 1) == 'U') {
+                item.img = require('../../../assets/img/host/h-icon7.png')
+              } else if(item.templatename.substring(0, 1) == 'D') {
+                item.img = require('../../../assets/img/host/h-icon8.png')}
             })
             this.selectFastMirror = response.data.result[0].systemtemplateid
             this.selectFastMirrorInfo = {systemId: response.data.result[0].systemtemplateid,systemName: response.data.result[0].templatename}
@@ -1826,6 +1826,8 @@
   .fast-mirror {
     width:136px;
     height:64px;
+    overflow: hidden;
+    margin-right: 10px;
     background:rgba(255,255,255,1);
     border:1px solid rgba(217,217,217,1);
     display: flex;
@@ -1834,7 +1836,13 @@
     img {
       display: block;
       margin: 0 10px;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
     }
+  }
+  .fast-mirror:last-of-type{
+    margin-right: 0;
   }
   .select-fast-mirror {
     overflow: hidden;
