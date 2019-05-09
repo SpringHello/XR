@@ -237,7 +237,9 @@ export default {
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success("订单删除成功");
-                  this.$router.push("/expenses");
+                  sessionStorage.setItem("expensesTab", "orderManage");
+                  sessionStorage.removeItem("orderid");
+                  this.$router.push("Expenses");
                 }
               })
     },
