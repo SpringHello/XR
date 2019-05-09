@@ -18,42 +18,49 @@
       <div class="company">
         <div class="company-box">
           <div class="company-box-icon">
-            <img src="../../../assets/img/market/company.png" />
+            <img :src="company.nameUrl" />
           </div>
           <div class="company-box-info">
-            <p>翔云</p>
-            <p>北京中安未来科技有限公司</p>
+            <p>{{company.series}}</p>
+            <p>{{company.name}}</p>
           </div>
         </div>
-        <button>返回</button>
+        <button @click="$router.go(-1)">返回</button>
       </div>
       <div class="product">
         <div class="product-nav">
-          <Dropdown>
-            <a href="javascript:void(0)" v-for="(item,index) in sortType" :key="index" :class="{iconActive:iconIndex == index}" @click="iconIndex = index">
+          <Dropdown trigger="click" v-for="(item,index) in sortType" :key="index" @on-click="picth">
+            <a href="javascript:void(0)" :class="{iconActive:iconIndex == index}" @click="sortTypes(index)">
               {{item.type}}
               <Icon :type="item.iconDropup"></Icon>
               <Icon :type="item.iconDropdown"></Icon>
             </a>
+            <DropdownMenu slot="list" v-show="item.asc != '' && item.des != ''">
+              <DropdownItem :name="item.asc">{{item.asc}}</DropdownItem>
+              <DropdownItem :name="item.des">{{item.des}}</DropdownItem>
+            </DropdownMenu>
           </Dropdown>
         </div>
         <div class="product-list">
-          <div class="product-list-item">
+          <div class="product-list-item" v-for="(item, index) in productList" :key="index">
             <div class="product-list-item-icon">
-              <img src="../../../assets/img/market/company.png" />
+              <img :src="item.pictureurl" />
             </div>
             <div class="product-list-item-content">
-              <div>VIN码识别</div>
-              <div>描述：码区域，识别速度快，识别率高。</div>
-              <div>供应商：北京中安未来科技有限公司</div>
+              <div>{{item.title}}</div>
+              <div>描述：{{item.description}}</div>
+              <div>供应商：{{item.company.name}}</div>
               <div>快速链接：<router-link to="">共供应商网站</router-link><span>|</span><router-link to="">使用帮助</router-link></div>
             </div>
             <div class="product-list-item-price">
               <div>
-                <span>￥0.01</span> / 100次
+                <span>￥{{item.price}}</span> / 100次
               </div>
               <i-button type="primary">立即购买</i-button>
             </div>
+          </div>
+          <div class="product-list-page">
+            <Page :total="pageSum" :current="page" :page-size="pageSise" @on-change="pageChange"/>
           </div>
         </div>
       </div>
@@ -62,16 +69,141 @@
 </template>
 
 <script type="text/ecmascript-6">
+import axios from '@/util/axiosInterceptor'
 export default {
   data () {
     return {
       iconIndex: false,
       sortType: [
-        {type: '综合排序', iconDropup: '', iconDropdown: ''},
-        {type: '价格', iconDropup: 'android-arrow-dropup', iconDropdown: 'android-arrow-dropdown'},
-        {type: '上架时间', iconDropup: 'android-arrow-dropup', iconDropdown: 'android-arrow-dropdown'},
-      ]
+        {type: '综合排序', iconDropup: '', iconDropdown: '', asc: '', des: ''},
+        {type: '价格', iconDropup: 'android-arrow-dropup', iconDropdown: 'android-arrow-dropdown', asc: '价格升序', des: '价格降序'},
+        {type: '上架时间', iconDropup: 'android-arrow-dropup', iconDropdown: 'android-arrow-dropdown', asc: '时间升序', des: '时间降序'}
+      ],
+      company: '',
+      productList: [],
+      // 分页
+      page: 1,
+      pageSise: 4,
+      pageSum: 0
     }
+  },
+  methods: {
+    // 分页选择
+    pageChange (index) {
+      this.page = index
+      this.getProduct()
+    },
+    // 产品信息列表
+    getProduct () {
+      axios.get('cloudMarket/getProduct.do', {
+        params: {
+          company_id: sessionStorage.getItem('companyId'),
+          page: this.page,
+          display: this.pageSise
+        }
+      }).then(res => {
+        if (res.status === 200 && res.data.status === 1) {
+          this.productList = res.data.result.list
+        }
+      })
+    },
+    // 产品信息总条数
+    getProductSum () {
+      axios.get('cloudMarket/getProduct.do', {
+        params: {
+          company_id: sessionStorage.getItem('companyId')
+        }
+      }).then(res => {
+        if (res.status === 200 && res.data.status === 1) {
+          this.pageSum = res.data.result.list.length
+        }
+      })
+    },
+    // 排序类型
+    sortTypes (index) {
+      this.iconIndex = index
+      if (index === 0) {
+        this.getProduct()
+      }
+    },
+    // 排序许方式
+    picth (name) {
+      if (name === '价格升序') {
+        axios.get('cloudMarket/getProduct.do', {
+          params: {
+            classification_id: this.key,
+            company_id: sessionStorage.getItem('companyId'),
+            page: this.page,
+            display: this.pageSise,
+            sort: 'price',
+            order: 1
+          }
+        }).then(res => {
+         if (res.status === 200 && res.data.status === 1) {
+           this.productList = res.data.result.list
+         }
+        })
+      } else if (name === '价格降序') {
+        axios.get('cloudMarket/getProduct.do', {
+          params: {
+            classification_id: this.key,
+            company_id: sessionStorage.getItem('companyId'),
+            page: this.page,
+            display: this.pageSise,
+            sort: 'price',
+            order: 2
+          }
+        }).then(res => {
+          if (res.status === 200 && res.data.status === 1) {
+            this.productList = res.data.result.list
+          }
+        })
+      } else if (name === '时间升序') {
+        axios.get('cloudMarket/getProduct.do', {
+          params: {
+            classification_id: this.key,
+            company_id: sessionStorage.getItem('companyId'),
+            page: this.page,
+            display: this.pageSise,
+            sort: 'putawayTime',
+            order: 1
+          }
+        }).then(res => {
+          if (res.status === 200 && res.data.status === 1) {
+            this.productList = res.data.result.list
+          }
+        })
+      } else if (name === '时间降序') {
+        axios.get('cloudMarket/getProduct.do', {
+          params: {
+            classification_id: this.key,
+            company_id: sessionStorage.getItem('companyId'),
+            page: this.page,
+            display: this.pageSise,
+            sort: 'putawayTime',
+            order: 2
+          }
+        }).then(res => {
+          if (res.status === 200 && res.data.status === 1) {
+            this.productList = res.data.result.list
+          }
+        })
+      }
+    }
+  },
+  created () {
+    axios.get('cloudMarket/getCompany.do', {
+      params: {
+        id: sessionStorage.getItem('companyId')
+      }
+    }).then(res => {
+      if (res.status === 200 && res.data.status === 1) {
+        this.company = res.data.result[0]
+      }
+      
+    })
+    this.getProduct()
+    this.getProductSum()
   }
 }
 </script>
@@ -273,6 +405,10 @@ export default {
               }
             }
           }
+        }
+        .product-list-page{
+          text-align: right;
+          padding: 40px 0 80px 0;
         }
       }
     }

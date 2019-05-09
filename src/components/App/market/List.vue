@@ -20,7 +20,7 @@
     </div>
     <!--列表-->
     <div class="menu">
-      <Menu theme="light" @on-select="menuselect" active-name="1">
+      <Menu theme="light" @on-select="menuselect" :active-name="key">
         <MenuGroup title="云市场分类">
           <MenuItem v-for="(item,index) in menu" :key='index' :name="item.name">
             <img :src="key == item.name ? item.url : item.unUrl" />
@@ -30,32 +30,39 @@
       </Menu>
       <div class="body">
         <div class="body-nav">
-          <Dropdown>
-            <a href="javascript:void(0)" v-for="(item,index) in sortType" :key="index" :class="{iconActive:iconIndex == index}" @click="iconIndex = index">
+          <Dropdown trigger="click" v-for="(item,index) in sortType" :key="index" @on-click="picth">
+            <a href="javascript:void(0)" :class="{iconActive:iconIndex == index}" @click="sortTypes(index)">
               {{item.type}}
               <Icon :type="item.iconDropup"></Icon>
               <Icon :type="item.iconDropdown"></Icon>
             </a>
+            <DropdownMenu slot="list" v-show="item.asc != '' && item.des != ''">
+              <DropdownItem :name="item.asc">{{item.asc}}</DropdownItem>
+              <DropdownItem :name="item.des">{{item.des}}</DropdownItem>
+            </DropdownMenu>
           </Dropdown>
-          <button>返回</button>
+          <button @click="$router.go(-1)">返回</button>
         </div>
-        <div class="body-list"  v-for="(item,index) in menuList" :key="index" v-show="item.type == key">
-          <div class="body-list-item" v-for="(items,index) in item.content" :key="index">
+        <div class="body-list">
+          <div class="body-list-item" v-for="(items,index) in menuList" :key="index">
             <div class="body-list-item-icon">
-              <img :src="items.url" />
+              <img :src="items.pictureurl" />
             </div>
             <div class="body-list-item-content">
               <div>{{items.title}}</div>
-              <div>描述：{{items.des}}</div>
-              <div>供应商：<router-link to="">{{items.sup}}</router-link></div>
-              <div>快速链接：<router-link to="">供应商网站</router-link><span>|</span><router-link to="">使用帮助</router-link></div>
+              <div>描述：{{items.description}}</div>
+              <div>供应商：<span @click="toSup(items)">{{items.company.name}}</span></div>
+              <div>快速链接：<span @click="open(items)">供应商网站</span></router-link><span>|</span><span>使用帮助</span></div>
             </div>
             <div class="body-list-item-price">
-              <div class="price"><span>￥415</span>/月</div>
+              <div class="price"><span>￥{{items.price}}</span>/月</div>
               <Button type="primary">立即购买</Button>
             </div>
           </div>
-          <div class="body-list-kong" v-show="item.content == ''">
+          <div class="body-list-page" v-show="menuList != ''">
+            <Page :total="pageSum" :current="page" :page-size="pageSise" @on-change="pageChange"/>
+          </div>
+          <div class="body-list-kong" v-show="menuList == ''">
             <div class="cir">
               <div class="cir-icon">
                 <img src="../../../assets/img/market/kong-4.png" />
@@ -64,9 +71,6 @@
               <p>你可以选择其他分类查看</p>
             </div>
           </div>
-          <div class="body-list-page">
-            <Page :total="100" />
-          </div>
         </div>
       </div>
     </div>
@@ -74,6 +78,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import axios from '@/util/axiosInterceptor'
 export default {
   data () {
     return {
@@ -86,108 +91,138 @@ export default {
         {title: '企业管理', name: '4', type: 'ios-gear', unUrl: require('../../../assets/img/market/menu-1-4.png'), url: require('../../../assets/img/market/menu-2-4.png')},
         {title: '客服销售', name: '5', type: 'ios-chatbubble-outline', unUrl: require('../../../assets/img/market/menu-1-5.png'), url: require('../../../assets/img/market/menu-2-5.png')}
       ],
-      selectMenu: [
-        '../../../assets/img/market/menu-2-1.png',
-        '../../../assets/img/market/menu-2-2.png',
-        '../../../assets/img/market/menu-2-3.png',
-        '../../../assets/img/market/menu-2-4.png',
-        '../../../assets/img/market/menu-2-5.png',
-      ],
       sortType: [
-        {type: '综合排序', iconDropup: '', iconDropdown: ''},
-        {type: '价格', iconDropup: 'android-arrow-dropup', iconDropdown: 'android-arrow-dropdown'},
-        {type: '上架时间', iconDropup: 'android-arrow-dropup', iconDropdown: 'android-arrow-dropdown'},
+        {type: '综合排序', iconDropup: '', iconDropdown: '', asc: '', des: ''},
+        {type: '价格', iconDropup: 'android-arrow-dropup', iconDropdown: 'android-arrow-dropdown', asc: '价格升序', des: '价格降序'},
+        {type: '上架时间', iconDropup: 'android-arrow-dropup', iconDropdown: 'android-arrow-dropdown', asc: '时间升序', des: '时间降序'}
       ],
-      menuList: [
-        {
-          type: 1,
-          content: [
-            {
-              url: require('../../../assets/img/market/web.png'),
-              title: '中高端企业定制化网站',
-              des: '响应式官网建设首选，全可视化操作，操作简单，功能强大，设计师一对一服务，不满意全额退...',
-              sup: '北京美联软通科技有限公司',
-              price: 415
-            },
-            {
-              url: require('../../../assets/img/market/web.png'),
-              title: '中高端企业定制化网站',
-              des: '响应式官网建设首选，全可视化操作，操作简单，功能强大，设计师一对一服务，不满意全额退...',
-              sup: '北京美联软通科技有限公司',
-              price: 415
-            },
-            {
-              url: require('../../../assets/img/market/web.png'),
-              title: '中高端企业定制化网站',
-              des: '响应式官网建设首选，全可视化操作，操作简单，功能强大，设计师一对一服务，不满意全额退...',
-              sup: '北京美联软通科技有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/web.png'),
-              title: '中高端企业定制化网站',
-              des: '响应式官网建设首选，全可视化操作，操作简单，功能强大，设计师一对一服务，不满意全额退...',
-              sup: '北京美联软通科技有限公司',
-              price: 415
-            }
-          ]
-        },
-        {
-          type: 2,
-          content: [
-            {
-              url: require('../../../assets/img/market/web.png'),
-              title: '电商平台',
-              des: '系列电子商务平台是由软谷团队独立研发的一款产品，支持线上开店。',
-              sup: '北京美联软通科技有限公司',
-              price: 415
-            }
-          ]
-        },
-        {
-          type: 3,
-          content: [
-            {
-              url: require('../../../assets/img/market/web.png'),
-              title: 'SEO优化',
-              des: '从市场的角度和客户的需求出发，融合视觉美学及有效策略，提升企业与产品的内在品质。',
-              sup: '品创天下（北京）科技发展有限公司',
-              price: 415
-            }
-          ]
-        },
-        {
-          type: 4,
-          content: [
-            {
-              url: require('../../../assets/img/market/web.png'),
-              title: '企业计划管理',
-              des: '响应式官网建设首选，全可视化操作，操作简单，功能强大，设计师一对一服务，不满意全额退...',
-              sup: '烟台易水软件有限公司',
-              price: 415
-            }
-          ]
-        },
-        {
-          type: 5,
-          content: [
-            {
-              url: require('../../../assets/img/market/web.png'),
-              title: '服务',
-              des: '这里聚集了很多优秀和经验丰富的工程师团队和设计师团队，帮助你免费提供项目开发诊断。',
-              sup: '软谷（成都）信息技术有限公司',
-              price: 415
-            }
-          ]
-        }
-      ],
-      key: 1
+      menuList: [],
+      key: sessionStorage.getItem('name'),
+      // 分页
+      page: 1,
+      pageSise: 10,
+      // 产品信息总条数
+      pageSum: 0
     }
   },
   methods: {
     menuselect (name) {
       this.key = name
+      this.getMenu()
+      this.getSum()
+    },
+    // 获取分类信息
+    getMenu () {
+      axios.get('cloudMarket/getProduct.do', {
+        params: {
+          classification_id: this.key,
+          page: this.page,
+          display: this.pageSise
+        }
+      }).then(res => {
+        if (res.status === 200 && res.data.status === 1) {
+           this.menuList = res.data.result.list
+        }
+      })
+    },
+    // 获取信息条数
+    getSum () {
+      axios.get('cloudMarket/getProduct.do', {
+        params: {
+          classification_id: this.key
+        }
+      }).then(res => {
+        if (res.status === 200 && res.data.status === 1) {
+           this.pageSum = res.data.result.list.length
+        }
+       
+      })
+    },
+    // 供应商
+    toSup (items) {
+      this.$router.push('supplier')
+      sessionStorage.setItem('companyId', items.company.id)  
+    },
+    open (items) {
+      window.open(items.company.linkurl, '_blank');
+    },
+    // 分页选择
+    pageChange (index) {
+      this.page = index
+      this.getMenu()
+    },  
+    // 排序类型
+    sortTypes (index) {
+      this.iconIndex = index
+      if (index === 0) {
+        this.getMenu()
+      }
+    },
+    // 排序许方式
+    picth (name) {
+      if (name === '价格升序') {
+        axios.get('cloudMarket/getProduct.do', {
+          params: {
+            classification_id: this.key,
+            page: this.page,
+            display: this.pageSise,
+            sort: 'price',
+            order: 1
+          }
+        }).then(res => {
+          if (res.status === 200 && res.data.status === 1) {
+            this.menuList = res.data.result.list
+          }
+        })
+      } else if (name === '价格降序') {
+        axios.get('cloudMarket/getProduct.do', {
+          params: {
+            classification_id: this.key,
+            page: this.page,
+            display: this.pageSise,
+            sort: 'price',
+            order: 2
+          }
+        }).then(res => {
+          if (res.status === 200 && res.data.status === 1) {
+            this.menuList = res.data.result.list
+          }
+        })
+      } else if (name === '时间升序') {
+        axios.get('cloudMarket/getProduct.do', {
+          params: {
+            classification_id: this.key,
+            page: this.page,
+            display: this.pageSise,
+            sort: 'putawayTime',
+            order: 1
+          }
+        }).then(res => {
+          if (res.status === 200 && res.data.status === 1) {
+            this.menuList = res.data.result.list
+          }
+        })
+      } else if (name === '时间降序') {
+        axios.get('cloudMarket/getProduct.do', {
+          params: {
+            classification_id: this.key,
+            page: this.page,
+            display: this.pageSise,
+            sort: 'putawayTime',
+            order: 2
+          }
+        }).then(res => {
+          if (res.status === 200 && res.data.status === 1) {
+            this.menuList = res.data.result.list
+          }
+        })
+      }
     }
   },
+  created () {
+    this.getMenu()
+    this.getSum()
+  }
 }
 </script>
 
@@ -341,11 +376,25 @@ export default {
               }
               &:nth-of-type(3){
                 margin-bottom: 5px;
+                span{
+                  color: #2d8cf0;
+                  cursor: pointer;
+                  &:hover{
+                    color: #6ab0f9;
+                  }
+                }
               }
               &:nth-of-type(4){
                 span{
-                  color: darkgray;
-                  margin: 0 5px;
+                  color: #2d8cf0;
+                  cursor: pointer;
+                  &:nth-of-type(2){
+                    color: darkgray;
+                    margin: 0 5px;
+                  }
+                  &:hover{
+                    color: #6ab0f9;
+                  }
                 }
               }
             }

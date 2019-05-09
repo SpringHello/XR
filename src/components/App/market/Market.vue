@@ -21,16 +21,16 @@
           <img src="../../../assets/img/market/notice.png" class="notice-row-icon" />
           <div class="title">公告</div>
           <div class="line"></div>
-          <div class="title-t">我是新产品或者新服务商接入公告的标题</div>
-          <div class="content">我是新产品或者新服...</div>
+          <div class="title-t">{{notice.description}}</div>
+          <div class="content">{{notice.title}}</div>
           <img src="../../../assets/img/market/go.png" />
         </div>
         <div class="notice-row">
           <img src="../../../assets/img/market/remcomend.png" class="notice-row-icon" />
           <div class="title">推荐</div>
           <div class="line"></div>
-          <div class="title-t">推荐产品或者推荐服务商文字链广告广告</div>
-          <div class="content">推荐产品或者推荐服...</div>
+          <div class="title-t">{{recommend.description}}</div>
+          <div class="content">{{recommend.title}}</div>
           <img src="../../../assets/img/market/go.png" />
         </div>
       </div>
@@ -44,13 +44,13 @@
         <div class="partner-box">
           <div class="partner-boxs">
             <div class="partner-box-n">
-              <div class="item" v-for="(item, index) in partnerList" :key="index">
+              <div class="item" v-for="(item, index) in partnerList" :key="index" @click="toPartner(item)">
                 <div class="item-url">
-                  <img :src="item.pictureUrl" />
+                  <img :src="item.pictureUrl" alt="加载中..."/>
                 </div>
                 <div class="item-content">{{ item.description }}</div>
                 <div class="item-icon">
-                  <img :src="item.iconUrl" />
+                  <img :src="item.iconUrl" alt="加载中..."/>
                 </div>
                 <div class="item-name">{{ item.name }}</div>
               </div>
@@ -65,23 +65,27 @@
       <div class="product" v-for="(item, index) in productList" :key="index">
         <div class="product-title">{{ item.name }}</div>
         <div class="product-list">
-          <div class="product-list-head"  @click="goList">
+          <div class="product-list-head"  @click="goList(index)">
             <div class="product-list-head-title">
               <span>{{ item.name }}</span>
-              <img :src="item.toUrl" />
+              <img :src="item.nameurl" />
             </div>
-            <div class="line-icon"><img :src="item.iconUrl" /></div>
+            <div class="line-icon">
+              <img :src="item.iconurl" />
+            </div>
             <div class="product-list-head-icon">
-              <img :src="item.nameUrl" />
+              <img :src="item.tourl" />
             </div>
           </div>
-          <div class="product-list-item" v-for="(items, index) in item.platform" :key="index">
+          <div class="product-list-item" v-for="(items, index) in item.productList" :key="index">
             <div class="product-list-item-icon">
-              <img :src="items.url" />
+              <img :src="items.pictureurl" />
             </div>
-            <div class="product-list-item-name">{{ items.name }}</div>
-            <p>{{ items.company }}</p>
-            <router-link to="">查看详情</router-link>
+            <div>
+            <div class="product-list-item-name">{{items.title}}</div>
+            <p>{{ items.company.name }}</p>
+            </div>
+            <span @click="toDetails(items.id)">查看详情</span>
           </div>
         </div>
       </div>
@@ -94,123 +98,14 @@ import axios from '@/util/axiosInterceptor'
 export default {
   data () {
     return {
+      // 公告
+      notice: '',
+      // 推荐 
+      recommend: '',
       // 合作伙伴
       partnerList: [],
       // 产品列表
-      productList: [
-        {
-          name: '企业建站',
-          toUrl: require('../../../assets/img/market/build-1.png'),
-          iconUrl: require('../../../assets/img/market/build-2.png'),
-          nameUrl: require('../../../assets/img/market/station.png'),
-          platform: [
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            }
-          ]
-        },
-        {
-          name: '电商平台',
-          toUrl: require('../../../assets/img/market/goRed.png'),
-          iconUrl: require('../../../assets/img/market/lineRed.png'),
-          nameUrl: require('../../../assets/img/market/n.e-commerce-3.png'),
-          platform: [
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            }
-          ]
-        },
-        {
-          name: '企业管理',
-          toUrl: require('../../../assets/img/market/menagerie-1.png'),
-          iconUrl: require('../../../assets/img/market/menagerie-2.png'),
-          nameUrl: require('../../../assets/img/market/menagerie-3.png'),
-          platform: [
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            }
-          ]
-        },
-        {
-          name: '网站优化',
-          toUrl: require('../../../assets/img/market/web-1.png'),
-          iconUrl: require('../../../assets/img/market/web-2.png'),
-          nameUrl: require('../../../assets/img/market/web-3.png'),
-          platform: [
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            },
-            {
-              url: require('../../../assets/img/market/station-1.png'),
-              name: '商企云虚拟主机',
-              company: '品创天下（北京）科技发展有限公司'
-            }
-          ]
-        }
-      ],
+      productList: [],
       isActive: false,
       distance: 0
     }
@@ -231,11 +126,32 @@ export default {
         document.querySelector('.partner-box-n').style.transform = 'translateX(-'+ this.distance +'px)'
       }
     },
-    goList () {
+    toPartner (item) {
+      this.$router.push('supplier')
+      sessionStorage.setItem('companyId', item.id)
+    },
+    goList (index) {
       this.$router.push('list')
+      sessionStorage.setItem('name', index+1)
+    },
+    toDetails (proid) {
+      sessionStorage.setItem('proid',proid)
+      this.$router.push('details')
     }
   },
   created () {
+    // 公告
+    axios.get('cloudMarket/getNotice.do', {}).then(res => {
+      if (res.status === 200 && res.data.status === 1) {
+        this.notice = res.data.result
+      }
+    })
+    // 推荐
+    axios.get('cloudMarket/getRecommend.do', {}).then(res => {
+      if (res.status === 200 && res.data.status === 1) {
+        this.recommend = res.data.result
+      }
+    })
     // 合作伙伴
     axios.get('cloudMarket/getPartner.do', {}).then(res => {
       if (res.status === 200 && res.data.status === 1) {
@@ -244,7 +160,9 @@ export default {
     })
     // 产品分类
     axios.get('cloudMarket/getClassificationAndProduct.do').then(res => {
-      console.log(res)
+      if (res.status === 200 || res.data.status === 1) {
+        this.productList = res.data.result
+      }
     })
   }
 }
@@ -324,7 +242,7 @@ export default {
     }
   }
   .notices {
-    width: 1920px;
+    width: 100%;
     margin: 0 auto;
     background: rgba(255, 255, 255, 1);
     .notice {
@@ -382,7 +300,7 @@ export default {
     }
   }
   .partners {
-    width: 1920px;
+    width: 100%;
     margin: 0 auto;
     background: rgba(255, 255, 255, 1);
     .partner {
@@ -488,9 +406,9 @@ export default {
     }
   }
   .show {
-    width: 1920px;
+    width: 100%;
     height: 1864px;
-    background: url('../../../assets/img/market/show-bg.png') no-repeat, linear-gradient(360deg, rgba(40, 96, 221, 0.14) 0%, rgba(59, 120, 255, 0.01) 100%);
+    background: url('../../../assets/img/market/show-bg.png') no-repeat, linear-gradient(360deg,rgba(40,96,221,0.14) 0%,rgba(59,120,255,0.01) 100%);;
     margin: auto;
     background-position: bottom;
     .product {
@@ -542,6 +460,8 @@ export default {
             padding: 8px 0 8px 20px;
             img {
               display: block;
+              width: 91px;
+              height: 4px;
             }
           }
           .product-list-head-icon {
@@ -568,6 +488,10 @@ export default {
           }
           .product-list-item-icon {
             padding: 40px 40px 30px 40px;
+            img{
+              width: 170px;
+              height: 130px;
+            }
           }
           .product-list-item-name {
             font-size: 16px;
@@ -578,6 +502,13 @@ export default {
             color: rgba(102, 102, 102, 1);
             margin-top: 5px;
             margin-bottom: 20px;
+          }
+          span{
+            color: #2d8cf0;
+            cursor: pointer;
+            &:hover{
+              color: #6ab0f9;
+            }
           }
         }
       }

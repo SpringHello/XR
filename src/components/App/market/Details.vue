@@ -13,17 +13,17 @@
         <div class="product">
           <!--产品-->
           <div class="product-box">
-            <div class="product-box-icon"></div>
+            <div class="product-box-icon">
+                <img :src="prodetials.pictureurl" alt="">
+            </div>
             <div class="product-box-content">
-              <div class="title">AB SalesCloud 销售云</div>
-              <div class="content">
-                客户自身属性，行为、服务、消费数据全信息整合基于海量标签的客户评价分层体系，构筑价值金字塔实时变化触发关联的个性化营销旅程、服务等级与客服云无缝协作。预设自动分配规则，正确匹配团队和客户，提高效率多种配置规则满足企业销售客保机制，随时调整实行自动回收清洗。
-              </div>
-              <div class="hint">提示性文字提示性文字提示性文字提示性文字提示性文字提示性文字提示性文字提示性文字提示性文字</div>
-              <i-button type="primary" @click="show = true">咨询购买</i-button>
+              <div class="title">{{prodetials.title}}</div>
+              <div class="content">{{prodetials.description}}</div>
+              <div class="hint">{{prodetials.description}}</div>
+              <i-button type="primary" @click="show = true" v-show="prodetials.type == 1">咨询购买</i-button>
             </div>
           </div>
-          <div class="product-nav" style="display: none;">
+          <div class="product-nav" v-show="prodetials.type == 0">
                 <Tabs :animated="false" @on-click="getPrice">
                     <div class="tabTitle">商品规格</div>
                     <TabPane v-for="(item, index) in buyWay" :key="index" :label="item.type" @on-click="getPrice(index)">
@@ -45,7 +45,7 @@
                     <div class="tab-row">
                         <div class="title">区域选择</div>
                         <div class="th">
-                            <span v-for="(item, index) in area" :key="index" :class="{sysActive: areaIndex == index }" @click="areaIndex = index">{{item}}</span>
+                            <span v-for="(item, index) in area" :key="index" :class="{sysActive: areaIndex == index }" @click="areaIndex = index">{{item.zonename}}</span>
                         </div>
                     </div>
                     <div class="tab-row">
@@ -89,9 +89,29 @@
       <div class="main-right">
         <div class="partner">
           <p class="partner-title">合作伙伴介绍</p>
+          <ul class="partner-intro">
+                <li>供应商：{{prodetials.company.name}}</li>
+                <li>客服热线：{{prodetials.consultation.sellPhone}}</li>
+                <li>服务时间：7*24小时</li>
+                <li>电子邮箱：{{prodetials.consultation.sellEmail}}</li>
+                <li>在线客服：<span>{{prodetials.consultation.sellName}}</span></li>
+                <li>供应商简介：{{prodetials.company.description}}</li>
+            </ul>
         </div>
         <div class="other">
           <p class="other-title">合作伙伴其他服务</p>
+            <div class="other-service">
+               <div v-for="(item,index) in otherService" :key="index" class="other-part">
+                   <img :src="item.pictureurl" alt="">
+                   <div class="other-sintr">
+                       <p>{{item.description}}</p>
+                       <span>￥ {{item.price}}</span>
+                   </div>
+               </div>
+               <div class="pageType">
+                   <Page :total="50" show-total :current="page" :page-size="5" @on-change="changePages"></Page>
+               </div>
+            </div>
         </div>
       </div>
       <!--咨询购买对话框-->
@@ -139,9 +159,14 @@
 </template>
 
 <script type="text/ecmascript-6">
+import axios from 'axios'
 export default {
   data () {
+    window.scrollTo(0, 0);
     return{
+      prodetials:[], // 产品详情
+      otherService: [],// 合作伙伴其他服务
+      page: 1,
       show: false,
       // 产品价格
       price: '免费',
@@ -181,7 +206,7 @@ export default {
       // 主机
       sys: ['1核1G 40G SSD系统盘', '2核4G 40G SSD系统盘', '自定义主机规格'],
       // 区域
-      area: ['北京1区（北京）', '北方1区（沈阳）', '北方2区（沈阳）', '华东1区（东莞）', '华南1区（绍兴）', '西北1区（西安）'],
+      area: [],
       // 产品介绍
       intro: ['商品详情', '参数规格', '使用帮助'],
       formValidate: {
@@ -224,7 +249,7 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          // this.$Message.success('Success!');
+          this.$Message.success('Success!');
         } else {
           // this.$Message.error('Fail!');
         }
@@ -232,9 +257,47 @@ export default {
     },
     handleReset (name) {
       this.$refs[name].resetFields();
+    },
+    // 合作伙伴其他服务
+    getOtherService () {
+      axios.get('cloudMarket/getProduct.do', {
+        params: {
+          page: this.page,
+          display: 5,
+          company_id: this.prodetials.company.id
+        }
+      }).then(res => {
+        if (res.status === 200 && res.data.status === 1) {
+          this.otherService = res.data.result.list
+        }
+      })
+    },
+    // 分页查询
+    changePages (key) {
+      this.page = key
+      this.getOtherService()
     }
   },
   created () {
+    var getArea = axios.get('information/zone.do',{
+      params: {
+        t: new Date().getTime()
+      }
+    })
+    var getProduct = axios.get('cloudMarket/getProductDetail.do',{
+      params: {
+        id: sessionStorage.getItem('proid')
+      }
+    })
+    Promise.all([getArea,getProduct]).then(res => {
+      if (res[0].status === 200 && res[0].data.status === 1) {
+        this.area = res[0].data.result
+      }
+      if (res[1].status === 200 && res[1].data.status === 1) {
+        this.prodetials = res[1].data.result
+        this.getOtherService()
+      }
+    })
   }
 }
 </script>
@@ -267,9 +330,12 @@ export default {
           width: 100%;
           display: flex;
           .product-box-icon {
-            background: salmon;
-            height: 60px;
+            height: 70px;
             width: 100px;
+             img {
+                 width: 100%;
+                 height: 100%;
+             }
           }
           .product-box-content {
             width: 622px;
@@ -425,6 +491,20 @@ export default {
           padding: 20px;
           box-sizing: border-box;
         }
+        .partner-intro {
+              background:rgba(255,255,255,1);
+              padding: 0 20px 20px 20px;
+              li {
+                  padding-top: 10px;
+                  list-style: none;
+                  font-size:14px;
+                  color:rgba(51,51,51,1);
+                  line-height:24px;
+                  span {
+                      color: #3B78FF;
+                  }
+              }
+          }
       }
       .other{
         background: rgba(255,255,255,1);
@@ -436,6 +516,43 @@ export default {
             line-height:24px;
             padding: 20px;
         }
+          .other-service {
+              margin: 0 20px;
+            .other-part {
+                padding: 20px 0;
+                display: flex;
+                align-items: center;
+                border-bottom: 1px solid #E9E9E9;
+                img {
+                    width: 100px;
+                    height: 60px;
+                    display: block;
+                    margin-right: 10px;
+                }
+                .other-sintr {
+                    p {
+                        font-size:14px;
+                        font-weight:bold;
+                        color:rgba(51,51,51,1);
+                        line-height:24px;
+                        padding-bottom: 10px;
+                    }
+                    span {
+                        font-size:14px;
+                        font-family:ArialMT;
+                        color:rgba(255,98,75,1);
+                        line-height:16px;
+                    }
+                }
+                &:last-of-type {
+                    border-bottom: none;
+                }
+            }
+            .pageType {
+                padding: 20px 0;
+                text-align: right;
+            }
+          }
       }
     }
   }
