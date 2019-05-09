@@ -9,9 +9,9 @@
         <div style="border-bottom: 1px solid #D9D9D9;">
           <h2>区域选择</h2>
           <div class="item-wrapper">
-            <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem" 
-                 :class="{zoneSelect:zone.zoneid==item.zoneid}"
-                 @click="zone=item">{{item.zonename}}
+    <div v-for="item in zoneList" :key="item.zoneid"  class="zoneItem"
+                 :class="{zoneSelect:zone.zoneid==item.zoneid&& item.buyover != 1, zoneDisabled:item.buyover == 1}"
+                 @click="zoneChange(item)">{{item.zonename}}<span v-show="item.buyover == 1">（已售罄）</span>
             </div>
           </div>
           <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
@@ -473,17 +473,6 @@
      })
      },*/
     data() {
-      var zoneList = this.$store.state.zoneList.filter(zone => {
-        return zone.gpuserver == 1
-      })
-      var zone = this.$store.state.zone
-      // 如果默认区域在该资源下不存在
-      if (!zoneList.some(i => {
-        return i.zoneid == zone.zoneid
-      })) {
-        // 默认选中zoneList中第一个区域
-        zone = zoneList[1]
-      }
       return {
         mirrorShow: false,
         acllist: [
@@ -563,8 +552,8 @@
         ],
         downRuleData: [
         ],
-        zone,
-        zoneList,
+        zone:null,
+        zoneList:[],
         // 计费方式
         timeType: [
           {label: '包年包月', value: 'annual'},
@@ -611,7 +600,7 @@
           {
             type: 'radio',
             width: 60,
-            align: 'center'
+            align: 'center',
           },
           {
             title: '型号',
@@ -634,7 +623,17 @@
             render: (h, params) => {
               return h('span', `${params.row.gpusize}*${params.row.gputype}`)
             }
-          }
+          },
+          // {
+          //   title:'是否售罄',
+          //   render: (h,params) => {
+          //     return h('span',{
+          //       style:{
+          //         color:params.row.serviceid == '1'?'#FF0000':''
+          //       }
+          //     },params.row.serviceid == '1'?'已售罄':'');
+          //   }
+          // }
         ],
         gpuSelection: null,
         vpcList: [],
@@ -718,15 +717,30 @@
       }
     },
     created() {
-      this.setGpuServer()
-      this.setTemplate()
-      this.queryVpc()
-      this.queryDiskPrice()
-      //this.queryCustomVM()
-      this.queryIPPrice()
+         this.zoneList = this.$store.state.zoneList.filter(zone => {
+        return zone.gpuserver == 1
+      })
+      this.zone = this.$store.state.zone;
+      // 如果默认区域在该资源下不存在
+      if (!this.zoneList.some(i => {
+        return i.zoneid == this.zone.zoneid
+      })) {
+        // 默认选中zoneList中第一个区域
+        this.zone = this.zoneList[0]
+      }    
+    },
+    mounted(){
+      this.setGpuServer();
+            this.setTemplate();
+            this.queryVpc();
+            this.queryDiskPrice();
+            //this.queryCustomVM()
+            this.queryIPPrice();
+ 
       setTimeout(() => {
         this.select();
       }, 200)
+      
       if (this.$route.query.mirrorType) {
         this.currentType = this.$route.query.mirrorType;
 
@@ -817,9 +831,13 @@
             zoneId: this.zone.zoneid
           }
         }).then(response => {
-          response.data.result[0]._checked = true
+          response.data.result[0]._checked = true;
           this.serverOfferList = response.data.result
-          this.gpuSelection = this.serverOfferList[0]
+          // this.serverOfferList.forEach(item =>{
+          //   item._disabled = item.serviceid == '1' ?true:false;
+          // })
+       
+          this.gpuSelection = this.serverOfferList[0];
         })
       },
       // 选中表中的一项
@@ -1071,6 +1089,13 @@
       }),
       // 数据库加入购物车
       addDataCart() {
+          if (this.zone.buyover == 1) {
+          this.$Message.info({
+            content: '请选择需要购买的区域'
+          })
+          this.roll(100)
+          return
+        }
         if (this.$parent.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
@@ -1123,6 +1148,13 @@
       buyData() {
         if (this.userInfo == null) {
           this.$LR({type: 'login'})
+          return
+        }
+        if (this.zone.buyover == 1) {
+          this.$Message.info({
+            content: '请选择需要购买的区域'
+          })
+          this.roll(100)
           return
         }
         if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
@@ -1211,6 +1243,11 @@
             })
           }
         })
+      },
+      zoneChange(item){
+        if(item.buyover != 1){
+         this.zone = item
+        }
       }
     },
     computed: {
@@ -1372,6 +1409,12 @@
           border-color: #377dff;
           background-color: #377dff;
           color: #ffffff;
+        }
+        .zoneDisabled{
+          background: #666666;
+          border: 1px solid #666666;
+          cursor: not-allowed;
+          color: #fff;
         }
         .item-wrapper {
           margin-top: 20px;

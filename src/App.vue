@@ -85,7 +85,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a href="https://zschj.xrcloud.net/login" rel="nofollow"><span>登录</span>
+                  <a href="https://www.xrcloud.net/login" rel="nofollow"><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -93,7 +93,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a href="https://zschj.xrcloud.net/register" rel="nofollow"><span>注册</span>
+                  <a href="https://www.xrcloud.net/register" rel="nofollow"><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -796,7 +796,7 @@
       // 获取用户信息
       var userInfo = axios.get('user/GetUserInfo.do', {params: {t: new Date().getTime()}})
       // 获取zone信息
-      var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime()}})
+      var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime(),buy: '1'}})
       Promise.all([userInfo, zoneList]).then(values => {
         if (values[0].data.status == 1 && values[0].status == 200) {
           $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})

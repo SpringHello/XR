@@ -619,11 +619,6 @@
             this.products.forEach(product => {
               product.config.zoneId = this.areaGroup[0].value
             })
-            this.areaGroup.forEach((item, index) => {
-              if (item.value === '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c') {
-                this.areaGroup.splice(index, 1)
-              }
-            })
           }
         })
       },

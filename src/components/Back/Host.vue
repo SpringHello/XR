@@ -1675,7 +1675,8 @@
       delBefore(){
         let url = 'information/delVMHint.do'
         let params = {
-          computerId: this.currentHost[0].computerid
+          computerId: this.currentHost[0].computerid,
+          type: '1'
         }
         this.$http.get(url,{params}).then(res=>{
           if(res.status === 200 && res.data.status === 1){

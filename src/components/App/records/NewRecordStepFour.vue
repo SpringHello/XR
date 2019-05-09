@@ -73,7 +73,7 @@
     <div class="footer" v-show="photograph === 2 && nextStep  && curtainStatus ">
       <div class="content">
         <h2>收到幕布后请按照要求拍照上传</h2>
-        <p>请仔细阅读拍照要求，以幕布为背景，拍摄网站负责人的上半身免冠照片。请保持光线充足，照片效果清晰</p>
+        <p>请仔细阅读拍照要求，以幕布为背景，拍摄网站负责人的上半身免冠照片。请保持光线充足，照片效果清晰。若拍照不符合要求，备案申请会被驳回</p>
       </div>
       <div class="upload">
         <div class="uploadTitle">
@@ -112,7 +112,7 @@
         <p>应部分管局要求：</p>
         <p>1.用户拍照的照片上面要显示拍照时间（水印）</p>
         <p>2.拍照时穿的衣服必须符合当时的季节</p>
-        <p>为保障您的资料顺利通过管局审核，请根据以上提示上传符合管局要求图片，如有问题可咨询客服专员<a target="_blank" :href="`tencent://message/?uin=1746856113&amp;Site=www.cloudsoar.com&amp;Menu=yes`">（QQ客服-备案）</a></p>
+        <p>为保障您的资料顺利通过管局审核，请根据以上提示上传符合管局要求图片，如有问题可咨询客服专员<span style="color: red">（建议您上传照片之前联系备案专员确认照片信息符合要求）</span><a target="_blank" :href="`tencent://message/?uin=1746856113&amp;Site=www.cloudsoar.com&amp;Menu=yes`">（QQ客服-备案）</a></p>
       </div>
       <div style="margin-top: 60px;height: 2px;background: #d9d9d9"></div>
     </div>
