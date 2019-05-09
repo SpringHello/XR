@@ -822,7 +822,13 @@
                         display: 'inline-block'
                       }
                     }), h('span', {style: styleInfo}, '关机中')])
-                  } else {
+                  } else if (params.row.computerstate == 0) {
+                    return h('div', {}, [h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }), h('span', {style: styleInfo}, '开机中')])
+                  }else {
                     return h('div', {}, [h('Spin', {
                       style: {
                         display: 'inline-block'
