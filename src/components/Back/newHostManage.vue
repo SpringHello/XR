@@ -564,7 +564,7 @@
         if (value.length < 8 || value.length > 30) {
           callback(new Error('密码长度8-30字符'));
         } else if (!this.regExpObj.password.test(value)) {
-          callback(new Error('密码必须包含数字和字母大小写,不能包含@!#@!#<>(){}[]%'));
+          callback(new Error('密码必须包含数字和字母,不能包#@!<>(){}[]%等特殊字符'));
         } else {
           callback()
         }
@@ -579,7 +579,7 @@
       const validaRegisteredName = regExp.validaRegisteredName
       return {
         regExpObj: {
-          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[`~$_^&*,-?.+=]{8,32}$/
+          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~$\\\\^*|;:\',\\/?]{8,32}$/
         },
         guideStep: 0,
         hostInfo: {},

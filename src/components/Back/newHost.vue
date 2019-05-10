@@ -521,7 +521,7 @@
           <div class="resetModal-hint">
             <p v-show="resetPasswordForm.errorMsg=='passwordUndercapacity'">您输入的密码强度不足</p>
             <p v-show="resetPasswordForm.errorMsg=='passwordHint'">提醒：密码必须是8-32个包含数字和大小写字母的字符，不能包含@!#&lt&gt(){}[]%</p>
-            <p v-show="resetPasswordForm.errorMsg=='passwordHintTwo'">注意：您的密码已经符合设置密码规则，但密码需要具备一定的强度，建议您设置12位以上，至少包括4项（：，-（）；）的特殊字符，每种字符大于等于2位</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordHintTwo'">注意：您的密码已经符合设置密码规则，但密码需要具备一定的强度，建议您设置12位以上，至少包括4项（：，-；）的特殊字符，每种字符大于等于2位</p>
           </div>
           <div class="resetModal-import">
             <span>确认密码</span>
@@ -560,7 +560,7 @@
       return {
         guideStep: 1,
         regExpObj: {
-          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~$_^&*,-?.+=]{8,32}$/
+          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~$\\\\^*|;:\',\\/?]{8,32}$/
         },
         showModal: {
           selectAuthType: false,
@@ -1915,6 +1915,7 @@
         })
       },
       delHostOk() {
+        this.showModal.delHostHint = false;
         let params = {}
         if (this.hostDelWay === 1) {
           this.hostListData.forEach(host => {
