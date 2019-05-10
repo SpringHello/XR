@@ -27,7 +27,7 @@
                     <li>¥{{ balance }}</li><!-- @click="getVipList" -->
                   </ul>
                   <ul style="width: 50%">
-                    <li class="item-li">现金券额度</li><!-- @click="toMyCard" -->
+                    <li class="item-li">现金券额度</li>
                     <li>¥{{ voucher }}</li>
                   </ul>
                   </div>
@@ -3194,9 +3194,6 @@
             }
           })
       },
-      searchOrderfunc() {
-        
-      },
       deleteOrder() {
         if (this.orderNumber.length != 0) {
           this.$Modal.confirm({
@@ -3603,10 +3600,6 @@
       },
       getBillAllOrder() {
         this.dateRangeOrder = ['', '']
-      },
-      toMyCard() {
-        this.name = 'myCard'
-        this.searchCard()
       },
       unfreeze_ok() {
         // 解冻到账户
@@ -4379,10 +4372,7 @@
     watch: {
       dateRange() {
         this.search()
-      },
-      dateRangeOrder() {
-        this.searchOrderfunc()
-      },
+      }
     }
   }
 </script>
