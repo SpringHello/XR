@@ -39,20 +39,22 @@
                     <div class="tab-row">
                         <div class="title">主机规格</div>
                         <div class="th">
-                            <span v-for="(item, index) in sys" :key="index" :class="{sysActive: sysIndex == index }" @click="sysIndex = index">{{item}}</span>
+                            <span v-for="(item, index) in sysPecification" :key="index" :class="{sysActive: sysIndex == index }" @click="sysIndex = index">{{item}}</span>
                         </div>
                     </div>
                     <div class="tab-row">
                         <div class="title">区域选择</div>
                         <div class="th">
-                            <span v-for="(item, index) in area" :key="index" :class="{sysActive: areaIndex == index }" @click="areaIndex = index">{{item.zonename}}</span>
+                            <span v-for="(item, index) in area" :key="index" :class="{sysActive: areaIndex == index }" @click="zoneidChange(item,index)">{{item.zonename}}</span>
                         </div>
                     </div>
                     <div class="tab-row">
                         <div class="title">所属网络</div>
                         <div class="th">
-                            <span class="sysActive">默认VPC</span>
-                            <router-link to="">+新建VPC</router-link>
+                            <Select v-model="vpcName" style="width:200px">
+                                <Option v-for="(item,index) in vpcList" :key="index" :value="item.vpcid">{{item.vpcname}}</Option>
+                            </Select>
+                            <router-link to="vpc">+新建VPC</router-link>
                         </div>
                     </div>
                     <div class="tab-row">
@@ -104,12 +106,15 @@
                <div v-for="(item,index) in otherService" :key="index" class="other-part">
                    <img :src="item.pictureurl" alt="">
                    <div class="other-sintr">
-                       <p>{{item.description}}</p>
-                       <span>￥ {{item.price}}</span>
+                       <p><span>{{item.title}}——</span>{{item.description}}</p>
+                       <span class="fwprices">￥ {{item.price}}</span>
                    </div>
                </div>
-               <div class="pageType">
-                   <Page :total="50" show-total :current="page" :page-size="5" @on-change="changePages"></Page>
+               <div class="pageType" v-if="totalPage">
+                   <Page :total="totalPage" show-total :current="page" :page-size="5" @on-change="changePages"></Page>
+               </div>
+               <div v-else class="nodatas">
+                   暂无数据
                </div>
             </div>
         </div>
@@ -166,10 +171,11 @@ export default {
     return{
       prodetials:[], // 产品详情
       otherService: [],// 合作伙伴其他服务
+      totalPage: 0,
       page: 1,
       show: false,
       // 产品价格
-      price: '免费',
+      price: '',
       units: '',
       // 选择状态
       checkIndex: false,
@@ -203,10 +209,14 @@ export default {
       name: '',
       tel: '',
       email: '',
-      // 主机
-      sys: ['1核1G 40G SSD系统盘', '2核4G 40G SSD系统盘', '自定义主机规格'],
+      // 主机规格
+      sysPecification: ['1核1G 40G SSD系统盘', '2核4G 40G SSD系统盘', '自定义主机规格'],
       // 区域
       area: [],
+      zoneid: '',
+      // vpc
+      vpcName: '',
+      vpcList: [],
       // 产品介绍
       intro: ['商品详情', '参数规格', '使用帮助'],
       formValidate: {
@@ -269,13 +279,33 @@ export default {
       }).then(res => {
         if (res.status === 200 && res.data.status === 1) {
           this.otherService = res.data.result.list
+          this.totalPage = res.data.result.paging.total
         }
       })
     },
-    // 分页查询
+    // 其他服务分页查询
     changePages (key) {
       this.page = key
       this.getOtherService()
+    },
+    // vpc 查询
+    listVpc () {
+      axios.get('network/listVpcBuyComputer.do',{
+        params: {
+          zoneId: this.zoneid
+        }
+      }).then(res => {
+        if (res.status === 200 && res.data.status === 1) {
+          this.vpcList = res.data.result
+          this.vpcName = this.vpcList[0].vpcid
+        }
+      })
+    },
+    // 区域切换
+    zoneidChange (item,index){
+      this.areaIndex = index
+      this.zoneid = item.zoneid
+      this.listVpc()
     }
   },
   created () {
@@ -292,6 +322,12 @@ export default {
     Promise.all([getArea,getProduct]).then(res => {
       if (res[0].status === 200 && res[0].data.status === 1) {
         this.area = res[0].data.result
+        this.area.forEach(e => {
+          if (e.isdefault == 1) {
+            this.zoneid = e.zoneid
+          }
+        })
+        this.listVpc()
       }
       if (res[1].status === 200 && res[1].data.status === 1) {
         this.prodetials = res[1].data.result
@@ -531,13 +567,16 @@ export default {
                 }
                 .other-sintr {
                     p {
+                        span {
+                           color:rgba(51,51,51,1);
+                        }
                         font-size:14px;
                         font-weight:bold;
-                        color:rgba(51,51,51,1);
+                        color:rgba(102,102,102,1);
                         line-height:24px;
                         padding-bottom: 10px;
                     }
-                    span {
+                    .fwprices {
                         font-size:14px;
                         font-family:ArialMT;
                         color:rgba(255,98,75,1);
@@ -551,6 +590,13 @@ export default {
             .pageType {
                 padding: 20px 0;
                 text-align: right;
+            }
+            .nodatas {
+                text-align: center;
+                font-size:14px;
+                color:rgba(102,102,102,1);
+                line-height:20px;
+                padding-bottom: 20px;
             }
           }
       }

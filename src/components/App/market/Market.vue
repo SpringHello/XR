@@ -17,7 +17,7 @@
     <!--公告、推荐-->
     <div class="notices">
       <div class="notice">
-        <div class="notice-row">
+        <div class="notice-row" @click="checkNotice(notice.id)">
           <img src="../../../assets/img/market/notice.png" class="notice-row-icon" />
           <div class="title">公告</div>
           <div class="line"></div>
@@ -25,7 +25,7 @@
           <div class="content">{{notice.title}}</div>
           <img src="../../../assets/img/market/go.png" />
         </div>
-        <div class="notice-row">
+        <div class="notice-row" @click="checkRecommend(recommend.id)">
           <img src="../../../assets/img/market/remcomend.png" class="notice-row-icon" />
           <div class="title">推荐</div>
           <div class="line"></div>
@@ -136,6 +136,14 @@ export default {
     },
     toDetails (proid) {
       sessionStorage.setItem('proid',proid)
+      this.$router.push('details')
+    },
+    checkNotice (noticeid) {
+      sessionStorage.setItem('proid',noticeid)
+      this.$router.push('details')
+    },
+    checkRecommend (recommendid) {
+      sessionStorage.setItem('proid',recommendid)
       this.$router.push('details')
     }
   },
