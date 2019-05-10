@@ -2070,7 +2070,7 @@
                               // 调用使用现金券接口
                               this.$http.get('ticket/useMoneyTicket.do', {
                                 params: {
-                                  moneyTicketId: obj.row.ticketnumber
+                                  moneyTicketId: obj.row.id
                                 }
                               }).then(response => {
                                 if (response.status == 200 && response.data.status == 1) {
@@ -2104,7 +2104,7 @@
                               // 调删除现金券接口
                               this.$http.get('ticket/delUserTicket.do', {
                                 params: {
-                                  id: obj.row.ticketnumber
+                                  id: obj.row.id
                                 }
                               }).then(response => {
                                 if (response.status == 200 && response.data.status == 1) {
@@ -2141,11 +2141,10 @@
                           this.$message.confirm({
                             content: '确认删除该优惠券吗？',
                             onOk: () => {
-                              console.log(obj.row.ticketnumber)
                               // 调删除现金券接口
                               this.$http.get('ticket/delUserTicket.do', {
                                 params: {
-                                  id: obj.row.ticketnumber
+                                  id: obj.row.id
                                 }
                               }).then(response => {
                                 if (response.status == 200 && response.data.status == 1) {
@@ -2179,7 +2178,7 @@
                           // 调删除现金券接口
                           this.$http.get('ticket/delUserTicket.do', {
                             params: {
-                              id: obj.row.ticketnumber
+                              id: obj.row.id
                             }
                           }).then(response => {
                             if (response.status == 200 && response.data.status == 1) {
