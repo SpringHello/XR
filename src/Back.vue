@@ -209,11 +209,11 @@
         <span class="phone"></span>
       </Poptip>-->
       <span class="phone" @click="getOrderType" @mouseenter="PME" @mouseleave="PML">
-        <div ref="phoneE" style="overflow: hidden;bottom:45px;">
+        <div ref="phoneE" style="overflow: hidden;bottom:5px;">
           <div class="wrapper">
             <div>
-              <span class="title">投诉与建议</span>
-            </div>
+            <span class="title">投诉与建议</span>
+              </div>
           </div>
         </div>
       </span>
@@ -1164,22 +1164,24 @@
       }
     }
     .phone {
-      width: 48px;
-      height: 48px;
-      display: block;
-      padding: 10px;
-      cursor: pointer;
-      background-color: #ffffff;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-image: url('./assets/img/app/phone.png');
-      /*&:hover {
-        background: #2A99F2;
+        width: 48px;
+        height: 48px;
+        display: block;
+        padding: 10px;
+        background: #FFF;
+        position: relative;
         background-repeat: no-repeat;
         background-position: center;
-        background-image: url('./assets/img/app/phone-hover.png');
-      }*/
-      > div {
+        background-image: url('./assets/img/app/phone.png');
+        cursor: pointer;
+        margin-bottom: 10px;
+        /*&:hover {
+          background: #2A99F2;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-image: url('./assets/img/app/phone-hover.png');
+        }*/
+        > div {
           position: absolute;
           width: 0px;
           background-color: #ffffff;
@@ -1207,7 +1209,7 @@
             }
           }
         }
-    }
+      }
   }
 
   .complain-modal {
