@@ -13,7 +13,7 @@
         <span class="title"
               style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>
         <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
-              style="margin-top: 20px;min-height: 550px">
+              style="margin-top: 20px;min-height: 650px">
           <Tab-pane label="财务总览" name="accountSummary">
             <div class="money">
               <div class="item1">
@@ -50,37 +50,20 @@
                   </p>
                 </div>
               </div>
-              <!-- <div class="item">
-                <span>消费</span>
-                <div>
-                  <ul style="width: 50%">
-                    <li class="item-li" @click="getBillMonth">本月账单金额</li>
-                    <li>¥{{ billmonth }}</li>
-                  </ul>
-                  <ul style="width: 50%">
-                    <li class="item-li" @click="getBillAll">累计消费金额</li>
-                    <li>¥{{ theCumulative }}</li>
-                  </ul>
-                </div>
-              </div> -->
               <div class="item2">
                 <p>本月累计支出</p>
                 <div>
-                  <!-- <ul style="width: 50%">
-                    <li class="item-li" @click="toMyCard">优惠券数量</li>
-                    <li>{{ couponNumber }}</li>
-                  </ul> -->
                   <ul style="width: 50%">
                     <li>消费金额
                       <Button type="ghost" shape="circle" size="small">查看详情</Button>
                     </li>
-                    <li>¥{{ theCumulative }}</li><!-- @click="getBillAll" -->
+                    <li>¥{{ theCumulative }}</li>
                   </ul>
                   <ul style="width: 50%">
                     <li>冻结金额
                       <Button type="ghost" shape="circle" size="small" @click="freezeDetails">历史冻结记录</Button>
                     </li>
-                    <li>¥{{ freezeDeposit }}</li><!-- @click="freezeDetails" -->
+                    <li>¥{{ freezeDeposit }}</li>
                   </ul>
                 </div>
               </div>
@@ -118,16 +101,16 @@
                 </p>
                 <img src="../../assets/img/back/daijj.png"/>
               </div>
-              <div class="item5" @click="name='applyInvoice'">
+              <div class="item5" @click="UnpaidJump('invoicejmp')">
                 <p>可开发票金额</p>
                 <p>
                   <span>{{ invoice }}</span>
                   元
                 </p>
-                <p v-if="invoice<=0" @click.stop="name='applyInvoice'" style="cursor: pointer;">
+                <p v-if="invoice<=0" @click.stop="UnpaidJump('invoicejmp')" style="cursor: pointer;">
                   查看发票管理
                 </p>
-                <p v-else-if="invoice>=1" @click.stop="name='applyInvoice'" style="cursor: pointer;">
+                <p v-else-if="invoice>=1" @click.stop="UnpaidJump('invoicejmp')" style="cursor: pointer;">
                   立即开票
                 </p>
                 <img src="../../assets/img/back/kkfpiao.png"/>
@@ -329,58 +312,15 @@
               <Table :columns="columns5" :data="data5" @on-sort-change="SortField" @on-selection-change="select" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;overflow: hidden">
                 <div style="float: right;">
-                  <Page :total="OrderPages" :current="currentORderPage" :page-size="OrderpageSize" @on-change="OrderchangePage"></Page>
+                  <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
                 </div>
               </div>
             </div>
-            <!-- <div class="ordertype">
-              <span class="order_s1">订单类型</span>
-              <Select v-model="order_type" @on-change="changeOrder" style="width:231px;margin-left: 10px">
-                <Option v-for="item in orderList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-              <span class="order_s2"> 订单时间</span>
-              <Select v-model="timeType" style="width:231px;margin-left: 10px" @on-change="searchOrderByType">
-                <Option v-for="item in timeTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-              <span style="line-height: 30px;">～</span>
-              <Row>
-                <Col span="12">
-                  <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
-                               placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
-                </Col>
-              </Row>
-              <Button type="primary" style="margin-left: 120px" @click="orderRefundBefore" :disabled="refundDisabled">退款</Button>
-              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button>
-              <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
-              </Button>
-            </div>
-            <div class="orderdata">
-              <Table highlight-row :columns="columns_order" :data="orderData" @on-selection-change="select"></Table>
-              <span
-                style="display:inline-block;margin-top:10px;font-family: PingFangSC-Regular;font-size: 14px;color: #2A99F2;line-height: 18px;cursor:pointer"
-                @click="clipCoupons">使用优惠券</span>
-              <span v-show="costSeen"
-                    style="font-family: Microsoft Yahei,微软雅黑;font-size: 20px;color: rgba(0,0,0,0.65);float: right;margin-top: 10px">总计支付 : {{totalCost}} 元（实际支付：{{ actualDelivery
-                  }}元）</span>
-              <div style="margin: 10px;overflow: hidden">
-                <div style="float: right;">
-                  <Page :total="ordertotal" :current="1" :page-size="10" @on-change="order_currentChange"></Page>
-                </div>
-              </div>
-            </div> -->
+           
           </Tab-pane>
           <Tab-pane label="我的卡券" name="myCard">
             <div class="searchCard">
-              <!-- <span>类型</span>
-              <Select v-model="cardType" style="width:231px;margin-left: 10px">
-                <Option v-for="item in cardTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-              <span style="margin-left: 20px">状态</span>
-              <Select v-model="cardState" @on-change="changedcard" style="width:231px;margin-left: 10px">
-                <Option v-for="item in cardStateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-              <Button type="primary" @click="searchCard">查询</Button>
-              <Button type="primary" style="float: right" @click="showModal.exchangeCard=true">兑换优惠券</Button> -->
+              
               <p>
                 <span class="spana">适用产品：</span>
                 <RadioGroup v-model="ApplicableProducts" type="button" class="rideo" @on-change="ProductChange">
@@ -418,7 +358,7 @@
             </Table>
                 <div style="margin: 10px;overflow: hidden">
                    <div style="float: right;">
-                     <Page :total="cardTotal" :page-size="cardPageSize" :current="1" @on-change="cardCurrentChange"></Page>
+                     <Page :total="cardTotal" :current="cardscurrent" :page-size-opts="Cardopts" @on-change="cardCurrentChange" @on-page-size-change="CardPageSizechange" show-sizer></Page>
                    </div>
                  </div>
           </Tab-pane>
@@ -1562,7 +1502,7 @@
         exportTotal: 1,
         OrderPages: 1,
         currentORderPage: 1,
-        OrderpageSize: 5,
+        OrderpageSize: 10,
         columns5: [
             {
               type: 'selection',
@@ -2493,232 +2433,7 @@
             label: '退款中订单'
           }
         ],
-        // columns_order: [
-        //   {
-        //     type: 'selection',
-        //     width: 60,
-        //   },
-        //   {
-        //     title: '交易明细',
-        //     width: 250,
-        //     render: (h, params) => {
-        //       var data = JSON.parse(params.row.display)
-        //       var type = ''
-        //       var arr = []
-        //       switch (data.订单类型) {
-        //         case 'host':
-        //           type = '云主机'
-        //           break
-        //         case 'vpc':
-        //           type = 'vpc'
-        //           break
-        //         case 'disk':
-        //           type = '云磁盘'
-        //           break
-        //         case 'ruirados':
-        //           type = '对象存储'
-        //           break
-        //         case 'gpu':
-        //           type = 'GPU服务器'
-        //           break
-        //         case 'database':
-        //           type = '数据库'
-        //           break
-        //         case 'publicIp':
-        //           type = '网络'
-        //           break
-        //         case 'continue':
-        //           type = '续费'
-        //           break
-        //         case 'upconfig':
-        //           type = '升级'
-        //           break
-        //         case 'nat' :
-        //           type = '网络'
-        //           break
-        //         case'domain':
-        //           type = '域名'
-        //           break
-        //         case'domaintransfer':
-        //           type = '域名转入'
-        //           break
-        //       }
-        //       for (var index in data.资源) {
-        //         for (var key in data.资源[index]) {
-        //           if (key != '地域') {
-        //             arr.push(h('p', {style: {lineHeight: '1.5'}}, `${key}:${data.资源[index][key]}`))
-        //           } else {
-        //             arr.unshift(h('p', {style: {lineHeight: '1.5'}}, `${key}:${data.资源[index][key]}`))
-        //           }
-        //         }
-        //       }
-        //       return h('div', [
-        //         h('Collapse', {
-        //           props: {
-        //             accordion: true,
-        //             value: '0'
-        //           },
-        //         }, [h('Panel', {
-        //             props: {
-        //               name: params.row._index.toString()
-        //             },
-        //           },
-        //           [type, h('div', {
-        //             slot: 'content'
-        //           }, arr)])]),
-        //       ])
-        //     }
-        //   },
-        //   {
-        //     title: '交易金额',
-        //     width: 108,
-        //     key: 'cost',
-        //     render: (h, params) => {
-        //       return h('div', [
-        //         h('span', '￥'),
-        //         h('strong', params.row.cost)
-        //       ])
-        //     }
-        //   },
-        //   {
-        //     title: '订单创建时间',
-        //     width: 180,
-        //     key: 'ordercreatetime'
-        //   },
-        //   {
-        //     title: '订单结束时间',
-        //     width: 180,
-        //     key: 'orderendtime',
-        //     render: (h, params) => {
-        //       return h('span', params.row.orderendtime == null ? '--' : params.row.orderendtime)
-        //     }
-        //   },
-        //   {
-        //     title: '订单状态',
-        //     width: 140,
-        //     align: 'center',
-        //     key: 'paymentstatus',
-        //     render: (h, params) => {
-        //       if (params.row.paymentstatus == '1') {
-        //         return h('span', {}, '已支付')
-        //       } else if (params.row.paymentstatus == '3') {
-        //         return h('span', {}, '退款中')
-        //       } else if (params.row.paymentstatus == '4') {
-        //         return h('span', {}, '已退款')
-        //       } else {
-        //         if (params.row.overTimeStatus == '1') {
-        //           return h('div', {}, [h('p', {}, '未支付'), h('p', {}, '（超时关闭订单）')])
-        //         } else {
-        //           return h('span', {}, '未支付')
-        //         }
-        //       }
-        //     }
-        //   },
-        //   {
-        //     title: '订单编号',
-        //     width: 150,
-        //     key: 'ordernumber'
-        //   },
-        //   {
-        //     title: '操作',
-        //     key: 'handle',
-        //     width: 90,
-        //     render: (h, params) => {
-        //       if (params.row.paymentstatus == '3') {
-        //         return h('div', [
-        //           h('span', {
-        //             style: {
-        //               cursor: 'pointer',
-        //               color: ' #2A99F2'
-        //             },
-        //             on: {
-        //               click: () => {
-        //                 let index = params.index
-        //                 let data = JSON.parse(this.orderData[index].display)
-        //                 this.$Modal.info({
-        //                   title: '订单信息',
-        //                   scrollable: true,
-        //                   content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
-        //            <br>订单状态：退款中<br>退款金额：￥${this.orderData[index].returnmoney}<br>预计到账时间：订单提交过后的3-5日<br>退款渠道：原支付渠道
-        //          <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
-        //                 })
-        //               }
-        //             }
-        //           }, '详情')
-        //         ])
-        //       } else if (params.row.paymentstatus == '4') {
-        //         return h('div', [
-        //           h('span', {
-        //             style: {
-        //               cursor: 'pointer',
-        //               color: ' #2A99F2'
-        //             },
-        //             on: {
-        //               click: () => {
-        //                 let index = params.index
-        //                 let data = JSON.parse(this.orderData[index].display)
-        //                 this.$Modal.info({
-        //                   title: '订单信息',
-        //                   scrollable: true,
-        //                   content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
-        //            <br>订单状态：已退款<br>退款金额：￥${this.orderData[index].returnmoney}<br>退款渠道：原支付渠道
-        //          <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
-        //                 })
-        //               }
-        //             }
-        //           }, '详情')
-        //         ])
-        //       } else {
-        //         return h('div', [
-        //           h('span', {
-        //             style: {
-        //               cursor: 'pointer',
-        //               color: ' #2A99F2'
-        //             },
-        //             on: {
-        //               click: () => {
-        //                 this.show(params.index)
-        //               }
-        //             }
-        //           }, '详情')
-        //         ])
-        //       }
-        //     }
-        //   }
-        // ],
         order_type,
-        // orderData: [],
-        // options: {
-        //   shortcuts: [
-        //     {
-        //       text: '最近一周',
-        //       value() {
-        //         const end = new Date()
-        //         const start = new Date()
-        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-        //         return [start, end]
-        //       }
-        //     },
-        //     {
-        //       text: '最近一个月',
-        //       value() {
-        //         const end = new Date()
-        //         const start = new Date()
-        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-        //         return [start, end]
-        //       }
-        //     },
-        //     {
-        //       text: '最近三个月',
-        //       value() {
-        //         const end = new Date()
-        //         const start = new Date()
-        //         start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-        //         return [start, end]
-        //       }
-        //     }
-        //   ]
-        // },
         optionsOrder: {
           shortcuts: [
             {
@@ -2770,25 +2485,13 @@
             label: '优惠券'
           }
         ],
-        // cardStateList: [
-        //   {
-        //     value: '',
-        //     label: '全部'
-        //   },
-        //   {
-        //     value: '1',
-        //     label: '已使用'
-        //   },
-        //   {
-        //     value: '0',
-        //     label: '未使用'
-        //   }
-        // ],
-        // cardState: '',
         cardType: '',
         cardTotal: 0,
         card_currentPage: 1,
-        cardPageSize: 5,
+        cardscurrent:1,
+        Cardopts:[10,20,50,100],
+        Orderopts:[10,20,50,100],
+        cardPageSize: 10,
         invoice: 0,
         invoiceList: true,
         applyChange: false,
@@ -2939,39 +2642,7 @@
         // 默认不显示兑换码错误
         exchangeCardCodeError:
           false,
-        /* cardVolumeColumn:[
-         {
-         type: 'selection',
-         align: 'center',
-         width:60,
-         },
-         {
-         title: '类型',
-         key: 'operator',
-         align: 'center',
-         width:100,
-         },
-         {
-         title: '面值',
-         key: 'money',
-         align: 'center',
-         width:100,
-         },
-         {
-         title: '失效时间',
-         key: 'endtime',
-         align: 'center',
-         },
-         {
-         title: '备注',
-         key: 'remark',
-         align: 'center',
-         ellipsis: true,
-         render: (h, params) => {
-         return h('span', params.row.remark == null ? '--' : params.row.remark)
-         }
-         },
-         ], */
+        
         cardVolumeTableData:
           [],
         card_type:
@@ -3258,12 +2929,17 @@
         this.searchCard()
       },
       OrderchangePage(currentPage) {
-        this.getOrder(currentPage)
+        this.currentORderPage=currentPage
+        this.getOrder()
       },
-      getOrder(currentPage) {
+      OrderPageSizeChange(value){
+        this.OrderpageSize=value
+        this.getOrder()
+      },
+      getOrder() {
         this.$http.get('/nVersionUser/findOrderByType.do', {
           params: {
-            page: currentPage,
+            page: this.currentORderPage,
             pageSize: this.OrderpageSize,
             paymentStatus: this.paymentStatusValue,
             startTime: this.dateRangeOrder[0],
@@ -3277,7 +2953,6 @@
           }
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              console.log(response.data)
               this.data5=response.data.result.info
               this.OrderPages=response.data.result.count
             }
@@ -3328,16 +3003,7 @@
           })
         
       },
-      //Cashforwithdrawa(){
-      //axios.get('user/selectValidRefundAmount.do', {
-      //}).then(response => {
-      //if (response.status == 200 && response.data.status == 1) {
-      //sessionStorage.setItem('moneyBank', response.data.moneyBank)
-      //sessionStorage.setItem('moneyOnLine', response.data.moneyOnLine)
-      //this.$router.push('/cashwithdrawal')
-      //}
-      //})
-      //},
+      
       balanceAlarmSet (status) {
         // this.$Message.info('开关状态：' + status);
         this.$http.get('/nVersionUser/balanceAlarmSet.do').then(response => {
@@ -3389,7 +3055,6 @@
       UnpaidJump(value){
         //this.order_type = 'notpay'
         //this.changeOrder()
-        console.log(value)
         if(value=='orderManage'){
           this.paymentStatusValue=''
           this.name='orderManage'
@@ -3410,33 +3075,12 @@
           this.name='myCard'
           this.changecard()
         }
+        else if(value=='invoicejmp'){
+          this.name='applyInvoice'
+          this.changecard()
+        }
       },
-      // UnpaidnullJump(){
-      //   //this.order_type = 'all'
-      //   //this.changeOrder()
-      //   this.name='orderManage'
-      //   this.changecard()
-      // },
-      // PreferentialJump(){ 
-      //   //this.cardState = '0'
-      //   //this.changedcard()
-      //   this.name='myCard'
-      //   this.changecard()
-      // },
-      // changedcard() {
-      //   switch (this.cardState) {
-      //     case '':
-      //       this.order_type = ''
-      //       this.searchCard()
-      //       break
-      //     case '1':
-      //       this.searchCard()
-      //       break
-      //     case '0':
-      //       this.searchCard()
-      //       break
-      //   }
-      // },
+      
       selectChange(item, index) {
         if (item.startmoney > this.totalCost) {
           this.activeIndex = null
@@ -3669,50 +3313,11 @@
             break
         }
       },
-      // searchOrderByType() {
-      //   var url = 'user/searchOrderByType.do'
-      //   var params = {
-      //     pageSize: this.pageSize,
-      //     page: this.order_currentPage,
-      //     paymentStatus: this.order_type == 'pay' ? '1' : this.order_type == 'notpay' ? '0' : this.order_type == 'refund' ? '4' : this.order_type == 'refunding' ? '3' : '',
-      //   }
-      //   switch (this.timeType) {
-      //     case '':
-      //     case '1':
-      //       params.startTime = this.order_dateRange[0]
-      //       params.endTime = this.order_dateRange[1]
-      //       break
-      //     case'2':
-      //       params.aleradyStartTime = this.order_dateRange[0]
-      //       params.alreadyEndTime = this.order_dateRange[1]
-      //       break
-      //   }
-      //   this.$http.get(url, {params}).then(response => {
-      //     if (response.status == 200 && response.data.status == 1) {
-      //       this.orderData = response.data.result.data
-      //       this.ordertotal = response.data.result.totle
-      //     }
-      //   })
-      // },
       order_currentChange(order_currentPage) {
         this.order_currentPage = order_currentPage
         //this.searchOrderByType()
         this.getOrder('1')
         this.init()
-      },
-      // order_dataChange(ordertime) {
-      //   this.order_dateRange = ordertime
-      //   this.init()
-      //   this.searchOrderByType()
-      // },
-      show(index) {
-        var data = JSON.parse(this.orderData[index].display)
-        this.$Modal.info({
-          title: '订单信息',
-          scrollable: true,
-          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
-                   <br>订单状态：${this.orderData[index].paymentstatus == '1' ? '已支付' : '未支付'}`
-        })
       },
       orderPay() {
         if (this.orderNumber.length != 0) {
@@ -3853,7 +3458,7 @@
         this.$http.get('/nVersionUser/getTicketInfo.do', {
           params: {
             pageSize: this.cardPageSize,
-            page: this.card_currentPage,
+            page: this.cardscurrent,
             orderTime : this.PreferentialOrder,
             expireDate : this.DueTime,
             status : this.VoucherStatus,
@@ -3863,12 +3468,15 @@
           if (response.status == 200 && response.data.status == 1) {
             this.cardVolumeTabledata = response.data.result.info
             this.cardTotal=response.data.result.count
-            console.log("这是第一个方法")
           }
         })
       },
       cardCurrentChange(card_currentPage) {
-        this.card_currentPage = card_currentPage
+        this.cardscurrent = card_currentPage
+        this.searchCard()
+      },
+      CardPageSizechange(value){
+        this.cardPageSize=value
         this.searchCard()
       },
       showInvoice(index) {
@@ -3922,7 +3530,6 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cardVolumeTableData = response.data.result
-                console.log("这是第二个方法")
                 for (var a = 0; a < this.cardVolumeTableData.length; a++) {
                   if (this.cardSelection && this.cardSelection.operatorid == this.cardVolumeTableData[a].operatorid) {
                     this.activeIndex = a
@@ -3990,29 +3597,6 @@
             })
           }
         })
-      },
-      getBillMonth() {
-        let arr = []
-        let end = new Date()
-        let start = new Date()
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-        arr.push(dateToStr(start))
-        arr.push(dateToStr(end))
-        this.dateRange = arr
-
-        function dateToStr(datetime) {
-          let year = datetime.getFullYear()
-          let month = datetime.getMonth() + 1
-          let date = datetime.getDate()
-          if (month < 10) {
-            month = '0' + month
-          }
-          if (date < 10) {
-            date = '0' + date
-          }
-          var time = year + '-' + month + '-' + date
-          return time
-        }
       },
       getBillAll() {
         this.dateRange = ['', '']
@@ -4710,7 +4294,6 @@
     },
     computed: {
       payDisabled() {
-        console.log(this.orderNumber)
         if (this.orderNumber.some(checkPaymentStatus) || this.orderNumber.length === 0) {
           return true
         } else {
@@ -4723,7 +4306,6 @@
       }
       ,
       deleteDisabled() {
-        console.log(this.orderNumber)
         if (this.orderNumber.length === 0) {
           return true
         } else {
@@ -4732,7 +4314,6 @@
       }
       ,
       refundDisabled() {
-        console.log(this.orderNumber)
         if (this.orderNumber.some(checkReturnMoneyFlag) || this.orderNumber.length === 0) {
           return true
         } else {
