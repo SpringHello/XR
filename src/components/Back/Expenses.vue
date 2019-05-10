@@ -3485,6 +3485,15 @@
                    <br>收件地址：${this.billTabledata[index].address}<br>发票抬头：${this.billTabledata[index].title}<br>联系电话：${this.billTabledata[index].phone}`
         })
       },
+      show(index) {
+        var data = JSON.parse(this.orderData[index].display)
+        this.$Modal.info({
+          title: '订单信息',
+          scrollable: true,
+          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
+                   <br>订单状态：${this.orderData[index].paymentstatus == '1' ? '已支付' : '未支付'}`
+        })
+      },
       cancelCertification() {
         this.appreciation = false
         this.applyChange = true
