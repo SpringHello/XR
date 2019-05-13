@@ -246,14 +246,10 @@ export default {
   methods: {
     getPrice (index) {
       if (index === 0) {
-        this.price = '免费'
-        this.units = ''
       }else if (index === 1 || index === 2) {
-        this.price = '0.12'
-        this.units = '元/小时'
+        /* this.price = '0.12'
+        this.units = '元/小时' */
       } else if (index === 3) {
-        this.price = '3890.00'
-        this.units = '元'
       }
     },
     handleSubmit (name) {
@@ -560,7 +556,7 @@ export default {
                 align-items: center;
                 border-bottom: 1px solid #E9E9E9;
                 img {
-                    width: 100px;
+                    // width: 100px;
                     height: 60px;
                     display: block;
                     margin-right: 10px;
