@@ -76,6 +76,7 @@ const AnniversaryActive = () => import('@/components/App/active/anniversaryActiv
 //const AnniversaryActiveBefore = () => import('@/components/App/active/AnniversaryActiveBefore')
 const xianNode = () => import('@/components/App/active/xianNode')
 const schoolSeason = () => import('@/components/App/active/schoolSeason')
+const BlacKActivities = () => import('@/components/App/active/BlacKActivities')
 //域名页面路由
 const Domainname = () =>import('@/components/App/Domain/Domainname')
 const DomainResult = () =>import('@/components/App/Domain/DomainResult')
@@ -329,6 +330,7 @@ var router = new Router({
         //{path: 'AnniversaryActiveBefore', name: 'AnniversaryActiveBefore', component: AnniversaryActiveBefore},
         {path: 'activity/xian', name: 'activity/xian', component: xianNode},
         {path: 'activity/2019spring', name: 'activity/2019spring', component: schoolSeason},
+        {path: 'activity/BlacKActivities', name: 'activity/BlacKActivities', component: BlacKActivities},
 
         {path: 'eastsouth', name: 'eastsouth', component: EastSouthNode},
         //{path: 'Scene/:type', name: 'Scene', component: SceneInfo},
