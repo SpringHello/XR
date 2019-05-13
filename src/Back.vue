@@ -449,7 +449,7 @@
       Promise.all([userInfo, zoneList]).then(values => {
         $store.commit('setZoneList', values[1].data.result)
         if (values[0].status == 200 && values[0].data.status == 1) {
-          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result, authInfoPersion: values[0].data.authInfo_persion})
         } else {
           next(vm => {
             vm.$router.push({path: '/login'})
@@ -631,7 +631,7 @@
       },
       exit() {
         axios.get('user/logout.do').then(response => {
-          $store.commit('setAuthInfo', {authInfo: null, userInfo: null})
+          $store.commit('setAuthInfo', {authInfo: null, userInfo: null, authInfoPersion: null})
           this.$router.push('/login')
         })
       },

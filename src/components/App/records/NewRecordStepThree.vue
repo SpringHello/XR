@@ -950,7 +950,7 @@
         let flag3 = this.uploadForm.otherFileGroup.some(item => {
           return item.otherFile.length === 0
         })
-        if (flag3) {
+        if (flag3&&this.mainUnitInformation.unitProperties == '企业') {
           this.$Message.info({
             content: '请上传其他资料（委托书等）'
           })

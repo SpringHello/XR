@@ -799,7 +799,7 @@
       var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime(),buy: '1'}})
       Promise.all([userInfo, zoneList]).then(values => {
         if (values[0].data.status == 1 && values[0].status == 200) {
-          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result, authInfoPersion: values[0].data.authInfo_persion})
           localStorage.setItem('realname', values[0].data.result.realname)
         }
         if (values[1].data.status == 1 && values[1].status == 200) {
