@@ -20,117 +20,24 @@
             <span v-for="(item,index) in flow" :key="index" :class="{finish:item.status != 0}">{{item.num}}</span>
           </div>
         </div>
-        <div class="flow-box-tooltip">
-          尊敬的（联系人名称），您的公司信息已填写完成，我们的商务人员将在24小时内与您取得联系，在此之前您可以选择您需要的测试主机规格，当新睿云的商务人员与您确认之后，将为您分配您所选择的主机
-        </div>
       </div>
     </div>
-    <div class="success" style="display: none;">
+    <div class="success">
       <div class="success-box">
         <div class="success-box-icon">
-          <img src="../../../assets/img/market/success.png" />
+          <img src="../../../assets/img/market/fails.png" />
         </div>
         <div class="success-box-content">
-          <div>提交成功</div>
-          <div>信息提交成功，新睿云的商务人员将在24小时内与您取得联系</div>
-          <div>部署测试将分为两个阶段，您在接收到测试主机并部署完成之后需要进行一次测试验收，通过之后将测试结果反馈至新睿云商务人员，我方将安排技术人员进行二次测试，若通过测试将安排进入商品上架流程</div>
+          <div>提交失败</div>
+          <div>信息提交失败，请稍后重试。</div>
+        </div>
+        <div class="fail-box">
+          <Button type="primary" @click="$router.push('apply1')">上一步</Button>
         </div>
       </div>
     </div>
     <div class="info">
       <div class="info-box">
-        <div class="info-box-title"><span></span>部署测试</div>
-        <div class="ino-box-deploy">
-          <div class="ino-box-deploy-item">
-            <div class="title">规格选择</div>
-            <div class="content">
-              <span v-for="(item,index) in sys"  :key="index" :class="{sysActive: sysIndex == index }" @click="sysIndex = index">{{item}}</span>
-            </div>
-          </div>
-          <div class="ino-box-deploy-item">
-            <div class="title">选择区域</div>
-            <div class="content">
-              <span v-for="(item,index) in area"  :key="index" :class="{areaActive: areaIndex == index }" @click="changeArea(item,index)">{{item.zonename}}</span>
-            </div>
-          </div>
-          <div class="ino-box-deploy-item">
-            <div class="title">所属网络</div>
-            <div class="content">
-              <Select v-model="vpc" style="width:300px;margin-right: 20px;" placeholder="请选择">
-                <Option v-for="item in vpcList" :value="item.vpcname" :key="item.value">{{ item.vpcname }}</Option>
-              </Select>
-              <router-link to="">新建VPC</router-link>
-            </div>
-          </div>
-          <div class="ino-box-deploy-item">
-            <div class="title">宽带大小</div>
-            <div class="content">
-              <i-slider
-                v-model="value"
-                unit="MB"
-                :min=1
-                :max=100
-                :step=1
-                :points="[10,30,50,100]"
-                style="width:500px;vertical-align: middle;">
-              </i-slider>
-              <InputNumber :max="100" :min="1" v-model="value"
-                           :editable="false"
-                           style="margin-left: 20px" :precision="0"></InputNumber>
-            </div>
-          </div>
-          
-          <div class="sub">
-            <Button type="primary">提交</Button>
-            <Button type="primary" @click="$router.go(-1)">上一步</Button>
-          </div>
-        </div>
-
-        <div class="info-box-rate" style="display: none;">
-          <div class="info-box-rate-info">
-            <div>项目ID：00236</div>
-            <div>新睿云商务：江杨</div>
-            <div>主机发放时间：2019-09-23 12:24</div>
-          </div>
-          <div class="info-box-rate-step">
-            <div class="dot">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <div class="wire">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-          <div class="info-box-rete-stepword">
-            <div class="item">
-              <p>发放测试主机</p>
-              <p>江杨</p>
-              <p>2019-09-23 12:24</p>
-            </div>
-            <div class="item">
-              <p>发放测试主机</p>
-              <p>江杨</p>
-              <p>2019-09-23 12:24</p>
-            </div>
-            <div class="item">
-              <p>发放测试主机</p>
-              <p>江杨</p>
-              <p>2019-09-23 12:24</p>
-            </div>
-            <div class="item">
-              <p>发放测试主机</p>
-              <p>江杨</p>
-              <p>2019-09-23 12:24</p>
-            </div>
-          </div>
-          <div class="back">
-            <button>返回</button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -301,16 +208,6 @@ export default {
           }
         }
       }
-      .flow-box-tooltip{
-        width: 951px;
-        height: 88px;
-        background: rgba(255,250,235,1);
-        border-radius: 4px;
-        margin: 0 auto;
-        font-size: 14px;
-        color: rgba(102,102,102,1);
-        padding: 20px 32px;
-      }
     }
   }
   .success{
@@ -340,11 +237,12 @@ export default {
             color: rgba(51,51,51,1);
             padding: 10px 0;
           }
-          &:last-of-type{
-            font-size: 14px;
-            color: rgba(153,153,153,1);
-          }
         }
+      }
+      .fail-box{
+        text-align: center;;
+        padding-top: 50px;
+        box-sizing: border-box;
       }
     }
   }

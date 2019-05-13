@@ -9,7 +9,7 @@
             <span>「华南地域」</span>
             数据中心盛大开服，万兆光纤极速体验，助力区域企业云上发展。
           </p>
-          <button>申请成为ISV服务供应商</button>
+          <button @click="$router.push('apply1')">申请成为ISV服务供应商</button>
         </div>
       </div>
     </div>

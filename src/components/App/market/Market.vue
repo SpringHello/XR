@@ -59,33 +59,34 @@
         </div>
       </div>
     </div>
-
     <!--产品展示-->
-    <div class="show">
-      <div class="product" v-for="(item, index) in productList" :key="index">
-        <div class="product-title">{{ item.name }}</div>
-        <div class="product-list">
-          <div class="product-list-head"  @click="goList(index)">
-            <div class="product-list-head-title">
-              <span>{{ item.name }}</span>
-              <img :src="item.nameurl" />
+    <div style="background: white;">
+      <div class="show">
+        <div class="product" v-for="(item, index) in productList" :key="index">
+          <div class="product-title">{{ item.name }}</div>
+          <div class="product-list">
+            <div class="product-list-head"  @click="goList(index)">
+              <div class="product-list-head-title">
+                <span>{{ item.name }}</span>
+                <img :src="item.nameurl" />
+              </div>
+              <div class="line-icon">
+                <img :src="item.iconurl" />
+              </div>
+              <div class="product-list-head-icon">
+                <img :src="item.tourl" />
+              </div>
             </div>
-            <div class="line-icon">
-              <img :src="item.iconurl" />
-            </div>
-            <div class="product-list-head-icon">
-              <img :src="item.tourl" />
-            </div>
-          </div>
-          <div class="product-list-item" v-for="(items, index) in item.productList" :key="index">
-            <div class="product-list-item-icon">
-              <img :src="items.pictureurl" />
-            </div>
+            <div class="product-list-item" v-for="(items, index) in item.productList" :key="index">
+              <div class="product-list-item-icon">
+                <img :src="items.pictureurl" />
+              </div>
             <div>
             <div class="product-list-item-name">{{items.title}}</div>
-            <p>{{ items.company.name }}</p>
+              <p>{{ items.company.name }}</p>
             </div>
-            <span @click="toDetails">查看详情</span>
+              <span @click="toDetails(items)">查看详情</span>
+            </div>
           </div>
         </div>
       </div>
@@ -134,8 +135,9 @@ export default {
       this.$router.push('list')
       sessionStorage.setItem('name', index+1)
     },
-    toDetails () {
+    toDetails (items) {
       this.$router.push('details')
+      sessionStorage.setItem('id', items.id)
     }
   },
   created () {
@@ -365,10 +367,14 @@ export default {
               &:last-of-type {
                 margin-right: 0;
               }
-              img {
+              .item-url{
                 width: 100%;
                 height: 191px;
-                border-radius: 4px 4px 0 0;
+                img {
+                  width: 100%;
+                  height: 191px;
+                  border-radius: 4px 4px 0 0;
+                }
               }
               .item-content {
                 margin: 9px 20px;

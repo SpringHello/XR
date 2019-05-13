@@ -52,7 +52,7 @@
               <div>{{items.title}}</div>
               <div>描述：{{items.description}}</div>
               <div>供应商：<span @click="toSup(items)">{{items.company.name}}</span></div>
-              <div>快速链接：<span @click="open(items)">供应商网站</span></router-link><span>|</span><span>使用帮助</span></div>
+              <div>快速链接：<span @click="open(items)">供应商网站</span><span>|</span><span>使用帮助</span></div>
             </div>
             <div class="body-list-item-price">
               <div class="price"><span>￥{{items.price}}</span>/月</div>
@@ -109,7 +109,6 @@ export default {
     menuselect (name) {
       this.key = name
       this.getMenu()
-      this.getSum()
     },
     // 获取分类信息
     getMenu () {
@@ -122,20 +121,8 @@ export default {
       }).then(res => {
         if (res.status === 200 && res.data.status === 1) {
            this.menuList = res.data.result.list
+           this.pageSum = res.data.result.paging.total
         }
-      })
-    },
-    // 获取信息条数
-    getSum () {
-      axios.get('cloudMarket/getProduct.do', {
-        params: {
-          classification_id: this.key
-        }
-      }).then(res => {
-        if (res.status === 200 && res.data.status === 1) {
-           this.pageSum = res.data.result.list.length
-        }
-       
       })
     },
     // 供应商
@@ -144,7 +131,7 @@ export default {
       sessionStorage.setItem('companyId', items.company.id)  
     },
     open (items) {
-      window.open(items.company.linkurl, '_blank');
+      window.open(items.company.linkurl, '_blank')
     },
     // 分页选择
     pageChange (index) {
@@ -221,7 +208,6 @@ export default {
   },
   created () {
     this.getMenu()
-    this.getSum()
   }
 }
 </script>

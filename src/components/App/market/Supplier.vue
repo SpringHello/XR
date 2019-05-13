@@ -50,7 +50,7 @@
               <div>{{item.title}}</div>
               <div>描述：{{item.description}}</div>
               <div>供应商：{{item.company.name}}</div>
-              <div>快速链接：<router-link to="">共供应商网站</router-link><span>|</span><router-link to="">使用帮助</router-link></div>
+              <div>快速链接：<span @click="open(item)">共供应商网站</span><span>|</span><span>使用帮助</span></div>
             </div>
             <div class="product-list-item-price">
               <div>
@@ -59,7 +59,7 @@
               <i-button type="primary">立即购买</i-button>
             </div>
           </div>
-          <div class="product-list-page">
+          <div class="product-list-page" v-if="productList != ''">
             <Page :total="pageSum" :current="page" :page-size="pageSise" @on-change="pageChange"/>
           </div>
         </div>
@@ -104,20 +104,12 @@ export default {
       }).then(res => {
         if (res.status === 200 && res.data.status === 1) {
           this.productList = res.data.result.list
+          this.pageSum = res.data.result.paging.total
         }
       })
     },
-    // 产品信息总条数
-    getProductSum () {
-      axios.get('cloudMarket/getProduct.do', {
-        params: {
-          company_id: sessionStorage.getItem('companyId')
-        }
-      }).then(res => {
-        if (res.status === 200 && res.data.status === 1) {
-          this.pageSum = res.data.result.list.length
-        }
-      })
+    open (item) {
+      window.open(item.company.linkurl, '_blank')
     },
     // 排序类型
     sortTypes (index) {
@@ -203,7 +195,6 @@ export default {
       
     })
     this.getProduct()
-    this.getProductSum()
   }
 }
 </script>
@@ -386,8 +377,15 @@ export default {
               }
               &:nth-of-type(4){
                 span{
-                  color: darkgray;
-                  margin: 0 5px;
+                  color: #2d8cf0;
+                  cursor: pointer;
+                  &:nth-of-type(2){
+                    color: darkgray;
+                    margin: 0 5px;
+                  }
+                  &:hover{
+                    color: #6ab0f9;
+                  }
                 }
               }
             }
