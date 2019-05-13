@@ -357,6 +357,7 @@
             sessionStorage.setItem('orderZoneId', JSON.parse(response.data.result.data[0].configure).zoneid)
           }
           let orderStatus = '';
+          let totalCost =0;
           sessionStorage.setItem('routername', response.data.result.data[0].goodstype);
           this.orderData = response.data.result.data.map(item => {
             var data = JSON.parse(item.display);
@@ -373,16 +374,17 @@
               data.discountmessage = ''
             }
             if (data['订单状态']) {
-              this.couponInfo.originCost += data['订单状态'] == 1 ? 0 : item.originalcost
-              this.couponInfo.cost += data['订单状态'] == 1 ? 0 : item.cost
-              this.couponInfo.totalCost += data['订单状态'] == 1 ? 0 : item.cost
+              this.couponInfo.originCost += data['订单状态'] == 1 ? 0 : Number(item.originalcost.toFixed(2));
+              this.couponInfo.cost += data['订单状态'] == 1 ? 0 : Number(item.cost.toFixed(2));
+              this.couponInfo.totalCost += data['订单状态'] == 1 ? 0 : Number(item.cost.toFixed(2));
               data._checked = data['订单状态'] == 1 ? false : true
-              data._disabled = data['订单状态'] == 1 ? true : false
+              data._disabled = data['订单状态'] == 1 ? true : false;
             } else {
               data._checked = true;
-              this.couponInfo.originCost += item.originalcost;
-              this.couponInfo.cost += Number(item.cost);
-              this.couponInfo.totalCost += Number(item.cost);
+              this.couponInfo.originCost += Number(item.originalcost.toFixed(2));
+              this.couponInfo.cost += Number(item.cost.toFixed(2));
+              totalCost += Number(item.cost.toFixed(2));
+              this.couponInfo.totalCost = Number(totalCost.toFixed(2));
             }
             return data
           })
@@ -411,11 +413,12 @@
           }).then(response => {
             this.couponInfo.couponList = response.data.result
           });
+         
           axios.get('information/zfconfirm.do', {
             params: {
               order: this.orderInfo.orderId,
               ticket: this.couponInfo.selectTicket,
-              money: this.couponInfo.totalCost
+              money: Number(this.couponInfo.totalCost.toFixed(2))
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -662,10 +665,10 @@
         }
         if (this.groupList[0] == 'cash' || this.groupList[1] == 'cash') {
           if (this.couponInfo.cost > this.couponInfo.cash) {
-            return this.couponInfo.cash;
+            return this.couponInfo.cash.toFixed(2);
           }
           if (this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash) {
-            return this.couponInfo.cost;
+            return this.couponInfo.cost.toFixed(2);
           }
         }
         return 0;
@@ -726,10 +729,10 @@
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
                     if(this.couponInfo.cost > this.couponInfo.cash){
-                        money = this.couponInfo.cash -(this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2));
+                        money = (this.couponInfo.cash -(this.couponInfo.cost - (this.couponInfo.cost * item.money))).toFixed(2);
                     }
                     if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
-                        money =  this.couponInfo.cash - (this.couponInfo.cost - Number((this.couponInfo.cost * item.money).toFixed(2)));
+                        money =  (this.couponInfo.cash - (this.couponInfo.cost - Number((this.couponInfo.cost * item.money)))).toFixed(2);
                     }
                   } else if (item.tickettype == 0) {
                     if((this.couponInfo.cost - item.money) > this.couponInfo.cash){

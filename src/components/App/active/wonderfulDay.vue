@@ -1419,9 +1419,9 @@
         scrolltop(){
           let scrolltop= document.documentElement.scrollTop ||document.body.scrollTop;
             if(scrolltop <460){
-              this.$refs.draw.style = 'position:absolute'
+              this.$refs.draw.style = 'display:block;';
             }else{
-              this.$refs.draw.style ='position:fixed;';
+              this.$refs.draw.style ='display:none;';
             }
         }
     },
