@@ -158,10 +158,10 @@
                       </div>
                       <div class="foot">
                         <span>{{item.createtime}}</span>
-                        <Button @click.stop="manage(item,'normal')" style="margin-left:55px;" :disabled="(!auth)||auth && auth.checkstatus !== 0"
-                                :class="{btnnormal:auth&& auth.checkstatus == 0,_hover:auth&& auth.checkstatus == 0}">管理
+                        <Button @click.stop="manage(item,'normal')" style="margin-left:55px;" :disabled="(!auth)||(auth && auth.checkstatus !== 0 && !personAuth) || (auth && auth.checkstatus !== 0 && personAuth && personAuth.checkstatus !== 0)"
+                                :class="{btnnormal:(auth&& auth.checkstatus == 0)||(personAuth&& personAuth.checkstatus == 0),_hover:(auth&& auth.checkstatus == 0)||(personAuth&& personAuth.checkstatus == 0)}">管理
                         </Button>
-                        <Button v-if="(!auth)||auth && auth.checkstatus !== 0" :disabled="(!auth)||auth && auth.checkstatus !== 0">连接主机</Button>
+                        <Button v-if="(!auth)||(auth && auth.checkstatus !== 0 && !personAuth) || (auth && auth.checkstatus !== 0 && personAuth && personAuth.checkstatus !== 0)" :disabled="(!auth)||(auth && auth.checkstatus !== 0 && !personAuth) || (auth && auth.checkstatus !== 0 && personAuth && personAuth.checkstatus !== 0)">连接主机</Button>
                         <Button v-else class="btnnormal _hover" @click="link(item)">连接主机
                         </Button>
                         <!--<a v-else :href="item.connecturl" target="_blank"
@@ -298,8 +298,8 @@
                       </div>
                       <div class="foot" style="background-color: #D9D9D9">
                         <span style="color: rgba(17,17,17,0.65);">{{item.createtime}}</span>
-                        <Button @click.stop="manage(item,'close')" style="margin-left:55px;" :disabled="(!auth)||auth && auth.checkstatus !== 0"
-                                :class="{btnnormal:auth&& auth.checkstatus == 0,_hover:auth&& auth.checkstatus == 0}">管理
+                        <Button @click.stop="manage(item,'close')" style="margin-left:55px;" :disabled="(!auth)||(auth && auth.checkstatus !== 0 && !personAuth) || (auth && auth.checkstatus !== 0 && personAuth && personAuth.checkstatus !== 0)"
+                                :class="{btnnormal:(auth&& auth.checkstatus == 0) || (personAuth&& personAuth.checkstatus == 0),_hover:(auth&& auth.checkstatus == 0)||(personAuth&& personAuth.checkstatus == 0)}">管理
                         </Button>
                       </div>
                     </div>
@@ -1127,7 +1127,7 @@
         })
       },
       toggle(item) {
-        if ((!this.auth) || this.auth && this.auth.checkstatus != 0) {
+        if ((!this.auth) || (this.auth && this.auth.checkstatus != 0 && this.personAuth && this.personAuth.checkstatus != 0) || this.auth && this.auth.checkstatus != 0 && !this.personAuth) {
           return
         }
         this.$set(item, 'select', !item.select)
@@ -1783,6 +1783,9 @@
     computed: {
       auth() {
         return this.$store.state.authInfo
+      },
+      personAuth(){
+        return this.$store.state.authInfoPersion
       }
     },
     watch: {

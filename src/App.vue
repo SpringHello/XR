@@ -85,7 +85,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a href="https://zschj.xrcloud.net/login" rel="nofollow"><span>登录</span>
+                  <a href="https://www.xrcloud.net/login" rel="nofollow"><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -93,7 +93,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a href="https://zschj.xrcloud.net/register" rel="nofollow"><span>注册</span>
+                  <a href="https://www.xrcloud.net/register" rel="nofollow"><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -313,20 +313,12 @@
           </div>
         </div>
       </span>
-      <!--<Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
-      <span class="service"><a
-        :href="kfURL"
-        target="_blank"></a></span>
-      </Poptip>-->
-      <!--      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left" style="height:48px;">
-              <span class="phone"></span>
-            </Poptip>-->
       <span class="phone" @click="getOrderType" @mouseenter="PME" @mouseleave="PML">
-        <div ref="phoneE" style="overflow: hidden;bottom:45px;">
+        <div ref="phoneE" style="overflow: hidden;bottom:5px;">
           <div class="wrapper">
             <div>
-              <span class="title">投诉与建议</span>
-            </div>
+            <span class="title">投诉与建议</span>
+              </div>
           </div>
         </div>
       </span>
@@ -807,7 +799,7 @@
       var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime(),buy: '1'}})
       Promise.all([userInfo, zoneList]).then(values => {
         if (values[0].data.status == 1 && values[0].status == 200) {
-          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result, authInfoPersion: values[0].data.authInfo_persion})
           localStorage.setItem('realname', values[0].data.result.realname)
         }
         if (values[1].data.status == 1 && values[1].status == 200) {
@@ -1536,6 +1528,7 @@
         display: block;
         padding: 10px;
         background: #FFF;
+        position: relative;
         background-repeat: no-repeat;
         background-position: center;
         background-image: url('./assets/img/app/phone.png');

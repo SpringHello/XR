@@ -678,7 +678,7 @@
           {
             title: '操作',
             render: (h, object) => {
-              if (this.auth && this.auth.checkstatus == 0) {
+              if ((this.auth && this.auth.checkstatus == 0) || this.personAuth && this.personAuth.checkstatus===0) {
                 if (object.row.status == 0) {
                   return h('span', {}, '已欠费')
                 } else if (object.row.status == 2) {
@@ -947,7 +947,7 @@
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
           let publicipids = []
-          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
+          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0 && this.personAuth && this.personAuth.checkstatus !==0)|| (this.auth && this.auth.checkstatus !== 0 && !this.personAuth)) {
             this.ipData.forEach(item => {
               item._disabled = true
             })
@@ -1815,6 +1815,9 @@
     computed: {
       auth() {
         return this.$store.state.authInfo
+      },
+      personAuth(){
+        return this.$store.state.authInfoPersion
       },
       publicipOnDelete() {
         if (this.select.length !== 0) {
