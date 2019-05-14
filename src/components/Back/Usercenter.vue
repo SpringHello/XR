@@ -45,7 +45,7 @@
                     <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
                     <li v-if="(!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0) || (!authInfoPersion|| authInfoPersion&&authInfoPersion.authtype==0&&authInfoPersion.checkstatus!=0)"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
                       @click="currentTab ='certification' ">马上认证</span></li>
-                    <li v-if="authInfoPersion&&authInfoPersion.authtype==0&&authInfoPersion.checkstatus==0"><span>身份证号</span><span>{{authInfo.personalnumber}}</span></li>
+                    <li v-if="authInfoPersion&&authInfoPersion.authtype==0&&authInfoPersion.checkstatus==0"><span>身份证号</span><span>{{authInfoPersion.personalnumber}}</span></li>
                     <li v-if="!(authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0)"><span>认证信息</span><span style="color: #FF9339">未企业认证</span><span
                       @click="currentTab ='companyInfo'">马上认证</span></li>
                   </ul>
@@ -352,12 +352,12 @@
               <img src="../../assets/img/usercenter/uc-img2.png"/>
               <p style="color: #FF001F">审核未通过</p>
               <p>提交审核资料发现问题，请重新提交</p>
-              <Button type="primary" style="margin-top: 20px" @click="resubmit('person')">重新提交</Button>
+              <Button type="primary" style="margin-top: 20px" @click="resubmit">重新提交</Button>
             </div>
           </Tab-pane>
           <!--用于企业认证的pane-->
           <Tab-pane label="企业认证" name="companyInfo">
-            <div v-if="!authInfo||authInfo&&authInfo.authtype==0">
+            <div v-if="authInfo&&authInfo.authtype==0">
               <h2>企业认证</h2>
               <Form :model="notAuth.companyAuthForm" :label-width="100" ref="companyAuth" :rules="notAuth.companyAuthFormValidate"
                     style="margin-top:20px;">
@@ -598,7 +598,7 @@
               <img src="../../assets/img/usercenter/uc-img2.png"/>
               <p style="color: #FF001F">审核未通过</p>
               <p>提交审核资料发现问题，请重新提交</p>
-              <Button type="primary" style="margin-top: 20px" @click="resubmit('company')">重新提交</Button>
+              <Button type="primary" style="margin-top: 20px" @click="resubmit">重新提交</Button>
             </div>
           </Tab-pane>
           <!--access key pane-->
@@ -2847,22 +2847,14 @@
         })
       },
       // 重新提交申请
-      resubmit(val) {
+      resubmit() {
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            if( val == 'person'){
-              $store.commit('setAuthInfo', {
-                authInfo: response.data.authInfo,
-                userInfo: response.data.result,
-                authInfoPersion: null
+            $store.commit('setAuthInfo', {
+              authInfo: response.data.authInfo,
+              userInfo: response.data.result,
+              authInfoPersion: response.data.authInfo_persion
             })
-            } else{
-              $store.commit('setAuthInfo', {
-                authInfo: null,
-                userInfo: response.data.result,
-                authInfoPersion: response.data.authInfo_persion
-            }) 
-            }
           }
         })
       },
@@ -3082,7 +3074,6 @@
               authType: this.notAuth.companyAuthForm.certificateType,
               name: this.notAuth.companyAuthForm.name,
               belongIndustry: this.notAuth.companyAuthForm.industry,
-              linkmanName: this.notAuth.companyAuthForm.contactPerson,
               trade: this.notAuth.companyAuthForm.industry,
               phone: this.notAuth.companyAuthForm.contact,
               companyLinkManPhone: this.notAuth.companyAuthForm.contact,

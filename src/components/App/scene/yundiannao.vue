@@ -312,14 +312,14 @@
 
   export default {
     metaInfo: {
-      title: '免费云电脑 - 云电脑下载 - 应用场景 - 新睿云', // set a title
+      title: '免费虚拟云桌面 - 虚拟云桌面下载 - 应用场景 - 新睿云', // set a title
       meta: [{                 // set meta
         name: 'keywords',
-        content: '云电脑,免费云电脑,云电脑下载'
+        content: '虚拟云桌面,免费虚拟云桌面,虚拟云桌面下载'
       },
         {                 // set meta
           name: 'description',
-          content: '云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。'
+          content: '虚拟云桌面是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。虚拟云桌面可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。'
         }]
     },
     components: {
@@ -369,8 +369,8 @@
         },
         currentSceneGroup: [
           {
-            currentScene: '云电脑',
-            disc: ' 云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
+            currentScene: '虚拟云桌面',
+            disc: ' 虚拟云桌面是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。虚拟云桌面可按需申请轻松使用，助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，虚拟云桌面都可以让您拥有完整的PC使用体验。虚拟云桌面为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
             configGroup: [
               {
                 title: '一个月',
@@ -1810,9 +1810,9 @@
         index2: '',
         vmConfig: '',
         userType: '',
-        scene: '云电脑',
+        scene: '虚拟云桌面',
         sceneGroup: [
-          {name: '云电脑', link: '/yundiannao/'},
+          {name: '虚拟云桌面', link: '/yundiannao/'},
           {name: '个人建站', link: '/selfhelpbuildingwebsite/'},
           {name: '个人网盘', link: '/storagedisk/'},
           {name: '软件研发', link: '/softwaredevelopment/'},
@@ -1935,7 +1935,7 @@
       setData(val) {
         switch (val) {
           case 'yundiannao':
-            this.scene = '云电脑'
+            this.scene = '虚拟云桌面'
             this.userType = '1'
             break
           case 'selfhelpbuildingwebsite':

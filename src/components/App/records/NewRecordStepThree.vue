@@ -282,7 +282,7 @@
           </div>
         </div>
         <h2>请上传其他资料</h2>
-        <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击<a :href="mandateAddress">下载法人授权委托书</a>）</p>
+        <p class="titleDescription">如前置审批材料，法人授权委托书、居住证、暂住证等材料（点击<a :href="mandateAddress">下载法人授权委托书</a>）</p>
         <div v-for="(item, upIndex) in  uploadForm.otherFileGroup">
           <div class="upload">
             <div class="uploadTitle">
