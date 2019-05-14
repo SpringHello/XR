@@ -71,7 +71,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.beforeDelete = false">取消</Button>
-        <Button type="primary" @click="custom">确定</Button>
+        <Button type="primary" :disabled="deleteRecordDisabled" @click="custom">确定{{ deleteRecordText}}</Button>
       </p>
     </Modal>
   </div>
@@ -337,6 +337,20 @@
                         on: {
                           click: () => {
                             this.recordId = params.row.id
+                            this.deleteRecordDisabled = true
+                            this.deleteRecordText = '(5S)'
+                            let i = 10
+                            this.deleteRecordTimer = setInterval(() => {
+                            i -= 1
+                            if (i == 0) {
+                            window.clearInterval(this.deleteRecordTimer)
+                                 this.unfreezeToBalanceDisabled = false
+                                this.deleteRecordText = ''
+                                 } else {
+                                this.deleteRecordText = '(0' + i + 'S)'
+                                  this.deleteRecordDisabled = true
+                                     }
+                                }, 1000)
                             this.showModal.beforeDelete = true
                           }
                         }
@@ -430,7 +444,10 @@
           }
         ],
         //已完成备案表格数据
-        recordTypeData: []
+        recordTypeData: [],
+        deleteRecordDisabled: true,
+        deleteRecordText:'(5S)',
+        deleteRecordTimer:null,
       }
     },
     created() {
