@@ -454,9 +454,11 @@
     <!-- 网站核验单 -->
     <Modal
       v-model="checkList"
-      title="重新上传网站备案信息真实性核验单信息"
       :scrollable="true"
     >
+     <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>重新上传网站备案信息真实性核验单信息</span>
+    </div>
       <p style="margin-bottom:5px">1、点击下载<a :href="single" style="color:#2A99F2;">《网站备案信息真实性核验单》</a></p>
       <p style="margin-bottom:5px">2、查看核验单样例图，填写以下载的核验单，不得涂改</p>
       <p>3、请您保存3份签字的核验单原件以备后续环节试用</p>
@@ -516,9 +518,11 @@
     <!-- 主办单位负责人照片 -->
     <Modal
       v-model="sponsorPhoto"
-      title="重新上传身份证信息"
       :scrollable="true"
     >
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>重新上传身份证信息</span>
+    </div>
       <p>身份证人像面</p>
       <div class="updatePhoto">
         <div class="updates">
@@ -597,9 +601,11 @@
     <!-- 主办单位照片 -->
     <Modal
       v-model="organizerPhoto"
-      title="重新上传营业执照信息"
       :scrollable="true"
     >
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>重新上传营业执照信息</span>
+    </div>
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
@@ -642,9 +648,11 @@
     <!-- 幕布照片 -->
     <Modal
       v-model="curtainInfo"
-      title="重新上传幕布信息"
       :scrollable="true"
     >
+      <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>重新上传幕布信息</span>
+    </div>
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
@@ -694,9 +702,11 @@
     <!-- 域名证书 -->
     <Modal
       v-model="domainNameCertificate"
-      title="重新上传域名证书信息"
       :scrollable="true"
     >
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>重新上传域名证书信息</span>
+    </div>
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
@@ -729,10 +739,12 @@
     <!-- 其他资料 -->
     <Modal
       v-model="otherInfo"
-      title="重新上传其他文件信息"
       :scrollable="true"
     >
-      <p>如前置审批材料，法人授权委托书等材料（点击下载<a :href="keep" style="color:#2A99F2;">法人委托书</a>）</p>
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>重新上传其他文件信息</span>
+    </div>
+      <p>如前置审批材料，法人授权委托书、居住证、暂住证等材料（点击下载<a :href="keep" style="color:#2A99F2;">法人委托书</a>）</p>
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:100%;text-align: center;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝' ">
@@ -768,9 +780,11 @@
     <!-- 修改主办单位信息 -->
     <Modal
       v-model="host"
-      title="主办单位信息"
       :scrollable="true"
     >
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>主办单位信息</span>
+    </div>
       <Form ref="hostUpdate" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="district">
           <p style="margin:10px">主办单位所属区域</p>
@@ -825,9 +839,11 @@
     <!-- 修改主体单位负责人信息 -->
     <Modal
       v-model="legal"
-      title="主体单位负责人信息"
       :scrollable="true"
     >
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>主体单位负责人信息</span>
+    </div>
       <Form ref="legal" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="legalname">
           <p style="margin:10px">法人姓名</p>
@@ -864,9 +880,11 @@
     <!-- 修改网站基本信息信息 -->
     <Modal
       v-model="website"
-      title="网站基本信息"
       :scrollable="true"
     >
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>网站基本信息</span>
+    </div>
       <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webname">
           <p style="margin:10px">网站名称</p>
@@ -905,9 +923,11 @@
     <!-- 修改网站负责人基本信息 -->
     <Modal
       v-model="websitePerson"
-      title="网站负责人基本信息"
       :scrollable="true"
     >
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>网站负责人基本信息</span>
+    </div>
       <Form ref="websitePerson" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webresponsibilitylinkname">
           <p style="margin:10px">姓名</p>
@@ -944,9 +964,11 @@
     <!-- 修改ISP信息信息 -->
     <Modal
       v-model="webIsp"
-      title="ISP备案网站接入信息"
       :scrollable="true"
     >
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>ISP备案网站接入信息</span>
+    </div>
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
@@ -977,9 +999,11 @@
     <!-- 修改邮寄地址信息 -->
     <Modal
       v-model="addressModal"
-      title="ISP备案网站接入信息"
       :scrollable="true"
     >
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>ISP备案网站接入信息</span>
+    </div>
       <Form ref="address" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="mark3">
           <p style="margin:10px">收件人</p>
@@ -1003,9 +1027,11 @@
     <!-- 网站信息修改 -->
     <Modal
       v-model="website"
-      title="网站基本信息"
       :scrollable="true"
     >
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>网站基本信息</span>
+    </div>
       <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webdomian">
           <p style="margin:10px">网站域名</p>
@@ -1028,9 +1054,11 @@
 
     <Modal
       v-model="website"
-      title="网站基本信息"
       :scrollable="true"
     >
+    <div slot='header' class="modal-header-border">
+      <span class='universal-modal-title'>网站基本信息</span>
+    </div>
       <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webdomian">
           <p style="margin:10px">网站域名</p>
