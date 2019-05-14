@@ -127,19 +127,133 @@
         </div>
       </div>
     </section>
+    <section class="product-yuyue">
+      <div class="wrap">
+        <div class="inlineheader">
+          <img src="../../../assets/img/active/blackactive/资源 18@2x.png">
+          <div>
+            <p>云电脑抢先预约</p>
+            <p style="margin-top:5px;">注册送新手好礼</p>
+          </div>
+        </div>
+        <div class="inlineright">
+          <p>注册即可获赠10云币</p>
+          <p>【可抵扣云电脑3小时使用时长】</p>
+          <Button type="warning" style="margin-top:16px;">立即预约</Button>
+        </div>
+        <div style="clear: both;"></div>
+      </div>
+    </section>
     <section class="product-hot">
       <div class="wrap">
         <div class="headline">
           <div>
-            热门云产品全线打折
+            
           </div>
-          <p>
-            新老用户皆可参与云服务器、对象存储等新春特惠活动
-            <span class="rule" @click="showModal.rule2=true">活动规则</span>
+          <p style="font-size:18px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:24px;">
+            中低高配云服务器年付低至三折，额外赠送一折爆款云服务器
+            <span class="rule" @click="showModal.rule2=true" style="color:#F5A623;text-decoration: underline;">活动规则</span>
           </p>
         </div>
         <div class="main">
-          <div class="box-top-a host flex">
+          <div class="boxall">
+            <div class="top">
+              <p>
+                <span>云服务器特惠</span>
+                <span>指定规格产品买一送一！</span>
+              </p>
+            </div>
+            <div class="bottom">
+              <div class="left">
+                <div class="leftpad">
+                  <p>
+                    <span>配置选择</span>
+                    <span>（皆包含40G SSD系统盘）</span>
+                  </p>
+                  <p class="selectseries">
+                    <span>基础入门级：</span>
+                    <ul class="flex" style="justify-content: flex-start;">
+                        <li v-for="(item3,index) in hostConfigListHot.basic" :key="index" @click="hostProductHot.cpuMemory=item3"
+                            :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                            <i>买1送1</i>
+                        </li>
+                      </ul>
+                      <div style="clear: both;"></div>
+                  </p>
+                  <p class="selectseries">
+                    <span>标准进阶型：</span>
+                      <ul class="flex" style="justify-content: flex-start">
+                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hostProductHot.cpuMemory=item3"
+                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                          <i>买1送1</i>
+                      </li>
+                    </ul>
+                      <div style="clear: both;"></div>
+                  </p>
+                  <p class="selectseries" v-if="highEndLength">
+                    <span>企业高配型：</span>
+                    <ul class="flex" style="justify-content: flex-start">
+                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hostProductHot.cpuMemory=item3"
+                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                          <i>买1送1</i>
+                      </li>
+                    </ul>
+                      <div style="clear: both;"></div>
+                  </p>
+                  <div class="item-select">
+                    <p>带宽选择</p>
+                    <Select v-model="hostProductHot.bandwith" class="schoolseason-select" style="width:416px;">
+                      <Option v-for="(item3,index) in hostbandwithListHot" :value="item3" :key="index">{{item3}}M</option>
+                    </Select>
+                  </div>
+                  <div class="item-config">
+                    <p style="margin-bottom: 10px;">NVme SSD数据盘</p>
+                    <ul class="flex" style="justify-content: flex-start">
+                      <li v-for="(item3,index) in hostDisksizeListHot" :key="index" @click="hostProductHot.disksize=item3" :class="{selected:hostProductHot.disksize==item3}">
+                        {{item3}}G
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="item-select">
+                    <p>购买数量</p>
+                    <Button @click="hostProductHot.count--" :disabled="hostProductHot.count<=1" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-right:8px;">-</Button>
+                    <Input type="text" style="width:60px;" class="host-count schoolseason-select" v-model="hostProductHot.count" readonly></Input>
+                    <Button @click="hostProductHot.count++" :disabled="hostProductHot.count>=7" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-left:8px;">+</Button>
+                  </div>
+                </div>
+              </div>
+              <div class="right">
+                <div class="buy">
+                  <img src="../../../assets/img/active/blackactive/buy.png">
+                  <div class="displays">
+                    <span>CPU</span>
+                    <span>内存</span>
+                  </div>
+                  <div class="cloums">
+                    <span>8核</span>
+                    <span>16G</span>
+                  </div>
+                </div>
+                <div class="give">
+                  <img src="../../../assets/img/active/blackactive/give.png">
+                  <p class="givep1">
+                    <span style=" margin: 0 25px 0 21px;">CPU</span>
+                    <span>内存</span>
+                    <span style="margin: 0 35px 0 25px;">带宽</span>
+                    <span>系统盘</span>
+                  </p>
+                  <p class="givep2">
+                    <span style=" margin: 0 20px 0 17px;">2核</span>
+                    <span>4G</span>
+                    <span style="margin: 0 20px 0 20px;">2M</span>
+                    <span>40G <span style="font-size:12px;">SSD</span></span>
+                  </p>
+                </div>
+                <div style="clear: both;"></div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="box-top-a host flex">
             <div class="left">
               <div class="top">
                 <p>云服务器特惠</p>
@@ -227,8 +341,8 @@
                 <Button @click="productBuy_host()">立即支付</Button>
               </div>
             </div>
-          </div>
-          <div class="box-top-a gpu flex">
+          </div> -->
+          <!-- <div class="box-top-a gpu flex">
             <div class="left">
               <div class="top">
                 <p>P100 GPU高效云服务器</p>
@@ -291,8 +405,8 @@
                 <Button @click="productBuy_gpu()">立即支付</Button>
               </div>
             </div>
-          </div>
-          <div class="box-top-a obj flex">
+          </div> -->
+          <!-- <div class="box-top-a obj flex">
             <div class="left">
               <div class="top">
                 <p>对象存储</p>
@@ -337,7 +451,7 @@
                 <Button @click="productBuy_obj()">立即支付</Button>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </section>
@@ -2306,7 +2420,7 @@
         text-align: center;
     }
     .main {
-      margin-top: 30px;
+      margin: 30px 0 0 0;
       // .tabs {
       //   > div {
       //     width: 400px;
@@ -2331,11 +2445,11 @@
       //   }
       // }
       .box_bg_long {
-        height: 627px;
+        //height: 627px;
         //background: url(../../../assets/img/active/schoolSeason/seckill_bg.png) center top no-repeat;
       }
       .box_bg_short {
-        height: 430px;
+        //height: 430px;
         //background: url(../../../assets/img/active/schoolSeason/seckill_bg_short.png) center top no-repeat;
       }
       .box {
@@ -2481,176 +2595,502 @@
     }
   }
 
+  .product-yuyue{
+    padding: 0;
+    .wrap{
+      background: url(../../../assets/img/active/blackactive/Group 12.png) center no-repeat;
+      height: 166px;
+      width: 100%;
+      .inlineheader{
+        width: 301px;
+        height: 80px;
+        margin: 38px 0 48px 481px;
+        float: left;
+          > div {
+          width: 201px;
+          float: right;
+          > p{
+              font-size:28px;
+              font-family:MicrosoftYaHei-Bold;
+              font-weight:bold;
+              color:rgba(255,255,255,1);
+              line-height:37px;
+          }
+        }
+      }
+      .inlineright{
+        height: 99px;
+        margin: 35px 0 32px 297px;
+        float: left;
+        > p:nth-child(1){
+          font-size:20px;
+          font-family:MicrosoftYaHei;
+          color:rgba(255,255,255,1);
+          line-height:26px;
+        }
+        > p:nth-child(2){
+          font-size:14px;
+          font-family:MicrosoftYaHei;
+          color:rgba(255,236,0,1);
+          line-height:19px;
+          margin-top: 3px;
+        }
+      }
+    }
+  }
+
+
   .product-hot {
-    background: rgba(247, 247, 247, 1);
+    background:rgba(54,56,84,1);
+    padding: 100px 0 0 0;
     // padding: 52px 0 86px 0;
     .headline {
       div {
-        background: url(../../../assets/img/active/schoolSeason/schoolsenson_headline_2.png) center no-repeat;
+        background: url(../../../assets/img/active/blackactive/Group 23.png) center no-repeat;
       }
     }
     .main {
       width: 1200px;
       height: 1529px;
-      background: rgba(255, 255, 255, 1);
-      border-radius: 20px;
-      border: 4px solid rgba(222, 185, 116, 1);
-      > div {
-        width: 1120px;
-        margin: 0 auto;
-        margin-top: 40px;
-        background: rgba(255, 255, 255, 1);
-        box-shadow: 0px 6px 20px -6px rgba(130, 77, 12, 0.49);
-        .config {
-          padding-left: 20px;
-        }
-        .right {
-          padding: 30px 20px;
-          background: rgba(254, 251, 244, 1);
-          width: 478px;
-          // height:558px;
-          .item-config,
-          .item-select {
-            p {
-              font-size: 14px;
-              margin-top: 10px;
-              margin-bottom: 10px;
-              line-height: 18px;
+      margin-top: 80px;
+      .boxall{
+        height: 589px;
+        width: 100%;
+        .top{
+          background: url(../../../assets/img/active/blackactive/头部.png) center no-repeat;
+          width: 100%;
+          height: 80px;
+          > p {
+            margin: 0 0 0 50px;
+            > span:nth-child(1){
+              font-size:22px;
+              font-family:MicrosoftYaHei-Bold;
+              font-weight:bold;
+              color:rgba(34,36,61,1);
+              line-height:80px;
             }
-            ul {
-              margin-bottom: 10px;
-            }
-            button {
-              padding: 0;
-              width: 30px;
-              height: 30px;
-              line-height: 28px;
-              font-size: 22px;
-              color: rgba(154, 127, 130, 1);
-              &:hover {
-                border-color: #e5c2c2;
-              }
-            }
-          }
-          .cash {
-            margin-top: 40px;
-            p {
-              color: rgba(248, 67, 46, 1);
-              font-size: 24px;
-              font-weight: bold;
-              span {
-                font-size: 14px;
-                font-weight: normal;
-              }
-            }
-            button {
-              padding: 0;
-              margin-top: 20px;
-              width: 438px;
-              height: 40px;
-              background: rgba(255, 98, 75, 1);
-              border-radius: 2px;
-              font-size: 18px;
-              color: rgba(255, 255, 255, 1);
-              border: none;
-              &:hover {
-                border: none;
-              }
+            > span:nth-child(2){
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(34,36,61,1);
+              line-height:80px;
+              margin-left: 20px;
             }
           }
         }
-        .item-config {
-          p {
-            margin-top: 20px;
-            font-size: 18px;
-            color: rgba(65, 6, 12, 1);
-            line-height: 24px;
-          }
-          .sec-title {
-            font-size: 14px;
-            color: rgba(154, 127, 130, 1);
-            line-height: 19px;
-          }
-          ul {
-            margin-top: 10px;
-            margin-bottom: 20px;
-            li {
-              position: relative;
-              width: 102px;
-              height: 35px;
-              background: rgba(255, 255, 255, 1);
-              border-radius: 2px;
-              border: 1px solid rgba(229, 194, 194, 1);
-              margin-right: 10px;
-              font-size: 14px;
-              color: rgba(75, 60, 61, 1);
-              line-height: 33px;
-              text-align: center;
-              cursor: pointer;
-              &.selected {
-                background: rgba(225, 33, 42, 1);
-                color: #fff;
-                i {
-                  color: rgba(255, 98, 75, 1);
-                  background: #fff;
+        .bottom{
+          width: 100%;
+          height: 509px;
+          background:rgba(55,59,89,1);
+          box-shadow:0px 9px 20px -6px rgba(16,17,26,0.5);
+          border:1px solid rgba(255,208,140,1);
+          .left{
+            width: 640px;
+            height: 100%;
+            float: left;
+            .leftpad{
+              padding: 30px 0 26px 50px;
+              > p:nth-child(1){
+                > span:nth-child(1){
+                  font-size:18px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:24px;
+                }
+                > span:nth-child(2){
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:16px;
                 }
               }
-              i {
-                display: inline-block;
-                position: absolute;
-                top: 1px;
-                right: 1px;
-                background: rgba(225, 33, 42, 1);
-                border-radius: 8px;
-                color: #fff;
-                padding: 0 4px;
-                font-size: 12px;
-                height: 16px;
-                line-height: 16px;
-                font-style: normal;
+              .selectseries{
+                margin: 20px 0;
+                > span{
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(178,178,178,1);
+                  line-height:35px;
+                  float: left;
+                }
+                ul {
+                  margin-left: 10px;
+                  float: left;
+                  li {
+                    position: relative;
+                    width: 110px;
+                    height: 35px;
+                    background:rgba(255,255,255,1);
+                    border-radius:2px;
+                    border:1px solid rgba(255,208,140,1);
+                    margin-right: 12px;
+                    font-size: 14px;
+                    color: #4B3C3D;
+                    line-height: 33px;
+                    text-align: center;
+                    cursor: pointer;
+                    &.selected {
+                      background:linear-gradient(90deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+                      color: #333333;
+                      i {
+                        color: #fff;
+                        background:rgba(255,118,59,1);
+                      }
+                    }
+                    i {
+                      display: inline-block;
+                      position: absolute;
+                      top: -11px;
+                      right: -5px;
+                      color: #fff;
+                      font-size: 12px;
+                      line-height: 18px;
+                      font-style: normal;
+                      width:47px;
+                      height:18px;
+                      background:rgba(255,118,59,1);
+                      border-radius:2px;
+                    }
+                  }
+                  .selected {
+                    color: #ff3000;
+                  }
+                }
+              }
+              .item-select {
+                p {
+                  margin-top: 20px;
+                  margin-bottom: 10px;
+                  font-size:18px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:24px;
+                }
+                ul {
+                  margin-bottom: 10px;
+                }
+                button {
+                  padding: 0;
+                  width: 30px;
+                  height: 30px;
+                  line-height: 28px;
+                  font-size: 22px;
+                  color: rgba(154, 127, 130, 1);
+                  &:hover {
+                    border-color: #e5c2c2;
+                  }
+                }
+              }
+              .item-config {
+                p {
+                  margin-top: 20px;
+                  font-size:18px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:24px;
+                }
+                .sec-title {
+                  font-size: 14px;
+                  color: rgba(154, 127, 130, 1);
+                  line-height: 19px;
+                }
+                ul {
+                  margin-top: 10px;
+                  margin-bottom: 20px;
+                  li {
+                    position: relative;
+                    width: 95px;
+                    height: 35px;
+                    background: rgba(255, 255, 255, 1);
+                    border-radius: 2px;
+                    border: 1px solid rgba(229, 194, 194, 1);
+                    margin-right: 12px;
+                    font-size: 14px;
+                    color: rgba(75, 60, 61, 1);
+                    line-height: 33px;
+                    text-align: center;
+                    cursor: pointer;
+                    &.selected {
+                      background:linear-gradient(90deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+                      color: #333333;
+                      i {
+                        color: #fff;
+                        background:rgba(255,118,59,1);
+                      }
+                    }
+                    i {
+                      display: inline-block;
+                      position: absolute;
+                      top: 1px;
+                      right: 1px;
+                      background:rgba(255,118,59,1);
+                      border-radius: 8px;
+                      color: #fff;
+                      padding: 0 4px;
+                      font-size: 12px;
+                      height: 16px;
+                      line-height: 16px;
+                      font-style: normal;
+                    }
+                  }
+                  .selected {
+                    color: #ff3000;
+                  }
+                }
               }
             }
-            .selected {
-              color: #ff3000;
-              border-color: #ff3000;
+          }
+          .right{
+            width:558px;
+            height: 100%;
+            background:rgba(68,72,110,1);
+            float: right;
+            .buy{
+              width:140px;
+              height:80px;
+              background:rgba(71,76,115,1);
+              border-radius:2px;
+              border:1px solid rgba(158,169,255,1);
+              float: left;
+              margin: 30px 0 0 81px;
+              position: relative;
+              > img{
+                position: absolute;
+                left: 0;
+                top: 0;
+              }
+              .displays{
+                width: 70px;
+                height: 16px;
+                margin: 0 0 11px -35px;
+                float: left;
+                > span:nth-child(1){
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(178,178,178,1);
+                  line-height:16px;
+                }
+                > span:nth-child(2){
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(178,178,178,1);
+                  line-height:16px;
+                  margin-left: 17px;
+                }
+              }
+              .cloums{
+               width: 100px;
+                height: 26px;
+                margin: 0 0 11px -38px;
+                float: left;
+                > span:nth-child(1){
+                  font-size:20px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:26px;
+                }
+                > span:nth-child(2){
+                  font-size:20px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:26px;
+                  margin-left: 10px;
+                }
+              }
+            }
+            .give{
+              width:257px;
+              height:80px;
+              border-radius:2px;
+              border:1px solid rgba(255,191,130,1);
+              float: left;
+              margin: 30px 0 0 18px;
+              position: relative;
+              > img{
+                position: absolute;
+                left: 0;
+                top: 0;
+              }
+              .givep1{
+                height: 16px;
+                margin-top: 14px;
+                > span{
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(178,178,178,1);
+                  line-height:16px;
+                }
+              }
+              .givep2{
+                height: 26px;
+                margin-top: 10px;
+                > span{
+                  font-size:20px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:26px;
+                }
+              }
             }
           }
         }
       }
-      .box-top-a {
-        height: 558px;
-        .left {
-          width: 642px;
-          .top {
-            height: 123px;
-            padding: 40px 20px;
-            color: #fff;
-            font-size: 18px;
-            p {
-              margin-bottom: 10px;
-              font-size: 22px;
-              font-weight: bold;
-            }
-          }
-        }
-      }
-      .host {
-        .top {
-          background: url("../../../assets/img/active/schoolSeason/hot_item_bg_1.png");
-        }
-      }
-      .gpu {
-        height: 440px;
-        .top {
-          background: url("../../../assets/img/active/schoolSeason/hot_item_bg_2.png");
-        }
-      }
-      .obj {
-        height: 371px;
-        .top {
-          background: url("../../../assets/img/active/schoolSeason/hot_item_bg_3.png");
-        }
-      }
+      // > div {
+      //   width: 1120px;
+      //   margin: 0 auto;
+      //   margin-top: 40px;
+      //   background: rgba(255, 255, 255, 1);
+      //   box-shadow: 0px 6px 20px -6px rgba(130, 77, 12, 0.49);
+      //   .config {
+      //     padding-left: 20px;
+      //   }
+      //   .right {
+      //     padding: 30px 20px;
+      //     background: rgba(254, 251, 244, 1);
+      //     width: 478px;
+      //     // height:558px;
+      //     .item-config,
+      //     .item-select {
+      //       p {
+      //         font-size: 14px;
+      //         margin-top: 10px;
+      //         margin-bottom: 10px;
+      //         line-height: 18px;
+      //       }
+      //       ul {
+      //         margin-bottom: 10px;
+      //       }
+      //       button {
+      //         padding: 0;
+      //         width: 30px;
+      //         height: 30px;
+      //         line-height: 28px;
+      //         font-size: 22px;
+      //         color: rgba(154, 127, 130, 1);
+      //         &:hover {
+      //           border-color: #e5c2c2;
+      //         }
+      //       }
+      //     }
+      //     .cash {
+      //       margin-top: 40px;
+      //       p {
+      //         color: rgba(248, 67, 46, 1);
+      //         font-size: 24px;
+      //         font-weight: bold;
+      //         span {
+      //           font-size: 14px;
+      //           font-weight: normal;
+      //         }
+      //       }
+      //       button {
+      //         padding: 0;
+      //         margin-top: 20px;
+      //         width: 438px;
+      //         height: 40px;
+      //         background: rgba(255, 98, 75, 1);
+      //         border-radius: 2px;
+      //         font-size: 18px;
+      //         color: rgba(255, 255, 255, 1);
+      //         border: none;
+      //         &:hover {
+      //           border: none;
+      //         }
+      //       }
+      //     }
+      //   }
+      //   .item-config {
+      //     p {
+      //       margin-top: 20px;
+      //       font-size: 18px;
+      //       color: rgba(65, 6, 12, 1);
+      //       line-height: 24px;
+      //     }
+      //     .sec-title {
+      //       font-size: 14px;
+      //       color: rgba(154, 127, 130, 1);
+      //       line-height: 19px;
+      //     }
+      //     ul {
+      //       margin-top: 10px;
+      //       margin-bottom: 20px;
+      //       li {
+      //         position: relative;
+      //         width: 102px;
+      //         height: 35px;
+      //         background: rgba(255, 255, 255, 1);
+      //         border-radius: 2px;
+      //         border: 1px solid rgba(229, 194, 194, 1);
+      //         margin-right: 10px;
+      //         font-size: 14px;
+      //         color: rgba(75, 60, 61, 1);
+      //         line-height: 33px;
+      //         text-align: center;
+      //         cursor: pointer;
+      //         &.selected {
+      //           background: rgba(225, 33, 42, 1);
+      //           color: #fff;
+      //           i {
+      //             color: rgba(255, 98, 75, 1);
+      //             background: #fff;
+      //           }
+      //         }
+      //         i {
+      //           display: inline-block;
+      //           position: absolute;
+      //           top: 1px;
+      //           right: 1px;
+      //           background: rgba(225, 33, 42, 1);
+      //           border-radius: 8px;
+      //           color: #fff;
+      //           padding: 0 4px;
+      //           font-size: 12px;
+      //           height: 16px;
+      //           line-height: 16px;
+      //           font-style: normal;
+      //         }
+      //       }
+      //       .selected {
+      //         color: #ff3000;
+      //         border-color: #ff3000;
+      //       }
+      //     }
+      //   }
+      // }
+      // .box-top-a {
+      //   height: 589px;
+      //   .left {
+      //     width: 642px;
+      //     .top {
+      //       height: 123px;
+      //       padding: 40px 20px;
+      //       color: #fff;
+      //       font-size: 18px;
+      //       p {
+      //         margin-bottom: 10px;
+      //         font-size: 22px;
+      //         font-weight: bold;
+      //       }
+      //     }
+      //   }
+      // }
+      // .host {
+      //   .top {
+      //     background: url("../../../assets/img/active/schoolSeason/hot_item_bg_1.png");
+      //   }
+      // }
+      // .gpu {
+      //   height: 440px;
+      //   .top {
+      //     background: url("../../../assets/img/active/schoolSeason/hot_item_bg_2.png");
+      //   }
+      // }
+      // .obj {
+      //   height: 371px;
+      //   .top {
+      //     background: url("../../../assets/img/active/schoolSeason/hot_item_bg_3.png");
+      //   }
+      // }
     }
   }
 
