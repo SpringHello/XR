@@ -885,7 +885,7 @@
       // 校验用户上传的文件类型
       handleFormatError() {
         this.$Message.info({
-          content: '请选择jpg、png、jpeg、doc、pdf类型的文件进行上传'
+          content: '请选择jpg、png、jpeg类型的文件进行上传'
         });
       },
       handleFormatJpg() {
@@ -895,7 +895,7 @@
       },
       handleMaxSize() {
         this.$Message.info({
-          content: '请选择大小小于2M的文件进行上传'
+          content: '请选择大小小于4M的文件进行上传'
         });
       },
       // 提交资料

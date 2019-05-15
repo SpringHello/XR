@@ -2218,7 +2218,7 @@
                   padding: 18px 0px;
                   text-align: center;
                   font-size: 16px;
-                  color: #999999;
+                  color: #666666;
                   font-weight: normal;
                 }
                 i {
@@ -2245,7 +2245,7 @@
                   width: 180px;
                   line-height: 19px;
                   font-size: 14px;
-                  color: #999999;
+                  color: #666666;
                   transform: translateX(-50%);
                 }
                 img {
@@ -2262,7 +2262,7 @@
                 a {
                   width: 50%;
                   text-align: center;
-                  color: #999999;
+                  color: #666666;
                   font-size: 14px;
                   vertical-align: middle;
                   line-height: 45px;

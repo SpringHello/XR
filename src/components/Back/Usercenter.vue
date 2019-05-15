@@ -24,7 +24,7 @@
                 <div class="pi-base-info">
                   <ul>
                     <li><span>用户名称</span><span @click="showModal.Cancellationaccount = true" style="display: inline;cursor: pointer;">{{(authInfo&&authInfo.name)? authInfo.name:userInfo.realname}}</span>
-                      <span v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0"
+                      <span v-if="(authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0) || (authInfoPersion&&authInfoPersion.authtype==0&&authInfoPersion.checkstatus==0 && authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==1)"
                             style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid rgba(42,153,242,1);margin-left: 20px;font-size: 10px;">个人认证</span>
                       <span v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0"
                             style="background:rgba(255,255,255,1);border-radius:10px;padding: 1px 6px;border:1px solid #14B278;margin-left: 20px;font-size: 10px;color: #14B278">企业认证</span>
@@ -45,9 +45,12 @@
                     <li><span>账号密码</span><span>************</span><span @click="showModal.modifyPassword = true">修改</span></li>
                     <li v-if="(!authInfo|| authInfo&&authInfo.authtype==0&&authInfo.checkstatus!=0) || (!authInfoPersion|| authInfoPersion&&authInfoPersion.authtype==0&&authInfoPersion.checkstatus!=0)"><span>认证信息</span><span style="color: #FF9339">未实名认证</span><span
                       @click="currentTab ='certification' ">马上认证</span></li>
-                    <li v-if="authInfoPersion&&authInfoPersion.authtype==0&&authInfoPersion.checkstatus==0"><span>身份证号</span><span>{{authInfoPersion.personalnumber}}</span></li>
-                    <li v-if="!(authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0)"><span>认证信息</span><span style="color: #FF9339">未企业认证</span><span
+                    <li v-if="authInfoPersion&&authInfoPersion.authtype==0&&authInfoPersion.checkstatus==0"><span>身份证号</span><span>{{authInfoPersion.personalnumber?authInfoPersion.personalnumber.substr(0,4) + '****' + authInfoPersion.personalnumber.substring(authInfoPersion.personalnumber.length-4,authInfoPersion.personalnumber.length): ''}}</span></li>
+                    <li v-if="authInfo&&authInfo.authtype==0"><span>认证信息</span><span style="color: #FF9339">未企业认证</span><span
                       @click="currentTab ='companyInfo'">马上认证</span></li>
+                       <li v-if="authInfo&&authInfo.authtype==1&& authInfo.checkstatus == 2"><span>认证信息</span><span style="color: #FF9339">企业认证中</span></li>
+                    <li v-if="authInfo&&authInfo.authtype==1&& authInfo.checkstatus == 1"><span>认证信息</span><span style="color: #FF9339">企业认证失败</span><span
+                      @click="currentTab ='companyInfo'">重新认证</span></li>
                   </ul>
                 </div>
               </div>
@@ -331,7 +334,7 @@
               <ol>
                 <li>真实姓名<span>{{ authInfoPersion.name}}</span><span>个人认证</span></li>
                 <li>手机号码<span>{{ authInfoPersion.phone?authInfoPersion.phone.substr(0,3) + '****' + authInfoPersion.phone.substr(7):''}}</span></li>
-                <li>身份证号<span>{{ authInfoPersion.personalnumber}}</span></li>
+                <li>身份证号<span>{{ authInfoPersion.personalnumber?authInfoPersion.personalnumber.substr(0,4) + '****' + authInfoPersion.personalnumber.substring(authInfoPersion.personalnumber.length-4,authInfoPersion.personalnumber.length): ''}}</span></li>
               </ol>
             </div>
             <div v-if="(authInfoPersion&&authInfoPersion.authtype==0&&authInfoPersion.checkstatus==2)||(authInfoPersion&&authInfoPersion.authtype==0&&authInfoPersion.checkstatus==1)"
@@ -352,12 +355,12 @@
               <img src="../../assets/img/usercenter/uc-img2.png"/>
               <p style="color: #FF001F">审核未通过</p>
               <p>提交审核资料发现问题，请重新提交</p>
-              <Button type="primary" style="margin-top: 20px" @click="resubmit">重新提交</Button>
+              <Button type="primary" style="margin-top: 20px" @click="resubmit('person')">重新提交</Button>
             </div>
           </Tab-pane>
           <!--用于企业认证的pane-->
           <Tab-pane label="企业认证" name="companyInfo">
-            <div v-if="authInfo&&authInfo.authtype==0">
+            <div v-if="(authInfo&&authInfo.authtype==0) || !authInfo">
               <h2>企业认证</h2>
               <Form :model="notAuth.companyAuthForm" :label-width="100" ref="companyAuth" :rules="notAuth.companyAuthFormValidate"
                     style="margin-top:20px;">
@@ -598,7 +601,7 @@
               <img src="../../assets/img/usercenter/uc-img2.png"/>
               <p style="color: #FF001F">审核未通过</p>
               <p>提交审核资料发现问题，请重新提交</p>
-              <Button type="primary" style="margin-top: 20px" @click="resubmit">重新提交</Button>
+              <Button type="primary" style="margin-top: 20px" @click="resubmit('company')">重新提交</Button>
             </div>
           </Tab-pane>
           <!--access key pane-->
@@ -2847,14 +2850,22 @@
         })
       },
       // 重新提交申请
-      resubmit() {
+      resubmit(val) {
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            $store.commit('setAuthInfo', {
+            if(val === 'person'){
+              $store.commit('setAuthInfo', {
               authInfo: response.data.authInfo,
+              userInfo: response.data.result,
+              authInfoPersion: null
+            })
+            } else{
+              $store.commit('setAuthInfo', {
+              authInfo: null,
               userInfo: response.data.result,
               authInfoPersion: response.data.authInfo_persion
             })
+            }
           }
         })
       },
@@ -3099,7 +3110,7 @@
                 window._agl && window._agl.push(['track', ['success', {t: 3}]])
                 // 获取用户信息
                 this.init()
-                this.currentTab = ''
+                this.currentTab = 'companyInfo'
               } else {
                 this.$message.info({
                   content: response.data.message

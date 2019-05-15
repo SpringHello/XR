@@ -1203,7 +1203,7 @@
               color: rgba(102, 102, 102, 1);
               line-height: 16px;
               &.title {
-                color:rgba(255,98,75,1);
+                color:#333333;
                 font-size: 14px;
               }
             }

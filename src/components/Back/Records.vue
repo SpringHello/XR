@@ -339,12 +339,12 @@
                             this.recordId = params.row.id
                             this.deleteRecordDisabled = true
                             this.deleteRecordText = '(5S)'
-                            let i = 10
+                            let i = 5
                             this.deleteRecordTimer = setInterval(() => {
                             i -= 1
                             if (i == 0) {
                             window.clearInterval(this.deleteRecordTimer)
-                                 this.unfreezeToBalanceDisabled = false
+                                 this.deleteRecordDisabled = false
                                 this.deleteRecordText = ''
                                  } else {
                                 this.deleteRecordText = '(0' + i + 'S)'
