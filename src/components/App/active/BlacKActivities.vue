@@ -82,9 +82,10 @@
                   <!-- <div class="rectangle">
                     {{item.discount}}折
                   </div> -->
-                  <p style="font-size:18px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(255,191,130,1);">{{item.servicetype == 'host' ? '云服务器' : 'GPU云服务器'}}</p>
-                  <p class="config-text"><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.bandwith}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘<span
-                    v-if="item.gpu" style="font-size:12px;font-weight:normal;">+<span>P{{item.gpu}}</span>显卡</span></p>
+                  <p style="font-size:18px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(255,191,130,1);">{{item.servicetype == 'host' ? '云服务器' : '对象存储'}}</p>
+                  <p v-if="item.storage" class="config-text"><span>{{item.storage}}G</span>存储+<span>{{item.flow}}</span>下行流量</p>
+                  <p v-else class="config-text"><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.bandwith}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘</p>
+                    <img :src="item.imgright" alt="描述"> 
                 </div>
                 <div class="host_content">
                   <div style="margin:10px 0;">
@@ -129,19 +130,21 @@
     </section>
     <section class="product-yuyue">
       <div class="wrap">
-        <div class="inlineheader">
-          <img src="../../../assets/img/active/blackactive/资源 18@2x.png">
-          <div>
-            <p>云电脑抢先预约</p>
-            <p style="margin-top:5px;">注册送新手好礼</p>
+        <div class="inbox">
+          <div class="inlineheader">
+            <img src="../../../assets/img/active/blackactive/资源 18@2x.png">
+            <div>
+              <p>云电脑抢先预约</p>
+              <p style="margin-top:5px;">注册送新手好礼</p>
+            </div>
           </div>
+          <div class="inlineright">
+            <p>注册即可获赠10云币</p>
+            <p>【可抵扣云电脑3小时使用时长】</p>
+            <Button type="warning" style="margin-top:16px;">立即预约</Button>
+          </div>
+          <div style="clear: both;"></div>
         </div>
-        <div class="inlineright">
-          <p>注册即可获赠10云币</p>
-          <p>【可抵扣云电脑3小时使用时长】</p>
-          <Button type="warning" style="margin-top:16px;">立即预约</Button>
-        </div>
-        <div style="clear: both;"></div>
       </div>
     </section>
     <section class="product-hot">
@@ -156,7 +159,7 @@
           </p>
         </div>
         <div class="main">
-          <div class="boxall">
+          <div class="CloudServer">
             <div class="top">
               <p>
                 <span>云服务器特惠</span>
@@ -249,209 +252,191 @@
                     <span>40G <span style="font-size:12px;">SSD</span></span>
                   </p>
                 </div>
+                <div class="item-config">
+                  <p style="margin-bottom: 10px;">区域选择</p>
+                  <Select v-model="hostProductHot.zoneId" class="schoolseason-select" style="width:416px;">
+                      <Option v-for="(item3,index) in hostZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
+                  </Select>
+                </div>
+                <div class="item-select">
+                  <p>系统选择</p>
+                  <Cascader :data="hostSystemListHot" v-model="hostProductHot.system" class="schoolseason-select"></Cascader>
+                </div>
+                <div class="item-config1">
+                  <p style="margin-bottom: 10px;">购买时长</p>
+                  <ul class="flex" style="justify-content: flex-start">
+                    <li v-for="(item3,index) in hostTimeListHot" :key="index" @click="hostProductHot.timeTimetype=item3"
+                        :class="{selected:hostProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'年'}}</span>
+                      <i>{{item3.discount}}折</i>
+                    </li>
+                  </ul>
+                </div>
+                <div class="cash">
+                  <p>
+                    <span>￥</span>{{(hostProductHot.price*hostProductHot.count).toFixed(2)}}<span>{{PriceHostHot}}</span>
+                    <span
+                      style="text-decoration:line-through;color:rgba(178,178,178,1);font-size:14px;margin-left:12px;">原价：￥{{(hostProductHot.originalPrice*hostProductHot.count).toFixed(2)}}元</span>
+                  </p>
+                  <Button @click="productBuy_host()">立即支付</Button>
+                </div>
                 <div style="clear: both;"></div>
               </div>
             </div>
           </div>
-          <!-- <div class="box-top-a host flex">
-            <div class="left">
+
+          <div class="EfficientCloud">
               <div class="top">
-                <p>云服务器特惠</p>
-                <span>低至2折</span>
+                <p>
+                  <span>P100 GPU高效云服务器</span>
+                  <span>超高计算能力，行业最低，低至2折,更有买一送一超优惠活动</span>
+                  <img src="../../../assets/img/active/blackactive/Grouptwo.png" alt="两折GPU">
+                </p>
               </div>
-              <div class="config">
-                <div class="item-config">
-                  <p style="margin-bottom: 10px;">区域选择</p>
-                  <ul class="flex" style="justify-content: flex-start">
-                    <li v-for="(item3,index) in hostZoneListHot" :key="index" @click="hostProductHot.zoneId=item3.value" :class="{selected:hostProductHot.zoneId==item3.value}">
-                      {{item3.name}}
-                    </li>
-                  </ul>
-                </div>
-                <div class="item-config">
-                  <p style="margin-bottom: 20px;">配置选择</p>
-                  <div>
-                    <span class="sec-title">基础入门级云服务器</span>
-                    <ul class="flex" style="justify-content: flex-start;">
-                      <li v-for="(item3,index) in hostConfigListHot.basic" :key="index" @click="hostProductHot.cpuMemory=item3"
-                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
-                      </li>
-                    </ul>
+              <div class="bottom">
+                <div class="left">
+                  <div class="leftpad">
+                    <p>
+                      <span>配置选择</span>
+                      <span>（皆包含128G SSD系统盘）</span>
+                    </p>
+                    <p class="selectseries">
+                      <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;margin-bottom:10px;">
+                          <li style="width:188px;margin-bottom:10px;" v-for="(item3,index) in gpuConfigListHot" :key="index" @click="gpuProductHot.cpuMemory=item3"
+                              :class="{selected:gpuProductHot.cpuMemory.cpunum==item3.cpunum&&gpuProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                            <span>{{item3.gpusize}}*NVIDIA P100</span></li>
+                        </ul>
+                        <div style="clear: both;"></div>
+                    </p>
+                    <div class="item-selecttt">
+                      <p>带宽选择</p>
+                      <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;">
+                        <li v-for="(item3,index) in gpubandwithListHot" :key="index" @click="gpuProductHot.bandwith=item3" :class="{selected:gpuProductHot.bandwith==item3}">
+                          {{item3}}M
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="item-selectnum">
+                      <p>购买数量</p>
+                      <Button @click="gpuProductHot.count--" :disabled="gpuProductHot.count<=1" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-right:8px;">-</Button>
+                      <Input type="text" style="width:60px;" class="host-count schoolseason-select" v-model="gpuProductHot.count" readonly></Input>
+                      <Button @click="gpuProductHot.count++" :disabled="gpuProductHot.count>=2" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-left:8px;">+</Button>
+                    </div>
                   </div>
-                  <div>
-                    <span class="sec-title">标准进阶型云服务器</span>
+                </div>
+                <div class="right">
+                  <div class="buy">
+                    <img src="../../../assets/img/active/blackactive/buy.png">
+                    <div class="displays">
+                      <span>CPU</span>
+                      <span>内存</span>
+                    </div>
+                    <div class="cloums">
+                      <span>8核</span>
+                      <span>16G</span>
+                    </div>
+                  </div>
+                  <div class="give">
+                    <img src="../../../assets/img/active/blackactive/give.png">
+                    <p class="givep1">
+                      <span style=" margin: 0 25px 0 21px;">CPU</span>
+                      <span>内存</span>
+                      <span style="margin: 0 35px 0 25px;">带宽</span>
+                      <span>系统盘</span>
+                    </p>
+                    <p class="givep2">
+                      <span style=" margin: 0 20px 0 17px;">2核</span>
+                      <span>4G</span>
+                      <span style="margin: 0 20px 0 20px;">2M</span>
+                      <span>40G <span style="font-size:12px;">SSD</span></span>
+                    </p>
+                  </div>
+                  <span class="givespan">赠送主机时长12个月</span>
+                  <div class="item-config">
+                    <p style="margin-bottom: 10px;">区域选择</p>
+                    <Select v-model="gpuProductHot.zoneId" class="schoolseason-select" style="width:416px;">
+                        <Option v-for="(item3,index) in gpuZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
+                    </Select>
+                  </div>
+                  <div class="item-select">
+                    <p>系统选择</p>
+                    <Cascader :data="gpuSystemListHot" v-model="gpuProductHot.system" class="schoolseason-select"></Cascader>
+                  </div>
+                  <div class="item-config1">
+                    <p style="margin-bottom: 10px;">购买时长</p>
                     <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hostProductHot.cpuMemory=item3"
-                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                      <li v-for="(item3,index) in gpuTimeListHot" :key="index" @click="gpuProductHot.timeTimetype=item3"
+                          :class="{selected:gpuProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'天'}}</span>
+                        <i>{{item3.discount}}折</i>
                       </li>
                     </ul>
                   </div>
-                  <div v-if="highEndLength">
-                    <span class="sec-title">企业高配型云服务器</span>
+                  <div class="cash">
+                    <p>
+                      <span>￥</span>{{(gpuProductHot.price*gpuProductHot.count).toFixed(2)}}<span>{{PriceGpuHot}}</span>
+                      <span
+                        style="text-decoration:line-through;color:rgba(178,178,178,1);font-size:14px;margin-left:12px;">原价：￥{{(gpuProductHot.originalPrice*gpuProductHot.count).toFixed(2)}}元</span>
+                    </p>
+                    <Button @click="productBuy_gpu()">立即支付</Button>
+                  </div>
+                  <div style="clear: both;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="storage">
+              <div class="top">
+                <p>
+                  <span>对象存储</span>
+                  <span>超大存储和流量，低至3折</span>
+                </p>
+              </div>
+              <div class="bottom">
+                <div class="left">
+                  <div class="leftpad">
+                    <p>
+                      <span>区域选择</span>
+                    </p>
+                    <p class="selectseries">
+                      <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;">
+                        <li v-for="(item3,index) in objZoneListHot" :key="index" @click="objProductHot.zoneId=item3.value" :class="{selected:objProductHot.zoneId==item3.value}">
+                          {{item3.name}}
+                        </li>
+                      </ul>
+                        <div style="clear: both;"></div>
+                    </p>
+                    <div class="selectseries">
+                      <p style="font-size:18px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:24px;margin-bottom:10px;">配置选择</p>
+                      <div>
+                        <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;">
+                          <li style="width:180px;height:54px;" v-for="(item3,index) in objConfigListHot" :key="index" @click="objProductHot.cpuMemory=item3"
+                              :class="{selected:objProductHot.cpuMemory.label==item3.label}"><span>{{item3.label}}<span>{{item3.unit}}</span>存储</span> + <span>{{item3.label}}<span>{{item3.unit}}</span>内外网</span>
+                            <span style="display:block;">下行流量</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="right">
+                  <div class="item-config1">
+                    <p style="margin-bottom: 10px;">购买时长</p>
                     <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hostProductHot.cpuMemory=item3"
-                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                      <li v-for="(item3,index) in objTimeListHot" :key="index" @click="objProductHot.timeTimetype=item3"
+                          :class="{selected:objProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'年'}}</span>
+                        <i>{{item3.discount}}折</i>
                       </li>
                     </ul>
                   </div>
-                  <p style="font-size:12px;color:rgba(154,127,130,1);margin-top:-10px;">*以上配置皆包含40G SSD系统盘</p>
-                </div>
-              </div>
-            </div>
-            <div class="right">
-              <div class="item-select">
-                <p>带宽选择</p>
-                <Select v-model="hostProductHot.bandwith" class="schoolseason-select">
-                  <Option v-for="(item3,index) in hostbandwithListHot" :value="item3" :key="index">{{item3}}M</option>
-                </Select>
-              </div>
-              <div class="item-select">
-                <p>系统选择</p>
-                <Cascader :data="hostSystemListHot" v-model="hostProductHot.system" class="schoolseason-select"></Cascader>
-              </div>
-              <div class="item-config">
-                <p style="margin-bottom: 10px;">NVme SSD数据盘</p>
-                <ul class="flex" style="justify-content: flex-start">
-                  <li v-for="(item3,index) in hostDisksizeListHot" :key="index" @click="hostProductHot.disksize=item3" :class="{selected:hostProductHot.disksize==item3}">
-                    {{item3}}G
-                  </li>
-                </ul>
-              </div>
-              <div class="item-config">
-                <p style="margin-bottom: 10px;">购买时长</p>
-                <ul class="flex" style="justify-content: flex-start">
-                  <li v-for="(item3,index) in hostTimeListHot" :key="index" @click="hostProductHot.timeTimetype=item3"
-                      :class="{selected:hostProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'年'}}</span>
-                    <i>{{item3.discount}}折</i>
-                  </li>
-                </ul>
-              </div>
-              <div class="item-select">
-                <p>购买数量</p>
-                <Button @click="hostProductHot.count--" :disabled="hostProductHot.count<=1" style="border: 1px solid #E5C2C2;">-</Button>
-                <Input type="text" style="width:60px;" class="host-count schoolseason-select" v-model="hostProductHot.count" readonly></Input>
-                <Button @click="hostProductHot.count++" :disabled="hostProductHot.count>=7" style="border: 1px solid #E5C2C2;">+</Button>
-              </div>
-              <div class="cash">
-                <p>
-                  <span>￥</span>{{(hostProductHot.price*hostProductHot.count).toFixed(2)}}<span>{{PriceHostHot}}</span>
-                  <span
-                    style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{(hostProductHot.originalPrice*hostProductHot.count).toFixed(2)}}元</span>
-                </p>
-                <Button @click="productBuy_host()">立即支付</Button>
-              </div>
-            </div>
-          </div> -->
-          <!-- <div class="box-top-a gpu flex">
-            <div class="left">
-              <div class="top">
-                <p>P100 GPU高效云服务器</p>
-                <span>超高计算能力，行业最低，低至3折</span>
-              </div>
-              <div class="config">
-                <div class="item-config">
-                  <p style="margin-bottom: 10px;">区域选择</p>
-                  <ul class="flex" style="justify-content: flex-start">
-                    <li v-for="(item3,index) in gpuZoneListHot" :key="index" @click="gpuProductHot.zoneId=item3.value" :class="{selected:gpuProductHot.zoneId==item3.value}">
-                      {{item3.name}}
-                    </li>
-                  </ul>
-                </div>
-                <div class="item-config">
-                  <p style="margin-bottom: 20px;">配置选择</p>
-                  <div>
-                    <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;margin-bottom:10px;">
-                      <li style="width:188px;margin-bottom:10px;" v-for="(item3,index) in gpuConfigListHot" :key="index" @click="gpuProductHot.cpuMemory=item3"
-                          :class="{selected:gpuProductHot.cpuMemory.cpunum==item3.cpunum&&gpuProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
-                        <span>{{item3.gpusize}}*NVIDIA P100</span></li>
-                    </ul>
+                  <div class="cash">
+                    <p>
+                      <span>￥</span>{{objProductHot.price}}<span>{{PriceobjHot}}</span>
+                      <span style="text-decoration:line-through;color:rgba(178,178,178,1);font-size:14px;margin-left:12px;">原价：￥{{objProductHot.originalPrice}}元</span>
+                    </p>
+                    <Button @click="productBuy_obj()">立即支付</Button>
                   </div>
-                  <p style="font-size:12px;color:rgba(154,127,130,1);margin-top:-10px;">*以上配置皆包含128G SSD系统盘</p>
+                  <div style="clear: both;"></div>
                 </div>
               </div>
             </div>
-            <div class="right">
-              <div class="item-select">
-                <p>带宽选择</p>
-                <Select v-model="gpuProductHot.bandwith" class="schoolseason-select">
-                  <Option v-for="(item3,index) in gpubandwithListHot" :value="item3" :key="index">{{item3}}M</option>
-                </Select>
-              </div>
-              <div class="item-select">
-                <p>系统选择</p>
-                <Cascader :data="gpuSystemListHot" v-model="gpuProductHot.system" class="schoolseason-select"></Cascader>
-              </div>
-              <div class="item-config">
-                <p style="margin-bottom: 10px;">购买时长</p>
-                <ul class="flex" style="justify-content: flex-start">
-                  <li v-for="(item3,index) in gpuTimeListHot" :key="index" @click="gpuProductHot.timeTimetype=item3"
-                      :class="{selected:gpuProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'天'}}</span>
-                    <i>{{item3.discount}}折</i>
-                  </li>
-                </ul>
-              </div>
-              <div class="item-select">
-                <p>购买数量</p>
-                <Button @click="gpuProductHot.count--" :disabled="gpuProductHot.count<=1" style="border: 1px solid #E5C2C2;">-</Button>
-                <Input type="text" style="width:60px;" class="host-count schoolseason-select" v-model="gpuProductHot.count" readonly></Input>
-                <Button @click="gpuProductHot.count++" :disabled="gpuProductHot.count>=2" style="border: 1px solid #E5C2C2;">+</Button>
-              </div>
-              <div class="cash" style="margin-top:20px;">
-                <p>
-                  <span>￥</span>{{(gpuProductHot.price*gpuProductHot.count).toFixed(2)}}<span>{{PriceGpuHot}}</span>
-                  <span
-                    style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{(gpuProductHot.originalPrice*gpuProductHot.count).toFixed(2)}}元</span>
-                </p>
-                <Button @click="productBuy_gpu()">立即支付</Button>
-              </div>
-            </div>
-          </div> -->
-          <!-- <div class="box-top-a obj flex">
-            <div class="left">
-              <div class="top">
-                <p>对象存储</p>
-                <span>超大存储和流量，低至3折</span>
-              </div>
-              <div class="config">
-                <div class="item-config">
-                  <p style="margin-bottom: 10px;">区域选择</p>
-                  <ul class="flex" style="justify-content: flex-start">
-                    <li v-for="(item3,index) in objZoneListHot" :key="index" @click="objProductHot.zoneId=item3.value" :class="{selected:objProductHot.zoneId==item3.value}">
-                      {{item3.name}}
-                    </li>
-                  </ul>
-                </div>
-                <div class="item-config">
-                  <p style="margin-bottom: 20px;">配置选择</p>
-                  <div>
-                    <ul class="flex" style="justify-content: flex-start;">
-                      <li style="width:187px;height:54px;" v-for="(item3,index) in objConfigListHot" :key="index" @click="objProductHot.cpuMemory=item3"
-                          :class="{selected:objProductHot.cpuMemory.label==item3.label}"><span>{{item3.label}}<span>{{item3.unit}}</span>存储</span> + <span>{{item3.label}}<span>{{item3.unit}}</span>内外网</span>
-                        <span style="display:block;">下行流量</span></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="right">
-              <div class="item-config">
-                <p style="margin-bottom: 10px;">购买时长</p>
-                <ul class="flex" style="justify-content: flex-start">
-                  <li v-for="(item3,index) in objTimeListHot" :key="index" @click="objProductHot.timeTimetype=item3"
-                      :class="{selected:objProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'年'}}</span>
-                    <i>{{item3.discount}}折</i>
-                  </li>
-                </ul>
-              </div>
-              <div class="cash">
-                <p>
-                  <span>￥</span>{{objProductHot.price}}<span>{{PriceobjHot}}</span>
-                  <span style="text-decoration:line-through;color:#41060C;font-size:14px;margin-left:12px;">原价：{{objProductHot.originalPrice}}元</span>
-                </p>
-                <Button @click="productBuy_obj()">立即支付</Button>
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
     </section>
@@ -459,11 +444,10 @@
       <div class="wrap">
         <div class="headline">
           <div>
-            <span>会员尊享折上折特权</span>
           </div>
-          <p>
+          <p style="color:rgba(255,255,255,1);">
             新睿云重磅推出会员制，成为会员可享相应折扣
-            <span class="rule" @click="getVipRule">活动规则</span>
+            <span class="rule" @click="getVipRule" style="color:#F5A623;text-decoration: underline;">活动规则</span>
           </p>
         </div>
         <div class="main" style="background:none;" v-if="this.userInfo && this.userInfo.vipname">
@@ -515,39 +499,6 @@
         </div>
       </div>
     </section>
-    <section class="product-coupon">
-      <div class="wrap">
-        <div class="headline">
-          <div>
-            38元无门槛优惠券限量抢
-          </div>
-          <p>
-            领取38元券可免费购买新睿云所有产品（特定申明除外）
-          </p>
-        </div>
-        <div class="main">
-          <div class="coupon flex">
-            <div class="left">
-              <div class="text flex" style="align-items: center">
-                <div>
-                  <span>¥</span>38
-                </div>
-                <div>
-                  <p>零门槛现金券</p>
-                  <span>全线产品均可使用</span>
-                </div>
-              </div>
-              <p>此现金券需前往<span @click="$router.push('/expenses')">个人中心</span>使用</p>
-            </div>
-            <div class="right" style="cursor:pointer" @click="getTicket()">立即领取</div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <div class="register">
-      <p>为您提供出众的上云实践机会和全面的尊贵服务</p>
-      <Button @click.stop="$LR({type: 'register'})">立即注册</Button>
-    </div>
     <!-- 登陆注册弹窗 -->
     <transition name="fade">
       <div class="overlay" @click.stop="showModal.notLoginModal=false" v-if="showModal.notLoginModal">
@@ -1037,11 +988,12 @@
         gpuZoneList: [],
         discountProduct: [
           {
-            cpunum: '1',
-            memory: '2',
+            cpunum: '2',
+            memory: '4',
             disksize: '40',
-            bandwith: '1',
+            bandwith: '2',
             zoneId: '',
+            imgright:require('../../../assets/img/active/blackactive/newuserfor.png'),
             system: [],
             duration: '6',
             originalPrice: '1300.32',
@@ -1075,10 +1027,49 @@
           },
           {
             cpunum: '2',
-            memory: '4',
+            memory: '8',
             disksize: '40',
-            bandwith: '2',
+            bandwith: '5',
             zoneId: '',
+            imgright:require('../../../assets/img/active/blackactive/onefor.png'),
+            system: [],
+            duration: '6',
+            originalPrice: '1300.32',
+            currentPrice: '351.09',
+            id: '40',
+            type: '0',
+            activityNum: '27',
+            servicetype: 'host',
+            num: 0,
+            discount: '1',
+            timeType: 'year',
+            hostSystemList: [{
+              value: 'window',
+              label: 'Windows',
+              children: []
+            }, {
+              value: 'centos',
+              label: 'Centos',
+              children: [],
+            },
+              {
+                value: 'debian',
+                label: 'Debian',
+                children: [],
+              },
+              {
+                value: 'ubuntu',
+                label: 'Ubuntu',
+                children: [],
+              }],
+          },
+          {
+            cpunum: '4',
+            memory: '8',
+            disksize: '40',
+            bandwith: '5',
+            zoneId: '',
+            imgright:require('../../../assets/img/active/blackactive/oneforone.png'),
             system: [],
             duration: '6',
             originalPrice: '1300.32',
@@ -1116,7 +1107,10 @@
             disksize: '128',
             bandwith: '10',
             gpu: '100',
+            storage:'100',
+            flow:'100',
             zoneId: '',
+            imgright:require('../../../assets/img/active/blackactive/threefor.png'),
             system: [],
             duration: '6',
             originalPrice: '1300.32',
@@ -1124,45 +1118,7 @@
             id: '40',
             type: '0',
             activityNum: '27',
-            servicetype: 'gpu',
-            num: 0,
-            discount: '2',
-            timeType: 'month',
-            hostSystemList: [{
-              value: 'window',
-              label: 'Windows',
-              children: []
-            }, {
-              value: 'centos',
-              label: 'Centos',
-              children: [],
-            },
-              {
-                value: 'debian',
-                label: 'Debian',
-                children: [],
-              },
-              {
-                value: 'ubuntu',
-                label: 'Ubuntu',
-                children: [],
-              }],
-          },
-          {
-            cpunum: '8',
-            memory: '64',
-            disksize: '128',
-            bandwith: '10',
-            gpu: '100',
-            zoneId: '',
-            system: [],
-            duration: '6',
-            originalPrice: '1300.32',
-            currentPrice: '351.09',
-            id: '40',
-            type: '0',
-            activityNum: '27',
-            servicetype: 'gpu',
+            servicetype: 'ObjectStorage',
             num: 0,
             discount: '2',
             timeType: 'month',
@@ -1232,10 +1188,8 @@
           }],
         hostDisksizeListHot: [0, 20, 50, 100],
         hostTimeListHot: [
-          {type: 'month', value: '6', discount: '4'},
-          {type: 'year', value: '1', discount: '3'},
-          {type: 'year', value: '2', discount: '2.5'},
-          {type: 'year', value: '3', discount: '2'},
+          {type: 'month', value: '6', discount: '5'},
+          {type: 'year', value: '1', discount: '4'},
         ],
         // 热门gpu打折
         gpuProductHot: {
@@ -1243,7 +1197,7 @@
           cpuMemory: {cpunum: '8', memory: '64', servicetype: '', gpusize: ''},
           bandwith: 5,
           system: [],
-          timeTimetype: {type: 'day', value: '7', discount: '4'},
+          timeTimetype: {type: 'month', value: '3', discount: '2'},
           count: '1',
           price: '',
           originalPrice: ''
@@ -1272,9 +1226,7 @@
           }],
         gpuDisksizeListHot: [20, 50, 100, 500],
         gpuTimeListHot: [
-          {type: 'day', value: '7', discount: '4'},
-          {type: 'month', value: '1', discount: '4'},
-          {type: 'month', value: '3', discount: '3'},
+          {type: 'month', value: '3', discount: '2'},
         ],
         // 热门对象存储打折
         objProductHot: {
@@ -1318,8 +1270,7 @@
         objTimeListHot: [
           {type: 'month', value: '3', discount: '5'},
           {type: 'month', value: '6', discount: '4'},
-          {type: 'year', value: '1', discount: '3.5'},
-          {type: 'year', value: '2', discount: '3'},
+          {type: 'year', value: '1', discount: '3'},
         ],
         memberData: [
           {
@@ -1644,6 +1595,7 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
+            console.log(res.data)
             this.hostZoneList = res.data.result.optionalArea
             this.defaultZone = res.data.result.optionalArea[0].value
 
@@ -2524,6 +2476,11 @@
                 font-weight: bold;
               }
             }
+            > img{
+              position: absolute;
+              right: 0;
+              top: 0;
+            }
             p {
               color: #ffffff;
             }
@@ -2601,39 +2558,43 @@
       background: url(../../../assets/img/active/blackactive/Group 12.png) center no-repeat;
       height: 166px;
       width: 100%;
-      .inlineheader{
-        width: 301px;
-        height: 80px;
-        margin: 38px 0 48px 481px;
-        float: left;
-          > div {
-          width: 201px;
-          float: right;
-          > p{
-              font-size:28px;
-              font-family:MicrosoftYaHei-Bold;
-              font-weight:bold;
-              color:rgba(255,255,255,1);
-              line-height:37px;
+      .inbox{
+        width: 789px;
+        margin-left: 481px;
+        .inlineheader{
+          width: 301px;
+          height: 80px;
+          margin: 38px 0 48px 0;
+          float: left;
+            > div {
+            width: 201px;
+            float: right;
+            > p{
+                font-size:28px;
+                font-family:MicrosoftYaHei-Bold;
+                font-weight:bold;
+                color:rgba(255,255,255,1);
+                line-height:37px;
+            }
           }
         }
-      }
-      .inlineright{
-        height: 99px;
-        margin: 35px 0 32px 297px;
-        float: left;
-        > p:nth-child(1){
-          font-size:20px;
-          font-family:MicrosoftYaHei;
-          color:rgba(255,255,255,1);
-          line-height:26px;
-        }
-        > p:nth-child(2){
-          font-size:14px;
-          font-family:MicrosoftYaHei;
-          color:rgba(255,236,0,1);
-          line-height:19px;
-          margin-top: 3px;
+        .inlineright{
+          height: 99px;
+          float: right;
+          margin-top: 35px;
+          > p:nth-child(1){
+            font-size:20px;
+            font-family:MicrosoftYaHei;
+            color:rgba(255,255,255,1);
+            line-height:26px;
+          }
+          > p:nth-child(2){
+            font-size:14px;
+            font-family:MicrosoftYaHei;
+            color:rgba(255,236,0,1);
+            line-height:19px;
+            margin-top: 3px;
+          }
         }
       }
     }
@@ -2651,9 +2612,8 @@
     }
     .main {
       width: 1200px;
-      height: 1529px;
       margin-top: 80px;
-      .boxall{
+      .CloudServer{
         height: 589px;
         width: 100%;
         .top{
@@ -2845,6 +2805,7 @@
             height: 100%;
             background:rgba(68,72,110,1);
             float: right;
+            padding: 30px 65px 40px 80px;
             .buy{
               width:140px;
               height:80px;
@@ -2852,7 +2813,6 @@
               border-radius:2px;
               border:1px solid rgba(158,169,255,1);
               float: left;
-              margin: 30px 0 0 81px;
               position: relative;
               > img{
                 position: absolute;
@@ -2904,7 +2864,7 @@
               border-radius:2px;
               border:1px solid rgba(255,191,130,1);
               float: left;
-              margin: 30px 0 0 18px;
+              margin: 0 0 0 15px;
               position: relative;
               > img{
                 position: absolute;
@@ -2932,6 +2892,747 @@
                 }
               }
             }
+            .item-config {
+              float: left;
+                p {
+                  margin-top: 20px;
+                  font-size:14px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:19px;
+                }
+                .sec-title {
+                  font-size: 14px;
+                  color: rgba(154, 127, 130, 1);
+                  line-height: 19px;
+                }
+              }
+              .item-select {
+                float: left;
+                width: 100%;
+                p {
+                  margin-top: 20px;
+                  margin-bottom: 10px;
+                  font-size:14px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:19px;
+                }
+                ul {
+                  margin-bottom: 10px;
+                }
+                button {
+                  padding: 0;
+                  width: 30px;
+                  height: 30px;
+                  line-height: 28px;
+                  font-size: 22px;
+                  color: rgba(154, 127, 130, 1);
+                  &:hover {
+                    border-color: #e5c2c2;
+                  }
+                }
+              }
+              .item-config1 {
+                float: left;
+                p {
+                  margin-top: 20px;
+                  font-size:14px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:19px;
+                }
+                .sec-title {
+                  font-size: 14px;
+                  color: rgba(154, 127, 130, 1);
+                  line-height: 19px;
+                }
+                ul {
+                  margin-top: 10px;
+                  margin-bottom: 20px;
+                  li {
+                    position: relative;
+                    width: 95px;
+                    height: 35px;
+                    background: rgba(255, 255, 255, 1);
+                    border-radius: 2px;
+                    border: 1px solid rgba(229, 194, 194, 1);
+                    margin-right: 12px;
+                    font-size: 14px;
+                    color: rgba(75, 60, 61, 1);
+                    line-height: 33px;
+                    text-align: center;
+                    cursor: pointer;
+                    &.selected {
+                      background:linear-gradient(90deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+                      color: #333333;
+                      i {
+                        color: #fff;
+                        background:rgba(255,118,59,1);
+                      }
+                    }
+                    i {
+                        display: inline-block;
+                        position: absolute;
+                        top: -11px;
+                        right: -5px;
+                        color: #fff;
+                        font-size: 12px;
+                        line-height: 18px;
+                        font-style: normal;
+                        width:28px;
+                        height:18px;
+                        background: #ff763b;
+                        border-radius: 2px;
+                    }
+                  }
+                  .selected {
+                    color: #ff3000;
+                  }
+                }
+              }
+              .cash {
+                float: left; 
+                p {
+                  color:rgba(255,118,59,1);
+                  font-size: 24px;
+                  font-weight: bold;
+                  span {
+                    font-size: 14px;
+                    font-weight: normal;
+                  }
+                }
+                button {
+                  padding: 0;
+                  margin-top: 20px;
+                  width: 408px;
+                  height: 40px;
+                  border-radius: 2px;
+                  font-size: 18px;
+                  background:linear-gradient(90deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+                  color: #333333;
+                  border: none;
+                  &:hover {
+                    border: none;
+                  }
+                }
+              }
+          }
+        }
+      }
+
+      .EfficientCloud{
+        height: 606px;
+        width: 100%;
+        margin-top: 60px;
+        .top{
+          background: url(../../../assets/img/active/blackactive/头部.png) center no-repeat;
+          width: 100%;
+          height: 80px;
+          > p {
+            margin: 0 0 0 50px;
+            > span:nth-child(1){
+              font-size:22px;
+              font-family:MicrosoftYaHei-Bold;
+              font-weight:bold;
+              color:rgba(34,36,61,1);
+              line-height:80px;
+            }
+            > span:nth-child(2){
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(34,36,61,1);
+              line-height:80px;
+              margin-left: 20px;
+            }
+            > img{
+              float: right;
+              margin-top: 9px;
+            }
+          }
+        }
+        .bottom{
+          width: 100%;
+          height: 509px;
+          background:rgba(55,59,89,1);
+          box-shadow:0px 9px 20px -6px rgba(16,17,26,0.5);
+          border:1px solid rgba(255,208,140,1);
+          .left{
+            width: 640px;
+            height: 100%;
+            float: left;
+            .leftpad{
+              padding: 30px 100px 26px 50px;
+              > p:nth-child(1){
+                > span:nth-child(1){
+                  font-size:18px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:24px;
+                }
+                > span:nth-child(2){
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:16px;
+                }
+              }
+              .selectseries{
+                margin: 20px 0;
+                > span{
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(178,178,178,1);
+                  line-height:35px;
+                  float: left;
+                }
+                ul {
+                  float: left;
+                  li {
+                    position: relative;
+                    width: 110px;
+                    height: 35px;
+                    background:rgba(255,255,255,1);
+                    border-radius:2px;
+                    border:1px solid rgba(255,208,140,1);
+                    margin-right: 12px;
+                    font-size: 14px;
+                    color: #4B3C3D;
+                    line-height: 33px;
+                    text-align: center;
+                    cursor: pointer;
+                    &.selected {
+                      background:linear-gradient(90deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+                      color: #333333;
+                      i {
+                        color: #fff;
+                        background:rgba(255,118,59,1);
+                      }
+                    }
+                    i {
+                      display: inline-block;
+                      position: absolute;
+                      top: -11px;
+                      right: -5px;
+                      color: #fff;
+                      font-size: 12px;
+                      line-height: 18px;
+                      font-style: normal;
+                      width:47px;
+                      height:18px;
+                      background:rgba(255,118,59,1);
+                      border-radius:2px;
+                    }
+                  }
+                  .selected {
+                    color: #ff3000;
+                  }
+                }
+              }
+              .item-selecttt {
+                p {
+                  margin-top: 10px;
+                  font-size:18px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:24px;
+                }
+                .sec-title {
+                  font-size: 14px;
+                  color: rgba(154, 127, 130, 1);
+                  line-height: 19px;
+                }
+                ul {
+                  margin-top: 10px;
+                  margin-bottom: 20px;
+                  li {
+                    position: relative;
+                    width:110px;
+                    height:35px;
+                    background: rgba(255, 255, 255, 1);
+                    border-radius: 2px;
+                    border: 1px solid rgba(229, 194, 194, 1);
+                    margin-right: 12px;
+                    font-size: 14px;
+                    color: rgba(75, 60, 61, 1);
+                    line-height: 33px;
+                    text-align: center;
+                    cursor: pointer;
+                    margin-bottom: 12px;
+                    &.selected {
+                      background:linear-gradient(90deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+                      color: #333333;
+                      i {
+                        color: #fff;
+                        background:rgba(255,118,59,1);
+                      }
+                    }
+                    i {
+                      display: inline-block;
+                      position: absolute;
+                      top: 1px;
+                      right: 1px;
+                      background:rgba(255,118,59,1);
+                      border-radius: 8px;
+                      color: #fff;
+                      padding: 0 4px;
+                      font-size: 12px;
+                      height: 16px;
+                      line-height: 16px;
+                      font-style: normal;
+                    }
+                  }
+                  .selected {
+                    color: #ff3000;
+                  }
+                }
+              }
+              .item-selectnum {
+                float: left;
+                width: 100%;
+                p {
+                  margin-bottom: 10px;
+                  font-size:18px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:24px;
+                }
+                ul {
+                  margin-bottom: 10px;
+                }
+                button {
+                  padding: 0;
+                  width: 30px;
+                  height: 30px;
+                  line-height: 28px;
+                  font-size: 22px;
+                  color: rgba(154, 127, 130, 1);
+                  &:hover {
+                    border-color: #e5c2c2;
+                  }
+                }
+              }
+            }
+          }
+          .right{
+            width:558px;
+            height: 100%;
+            background:rgba(68,72,110,1);
+            float: right;
+            padding: 30px 65px 40px 80px;
+            .buy{
+              width:140px;
+              height:80px;
+              background:rgba(71,76,115,1);
+              border-radius:2px;
+              border:1px solid rgba(158,169,255,1);
+              float: left;
+              position: relative;
+              > img{
+                position: absolute;
+                left: 0;
+                top: 0;
+              }
+              .displays{
+                width: 70px;
+                height: 16px;
+                margin: 0 0 11px -35px;
+                float: left;
+                > span:nth-child(1){
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(178,178,178,1);
+                  line-height:16px;
+                }
+                > span:nth-child(2){
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(178,178,178,1);
+                  line-height:16px;
+                  margin-left: 17px;
+                }
+              }
+              .cloums{
+               width: 100px;
+                height: 26px;
+                margin: 0 0 11px -38px;
+                float: left;
+                > span:nth-child(1){
+                  font-size:20px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:26px;
+                }
+                > span:nth-child(2){
+                  font-size:20px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:26px;
+                  margin-left: 10px;
+                }
+              }
+            }
+            .give{
+              width:257px;
+              height:80px;
+              border-radius:2px;
+              border:1px solid rgba(255,191,130,1);
+              float: left;
+              margin: 0 0 0 15px;
+              position: relative;
+              > img{
+                position: absolute;
+                left: 0;
+                top: 0;
+              }
+              .givep1{
+                height: 16px;
+                margin-top: 14px;
+                > span{
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(178,178,178,1);
+                  line-height:16px;
+                }
+              }
+              .givep2{
+                height: 26px;
+                margin-top: 10px;
+                > span{
+                  font-size:20px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:26px;
+                }
+              }
+            }
+            .givespan{
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:rgba(255,191,130,1);
+              line-height:16px;
+              margin-left: 238px;
+              float: left;
+            }
+            .item-config {
+              float: left;
+                p {
+                  margin-top: 20px;
+                  font-size:14px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:19px;
+                }
+                .sec-title {
+                  font-size: 14px;
+                  color: rgba(154, 127, 130, 1);
+                  line-height: 19px;
+                }
+              }
+              .item-select {
+                float: left;
+                width: 100%;
+                p {
+                  margin-top: 20px;
+                  margin-bottom: 10px;
+                  font-size:14px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:19px;
+                }
+                ul {
+                  margin-bottom: 10px;
+                }
+                button {
+                  padding: 0;
+                  width: 30px;
+                  height: 30px;
+                  line-height: 28px;
+                  font-size: 22px;
+                  color: rgba(154, 127, 130, 1);
+                  &:hover {
+                    border-color: #e5c2c2;
+                  }
+                }
+              }
+              .item-config1 {
+                float: left;
+                p {
+                  margin-top: 20px;
+                  font-size:14px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:19px;
+                }
+                .sec-title {
+                  font-size: 14px;
+                  color: rgba(154, 127, 130, 1);
+                  line-height: 19px;
+                }
+                ul {
+                  margin-top: 10px;
+                  margin-bottom: 20px;
+                  li {
+                    position: relative;
+                    width: 95px;
+                    height: 35px;
+                    background: rgba(255, 255, 255, 1);
+                    border-radius: 2px;
+                    border: 1px solid rgba(229, 194, 194, 1);
+                    margin-right: 12px;
+                    font-size: 14px;
+                    color: rgba(75, 60, 61, 1);
+                    line-height: 33px;
+                    text-align: center;
+                    cursor: pointer;
+                    &.selected {
+                      background:linear-gradient(90deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+                      color: #333333;
+                      i {
+                        color: #fff;
+                        background:rgba(255,118,59,1);
+                      }
+                    }
+                    i {
+                        display: inline-block;
+                        position: absolute;
+                        top: -11px;
+                        right: -5px;
+                        color: #fff;
+                        font-size: 12px;
+                        line-height: 18px;
+                        font-style: normal;
+                        width:28px;
+                        height:18px;
+                        background: #ff763b;
+                        border-radius: 2px;
+                    }
+                  }
+                  .selected {
+                    color: #ff3000;
+                  }
+                }
+              }
+              .cash {
+                float: left; 
+                p {
+                  color:rgba(255,118,59,1);
+                  font-size: 24px;
+                  font-weight: bold;
+                  span {
+                    font-size: 14px;
+                    font-weight: normal;
+                  }
+                }
+                button {
+                  padding: 0;
+                  margin-top: 20px;
+                  width: 408px;
+                  height: 40px;
+                  border-radius: 2px;
+                  font-size: 18px;
+                  background:linear-gradient(90deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+                  color: #333333;
+                  border: none;
+                  &:hover {
+                    border: none;
+                  }
+                }
+              }
+          }
+        }
+      }
+
+      .storage{
+        height: 340px;
+        width: 100%;
+        margin-top: 60px;
+        .top{
+          background: url(../../../assets/img/active/blackactive/头部.png) center no-repeat;
+          width: 100%;
+          height: 80px;
+          > p {
+            margin: 0 0 0 50px;
+            > span:nth-child(1){
+              font-size:22px;
+              font-family:MicrosoftYaHei-Bold;
+              font-weight:bold;
+              color:rgba(34,36,61,1);
+              line-height:80px;
+            }
+            > span:nth-child(2){
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(34,36,61,1);
+              line-height:80px;
+              margin-left: 20px;
+            }
+          }
+        }
+        .bottom{
+          width: 100%;
+          height: 260px;
+          background:rgba(55,59,89,1);
+          box-shadow:0px 9px 20px -6px rgba(16,17,26,0.5);
+          border:1px solid rgba(255,208,140,1);
+          .left{
+            width: 640px;
+            height: 100%;
+            float: left;
+            .leftpad{
+              padding: 30px 0 26px 50px;
+              > p:nth-child(1){
+                > span:nth-child(1){
+                  font-size:18px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:24px;
+                }
+              }
+              .selectseries{
+                margin: 20px 0;
+                > span{
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(178,178,178,1);
+                  line-height:35px;
+                  float: left;
+                }
+                ul {
+                  float: left;
+                  li {
+                    position: relative;
+                    width: 110px;
+                    height: 35px;
+                    background:rgba(255,255,255,1);
+                    border-radius:2px;
+                    border:1px solid rgba(255,208,140,1);
+                    margin-right: 12px;
+                    font-size: 14px;
+                    color: #4B3C3D;
+                    line-height: 33px;
+                    text-align: center;
+                    cursor: pointer;
+                    &.selected {
+                      background:linear-gradient(90deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+                      color: #333333;
+                      i {
+                        color: #fff;
+                        background:rgba(255,118,59,1);
+                      }
+                    }
+                    i {
+                      display: inline-block;
+                      position: absolute;
+                      top: -11px;
+                      right: -5px;
+                      color: #fff;
+                      font-size: 12px;
+                      line-height: 18px;
+                      font-style: normal;
+                      width:47px;
+                      height:18px;
+                      background:rgba(255,118,59,1);
+                      border-radius:2px;
+                    }
+                  }
+                  .selected {
+                    color: #ff3000;
+                  }
+                }
+              }
+            }
+          }
+          .right{
+            width:558px;
+            height: 100%;
+            background:rgba(68,72,110,1);
+            float: right;
+            padding: 30px 65px 40px 80px;
+              .item-config1 {
+                float: left;
+                p {
+                  margin-top: 20px;
+                  font-size:14px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:19px;
+                }
+                .sec-title {
+                  font-size: 14px;
+                  color: rgba(154, 127, 130, 1);
+                  line-height: 19px;
+                }
+                ul {
+                  margin-top: 10px;
+                  margin-bottom: 20px;
+                  li {
+                    position: relative;
+                    width: 95px;
+                    height: 35px;
+                    background: rgba(255, 255, 255, 1);
+                    border-radius: 2px;
+                    border: 1px solid rgba(229, 194, 194, 1);
+                    margin-right: 12px;
+                    font-size: 14px;
+                    color: rgba(75, 60, 61, 1);
+                    line-height: 33px;
+                    text-align: center;
+                    cursor: pointer;
+                    &.selected {
+                      background:linear-gradient(90deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+                      color: #333333;
+                      i {
+                        color: #fff;
+                        background:rgba(255,118,59,1);
+                      }
+                    }
+                    i {
+                        display: inline-block;
+                        position: absolute;
+                        top: -11px;
+                        right: -5px;
+                        color: #fff;
+                        font-size: 12px;
+                        line-height: 18px;
+                        font-style: normal;
+                        width:28px;
+                        height:18px;
+                        background: #ff763b;
+                        border-radius: 2px;
+                    }
+                  }
+                  .selected {
+                    color: #ff3000;
+                  }
+                }
+              }
+              .cash {
+                float: left; 
+                p {
+                  color:rgba(255,118,59,1);
+                  font-size: 24px;
+                  font-weight: bold;
+                  span {
+                    font-size: 14px;
+                    font-weight: normal;
+                  }
+                }
+                button {
+                  padding: 0;
+                  margin-top: 20px;
+                  width: 408px;
+                  height: 40px;
+                  border-radius: 2px;
+                  font-size: 18px;
+                  background:linear-gradient(90deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+                  color: #333333;
+                  border: none;
+                  &:hover {
+                    border: none;
+                  }
+                }
+              }
           }
         }
       }
@@ -3095,20 +3796,17 @@
   }
 
   .product-member {
-    background: url(../../../assets/img/active/schoolSeason/schoolsenson_item_bg.png) center no-repeat;
+    
     .headline {
       div {
-        background: url(../../../assets/img/active/schoolSeason/schoolsenson_headline_1.png) center no-repeat;
+        background: url(../../../assets/img/active/blackactive/Group 21.png) center no-repeat;
       }
     }
     .main {
       width: 1200px;
       height: 499px;
-      background: rgba(255, 255, 255, 1);
-      border-radius: 20px;
-      border: 4px solid rgba(225, 33, 42, 1);
-      padding: 34px 27px;
       text-align: center;
+      margin-top: 80px;
       .container {
         margin-bottom: 40px;
         .item {
@@ -3166,7 +3864,7 @@
             color: rgba(154, 127, 130, 1);
             line-height: 24px;
             span {
-              color: #ff624b;
+              color:#FF763B;
             }
           }
         }
@@ -3177,9 +3875,10 @@
         height: 50px;
         line-height: 50px;
         font-size: 18px;
-        font-weight: bold;
-        color: rgba(255, 255, 255, 1);
-        background: url(../../../assets/img/active/schoolSeason/recharge_btn.png) center no-repeat;
+        color:rgba(51,51,51,1);
+        background:linear-gradient(128deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+        box-shadow:0px 3px 10px -10px rgba(33,34,51,0.92);
+        border-radius:4px;
       }
     }
   }
@@ -3685,6 +4384,6 @@
   }
 
   section:nth-of-type(even) {
-    background: #FEFBF4
+        background: #363854;
   }
 </style>
