@@ -89,15 +89,16 @@
                 </div>
                 <div class="host_content">
                   <div style="margin:10px 0;">
-                    <span class="label-title">选择区域：</span>
+                    <span class="label-title" v-if="item.servicetype == 'host'">选择区域：</span>
+                    <p class="label-title" style="margin:0 0 15px 0;line-height:26px;" v-if="item.servicetype != 'host'">选择区域：</p>
                     <Select v-model="item.zoneId" style="width:180px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-if="item.servicetype == 'host'">
                       <Option v-for="(item,index) in hostZoneList" :value="item.value" :key="index">{{ item.name }}</Option>
                     </Select>
-                    <Select v-model="item.zoneId" style="width:180px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-else>
+                    <Select v-model="item.zoneId" style="width:245px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-else>
                       <Option v-for="(item,index) in gpuZoneList" :value="item.value" :key="index">{{ item.name }}</Option>
                     </Select>
                   </div>
-                  <div>
+                  <div v-if="item.servicetype == 'host'">
                     <span class="label-title">选择系统：</span>
                     <Cascader :data="item.hostSystemList" v-model="item.system" style="width:180px;display: inline-block;" class="schoolseason-select"></Cascader>
                   </div>
@@ -141,7 +142,7 @@
           <div class="inlineright">
             <p>注册即可获赠10云币</p>
             <p>【可抵扣云电脑3小时使用时长】</p>
-            <Button type="warning" style="margin-top:16px;">立即预约</Button>
+            <Button type="warning" style="margin-top:16px;" @click="">立即预约</Button>
           </div>
           <div style="clear: both;"></div>
         </div>
@@ -176,9 +177,9 @@
                   <p class="selectseries">
                     <span>基础入门级：</span>
                     <ul class="flex" style="justify-content: flex-start;">
-                        <li v-for="(item3,index) in hostConfigListHot.basic" :key="index" @click="hostProductHot.cpuMemory=item3"
+                        <li v-for="(item3,index) in hostConfigListHot.basic" :key="index"  @click="getconfigureto(item3)"
                             :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
-                            <i>买1送1</i>
+                            <i v-if="item3.cpunum==2">买1送1</i>
                         </li>
                       </ul>
                       <div style="clear: both;"></div>
@@ -186,7 +187,7 @@
                   <p class="selectseries">
                     <span>标准进阶型：</span>
                       <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="hostProductHot.cpuMemory=item3"
+                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="getconfigureto(item3)"
                           :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
                           <i>买1送1</i>
                       </li>
@@ -196,7 +197,7 @@
                   <p class="selectseries" v-if="highEndLength">
                     <span>企业高配型：</span>
                     <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="hostProductHot.cpuMemory=item3"
+                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="getconfigureto(item3)"
                           :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
                           <i>买1送1</i>
                       </li>
@@ -233,8 +234,8 @@
                     <span>内存</span>
                   </div>
                   <div class="cloums">
-                    <span>8核</span>
-                    <span>16G</span>
+                    <span>{{nucleus}}核</span>
+                    <span>{{numG}}G</span>
                   </div>
                 </div>
                 <div class="give">
@@ -301,7 +302,7 @@
                     </p>
                     <p class="selectseries">
                       <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;margin-bottom:10px;">
-                          <li style="width:188px;margin-bottom:10px;" v-for="(item3,index) in gpuConfigListHot" :key="index" @click="gpuProductHot.cpuMemory=item3"
+                          <li style="width:188px;margin-bottom:10px;" v-for="(item3,index) in gpuConfigListHot" :key="index" @click="getconfiguretogpu(item3)"
                               :class="{selected:gpuProductHot.cpuMemory.cpunum==item3.cpunum&&gpuProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
                             <span>{{item3.gpusize}}*NVIDIA P100</span></li>
                         </ul>
@@ -331,8 +332,8 @@
                       <span>内存</span>
                     </div>
                     <div class="cloums">
-                      <span>8核</span>
-                      <span>16G</span>
+                      <span>{{nucleusgpu}}核</span>
+                      <span>{{numGgpu}}G</span>
                     </div>
                   </div>
                   <div class="give">
@@ -512,9 +513,9 @@
           </div>
           <div class="footer">
             <Button @click.stop="$LR({type: 'register'}),showModal.notLoginModal=false" class="regular-btn"
-                    style="width:66px;background:none;color:#FF624B;margin-right:10px;border:1px solid rgba(255,98,75,1);">注册
+                    style="width:120px;background:none;color:rgba(51,51,51,1);margin-right:10px;border:1px solid rgba(227,183,111,1);">注册
             </Button>
-            <Button @click.stop="$LR({type: 'login'}),showModal.notLoginModal=false" class="regular-btn" style="width:66px;"><span>登录</span></Button>
+            <Button @click.stop="$LR({type: 'login'}),showModal.notLoginModal=false" class="regular-btn" style="width:120px;"><span>登录</span></Button>
           </div>
         </div>
       </div>
@@ -645,11 +646,11 @@
             <i @click.stop="showModal.rule1=false"></i>
           </div>
           <div class="body">
-            <h3>1、活动时间：2019.3.1-2019.4.30</h3>
-            <h3>2、活动对象：没有使用过平台任何产品（域名产品除外）且完成实名认证的用户。</h3>
-            <h3>3、数量限制：秒杀产品每天数量有限，每天9点和14点开始秒杀，每款每个用户只限购买一台。</h3>
-            <h3>4、秒杀产品不可使用任何优惠券和现金券。</h3>
-            <h3>5、参与此活动购买的云产品不享有7天无理由退款。</h3>
+            <h3>1、活动时间：2019.5.25-2019.6.30，每天5场秒杀， 0点、9点、14点、18点、21点开抢。</h3>
+            <h3>2、活动对象：新用户指的是没有使用过平台任何产品（域名产品除外）、没有未支付订单且完成实名认证的用户。其他未特殊标明产品新老用户且完成实名认证均可参与。</h3>
+            <h3>3、数量限制：秒杀产品每天数量有限，每次秒杀限选一款，限购一次。新用户指定产品每款每个用户限购买一台。未特殊指定产品可秒杀多次，限额以后台配额限制为准（每个用户云服务器最多可拥有7台，如有特殊要求，可向销售申请）。</h3>
+            <h3>4、参与本次活动购买的产品不能进行退款。</h3>
+            <h3>5、购买时不可使用任何优惠券和现金券。</h3>
             <h3>6、活动最终解释权为新睿云所有。</h3>
           </div>
           <div class="footer">
@@ -669,16 +670,35 @@
             <i @click.stop="showModal.rule2=false"></i>
           </div>
           <div class="body">
-            <h3>1、活动时间：2019.3.1-2019.4.30</h3>
-            <h3>2、活动对象：平台已完成实名认证的新老用户</h3>
-            <h3>3、数量限制：云服务器产品每个用户限购7台，GPU云服务器限购2台，对象存储产品限购5款。</h3>
-            <h3>4、活动产品不可使用任何优惠券和现金券。</h3>
-            <h3>5、参与此活动购买的云产品不享有7天无理由退款。</h3>
+            <h3>1、活动时间：2019.5.14-2019.6.30</h3>
+            <h3>2、活动对象：平台已完成实名认证的新老用户。</h3>
+            <h3>3、数量限制：云服务器产品每个用户限购7台（若有更多需求，可向客服申请提高配额）</h3>
+            <h3>4、参与本次活动购买的产品不能进行退款。</h3>
+            <h3>5、购买时不可使用任何优惠券和现金券。</h3>
             <h3>6、活动最终解释权为新睿云所有。</h3>
           </div>
           <div class="footer">
             <div class="wraper">
               <Button @click.stop="showModal.rule2=false" class="regular-btn"><span>我知道了</span></Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!-- 开通会员弹窗 -->
+    <transition name="fade">
+      <div class="overlay" @click="showModal.OpenMembership=false" v-if="showModal.OpenMembership">
+        <div class="shipmodel" @click.stop="showModal.OpenMembership=true">
+          <div class="header">
+            <img src="../../../assets/img/active/blackactive/Path.png" @click.stop="showModal.OpenMembership=false">
+          </div>
+          <div class="body">
+            
+          </div>
+          <div class="footer">
+            <div class="wraper" @click.stop="showModal.OpenMembership=false">
+
             </div>
           </div>
         </div>
@@ -921,6 +941,10 @@
         }
       }
       return {
+        nucleus:'1',
+        numG:'1',
+        nucleusgpu:'16',
+        numGgpu:'64',
         tooltipStatus: true,
         selectVipGrade: '白银会员',
         highEndLength: '',
@@ -1324,7 +1348,8 @@
           paySuccessModal: false,
           payDefeatedModal: false,
           joinedActivity: false,
-          notNewcoustomer: false
+          notNewcoustomer: false,
+          OpenMembership:false
         },
         authFormValidate: {
           name: '',
@@ -1365,10 +1390,14 @@
       this.setTime()
       this.getUserVipLevel()
       this.getBalance()
+      this.TOmembership()
     },
     mounted() {
     },
     methods: {
+      TOmembership(){
+        this.showModal.OpenMembership=true
+      },
       recharge() {
         this.showModal.cashCoupon = false
         switch (this.zf) {
@@ -1533,10 +1562,16 @@
             var endTime = ''
             var limitTime = ''
             this.hour = now.getHours()
-            if (this.hour >= 9 && this.hour < 12) {
-              endTime = now.setHours(12, 0, 0, 0)
-            } else if (this.hour >= 14 && this.hour < 20) {
-              endTime = now.setHours(20, 0, 0, 0)
+            if (this.hour >= 0 && this.hour < 9) {
+              endTime = now.setHours(9, 0, 0, 0)
+            } else if (this.hour >= 9 && this.hour < 14) {
+              endTime = now.setHours(14, 0, 0, 0)
+            } else if (this.hour >= 14 && this.hour < 18) {
+              endTime = now.setHours(18, 0, 0, 0)
+            } else if (this.hour >= 18 && this.hour < 21) {
+              endTime = now.setHours(21, 0, 0, 0)
+            }else if (this.hour >= 21 && this.hour < 24) {
+              endTime = now.setHours(24, 0, 0, 0)
             }
             limitTime = endTime - startTime
             if (limitTime > 0) {
@@ -1591,7 +1626,7 @@
         let url = 'activity/getTemActInfoById.do'
         axios.get(url, {
           params: {
-            activityNum: '37'
+            activityNum: '45'
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
@@ -1602,7 +1637,7 @@
             // 默认选择区域
             this.discountProduct.forEach((item, index) => {
               // console.log(index)
-              if (index == 2) {
+              if (index == 3) {
                 item.zoneId = res.data.result.unoptionalRegion[0].value
               } else {
                 item.zoneId = res.data.result.optionalArea[0].value
@@ -1684,7 +1719,7 @@
           params: {
             zoneId: item.zoneId,
             vmConfigId: item.id,
-            month: index == 2 ? 1 : 12
+            month: index == 3 ? 1 : 12
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
@@ -1697,7 +1732,7 @@
       getSubsection(index) {
         axios.get('activity/getSubsection.do', {
           params: {
-            activityNum: '37',
+            activityNum: '45',
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
@@ -1899,6 +1934,16 @@
             this.gpuProductHot.cpuMemory = this.gpuConfigListHot[0]
           }
         })
+      },
+      getconfigureto(item3){
+        this.hostProductHot.cpuMemory=item3
+        this.nucleus=item3.cpunum
+        this.numG=item3.memory
+      },
+      getconfiguretogpu(item3){
+        this.gpuProductHot.cpuMemory=item3
+        this.nucleusgpu=item3.cpunum
+        this.numGgpu=item3.memory
       },
       // gpu打折提交订单
       productBuy_gpu() {
@@ -2373,67 +2418,11 @@
     }
     .main {
       margin: 30px 0 0 0;
-      // .tabs {
-      //   > div {
-      //     width: 400px;
-      //     height: 60px;
-      //     background: rgba(254, 162, 145, 1);
-      //     border-radius: 24px 24px 0px 0px;
-      //     font-size: 18px;
-      //     color: #fff;
-      //     text-align: center;
-      //     line-height: 60px;
-      //   }
-      //   .started {
-      //     background: rgba(225, 33, 42, 1);
-      //     position: relative;
-      //     &:after {
-      //       content: url("../../../assets/img/active/schoolSeason/seckill_killing_icon.png");
-      //       display: block;
-      //       position: absolute;
-      //       top: -31px;
-      //       right: -32px;
-      //     }
-      //   }
-      // }
       .box_bg_long {
-        //height: 627px;
-        //background: url(../../../assets/img/active/schoolSeason/seckill_bg.png) center top no-repeat;
       }
       .box_bg_short {
-        //height: 430px;
-        //background: url(../../../assets/img/active/schoolSeason/seckill_bg_short.png) center top no-repeat;
       }
       .box {
-        // .box_time {
-        //   > p {
-        //     margin: 20px 0;
-        //     text-align: center;
-        //     font-size: 18px;
-        //     font-weight: bold;
-        //     color: rgba(225, 33, 42, 1);
-        //     line-height: 24px;
-        //   }
-        //   .count-down {
-        //     text-align: center;
-        //     font-size: 14px;
-        //     font-family: AppleSystemUIFont;
-        //     color: rgba(65, 6, 12, 1);
-        //     span {
-        //       display: inline-block;
-        //       width: 71px;
-        //       height: 71px;
-        //       line-height: 71px;
-        //       background: url(../../../assets/img/active/schoolSeason/seckill_text_bg.png) center no-repeat;
-        //       font-size: 36px;
-        //       font-family: Arial-BoldMT;
-        //       color: rgba(255, 246, 232, 1);
-        //     }
-        //     i {
-        //       font-style: normal;
-        //     }
-        //   }
-        // }
         .w_host {
           margin-left: -10px;
           font-family: MicrosoftYaHei;
@@ -2839,7 +2828,7 @@
                 }
               }
               .cloums{
-               width: 100px;
+               width: 110px;
                 height: 26px;
                 margin: 0 0 11px -38px;
                 float: left;
@@ -3253,9 +3242,9 @@
                 }
               }
               .cloums{
-               width: 100px;
+               width: 110px;
                 height: 26px;
-                margin: 0 0 11px -38px;
+                margin: 0 0 11px -48px;
                 float: left;
                 > span:nth-child(1){
                   font-size:20px;
@@ -3636,162 +3625,6 @@
           }
         }
       }
-      // > div {
-      //   width: 1120px;
-      //   margin: 0 auto;
-      //   margin-top: 40px;
-      //   background: rgba(255, 255, 255, 1);
-      //   box-shadow: 0px 6px 20px -6px rgba(130, 77, 12, 0.49);
-      //   .config {
-      //     padding-left: 20px;
-      //   }
-      //   .right {
-      //     padding: 30px 20px;
-      //     background: rgba(254, 251, 244, 1);
-      //     width: 478px;
-      //     // height:558px;
-      //     .item-config,
-      //     .item-select {
-      //       p {
-      //         font-size: 14px;
-      //         margin-top: 10px;
-      //         margin-bottom: 10px;
-      //         line-height: 18px;
-      //       }
-      //       ul {
-      //         margin-bottom: 10px;
-      //       }
-      //       button {
-      //         padding: 0;
-      //         width: 30px;
-      //         height: 30px;
-      //         line-height: 28px;
-      //         font-size: 22px;
-      //         color: rgba(154, 127, 130, 1);
-      //         &:hover {
-      //           border-color: #e5c2c2;
-      //         }
-      //       }
-      //     }
-      //     .cash {
-      //       margin-top: 40px;
-      //       p {
-      //         color: rgba(248, 67, 46, 1);
-      //         font-size: 24px;
-      //         font-weight: bold;
-      //         span {
-      //           font-size: 14px;
-      //           font-weight: normal;
-      //         }
-      //       }
-      //       button {
-      //         padding: 0;
-      //         margin-top: 20px;
-      //         width: 438px;
-      //         height: 40px;
-      //         background: rgba(255, 98, 75, 1);
-      //         border-radius: 2px;
-      //         font-size: 18px;
-      //         color: rgba(255, 255, 255, 1);
-      //         border: none;
-      //         &:hover {
-      //           border: none;
-      //         }
-      //       }
-      //     }
-      //   }
-      //   .item-config {
-      //     p {
-      //       margin-top: 20px;
-      //       font-size: 18px;
-      //       color: rgba(65, 6, 12, 1);
-      //       line-height: 24px;
-      //     }
-      //     .sec-title {
-      //       font-size: 14px;
-      //       color: rgba(154, 127, 130, 1);
-      //       line-height: 19px;
-      //     }
-      //     ul {
-      //       margin-top: 10px;
-      //       margin-bottom: 20px;
-      //       li {
-      //         position: relative;
-      //         width: 102px;
-      //         height: 35px;
-      //         background: rgba(255, 255, 255, 1);
-      //         border-radius: 2px;
-      //         border: 1px solid rgba(229, 194, 194, 1);
-      //         margin-right: 10px;
-      //         font-size: 14px;
-      //         color: rgba(75, 60, 61, 1);
-      //         line-height: 33px;
-      //         text-align: center;
-      //         cursor: pointer;
-      //         &.selected {
-      //           background: rgba(225, 33, 42, 1);
-      //           color: #fff;
-      //           i {
-      //             color: rgba(255, 98, 75, 1);
-      //             background: #fff;
-      //           }
-      //         }
-      //         i {
-      //           display: inline-block;
-      //           position: absolute;
-      //           top: 1px;
-      //           right: 1px;
-      //           background: rgba(225, 33, 42, 1);
-      //           border-radius: 8px;
-      //           color: #fff;
-      //           padding: 0 4px;
-      //           font-size: 12px;
-      //           height: 16px;
-      //           line-height: 16px;
-      //           font-style: normal;
-      //         }
-      //       }
-      //       .selected {
-      //         color: #ff3000;
-      //         border-color: #ff3000;
-      //       }
-      //     }
-      //   }
-      // }
-      // .box-top-a {
-      //   height: 589px;
-      //   .left {
-      //     width: 642px;
-      //     .top {
-      //       height: 123px;
-      //       padding: 40px 20px;
-      //       color: #fff;
-      //       font-size: 18px;
-      //       p {
-      //         margin-bottom: 10px;
-      //         font-size: 22px;
-      //         font-weight: bold;
-      //       }
-      //     }
-      //   }
-      // }
-      // .host {
-      //   .top {
-      //     background: url("../../../assets/img/active/schoolSeason/hot_item_bg_1.png");
-      //   }
-      // }
-      // .gpu {
-      //   height: 440px;
-      //   .top {
-      //     background: url("../../../assets/img/active/schoolSeason/hot_item_bg_2.png");
-      //   }
-      // }
-      // .obj {
-      //   height: 371px;
-      //   .top {
-      //     background: url("../../../assets/img/active/schoolSeason/hot_item_bg_3.png");
-      //   }
-      // }
     }
   }
 
@@ -3979,9 +3812,8 @@
   .modal-btn1 {
     width: 134px;
     height: 36px;
-    background: #FF624B;
-    color: #fff;
-    border: 1px solid #FF624B;
+    background:linear-gradient(128deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
+    color:rgba(51,51,51,1);
   }
 
   .modal-btn1:hover {
@@ -4024,7 +3856,7 @@
         line-height: 60px;
         font-size: 18px;
         font-family: MicrosoftYaHei;
-        color: #FF624B;
+        color:rgba(255,208,140,1);
         position: relative;
         > i {
           color: rgba(255, 255, 255, 1);
@@ -4038,7 +3870,7 @@
             display: inline-block;
             height: 16px;
             width: 2px;
-            background: #ff3000;
+            background: rgba(255,208,140,1);
             transform: translateX(9px);
           }
           &:after {
@@ -4046,7 +3878,7 @@
             display: inline-block;
             height: 2px;
             width: 16px;
-            background: #ff3000;
+            background: rgba(255,208,140,1);
             transform: translateY(-7px);
           }
         }
@@ -4057,21 +3889,21 @@
   .regular-btn {
     width: 120px;
     height: 36px;
-    background: rgba(255, 98, 75, 1);
+    background:linear-gradient(128deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
     border: none;
     border-radius: 4px;
     font-size: 14px;
     text-align: center;
-    color: #fff;
+    color:rgba(51,51,51,1);
     &:hover {
-      background: rgb(253, 116, 95);
+      
     }
   }
 
   .regular-modal {
     width: 380px;
     .header {
-      background: url("../../../assets/img/active/schoolSeason/header_bg_short.png") no-repeat;
+      background:linear-gradient(90deg,rgba(12,12,27,1) 0%,rgba(34,36,61,1) 55%,rgba(12,12,27,1) 100%);
     }
     .body {
       margin: 20px 0;
@@ -4094,7 +3926,7 @@
     font-family: MicrosoftYaHei;
     width: 500px;
     > .header {
-      background: url("../../../assets/img/usercenter/icon_vip.png") no-repeat;
+      background:linear-gradient(90deg,rgba(12,12,27,1) 0%,rgba(34,36,61,1) 55%,rgba(12,12,27,1) 100%);
     }
     .body {
       padding: 20px;
@@ -4136,9 +3968,9 @@
   .activity-rule {
     width: 500px;
     > .header {
-      background: url("../../../assets/img/usercenter/icon_vip.png") no-repeat;
+      background:linear-gradient(90deg,rgba(12,12,27,1) 0%,rgba(34,36,61,1) 55%,rgba(12,12,27,1) 100%);
       span {
-        color: #FF624B;
+        color:rgba(255,208,140,1);
         font-size: 18px;
         line-height: 55px;
       }
@@ -4168,9 +4000,9 @@
   .modal5 {
     width: 500px;
     > .header {
-      background: url("../../../assets/img/usercenter/icon_vip.png") no-repeat;
+      background:linear-gradient(90deg,rgba(12,12,27,1) 0%,rgba(34,36,61,1) 55%,rgba(12,12,27,1) 100%);
       span {
-        color: #FF624B;
+        color:rgba(255,208,140,1);
         font-size: 18px;
         line-height: 55px;
       }
@@ -4227,7 +4059,7 @@
       width: 104px;
       div:first-child {
         padding: 20px;
-        background: #FFF1E0;
+        background:linear-gradient(180deg,rgba(249,239,184,1) 0%,rgba(227,183,111,1) 100%);
       }
       div:last-child {
         padding: 20px;
@@ -4380,6 +4212,33 @@
           }
         }
       }
+    }
+  }
+
+  .shipmodel{
+    background: url("../../../assets/img/active/blackactive/tanchuangall.png") no-repeat;
+    width: 520px;
+    height: 600px;
+    position: relative;
+    margin: 0 auto;
+    top: 15%;
+    .header{
+      background: none;
+       > img{
+         position: absolute;
+         right: 20px;
+         top: 20px;
+         cursor: pointer;
+       }
+    }
+    .wraper{
+      background: url("../../../assets/img/active/blackactive/tanchuangbtn.png") no-repeat;
+      width: 440px;
+      height: 80px;
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      cursor: pointer;
     }
   }
 
