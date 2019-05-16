@@ -563,7 +563,8 @@
         let id = sessionStorage.getItem('newId')
         let params = {
           id: id,
-          backgroundUrl: this.upload.photo
+          backgroundUrl: this.upload.photo,
+          status: '上传成功',
         }
         axios.post(url, params).then(res => {
           if (res.data.status === 1) {

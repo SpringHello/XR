@@ -269,7 +269,7 @@
             render: (h, params) => {
               const row = params.row;
               const color = row.status == "初审成功" ? "" : "#2A99F2";
-              const text = row.status == "初审中" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' || row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ? "暂无" : row.operation == '短信核验' ? '短信核验' : row.status == '管局审核成功' ? '暂无' : '暂无'
+              const text = row.status == "初审中" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' || row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ||row.status == '上传成功' ? "等待短信核验" : row.operation == '短信核验' ? '等待短信核验' : row.status == '管局审核成功' ? '暂无' : '暂无'
               return (
                 "div",
                   [
@@ -290,8 +290,8 @@
                               this.$router.push({path: "newRecordStepFour"});
                             } else if (row.status == "管局审核拒绝" || row.status == "初审拒绝") {
                               this.jumpRecord(row.id, row.webcompany_Id);
-                            } else if (row.operation == '短信核验') {
-                              window.open('https://www.xrcloud.net/documentInfo/qHwTxQKS7/qZhAC3dxb')
+                            } else if (row.status == '初审成功' ||row.status == '上传成功') {
+                              window.open('https://www.xrcloud.net/support_docs/qHwTxQKS7_qZhAC3dxb.html')
                             }
                           }
                         }
@@ -306,7 +306,7 @@
             title: "操作",
             key: "waitOperation",
             render: (h, params) => {
-              const hide = params.row.status == '初审中' || params.row.status == '初审拒绝' ? '' : 'none'
+              const hide = params.row.status == '初审中' || params.row.status == '初审拒绝' || params.row.status == '上传' ? '' : 'none'
               return (
                 "div",
                   [
