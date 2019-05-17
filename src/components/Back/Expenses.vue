@@ -355,12 +355,13 @@
       </p>
       <div class="universal-modal-content-flex">
         <p style="font-size:14px;color:rgba(102,102,102,1);">解冻条件已达到，可以解冻</p>
-        <RadioGroup v-model="unfreezeTo">
-          <Radio label="account" style="margin:20px 0px">
-            <span>解冻到原支付账户（需3-5个工作日）</span>
+        <RadioGroup v-model="unfreezeTo" class="unfreeze-type">
+          <Radio label="account" class="item" :class="{selsected: unfreezeTo == 'account'}">
+            <p>解冻到原支付账户</p>
+            <p>（需3-5个工作日）</p>
           </Radio>
-          <Radio label="yue" style="display: block;margin-bottom:20px">
-            <span>解冻到余额</span>
+          <Radio label="yue" class="item" :class="{selsected: unfreezeTo == 'yue'}">
+            <p>解冻到余额</p>
           </Radio>
         </RadioGroup>
         <div v-if="unfreezeTo=='account'" style="border-top:1px dashed rgba(151,151,151,1);padding: 20px 0 10px;">
@@ -4248,6 +4249,32 @@
       color: #4B3C3D;
       font-size: 14px;
       font-weight: bold;
+    }
+  }
+  .unfreeze-type{
+    display: flex;
+    margin: 20px 0;
+    .item{
+      padding: 6px;
+      width:163px;
+      background:rgba(247,247,247,0.45);
+      border-radius:4px;
+      border:1px solid rgba(233,233,233,1);
+      &.selsected{
+        background:rgba(66,151,242,0.05);
+        border:1px solid rgba(66,151,242,1);
+      }
+      >p{
+        font-size:14px;
+        font-family:MicrosoftYaHei;
+        color:rgba(51,51,51,1);
+        line-height:20px;
+        text-align: center;
+      }
+      p:nth-child(3){
+        font-size:12px;
+        color:rgba(255,98,75,1);
+      }
     }
   }
 </style>
