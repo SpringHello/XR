@@ -3651,7 +3651,7 @@
       userInfoUpdate() {
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result, authInfoPersion: response.data.authInfo_persion})
             this.getBalance()
             this.showMoneyByMonth()
             this.search()
@@ -3665,7 +3665,7 @@
         })
       },
       Cashwithdrawal() {
-        if (this.authInfo && this.authInfo.checkstatus == 0) {
+        if ((this.authInfo && this.authInfo.checkstatus == 0) ||(this.authInfoPersion && this.authInfoPersion.checkstatus == 0)) {
           this.$router.push('/cashwithdrawal')
         } else {
           this.showModal.nonrealName = true
@@ -3759,6 +3759,10 @@
         return this.$store.state.userInfo ? this.$store.state.userInfo : null
       }
       ,
+      // 新增的个人认证信息
+      authInfoPersion(){
+        return this.$store.state.authInfoPersion ? this.$store.state.authInfoPersion : null
+      },
       chargeDisabled() {
         return this.cashCouponForm.agreeStatus == false || this.cashCouponForm.upVipCost > this.balance
       }

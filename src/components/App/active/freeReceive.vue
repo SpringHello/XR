@@ -78,7 +78,10 @@
                 </Select>
               </div>
               <div class="item-price">
-                <p>押金：<span>¥{{config.cashPledge}}</span><span v-if="configIndex===0" style="font-size:14px">/月</span><span v-else style="font-size:14px">/年</span><span>原价：¥{{ config.originalCost}}</span></p>
+                <p>使用价格：<span>¥0</span><span v-if="configIndex===0" style="font-size:14px">/月</span><span v-else style="font-size:14px">/年</span><span></span></p>
+              </div>
+              <div class="item-price">
+                <p><span class="cash"> 押金：¥{{config.cashPledge}}</span><span v-if="configIndex===0" class="cash">/月</span><span v-else class="cash">/年</span><span>原价：¥{{ config.originalCost}}</span></p>
               </div>
               <div class="item-button">
                 <button @click="getHost(configIndex)" :disabled="flag" :class="{disabled: flag}">免费领取</button>
@@ -1496,6 +1499,11 @@
                 color:rgba(230,0,27,1);
                 >span{
                   font-size: 24px;
+                }
+                .cash{
+                  font-size:14px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(102,102,102,1);
                 }
                 span:last-child{
                   margin-left: 10px;

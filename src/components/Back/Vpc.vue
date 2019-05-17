@@ -9,7 +9,7 @@
         云网络 /
          <span>网络私有云VPC</span>
       </span>
-      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="(!auth)||auth && auth.checkstatus !== 0">您尚未进行实名认证，只有认证用户才能对外提供服务，
+      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
@@ -564,7 +564,7 @@
           {
             title: '源NAT',
             render: (h, object) => {
-              if (this.auth && this.auth.checkstatus == 0) {
+              if ((this.auth && this.auth.checkstatus == 0)|| (this.personAuth && this.personAuth.checkstatus == 0 )) {
                 if (object.row._status) {
                   let message = object.row._status == 1 ? '正在添加源NAT...' : '正在删除源NAT...'
                   return h('div', {}, [h('Spin', {
@@ -658,7 +658,7 @@
           {
             title: '目标IP',
             render: (h, object) => {
-              if (this.auth && this.auth.checkstatus == 0) {
+              if ((this.auth && this.auth.checkstatus == 0)|| (this.personAuth && this.personAuth.checkstatus == 0 )) {
                 var renderArray = []
                 if (object.row.prottransip) {
                   var prottransipArray = object.row.prottransip.split(',')
@@ -745,7 +745,7 @@
             title: '操作',
             width: 100,
             render: (h, object) => {
-              if (this.auth && this.auth.checkstatus == 0) {
+              if ((this.auth && this.auth.checkstatus == 0) || (this.personAuth && this.personAuth.checkstatus == 0 )) {
                 return h('span', {
                   style: {
                     color: '#2A99F2',
@@ -1173,7 +1173,7 @@
             })
           })
           this.natData = response.data.result
-          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
+          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0 && !this.personAuth)|| (this.auth && this.auth.checkstatus !== 0 && this.personAuth && this.personAuth.checkstatus !== 0)) {
             this.natData.forEach(nat => {
               nat._disabled = true
             })
@@ -1628,7 +1628,10 @@
       paneStatus: state => state.paneStatus,
       auth() {
         return this.$store.state.authInfo
-      }
+      },
+      personAuth(){
+        return this.$store.state.authInfoPersion
+      },
     }),
     watch: {
       renewalType(type) {

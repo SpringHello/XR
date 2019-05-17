@@ -58,6 +58,22 @@
         </div>
       </div>
     </div>
+      <Modal v-model="showModal.beforeDelete" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">是否撤销备案</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24" style="color: rgba(255,57,42,1)">若您是因为资料填写错误而准备撤销，您可以联系客服人员进行备案资料修改。当您确认放弃此次备案之时，再选择撤销备案。
+                        请注意，若您撤销备案之时已冻结押金，请您在解冻押金之后在申请撤销备案</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.beforeDelete = false">取消</Button>
+        <Button type="primary" :disabled="deleteRecordDisabled" @click="custom">确定{{ deleteRecordText}}</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -68,6 +84,10 @@
   export default {
     data() {
       return {
+        showModal:{
+          beforeDelete:false
+        },
+        recordId: '',
         //我的备案进度标签值
         tabValueCom: h => {
           return h("div", [
@@ -249,7 +269,7 @@
             render: (h, params) => {
               const row = params.row;
               const color = row.status == "初审成功" ? "" : "#2A99F2";
-              const text = row.status == "初审中" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' || row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ? "暂无" : row.operation == '短信核验' ? '短信核验' : row.status == '管局审核成功' ? '暂无' : '暂无'
+              const text = row.status == "初审中" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' || row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ||row.status == '上传成功' ? "等待短信核验" : row.operation == '短信核验' ? '等待短信核验' : row.status == '管局审核成功' ? '暂无' : '暂无'
               return (
                 "div",
                   [
@@ -270,8 +290,8 @@
                               this.$router.push({path: "newRecordStepFour"});
                             } else if (row.status == "管局审核拒绝" || row.status == "初审拒绝") {
                               this.jumpRecord(row.id, row.webcompany_Id);
-                            } else if (row.operation == '短信核验') {
-                              window.open('https://www.xrcloud.net/documentInfo/qHwTxQKS7/qZhAC3dxb')
+                            } else if (row.status == '初审成功' ||row.status == '上传成功') {
+                              window.open('https://www.xrcloud.net/support_docs/qHwTxQKS7_qZhAC3dxb.html')
                             }
                           }
                         }
@@ -286,7 +306,7 @@
             title: "操作",
             key: "waitOperation",
             render: (h, params) => {
-              const hide = params.row.status == '初审中' || params.row.status == '初审拒绝' ? '' : 'none'
+              const hide = params.row.status == '初审中' || params.row.status == '初审拒绝' || params.row.status == '上传' ? '' : 'none'
               return (
                 "div",
                   [
@@ -316,7 +336,22 @@
                         },
                         on: {
                           click: () => {
-                            this.custom(params.row.id);
+                            this.recordId = params.row.id
+                            this.deleteRecordDisabled = true
+                            this.deleteRecordText = '(5S)'
+                            let i = 5
+                            this.deleteRecordTimer = setInterval(() => {
+                            i -= 1
+                            if (i == 0) {
+                            window.clearInterval(this.deleteRecordTimer)
+                                 this.deleteRecordDisabled = false
+                                this.deleteRecordText = ''
+                                 } else {
+                                this.deleteRecordText = '(0' + i + 'S)'
+                                  this.deleteRecordDisabled = true
+                                     }
+                                }, 1000)
+                            this.showModal.beforeDelete = true
                           }
                         }
                       },
@@ -409,7 +444,10 @@
           }
         ],
         //已完成备案表格数据
-        recordTypeData: []
+        recordTypeData: [],
+        deleteRecordDisabled: true,
+        deleteRecordText:'(5S)',
+        deleteRecordTimer:null,
       }
     },
     created() {
@@ -479,24 +517,21 @@
         sessionStorage.setItem("webcompany_Id", webcompany_Id);
         this.$router.push({path: "RecordDetails"});
       },
-      custom(id) {
-        this.$Modal.confirm({
-          title: '是否撤销备案',
-          content: '<p>撤销备案此条备案信息会被删除</p>',
-          onOk: () => {
-            axios.post('recode/updateMainWeb.do', {
-              id: id,
+      custom() {
+        this.showModal.beforeDelete = false
+          axios.post('recode/updateMainWeb.do', {
+              id: this.recordId,
               status: '撤销备案'
             }).then(res => {
               if (res.data.status == 1) {
                 this.$Message.success('您的申请提交成功');
                 this.listMainWeb(0);
               } else {
-                this.$Message.error(res.data.message);
+                this.$message.info({
+                  content:res.data.message
+                });
               }
             })
-          }
-        });
       },
       toEntrance() {
         sessionStorage.setItem('back', 'back')

@@ -85,7 +85,7 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a href="https://www.xrcloud.net/login" rel="nofollow"><span>登录</span>
+                  <a href="https://zschj.xrcloud.net/login" rel="nofollow"><span>登录</span>
                   </a>
                 </div>
               </div>
@@ -93,7 +93,7 @@
             <li @mouseenter="ME(1,$event)" style="background:#387Dff;width:100px;text-align:center;">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rels">
-                  <a href="https://www.xrcloud.net/register" rel="nofollow"><span>注册</span>
+                  <a href="https://zschj.xrcloud.net/register" rel="nofollow"><span>注册</span>
                   </a>
                 </div>
               </div>
@@ -231,7 +231,7 @@
               <a href="javascript:void(0)" target="_blank" style="cursor: auto">增值电信业务经营许可证B1-20180455</a>
             </li>
             <li>
-              <a href="https://www.xrcloud.net/about/" rel="nofollow">关于我们</a>
+              <a href="https://zschj.xrcloud.net/about/" rel="nofollow">关于我们</a>
             </li>
           </ul>
         </div>
@@ -1562,7 +1562,7 @@
               color: rgba(102, 102, 102, 1);
               line-height: 16px;
               &.title {
-                color:rgba(255,98,75,1);
+                color:#333333;
                 font-size: 14px;
               }
             }

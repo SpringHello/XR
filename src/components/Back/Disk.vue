@@ -408,7 +408,7 @@
             ellipsis: true,
             render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : row.status === 6 ? '备份中' : ''
+              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '挂载中' : row.status === 4 ? '卸载中' : row.status === -2 ? '删除中' : row.status === 6 ? '备份中' : ''
               if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5 || row.status == 6) {
                 return h('div', {}, [h('Spin', {
                   style: {
@@ -1014,7 +1014,7 @@
               onOk: () => {
                 this.diskData.forEach(item => {
                   if (item.diskid == this.diskSelection.diskid) {
-                    item.status = 3
+                    item.status = -2
                   }
                 })
                 this.$http.get('Disk/delDisk.do', {
@@ -1222,7 +1222,7 @@
         this.showModal.mountDisk = false
         this.diskData.forEach(item => {
           if (item.diskid == this.operand.diskid) {
-            item.status = 5
+            item.status = 3
             item._disabled = true
           }
         })

@@ -401,30 +401,31 @@
         }
         return {}
       },
+      authInfoPersion(){
+        return $store.state.authInfoPersion ? $store.state.authInfoPersion : null
+      },
       // 认证状态
       auth() {
         return {
           // 未认证
-          'not-auth': (!this.authInfo) || (this.authInfo && this.authInfo.checkstatus != 0),
+          'not-auth': !this.authInfo,
           // 个人认证
-          'personal-icon': this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0,
+          'personal-icon': (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) || (this.authInfoPersion && this.authInfoPersion.authtype == 0 && this.authInfoPersion.checkstatus == 0&&this.authInfo&&this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1),
           // 企业认证
           'company-icon': this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0,
           // 企业认证中/失败
-          'company-authing': (this.authInfo&&this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2) || this.authInfo&&this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1
+          'company-authing': (this.authInfo&&this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2) 
         }
       },
       authText() {
-        if ((!this.authInfo) || (this.authInfo && this.authInfo.checkstatus != 0)) {
+        if (!this.authInfo) {
           return '未认证'
-        } else if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+        } else if ((this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0)||(this.authInfoPersion && this.authInfoPersion.authtype == 0 && this.authInfoPersion.checkstatus == 0&&this.authInfo&&this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1)) {
           return '个人认证'
         } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
           return '企业认证'
         } else if (this.authInfo&&this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2) {
           return '企业认证中'
-        } else if (this.authInfo&&this.authInfo.authtype == 1 && this.authInfo.checkstatus == 1) {
-          return '企业认证失败'
         }
       }
     },
