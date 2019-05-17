@@ -1278,9 +1278,9 @@
       }
       #foot-footer {
         .footer-top {
-          height: 340px;
+          // height: 340px;
           background-color: #434343;
-          padding-top: 46px;
+          padding: 46px 0 20px 0;
           .description {
             width: 1200px;
             margin: 0px auto;
