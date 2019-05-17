@@ -1,296 +1,179 @@
 <template>
+
   <div id="schoolseason">
-    <div class="banner">
-      <div class="wrap">
-        <div class="container flex-vertical-center">
-            <div class="bannerdiv">
-                <h1>酷/爽/到/底</h1>
-                <img class="bannerimg" src="../../../assets/img/active/blackactive/Ninetypercent.png" alt="一折秒杀">
-                <p>
-                    新睿云 云电脑惊喜上市 提前预约 抢先体验
-                </p>
-                <img class="bannerxian" src="../../../assets/img/active/blackactive/Rectangle 2 Copy.png" alt="一折秒杀线">
-            </div>
-            <!-- <span @click="roll(500)">立即购买</span> -->
-        </div>
+    <div class="active404" v-if="ActivityState=='2'">
+      <div id="wrapper">
+        <img src="../../../assets/img/active/blackactive/active404.png" class="imgg" />
+        <h1>活动已经结束咯，去活动中心看看其它活动吧！</h1>
+        <Button @click="$router.push('/activity/')" class="btn1">去活动中心</Button>
       </div>
     </div>
-    <section class="product-seckill">
-      <div class="wrap">
-          <div class="headline">
-          <div>
-            
-          </div>
-          <p>
-            爆品秒杀 先到先得 低至一折
-            <span class="rule" @click="showModal.rule1=true">活动规则</span>
-          </p>
-        </div>
-        <div class="daojishi">
-            <div class="daojisss">
-                <span class="daosapan">本场秒杀倒计时</span>
-                <div class="count-down">
-                    <span>{{h}}</span>
-                    <i>时</i>
-                    <span>{{m1}}</span>
-                    <span>{{m2}}</span>
-                    <i>分</i>
-                    <span>{{s1}}</span>
-                    <span>{{s2}}</span>
-                    <i>秒</i>
-                </div>
-            </div>
-        </div>
-        <div class="kaiqiang">
-            每天0点、9点、14点、18点、21点开抢
-        </div>
-        <!-- <div class="headline">
-          <div>
-            低配爆款主机限时疯抢
-          </div>
-          <p>
-            新用户专享 爆品秒杀 先到先得 低至一折
-            <span class="rule" @click="showModal.rule1=true">活动规则</span>
-          </p>
-        </div> -->
-        <div class="main">
-          <!-- <div class="tabs  flex" style="justify-content: center" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
-            <div :class="{started: hour >=9&&hour<12}">9:00~12:00</div>
-            <div :class="{started: hour >=14&&hour<20}">14:00~20:00</div>
-          </div> -->
-          <!-- <div class="tabs  flex" style="justify-content: center" v-else>
-            <div style="width:800px;background:#E1212A" v-if="hour >=12&&hour <14">下场秒杀时间14:00~20:00</div>
-            <div style="width:800px;background:#E1212A" v-else>下场秒杀时间9:00～12:00</div>
-          </div> -->
-          <div class="box" :class="[hour >=9&&hour<12 || hour >=14&&hour<20?'box_bg_long':'box_bg_short']">
-            <!-- <div class="box_time" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
-              <p>本场秒杀倒计时</p>
-              <div class="count-down">
-                <span>{{h}}</span>
-                <i>时</i>
-                <span>{{m1}}</span>
-                <span>{{m2}}</span>
-                <i>分</i>
-                <span>{{s1}}</span>
-                <span>{{s2}}</span>
-                <i>秒</i>
-              </div>
-            </div> -->
-            <div class="w_host">
-              <div v-for="(item,index) in discountProduct" :key="index">
-                <div class="host_title">
-                  <!-- <div class="rectangle">
-                    {{item.discount}}折
-                  </div> -->
-                  <p style="font-size:18px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(255,191,130,1);">{{item.servicetype == 'host' ? '云服务器' : '对象存储'}}</p>
-                  <p v-if="item.storage" class="config-text"><span>{{item.storage}}G</span>存储+<span>{{item.flow}}</span>下行流量</p>
-                  <p v-else class="config-text"><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.bandwith}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘</p>
-                    <img :src="item.imgright" alt="描述"> 
-                </div>
-                <div class="host_content">
-                  <div style="margin:10px 0;">
-                    <span class="label-title" v-if="item.servicetype == 'host'">选择区域：</span>
-                    <p class="label-title" style="margin:0 0 15px 0;line-height:26px;" v-if="item.servicetype != 'host'">选择区域：</p>
-                    <Select v-model="item.zoneId" style="width:180px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-if="item.servicetype == 'host'">
-                      <Option v-for="(item,index) in hostZoneList" :value="item.value" :key="index">{{ item.name }}</Option>
-                    </Select>
-                    <Select v-model="item.zoneId" style="width:245px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-else>
-                      <Option v-for="(item,index) in gpuZoneList" :value="item.value" :key="index">{{ item.name }}</Option>
-                    </Select>
-                  </div>
-                  <div v-if="item.servicetype == 'host'">
-                    <span class="label-title">选择系统：</span>
-                    <Cascader :data="item.hostSystemList" v-model="item.system" style="width:180px;display: inline-block;" class="schoolseason-select"></Cascader>
-                  </div>
-                  <div style="text-align:left;margin:20px 0 10px 0;">
-                    <span style="color:#FF763B;font-size:14px;">￥<span
-                      style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/{{item.timeType=='month'?'月':'年'}}</span>
-                  </div>
-                  <p style="text-decoration:line-through;margin:12px 0 20px 0;
-                    font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);">
-                        原价：{{item.originalPrice}}元/{{item.timeType=='month'?'月':'年'}}
+    <div v-if="ActivityState=='1'">
+      <div class="banner">
+        <div class="wrap">
+          <div class="container flex-vertical-center">
+              <div class="bannerdiv">
+                  <h1>酷/爽/到/底</h1>
+                  <img class="bannerimg" src="../../../assets/img/active/blackactive/Ninetypercent.png" alt="一折秒杀">
+                  <p>
+                      新睿云 云电脑惊喜上市 提前预约 抢先体验
                   </p>
-                  <Button class="host_button host_button_not" v-if="!(hour >=9&&hour<12||hour >=14&&hour<20)">暂未开始</Button>
-                  <Button class="host_button" :disabled="item.num=='100'" :class="{host_button_not:item.num=='100'}" @click="getDiskcountMv(item,index)" v-else>
-                    {{item.num!='100'?'立即抢购':'已抢完'}}
-                  </Button>
-                 <div class="progress">
-                    <Progress class="schoolseason-progress" :percent="item.num" hide-info/>
-                    <span v-if="hour >=9&&hour<12||hour >=14&&hour<20">已抢购{{item.num.toFixed(2)}}%</span>
-                    <span v-else>已抢购0%</span>
-                  </div>
-                </div>
+                  <img class="bannerxian" src="../../../assets/img/active/blackactive/Rectangle 2 Copy.png" alt="一折秒杀线">
               </div>
+              <!-- <span @click="roll(500)">立即购买</span> -->
+          </div>
+        </div>
+      </div>
+      <section class="product-seckill">
+        <div class="wrap">
+            <div class="headline">
+            <div>
+              
             </div>
-            <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(247,190,135,1);line-height:21px;margin-top:17px;">
-              温馨提示，秒杀产品不支持7天无理由退款；购买区域不同，价格会有差异，请确认之后再进行购买。
+            <p>
+              爆品秒杀 先到先得 低至一折
+              <span class="rule" @click="showModal.rule1=true">活动规则</span>
             </p>
           </div>
-        </div>
-      </div>
-    </section>
-    <section class="product-yuyue">
-      <div class="wrap">
-        <div class="inbox">
-          <div class="inlineheader">
-            <img src="../../../assets/img/active/blackactive/资源 18@2x.png">
+          <div class="daojishi">
+              <div class="daojisss">
+                  <span class="daosapan">本场秒杀倒计时</span>
+                  <div class="count-down">
+                      <span>{{h}}</span>
+                      <i>时</i>
+                      <span>{{m1}}</span>
+                      <span>{{m2}}</span>
+                      <i>分</i>
+                      <span>{{s1}}</span>
+                      <span>{{s2}}</span>
+                      <i>秒</i>
+                  </div>
+              </div>
+          </div>
+          <div class="kaiqiang">
+              每天0点、9点、14点、18点、21点开抢
+          </div>
+          <!-- <div class="headline">
             <div>
-              <p>云电脑抢先预约</p>
-              <p style="margin-top:5px;">注册送新手好礼</p>
+              低配爆款主机限时疯抢
             </div>
-          </div>
-          <div class="inlineright">
-            <p>注册即可获赠10云币</p>
-            <p>【可抵扣云电脑3小时使用时长】</p>
-            <Button type="warning" style="margin-top:16px;" @click="">立即预约</Button>
-          </div>
-          <div style="clear: both;"></div>
-        </div>
-      </div>
-    </section>
-    <section class="product-hot">
-      <div class="wrap">
-        <div class="headline">
-          <div>
-            
-          </div>
-          <p style="font-size:18px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:24px;">
-            中低高配云服务器年付低至三折，额外赠送一折爆款云服务器
-            <span class="rule" @click="showModal.rule2=true" style="color:#F5A623;text-decoration: underline;">活动规则</span>
-          </p>
-        </div>
-        <div class="main">
-          <div class="CloudServer">
-            <div class="top">
-              <p>
-                <span>云服务器特惠</span>
-                <span>指定规格产品买一送一！</span>
+            <p>
+              新用户专享 爆品秒杀 先到先得 低至一折
+              <span class="rule" @click="showModal.rule1=true">活动规则</span>
+            </p>
+          </div> -->
+          <div class="main">
+            <!-- <div class="tabs  flex" style="justify-content: center" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
+              <div :class="{started: hour >=9&&hour<12}">9:00~12:00</div>
+              <div :class="{started: hour >=14&&hour<20}">14:00~20:00</div>
+            </div> -->
+            <!-- <div class="tabs  flex" style="justify-content: center" v-else>
+              <div style="width:800px;background:#E1212A" v-if="hour >=12&&hour <14">下场秒杀时间14:00~20:00</div>
+              <div style="width:800px;background:#E1212A" v-else>下场秒杀时间9:00～12:00</div>
+            </div> -->
+            <div class="box">
+              <!-- <div class="box_time" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
+                <p>本场秒杀倒计时</p>
+                <div class="count-down">
+                  <span>{{h}}</span>
+                  <i>时</i>
+                  <span>{{m1}}</span>
+                  <span>{{m2}}</span>
+                  <i>分</i>
+                  <span>{{s1}}</span>
+                  <span>{{s2}}</span>
+                  <i>秒</i>
+                </div>
+              </div> -->
+              <div class="w_host">
+                <div v-for="(item,index) in discountProduct" :key="index">
+                  <div class="host_title">
+                    <!-- <div class="rectangle">
+                      {{item.discount}}折
+                    </div> -->
+                    <p style="font-size:18px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(255,191,130,1);">{{item.servicetype == 'host' ? '云服务器' : '对象存储'}}</p>
+                    <p v-if="item.storage" class="config-text"><span>{{item.storage}}G</span>存储+<span>{{item.flow}}</span>下行流量</p>
+                    <p v-else class="config-text"><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.bandwith}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘</p>
+                      <img :src="item.imgright" alt="描述"> 
+                  </div>
+                  <div class="host_content">
+                    <div style="margin:10px 0;">
+                      <span class="label-title" v-if="item.servicetype == 'host'">选择区域：</span>
+                      <p class="label-title" style="margin:0 0 15px 0;line-height:26px;" v-if="item.servicetype != 'host'">选择区域：</p>
+                      <Select v-model="item.zoneId" style="width:180px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-if="item.servicetype == 'host'">
+                        <Option v-for="(item,index) in hostZoneList" :value="item.value" :key="index">{{ item.name }}</Option>
+                      </Select>
+                      <Select v-model="item.zoneId" style="width:245px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-else>
+                        <Option v-for="(item,index) in gpuZoneList" :value="item.value" :key="index">{{ item.name }}</Option>
+                      </Select>
+                    </div>
+                    <div v-if="item.servicetype == 'host'">
+                      <span class="label-title">选择系统：</span>
+                      <Cascader :data="item.hostSystemList" v-model="item.system" style="width:180px;display: inline-block;" class="schoolseason-select"></Cascader>
+                    </div>
+                    <div style="text-align:left;margin:20px 0 10px 0;">
+                      <span style="color:#FF763B;font-size:14px;">￥<span
+                        style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/{{item.timeType=='month'?'月':'年'}}</span>
+                    </div>
+                    <p style="text-decoration:line-through;margin:12px 0 20px 0;
+                      font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);">
+                          原价：{{item.originalPrice}}元/{{item.timeType=='month'?'月':'年'}}
+                    </p>
+                    <Button class="host_button host_button_not" v-if="!(hour >=0&&hour<9||hour >=9&&hour<14||hour >=14&&hour<18||hour >=18&&hour<21||hour >=21&&hour<24)">暂未开始</Button>
+                    <Button class="host_button" :disabled="item.num=='100'" :class="{host_button_not:item.num=='100'}" @click="getDiskcountMv(item,index)" v-else>
+                      {{item.num!='100'?'立即抢购':'已抢完'}}
+                    </Button>
+                  <div class="progress">
+                      <Progress class="schoolseason-progress" :percent="item.num" hide-info/>
+                      <span v-if="hour >=0&&hour<9||hour >=9&&hour<14||hour >=14&&hour<18||hour >=18&&hour<21||hour >=21&&hour<24">已抢购{{item.num.toFixed(2)}}%</span>
+                      <span v-else>已抢购0%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(247,190,135,1);line-height:21px;margin-top:17px;">
+                温馨提示，秒杀产品不支持7天无理由退款；购买区域不同，价格会有差异，请确认之后再进行购买。
               </p>
             </div>
-            <div class="bottom">
-              <div class="left">
-                <div class="leftpad">
-                  <p>
-                    <span>配置选择</span>
-                    <span>（皆包含40G SSD系统盘）</span>
-                  </p>
-                  <p class="selectseries">
-                    <span>基础入门级：</span>
-                    <ul class="flex" style="justify-content: flex-start;">
-                        <li v-for="(item3,index) in hostConfigListHot.basic" :key="index"  @click="getconfigureto(item3)"
-                            :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
-                            <i v-if="item3.cpunum==2">买1送1</i>
-                        </li>
-                      </ul>
-                      <div style="clear: both;"></div>
-                  </p>
-                  <p class="selectseries">
-                    <span>标准进阶型：</span>
-                      <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="getconfigureto(item3)"
-                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
-                          <i>买1送1</i>
-                      </li>
-                    </ul>
-                      <div style="clear: both;"></div>
-                  </p>
-                  <p class="selectseries" v-if="highEndLength">
-                    <span>企业高配型：</span>
-                    <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="getconfigureto(item3)"
-                          :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
-                          <i>买1送1</i>
-                      </li>
-                    </ul>
-                      <div style="clear: both;"></div>
-                  </p>
-                  <div class="item-select">
-                    <p>带宽选择</p>
-                    <Select v-model="hostProductHot.bandwith" class="schoolseason-select" style="width:416px;">
-                      <Option v-for="(item3,index) in hostbandwithListHot" :value="item3" :key="index">{{item3}}M</option>
-                    </Select>
-                  </div>
-                  <div class="item-config">
-                    <p style="margin-bottom: 10px;">NVme SSD数据盘</p>
-                    <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in hostDisksizeListHot" :key="index" @click="hostProductHot.disksize=item3" :class="{selected:hostProductHot.disksize==item3}">
-                        {{item3}}G
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="item-select">
-                    <p>购买数量</p>
-                    <Button @click="hostProductHot.count--" :disabled="hostProductHot.count<=1" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-right:8px;">-</Button>
-                    <Input type="text" style="width:60px;" class="host-count schoolseason-select" v-model="hostProductHot.count" readonly></Input>
-                    <Button @click="hostProductHot.count++" :disabled="hostProductHot.count>=7" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-left:8px;">+</Button>
-                  </div>
-                </div>
-              </div>
-              <div class="right">
-                <div class="buy">
-                  <img src="../../../assets/img/active/blackactive/buy.png">
-                  <div class="displays">
-                    <span>CPU</span>
-                    <span>内存</span>
-                  </div>
-                  <div class="cloums">
-                    <span>{{nucleus}}核</span>
-                    <span>{{numG}}G</span>
-                  </div>
-                </div>
-                <div class="give">
-                  <img src="../../../assets/img/active/blackactive/give.png">
-                  <p class="givep1">
-                    <span style=" margin: 0 25px 0 21px;">CPU</span>
-                    <span>内存</span>
-                    <span style="margin: 0 35px 0 25px;">带宽</span>
-                    <span>系统盘</span>
-                  </p>
-                  <p class="givep2">
-                    <span style=" margin: 0 20px 0 17px;">2核</span>
-                    <span>4G</span>
-                    <span style="margin: 0 20px 0 20px;">2M</span>
-                    <span>40G <span style="font-size:12px;">SSD</span></span>
-                  </p>
-                </div>
-                <div class="item-config">
-                  <p style="margin-bottom: 10px;">区域选择</p>
-                  <Select v-model="hostProductHot.zoneId" class="schoolseason-select" style="width:416px;">
-                      <Option v-for="(item3,index) in hostZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
-                  </Select>
-                </div>
-                <div class="item-select">
-                  <p>系统选择</p>
-                  <Cascader :data="hostSystemListHot" v-model="hostProductHot.system" class="schoolseason-select"></Cascader>
-                </div>
-                <div class="item-config1">
-                  <p style="margin-bottom: 10px;">购买时长</p>
-                  <ul class="flex" style="justify-content: flex-start">
-                    <li v-for="(item3,index) in hostTimeListHot" :key="index" @click="hostProductHot.timeTimetype=item3"
-                        :class="{selected:hostProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'年'}}</span>
-                      <i>{{item3.discount}}折</i>
-                    </li>
-                  </ul>
-                </div>
-                <div class="cash">
-                  <p>
-                    <span>￥</span>{{(hostProductHot.price*hostProductHot.count).toFixed(2)}}<span>{{PriceHostHot}}</span>
-                    <span
-                      style="text-decoration:line-through;color:rgba(178,178,178,1);font-size:14px;margin-left:12px;">原价：￥{{(hostProductHot.originalPrice*hostProductHot.count).toFixed(2)}}元</span>
-                  </p>
-                  <Button @click="productBuy_host()">立即支付</Button>
-                </div>
-                <div style="clear: both;"></div>
+          </div>
+        </div>
+      </section>
+      <section class="product-yuyue">
+        <div class="wrap">
+          <div class="inbox">
+            <div class="inlineheader">
+              <img src="../../../assets/img/active/blackactive/资源 18@2x.png">
+              <div>
+                <p>云电脑抢先预约</p>
+                <p style="margin-top:5px;">注册送新手好礼</p>
               </div>
             </div>
+            <div class="inlineright">
+              <p>注册即可获赠10云币</p>
+              <p>【可抵扣云电脑3小时使用时长】</p>
+              <Button type="warning" style="margin-top:16px;" @click="showModal.CloudComputers=true">立即预约</Button>
+            </div>
+            <div style="clear: both;"></div>
           </div>
-
-          <div class="EfficientCloud">
+        </div>
+      </section>
+      <section class="product-hot">
+        <div class="wrap">
+          <div class="headline">
+            <div>
+              
+            </div>
+            <p style="font-size:18px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:24px;">
+              中低高配云服务器年付低至三折，额外赠送一折爆款云服务器
+              <span class="rule" @click="showModal.rule2=true" style="color:#F5A623;text-decoration: underline;">活动规则</span>
+            </p>
+          </div>
+          <div class="main">
+            <div class="CloudServer">
               <div class="top">
                 <p>
-                  <span>P100 GPU高效云服务器</span>
-                  <span>超高计算能力，行业最低，低至2折,更有买一送一超优惠活动</span>
-                  <img src="../../../assets/img/active/blackactive/Grouptwo.png" alt="两折GPU">
+                  <span>云服务器特惠</span>
+                  <span>指定规格产品买一送一！</span>
                 </p>
               </div>
               <div class="bottom">
@@ -298,29 +181,57 @@
                   <div class="leftpad">
                     <p>
                       <span>配置选择</span>
-                      <span>（皆包含128G SSD系统盘）</span>
+                      <span>（皆包含40G SSD系统盘）</span>
                     </p>
                     <p class="selectseries">
-                      <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;margin-bottom:10px;">
-                          <li style="width:188px;margin-bottom:10px;" v-for="(item3,index) in gpuConfigListHot" :key="index" @click="getconfiguretogpu(item3)"
-                              :class="{selected:gpuProductHot.cpuMemory.cpunum==item3.cpunum&&gpuProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
-                            <span>{{item3.gpusize}}*NVIDIA P100</span></li>
+                      <span>基础入门级：</span>
+                      <ul class="flex" style="justify-content: flex-start;">
+                          <li v-for="(item3,index) in hostConfigListHot.basic" :key="index"  @click="getconfigureto(item3)"
+                              :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                              <i v-if="item3.cpunum==2">买1送1</i>
+                          </li>
                         </ul>
                         <div style="clear: both;"></div>
                     </p>
-                    <div class="item-selecttt">
+                    <p class="selectseries">
+                      <span>标准进阶型：</span>
+                        <ul class="flex" style="justify-content: flex-start">
+                        <li v-for="(item3,index) in hostConfigListHot.standard" :key="index" @click="getconfigureto(item3)"
+                            :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                            <i>买1送1</i>
+                        </li>
+                      </ul>
+                        <div style="clear: both;"></div>
+                    </p>
+                    <p class="selectseries" v-if="highEndLength">
+                      <span>企业高配型：</span>
+                      <ul class="flex" style="justify-content: flex-start">
+                        <li v-for="(item3,index) in hostConfigListHot.highEnd" :key="index" @click="getconfigureto(item3)"
+                            :class="{selected:hostProductHot.cpuMemory.cpunum==item3.cpunum&&hostProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                            <i>买1送1</i>
+                        </li>
+                      </ul>
+                        <div style="clear: both;"></div>
+                    </p>
+                    <div class="item-select">
                       <p>带宽选择</p>
-                      <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;">
-                        <li v-for="(item3,index) in gpubandwithListHot" :key="index" @click="gpuProductHot.bandwith=item3" :class="{selected:gpuProductHot.bandwith==item3}">
-                          {{item3}}M
+                      <Select v-model="hostProductHot.bandwith" class="schoolseason-select" style="width:416px;">
+                        <Option v-for="(item3,index) in hostbandwithListHot" :value="item3" :key="index">{{item3}}M</option>
+                      </Select>
+                    </div>
+                    <div class="item-config">
+                      <p style="margin-bottom: 10px;">NVme SSD数据盘</p>
+                      <ul class="flex" style="justify-content: flex-start">
+                        <li v-for="(item3,index) in hostDisksizeListHot" :key="index" @click="hostProductHot.disksize=item3" :class="{selected:hostProductHot.disksize==item3}">
+                          {{item3}}G
                         </li>
                       </ul>
                     </div>
-                    <div class="item-selectnum">
+                    <div class="item-select">
                       <p>购买数量</p>
-                      <Button @click="gpuProductHot.count--" :disabled="gpuProductHot.count<=1" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-right:8px;">-</Button>
-                      <Input type="text" style="width:60px;" class="host-count schoolseason-select" v-model="gpuProductHot.count" readonly></Input>
-                      <Button @click="gpuProductHot.count++" :disabled="gpuProductHot.count>=2" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-left:8px;">+</Button>
+                      <Button @click="hostProductHot.count--" :disabled="hostProductHot.count<=1" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-right:8px;">-</Button>
+                      <Input type="text" style="width:60px;" class="host-count schoolseason-select" v-model="hostProductHot.count" readonly></Input>
+                      <Button @click="hostProductHot.count++" :disabled="hostProductHot.count>=7" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-left:8px;">+</Button>
                     </div>
                   </div>
                 </div>
@@ -332,8 +243,8 @@
                       <span>内存</span>
                     </div>
                     <div class="cloums">
-                      <span>{{nucleusgpu}}核</span>
-                      <span>{{numGgpu}}G</span>
+                      <span>{{nucleus}}核</span>
+                      <span>{{numG}}G</span>
                     </div>
                   </div>
                   <div class="give">
@@ -351,543 +262,705 @@
                       <span>40G <span style="font-size:12px;">SSD</span></span>
                     </p>
                   </div>
-                  <span class="givespan">赠送主机时长12个月</span>
                   <div class="item-config">
                     <p style="margin-bottom: 10px;">区域选择</p>
-                    <Select v-model="gpuProductHot.zoneId" class="schoolseason-select" style="width:416px;">
-                        <Option v-for="(item3,index) in gpuZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
+                    <Select v-model="hostProductHot.zoneId" class="schoolseason-select" style="width:416px;">
+                        <Option v-for="(item3,index) in hostZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
                     </Select>
                   </div>
                   <div class="item-select">
                     <p>系统选择</p>
-                    <Cascader :data="gpuSystemListHot" v-model="gpuProductHot.system" class="schoolseason-select"></Cascader>
+                    <Cascader :data="hostSystemListHot" v-model="hostProductHot.system" class="schoolseason-select"></Cascader>
                   </div>
                   <div class="item-config1">
                     <p style="margin-bottom: 10px;">购买时长</p>
                     <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in gpuTimeListHot" :key="index" @click="gpuProductHot.timeTimetype=item3"
-                          :class="{selected:gpuProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'天'}}</span>
+                      <li v-for="(item3,index) in hostTimeListHot" :key="index" @click="hostProductHot.timeTimetype=item3"
+                          :class="{selected:hostProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'年'}}</span>
                         <i>{{item3.discount}}折</i>
                       </li>
                     </ul>
                   </div>
                   <div class="cash">
                     <p>
-                      <span>￥</span>{{(gpuProductHot.price*gpuProductHot.count).toFixed(2)}}<span>{{PriceGpuHot}}</span>
+                      <span>￥</span>{{(hostProductHot.price*hostProductHot.count).toFixed(2)}}<span>{{PriceHostHot}}</span>
                       <span
-                        style="text-decoration:line-through;color:rgba(178,178,178,1);font-size:14px;margin-left:12px;">原价：￥{{(gpuProductHot.originalPrice*gpuProductHot.count).toFixed(2)}}元</span>
+                        style="text-decoration:line-through;color:rgba(178,178,178,1);font-size:14px;margin-left:12px;">原价：￥{{(hostProductHot.originalPrice*hostProductHot.count).toFixed(2)}}元</span>
                     </p>
-                    <Button @click="productBuy_gpu()">立即支付</Button>
+                    <Button @click="productBuy_host()">立即支付</Button>
                   </div>
                   <div style="clear: both;"></div>
                 </div>
               </div>
             </div>
 
-            <div class="storage">
-              <div class="top">
-                <p>
-                  <span>对象存储</span>
-                  <span>超大存储和流量，低至3折</span>
-                </p>
-              </div>
-              <div class="bottom">
-                <div class="left">
-                  <div class="leftpad">
-                    <p>
-                      <span>区域选择</span>
-                    </p>
-                    <p class="selectseries">
-                      <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;">
-                        <li v-for="(item3,index) in objZoneListHot" :key="index" @click="objProductHot.zoneId=item3.value" :class="{selected:objProductHot.zoneId==item3.value}">
-                          {{item3.name}}
-                        </li>
-                      </ul>
-                        <div style="clear: both;"></div>
-                    </p>
-                    <div class="selectseries">
-                      <p style="font-size:18px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:24px;margin-bottom:10px;">配置选择</p>
-                      <div>
+            <div class="EfficientCloud">
+                <div class="top">
+                  <p>
+                    <span>P100 GPU高效云服务器</span>
+                    <span>超高计算能力，行业最低，低至2折,更有买一送一超优惠活动</span>
+                    <img src="../../../assets/img/active/blackactive/Grouptwo.png" alt="两折GPU">
+                  </p>
+                </div>
+                <div class="bottom">
+                  <div class="left">
+                    <div class="leftpad">
+                      <p>
+                        <span>配置选择</span>
+                        <span>（皆包含128G SSD系统盘）</span>
+                      </p>
+                      <p class="selectseries">
+                        <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;margin-bottom:10px;">
+                            <li style="width:188px;margin-bottom:10px;" v-for="(item3,index) in gpuConfigListHot" :key="index" @click="getconfiguretogpu(item3)"
+                                :class="{selected:gpuProductHot.cpuMemory.cpunum==item3.cpunum&&gpuProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
+                              <span>{{item3.gpusize}}*NVIDIA P100</span></li>
+                          </ul>
+                          <div style="clear: both;"></div>
+                      </p>
+                      <div class="item-selecttt">
+                        <p>带宽选择</p>
                         <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;">
-                          <li style="width:180px;height:54px;" v-for="(item3,index) in objConfigListHot" :key="index" @click="objProductHot.cpuMemory=item3"
-                              :class="{selected:objProductHot.cpuMemory.label==item3.label}"><span>{{item3.label}}<span>{{item3.unit}}</span>存储</span> + <span>{{item3.label}}<span>{{item3.unit}}</span>内外网</span>
-                            <span style="display:block;">下行流量</span></li>
+                          <li v-for="(item3,index) in gpubandwithListHot" :key="index" @click="gpuProductHot.bandwith=item3" :class="{selected:gpuProductHot.bandwith==item3}">
+                            {{item3}}M
+                          </li>
                         </ul>
+                      </div>
+                      <div class="item-selectnum">
+                        <p>购买数量</p>
+                        <Button @click="gpuProductHot.count--" :disabled="gpuProductHot.count<=1" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-right:8px;">-</Button>
+                        <Input type="text" style="width:60px;" class="host-count schoolseason-select" v-model="gpuProductHot.count" readonly></Input>
+                        <Button @click="gpuProductHot.count++" :disabled="gpuProductHot.count>=2" style="background:rgba(255,255,255,1);border-radius:2px;border:1px solid rgba(255,208,140,1);margin-left:8px;">+</Button>
                       </div>
                     </div>
                   </div>
+                  <div class="right">
+                    <div class="buy">
+                      <img src="../../../assets/img/active/blackactive/buy.png">
+                      <div class="displays">
+                        <span>CPU</span>
+                        <span>内存</span>
+                      </div>
+                      <div class="cloums">
+                        <span>{{nucleusgpu}}核</span>
+                        <span>{{numGgpu}}G</span>
+                      </div>
+                    </div>
+                    <div class="give">
+                      <img src="../../../assets/img/active/blackactive/give.png">
+                      <p class="givep1">
+                        <span style=" margin: 0 25px 0 21px;">CPU</span>
+                        <span>内存</span>
+                        <span style="margin: 0 35px 0 25px;">带宽</span>
+                        <span>系统盘</span>
+                      </p>
+                      <p class="givep2">
+                        <span style=" margin: 0 20px 0 17px;">2核</span>
+                        <span>4G</span>
+                        <span style="margin: 0 20px 0 20px;">2M</span>
+                        <span>40G <span style="font-size:12px;">SSD</span></span>
+                      </p>
+                    </div>
+                    <span class="givespan">赠送主机时长12个月</span>
+                    <div class="item-config">
+                      <p style="margin-bottom: 10px;">区域选择</p>
+                      <Select v-model="gpuProductHot.zoneId" class="schoolseason-select" style="width:416px;">
+                          <Option v-for="(item3,index) in gpuZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
+                      </Select>
+                    </div>
+                    <div class="item-select">
+                      <p>系统选择</p>
+                      <Cascader :data="gpuSystemListHot" v-model="gpuProductHot.system" class="schoolseason-select"></Cascader>
+                    </div>
+                    <div class="item-config1">
+                      <p style="margin-bottom: 10px;">购买时长</p>
+                      <ul class="flex" style="justify-content: flex-start">
+                        <li v-for="(item3,index) in gpuTimeListHot" :key="index" @click="gpuProductHot.timeTimetype=item3"
+                            :class="{selected:gpuProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'天'}}</span>
+                          <i>{{item3.discount}}折</i>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="cash">
+                      <p>
+                        <span>￥</span>{{(gpuProductHot.price*gpuProductHot.count).toFixed(2)}}<span>{{PriceGpuHot}}</span>
+                        <span
+                          style="text-decoration:line-through;color:rgba(178,178,178,1);font-size:14px;margin-left:12px;">原价：￥{{(gpuProductHot.originalPrice*gpuProductHot.count).toFixed(2)}}元</span>
+                      </p>
+                      <Button @click="productBuy_gpu()">立即支付</Button>
+                    </div>
+                    <div style="clear: both;"></div>
+                  </div>
                 </div>
-                <div class="right">
-                  <div class="item-config1">
-                    <p style="margin-bottom: 10px;">购买时长</p>
-                    <ul class="flex" style="justify-content: flex-start">
-                      <li v-for="(item3,index) in objTimeListHot" :key="index" @click="objProductHot.timeTimetype=item3"
-                          :class="{selected:objProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'年'}}</span>
-                        <i>{{item3.discount}}折</i>
+              </div>
+
+              <div class="storage">
+                <div class="top">
+                  <p>
+                    <span>对象存储</span>
+                    <span>超大存储和流量，低至3折</span>
+                  </p>
+                </div>
+                <div class="bottom">
+                  <div class="left">
+                    <div class="leftpad">
+                      <p>
+                        <span>区域选择</span>
+                      </p>
+                      <p class="selectseries">
+                        <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;">
+                          <li v-for="(item3,index) in objZoneListHot" :key="index" @click="objProductHot.zoneId=item3.value" :class="{selected:objProductHot.zoneId==item3.value}">
+                            {{item3.name}}
+                          </li>
+                        </ul>
+                          <div style="clear: both;"></div>
+                      </p>
+                      <div class="selectseries">
+                        <p style="font-size:18px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:24px;margin-bottom:10px;">配置选择</p>
+                        <div>
+                          <ul class="flex" style="justify-content: flex-start;flex-wrap: wrap;">
+                            <li style="width:180px;height:54px;" v-for="(item3,index) in objConfigListHot" :key="index" @click="objProductHot.cpuMemory=item3"
+                                :class="{selected:objProductHot.cpuMemory.label==item3.label}"><span>{{item3.label}}<span>{{item3.unit}}</span>存储</span> + <span>{{item3.label}}<span>{{item3.unit}}</span>内外网</span>
+                              <span style="display:block;">下行流量</span></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="right">
+                    <div class="item-config1">
+                      <p style="margin-bottom: 10px;">购买时长</p>
+                      <ul class="flex" style="justify-content: flex-start">
+                        <li v-for="(item3,index) in objTimeListHot" :key="index" @click="objProductHot.timeTimetype=item3"
+                            :class="{selected:objProductHot.timeTimetype.value==item3.value}">{{item3.value}}<span>{{item3.type=='month'?'月':'年'}}</span>
+                          <i>{{item3.discount}}折</i>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="cash">
+                      <p>
+                        <span>￥</span>{{objProductHot.price}}<span>{{PriceobjHot}}</span>
+                        <span style="text-decoration:line-through;color:rgba(178,178,178,1);font-size:14px;margin-left:12px;">原价：￥{{objProductHot.originalPrice}}元</span>
+                      </p>
+                      <Button @click="productBuy_obj()">立即支付</Button>
+                    </div>
+                    <div style="clear: both;"></div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </section>
+      <section class="product-member">
+        <div class="wrap">
+          <div class="headline">
+            <div>
+            </div>
+            <p style="color:rgba(255,255,255,1);">
+              新睿云重磅推出会员制，成为会员可享相应折扣
+              <span class="rule" @click="getVipRule" style="color:#F5A623;text-decoration: underline;">活动规则</span>
+            </p>
+          </div>
+          <div class="main" style="background:none;" v-if="this.userInfo && this.userInfo.vipname">
+            <h3 style="font-size:32px;color:#FF392A;margin-bottom:30px;">恭喜您已成为{{userInfo.vipname}}！</h3>
+            <div class="container flex" style="justify-content: center;">
+              <div class="item" v-for="(item,index) in memberData" :key="index">
+                <div :style="{background:'url('+item.img+')'}" :class="item.class" v-if="userInfo.vipname==item.title" style="padding:0;padding-top:33px;">
+                  <div class="flex" style="justify-content: flex-start;align-items: center;margin-left: 60px;">
+                    <div>
+                      <img :src="item.imgDiamonds" alt="描述" style="margin-right:14px;">
+                    </div>
+                    <div>
+                      <p style="font-size:24px;">{{item.title}}</p>
+                      <p style="font-size:12px;line-height: 24px;">{{item.time1}}</p>
+                    </div>
+                  </div>
+                  <p style="text-align: center;"><span>{{item.discount}}</span>折</p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <span class="recharge-btn" style="cursor:pointer;" @click="$router.push('/memberInfo')">查看会员权益</span>
+              <!-- <span class="recharge-btn" @click="getVipList()" style="cursor:pointer">立即充值</span> -->
+              <span class="recharge-btn" v-if="userInfo.vipname!='铂金会员'" @click="$router.push('/recharge')" style="cursor:pointer;margin-left:40px;">立即充值</span>
+            </div>
+          </div>
+          <div class="main" v-else>
+            <div class="container flex">
+              <div class="item" v-for="(item,index) in memberData" :key="index">
+                <div :style="{background:'url('+item.img+')'}" :class="item.class">
+                  <p>{{item.title}}</p>
+                  <p><span>{{item.discount}}</span>折</p>
+                  <div class="flex" style="padding-right:37px">
+                    <span class="font-10px">{{item.time}}</span>
+                    <img :src="item.icon" alt="描述">
+                  </div>
+                </div>
+                <h3><i></i><span>{{item.title}}</span><i></i></h3>
+                <p class="des">24小时内充值
+                  <span>{{item.money1}}</span>
+                  或者一个自然年度内累计消费
+                  <span>{{item.money2}}</span>
+                  可享受平台<span>{{item.discount}}折</span></p>
+              </div>
+            </div>
+            <div>
+              <span class="recharge-btn" @click="getVipList()" style="cursor:pointer">立即充值</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- 登陆注册弹窗 -->
+      <transition name="fade">
+        <div class="overlay" @click.stop="showModal.notLoginModal=false" v-if="showModal.notLoginModal">
+          <div class="all-modal regular-modal" @click.stop="showModal.notLoginModal=true">
+            <div class="header">
+              <i @click.stop="showModal.notLoginModal=false"></i>
+              <span>温馨提示</span>
+            </div>
+            <div class="body">
+              <p>您还没有登录，请您登录/注册后再来购买吧</p>
+            </div>
+            <div class="footer">
+              <Button @click.stop="$LR({type: 'register'}),showModal.notLoginModal=false" class="regular-btn"
+                      style="width:120px;background:none;color:rgba(51,51,51,1);margin-right:10px;border:1px solid rgba(227,183,111,1);">注册
+              </Button>
+              <Button @click.stop="$LR({type: 'login'}),showModal.notLoginModal=false" class="regular-btn" style="width:120px;"><span>登录</span></Button>
+            </div>
+          </div>
+        </div>
+      </transition>
+      <!-- 弹窗提示(后端返回数据) -->
+      <transition name="fade">
+        <div class="overlay" @click.stop="showModal.regular=false" v-if="showModal.regular">
+          <div class="all-modal regular-modal" @click.stop="showModal.regular=true">
+            <div class="header">
+              <i @click.stop="showModal.regular=false"></i>
+              <span>温馨提示</span>
+            </div>
+            <div class="body">
+              <p v-html="posText"></p>
+            </div>
+            <div class="footer">
+              <Button @click.stop="showModal.regular=false" class="regular-btn">确定</Button>
+            </div>
+          </div>
+        </div>
+      </transition>
+      <!-- 不是新用户提示 -->
+      <transition name="fade">
+        <div class="overlay" @click.stop="showModal.notNewcoustomer=false" v-if="showModal.notNewcoustomer">
+          <div class="all-modal regular-modal" @click.stop="showModal.notNewcoustomer=true">
+            <div class="header">
+              <i @click.stop="showModal.notNewcoustomer=false"></i>
+              <span>抱歉</span>
+            </div>
+            <div class="body">
+              <p>您不符合参与秒杀活动的条件，去看看 <span @click.stop="rollDiscount(1400)">其他活动</span>吧</p>
+            </div>
+            <div class="footer">
+              <Button @click.stop="rollDiscount(1400)" class="regular-btn">查看其他活动</Button>
+            </div>
+          </div>
+        </div>
+      </transition>
+      <!-- 曾参加过秒杀活动 -->
+      <transition name="fade">
+        <div class="overlay" @click.stop="showModal.joinedActivity=false" v-if="showModal.joinedActivity">
+          <div class="all-modal regular-modal" @click.stop="showModal.joinedActivity=true">
+            <div class="header">
+              <i @click.stop="showModal.joinedActivity=false"></i>
+              <span>抱歉</span>
+            </div>
+            <div class="body">
+              <p>您不符合参与秒杀活动的条件，去看看 <span @click.stop="$router.push('/activity/')">其他活动</span>吧</p>
+            </div>
+            <div class="footer">
+              <Button @click.stop="$router.push('/activity/')" class="regular-btn">查看其他活动</Button>
+            </div>
+          </div>
+        </div>
+      </transition>
+      <!-- 实名认证弹窗 -->
+      <transition name="fade">
+        <div class="overlay" @click.stop="showModal.authModal=false" v-if="showModal.authModal">
+          <div class="all-modal auth-modal" @click.stop="showModal.authModal=true">
+            <div class="header">
+              <i @click.stop="showModal.authModal=false"></i>
+              <span>实名认证</span>
+            </div>
+            <div class="body">
+              <p class="reminder">
+                根据国家规定，使用公共互联网需进行 <span>实名认证</span>
+              </p>
+              <Form ref="authForm" :model="authFormValidate" :rules="authFormRuleValidate" :label-width="0" class="ss-anth-modal">
+                <FormItem prop="name">
+                  <span class="label">真实姓名</span>
+                  <Input v-model="authFormValidate.name" placeholder=" 请输入您的真实姓名" size="large" style="width:300px;"></Input>
+                </FormItem>
+                <FormItem prop="personId">
+                  <span class="label">身份证号</span>
+                  <Input v-model="authFormValidate.personId" placeholder=" 请输入您的身份证号" size="large" style="width:300px;"></Input>
+                </FormItem>
+                <FormItem prop="pictureCode">
+                  <span class="label">图形验证码</span>
+                  <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:200px;">
+                  </Input>
+                  <img :src="imgSrc" style="height:33px;"
+                      @click="imgSrc=`https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                </FormItem>
+                <FormItem prop="tel">
+                  <span class="label">手机号码</span>
+                  <Input v-model="authFormValidate.tel" placeholder=" 请输入您的手机号码" style="width:200px;" size="large"></Input>
+                </FormItem>
+                <FormItem prop="vailCode">
+                  <span class="label">验证码</span>
+                  <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" style="width:200px;" size="large"></Input>
+                  <Button type="text" @click="getVerificationCode" class="regular-btn" :class="{disabled:authFormValidate.sendCodeText!='获取验证码'}" style="width:109px;"
+                          :disabled="authFormValidate.sendCodeText!='获取验证码'">
+                    {{authFormValidate.sendCodeText}}
+                  </Button>
+                </FormItem>
+              </Form>
+              <div class="footer">
+                <Button @click.stop="qucklyAuth" class="regular-btn" style="width:134px;">确认信息并提交</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+      <!-- 实名认证失败提示 -->
+      <transition name="fade">
+        <div class="overlay" @click.stop="showModal.authErrorModal=false" v-if="showModal.authErrorModal">
+          <div class="all-modal regular-modal" @click.stop="showModal.authErrorModal=true">
+            <div class="header">
+              <i @click.stop="showModal.authErrorModal=false"></i>
+              <span>温馨提示</span>
+            </div>
+            <div class="body">
+              <p>很遗憾！您未通过快速实名认证审核！</p>
+              <p> 您也可以通过<span style="color:#FF624B;text-decoration:underline;cursor:pointer" @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
+            </div>
+            <div class="footer">
+              <Button @click.stop="showModal.authErrorModal=false" class="regular-btn"><span>确定</span></Button>
+            </div>
+          </div>
+        </div>
+      </transition>
+      <!-- 活动规则弹窗 -->
+      <transition name="fade">
+        <div class="overlay" @click="showModal.rule1=false" v-if="showModal.rule1">
+          <div class="all-modal activity-rule" @click.stop="showModal.rule1=true">
+            <div class="header">
+              <span>秒杀活动规则</span>
+              <i @click.stop="showModal.rule1=false"></i>
+            </div>
+            <div class="body">
+              <h3>1、活动时间：2019.5.25-2019.6.30，每天5场秒杀， 0点、9点、14点、18点、21点开抢。</h3>
+              <h3>2、活动对象：新用户指的是没有使用过平台任何产品（域名产品除外）、没有未支付订单且完成实名认证的用户。其他未特殊标明产品新老用户且完成实名认证均可参与。</h3>
+              <h3>3、数量限制：秒杀产品每天数量有限，每次秒杀限选一款，限购一次。新用户指定产品每款每个用户限购买一台。未特殊指定产品可秒杀多次，限额以后台配额限制为准（每个用户云服务器最多可拥有7台，如有特殊要求，可向销售申请）。</h3>
+              <h3>4、参与本次活动购买的产品不能进行退款。</h3>
+              <h3>5、购买时不可使用任何优惠券和现金券。</h3>
+              <h3>6、活动最终解释权为新睿云所有。</h3>
+            </div>
+            <div class="footer">
+              <div class="wraper">
+                <Button @click.stop="showModal.rule1=false" class="regular-btn"><span>我知道了</span></Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+      <!-- 秒杀活动规则 -->
+      <transition name="fade">
+        <div class="overlay" @click="showModal.rule2=false" v-if="showModal.rule2">
+          <div class="all-modal activity-rule" @click.stop="showModal.rule2=true">
+            <div class="header">
+              <span>活动规则</span>
+              <i @click.stop="showModal.rule2=false"></i>
+            </div>
+            <div class="body">
+              <h3>1、活动时间：2019.5.14-2019.6.30</h3>
+              <h3>2、活动对象：平台已完成实名认证的新老用户。</h3>
+              <h3>3、数量限制：云服务器产品每个用户限购7台（若有更多需求，可向客服申请提高配额）</h3>
+              <h3>4、参与本次活动购买的产品不能进行退款。</h3>
+              <h3>5、购买时不可使用任何优惠券和现金券。</h3>
+              <h3>6、活动最终解释权为新睿云所有。</h3>
+            </div>
+            <div class="footer">
+              <div class="wraper">
+                <Button @click.stop="showModal.rule2=false" class="regular-btn"><span>我知道了</span></Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- 开通会员弹窗 -->
+      <transition name="fade">
+        <div class="overlay" @click="showModal.OpenMembership=false" v-if="showModal.OpenMembership">
+          <div class="shipmodel" @click.stop="showModal.OpenMembership=true">
+            <div class="header">
+              <img src="../../../assets/img/active/blackactive/Path.png" @click.stop="showModal.OpenMembership=false">
+            </div>
+            <div class="body">
+                
+            </div>
+            <div class="footer">
+              <div class="wraper" @click.stop="OpenMembershipscroll">
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- 预约云电脑弹窗 -->
+      <transition name="fade">
+        <div class="overlay" @click="showModal.CloudComputers=false" v-if="showModal.CloudComputers">
+          <div class="CloudComputers" @click.stop="showModal.CloudComputers=true">
+            <div class="header">
+              <img src="../../../assets/img/active/blackactive/quxiao.png" @click.stop="showModal.CloudComputers=false">
+            </div>
+            <div class="body">
+              <img src="../../../assets/img/active/blackactive/yuyue.png">
+              <p>预约新睿云电脑</p>
+              <div>新睿云重磅推出云电脑服务，您可以通过新睿云电脑APP、PC客户端、TV客户端等系统以较低价格享受顶级PC配置带来的魅力，可用于大型游戏、视频、模型渲染、移动办公等场景。</div>
+            </div>
+            <div class="footer">
+              <div class="wraper">
+                <Button type="primary" @click.stop="showModal.CloudComputers=false">确认预约</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- 预约云电脑成功弹窗 -->
+      <transition name="fade">
+        <div class="overlay" @click="showModal.CloudComputersSuccess=false" v-if="showModal.CloudComputersSuccess">
+          <div class="CloudComputers" @click.stop="showModal.CloudComputersSuccess=true">
+            <div class="header">
+              <img src="../../../assets/img/active/blackactive/quxiao.png" @click.stop="showModal.CloudComputersSuccess=false">
+            </div>
+            <div class="body">
+              <img src="../../../assets/img/active/blackactive/yuyuechengg.png">
+              <p>恭喜您！预约成功！</p>
+              <div>新睿云云电脑上线之后您可以直接通过此账号登录，并免费获得10个云币，可免费体验三小时使用时长。</div>
+            </div>
+            <div class="footer">
+              <div class="wraper">
+                <Button type="primary" @click.stop="showModal.CloudComputersSuccess=false">确认</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- 预约云电脑失败弹窗 -->
+      <transition name="fade">
+        <div class="overlay" @click="showModal.CloudComputersfail=false" v-if="showModal.CloudComputersfail">
+          <div class="CloudComputers" @click.stop="showModal.CloudComputersfail=true">
+            <div class="header">
+              <img src="../../../assets/img/active/blackactive/quxiao.png" @click.stop="showModal.CloudComputersfail=false">
+            </div>
+            <div class="body">
+              <img src="../../../assets/img/active/blackactive/yuyueshibai.png">
+              <p>抱歉，预约失败</p>
+              <div style="text-align: center;">请点击预约按钮重试</div>
+            </div>
+            <div class="footer">
+              <div class="wraper">
+                <Button type="primary" @click.stop="showModal.CloudComputersfail=false">预约新睿云云游</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+
+      <!-- 会员规则弹窗 -->
+      <transition name="fade">
+        <div class="overlay" style="z-index:2000" v-if="showModal.vipRuleModal" @click.stop="showModal.vipRuleModal=false">
+          <div class="all-modal modal5" @click.stop="showModal.vipRuleModal=true">
+            <div class="header">
+              <span>会员制规则</span>
+              <i @click.stop="showModal.vipRuleModal=false"></i>
+            </div>
+            <div class="body">
+              <div class="body_hide" ref='viewBox'>
+                <div style="height:1138px;">
+                  <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
+                  <nav>
+                    <ul class="nav_list">
+                      <li class="nav_item" v-for="(item,index) in vipRule" :key="index">
+                        <div>
+                          {{item.title}}
+                        </div>
+                        <div>
+                          {{item.trOne}}
+                        </div>
+                        <div>
+                          {{item.trTwo}}
+                        </div>
+                        <div>
+                          {{item.trThree}}
+                        </div>
                       </li>
                     </ul>
+                  </nav>
+                  <div class="word_style">
+                    <h3>通过一次性充值（24小时内累计充值金额）或者上个自然年度（每年1月1日至12月31日）累计消费(订单支付成功七日后)的金额判定不同的会员级别，会员级别不同消费时可享受相应的折扣优惠。</h3>
+                    <h3><span>2、会员退货退款</span>：累计消费成为会员的客户，因为消费不涉及会员级别的更改，享受平台正常的退货退款流程。 </h3>
+                    <h3 style="color:#FF624B;">
+                      充值成为会员的用户，会员充值一定金额后，对应会员级别的最低充值额度（如白银会员1万元、黄金会员5万元、铂金会员15万元）经会员同意后单独放入特定账户，优先消费，不可自动提取，以保证会员资格。若强制要求提现此部分金额，则意味会员主动取消会员资格。则之前购买产品均按折扣之前的价格扣除对应金额后方可提现。不足部分平台保留追补权利。 </h3>
+                    <h3><span>3、会员折扣范围：</span>1. 包括平台自有云产品（域名、SSL证书等第三方平台产品除外），参与活动产品购买时可享受折上折（押金活动除外）。 </h3>
+                    <h3><span>4、会员权益有效期</span>：充值或者上个自然年度累计消费达到一定金额即可立即成为会员，会员有效期从会员权益生效之日起至第三年的1月17日。比如2009年7月31日充值1万元或者2009年1月1日至7月31日期间累计消费达到5万元则成为白银会员，有效期至2011年1月17日。 </h3>
+                    <h3><span>5、会员其他福利</span>：会员还可享受平台新品免费试用、问题优先解决、免费技术咨询、生日和节日礼品、平台产品不定时赠送等福利。 </h3>
+                    <h3><span>6、协议声明</span>：新睿云平台对于此会员制规则拥有最终解释权，其他未尽事项平台保留最终解释权力。若发现以不正当手段成为会员的用户，我们有资格取消或者封禁会员资格。</h3>
+                    <h3>
+                      新睿云有权根据政府法律法规、技术及行业实践、市场行情等变化修改和（或）补充本协议的条款和条件，修改后的条款应公示于新睿云服务网站上，并于公示即时生效。若您在本协议条款内容变更公告后继续使用云服务的，表示您已充分阅读、理解并接受修改后的协议内容，也将遵循修改后的条款内容使用云服务；若您不同意修改后的服务条款，您应立即停止使用云服务</h3>
+                    <h3><span>会员权益发生改变的情形</span></h3>
+                    <h3><span>会员保级</span>：会员达到会员有效期后，若有效期内达到任何会员条件，比如充值一定金额或者上一自然年度累计消费达到一定金额，则会员权益相应保留并延期。 </h3>
+                    <h3><span>会员升级</span>：某一级别的会员在会员有效期内通过充值或者累计消费后达到更高级别后，以最高级别为准，且会员有效期相应延长。如累计消费达到白银会员后，一次性充值5万元则升级成为黄金会员，会员有效期从成为黄金会员那日开始计算，至第三年的1月17日。 </h3>
+                    <h3><span>会员降级</span>：会员达到会员有效期后，若有效期内未达到本级别会员条件，则会员权益重新计算。比如充值会员有效期内没有会员级别的充值行为，则有效期后会员权益失效。若有效期内，若会员资格费用发生提现吗，则会员权益立时失效。 </h3>
+                    <h3>
+                      比如客户一次性充值2.5万元，则1万元会员资格费用放到现金券账户（不可自动提现），剩余1.5万元放到可提现余额中（可随时提现），若客户要提现5000元，则优先提现1.5万元账户部分，直至此部分金额为0，不影响会员资格。若客户消费了5000元，则优先消费会员资格费用。现金券账户余额还剩下5000元（不考虑其他现金券金额）。若要提现此部分现金券余额，则会员资格会受到影响。客户需提交工单，且要回冲会员折扣费用，实际客户购买产品5000元/0.65=7692.31元
+                      则用户可提现金额不是现金券余额5000元，而是10000元-7692.31元=2307.69，则用户可实际提现2307.69元。 若用户消费了6500元，则6500元/0.65=10000元，则可提现金额为0.若客户消费大于6500元，则可提现金额依然为0，不足部分平台保留追补权利。</h3>
+                    <h3>若累计消费达到会员级别，则会员后续消费发生退货退款不影响会员资格。直到会员有效期时，会在第三年的1月1日-1月17日计算上一年度的累计消费，重新定义会员级别。若没有达到会员级别，且没有充值达到一定金额，则会员级别降级为相应级别。</h3>
+                    <h3>比如客户2009年1月1日至7月31日期间累计消费达到5万元，则自动成为白银会员；在2011年1月1日-1月17日期间，会重新计算2010年1月-12月31日期间的消费累计金额，如没达到1万元，则2011年1月17日降级为非会员用户。</h3>
                   </div>
-                  <div class="cash">
-                    <p>
-                      <span>￥</span>{{objProductHot.price}}<span>{{PriceobjHot}}</span>
-                      <span style="text-decoration:line-through;color:rgba(178,178,178,1);font-size:14px;margin-left:12px;">原价：￥{{objProductHot.originalPrice}}元</span>
-                    </p>
-                    <Button @click="productBuy_obj()">立即支付</Button>
-                  </div>
-                  <div style="clear: both;"></div>
                 </div>
               </div>
             </div>
+            <Tooltip content="请先阅读完会员规则" placement="top" style="margin-bottom:30px" :disabled="tooltipStatus">
+                <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true,selectedRule = false" :class="[disabledButton?'modal-btnDisbled':'modal-btn1']"
+                    :disabled='disabledButton'>
+                    <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
+            </Tooltip>
+          </div>
         </div>
-      </div>
-    </section>
-    <section class="product-member">
-      <div class="wrap">
-        <div class="headline">
+      </transition>
+      <!-- 余额转入现金券 -->
+      <Modal v-model="showModal.cashCoupon" :scrollable="true" :width="640">
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">充值</span>
+        </p>
+        <div class="universal-modal-content-flex">
+          <!-- <p class="cash-coupon-p">帐户余额：<span> ¥{{ balance }}</span> -->
+          <p class="cash-coupon-p">选择会员类型：</p>
+          <div class="vip-list">
+            <ul v-for="(item,index) in cashCouponForm.vipList" :key="index" :class="{selected: item.vipid == cashCouponForm.vipId,notallowed: index < cashCouponForm.vipLevel }"
+                @click="changeVipGrade(item,index)">
+              <li>{{ item.title }}</li>
+              <li class="cash-coupon-p"><span>{{item.money}}</span>元</li>
+              <li><img :src="item.url" alt="描述"/>{{ item.descriptStart}}<span>{{ item.discount * 10}}</span>{{item.descriptEnd}}</li>
+              <li>{{ item.descript2}}</li>
+            </ul>
+          </div>
+          <div class="beVip">
+            <Checkbox v-model="cashCouponForm.agreeStatus" :disabled="selectedRule"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
+              style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox>
+          </div>
+          <div style="margin-top: 20px;">
+            <Radio-group v-model="zf">
+              <Radio label="zfb" style="margin-right: 40px;">
+                <img src="../../../assets/img/recharge/pay-icon-ali.png"
+                    style="width: 104px;height: 40px;vertical-align: middle" alt="支付宝">
+              </Radio>
+              <Radio label="wx">
+                <img src="../../../assets/img/recharge/pay-icon-wx.png"
+                    style="width: 122px;height: 40px;vertical-align: middle" alt="微信">
+              </Radio>
+            </Radio-group>
+          </div>
+        </div>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="primary" @click="recharge" :disabled="chargeDisabled">确认充值</Button>
+        </div>
+      </Modal>
+      <!-- 支付宝支付提示弹窗 -->
+      <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+        <p slot="header" class="modal-header-border">
+          <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+          <span class="universal-modal-title">提示</span>
+        </p>
+        <div class="modal-content-s">
           <div>
+            <p class="lh24">您是否已经完成支付</p>
           </div>
-          <p style="color:rgba(255,255,255,1);">
-            新睿云重磅推出会员制，成为会员可享相应折扣
-            <span class="rule" @click="getVipRule" style="color:#F5A623;text-decoration: underline;">活动规则</span>
-          </p>
         </div>
-        <div class="main" style="background:none;" v-if="this.userInfo && this.userInfo.vipname">
-          <h3 style="font-size:32px;color:#FF392A;margin-bottom:30px;">恭喜您已成为{{userInfo.vipname}}！</h3>
-          <div class="container flex" style="justify-content: center;">
-            <div class="item" v-for="(item,index) in memberData" :key="index">
-              <div :style="{background:'url('+item.img+')'}" :class="item.class" v-if="userInfo.vipname==item.title" style="padding:0;padding-top:33px;">
-                <div class="flex" style="justify-content: flex-start;align-items: center;margin-left: 60px;">
-                  <div>
-                    <img :src="item.imgDiamonds" alt="描述" style="margin-right:14px;">
-                  </div>
-                  <div>
-                    <p style="font-size:24px;">{{item.title}}</p>
-                    <p style="font-size:12px;line-height: 24px;">{{item.time1}}</p>
-                  </div>
-                </div>
-                <p style="text-align: center;"><span>{{item.discount}}</span>折</p>
+        <p slot="footer" class="modal-footer-s">
+          <Button @click="showModal.rechargeHint = false;showModal.cashCoupon=true">支付遇到问题</Button>
+          <Button type="primary" @click="rechargeOk()">支付完成</Button>
+        </p>
+      </Modal>
+      <!-- 微信支付弹窗 -->
+      <Modal v-model="showModal.weChatRechargeModal" width="640" :scrollable="true" :closable="false" :mask-closable="false">
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">微信支付/充值</span>
+        </p>
+        <div class="universal-modal-content-flex">
+          <div class="modal-p">
+            <Steps :current="1">
+              <Step title="订单确认"></Step>
+              <Step title="支付"></Step>
+              <Step title="支付成功"></Step>
+            </Steps>
+            <div class="payInfo">
+              <div id="code">
+                <vue-q-art :config="config" v-if="config.value!=''"></vue-q-art>
+              </div>
+              <div class="pay-p">
+                <p>应付金额(元)：<span>{{input}}</span></p>
+                <p>请使用微信扫一扫，扫描二维码支付</p>
               </div>
             </div>
           </div>
-          <div>
-            <span class="recharge-btn" style="cursor:pointer;" @click="$router.push('/memberInfo')">查看会员权益</span>
-            <!-- <span class="recharge-btn" @click="getVipList()" style="cursor:pointer">立即充值</span> -->
-            <span class="recharge-btn" v-if="userInfo.vipname!='铂金会员'" @click="$router.push('/recharge')" style="cursor:pointer;margin-left:40px;">立即充值</span>
+        </div>
+        <div slot="footer" class="modal-footer-border">
+          <Button @click="isPay">已完成支付</Button>
+          <Button type="primary" @click="showModal.weChatRechargeModal = false,showModal.cashCoupon = true">更换支付方式</Button>
+        </div>
+      </Modal>
+      <!-- 支付充值失败 -->
+      <Modal v-model="showModal.payDefeatedModal" width="640" :scrollable="true" :closable="false" :mask-closable="false">
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">支付/充值</span>
+        </p>
+        <div class="universal-modal-content-flex">
+          <div class="modal-p">
+            <Steps :current="2" status="error">
+              <Step title="订单确认"></Step>
+              <Step title="支付"></Step>
+              <Step title="支付失败"></Step>
+            </Steps>
+            <p><img src="../../../assets/img/sceneInfo/si-defeated.png" alt="支付失败"/><span>抱歉，支付失败，请再次尝试！</span></p>
           </div>
         </div>
-        <div class="main" v-else>
-          <div class="container flex">
-            <div class="item" v-for="(item,index) in memberData" :key="index">
-              <div :style="{background:'url('+item.img+')'}" :class="item.class">
-                <p>{{item.title}}</p>
-                <p><span>{{item.discount}}</span>折</p>
-                <div class="flex" style="padding-right:37px">
-                  <span class="font-10px">{{item.time}}</span>
-                  <img :src="item.icon" alt="描述">
-                </div>
-              </div>
-              <h3><i></i><span>{{item.title}}</span><i></i></h3>
-              <p class="des">24小时内充值
-                <span>{{item.money1}}</span>
-                或者一个自然年度内累计消费
-                <span>{{item.money2}}</span>
-                可享受平台<span>{{item.discount}}折</span></p>
-            </div>
-          </div>
-          <div>
-            <span class="recharge-btn" @click="getVipList()" style="cursor:pointer">立即充值</span>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="primary" @click="showModal.payDefeatedModal = false,showModal.cashCoupon = true">再次支付</Button>
+        </div>
+      </Modal>
+      <!-- 支付充值成功 -->
+      <Modal v-model="showModal.paySuccessModal" width="640" :scrollable="true" :closable="false" :mask-closable="false">
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">支付/充值</span>
+        </p>
+        <div class="universal-modal-content-flex">
+          <div class="modal-p">
+            <Steps :current="2">
+              <Step title="订单确认"></Step>
+              <Step title="支付"></Step>
+              <Step title="支付成功"></Step>
+            </Steps>
+            <p><img src="../../../assets/img/sceneInfo/si-success.png" alt="支付成功"/><span>恭喜您成为{{selectVipGrade}}</span></p>
           </div>
         </div>
-      </div>
-    </section>
-    <!-- 登陆注册弹窗 -->
-    <transition name="fade">
-      <div class="overlay" @click.stop="showModal.notLoginModal=false" v-if="showModal.notLoginModal">
-        <div class="all-modal regular-modal" @click.stop="showModal.notLoginModal=true">
-          <div class="header">
-            <i @click.stop="showModal.notLoginModal=false"></i>
-            <span>温馨提示</span>
-          </div>
-          <div class="body">
-            <p>您还没有登录，请您登录/注册后再来购买吧</p>
-          </div>
-          <div class="footer">
-            <Button @click.stop="$LR({type: 'register'}),showModal.notLoginModal=false" class="regular-btn"
-                    style="width:120px;background:none;color:rgba(51,51,51,1);margin-right:10px;border:1px solid rgba(227,183,111,1);">注册
-            </Button>
-            <Button @click.stop="$LR({type: 'login'}),showModal.notLoginModal=false" class="regular-btn" style="width:120px;"><span>登录</span></Button>
-          </div>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="primary" @click="showModal.paySuccessModal=false">确认</Button>
         </div>
-      </div>
-    </transition>
-    <!-- 弹窗提示(后端返回数据) -->
-    <transition name="fade">
-      <div class="overlay" @click.stop="showModal.regular=false" v-if="showModal.regular">
-        <div class="all-modal regular-modal" @click.stop="showModal.regular=true">
-          <div class="header">
-            <i @click.stop="showModal.regular=false"></i>
-            <span>温馨提示</span>
-          </div>
-          <div class="body">
-            <p v-html="posText"></p>
-          </div>
-          <div class="footer">
-            <Button @click.stop="showModal.regular=false" class="regular-btn">确定</Button>
-          </div>
-        </div>
-      </div>
-    </transition>
-    <!-- 不是新用户提示 -->
-    <transition name="fade">
-      <div class="overlay" @click.stop="showModal.notNewcoustomer=false" v-if="showModal.notNewcoustomer">
-        <div class="all-modal regular-modal" @click.stop="showModal.notNewcoustomer=true">
-          <div class="header">
-            <i @click.stop="showModal.notNewcoustomer=false"></i>
-            <span>抱歉</span>
-          </div>
-          <div class="body">
-            <p>您不符合参与秒杀活动的条件，去看看 <span @click.stop="rollDiscount(1400)">其他活动</span>吧</p>
-          </div>
-          <div class="footer">
-            <Button @click.stop="rollDiscount(1400)" class="regular-btn">查看其他活动</Button>
-          </div>
-        </div>
-      </div>
-    </transition>
-    <!-- 曾参加过秒杀活动 -->
-    <transition name="fade">
-      <div class="overlay" @click.stop="showModal.joinedActivity=false" v-if="showModal.joinedActivity">
-        <div class="all-modal regular-modal" @click.stop="showModal.joinedActivity=true">
-          <div class="header">
-            <i @click.stop="showModal.joinedActivity=false"></i>
-            <span>抱歉</span>
-          </div>
-          <div class="body">
-            <p>您不符合参与秒杀活动的条件，去看看 <span @click.stop="$router.push('/activity/')">其他活动</span>吧</p>
-          </div>
-          <div class="footer">
-            <Button @click.stop="$router.push('/activity/')" class="regular-btn">查看其他活动</Button>
-          </div>
-        </div>
-      </div>
-    </transition>
-    <!-- 实名认证弹窗 -->
-    <transition name="fade">
-      <div class="overlay" @click.stop="showModal.authModal=false" v-if="showModal.authModal">
-        <div class="all-modal auth-modal" @click.stop="showModal.authModal=true">
-          <div class="header">
-            <i @click.stop="showModal.authModal=false"></i>
-            <span>实名认证</span>
-          </div>
-          <div class="body">
-            <p class="reminder">
-              根据国家规定，使用公共互联网需进行 <span>实名认证</span>
-            </p>
-            <Form ref="authForm" :model="authFormValidate" :rules="authFormRuleValidate" :label-width="0" class="ss-anth-modal">
-              <FormItem prop="name">
-                <span class="label">真实姓名</span>
-                <Input v-model="authFormValidate.name" placeholder=" 请输入您的真实姓名" size="large" style="width:300px;"></Input>
-              </FormItem>
-              <FormItem prop="personId">
-                <span class="label">身份证号</span>
-                <Input v-model="authFormValidate.personId" placeholder=" 请输入您的身份证号" size="large" style="width:300px;"></Input>
-              </FormItem>
-              <FormItem prop="pictureCode">
-                <span class="label">图形验证码</span>
-                <Input v-model="authFormValidate.pictureCode" placeholder="请输入图片验证码" size="large" style="width:200px;">
-                </Input>
-                <img :src="imgSrc" style="height:33px;"
-                     @click="imgSrc=`https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`">
-              </FormItem>
-              <FormItem prop="tel">
-                <span class="label">手机号码</span>
-                <Input v-model="authFormValidate.tel" placeholder=" 请输入您的手机号码" style="width:200px;" size="large"></Input>
-              </FormItem>
-              <FormItem prop="vailCode">
-                <span class="label">验证码</span>
-                <Input v-model="authFormValidate.vailCode" placeholder=" 请输入您收到的手机验证码" style="width:200px;" size="large"></Input>
-                <Button type="text" @click="getVerificationCode" class="regular-btn" :class="{disabled:authFormValidate.sendCodeText!='获取验证码'}" style="width:109px;"
-                        :disabled="authFormValidate.sendCodeText!='获取验证码'">
-                  {{authFormValidate.sendCodeText}}
-                </Button>
-              </FormItem>
-            </Form>
-            <div class="footer">
-              <Button @click.stop="qucklyAuth" class="regular-btn" style="width:134px;">确认信息并提交</Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
-    <!-- 实名认证失败提示 -->
-    <transition name="fade">
-      <div class="overlay" @click.stop="showModal.authErrorModal=false" v-if="showModal.authErrorModal">
-        <div class="all-modal regular-modal" @click.stop="showModal.authErrorModal=true">
-          <div class="header">
-            <i @click.stop="showModal.authErrorModal=false"></i>
-            <span>温馨提示</span>
-          </div>
-          <div class="body">
-            <p>很遗憾！您未通过快速实名认证审核！</p>
-            <p> 您也可以通过<span style="color:#FF624B;text-decoration:underline;cursor:pointer" @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
-          </div>
-          <div class="footer">
-            <Button @click.stop="showModal.authErrorModal=false" class="regular-btn"><span>确定</span></Button>
-          </div>
-        </div>
-      </div>
-    </transition>
-    <!-- 活动规则弹窗 -->
-    <transition name="fade">
-      <div class="overlay" @click="showModal.rule1=false" v-if="showModal.rule1">
-        <div class="all-modal activity-rule" @click.stop="showModal.rule1=true">
-          <div class="header">
-            <span>秒杀活动规则</span>
-            <i @click.stop="showModal.rule1=false"></i>
-          </div>
-          <div class="body">
-            <h3>1、活动时间：2019.5.25-2019.6.30，每天5场秒杀， 0点、9点、14点、18点、21点开抢。</h3>
-            <h3>2、活动对象：新用户指的是没有使用过平台任何产品（域名产品除外）、没有未支付订单且完成实名认证的用户。其他未特殊标明产品新老用户且完成实名认证均可参与。</h3>
-            <h3>3、数量限制：秒杀产品每天数量有限，每次秒杀限选一款，限购一次。新用户指定产品每款每个用户限购买一台。未特殊指定产品可秒杀多次，限额以后台配额限制为准（每个用户云服务器最多可拥有7台，如有特殊要求，可向销售申请）。</h3>
-            <h3>4、参与本次活动购买的产品不能进行退款。</h3>
-            <h3>5、购买时不可使用任何优惠券和现金券。</h3>
-            <h3>6、活动最终解释权为新睿云所有。</h3>
-          </div>
-          <div class="footer">
-            <div class="wraper">
-              <Button @click.stop="showModal.rule1=false" class="regular-btn"><span>我知道了</span></Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
-    <!-- 秒杀活动规则 -->
-    <transition name="fade">
-      <div class="overlay" @click="showModal.rule2=false" v-if="showModal.rule2">
-        <div class="all-modal activity-rule" @click.stop="showModal.rule2=true">
-          <div class="header">
-            <span>活动规则</span>
-            <i @click.stop="showModal.rule2=false"></i>
-          </div>
-          <div class="body">
-            <h3>1、活动时间：2019.5.14-2019.6.30</h3>
-            <h3>2、活动对象：平台已完成实名认证的新老用户。</h3>
-            <h3>3、数量限制：云服务器产品每个用户限购7台（若有更多需求，可向客服申请提高配额）</h3>
-            <h3>4、参与本次活动购买的产品不能进行退款。</h3>
-            <h3>5、购买时不可使用任何优惠券和现金券。</h3>
-            <h3>6、活动最终解释权为新睿云所有。</h3>
-          </div>
-          <div class="footer">
-            <div class="wraper">
-              <Button @click.stop="showModal.rule2=false" class="regular-btn"><span>我知道了</span></Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
-
-    <!-- 开通会员弹窗 -->
-    <transition name="fade">
-      <div class="overlay" @click="showModal.OpenMembership=false" v-if="showModal.OpenMembership">
-        <div class="shipmodel" @click.stop="showModal.OpenMembership=true">
-          <div class="header">
-            <img src="../../../assets/img/active/blackactive/Path.png" @click.stop="showModal.OpenMembership=false">
-          </div>
-          <div class="body">
-            
-          </div>
-          <div class="footer">
-            <div class="wraper" @click.stop="showModal.OpenMembership=false">
-
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
-
-
-    <!-- 会员规则弹窗 -->
-    <transition name="fade">
-      <div class="overlay" style="z-index:2000" v-if="showModal.vipRuleModal" @click.stop="showModal.vipRuleModal=false">
-        <div class="all-modal modal5" @click.stop="showModal.vipRuleModal=true">
-          <div class="header">
-            <span>会员制规则</span>
-            <i @click.stop="showModal.vipRuleModal=false"></i>
-          </div>
-          <div class="body">
-            <div class="body_hide" ref='viewBox'>
-              <div style="height:1138px;">
-                <h3><span style="color:#4B3C3D;font-size: 14px;font-weight: bold;">1、会员级别</span>：新睿云平台会员包括三个等级：从低到高为白银会员、黄金会员和铂金会员。</h3>
-                <nav>
-                  <ul class="nav_list">
-                    <li class="nav_item" v-for="(item,index) in vipRule" :key="index">
-                      <div>
-                        {{item.title}}
-                      </div>
-                      <div>
-                        {{item.trOne}}
-                      </div>
-                      <div>
-                        {{item.trTwo}}
-                      </div>
-                      <div>
-                        {{item.trThree}}
-                      </div>
-                    </li>
-                  </ul>
-                </nav>
-                <div class="word_style">
-                  <h3>通过一次性充值（24小时内累计充值金额）或者上个自然年度（每年1月1日至12月31日）累计消费(订单支付成功七日后)的金额判定不同的会员级别，会员级别不同消费时可享受相应的折扣优惠。</h3>
-                  <h3><span>2、会员退货退款</span>：累计消费成为会员的客户，因为消费不涉及会员级别的更改，享受平台正常的退货退款流程。 </h3>
-                  <h3 style="color:#FF624B;">
-                    充值成为会员的用户，会员充值一定金额后，对应会员级别的最低充值额度（如白银会员1万元、黄金会员5万元、铂金会员15万元）经会员同意后单独放入特定账户，优先消费，不可自动提取，以保证会员资格。若强制要求提现此部分金额，则意味会员主动取消会员资格。则之前购买产品均按折扣之前的价格扣除对应金额后方可提现。不足部分平台保留追补权利。 </h3>
-                  <h3><span>3、会员折扣范围：</span>1. 包括平台自有云产品（域名、SSL证书等第三方平台产品除外），参与活动产品购买时可享受折上折（押金活动除外）。 </h3>
-                  <h3><span>4、会员权益有效期</span>：充值或者上个自然年度累计消费达到一定金额即可立即成为会员，会员有效期从会员权益生效之日起至第三年的1月17日。比如2009年7月31日充值1万元或者2009年1月1日至7月31日期间累计消费达到5万元则成为白银会员，有效期至2011年1月17日。 </h3>
-                  <h3><span>5、会员其他福利</span>：会员还可享受平台新品免费试用、问题优先解决、免费技术咨询、生日和节日礼品、平台产品不定时赠送等福利。 </h3>
-                  <h3><span>6、协议声明</span>：新睿云平台对于此会员制规则拥有最终解释权，其他未尽事项平台保留最终解释权力。若发现以不正当手段成为会员的用户，我们有资格取消或者封禁会员资格。</h3>
-                  <h3>
-                    新睿云有权根据政府法律法规、技术及行业实践、市场行情等变化修改和（或）补充本协议的条款和条件，修改后的条款应公示于新睿云服务网站上，并于公示即时生效。若您在本协议条款内容变更公告后继续使用云服务的，表示您已充分阅读、理解并接受修改后的协议内容，也将遵循修改后的条款内容使用云服务；若您不同意修改后的服务条款，您应立即停止使用云服务</h3>
-                  <h3><span>会员权益发生改变的情形</span></h3>
-                  <h3><span>会员保级</span>：会员达到会员有效期后，若有效期内达到任何会员条件，比如充值一定金额或者上一自然年度累计消费达到一定金额，则会员权益相应保留并延期。 </h3>
-                  <h3><span>会员升级</span>：某一级别的会员在会员有效期内通过充值或者累计消费后达到更高级别后，以最高级别为准，且会员有效期相应延长。如累计消费达到白银会员后，一次性充值5万元则升级成为黄金会员，会员有效期从成为黄金会员那日开始计算，至第三年的1月17日。 </h3>
-                  <h3><span>会员降级</span>：会员达到会员有效期后，若有效期内未达到本级别会员条件，则会员权益重新计算。比如充值会员有效期内没有会员级别的充值行为，则有效期后会员权益失效。若有效期内，若会员资格费用发生提现吗，则会员权益立时失效。 </h3>
-                  <h3>
-                    比如客户一次性充值2.5万元，则1万元会员资格费用放到现金券账户（不可自动提现），剩余1.5万元放到可提现余额中（可随时提现），若客户要提现5000元，则优先提现1.5万元账户部分，直至此部分金额为0，不影响会员资格。若客户消费了5000元，则优先消费会员资格费用。现金券账户余额还剩下5000元（不考虑其他现金券金额）。若要提现此部分现金券余额，则会员资格会受到影响。客户需提交工单，且要回冲会员折扣费用，实际客户购买产品5000元/0.65=7692.31元
-                    则用户可提现金额不是现金券余额5000元，而是10000元-7692.31元=2307.69，则用户可实际提现2307.69元。 若用户消费了6500元，则6500元/0.65=10000元，则可提现金额为0.若客户消费大于6500元，则可提现金额依然为0，不足部分平台保留追补权利。</h3>
-                  <h3>若累计消费达到会员级别，则会员后续消费发生退货退款不影响会员资格。直到会员有效期时，会在第三年的1月1日-1月17日计算上一年度的累计消费，重新定义会员级别。若没有达到会员级别，且没有充值达到一定金额，则会员级别降级为相应级别。</h3>
-                  <h3>比如客户2009年1月1日至7月31日期间累计消费达到5万元，则自动成为白银会员；在2011年1月1日-1月17日期间，会重新计算2010年1月-12月31日期间的消费累计金额，如没达到1万元，则2011年1月17日降级为非会员用户。</h3>
-                </div>
-              </div>
-            </div>
-          </div>
-          <Tooltip content="请先阅读完会员规则" placement="top" style="margin-bottom:30px" :disabled="tooltipStatus">
-              <Button @click.stop="showModal.vipRuleModal=false,cashCouponForm.agreeStatus = true,selectedRule = false" :class="[disabledButton?'modal-btnDisbled':'modal-btn1']"
-                  :disabled='disabledButton'>
-                  <span>我已阅读并同意</span><span v-if="disabledButton">{{'('+vipCount+'s)'}}</span></Button>
-          </Tooltip>
-        </div>
-      </div>
-    </transition>
-    <!-- 余额转入现金券 -->
-    <Modal v-model="showModal.cashCoupon" :scrollable="true" :width="640">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">充值</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <!-- <p class="cash-coupon-p">帐户余额：<span> ¥{{ balance }}</span> -->
-        <p class="cash-coupon-p">选择会员类型：</p>
-        <div class="vip-list">
-          <ul v-for="(item,index) in cashCouponForm.vipList" :key="index" :class="{selected: item.vipid == cashCouponForm.vipId,notallowed: index < cashCouponForm.vipLevel }"
-              @click="changeVipGrade(item,index)">
-            <li>{{ item.title }}</li>
-            <li class="cash-coupon-p"><span>{{item.money}}</span>元</li>
-            <li><img :src="item.url" alt="描述"/>{{ item.descriptStart}}<span>{{ item.discount * 10}}</span>{{item.descriptEnd}}</li>
-            <li>{{ item.descript2}}</li>
-          </ul>
-        </div>
-        <div class="beVip">
-          <Checkbox v-model="cashCouponForm.agreeStatus" :disabled="selectedRule"><span style="font-size: 12px;margin-left: 5px">我已阅读并同意<span
-            style="cursor: pointer;color:#4A97EE" @click="getVipRule">《会员制规则》</span></span></Checkbox>
-        </div>
-        <div style="margin-top: 20px;">
-          <Radio-group v-model="zf">
-            <Radio label="zfb" style="margin-right: 40px;">
-              <img src="../../../assets/img/recharge/pay-icon-ali.png"
-                   style="width: 104px;height: 40px;vertical-align: middle" alt="支付宝">
-            </Radio>
-            <Radio label="wx">
-              <img src="../../../assets/img/recharge/pay-icon-wx.png"
-                   style="width: 122px;height: 40px;vertical-align: middle" alt="微信">
-            </Radio>
-          </Radio-group>
-        </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="recharge" :disabled="chargeDisabled">确认充值</Button>
-      </div>
-    </Modal>
-    <!-- 支付宝支付提示弹窗 -->
-    <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
-      <p slot="header" class="modal-header-border">
-        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
-        <span class="universal-modal-title">提示</span>
-      </p>
-      <div class="modal-content-s">
-        <div>
-          <p class="lh24">您是否已经完成支付</p>
-        </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.rechargeHint = false;showModal.cashCoupon=true">支付遇到问题</Button>
-        <Button type="primary" @click="rechargeOk()">支付完成</Button>
-      </p>
-    </Modal>
-    <!-- 微信支付弹窗 -->
-    <Modal v-model="showModal.weChatRechargeModal" width="640" :scrollable="true" :closable="false" :mask-closable="false">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">微信支付/充值</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <div class="modal-p">
-          <Steps :current="1">
-            <Step title="订单确认"></Step>
-            <Step title="支付"></Step>
-            <Step title="支付成功"></Step>
-          </Steps>
-          <div class="payInfo">
-            <div id="code">
-              <vue-q-art :config="config" v-if="config.value!=''"></vue-q-art>
-            </div>
-            <div class="pay-p">
-              <p>应付金额(元)：<span>{{input}}</span></p>
-              <p>请使用微信扫一扫，扫描二维码支付</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button @click="isPay">已完成支付</Button>
-        <Button type="primary" @click="showModal.weChatRechargeModal = false,showModal.cashCoupon = true">更换支付方式</Button>
-      </div>
-    </Modal>
-    <!-- 支付充值失败 -->
-    <Modal v-model="showModal.payDefeatedModal" width="640" :scrollable="true" :closable="false" :mask-closable="false">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">支付/充值</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <div class="modal-p">
-          <Steps :current="2" status="error">
-            <Step title="订单确认"></Step>
-            <Step title="支付"></Step>
-            <Step title="支付失败"></Step>
-          </Steps>
-          <p><img src="../../../assets/img/sceneInfo/si-defeated.png" alt="支付失败"/><span>抱歉，支付失败，请再次尝试！</span></p>
-        </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="showModal.payDefeatedModal = false,showModal.cashCoupon = true">再次支付</Button>
-      </div>
-    </Modal>
-    <!-- 支付充值成功 -->
-    <Modal v-model="showModal.paySuccessModal" width="640" :scrollable="true" :closable="false" :mask-closable="false">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">支付/充值</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <div class="modal-p">
-          <Steps :current="2">
-            <Step title="订单确认"></Step>
-            <Step title="支付"></Step>
-            <Step title="支付成功"></Step>
-          </Steps>
-          <p><img src="../../../assets/img/sceneInfo/si-success.png" alt="支付成功"/><span>恭喜您成为{{selectVipGrade}}</span></p>
-        </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="showModal.paySuccessModal=false">确认</Button>
-      </div>
-    </Modal>
+      </Modal>
+    </div>
   </div>
 </template>
 
@@ -941,6 +1014,8 @@
         }
       }
       return {
+        servicetypeGPU:'',
+        ActivityState:'1',
         nucleus:'1',
         numG:'1',
         nucleusgpu:'16',
@@ -1349,7 +1424,10 @@
           payDefeatedModal: false,
           joinedActivity: false,
           notNewcoustomer: false,
-          OpenMembership:false
+          OpenMembership:false,
+          CloudComputers:false,
+          CloudComputersSuccess:false,
+          CloudComputersfail:false
         },
         authFormValidate: {
           name: '',
@@ -1383,18 +1461,32 @@
       }
     },
     created() {
-      this.getHostZoneList()
-      this.getHostZoneListHot()
-      this.getGpuZoneListHot()
-      this.getobjZoneListHot()
-      this.setTime()
-      this.getUserVipLevel()
-      this.getBalance()
-      this.TOmembership()
+      this.getActivitystatus()
     },
     mounted() {
     },
     methods: {
+      getActivitystatus(){
+        axios.get('activity/activityTime.do', {
+              params: {
+                activityId: '43'
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.ActivityState=response.data.status
+                this.getHostZoneList()
+                this.getHostZoneListHot()
+                this.getGpuZoneListHot()
+                this.getobjZoneListHot()
+                this.setTime()
+                this.getUserVipLevel()
+                this.getBalance()
+                this.TOmembership()
+              } else {
+                this.ActivityState=response.data.status
+              }
+            })
+      },
       TOmembership(){
         this.showModal.OpenMembership=true
       },
@@ -1584,6 +1676,7 @@
                   this.hour++
                   // console.log(this.hour)
                   window.clearInterval(this.timer)
+                  this.$router.history.go(0)
                 }
               }, 1000);
             } else {
@@ -1614,6 +1707,10 @@
         this.showModal.notNewcoustomer = false
         $('html, body').animate({scrollTop: val}, 300)
       },
+      OpenMembershipscroll(){
+        $('html, body').animate({scrollTop: 3400}, 300)
+        this.showModal.OpenMembership=false
+      },
       init() {
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1630,7 +1727,6 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
-            console.log(res.data)
             this.hostZoneList = res.data.result.optionalArea
             this.defaultZone = res.data.result.optionalArea[0].value
 
@@ -1750,9 +1846,9 @@
             this.showModal.authModal = true
             return
           }
-          axios.get('activity/getSubsection.do', {
+           axios.get('activity/getSubsection.do', {
             params: {
-              activityNum: '37',
+              activityNum: '45',
             }
           }).then(res => {
             if (res.status == 200 && res.data.status == 1) {
@@ -1789,7 +1885,7 @@
         let url = 'activity/getTemActInfoById.do'
         axios.get(url, {
           params: {
-            activityNum: '38'
+            activityNum: '42'
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
@@ -1858,7 +1954,7 @@
               diskSize: this.hostProductHot.disksize,
               networkId: 'no',
               vpcId: 'no',
-              discountForActivity: '38'
+              discountForActivity: '42'
           }
         } else {
             params = {
@@ -1875,7 +1971,7 @@
               rootDiskSize: '40',
               networkId: 'no',
               vpcId: 'no',
-              discountForActivity: '38'
+              discountForActivity: '42'
           }
         }
         axios.get('information/deployVirtualMachine.do', {params}).then((response) => {
@@ -1891,12 +1987,13 @@
         let url = 'activity/getTemActInfoById.do'
         axios.get(url, {
           params: {
-            activityNum: '39'
+            activityNum: '43'
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.gpuZoneListHot = res.data.result.optionalArea
             this.gpuProductHot.zoneId = res.data.result.optionalArea[0].value
+            this.servicetypeGPU = res.data.result.freevmconfigs[0].servicetype
           }
         })
       },
@@ -1972,9 +2069,10 @@
           diskSize: '',
           networkId: 'no',
           vpcId: 'no',
-          discountForActivity: '39',
+          discountForActivity: '43',
           gpusize: this.gpuProductHot.cpuMemory.gpusize,
-          serviceType: this.gpuProductHot.cpuMemory.servicetype
+          serviceType: this.servicetypeGPU
+          // serviceType: this.gpuProductHot.cpuMemory.servicetype
         }
         axios.get('gpuserver/createGpuServer.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1989,7 +2087,7 @@
         let url = 'activity/getTemActInfoById.do'
         axios.get(url, {
           params: {
-            activityNum: '40'
+            activityNum: '41'
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
@@ -2012,7 +2110,7 @@
         }
         var params = {
           zoneId: this.objProductHot.zoneId,
-          activityNum: '40',
+          activityNum: '41',
           timeType: this.objProductHot.timeTimetype.type,
           timeValue: this.objProductHot.timeTimetype.value,
           capacity: this.objProductHot.cpuMemory.label + this.objProductHot.cpuMemory.unit,
@@ -2161,7 +2259,7 @@
         axios.get('activity/getOriginalPrice.do', {
           params: {
             zoneId: this.hostProductHot.zoneId,
-            activityNum: '38',
+            activityNum: '42',
             type: this.hostProductHot.timeTimetype.type,
             month: this.hostProductHot.timeTimetype.type == 'month' ? this.hostProductHot.timeTimetype.value : this.hostProductHot.timeTimetype.value * 12,
             cpu: this.hostProductHot.cpuMemory.cpunum,
@@ -2180,7 +2278,7 @@
         axios.get('activity/getOriginalPrice.do', {
           params: {
             zoneId: this.gpuProductHot.zoneId,
-            activityNum: '39',
+            activityNum: '43',
             type: this.gpuProductHot.timeTimetype.type,
             month: this.gpuProductHot.timeTimetype.type == 'month' ? this.gpuProductHot.timeTimetype.value : this.gpuProductHot.timeTimetype.value,
             cpu: this.gpuProductHot.cpuMemory.cpunum,
@@ -2198,7 +2296,7 @@
         axios.get('activity/getOriginalPrice.do', {
           params: {
             zoneId: this.objProductHot.zoneId,
-            activityNum: '40',
+            activityNum: '41',
             type: this.objProductHot.timeTimetype.type,
             month: this.objProductHot.timeTimetype.type == 'month' ? this.objProductHot.timeTimetype.value : this.objProductHot.timeTimetype.value * 12,
             capacitys: this.objProductHot.cpuMemory.value,
@@ -4242,7 +4340,94 @@
     }
   }
 
+  .CloudComputers{
+    background:rgba(255,255,255,1);
+    box-shadow:0px 4px 18px -4px rgba(197,197,197,0.5);
+    width:500px;
+    height:557px;
+    border-radius:4px;
+    position: relative;
+    margin: 0 auto;
+    top: 15%;
+    .header{
+       > img{
+         position: absolute;
+         right: 30px;
+         top: 30px;
+         cursor: pointer;
+       }
+    }
+    .body{
+      width: 100%;
+      position: absolute;
+      top: 70px;
+      text-align: center;
+      margin: 0 auto;
+      > img{
+      }
+      > p{
+        font-size:24px;
+        font-family:MicrosoftYaHei-Bold;
+        font-weight:bold;
+        color:rgba(51,51,51,1);
+        margin-top: 40px;
+        text-align: center;
+      }
+      > div{
+        font-size:16px;
+        font-family:MicrosoftYaHei;
+        color:rgba(153,153,153,1);
+        line-height:24px;
+        padding: 30px 80px 0 80px;
+        text-align: left;
+      }
+    }
+    .footer{
+      width: 100%;
+      position: absolute;
+      top: 461px;
+      text-align: center;
+      margin: 0 auto;
+      .wraper{
+        margin: 0 auto;
+        > button{
+          width:340px;
+          height:46px;
+          background:rgba(56,125,255,1);
+        }
+      }
+    }
+  }
+
   section:nth-of-type(even) {
         background: #363854;
+  }
+
+  .active404{
+    background:rgba(255,255,255,1);
+    width: 100%;
+    height: 100%;
+    #wrapper {
+		width: 100%;
+		margin: 0px auto;
+		text-align: center;
+    justify-content: center;
+    .imgg{
+      margin-top: 180px;
+      }
+     > h1{
+        margin-top: 80px;
+      }
+      .btn1{
+        margin: 50px auto 156px auto;
+        color:rgba(255,255,255,1);
+        font-size:16px;
+        width:128px;
+        height:42px;
+        background:rgba(42,153,242,1);
+        border-radius:4px;
+      }
+	}
+	
   }
 </style>
