@@ -8,7 +8,7 @@
         <Button @click="$router.push('/activity/')" class="btn1">去活动中心</Button>
       </div>
     </div>
-    <div v-if="ActivityState=='1'">
+    <div v-else>
       <div class="banner">
         <div class="wrap">
           <div class="container flex-vertical-center">
@@ -86,25 +86,23 @@
                 </div>
               </div> -->
               <div class="w_host">
-                <div v-for="(item,index) in discountProduct" :key="index">
+                <div v-for="(item,index) in discountProductfornew" >
                   <div class="host_title">
                     <!-- <div class="rectangle">
                       {{item.discount}}折
                     </div> -->
                     <p style="font-size:18px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(255,191,130,1);">{{item.servicetype == 'host' ? '云服务器' : '对象存储'}}</p>
-                    <p v-if="item.storage" class="config-text"><span>{{item.storage}}G</span>存储+<span>{{item.flow}}</span>下行流量</p>
-                    <p v-else class="config-text"><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.bandwith}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘</p>
+                    <p class="config-text">100%性能可用，更低价格，拒绝套路</p>
                       <img :src="item.imgright" alt="描述"> 
                   </div>
                   <div class="host_content">
                     <div style="margin:10px 0;">
+                      <p class="hostfirstp"><span>CPU</span><span>内存</span><span>带宽</span><span>系统盘</span></p>
+                      <p class="hostfirstp2"><span>{{item.cpunum}}核</span><span>{{item.memory}}G</span><span>{{item.bandwith}}M</span><span>{{item.disksize}}G</span>SSD</p>
                       <span class="label-title" v-if="item.servicetype == 'host'">选择区域：</span>
                       <p class="label-title" style="margin:0 0 15px 0;line-height:26px;" v-if="item.servicetype != 'host'">选择区域：</p>
-                      <Select v-model="item.zoneId" style="width:180px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-if="item.servicetype == 'host'">
-                        <Option v-for="(item,index) in hostZoneList" :value="item.value" :key="index">{{ item.name }}</Option>
-                      </Select>
-                      <Select v-model="item.zoneId" style="width:245px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-else>
-                        <Option v-for="(item,index) in gpuZoneList" :value="item.value" :key="index">{{ item.name }}</Option>
+                      <Select v-model="item.zoneId" style="width:180px" class="schoolseason-select" @on-change="changeZoneHostfornew(item,index)" v-if="item.servicetype == 'host'">
+                        <Option v-for="(item,indexnew) in hostZoneListfornew" :value="item.value" :key="indexnew">{{ item.name }}</Option>
                       </Select>
                     </div>
                     <div v-if="item.servicetype == 'host'">
@@ -114,6 +112,55 @@
                     <div style="text-align:left;margin:20px 0 10px 0;">
                       <span style="color:#FF763B;font-size:14px;">￥<span
                         style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/{{item.timeType=='month'?'月':'年'}}</span>
+                    </div>
+                    <p style="text-decoration:line-through;margin:12px 0 20px 0;
+                      font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);">
+                          原价：{{item.originalPrice}}元/{{item.timeType=='month'?'月':'年'}}
+                    </p>
+                    <Button class="host_button host_button_not" v-if="!(hour >=0&&hour<9||hour >=9&&hour<14||hour >=14&&hour<18||hour >=18&&hour<21||hour >=21&&hour<24)">暂未开始</Button>
+                    <Button class="host_button" :disabled="item.num=='100'" :class="{host_button_not:item.num=='100'}" @click="getDiskcountMvfornew(item,index)" v-else>
+                      {{item.num!='100'?'立即抢购':'已抢完'}}
+                    </Button>
+                  <div class="progress">
+                      <Progress class="schoolseason-progress" :percent="item.num" hide-info/>
+                      <span v-if="hour >=0&&hour<9||hour >=9&&hour<14||hour >=14&&hour<18||hour >=18&&hour<21||hour >=21&&hour<24">已抢购{{item.num.toFixed(2)}}%</span>
+                      <span v-else>已抢购0%</span>
+                    </div>
+                  </div>
+                </div>
+                <div v-for="(item,index) in discountProduct" :key="index">
+                  <div class="host_title">
+                    <!-- <div class="rectangle">
+                      {{item.discount}}折
+                    </div> -->
+                    <p style="font-size:18px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(255,191,130,1);">{{item.servicetype == 'host' ? '云服务器' : '对象存储'}}</p>
+                    <!-- <p v-if="item.storage" class="config-text"><span>{{item.storage}}G</span>存储+<span>{{item.flow}}</span>下行流量</p>
+                    <p v-else class="config-text"><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.bandwith}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘</p> -->
+                    <p class="config-text">100%性能可用，更低价格，拒绝套路</p>
+                      <img :src="item.imgright" alt="描述"> 
+                  </div>
+                  <div class="host_content">
+                    <div style="margin:10px 0;">
+                      <p v-if="item.storage" class="hostfirstp3"><span>存储</span><span>下行流量</span></p>
+                      <p v-if="item.storage" class="hostfirstp4"><span>{{item.storage}}G</span><span>{{item.flow}}G</span></p>
+                      <p v-if="!item.storage" class="hostfirstp"><span>CPU</span><span>内存</span><span>带宽</span><span>系统盘</span></p>
+                      <p v-if="!item.storage" class="hostfirstp2"><span>{{item.cpunum}}核</span><span>{{item.memory}}G</span><span>{{item.bandwith}}M</span><span>{{item.disksize}}G</span>SSD</p>
+                      <span class="label-title" v-if="item.servicetype == 'host'">选择区域：</span>
+                      <p class="label-title" style="margin:0 0 15px 0;line-height:26px;" v-if="item.servicetype != 'host'">选择区域：</p>
+                      <Select v-model="item.zoneId" style="width:180px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-if="item.servicetype == 'host'">
+                        <Option v-for="(item,indexold) in hostZoneList" :value="item.value" :key="indexold">{{ item.name }}</Option>
+                      </Select>
+                      <Select v-model="item.zoneId" style="width:245px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-else>
+                        <Option v-for="(item,indexold) in gpuZoneList" :value="item.value" :key="indexold">{{ item.name }}</Option>
+                      </Select>
+                    </div>
+                    <div v-if="item.servicetype == 'host'">
+                      <span class="label-title">选择系统：</span>
+                      <Cascader :data="item.hostSystemList" v-model="item.system" style="width:180px;display: inline-block;" class="schoolseason-select"></Cascader>
+                    </div>
+                    <div style="text-align:left;margin:20px 0 10px 0;">
+                      <span style="color:#FF763B;font-size:14px;">￥<span
+                        style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/{{item.timeType=='month'?'半年':'年'}}</span>
                     </div>
                     <p style="text-decoration:line-through;margin:12px 0 20px 0;
                       font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);">
@@ -151,7 +198,7 @@
             <div class="inlineright">
               <p>注册即可获赠10云币</p>
               <p>【可抵扣云电脑3小时使用时长】</p>
-              <Button type="warning" style="margin-top:16px;" @click="showModal.CloudComputers=true">立即预约</Button>
+              <Button type="warning" style="margin-top:16px;" @click="appointmentimmediately">立即预约</Button>
             </div>
             <div style="clear: both;"></div>
           </div>
@@ -728,7 +775,7 @@
             </div>
             <div class="footer">
               <div class="wraper">
-                <Button type="primary" @click.stop="showModal.CloudComputers=false">确认预约</Button>
+                <Button type="primary" @click.stop="appointment">确认预约</Button>
               </div>
             </div>
           </div>
@@ -770,7 +817,7 @@
             </div>
             <div class="footer">
               <div class="wraper">
-                <Button type="primary" @click.stop="showModal.CloudComputersfail=false">预约新睿云云游</Button>
+                <Button type="primary" @click.stop="appointment">预约新睿云云游</Button>
               </div>
             </div>
           </div>
@@ -1084,8 +1131,9 @@
         zoneList: [],
         defaultZone: '',
         hostZoneList: [],
+        hostZoneListfornew: [],
         gpuZoneList: [],
-        discountProduct: [
+        discountProductfornew:[
           {
             cpunum: '2',
             memory: '4',
@@ -1123,7 +1171,9 @@
                 label: 'Ubuntu',
                 children: [],
               }],
-          },
+          }
+        ],
+        discountProduct: [
           {
             cpunum: '2',
             memory: '8',
@@ -1475,9 +1525,10 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.ActivityState=response.data.status
                 this.getHostZoneList()
+                 this.getHostZoneListfornew()
+                this.getobjZoneListHot()
                 this.getHostZoneListHot()
                 this.getGpuZoneListHot()
-                this.getobjZoneListHot()
                 this.setTime()
                 this.getUserVipLevel()
                 this.getBalance()
@@ -1489,6 +1540,28 @@
       },
       TOmembership(){
         this.showModal.OpenMembership=true
+      },
+      appointmentimmediately(){
+        if (this.$store.state.userInfo == null) {
+          this.showModal.notLoginModal = true
+          return
+        }
+        this.showModal.CloudComputers=true
+      },
+      appointment(){
+        axios.get('user/activityAppointment.do', {
+              params: {
+                code: 'yrxt_ydn'
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.showModal.CloudComputers=false
+                this.showModal.CloudComputersSuccess=true
+              } else {
+                this.showModal.CloudComputers=false
+                this.showModal.CloudComputersfail=true
+              }
+            })
       },
       recharge() {
         this.showModal.cashCoupon = false
@@ -1733,18 +1806,43 @@
             // 默认选择区域
             this.discountProduct.forEach((item, index) => {
               // console.log(index)
-              if (index == 3) {
-                item.zoneId = res.data.result.unoptionalRegion[0].value
+              if (index == 2) {
+                item.zoneId = this.objProductHot.zoneId
               } else {
                 item.zoneId = res.data.result.optionalArea[0].value
               }
             })
-            this.gpuZoneList = res.data.result.unoptionalRegion
+            //this.gpuZoneList = res.data.result.unoptionalRegion
             // 赋值配置id,初始化价格和抢购数量
             this.discountProduct.forEach((item, index) => {
               item.id = res.data.result.freevmconfigs[index].id
               this.getVMConfigId(item, index)
               this.getSubsection(index)
+            })
+          }
+        })
+      },
+      getHostZoneListfornew() {
+        let url = 'activity/getTemActInfoById.do'
+        axios.get(url, {
+          params: {
+            activityNum: '46'
+          }
+        }).then(res => {
+          if (res.data.status == 1 && res.status == 200) {
+            this.hostZoneListfornew = res.data.result.optionalArea
+
+            // 默认选择区域
+            this.discountProductfornew.forEach((item, index) => {
+              // console.log(index)
+                item.zoneId = res.data.result.optionalArea[0].value
+            })
+            //this.gpuZoneList = res.data.result.unoptionalRegion
+            // 赋值配置id,初始化价格和抢购数量
+            this.discountProductfornew.forEach((item, index) => {
+              item.id = res.data.result.freevmconfigs[index].id
+              this.getVMConfigIdfornew(item, index)
+              this.getSubsectionfornew(index)
             })
           }
         })
@@ -1784,6 +1882,40 @@
           }
         })
       },
+      changeZoneHostfornew(item, index) {
+        axios.get('information/listTemplates.do', {
+          params: {
+            zoneId: item.zoneId,
+            user: 0
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            var x
+            for (x in res.data.result) {
+              this.discountProductfornew[index].hostSystemList.forEach(item => {
+                if (item.value == x) {
+                  item.children = res.data.result[x]
+                }
+              })
+            }
+            this.discountProductfornew[index].hostSystemList.forEach(item => {
+              item.children.forEach(item => {
+                item.value = item.systemtemplateid
+                item.label = item.templatedescript
+              })
+            })
+            this.discountProductfornew[index].hostSystemList.forEach((item, index) => {
+              if (item.children.length == 0) {
+                item.disabled = true
+              }
+            })
+            // 设置默认系统
+            this.discountProductfornew.forEach(item => {
+              item.system = ['window', res.data.result.window[0].systemtemplateid]
+            })
+          }
+        })
+      },
       // 系统编辑成级联选择组件需要的数据
       cascaderSystemM(responseData, obj, selectobj) {
         var x;
@@ -1815,12 +1947,26 @@
           params: {
             zoneId: item.zoneId,
             vmConfigId: item.id,
-            month: index == 3 ? 1 : 12
+            month: index == 2 ? 6 : 12
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
             this.discountProduct[index].currentPrice = res.data.result.cost;
             this.discountProduct[index].originalPrice = res.data.result.originalPrice;
+          }
+        })
+      },
+      getVMConfigIdfornew(item, index) {
+        axios.get('activity/getOriginalPrice.do', {
+          params: {
+            zoneId: item.zoneId,
+            vmConfigId: item.id,
+            month:  12
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.discountProductfornew[index].currentPrice = res.data.result.cost;
+            this.discountProductfornew[index].originalPrice = res.data.result.originalPrice;
           }
         })
       },
@@ -1833,6 +1979,17 @@
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
             this.discountProduct[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
+          }
+        })
+      },
+      getSubsectionfornew(index) {
+        axios.get('activity/getSubsection.do', {
+          params: {
+            activityNum: '46',
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.discountProductfornew[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
           }
         })
       },
@@ -1855,6 +2012,50 @@
               this.discountProduct[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
               if (this.discountProduct[index].num != 100) {
                 var url = index != 2 ? 'information/getDiskcountMv.do' : 'activity/getDiskcountGPU.do'
+                axios.get(url, {
+                  params: {
+                    vmConfigId: item.id,
+                    osType: item.system[1],
+                    defzoneid: item.zoneId,
+                  }
+                }).then(res => {
+                  if (res.status == 200 && res.data.status == 1) {
+                    this.$Message.success('创建订单成功')
+                    this.$router.push('/order')
+                  } else {
+                    if (res.data.flag == '1') {
+                      this.showModal.notNewcoustomer = true
+                    } else if (res.data.flag == '2') {
+                      this.showModal.joinedActivity = true
+                    } else {
+                      this.posText = res.data.message
+                      this.showModal.regular = true
+                    }
+                  }
+                })
+              }
+            }
+          })
+        }
+      },
+      getDiskcountMvfornew(item, index) {
+        if (!this.$store.state.userInfo) {
+          this.showModal.notLoginModal = true
+        } else {
+          if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+            this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
+            this.showModal.authModal = true
+            return
+          }
+           axios.get('activity/getSubsection.do', {
+            params: {
+              activityNum: '46',
+            }
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.discountProductfornew[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
+              if (this.discountProductfornew[index].num != 100) {
+                var url =  'information/getDiskcountMv.do' 
                 axios.get(url, {
                   params: {
                     vmConfigId: item.id,
@@ -2092,6 +2293,7 @@
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.objZoneListHot = res.data.result.optionalArea
+            this.gpuZoneList = res.data.result.optionalArea
             this.objProductHot.zoneId = res.data.result.optionalArea[0].value
             // console.log(this.objZoneListHot)
           }
@@ -2556,8 +2758,12 @@
               padding-left: 4px;
             }
             .config-text {
-              font-size: 12px;
+              font-size: 14px;
               margin-top: 15px;
+              font-family:Arial-BoldMT;
+              font-weight:normal;
+              color:rgba(255,255,255,1);
+              line-height:20px;
               span {
                 font-size: 14px;
                 font-weight: bold;
@@ -2594,10 +2800,79 @@
           }
           .host_content {
             width: 287px;
-            height: 296px;
+            height: 395px;
             border:1px solid rgba(255,208,140,1);
             padding: 20px;
             padding-top: 10px;
+            .hostfirstp{
+              margin: 0 0 10px 0;
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:rgba(178,178,178,1);
+              line-height:16px;
+              > span:nth-child(1){
+                margin-right: 37px;
+              }
+              > span:nth-child(2){
+                margin-right: 37px;
+              }
+              > span:nth-child(3){
+                margin-right: 49px;
+              }
+              > span:nth-child(4){
+              }
+            }
+            .hostfirstp2{
+              width: 107%;
+              margin: 0 0 30px 0;
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:rgba(255,255,255,1);
+              line-height:24px;
+              > span:nth-child(1){
+                margin-right: 35px;
+                font-size: 18px;
+              }
+              > span:nth-child(2){
+                margin-right: 35px;
+                font-size: 18px;
+              }
+              > span:nth-child(3){
+                margin-right: 35px;
+                font-size: 18px;
+              }
+              > span:nth-child(4){
+                font-size: 18px;
+              }
+            }
+            .hostfirstp3{
+              margin: 0 0 10px 0;
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:rgba(178,178,178,1);
+              line-height:16px;
+              > span:nth-child(1){
+                margin-left: 61px;
+                margin-right: 61px;
+              }
+              > span:nth-child(2){
+                
+              }
+            }
+            .hostfirstp4{
+              margin: 0 0 30px 0;
+              font-size: 18px;
+              font-family:MicrosoftYaHei;
+              color:rgba(255,255,255,1);
+              line-height:24px;
+              > span:nth-child(1){
+                margin-left: 50px;
+                margin-right: 51px;
+              }
+              > span:nth-child(2){
+                
+              }
+            }
             .label-title {
               font-size:12px;
               font-family:MicrosoftYaHei;
