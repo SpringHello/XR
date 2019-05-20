@@ -42,13 +42,13 @@
       <div style="margin-top:20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
         <h2>网络与带宽</h2>
         <!--虚拟私有云-->
-        <div class="item-wrapperr">
+        <div class="item-wrapper">
           <div style="display: flex">
             <div>
-              <p class="item-title" style="margin-top: 7px;">虚拟私有云</p>
+              <p class="item-title">虚拟私有云</p>
             </div>
             <div>
-              <Select v-model="vpc" style="width:200px">
+              <Select v-model="vpc" style="width:200px;align-items:center">
                 <Option v-for="item in vpcList" :key="item.vpcid" :value="item.vpcid">
                   {{item.vpcname}}
                 </Option>
