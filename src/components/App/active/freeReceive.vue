@@ -78,7 +78,10 @@
                 </Select>
               </div>
               <div class="item-price">
-                <p>押金：<span>¥{{config.cashPledge}}</span><span v-if="configIndex===0" style="font-size:14px">/月</span><span v-else style="font-size:14px">/年</span><span>原价：¥{{ config.originalCost}}</span></p>
+                <p>使用价格：<span>¥0</span><span v-if="configIndex===0" style="font-size:14px">/月</span><span v-else style="font-size:14px">/年</span><span></span></p>
+              </div>
+              <div class="item-price">
+                <p><span class="cash"> 押金：¥{{config.cashPledge}}</span><span v-if="configIndex===0" class="cash">/月</span><span v-else class="cash">/年</span><span>原价：¥{{ config.originalCost}}</span></p>
               </div>
               <div class="item-button">
                 <button @click="getHost(configIndex)" :disabled="flag" :class="{disabled: flag}">免费领取</button>
@@ -144,8 +147,9 @@
           <dt>每个用户只能参与一次，同一手机号对应的多个账号、同一实名认证用户等满足同一条件的均视为一个用户。</dt>
           <dt>免费产品中的资源可随时进行升级，升级费用按新睿云标准收费进行收取。</dt>
           <dt>在各产品免费使用期间，若对免费资源进行了销毁，则视为放弃免费使用权。</dt>
+          <dt>因押金主机为免费产品，暂不支持备案，若您需要备案可执行押金转续费操作，或者购买包年包月主机及IP之后进行备案。</dt>
           <dd>活动声明：</dd>
-          <dt>为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源，领取后3天内未使用资源、利用资源从事违法违规行为的用户收回免费套餐使用资格。因此造成任何损失的，由该用户自行负责。</dt>
+          <dt>为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源；领取后3天内未使用资源；利用资源从事违法违规行为；因用户主机遭受DDOS攻击而给平台方带来损失的用户，收回免费套餐使用资格。因此造成任何损失的，由该用户自行负责。</dt>
         </dl>
       </div>
     </div>
@@ -1496,6 +1500,11 @@
                 color:rgba(230,0,27,1);
                 >span{
                   font-size: 24px;
+                }
+                .cash{
+                  font-size:14px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(102,102,102,1);
                 }
                 span:last-child{
                   margin-left: 10px;

@@ -488,11 +488,9 @@
                   break
                 case 3:
                   value = '绑定中'
-                  //value = '正常'
                   break
                 case 4:
                   value = '解绑中'
-                  //value = '正常'
                   break
                 case 5:
                   value = '升级中'
@@ -678,7 +676,7 @@
           {
             title: '操作',
             render: (h, object) => {
-              if (this.auth && this.auth.checkstatus == 0) {
+              if ((this.auth && this.auth.checkstatus == 0) || this.personAuth && this.personAuth.checkstatus===0) {
                 if (object.row.status == 0) {
                   return h('span', {}, '已欠费')
                 } else if (object.row.status == 2) {
@@ -947,14 +945,14 @@
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
           let publicipids = []
-          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
+          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0 && this.personAuth && this.personAuth.checkstatus !==0)|| (this.auth && this.auth.checkstatus !== 0 && !this.personAuth)) {
             this.ipData.forEach(item => {
               item._disabled = true
             })
           }
           let ids =[];
           this.ipData.forEach(item => {
-            if (item.status != 1 || item.status == 0) {
+            if (item.status == 2 || item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6) {
               item._disabled = true
               ids.push(item.publicipid)
             }
@@ -1336,6 +1334,10 @@
       },
       adjust() {
         if (this.select.length === 1) {
+          if(this.select[0].status == 0){
+            this.$Message.info("该资源已欠费，请续费后再操作")
+            return
+          }
           this.adjustForm.minBrand = this.select[0].bandwith
           this.adjustForm.brand = this.select[0].bandwith
           switch (this.select[0].caseType) {
@@ -1377,6 +1379,10 @@
         if (this.select.length === 1) {
           if (this.select[0].caseType != 3) {
             this.$Message.info("实时计费才能变更资费")
+            return
+          }
+          if(this.select[0].status == 0){
+            this.$Message.info("该资源已欠费，请续费后再操作")
             return
           }
           this.chargesForm.discounts = null
@@ -1815,6 +1821,9 @@
     computed: {
       auth() {
         return this.$store.state.authInfo
+      },
+      personAuth(){
+        return this.$store.state.authInfoPersion
       },
       publicipOnDelete() {
         if (this.select.length !== 0) {

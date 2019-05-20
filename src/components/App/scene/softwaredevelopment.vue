@@ -30,7 +30,7 @@
         <div class="body">
           <h2>典型配置推荐</h2>
           <div class="configGroup">
-            <div v-for="(cfg,index1) in item.configGroup" class="config" :class="{gpu: scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'}">
+            <div v-for="(cfg,index1) in item.configGroup" class="config" :class="{gpu: scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算',hidden: index1 == 1 || index1 == 2}">
               <div class="cf-title" :class="{gpu: scene == '游戏服务'||scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算' }">{{cfg.title}}</div>
               <div class="cf-body">
                 <div class="cf-content">
@@ -2627,10 +2627,13 @@
         .configGroup {
           margin-top: 40px;
           display: flex;
-          justify-content: space-around;
           .config {
-            width: 250px;
+            width: 350px;
+            margin-right: 40px;
             background: rgba(255, 255, 255, 1);
+             &.hidden{
+              display: none;
+            }
             &:hover {
               box-shadow: 0px 0px 20px 0px rgba(179, 179, 179, 1);
             }

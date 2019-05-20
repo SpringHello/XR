@@ -147,6 +147,7 @@
         width: 1200px;
         height: 100%;
         margin: 0px auto;
+        display: -webkit-box;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -178,6 +179,7 @@
       .wrapper-form {
         width: 1200px;
         margin: 0px auto;
+        display: -webkit-box;           
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -249,6 +251,7 @@
       border: 1px solid rgba(161, 161, 161, 0.00);
       box-shadow: 0 2px 24px 0 hsla(0, 0%, 49%, .35);
       .title {
+        display: -webkit-box;
         display: flex;
         > span {
           display: inline-block;
@@ -273,6 +276,7 @@
           width: 340px;
           border-radius: 4px;
           border: 1px solid rgba(200, 200, 200, 1);
+          display: -webkit-box;
           display: flex;
           align-items: center;
           &.error {
@@ -308,6 +312,7 @@
         .errorMsg {
           height: 30px;
           > div {
+            display: -webkit-box;
             display: flex;
             padding: 8px 0;
             > i {
@@ -378,6 +383,7 @@
       width: 100%;
       top: 0;
       z-index: 1000;
+      display: -webkit-box;           
       display: flex;
       justify-content: center;
       align-items: center;
@@ -385,6 +391,7 @@
         height: 140px;
         width: 220px;
         margin: 0 auto;
+        display: -webkit-box;
         display: flex;
         justify-content: center;
         align-items: center;

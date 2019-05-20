@@ -31,7 +31,7 @@
       return {
         sceneList: [
           {
-            text: '云电脑',
+            text: '虚拟云桌面',
             icons: [
               {
                 src: require('../../assets/img/sceneList/sl-icon1.png')

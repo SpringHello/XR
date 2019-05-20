@@ -313,20 +313,12 @@
           </div>
         </div>
       </span>
-      <!--<Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
-      <span class="service"><a
-        :href="kfURL"
-        target="_blank"></a></span>
-      </Poptip>-->
-      <!--      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left" style="height:48px;">
-              <span class="phone"></span>
-            </Poptip>-->
       <span class="phone" @click="getOrderType" @mouseenter="PME" @mouseleave="PML">
-        <div ref="phoneE" style="overflow: hidden;bottom:45px;">
+        <div ref="phoneE" style="overflow: hidden;bottom:5px;">
           <div class="wrapper">
             <div>
-              <span class="title">投诉与建议</span>
-            </div>
+            <span class="title">投诉与建议</span>
+              </div>
           </div>
         </div>
       </span>
@@ -807,7 +799,7 @@
       var zoneList = axios.get('information/zone.do', {params: {t: new Date().getTime(),buy: '1'}})
       Promise.all([userInfo, zoneList]).then(values => {
         if (values[0].data.status == 1 && values[0].status == 200) {
-          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result, authInfoPersion: values[0].data.authInfo_persion})
           localStorage.setItem('realname', values[0].data.result.realname)
         }
         if (values[1].data.status == 1 && values[1].status == 200) {
@@ -1286,9 +1278,9 @@
       }
       #foot-footer {
         .footer-top {
-          height: 340px;
+          // height: 340px;
           background-color: #434343;
-          padding-top: 46px;
+          padding: 46px 0 20px 0;
           .description {
             width: 1200px;
             margin: 0px auto;
@@ -1536,6 +1528,7 @@
         display: block;
         padding: 10px;
         background: #FFF;
+        position: relative;
         background-repeat: no-repeat;
         background-position: center;
         background-image: url('./assets/img/app/phone.png');
@@ -1569,7 +1562,7 @@
               color: rgba(102, 102, 102, 1);
               line-height: 16px;
               &.title {
-                color:rgba(255,98,75,1);
+                color:#333333;
                 font-size: 14px;
               }
             }

@@ -282,7 +282,7 @@
           </div>
         </div>
         <h2>请上传其他资料</h2>
-        <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击<a :href="mandateAddress">下载法人授权委托书</a>）</p>
+        <p class="titleDescription">如前置审批材料，法人授权委托书、居住证、暂住证等材料（点击<a :href="mandateAddress">下载法人授权委托书</a>）</p>
         <div v-for="(item, upIndex) in  uploadForm.otherFileGroup">
           <div class="upload">
             <div class="uploadTitle">
@@ -885,7 +885,7 @@
       // 校验用户上传的文件类型
       handleFormatError() {
         this.$Message.info({
-          content: '请选择jpg、png、jpeg、doc、pdf类型的文件进行上传'
+          content: '请选择jpg、png、jpeg类型的文件进行上传'
         });
       },
       handleFormatJpg() {
@@ -895,7 +895,7 @@
       },
       handleMaxSize() {
         this.$Message.info({
-          content: '请选择大小小于2M的文件进行上传'
+          content: '请选择大小小于4M的文件进行上传'
         });
       },
       // 提交资料
@@ -950,7 +950,7 @@
         let flag3 = this.uploadForm.otherFileGroup.some(item => {
           return item.otherFile.length === 0
         })
-        if (flag3) {
+        if (flag3&&this.mainUnitInformation.unitProperties == '企业') {
           this.$Message.info({
             content: '请上传其他资料（委托书等）'
           })

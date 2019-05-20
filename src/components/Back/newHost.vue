@@ -4,7 +4,7 @@
       <span class="title">云服务器 /
          <span>云主机</span>
       </span>
-      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="(!auth)||auth && auth.checkstatus !== 0">您尚未进行实名认证，只有认证用户才能对外提供服务，
+      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
@@ -520,8 +520,8 @@
           </div>
           <div class="resetModal-hint">
             <p v-show="resetPasswordForm.errorMsg=='passwordUndercapacity'">您输入的密码强度不足</p>
-            <p v-show="resetPasswordForm.errorMsg=='passwordHint'">提醒：密码必须是8-32个包含数字和大小写字母的字符，不能包含@!#&lt&gt(){}[]%</p>
-            <p v-show="resetPasswordForm.errorMsg=='passwordHintTwo'">注意：您的密码已经符合设置密码规则，但密码需要具备一定的强度，建议您设置12位以上，至少包括4项（：，-（）；）的特殊字符，每种字符大于等于2位</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordHint'">提醒：密码必须是8-32个包含数字和大小写字母的字符，可用特殊符号：~:,*</p>
+            <p v-show="resetPasswordForm.errorMsg=='passwordHintTwo'">注意：您的密码已经符合设置密码规则，但密码需要具备一定的强度，建议您设置12位以上，至少包括4项（~:,*）的特殊字符，每种字符大于等于2位</p>
           </div>
           <div class="resetModal-import">
             <span>确认密码</span>
@@ -560,7 +560,7 @@
       return {
         guideStep: 1,
         regExpObj: {
-          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~$_^&*,-?.+=]{8,32}$/
+          password: /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~\\\\^*|:\',]{8,32}$/
         },
         showModal: {
           selectAuthType: false,
@@ -595,7 +595,7 @@
             render: (h, params) => {
               let text_1 = params.row.computername ? params.row.computername : '----'
               let text_2 = params.row.instancename ? params.row.instancename : '----'
-              if (params.row.status == 1 && this.auth && this.auth.checkstatus == 0) {
+              if ((params.row.status == 1 && this.auth && this.auth.checkstatus == 0 )|| (params.row.status == 1 && this.personAuth && this.personAuth.checkstatus == 0 )) {
                 return h('ul', {}, [
                   h('li', {
                     style: {
@@ -1006,7 +1006,7 @@
           {
             title: '操作',
             render: (h, params) => {
-              if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
+              if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0 && this.personAuth && this.personAuth.checkstatus !== 0)|| (this.auth && this.auth.checkstatus !== 0 && !this.personAuth)) {
                 return h('div', {}, [
                   h('p', {
                     style: {
@@ -1664,7 +1664,7 @@
             if (ids.length !== 0) {
               this.timingRefresh(ids + '')
             }
-            if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0)) {
+            if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0 && !this.personAuth)|| (this.auth && this.auth.checkstatus !== 0 && this.personAuth && this.personAuth.checkstatus !== 0)) {
               this.hostListData.forEach(host => {
                 host._disabled = true
               })
@@ -1915,6 +1915,7 @@
         })
       },
       delHostOk() {
+        this.showModal.delHostHint = false;
         let params = {}
         if (this.hostDelWay === 1) {
           this.hostListData.forEach(host => {
@@ -2751,6 +2752,9 @@
     computed: {
       auth() {
         return this.$store.state.authInfo
+      },
+      personAuth(){
+        return this.$store.state.authInfoPersion
       },
       selectHostIds() {
         let ids = []

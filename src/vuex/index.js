@@ -18,6 +18,8 @@ const store = new Vuex.Store({
     authInfo: null,
     // 用户个人信息
     userInfo: null,
+    // 新增用户个人认证信息
+    authInfoPersion: null,
     // 区域信息
     zoneList: null,
     // 当前区域
@@ -36,9 +38,10 @@ const store = new Vuex.Store({
   getters: {},
 
   mutations: {
-    setAuthInfo(state, {authInfo, userInfo}) {
+    setAuthInfo(state, {authInfo, userInfo, authInfoPersion}) {
       state.authInfo = authInfo
       state.userInfo = userInfo
+      state.authInfoPersion = authInfoPersion
     },
     setZoneList(state, zoneList) {
       state.zoneList = zoneList
@@ -73,7 +76,8 @@ const store = new Vuex.Store({
           if (response.status == 200 && response.data.status == 1) {
             commit('setAuthInfo', {
               authInfo: response.data.authInfo,
-              userInfo: response.data.result
+              userInfo: response.data.result,
+              authInfoPersion: response.data.authInfo_persion,
             })
           } else {
             localStorage.removeItem('authToken')

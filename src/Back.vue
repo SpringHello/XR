@@ -209,11 +209,11 @@
         <span class="phone"></span>
       </Poptip>-->
       <span class="phone" @click="getOrderType" @mouseenter="PME" @mouseleave="PML">
-        <div ref="phoneE" style="overflow: hidden;bottom:45px;">
+        <div ref="phoneE" style="overflow: hidden;bottom:5px;">
           <div class="wrapper">
             <div>
-              <span class="title">投诉与建议</span>
-            </div>
+            <span class="title">投诉与建议</span>
+              </div>
           </div>
         </div>
       </span>
@@ -449,7 +449,7 @@
       Promise.all([userInfo, zoneList]).then(values => {
         $store.commit('setZoneList', values[1].data.result)
         if (values[0].status == 200 && values[0].data.status == 1) {
-          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result, authInfoPersion: values[0].data.authInfo_persion})
         } else {
           next(vm => {
             vm.$router.push({path: '/login'})
@@ -631,7 +631,7 @@
       },
       exit() {
         axios.get('user/logout.do').then(response => {
-          $store.commit('setAuthInfo', {authInfo: null, userInfo: null})
+          $store.commit('setAuthInfo', {authInfo: null, userInfo: null, authInfoPersion: null})
           this.$router.push('/login')
         })
       },
@@ -1164,22 +1164,24 @@
       }
     }
     .phone {
-      width: 48px;
-      height: 48px;
-      display: block;
-      padding: 10px;
-      cursor: pointer;
-      background-color: #ffffff;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-image: url('./assets/img/app/phone.png');
-      /*&:hover {
-        background: #2A99F2;
+        width: 48px;
+        height: 48px;
+        display: block;
+        padding: 10px;
+        background: #FFF;
+        position: relative;
         background-repeat: no-repeat;
         background-position: center;
-        background-image: url('./assets/img/app/phone-hover.png');
-      }*/
-      > div {
+        background-image: url('./assets/img/app/phone.png');
+        cursor: pointer;
+        margin-bottom: 10px;
+        /*&:hover {
+          background: #2A99F2;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-image: url('./assets/img/app/phone-hover.png');
+        }*/
+        > div {
           position: absolute;
           width: 0px;
           background-color: #ffffff;
@@ -1201,13 +1203,13 @@
               color: rgba(102, 102, 102, 1);
               line-height: 16px;
               &.title {
-                color:rgba(255,98,75,1);
+                color:#333333;
                 font-size: 14px;
               }
             }
           }
         }
-    }
+      }
   }
 
   .complain-modal {

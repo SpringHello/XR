@@ -43,7 +43,15 @@
           <div @click="push('/activity/free/')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
-
+              <div class="wrap">
+              <div class="text">
+                 <p>爆款云服务器免费用一年</p>
+              <p>押金随时可退</p>
+             </div>
+           <div class="img">
+                <img src="../../assets/img/active/freeToReceive/fr-banner22.png" />
+           </div>
+            </div>
             </div>
           </div>
         </my-carousel-item>
@@ -183,14 +191,14 @@
       return {
         active: [],
         activedata: [
-          {
+         /* {
             imgPath: require('../../assets/img/activecenter/bg-card-kaixue.png'),
             time: '2019.3.1-2019.4.30',
             activeObj: '新老用户皆可参与',
             url: '/activity/2019spring/',
             isStart: true,
             weight: '1',
-          },
+          },*/
           // {
           //   imgPath: require('../../assets/img/activecenter/bg-card-6.png'),
           //   time: '2019.1.28-2019.03.01',
@@ -330,7 +338,34 @@
           }
           .free-receive {
             height: 400px;
-            background:  url("../../assets/img/active/freeToReceive/fr-banner20.png") center no-repeat;
+            background: linear-gradient(90deg, #ffe3d0, #ffffff), url("../../assets/img/active/freeToReceive/fr-banner21.png") center no-repeat;
+                .wrap{
+      width: 1200px;
+      margin:0 auto;
+      display: flex;
+      justify-content: space-between;
+      .text{
+      >p{
+        font-size:50px;
+        font-family:"Microsoft YaHei", "微软雅黑";
+        font-weight:600;
+        color:rgba(51,51,51,1);
+      }
+      p:nth-child(1){
+        margin-top: 140px;
+        font-size:48px;
+        font-weight:400;
+      }
+      p:nth-child(2){
+        font-size:24px;
+        margin-top: 25px;
+        font-weight: normal;
+      }
+      }
+      .img{
+        padding-top: 30px;
+      }
+    }
           }
           .obj-storage {
             background: linear-gradient(

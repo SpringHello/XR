@@ -30,7 +30,7 @@
                 <div>
                    <p>主机信息</p>  
                   <ul>
-                    <li><span class="one">镜像系统</span><span class="two">{{ gpuDetail.template}}</span><span class="three" @click="modifyMirror"> [修改]</span></li>
+                    <li><span class="one">镜像系统</span><span class="two">{{ gpuDetail.template}}</span></li><!--<span class="three" @click="modifyMirror"> [修改]</span>-->
                     <li><span class="one">系统盘容量</span><span class="two">{{ gpuDetail.rootDiskSize}}G</span></li>
                     <li><span class="one">绑定数据盘</span><span class="two">{{ gpuDetail.diskSize }}G</span><span class="three" @click="diskMount"> [挂载</span><span class="three" @click="diskUnload"> / 卸载]</span></li>
                     <li><span class="one">登陆密码</span><span class="two"></span><span class="three" v-if="codePlaceholder == '发送密码'" @click="showWindow.lookPassword = true"> [{{codePlaceholder}}]</span>
@@ -565,7 +565,7 @@
   }
   export default {
     data(){
-      var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
+      var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~$_^&*,-?.+=]{8,32}$/
       const validaRegisteredPassWord = (rule, value, callback) => {
         if (value.length < 8 || value.length > 30) {
           callback(new Error('密码长度8-30字符'));
