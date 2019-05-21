@@ -184,7 +184,7 @@
               <div class="list">
                 <div class="flex-vertical-center content-header">
                   <span>{{defaultMonth}}账单汇总</span>
-                  <Button type="primary">导出当前账单</Button>
+                  <Button type="primary" @click="billExportType()">导出当前账单</Button>
                 </div>
                 <ul class="monthly-tabs">
                   <li v-for="(item,index) in billMonthlyTabs" :key="index" :class="{'select-tab':billTypeSelected == index}" @click="changetabs(index)">{{item}}</li>
@@ -1177,12 +1177,12 @@
         <div class="export-bill-modal">
           <div class="row">
             <i class="lable">{{currentMonth}}月账单文件</i>
-            <span class="btn" v-if="checkExport">点击生成</span>
+            <span class="btn" v-if="checkExport" @click="downloadBillAll()">点击生成</span>
             <span v-else>账单于次月3日统计完成</span>
           </div>
           <div class="row">
             <i class="lable">账单自动发送</i>
-            <i-switch v-model="switchBill" size="default" @on-change="changeSwitch"></i-switch>
+            <i-switch v-model="switchBill" @on-change="changeSwitch"></i-switch>
           </div>
           <div class="row" v-if="switchBill">
             <span style="color:#B2B2B2">开启账单自动发送之后，将在每月3号自动产生上月账单并发送至账单接收人</span>
@@ -1190,7 +1190,7 @@
           <div class="row" v-if="switchBill">
             <i class="lable">账单接收人</i>
             <Select v-model="selectLinkMan" style="width:280px;">
-              <Option value="item.id" v-for="(item,index) in linkManData" :key="index">{{item.username}}</Option>
+              <Option :value="item.id" v-for="(item,index) in linkManData" :key="index">{{item.username}}</Option>
             </Select>
             <Poptip trigger="hover" placement="top" style="margin-left:8px;color:#2B99F2;font-size:18px;">
                 <Icon type="ios-help-outline"></Icon>
@@ -1203,7 +1203,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.billExport = false">取消</Button>
-        <Button type="primary" @click="updateBalanceWarn">确认</Button>
+        <Button type="primary" @click="billExportAuto_ok()">确认</Button>
       </p>
     </Modal>
   </div>
@@ -1794,23 +1794,68 @@
         columnsProductA: [
             {
                 title: '产品名称',
-                key: 'name'
+                key: 'name',
+                render: (h,params) => {
+                  return h('span',{
+                    style: {
+                      color: '#2A99F2'
+                    }
+                  }, params.row.name)
+                }
             },
             {
                 title: '现金支付',
-                key: 'cashPay'
+                key: 'cashPay',
+                renderHeader: (h,params) => {
+                  return h('div',[
+                    h('span', '现金支付'),
+                    h('Poptip',{
+                      props: {
+                        trigger: 'hover',
+                        content: '现金支付包含余额支付与第三方支付',
+                        transfer: true
+                      },
+                      style: {
+                        color: '#2B99F2',
+                        marginLeft: '4px'
+                      }
+                    },[
+                      h('Icon',{
+                        props: {
+                          type: 'ios-help-outline'
+                        },
+                        style: {
+                          color: '#2B99F2',
+                          fontSize: '14px',
+                        }
+                      })
+                    ])
+                  ])
+                },
+                render: (h,params) => {
+                  return h('span','¥'+params.row.cashPay)
+                }
             },
             {
                 title: '现金券支付',
-                key: 'voucherPay'
+                key: 'voucherPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.voucherPay)
+                }
             },
             {
                 title: '优惠券抵扣',
-                key: 'coupon'
+                key: 'coupon',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.coupon)
+                }
             },
             {
                 title: '总费用',
-                key: 'totalPay'
+                key: 'totalPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.totalPay)
+                }
             }
         ],
         dataProductA: [
@@ -1818,49 +1863,137 @@
         columnsZoneA: [
             {
                 title: '区域名称',
-                key: 'name'
+                key: 'name',
+                render: (h,params) => {
+                  return h('span',{
+                    style: {
+                      color: '#2A99F2'
+                    }
+                  }, params.row.name)
+                }
             },
             {
                 title: '现金支付',
-                key: 'cashPay'
+                key: 'cashPay',
+                renderHeader: (h,params) => {
+                  return h('div',[
+                    h('span', '现金支付'),
+                    h('Poptip',{
+                      props: {
+                        trigger: 'hover',
+                        content: '现金支付包含余额支付与第三方支付',
+                        transfer: true
+                      },
+                      style: {
+                        color: '#2B99F2',
+                        marginLeft: '4px'
+                      }
+                    },[
+                      h('Icon',{
+                        props: {
+                          type: 'ios-help-outline'
+                        },
+                        style: {
+                          color: '#2B99F2',
+                          fontSize: '14px',
+                        }
+                      })
+                    ])
+                  ])
+                },
+                render: (h,params) => {
+                  return h('span','¥'+params.row.cashPay)
+                }
             },
             {
                 title: '现金券支付',
-                key: 'voucherPay'
+                key: 'voucherPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.voucherPay)
+                }
             },
             {
                 title: '优惠券抵扣',
-                key: 'coupon'
+                key: 'coupon',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.coupon)
+                }
             },
             {
                 title: '总费用',
-                key: 'totalPay'
+                key: 'totalPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.totalPay)
+                }
             }
-              
         ],
         dataZoneA: [],
         columnsDatetypeA: [
             {
                 title: '消费类型',
-                key: 'name'
+                key: 'name',
+                render: (h,params) => {
+                  return h('span',{
+                    style: {
+                      color: '#2A99F2'
+                    }
+                  }, params.row.name)
+                }
             },
             {
                 title: '现金支付',
-                key: 'cashPay'
+                key: 'cashPay',
+                renderHeader: (h,params) => {
+                  return h('div',[
+                    h('span', '现金支付'),
+                    h('Poptip',{
+                      props: {
+                        trigger: 'hover',
+                        content: '现金支付包含余额支付与第三方支付',
+                        transfer: true
+                      },
+                      style: {
+                        color: '#2B99F2',
+                        marginLeft: '4px'
+                      }
+                    },[
+                      h('Icon',{
+                        props: {
+                          type: 'ios-help-outline'
+                        },
+                        style: {
+                          color: '#2B99F2',
+                          fontSize: '14px',
+                        }
+                      })
+                    ])
+                  ])
+                },
+                render: (h,params) => {
+                  return h('span','¥'+params.row.cashPay)
+                }
             },
             {
                 title: '现金券支付',
-                key: 'voucherPay'
+                key: 'voucherPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.voucherPay)
+                }
             },
             {
                 title: '优惠券抵扣',
-                key: 'coupon'
+                key: 'coupon',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.coupon)
+                }
             },
             {
                 title: '总费用',
-                key: 'totalPay'
+                key: 'totalPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.totalPay)
+                }
             }
-              
         ],
         dataDatetypeA: [],
         billProductTotal: '',
@@ -2869,7 +3002,20 @@
         }
       },
       changeSwitch(status) {
-        console.log(status)
+        // console.log(status)
+      },
+      // 添加a标签下载并且重命名，公用方法
+      saveAs(blob, filename) {
+            this.$Message.success('导出成功')
+            const link = document.createElement('a');
+            const body = document.querySelector('body');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = filename;
+            link.style.display = 'none';
+            body.appendChild(link);
+            link.click();
+            body.removeChild(link);
+            window.URL.revokeObjectURL(link.href);
       },
       // 列出联系人
       getContacts() {
@@ -2877,13 +3023,73 @@
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.linkManData = response.data.result
-            // console.log(this.linkManData)
+            if(this.linkManData.length!=0) {
+              this.selectLinkMan = response.data.result[0].id
+            }
           }
+        })
+      },
+      getExportStatus() {
+        axios.get('nVersionUser/getBillReceiverInfo.do',).then(response=> {
+
         })
       },
       exportBillMonth() {
         this.showModal.billExport = true
         this.getContacts()
+        // this.getExportStatus()
+      },
+      downloadBillAll() {
+        // console.log(this.valueBill)
+        axios.get('nVersionUser/billOverviewExport.do',{
+          responseType: 'arraybuffer',
+          params: {
+            companyId: this.$store.state.userInfo.companyid,
+            times: this.valueBill
+          }
+        }).then(response=> {
+          if(response.status == 200) {
+            var blob = new Blob([response.data],{type: "application/vnd.ms-excel"})
+            this.saveAs(blob,this.defaultMonth+'账单概览')
+          } else {
+            this.$Message.error(response.data.message)
+          }
+        })
+      },
+      billExportAuto_ok() {
+        axios.get('nVersionUser/modifyBillReceiver.do',{
+          params: {
+            status: this.switchBill?1:0,
+            billSendUser: this.selectLinkMan
+          }
+        }).then(response=> {
+          if(response.status == 200&&response.data.status == 1) {
+            if(this.switchBill) {
+              this.$Message.success('账单自动生成设置成功')
+            } else {
+              this.$Message.info('账单自动生成取消成功')
+            }
+          } else {
+            this.$Message.error(response.data.message)
+          }
+        })
+      },
+      billExportType() {
+        axios.get('nVersionUser/consumptionSummaryExport.do',{
+          responseType: 'arraybuffer',
+          params: {
+            companyId: this.$store.state.userInfo.companyid,
+            times: this.valueBill,
+            type: this.billTypeSelected+1
+          }
+        }).then(response=> {
+          if(response.status == 200) {
+            var blob = new Blob([response.data],{type: "application/vnd.ms-excel"})
+            this.saveAs(blob,this.billMonthlyTabs[this.billTypeSelected]+'('+this.defaultMonth+')')
+          } else {
+            this.$Message.error(response.data.message)
+          }
+        })
       },
       toAppllyInvoice() {
         this.$router.push('invoiceManage')
