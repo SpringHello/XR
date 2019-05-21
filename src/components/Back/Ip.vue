@@ -854,15 +854,18 @@
         this.hide = 'none';
       }
       this.testjump()
-      axios.get('network/listVpc.do', {
+      this.listVpc()
+    },
+    methods: {
+      listVpc(){
+        axios.get('network/listVpc.do', {
           params: {
             zoneId: $store.state.zone.zoneid
           }
         }).then(response => {
           this.newIPForm.VPCOptions = response.data.result
         })
-    },
-    methods: {
+      },
 			testjump(){
 			  if (sessionStorage.getItem('modal')) {
 			    var modalName = sessionStorage.getItem('modal')
@@ -1809,6 +1812,7 @@
             this.hide = 'none';
           }
           this.refresh()
+          this.listVpc()
           this.select = []
         },
         deep: true

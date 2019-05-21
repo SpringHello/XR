@@ -2220,7 +2220,9 @@
                   },
                   on: {
                     click: () => {
-                      this.showModal.freezeParticulars = false
+                      sessionStorage.setItem('unfreezeId',params.row.id)
+                      this.$router.push('ThawDeposit')
+                      /*this.showModal.freezeParticulars = false
                       this.unfreezeId = params.row.id
                       this.$http.get('user/jdugeThawCondition.do', {
                         params: {
@@ -2249,7 +2251,7 @@
                           this.thawingCondition = params.row.thawCondition
                           this.showModal.notUnfreeze = true
                         }
-                      })
+                      })*/
                     }
                   }
                 }, '申请解冻')
