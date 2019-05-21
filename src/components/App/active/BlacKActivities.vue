@@ -53,44 +53,11 @@
           <div class="kaiqiang">
               每天0点、9点、14点、18点、21点开抢
           </div>
-          <!-- <div class="headline">
-            <div>
-              低配爆款主机限时疯抢
-            </div>
-            <p>
-              新用户专享 爆品秒杀 先到先得 低至一折
-              <span class="rule" @click="showModal.rule1=true">活动规则</span>
-            </p>
-          </div> -->
           <div class="main">
-            <!-- <div class="tabs  flex" style="justify-content: center" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
-              <div :class="{started: hour >=9&&hour<12}">9:00~12:00</div>
-              <div :class="{started: hour >=14&&hour<20}">14:00~20:00</div>
-            </div> -->
-            <!-- <div class="tabs  flex" style="justify-content: center" v-else>
-              <div style="width:800px;background:#E1212A" v-if="hour >=12&&hour <14">下场秒杀时间14:00~20:00</div>
-              <div style="width:800px;background:#E1212A" v-else>下场秒杀时间9:00～12:00</div>
-            </div> -->
             <div class="box">
-              <!-- <div class="box_time" v-if="hour >=9&&hour<12||hour >=14&&hour<20">
-                <p>本场秒杀倒计时</p>
-                <div class="count-down">
-                  <span>{{h}}</span>
-                  <i>时</i>
-                  <span>{{m1}}</span>
-                  <span>{{m2}}</span>
-                  <i>分</i>
-                  <span>{{s1}}</span>
-                  <span>{{s2}}</span>
-                  <i>秒</i>
-                </div>
-              </div> -->
               <div class="w_host">
                 <div v-for="(item,index) in discountProductfornew" >
                   <div class="host_title">
-                    <!-- <div class="rectangle">
-                      {{item.discount}}折
-                    </div> -->
                     <p style="font-size:18px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(255,191,130,1);">{{item.servicetype == 'host' ? '云服务器' : '对象存储'}}</p>
                     <p class="config-text">100%性能可用，更低价格，拒绝套路</p>
                       <img :src="item.imgright" alt="描述"> 
@@ -130,12 +97,8 @@
                 </div>
                 <div v-for="(item,index) in discountProduct" :key="index">
                   <div class="host_title">
-                    <!-- <div class="rectangle">
-                      {{item.discount}}折
-                    </div> -->
                     <p style="font-size:18px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(255,191,130,1);">{{item.servicetype == 'host' ? '云服务器' : '对象存储'}}</p>
-                    <!-- <p v-if="item.storage" class="config-text"><span>{{item.storage}}G</span>存储+<span>{{item.flow}}</span>下行流量</p>
-                    <p v-else class="config-text"><span>{{item.cpunum}}</span>核+<span>{{item.memory}}G</span>+<span>{{item.bandwith}}M</span>带宽+<span>{{item.disksize}}G</span>SSD系统盘</p> -->
+                    
                     <p class="config-text">100%性能可用，更低价格，拒绝套路</p>
                       <img :src="item.imgright" alt="描述"> 
                   </div>
@@ -191,12 +154,12 @@
             <div class="inlineheader">
               <img src="../../../assets/img/active/blackactive/资源 18@2x.png">
               <div>
-                <p>云电脑抢先预约</p>
-                <p style="margin-top:5px;">注册送新手好礼</p>
+                <p>云电脑</p>
+                <p style="margin-top:5px;">畅享无限游戏体验</p>
               </div>
             </div>
             <div class="inlineright">
-              <p>注册即可获赠10云币</p>
+              <p>云电脑注册即可获赠10云币</p>
               <p>【可抵扣云电脑3小时使用时长】</p>
               <Button type="warning" style="margin-top:16px;" @click="appointmentimmediately">立即预约</Button>
             </div>
@@ -294,30 +257,53 @@
                       <span>{{numG}}G</span>
                     </div>
                   </div>
-                  <div class="give">
+                  <div class="give" v-if="hostProductHot.timeTimetype.value=='1'&&hostProductHot.cpuMemory.cpunum!=1&&hostProductHot.cpuMemory.memory!=2">
                     <img src="../../../assets/img/active/blackactive/give.png">
                     <p class="givep1">
-                      <span style=" margin: 0 25px 0 21px;">CPU</span>
+                      <span style=" margin: 0 19px 0 23px;">CPU</span>
                       <span>内存</span>
-                      <span style="margin: 0 35px 0 25px;">带宽</span>
+                      <span style="margin: 0 19px 0 20px;">带宽</span>
                       <span>系统盘</span>
+                      <span style="margin: 0 18px 0 20px;">时长</span>
                     </p>
                     <p class="givep2">
-                      <span style=" margin: 0 20px 0 17px;">2核</span>
+                      <span style=" margin: 0 15px 0 18px;">2核</span>
                       <span>4G</span>
-                      <span style="margin: 0 20px 0 20px;">2M</span>
-                      <span>40G <span style="font-size:12px;">SSD</span></span>
+                      <span style="margin: 0 15px 0 15px;">2M</span>
+                      <span>40G</span>
+                      <span style="margin: 0 15px 0 15px;">1年</span>
                     </p>
+                  </div>
+                  <div class="give" v-if="hostProductHot.timeTimetype.value=='3'&&hostProductHot.cpuMemory.cpunum!=1&&hostProductHot.cpuMemory.memory!=2">
+                    <img src="../../../assets/img/active/blackactive/give.png">
+                    <p class="givep1">
+                      <span style=" margin: 0 19px 0 23px;">CPU</span>
+                      <span>内存</span>
+                      <span style="margin: 0 19px 0 20px;">带宽</span>
+                      <span>系统盘</span>
+                      <span style="margin: 0 18px 0 20px;">时长</span>
+                    </p>
+                    <p class="givep2">
+                      <span style=" margin: 0 15px 0 18px;">2核</span>
+                      <span>8G</span>
+                      <span style="margin: 0 15px 0 15px;">5M</span>
+                      <span>40G</span>
+                      <span style="margin: 0 15px 0 15px;">1年</span>
+                    </p>
+                  </div>
+                  <div class="give" v-if="hostProductHot.cpuMemory.cpunum==1&&hostProductHot.cpuMemory.memory==2">
+                    <p style="margin: 21px auto 10px auto;font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);text-align: center;">购买<span style="color:#FF624B;">2核4G</span>及以上配置</p>
+                    <p style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);text-align: center;">尊享更多优惠</p>
                   </div>
                   <div class="item-config">
                     <p style="margin-bottom: 10px;">区域选择</p>
-                    <Select v-model="hostProductHot.zoneId" class="schoolseason-select" style="width:416px;">
+                    <Select v-model="hostProductHot.zoneId" class="schoolseason-select" style="width:424px;">
                         <Option v-for="(item3,index) in hostZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
                     </Select>
                   </div>
                   <div class="item-select">
                     <p>系统选择</p>
-                    <Cascader :data="hostSystemListHot" v-model="hostProductHot.system" class="schoolseason-select"></Cascader>
+                    <Cascader :data="hostSystemListHot" v-model="hostProductHot.system" class="schoolseason-select" style="width:424px;"></Cascader>
                   </div>
                   <div class="item-config1">
                     <p style="margin-bottom: 10px;">购买时长</p>
@@ -393,21 +379,22 @@
                       </div>
                     </div>
                     <div class="give">
-                      <img src="../../../assets/img/active/blackactive/give.png">
-                      <p class="givep1">
-                        <span style=" margin: 0 25px 0 21px;">CPU</span>
-                        <span>内存</span>
-                        <span style="margin: 0 35px 0 25px;">带宽</span>
-                        <span>系统盘</span>
-                      </p>
-                      <p class="givep2">
-                        <span style=" margin: 0 20px 0 17px;">2核</span>
-                        <span>4G</span>
-                        <span style="margin: 0 20px 0 20px;">2M</span>
-                        <span>40G <span style="font-size:12px;">SSD</span></span>
-                      </p>
-                    </div>
-                    <span class="givespan">赠送主机时长12个月</span>
+                    <img src="../../../assets/img/active/blackactive/give.png">
+                    <p class="givep1">
+                      <span style=" margin: 0 19px 0 23px;">CPU</span>
+                      <span>内存</span>
+                      <span style="margin: 0 19px 0 20px;">带宽</span>
+                      <span>系统盘</span>
+                      <span style="margin: 0 18px 0 20px;">时长</span>
+                    </p>
+                    <p class="givep2">
+                      <span style=" margin: 0 15px 0 18px;">2核</span>
+                      <span>4G</span>
+                      <span style="margin: 0 15px 0 15px;">2M</span>
+                      <span>40G</span>
+                      <span style="margin: 0 15px 0 15px;">1年</span>
+                    </p>
+                  </div>
                     <div class="item-config">
                       <p style="margin-bottom: 10px;">区域选择</p>
                       <Select v-model="gpuProductHot.zoneId" class="schoolseason-select" style="width:416px;">
@@ -494,6 +481,53 @@
                   </div>
                 </div>
               </div>
+          </div>
+        </div>
+      </section>
+      <section class="product-establishment">
+        <div class="wrap">
+          <div class="headline">
+            <div>
+            </div>
+            </p>
+          </div>
+          <div class="main flex">
+            <div class="contai">
+              <div class="con1">
+                <p>热卖域名优惠券</p>
+                <p>
+                  .com<span>¥55/年</span> | .cn<span>¥35/年</span> | .net<span>¥70/年</span>
+                </p>
+                <div class="eightzhe">
+                  <span>8</span>
+                  折
+                </div>
+                <div class="enjoy">
+                  <p>域名年付享受</p>
+                  <p>请前往<span @click="$router.push('/domain/')">域名注册</span>首页购买时使用</p>
+                </div>
+                <div style="clear: both;"></div>
+              </div>
+              <div class="con2" @click="ReceivingPreferential('36')">立即领取</div>
+            </div>
+            <div class="contai">
+              <div class="con1">
+                <p>SSL证书优惠券</p>
+                <p>
+                  <span>OV超快</span> SSL | <span>DV超真</span> SSL
+                </p>
+                <div class="eightzhe">
+                  <span>7</span>
+                  折
+                </div>
+                <div class="enjoy">
+                  <p>SSL证书年付享受</p>
+                  <p>请前往<span @click="$router.push('/buy/ssl/ ')">SSL证书</span>首页购买时使用</p>
+                </div>
+                <div style="clear: both;"></div>
+              </div>
+              <div class="con2" @click="ReceivingPreferential('37')">立即领取</div>
+            </div>
           </div>
         </div>
       </section>
@@ -1064,7 +1098,7 @@
         servicetypeGPU:'',
         ActivityState:'1',
         nucleus:'1',
-        numG:'1',
+        numG:'2',
         nucleusgpu:'16',
         numGgpu:'64',
         tooltipStatus: true,
@@ -1295,11 +1329,11 @@
         // 热门云主机打折
         hostProductHot: {
           zoneId: '',
-          cpuMemory: {cpunum: '1', memory: '1'},
+          cpuMemory: {cpunum: '1', memory: '2'},
           bandwith: 1,
           system: [],
           disksize: 20,
-          timeTimetype: {type: 'month', value: '6', discount: '4'},
+          timeTimetype: {type: 'year', value: '1', discount: '6'},
           count: '1',
           price: '',
           originalPrice: ''
@@ -1307,9 +1341,9 @@
         hostZoneListHot: [],
         hostConfigListHot: {
           basic: [
-            {cpunum: 1, memory: 1},
             {cpunum: 1, memory: 2},
-            {cpunum: 2, memory: 4}],
+            {cpunum: 2, memory: 4},
+            {cpunum: 2, memory: 8}],
           standard: [
             {cpunum: 4, memory: 8},
             {cpunum: 8, memory: 16},
@@ -1337,8 +1371,8 @@
           }],
         hostDisksizeListHot: [0, 20, 50, 100],
         hostTimeListHot: [
-          {type: 'month', value: '6', discount: '5'},
-          {type: 'year', value: '1', discount: '4'},
+          {type: 'year', value: '1', discount: '6'},
+          {type: 'year', value: '3', discount: '4'},
         ],
         // 热门gpu打折
         gpuProductHot: {
@@ -1540,6 +1574,23 @@
       },
       TOmembership(){
         this.showModal.OpenMembership=true
+      },
+      ReceivingPreferential(value){
+        axios.get('ticket/takeTicket.do', {
+              params: {
+                id: value
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$message.info({
+                  content: response.data.message
+                })
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
       },
       appointmentimmediately(){
         if (this.$store.state.userInfo == null) {
@@ -2921,15 +2972,15 @@
       height: 166px;
       width: 100%;
       .inbox{
-        width: 789px;
-        margin-left: 481px;
+        width: 717px;
+        margin: 0 auto;
         .inlineheader{
-          width: 301px;
+          width: 331px;
           height: 80px;
           margin: 38px 0 48px 0;
           float: left;
             > div {
-            width: 201px;
+            width: 231px;
             float: right;
             > p{
                 font-size:28px;
@@ -3167,7 +3218,7 @@
             height: 100%;
             background:rgba(68,72,110,1);
             float: right;
-            padding: 30px 65px 40px 80px;
+            padding: 30px 55px 40px 70px;
             .buy{
               width:140px;
               height:80px;
@@ -3216,12 +3267,12 @@
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
-                  margin-left: 10px;
+                  margin-left: 13px;
                 }
               }
             }
             .give{
-              width:257px;
+              width:270px;
               height:80px;
               border-radius:2px;
               border:1px solid rgba(255,191,130,1);
@@ -3581,7 +3632,7 @@
             height: 100%;
             background:rgba(68,72,110,1);
             float: right;
-            padding: 30px 65px 40px 80px;
+            padding: 30px 55px 40px 70px;
             .buy{
               width:140px;
               height:80px;
@@ -3635,7 +3686,7 @@
               }
             }
             .give{
-              width:257px;
+              width:270px;
               height:80px;
               border-radius:2px;
               border:1px solid rgba(255,191,130,1);
@@ -4001,8 +4052,99 @@
     }
   }
 
+  .product-establishment {
+    padding: 100px 0 100px 0;
+    .headline {
+      div {
+        background: url(../../../assets/img/active/blackactive/establishment.png) center no-repeat;
+      }
+    }
+    .main {
+      width: 1200px;
+      height: 341px;
+      text-align: center;
+      margin-top: 80px;
+      border:1px solid rgba(255,191,130,1);
+      padding: 36px 123px;
+      .contai {
+        width:416px;
+        height: 269px;
+        background: url(../../../assets/img/active/blackactive/youhuijuan.png) center no-repeat;
+        .con1{
+          width:100%;
+          height:200px;
+          padding: 20px 35px 10px 20px; 
+          text-align: left;
+          > p:nth-child(1){
+            font-size:20px;
+            font-family:MicrosoftYaHei-Bold;
+            font-weight:bold;
+            color:rgba(255,255,255,1);
+            line-height:20px;
+          }
+          > p:nth-child(2){
+            font-size:20px;
+            margin-top: 15px;
+            font-family:MicrosoftYaHei;
+            color:rgba(255,255,255,1);
+            line-height:20px;
+            > span{
+              color:rgba(255,118,59,1);
+            }
+          }
+          .eightzhe{
+            width: 110px;
+            margin-top: 15px;
+            font-size:26px;
+            font-family:MicrosoftYaHei-Bold;
+            font-weight:bold;
+            color:rgba(255,118,59,1);
+            float: left;
+            > span{
+              font-size:88px;
+            }
+          }
+          .enjoy{
+            width: 210px;
+            float: left;
+            margin-top: 52px;
+            > p:nth-child(1){
+              font-size:20px;
+              font-family:MicrosoftYaHei-Bold;
+              font-weight:bold;
+              color:rgba(255,255,255,1);
+              line-height:26px;
+            }
+            > p:nth-child(2){
+              margin-top: 5px;
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:rgba(178,178,178,1);
+              line-height:16px;
+              > span{
+                cursor: pointer;
+                color: #FF763B;
+              }
+            }
+          }
+        }
+        .con2{
+          width:100%;
+          height:69px;
+          text-align: center;
+          line-height: 54px;
+          font-size:24px;
+          font-family:MicrosoftYaHei;
+          color:rgba(51,51,51,1);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
   .product-member {
-    
+        padding: 0 0 100px 0;
+        background: #363854;
     .headline {
       div {
         background: url(../../../assets/img/active/blackactive/Group 21.png) center no-repeat;
@@ -4010,7 +4152,6 @@
     }
     .main {
       width: 1200px;
-      height: 499px;
       text-align: center;
       margin-top: 80px;
       .container {
