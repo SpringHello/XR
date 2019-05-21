@@ -775,7 +775,7 @@
         switch (this.index) {
           case 0:
             vmConfigId = '43'
-            dbVersion = 'mysql'
+            dbVersion = 'mysql-5.6'
             break
           case 1:
             vmConfigId = '43'
