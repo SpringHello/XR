@@ -73,7 +73,7 @@ export default {
     background: url('../../../assets/img/market/provider-bg.png') no-repeat center, linear-gradient(270deg, rgba(174, 201, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
     background-size: cover;
     .banner-box {
-      width: 1920px;
+      width: 1264px;
       height: 400px;
       margin: 0 auto;
       position: relative;
@@ -92,10 +92,8 @@ export default {
       }
       .banner-box-right {
         width: 592px;
-        height: 270px;
-        position: absolute;
-        top: 0;
-        right: 337px;
+        height: 100%;
+        float: right;
         z-index: 1;
         img {
           width: 592px;

@@ -686,6 +686,7 @@ box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
 }
 .product-nav .ivu-tabs-nav .ivu-tabs-tab{
   height: 35px;
+  line-height: 15px;
   margin-right: 10px;
   font-size: 14px;
   border-radius: 4px;
@@ -755,6 +756,43 @@ box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
 .ivu-input{
   width: 300px;
 }
+#details [type=reset], [type=submit],html [type=button]{
+  width: 92px !important;
+  height: 36px !important;
+  font-size: 14px !important;
+}
+.ivu-modal-wrap * .success{
+  width: 100%;
+  text-align: center;
+}
+.ivu-modal-wrap * .success .success-icon{
+  width: 100%;
+  padding: 50px 0 20px 0;
+  box-sizing: border-box;
+}
+.ivu-modal-wrap * .success .success-content{
+  width: 100%;
+}
+.ivu-modal-wrap * .success .success-content p:first-of-type{
+  font-size: 18px;
+  color: rgba(48,186,120,1);
+}
+.ivu-modal-wrap * .success .success-content p:last-of-type{
+  font-size: 14px;
+  color: rgba(102,102,102,1);
+  padding: 10px 0 20px 0;
+  box-sizing: border-box;
+}
+.ivu-modal-wrap * .success .success-content button{
+  width: 64px;
+  height: 36px;
+  background: rgba(59,120,255,1);
+  border-radius: 2px;
+  color: white;
+  outline: navajowhite;
+  border: navajowhite;
+  cursor: pointer;
+}
 
 /*云市场-列表页*/
 .ivu-menu-light{
@@ -789,7 +827,6 @@ box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
   padding-bottom: 10px;
 }
 .ivu-dropdown-rel a{
-  margin: 30px;
   color: rgba(102,102,102,1);
   position: relative;
 }
@@ -864,4 +901,75 @@ textarea.ivu-input{
 }
 #apply .points-style[data-v-e7b0a332]{
   background: white;
+}
+#apply .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
+  color: #666666;
+}
+
+/*云市场-产品详情页*/
+.ivu-modal-wrap * .ino-box-deploy-item{
+  display: flex;
+  margin-bottom: 20px;
+}
+.ivu-modal-wrap * .ino-box-deploy-item .title{
+  width: 75px;
+  line-height: 32px;
+  margin-right: 10px;
+  text-align: right;
+}
+.ivu-modal-wrap * .ino-box-deploy-item .content{
+  width: 400px;
+}
+.ivu-modal-wrap * .ino-box-deploy-item:nth-of-type(2) {
+  margin-bottom: 0;
+}
+.ivu-modal-wrap * .ino-box-deploy-item .content>span{
+  display: inline-block;
+  padding: 8px 25px;
+  border: 1px solid rgba(217,217,217,1);
+  color: rgba(102,102,102,1);
+  font-size: 14px;
+  height: 30px;
+  margin-right: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.ivu-modal-wrap * .ino-box-deploy-item .content>span:hover{
+  background: rgba(56,125,255,1);
+  color: white !important;
+  border: 1px solid rgba(56,125,255,1);
+  transition: 0.5s;
+}
+.ivu-modal-wrap * .active{
+  background: rgba(56,125,255,1);
+  color: white !important;
+  border: 1px solid rgba(56,125,255,1);
+}
+.ivu-modal-wrap * .points-style[data-v-e7b0a332]{
+  background: white;
+}
+.ivu-modal-wrap * .sub{
+  border-top: 1px solid rgba(233,233,233,1);
+  padding-top: 20px;
+  box-sizing: border-box;
+  text-align: right;
+  margin-top: 40px;
+}
+.ivu-modal-wrap * .sub button{
+  width:92px;
+  height:36px;
+  margin-left: 10px;
+}
+.ivu-icon-android-alert:before {
+  font-size: 40px;
+}
+.ivu-icon-help-circled:before{
+  font-size: 40px;
+}
+.ivu-modal-confirm-body{
+  padding-top: 8px;
+}
+
+#list .ivu-dropdown{
+  margin: 0 30px;
 }

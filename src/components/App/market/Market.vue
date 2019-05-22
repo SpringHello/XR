@@ -10,14 +10,14 @@
             <span>「华南地域」</span>
             数据中心盛大开服，万兆光纤极速体验，助力区域企业云上发展。
           </p>
-          <button>立即购买</button>
+          <button @click="banner">立即购买</button>
         </div>
       </div>
     </div>
     <!--公告、推荐-->
     <div class="notices">
       <div class="notice">
-        <div class="notice-row">
+        <div class="notice-row" @click="checkNotice(notice.id)">
           <img src="../../../assets/img/market/notice.png" class="notice-row-icon" />
           <div class="title">公告</div>
           <div class="line"></div>
@@ -25,7 +25,7 @@
           <div class="content">{{notice.title}}</div>
           <img src="../../../assets/img/market/go.png" />
         </div>
-        <div class="notice-row">
+        <div class="notice-row" @click="checkRecommend(recommend.id)">
           <img src="../../../assets/img/market/remcomend.png" class="notice-row-icon" />
           <div class="title">推荐</div>
           <div class="line"></div>
@@ -85,7 +85,7 @@
             <div class="product-list-item-name">{{items.title}}</div>
               <p>{{ items.company.name }}</p>
             </div>
-              <span @click="toDetails(items)">查看详情</span>
+               <span @click="toDetails(items.id,item)">查看详情</span>
             </div>
           </div>
         </div>
@@ -112,6 +112,11 @@ export default {
     }
   },
   methods: {
+    banner () {
+      sessionStorage.setItem('proid',1)
+      sessionStorage.setItem('typeName', '网站建设')
+      this.$router.push('details')
+    },
     // 合作伙伴左右切换
     right () {
       // 获取显示宽度
@@ -135,9 +140,20 @@ export default {
       this.$router.push('list')
       sessionStorage.setItem('name', index+1)
     },
-    toDetails (items) {
+    toDetails (proid,item) {
+      sessionStorage.setItem('proid',proid)
+      sessionStorage.setItem('typeName', item.name)
       this.$router.push('details')
-      sessionStorage.setItem('id', items.id)
+    },
+    checkNotice (noticeid) {
+      sessionStorage.setItem('proid',noticeid)
+      this.$router.push('details')
+      sessionStorage.setItem('typeName', this.notice.classification.name)
+    },
+    checkRecommend (recommendid) {
+      sessionStorage.setItem('proid',recommendid)
+      this.$router.push('details')
+      sessionStorage.setItem('typeName', this.recommend.classification.name)
     }
   },
   created () {
@@ -177,7 +193,7 @@ export default {
     background: url('../../../assets/img/market/gridding.png') no-repeat center, linear-gradient(270deg, rgba(174, 201, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
     background-size: cover;
     .banner-box {
-      width: 1920px;
+      width: 1900px;
       height: 400px;
       margin: 0 auto;
       position: relative;

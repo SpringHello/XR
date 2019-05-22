@@ -1,5 +1,5 @@
 <template>
-  <div id="front">
+  <div id="fronts">
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -367,7 +367,6 @@
   import '@/assets/iconfont/frontend/iconfont.js'
   import uuid from 'uuid'
   import regExp from './util/regExp'
-
   export default {
     name: 'app',
     data() {
@@ -891,7 +890,7 @@
 </script>
 
 <style rel="stylesheet/less" lang="less">
-  #front {
+  #fronts {
     .app-hint {
       height: 0;
       background: url("./assets/img/app/hint-banner.png") center no-repeat, linear-gradient(to right, #FF4439, #FF1569);

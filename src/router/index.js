@@ -132,12 +132,14 @@ const ResetNew = () =>import('@/components/LR/ResetNew')
 
 //云市场页面路由
 const market = () =>import('@/components/App/market/Market')
+const mtest = () =>import('@/components/App/market/test')
 const details = () =>import('@/components/App/market/Details')
 const list = () =>import('@/components/App/market/List')
 const supplier = () =>import('@/components/App/market/Supplier')
 const provider = () =>import('@/components/App/market/Provider')
 const apply1 = () =>import('@/components/App/market/Apply1')
 const apply2 = () =>import('@/components/App/market/Apply2')
+
 
 // 后台页面子路由
 // import Overview from '@/components/Back/Overview'

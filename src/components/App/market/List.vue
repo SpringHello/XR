@@ -52,11 +52,11 @@
               <div>{{items.title}}</div>
               <div>描述：{{items.description}}</div>
               <div>供应商：<span @click="toSup(items)">{{items.company.name}}</span></div>
-              <div>快速链接：<span @click="open(items)">供应商网站</span><span>|</span><span>使用帮助</span></div>
+              <div>快速链接：<span @click="open(items)">供应商网站</span><span>|</span><span @click="help(items)">使用帮助</span></div>
             </div>
             <div class="body-list-item-price">
               <div class="price"><span>￥{{items.price}}</span>/月</div>
-              <Button type="primary">立即购买</Button>
+              <Button type="primary" @click="toBuy(items)">立即购买</Button>
             </div>
           </div>
           <div class="body-list-page" v-show="menuList != ''">
@@ -133,10 +133,22 @@ export default {
     open (items) {
       window.open(items.company.linkurl, '_blank')
     },
+    // 使用帮助
+    help (items) {
+      this.$router.push('details')
+      sessionStorage.setItem('proid', items.id)
+      sessionStorage.setItem('tabName', 'name2')
+    },
+    // 购买
+    toBuy (items) {
+      sessionStorage.setItem('proid', items.id)
+      this.$router.push('details')
+    },
     // 分页选择
     pageChange (index) {
       this.page = index
       this.getMenu()
+      window.scrollTo(0,0)
     },  
     // 排序类型
     sortTypes (index) {
@@ -220,7 +232,7 @@ export default {
     background: url('../../../assets/img/market/gridding.png') no-repeat center, linear-gradient(270deg, rgba(174, 201, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
     background-size: cover;
     .banner-box {
-      width: 1920px;
+      width: 1900px;
       height: 400px;
       margin: 0 auto;
       position: relative;
@@ -328,7 +340,7 @@ export default {
           height: 156px;
           border-radius: 4px;
           border-bottom: 1px solid rgba(233,233,233,1);
-          padding: 20px 0 20px 20px;
+          padding: 20px 0 20px 0;
           display: flex;
           justify-content: space-between;
           .body-list-item-icon{

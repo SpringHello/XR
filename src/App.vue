@@ -14,8 +14,6 @@
         <a href="/" class="logo" alt='新睿云'>
           <div></div>
         </a>
-        <img class="logo-img" src="./assets/img/active/schoolSeason/nav_logo_cc.png"
-             @click="$router.push('/activity/2019spring/')" alt="新春采购季">
         <div class="operate operate-pdding">
           <ul @mouseleave="ME(-1)">
             <li v-for="(item,index1) in titleItem" :key="index1" @mouseenter="ME(index1,$event)">
@@ -35,8 +33,8 @@
                       <div v-if="item.content" class="column" :class="{info:index1 == 4,zx:index1 == 3}" style="padding:21px 0;">
                         <div v-for="(prod,index) in item.content" :key="index">
                           <div>
-                            <h2 v-if="index1 == 3||index1 == 4" class="info" @click="openInfo(prod.path)">{{prod.prod}}</h2>
-                            <h2 v-else>{{prod.prod}}</h2>
+                            <h2 v-if="index1 == 3||index1 == 4" class="info" @click="openInfo(prod.path)" :class="{mark:item.title=='新闻动态'}">{{prod.prod}}</h2>
+                            <h2 v-else :class="{mark:item.title=='新闻动态'}">{{prod.prod}}</h2>
                             <div v-for="(i,index) in prod.prodItem" style="line-height: normal" :key="index">
                               <a :href="i.path" v-if="i.path==''">{{i.title}}</a>
                               <a :href="i.path" v-else>{{i.title}}</a>
@@ -85,8 +83,8 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <!-- <a href="https://www.xrcloud.net/login" rel="nofollow"><span>登录</span></a> -->
-                  <a href="#" rel="nofollow"><span @click="login">登录</span></a>
+                  <a href="https://www.xrcloud.net/login" rel="nofollow"><span>登录</span></a>
+                  <!-- <a href="#" rel="nofollow"><span @click="login">登录</span></a> -->
                 </div>
               </div>
             </li>
@@ -115,7 +113,7 @@
                 </div>
               </div>
             </li>
-            <li @mouseenter="ME(5,$event)">
+            <li @mouseenter="ME(1,$event)">
               <Dropdown @on-click="go">
                 <a href="javascript:void(0)" style="position:relative">
                   {{ userInfo?userInfo.realname:''}}
@@ -562,6 +560,10 @@
               },
             ]
           },
+          {
+            title: '云市场',
+            path: '/market'
+          }, 
           {
             title: '帮助文档',
             path: 'https://www.xrcloud.net/support/products/',
@@ -1053,7 +1055,7 @@
           }
         }
         .operate-pdding {
-          padding-left: 90px;
+          //padding-left: 90px;
         }
         .operate {
           > ul {
@@ -1162,6 +1164,10 @@
                           //   }
                           // }
 
+                        }
+                        .mark {
+                          border-bottom: none;
+                          padding-bottom: 0;
                         }
                         h2 {
                           font-size: 18px;

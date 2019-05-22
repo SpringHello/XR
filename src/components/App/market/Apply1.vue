@@ -380,6 +380,7 @@ export default {
       }).then(res => {
         if (res.status === 200 && res.data.status === 1) {
           this.vpcList = res.data.result
+          this.vpc = this.vpcList[0].vpcid
         }
       })
     },
@@ -504,8 +505,17 @@ export default {
         })
       }
     })
+    if (this.userInfos == null) {
+      this.$router.push('login')
+      return
+    } 
     this.getFrame()
     this.getCustom()
+  },
+  computed: {
+    userInfos () {
+      return this.$store.state.userInfo
+    }
   },
   created () {
     this.getRecord()

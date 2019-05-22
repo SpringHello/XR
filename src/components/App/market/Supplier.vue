@@ -50,13 +50,13 @@
               <div>{{item.title}}</div>
               <div>描述：{{item.description}}</div>
               <div>供应商：{{item.company.name}}</div>
-              <div>快速链接：<span @click="open(item)">共供应商网站</span><span>|</span><span>使用帮助</span></div>
+              <div>快速链接：<span @click="open(item)">共供应商网站</span><span>|</span><span @click="toBuy(item)">使用帮助</span></div>
             </div>
             <div class="product-list-item-price">
               <div>
                 <span>￥{{item.price}}</span> / 100次
               </div>
-              <i-button type="primary">立即购买</i-button>
+              <i-button type="primary" @click="toBuy(item)">立即购买</i-button>
             </div>
           </div>
           <div class="product-list-page" v-if="productList != ''">
@@ -110,6 +110,12 @@ export default {
     },
     open (item) {
       window.open(item.company.linkurl, '_blank')
+    },
+    // 购买
+    toBuy (item) {
+      sessionStorage.setItem('proid', item.id)
+      sessionStorage.setItem('typeName', item.classification.name)
+      this.$router.push('details')
     },
     // 排序类型
     sortTypes (index) {
