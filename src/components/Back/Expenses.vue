@@ -216,24 +216,20 @@
             </div>
             <div v-if="billBtnSelected==1">
               <div class="expenses_condition">
-                <span>按交易时间</span>
-                <Row style="display: inline-block;margin-left: 10px">
-                  <!-- <Col span="12">
-                    <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
-                                placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
-                  </Col> -->
-                </Row>
+                <span style="margin-right: 10px">按交易时间</span>
+                <Date-picker v-model="timeResource" format="yyyy-MM-dd" type="daterange" placement="bottom-start"
+                            placeholder="选择日期" style="width: 231px;position: relative;bottom: 12px" @on-change="dataChangeResource"></Date-picker>
                 <span style="margin-left: 20px">按交易金额</span>
-                <Input-number :min="0" v-model="value1"
+                <Input-number :min="0" v-model="minCashPayResource"
                               style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
                 &nbsp;&nbsp;
                 <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
                 &nbsp;&nbsp;
-                <Input-number :min="0" v-model="value2"
+                <Input-number :min="0" v-model="maxCashPayResource"
                               style="width: 116px;position: relative;bottom: 12px"></Input-number>
-                <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
+                <Button type="primary" style="bottom: 12px; margin-left: 10px;position: relative" @click="getResourcesTable()">查询
                 </Button>
-                <Button type="primary" style="bottom: 12px;position: relative" @click="seaWaterN">导出流水
+                <Button type="primary" style="bottom: 12px;position: relative;float:right" @click="seaWaterN">导出流水
                 </Button>
                 <Table highlight-row :columns="columnsResources" :data="resourcesTable"></Table>
                 <div style="margin: 10px;overflow: hidden">
@@ -1177,8 +1173,18 @@
         <div class="export-bill-modal">
           <div class="row">
             <i class="lable">{{currentMonth}}月账单文件</i>
-            <span class="btn" v-if="checkExport" @click="downloadBillAll()">点击生成</span>
-            <span v-else>账单于次月3日统计完成</span>
+            <span class="btn" v-if="checkExport">
+              <span @click="downloadBillAll()" v-if="billExportflag">{{billExportText}}</span>
+              <span v-else>
+                <span v-if="billExportUrl">
+                  <span style="margin-right:10px;color:#666666">{{billExportName}}</span><a class="btn" :href="billExportUrl">下载</a>
+                </span>
+                <span v-else>
+                  <span style="color:#FF0000;margin-right:10px">账单生成失败，请重试</span><span class="btn" @click="downloadBillAll()">重试</span>
+                </span>
+              </span>
+            </span>
+            <span v-if="!checkExport">账单于次月3日统计完成</span>
           </div>
           <div class="row">
             <i class="lable">账单自动发送</i>
@@ -1239,7 +1245,20 @@
         /*this.searchOrderByType()
          this.init()*/
       }
+      // 默认上一个月的一号到月底的日期
+      let now = new Date()
+      let nowEnd = new Date(now.setDate(1) - 24*60*60*1000)
+      let startTime = now.getFullYear()+'-'+now.getMonth()+'-1'
+      let endTime = now.getFullYear()+'-'+now.getMonth()+'-'+nowEnd.getDate()
       return {
+        billExportflag: true,
+        billExportText: '点击生成',
+        billExportUrl: '',
+        billExportName: '',
+        // timeResource: [startTime, endTime],
+        timeResource: ['2019-04-01', '2019-04-30'],
+        minCashPayResource:0,
+        maxCashPayResource: 10000,
         AllMpney:'0.0',
         AllMpneylength:'0',
         ordernumS:'',
@@ -1417,17 +1436,28 @@
                 key: 'typedesc',
                 width: 200,
                 render:(h,params)=>{
-                  // let typedesc = JSON.parse(params.row.typedesc)
-                  // console.log(typedesc)
-                  // let x = ''
-                  // let array = []
-
-                  // for(x in typedesc) {
-                  //   array.push()
-                  // }
-                  return h('div',[  
-                    h('p','你好')
-                  ] )
+                  let item = params.row.desc
+                  let x = ''
+                  let array = []
+                  for(x in item) {
+                    array.push(h('p',{style:{lineHeight:'18px'}},x+':'+item[x]))
+                  }
+                  let arryShow = []
+                  for(x in item) {
+                    arryShow.push(h('p',{style:{lineHeight:'18px',overflow: 'hidden',textOverflow:'ellipsis',whiteSpace: 'nowrap'}},x+':'+item[x]))
+                  }
+                  return h('Poptip',{
+                    props: {
+                      trigger: 'hover',
+                      placement: 'left',
+                      transfer: true
+                    }
+                  },[ h('div',{style:{width:'164px'}},arryShow.slice(0,2)),
+                      h('div',{
+                        slot: 'content'
+                      },array)
+                    ]
+                  )
                 }
             },
             {
@@ -3040,19 +3070,19 @@
         // this.getExportStatus()
       },
       downloadBillAll() {
-        // console.log(this.valueBill)
-        axios.get('nVersionUser/billOverviewExport.do',{
-          responseType: 'arraybuffer',
+        this.billExportText = '生成中...'
+        axios.get('nVersionUser/getBillOverviewExport.do',{
           params: {
-            companyId: this.$store.state.userInfo.companyid,
             times: this.valueBill
           }
         }).then(response=> {
-          if(response.status == 200) {
-            var blob = new Blob([response.data],{type: "application/vnd.ms-excel"})
-            this.saveAs(blob,this.defaultMonth+'账单概览')
+          if(response.status == 200 && response.data.status == 1 ) {
+            this.billExportflag = false
+            this.billExportUrl = response.data.url
+            this.billExportName = response.data.title
           } else {
-            this.$Message.error(response.data.message)
+            this.billExportUrl = ''
+            this.billExportName = ''
           }
         })
       },
@@ -3167,22 +3197,26 @@
         this.getResourcesTable(currentPage)
       },
       getResourcesTable(currentPage) {
+        console.log(this.timeResource)
+        console.log(this.timeResource[0])
+        console.log(this.timeResource[1])
         axios.get('/nVersionUser/resourceDetails.do', {
           params: {
             pageSize: '5',
             page: currentPage,
-            minTime: '',
-            maxTime: '',
+            minTime: this.timeResource[0],
+            maxTime: this.timeResource[1],
             billingMode: this.resourcesDataType,
             resourceType: this.resourcesType,
-            minCashPay: '',
-            mmxCashPay:'',
+            minCashPay: this.minCashPayResource,
+            mmxCashPay: this.maxCashPayResource,
             zoneId: this.resourcesZoneId
           }
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.resouresTotal = response.data.result.count
               this.resourcesTable = response.data.result.info
+              // console.log(this.resourcesTable)
               let filtersData = []
               this.$store.state.zoneList.forEach((item,index) => {
                     filtersData[index]={'label':item.zonename,'value':item.zoneid}
@@ -3373,7 +3407,12 @@
         this.currentPage = currentPage
         this.search()
       },
-      
+      dataChangeResource(time) {
+        this.timeResource = time
+        console.log(time)
+        console.log(this.timeResource[0])
+        console.log(this.timeResource[1])
+      },
       dataChange(time) {
         this.dateRange = time
       },
@@ -3381,21 +3420,23 @@
         this.dateRangeOrder = timeOrder
       },
       search() {
-        this.$http.get('user/searchWaterNumber.do', {
+        this.$http.get('nVersionUser/getAccountInfoByType.do', {
           params: {
             pageSize: this.wpageSize,
             page: this.currentPage,
             type: this.types,
-            starttime: this.dateRange[0],
-            endtime: this.dateRange[1],
-            startcount: this.value1,
-            endcount: this.value2
+            startTime: this.dateRange[0],
+            endTime: this.dateRange[1],
+            minCost: this.value1,
+            maxCost: this.value2,
+            type:'',
+            zoneId: ''
           }
         })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.tabledata = response.data.result.data
-              this.total = response.data.result.totle
+              this.tabledata = response.data.result.info
+              this.total = response.data.result.count
             }
           })
       },
@@ -5522,6 +5563,7 @@
       }
       .btn {
         color: #2A99F2;
+        cursor: pointer;
       }
     }
     .row:nth-of-type(3) {
