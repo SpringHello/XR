@@ -25,28 +25,16 @@
              <div v-for="(item,index) in issueData" :key="index" class="issus">
             <div class="issus-title">
               <div class="serialNum"><p>{{ index + 1}}</p></div>
-              <p>产品原因</p>
+              <p>{{ item.par_descs }}</p>
             </div>
-            <div class="issus-content">
+            <div class="issus-content" v-if="index<3">
               <CheckboxGroup>
-              <p><Checkbox label="香蕉">
-                <span>香蕉</span>
-                </Checkbox></p>
-              <p><Checkbox label="苹果">
-                <span>苹果</span>
-                </Checkbox></p>
-              <p><Checkbox label="西瓜">
-                <span>西瓜</span>
+              <p v-for="(option,o_index) in item.docs" :key="o_index"><Checkbox :label="option.descs">
+                <span>{{option.descs}}</span>
                 </Checkbox></p>
               </CheckboxGroup>
             </div>
-            </div>
-             <div class="issus">
-            <div class="issus-title">
-              <div class="serialNum"><p>4</p></div>
-              <p>其他原因</p>
-            </div>
-            <div class="issus-content">
+              <div class="issus-content" v-else>
             <Input type="textarea"  :rows="4" placeholder="请输入"/>
             </div>
             </div>
@@ -56,68 +44,150 @@
             </div>
           </div>
           <div v-if="unfreezeStep === 1">
-      <div class="universal-modal-content-flex" style="width:580px">
-        <p style="font-size:18px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);margin-top:40px;">解冻条件已达到，可以解冻</p>
-        <RadioGroup v-model="unfreezeTo" class="unfreeze-type">
-          <Radio label="account" class="item" :class="{selsected: unfreezeTo == 'account'}">
-            <p>解冻到原支付账户</p>
-            <p>（需3-5个工作日）</p>
-          </Radio>
-          <Radio label="yue" class="item" :class="{selsected: unfreezeTo == 'yue'}">
-            <p>解冻到余额</p>
-          </Radio>
-        </RadioGroup>
-        <div v-if="unfreezeTo=='account'" style="border-top:1px dashed rgba(151,151,151,1);padding: 20px 0 10px;">
-          <p style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,57,42,1);">*优先退回到原支付账户，原支付账户不可用时则退回到下方填写的账户。</p>
-        </div>
-        <Form v-if="unfreezeTo=='account'" :model="withdrawForm" :rules="withdrawValidate" ref="unfreeze">
-          <Form-item label="收款人姓名" prop="payeeName">
-            <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
-          </Form-item>
-          <Form-item label="收款人账户类型" prop="accountType">
-            <Select v-model="withdrawForm.accountType" placeholder="请选择">
-              <Option v-for="item in withdrawForm.accountList" :key="item.type" :value="item.type">{{ item.name }}
-              </Option>
-            </Select>
-          </Form-item>
-          <Form-item label="开户行信息" prop="bankName" v-if="withdrawForm.accountType=='银行卡'">
-            <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
-          </Form-item>
-          <Form-item label="收款人账户" prop="account" v-if="withdrawForm.accountType != '微信'">
-            <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
-          </Form-item>
-          <p style="line-height: 20px;font-size: 14px;">
-            为保障您的资金安全，我们将向您的实名认证手机号码（{{withdrawConfirm.number?withdrawConfirm.number.substr(0,3) + '****' + withdrawConfirm.number.substr(7):''}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
-          <Form-item label="图片验证码">
-            <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
-            <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
-                 @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-          </Form-item>
-          <Form-item label="短信/邮箱验证码" prop="phoneCode">
-            <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
-            <Button type="primary" @click="getCode('code')">{{codePlaceholder}}</Button>
-          </Form-item>
-        </Form>
-        <div v-if="unfreezeTo=='account'" class="voice-vail">
-          <p>没有收到验证码？</p>
-          <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:codePlaceholder!='发送验证码'}" @click="getCode('againCode')">重新获取</span>或<span class="blue code"
-                                                                                                                                                :class="{notallow:codePlaceholder!='发送验证码'}"
-                                                                                                                                                @click.prevent="getCode('voice')">接收语音验证码</span>。
-          </p>
-          <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue"
-                                                                                              @click="showModal.modifyPhoneID = true;showModal.unfreeze=false;modifyPhoneIDcancel()">通过身份证号码验证</span>更改手机号。
-          </p>
-        </div>
-        <div style="clear: both"></div>
-      </div>
-      <div style="padding-top: 40px">
-        <Button type="ghost" @click="unfreezeStep = 0" style="margin-right:10px">上一步</Button>
-        <Button type="primary" @click="unfreeze_ok">下一步</Button>
-      </div>
+            <div  v-if="freezeToRenew">
+              <div class="universal-modal-content-flex"  style="width:580px">
+                <p style="font-size:18px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);margin-top:40px;line-height:30px;">需解冻<span style="color:#ED4014">资源未彻底删除</span>，故不能解冻到余额或充值帐户。资源<span style="color:#ED4014">彻底删除后可选择解冻到余额或充值帐户。</span></p>
+                    <RadioGroup v-model="unfreezeTo" class="unfreeze-type">
+                      <Radio label="account" class="disabled" disabled>
+                        <p>解冻到原支付账户</p>
+                        <p>（需3-5个工作日）</p>
+                      </Radio>
+                      <Radio label="yue" class="disabled" disabled>
+                         <p>解冻到余额</p>
+                      </Radio>
+                      <Radio label="freezeToRenew" class="item" :class="{selsected: unfreezeTo == 'freezeToRenew'}">
+                         <p>押金转续费</p>
+                      </Radio>
+                    </RadioGroup>
+                   <Table :columns="freezeOrderColumns" :data="freezeOrderData" style="margin-top: 20px"></Table>
+                    <div style="padding-top: 40px">
+                      <Button type="ghost" @click="unfreezeStep = 0" style="margin-right:10px">上一步</Button>
+                      <Button type="primary">下一步</Button>
+                    </div>
+               </div>
+            </div> 
+            <div v-else>
+              <div class="universal-modal-content-flex" style="width:580px">
+                  <p style="font-size:18px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);margin-top:40px;">解冻条件已达到，可以解冻</p>
+                  <RadioGroup v-model="unfreezeTo" class="unfreeze-type">
+                    <Radio label="account" class="item" :class="{selsected: unfreezeTo == 'account'}">
+                      <p>解冻到原支付账户</p>
+                      <p>（需3-5个工作日）</p>
+                    </Radio>
+                    <Radio label="yue" class="item" :class="{selsected: unfreezeTo == 'yue'}">
+                      <p>解冻到余额</p>
+                    </Radio>
+                  </RadioGroup>
+                  <div v-if="unfreezeTo=='account'" style="border-top:1px dashed rgba(151,151,151,1);padding: 20px 0 10px;">
+                    <p style="font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,57,42,1);">*优先退回到原支付账户，原支付账户不可用时则退回到下方填写的账户。</p>
+                  </div>
+                  <Form v-if="unfreezeTo=='account'" :model="withdrawForm" :rules="withdrawValidate" ref="unfreeze">
+                    <Form-item label="收款人姓名" prop="payeeName">
+                      <Input v-model="withdrawForm.payeeName" placeholder="请输入收款人姓名"></Input>
+                    </Form-item>
+                    <Form-item label="收款人账户类型" prop="accountType">
+                      <Select v-model="withdrawForm.accountType" placeholder="请选择">
+                        <Option v-for="item in withdrawForm.accountList" :key="item.type" :value="item.type">{{ item.name }}
+                        </Option>
+                      </Select>
+                    </Form-item>
+                    <Form-item label="开户行信息" prop="bankName" v-if="withdrawForm.accountType=='银行卡'">
+                      <Input v-model="withdrawForm.bankName" placeholder="请输入开户行"></Input>
+                    </Form-item>
+                    <Form-item label="收款人账户" prop="account" v-if="withdrawForm.accountType != '微信'">
+                      <Input v-model="withdrawForm.account" placeholder="请输入收款账户"></Input>
+                    </Form-item>
+                    <p style="line-height: 20px;font-size: 14px;">
+                      为保障您的资金安全，我们将向您的实名认证手机号码（{{withdrawConfirm.number?withdrawConfirm.number.substr(0,3) + '****' + withdrawConfirm.number.substr(7):''}}）发送一条验证短信，请收到验证信息之后将验证码填入下方。</p>
+                    <Form-item label="图片验证码">
+                      <Input v-model="withdrawForm.code" placeholder="请输入图形验证码" style="width:58%;"></Input>
+                      <img :src="imgSrc" style="height:32px;width:92px;vertical-align: middle"
+                          @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                    </Form-item>
+                    <Form-item label="短信/邮箱验证码" prop="phoneCode">
+                      <Input v-model="withdrawForm.phoneCode" placeholder="请输入短信验证码" style="width:52%;"></Input>
+                      <Button type="primary" @click="getCode('code')">{{codePlaceholder}}</Button>
+                    </Form-item>
+                  </Form>
+                  <div v-if="unfreezeTo=='account'" class="voice-vail">
+                    <p>没有收到验证码？</p>
+                    <p>1、网络通讯异常可能会造成短信丢失，请<span class="blue" :class="{notallow:codePlaceholder!='发送验证码'}" @click="getCode('againCode')">重新获取</span>或<span class="blue code"
+                                                                                                                                                          :class="{notallow:codePlaceholder!='发送验证码'}"
+                                                                                                                                                          @click.prevent="getCode('voice')">接收语音验证码</span>。
+                    </p>
+                    <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue"
+                                                                                                        @click="showModal.modifyPhoneID = true;showModal.unfreeze=false;modifyPhoneIDcancel()">通过身份证号码验证</span>更改手机号。
+                    </p>
+                  </div>
+                  <div style="clear: both"></div>
+              </div>
+              <div style="padding-top: 40px">
+                <Button type="ghost" @click="unfreezeStep = 0" style="margin-right:10px">上一步</Button>
+                <Button type="primary" @click="unfreeze_ok">下一步</Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- 解冻条件未达成-->
+      <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
+        <p slot="header" class="modal-header-border">
+          <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+          <span class="universal-modal-title">申请解冻</span>
+        </p>
+        <div class="modal-content-s">
+          <div>
+            <p class="lh24">解冻条件:{{thawingCondition}}未达成，请确认上述内容都已彻底删除，包括回收站也已清除资源。详情可咨询客服。
+            </p>
+          </div>
+        </div>
+        <p slot="footer" class="modal-footer-s">
+          <Button @click="showModal.notUnfreeze = false">取消</Button>
+          <Button type="primary" @click="showModal.notUnfreeze = false">确定</Button>
+        </p>
+      </Modal>
+      <!-- 解冻到余额提示 -->
+    <Modal v-model="showModal.unfreezeToBalanceHint" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <RadioGroup v-model="unfreezeToHint" vertical>
+            <Radio label="account">
+              <span>解冻到原支付账户（需3-5个工作日）</span>
+            </Radio>
+            <Radio label="yue">
+              <span>解冻到余额</span>
+            </Radio>
+          </RadioGroup>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.unfreezeToBalanceHint = false">取消</Button>
+        <Button type="primary" :disabled="unfreezeToBalanceDisabled" @click="unfreezeToBalance">确定{{ unfreezeToBalanceText}}</Button>
+      </p>
+    </Modal>
+
+    <!-- 押金转续费弹窗 -->
+    <Modal v-model="showModal.freezeToRenewAffirm" crollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24" style="margin-bottom: 20px">当前免费剩余时长到期日为<span style="color: #2A99F2">{{ freezeEndTime}}</span>，转为续费之后资源到期时间为<span style="color: #2A99F2">{{ renewalFeeTime}}</span>，您是否确认将押金转为续费？
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.freezeToRenewAffirm = false">取消</Button>
+        <Button type="primary" :disabled="freezeToRenewAffirmDisabled" @click="freezeToRenew_ok">确定{{ freezeToRenewAffirmText}}</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -127,15 +197,14 @@
   export default {
     data() {
       return {
+        unfreezeId: '',
         showModal:{
-
+          notUnfreeze: false,
+          unfreezeToBalanceHint: false,
+          freezeToRenewAffirm: false
         },
-        unfreezeStep: 1,
-        issueData: [
-          {},
-          {},
-          {}
-        ],
+        unfreezeStep: 0,
+        issueData: [],
        /*解冻到余额/账户  默认解冻到余额*/
         unfreezeTo: 'account',
         unfreezeToHint:'account',
@@ -205,12 +274,51 @@
         /* 验证码地址(加上时间戳，防止缓存) */
         imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
         /*发送验证码button innerText*/
-        codePlaceholder:
-          '发送验证码',
+        codePlaceholder:'发送验证码',
+        freezeToRenew: true,
+        freezeOrderColumns:
+          [
+            {
+              title: '名称/ID',
+              key: '名称/ID'
+            },
+            {
+              title: '资源',
+              width: 200,
+              render: (h, params) => {
+                let obj = JSON.parse(params.row['资源'])
+                let arr = []
+                for (let key in obj) {
+                  arr.push(h('li', {}, key + ': ' + obj[key]))
+                }
+                return h('ul', {}, arr)
+              }
+            },
+            {
+              title: '计费类型',
+              key: '计费类型'
+            },
+            {
+              title: '续费时长',
+              key: '续费时长'
+            }
+          ],
+        freezeOrderData: [],
+        thawingCondition: '',
+        unfreezeToHint:'account',
+        unfreezeToBalanceDisabled: true,
+        unfreezeToBalanceText:'(10S)',
+        unfreezeToBalanceTimer:null,
+        freezeToRenewAffirmDisabled:true,
+        freezeToRenewAffirmText:'(10S)',
+        freezeToRenewAffirmTimer:null,
+        renewalFeeTime:'',
+        freezeEndTime:'',
       }
     },
     created() {
-      console.log(sessionStorage.getItem('unfreezeId'))
+      this.unfreezeId = sessionStorage.getItem('unfreezeId')
+      this.getQuestionnaire()
     },
     computed: {
       auth() {
@@ -233,6 +341,17 @@
       }
     },
     methods: {
+      getQuestionnaire(){
+        let url = 'order/getQuestionnaire.do'
+        this.$http.get(url,{params:{}}).then(res=>{
+          if(res.data.status === 1 && res.status === 200){
+            this.issueData = res.data.result
+          } else{
+            this.$Message.info(res.data.message)
+            this.$router.push('expenses')
+          }
+        })
+      },
       sumbitQuestionnaire(){
         this.unfreezeStep = 1
       },
@@ -344,6 +463,45 @@
         this.$refs['authModifyPhoneFormOne'].resetFields()
         this.$refs['authModifyPhoneFormThere'].resetFields()
         this.uploadImgDispaly = ''
+      },
+      unfreezeToBalance() {
+        if (this.unfreezeToHint == 'yue') {
+          let url = 'user/getRremainderThaw.do'
+          let params = {
+            id: this.unfreezeId,
+          }
+          this.$http.post(url, params).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.$Message.success('解冻成功')
+              this.showModal.unfreezeToBalanceHint = false
+            } else {
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
+        } else {
+          this.unfreezeTo = 'account'
+          this.showModal.unfreezeToBalanceHint = false
+        }
+      },
+            // 押金转续费
+      freezeToRenew_ok() {
+        let url = 'user/depositRenewal.do'
+        axios.get(url, {
+          params: {
+            id: this.unfreezeId
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.showModal.freezeToRenewAffirm = false
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       },
     },
     watch: {
@@ -457,6 +615,20 @@
       p:nth-child(3){
         font-size:12px;
         color:rgba(255,98,75,1);
+      }
+    }
+    .disabled{
+      padding: 6px;
+      width:163px;
+      background:rgba(247,247,247,0.45);
+      border-radius:4px;
+      border:1px solid rgba(233,233,233,1);
+      >p{
+        font-size:14px;
+        font-family:MicrosoftYaHei;
+        color:rgba(196,196,196,1);
+        line-height:20px;
+        text-align: center;
       }
     }
   }
