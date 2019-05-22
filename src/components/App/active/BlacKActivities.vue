@@ -55,6 +55,9 @@
           </div>
           <div class="main">
             <div class="box">
+              <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(247,190,135,1);line-height:21px;margin-bottom:16px;">
+                温馨提示，秒杀产品不支持7天无理由退款；购买区域不同，价格会有差异，请确认之后再进行购买。
+              </p>
               <div class="w_host">
                 <div v-for="(item,index) in discountProductfornew" >
                   <div class="host_title">
@@ -65,7 +68,7 @@
                   <div class="host_content">
                     <div style="margin:10px 0;">
                       <p class="hostfirstp"><span>CPU</span><span>内存</span><span>带宽</span><span>系统盘</span></p>
-                      <p class="hostfirstp2"><span>{{item.cpunum}}核</span><span>{{item.memory}}G</span><span>{{item.bandwith}}M</span><span>{{item.disksize}}G</span>SSD</p>
+                      <p class="hostfirstp2 flex"><span>{{item.cpunum}}核</span><span>{{item.memory}}G</span><span>{{item.bandwith}}M</span><span>{{item.disksize}}G<span style="font-size:12px;">SSD</span></span></p>
                       <span class="label-title" v-if="item.servicetype == 'host'">选择区域：</span>
                       <p class="label-title" style="margin:0 0 15px 0;line-height:26px;" v-if="item.servicetype != 'host'">选择区域：</p>
                       <Select v-model="item.zoneId" style="width:180px" class="schoolseason-select" @on-change="changeZoneHostfornew(item,index)" v-if="item.servicetype == 'host'">
@@ -107,7 +110,7 @@
                       <p v-if="item.storage" class="hostfirstp3"><span>存储</span><span>下行流量</span></p>
                       <p v-if="item.storage" class="hostfirstp4"><span>{{item.storage}}G</span><span>{{item.flow}}G</span></p>
                       <p v-if="!item.storage" class="hostfirstp"><span>CPU</span><span>内存</span><span>带宽</span><span>系统盘</span></p>
-                      <p v-if="!item.storage" class="hostfirstp2"><span>{{item.cpunum}}核</span><span>{{item.memory}}G</span><span>{{item.bandwith}}M</span><span>{{item.disksize}}G</span>SSD</p>
+                      <p v-if="!item.storage" class="hostfirstp2 flex"><span>{{item.cpunum}}核</span><span>{{item.memory}}G</span><span>{{item.bandwith}}M</span><span>{{item.disksize}}G<span style="font-size:12px;">SSD</span></span></p>
                       <span class="label-title" v-if="item.servicetype == 'host'">选择区域：</span>
                       <p class="label-title" style="margin:0 0 15px 0;line-height:26px;" v-if="item.servicetype != 'host'">选择区域：</p>
                       <Select v-model="item.zoneId" style="width:180px" class="schoolseason-select" @on-change="changeZoneHost(item,index)" v-if="item.servicetype == 'host'">
@@ -141,8 +144,10 @@
                   </div>
                 </div>
               </div>
-              <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(247,190,135,1);line-height:21px;margin-top:17px;">
-                温馨提示，秒杀产品不支持7天无理由退款；购买区域不同，价格会有差异，请确认之后再进行购买。
+              <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:21px;margin-top:17px;">
+                <img src="../../../assets/img/active/blackactive/Shape.png" alt="提示" style="margin:4px 10px auto 0;float:left;">
+                下场秒杀预告：云服务器 2C4G5M、2C8G10M、4C8G5M、对象存储<span style="cursor: pointer;color:rgba(245,166,35,1);margin-left:10px;">更多场次预告 ></span>
+                <div style="clear: both;"></div>
               </p>
             </div>
           </div>
@@ -776,6 +781,48 @@
         </div>
       </transition>
 
+      <!-- 域名优惠劵领取成功弹窗 -->
+      <transition name="fade">
+        <div class="overlay" @click="showModal.PreferencesName=false" v-if="showModal.PreferencesName">
+          <div class="all-modal activity-rule" @click.stop="showModal.PreferencesName=true" style="width:400px;">
+            <div class="header">
+              <span>提示</span>
+              <i @click.stop="showModal.PreferencesName=false"></i>
+            </div>
+            <div class="body">
+              <p style="font-size:16px;line-height:24px;text-align: center;">恭喜您，优惠券领取成功！您可在</p>
+              <p style="font-size:16px;line-height:24px;text-align: center;"><span style="color:#FF763B;cursor: pointer;" @click="$router.push('/domain/ ')">域名注册</span>页面选购时使用。</p>
+            </div>
+            <div class="footer">
+              <div class="wraper">
+                <Button @click.stop="showModal.PreferencesName=false" class="regular-btn"><span>确认</span></Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- SSL优惠劵领取成功弹窗 -->
+      <transition name="fade">
+        <div class="overlay" @click="showModal.SSLname=false" v-if="showModal.SSLname">
+          <div class="all-modal activity-rule" @click.stop="showModal.SSLname=true" style="width:400px;">
+            <div class="header">
+              <span>提示</span>
+              <i @click.stop="showModal.SSLname=false"></i>
+            </div>
+            <div class="body">
+              <p style="font-size:16px;line-height:24px;text-align: center;">恭喜您，优惠券领取成功！您可在</p>
+              <p style="font-size:16px;line-height:24px;text-align: center;"><span style="color:#FF763B;cursor: pointer;" @click="$router.push('/buy/ssl/ ')">域名注册</span>页面选购时使用。</p>
+            </div>
+            <div class="footer">
+              <div class="wraper">
+                <Button @click.stop="showModal.SSLname=false" class="regular-btn"><span>确认</span></Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
       <!-- 开通会员弹窗 -->
       <transition name="fade">
         <div class="overlay" @click="showModal.OpenMembership=false" v-if="showModal.OpenMembership">
@@ -1290,8 +1337,8 @@
             disksize: '128',
             bandwith: '10',
             gpu: '100',
-            storage:'100',
-            flow:'100',
+            storage:'',
+            flow:'',
             zoneId: '',
             imgright:require('../../../assets/img/active/blackactive/threefor.png'),
             system: [],
@@ -1301,7 +1348,7 @@
             id: '40',
             type: '0',
             activityNum: '27',
-            servicetype: 'ObjectStorage',
+            servicetype: 'oss',
             num: 0,
             discount: '2',
             timeType: 'month',
@@ -1511,7 +1558,9 @@
           OpenMembership:false,
           CloudComputers:false,
           CloudComputersSuccess:false,
-          CloudComputersfail:false
+          CloudComputersfail:false,
+          PreferencesName:false,
+          SSLname:false
         },
         authFormValidate: {
           name: '',
@@ -1582,9 +1631,12 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
-                  content: response.data.message
-                })
+                if(value=='36'){
+                  this.showModal.PreferencesName=true
+                }
+                if(value=='37'){
+                  this.showModal.SSLname=true
+                }
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -1780,7 +1832,7 @@
             this.hour = now.getHours()
             if (this.hour >= 0 && this.hour < 9) {
               endTime = now.setHours(9, 0, 0, 0)
-            } else if (this.hour >= 9 && this.hour < 14) {
+            }else if (this.hour >= 9 && this.hour < 14) {
               endTime = now.setHours(14, 0, 0, 0)
             } else if (this.hour >= 14 && this.hour < 18) {
               endTime = now.setHours(18, 0, 0, 0)
@@ -1797,10 +1849,10 @@
                 limitTime -= 1000
                 // console.log(this.hour)
                 if (limitTime <= 0) {
+                  this.$router.history.go(0)
                   this.hour++
                   // console.log(this.hour)
                   window.clearInterval(this.timer)
-                  this.$router.history.go(0)
                 }
               }, 1000);
             } else {
@@ -1832,7 +1884,7 @@
         $('html, body').animate({scrollTop: val}, 300)
       },
       OpenMembershipscroll(){
-        $('html, body').animate({scrollTop: 3400}, 300)
+        $('html, body').animate({scrollTop: 4100}, 300)
         this.showModal.OpenMembership=false
       },
       init() {
@@ -1844,7 +1896,7 @@
       },
       // 云服务器获取区域
       getHostZoneList() {
-        let url = 'activity/getTemActInfoById.do'
+        let url = 'activity/getActInfoById.do'
         axios.get(url, {
           params: {
             activityNum: '45'
@@ -1867,6 +1919,13 @@
             // 赋值配置id,初始化价格和抢购数量
             this.discountProduct.forEach((item, index) => {
               item.id = res.data.result.freevmconfigs[index].id
+
+              item.cpunum = res.data.result.freevmconfigs[index].cpu
+              item.memory = res.data.result.freevmconfigs[index].mem
+              item.bandwith = res.data.result.freevmconfigs[index].bandwith
+              item.disksize = res.data.result.freevmconfigs[index].disksize
+              item.storage = res.data.result.freevmconfigs[index].capacity
+              item.flow = res.data.result.freevmconfigs[index].flowpackage
               this.getVMConfigId(item, index)
               this.getSubsection(index)
             })
@@ -1874,7 +1933,7 @@
         })
       },
       getHostZoneListfornew() {
-        let url = 'activity/getTemActInfoById.do'
+        let url = 'activity/getActInfoById.do'
         axios.get(url, {
           params: {
             activityNum: '46'
@@ -1882,7 +1941,6 @@
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
             this.hostZoneListfornew = res.data.result.optionalArea
-
             // 默认选择区域
             this.discountProductfornew.forEach((item, index) => {
               // console.log(index)
@@ -1892,6 +1950,11 @@
             // 赋值配置id,初始化价格和抢购数量
             this.discountProductfornew.forEach((item, index) => {
               item.id = res.data.result.freevmconfigs[index].id
+              
+              item.cpunum = res.data.result.freevmconfigs[index].cpu
+              item.memory = res.data.result.freevmconfigs[index].mem
+              item.bandwith = res.data.result.freevmconfigs[index].bandwith
+              item.disksize = res.data.result.freevmconfigs[index].disksize
               this.getVMConfigIdfornew(item, index)
               this.getSubsectionfornew(index)
             })
@@ -2060,31 +2123,35 @@
             }
           }).then(res => {
             if (res.status == 200 && res.data.status == 1) {
-              this.discountProduct[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
-              if (this.discountProduct[index].num != 100) {
-                var url = index != 2 ? 'information/getDiskcountMv.do' : 'activity/getDiskcountGPU.do'
-                axios.get(url, {
-                  params: {
-                    vmConfigId: item.id,
-                    osType: item.system[1],
-                    defzoneid: item.zoneId,
+              res.data.result.forEach(itemed => {
+                if(itemed.freevmconfigId==this.discountProduct[index].id){
+                  this.discountProduct[index].num = (itemed.receive / itemed.total) * 100
+                  if (this.discountProduct[index].num != 100) {
+                    var url = index != 2 ? 'information/getDiskcountMv.do' : 'activity/getDiskcountGPU.do'
+                    axios.get(url, {
+                      params: {
+                        vmConfigId: item.id,
+                        osType: item.system[1],
+                        defzoneid: item.zoneId,
+                      }
+                    }).then(res => {
+                      if (res.status == 200 && res.data.status == 1) {
+                        this.$Message.success('创建订单成功')
+                        this.$router.push('/order')
+                      } else {
+                        if (res.data.flag == '1') {
+                          this.showModal.notNewcoustomer = true
+                        } else if (res.data.flag == '2') {
+                          this.showModal.joinedActivity = true
+                        } else {
+                          this.posText = res.data.message
+                          this.showModal.regular = true
+                        }
+                      }
+                    })
                   }
-                }).then(res => {
-                  if (res.status == 200 && res.data.status == 1) {
-                    this.$Message.success('创建订单成功')
-                    this.$router.push('/order')
-                  } else {
-                    if (res.data.flag == '1') {
-                      this.showModal.notNewcoustomer = true
-                    } else if (res.data.flag == '2') {
-                      this.showModal.joinedActivity = true
-                    } else {
-                      this.posText = res.data.message
-                      this.showModal.regular = true
-                    }
-                  }
-                })
-              }
+                }
+              })
             }
           })
         }
@@ -2104,8 +2171,10 @@
             }
           }).then(res => {
             if (res.status == 200 && res.data.status == 1) {
-              this.discountProductfornew[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
-              if (this.discountProductfornew[index].num != 100) {
+              res.data.result.forEach(itemed => {
+              if(itemed.freevmconfigId==this.discountProductfornew[index].id){
+                this.discountProductfornew[index].num = (itemed.receive / itemed.total) * 100
+                if (this.discountProductfornew[index].num != 100) {
                 var url =  'information/getDiskcountMv.do' 
                 axios.get(url, {
                   params: {
@@ -2129,6 +2198,9 @@
                   }
                 })
               }
+              }
+            })
+              
             }
           })
         }
@@ -2874,22 +2946,19 @@
               }
             }
             .hostfirstp2{
-              width: 107%;
-              margin: 0 0 30px 0;
+              width: 104%;
+              margin: 0 0 36px 0;
               font-size:12px;
               font-family:MicrosoftYaHei;
               color:rgba(255,255,255,1);
               line-height:24px;
               > span:nth-child(1){
-                margin-right: 35px;
                 font-size: 18px;
               }
               > span:nth-child(2){
-                margin-right: 35px;
                 font-size: 18px;
               }
               > span:nth-child(3){
-                margin-right: 35px;
                 font-size: 18px;
               }
               > span:nth-child(4){
@@ -4804,6 +4873,7 @@
       top: 461px;
       text-align: center;
       margin: 0 auto;
+      
       .wraper{
         margin: 0 auto;
         > button{
