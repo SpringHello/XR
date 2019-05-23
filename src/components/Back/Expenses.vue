@@ -217,24 +217,28 @@
             <div v-if="billBtnSelected==1">
               <div class="expenses_condition">
                 <span style="margin-right: 10px">按交易时间</span>
-                <Date-picker v-model="timeResource" format="yyyy-MM-dd" type="daterange" placement="bottom-start"
+                <Date-picker v-model="timeResourceVal" format="yyyy-MM-dd" type="daterange" placement="bottom-start"
                             placeholder="选择日期" style="width: 231px;position: relative;bottom: 12px" @on-change="dataChangeResource"></Date-picker>
                 <span style="margin-left: 20px">按交易金额</span>
-                <Input-number :min="0" v-model="minCashPayResource"
+                <Input-number :min="0" v-model="minCashResource"
                               style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
                 &nbsp;&nbsp;
                 <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
                 &nbsp;&nbsp;
-                <Input-number :min="0" v-model="maxCashPayResource"
+                <Input-number :min="0" v-model="maxCashResource"
                               style="width: 116px;position: relative;bottom: 12px"></Input-number>
                 <Button type="primary" style="bottom: 12px; margin-left: 10px;position: relative" @click="getResourcesTable()">查询
                 </Button>
-                <Button type="primary" style="bottom: 12px;position: relative;float:right" @click="seaWaterN">导出流水
+                <Button type="primary" style="bottom: 12px;position: relative;float:right" @click="exportResource()">导出流水
                 </Button>
                 <Table highlight-row :columns="columnsResources" :data="resourcesTable"></Table>
+                <ul class="table-end table-other">
+                  <li>总计支出</li>
+                  <li>¥{{resouresAllCost}}</li>
+                </ul>
                 <div style="margin: 10px;overflow: hidden">
                   <div style="float: right;">
-                    <Page :total="resouresTotal" :current="1" :page-size="5" @on-change="resourcesPageChange"></Page>
+                    <Page :total="resouresTotal" :current="resourcePage" :page-size="resourcePageSize" @on-change="resourcesPageChange"></Page>
                   </div>
                 </div>
               </div>
@@ -244,7 +248,7 @@
                 <span>按交易时间</span>
                 <Row style="display: inline-block;margin-left: 10px">
                   <Col span="12">
-                    <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
+                    <Date-picker v-model="time" type="daterange" placement="bottom-start"
                                 placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
                   </Col>
                 </Row>
@@ -256,11 +260,17 @@
                 &nbsp;&nbsp;
                 <Input-number :min="0" v-model="value2"
                               style="width: 116px;position: relative;bottom: 12px"></Input-number>
-                <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
+                <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search()">查询
                 </Button>
                 <Button type="primary" style="bottom: 12px;position: relative" @click="seaWaterN">导出流水
                 </Button>
                 <Table highlight-row :columns="columns" :data="tabledata"></Table>
+                <ul class="table-end table-other">
+                  <li style="margin-right: 80px;">总计支出</li>
+                  <li style="border-right:1px solid #D9D9D9">¥{{flowAllCost}}</li>
+                  <li>总计收入</li>
+                  <li>¥{{flowAllIncome}}</li>
+                </ul>
                 <div style="margin: 10px;overflow: hidden">
                   <div style="float: right;">
                     <Page :total="total" :current="1" :page-size="7" @on-change="currentChange"></Page>
@@ -272,7 +282,7 @@
               <Table highlight-row :columns="columnsExport" :data="exportTable"></Table>
                 <div style="margin: 10px;overflow: hidden">
                   <div style="float: right;">
-                    <Page :total="exportTotal" :current="1" :page-size="7" @on-change="exportPageChange"></Page>
+                    <Page :total="exportTotal" :current="exportPage" :page-size="exportPageSize" @on-change="exportPageChange"></Page>
                   </div>
                 </div>
             </div>      
@@ -1245,7 +1255,7 @@
         /*this.searchOrderByType()
          this.init()*/
       }
-      // 默认上一个月的一号到月底的日期
+      // 默认上一个月的一号到月底的日期（table默认日期）
       let now = new Date()
       let nowEnd = new Date(now.setDate(1) - 24*60*60*1000)
       let startTime = now.getFullYear()+'-'+now.getMonth()+'-1'
@@ -1255,10 +1265,7 @@
         billExportText: '点击生成',
         billExportUrl: '',
         billExportName: '',
-        // timeResource: [startTime, endTime],
-        timeResource: ['2019-04-01', '2019-04-30'],
-        minCashPayResource:0,
-        maxCashPayResource: 10000,
+        
         AllMpney:'0.0',
         AllMpneylength:'0',
         ordernumS:'',
@@ -1279,6 +1286,7 @@
         CreatTimesort:'',
         PayTimesort:'',
         PreferentialOrder:'',
+        // 账单-资源详情变量
         columnsResources: [
             {
                 title: '资源ID',
@@ -1315,7 +1323,7 @@
                   } else {
                     this.resourcesDataType = value[0]
                   }
-                  this.getResourcesTable('1')
+                  this.getResourcesTable()
                 }
             },
             {
@@ -1329,7 +1337,7 @@
                   } else {
                     this.resourcesZoneId = value[0]
                   }
-                  this.getResourcesTable('1')
+                  this.getResourcesTable()
                 }
             },
             {
@@ -1423,7 +1431,7 @@
                   } else {
                     this.resourcesType = value[0]
                   }
-                  this.getResourcesTable('1')
+                  this.getResourcesTable()
                 }
               },
             {
@@ -1493,36 +1501,53 @@
         ],
         resourcesTable: [],
         resourcesList: [],
+        resouresAllCost: '',
         resouresTotal: 1,
         resourcesType: '',
         resourcesZoneId: '',
         resourcesDataType: '',
+        timeResourceVal: [startTime, endTime],
+        timeResource: [startTime, endTime],
+        minCashResource:0,
+        maxCashResource: 10000,
+        resourcePageSize: 6,
+        resourcePage: 1,
+        // 结束
+        // 账单-导出记录变量
         columnsExport: [
             {
                 title: '最近下载时间',
-                key: 'name'
+                key: 'createtime'
             },
             {
                 title: '内容',
-                key: 'age'
+                key: 'title',
+                width: 400
             },
             {
                 title: '状态',
-                key: 'address'
+                key: 'status',
+                render: (h,params) => {
+                  return h('span',params.row.status?'已下载':'未下载')
+                }
             },
             {
                 title: '操作',
                 key: 'address',
                 render: (h,params)=> {
-                  return h('span', {
+                  return h('a', {
                     style: {
                       color: '#2A99F2',
                       cursor: 'pointer'
                     },
+                    attrs: {
+                      href: params.row.remark,
+                      download: params.row.filename
+                    },
                     on: {
-                      click: () => {
-                        alert('这是下载')
-                      }
+                          click: () => {
+                              this.exportTable[params.index].status = 1
+                          }
                     }
                   }, '下载')
                 }
@@ -1530,6 +1555,9 @@
         ],
         exportTable: [],
         exportTotal: 1,
+        exportPage: 1,
+        exportPageSize: 6,
+        // 结束
         OrderPages: 1,
         currentORderPage: 1,
         OrderpageSize: 10,
@@ -2447,7 +2475,7 @@
           }
         ],
         // ordertime: '',
-        time: '',
+        time: [startTime, endTime],
         timeOrder: '',
         total: 0,
         currentPage: 1,
@@ -2463,7 +2491,7 @@
         types: '',
         value1: 0,
         value2: 10000,
-        dateRange: ['', ''],
+        dateRange: [startTime, endTime],
         dateRangeOrder: ['', ''],
         order_dateRange: ['', ''],
         columns: [
@@ -2543,6 +2571,8 @@
           }
         ],
         tabledata: [],
+        flowAllCost: '',
+        flowAllIncome: '',
         typeList: [
           {
             value: '',
@@ -3193,55 +3223,7 @@
             }
           })
       },
-      resourcesPageChange(currentPage) {
-        this.getResourcesTable(currentPage)
-      },
-      getResourcesTable(currentPage) {
-        console.log(this.timeResource)
-        console.log(this.timeResource[0])
-        console.log(this.timeResource[1])
-        axios.get('/nVersionUser/resourceDetails.do', {
-          params: {
-            pageSize: '5',
-            page: currentPage,
-            minTime: this.timeResource[0],
-            maxTime: this.timeResource[1],
-            billingMode: this.resourcesDataType,
-            resourceType: this.resourcesType,
-            minCashPay: this.minCashPayResource,
-            mmxCashPay: this.maxCashPayResource,
-            zoneId: this.resourcesZoneId
-          }
-        }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.resouresTotal = response.data.result.count
-              this.resourcesTable = response.data.result.info
-              // console.log(this.resourcesTable)
-              let filtersData = []
-              this.$store.state.zoneList.forEach((item,index) => {
-                    filtersData[index]={'label':item.zonename,'value':item.zoneid}
-              })
-              this.columnsResources[2].filters = filtersData
-            }
-          })
-      },
-      exportPageChange(currentPage) {
-        this.getResourcesTable(currentPage)
-      },
-      getExportTable(currentPage,type) {
-        this.exportTable = [{}]
-        this.$http.get('nVersionUser/getExport.do',{
-          params: {
-            page: '1',
-            pageSize: '7'
-          }
-        }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              console.log(response.data.result)
-            }
-          })
-        
-      },
+      
       
       balanceAlarmSet (status) {
         // this.$Message.info('开关状态：' + status);
@@ -3361,7 +3343,7 @@
             this.invoiceLimit()
             break
           case 'bills':
-            this.getResourcesTable('1')
+            this.getResourcesTable()
             this.getExportTable()
             this.search()
             this.initOverview()
@@ -3409,9 +3391,6 @@
       },
       dataChangeResource(time) {
         this.timeResource = time
-        console.log(time)
-        console.log(this.timeResource[0])
-        console.log(this.timeResource[1])
       },
       dataChange(time) {
         this.dateRange = time
@@ -3436,7 +3415,57 @@
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.tabledata = response.data.result.info
+              this.flowAllCost = response.data.result.totalExpenditure
+              this.flowAllIncome = response.data.result.totalIncome
               this.total = response.data.result.count
+            }
+          })
+      },
+      resourcesPageChange(currentPage) {
+        this.resourcePage = currentPage
+        this.getResourcesTable()
+        
+      },
+      getResourcesTable() {
+        axios.get('/nVersionUser/resourceDetails.do', {
+          params: {
+            pageSize: this.resourcePageSize,
+            page: this.resourcePage,
+            minTime: this.timeResource[0],
+            maxTime: this.timeResource[1],
+            billingMode: this.resourcesDataType,
+            resourceType: this.resourcesType,
+            minCashPay: this.minCashResource,
+            maxCashPay: this.maxCashResource,
+            zoneId: this.resourcesZoneId
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.resouresTotal = response.data.result.count
+              this.resourcesTable = response.data.result.info
+              this.resouresAllCost = response.data.result.totalExpenditure
+              let filtersData = []
+              this.$store.state.zoneList.forEach((item,index) => {
+                    filtersData[index]={'label':item.zonename,'value':item.zoneid}
+              })
+              this.columnsResources[2].filters = filtersData
+            }
+          })
+      },
+      exportPageChange(currentPage) {
+        this.exportPage = currentPage
+        this.getExportTable()
+      },
+      getExportTable(currentPage,type) {
+        this.$http.get('nVersionUser/getExport.do',{
+          params: {
+            page: this.exportPage,
+            pageSize: this.exportPageSize
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.exportTable = response.data.result.info
+              this.exportTotal =  response.data.result.count
             }
           })
       },
@@ -4538,7 +4567,30 @@
             })
           }
         })
-      }
+      },
+      exportResource() {
+        let url = 'nVersionUser/resourceDetailsExport.do'
+        let params = {
+          companyId: this.$store.state.userInfo.companyid,
+          minTime: this.timeResource[0],
+          maxTime: this.timeResource[1],
+          billingMode: this.resourcesDataType,
+          zoneId: this.resourcesZoneId,
+          resourceType: this.resourcesDataType,
+          minCashPay: this.minCashResource,
+          maxCashPay: this.maxCashResource
+        }
+        axios.get(url, {responseType: 'arraybuffer', params: params}).then(response => {
+          if (response.status == 200) {
+            var blob = new Blob([response.data],{type: "application/vnd.ms-excel"})
+            this.saveAs(blob,'资源详单'+'('+this.timeResource[0]+this.timeResource[1]+')')
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
     },
     computed: {
       payDisabled() {
@@ -4627,7 +4679,10 @@
     watch: {
       dateRange() {
         this.search()
-      }
+      },
+      timeResource() {
+        this.getResourcesTable()
+      },
     }
   }
 </script>
@@ -5433,23 +5488,29 @@
           }
         }
       }
-      .table-container {
-        .table-end {
-          display: flex;
-          justify-content: space-between;
-          border: 1px solid #d9d9d9;
-          border-top: none;
-          li {
-            height: 47px;
-            line-height: 45px;
-            padding-left: 18px;
-          }
-          li:last-child{
-            width: 232px;
-            color:#FF624B;
-          }
-        }
-      }
+    }
+  }
+  .table-end {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #d9d9d9;
+    border-top: none;
+    li {
+      height: 47px;
+      line-height: 45px;
+      padding-left: 18px;
+    }
+    li:nth-of-type(even) {
+      width: 232px;
+      color:#FF624B;
+    }
+  }
+  .table-other {
+    border: none;
+    border-bottom: 1px solid #d9d9d9;
+    li:nth-of-type(even) {
+      padding-right: 18px;
+      text-align: right;
     }
   }
   .invoice-management {
