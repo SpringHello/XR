@@ -146,7 +146,7 @@
               </div>
               <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:21px;margin-top:17px;">
                 <img src="../../../assets/img/active/blackactive/Shape.png" alt="提示" style="margin:4px 10px auto 0;float:left;">
-                下场秒杀预告：云服务器 2C4G5M、2C8G10M、4C8G5M、对象存储<span style="cursor: pointer;color:rgba(245,166,35,1);margin-left:10px;">更多场次预告 ></span>
+                下场秒杀预告：云服务器 2C4G5M、2C8G10M、4C8G5M、对象存储<span @click="showModal.SpikeMore=true" style="cursor: pointer;color:rgba(245,166,35,1);margin-left:10px;">更多场次预告 ></span>
                 <div style="clear: both;"></div>
               </p>
             </div>
@@ -597,7 +597,7 @@
       </section>
       <!-- 登陆注册弹窗 -->
       <transition name="fade">
-        <div class="overlay" @click.stop="showModal.notLoginModal=false" v-if="showModal.notLoginModal">
+        <div class="overlay" @click.stop="showModal.notLoginModal=true" v-if="showModal.notLoginModal">
           <div class="all-modal regular-modal" @click.stop="showModal.notLoginModal=true">
             <div class="header">
               <i @click.stop="showModal.notLoginModal=false"></i>
@@ -627,7 +627,7 @@
               <p v-html="posText"></p>
             </div>
             <div class="footer">
-              <Button @click.stop="showModal.regular=false" class="regular-btn">确定</Button>
+              <Button @click.stop="showModal.regular=false" class="regular-btn">确认</Button>
             </div>
           </div>
         </div>
@@ -638,20 +638,20 @@
           <div class="all-modal regular-modal" @click.stop="showModal.notNewcoustomer=true">
             <div class="header">
               <i @click.stop="showModal.notNewcoustomer=false"></i>
-              <span>抱歉</span>
+              <span>提示</span>
             </div>
             <div class="body">
-              <p>您不符合参与秒杀活动的条件，去看看 <span @click.stop="rollDiscount(1400)">其他活动</span>吧</p>
+              <p>您已经参与过秒杀活动啦，去看看其他活动吧！</p>
             </div>
             <div class="footer">
-              <Button @click.stop="rollDiscount(1400)" class="regular-btn">查看其他活动</Button>
+              <Button @click.stop="rollDiscount(1400)" class="regular-btn">确认</Button>
             </div>
           </div>
         </div>
       </transition>
       <!-- 曾参加过秒杀活动 -->
       <transition name="fade">
-        <div class="overlay" @click.stop="showModal.joinedActivity=false" v-if="showModal.joinedActivity">
+        <div class="overlay" @click.stop="showModal.joinedActivity=true" v-if="showModal.joinedActivity">
           <div class="all-modal regular-modal" @click.stop="showModal.joinedActivity=true">
             <div class="header">
               <i @click.stop="showModal.joinedActivity=false"></i>
@@ -668,7 +668,7 @@
       </transition>
       <!-- 实名认证弹窗 -->
       <transition name="fade">
-        <div class="overlay" @click.stop="showModal.authModal=false" v-if="showModal.authModal">
+        <div class="overlay" @click.stop="showModal.authModal=true" v-if="showModal.authModal">
           <div class="all-modal auth-modal" @click.stop="showModal.authModal=true">
             <div class="header">
               <i @click.stop="showModal.authModal=false"></i>
@@ -727,14 +727,14 @@
               <p> 您也可以通过<span style="color:#FF624B;text-decoration:underline;cursor:pointer" @click="toAuth()"> 上传身份证照片</span>的方式行实名认证</p>
             </div>
             <div class="footer">
-              <Button @click.stop="showModal.authErrorModal=false" class="regular-btn"><span>确定</span></Button>
+              <Button @click.stop="showModal.authErrorModal=false" class="regular-btn"><span>确认</span></Button>
             </div>
           </div>
         </div>
       </transition>
       <!-- 活动规则弹窗 -->
       <transition name="fade">
-        <div class="overlay" @click="showModal.rule1=false" v-if="showModal.rule1">
+        <div class="overlay" @click="showModal.rule1=true" v-if="showModal.rule1">
           <div class="all-modal activity-rule" @click.stop="showModal.rule1=true">
             <div class="header">
               <span>秒杀活动规则</span>
@@ -756,9 +756,29 @@
           </div>
         </div>
       </transition>
+      <!-- 更多秒杀场次预告弹窗 -->
+      <transition name="fade">
+        <div class="overlay" @click="showModal.SpikeMore=true" v-if="showModal.SpikeMore">
+          <div class="all-modal activity-rule" @click.stop="showModal.SpikeMore=true" style="width:540px;">
+            <div class="header">
+              <span>更多秒杀场次预告</span>
+              <i @click.stop="showModal.SpikeMore=false"></i>
+            </div>
+            <div class="body" style="padding:20px;">
+              <div style="background:rgba(247,247,247,1);font-size:12px;color:rgba(255,136,28,1);text-align: center;height:28px;line-height: 28px;">表格仅展示部分秒杀场次预告，此次秒杀活动以五天为一个周期循环开放，敬请关注。</div>
+              <Table :columns="SpikeKill" :data="SpikeKilldata" border style="margin-top:15px;"></Table>
+            </div>
+            <div class="footer">
+              <div class="wraper" style="border-top:none;padding:0 0 20px 0;">
+                <Button @click.stop="showModal.SpikeMore=false" class="regular-btn"><span>返回活动页</span></Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
       <!-- 秒杀活动规则 -->
       <transition name="fade">
-        <div class="overlay" @click="showModal.rule2=false" v-if="showModal.rule2">
+        <div class="overlay" @click="showModal.rule2=true" v-if="showModal.rule2">
           <div class="all-modal activity-rule" @click.stop="showModal.rule2=true">
             <div class="header">
               <span>活动规则</span>
@@ -844,7 +864,7 @@
 
       <!-- 预约云电脑弹窗 -->
       <transition name="fade">
-        <div class="overlay" @click="showModal.CloudComputers=false" v-if="showModal.CloudComputers">
+        <div class="overlay" @click="showModal.CloudComputers=true" v-if="showModal.CloudComputers">
           <div class="CloudComputers" @click.stop="showModal.CloudComputers=true">
             <div class="header">
               <img src="../../../assets/img/active/blackactive/quxiao.png" @click.stop="showModal.CloudComputers=false">
@@ -886,7 +906,7 @@
 
       <!-- 预约云电脑失败弹窗 -->
       <transition name="fade">
-        <div class="overlay" @click="showModal.CloudComputersfail=false" v-if="showModal.CloudComputersfail">
+        <div class="overlay" @click="showModal.CloudComputersfail=true" v-if="showModal.CloudComputersfail">
           <div class="CloudComputers" @click.stop="showModal.CloudComputersfail=true">
             <div class="header">
               <img src="../../../assets/img/active/blackactive/quxiao.png" @click.stop="showModal.CloudComputersfail=false">
@@ -908,7 +928,7 @@
 
       <!-- 会员规则弹窗 -->
       <transition name="fade">
-        <div class="overlay" style="z-index:2000" v-if="showModal.vipRuleModal" @click.stop="showModal.vipRuleModal=false">
+        <div class="overlay" style="z-index:2000" v-if="showModal.vipRuleModal" @click.stop="showModal.vipRuleModal=true">
           <div class="all-modal modal5" @click.stop="showModal.vipRuleModal=true">
             <div class="header">
               <span>会员制规则</span>
@@ -969,7 +989,7 @@
         </div>
       </transition>
       <!-- 余额转入现金券 -->
-      <Modal v-model="showModal.cashCoupon" :scrollable="true" :width="640">
+      <Modal v-model="showModal.cashCoupon" :scrollable="true" :width="640" >
         <p slot="header" class="modal-header-border">
           <span class="universal-modal-title">充值</span>
         </p>
@@ -1153,6 +1173,59 @@
         highEndLength: '',
         selectedRule: true,
         serialNum: '',
+        SpikeKill: [
+          {
+            title: '秒杀时间',
+            key: 'data'
+          },
+          {
+            title: '该场次产品',
+            width:291,
+            render: (h, params) => {
+                return h('span', {
+                  style: {
+                    color: '#666666'
+                  }
+                }, params.row.age)
+            }
+          },
+          {
+            title: '状态',
+            width:85,
+            render: (h, params) => {
+              if(params.row.address=='1'){
+                return h('span', {
+                  style: {
+                    color: '#FF881C'
+                  }
+                }, '进行中')
+              }else{
+                return h('span', {
+                  style: {
+                    color: '#666666'
+                  }
+                }, '未开始')
+              }
+            }
+          }
+        ],
+        SpikeKilldata: [
+          {
+             data: '2019.05.29',
+             age: '云服务器 2C8G5M、2C8G10M、4C16G5M、 对象存储 100G存储+100G下行流量',
+             address: 1
+          },
+          {
+              data: '2019.05.30',
+              age: '云服务器 2C4G5M、2C8G10M、4C8G5M、 对象存储 100G存储+100G下行流量',
+              address: 0
+          },
+          {
+              data: '2019.05.31',
+              age: '云服务器 2C4G2M、2C8G5M、8C16G5M、 对象存储 100G存储+100G下行流量',
+              address: 0
+          }
+        ],
         config: {
           value: '',
           imagePath: require('../../../assets/img/pay/payBackground.png'),
@@ -1890,7 +1963,7 @@
       init() {
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result, authInfoPersion: response.data.authInfo_persion})
           }
         })
       },
@@ -2112,7 +2185,7 @@
         if (!this.$store.state.userInfo) {
           this.showModal.notLoginModal = true
         } else {
-          if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+          if ((!this.authInfo)|| (this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus!=0)||(!this.authInfoPersion &&this.authInfo&&this.authInfo.authtype==1&&this.authInfo.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.authInfo&&this.authInfo.checkstatus!=0)) {
             this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
             this.showModal.authModal = true
             return
@@ -2160,7 +2233,7 @@
         if (!this.$store.state.userInfo) {
           this.showModal.notLoginModal = true
         } else {
-          if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+          if ((!this.authInfo)|| (this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus!=0)||(!this.authInfoPersion &&this.authInfo&&this.authInfo.authtype==1&&this.authInfo.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.authInfo&&this.authInfo.checkstatus!=0)) {
             this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
             this.showModal.authModal = true
             return
@@ -2255,7 +2328,7 @@
           this.showModal.notLoginModal = true
           return
         }
-        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+        if ((!this.authInfo)|| (this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus!=0)||(!this.authInfoPersion &&this.authInfo&&this.authInfo.authtype==1&&this.authInfo.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.authInfo&&this.authInfo.checkstatus!=0)) {
           this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authModal = true
           return
@@ -2372,7 +2445,7 @@
           this.showModal.notLoginModal = true
           return
         }
-        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+        if ((!this.authInfo)|| (this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus!=0)||(!this.authInfoPersion &&this.authInfo&&this.authInfo.authtype==1&&this.authInfo.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.authInfo&&this.authInfo.checkstatus!=0)) {
           this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authModal = true
           return
@@ -2428,7 +2501,8 @@
           this.showModal.notLoginModal = true
           return
         }
-        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+        
+        if ((!this.authInfo)|| (this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus!=0)||(!this.authInfoPersion &&this.authInfo&&this.authInfo.authtype==1&&this.authInfo.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.authInfo&&this.authInfo.checkstatus!=0)) {
           this.imgSrc = `https://www.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`
           this.showModal.authModal = true
           return
@@ -2579,6 +2653,12 @@
       },
       userInfo() {
         return this.$store.state.userInfo
+      },
+      authInfo() {
+        return this.$store.state.authInfo
+      },
+      authInfoPersion(){
+        return this.$store.state.authInfoPersion
       },
       PriceHostHot() {
         axios.get('activity/getOriginalPrice.do', {
