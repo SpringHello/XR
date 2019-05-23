@@ -339,6 +339,23 @@
         <Button type="primary" @click="unbindResources_ok">确认</Button>
       </p>
     </Modal>
+    <!-- 当前区域没有主机提示 -->
+    <Modal v-model="showModal.withoutHost" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">检测到您所选择区域内没有可用主机，确认在{{ auth.defaultzonename}}购买公网IP吗 
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.withoutHost = false">取消</Button>
+        <Button type="primary" @click="buyIpOk">确认</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -411,7 +428,8 @@
           adjust: false,
           bindIPForGpu: false,
           deleteIP: false,
-          unbindResources: false
+          unbindResources: false,
+          withoutHost: false
         },
         chargesForm: {
           timeType: '',
@@ -921,6 +939,7 @@
           this.setData(response)
         })
       },
+      // 局部刷新
       timingRefresh(id) {
         let timer = setInterval(() => {
           axios.get('network/listPublicIpById.do', {
@@ -939,6 +958,7 @@
               })
               if (!(status == 2 || status == 3 || status == 4 || status == 5)) {
                 clearInterval(timer)
+                this.refresh()
               }
             }
           })
@@ -961,9 +981,6 @@
             }
           })
           this.total = response.data.result.total
-    /*      if (publicipids.length !== 0) {
-            this.timingRefresh(publicipids + '')
-          }*/
           this.select.forEach(item => {
             this.ipData.forEach(ip => {
               if (item.id === ip.id) {
@@ -972,7 +989,7 @@
             })
           })
           if(ids.length != 0){
-            this.timingRefresh(ids+'');
+            this.refresh()
           }
         }
       },
@@ -1014,6 +1031,30 @@
       handleNewIPSubmit() {
         this.$refs.newIPFormValidate.validate(validate => {
           if (validate) {
+        let url = 'information/listVirtualMachines.do'
+        this.$http.get(url, {
+          params: {
+            returnList: '1',
+            page:'1',
+            pageSize: '10'
+          }
+        }).then(res=>{
+          if(res.status == 200 && res.data.status ==1){
+            if(res.data.result.data.length != 0){
+              this.buyIpOk()
+            } else{
+              this.showModal.withoutHost = true
+            }
+          } else{
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+          }
+        })
+      },
+      buyIpOk(){
             axios.get('network/createPublicIp.do', {
               params: {
                 brandWith: this.newIPForm.bandWidth,
@@ -1032,10 +1073,7 @@
                   content: response.data.message
                 })
               }
-
             })
-          }
-        })
       },
       // 打开绑定IP到云主机模态框
       openBindIPModal(type, row, id) {
@@ -1123,6 +1161,7 @@
               if (item.id === this.operatingId) {
                 // 3代表绑定中
                 item.status = 3
+                item._disabled = true
               }
               this.select.forEach(ip => {
                 if (item.id === ip.id) {
@@ -1160,6 +1199,7 @@
               if (item.id === this.operatingId) {
                 // 3代表绑定中
                 item.status = 3
+                item._disabled = true
               }
               this.select.forEach(ip => {
                 if (item.id === ip.id) {
@@ -1197,6 +1237,7 @@
               if (item.id === this.operatingId) {
                 // 3代表绑定中
                 item.status = 3
+                item._disabled = true
               }
               this.select.forEach(ip => {
                 if (item.id === ip.id) {
@@ -1235,6 +1276,7 @@
               if (item.id === this.operatingId) {
                 // 3代表绑定中
                 item.status = 3
+                item._disabled = true
               }
               this.select.forEach(ip => {
                 if (item.id === ip.id) {
@@ -1296,6 +1338,7 @@
           if (item.id === this.operatingId) {
             // 4代表解绑中
             item.status = 4
+            item._disabled = true
           }
           this.select.forEach(ip => {
             if (item.id === ip.id) {

@@ -4131,7 +4131,6 @@
       },
       authInfo() {
         return $store.state.authInfo ? $store.state.authInfo : null
-        // return null
       },
       // 新增的个人认证信息
       authInfoPersion(){
