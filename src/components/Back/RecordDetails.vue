@@ -217,7 +217,7 @@
                     <span style="color:#2a99f2;cursor:pointer;" @click=" website = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
-                      <p v-if="hostUnitList.mainrecordnumber != '' || hostUnitList.mainrecordnumber != undefined">{{hostUnitList.mainrecordnumber}}</p>
+                      <p v-if="hostUnitList.mainrecordnumber != '' && hostUnitList.mainrecordnumber != undefined">{{hostUnitList.mainrecordnumber}}</p>
                       <p v-else>暂无主体备案号</p>
                       <div v-if="mainrecordnumberHide" class="text_block"><span style="color:red">信息有误</span> <span
                         style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span></div>
@@ -1038,8 +1038,12 @@
           <Input type="text" v-model="updateHostUnitList.webdomian"></Input>
         </FormItem>
         <FormItem prop="weburl">
-          <p style="margin:10px">ICP备案密码</p>
+          <p style="margin:10px">网站首页URL</p>
           <Input type="text" v-model="updateHostUnitList.weburl"></Input>
+        </FormItem>
+        <FormItem prop="icprecordpassword">
+          <p style="margin:10px">ICP备案密码</p>
+          <Input type="text" v-model="updateHostUnitList.icprecordpassword"></Input>
         </FormItem>
         <FormItem prop="webname">
           <p style="margin:10px">主体备案号</p>
@@ -1859,7 +1863,7 @@ export default {
                 }
               });
             } else {
-              this.isAllUpate = true;
+              this.isAllUpate = false;
             }
           } else {
             this.$Loading.finish();
@@ -2111,7 +2115,7 @@ export default {
       let web = {
         id: this.id,
         status: "初审中",
-        ISPName: this.hostUnitList.ispname,
+        ISPName: this.hostUnitList.ispname,//this.hostUnitList.ispname
         webIp: this.hostUnitList.webip,
         webAccessType: this.hostUnitList.webaccesstype,
         webServerAddress: this.hostUnitList.webserveraddress,
@@ -2135,7 +2139,7 @@ export default {
         companyResponsibilityUrlBack: this.updateHostUnitList
           .webresponsibilityurlback,
         domainCertificateUrl: this.hostUnitList.domaincertificateurl,
-        otherDataUrl: this.hostUnitList.otherdataurl,
+        otherDataUrl:'',//this.hostUnitList.otherdataurl
         backgroundUrl: backgroundUrl,
         backgroundAddress: this.hostUnitList.mark2,
         backgroundName: this.hostUnitList.mark3,
@@ -2143,7 +2147,13 @@ export default {
         mainrecordnumber:this.hostUnitList.mainrecordnumber == undefined ?'':this.hostUnitList.mainrecordnumber,
         icprecordpassword:this.hostUnitList.icprecordpassword
       };
+      for(let i in web){
+        if(web[i] == ''){
+          delete web[i];
+        }
+      }
       let update = this.$http.post("recode/updateMainWeb.do", web);
+
       let main = {
         id: webcompany_Id,
         phone: this.hostUnitList.companyphone,
@@ -2174,7 +2184,7 @@ export default {
           this.$router.push({ path: "BRecords" });
           this.$Message.success("修改成功");
         } else {
-          this.$message.info(res.data.message);
+          this.$message.info('修改失败');
         }
       });
     }

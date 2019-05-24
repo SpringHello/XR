@@ -46,7 +46,7 @@ axios.defaults.withCredentials = true
 
 //axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
 axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
-//axios.defaults.baseURL = 'https://www.xrcloud.net/'
+// axios.defaults.baseURL = 'https://www.xrcloud.net/'
 
 
 
@@ -92,9 +92,9 @@ function appendMD5(params, type) {
   if (params === undefined) {
     return undefined
   }
-  var str = '', count = 0
+  var str = '', count = 0;
   for (let i in params) {
-    str += i.substr(0, 1) + params[i]
+      str += i.substr(0, 1) + params[i]
     count++
   }
   str += count
@@ -105,6 +105,7 @@ function appendMD5(params, type) {
     str = md5(str)
     count = count % 10
     var mac = str.substr(0, count) + count + str.substr(count)
+    console.log({...params});
     return {
       ...params,
       mac: mac.toUpperCase()
