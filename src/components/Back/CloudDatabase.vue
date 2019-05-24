@@ -269,20 +269,26 @@
         renewalInfo: '',
         currentDBId: '',
         templateid: '',
+        styleVisible:{
+            color: '#2A99F2',
+            cursor: 'pointer'
+          },
+        styleDisable: {
+            cursor: 'not-allowed'
+        },
         databaseColumns: [
           {
             title: '数据库名称',
             ellipsis: true,
             render: (h, params) => {
               return h('div', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer'
-                },
+                style: this.auth?this.styleVisible:this.styleDisable,
                 on: {
                   click: () => {
-                    sessionStorage.setItem('databaseInfo', JSON.stringify(params.row))
-                    this.$router.push('CloudDataManage')
+                    if(this.auth){
+                      sessionStorage.setItem('databaseInfo', JSON.stringify(params.row))
+                      this.$router.push('CloudDataManage')
+                    }
                   }
                 }
               }, params.row.computername)
@@ -298,47 +304,12 @@
             key: 'serviceoffername',
             ellipsis: true,
           },
-          // {
-          //   title: '主机状态',
-          //   render: (h, params) => {
-          //     const row = params.row
-          //     let text = ''
-          //     switch (row.dbStatus) {
-          //       case '0':
-          //         text = '关闭';
-          //         break;
-          //       case '1':
-          //         text = '开启';
-          //         break;
-          //       case '2':
-          //         text = '开启中';
-          //         break;
-          //       case '3':
-          //         text = '关闭中';
-          //         break;
-          //       case '4':
-          //         text = '重启中';
-          //         break;
-          //       case '5':
-          //         text = '删除中'
-          //         break;
-          //     }
-          //     if (row.dbStatus == 2 || row.dbStatus == 3 || row.dbStatus == 4 || row.dbStatus == 5) {
-          //       return h('div', {}, [h('Spin', {
-          //         style: {
-          //           display: 'inline-block',
-          //           marginRight: '10px'
-          //         }
-          //       }), h('span', {}, text)])
-          //     } else {
-          //       return h('span', text)
-          //     }
-          //   }
-          // },
           {
             title: '状态',
             key: 'status',
             render: (h, params) => {
+              // dbStatus  数据库开启或关闭状态   1开启  0关闭  2开启中  3关闭中   4重启中
+              // Status 1: 正常   0:余额不足 -1:扣费时除余额不足的其他原因   -2:用户删除实时虚拟机   2创建中   3删除中   5数据库扩容中   6数据库升级中
               const row = params.row
               let text = ''
               switch (row.status) {
@@ -346,13 +317,20 @@
                   text = '欠费';
                   break;
                 case 1:
-                  text = '正常';
+                  if(row.dbStatus == 1) {
+                    text = '开启'
+                  } else if(row.dbStatus == 0) {
+                    text = '关闭'
+                  } else if(row.dbStatus == 2) {
+                    text = '开启中'
+                  } else if(row.dbStatus == 3) {
+                    text = '关闭中'
+                  } else if(row.dbStatus == 4) {
+                    text = '重启中'
+                  }
                   break;
                 case 2:
                   text = '创建中';
-                  break;
-                case 4:
-                  text = '重启中';
                   break;
                 case 5:
                   text = '扩容中';
@@ -370,7 +348,7 @@
                   text = '修改中';
                   break;
               }
-              if (row.status == 2 || row.status == 4 || row.status == 5 || row.status == 6 || row.status == 7 || row.status == 8 || row.status == 9) {
+              if (row.status == 2 || row.status == 5 || row.status == 6 || row.status == 7 || row.status == 8 || row.status == 9 || row.dbStatus == 2 || row.dbStatus == 3 || row.dbStatus == 4) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
@@ -393,13 +371,11 @@
             render: (h, params) => {
               if (params.row.publicip) {
                 return h('div', {}, [h('span', {}, params.row.publicip), h('span', {
-                  style: {
-                    color: '#2A99F2',
-                    cursor: 'pointer'
-                  },
+                  style: this.auth?this.styleVisible:this.styleDisable,
                   on: {
                     click: () => {
-                      this.$message.confirm({
+                      if(this.auth) {
+                        this.$message.confirm({
                           title: '提示',
                           content: `您正在为${params.row.computername}解绑公网IP，解绑之后您将不能通过公网访问该数据库，确认解绑？`,
                           onOk: () => {
@@ -428,35 +404,35 @@
                           }
                         }
                       )
+                      }
                     }
                   }
                 }, ' × 解绑')])
               } else {
                 return h('span', {
-                  style: {
-                    color: '#2A99F2',
-                    cursor: 'pointer'
-                  },
+                  style: this.auth?this.styleVisible:this.styleDisable,
                   on: {
                     click: () => {
-                      console.log(params.row.vpcid)
-                      this.currentComputerId = params.row.computerid
-                      this.bindForm.publicIP = ''
-                      this.$http.get('network/listPublicIp.do', {
-                        params: {
-                          useType: 0,
-                          vpcId: params.row.vpcid
-                        }
-                      }).then(response => {
-                        if (response.status == 200 && response.data.status == 1) {
-                          this.publicIPList = response.data.result
-                          if (this.publicIPList == '') {
-                            this.showModal.publicIPHint = true
-                          } else {
-                            this.showModal.bindIP = true
+                      // console.log(params.row.vpcid)
+                      if(this.auth){
+                        this.currentComputerId = params.row.computerid
+                        this.bindForm.publicIP = ''
+                        this.$http.get('network/listPublicIp.do', {
+                          params: {
+                            useType: 0,
+                            vpcId: params.row.vpcid
                           }
-                        }
-                      })
+                        }).then(response => {
+                          if (response.status == 200 && response.data.status == 1) {
+                            this.publicIPList = response.data.result
+                            if (this.publicIPList == '') {
+                              this.showModal.publicIPHint = true
+                            } else {
+                              this.showModal.bindIP = true
+                            }
+                          }
+                        })
+                      }
                     }
                   }
                 }, '绑定公网IP')
@@ -468,18 +444,20 @@
             ellipsis: true,
             render: (h, params) => {
               if (params.row.status == 1) {
-                return h('div', {}, [h('span', {}, params.row.dbPort), h('span', {
+                return h('div', {}, [h('span', {
                   style: {
-                    color: '#2A99F2',
-                    marginLeft: '10px',
-                    cursor: 'pointer'
-                  },
+                    marginRight: '10px',
+                  }
+                }, params.row.dbPort), h('span', {
+                  style: this.auth?this.styleVisible:this.styleDisable,
                   on: {
                     click: () => {
-                      this.current = params.row
-                      this.showModal.beforePortModify = true
-                      this.portModifyForm.currentPorts = params.row.dbPort
-                      this.currentComputerId = params.row.computerid
+                      if(this.auth){
+                        this.current = params.row
+                        this.showModal.beforePortModify = true
+                        this.portModifyForm.currentPorts = params.row.dbPort
+                        this.currentComputerId = params.row.computerid
+                      }
                     }
                   }
                 }, '修改端口')])
@@ -496,7 +474,8 @@
           {
             title: '操作',
             render: (h, params) => {
-              if (params.row.status == 1) {
+              if(this.auth) {
+                if (params.row.status == 1) {
                 var isShow = params.row.caseType != '3' ? 'inline-block' : 'none'
                 return h('div', {}, [h('span', {
                   style: {
@@ -887,6 +866,16 @@
                 ]),
                 ])
               }
+              } else {
+                return h('div',[
+                  h('span',{style:this.styleDisable},'删除'),
+                  h('span',{style:{
+                    cursor: 'not-allowed',
+                    marginLeft: '5px'
+                  }},'更多操作'),
+                ])
+              }
+              
             }
           },
         ],
@@ -981,9 +970,8 @@
       })
     },
     created() {
-      this.timer = setInterval(() => {
-        this.listDatabase()
-      }, 5000)
+      // 当没用操作时，刷新时需要调用
+      this.listDatabase()
     },
     methods: {
       // 绑定公网ip
@@ -1051,7 +1039,19 @@
       listDatabase() {
         this.$http.get('database/listDB.do').then(res => {
           if (res.status == 200 && res.data.status == 1) {
+            // dbStatus  数据库开启或关闭状态   1开启  0关闭  2开启中  3关闭中   4重启中
+            // Status 1: 正常   0:余额不足 -1:扣费时除余额不足的其他原因   -2:用户删除实时虚拟机   2创建中   3删除中   5数据库扩容中   6数据库升级中
             this.dataBaseData = res.data.result
+            let flag = res.data.result.some(item => {
+              return item.status == 2 || item.status == 3 || item.status == 5 || item.status == 6 || item.dbStatus == 2 || item.dbStatus == 3 || item.dbStatus == 4
+            })
+            if (!flag) {
+              window.clearInterval(this.timer)
+            } else {
+              this.timer = setTimeout(() => {
+                this.listDatabase()
+              }, 5000)
+            }
           }
         })
       },
@@ -1248,9 +1248,19 @@
       }),
     },
     computed: {
-      auth() {
-        return this.$store.state.authInfo != null
+      authInfo() {
+        return this.$store.state.authInfo ? this.$store.state.authInfo : null
       },
+      userInfo() {
+        return this.$store.state.userInfo ? this.$store.state.userInfo : null
+      },
+      // 新增的个人认证信息
+      authInfoPersion(){
+        return this.$store.state.authInfoPersion ? this.$store.state.authInfoPersion : null
+      },
+      auth () {
+        return (!this.authInfo)|| (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus != 0)||(!this.authInfoPersion && this.authInfo && this.authInfo.authtype == 1 && this.authInfo.checkstatus != 0)||(this.authInfoPersion && this.authInfoPersion.checkstatus != 0 && this.authInfo && this.authInfo.checkstatus != 0)
+      }
     },
     watch: {
       renewalType(type) {
