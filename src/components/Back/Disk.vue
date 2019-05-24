@@ -345,6 +345,23 @@
         <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>
     </Modal>
+    <!-- 当前区域没有主机提示 -->
+    <Modal v-model="showModal.withoutHost" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">检测到您所选择区域内没有可用主机，确认在{{ auth.defaultzonename}}购买磁盘吗 
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.withoutHost = false">取消</Button>
+        <Button type="primary" @click="newDisk_ok">确认</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -620,6 +637,7 @@
           renewDisk: false,
           // 资费变更
           ratesChange: false,
+          withoutHost: false,
           /*
 
            mountDisk: false,
@@ -773,8 +791,27 @@
       _checkNewForm() {
         this.$refs.newDisk.validate((valid) => {
           if (valid) {
-            // 表单验证通过，调用创建磁盘方法
-            this.newDisk_ok()
+        // 表单验证通过，调用创建磁盘方法
+        let url = 'information/listVirtualMachines.do'
+        this.$http.get(url, {
+          params: {
+            returnList: '1',
+            page:'1',
+            pageSize: '10'
+          }
+        }).then(res=>{
+          if(res.status == 200 && res.data.status ==1){
+            if(res.data.result.data.length != 0){
+              this.newDisk_ok()
+            } else{
+              this.showModal.withoutHost = true
+            }
+          } else{
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
           }
         })
       },

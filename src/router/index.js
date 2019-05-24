@@ -196,6 +196,7 @@ const GpuManageNew = () => import('@/components/Back/GpuManageNew')
 const Cashwithdrawal = () => import('@/components/Back/Cashwithdrawal')
 const Cashprocess = () => import('@/components/Back/Cashprocess')
 const CancellationAccount = () =>import('@/components/Back/CancellationAccount')
+const ThawDeposit = () =>import('@/components/Back/ThawDeposit')
 // 域名系统 ==============================
 
 const Link = () => import('@/components/Link')
@@ -448,7 +449,8 @@ var router = new Router({
         {path: 'Elastic', name: 'Elastic', component: Elastic},
         {path: 'ElasticDetails', name: 'ElasticDetails', component: ElasticDetails},
         {path: 'newAddElastic', name: 'newAddElastic', component: newAddElastic},
-        {path: 'TelescopicDetails', name: 'TelescopicDetails', component: TelescopicDetails}
+        {path: 'TelescopicDetails', name: 'TelescopicDetails', component: TelescopicDetails},
+        {path: 'ThawDeposit', name: 'ThawDeposit', component: ThawDeposit}
       ]
     },
     {

@@ -339,6 +339,23 @@
         <Button type="primary" @click="unbindResources_ok">确认</Button>
       </p>
     </Modal>
+    <!-- 当前区域没有主机提示 -->
+    <Modal v-model="showModal.withoutHost" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">检测到您所选择区域内没有可用主机，确认在{{ auth.defaultzonename}}购买公网IP吗 
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.withoutHost = false">取消</Button>
+        <Button type="primary" @click="buyIpOk">确认</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -411,7 +428,8 @@
           adjust: false,
           bindIPForGpu: false,
           deleteIP: false,
-          unbindResources: false
+          unbindResources: false,
+          withoutHost: false
         },
         chargesForm: {
           timeType: '',
@@ -488,11 +506,9 @@
                   break
                 case 3:
                   value = '绑定中'
-                  //value = '正常'
                   break
                 case 4:
                   value = '解绑中'
-                  //value = '正常'
                   break
                 case 5:
                   value = '升级中'
@@ -678,7 +694,7 @@
           {
             title: '操作',
             render: (h, object) => {
-              if ((this.auth && this.auth.checkstatus == 0) || this.personAuth && this.personAuth.checkstatus===0) {
+              if ((this.auth && this.auth.checkstatus == 0) || this.authInfoPersion && this.authInfoPersion.checkstatus===0) {
                 if (object.row.status == 0) {
                   return h('span', {}, '已欠费')
                 } else if (object.row.status == 2) {
@@ -856,15 +872,18 @@
         this.hide = 'none';
       }
       this.testjump()
-      axios.get('network/listVpc.do', {
+      this.listVpc()
+    },
+    methods: {
+      listVpc(){
+        axios.get('network/listVpc.do', {
           params: {
             zoneId: $store.state.zone.zoneid
           }
         }).then(response => {
           this.newIPForm.VPCOptions = response.data.result
         })
-    },
-    methods: {
+      },
 			testjump(){
 			  if (sessionStorage.getItem('modal')) {
 			    var modalName = sessionStorage.getItem('modal')
@@ -920,6 +939,7 @@
           this.setData(response)
         })
       },
+      // 局部刷新
       timingRefresh(id) {
         let timer = setInterval(() => {
           axios.get('network/listPublicIpById.do', {
@@ -938,6 +958,7 @@
               })
               if (!(status == 2 || status == 3 || status == 4 || status == 5)) {
                 clearInterval(timer)
+                this.refresh()
               }
             }
           })
@@ -947,22 +968,19 @@
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
           let publicipids = []
-          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0 && this.personAuth && this.personAuth.checkstatus !==0)|| (this.auth && this.auth.checkstatus !== 0 && !this.personAuth)) {
+          if ((!this.auth)|| (this.auth&&this.auth.authtype==0&&this.auth.checkstatus!=0)||(!this.authInfoPersion &&this.auth&&this.auth.authtype==1&&this.auth.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.auth&&this.auth.checkstatus!=0)) {
             this.ipData.forEach(item => {
               item._disabled = true
             })
           }
           let ids =[];
           this.ipData.forEach(item => {
-            if (item.status != 1 || item.status == 0) {
+            if (item.status == 2 || item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6) {
               item._disabled = true
               ids.push(item.publicipid)
             }
           })
           this.total = response.data.result.total
-    /*      if (publicipids.length !== 0) {
-            this.timingRefresh(publicipids + '')
-          }*/
           this.select.forEach(item => {
             this.ipData.forEach(ip => {
               if (item.id === ip.id) {
@@ -971,7 +989,7 @@
             })
           })
           if(ids.length != 0){
-            this.timingRefresh(ids+'');
+            this.refresh()
           }
         }
       },
@@ -1013,6 +1031,30 @@
       handleNewIPSubmit() {
         this.$refs.newIPFormValidate.validate(validate => {
           if (validate) {
+        let url = 'information/listVirtualMachines.do'
+        this.$http.get(url, {
+          params: {
+            returnList: '1',
+            page:'1',
+            pageSize: '10'
+          }
+        }).then(res=>{
+          if(res.status == 200 && res.data.status ==1){
+            if(res.data.result.data.length != 0){
+              this.buyIpOk()
+            } else{
+              this.showModal.withoutHost = true
+            }
+          } else{
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+          }
+        })
+      },
+      buyIpOk(){
             axios.get('network/createPublicIp.do', {
               params: {
                 brandWith: this.newIPForm.bandWidth,
@@ -1031,10 +1073,7 @@
                   content: response.data.message
                 })
               }
-
             })
-          }
-        })
       },
       // 打开绑定IP到云主机模态框
       openBindIPModal(type, row, id) {
@@ -1122,6 +1161,7 @@
               if (item.id === this.operatingId) {
                 // 3代表绑定中
                 item.status = 3
+                item._disabled = true
               }
               this.select.forEach(ip => {
                 if (item.id === ip.id) {
@@ -1159,6 +1199,7 @@
               if (item.id === this.operatingId) {
                 // 3代表绑定中
                 item.status = 3
+                item._disabled = true
               }
               this.select.forEach(ip => {
                 if (item.id === ip.id) {
@@ -1196,6 +1237,7 @@
               if (item.id === this.operatingId) {
                 // 3代表绑定中
                 item.status = 3
+                item._disabled = true
               }
               this.select.forEach(ip => {
                 if (item.id === ip.id) {
@@ -1234,6 +1276,7 @@
               if (item.id === this.operatingId) {
                 // 3代表绑定中
                 item.status = 3
+                item._disabled = true
               }
               this.select.forEach(ip => {
                 if (item.id === ip.id) {
@@ -1295,6 +1338,7 @@
           if (item.id === this.operatingId) {
             // 4代表解绑中
             item.status = 4
+            item._disabled = true
           }
           this.select.forEach(ip => {
             if (item.id === ip.id) {
@@ -1336,6 +1380,10 @@
       },
       adjust() {
         if (this.select.length === 1) {
+          if(this.select[0].status == 0){
+            this.$Message.info("该资源已欠费，请续费后再操作")
+            return
+          }
           this.adjustForm.minBrand = this.select[0].bandwith
           this.adjustForm.brand = this.select[0].bandwith
           switch (this.select[0].caseType) {
@@ -1377,6 +1425,10 @@
         if (this.select.length === 1) {
           if (this.select[0].caseType != 3) {
             this.$Message.info("实时计费才能变更资费")
+            return
+          }
+          if(this.select[0].status == 0){
+            this.$Message.info("该资源已欠费，请续费后再操作")
             return
           }
           this.chargesForm.discounts = null
@@ -1803,6 +1855,7 @@
             this.hide = 'none';
           }
           this.refresh()
+          this.listVpc()
           this.select = []
         },
         deep: true
@@ -1816,7 +1869,7 @@
       auth() {
         return this.$store.state.authInfo
       },
-      personAuth(){
+      authInfoPersion(){
         return this.$store.state.authInfoPersion
       },
       publicipOnDelete() {

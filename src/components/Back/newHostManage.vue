@@ -564,7 +564,7 @@
         if (value.length < 8 || value.length > 30) {
           callback(new Error('密码长度8-30字符'));
         } else if (!this.regExpObj.password.test(value)) {
-          callback(new Error('密码必须包含数字和字母,可用特殊符号：~:,*'));
+          callback(new Error('密码必须包含数字和字母大小写,可用特殊符号：~:,*'));
         } else {
           callback()
         }

@@ -32,7 +32,7 @@
                    <DropdownMenu slot="list">
                         <DropdownItem name='add' >添加VPC互通网关</DropdownItem>
                         <DropdownItem name='delete'>删除VPC</DropdownItem>
-                        <DropdownItem name='reset'>恢复默认</DropdownItem>
+                        <DropdownItem name='reset'>重启VPC</DropdownItem>
 												<DropdownItem name='rename'>重命名</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
@@ -564,7 +564,7 @@
           {
             title: '源NAT',
             render: (h, object) => {
-              if ((this.auth && this.auth.checkstatus == 0)|| (this.personAuth && this.personAuth.checkstatus == 0 )) {
+              if ((this.auth && this.auth.checkstatus == 0)|| (this.authInfoPersion && this.authInfoPersion.checkstatus == 0 )) {
                 if (object.row._status) {
                   let message = object.row._status == 1 ? '正在添加源NAT...' : '正在删除源NAT...'
                   return h('div', {}, [h('Spin', {
@@ -658,7 +658,7 @@
           {
             title: '目标IP',
             render: (h, object) => {
-              if ((this.auth && this.auth.checkstatus == 0)|| (this.personAuth && this.personAuth.checkstatus == 0 )) {
+              if ((this.auth && this.auth.checkstatus == 0)|| (this.authInfoPersion && this.authInfoPersion.checkstatus == 0 )) {
                 var renderArray = []
                 if (object.row.prottransip) {
                   var prottransipArray = object.row.prottransip.split(',')
@@ -745,7 +745,7 @@
             title: '操作',
             width: 100,
             render: (h, object) => {
-              if ((this.auth && this.auth.checkstatus == 0) || (this.personAuth && this.personAuth.checkstatus == 0 )) {
+              if ((this.auth && this.auth.checkstatus == 0) || (this.authInfoPersion && this.authInfoPersion.checkstatus == 0 )) {
                 return h('span', {
                   style: {
                     color: '#2A99F2',
@@ -1173,7 +1173,7 @@
             })
           })
           this.natData = response.data.result
-          if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0 && !this.personAuth)|| (this.auth && this.auth.checkstatus !== 0 && this.personAuth && this.personAuth.checkstatus !== 0)) {
+          if ((!this.auth)|| (this.auth&&this.auth.authtype==0&&this.auth.checkstatus!=0)||(!this.authInfoPersion &&this.auth&&this.auth.authtype==1&&this.auth.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.auth&&this.auth.checkstatus!=0)) {
             this.natData.forEach(nat => {
               nat._disabled = true
             })
@@ -1587,7 +1587,7 @@
             id += item.vpcid + ','
         });
         this.$message.confirm({
-          content: '您确认恢复默认吗',
+          content: '您确定重启VPC吗？重启过程中会断网，以确保对您的业务没有影响。',
           onOk: () => {
             this.$http.get('network/restartVpc.do', {
               params: {
@@ -1629,7 +1629,7 @@
       auth() {
         return this.$store.state.authInfo
       },
-      personAuth(){
+      authInfoPersion(){
         return this.$store.state.authInfoPersion
       },
     }),

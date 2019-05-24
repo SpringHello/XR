@@ -103,7 +103,7 @@
           </div>
         </div>
         <!--是否自动续费-->
-        <div class="item-wrapper">
+        <div class="item-wrapper" v-show="timeForm.currentTimeType !== 'current'">
           <div style="display: flex">
             <div>
               <p class="item-title" style="margin-top: 4px">自动续费</p>
@@ -138,6 +138,23 @@
         </div>
       </div>
     </div>
+    <!-- 当前区域没有主机提示 -->
+    <Modal v-model="showModal.withoutHost" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">检测到您所选择区域内没有可用主机，确认在{{ zone.zonename}}购买磁盘吗 
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.withoutHost = false">取消</Button>
+        <Button type="primary" @click="buyDiskOK">确认</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -204,7 +221,10 @@
         // 自动续费
         autoRenewal: true,
         dataDiskCost: 0,
-        coupon: 0
+        coupon: 0,
+        showModal:{
+          withoutHost: false
+        }
       }
     },
     created(){
@@ -264,6 +284,29 @@
           this.$LR({type: 'login'})
           return
         }
+        let url = 'information/listVirtualMachines.do'
+        axios.get(url, {
+          params: {
+            returnList: '1',
+            page:'1',
+            pageSize: '10',
+            zoneId: this.zone.zoneid
+          }
+        }).then(res=>{
+          if(res.status == 200 && res.data.status ==1){
+            if(res.data.result.data.length != 0){
+              this.buyDiskOK()
+            } else{
+              this.showModal.withoutHost = true
+            }
+          } else{
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      buyDiskOK(){
         var diskSize = ''
         var diskType = ''
         this.dataDiskList.forEach(item => {

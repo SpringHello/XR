@@ -467,11 +467,15 @@
             if (res.data.data.templates.length != 0) {
               res.data.data.templates.forEach(item => {
                 if(item.userStatus == 1){
+                  // 已认证的模板
                    this.btns = 'templated'
                     this.templateds.push(item);
                     this.templateName = this.templateds[0].id
                 }
               })
+              if (this.templateds.length == 0) {
+                return this.$Message.info('暂没有已认证的可用模板')
+              }
             } else {
               return this.$Message.info('暂没有可用模板，请直接创建')
             }

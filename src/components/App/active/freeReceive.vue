@@ -147,8 +147,9 @@
           <dt>每个用户只能参与一次，同一手机号对应的多个账号、同一实名认证用户等满足同一条件的均视为一个用户。</dt>
           <dt>免费产品中的资源可随时进行升级，升级费用按新睿云标准收费进行收取。</dt>
           <dt>在各产品免费使用期间，若对免费资源进行了销毁，则视为放弃免费使用权。</dt>
+          <dt>因押金主机为免费产品，暂不支持备案，若您需要备案可执行押金转续费操作，或者购买包年包月主机及IP之后进行备案。</dt>
           <dd>活动声明：</dd>
-          <dt>为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源，领取后3天内未使用资源、利用资源从事违法违规行为的用户收回免费套餐使用资格。因此造成任何损失的，由该用户自行负责。</dt>
+          <dt>为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源；领取后3天内未使用资源；利用资源从事违法违规行为；因用户主机遭受DDOS攻击而给平台方带来损失的用户，收回免费套餐使用资格。因此造成任何损失的，由该用户自行负责。</dt>
         </dl>
       </div>
     </div>
@@ -789,7 +790,7 @@
       init() {
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result, authInfoPersion: response.data.authInfo_persion})
           }
         })
       },
@@ -910,7 +911,7 @@
           this.$LR({type: 'register'})
           return
         }
-        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+        if ((!this.authInfo)|| (this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus!=0)||(!this.authInfoPersion &&this.authInfo&&this.authInfo.authtype==1&&this.authInfo.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.authInfo&&this.authInfo.checkstatus!=0)) {
           this.showModal.authentication = true
           return
         }
@@ -1206,6 +1207,9 @@
       },
       authInfo() {
         return this.$store.state.authInfo ? this.$store.state.authInfo : null
+      },
+      authInfoPersion(){
+        return this.$store.state.authInfoPersion
       },
     },
     beforeRouteLeave(to, from, next) {

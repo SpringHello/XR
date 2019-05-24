@@ -55,7 +55,7 @@
 var info = [
   {
     zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858',
-    zoneName: '北京一区',
+    zoneName: '北京一区(北京)',
     kernelList: [
       {
         label: '1核',
@@ -121,6 +121,68 @@ var info = [
         RAMList: [
           { label: '128G', value: 128 },
           { label: '256G', value: 256 },
+        ]
+      }
+    ],
+  },
+  {
+    zoneId: 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d',
+    zoneName: '北方一区(沈阳)',
+    kernelList: [
+      {
+        label: '1核',
+        value: 1,
+        RAMList: [
+          { label: '1G', value: 1 },
+          { label: '2G', value: 2 },
+          { label: '4G', value: 4 }
+        ]
+      },
+      {
+        label: '2核',
+        value: 2,
+        RAMList: [
+          { label: '4G', value: 2 },
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 },
+          { label: '12G', value: 12 },
+        ]
+      },
+      {
+        label: '4核',
+        value: 4,
+        RAMList: [
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 },
+          { label: '12G', value: 12 },
+          { label: '16G', value: 16 },
+          { label: '32G', value: 32 }
+        ]
+      },
+      {
+        label: '8核',
+        value: 8,
+        RAMList: [
+          { label: '16G', value: 8 },
+          { label: '16G', value: 16 },
+          { label: '24G', value: 24 },
+          { label: '32G', value: 32 }
+        ]
+      },
+      {
+        label: '16核',
+        value: 16,
+        RAMList: [
+          { label: '16G', value: 16 },
+          { label: '24G', value: 24 },
+          { label: '32G', value: 32 }
+        ]
+      },
+      {
+        label: '32核',
+        value: 32,
+        RAMList: [
+          { label: '32G', value: 32 }
         ]
       }
     ],
@@ -198,8 +260,8 @@ var info = [
     ],
   },
   {
-    zoneId: 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d',
-    zoneName: '北方一区',
+    zoneId: 'c6dcb310-3e37-4431-87f3-d8ada0cf3d91',
+    zoneName: '华东一区(绍兴)',
     kernelList: [
       {
         label: '1核',
@@ -207,16 +269,18 @@ var info = [
         RAMList: [
           { label: '1G', value: 1 },
           { label: '2G', value: 2 },
-          { label: '4G', value: 4 }
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 }
         ]
       },
       {
         label: '2核',
         value: 2,
         RAMList: [
+          { label: '2G', value: 2 },
           { label: '4G', value: 4 },
           { label: '8G', value: 8 },
-          { label: '12G', value: 12 },
+          { label: '16G', value: 16 }
         ]
       },
       {
@@ -225,7 +289,6 @@ var info = [
         RAMList: [
           { label: '4G', value: 4 },
           { label: '8G', value: 8 },
-          { label: '12G', value: 12 },
           { label: '16G', value: 16 },
           { label: '32G', value: 32 }
         ]
@@ -234,9 +297,10 @@ var info = [
         label: '8核',
         value: 8,
         RAMList: [
+          { label: '8G', value: 8 },
           { label: '16G', value: 16 },
-          { label: '24G', value: 24 },
-          { label: '32G', value: 32 }
+          { label: '32G', value: 32 },
+          { label: '64G', value: 64 }
         ]
       },
       {
@@ -244,15 +308,168 @@ var info = [
         value: 16,
         RAMList: [
           { label: '16G', value: 16 },
-          { label: '24G', value: 24 },
-          { label: '32G', value: 32 }
+          { label: '32G', value: 32 },
+          { label: '64G', value: 64 },
+          { label: '128G', value: 128 }
         ]
       },
       {
         label: '32核',
         value: 32,
         RAMList: [
+          { label: '64G', value: 64 },
+          { label: '128G', value: 128 }
+        ]
+      },
+      {
+        label: '64核',
+        value: 64,
+        RAMList: [
+          { label: '128G', value: 128 },
+          { label: '256G', value: 256 },
+        ]
+      }
+    ],
+  },
+  {
+    zoneId: 'a6a20cc2-f84c-409d-9c11-c88a04cce852',
+    zoneName: '华南一区(东莞)',
+    kernelList: [
+      {
+        label: '1核',
+        value: 1,
+        RAMList: [
+          { label: '1G', value: 1 },
+          { label: '2G', value: 2 },
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 }
+        ]
+      },
+      {
+        label: '2核',
+        value: 2,
+        RAMList: [
+          { label: '2G', value: 2 },
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 },
+          { label: '16G', value: 16 }
+        ]
+      },
+      {
+        label: '4核',
+        value: 4,
+        RAMList: [
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 },
+          { label: '16G', value: 16 },
           { label: '32G', value: 32 }
+        ]
+      },
+      {
+        label: '8核',
+        value: 8,
+        RAMList: [
+          { label: '8G', value: 8 },
+          { label: '16G', value: 16 },
+          { label: '32G', value: 32 },
+          { label: '64G', value: 64 }
+        ]
+      },
+      {
+        label: '16核',
+        value: 16,
+        RAMList: [
+          { label: '16G', value: 16 },
+          { label: '32G', value: 32 },
+          { label: '64G', value: 64 },
+          { label: '128G', value: 128 }
+        ]
+      },
+      {
+        label: '32核',
+        value: 32,
+        RAMList: [
+          { label: '64G', value: 64 },
+          { label: '128G', value: 128 }
+        ]
+      },
+      {
+        label: '64核',
+        value: 64,
+        RAMList: [
+          { label: '128G', value: 128 },
+          { label: '256G', value: 256 },
+        ]
+      }
+    ],
+  },
+  {
+    zoneId: '3f3b1961-c693-489f-b6fc-c3ddc19d5c18',
+    zoneName: '西北一区(西安)',
+    kernelList: [
+      {
+        label: '1核',
+        value: 1,
+        RAMList: [
+          { label: '1G', value: 1 },
+          { label: '2G', value: 2 },
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 }
+        ]
+      },
+      {
+        label: '2核',
+        value: 2,
+        RAMList: [
+          { label: '2G', value: 2 },
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 },
+          { label: '16G', value: 16 }
+        ]
+      },
+      {
+        label: '4核',
+        value: 4,
+        RAMList: [
+          { label: '4G', value: 4 },
+          { label: '8G', value: 8 },
+          { label: '16G', value: 16 },
+          { label: '32G', value: 32 }
+        ]
+      },
+      {
+        label: '8核',
+        value: 8,
+        RAMList: [
+          { label: '8G', value: 8 },
+          { label: '16G', value: 16 },
+          { label: '32G', value: 32 },
+          { label: '64G', value: 64 }
+        ]
+      },
+      {
+        label: '16核',
+        value: 16,
+        RAMList: [
+          { label: '16G', value: 16 },
+          { label: '32G', value: 32 },
+          { label: '128G', value: 128 }
+        ]
+      },
+      {
+        label: '32核',
+        value: 32,
+        RAMList: [
+          { label: '64G', value: 64 },
+          { label: '128G', value: 128 }
+        ]
+      },
+      {
+        label: '64核',
+        value: 64,
+        RAMList: [
+          { label: '128G', value: 128 },
+          { label: '256G', value: 256 },
         ]
       }
     ],
@@ -380,7 +597,7 @@ export default {
   data () {
     var confInfo = localStorage.serviceoffername.match(/\d+/g)
     var currentCPUNum = Number.parseInt(confInfo[0])
-    var currentRAMSize = Number.parseInt(confInfo[2])
+    var currentRAMSize = Number.parseInt(confInfo[1])
     var hostname = sessionStorage.getItem('databaseName')
     var endtime = sessionStorage.getItem('endtime')
     sessionStorage.removeItem('databaseName')

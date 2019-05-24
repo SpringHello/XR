@@ -88,7 +88,7 @@
             </RadioGroup>
           </div>
         </Form>
-        <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
+        <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>{{totalQuota }}个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -151,7 +151,7 @@
             </RadioGroup>
           </div>
         </Form>
-        <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span class="bluetext">8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您最多能创建<span
+        <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span class="bluetext">{{totalQuota }}个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您最多能创建<span
           class="bluetext">3个</span>自动快照策略
         </p>
       </div>
@@ -1761,12 +1761,14 @@
         page: 1,
         pageSize: 10,
         total: 0,
+        totalQuota: 10,
       }
     },
     created() {
       this.listsnaps()
       this.listBackups()
       this.inter()
+      this.getResourceAllocation()
     },
     methods: {
       inter() {
@@ -1798,6 +1800,16 @@
               }
             })
         }, 1000 * 10)
+      },
+      // 获取资源配额
+      getResourceAllocation() {
+        this.$http.get('user/personalCenterResourceQuota.do', {
+          params: {}
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.totalQuota = res.data.result[1].totalQuota
+          }
+        })
       },
       // 分页
       currentChange(page) {

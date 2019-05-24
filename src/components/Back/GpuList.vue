@@ -380,7 +380,7 @@
   import cpuOptions from "@/echarts/cpuUtilization"
   import momeryOptions from  "@/echarts/memory"
   import regExps from '../../util/regExp'
-   var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/;
+   var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`!\\\\^|;:\',\\/?]{6,23}$/;
   var urlList = {
     dayURL: 'alarm/getVmAlarmByHour.do',
     otherURL: 'alarm/getVmAlarmByDay.do'
@@ -736,7 +736,7 @@
               },
               render:(h,params)=> {
                 this.hostSelectList = params.row;
-                if (params.row.status == 1){
+                if ((params.row.status == 1 && this.auth && this.auth.checkstatus == 0 )|| (params.row.status == 1 && this.personAuth && this.personAuth.checkstatus == 0 )){
                   return h('ul',[
                     h('li',{
                       style:{
@@ -1140,7 +1140,7 @@
               title:'操作',
               width:100,
               render:(h,params)=>{
-                if( (!this.auth) || (this.auth && this.auth.checkstatus !== 0)){
+                if( (!this.auth) || (this.auth && this.auth.checkstatus !== 0 && this.personAuth.checkstatus !== 0 )){
                   return h('div',
                     {
                       style:{padding:'8px 0',display:'inline-block'}
@@ -2309,6 +2309,9 @@
     computed:{
       auth() {
           return this.$store.state.authInfo;
+      },
+      personAuth(){
+        return this.$store.state.authInfoPersion
       },
       selectHostIds() {
         let ids = []

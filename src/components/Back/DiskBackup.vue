@@ -136,7 +136,7 @@
           </Form-item>
           <div>
             <p style="font-family: Microsoft YaHei;font-size: 12px;color: #999999;line-height: 15px">
-              提示：云硬盘数据服务为每块磁盘提供<span style="color: #2A99F2;">8</span>个快照额度，当某块磁盘的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您当前总共可设置3个备份策略。
+              提示：云硬盘数据服务为每块磁盘提供<span style="color: #2A99F2;">{{ totalQuota}}</span>个备份额度，当某块磁盘的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您当前总共可设置3个备份策略。
             </p>
           </div>
         </Form>
@@ -168,7 +168,7 @@
         </Form>
         <p style="font-family: Microsoft YaHei;font-size: 12px;line-height:20px;color: #999999;">
           提示：云硬盘数据服务为每块磁盘提供<span
-          style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
+          style="color:#2A99F2">{{ totalQuota}}</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.createDiskBackup = false">取消</Button>
@@ -643,7 +643,8 @@
         // 备份策略名称，用于显示在添加删除磁盘模态框上
         strategyName: '',
         // 备份策略id
-        strategyId: ''
+        strategyId: '',
+        totalQuota: '10'
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -664,6 +665,7 @@
     created() {
       this.getMonthCongigDate()
       this.getWeekTimeData()
+      this.getResourceAllocation()
     },
     computed: {
       // 该计算属性用于解决观测对象时currentValue与oldValue指向同一对象的问题，没有其他用处
@@ -680,6 +682,16 @@
       }
     },
     methods: {
+      // 获取资源配额
+      getResourceAllocation() {
+        this.$http.get('user/personalCenterResourceQuota.do', {
+          params: {}
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.totalQuota = res.data.result[7].totalQuota
+          }
+        })
+      },
       /* 刷新页面 */
       refreshPage() {
         if (this.tabPane == 'diskBackups') {

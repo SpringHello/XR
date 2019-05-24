@@ -287,7 +287,7 @@ export default {
         this.$LR({type:'login'})
         return
       }
-      if (!this.$store.state.authInfo) {
+      if ((!this.authInfo)|| (this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus!=0)||(!this.authInfoPersion &&this.authInfo&&this.authInfo.authtype==1&&this.authInfo.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.authInfo&&this.authInfo.checkstatus!=0)) {
         this.$Modal.confirm({
           scrollable: true,
           title: '提示',
@@ -400,7 +400,13 @@ export default {
   computed: {
     disabled () {
       return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
-    }
+    },
+    authInfo() {
+        return this.$store.state.authInfo ? this.$store.state.authInfo : null
+      },
+    authInfoPersion(){
+        return this.$store.state.authInfoPersion
+      },
   },
   watch: {},
   components: {}

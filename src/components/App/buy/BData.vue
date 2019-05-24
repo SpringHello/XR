@@ -337,7 +337,7 @@
           </div>
 
           <!--是否自动续费-->
-          <div class="item-wrapper">
+          <div class="item-wrapper" v-show="timeForm.currentTimeType !== 'current'">
             <div style="display: flex">
               <div>
                 <p class="item-title" style="margin-top: 4px">自动续费</p>
