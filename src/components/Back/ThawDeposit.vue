@@ -18,24 +18,24 @@
           </Steps>
           <div v-if="unfreezeStep === 0">
             <div class="unfreeze-hint">
-            <p><span class="blod">温馨提醒</span>：感谢您使用新睿云云服务器押金活动主机，您如果有续费的打算，本活动可支持 <span class="blue">押金一键转续费 </span>功能：<span>69元</span>押金可转为<span>续费一个月</span>,
-            <span>569元</span>押金可转为<span>续费一年</span>，操作简单方便，性价比超高，爆款云服务器等您继续使用！</p>
+            <p><span class="blod">温馨提醒</span>：感谢您使用新睿云云服务器押金活动主机，您如果有续费的打算，本活动可支持 <span class="blue" @click="ToRenew">押金一键转续费 </span>功能：<span>69元</span>押金可转为<span>续费一个月</span>,
+            <span>569元</span>押金可转为<span>续费一年</span>，操作简单方便，性价比超高，爆款云服务器等您继续使用！<span class="blue"  @click="ToRenew">立即续费 </span></p>
             </div>
             <p class="title">请问您退押金的原因是什么？（可多选）</p>
              <div v-for="(item,index) in issueData" :key="index" class="issus">
             <div class="issus-title">
               <div class="serialNum"><p>{{ index + 1}}</p></div>
-              <p>{{ item.par_descs }}</p>
+              <p>{{ item.par_descs }} <span v-if="emptyHint === index">（请选择/填写）</span></p>
             </div>
-            <div class="issus-content" v-if="index<3">
-              <CheckboxGroup>
-              <p v-for="(option,o_index) in item.docs" :key="o_index"><Checkbox :label="option.descs">
+            <div class="issus-content" v-if="item.par_type === 2">
+              <CheckboxGroup v-model="questionnaireResults[index]">
+              <p v-for="(option,o_index) in item.docs" :key="o_index"><Checkbox :label="option.id">
                 <span>{{option.descs}}</span>
                 </Checkbox></p>
               </CheckboxGroup>
             </div>
-              <div class="issus-content" v-else>
-            <Input type="textarea"  :rows="4" placeholder="请输入"/>
+              <div class="issus-content" v-if="item.par_type === 3">
+             <Input  v-model="questionnaireResults[index]" type="textarea"  :rows="4" placeholder="请输入"/>
             </div>
             </div>
            <div class="footer">
@@ -46,7 +46,6 @@
           <div v-if="unfreezeStep === 1">
             <div  v-if="freezeToRenew">
               <div class="universal-modal-content-flex"  style="width:580px">
-                <p style="font-size:18px;font-family:MicrosoftYaHei;color:rgba(51,51,51,1);margin-top:40px;line-height:30px;">需解冻<span style="color:#ED4014">资源未彻底删除</span>，故不能解冻到余额或充值帐户。资源<span style="color:#ED4014">彻底删除后可选择解冻到余额或充值帐户。</span></p>
                     <RadioGroup v-model="unfreezeTo" class="unfreeze-type">
                       <Radio label="account" class="disabled" disabled>
                         <p>解冻到原支付账户</p>
@@ -116,7 +115,7 @@
                                                                                                                                                           @click.prevent="getCode('voice')">接收语音验证码</span>。
                     </p>
                     <p>2、如果手机已丢失或停机，请<span class="blue" @click="$router.push('work')">提交工单</span>或<span class="blue"
-                                                                                                        @click="showModal.modifyPhoneID = true;showModal.unfreeze=false;modifyPhoneIDcancel()">通过身份证号码验证</span>更改手机号。
+                                                                                                        @click="showModal.modifyPhoneID = true;modifyPhoneIDcancel()">通过身份证号码验证</span>更改手机号。
                     </p>
                   </div>
                   <div style="clear: both"></div>
@@ -179,29 +178,223 @@
       </p>
       <div class="modal-content-s">
         <div>
-          <p class="lh24" style="margin-bottom: 20px">当前免费剩余时长到期日为<span style="color: #2A99F2">{{ freezeEndTime}}</span>，转为续费之后资源到期时间为<span style="color: #2A99F2">{{ renewalFeeTime}}</span>，您是否确认将押金转为续费？
+          <p class="lh24">当前免费剩余时长为<span style="color:#2A99F2">{{freeTime}}个月</span>（到期时间为：<span style="color: #2A99F2">{{ freezeEndTime}}</span>），转为续费之后资源到期时间为<span style="color: #2A99F2">{{ renewalFeeTime}}</span>，您是否确认将押金转为续费？ 
           </p>
+          <p style="margin-bottom: 20px">请输入“confirm”</p>
+          <Input v-model="freezeToRenewAffirm" placeholder="请输入“confirm”"></Input>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.freezeToRenewAffirm = false">取消</Button>
-        <Button type="primary" :disabled="freezeToRenewAffirmDisabled" @click="freezeToRenew_ok">确定{{ freezeToRenewAffirmText}}</Button>
+        <Button type="primary" :disabled="freezeToRenewAffirmDisabled" @click="freezeToRenew_ok">确定</Button>
       </p>
+    </Modal>
+        <!-- 修改手机号码(身份证验证) -->
+    <Modal v-model="showModal.modifyPhoneID" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">修改手机号码</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div>
+          <Steps :current="authModifyPhoneStep" size="small">
+            <Step title="验证身份" style="width:25%"></Step>
+            <Step title="手持身份证照" style="width:30%"></Step>
+            <Step title="设置新手机号码" style="width:32%"></Step>
+            <Step title="完成" style="width:13%"></Step>
+          </Steps>
+          <div v-show="authModifyPhoneStep == 0">
+            <Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">
+              <div v-if="(authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0)||(authInfoPersion && authInfoPersion.checkstatus ==0 && authInfo && authInfo.authtype!=0&&authInfo.checkstatus!=0) ">
+                <Form-item label="真实姓名" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
+                  <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.userInfo.realname}}</span>
+                </Form-item>
+                <FormItem label="注册身份证号码" style="width: 100%;" prop="ID">
+                  <Input v-model="authModifyPhoneFormOne.ID" placeholder="请输入注册的身份证号码"
+                         style="width:240px;"></Input>
+                </FormItem>
+                <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.personHint">
+                  <Icon type="ios-close"></Icon>
+                  身份证号码输入有误，验证失败，请尝试
+                  <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+                  <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+                </p>
+              </div>
+              <div v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0">
+                <Form-item label="公司名称" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
+                  <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.authInfo.name}}</span>
+                </Form-item>
+                <FormItem label="公司营业执照号码" style="width: 100%;" prop="businessLicense">
+                  <Input v-model="authModifyPhoneFormOne.businessLicense" placeholder="请输入公司营业执照号码"
+                         style="width:240px;"></Input>
+                </FormItem>
+                <p style="color:#FF0000;position:absolute;bottom:106px" v-if="authModifyPhoneFormOne.companyHint">
+                  <Icon type="ios-close"></Icon>
+                  公司营业执照号码输入有误，验证失败，请尝试
+                  <span style="color:#2d8cf0;cursor:pointer;" @click="$router.push('work')">提交工单</span> 或
+                  <a target="_blank" :href="`tencent://message/?uin=${$store.state.qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`">联系客服</a>
+                </p>
+              </div>
+            </Form>
+          </div>
+          <div v-show="authModifyPhoneStep == 1">
+            <div v-if="(authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0)||(authInfoPersion && authInfoPersion.checkstatus ==0 && authInfo && authInfo.authtype!=0&&authInfo.checkstatus!=0)">
+              <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+                提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
+              </p>
+              <div class="upload-img" style="margin-top:10px">
+                <div class="content">
+                  <div class="left">
+                    <Upload
+                      multiple
+                      type="drag"
+                      :show-upload-list="false"
+                      :with-credentials="true"
+                      action="file/upFile.do"
+                      :format="['jpg','jpeg','png','gif']"
+                      :max-size="4096"
+                      :on-format-error="handleFormatError"
+                      :on-exceeded-size="handleMaxSize"
+                      :on-success="legalPersonIDFront">
+                      <div class="icon-wrap" v-if="uploadImgDispaly==''">
+                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+                      </div>
+                      <img v-else :src="uploadImgDispaly">
+                      <p>上传图片</p>
+                    </Upload>
+                  </div>
+                  <div class="right">
+                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+                    <p>手持身份证人像照片</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-if="authInfo&&authInfo.authtype!=0&&authInfo.checkstatus==0">
+              <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
+                提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
+              </p>
+              <div class="upload-img" style="margin-top:10px">
+                <div class="content">
+                  <div class="left">
+                    <Upload
+                      multiple
+                      type="drag"
+                      :show-upload-list="false"
+                      :with-credentials="true"
+                      action="file/upFile.do"
+                      :format="['jpg','jpeg','png','gif']"
+                      :max-size="4096"
+                      :on-format-error="handleFormatError"
+                      :on-exceeded-size="handleMaxSize"
+                      :on-success="legalPersonIDFront1">
+                      <div class="icon-wrap" v-if="uploadImgDispaly1==''">
+                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+                      </div>
+                      <img v-else :src="uploadImgDispaly1">
+                      <p>上传图片</p>
+                    </Upload>
+                  </div>
+                  <div class="right">
+                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;">
+                    <p>法人身份证正面照片</p>
+                  </div>
+                </div>
+              </div>
+              <div class="upload-img" style="margin-top:10px">
+                <div class="content">
+                  <div class="left">
+                    <Upload
+                      multiple
+                      type="drag"
+                      :show-upload-list="false"
+                      :with-credentials="true"
+                      action="file/upFile.do"
+                      :format="['jpg','jpeg','png','gif']"
+                      :max-size="4096"
+                      :on-format-error="handleFormatError"
+                      :on-exceeded-size="handleMaxSize"
+                      :on-success="legalPersonIDFront2">
+                      <div class="icon-wrap" v-if="uploadImgDispaly2==''">
+                        <Icon type="plus" size="28" style="color:#D8D8D8"></Icon>
+                      </div>
+                      <img v-else :src="uploadImgDispaly2">
+                      <p>上传图片</p>
+                    </Upload>
+                  </div>
+                  <div class="right">
+                    <img src="../../assets/img/usercenter/card-person.png" style="display:block;margin:0 auto">
+                    <p style="width:168px">经办人手持身份证人像照片</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-show="authModifyPhoneStep == 2">
+            <Form :model="authModifyPhoneFormThere" :rules="authModifyPhoneThereRuleValidate" ref="authModifyPhoneFormThere">
+              <FormItem label="绑定新手机" prop="newPhone" style="width: 100%">
+                <Input v-model="authModifyPhoneFormThere.newPhone" placeholder="请输入新手机号码" style="width:240px"></Input>
+              </FormItem>
+              <FormItem label="图形验证码" style="width: 100%;" prop="pictureCode">
+                <Input v-model="authModifyPhoneFormThere.pictureCode" placeholder="请输入随机验证码"
+                       style="width:240px;margin-right:20px"></Input>
+                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+                     style="height:32px;vertical-align: middle">
+              </FormItem>
+              <Form-item label="短信验证码" prop="newVerificationCode" style="width: 100%">
+                <Input v-model="authModifyPhoneFormThere.newVerificationCode" placeholder="请输入收到的验证码" style="width: 240px;margin-right: 20px"></Input>
+                <Button type="primary" :disabled="authModifyPhoneFormThere.newCodeText !='获取验证码' " @click="getBindingNewMobilePhoneCode('authModifyPhoneFormThere')">{{
+                  authModifyPhoneFormThere.newCodeText}}
+                </Button>
+              </Form-item>
+            </Form>
+          </div>
+          <div v-show="authModifyPhoneStep == 3" style="text-align:center">
+            <Icon type="checkmark-circled" style="font-size:54px;color:#3EBB62;margin:20px 0;"></Icon>
+            <p style="font-size:14px;color:#666;margin-bottom:10px;">您的更改申请提交成功</p>
+            <span style="font-size:12px;color:#666">我们会在24小时内将审核结果发送至您的新手机号：{{authModifyPhoneFormThere.newPhone}}</span>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.modifyPhoneID = false">取消</Button>
+        <Button type="primary" v-if="authModifyPhoneStep == 0" @click="bindingMobilePhoneStepTwo('authModifyPhoneFormOne')">下一步</Button>
+        <Button type="primary" v-if="authModifyPhoneStep == 1" @click="uploadIDImg()">下一步</Button>
+        <Button type="primary" v-if="authModifyPhoneStep == 2" @click="bindMobilePhone('authModifyPhoneFormThere')">下一步</Button>
+        <Button type="primary" v-if="authModifyPhoneStep == 3" @click="showModal.modifyPhoneID=false">完成</Button>
+      </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import regExp from '../../util/regExp'
-
+  import reg from '../../util/regExp'
+  import axios from 'axios'
   export default {
     data() {
+      const validaRegisteredPhone = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('电话号码不能为空'))
+        }
+        if (!(/^1(3|4|5|7|8)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
+          callback(new Error('请输入正确的电话号码'))
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredID = (rule, value, callback) => {
+        if (!reg.IDCardVail(value)) {
+          callback(new Error('请输入正确的身份证号码'));
+        } else {
+          callback()
+        }
+      }
       return {
         unfreezeId: '',
         showModal:{
           notUnfreeze: false,
           unfreezeToBalanceHint: false,
-          freezeToRenewAffirm: false
+          freezeToRenewAffirm: false,
+          modifyPhoneID: false
         },
         unfreezeStep: 0,
         issueData: [],
@@ -309,11 +502,55 @@
         unfreezeToBalanceDisabled: true,
         unfreezeToBalanceText:'(10S)',
         unfreezeToBalanceTimer:null,
-        freezeToRenewAffirmDisabled:true,
-        freezeToRenewAffirmText:'(10S)',
-        freezeToRenewAffirmTimer:null,
+        freezeToRenewAffirm: '',
+        freeTime:'',
         renewalFeeTime:'',
         freezeEndTime:'',
+        // 问卷选中的数据
+        questionnaireResults:[],
+        // 问卷没填信息指示 -1：通过 0：第一项没选 1 第二项没选。。。。 
+        emptyHint: -1,
+        authModifyPhoneFormThere: {
+        verificationCode: '',
+        pictureCode: '',
+        newCodeText: '获取验证码',
+        newPhone: '',
+        newVerificationCode: ''
+        },
+        authModifyPhoneThereRuleValidate: {
+          verificationCode: [
+            {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+          ],
+          pictureCode: [
+            {required: true, message: '请输入图形验证码', trigger: 'blur'},
+          ],
+          newPhone: [
+            {required: true, message: '请输入新手机号码', trigger: 'blur'},
+            {validator: validaRegisteredPhone, trigger: 'blur'}
+          ],
+          newVerificationCode: [
+            {required: true, message: '请输入收到的验证码', trigger: 'blur'},
+          ],
+        },
+        uploadImgDispaly: '',
+        uploadImgDispaly1: '',
+        uploadImgDispaly2: '',
+        authModifyPhoneStep: 0,
+        authModifyPhoneFormOne: {
+          ID: '',
+          personHint: 0,
+          companyHint: 0,
+          businessLicense: ''
+        },
+        authModifyPhoneOneRuleValidate: {
+          ID: [
+            {required: true, message: '请输入身份证号码', trigger: 'blur'},
+            {validator: validaRegisteredID, trigger: 'blur'}
+          ],
+          businessLicense: [
+            {required: true, message: '请输入公司营业执照号码', trigger: 'blur'},
+          ]
+        },
       }
     },
     created() {
@@ -323,6 +560,12 @@
     computed: {
       auth() {
         return this.$store.state.authInfo != null
+      },
+      authInfo() {
+        return this.$store.state.authInfo ? this.$store.state.authInfo : null
+      },
+      authInfoPersion(){
+        return this.$store.state.authInfoPersion
       },
       // 返回一个对象，包含提现时的发送验证码方式（手机、邮箱），号码
       withdrawConfirm() {
@@ -338,6 +581,9 @@
           type,
           number
         }
+      },
+      freezeToRenewAffirmDisabled(){
+        return this.freezeToRenewAffirm !== 'confirm'
       }
     },
     methods: {
@@ -353,7 +599,86 @@
         })
       },
       sumbitQuestionnaire(){
-        this.unfreezeStep = 1
+        this.emptyHint = -1
+        let len = this.issueData.length
+        for(let i =0;i<len;i++){
+          if((!this.questionnaireResults[i])||this.questionnaireResults[i].length === 0 ){
+              this.emptyHint = i
+              break
+          }
+        }
+        let message = []
+        this.questionnaireResults.forEach((item,index)=>{
+          let data = {
+            par_id: this.issueData[index].par_id + '',
+            id: this.issueData[index].par_type === 2 ? item + '' : '',
+            content: this.issueData[index].par_type === 3 ? item + '' : ''
+          }
+          message.push(data)
+        })
+        if(this.emptyHint === -1){
+          let url = 'order/addQuestionnaire.do'
+          let params = {
+             par_bankId: this.issueData[0].par_bankId,
+             message: JSON.stringify(message)
+          }
+          this.$http.post(url,params).then(res=>{
+            if(res.status === 200 && res.data.status === 1){
+              this.getUnfreezeInfo()
+            } else {
+              this.$message.info({
+                content:res.data.message
+              })
+            }
+          })
+        }
+      },
+      ToRenew(){
+       this.$http.get('user/jdugeRenewalFee.do', {
+           params:{
+             id: this.unfreezeId
+           }
+        }).then(res=>{
+          if(res.status === 200 && res.data.status === 1){
+          let url = 'user/judgeRenewalFee.do'
+          this.$http.get(url, {
+            params: {
+              id: this.unfreezeId
+            } }).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+              this.freezeOrderData = res.data.result
+              this.freeTime = res.data.month
+              this.freezeEndTime = res.data.endTime
+              this.renewalFeeTime = res.data.renewalFeeTime
+              this.unfreezeTo = 'freezeToRenew'
+              this.unfreezeStep = 1
+              this.freezeToRenew = true
+              } else {
+               this.$message.info({content: res.data.message})
+               }
+            })
+          } else{
+              this.$message.info({
+                content: res.data.message
+              })
+          }
+        })
+      },
+      getUnfreezeInfo(){
+        this.$http.get('user/jdugeThawCondition.do', {
+           params:{
+             id: this.unfreezeId
+           }
+        }).then(res=>{
+          if(res.status === 200 && res.data.status === 1){
+            this.unfreezeTo = 'account'
+            this.unfreezeStep = 1
+            this.freezeToRenew = false
+          } else{
+            this.thawingCondition = params.row.thawCondition
+            this.showModal.notUnfreeze = true
+          }
+        })
       },
       unfreeze_ok() {
         // 解冻到账户
@@ -503,6 +828,198 @@
           }
         })
       },
+      modifyPhoneIDcancel() {
+        this.authModifyPhoneStep = 0
+        this.$refs['authModifyPhoneFormOne'].resetFields()
+        this.$refs['authModifyPhoneFormThere'].resetFields()
+        this.uploadImgDispaly = ''
+      },
+      bindingMobilePhoneStepTwo(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            if ((this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus==0)||(this.authInfoPersion && this.authInfoPersion.checkstatus ==0 && this.authInfo && this.authInfo.authtype!=0&&this.authInfo.checkstatus!=0)) {
+              axios.post('user/isIdCardAndNameSame.do', {
+                type: '0',
+                name: this.$store.state.userInfo.realname,
+                idCard: this.authModifyPhoneFormOne.ID,
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 1
+                } else {
+                  this.authModifyPhoneFormOne.personHint = 1
+                }
+              })
+            } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
+              axios.post('user/isIdCardAndNameSame.do', {
+                type: '1',
+                name: this.$store.state.authInfo.name,
+                businessLicense: this.authModifyPhoneFormOne.businessLicense,
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 1
+                } else {
+                  this.authModifyPhoneFormOne.companyHint = 1
+                }
+              })
+            }
+          } else {
+            this.authModifyPhoneFormOne.personHint = 0
+            this.authModifyPhoneFormOne.companyHint = 0
+          }
+        })
+      },
+      uploadIDImg() {
+        if ((this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus==0)||(this.authInfoPersion && this.authInfoPersion.checkstatus ==0 && this.authInfo && this.authInfo.authtype!=0&&this.authInfo.checkstatus!=0)) {
+          if (this.uploadImgDispaly == '') {
+            this.$Message.info({
+              content: '请上传手持身份证人像照片',
+              duration: 2
+            })
+          } else {
+            this.authModifyPhoneStep = 2
+          }
+        } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
+          if (this.uploadImgDispaly1 == '' || this.uploadImgDispaly2 == '') {
+            this.$Message.info({
+              content: '请上传手持身份证人像照片',
+              duration: 2
+            })
+          } else {
+            this.authModifyPhoneStep = 2
+          }
+        }
+      },
+      legalPersonIDFront(response) {
+        if (response.status == 1) {
+          this.uploadImgDispaly = response.result
+        }
+      },
+      legalPersonIDFront1(response) {
+        if (response.status == 1) {
+          this.uploadImgDispaly1 = response.result
+        }
+      },
+      legalPersonIDFront2(response) {
+        if (response.status == 1) {
+          this.uploadImgDispaly2 = response.result
+        }
+      },
+      handleFormatError() {
+        this.$Message.info({
+          content: '仅支持jpg,jpeg,png,gif格式的文件上传'
+        })
+      },
+      handleMaxSize() {
+        this.$Message.info({
+          content: '上传的文件过大'
+        })
+      },
+      getBindingNewMobilePhoneCode(name) {
+        this.$refs[name].validateField('newPhone', (text) => {
+          if (text == '') {
+            axios.get('user/code.do', {
+              params: {
+                aim: this.authModifyPhoneFormThere.newPhone,
+                isemail: 0,
+                vailCode: this.authModifyPhoneFormThere.pictureCode
+              }
+            }).then(response => {
+              // 发送成功，进入倒计时
+              if (response.status == 200 && response.data.status == 1) {
+                var countdown = 60
+                this.authModifyPhoneFormThere.newCodeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.authModifyPhoneFormThere.newCodeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.authModifyPhoneFormThere.newCodeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      // 绑定手机
+      bindMobilePhone(name) {
+        this.$refs[name].validate((vail) => {
+          if (vail) {
+            // /user/newPhoneByIdCard.do
+            // post请求
+            // 参数IDCard 身份证
+            // authType认证类型(0是个人 1是企业)
+            // newPhone新手机号
+            // (个人认证 personIdCardHandUrl 个人认证手持照片)
+
+            //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
+            if ((this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus==0)||(this.authInfoPersion && this.authInfoPersion.checkstatus ==0 && this.authInfo && this.authInfo.authtype!=0&&this.authInfo.checkstatus!=0)) {
+              axios.post('user/newPhoneByIdCard.do', {
+                IdCard: this.authModifyPhoneFormOne.ID,
+                authType: '0',
+                newPhone: this.authModifyPhoneFormThere.newPhone,
+                personIdCardHandUrl: this.uploadImgDispaly
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 3
+                } else {
+                  this.$Message.error(response.data.message)
+                }
+              })
+            } else if (this.authInfo && this.authInfo.authtype != 0 && this.authInfo.checkstatus == 0) {
+              axios.post('user/newPhoneByIdCard.do', {
+                businessLicense: this.authModifyPhoneFormOne.businessLicense,
+                authType: '1',
+                newPhone: this.authModifyPhoneFormThere.newPhone,
+                agentIdCardHandUrl: this.uploadImgDispaly2,
+                legalIdCardFrontUrl: this.uploadImgDispaly1
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.authModifyPhoneStep = 3
+                } else {
+                  this.$Message.error(response.data.message)
+                }
+              })
+            }
+          }
+        })
+      },
+      modifyPhoneIDcancel() {
+        this.authModifyPhoneStep = 0
+        this.$refs['authModifyPhoneFormOne'].resetFields()
+        this.$refs['authModifyPhoneFormThere'].resetFields()
+        this.uploadImgDispaly = ''
+      },
+      unfreezeToBalance() {
+        if (this.unfreezeToHint == 'yue') {
+          let url = 'user/getRremainderThaw.do'
+          let params = {
+            id: this.unfreezeId,
+          }
+          this.$http.post(url, params).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.$Message.success('解冻成功')
+              this.showModal.unfreezeToBalanceHint = false
+              this.freezeDetails()
+              this.getBalance()
+              this.showMoneyByMonth()
+              this.search()
+            } else {
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
+        } else {
+          this.unfreezeTo = 'account'
+          this.showModal.unfreezeToBalanceHint = false
+          this.showModal.unfreeze = true
+        }
+      },
     },
     watch: {
       '$store.state.zone': {
@@ -536,6 +1053,7 @@
           color: #FF624B;
           &.blue{
             color: #4297F2;
+            cursor: pointer;
           }
           &.blod{
             font-family:MicrosoftYaHei-Bold;
@@ -575,6 +1093,11 @@
           color:rgba(51,51,51,1);
           line-height:28px;
           margin-left: 11px;
+         >span{
+           font-size: 12px;
+            margin-left: 20px;
+            color: #FF1E39;
+          }
         }
       }
       .issus-content{

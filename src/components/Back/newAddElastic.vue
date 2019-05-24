@@ -983,7 +983,7 @@
           width: 14px;
           background: #2A99F2;
           position: absolute;
-          top: -0.71973rem;
+          top: -11.88027px;
           left: -4px;
         }
       }
@@ -991,6 +991,7 @@
         content: '';
         width: 10px;
         height: 10px;
+        -moz-transform: rotate(45deg);
         transform: rotate(45deg);
         border-top: 1px solid #2A99F2;
         border-right: 1px solid #2A99F2;

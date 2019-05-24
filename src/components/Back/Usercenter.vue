@@ -1139,7 +1139,7 @@
           </Steps>
           <div v-show="authModifyPhoneStep == 0">
             <Form :model="authModifyPhoneFormOne" :rules="authModifyPhoneOneRuleValidate" ref="authModifyPhoneFormOne">
-              <div v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0">
+              <div v-if="(authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0)||(authInfoPersion && authInfoPersion.checkstatus ==0 && authInfo && authInfo.authtype!=0&&authInfo.checkstatus!=0)">
                 <Form-item label="真实姓名" style="width: 100%;margin-top: 10px;margin-bottom:0px;">
                   <span style="color:rgba(0,0,0,0.43);font-size:14px;">{{ $store.state.userInfo.realname}}</span>
                 </Form-item>
@@ -1170,7 +1170,7 @@
             </Form>
           </div>
           <div v-show="authModifyPhoneStep == 1">
-            <div v-if="authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0">
+            <div v-if="(authInfo&&authInfo.authtype==0&&authInfo.checkstatus==0)||(authInfoPersion && authInfoPersion.checkstatus ==0 && authInfo && authInfo.authtype!=0&&authInfo.checkstatus!=0)">
               <p style="font-size:14px;color:rgba(153,153,153,1);margin-top:10px;">
                 提示：上传文件支持jpg、png、gif、jpeg格式，单个文件最大不超过<span class="red">4MB</span>。
               </p>
@@ -3890,7 +3890,7 @@
       bindingMobilePhoneStepTwo(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
-            if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+            if ((this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus==0)||(this.authInfoPersion && this.authInfoPersion.checkstatus ==0 && this.authInfo && this.authInfo.authtype!=0&&this.authInfo.checkstatus!=0)) {
               axios.post('user/isIdCardAndNameSame.do', {
                 type: '0',
                 name: this.$store.state.userInfo.realname,
@@ -3947,7 +3947,7 @@
             // newPhone新手机号
             // (个人认证 personIdCardHandUrl 个人认证手持照片)
             //   (企业认证   businessLicense营业执照 agentIdCardHandUrl经办人手持照片 legalIdCardFrontUrl法人身份证正面照)
-            if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+            if ((this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus==0)||(this.authInfoPersion && this.authInfoPersion.checkstatus ==0 && this.authInfo && this.authInfo.authtype!=0&&this.authInfo.checkstatus!=0)) {
               axios.post('user/newPhoneByIdCard.do', {
                 IdCard: this.authModifyPhoneFormOne.ID,
                 authType: '0',
@@ -3985,7 +3985,7 @@
         this.uploadImgDispaly = ''
       },
       uploadIDImg() {
-        if (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus == 0) {
+        if ((this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus==0)||(this.authInfoPersion && this.authInfoPersion.checkstatus ==0 && this.authInfo && this.authInfo.authtype!=0&&this.authInfo.checkstatus!=0)) {
           if (this.uploadImgDispaly == '') {
             this.$Message.info({
               content: '请上传手持身份证人像照片',

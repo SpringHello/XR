@@ -595,7 +595,7 @@
             render: (h, params) => {
               let text_1 = params.row.computername ? params.row.computername : '----'
               let text_2 = params.row.instancename ? params.row.instancename : '----'
-              if ((params.row.status == 1 && this.auth && this.auth.checkstatus == 0 )|| (params.row.status == 1 && this.personAuth && this.personAuth.checkstatus == 0 )) {
+              if ((params.row.status == 1 && this.auth && this.auth.checkstatus == 0 )|| (params.row.status == 1 && this.authInfoPersion && this.authInfoPersion.checkstatus == 0 )) {
                 return h('ul', {}, [
                   h('li', {
                     style: {
@@ -1006,7 +1006,7 @@
           {
             title: '操作',
             render: (h, params) => {
-              if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0 && this.personAuth && this.personAuth.checkstatus !== 0)|| (this.auth && this.auth.checkstatus !== 0 && !this.personAuth)) {
+              if ((!this.auth)|| (this.auth&&this.auth.authtype==0&&this.auth.checkstatus!=0)||(!this.authInfoPersion &&this.auth&&this.auth.authtype==1&&this.auth.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.auth&&this.auth.checkstatus!=0)) {
                 return h('div', {}, [
                   h('p', {
                     style: {
@@ -1664,7 +1664,7 @@
             if (ids.length !== 0) {
               this.timingRefresh(ids + '')
             }
-            if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0 && !this.personAuth)|| (this.auth && this.auth.checkstatus !== 0 && this.personAuth && this.personAuth.checkstatus !== 0)) {
+            if ((!this.auth)|| (this.auth&&this.auth.authtype==0&&this.auth.checkstatus!=0)||(!this.authInfoPersion &&this.auth&&this.auth.authtype==1&&this.auth.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.auth&&this.auth.checkstatus!=0)) {
               this.hostListData.forEach(host => {
                 host._disabled = true
               })
@@ -2159,7 +2159,7 @@
             this.$message.confirm({
               title: '提示',
               okText: '调整子网',
-              content: '您选择的主机的子网的网络服务方案为普通网络，不支持负载均衡。若您需要将该主机加入负载均衡可将该主机移入子网服务方案为：公网/私网负载均衡网络的子网之后在进行加入负载均衡操作',
+              content: '您选择的主机子网的网络服务方案为普通网络，不支持负载均衡。若您需要将该主机加入负载均衡，可将该主机移入子网服务方案为：“公网/私网负载均衡网络”的子网之后再进行加入负载均衡操作。',
               onOk: () => {
                 sessionStorage.setItem('vpcId', this.hostCurrentSelected.vpcid)
                 this.$router.push('vpcManage')
@@ -2750,7 +2750,7 @@
       auth() {
         return this.$store.state.authInfo
       },
-      personAuth(){
+      authInfoPersion(){
         return this.$store.state.authInfoPersion
       },
       selectHostIds() {

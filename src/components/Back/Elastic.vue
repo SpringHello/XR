@@ -33,8 +33,10 @@
         </Tabs>
       </div>
       <!--新建伸缩组-->
-      <modal title="新建伸缩组" v-model="newAddTelescopic" width="550" :mask-closable="false">
-
+      <modal  v-model="newAddTelescopic" width="550" :mask-closable="false">
+         <p slot="header" class="modal-header-border">
+            <span class="universal-modal-title">新建伸缩组</span>
+          </p>
         <Form ref="newAddTelescopicList" :model="newAddTelescopicList" :rules="ruleValidate" style="width: 519px" label-position="top" inline>
           <FormItem label="名称" prop="addName">
             <Input v-model="newAddTelescopicList.addName" style="width: 240px" placeholder="请输入名称"></Input>

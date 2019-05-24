@@ -1928,7 +1928,7 @@
       init() {
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result,authInfoPersion: response.data.authInfo_persion})
           }
         })
       },
@@ -2114,7 +2114,7 @@
           this.$LR({type: 'register'})
           return
         }
-        if (!this.$store.state.authInfo || (this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)) {
+        if ((!this.authInfo)|| (this.authInfo&&this.authInfo.authtype==0&&this.authInfo.checkstatus!=0)||(!this.authInfoPersion &&this.authInfo&&this.authInfo.authtype==1&&this.authInfo.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.authInfo&&this.authInfo.checkstatus!=0)) {
           this.showModal.authentication = true
           return
         }
@@ -2523,6 +2523,9 @@
       authInfo() {
         return this.$store.state.authInfo ? this.$store.state.authInfo : null
       },
+        authInfoPersion(){
+        return this.$store.state.authInfoPersion
+      }, 
     },
     beforeRouteLeave(to, from, next) {
       clearInterval(this.pageTimer)

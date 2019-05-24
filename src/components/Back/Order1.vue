@@ -6,7 +6,7 @@
         <span>订单确认</span>
         <button style="float:right" class="button" @click="$router.go(-1)">返回</button>
         <div class="order_text"
-             v-if="routerName == '新建云服务器' || routerName =='续费' || routerName == '新建云硬盘' || routerName == '磁盘升级' || routerName == '新建GPU云服务器' || routerName == '系统盘扩容'">
+             v-if="routerName == '新建云主机' || routerName =='续费' || routerName == '新建云硬盘' || routerName == '磁盘升级' || routerName == '新建GPU云服务器' || routerName == '系统盘扩容'">
           <div>
             <p>请确保当前选择安全组开放22端口和ICMP协议，否则无法远程登录和PING云服务器</p>
             <p style="margin-top:10px;">请牢记您所设置的密码，如遗忘可登录云服务器控制台重置密码。<a class="blue_font" href="/support_docs/kiRWuMFJd_kmKQJcCNq.html" target="_blank" >查看</a></p>
@@ -50,7 +50,7 @@
                 <Checkbox label='cash'>
                   <p style="font-weight: 700;margin-left: 10px;display:inline-block;">使用现金券<span style="color:#FF624B;font-size:18px;">{{couponInfo.cash}}</span>元</p>
                 </Checkbox>
-                <span style="float:right;">已经抵扣：<strong style="color:#FF624B;font-size:24px;">{{ vipName != '' || vipName !=undefined ? vipPrice : deductionPrice}}</strong>元</span>
+                <span style="float:right;">已经抵扣：<strong style="color:#FF624B;font-size:24px;">{{ vipName != '' && vipName !=undefined ? vipPrice : deductionPrice}}</strong>元</span>
               </div>
             </CheckboxGroup>
           </div>
@@ -654,7 +654,7 @@
             this.couponInfo.couponList.forEach(item => {
               if (item.operatorid == this.couponInfo.selectTicket) {
                 if (item.tickettype == 1) {
-                  money = this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2)
+                  money = (this.couponInfo.cost - (this.couponInfo.cost * item.money)).toFixed(2);
                 } else if (item.tickettype == 0) {
                   money = item.money.toFixed(2);
                 }
@@ -729,7 +729,7 @@
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
                     if(this.couponInfo.cost > this.couponInfo.cash){
-                        money = (this.couponInfo.cash -(this.couponInfo.cost - (this.couponInfo.cost * item.money))).toFixed(2);
+                        money = (this.couponInfo.cash -(this.couponInfo.cost - Number((this.couponInfo.cost * item.money)))).toFixed(2);
                     }
                     if(this.couponInfo.cost < this.couponInfo.cash || this.couponInfo.cost == this.couponInfo.cash){
                         money =  (this.couponInfo.cash - (this.couponInfo.cost - Number((this.couponInfo.cost * item.money)))).toFixed(2);
@@ -758,7 +758,7 @@
               this.couponInfo.couponList.forEach(item => {
                 if (item.operatorid == this.couponInfo.selectTicket) {
                   if (item.tickettype == 1) {
-                    money = this.couponInfo.cost - (this.couponInfo.cost * item.money).toFixed(2);
+                    money = (this.couponInfo.cost - (this.couponInfo.cost * item.money)).toFixed(2);
                   } else if (item.tickettype == 0) {
                     money = item.money.toFixed(2);
                   }
