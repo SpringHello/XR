@@ -595,7 +595,7 @@
             render: (h, params) => {
               let text_1 = params.row.computername ? params.row.computername : '----'
               let text_2 = params.row.instancename ? params.row.instancename : '----'
-              if ((params.row.status == 1 && this.auth && this.auth.checkstatus == 0 )|| (params.row.status == 1 && this.personAuth && this.personAuth.checkstatus == 0 )) {
+              if ((params.row.status == 1 && this.auth && this.auth.checkstatus == 0 )|| (params.row.status == 1 && this.authInfoPersion && this.authInfoPersion.checkstatus == 0 )) {
                 return h('ul', {}, [
                   h('li', {
                     style: {
@@ -1006,7 +1006,7 @@
           {
             title: '操作',
             render: (h, params) => {
-              if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0 && this.personAuth && this.personAuth.checkstatus !== 0)|| (this.auth && this.auth.checkstatus !== 0 && !this.personAuth)) {
+              if ((!this.auth)|| (this.auth&&this.auth.authtype==0&&this.auth.checkstatus!=0)||(!this.authInfoPersion &&this.auth&&this.auth.authtype==1&&this.auth.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.auth&&this.auth.checkstatus!=0)) {
                 return h('div', {}, [
                   h('p', {
                     style: {
@@ -1664,7 +1664,7 @@
             if (ids.length !== 0) {
               this.timingRefresh(ids + '')
             }
-            if ((!this.auth) || (this.auth && this.auth.checkstatus !== 0 && !this.personAuth)|| (this.auth && this.auth.checkstatus !== 0 && this.personAuth && this.personAuth.checkstatus !== 0)) {
+            if ((!this.auth)|| (this.auth&&this.auth.authtype==0&&this.auth.checkstatus!=0)||(!this.authInfoPersion &&this.auth&&this.auth.authtype==1&&this.auth.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.auth&&this.auth.checkstatus!=0)) {
               this.hostListData.forEach(host => {
                 host._disabled = true
               })
@@ -2753,7 +2753,7 @@
       auth() {
         return this.$store.state.authInfo
       },
-      personAuth(){
+      authInfoPersion(){
         return this.$store.state.authInfoPersion
       },
       selectHostIds() {

@@ -63,7 +63,7 @@
                 <div class="chart-shade" ref="firstShade">
                   <p style="margin-top: 100px">请购买弹性云服务器后查看信息</p>
                   <button v-if="noHost" style="margin-right: 10px" @click="$router.push('/buy/host/')">购买云主机</button>
-                  <button v-if="noHost" @click="$router.push('documentInfo/kiRWuMFJd/kly3c37B1')">查看云主机购买指南</button>
+                  <button v-if="noHost"  @click="toDoc">查看云主机购买指南</button>
                   <button v-if="!noHost" @click="addOverviewMonitoring(1)">添加监控指标</button>
                 </div>
               </div>
@@ -104,7 +104,7 @@
                 <div class="chart-shade" style="width: 1160px;" ref="secondShade">
                   <p style="margin-top: 150px">请购买弹性云服务器后查看信息</p>
                   <button v-if="noHost" style="margin-right: 10px" @click="$router.push('/buy/host/')">购买云主机</button>
-                  <button v-if="noHost" @click="$router.push('documentInfo/kiRWuMFJd/kly3c37B1')">查看云主机购买指南</button>
+                  <button v-if="noHost" @click="toDoc">查看云主机购买指南</button>
                   <button v-if="!noHost" @click="addOverviewMonitoring(2)">添加监控指标</button>
                 </div>
               </div>
@@ -2321,6 +2321,9 @@
         } else if (index == 2) {
           this.$router.push({path: 'host', query: {name: 'close'}});
         }
+      },
+      toDoc(){
+        window.open('https://www.xrcloud.net/support_docs/kiRWuMFJd_kly3c37B1.html')
       }
     },
     computed: {
