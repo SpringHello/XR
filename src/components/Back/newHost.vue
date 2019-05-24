@@ -2162,7 +2162,7 @@
             this.$message.confirm({
               title: '提示',
               okText: '调整子网',
-              content: '您选择的主机的子网的网络服务方案为普通网络，不支持负载均衡。若您需要将该主机加入负载均衡可将该主机移入子网服务方案为：公网/私网负载均衡网络的子网之后在进行加入负载均衡操作',
+              content: '您选择的主机子网的网络服务方案为普通网络，不支持负载均衡。若您需要将该主机加入负载均衡，可将该主机移入子网服务方案为：“公网/私网负载均衡网络”的子网之后再进行加入负载均衡操作。',
               onOk: () => {
                 sessionStorage.setItem('vpcId', this.hostCurrentSelected.vpcid)
                 this.$router.push('vpcManage')
