@@ -67,7 +67,7 @@
                   </div>
                   <div class="host_content">
                     <div style="margin:10px 0;">
-                      <p class="hostfirstp"><span>CPU</span><span>内存</span><span>带宽</span><span>系统盘</span></p>
+                      <p class="hostfirstp flex"><span>CPU</span><span>内存</span><span>带宽</span><span>系统盘</span></p>
                       <p class="hostfirstp2 flex"><span>{{item.cpunum}}核</span><span>{{item.memory}}G</span><span>{{item.bandwith}}M</span><span>{{item.disksize}}G<span style="font-size:12px;">SSD</span></span></p>
                       <span class="label-title" v-if="item.servicetype == 'host'">选择区域：</span>
                       <p class="label-title" style="margin:0 0 15px 0;line-height:26px;" v-if="item.servicetype != 'host'">选择区域：</p>
@@ -109,7 +109,7 @@
                     <div style="margin:10px 0;">
                       <p v-if="item.storage" class="hostfirstp3"><span>存储</span><span>下行流量</span></p>
                       <p v-if="item.storage" class="hostfirstp4"><span>{{item.storage}}G</span><span>{{item.flow}}G</span></p>
-                      <p v-if="!item.storage" class="hostfirstp"><span>CPU</span><span>内存</span><span>带宽</span><span>系统盘</span></p>
+                      <p v-if="!item.storage" class="hostfirstp flex"><span>CPU</span><span>内存</span><span>带宽</span><span>系统盘</span></p>
                       <p v-if="!item.storage" class="hostfirstp2 flex"><span>{{item.cpunum}}核</span><span>{{item.memory}}G</span><span>{{item.bandwith}}M</span><span>{{item.disksize}}G<span style="font-size:12px;">SSD</span></span></p>
                       <span class="label-title" v-if="item.servicetype == 'host'">选择区域：</span>
                       <p class="label-title" style="margin:0 0 15px 0;line-height:26px;" v-if="item.servicetype != 'host'">选择区域：</p>
@@ -146,7 +146,7 @@
               </div>
               <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:21px;margin-top:17px;">
                 <img src="../../../assets/img/active/blackactive/Shape.png" alt="提示" style="margin:4px 10px auto 0;float:left;">
-                下场秒杀预告：云服务器 2C4G5M、2C8G10M、4C8G5M、对象存储<span @click="showModal.SpikeMore=true" style="cursor: pointer;color:rgba(245,166,35,1);margin-left:10px;">更多场次预告 ></span>
+                下场秒杀预告：云服务器 {{Data3}}、{{freevmconfigs1}}、{{freevmconfigs2}}、对象存储 {{freevmconfigs3}}<span @click="showModal.SpikeMore=true" style="cursor: pointer;color:rgba(245,166,35,1);margin-left:10px;">更多场次预告 ></span>
                 <div style="clear: both;"></div>
               </p>
             </div>
@@ -166,7 +166,8 @@
             <div class="inlineright">
               <p>云电脑注册即可获赠10云币</p>
               <p>【可抵扣云电脑3小时使用时长】</p>
-              <Button type="warning" style="margin-top:16px;" @click="appointmentimmediately">立即预约</Button>
+              <Button v-if="AppointmentStatus==0" type="warning" style="margin-top:16px;" @click="appointmentimmediately">立即预约</Button>
+              <Button v-if="AppointmentStatus==1" disabled style="margin-top:16px;border:1px solid rgba(185,157,41,1);color:#B99D29;background:none;">预约成功</Button>
             </div>
             <div style="clear: both;"></div>
           </div>
@@ -253,11 +254,11 @@
                 <div class="right">
                   <div class="buy">
                     <img src="../../../assets/img/active/blackactive/buy.png">
-                    <div class="displays">
+                    <div class="displays flex">
                       <span>CPU</span>
                       <span>内存</span>
                     </div>
-                    <div class="cloums">
+                    <div class="cloums flex">
                       <span>{{nucleus}}核</span>
                       <span>{{numG}}G</span>
                     </div>
@@ -374,11 +375,11 @@
                   <div class="right">
                     <div class="buy">
                       <img src="../../../assets/img/active/blackactive/buy.png">
-                      <div class="displays">
+                      <div class="displays flex">
                         <span>CPU</span>
                         <span>内存</span>
                       </div>
-                      <div class="cloums">
+                      <div class="cloums flex">
                         <span>{{nucleusgpu}}核</span>
                         <span>{{numGgpu}}G</span>
                       </div>
@@ -1162,6 +1163,18 @@
         }
       }
       return {
+        hostfreevmconfigs:'',
+        hostfreevmconfigsthree:'',
+        gpuhostid:'',
+        Data2:[],
+        Data3:'',
+        hostdisktype:'',
+        hostdisktypetwo:'',
+        gpudisktype:'',
+        freevmconfigs1:'',
+        freevmconfigs2:'',
+        freevmconfigs3:'',
+        AppointmentStatus:0,
         servicetypeGPU:'',
         ActivityState:'1',
         nucleus:'1',
@@ -1176,24 +1189,35 @@
         SpikeKill: [
           {
             title: '秒杀时间',
-            key: 'data'
+            key: 'date'
           },
           {
             title: '该场次产品',
             width:291,
             render: (h, params) => {
-                return h('span', {
+              let textArr = params.row.freevmconfigs
+              let text_0 = this.Data2.freevmconfigs[0]
+              let text1 = '云服务器:' + text_0 + '、'+ textArr[0]+ '、' + textArr[1]
+              let text2 = '对象存储:' + textArr[2]
+              return h('ul', {}, [
+                h('li', {
                   style: {
                     color: '#666666'
                   }
-                }, params.row.age)
+                }, text1),
+                h('li', {
+                  style: {
+                    color: '#666666'
+                  }
+                }, text2)
+              ])
             }
           },
           {
             title: '状态',
             width:85,
             render: (h, params) => {
-              if(params.row.address=='1'){
+              if(params.row.flag=='1'){
                 return h('span', {
                   style: {
                     color: '#FF881C'
@@ -1209,23 +1233,7 @@
             }
           }
         ],
-        SpikeKilldata: [
-          {
-             data: '2019.05.29',
-             age: '云服务器 2C8G5M、2C8G10M、4C16G5M、 对象存储 100G存储+100G下行流量',
-             address: 1
-          },
-          {
-              data: '2019.05.30',
-              age: '云服务器 2C4G5M、2C8G10M、4C8G5M、 对象存储 100G存储+100G下行流量',
-              address: 0
-          },
-          {
-              data: '2019.05.31',
-              age: '云服务器 2C4G2M、2C8G5M、8C16G5M、 对象存储 100G存储+100G下行流量',
-              address: 0
-          }
-        ],
+        SpikeKilldata: [],
         config: {
           value: '',
           imagePath: require('../../../assets/img/pay/payBackground.png'),
@@ -1497,7 +1505,7 @@
         // 热门gpu打折
         gpuProductHot: {
           zoneId: '',
-          cpuMemory: {cpunum: '8', memory: '64', servicetype: '', gpusize: ''},
+          cpuMemory: {cpunum: '16', memory: '64', servicetype: '', gpusize: ''},
           bandwith: 5,
           system: [],
           timeTimetype: {type: 'month', value: '3', discount: '2'},
@@ -1681,7 +1689,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.ActivityState=response.data.status
                 this.getHostZoneList()
-                 this.getHostZoneListfornew()
+                this.getHostZoneListfornew()
                 this.getobjZoneListHot()
                 this.getHostZoneListHot()
                 this.getGpuZoneListHot()
@@ -1689,6 +1697,8 @@
                 this.getUserVipLevel()
                 this.getBalance()
                 this.TOmembership()
+                this.getAppointment()
+                this.getSpikeKilldata()
               } else {
                 this.ActivityState=response.data.status
               }
@@ -1696,6 +1706,64 @@
       },
       TOmembership(){
         this.showModal.OpenMembership=true
+      },
+      getSpikeKilldata(){
+        var Data1=[]
+        var Data1Time
+        var Data1Time2
+        axios.get('activity/getActivityForecast.do', {
+              params: {
+                activityNum : '45'
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                Data1Time=response.data.result[0].date
+                Data1Time2=response.data.result[1].date
+                Data1=response.data.result
+                this.freevmconfigs1=Data1[1].freevmconfigs[0]
+                this.freevmconfigs2=Data1[1].freevmconfigs[1]
+                this.freevmconfigs3=Data1[1].freevmconfigs[2]
+                axios.get('activity/getActivityForecast.do', {
+                  params: {
+                    activityNum : '46'
+                  }
+                }).then(response => {
+                  if (response.status == 200 && response.data.status == 1) {
+                    response.data.result.forEach((item, index) => {
+                      if (item.date==Data1Time) {
+                        this.Data2=item
+                        this.SpikeKilldata =Data1
+                      }
+                      if(item.date==Data1Time2){
+                        this.Data3=item.freevmconfigs[0]
+                      }
+                    })
+                  } else {
+                    // this.$message.info({
+                    //   content: response.data.message
+                    // })
+                  }
+                })
+              } else {
+                // this.$message.info({
+                //   content: response.data.message
+                // })
+              }
+            })
+      },
+      getAppointment(){
+        axios.get('user/getactivityAppointment.do', {
+              params: {}
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.AppointmentStatus=1
+              } else {
+                // this.$message.info({
+                //   content: response.data.message
+                // })
+                this.AppointmentStatus=0
+              }
+            })
       },
       ReceivingPreferential(value){
         axios.get('ticket/takeTicket.do', {
@@ -1731,6 +1799,7 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.AppointmentStatus=1
                 this.showModal.CloudComputers=false
                 this.showModal.CloudComputersSuccess=true
               } else {
@@ -2288,6 +2357,10 @@
           if (res.data.status == 1 && res.status == 200) {
             this.hostZoneListHot = res.data.result.optionalArea
             this.hostProductHot.zoneId = res.data.result.optionalArea[0].value
+            this.hostfreevmconfigs=res.data.result.freevmconfigs[0].id
+            this.hostdisktype=res.data.result.freevmconfigs[0].disktype
+            this.hostdisktypetwo=res.data.result.freevmconfigs[1].disktype
+            this.hostfreevmconfigsthree=res.data.result.freevmconfigs[1].id
           }
         })
       },
@@ -2311,7 +2384,7 @@
           params: {
             zoneId: zoneId,
             type: 'host',
-            rootDiskType: 'ssd'
+            rootDiskType: 'sas'
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
@@ -2335,6 +2408,7 @@
         }
         var params = {}
         if (this.hostProductHot.disksize) {
+          if(this.hostProductHot.timeTimetype.value=='1'){
             params = {
               zoneId: this.hostProductHot.zoneId,
               timeType: this.hostProductHot.timeTimetype.type,
@@ -2345,15 +2419,40 @@
               cpuNum: this.hostProductHot.cpuMemory.cpunum,
               memory: this.hostProductHot.cpuMemory.memory,
               bandWidth: this.hostProductHot.bandwith,
-              rootDiskType: 'ssd',
+              rootDiskType: this.hostdisktype,
               rootDiskSize: '40',
-              diskType: 'ssd',
+              diskType: this.hostdisktype,
               diskSize: this.hostProductHot.disksize,
               networkId: 'no',
               vpcId: 'no',
-              discountForActivity: '42'
+              discountForActivity: '42',
+              discountForActivityConfigId: this.hostfreevmconfigs
+            }
           }
+          else if(this.hostProductHot.timeTimetype.value=='3'){
+            params = {
+              zoneId: this.hostProductHot.zoneId,
+              timeType: this.hostProductHot.timeTimetype.type,
+              timeValue: this.hostProductHot.timeTimetype.value,
+              templateId: this.hostProductHot.system[1],
+              isAutoRenew: 1,
+              count: this.hostProductHot.count,
+              cpuNum: this.hostProductHot.cpuMemory.cpunum,
+              memory: this.hostProductHot.cpuMemory.memory,
+              bandWidth: this.hostProductHot.bandwith,
+              rootDiskType: this.hostdisktypetwo,
+              rootDiskSize: '40',
+              diskType: this.hostdisktypetwo,
+              diskSize: this.hostProductHot.disksize,
+              networkId: 'no',
+              vpcId: 'no',
+              discountForActivity: '42',
+              discountForActivityConfigId: this.hostfreevmconfigsthree
+            }
+          }
+            
         } else {
+          if(this.hostProductHot.timeTimetype.value=='1'){
             params = {
               zoneId: this.hostProductHot.zoneId,
               timeType: this.hostProductHot.timeTimetype.type,
@@ -2368,8 +2467,31 @@
               rootDiskSize: '40',
               networkId: 'no',
               vpcId: 'no',
-              discountForActivity: '42'
+              discountForActivity: '42',
+              discountForActivityConfigId: this.hostfreevmconfigs
+            }
           }
+          else if(this.hostProductHot.timeTimetype.value=='3'){
+            params = {
+              zoneId: this.hostProductHot.zoneId,
+              timeType: this.hostProductHot.timeTimetype.type,
+              timeValue: this.hostProductHot.timeTimetype.value,
+              templateId: this.hostProductHot.system[1],
+              isAutoRenew: 1,
+              count: this.hostProductHot.count,
+              cpuNum: this.hostProductHot.cpuMemory.cpunum,
+              memory: this.hostProductHot.cpuMemory.memory,
+              bandWidth: this.hostProductHot.bandwith,
+              rootDiskType: 'ssd',
+              rootDiskSize: '40',
+              networkId: 'no',
+              vpcId: 'no',
+              discountForActivity: '42',
+              discountForActivityConfigId: this.hostfreevmconfigs,
+              discountForActivityConfigId: this.hostfreevmconfigsthree
+            }
+          }
+            
         }
         axios.get('information/deployVirtualMachine.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
@@ -2391,6 +2513,8 @@
             this.gpuZoneListHot = res.data.result.optionalArea
             this.gpuProductHot.zoneId = res.data.result.optionalArea[0].value
             this.servicetypeGPU = res.data.result.freevmconfigs[0].servicetype
+            this.gpuhostid = res.data.result.freevmconfigs[0].id
+            this.gpudisktype = res.data.result.freevmconfigs[0].disktype
           }
         })
       },
@@ -2450,27 +2574,31 @@
           this.showModal.authModal = true
           return
         }
-        var params = {
-          zoneId: this.gpuProductHot.zoneId,
-          timeType: this.gpuProductHot.timeTimetype.type == 'day' ? 'week' : 'month',
-          timeValue: this.gpuProductHot.timeTimetype.type == 'day' ? this.gpuProductHot.timeTimetype.value / 7 : this.gpuProductHot.timeTimetype.value,
-          templateId: this.gpuProductHot.system[1],
-          isAutoRenew: 1,
-          count: this.gpuProductHot.count,
-          cpuNum: this.gpuProductHot.cpuMemory.cpunum,
-          memory: this.gpuProductHot.cpuMemory.memory,
-          bandWidth: this.gpuProductHot.bandwith,
-          rootDiskType: 'ssd',
-          rootDiskSize: '128',
-          diskType: '',
-          diskSize: '',
-          networkId: 'no',
-          vpcId: 'no',
-          discountForActivity: '43',
-          gpusize: this.gpuProductHot.cpuMemory.gpusize,
-          serviceType: this.servicetypeGPU
-          // serviceType: this.gpuProductHot.cpuMemory.servicetype
+        if(this.gpuProductHot.timeTimetype.value=='3'){
+          var params = {
+            zoneId: this.gpuProductHot.zoneId,
+            timeType: this.gpuProductHot.timeTimetype.type == 'day' ? 'week' : 'month',
+            timeValue: this.gpuProductHot.timeTimetype.type == 'day' ? this.gpuProductHot.timeTimetype.value / 7 : this.gpuProductHot.timeTimetype.value,
+            templateId: this.gpuProductHot.system[1],
+            isAutoRenew: 1,
+            count: this.gpuProductHot.count,
+            cpuNum: this.gpuProductHot.cpuMemory.cpunum,
+            memory: this.gpuProductHot.cpuMemory.memory,
+            bandWidth: this.gpuProductHot.bandwith,
+            rootDiskType: this.gpudisktype,
+            rootDiskSize: '128',
+            diskType: this.gpudisktype,
+            diskSize: '',
+            networkId: 'no',
+            vpcId: 'no',
+            discountForActivity: '43',
+            gpusize: this.gpuProductHot.cpuMemory.gpusize,
+            serviceType: this.servicetypeGPU,
+            discountForActivityConfigId: this.gpuhostid
+            // serviceType: this.gpuProductHot.cpuMemory.servicetype
+          }
         }
+        
         axios.get('gpuserver/createGpuServer.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('/order')
@@ -3008,6 +3136,7 @@
             padding: 20px;
             padding-top: 10px;
             .hostfirstp{
+              width: 101%;
               margin: 0 0 10px 0;
               font-size:12px;
               font-family:MicrosoftYaHei;
@@ -3027,7 +3156,7 @@
             }
             .hostfirstp2{
               width: 104%;
-              margin: 0 0 36px 0;
+              margin: 0 0 40px 0;
               font-size:12px;
               font-family:MicrosoftYaHei;
               color:rgba(255,255,255,1);
@@ -3382,7 +3511,7 @@
                 top: 0;
               }
               .displays{
-                width: 70px;
+                width: 98px;
                 height: 16px;
                 margin: 0 0 11px -35px;
                 float: left;
@@ -3796,7 +3925,7 @@
                 top: 0;
               }
               .displays{
-                width: 70px;
+                width: 95px;
                 height: 16px;
                 margin: 0 0 11px -35px;
                 float: left;
@@ -3815,7 +3944,7 @@
                 }
               }
               .cloums{
-               width: 110px;
+               width: 120px;
                 height: 26px;
                 margin: 0 0 11px -48px;
                 float: left;
