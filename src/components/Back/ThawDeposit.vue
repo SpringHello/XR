@@ -61,7 +61,7 @@
                    <Table :columns="freezeOrderColumns" :data="freezeOrderData" style="margin-top: 20px"></Table>
                     <div style="padding-top: 40px">
                       <Button type="ghost" @click="unfreezeStep = 0" style="margin-right:10px">上一步</Button>
-                      <Button type="primary">下一步</Button>
+                      <Button type="primary" @click="freezeToRenewNext">下一步</Button>
                     </div>
                </div>
             </div> 
@@ -675,7 +675,7 @@
             this.unfreezeStep = 1
             this.freezeToRenew = false
           } else{
-            this.thawingCondition = params.row.thawCondition
+            this.thawingCondition = res.data.message
             this.showModal.notUnfreeze = true
           }
         })
@@ -809,6 +809,11 @@
           this.unfreezeTo = 'account'
           this.showModal.unfreezeToBalanceHint = false
         }
+      },
+      freezeToRenewNext() {
+        this.freezeToRenewAffirm = ''
+        this.showModal.freezeToRenew = false
+        this.showModal.freezeToRenewAffirm = true
       },
             // 押金转续费
       freezeToRenew_ok() {
