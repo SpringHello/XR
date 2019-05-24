@@ -75,7 +75,7 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="用户名" prop="userName">
+          <FormItem label="新增接入点用户名称" prop="userName">
             <Input v-model="newRemoteAccessForm.userName" placeholder="请输入用户名"></Input>
           </FormItem>
           <FormItem label="密码" prop="password">
@@ -434,7 +434,8 @@
         },
         newRemoteAccessFormValidate: {
           userName: [
-            {required: true, validator: validalength, trigger: 'blur'}
+            {required: true, message: '请输入用户名', trigger: 'blur'},
+            {validator: validateUserName, trigger: 'blur'}
           ],
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'}

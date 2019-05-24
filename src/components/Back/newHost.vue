@@ -1669,9 +1669,6 @@
                 host._disabled = true
               })
             }
-            if(ids.length != 0){
-              this.timingRefresh(ids+'');
-            }
           }
         })
       },
