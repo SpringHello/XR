@@ -18,7 +18,7 @@
       <div class="company">
         <div class="company-box">
           <div class="company-box-icon">
-            <img :src="company.nameUrl" />
+            <img :src="company.nameUrl" :alt="company.name"/>
           </div>
           <div class="company-box-info">
             <p>{{company.series}}</p>
@@ -44,7 +44,7 @@
         <div class="product-list">
           <div class="product-list-item" v-for="(item, index) in productList" :key="index">
             <div class="product-list-item-icon">
-              <img :src="item.pictureurl" />
+              <img :src="item.pictureurl" :alt="item.title"/>
             </div>
             <div class="product-list-item-content">
               <div>{{item.title}}</div>

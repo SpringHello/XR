@@ -14,7 +14,7 @@
             <span>「华南地域」</span>
             数据中心盛大开服，万兆光纤极速体验，助力区域企业云上发展。
           </p>
-          <button>立即购买</button>
+          <button @click="banner">立即购买</button>
         </div>
       </div>
     </div>
@@ -46,7 +46,7 @@
         <div class="body-list">
           <div class="body-list-item" v-for="(items,index) in menuList" :key="index">
             <div class="body-list-item-icon">
-              <img :src="items.pictureurl" />
+              <img :src="items.pictureurl" :alt="items.title"/>
             </div>
             <div class="body-list-item-content">
               <div>{{items.title}}</div>
@@ -106,6 +106,11 @@ export default {
     }
   },
   methods: {
+    banner () {
+      sessionStorage.setItem('proid',1)
+      sessionStorage.setItem('typeName', '网站建设')
+      this.$router.push('details')
+    },
     menuselect (name) {
       this.key = name
       this.getMenu()

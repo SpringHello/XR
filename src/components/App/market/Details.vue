@@ -14,7 +14,7 @@
           <!--产品-->
           <div class="product-box">
             <div class="product-box-icon">
-                <img :src="prodetials.pictureurl" alt="">
+                <img :src="prodetials.pictureurl" :alt="prodetials.title">
             </div>
             <div class="product-box-content">
               <div class="title">{{prodetials.title}}</div>
@@ -70,7 +70,7 @@
               </div>
               <div class="tab-row">
                 <div class="title">价格</div>
-                <div class="th">{{ price }}<span class="un">{{units}}</span></div>
+                <div class="th">{{ price }}<div class="un">{{units}}</div></div>
               </div>
               <div class="tab-row">
                 <div class="title"></div>
@@ -117,7 +117,9 @@
           <p class="other-title">合作伙伴其他服务</p>
             <div class="other-service">
                <div v-for="(item,index) in otherService" :key="index" class="other-part" @click="checkDetails(item)">
-                 <img :src="item.pictureurl" alt="">
+                 <div style="height: 100%;">
+                   <img :src="item.pictureurl" :alt="item.title">
+                 </div>
                  <div class="other-sintr">
                    <p><span>{{item.title}}——</span>{{item.description}}</p>
                    <span class="fwprices">￥ {{item.price}}</span>
@@ -466,9 +468,11 @@ export default {
     },
     checkDetails (item) {
       sessionStorage.setItem('proid',item.id)
+      sessionStorage.setItem('typeName', item.classification.name)
       this.$router.push('details')
       this.getProduct()
       window.scrollTo(0,0)
+      console.log(item)
     },
     // 获取产品详情
     getProduct () {
@@ -503,7 +507,7 @@ export default {
             }
           })
           this.area.forEach(e => {
-            if (e.isdefault == 0) {
+            if (e.isdefault == 1) {
               this.zoneid = e.zoneid
             }
           })
@@ -837,6 +841,8 @@ export default {
                   color: rgba(255,98,75,1);
                   padding: 0;
                   margin-left: 5px;
+                  padding-top: 10px;
+                  box-sizing: border-box;
                 }
                 span {
                   display: inline-block;
@@ -922,7 +928,7 @@ export default {
                 border-bottom: 1px solid #E9E9E9;
                 cursor: pointer;
                 img {
-                    // width: 100px;
+                    width: 90px;
                     height: 60px;
                     display: block;
                     margin-right: 10px;
@@ -937,6 +943,13 @@ export default {
                         color:rgba(102,102,102,1);
                         line-height:24px;
                         padding-bottom: 10px;
+                        height: 48px;
+                        white-space: normal;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        -webkit-line-clamp: 2;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                     }
                     .fwprices {
                         font-size:14px;

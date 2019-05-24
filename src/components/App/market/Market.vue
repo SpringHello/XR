@@ -50,7 +50,7 @@
                 </div>
                 <div class="item-content">{{ item.description }}</div>
                 <div class="item-icon">
-                  <img :src="item.iconUrl" alt="加载中..."/>
+                  <img :src="item.iconUrl" :alt="item.name"/>
                 </div>
                 <div class="item-name">{{ item.name }}</div>
               </div>
@@ -74,12 +74,12 @@
                 <img :src="item.iconurl" />
               </div>
               <div class="product-list-head-icon">
-                <img :src="item.tourl" />
+                <img :src="item.tourl" :alt="item.name"/>
               </div>
             </div>
             <div class="product-list-item" v-for="(items, index) in item.productList" :key="index">
               <div class="product-list-item-icon">
-                <img :src="items.pictureurl" />
+                <img :src="items.pictureurl" :alt="items.title"/>
               </div>
             <div>
             <div class="product-list-item-name">{{items.title}}</div>
