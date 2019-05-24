@@ -1116,7 +1116,6 @@
       },
       /* 确认以备份创建新磁盘，跳转订单*/
       createBackupsToDisk_ok() {
-        console.log(this.diskForm)
         this.$http.get('Disk/createVolume.do', {
           params: {
             diskSize: this.diskForm.diskSize,
