@@ -599,7 +599,6 @@
         })
       },
       sumbitQuestionnaire(){
-        this.getUnfreezeInfo()
         this.emptyHint = -1
         let len = this.issueData.length
         for(let i =0;i<len;i++){
@@ -611,9 +610,9 @@
         let message = []
         this.questionnaireResults.forEach((item,index)=>{
           let data = {
-            par_id: this.issueData[index].par_id,
+            par_id: this.issueData[index].par_id + '',
             id: this.issueData[index].par_type === 2 ? item + '' : '',
-            content: this.issueData[index].par_type === 3 ? item : ''
+            content: this.issueData[index].par_type === 3 ? item + '' : ''
           }
           message.push(data)
         })
@@ -624,7 +623,7 @@
              message: JSON.stringify(message)
           }
           this.$http.post(url,params).then(res=>{
-            if(res.status === 200 && res.datat.status === 1){
+            if(res.status === 200 && res.data.status === 1){
               this.getUnfreezeInfo()
             } else {
               this.$message.info({
