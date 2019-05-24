@@ -136,7 +136,10 @@
 
 
       <!--绑定IP-->
-      <Modal title="绑定IP"  :mask-closable="false" v-model="showModal.ipShow">
+      <Modal  :mask-closable="false" v-model="showModal.ipShow">
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">绑定IP</span>
+        </p>
         <Form ref="ipValidate" :model="ipValidate" :rules="ipRuleValidate" label-position="top">
           <FormItem label="选择IP" prop="ip">
             <Select v-model="ipValidate.ip" placeholder="请选择IP" style="width: 200px">
@@ -154,9 +157,12 @@
 
 
       <!--制作镜像-->
-      <Modal title="制作镜像" width="550" :mask-closable="false" v-model="showModal.mirror">
+      <Modal  width="550" :mask-closable="false" v-model="showModal.mirror">
         <hr size="1" color="#999999">
         <br>
+        <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">制作镜像</span>
+        </p>
         <Form ref="mirrorValidate" :model="mirrorValidate" :rules="mirrorRuleValidate" label-position="top" inline>
           <FormItem label="镜像名称" prop="name">
             <Input v-model="mirrorValidate.name" placeholder="小于20位数字或字母" style="width: 200px;"></Input>
@@ -175,7 +181,10 @@
       </Modal>
 
       <!--主机续费-->
-      <Modal title="主机续费" width="550" :mask-closable="false" v-model="showModal.renew" >
+      <Modal width="550" :mask-closable="false" v-model="showModal.renew" >
+         <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">主机续费</span>
+        </p>
         <Form ref="renewValidate" :model="renewValidate" :rules="renewRuleValidate" label-position="top" inline>
           <FormItem label="付费类型" prop="name">
             <Select v-model="timeType" placeholder="请选择付费类型" style="width: 200px" @on-change="renewChange">
@@ -390,11 +399,11 @@
     }
   }
   const mirrorName = (rule, value, callback) => {
-    let reg = /^[0-9a-zA-Z]{1,20}$/;
+    let reg = /^[0-9a-zA-Z~:,*]{6,23}$/;
     if(value == ''){
       return callback(new Error('请输入镜像名称'));
     }else if(!reg.test(value)){
-      return callback(new Error('镜像名称格式不正确'));
+      return callback(new Error('请输入6-23位包含大小写与数字的密码,可用特殊符号：~:,*'));
     }else {
       callback();
     }
@@ -1518,7 +1527,6 @@
                   }
                 }).then(response => {
                   if (response.status == 200 && response.data.status == 1) {
-                    this.$Message.success(response.data.message);
                     this.timingRefesh(this.hostSelectList.id);
                   } else {
                     this.$message.info({
@@ -1545,7 +1553,6 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success(response.data.message);
                  this.timingRefesh(this.hostSelectList.id);
               }
               else if (response.status == 200 && response.data.status == 2) {

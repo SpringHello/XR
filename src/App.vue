@@ -756,11 +756,10 @@
       //   this.$refs.hint.style.height = '80px'
       // }
       //this.setTime()
-
       let params = {
         batchNumber: window.UUID,
         type: '1',
-        pageURL: window.location.href
+        pageURL:window.location.href ,
       }
       // 获取入口信息
       axios.post('information/webReachableRecord.do', params)
@@ -806,7 +805,11 @@
           $store.commit('setZoneList', values[1].data.result)
         }
       },)
-      this.$http.get('user/getKfAdd.do').then(response => {
+      this.$http.get('user/getKfAdd.do',{
+        params:{
+          type:''
+        }
+      }).then(response => {
         this.kfURL = response.data.result
       })
       // QQ客服在线情况
