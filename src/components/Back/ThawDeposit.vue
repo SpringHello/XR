@@ -849,7 +849,7 @@
         }
       },
       freezeToRenewNext() {
-        if(JSON.parseInt(this.freeTime) < 1){
+        if(parseInt(this.freeTime) < 1){
           window.clearInterval(this.freezeToRenewAffirmTimer)
           this.freezeDisabled = true
           this.freezeToRenewAffirmText = '(10S)'
@@ -882,6 +882,7 @@
           if (res.status == 200 && res.data.status == 1) {
             this.$Message.success(res.data.message)
             this.showModal.freezeToRenewAffirm = false
+            this.showModal._freezeToRenewAffirm = false
             this.unfreezeStep = 2
           } else {
             this.$message.info({
