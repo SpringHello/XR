@@ -355,7 +355,7 @@
                             <li style="width:188px;margin-bottom:10px;" v-for="(item3,index) in gpuConfigListHot" :key="index" @click="getconfiguretogpu(item3)"
                                 :class="{selected:gpuProductHot.cpuMemory.cpunum==item3.cpunum&&gpuProductHot.cpuMemory.memory==item3.memory}"><span>{{item3.cpunum}}核</span><span>{{item3.memory}}G</span>
                               <span>{{item3.gpusize}}*NVIDIA P100</span></li>
-                          </ul>
+                          </ul> 
                           <div style="clear: both;"></div>
                       </p>
                       <div class="item-selecttt">
@@ -405,13 +405,13 @@
                   </div>
                     <div class="item-config">
                       <p style="margin-bottom: 10px;">区域选择</p>
-                      <Select v-model="gpuProductHot.zoneId" class="schoolseason-select" style="width:416px;">
+                      <Select v-model="gpuProductHot.zoneId" class="schoolseason-select" style="width: 424px;">
                           <Option v-for="(item3,index) in gpuZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
                       </Select>
                     </div>
                     <div class="item-select">
                       <p>系统选择</p>
-                      <Cascader :data="gpuSystemListHot" v-model="gpuProductHot.system" class="schoolseason-select"></Cascader>
+                      <Cascader :data="gpuSystemListHot" v-model="gpuProductHot.system" class="schoolseason-select" style="width: 424px;"></Cascader>
                     </div>
                     <div class="item-config1">
                       <p style="margin-bottom: 10px;">购买时长</p>
@@ -744,7 +744,7 @@
               <i @click.stop="showModal.rule1=false"></i>
             </div>
             <div class="body">
-              <h3>1、活动时间：2019.5.25-2019.6.30，每天5场秒杀， 0点、9点、14点、18点、21点开抢。</h3>
+              <h3>1、活动时间：2019.5.29-2019.6.30，每天5场秒杀， 0点、9点、14点、18点、21点开抢。</h3>
               <h3>2、活动对象：新用户指的是没有使用过平台任何产品（域名产品除外）、没有未支付订单且完成实名认证的用户。其他未特殊标明产品新老用户且完成实名认证均可参与。</h3>
               <h3>3、数量限制：活动期间同一用户（同一手机、邮箱、实名认证用户视为同一用户）每次秒杀限选1款，限购1台，同一用户每款配置的商品可秒杀1次；新用户指定产品每款每个用户限购买1台。限额以后台配额限制为准（实名认证后每个用户云服务器最多可拥有7台，如有特殊要求，可向销售申请）。</h3>
               <h3>4、参与本次活动购买的产品不能进行退款。</h3>
@@ -788,7 +788,7 @@
               <i @click.stop="showModal.rule2=false"></i>
             </div>
             <div class="body">
-              <h3>1、活动时间：2019.5.14-2019.6.30</h3>
+              <h3>1、活动时间：2019.5.29-2019.6.30</h3>
               <h3>2、活动对象：平台已完成实名认证的新老用户。</h3>
               <h3>3、数量限制：云服务器产品每个用户限购7台（若有更多需求，可向客服申请提高配额）</h3>
               <h3>4、参与本次活动购买的产品不能进行退款。</h3>
@@ -1520,7 +1520,13 @@
           originalPrice: ''
         },
         gpuZoneListHot: [],
-        gpuConfigListHot: [],
+        gpuConfigListHot: [
+          {cpunum: 8, memory: 64, gpusize:1},
+          {cpunum: 16, memory: 128, gpusize:2},
+          {cpunum: 16, memory: 192, gpusize:3},
+          {cpunum: 32, memory: 256, gpusize:4},
+          {cpunum: 64, memory: 384, gpusize:6}
+        ],
         gpubandwithListHot: [5, 10, 20, 30, 50],
         gpuSystemListHot: [{
           value: 'window',
@@ -2551,12 +2557,21 @@
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
             if (window.location.origin == 'http://localhost:8088'||window.location.origin == 'https://zschj.xrcloud.net') {
-              this.gpuConfigListHot = res.data.result.filter((item,index) => {
-                return index < 5
+              this.gpuConfigListHot.filter((itemd,index) => {
+                res.data.result.filter((item,index) => {
+                  if(item.cpunum==itemd.cpunum && item.memory==itemd.memory){
+                    return item;
+                  }
+                })
+                return;
               })
             } else{
-              this.gpuConfigListHot = res.data.result.filter(item => {
-                return item.gpu == '100'
+              this.gpuConfigListHot.filter((itemd,index) => {
+                res.data.result.filter((item,index) => {
+                  if(item.cpunum==itemd.cpunum && item.memory==itemd.memory){
+                    return item;
+                  }
+                })
               })
             }
             this.gpuProductHot.cpuMemory = this.gpuConfigListHot[0]
@@ -2958,7 +2973,6 @@
     color: rgba(51, 51, 51, 1);
     .wrap{
         margin: 0 auto;
-        width: 600px;
         .container {
             margin: 0 auto;
             .bannerdiv{
@@ -4364,6 +4378,7 @@
       margin-top: 80px;
       border:1px solid rgba(255,191,130,1);
       padding: 36px 123px;
+      box-shadow:0px 9px 20px -6px rgba(16,17,26,0.5);
       .contai {
         width:416px;
         height: 269px;
