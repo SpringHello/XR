@@ -619,7 +619,7 @@
         if(this.emptyHint === -1){
           let url = 'order/addQuestionnaire.do'
           let params = {
-             par_bankId: this.issueData[0].par_bankId,
+             par_bankId: this.issueData[0].par_bankId + '',
              message: JSON.stringify(message)
           }
           this.$http.post(url,params).then(res=>{
