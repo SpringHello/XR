@@ -217,7 +217,7 @@
             <div v-if="billBtnSelected==1">
               <div class="expenses_condition">
                 <span style="margin-right: 10px">按交易时间</span>
-                <Date-picker v-model="timeResourceVal" format="yyyy-MM-dd" type="daterange" placement="bottom-start"
+                <Date-picker v-model="timeResourceVal" format="yyyy-MM-dd" type="daterange" placement="bottom-start" :clearable="false"
                             placeholder="选择日期" style="width: 231px;position: relative;bottom: 12px" @on-change="dataChangeResource"></Date-picker>
                 <span style="margin-left: 20px">按交易金额</span>
                 <Input-number :min="0" v-model="minCashResource"
@@ -248,7 +248,7 @@
                 <span>按交易时间</span>
                 <Row style="display: inline-block;margin-left: 10px">
                   <Col span="12">
-                    <Date-picker v-model="time" type="daterange" placement="bottom-start"
+                    <Date-picker v-model="time" type="daterange" placement="bottom-start" :clearable="false"
                                 placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
                   </Col>
                 </Row>
@@ -260,11 +260,11 @@
                 &nbsp;&nbsp;
                 <Input-number :min="0" v-model="value2"
                               style="width: 116px;position: relative;bottom: 12px"></Input-number>
-                <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search()">查询
+                <Button type="primary" style="bottom: 12px; margin-left: 10px;position: relative" @click="search()">查询
                 </Button>
-                <Button type="primary" style="bottom: 12px;position: relative" @click="seaWaterN">导出流水
+                <Button type="primary" style="position: relative;float:right" @click="seaWaterN">导出流水
                 </Button>
-                <Table highlight-row :columns="columns" :data="tabledata"></Table>
+                <Table highlight-row :columns="columnsFlow" :data="tabledataFlow"></Table>
                 <ul class="table-end table-other">
                   <li style="margin-right: 80px;">总计支出</li>
                   <li style="border-right:1px solid #D9D9D9">¥{{flowAllCost}}</li>
@@ -1260,12 +1260,14 @@
       let nowEnd = new Date(now.setDate(1) - 24*60*60*1000)
       let startTime = now.getFullYear()+'-'+now.getMonth()+'-1'
       let endTime = now.getFullYear()+'-'+now.getMonth()+'-'+nowEnd.getDate()
+      //最近30天日期
+      let strat30 = new Date(now.getTime()-30*24*60*60*1000).format('yyyy-MM-dd')
+      let end30 = new Date().format('yyyy-MM-dd')
       return {
         billExportflag: true,
         billExportText: '点击生成',
         billExportUrl: '',
         billExportName: '',
-        
         AllMpney:'0.0',
         AllMpneylength:'0',
         ordernumS:'',
@@ -1506,8 +1508,8 @@
         resourcesType: '',
         resourcesZoneId: '',
         resourcesDataType: '',
-        timeResourceVal: [startTime, endTime],
-        timeResource: [startTime, endTime],
+        timeResourceVal: [strat30, end30],
+        timeResource: [strat30, end30],
         minCashResource:0,
         maxCashResource: 10000,
         resourcePageSize: 6,
@@ -1847,7 +1849,7 @@
             }
           }
         ],
-          data5: [],
+        data5: [],
         dataResponse:[],
         columnsProductA: [
             {
@@ -2475,7 +2477,7 @@
           }
         ],
         // ordertime: '',
-        time: [startTime, endTime],
+        time: [strat30, end30],
         timeOrder: '',
         total: 0,
         currentPage: 1,
@@ -2488,13 +2490,12 @@
         voucher: '--',
         couponNumber: '--',
         billmonth: '--',
-        types: '',
         value1: 0,
         value2: 10000,
-        dateRange: [startTime, endTime],
+        dateRange: [strat30, end30],
         dateRangeOrder: ['', ''],
         order_dateRange: ['', ''],
-        columns: [
+        columnsFlow: [
           // {
           //  title: '交易详情',
           //  key: 'descs',
@@ -2503,36 +2504,16 @@
           //  ellipsis: true,
           //  },
           {
-            title: '交易详情',
-            width: 370,
+            title: '交易时间',
+            key: 'createtime',
             align: 'left',
-            render: (h, params) => {
-              return h('Tooltip', {
-                  props: {
-                    content: params.row.descs,
-                    placement: 'top-start'
-                  }
-                },
-                params.row.descs
-              )
-            }
+            width: 160
           },
-          {
-            title: '交易金额',
-            key: 'amount',
-            align: 'left',
-            render: (h, params) => {
-              return h('div', [
-                h('span', '￥'),
-                h('strong', params.row.amount)
-              ])
-            }
-          },
-
           {
             title: '交易类型',
             key: 'type',
             align: 'left',
+            width: 100,
             render: (h, params) => {
               let text = ''
               switch (params.row.type) {
@@ -2556,12 +2537,95 @@
                   break
               }
               return h('span', text)
+            },
+            filters: [
+                  {
+                    label: '充值',
+                    value: 0
+                  }, 
+                  {
+                    label: '扣费',
+                    value: 1
+                  }, 
+                  {
+                    label: '冻结',
+                    value: 2
+                  }, 
+                  {
+                    label: '解冻',
+                    value: 3
+                  },
+                  {
+                    label: '提现',
+                    value: 4
+                  }, 
+                  {
+                    label: '退款',
+                    value: 5
+                  }
+                ],
+                filterMultiple: false,
+                filterRemote:(value,row)=>{
+                  if (!value.length) {
+                    this.flowType = ''
+                  } else {
+                    this.flowType = value[0]
+                  }
+                  this.search()
+                }
+          },
+          {
+            title: '地域',
+            key: 'zonename',
+            width: 100,
+            render: (h,params) => {
+              let text = params.row.zonename?params.row.zonename:'--'
+              return h('span',text)
+            },
+            filterMultiple: false,
+            filterRemote:(value,row)=>{
+              if (!value.length) {
+                this.flowZoneid = ''
+              } else {
+                this.flowZoneid = value[0]
+              }
+              this.search()
             }
           },
           {
-            title: '交易时间',
-            key: 'createtime',
+            title: '交易详情',
+            width: 370,
             align: 'left',
+            render: (h, params) => {
+              return h('Tooltip', {
+                  props: {
+                    content: params.row.descs,
+                    placement: 'top-start'
+                  }
+                },
+                params.row.descs
+              )
+            }
+          },
+          {
+            title: '现金交易金额',
+            key: 'cashpay',
+            align: 'left',
+            width: 120,
+            render: (h, params) => {
+              let text = (params.row.cashpay==0||params.row.cashpay)?'￥'+params.row.cashpay:'--'
+              return h('span', text)
+            }
+          },
+          {
+            title: '现金券交易金额',
+            key: 'voucherpay',
+            align: 'left',
+            width: 120,
+            render: (h, params) => {
+              let text = (params.row.voucherpay==0||params.row.voucherpay)?'￥'+params.row.voucherpay:'--'
+              return h('span', text)
+            }
           },
           {
             title: '流水编号',
@@ -2570,9 +2634,11 @@
             width: 180
           }
         ],
-        tabledata: [],
+        tabledataFlow: [],
         flowAllCost: '',
         flowAllIncome: '',
+        flowType: '',
+        flowZoneid: '',
         typeList: [
           {
             value: '',
@@ -3399,27 +3465,53 @@
         this.dateRangeOrder = timeOrder
       },
       search() {
-        this.$http.get('nVersionUser/getAccountInfoByType.do', {
+        axios.get('nVersionUser/getAccountInfoByType.do', {
           params: {
             pageSize: this.wpageSize,
             page: this.currentPage,
-            type: this.types,
             startTime: this.dateRange[0],
             endTime: this.dateRange[1],
             minCost: this.value1,
             maxCost: this.value2,
-            type:'',
-            zoneId: ''
+            type: this.flowType,
+            zoneId: this.flowZoneid
           }
         })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.tabledata = response.data.result.info
+              this.tabledataFlow = response.data.result.info
               this.flowAllCost = response.data.result.totalExpenditure
               this.flowAllIncome = response.data.result.totalIncome
               this.total = response.data.result.count
+              let filterDataFlow = []
+              this.$store.state.zoneList.forEach((item,index) => {
+                    filterDataFlow[index]={'label':item.zonename,'value':item.zoneid}
+              })
+              this.columnsFlow[2].filters = filterDataFlow
             }
           })
+      },
+      seaWaterN() {
+        let url = 'nVersionUser/getAccountInfoByTypeExport.do'
+        let params = {
+            companyId: this.$store.state.userInfo.companyid,
+            startTime: this.dateRange[0],
+            endTime: this.dateRange[1],
+            minCost: this.value1,
+            maxCost: this.value2,
+            type: this.flowType,
+            zoneId: this.flowZoneid
+        }
+        axios.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
+          if (res.status == 200) {
+            var blob = new Blob([res.data],{type: "application/vnd.ms-excel"})
+            this.saveAs(blob,'流水详单'+'('+this.dateRange[0]+'-'+this.dateRange[1]+')')
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })  
+          }
+        })
       },
       resourcesPageChange(currentPage) {
         this.resourcePage = currentPage
@@ -4546,28 +4638,7 @@
         this.$store.commit('setPane', {vpc: 'VPC', vpn: 'remote', usercenter: 'certification'})
         this.$router.push('/Usercenter')
       },
-      seaWaterN() {
-        let url = 'user/searchWaterNumberExcel.do'
-        let params = {
-          type: this.types,
-          starttime: this.dateRange[0],
-          endtime: this.dateRange[1],
-          startcount: this.value1,
-          endcount: this.value2
-        }
-        this.$http.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
-          if (res.status == 200) {
-            this.$Message.success('导出成功')
-            let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
-            let objectUrl = URL.createObjectURL(blob)
-            window.location.href = objectUrl
-          } else {
-            this.$message.info({
-              content: res.data.message
-            })
-          }
-        })
-      },
+      
       exportResource() {
         let url = 'nVersionUser/resourceDetailsExport.do'
         let params = {
