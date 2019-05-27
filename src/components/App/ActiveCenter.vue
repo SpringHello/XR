@@ -40,6 +40,17 @@
           </div>
         </my-carousel-item> -->
         <my-carousel-item class="carousel-item">
+          <div @click="push('/activity/BlacKActivities')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="free-black">
+              <div class="wrap">
+              <div class="text">
+             </div>
+            </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div @click="push('/activity/free/')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
@@ -127,7 +138,7 @@
                 <img :src="item.textImg"  v-else>
 
               </div>
-              <div class="box-bottom">
+              <div class="box-bottom" v-if="item.blackact">
                 <div>
                   <p>活动时间：{{item.time}}</p>
                   <p>活动对象：{{item.activeObj}}</p>
@@ -208,6 +219,16 @@
           //   weight: '1',
           // },
           {
+            imgPath: require('../../assets/img/activecenter/blackact.png'),
+            name: '',
+            desc: '',
+            time: '',
+            activeObj: '',
+            url: '/activity/BlacKActivities',
+            isStart: true,
+            weight: '1'
+          },
+          {
             imgPath: require('../../assets/img/activecenter/bg-card-2.png'),
             name: '免费云主机 不限量领取',
             desc: '交押金最长可用一年 押金闪退',
@@ -215,6 +236,7 @@
             activeObj: '云主机 新注册用户',
             url: '/activity/free/',
             isStart: true,
+            blackact:true,
             weight: '1'
           },
           // {
@@ -234,6 +256,7 @@
             activeObj: '对象存储 新老用户',
             url: '/activity/objectstorage/',
             isStart: true,
+            blackact:true,
             weight: '1',
             color: 'black'
           },
@@ -246,6 +269,7 @@
             activeObj: '云数据库 新老用户',
             url: '/activity/hotdatabase/',
             isStart: true,
+            blackact:true,
             weight: '1',
             color: 'black'
           },
@@ -336,36 +360,67 @@
               box-shadow: 0px 2px 2px 1px #881411;
             }
           }
+          .free-black {
+            height: 400px;
+            background:  url("../../assets/img/active/freeToReceive/centerimg.png") center no-repeat;
+                .wrap{
+                  width: 1200px;
+                  margin:0 auto;
+                  display: flex;
+                  justify-content: space-between;
+                  .text{
+                  >p{
+                    font-size:50px;
+                    font-family:"Microsoft YaHei", "微软雅黑";
+                    font-weight:600;
+                    color:rgba(51,51,51,1);
+                  }
+                  p:nth-child(1){
+                    margin-top: 140px;
+                    font-size:48px;
+                    font-weight:400;
+                  }
+                  p:nth-child(2){
+                    font-size:24px;
+                    margin-top: 25px;
+                    font-weight: normal;
+                  }
+                  }
+                  .img{
+                    padding-top: 30px;
+                  }
+                }
+          }
           .free-receive {
             height: 400px;
             background: linear-gradient(90deg, #ffe3d0, #ffffff), url("../../assets/img/active/freeToReceive/fr-banner21.png") center no-repeat;
                 .wrap{
-      width: 1200px;
-      margin:0 auto;
-      display: flex;
-      justify-content: space-between;
-      .text{
-      >p{
-        font-size:50px;
-        font-family:"Microsoft YaHei", "微软雅黑";
-        font-weight:600;
-        color:rgba(51,51,51,1);
-      }
-      p:nth-child(1){
-        margin-top: 140px;
-        font-size:48px;
-        font-weight:400;
-      }
-      p:nth-child(2){
-        font-size:24px;
-        margin-top: 25px;
-        font-weight: normal;
-      }
-      }
-      .img{
-        padding-top: 30px;
-      }
-    }
+                  width: 1200px;
+                  margin:0 auto;
+                  display: flex;
+                  justify-content: space-between;
+                  .text{
+                  >p{
+                    font-size:50px;
+                    font-family:"Microsoft YaHei", "微软雅黑";
+                    font-weight:600;
+                    color:rgba(51,51,51,1);
+                  }
+                  p:nth-child(1){
+                    margin-top: 140px;
+                    font-size:48px;
+                    font-weight:400;
+                  }
+                  p:nth-child(2){
+                    font-size:24px;
+                    margin-top: 25px;
+                    font-weight: normal;
+                  }
+                  }
+                  .img{
+                    padding-top: 30px;
+                  }
+                }
           }
           .obj-storage {
             background: linear-gradient(
