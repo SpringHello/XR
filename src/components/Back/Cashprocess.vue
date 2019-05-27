@@ -467,7 +467,7 @@
         this.$emit('changeTabSec', name)
       },
       Callpresentation() {
-        axios.post('user/balanceWithdrawal.do', {
+        this.$http.post('user/balanceWithdrawal.do', {
           balance: this.Actualamount,
           smsCode: this.formCustom.messagecode,
           username: this.userphone,
@@ -500,7 +500,7 @@
         else {
           sessionStorage.removeItem('ALLf')
           this.moneyall = parseFloat(this.AllseMoney.balance)
-          axios.get('user/getBalanceWithdrawalLimit.do', {
+          this.$http.get('user/getBalanceWithdrawalLimit.do', {
             params: {
               type: this.AllseMoney.type
             }

@@ -874,7 +874,7 @@
             // 押金转续费
       freezeToRenew_ok() {
         let url = 'user/depositRenewal.do'
-        axios.get(url, {
+        this.$http.get(url, {
           params: {
             id: this.unfreezeId
           }
