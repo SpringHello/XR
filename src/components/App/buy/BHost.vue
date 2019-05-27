@@ -501,8 +501,15 @@
                   <p class="item-title" style="margin-top: 8px">登录密码</p>
                 </div>
                 <Input v-model="password" placeholder="请输入至少6位包含大小写与数字的密码"
-                       style="width: 300px" @on-change="passwordWarning=''"></Input>
+                       style="width: 300px" @on-change="passwordWarning=''"  @on-focus="passwordForm.passwordHint = true" @on-blur="passwordForm.passwordHint = false"></Input>
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
+              </div>
+              <div class="popTip" v-show="false">
+                  <div><i :class="{reach: passwordForm.passwordDegree > 0 }"></i>
+                    <p>8-32个字符</p></div>
+                  <div><i :class="{reach: passwordForm.passwordDegree > 1 }"></i>
+                    <p>包含数字、大小写字母</p></div>
+                  <div><p style="color:rgba(102,102,102,1);">可输入特殊字符包括：!#$%_()^&*,-<>?@.+=</p></div>
               </div>
             </div>
           </div>
@@ -815,6 +822,11 @@
         fastCoupon: 0,
         mirrorQuery: this.$route.query.mirror,
         mirrorListQ: [],
+        passwordForm: {
+          passwordHint: false,
+          //密码强度
+          passwordDegree: 0
+        }
       }
     },
     created() {
@@ -1584,6 +1596,7 @@
           color: #fff;
         }
         .item-wrapper {
+          position: relative;
           margin-top: 20px;
           .item-title {
             font-size: 16px;
@@ -1622,6 +1635,55 @@
             }
             .desc {
               color: #ffffff
+            }
+          }
+          .popTip {
+            width: 300px;
+            padding: 19px 21px;
+            position: absolute;
+            background: #FFF;
+            border-radius: 8px;
+            box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
+            right: 0;
+            bottom: -30px;
+            z-index: 3;
+            > div {
+              display: flex;
+              > i {
+                display: inline-block;
+                border: 1px solid rgba(151, 151, 151, 1);
+                margin-right: 3px;
+                margin-top: 5px;
+                height: 12px;
+                width: 12px;
+                border-radius: 6px;
+                &.reach {
+                  background: #09BC1D;
+                  border: 1px solid #09BC1D;
+                  &:before {
+                    content: '';
+                    display: inline-block;
+                    background: #FFF;
+                    height: 1px;
+                    width: 10px;
+                    transform: translate(3px, -8px) rotate(-55deg);
+                  }
+                  &:after {
+                    content: '';
+                    display: inline-block;
+                    background: #FFF;
+                    height: 1px;
+                    width: 6px;
+                    transform: translate(0px, -23px) rotate(215deg);
+                  }
+                }
+              }
+              > p {
+                font-size: 14px;
+                font-family: MicrosoftYaHei;
+                color: rgba(51, 51, 51, 1);
+                line-height: 24px;
+              }
             }
           }
         }
