@@ -468,7 +468,7 @@
 				})
 			},
 			xianzhia(){
-				axios.get('user/getBalanceWithdrawalLimit.do', {
+				this.$http.get('user/getBalanceWithdrawalLimit.do', {
 					params: {
 						type:3
 					}

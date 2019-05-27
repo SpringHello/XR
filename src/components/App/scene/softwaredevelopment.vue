@@ -2373,7 +2373,8 @@
             describe: '领取主机',
             operationType: '领取主机',
             thawCondition: '删除主机',
-            vmConfig: this.vmConfig
+            vmConfig: this.vmConfig,
+            zoneId: this.currentSceneGroup[this.index1].configGroup[this.index2].zoneId,
           }
           axios.post(url, params).then(response => {
             if (response.data.status == 1 && response.status == 200) {
@@ -2408,7 +2409,8 @@
             describe: '领取GPU服务器',
             operationType: '领取GPU服务器',
             thawCondition: '删除GPU服务器',
-            vmConfig: this.vmConfig
+            vmConfig: this.vmConfig,
+            zoneId: this.currentSceneGroup[this.index1].configGroup[this.index2].zoneId,
           }
           axios.post(url, params).then(response => {
             if (response.data.status == 1 && response.status == 200) {
