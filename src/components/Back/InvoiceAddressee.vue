@@ -42,7 +42,8 @@
         <p slot="header" class="modal-header-border">
           <span class="universal-modal-title">{{addresseeTitleModal}}收件信息</span>
         </p>
-        <Form ref="formReceipt" :model="formReceipt" :rules="ruleReceipt" :label-width="90">
+      <div class="universal-modal-label-14px hide-star-symbol">
+        <Form ref="formReceipt" :model="formReceipt" :rules="ruleReceipt" :label-width="82" label-position="left">
           <FormItem prop="recipient" label="收件人姓名">
               <Input type="text" v-model="formReceipt.recipient" placeholder="请输入收件人姓名" style="width:300px;">
               </Input>
@@ -51,11 +52,16 @@
               <Input type="text" v-model="formReceipt.phone" placeholder="请输入收件人电话" style="width:300px;">
               </Input>
           </FormItem>
-          <!-- <FormItem label="验证码" prop="code">
+          <FormItem label="图形验证码" prop="imgCode">
+            <Input v-model="formReceipt.imgCode" style="width:107px;margin-right: 10px;"></Input>
+            <img :src="imgSrc" @click="imgSrc=`https://zschj.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`" width="80" height="30"
+                  style="vertical-align:middle;cursor:pointer">
+          </FormItem>
+          <FormItem label="验证码" prop="code">
               <Input type="text" v-model="formReceipt.code" placeholder="请输入验证码" style="width:107px;">
               </Input>
-              <Button type="primary" style="margin-left:10px;"  @click="getVerificationCode" v-if="timeBoo" >获取验证码</Button>
-              <Button disabled style="margin-left:10px;" v-else>{{count+'分'}}</Button> -->
+              <Button type="primary" style="margin-left:10px;"  @click="getVerificationCode('msg')" v-if="timeBoo" >获取验证码</Button>
+              <Button disabled style="margin-left:10px;" v-else>{{count+'分'}}</Button>
           </FormItem>
           <FormItem label="区域">
             <Select v-model="formReceipt.province" style="width:93px;" @on-change='changeProvince'>
@@ -71,14 +77,15 @@
           <FormItem label="详细地址" prop="address">
              <Input v-model="formReceipt.address" type="textarea" :autosize="{minRows: 5,maxRows: 8}" placeholder="请详细填写便于快递投递无误，例如：重庆市 渝北区洪湖西路 智慧大厦A栋5-D"></Input>
           </FormItem>
-      </Form>
-      <!-- <div class="v_box">
+        </Form>
+      </div>
+      <div class="v_box">
         <p>没有收到验证码？</p>
-        <p>1、网络异常可能会造成短信丢失，请<span @click="getVerificationCode">重新获取</span>或<span @click="getVoiceCode">接受语音验证码</span>。</p>
+        <p>1、网络异常可能会造成短信丢失，请<span @click="getVerificationCode('msg')">重新获取</span>或<span @click="getVerificationCode('voice')">接受语音验证码</span>。</p>
         <p>2、如果手机已丢失或停机，请<a href="https://www.xrcloud.net/work" target="_blank">提交工单</a>或<a class="box_a" target="_blank"
         :href="`tencent://message/?uin=${QQInfo}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
         >联系客服</a>更改手机号。</p>
-      </div> -->
+      </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.receiptInfoAdd = false">取消</Button>
         <Button type="primary" @click="addAdrressOk('formReceipt')">确定</Button>
@@ -90,59 +97,61 @@
         <p slot="header" class="modal-header-border">
           <span class="universal-modal-title">{{addresseeTitleModal}}开票信息</span>
         </p>
-        <Form ref="formInvoice" :model="formInvoice" :rules="ruleInvoice" :label-width="100">
-          <FormItem prop="invoiceSelect" label="发票类型">
-            <RadioGroup v-model="formInvoice.invoiceSelect" type="button">
-                <Radio label="normal">增值税普通发票</Radio>
-                <Radio label="personal">增值税专用发票</Radio>
-            </RadioGroup>
-          </FormItem>
-          <div v-if="formInvoice.invoiceSelect == 'normal'">
-            <FormItem prop="personal" label="开具类型">
-              <RadioGroup v-model="formInvoice.personal" type="button">
-                  <Radio label="2">个人</Radio>
-                  <Radio label="0">企业</Radio>
+        <div class="universal-modal-label-14px hide-star-symbol">
+          <Form ref="formInvoice" :model="formInvoice" :rules="ruleInvoice" :label-width="100">
+            <FormItem prop="invoiceSelect" label="发票类型">
+              <RadioGroup v-model="formInvoice.invoiceSelect" type="button">
+                  <Radio label="normal">增值税普通发票</Radio>
+                  <Radio label="personal">增值税专用发票</Radio>
               </RadioGroup>
-            </FormItem> 
-            <FormItem prop="rise" label="发票抬头">
-                <Input type="text" v-model="formInvoice.rise" placeholder="您公司营业执照上的全称" style="width:300px;">
-                </Input>
             </FormItem>
-            <FormItem prop="taxpayer" label="纳税人识别码" v-if="formInvoice.personal == '0'">
-                <Input type="text" v-model="formInvoice.taxpayer" placeholder="15位或18位的英文字符、数字" style="width:300px;">
-                </Input>
-            </FormItem>
-          </div>
-          <div v-if="formInvoice.invoiceSelect == 'personal'">
-            <FormItem prop="rise" label="发票抬头">
-                <Input type="text" v-model="formInvoice.rise" placeholder="您公司营业执照上的全称" style="width:300px;">
-                </Input>
-            </FormItem>
-            <FormItem prop="taxpayer" label="纳税人识别码">
-                <Input type="text" v-model="formInvoice.taxpayer" placeholder="15位或18位的英文字符、数字" style="width:300px;">
-                </Input>
-            </FormItem>
-            <FormItem prop="address" label="单位地址">
-                <Input type="text" v-model="formInvoice.address" placeholder="您公司营业执照上的注册地址" style="width:300px;">
-                </Input>
-            </FormItem>
-            <FormItem prop="rPhone" label="注册电话">
-                <Input type="text" v-model="formInvoice.rPhone" placeholder="区号" style="width:90px;">
-                </Input>
-                ——
-                <Input type="text" v-model="formInvoice.rPhone" placeholder="电话号" style="width:180px;">
-                </Input>
-            </FormItem>
-            <FormItem prop="deposit" label="开户银行">
-                <Input type="text" v-model="formInvoice.deposit" placeholder="请精确到支行，如‘招商银行重庆靖城路支行’" style="width:300px;">
-                </Input>
-            </FormItem>
-            <FormItem prop="bankAccount" label="银行账户">
-                <Input type="text" v-model="formInvoice.bankAccount" placeholder="您公司开户许可证上的银行账号" style="width:300px;">
-                </Input>
-            </FormItem>
-          </div>
-      </Form>
+            <div v-if="formInvoice.invoiceSelect == 'normal'">
+              <FormItem prop="personal" label="开具类型">
+                <RadioGroup v-model="formInvoice.personal" type="button">
+                    <Radio :label="2">个人</Radio>
+                    <Radio :label="0">企业</Radio>
+                </RadioGroup>
+              </FormItem> 
+              <FormItem prop="rise" label="发票抬头">
+                  <Input type="text" v-model="formInvoice.rise" placeholder="您公司营业执照上的全称" style="width:300px;">
+                  </Input>
+              </FormItem>
+              <FormItem prop="taxpayer" label="纳税人识别码" v-if="formInvoice.personal == 0">
+                  <Input type="text" v-model="formInvoice.taxpayer" placeholder="15位或18位的英文字符、数字" style="width:300px;">
+                  </Input>
+              </FormItem>
+            </div>
+            <div v-if="formInvoice.invoiceSelect == 'personal'">
+              <FormItem prop="rise" label="发票抬头">
+                  <Input type="text" v-model="formInvoice.rise" placeholder="您公司营业执照上的全称" style="width:300px;">
+                  </Input>
+              </FormItem>
+              <FormItem prop="taxpayer" label="纳税人识别码">
+                  <Input type="text" v-model="formInvoice.taxpayer" placeholder="15位或18位的英文字符、数字" style="width:300px;">
+                  </Input>
+              </FormItem>
+              <FormItem prop="address" label="单位地址">
+                  <Input type="text" v-model="formInvoice.address" placeholder="您公司营业执照上的注册地址" style="width:300px;">
+                  </Input>
+              </FormItem>
+              <FormItem prop="phone" label="注册电话">
+                  <Input type="text" v-model="formInvoice.areaCode" placeholder="区号" style="width:90px;">
+                  </Input>
+                  ——
+                  <Input type="text" v-model="formInvoice.phone" placeholder="电话号" style="width:180px;">
+                  </Input>
+              </FormItem>
+              <FormItem prop="deposit" label="开户银行">
+                  <Input type="text" v-model="formInvoice.deposit" placeholder="请精确到支行，如‘招商银行重庆靖城路支行’" style="width:300px;">
+                  </Input>
+              </FormItem>
+              <FormItem prop="bankAccount" label="银行账户">
+                  <Input type="text" v-model="formInvoice.bankAccount" placeholder="您公司开户许可证上的银行账号" style="width:300px;">
+                  </Input>
+              </FormItem>
+            </div>
+          </Form>
+        </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.invoiceInfo = false">取消</Button>
         <Button type="primary" @click="addInvoiceOk('formInvoice')">确定</Button>
@@ -180,6 +189,7 @@ const validTaxpayer = (rule, value, callback) =>{
 export default {
   data() {
     return {
+      imgSrc: 'https://zschj.xrcloud.net/user/getKaptchaImage.do',
       addresseeTitleModal: '新增',
       area: area,
       QQInfo: "",
@@ -248,17 +258,17 @@ export default {
                         this.$refs['formInvoice'].resetFields()
                         this.addresseeTitleModal = '修改'
                         this.formInvoice = {
-                          personal: params.row.type+'',
+                          personal: params.row.type,
                           id: params.row.id,
                           rise: params.row.companyname,
                           taxpayer: params.row.identicode,
                           address: params.row.address,
-                          rPhone: params.row.phone,
-                          deposit: params.row.bankname,
+                          phone: params.row.phone,
+                          areaCode: params.row.phone,
+                          deposit: params.row.areaCode,
                           bankAccount: params.row.banknum,
-                          invoiceSelect:params.row.type+'' == '1'?'personal':'normal'
+                          invoiceSelect:params.row.type == 1?'personal':'normal'
                         }
-                        console.log(this.formInvoice)
                         this.showModal.invoiceInfo = true;
                       }
                     }
@@ -349,6 +359,7 @@ export default {
                     click: () => {
                       this.$refs['formReceipt'].resetFields()
                       this.formReceipt = params.row
+                      this.formReceipt.code =''
                       this.addresseeTitleModal = '修改'
                       this.showModal.receiptInfoAdd = true
                     }
@@ -420,24 +431,21 @@ export default {
         }
       ],
       addresseeList: [
-        {
-          name: "John Brown",
-          age: 18,
-          address: "New York No. 1 Lake Park",
-          date: "2016-10-03"
-        }
       ],
       showModal: {
         receiptInfoAdd: false,
-        invoiceInfo: false,
+        invoiceInfo: true,
       },
       // 收件信息
       ruleReceipt: {
-        name:[
+        recipient:[
           {required:true,message:'请输入收件人姓名',trigger:'blur'}
         ],
         phone:[ 
           {required:true,validator:vailAucct,trigger:'blur'}
+        ],
+        imgCode:[ 
+          {required:true,message:'请输入图形验证码',trigger:'blur'}
         ],
         code:[
           {required:true,message:'请输入验证码',trigger:'blur'}
@@ -454,8 +462,8 @@ export default {
         district: "",
         address: "",
         code:'',
+        imgCode: ''
       },
-
       // 开票信息
       ruleInvoice: {
         rise:[
@@ -476,11 +484,12 @@ export default {
       },
       formInvoice: {
         invoiceSelect: "normal",
-        personal: "2",
+        personal: 2,
         rise: "",
         taxpayer: "",
         address:'',
-        rPhone:'',
+        phone:'',
+        areaCode: '',
         deposit:'',
         bankAccount:''
       },
@@ -531,7 +540,7 @@ export default {
       this.addresseeTitleModal='新增'
       this.formInvoice = {
         invoiceSelect: 'normal',
-        personal: '2'
+        personal: 2
       }
       this.showModal.invoiceInfo = true
     },
@@ -555,63 +564,37 @@ export default {
       });
     },
 
-    //获取语音验证码
-    getVoiceCode() {
-      // this.$refs.temlateForm.validate(valid => {
-      //   if (valid) {
-          if (this.vCodeMessage != "") {
-            this.$Message.error("图形验证码错误，请重新输入");
-          }
-          this.$refs.dataPhone.validate(valid => {
-            if (valid) {
-              axios
-                .get("validation/voiceCode.do", {
-                  params: {
-                    aim: this.templateInfo.phone,
-                    vailCode: this.temlateForm.pictureCode
-                  }
-                })
-                .then(res => {
-                  if (res.status == 200 && res.data.status == 1) {
-                    this.timeBoo = false;
-                    let char = setInterval(() => {
-                      if (this.count != 0) {
-                        this.count--;
-                      } else {
-                        clearInterval(char);
-                        this.count = 60;
-                        this.timeBoo = true;
-                      }
-                    }, 1000);
-                  } else {
-                    this.imgSrc = this.imgSrc + `?t=${new Date().getTime()}`;
-                  }
-                });
-            }
-          });
-      //   }
-      // });
-    },
-
     //获取手机验证码
-    getVerificationCode() {
-      // this.$refs.temlateForm.validate(valid => {
-      //   if (valid) {
-          axios
-            .get("template/code.do", {
-              params: {
-                aim:
-                  this.vcation == "手机验证"
-                    ? this.templateInfo.phone
-                    : this.templateInfo.email,
-                isemail: this.vcation == "手机验证" ? 0 : 1,
-                vailCode: this.temlateForm.pictureCode
-              }
-            })
-            .then(res => {
+    getVerificationCode(type) {
+      let url = ''
+      let params = {}
+      if (type=='msg') {
+        url = 'user/code.do'
+        params = {
+          aim: this.formReceipt.phone,
+          isemail: 0,
+          vailCode: this.formReceipt.imgCode
+        }
+      } else {
+        url = 'user/voiceCode.do'
+        params = {
+          aim: this.formReceipt.phone,
+          vailCode: this.formReceipt.imgCode
+        }
+      }
+      let imgCodeMsg = ''
+      let phoneMsg = ''
+      this.$refs.formReceipt.validateField('phone',(msg)=>{
+        phoneMsg = msg
+      });
+      this.$refs.formReceipt.validateField('imgCode',(msg)=>{
+        imgCodeMsg = msg
+      });
+      if (!(imgCodeMsg||phoneMsg)) {
+        axios.get(url, {params: params}).then(res => {
               if (res.status == 200 && res.data.status == 1) {
-                this.timeBoo = false;
-                this.$Message.success(res.data.message);
+                this.timeBoo = false
+                this.$Message.success(res.data.message)
                 let char = setInterval(() => {
                   if (this.count != 0) {
                     this.count--;
@@ -620,17 +603,16 @@ export default {
                     this.count = 60;
                     this.timeBoo = true;
                   }
-                }, 1000);
+                }, 1000)
               } else {
                 this.imgSrc = this.imgSrc + `?t=${new Date().getTime()}`;
                 this.$Message.error({
                   content: res.data.message,
                   duration: 5
-                });
+                })
               }
-            });
-      //   }
-      // });
+            })
+      }
     },
     addAdrressOk(name) {
       this.$refs[name].validate((valid) => {
@@ -642,14 +624,14 @@ export default {
                   city: this.formReceipt.city,
                   district: this.formReceipt.district,
                   address: this.formReceipt.address,
-                  // code: this.formReceipt.code
+                  smsCode: this.formReceipt.code
                 }
             let url = 'nVersionUser/addReciveinfo.do'
             if(this.addresseeTitleModal == '修改'){
               params.id = this.formReceipt.id
               url = 'nVersionUser/modifyReciveinfo.do'
             }
-            this.$http.post('nVersionUser/addReciveinfo.do',params).then(response => {
+            axios.post(url,params).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(`${this.addresseeTitleModal}收件信息成功`)
               this.showModal.receiptInfoAdd = false
@@ -664,28 +646,30 @@ export default {
     addInvoiceOk(name) {
       this.$refs[name].validate((valid) => {
           if (valid) {
-            // 发票类型判断 2个人 0企业 3专用
+            // normal 普通发票 personal 专用发票
+            // 发票类型判断 2个人 0企业 1专用 
             let type = this.formInvoice.personal
             if(this.formInvoice.invoiceSelect == 'personal') {
-              type = '1'
+              type = 1
             }
             let params = {}
             switch (type) {
-              case '2':
+              case 2:
                 params.type = type
                 params.companyName = this.formInvoice.rise
                 break;
-              case '0':
+              case 0:
                 params.type = type
                 params.companyName = this.formInvoice.rise
                 params.identicode = this.formInvoice.taxpayer
                 break;
-              case '1':
+              case 1:
                 params.type = type
                 params.companyName = this.formInvoice.rise
                 params.identicode = this.formInvoice.taxpayer
                 params.address = this.formInvoice.address
-                params.phone = this.formInvoice.rPhone
+                params.phone = this.formInvoice.phone
+                params.areaCode = this.formInvoice.areaCode
                 params.bankName = this.formInvoice.deposit
                 params.bankNum = this.formInvoice.bankAccount
                 break;
@@ -694,11 +678,12 @@ export default {
             }
             let url = 'user/invoiceExamine.do'
             if(this.addresseeTitleModal == '修改'){
+              params.identiCode = this.formInvoice.taxpayer
+              // delete params['identicode']
               params.id = this.formInvoice.id
               url = 'nVersionUser/modifyExamine.do'
             }
-            console.log(params)
-            this.$http.post(url,params).then(response => {
+            axios.post(url,params).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(`${this.addresseeTitleModal}收件开票成功`)
                 this.showModal.invoiceInfo = false

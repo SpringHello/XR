@@ -72,6 +72,10 @@
 .universal-modal-label-14px form .ivu-form-item .ivu-form-item-label {
   font-size: 14px;
 }
+/* form表单,隐藏必填字段的*号 */
+.hide-star-symbol .ivu-form-item-required .ivu-form-item-label:before {
+  display: none;
+}
 /* form表单, formItem间距10px*/
 .universal-modal-mb-10px form .ivu-form-item, form.universal-modal-mb-10px .ivu-form-item {
   margin-bottom: 10px;
