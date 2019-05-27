@@ -624,7 +624,7 @@
           {bgUrl: require('../../assets/img/home/eightscene-bg-8.png')}
         ],
         eigthSceneMenu: [
-          {name: '虚拟云桌面', link: 'yundiannao/'},
+          {name: '云桌面', link: 'yundiannao/'},
           {name: '自助建站', link: 'selfhelpbuildingwebsite/'},
           {name: '存储&网盘', link: 'storagedisk/'},
           {name: '软件研发', link: 'softwaredevelopment/'},
@@ -635,8 +635,8 @@
         ],
         eigthSceneContent: [
           {
-            title: '虚拟云桌面',
-            scene: '虚拟云桌面是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。虚拟云桌面可按需申请轻松使用，虚拟云桌面助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，虚拟云桌面都可以让您拥有完整的PC使用体验。虚拟云桌面为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
+            title: '云桌面',
+            scene: '云桌面是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云桌面可按需申请轻松使用，云桌面助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云桌面都可以让您拥有完整的PC使用体验。云桌面为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
             software: [
               require('../../assets/img/sceneList/sl-icon1.png'),
               require('../../assets/img/sceneList/sl-icon2.png'),

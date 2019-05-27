@@ -7,7 +7,7 @@
       </Alert>
       <div id="content">
         <div id="header" style="border-bottom:1px solid rgba(233,233,233,1);">
-          <span id="title"><img style="vertical-align:sub;cursor:pointer" @click="$router.push('/expenses')" src="../../assets/img/host/h-icon9.png" alt="back to expenses"/> 问卷调查</span>
+          <span id="title"><img style="vertical-align:sub;cursor:pointer" @click="$router.push('/expenses')" src="../../assets/img/host/h-icon9.png" alt="back to expenses"/> 押金解冻或续费</span>
           <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="unfreeze-content">
@@ -126,6 +126,16 @@
               </div>
             </div>
           </div>
+          <div v-if="unfreezeStep === 2" class="unfreezeComplete">
+            <div>
+              <img src="../../assets/img/thawDeposit/td_img_1.png" />
+            </div>
+            <p v-if="unfreezeTo === 'account'">您的押金已经解冻到充值账户</p>
+            <p v-if="unfreezeTo === 'yue'">您的押金已经解冻到余额</p>
+            <p v-if="unfreezeTo === 'freezeToRenew'">您的押金已经成功转为续费</p>
+             <p v-if="unfreezeTo === 'freezeToRenew'">转为续费之后资源到期时间为{{renewalFeeTime}}</p>
+            <Button  type="primary"  @click="$router.push('/expenses')">返回控制台</Button>
+          </div>
         </div>
       </div>
     </div>
@@ -170,7 +180,7 @@
       </p>
     </Modal>
 
-    <!-- 押金转续费弹窗 -->
+    <!-- 押金转续费弹窗 实际到期时间和续费时间相差大于1个月-->
     <Modal v-model="showModal.freezeToRenewAffirm" crollable="true" :closable="false" :width="390" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
@@ -187,6 +197,24 @@
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.freezeToRenewAffirm = false">取消</Button>
         <Button type="primary" :disabled="freezeToRenewAffirmDisabled" @click="freezeToRenew_ok">确定</Button>
+      </p>
+    </Modal>
+    <!-- 押金转续费弹窗 实际到期时间和续费时间相差小于1个月-->
+    <Modal v-model="showModal._freezeToRenewAffirm" crollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">当前免费剩余时长为<span style="color:#2A99F2">{{freeTime}}个月</span>（到期时间为：<span style="color: #2A99F2">{{ freezeEndTime}}</span>），转为续费之后资源到期时间为<span style="color: #2A99F2">{{ renewalFeeTime}}</span>，
+          ，实际到期时间和续费时间相差<span style="color: #FF624B">小于1个月</span>（<span style="color:#FF9801">若您在{{ currentData }}转为续费之后，资源到期时间为{{ renewalFeeTime}}</span>）您是否确认现在将押金转为续费？ 
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal._freezeToRenewAffirm = false">取消</Button>
+        <Button type="primary" :disabled="freezeDisabled" @click="freezeToRenew_ok">确定{{ freezeToRenewAffirmText}}</Button>
       </p>
     </Modal>
         <!-- 修改手机号码(身份证验证) -->
@@ -394,6 +422,7 @@
           notUnfreeze: false,
           unfreezeToBalanceHint: false,
           freezeToRenewAffirm: false,
+          _freezeToRenewAffirm: false,
           modifyPhoneID: false
         },
         unfreezeStep: 0,
@@ -502,6 +531,9 @@
         unfreezeToBalanceDisabled: true,
         unfreezeToBalanceText:'(10S)',
         unfreezeToBalanceTimer:null,
+        freezeDisabled: true,
+        freezeToRenewAffirmText: '(10S)',
+        freezeToRenewAffirmTimer: null,
         freezeToRenewAffirm: '',
         freeTime:'',
         renewalFeeTime:'',
@@ -584,6 +616,10 @@
       },
       freezeToRenewAffirmDisabled(){
         return this.freezeToRenewAffirm !== 'confirm'
+      },
+      currentData(){
+        let myDate = new Date()
+        return  myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' +  myDate.getDate()
       }
     },
     methods: {
@@ -702,6 +738,7 @@
                 if (res.status == 200 && res.data.status == 1) {
                   this.$Message.success('解冻成功')
                   this.showModal.unfreeze = false
+                  this.unfreezeStep = 2
                 } else {
                   this.$message.info({
                     content: res.data.message
@@ -799,6 +836,7 @@
             if (res.status == 200 && res.data.status == 1) {
               this.$Message.success('解冻成功')
               this.showModal.unfreezeToBalanceHint = false
+              this.unfreezeStep = 2
             } else {
               this.$message.info({
                 content: res.data.message
@@ -811,9 +849,27 @@
         }
       },
       freezeToRenewNext() {
-        this.freezeToRenewAffirm = ''
-        this.showModal.freezeToRenew = false
-        this.showModal.freezeToRenewAffirm = true
+        if(JSON.parseInt(this.freeTime) < 1){
+          window.clearInterval(this.freezeToRenewAffirmTimer)
+          this.freezeDisabled = true
+          this.freezeToRenewAffirmText = '(10S)'
+          let i = 10
+          this.freezeToRenewAffirmTimer = setInterval(() => {
+            i -= 1
+            if (i == 0) {
+              window.clearInterval(this.freezeToRenewAffirmTimer)
+              this.freezeDisabled = false
+              this.freezeToRenewAffirmText = ''
+            } else {
+              this.freezeToRenewAffirmText = '(0' + i + 'S)'
+              this.freezeDisabled = true
+            }
+          }, 1000)
+          this.showModal._freezeToRenewAffirm = true
+        } else {
+          this.freezeToRenewAffirm = ''
+          this.showModal.freezeToRenewAffirm = true
+        }
       },
             // 押金转续费
       freezeToRenew_ok() {
@@ -826,6 +882,7 @@
           if (res.status == 200 && res.data.status == 1) {
             this.$Message.success(res.data.message)
             this.showModal.freezeToRenewAffirm = false
+            this.unfreezeStep = 2
           } else {
             this.$message.info({
               content: res.data.message
@@ -1118,6 +1175,16 @@
     }
     .footer{
        padding: 20px 0 0 40px;
+    }
+    .unfreezeComplete{ 
+      text-align: center;
+      margin: 40px 150px 20px 0; 
+      >p{
+        font-size:18px;
+        font-family:MicrosoftYaHei;
+        color:rgba(51,51,51,1);
+        margin: 20px 0;
+      }
     }
   }
   .unfreeze-type{

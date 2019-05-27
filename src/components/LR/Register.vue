@@ -45,7 +45,7 @@
                 <img src="../../assets/img/login/lr-icon2.png"/>
                 <input v-model="registerForm.password" @focus="registerForm.passwordHint = true" @blur="registerPasswordBlur" @input="registerForm.errorMsg=''"
                        ref="registerPasInput" type="password"
-                       placeHolder="请输入密码"/>
+                       placeHolder="请输入密码" :maxlength="32"/>
                 <img style="cursor: pointer" @click="changeLoginPasType('registerPasInput')" src="../../assets/img/login/lr-icon3.png"/>
                 <div class="popTip" v-show="registerForm.passwordHint">
                   <div><i :class="{reach: registerForm.passwordDegree > 0 }"></i>
@@ -89,8 +89,8 @@
               </div>
               <div class="import" v-if="registerForm.onStep === 2" :class="{error: registerForm.errorMsg === 'notConfirmPassword'}">
                 <img src="../../assets/img/login/lr-icon2.png"/>
-                <input v-model="registerForm.passwordAffirm" ref="registerPasInputAffirm" @input="registerForm.errorMsg=''" type="password" placeHolder="请确认密码"/>
-                <img style="cursor: pointer" @click="changeLoginPasType('registerPasInputAffirm')" src="../../assets/img/login/lr-icon3.png"/>
+                <input v-model="registerForm.passwordAffirm" ref="registerPasInputAffirm" @input="registerForm.errorMsg=''" type="password" placeHolder="请确认密码" :maxlength="32"/>
+                <img style="cursor: pointer" @click="changeLoginPasType('registerPasInputAffirm')" src="../../assets/img/login/lr-icon3.png"  />
               </div>
               <div class="errorMsg">
                 <div v-if="registerForm.errorMsg === 'verificationCodeMistake'">
