@@ -16,7 +16,7 @@
                   <h1>酷/爽/到/底</h1>
                   <img class="bannerimg" src="../../../assets/img/active/blackactive/Ninetypercent.png" alt="一折秒杀">
                   <p>
-                      新睿云 云电脑惊喜上市 提前预约 抢先体验
+                      云电脑惊喜上市 提前预约 抢先体验
                   </p>
                   <img class="bannerxian" src="../../../assets/img/active/blackactive/Rectangle 2 Copy.png" alt="一折秒杀线">
               </div>
@@ -31,7 +31,7 @@
               
             </div>
             <p>
-              爆品秒杀 先到先得 低至一折
+              爆品低价秒杀 先到先得 
               <span class="rule" @click="showModal.rule1=true">活动规则</span>
             </p>
           </div>
@@ -64,6 +64,7 @@
                     <p style="font-size:18px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(255,191,130,1);">{{item.servicetype == 'host' ? '云服务器' : '对象存储'}}</p>
                     <p class="config-text">100%性能可用，更低价格，拒绝套路</p>
                       <img :src="item.imgright" alt="描述"> 
+                      <span class="imgtitle" style="width:108px;height:22px;">新用户专享{{item.discount}}折</span>
                   </div>
                   <div class="host_content">
                     <div style="margin:10px 0;">
@@ -81,18 +82,18 @@
                     </div>
                     <div style="text-align:left;margin:20px 0 10px 0;">
                       <span style="color:#FF763B;font-size:14px;">￥<span
-                        style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/{{item.timeType=='month'?'月':'年'}}</span>
+                        style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/{{item.yearnum/12 == 0.5 ? '半' : item.yearnum/12}}年</span>
                     </div>
                     <p style="text-decoration:line-through;margin:12px 0 20px 0;
                       font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);">
-                          原价：{{item.originalPrice}}元/{{item.timeType=='month'?'月':'年'}}
+                          原价：{{item.originalPrice}}元/{{item.yearnum/12 == 0.5 ? '半' : item.yearnum/12}}年
                     </p>
                     <Button class="host_button host_button_not" v-if="!(hour >=0&&hour<9||hour >=9&&hour<14||hour >=14&&hour<18||hour >=18&&hour<21||hour >=21&&hour<24)">暂未开始</Button>
                     <Button class="host_button" :disabled="item.num=='100'" :class="{host_button_not:item.num=='100'}" @click="getDiskcountMvfornew(item,index)" v-else>
                       {{item.num!='100'?'立即抢购':'已抢完'}}
                     </Button>
                   <div class="progress">
-                      <Progress class="schoolseason-progress" :percent="item.num" hide-info/>
+                      <Progress class="schoolseason-progress1" :percent="item.num" hide-info/>
                       <span v-if="hour >=0&&hour<9||hour >=9&&hour<14||hour >=14&&hour<18||hour >=18&&hour<21||hour >=21&&hour<24">已抢购{{item.num.toFixed(2)}}%</span>
                       <span v-else>已抢购0%</span>
                     </div>
@@ -104,6 +105,7 @@
                     
                     <p class="config-text">100%性能可用，更低价格，拒绝套路</p>
                       <img :src="item.imgright" alt="描述"> 
+                      <span class="imgtitle" style="width:54px;height:22px;">{{item.discount}}折</span>
                   </div>
                   <div class="host_content">
                     <div style="margin:10px 0;">
@@ -126,18 +128,18 @@
                     </div>
                     <div style="text-align:left;margin:20px 0 10px 0;">
                       <span style="color:#FF763B;font-size:14px;">￥<span
-                        style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/{{item.timeType=='month'?'半年':'年'}}</span>
+                        style="font-size:24px;font-weight:bold">{{ item.currentPrice}}</span>/{{item.yearnum/12 == 0.5 ? '半' : item.yearnum/12}}年</span>
                     </div>
                     <p style="text-decoration:line-through;margin:12px 0 20px 0;
                       font-size:12px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);">
-                          原价：{{item.originalPrice}}元/{{item.timeType=='month'?'月':'年'}}
+                          原价：{{item.originalPrice}}元/{{item.yearnum/12 == 0.5 ? '半' : item.yearnum/12}}年
                     </p>
                     <Button class="host_button host_button_not" v-if="!(hour >=0&&hour<9||hour >=9&&hour<14||hour >=14&&hour<18||hour >=18&&hour<21||hour >=21&&hour<24)">暂未开始</Button>
                     <Button class="host_button" :disabled="item.num=='100'" :class="{host_button_not:item.num=='100'}" @click="getDiskcountMv(item,index)" v-else>
                       {{item.num!='100'?'立即抢购':'已抢完'}}
                     </Button>
                   <div class="progress">
-                      <Progress class="schoolseason-progress" :percent="item.num" hide-info/>
+                      <Progress class="schoolseason-progress1" :percent="item.num" hide-info/>
                       <span v-if="hour >=0&&hour<9||hour >=9&&hour<14||hour >=14&&hour<18||hour >=18&&hour<21||hour >=21&&hour<24">已抢购{{item.num.toFixed(2)}}%</span>
                       <span v-else>已抢购0%</span>
                     </div>
@@ -145,7 +147,7 @@
                 </div>
               </div>
               <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:21px;margin-top:17px;">
-                <img src="../../../assets/img/active/blackactive/Shape.png" alt="提示" style="margin:4px 10px auto 0;float:left;">
+                <img src="../../../assets/img/active/blackactive/blackicon1.png" alt="提示" style="margin:4px 10px auto 0;float:left;">
                 下场秒杀预告：云服务器 {{Data3}}、{{freevmconfigs1}}、{{freevmconfigs2}}、对象存储 {{freevmconfigs3}}<span @click="showModal.SpikeMore=true" style="cursor: pointer;color:rgba(245,166,35,1);margin-left:10px;">更多场次预告 ></span>
                 <div style="clear: both;"></div>
               </p>
@@ -157,7 +159,7 @@
         <div class="wrap">
           <div class="inbox">
             <div class="inlineheader">
-              <img src="../../../assets/img/active/blackactive/资源 18@2x.png">
+              <img src="../../../assets/img/active/blackactive/bgziyuan.png">
               <div>
                 <p>云电脑</p>
                 <p style="margin-top:5px;">畅享无限游戏体验</p>
@@ -166,7 +168,7 @@
             <div class="inlineright">
               <p>云电脑注册即可获赠10云币</p>
               <p>【可抵扣云电脑3小时使用时长】</p>
-              <Button v-if="AppointmentStatus==0" type="warning" style="margin-top:16px;" @click="appointmentimmediately">立即预约</Button>
+              <Button v-if="AppointmentStatus==0" type="warning" style="margin-top:16px;background:#FFCE00;color:rgba(51,51,51,1);" @click="appointmentimmediately">立即预约</Button>
               <Button v-if="AppointmentStatus==1" disabled style="margin-top:16px;border:1px solid rgba(185,157,41,1);color:#B99D29;background:none;">预约成功</Button>
             </div>
             <div style="clear: both;"></div>
@@ -180,7 +182,7 @@
               
             </div>
             <p style="font-size:18px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:24px;">
-              中低高配云服务器年付低至三折，额外赠送一折爆款云服务器
+              买一赠一，中低高配云服务器年付低至三折，额外赠送爆款云服务器
               <span class="rule" @click="showModal.rule2=true" style="color:#F5A623;text-decoration: underline;">活动规则</span>
             </p>
           </div>
@@ -236,7 +238,7 @@
                       </Select>
                     </div>
                     <div class="item-config">
-                      <p style="margin-bottom: 10px;">NVme SSD数据盘</p>
+                      <p style="margin-bottom: 10px;">SSD数据盘</p>
                       <ul class="flex" style="justify-content: flex-start">
                         <li v-for="(item3,index) in hostDisksizeListHot" :key="index" @click="hostProductHot.disksize=item3" :class="{selected:hostProductHot.disksize==item3}">
                           {{item3}}G
@@ -744,7 +746,7 @@
             <div class="body">
               <h3>1、活动时间：2019.5.25-2019.6.30，每天5场秒杀， 0点、9点、14点、18点、21点开抢。</h3>
               <h3>2、活动对象：新用户指的是没有使用过平台任何产品（域名产品除外）、没有未支付订单且完成实名认证的用户。其他未特殊标明产品新老用户且完成实名认证均可参与。</h3>
-              <h3>3、数量限制：秒杀产品每天数量有限，每次秒杀限选一款，限购一次。新用户指定产品每款每个用户限购买一台。未特殊指定产品可秒杀多次，限额以后台配额限制为准（每个用户云服务器最多可拥有7台，如有特殊要求，可向销售申请）。</h3>
+              <h3>3、数量限制：活动期间同一用户（同一手机、邮箱、实名认证用户视为同一用户）每次秒杀限选1款，限购1台，同一用户每款配置的商品可秒杀1次；新用户指定产品每款每个用户限购买1台。限额以后台配额限制为准（实名认证后每个用户云服务器最多可拥有7台，如有特殊要求，可向销售申请）。</h3>
               <h3>4、参与本次活动购买的产品不能进行退款。</h3>
               <h3>5、购买时不可使用任何优惠券和现金券。</h3>
               <h3>6、活动最终解释权为新睿云所有。</h3>
@@ -1309,6 +1311,7 @@
             currentPrice: '351.09',
             id: '40',
             type: '0',
+            yearnum:'',
             activityNum: '27',
             servicetype: 'host',
             num: 0,
@@ -1349,6 +1352,7 @@
             currentPrice: '351.09',
             id: '40',
             type: '0',
+            yearnum:'',
             activityNum: '27',
             servicetype: 'host',
             num: 0,
@@ -1380,13 +1384,14 @@
             disksize: '40',
             bandwith: '5',
             zoneId: '',
-            imgright:require('../../../assets/img/active/blackactive/oneforone.png'),
+            imgright:require('../../../assets/img/active/blackactive/onefor.png'),
             system: [],
             duration: '6',
             originalPrice: '1300.32',
             currentPrice: '351.09',
             id: '40',
             type: '0',
+            yearnum:'',
             activityNum: '27',
             servicetype: 'host',
             num: 0,
@@ -1421,13 +1426,14 @@
             storage:'',
             flow:'',
             zoneId: '',
-            imgright:require('../../../assets/img/active/blackactive/threefor.png'),
+            imgright:require('../../../assets/img/active/blackactive/onefor.png'),
             system: [],
             duration: '6',
             originalPrice: '1300.32',
             currentPrice: '351.09',
             id: '40',
             type: '0',
+            yearnum:'',
             activityNum: '27',
             servicetype: 'oss',
             num: 0,
@@ -1497,7 +1503,7 @@
             label: 'Ubuntu',
             children: [],
           }],
-        hostDisksizeListHot: [0, 20, 50, 100],
+        hostDisksizeListHot: [20, 50, 100,500],
         hostTimeListHot: [
           {type: 'year', value: '1', discount: '6'},
           {type: 'year', value: '3', discount: '4'},
@@ -2068,6 +2074,8 @@
               item.disksize = res.data.result.freevmconfigs[index].disksize
               item.storage = res.data.result.freevmconfigs[index].capacity
               item.flow = res.data.result.freevmconfigs[index].flowpackage
+              item.discount = res.data.result.freevmconfigs[index].discount
+              item.yearnum = res.data.result.freevmconfigs[index].days
               this.getVMConfigId(item, index)
               this.getSubsection(index)
             })
@@ -2097,6 +2105,8 @@
               item.memory = res.data.result.freevmconfigs[index].mem
               item.bandwith = res.data.result.freevmconfigs[index].bandwith
               item.disksize = res.data.result.freevmconfigs[index].disksize
+              item.discount = res.data.result.freevmconfigs[index].discount
+              item.yearnum = res.data.result.freevmconfigs[index].days
               this.getVMConfigIdfornew(item, index)
               this.getSubsectionfornew(index)
             })
@@ -2203,7 +2213,7 @@
           params: {
             zoneId: item.zoneId,
             vmConfigId: item.id,
-            month: index == 2 ? 6 : 12
+            month: item.yearnum
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
@@ -2217,7 +2227,7 @@
           params: {
             zoneId: item.zoneId,
             vmConfigId: item.id,
-            month:  12
+            month:  item.yearnum
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
@@ -2542,7 +2552,7 @@
           if (res.status == 200 && res.data.status == 1) {
             if (window.location.origin == 'http://localhost:8088'||window.location.origin == 'https://zschj.xrcloud.net') {
               this.gpuConfigListHot = res.data.result.filter((item,index) => {
-                return index < 4
+                return index < 5
               })
             } else{
               this.gpuConfigListHot = res.data.result.filter(item => {
@@ -2982,7 +2992,7 @@
   }
 
   .product-seckill {
-    background:rgba(54,56,84,1);
+    background:linear-gradient(360deg,rgba(54,56,84,1) 0%,rgba(33,35,60,1) 100%);
     .headline {
       div {
         background: url(../../../assets/img/active/blackactive/Group 19.png) center no-repeat;
@@ -3104,6 +3114,16 @@
               position: absolute;
               right: 0;
               top: 0;
+            }
+            .imgtitle{
+              position: absolute;
+              right: 0;
+              top: 0;
+              text-align: center;
+              line-height: 22px;
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
             }
             p {
               color: #ffffff;
@@ -3228,13 +3248,13 @@
               background:linear-gradient(90deg,rgba(206,206,206,1) 0%,rgba(168,168,168,1) 100%);
             }
             .progress {
-              .schoolseason-progress {
+              .schoolseason-progress1 {
                 margin-top: 20px;
                 margin-bottom: 8px;
               }
               span {
                 font-size: 14px;
-                color: rgba(154, 127, 130, 1);
+                color:rgba(153,153,153,1);
               }
             }
           }
@@ -3308,7 +3328,7 @@
         height: 589px;
         width: 100%;
         .top{
-          background: url(../../../assets/img/active/blackactive/头部.png) center no-repeat;
+          background: url(../../../assets/img/active/blackactive/bgtop.png) center no-repeat;
           width: 100%;
           height: 80px;
           > p {
@@ -3717,7 +3737,7 @@
         width: 100%;
         margin-top: 60px;
         .top{
-          background: url(../../../assets/img/active/blackactive/头部.png) center no-repeat;
+          background: url(../../../assets/img/active/blackactive/bgtop.png) center no-repeat;
           width: 100%;
           height: 80px;
           > p {
@@ -4139,7 +4159,7 @@
         width: 100%;
         margin-top: 60px;
         .top{
-          background: url(../../../assets/img/active/blackactive/头部.png) center no-repeat;
+          background: url(../../../assets/img/active/blackactive/bgtop.png) center no-repeat;
           width: 100%;
           height: 80px;
           > p {

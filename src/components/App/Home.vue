@@ -52,6 +52,18 @@
           </div>
         </my-carousel-item> -->
         <my-carousel-item class="carousel-item">
+          <div @click="push('/activity/BlacKActivities')"
+               style="cursor: pointer;background: #F56B23;">
+            <div>
+              <div>
+                <div>
+                  <img src="../../assets/img/home/indeximg.png" alt="black"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div class="eightscene" @click="push('/scene/')">
             <div class="wrap">
               <div class="left">

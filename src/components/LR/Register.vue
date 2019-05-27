@@ -17,6 +17,10 @@
               </div>
             </my-carousel-item> -->
             <my-carousel-item class="carousel-item">
+              <div @click="$router.push('activity/BlacKActivities')" class="black-active">
+              </div>
+            </my-carousel-item>
+            <my-carousel-item class="carousel-item">
               <div @click="$router.push('activity/free/')" class="fr-active">
               </div>
             </my-carousel-item>
@@ -543,6 +547,10 @@
       .fr-active {
         height: 100%;
         background: #FFF url("../../assets/img/login/fr-banner.png") no-repeat;
+      }
+      .black-active {
+        height: 100%;
+        background: #FFF url("../../assets/img/login/blacklogin.png") no-repeat;
       }
     }
     .loginOrRegister-form {
