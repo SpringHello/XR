@@ -21,9 +21,9 @@
           <p>实际可开金额发票：<span>￥{{ invoice }}</span></p>
           <p>开票口径：按充值金额开票，已开票金额将<span>无法操作提现</span></p>
         </div>
-        <div v-if="applyChange">
-          <div class="invoiceInformation">
-            <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="100"F
+        <div>
+          <div class="invoiceInformation universal-modal-label-14px hide-star-symbol">
+            <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="100"
                   label-position="left">
               <Form-item label="开票金额" prop="invoiceAmount">
                 <Input :maxlength="10" v-model="formInvoiceDate.invoiceAmount" placeholder="请输入开票金额"
@@ -31,109 +31,84 @@
                         number></Input>
               </Form-item>
               <Form-item label="发票类型" prop="InvoiceType">
-                <Select v-model="formInvoiceDate.InvoiceType" placeholder="请选择发票类型" style="width: 317px"
-                        @on-change="changeInvoiceType">
-                  <Option value="1">增值税专用发票</Option>
-                  <Option value="0">普通发票</Option>
-                </Select>
-                <!-- <RadioGroup v-model="formInvoiceDate.InvoiceType">
+                <RadioGroup v-model="formInvoiceDate.InvoiceType">
                     <Radio label="0">增值税普通发票</Radio>
                     <Radio label="1">增值税专用发票</Radio>
-                </RadioGroup> -->
+                </RadioGroup>
               </Form-item>
-              <Form-item label="发票抬头" prop="invoiceTitle">
-                <Input :maxlength="32" v-model="formInvoiceDate.invoiceTitle" placeholder="请输入发票抬头"
-                        style="width: 317px"></Input>
-                <!-- <span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的抬头名称默认为认证企业，无需填写，但是可以修改。</span>-->
+              <div v-if="formInvoiceDate.InvoiceType!=1">
+                <Form-item label="发票抬头" prop="invoiceTitle" v-if="normalInvoiceLength==0">
+                  <Input :maxlength="32" v-model="formInvoiceDate.invoiceTitle" placeholder="请输入发票抬头"
+                          style="width: 317px"></Input>
+                </Form-item>
+                <Form-item label="发票抬头" v-else>
+                <Select v-model="formInvoiceDate.selectInvoiceTitle" style="width: 317px">
+                  <Option :value="item.companyname+'#'+item.id+'#'+item.type" v-for="(item,index) in normalInvoiceList" :key="index">{{item.companyname}}</Option>
+                </Select>
               </Form-item>
-              <Form-item label="纳税人识别码" prop="taxpayerId" v-if="formInvoiceDate.InvoiceType == 0">
-                <Input :maxlength="32" v-model="formInvoiceDate.taxpayerId" placeholder="请输入纳税人识别码"
-                        style="width: 317px"></Input>
-              </Form-item>
-              <Form-item label="发票信息" v-show="authenticationShow">
-                <div class="invoiceInformationShow">
-                  <span>单位：{{ formAppreciationDate.companyName }}</span>
-                  <span>纳税人识别码：{{ formAppreciationDate.taxpayerID }}</span>
-                  <span>注册电话：{{ formAppreciationDate.registeredPhone }}</span>
-                  <span>开户银行：{{ formAppreciationDate.depositBank }}</span>
-                  <span>银行账号：{{ formAppreciationDate.bankAccount }}</span>
+                <Form-item label="纳税人识别码" prop="taxpayerId" v-if="selectNormalInvoiceType==0">
+                  <Input :maxlength="32" v-model="formInvoiceDate.taxpayerId" placeholder="请输入纳税人识别码" :disabled="normalInvoiceLength!=0"
+                          style="width: 317px"></Input>
+                </Form-item>
+              </div>
+              <div v-else>
+                <div v-if="specialInvoiceStatus==0">
+                  <Form-item label="单位名称">
+                    <Input :maxlength="32" v-model="formInvoiceDate.specialInvoiceTitle" placeholder="请输入发票抬头" disabled
+                            style="width: 317px"></Input>
+                  </Form-item>
+                  <Form-item label="纳税人识别码">
+                    <Input :maxlength="32" v-model="formInvoiceDate.specialTaxpayerId" placeholder="请输入纳税人识别码" disabled
+                            style="width: 317px"></Input>
+                  </Form-item>
+                  <Form-item label="单位注册地址">
+                    <Input :maxlength="10" v-model="formInvoiceDate.unitAddress" placeholder="北京市 中关村 五道口 宇宙中心大厦" disabled
+                            style="width: 317px"></Input>
+                  </Form-item>
+                  <Form-item label="注册电话">
+                    <Input :maxlength="10" v-model="formInvoiceDate.landline" placeholder="023-41438130" disabled
+                            style="width: 317px"></Input>
+                  </Form-item>
+                  <Form-item label="开户银行">
+                    <Input :maxlength="10" v-model="formInvoiceDate.bankName" placeholder="中国银行" disabled
+                            style="width: 317px"></Input>
+                  </Form-item>
+                  <Form-item label="银行账户">
+                    <Input :maxlength="10" v-model="formInvoiceDate.bankNum" placeholder="400897383827290" disabled
+                            style="width: 317px"></Input>
+                  </Form-item>
                 </div>
-              </Form-item>
-              <Form-item label="发票信息" v-show="invoiceInformationShow">
-                <p v-if="certificateStatus" style="line-height: 2.5;">您需要通过<span
-                  style="color: dodgerblue;cursor:pointer;"
-                  @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
-                <Button type="primary" style="margin-left: 237px" @click="invoiceCertification"
-                        v-if="certificateStatus">点击认证
-                </Button>
-                <p v-if="underReview" style="line-height: 2.5;">您的增票资质正在<span style="color: #FF8B22;">审核中</span>，请耐心等待
-                </p>
-                <p v-if="failureAudit" style="line-height: 2.5;">您的增票资质<span
-                  style="color: #FF3366;">审核失败</span>，点击<span style="color: dodgerblue;cursor:pointer;"
-                                                              @click="invoiceCertification">增票资质认证</span>进行修改</p>
-              </Form-item>
-              <Form-item label="收件人" prop="recipients">
+                <Form-item label="发票信息" v-else>
+                  <p style="line-height: 2.5;color:#666666">您需要通过
+                    <span style="color: #2A99F2;cursor:pointer;" @click="$router.push('InvoiceAuthentication')">增票资质认证</span>
+                    才能开具增值税专用发票</p>
+                  <Button type="primary" @click="$router.push('InvoiceAuthentication')">点击申请</Button>
+                </Form-item>
+              </div>
+              <p style="color:#2A99F2;margin-left: 100px;margin-bottom: 10px;cursor:pointer" @click="$router.push('invoiceAddressee')">+新增发票抬头与收件信息</p>
+              <Form-item label="收件人" prop="recipients" v-if="addresseeLength==0">
                 <Input :maxlength="10" v-model="formInvoiceDate.recipients" placeholder="请输入收件人姓名"
                         style="width: 317px"></Input>
               </Form-item>
-              <Form-item label="收件地址" prop="consigneeAddress">
-                <Input :maxlength="64" v-model="formInvoiceDate.consigneeAddress" placeholder="请输入收件地址"
-                        style="width: 317px"></Input>
-                <!--<span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的收件地址默认为认证企业地址，无需填写，但是可以修改。</span>-->
+              <Form-item label="收件人" v-else>
+                <Select v-model="formInvoiceDate.selectAddressee" style="width: 317px">
+                  <Option :value="item.recipient+'#'+item.id" v-for="(item,index) in addresseeList" :key="index">{{item.recipient}}</Option>
+                </Select>
               </Form-item>
               <Form-item label="联系电话" prop="phone">
-                <Input :maxlength="20" v-model="formInvoiceDate.phone" placeholder="请输入联系电话"
+                <Input :maxlength="20" v-model="formInvoiceDate.phone" placeholder="请输入联系电话" :disabled="addresseeLength!=0"
+                        style="width: 317px"></Input>
+              </Form-item>
+              <Form-item label="收件地址" prop="consigneeAddress">
+                <Input :maxlength="64" v-model="formInvoiceDate.consigneeAddress" placeholder="请输入收件地址" :disabled="addresseeLength!=0"
                         style="width: 317px"></Input>
               </Form-item>
               <Form-item>
                 <Button type="primary" style="font-size: 12px;margin-left: 237px"
-                        @click="invoiceMake('formInvoiceDate')">确认开票
+                        @click="invoiceInfoSave('formInvoiceDate')">下一步
                 </Button>
-              </Form-item>
-            </Form>
-          </div>
-        </div>
-        <div v-if="appreciation">
-          <span class="appreciation_s1">增值资质认证</span>
-          <div style="margin-top: 15px;padding: 13px 11px;background: #F7FBFF">
-            <p class="appreciation_p">我们会在一个工作日内审核完成。</p>
-            <p class="appreciation_p">1、注意有效增值税发票开票资质仅为一个。</p>
-            <p class="appreciation_p">2、发票常见问题查看增票资质帮助。</p>
-          </div>
-          <div style="margin-top: 20px">
-            <Form ref="formAppreciationDate" :model="formAppreciationDate" :rules="ruleValidate"
-                  :label-width="100" label-position="left">
-              <Form-item label="单位名称" prop="companyName">
-                <Input :maxlength="32" v-model="formAppreciationDate.companyName" placeholder="请输入单位名称"
-                        style="width: 317px"></Input>
-              </Form-item>
-              <Form-item label="纳税人识别码" prop="taxpayerID">
-                <Input :maxlength="32" v-model="formAppreciationDate.taxpayerID" placeholder="请输入纳税人识别码"
-                        style="width: 317px"></Input>
-              </Form-item>
-              <Form-item label="注册地址" prop="registeredAddress">
-                <Input :maxlength="64" v-model="formAppreciationDate.registeredAddress" placeholder="请输入注册地址"
-                        style="width: 317px"></Input>
-              </Form-item>
-              <Form-item label="注册电话" prop="registeredPhone">
-                <Input :maxlength="20" v-model="formAppreciationDate.registeredPhone" placeholder="请输入注册电话"
-                        style="width: 317px"></Input>
-              </Form-item>
-              <Form-item label="开户银行" prop="depositBank">
-                <Input :maxlength="32" v-model="formAppreciationDate.depositBank" placeholder="请输入开户银行"
-                        style="width: 317px"></Input>
-              </Form-item>
-              <Tooltip :content="bank_account" placement="right-start">
-                <Form-item label="银行账户" prop="bankAccount">
-                  <Input :maxlength="32" v-model="formAppreciationDate.bankAccount" placeholder="请输入银行账户"
-                          style="width: 317px"
-                          v-on:input="conversion"></Input>
-                </Form-item>
-              </Tooltip>
-              <Form-item>
-                <Button style="margin-left: 191px" @click="cancelCertification">取消</Button>
-                <Button type="primary" style="margin-left: 10px"
-                        @click="affirmCertification('formAppreciationDate')">确定
+                <Button type="primary" style="font-size: 12px;margin-left: 237px"
+                        @click="invoiceMake('formInvoiceDate')">确认开票
                 </Button>
               </Form-item>
             </Form>
@@ -273,9 +248,14 @@ export default {
         }
       }
     return {
+      normalInvoiceList: [],
+      normalInvoiceLength: 0,
+      selectNormalInvoiceType: 0,
+      addresseeList: [],
+      addresseeLength: 0,
+      specialInvoiceStatus: -1,
       invoice: 0,
       applyChange: true,
-      appreciation: false,
       authenticationShow: false, // 增值税信息
       invoiceInformationShow: false, // 增值税认证
       certificateStatus: true, // 点击认证
@@ -292,20 +272,30 @@ export default {
         },
       formInvoiceDate: {
           invoiceAmount: '',
-          InvoiceType: '',
+          InvoiceType: 0,
           recipients: '',
           consigneeAddress: '',
           phone: '',
           invoiceTitle: '',
-          taxpayerId: ''
+          selectInvoiceTitle: '',
+          taxpayerId: '',
+          // 专有发票特有参数
+          specialInvoiceTitle: '',
+          specialTaxpayerId: '',
+          unitAddress: '',
+          landline: '',
+          bankName: '',
+          bankNum: '',
+          // 收件人
+          selectAddressee: ''
         },
       ruleValidate: {
           invoiceAmount: [
             {required: true, validator: validateInvoice, trigger: 'blur'}
           ],
-          InvoiceType: [
-            {required: true, validator: validateType, trigger: 'change'}
-          ],
+          // InvoiceType: [
+          //   {required: true, validator: validateType, trigger: 'change'}
+          // ],
           invoiceTitle: [
             {required: true, validator: validateTitle, trigger: 'blur'}
           ],
@@ -343,12 +333,99 @@ export default {
     }
   },
   created() {
-
+    this.invoiceLimit()
+    this.getInvoiceList()
+    this.getAddresseeList()
   },
   mounted() {
-    this.invoiceLimit()
   },
   methods: {
+    getInvoiceList() {
+      // 0  普通发票 企业  1  增值税专用发票  2 普通发票 个人 type
+      //0 审核通过  1  审核失败  2 审核中 status
+      this.$http.get('nVersionUser/getExamine.do').then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          console.log(response.data.result.result)
+          this.normalInvoiceList = response.data.result.result.filter(item => {
+            return item.type != 1
+          })
+          this.normalInvoiceLength = this.normalInvoiceList.length
+          this.formInvoiceDate.selectInvoiceTitle = this.normalInvoiceList[0].companyname+'#'+this.normalInvoiceList[0].id+'#'+this.normalInvoiceList[0].type
+          response.data.result.result.forEach(item=> {
+            if(item.type == 1) {  
+              this.specialInvoiceStatus = item.status
+              // 给专有发票赋值
+              this.formInvoiceDate.specialInvoiceTitle = item.companyname,
+              this.formInvoiceDate.specialTaxpayerId = item.identicode,
+              this.formInvoiceDate.unitAddress = item.address,
+              this.formInvoiceDate.landline = item.areacode+'-'+item.phone,
+              this.formInvoiceDate.bankName = item.bankname,
+              this.formInvoiceDate.bankNum = item.banknum
+            }
+          })
+        }
+      })
+    },
+    getAddresseeList() {
+      this.$http.get('nVersionUser/getReciveinfo.do').then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.addresseeList = response.data.result.data
+          console.log(response.data.result.data)
+          this.addresseeLength = this.addresseeList.length
+          this.formInvoiceDate.selectAddressee = this.addresseeList[0].recipient+'#'+this.addresseeList[0].id
+        }
+      })
+    },
+    invoiceInfoSave() {
+      // normal 普通发票 personal 专用发票
+      // 发票类型判断 2个人 0企业 1专用 
+      let type = this.formInvoice.personal
+      if(this.formInvoice.invoiceSelect == 'personal') {
+        type = 1
+      }
+      let params = {}
+      switch (type) {
+        case 2:
+          params.type = type
+          params.companyName = this.formInvoice.rise
+          break;
+        case 0:
+          params.type = type
+          params.companyName = this.formInvoice.rise
+          params.identicode = this.formInvoice.taxpayer
+          break;
+        case 1:
+          params.type = type
+          params.companyName = this.formInvoice.rise
+          params.identicode = this.formInvoice.taxpayer
+          params.address = this.formInvoice.address
+          params.phone = this.formInvoice.phone
+          params.areaCode = this.formInvoice.areaCode
+          params.bankName = this.formInvoice.bankName
+          params.bankNum = this.formInvoice.bankNum
+          break;
+        default:
+          break;
+      }
+      let url = 'user/invoiceExamine.do'
+      if(this.addresseeTitleModal == '修改'){
+        if(this.formInvoice.taxpayer) {
+          delete params['identicode']
+          params.identiCode = this.formInvoice.taxpayer
+        }
+        params.id = this.formInvoice.id
+        url = 'nVersionUser/modifyExamine.do'
+      }
+      axios.post(url,params).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.$Message.success(`${this.addresseeTitleModal}收件开票成功`)
+          this.showModal.invoiceInfo = false
+          this.getInvoiceList()
+        } else {
+          this.$Message.error(response.data.message)
+        }
+      })
+    },
     invoiceLimit() {
       this.$http.get('user/invoiceLimit.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
@@ -445,14 +522,10 @@ export default {
                 content: '增值票资质认证申请成功！我们将尽快完成审核',
                 duration: 5
               })
-              this.appreciation = false
-              this.applyChange = true
               this.certificateStatus = false
               this.underReview = true
               this.failureAudit = false
             } else {
-              this.appreciation = false
-              this.applyChange = true
               this.$message.info({
                 content: response.data.message
               })
@@ -462,7 +535,6 @@ export default {
       })
     },
     invoiceCertification() {
-      this.appreciation = true
       this.applyChange = false
     },
     toExpenses() {
@@ -474,7 +546,31 @@ export default {
 
   },
   watch: {
-
+    
+    'formInvoiceDate.selectAddressee': {
+      handler: function (val) {
+        this.addresseeList.forEach(item => {
+          let id = val.split('#')[1]
+          if(id == item.id) {
+            this.formInvoiceDate.phone = item.phone
+            this.formInvoiceDate.consigneeAddress = item.province + '-' + item.city + '-' + item.district + '-' + item.address
+          }
+        })
+      },
+      deep: true
+    },
+    'formInvoiceDate.selectInvoiceTitle': {
+      handler: function (val) {
+        this.normalInvoiceList.forEach(item => {
+          let id = val.split('#')[1]
+          this.selectNormalInvoiceType = val.split('#')[2]
+          if(id == item.id) {
+            this.formInvoiceDate.taxpayerId = item.identicode
+          }
+        })
+      },
+      deep: true
+    },
   },
   components: {
 

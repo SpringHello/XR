@@ -381,7 +381,12 @@
               <div class="invoice-records" v-if="invoiceList">
                 <Button type="primary" style="margin-right: 10px" @click="toAppllyInvoice()">申请发票</Button>
                 <Button @click="toAdressee()">发票信息&收件人</Button>
-                <Table highlight-row :columns="billColumns" :data="billTabledata" style="margin-top: 10px"></Table>
+                <Table highlight-row :columns="invoiceColumns" :data="invoiceTabledata" style="margin-top: 10px"></Table>
+                <div style="margin: 10px;overflow: hidden">
+                  <div style="float: right;">
+                    <Page :total="invoiceTotal" :current="invoicePage" :page-size="invoicePageSize" @on-change="invoicePageChange"></Page>
+                  </div>
+                </div>
               </div>
             </div>
           </Tab-pane>
@@ -2393,11 +2398,13 @@
           }
         ],
         cardVolumeTabledata: [],
-        billColumns: [
+        invoiceDetailShow: {},
+        invoiceColumns: [
           {
             title: '发票申请时间',
             key: 'createtime',
             align: 'left',
+            sortable: true,
           },
           {
             title: '发票种类',
@@ -2461,8 +2468,10 @@
             }
           }
         ],
-        invoiceDetailShow: {},
-        billTabledata: [],
+        invoiceTabledata: [],
+        invoiceTotal: 12,
+        invoicePage: 1,
+        invoicePageSize: 7,
         name,
         ordertotal: 0,
         timeType: '',
@@ -3516,7 +3525,6 @@
       resourcesPageChange(currentPage) {
         this.resourcePage = currentPage
         this.getResourcesTable()
-        
       },
       getResourcesTable() {
         axios.get('/nVersionUser/resourceDetails.do', {
@@ -3843,15 +3851,6 @@
         this.cardPageSize=value
         this.searchCard()
       },
-      showInvoice(index) {
-        this.$Modal.info({
-          title: '发票详情',
-          width: '500',
-          scrollable: true,
-          content: `收件人：${this.billTabledata[index].recipients}<br>开票金额：￥${this.billTabledata[index].amount}<br>发票类型：${this.billTabledata[index].type == '0' ? '普票' : '专票'}
-                   <br>收件地址：${this.billTabledata[index].address}<br>发票抬头：${this.billTabledata[index].title}<br>联系电话：${this.billTabledata[index].phone}`
-        })
-      },
       show(index) {
         var data = JSON.parse(this.orderData[index].display)
         this.$Modal.info({
@@ -3865,10 +3864,21 @@
         this.appreciation = false
         this.applyChange = true
       },
+      invoicePageChange(currentPage) {
+        this.invoicePage = currentPage
+        this.getInvoiceList()
+      },
       getInvoiceList() {
-        this.$http.get('user/getInvoiceList.do').then(response => {
+        axios.get('user/getInvoiceList.do',{
+          params: {
+            page: this.invoicePage,
+            pageSize: this.invoicePageSize,
+            timeOrder: ''
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.billTabledata = response.data.result.result
+            this.invoiceTabledata = response.data.result.result
+            this.invoiceTotal = response.data.result.count
           }
         })
       },

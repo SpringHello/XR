@@ -141,12 +141,12 @@
                   <Input type="text" v-model="formInvoice.phone" placeholder="电话号" style="width:180px;">
                   </Input>
               </FormItem>
-              <FormItem prop="deposit" label="开户银行">
-                  <Input type="text" v-model="formInvoice.deposit" placeholder="请精确到支行，如‘招商银行重庆靖城路支行’" style="width:300px;">
+              <FormItem prop="bankName" label="开户银行">
+                  <Input type="text" v-model="formInvoice.bankName" placeholder="请精确到支行，如‘招商银行重庆靖城路支行’" style="width:300px;">
                   </Input>
               </FormItem>
-              <FormItem prop="bankAccount" label="银行账户">
-                  <Input type="text" v-model="formInvoice.bankAccount" placeholder="您公司开户许可证上的银行账号" style="width:300px;">
+              <FormItem prop="bankNum" label="银行账户">
+                  <Input type="text" v-model="formInvoice.bankNum" placeholder="您公司开户许可证上的银行账号" style="width:300px;">
                   </Input>
               </FormItem>
             </div>
@@ -264,9 +264,9 @@ export default {
                           taxpayer: params.row.identicode,
                           address: params.row.address,
                           phone: params.row.phone,
-                          areaCode: params.row.phone,
-                          deposit: params.row.areaCode,
-                          bankAccount: params.row.banknum,
+                          areaCode: params.row.areacode,
+                          bankName: params.row.bankname,
+                          bankNum: params.row.banknum,
                           invoiceSelect:params.row.type == 1?'personal':'normal'
                         }
                         this.showModal.invoiceInfo = true;
@@ -308,17 +308,6 @@ export default {
         }
       ],
       invoiceList: [
-        {
-          title: "北京允睿讯通科技有限公司",
-          invoiceType: "增值税专用发票",
-          taxNum: "915001058 1564 125",
-          companyAddr: "重庆渝北区洪湖西路神州智慧天地5-D",
-          bank: "建行渝北支行",
-          bankAccount: "5000233690002345871",
-          tel: "023-57898765",
-          status: "可用",
-          type: ""
-        }
       ],
       columnsAddressee: [
         {
@@ -386,7 +375,7 @@ export default {
                               }
                             }).then(response => {
                               if (response.status == 200 && response.data.status == 1) {
-                                this.getInvoiceAddressee()
+                                this.getAddresseeList()
                               }
                             })
                           }
@@ -415,7 +404,7 @@ export default {
                               }
                             }).then(response => {
                               if (response.status == 200 && response.data.status == 1) {
-                                this.getInvoiceAddressee()
+                                this.getAddresseeList()
                               }
                             })
                           }
@@ -434,7 +423,7 @@ export default {
       ],
       showModal: {
         receiptInfoAdd: false,
-        invoiceInfo: true,
+        invoiceInfo: false,
       },
       // 收件信息
       ruleReceipt: {
@@ -475,10 +464,10 @@ export default {
         address:[
           {required:true,message:'请输入单位地址',trigger:'blur'}
         ],
-        deposit:[
+        bankName:[
           {required:true,message:'请输入开户银行',trigger:'blur'}
         ],
-        bankAccount:[
+        bankNum:[
           {required:true,message:'请输入银行账号',trigger:'blur'}
         ]
       },
@@ -490,8 +479,8 @@ export default {
         address:'',
         phone:'',
         areaCode: '',
-        deposit:'',
-        bankAccount:''
+        bankName:'',
+        bankNum:''
       },
       //区列表
       areaList: [],
@@ -507,7 +496,7 @@ export default {
     this.changeProvince('北京市');
     this.changeArea('北京市');
     this.getInvoiceList()
-    this.getInvoiceAddressee()
+    this.getAddresseeList()
   },
   mounted() {},
   methods: {
@@ -518,7 +507,7 @@ export default {
         }
       })
     },
-    getInvoiceAddressee() {
+    getAddresseeList() {
       this.$http.get('nVersionUser/getReciveinfo.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.addresseeList = response.data.result.data
@@ -635,7 +624,7 @@ export default {
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(`${this.addresseeTitleModal}收件信息成功`)
               this.showModal.receiptInfoAdd = false
-              this.getInvoiceAddressee()
+              this.getAddresseeList()
             } else {
               this.$Message.error(response.data.message)
             }
@@ -670,16 +659,18 @@ export default {
                 params.address = this.formInvoice.address
                 params.phone = this.formInvoice.phone
                 params.areaCode = this.formInvoice.areaCode
-                params.bankName = this.formInvoice.deposit
-                params.bankNum = this.formInvoice.bankAccount
+                params.bankName = this.formInvoice.bankName
+                params.bankNum = this.formInvoice.bankNum
                 break;
               default:
                 break;
             }
             let url = 'user/invoiceExamine.do'
             if(this.addresseeTitleModal == '修改'){
-              params.identiCode = this.formInvoice.taxpayer
-              // delete params['identicode']
+              if(this.formInvoice.taxpayer) {
+                delete params['identicode']
+                params.identiCode = this.formInvoice.taxpayer
+              }
               params.id = this.formInvoice.id
               url = 'nVersionUser/modifyExamine.do'
             }
