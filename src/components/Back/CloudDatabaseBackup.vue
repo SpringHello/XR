@@ -73,6 +73,7 @@
             <Input v-model="createSnapsForm.name" placeholder="请输入数据库名称"></Input>
           </FormItem>
         </Form>
+        <p style="color:#ed3f14;margin-bottom: 10px;">提示：请输入数据库名称，默认名称为：mysql</p>
         <p class="mb20">备份时间为：{{new Date().format('yyyy-MM-dd hh:mm:ss')}}</p>
       </div>
       <div slot="footer" class="modal-footer-border">
