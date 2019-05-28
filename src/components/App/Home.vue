@@ -52,12 +52,12 @@
           </div>
         </my-carousel-item> -->
         <my-carousel-item class="carousel-item">
-          <div @click="push('/activity/BlacKActivities')"
-               style="cursor: pointer;background: #F56B23;">
-            <div>
+          <div class="blackact" @click="push('/activity/BlacKActivities')"
+               style="cursor: pointer;">
+            <div class="wrap">
               <div>
                 <div>
-                  <img src="../../assets/img/home/indeximg.png" alt="black"/>
+                  <!-- <img src="../../assets/img/home/indeximg.png" alt="black"/> -->
                 </div>
               </div>
             </div>
@@ -3060,6 +3060,17 @@
           font-size: 14px;
         }
       }
+    }
+  }
+
+  .blackact{
+    height: 400px;
+    overflow: hidden;
+    background: url("../../assets/img/home/indeximg.png") no-repeat;
+    .wrap {
+      display: flex;
+      justify-content: space-between;
+      width: 1200px;
     }
   }
 

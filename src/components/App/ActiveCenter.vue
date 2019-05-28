@@ -41,7 +41,7 @@
         </my-carousel-item> -->
         <my-carousel-item class="carousel-item">
           <div @click="push('/activity/BlacKActivities')"
-               style="cursor: pointer;background: #F56B23;">
+               style="cursor: pointer;background: linear-gradient(90deg, #F7FAFF, #FFE3D9);">
             <div class="free-black">
               <div class="wrap">
               <div class="text">
@@ -368,6 +368,7 @@
                   margin:0 auto;
                   display: flex;
                   justify-content: space-between;
+                 
                   .text{
                   >p{
                     font-size:50px;

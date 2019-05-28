@@ -866,6 +866,9 @@
       '$store.state.zone': {
         handler: function () {
           this.getTemplates();
+          if(this.$store.state.zone.gpuserver == 1){
+            this.$Message.info('GPU主机目前不支持创建启动配置');
+          }
         },
         deep: true
       }
