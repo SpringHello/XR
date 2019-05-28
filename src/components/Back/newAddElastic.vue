@@ -20,9 +20,9 @@
           <div class="next_box" :class="item.className" v-for="(item,index) in nextList" :key="index">
             <div :class="item.yuanName">{{item.number}}</div>
             <span style="margin-left: 10px;font-size: 14px;">{{item.value}}</span>
-            <i :class="item.arrowName" v-if="index !=3">
+            <div :class="item.arrowName" v-if="index !=3">
               <i></i>
-            </i>
+            </div>
           </div>
         </div>
         <p style="margin: 20px 0;font-size: 14px;color: #999999;">提示：启动配置之时模板，创建启动配置不收费，按照启动配置增加的主机才按照实时价格计费。</p>
@@ -955,13 +955,14 @@
       .next_arrow {
         position: relative;
         left: 27%;
-        top: 20px;
+        top: -10px;
+        display: inline-block;
         i {
           height: 1px;
           width: 14px;
           background: #666666;
           position: absolute;
-          top: -0.71973rem;
+          top: 4.11973px;
           left: -4px;
         }
       }
@@ -977,13 +978,14 @@
       .next_arrows {
         position: relative;
         left: 27%;
-        top: 20px;
+        top: -10px;
+        display: inline-block;
         i {
           height: 1px;
           width: 14px;
           background: #2A99F2;
           position: absolute;
-          top: -11.88027px;
+          top: 4.11973px;
           left: -4px;
         }
       }
