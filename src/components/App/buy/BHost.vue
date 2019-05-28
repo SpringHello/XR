@@ -504,7 +504,7 @@
                        style="width: 300px" @on-change="passwordWarning=''"  @on-focus="passwordForm.passwordHint = true" @on-blur="passwordForm.passwordHint = false"></Input>
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
-              <div class="popTip" v-show="true">
+              <div class="popTip" v-show="passwordForm.passwordHint">
                   <div><i :class="{reach: passwordForm.passwordDegree > 0 }"></i>
                     <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: passwordForm.passwordDegree > 1 }"></i>
@@ -1505,7 +1505,11 @@
       },
       password(val){
         if(val.length >7 && val.length <31){
-          this.passwordForm.passwordDegree =1
+          this.passwordForm.passwordDegree = 2
+        }
+        if(regExp.hostPassword(val)){
+          console.log(111)
+          this.passwordForm.passwordDegree = 3
         }
       }
     }

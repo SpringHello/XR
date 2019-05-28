@@ -60,7 +60,7 @@
                     </RadioGroup>
                    <Table :columns="freezeOrderColumns" :data="freezeOrderData" style="margin-top: 20px"></Table>
                     <div style="padding-top: 40px">
-                      <Button type="ghost" @click="unfreezeStep = 0" style="margin-right:10px">上一步</Button>
+                      <Button type="ghost" @click="unfreezeStep = 0,questionnaireResults = []" style="margin-right:10px">上一步</Button>
                       <Button type="primary" @click="freezeToRenewNext">下一步</Button>
                     </div>
                </div>
@@ -121,7 +121,7 @@
                   <div style="clear: both"></div>
               </div>
               <div style="padding-top: 40px">
-                <Button type="ghost" @click="unfreezeStep = 0" style="margin-right:10px">上一步</Button>
+                <Button type="ghost" @click="unfreezeStep = 0,questionnaireResults = []" style="margin-right:10px">上一步</Button>
                 <Button type="primary" @click="unfreeze_ok">下一步</Button>
               </div>
             </div>
@@ -435,9 +435,9 @@
         unfreezeToBalanceTimer: null,
                 // 解冻
         withdrawForm: {
-          accountList: [{name: '支付宝', type: '支付宝'}, {name: '微信支付', type: '微信'}/*, {name: '银行卡', type: '银行卡'}*/],
+          accountList: [/*{name: '支付宝', type: '支付宝'}, {name: '微信支付', type: '微信'},*/ {name: '银行卡', type: '银行卡'}],
           // 账户类型
-          accountType: '',
+          accountType: '银行卡',
           // 金额
           money: 0,
           // 开户行
@@ -635,11 +635,11 @@
         })
       },
       sumbitQuestionnaire(){
-        this.emptyHint = -1
+        this.emptyHint = 0
         let len = this.issueData.length
         for(let i =0;i<len;i++){
-          if((!this.questionnaireResults[i])||this.questionnaireResults[i].length === 0 ){
-              this.emptyHint = i
+          if(this.questionnaireResults[i]||(this.questionnaireResults[i] instanceof Array && this.questionnaireResults[i].length !== 0) ){
+              this.emptyHint = -1
               break
           }
         }
