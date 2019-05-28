@@ -22,10 +22,11 @@
             <span>569元</span>押金可转为<span>续费一年</span>，操作简单方便，性价比超高，爆款云服务器等您继续使用！<span class="blue"  @click="ToRenew">立即续费 </span></p>
             </div>
             <p class="title">请问您退押金的原因是什么？（可多选）</p>
+            <span class="empty-hint" v-if="emptyHint === 0">为提升服务质量，请您配合填写退款原因 </span>
              <div v-for="(item,index) in issueData" :key="index" class="issus">
             <div class="issus-title">
               <div class="serialNum"><p>{{ index + 1}}</p></div>
-              <p>{{ item.par_descs }} <span v-if="emptyHint === index">（请选择/填写）</span></p>
+              <p>{{ item.par_descs }}</p>
             </div>
             <div class="issus-content" v-if="item.par_type === 2">
               <CheckboxGroup v-model="questionnaireResults[index]">
@@ -1131,6 +1132,10 @@
       font-family:MicrosoftYaHei;
       color:rgba(51,51,51,1);
     } 
+    .empty-hint{
+      font-size: 14px;
+      color: #FF1E39;
+    }
     .issus{
       padding: 20px 0;
       width: 580px;
@@ -1156,11 +1161,6 @@
           color:rgba(51,51,51,1);
           line-height:28px;
           margin-left: 11px;
-         >span{
-           font-size: 12px;
-            margin-left: 20px;
-            color: #FF1E39;
-          }
         }
       }
       .issus-content{
