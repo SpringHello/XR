@@ -614,10 +614,7 @@ export default {
         this.$LR({type: 'login'})
         return
       } else if (this.single === false) {
-        this.$Modal.warning({
-            title: '温馨提示',
-            content: '您还没有阅读协议！'
-        });
+        this.$Message.warning('您还没有阅读并同意协议');
       } else {
         axios.get('cloudMarket/deployVirtualMachine.do', {
           params: {
