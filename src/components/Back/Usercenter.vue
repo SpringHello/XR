@@ -1353,7 +1353,7 @@
   export default {
     data() {
       var authType = sessionStorage.getItem('pane')
-      var currentTab = ''
+      var currentTab = 'personalInfo'
       if (authType == 'company') {
         currentTab = 'companyInfo'
       } else if (authType == 'person') {

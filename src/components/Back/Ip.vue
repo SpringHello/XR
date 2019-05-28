@@ -347,13 +347,13 @@
       </p>
       <div class="modal-content-s">
         <div>
-          <p class="lh24">检测到您所选择区域内没有可用主机，确认在{{ auth.defaultzonename}}购买公网IP吗 
+          <p class="lh24">检测到您所选择区域内没有可用主机，确认在{{ $store.state.zone.zonename}}购买公网IP吗 
           </p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.withoutHost = false">取消</Button>
-        <Button type="primary" @click="buyIpOk">确认</Button>
+        <Button type="primary" @click="showModal.withoutHost = false,showModal.newIPModal = true">仍然创建</Button>
       </p>
     </Modal>
   </div>
@@ -999,7 +999,26 @@
       },
       // 打开新建IP模态框
       openNewIPModal() {
-        this.showModal.newIPModal = true
+        let url = 'information/listVirtualMachines.do'
+        this.$http.get(url, {
+          params: {
+            returnList: '1',
+            page:'1',
+            pageSize: '10'
+          }
+        }).then(res=>{
+          if(res.status == 200 && res.data.status ==1){
+            if(res.data.result.data.length != 0){
+              this.showModal.newIPModal = true
+            } else{
+              this.showModal.withoutHost = true
+            }
+          } else{
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       },
       // 改变购买方式触发函数
       changeTimeType() {
@@ -1031,26 +1050,7 @@
       handleNewIPSubmit() {
         this.$refs.newIPFormValidate.validate(validate => {
           if (validate) {
-        let url = 'information/listVirtualMachines.do'
-        this.$http.get(url, {
-          params: {
-            returnList: '1',
-            page:'1',
-            pageSize: '10'
-          }
-        }).then(res=>{
-          if(res.status == 200 && res.data.status ==1){
-            if(res.data.result.data.length != 0){
-              this.buyIpOk()
-            } else{
-              this.showModal.withoutHost = true
-            }
-          } else{
-            this.$message.info({
-              content: res.data.message
-            })
-          }
-        })
+             this.buyIpOk()
           }
         })
       },
