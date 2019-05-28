@@ -86,8 +86,10 @@
     </Modal>
 
     <!-- 修改伸缩组 -->
-    <modal title="修改伸缩组" v-model="updateTelescopic" width="550" :mask-closable="false">
-     
+    <modal v-model="updateTelescopic" width="550" :mask-closable="false">
+     <p slot="header" class="modal-header-border">
+          <span class="universal-modal-title">修改伸缩组</span>
+      </p>
       <Form ref="updateTelescopicList" :model="updateTelescopicList" :rules="updateRuleValidate" style="width: 519px"  label-position="top" inline>
         <FormItem label="名称" prop="stretchname">
           <Input v-model="updateTelescopicList.stretchname" style="width: 240px" placeholder="请输入名称"></Input>
