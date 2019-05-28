@@ -64,7 +64,7 @@
                     <p style="font-size:18px;font-family:MicrosoftYaHei-Bold;font-weight:bold;color:rgba(255,191,130,1);">{{item.servicetype == 'host' ? '云服务器' : '对象存储'}}</p>
                     <p class="config-text">100%性能可用，更低价格，拒绝套路</p>
                       <img :src="item.imgright" alt="描述"> 
-                      <span class="imgtitle" style="width:108px;height:22px;">新用户专享{{item.discount}}折</span>
+                      <span class="imgtitle" style="width:108px;height:22px;"><span v-if="newUsers=='1'">新用户专享</span>{{item.discount}}折</span>
                   </div>
                   <div class="host_content">
                     <div style="margin:10px 0;">
@@ -635,6 +635,24 @@
           </div>
         </div>
       </transition>
+      <!-- 弹窗提示(限购一台) -->
+      <transition name="fade">
+        <div class="overlay" @click.stop="showModal.regularforone=false" v-if="showModal.regularforone">
+          <div class="all-modal regular-modal" @click.stop="showModal.regularforone=true" style="width:400px;height:250px;">
+            <div class="header">
+              <i @click.stop="showModal.regularforone=false" style="top:0;"></i>
+              <span>提示</span>
+            </div>
+            <div class="body" style="padding:30px 37px;margin:0;">
+              <p>尊敬的用户，本场活动资源产品限购1台，欢迎您关注下一场活动进行抢购。</p>
+            </div>
+            <div class="footer">
+              <Button class="lookactbtn" @click.stop="showModal.regularforone=false,showModal.SpikeMore=true">查看活动场次</Button>
+              <Button @click.stop="showModal.regularforone=false" class="regular-btn" style="width:140px;height:42px;margin-left:20px;">确认</Button>
+            </div>
+          </div>
+        </div>
+      </transition>
       <!-- 不是新用户提示 -->
       <transition name="fade">
         <div class="overlay" @click.stop="showModal.notNewcoustomer=false" v-if="showModal.notNewcoustomer">
@@ -1165,10 +1183,10 @@
         }
       }
       return {
+        newUsers:'',
         hostfreevmconfigs:'',
         hostfreevmconfigsthree:'',
         gpuhostid:'',
-        Data2:[],
         Data3:'',
         hostdisktype:'',
         hostdisktypetwo:'',
@@ -1198,9 +1216,8 @@
             width:291,
             render: (h, params) => {
               let textArr = params.row.freevmconfigs
-              let text_0 = this.Data2.freevmconfigs[0]
-              let text1 = '云服务器:' + text_0 + '、'+ textArr[0]+ '、' + textArr[1]
-              let text2 = '对象存储:' + textArr[2]
+              let text1 = '云服务器:' + textArr[0] + '、'+ textArr[1]+ '、' + textArr[2]
+              let text2 = '对象存储:' + textArr[3]
               return h('ul', {}, [
                 h('li', {
                   style: {
@@ -1653,7 +1670,8 @@
           CloudComputersSuccess:false,
           CloudComputersfail:false,
           PreferencesName:false,
-          SSLname:false
+          SSLname:false,
+          regularforone:false
         },
         authFormValidate: {
           name: '',
@@ -1717,7 +1735,13 @@
             })
       },
       TOmembership(){
-        this.showModal.OpenMembership=true
+        if(sessionStorage.getItem('Openship')){
+          this.showModal.OpenMembership=false
+        }
+        else{
+          this.showModal.OpenMembership=true
+          sessionStorage.setItem('Openship',true)
+        }
       },
       getSpikeKilldata(){
         var Data1=[]
@@ -1729,7 +1753,7 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                Data1Time=response.data.result[0].date
+                Data1Time=response.data.result
                 Data1Time2=response.data.result[1].date
                 Data1=response.data.result
                 this.freevmconfigs1=Data1[1].freevmconfigs[0]
@@ -1741,14 +1765,16 @@
                   }
                 }).then(response => {
                   if (response.status == 200 && response.data.status == 1) {
+                    Data1Time.forEach((itemr, indexr) => {
                     response.data.result.forEach((item, index) => {
-                      if (item.date==Data1Time) {
-                        this.Data2=item
-                        this.SpikeKilldata =Data1
-                      }
-                      if(item.date==Data1Time2){
-                        this.Data3=item.freevmconfigs[0]
-                      }
+                        if (item.date==itemr.date) {
+                          itemr.freevmconfigs=item.freevmconfigs.concat(itemr.freevmconfigs)
+                          this.SpikeKilldata =Data1Time
+                        }
+                        if(item.date==Data1Time2){
+                          this.Data3=item.freevmconfigs[0]
+                        }
+                      })
                     })
                   } else {
                     // this.$message.info({
@@ -1790,7 +1816,10 @@
                 if(value=='37'){
                   this.showModal.SSLname=true
                 }
-              } else {
+              }else if(response.data.status== 3){
+                this.showModal.notLoginModal=true
+              }
+               else {
                 this.$message.info({
                   content: response.data.message
                 })
@@ -2096,6 +2125,7 @@
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
+            this.newUsers =  res.data.result.newUsers
             this.hostZoneListfornew = res.data.result.optionalArea
             // 默认选择区域
             this.discountProductfornew.forEach((item, index) => {
@@ -2285,28 +2315,54 @@
                 if(itemed.freevmconfigId==this.discountProduct[index].id){
                   this.discountProduct[index].num = (itemed.receive / itemed.total) * 100
                   if (this.discountProduct[index].num != 100) {
-                    var url = index != 2 ? 'information/getDiskcountMv.do' : 'activity/getDiskcountGPU.do'
-                    axios.get(url, {
-                      params: {
-                        vmConfigId: item.id,
-                        osType: item.system[1],
-                        defzoneid: item.zoneId,
-                      }
-                    }).then(res => {
-                      if (res.status == 200 && res.data.status == 1) {
-                        this.$Message.success('创建订单成功')
-                        this.$router.push('/order')
-                      } else {
-                        if (res.data.flag == '1') {
-                          this.showModal.notNewcoustomer = true
-                        } else if (res.data.flag == '2') {
-                          this.showModal.joinedActivity = true
-                        } else {
-                          this.posText = res.data.message
-                          this.showModal.regular = true
+                    if(index != 2){
+                      axios.get('information/getDiskcountMv.do', {
+                        params: {
+                          vmConfigId: item.id,
+                          osType: item.system[1],
+                          defzoneid: item.zoneId
                         }
-                      }
-                    })
+                      }).then(res => {
+                        if (res.status == 200 && res.data.status == 1) {
+                          this.$Message.success('创建订单成功')
+                          this.$router.push('/order')
+                        } else {
+                          if (res.data.flag == '1') {
+                            this.showModal.notNewcoustomer = true
+                          } else if (res.data.flag == '2') {
+                            this.showModal.joinedActivity = true
+                          } else if (res.data.flag == '4') {
+                            this.showModal.regularforone = true
+                          } else {
+                            this.posText = res.data.message
+                            this.showModal.regular = true
+                          }
+                        }
+                      })
+                    }
+                    else{
+                      axios.post('ruiradosPrice/getDickCountOSS.do', {
+                          OOSConfigId: item.id,
+                          zoneId: item.zoneId
+                      }).then(res => {
+                        if (res.status == 200 && res.data.status == 1) {
+                          this.$Message.success('创建订单成功')
+                          this.$router.push('/order')
+                        } else {
+                          if (res.data.flag == '1') {
+                            this.showModal.notNewcoustomer = true
+                          } else if (res.data.flag == '2') {
+                            this.showModal.joinedActivity = true
+                          } else if (res.data.flag == '4') {
+                            this.showModal.regularforone = true
+                          } else {
+                            this.posText = res.data.message
+                            this.showModal.regular = true
+                          }
+                        }
+                      })
+                    }
+
                   }
                 }
               })
@@ -2349,6 +2405,8 @@
                       this.showModal.notNewcoustomer = true
                     } else if (res.data.flag == '2') {
                       this.showModal.joinedActivity = true
+                    } else if (res.data.flag == '4') {
+                          this.showModal.regularforone = true
                     } else {
                       this.posText = res.data.message
                       this.showModal.regular = true
@@ -4680,7 +4738,7 @@
       font-size: 14px;
       .header {
         height: 64px;
-        line-height: 60px;
+        line-height: 64px;
         font-size: 18px;
         font-family: MicrosoftYaHei;
         color:rgba(255,208,140,1);
@@ -4690,7 +4748,6 @@
           cursor: pointer;
           position: absolute;
           right: 13px;
-          top: -6px;
           transform: rotate(45deg);
           &:before {
             content: "";
@@ -4724,6 +4781,17 @@
     color:rgba(51,51,51,1);
     &:hover {
       
+    }
+  }
+
+  .lookactbtn{
+    background:rgba(255,255,255,1);
+    border-radius:4px;
+    border:1px solid rgba(227,183,111,1);
+    width:140px;
+    height:42px;
+    &:hover {
+      color:#495060;
     }
   }
 
@@ -4799,7 +4867,6 @@
       span {
         color:rgba(255,208,140,1);
         font-size: 18px;
-        line-height: 55px;
       }
     }
     > .body {
@@ -4831,7 +4898,6 @@
       span {
         color:rgba(255,208,140,1);
         font-size: 18px;
-        line-height: 55px;
       }
     }
     > .body {
@@ -5044,8 +5110,8 @@
 
   .shipmodel{
     background: url("../../../assets/img/active/blackactive/tanchuangall.png") no-repeat;
-    width: 520px;
-    height: 600px;
+    width: 400px;
+    height: 489px;
     position: relative;
     margin: 0 auto;
     top: 15%;
@@ -5060,11 +5126,11 @@
     }
     .wraper{
       background: url("../../../assets/img/active/blackactive/tanchuangbtn.png") no-repeat;
-      width: 440px;
+      width: 310px;
       height: 80px;
       position: absolute;
       bottom: 40px;
-      left: 40px;
+      left: 45px;
       cursor: pointer;
     }
   }

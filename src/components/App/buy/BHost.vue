@@ -500,16 +500,18 @@
                 <div>
                   <p class="item-title" style="margin-top: 8px">登录密码</p>
                 </div>
-                <Input v-model="password" placeholder="请输入至少6位包含大小写与数字的密码"
+                <Input v-model="password" placeholder="请输入至少8位包含大小写与数字的密码"
                        style="width: 300px" @on-change="passwordWarning=''"  @on-focus="passwordForm.passwordHint = true" @on-blur="passwordForm.passwordHint = false"></Input>
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
-              <div class="popTip" v-show="false">
+              <div class="popTip" v-show="passwordForm.passwordHint">
                   <div><i :class="{reach: passwordForm.passwordDegree > 0 }"></i>
-                    <p>8-32个字符</p></div>
+                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: passwordForm.passwordDegree > 1 }"></i>
-                    <p>包含数字、大小写字母</p></div>
-                  <div><p style="color:rgba(102,102,102,1);">可输入特殊字符包括：!#$%_()^&*,-<>?@.+=</p></div>
+                    <p>不能输入连续6位数字或字母，如123456aA</p></div>
+                  <div><i :class="{reach: passwordForm.passwordDegree > 2 }"></i>
+                    <p>至少包含：小写字母，大写字母，数字</p></div>
+                  <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
               </div>
             </div>
           </div>
@@ -1096,7 +1098,7 @@
             return
           }
           if (!regExp.hostPassword(this.password)) {
-            this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
+            this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
             return
           }
         }
@@ -1152,7 +1154,7 @@
             return
           }
           if (!regExp.hostPassword(this.password)) {
-            this.passwordWarning = '请输入6-23位包含大小写与数字的密码,可用特殊符号：~:,*'
+            this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
             return
           }
         }
@@ -1500,6 +1502,15 @@
       },
       'network'() {
           this.fireList()
+      },
+      password(val){
+        if(val.length >7 && val.length <31){
+          this.passwordForm.passwordDegree = 2
+        }
+        if(regExp.hostPassword(val)){
+          console.log(111)
+          this.passwordForm.passwordDegree = 3
+        }
       }
     }
   }
@@ -1638,13 +1649,13 @@
             }
           }
           .popTip {
-            width: 300px;
+            width: 350px;
             padding: 19px 21px;
             position: absolute;
             background: #FFF;
             border-radius: 8px;
             box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
-            right: 0;
+            right: -25px;
             bottom: -30px;
             z-index: 3;
             > div {

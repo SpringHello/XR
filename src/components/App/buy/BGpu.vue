@@ -397,7 +397,7 @@
                 <div>
                   <p class="item-title" style="margin-top: 8px">登录密码</p>
                 </div>
-                <Input v-model="password" placeholder="请输入至少6位包含大小写与数字的密码"
+                <Input v-model="password" placeholder="请输入至少8位包含大小写与数字的密码"
                        style="width: 300px" @on-change="passwordWarning=''"></Input>
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
@@ -1117,7 +1117,7 @@
             return
           }
           if (!regExp.hostPassword(this.password)) {
-            this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
+            this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
             return
           }
         }
@@ -1171,7 +1171,7 @@
             return
           }
           if (!regExp.hostPassword(this.password)) {
-            this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
+            this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
             return
           }
         }

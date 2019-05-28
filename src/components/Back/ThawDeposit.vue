@@ -22,10 +22,11 @@
             <span>569元</span>押金可转为<span>续费一年</span>，操作简单方便，性价比超高，爆款云服务器等您继续使用！<span class="blue"  @click="ToRenew">立即续费 </span></p>
             </div>
             <p class="title">请问您退押金的原因是什么？（可多选）</p>
+            <span class="empty-hint" v-if="emptyHint === 0">为提升服务质量，请您配合填写退款原因 </span>
              <div v-for="(item,index) in issueData" :key="index" class="issus">
             <div class="issus-title">
               <div class="serialNum"><p>{{ index + 1}}</p></div>
-              <p>{{ item.par_descs }} <span v-if="emptyHint === index">（请选择/填写）</span></p>
+              <p>{{ item.par_descs }}</p>
             </div>
             <div class="issus-content" v-if="item.par_type === 2">
               <CheckboxGroup v-model="questionnaireResults[index]">
@@ -60,7 +61,7 @@
                     </RadioGroup>
                    <Table :columns="freezeOrderColumns" :data="freezeOrderData" style="margin-top: 20px"></Table>
                     <div style="padding-top: 40px">
-                      <Button type="ghost" @click="unfreezeStep = 0" style="margin-right:10px">上一步</Button>
+                      <Button type="ghost" @click="unfreezeStep = 0,questionnaireResults = []" style="margin-right:10px">上一步</Button>
                       <Button type="primary" @click="freezeToRenewNext">下一步</Button>
                     </div>
                </div>
@@ -121,7 +122,7 @@
                   <div style="clear: both"></div>
               </div>
               <div style="padding-top: 40px">
-                <Button type="ghost" @click="unfreezeStep = 0" style="margin-right:10px">上一步</Button>
+                <Button type="ghost" @click="unfreezeStep = 0,questionnaireResults = []" style="margin-right:10px">上一步</Button>
                 <Button type="primary" @click="unfreeze_ok">下一步</Button>
               </div>
             </div>
@@ -435,9 +436,9 @@
         unfreezeToBalanceTimer: null,
                 // 解冻
         withdrawForm: {
-          accountList: [{name: '支付宝', type: '支付宝'}, {name: '微信支付', type: '微信'}/*, {name: '银行卡', type: '银行卡'}*/],
+          accountList: [/*{name: '支付宝', type: '支付宝'}, {name: '微信支付', type: '微信'},*/ {name: '银行卡', type: '银行卡'}],
           // 账户类型
-          accountType: '',
+          accountType: '银行卡',
           // 金额
           money: 0,
           // 开户行
@@ -635,11 +636,11 @@
         })
       },
       sumbitQuestionnaire(){
-        this.emptyHint = -1
+        this.emptyHint = 0
         let len = this.issueData.length
         for(let i =0;i<len;i++){
-          if((!this.questionnaireResults[i])||this.questionnaireResults[i].length === 0 ){
-              this.emptyHint = i
+          if(this.questionnaireResults[i]||(this.questionnaireResults[i] instanceof Array && this.questionnaireResults[i].length !== 0) ){
+              this.emptyHint = -1
               break
           }
         }
@@ -1131,6 +1132,10 @@
       font-family:MicrosoftYaHei;
       color:rgba(51,51,51,1);
     } 
+    .empty-hint{
+      font-size: 14px;
+      color: #FF1E39;
+    }
     .issus{
       padding: 20px 0;
       width: 580px;
@@ -1156,11 +1161,6 @@
           color:rgba(51,51,51,1);
           line-height:28px;
           margin-left: 11px;
-         >span{
-           font-size: 12px;
-            margin-left: 20px;
-            color: #FF1E39;
-          }
         }
       }
       .issus-content{

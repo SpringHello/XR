@@ -109,7 +109,7 @@
                   }
                 }, '正在添加主机...')])
               }
-              if (object.row._status == 2) {
+              if (object.row._status == 2 || object.row.loadbalanceStatus == 3) {
                 return h('div', [h('Spin', {
                   style: {
                     display: 'inline-block',
