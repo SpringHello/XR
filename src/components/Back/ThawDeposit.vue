@@ -18,8 +18,8 @@
           </Steps>
           <div v-if="unfreezeStep === 0">
             <div class="unfreeze-hint">
-            <p><span class="blod">温馨提醒</span>：感谢您使用新睿云云服务器押金活动主机，您如果有续费的打算，本活动可支持 <span class="blue" @click="ToRenew">押金一键转续费 </span>功能：<span>69元</span>押金可转为<span>续费一个月</span>,
-            <span>569元</span>押金可转为<span>续费一年</span>，操作简单方便，性价比超高，爆款云服务器等您继续使用！<span class="blue"  @click="ToRenew">立即续费 </span></p>
+            <p><span class="blod">温馨提醒</span>：感谢您使用新睿云云服务器押金活动主机，本活动可支持  <span class="blue" @click="ToRenew">押金一键转续费 </span>功能：<span>69元</span>押金可<span>续费一个月</span>,
+            <span>569元</span>押金可<span>续费一年</span>，操作简单方便，性价比超高，爆款云服务器等您继续使用！<span class="blue"  @click="ToRenew">立即续费 </span></p>
             </div>
             <p class="title">请问您退押金的原因是什么？（可多选）</p>
             <span class="empty-hint" v-if="emptyHint === 0">为提升服务质量，请您配合填写退款原因 </span>
