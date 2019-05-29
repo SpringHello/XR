@@ -2705,7 +2705,7 @@
         let url = 'activity/getTemActInfoById.do'
         axios.get(url, {
           params: {
-            activityNum: '47'
+            activityNum: '41'
           }
         }).then(res => {
           if (res.data.status == 1 && res.status == 200) {
@@ -2730,7 +2730,7 @@
         }
         var params = {
           zoneId: this.objProductHot.zoneId,
-          activityNum: '47',
+          activityNum: '41',
           timeType: this.objProductHot.timeTimetype.type,
           timeValue: this.objProductHot.timeTimetype.value,
           capacity: this.objProductHot.cpuMemory.label + this.objProductHot.cpuMemory.unit,
@@ -2922,7 +2922,7 @@
         axios.get('activity/getOriginalPrice.do', {
           params: {
             zoneId: this.objProductHot.zoneId,
-            activityNum: '47',
+            activityNum: '41',
             type: this.objProductHot.timeTimetype.type,
             month: this.objProductHot.timeTimetype.type == 'month' ? this.objProductHot.timeTimetype.value : this.objProductHot.timeTimetype.value * 12,
             capacitys: this.objProductHot.cpuMemory.value,
