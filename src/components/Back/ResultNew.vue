@@ -127,16 +127,16 @@
         } else if (name == '15' || name == '16') {
           router = 'gpuList';
         } else if (name == '17') {
-          window.location.href = 'https://testoss-console.xrcloud.net/ruirados/objectStorage';
+          window.location.href = 'https://oss-console.xrcloud.net/ruirados/objectStorage';
           return;
         } else if (name == '18') {
-          window.location.href = 'https://test-domain.xrcloud.net/xrdomain/domainTransfer';
+          window.location.href = 'https://domain.xrcloud.net/xrdomain/domainTransfer';
           return;
         } else if (name == '19' || name == '21') {
-          window.location.href = 'https://test-domain.xrcloud.net/xrdomain/domainGroup';
+          window.location.href = 'https://domain.xrcloud.net/xrdomain/domainGroup';
           return;
         } else if (name == '22') {
-          window.location.href = 'https://test-domain.xrcloud.net/xrdomain/domainSSL';
+          window.location.href = 'https://domain.xrcloud.net/xrdomain/domainSSL';
           return;
         }
         this.$router.push(router)
