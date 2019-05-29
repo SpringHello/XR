@@ -319,6 +319,11 @@ div.modal-header-border {
 .lh24 {
   line-height: 24px;
 }
+.attention{
+  font-size:12px;
+  color:rgba(255,57,42,1);
+  line-height:21px;
+}
 /* 浮动 */
 .fl {
   float: left;

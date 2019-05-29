@@ -332,6 +332,7 @@
         <div>
           <p class="lh24">您确认解绑该IP下资源?
           </p>
+          <p class="attention">注意：解绑弹性IP不等于释放弹性IP，IP解绑之后您还需要到弹性IP列表中释放所选IP。</p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
