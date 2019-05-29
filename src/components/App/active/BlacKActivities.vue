@@ -2284,7 +2284,11 @@
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            this.discountProduct[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
+            res.data.result.forEach(itemed => {
+              if(itemed.freevmconfigId==this.discountProduct[index].id){
+                this.discountProduct[index].num = (itemed.receive / itemed.total) * 100
+              }
+            })
           }
         })
       },
@@ -2295,7 +2299,11 @@
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            this.discountProductfornew[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
+            res.data.result.forEach(itemed => {
+              if(itemed.freevmconfigId==this.discountProductfornew[index].id){
+                this.discountProductfornew[index].num = (itemed.receive / itemed.total) * 100
+              }
+            })
           }
         })
       },
@@ -2487,89 +2495,86 @@
         var params = {}
         if (this.hostProductHot.disksize) {
           if(this.hostProductHot.timeTimetype.value=='1'){
-            params = {
-              zoneId: this.hostProductHot.zoneId,
-              timeType: this.hostProductHot.timeTimetype.type,
-              timeValue: this.hostProductHot.timeTimetype.value,
-              templateId: this.hostProductHot.system[1],
-              isAutoRenew: 1,
-              count: this.hostProductHot.count,
-              cpuNum: this.hostProductHot.cpuMemory.cpunum,
-              memory: this.hostProductHot.cpuMemory.memory,
-              bandWidth: this.hostProductHot.bandwith,
-              rootDiskType: this.hostdisktype,
-              rootDiskSize: '40',
-              diskType: this.hostdisktype,
-              diskSize: this.hostProductHot.disksize,
-              networkId: 'no',
-              vpcId: 'no',
-              discountForActivity: '42',
-              discountForActivityConfigId: this.hostfreevmconfigs
-            }
+              params = {
+                zoneId: this.hostProductHot.zoneId,
+                timeType: this.hostProductHot.timeTimetype.type,
+                timeValue: this.hostProductHot.timeTimetype.value,
+                templateId: this.hostProductHot.system[1],
+                isAutoRenew: 1,
+                count: this.hostProductHot.count,
+                cpuNum: this.hostProductHot.cpuMemory.cpunum,
+                memory: this.hostProductHot.cpuMemory.memory,
+                bandWidth: this.hostProductHot.bandwith,
+                rootDiskType: this.hostdisktype,
+                rootDiskSize: '40',
+                diskType: this.hostdisktype,
+                diskSize: this.hostProductHot.disksize,
+                networkId: 'no',
+                vpcId: 'no',
+                discountForActivity: '42',
+                discountForActivityConfigId: (this.hostProductHot.cpuMemory.cpunum!=1&&this.hostProductHot.cpuMemory.memory!=2) ? this.hostfreevmconfigs : ''
+              }
           }
           else if(this.hostProductHot.timeTimetype.value=='3'){
-            params = {
-              zoneId: this.hostProductHot.zoneId,
-              timeType: this.hostProductHot.timeTimetype.type,
-              timeValue: this.hostProductHot.timeTimetype.value,
-              templateId: this.hostProductHot.system[1],
-              isAutoRenew: 1,
-              count: this.hostProductHot.count,
-              cpuNum: this.hostProductHot.cpuMemory.cpunum,
-              memory: this.hostProductHot.cpuMemory.memory,
-              bandWidth: this.hostProductHot.bandwith,
-              rootDiskType: this.hostdisktypetwo,
-              rootDiskSize: '40',
-              diskType: this.hostdisktypetwo,
-              diskSize: this.hostProductHot.disksize,
-              networkId: 'no',
-              vpcId: 'no',
-              discountForActivity: '42',
-              discountForActivityConfigId: this.hostfreevmconfigsthree
-            }
+              params = {
+                zoneId: this.hostProductHot.zoneId,
+                timeType: this.hostProductHot.timeTimetype.type,
+                timeValue: this.hostProductHot.timeTimetype.value,
+                templateId: this.hostProductHot.system[1],
+                isAutoRenew: 1,
+                count: this.hostProductHot.count,
+                cpuNum: this.hostProductHot.cpuMemory.cpunum,
+                memory: this.hostProductHot.cpuMemory.memory,
+                bandWidth: this.hostProductHot.bandwith,
+                rootDiskType: this.hostdisktypetwo,
+                rootDiskSize: '40',
+                diskType: this.hostdisktypetwo,
+                diskSize: this.hostProductHot.disksize,
+                networkId: 'no',
+                vpcId: 'no',
+                discountForActivity: '42',
+                discountForActivityConfigId: (this.hostProductHot.cpuMemory.cpunum!=1&&this.hostProductHot.cpuMemory.memory!=2) ? this.hostfreevmconfigsthree : ''
+              }
           }
-            
         } else {
           if(this.hostProductHot.timeTimetype.value=='1'){
-            params = {
-              zoneId: this.hostProductHot.zoneId,
-              timeType: this.hostProductHot.timeTimetype.type,
-              timeValue: this.hostProductHot.timeTimetype.value,
-              templateId: this.hostProductHot.system[1],
-              isAutoRenew: 1,
-              count: this.hostProductHot.count,
-              cpuNum: this.hostProductHot.cpuMemory.cpunum,
-              memory: this.hostProductHot.cpuMemory.memory,
-              bandWidth: this.hostProductHot.bandwith,
-              rootDiskType: 'ssd',
-              rootDiskSize: '40',
-              networkId: 'no',
-              vpcId: 'no',
-              discountForActivity: '42',
-              discountForActivityConfigId: this.hostfreevmconfigs
-            }
+              params = {
+                zoneId: this.hostProductHot.zoneId,
+                timeType: this.hostProductHot.timeTimetype.type,
+                timeValue: this.hostProductHot.timeTimetype.value,
+                templateId: this.hostProductHot.system[1],
+                isAutoRenew: 1,
+                count: this.hostProductHot.count,
+                cpuNum: this.hostProductHot.cpuMemory.cpunum,
+                memory: this.hostProductHot.cpuMemory.memory,
+                bandWidth: this.hostProductHot.bandwith,
+                rootDiskType: this.hostdisktype,
+                rootDiskSize: '40',
+                networkId: 'no',
+                vpcId: 'no',
+                discountForActivity: '42',
+                discountForActivityConfigId: (this.hostProductHot.cpuMemory.cpunum!=1&&this.hostProductHot.cpuMemory.memory!=2) ? this.hostfreevmconfigs : ''
+              }
           }
           else if(this.hostProductHot.timeTimetype.value=='3'){
-            params = {
-              zoneId: this.hostProductHot.zoneId,
-              timeType: this.hostProductHot.timeTimetype.type,
-              timeValue: this.hostProductHot.timeTimetype.value,
-              templateId: this.hostProductHot.system[1],
-              isAutoRenew: 1,
-              count: this.hostProductHot.count,
-              cpuNum: this.hostProductHot.cpuMemory.cpunum,
-              memory: this.hostProductHot.cpuMemory.memory,
-              bandWidth: this.hostProductHot.bandwith,
-              rootDiskType: 'ssd',
-              rootDiskSize: '40',
-              networkId: 'no',
-              vpcId: 'no',
-              discountForActivity: '42',
-              discountForActivityConfigId: this.hostfreevmconfigs,
-              discountForActivityConfigId: this.hostfreevmconfigsthree
-            }
-          }
-            
+              params = {
+                zoneId: this.hostProductHot.zoneId,
+                timeType: this.hostProductHot.timeTimetype.type,
+                timeValue: this.hostProductHot.timeTimetype.value,
+                templateId: this.hostProductHot.system[1],
+                isAutoRenew: 1,
+                count: this.hostProductHot.count,
+                cpuNum: this.hostProductHot.cpuMemory.cpunum,
+                memory: this.hostProductHot.cpuMemory.memory,
+                bandWidth: this.hostProductHot.bandwith,
+                rootDiskType: this.hostdisktypetwo,
+                rootDiskSize: '40',
+                networkId: 'no',
+                vpcId: 'no',
+                discountForActivity: '42',
+                discountForActivityConfigId: (this.hostProductHot.cpuMemory.cpunum!=1&&this.hostProductHot.cpuMemory.memory!=2) ? this.hostfreevmconfigsthree : ''
+              }
+          } 
         }
         axios.get('information/deployVirtualMachine.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
