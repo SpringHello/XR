@@ -777,6 +777,7 @@
       this.diskAreaList = this.$store.state.zoneList;
       this.listDisk();
       this.getGpuList();
+      this.getResourceAllocation();
     },
     methods: {
       // 获取资源配额
