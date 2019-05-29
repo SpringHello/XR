@@ -504,7 +504,7 @@
                        style="width: 300px" @on-change="passwordWarning=''"  @on-focus="passwordForm.passwordHint = true" @on-blur="passwordForm.passwordHint = false"></Input>
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
-              <div class="popTip" v-show="passwordForm.passwordHint">
+              <div class="popTip" v-show="false">
                   <div><i :class="{reach: passwordForm.firstDegree }"></i>
                     <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: passwordForm.secondDegree }"></i>
@@ -1513,22 +1513,23 @@
         }
         let len = val.length
         let reg = /[0-9]/
+        let flag = false
         if(len>5){
-         let flag = check(len)
+          flag = check(len)
           function check(index){
             let count = 0
             for(let i = index- 5; i < index;i++){
             let next = reg.test(val[i]) ? val[i] : val[i].charCodeAt()
             let current = reg.test(val[i-1]) ? val[i-1] : val[i-1].charCodeAt()
-            if(Math.abs(next-current) === 1){
+            if(next-current === 1){
               count +=1
              }
            }
             if(count > 4){
               return true
-            } else if(count < 5 && index > 5){
+            } else if(count < 5 && index > 6){
               return check(index - 1)
-            } else if(index <= 5){
+            } else{
               return false
             }
           }
