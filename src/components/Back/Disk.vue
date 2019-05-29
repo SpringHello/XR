@@ -257,7 +257,7 @@
           </Form>
           <p style="font-family: Microsoft YaHei;font-size: 12px;line-height:20px;color: #999999;">
             提示：云硬盘数据服务为每块磁盘提供<span
-            style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
+            style="color:#2A99F2">{{ totalQuota }}</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -769,7 +769,8 @@
           diskType: '',
           diskSize: '',
           endTime: ''
-        }
+        },
+        totalQuota: ''
       }
     },
     created() {
@@ -778,6 +779,16 @@
       this.getGpuList();
     },
     methods: {
+      // 获取资源配额
+      getResourceAllocation() {
+        this.$http.get('user/personalCenterResourceQuota.do', {
+          params: {}
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.totalQuota = res.data.result[7].totalQuota
+          }
+        })
+      },
       /* 刷新页面 */
       refreshPage() {
         this.$router.go(0)
