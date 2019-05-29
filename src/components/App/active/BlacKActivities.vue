@@ -192,6 +192,7 @@
                 <p>
                   <span>云服务器特惠</span>
                   <span>指定规格产品买一送一！</span>
+                  <img src="../../../assets/img/active/blackactive/forseven.png" alt="七台服务器">
                 </p>
               </div>
               <div class="bottom">
@@ -275,11 +276,11 @@
                       <span style="margin: 0 18px 0 20px;">时长</span>
                     </p>
                     <p class="givep2">
-                      <span style=" margin: 0 15px 0 18px;">2核</span>
+                      <span style="margin: 0 20px 0 22px;">2核</span>
                       <span>4G</span>
-                      <span style="margin: 0 15px 0 15px;">2M</span>
+                      <span style="margin: 0 18px 0 21px;">2M</span>
                       <span>40G</span>
-                      <span style="margin: 0 15px 0 15px;">1年</span>
+                      <span style="margin: 0 18px 0 23px;">1年</span>
                     </p>
                   </div>
                   <div class="give" v-if="hostProductHot.timeTimetype.value=='3'&&hostProductHot.cpuMemory.cpunum!=1&&hostProductHot.cpuMemory.memory!=2">
@@ -292,11 +293,11 @@
                       <span style="margin: 0 18px 0 20px;">时长</span>
                     </p>
                     <p class="givep2">
-                      <span style=" margin: 0 15px 0 18px;">2核</span>
+                      <span style="margin: 0 20px 0 22px;">2核</span>
                       <span>8G</span>
-                      <span style="margin: 0 15px 0 15px;">5M</span>
+                      <span style="margin: 0 18px 0 21px;">5M</span>
                       <span>40G</span>
-                      <span style="margin: 0 15px 0 15px;">1年</span>
+                      <span style="margin: 0 18px 0 23px;">1年</span>
                     </p>
                   </div>
                   <div class="give" v-if="hostProductHot.cpuMemory.cpunum==1&&hostProductHot.cpuMemory.memory==2">
@@ -334,13 +335,13 @@
                 </div>
               </div>
             </div>
-
+            
             <div class="EfficientCloud">
                 <div class="top">
                   <p>
                     <span>P100 GPU高效云服务器</span>
                     <span>超高计算能力，行业最低，低至2折,更有买一送一超优惠活动</span>
-                    <img src="../../../assets/img/active/blackactive/Grouptwo.png" alt="两折GPU">
+                    <img src="../../../assets/img/active/blackactive/Grouptwo.png" alt="两台GPU">
                   </p>
                 </div>
                 <div class="bottom">
@@ -380,10 +381,12 @@
                       <div class="displays flex">
                         <span>CPU</span>
                         <span>内存</span>
+                        <span>GPU</span>
                       </div>
                       <div class="cloums flex">
                         <span>{{nucleusgpu}}核</span>
                         <span>{{numGgpu}}G</span>
+                        <span>{{numGgpuKa}}</span>
                       </div>
                     </div>
                     <div class="give">
@@ -396,11 +399,11 @@
                       <span style="margin: 0 18px 0 20px;">时长</span>
                     </p>
                     <p class="givep2">
-                      <span style=" margin: 0 15px 0 18px;">2核</span>
+                      <span style=" margin: 0 20px 0 22px;">2核</span>
                       <span>4G</span>
-                      <span style="margin: 0 15px 0 15px;">2M</span>
+                      <span style="margin: 0 18px 0 21px;">2M</span>
                       <span>40G</span>
-                      <span style="margin: 0 15px 0 15px;">1年</span>
+                      <span style="margin: 0 18px 0 23px;">1年</span>
                     </p>
                   </div>
                     <div class="item-config">
@@ -1199,8 +1202,9 @@
         ActivityState:'1',
         nucleus:'1',
         numG:'2',
-        nucleusgpu:'16',
+        nucleusgpu:'8',
         numGgpu:'64',
+        numGgpuKa:'1',
         tooltipStatus: true,
         selectVipGrade: '白银会员',
         highEndLength: '',
@@ -1483,7 +1487,7 @@
           cpuMemory: {cpunum: '1', memory: '2'},
           bandwith: 1,
           system: [],
-          disksize: 20,
+          disksize: 0,
           timeTimetype: {type: 'year', value: '1', discount: '6'},
           count: '1',
           price: '',
@@ -1520,7 +1524,7 @@
             label: 'Ubuntu',
             children: [],
           }],
-        hostDisksizeListHot: [20, 50, 100,500],
+        hostDisksizeListHot: [0,20, 50, 100,500],
         hostTimeListHot: [
           {type: 'year', value: '1', discount: '6'},
           {type: 'year', value: '3', discount: '4'},
@@ -1571,7 +1575,7 @@
         // 热门对象存储打折
         objProductHot: {
           zoneId: '',
-          cpuMemory: {label: '100', unit: 'GB', value: '100'},
+          cpuMemory: {label: '500', unit: 'GB', value: '500'},
           bandwith: 1,
           system: [],
           disksize: 20,
@@ -1582,9 +1586,9 @@
         },
         objZoneListHot: [],
         objConfigListHot: [
-          {label: '100', unit: 'GB', value: '100'},
           {label: '500', unit: 'GB', value: '500'},
           {label: '1', unit: 'TB', value: '1024'},
+          {label: '2', unit: 'TB', value: '2048'},
         ],
         objbandwithListHot: [1, 2, 5, 10, 20],
         objSystemListHot: [{
@@ -2645,6 +2649,7 @@
         this.gpuProductHot.cpuMemory=item3
         this.nucleusgpu=item3.cpunum
         this.numGgpu=item3.memory
+        this.numGgpuKa=item3.gpusize
       },
       // gpu打折提交订单
       productBuy_gpu() {
@@ -3419,6 +3424,10 @@
               line-height:80px;
               margin-left: 20px;
             }
+            > img{
+              float: right;
+              margin-top: 9px;
+            }
           }
         }
         .bottom{
@@ -3622,18 +3631,18 @@
                 }
               }
               .cloums{
-               width: 110px;
+               width: 100px;
                 height: 26px;
                 margin: 0 0 11px -38px;
                 float: left;
                 > span:nth-child(1){
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
                 }
                 > span:nth-child(2){
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
@@ -3668,7 +3677,7 @@
                 height: 26px;
                 margin-top: 10px;
                 > span{
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
@@ -4017,7 +4026,7 @@
                 top: 0;
               }
               .displays{
-                width: 95px;
+                width: 105px;
                 height: 16px;
                 margin: 0 0 11px -35px;
                 float: left;
@@ -4032,26 +4041,36 @@
                   font-family:MicrosoftYaHei;
                   color:rgba(178,178,178,1);
                   line-height:16px;
-                  margin-left: 17px;
+                }
+                > span:nth-child(3){
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(178,178,178,1);
+                  line-height:16px;
                 }
               }
               .cloums{
-               width: 120px;
+               width: 110px;
                 height: 26px;
-                margin: 0 0 11px -48px;
+                margin: 0 0 11px -43px;
                 float: left;
                 > span:nth-child(1){
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
                 }
                 > span:nth-child(2){
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
-                  margin-left: 10px;
+                }
+                > span:nth-child(3){
+                  font-size:16px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:26px;
                 }
               }
             }
@@ -4082,7 +4101,7 @@
                 height: 26px;
                 margin-top: 10px;
                 > span{
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
