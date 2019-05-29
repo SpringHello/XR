@@ -166,7 +166,7 @@
               </div>
             </div>
             <div class="inlineright">
-              <p>云电脑注册即可获赠10云币</p>
+              <p>云电脑提前预约注册即可获赠10云币 </p>
               <p>【可抵扣云电脑3小时使用时长】</p>
               <Button v-if="AppointmentStatus==0" type="warning" style="margin-top:16px;background:#FFCE00;color:rgba(51,51,51,1);" @click="appointmentimmediately">立即预约</Button>
               <Button v-if="AppointmentStatus==1" disabled style="margin-top:16px;border:1px solid rgba(185,157,41,1);color:#B99D29;background:none;">预约成功</Button>
