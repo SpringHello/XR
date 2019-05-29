@@ -37,12 +37,12 @@
                 </RadioGroup>
               </Form-item>
               <div v-if="formInvoiceDate.InvoiceType!=1">
-                <Form-item label="发票抬头" prop="invoiceTitle" v-if="normalInvoiceLength==0">
-                  <Input :maxlength="32" v-model="formInvoiceDate.invoiceTitle" placeholder="请输入发票抬头"
+                <Form-item label="发票抬头" prop="invoiceTitle" v-if="normalInvoiceLength==0" >
+                  <Input :maxlength="32" v-model="formInvoiceDate.invoiceTitle" placeholder="请输入发票抬头" @on-blur="getInvoiceTitle"
                           style="width: 317px"></Input>
                 </Form-item>
                 <Form-item label="发票抬头" v-else>
-                <Select v-model="formInvoiceDate.selectInvoiceTitle" style="width: 317px">
+                <Select v-model="formInvoiceDate.invoiceTitle" style="width: 317px">
                   <Option :value="item.companyname+'#'+item.id+'#'+item.type" v-for="(item,index) in normalInvoiceList" :key="index">{{item.companyname}}</Option>
                 </Select>
               </Form-item>
@@ -82,7 +82,9 @@
                   <p style="line-height: 2.5;color:#666666">您需要通过
                     <span style="color: #2A99F2;cursor:pointer;" @click="$router.push('InvoiceAuthentication')">增票资质认证</span>
                     才能开具增值税专用发票</p>
-                  <Button type="primary" @click="$router.push('InvoiceAuthentication')">点击申请</Button>
+                  <Button type="primary" @click="$router.push('InvoiceAuthentication')" v-if="!speacialInvoiceLength">点击申请</Button>
+                  <Button type="primary" @click="$router.push('InvoiceAuthentication')"  v-if="specialInvoiceStatus==2">审核中</Button>
+                  <Button type="error" @click="$router.push('InvoiceAuthentication')" v-if="specialInvoiceStatus==1">审核失败</Button>
                 </Form-item>
               </div>
               <p style="color:#2A99F2;margin-left: 100px;margin-bottom: 10px;cursor:pointer" @click="$router.push('invoiceAddressee')">+新增发票抬头与收件信息</p>
@@ -91,7 +93,7 @@
                         style="width: 317px"></Input>
               </Form-item>
               <Form-item label="收件人" v-else>
-                <Select v-model="formInvoiceDate.selectAddressee" style="width: 317px">
+                <Select v-model="formInvoiceDate.recipients" style="width: 317px">
                   <Option :value="item.recipient+'#'+item.id" v-for="(item,index) in addresseeList" :key="index">{{item.recipient}}</Option>
                 </Select>
               </Form-item>
@@ -99,15 +101,36 @@
                 <Input :maxlength="20" v-model="formInvoiceDate.phone" placeholder="请输入联系电话" :disabled="addresseeLength!=0"
                         style="width: 317px"></Input>
               </Form-item>
-              <Form-item label="收件地址" prop="consigneeAddress">
-                <Input :maxlength="64" v-model="formInvoiceDate.consigneeAddress" placeholder="请输入收件地址" :disabled="addresseeLength!=0"
-                        style="width: 317px"></Input>
-              </Form-item>
+              <FormItem label="图形验证码" prop="imgCode" v-if="this.addresseeLength==0">
+                <Input v-model="formInvoiceDate.imgCode" style="width:107px;margin-right: 10px;"></Input>
+                <img :src="imgSrc" @click="imgSrc=`https://zschj.xrcloud.net/user/getKaptchaImage.do?t=${new Date().getTime()}`" width="80" height="30"
+                      style="vertical-align:middle;cursor:pointer">
+              </FormItem>
+              <FormItem label="验证码" prop="code" v-if="this.addresseeLength==0">
+                <Input type="text" v-model="formInvoiceDate.code" placeholder="请输入验证码" style="width:107px;">
+                </Input>
+                <Button type="primary" style="margin-left:10px;"  @click="getVerificationCode('msg')" v-if="timeBoo" >获取验证码</Button>
+                <Button disabled style="margin-left:10px;" v-else>{{count+'分'}}</Button>
+              </FormItem>
+              <FormItem label="区域">
+                <Select v-model="formInvoiceDate.province" style="width:93px;" :disabled="addresseeLength!=0" @on-change='changeProvince'>
+                    <Option  v-for="item in area" :value="item.name" :key="item.name">{{item.name}}</Option>
+                </Select>
+                <Select v-model="formInvoiceDate.city" style="width:93px;" :disabled="addresseeLength!=0" @on-change='changeArea'>
+                    <Option v-for="item in areaList" :value="item.name"  :key="item.name">{{item.name}}</Option>
+                </Select>
+                <Select v-model="formInvoiceDate.district" style="width:93px;" :disabled="addresseeLength!=0">
+                    <Option v-for="item in countyList" :value="item" :key="item">{{item}}</Option>
+                </Select>
+              </FormItem>
+              <FormItem label="详细地址" prop="address">
+                <Input v-model="formInvoiceDate.address" type="textarea" style="width:317px" :rows="3" :disabled="addresseeLength!=0" placeholder="请详细填写便于快递投递无误，例如：重庆市 渝北区洪湖西路 智慧大厦A栋5-D"></Input>
+              </FormItem>
               <Form-item>
-                <Button type="primary" style="font-size: 12px;margin-left: 237px"
+                <Button type="primary" style="font-size: 12px;margin-left: 237px" v-if="this.normalInvoiceLength == 0 || this.addresseeLength == 0"
                         @click="invoiceInfoSave('formInvoiceDate')">下一步
                 </Button>
-                <Button type="primary" style="font-size: 12px;margin-left: 237px"
+                <Button type="primary" style="font-size: 12px;margin-left: 237px" v-else
                         @click="invoiceMake('formInvoiceDate')">确认开票
                 </Button>
               </Form-item>
@@ -120,7 +143,18 @@
 </template>
 
 <script type="text/ecmascript-6">
+import area from "../../options/area.json"
+import axios from "axios"
 export default {
+  beforeRouteEnter(to, from, next) {
+    if(from.name=='invoiceAuthentication') {
+      next(vm => {
+        vm.formInvoiceDate.InvoiceType = 1
+      })
+    } else {
+      next()
+    }
+  },
   data() {
     const validateInvoice = (rule, value, callback) => {
         if (!value) {
@@ -207,6 +241,16 @@ export default {
           callback()
         }
       }
+      const validTaxpayer = (rule, value, callback) =>{
+        let reg = /^([0-9a-zA-z]{15}|[0-9a-zA-z]{18})$/;
+        if(value == ''){
+          return callback(new Error('请输入纳税人识别码'));
+        }else if(!reg.test(value)){
+          return callback(new Error('请输入正确的纳税人识别码'));
+        }else{
+          callback();
+        }
+      }
       const validaRegisteredAddress = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('注册地址不能为空'))
@@ -248,12 +292,20 @@ export default {
         }
       }
     return {
+      speacialInvoiceLength: 0,
+      area: area,
+      areaList: [],
+      countyList: [],
+      count: 60,
+      timeBoo:true,
+      imgSrc: 'https://zschj.xrcloud.net/user/getKaptchaImage.do',
       normalInvoiceList: [],
       normalInvoiceLength: 0,
       selectNormalInvoiceType: 0,
       addresseeList: [],
       addresseeLength: 0,
       specialInvoiceStatus: -1,
+      specialInvoiceBtn: '点击申请',
       invoice: 0,
       applyChange: true,
       authenticationShow: false, // 增值税信息
@@ -274,10 +326,8 @@ export default {
           invoiceAmount: '',
           InvoiceType: 0,
           recipients: '',
-          consigneeAddress: '',
           phone: '',
           invoiceTitle: '',
-          selectInvoiceTitle: '',
           taxpayerId: '',
           // 专有发票特有参数
           specialInvoiceTitle: '',
@@ -286,8 +336,14 @@ export default {
           landline: '',
           bankName: '',
           bankNum: '',
-          // 收件人
-          selectAddressee: ''
+          // 地址
+          province:'北京市',
+          city: '',
+          district: '',
+          address: '',
+          //验证码
+          code: '',
+          imgCode: ''
         },
       ruleValidate: {
           invoiceAmount: [
@@ -302,7 +358,7 @@ export default {
           recipients: [
             {required: true, validator: validateRecipients, trigger: 'blur'}
           ],
-          consigneeAddress: [
+          address: [
             {required: true, validator: validateAddress, trigger: 'blur'}
           ],
           phone: [
@@ -312,10 +368,10 @@ export default {
             {required: true, validator: validateCompanyName, trigger: 'blur'}
           ],
           taxpayerId: [
-            {required: true, validator: validaTetaxpayerID, trigger: 'blur'}
+            {required: true, validator: validTaxpayer, trigger: 'blur'}
           ],
           taxpayerID: [
-            {required: true, validator: validaTetaxpayerID, trigger: 'blur'}
+            {required: true, validator: validTaxpayer, trigger: 'blur'}
           ],
           registeredAddress: [
             {required: true, validator: validaRegisteredAddress, trigger: 'blur'}
@@ -328,7 +384,13 @@ export default {
           ],
           bankAccount: [
             {required: true, validator: validaBankAccount, trigger: 'blur'}
-          ]
+          ],
+          imgCode:[ 
+            {required:true,message:'请输入图形验证码',trigger:'blur'}
+          ],
+          code:[
+            {required:true,message:'请输入验证码',trigger:'blur'}
+          ],
         },
     }
   },
@@ -336,6 +398,8 @@ export default {
     this.invoiceLimit()
     this.getInvoiceList()
     this.getAddresseeList()
+    this.changeProvince('北京市');
+    this.changeArea('北京市');
   },
   mounted() {
   },
@@ -345,84 +409,44 @@ export default {
       //0 审核通过  1  审核失败  2 审核中 status
       this.$http.get('nVersionUser/getExamine.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
-          console.log(response.data.result.result)
-          this.normalInvoiceList = response.data.result.result.filter(item => {
-            return item.type != 1
-          })
-          this.normalInvoiceLength = this.normalInvoiceList.length
-          this.formInvoiceDate.selectInvoiceTitle = this.normalInvoiceList[0].companyname+'#'+this.normalInvoiceList[0].id+'#'+this.normalInvoiceList[0].type
-          response.data.result.result.forEach(item=> {
-            if(item.type == 1) {  
-              this.specialInvoiceStatus = item.status
-              // 给专有发票赋值
-              this.formInvoiceDate.specialInvoiceTitle = item.companyname,
-              this.formInvoiceDate.specialTaxpayerId = item.identicode,
-              this.formInvoiceDate.unitAddress = item.address,
-              this.formInvoiceDate.landline = item.areacode+'-'+item.phone,
-              this.formInvoiceDate.bankName = item.bankname,
-              this.formInvoiceDate.bankNum = item.banknum
+          if (response.data.result.result.length!=0) {
+            this.normalInvoiceList = response.data.result.result.filter(item => {
+              return item.type != 1
+            })
+            if(this.normalInvoiceList.length!=0) {
+              this.normalInvoiceLength = this.normalInvoiceList.length
+              this.formInvoiceDate.invoiceTitle = this.normalInvoiceList[0].companyname+'#'+this.normalInvoiceList[0].id+'#'+this.normalInvoiceList[0].type
             }
-          })
+            let specialInvoiceList = response.data.result.result.filter(item => {
+              return item.type == 1
+            })
+            if (specialInvoiceList.length!=0) {
+              response.data.result.result.forEach(item=> {
+                if(item.type == 1) {
+                  this.speacialInvoiceLength = 1
+                  this.specialInvoiceStatus = item.status
+                  // 给专有发票赋值
+                  this.formInvoiceDate.specialInvoiceTitle = item.companyname,
+                  this.formInvoiceDate.specialTaxpayerId = item.identicode,
+                  this.formInvoiceDate.unitAddress = item.address,
+                  this.formInvoiceDate.landline = item.areacode+'-'+item.phone,
+                  this.formInvoiceDate.bankName = item.bankname,
+                  this.formInvoiceDate.bankNum = item.banknum
+                }
+              })
+            }
+          }
         }
       })
     },
     getAddresseeList() {
       this.$http.get('nVersionUser/getReciveinfo.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
-          this.addresseeList = response.data.result.data
-          console.log(response.data.result.data)
-          this.addresseeLength = this.addresseeList.length
-          this.formInvoiceDate.selectAddressee = this.addresseeList[0].recipient+'#'+this.addresseeList[0].id
-        }
-      })
-    },
-    invoiceInfoSave() {
-      // normal 普通发票 personal 专用发票
-      // 发票类型判断 2个人 0企业 1专用 
-      let type = this.formInvoice.personal
-      if(this.formInvoice.invoiceSelect == 'personal') {
-        type = 1
-      }
-      let params = {}
-      switch (type) {
-        case 2:
-          params.type = type
-          params.companyName = this.formInvoice.rise
-          break;
-        case 0:
-          params.type = type
-          params.companyName = this.formInvoice.rise
-          params.identicode = this.formInvoice.taxpayer
-          break;
-        case 1:
-          params.type = type
-          params.companyName = this.formInvoice.rise
-          params.identicode = this.formInvoice.taxpayer
-          params.address = this.formInvoice.address
-          params.phone = this.formInvoice.phone
-          params.areaCode = this.formInvoice.areaCode
-          params.bankName = this.formInvoice.bankName
-          params.bankNum = this.formInvoice.bankNum
-          break;
-        default:
-          break;
-      }
-      let url = 'user/invoiceExamine.do'
-      if(this.addresseeTitleModal == '修改'){
-        if(this.formInvoice.taxpayer) {
-          delete params['identicode']
-          params.identiCode = this.formInvoice.taxpayer
-        }
-        params.id = this.formInvoice.id
-        url = 'nVersionUser/modifyExamine.do'
-      }
-      axios.post(url,params).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.$Message.success(`${this.addresseeTitleModal}收件开票成功`)
-          this.showModal.invoiceInfo = false
-          this.getInvoiceList()
-        } else {
-          this.$Message.error(response.data.message)
+          if(response.data.result.data.length!=0) {
+            this.addresseeList = response.data.result.data
+            this.addresseeLength = this.addresseeList.length
+            this.formInvoiceDate.recipients = this.addresseeList[0].recipient+'#'+this.addresseeList[0].id
+          }
         }
       })
     },
@@ -430,6 +454,7 @@ export default {
       this.$http.get('user/invoiceLimit.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.invoice = response.data.result.result
+          this.invoice = 1000
         }
       })
     },
@@ -470,41 +495,117 @@ export default {
     invoiceMake(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (this.invoiceInformationShow == false) {
-            this.$http.post('user/applyInvoice.do', {
+          let params = {}
+          // 普通发票参数
+          if(this.formInvoiceDate.InvoiceType == 0) {
+            params= {
               amount: this.formInvoiceDate.invoiceAmount,
-              type: this.formInvoiceDate.InvoiceType,
-              title: this.formInvoiceDate.invoiceTitle,
-              recipients: this.formInvoiceDate.recipients,
-              address: this.formInvoiceDate.consigneeAddress,
-              phone: this.formInvoiceDate.phone
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success({
-                  content: '发票申请成功！',
-                  duration: 5
-                })
-                this.formInvoiceDate.invoiceAmount = ''
-                this.formInvoiceDate.InvoiceType = ''
-                this.formInvoiceDate.invoiceTitle = ''
-                this.formInvoiceDate.recipients = ''
-                this.formInvoiceDate.consigneeAddress = ''
-                this.formInvoiceDate.phone = ''
-                this.getInvoiceList()
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
+              type: this.selectNormalInvoiceType!=0?2:this.formInvoiceDate.InvoiceType,
+              title: this.normalInvoiceLength==0?this.formInvoiceDate.invoiceTitle:this.formInvoiceDate.invoiceTitle.split('#')[0],
+              identiCode: this.formInvoiceDate.taxpayerId,
+              recipients: this.addresseeLength==0?this.formInvoiceDate.recipients:this.formInvoiceDate.recipients.split('#')[0],
+              address: this.formInvoiceDate.province+this.formInvoiceDate.city+this.formInvoiceDate.district+this.formInvoiceDate.address,
+              phone: this.formInvoiceDate.phone,
+            }
+            // 普通发票(个人)
+            if(this.selectNormalInvoiceType!=0) {
+              delete params['identiCode']
+            }
+          } else if(this.formInvoiceDate.InvoiceType == 1) {
+            // 专有发票参数
+              params= {
+                amount: this.formInvoiceDate.invoiceAmount,
+                type: this.formInvoiceDate.InvoiceType,
+                title: this.formInvoiceDate.specialInvoiceTitle,
+                identiCode: this.formInvoiceDate.specialTaxpayerId,
+                recipients: this.formInvoiceDate.recipients,
+                address: this.formInvoiceDate.province+this.formInvoiceDate.city+this.formInvoiceDate.district+this.formInvoiceDate.address,
+                phone: this.formInvoiceDate.phone,
+              }
+          }
+          this.$http.post('user/applyInvoice.do', params).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success({
+                content: '发票申请成功！',
+                duration: 5
+              })
+              //跳转到发票管理页面
+              this.toExpenses()
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
+         }
+      })
+    },
+    invoiceInfoSave(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+            this.$message.confirm({
+              width: '380px',
+              title: '是否保存发票抬头与收件信息？',
+              content:'保存完成之后下次开票您可以快速选择相关信息。您可以在【发票信息&收件人】列表管理您的相关信息。',
+              onOk: () => {
+                if (this.normalInvoiceLength == 0&&this.addresseeLength != 0) {
+                  this.addInvoiceOk()
+                } else if(this.addresseeLength == 0&&this.normalInvoiceLength != 0) {
+                  this.addAdrressOk()
+                } else if(this.normalInvoiceLength == 0&&this.addresseeLength == 0){
+                  this.addInvoiceOk()
+                  this.addAdrressOk()
+                }
               }
             })
-          } else {
-            this.$Message.error({
-              content: '您的资质认证没有完成！',
-              duration: 5
-            })
-          }
         }
       })
+    },
+    addAdrressOk() {
+        let params = {
+          recipient: this.formInvoiceDate.recipients,
+          phone: this.formInvoiceDate.phone,
+          province: this.formInvoiceDate.province,
+          city: this.formInvoiceDate.city,
+          district: this.formInvoiceDate.district,
+          address: this.formInvoiceDate.address,
+          smsCode: this.formInvoiceDate.code
+        }
+        let url = 'nVersionUser/addReciveinfo.do'
+        axios.post(url,params).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(`新增收件信息成功`)
+            this.getAddresseeList()
+          } else {
+            this.$Message.error(response.data.message)
+            // this.addAddresseeResult = false
+          }
+        })
+    },
+    addInvoiceOk() {
+      // 发票类型判断 2个人 0企业 1专用 
+      let params = {}
+      if (this.selectNormalInvoiceType = 0) {
+          params.type = 0
+          params.companyName = this.formInvoiceDate.invoiceTitle
+          params.identicode = this.formInvoiceDate.taxpayerId
+      } else if(this.selectNormalInvoiceType = 2) {
+          params.type = 2
+          params.companyName = this.formInvoiceDate.invoiceTitle
+      }
+      let url = 'user/invoiceExamine.do'
+      axios.post(url,params).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.$Message.success(`新增收件开票成功`)
+          this.getInvoiceList()
+        } else {
+          this.$Message.error(response.data.message)
+        }
+      })
+    },
+    toExpenses() {
+      sessionStorage.setItem("expensesTab", "applyInvoice");
+      this.$router.push("expenses");
     },
     affirmCertification(name) {
       this.$refs[name].validate((valid) => {
@@ -540,26 +641,104 @@ export default {
     toExpenses() {
       sessionStorage.setItem('expensesTab','applyInvoice')
       this.$router.push('expenses')
+    },
+    // 切换省份
+    changeProvince(val) {
+      this.area.forEach(item => {
+        if (item.name == val) {
+          this.formInvoiceDate.city =  item.city[0].name;
+          this.areaList = item.city;
+        }
+      });
+    },
+    // 切换区
+    changeArea(val) {
+      this.areaList.forEach(item => {
+        if (item.name == val) {
+          this.formInvoiceDate.district = item.area[0];
+          this.countyList = item.area;
+        }
+      });
+    },
+    //获取手机验证码
+    getVerificationCode(type) {
+      let url = ''
+      let params = {}
+      if (type=='msg') {
+        url = 'user/code.do'
+        params = {
+          aim: this.formInvoiceDate.phone,
+          isemail: 0,
+          vailCode: this.formInvoiceDate.imgCode
+        }
+      } else {
+        url = 'user/voiceCode.do'
+        params = {
+          aim: this.formInvoiceDate.phone,
+          vailCode: this.formInvoiceDate.imgCode
+        }
+      }
+      let imgCodeMsg = ''
+      let phoneMsg = ''
+      this.$refs.formInvoiceDate.validateField('phone',(msg)=>{
+        phoneMsg = msg
+      });
+      this.$refs.formInvoiceDate.validateField('imgCode',(msg)=>{
+        imgCodeMsg = msg
+      });
+      if (!(imgCodeMsg||phoneMsg)) {
+        axios.get(url, {params: params}).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+                this.timeBoo = false
+                this.$Message.success(res.data.message)
+                let char = setInterval(() => {
+                  if (this.count != 0) {
+                    this.count--;
+                  } else {
+                    clearInterval(char);
+                    this.count = 60;
+                    this.timeBoo = true;
+                  }
+                }, 1000)
+              } else {
+                this.imgSrc = this.imgSrc + `?t=${new Date().getTime()}`;
+                this.$Message.error({
+                  content: res.data.message,
+                  duration: 5
+                })
+              }
+            })
+      }
+    },
+    getInvoiceTitle(val) {
+      let flag = this.formInvoiceDate.invoiceTitle.slice(-2)
+      if(flag=='公司') {
+        this.selectNormalInvoiceType = 0
+      } else {
+        this.selectNormalInvoiceType = 2
+      }
     }
   },
   computed: {
-
   },
   watch: {
-    
-    'formInvoiceDate.selectAddressee': {
+    'formInvoiceDate.recipients': {
       handler: function (val) {
         this.addresseeList.forEach(item => {
           let id = val.split('#')[1]
           if(id == item.id) {
+            console.log(item)
             this.formInvoiceDate.phone = item.phone
-            this.formInvoiceDate.consigneeAddress = item.province + '-' + item.city + '-' + item.district + '-' + item.address
+            this.formInvoiceDate.province = item.province
+            this.formInvoiceDate.city = item.city
+            this.formInvoiceDate.district = item.district
+            this.formInvoiceDate.address = item.address
           }
         })
       },
       deep: true
     },
-    'formInvoiceDate.selectInvoiceTitle': {
+    'formInvoiceDate.invoiceTitle': {
       handler: function (val) {
         this.normalInvoiceList.forEach(item => {
           let id = val.split('#')[1]

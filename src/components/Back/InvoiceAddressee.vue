@@ -185,6 +185,16 @@ const validTaxpayer = (rule, value, callback) =>{
     callback();
   }
 }
+const validateAddress = (rule, value, callback) => {
+    if (!value) {
+      return callback(new Error('收件人地址不能为空'))
+    }
+    if ((/^[0-9a-zA-Z]+$/.test(value)) || (/\s+/.test(value))) {
+      callback(new Error('收件地址不能包含空格或是纯数字、英文'))
+    } else {
+      callback()
+    }
+  }
 
 export default {
   data() {
@@ -439,9 +449,9 @@ export default {
         code:[
           {required:true,message:'请输入验证码',trigger:'blur'}
         ],
-        desc:[
-          {required:true,message:'请输入详细地址',trigger:'blur'}
-        ]
+        desc: [
+          {required: true, validator: validateAddress, trigger: 'blur'}
+        ],
       },
       formReceipt: {
         recipient: "",

@@ -8,50 +8,53 @@
       </span>
       <div class="content">
         <header>
-          <span @click="toExpenses()">
+          <span @click="$router.push('InvoiceManage')">
             <Icon type="chevron-left"></Icon>
           </span>
-          <h1>申请发票</h1>
+          <h1>增票资质认证</h1>
         </header>
         <div class="alert-warning">
           <p>1.我们会在一个工作日内完成审核工作。</p>
           <p>2.注意有效增值税发票开票资质仅为一个；发票常见问题查看 <span>增票资质帮助</span></p>
         </div>
         <div>
-          <div style="margin-top: 20px">
+          <div style="margin-top: 20px" class="universal-modal-label-14px hide-star-symbol">
             <Form ref="formAppreciationDate" :model="formAppreciationDate" :rules="ruleValidate"
                   :label-width="100" label-position="left">
               <Form-item label="单位名称" prop="companyName">
-                <Input :maxlength="32" v-model="formAppreciationDate.companyName" placeholder="请输入单位名称"
+                <Input :maxlength="32" v-model="formAppreciationDate.companyName" placeholder="请输入单位名称" :disabled="specialInvoiceStatus==2"
                         style="width: 317px"></Input>
               </Form-item>
               <Form-item label="纳税人识别码" prop="taxpayerID">
-                <Input :maxlength="32" v-model="formAppreciationDate.taxpayerID" placeholder="请输入纳税人识别码"
+                <Input :maxlength="32" v-model="formAppreciationDate.taxpayerID" placeholder="请输入纳税人识别码" :disabled="specialInvoiceStatus==2"
                         style="width: 317px"></Input>
               </Form-item>
               <Form-item label="注册地址" prop="registeredAddress">
-                <Input :maxlength="64" v-model="formAppreciationDate.registeredAddress" placeholder="请输入注册地址"
+                <Input :maxlength="64" v-model="formAppreciationDate.registeredAddress" placeholder="请输入注册地址" :disabled="specialInvoiceStatus==2"
                         style="width: 317px"></Input>
               </Form-item>
-              <Form-item label="注册电话" prop="registeredPhone">
-                <Input :maxlength="20" v-model="formAppreciationDate.registeredPhone" placeholder="请输入注册电话"
-                        style="width: 317px"></Input>
-              </Form-item>
+              <FormItem label="注册电话">
+                  <Input type="text" v-model="formAppreciationDate.areaCode" placeholder="区号" style="width:90px;" :disabled="specialInvoiceStatus==2">
+                  </Input>
+                  ——
+                  <Input type="text" v-model="formAppreciationDate.registeredPhone" placeholder="电话号" style="width:194px;" :disabled="specialInvoiceStatus==2">
+                  </Input>
+              </FormItem>
               <Form-item label="开户银行" prop="depositBank">
-                <Input :maxlength="32" v-model="formAppreciationDate.depositBank" placeholder="请输入开户银行"
+                <Input :maxlength="32" v-model="formAppreciationDate.depositBank" placeholder="请输入开户银行" :disabled="specialInvoiceStatus==2"
                         style="width: 317px"></Input>
               </Form-item>
-              <Tooltip :content="bank_account" placement="right-start">
-                <Form-item label="银行账户" prop="bankAccount">
-                  <Input :maxlength="32" v-model="formAppreciationDate.bankAccount" placeholder="请输入银行账户"
-                          style="width: 317px"
-                          v-on:input="conversion"></Input>
-                </Form-item>
-              </Tooltip>
+              <Form-item label="银行账户" prop="bankAccount">
+                <Input :maxlength="32" v-model="formAppreciationDate.bankAccount" placeholder="请输入银行账户" :disabled="specialInvoiceStatus==2"
+                        style="width: 317px"></Input>
+                        
+              </Form-item>
               <Form-item>
-                <Button style="margin-left: 191px" @click="cancelCertification">取消</Button>
-                <Button type="primary" style="margin-left: 10px"
-                        @click="affirmCertification('formAppreciationDate')">确定
+                <Button type="primary" v-if="specialInvoiceStatus==1"
+                        @click="affirmCertification('formAppreciationDate')">重新提交
+                </Button>
+                <Button type="primary" v-else
+                        @click="affirmCertification('formAppreciationDate')">确认
                 </Button>
               </Form-item>
             </Form>
@@ -63,25 +66,10 @@
 </template>
 
 <script type="text/ecmascript-6">
+import axios from "axios";
 export default {
   data() {
-    const validateInvoice = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('开票金额不能为空'))
-        }
-        if (!/^([1-9][\d]{0,7}|0)(\.[\d]{1,2})?$/.test(value)) {
-          callback(new Error('请输入保留两位小数的金额数'))
-        } else if (this.formInvoiceDate.InvoiceType == 0) {
-          if (value < 1000 || value > this.invoice) {
-            callback(new Error('开票金额不能少于1000或者多于实际可开金额'))
-          }
-        } else if (this.formInvoiceDate.InvoiceType == 1) {
-          if (value < 10000 || value > this.invoice) {
-            callback(new Error('开票金额不能少于10000或者多于实际可开金额'))
-          }
-        }
-        callback()
-      }
+    
       const validateType = (rule, value, callback) => {
         /*this.$refs.formInvoiceDate.validateField('invoiceAmount')*/
         if (!value) {
@@ -150,6 +138,16 @@ export default {
           callback()
         }
       }
+      const validTaxpayer = (rule, value, callback) =>{
+        let reg = /^([0-9a-zA-z]{15}|[0-9a-zA-z]{18})$/;
+        if(value == ''){
+          return callback(new Error('请输入纳税人识别码'));
+        }else if(!reg.test(value)){
+          return callback(new Error('请输入正确的纳税人识别码'));
+        }else{
+          callback();
+        }
+      }
       const validaRegisteredAddress = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('注册地址不能为空'))
@@ -191,35 +189,17 @@ export default {
         }
       }
     return {
-      invoice: 0,
-      applyChange: true,
-      authenticationShow: false, // 增值税信息
-      invoiceInformationShow: false, // 增值税认证
-      certificateStatus: true, // 点击认证
-      underReview: false, // 审核中
-      failureAudit: false, // 审核失败
-      aptitudeStatus: '', // 增票资质状态
+      specialInvoiceStatus: '',
       formAppreciationDate: {
           companyName: '',
           taxpayerID: '',
           registeredAddress: '',
+          areaCode: '',
           registeredPhone: '',
           depositBank: '',
           bankAccount: ''
         },
-      formInvoiceDate: {
-          invoiceAmount: '',
-          InvoiceType: '',
-          recipients: '',
-          consigneeAddress: '',
-          phone: '',
-          invoiceTitle: '',
-          taxpayerId: ''
-        },
       ruleValidate: {
-          invoiceAmount: [
-            {required: true, validator: validateInvoice, trigger: 'blur'}
-          ],
           InvoiceType: [
             {required: true, validator: validateType, trigger: 'change'}
           ],
@@ -260,132 +240,59 @@ export default {
     }
   },
   created() {
-
+    this.getInvoiceList()
   },
   mounted() {
-    this.invoiceLimit()
   },
   methods: {
-    invoiceLimit() {
-      this.$http.get('user/invoiceLimit.do').then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.invoice = response.data.result.result
+    getInvoiceList () {
+      axios.get('nVersionUser/getExamine.do',{
+        params: {
+          type: 1
         }
-      })
-    },
-    changeInvoiceType(value) {
-      switch (value) {
-        case '1':
-          this.$http.get('user/getExamine.do').then(response => {
-            if (response.status == 200 && response.data.status == 2) {
-              this.aptitudeStatus = response.data.result.result['status']
-              this.formAppreciationDate.companyName = response.data.result.result['companyname']
-              this.formAppreciationDate.registeredAddress = response.data.result.result['address']
-              this.formAppreciationDate.registeredPhone = response.data.result.result['phone']
-              this.formAppreciationDate.depositBank = response.data.result.result['bankname']
-              this.formAppreciationDate.bankAccount = response.data.result.result['banknum']
-              this.formAppreciationDate.taxpayerID = response.data.result.result['identicode']
-              if (this.aptitudeStatus == 0) {
-                this.authenticationShow = true
-              } else if (this.aptitudeStatus == 1) {
-                this.invoiceInformationShow = true
-                this.failureAudit = true
-                this.certificateStatus = false
-              } else if (this.aptitudeStatus == 2) {
-                this.invoiceInformationShow = true
-                this.underReview = true
-                this.certificateStatus = false
-              }
-            } else {
-              this.invoiceInformationShow = true
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.specialInvoiceStatus = response.data.result.result.status
+          let specialInvoiceList = response.data.result.result
+          if(specialInvoiceList.length!=0) {
+            this.formAppreciationDate = {
+              companyName: specialInvoiceList.companyname,
+              taxpayerID: specialInvoiceList.identicode,
+              registeredAddress: specialInvoiceList.address,
+              areaCode: specialInvoiceList.areacode,
+              registeredPhone: specialInvoiceList.phone,
+              depositBank: specialInvoiceList.bankname,
+              bankAccount: specialInvoiceList.banknum
             }
-          })
-          break
-        case '0':
-          this.invoiceInformationShow = false
-          this.authenticationShow = false
-          break
-      }
-    },
-    invoiceMake(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          if (this.invoiceInformationShow == false) {
-            this.$http.post('user/applyInvoice.do', {
-              amount: this.formInvoiceDate.invoiceAmount,
-              type: this.formInvoiceDate.InvoiceType,
-              title: this.formInvoiceDate.invoiceTitle,
-              recipients: this.formInvoiceDate.recipients,
-              address: this.formInvoiceDate.consigneeAddress,
-              phone: this.formInvoiceDate.phone
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success({
-                  content: '发票申请成功！',
-                  duration: 5
-                })
-                this.formInvoiceDate.invoiceAmount = ''
-                this.formInvoiceDate.InvoiceType = ''
-                this.formInvoiceDate.invoiceTitle = ''
-                this.formInvoiceDate.recipients = ''
-                this.formInvoiceDate.consigneeAddress = ''
-                this.formInvoiceDate.phone = ''
-                this.getInvoiceList()
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
-            })
-          } else {
-            this.$Message.error({
-              content: '您的资质认证没有完成！',
-              duration: 5
-            })
           }
         }
       })
     },
     affirmCertification(name) {
       this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.$http.post('user/invoiceExamine.do', {
-            companyName: this.formAppreciationDate.companyName,
-            address: this.formAppreciationDate.registeredAddress,
-            phone: this.formAppreciationDate.registeredPhone,
-            bankName: this.formAppreciationDate.depositBank,
-            bankNum: this.formAppreciationDate.bankAccount,
-            identicode: this.formAppreciationDate.taxpayerID
-          }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success({
-                content: '增值票资质认证申请成功！我们将尽快完成审核',
-                duration: 5
-              })
-              this.appreciation = false
-              this.applyChange = true
-              this.certificateStatus = false
-              this.underReview = true
-              this.failureAudit = false
-            } else {
-              this.appreciation = false
-              this.applyChange = true
-              this.$message.info({
-                content: response.data.message
-              })
-            }
-          })
+          if (valid) {
+            // 发票类型判断 2个人 0企业 1专用 
+            let params = {}
+            params.type = 1
+            params.companyName = this.formAppreciationDate.companyName
+            params.identicode = this.formAppreciationDate.taxpayerID
+            params.address = this.formAppreciationDate.registeredAddress
+            params.phone = this.formAppreciationDate.registeredPhone
+            params.areaCode = this.formAppreciationDate.areaCode
+            params.bankName = this.formAppreciationDate.depositBank
+            params.bankNum = this.formAppreciationDate.bankAccount
+            let url = 'user/invoiceExamine.do'
+            axios.post(url,params).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success('认证提交成功，我们将尽快完成审核')
+                this.$router.push('invoiceManage')
+              } else {
+                this.$Message.error(response.data.message)
+              }
+            })
         }
       })
     },
-    invoiceCertification() {
-      this.appreciation = true
-      this.applyChange = false
-    },
-    toExpenses() {
-      sessionStorage.setItem('expensesTab','applyInvoice')
-      this.$router.push('expenses')
-    }
   },
   computed: {
 
@@ -449,21 +356,4 @@ header {
     vertical-align: middle;
   }
 }
-.invoiceInformation {
-    margin-top: 20px;
-    .invoiceInformationShow {
-      span {
-        display: block;
-        line-height: 2;
-      }
-    }
-    .bill_s1 {
-      font-family: Microsoft Yahei, 微软雅黑;
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.43);
-      letter-spacing: 0.71px;
-      line-height: 18px;
-      margin-left: 10px;
-    }
-  }
 </style>
