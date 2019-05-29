@@ -1513,8 +1513,9 @@
         }
         let len = val.length
         let reg = /[0-9]/
+        let flag = false
         if(len>5){
-         let flag = check(len)
+          flag = check(len)
           function check(index){
             let count = 0
             for(let i = index- 5; i < index;i++){
@@ -1526,7 +1527,7 @@
            }
             if(count > 4){
               return true
-            } else if(count < 5 && index > 5){
+            } else if(count < 5 && index > 6){
               return check(index - 1)
             } else if(index <= 5){
               return false
