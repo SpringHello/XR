@@ -132,13 +132,13 @@
                   <p>
                     {{item.name}}
                   </p>
-                  <p v-html="item.desc"></p>
+                  <p v-html="item.desc" :style="{color:item.colortwo}"></p>
                   <p v-if="item.secDesc">{{item.secDesc}}</p>
                 </div>
                 <img :src="item.textImg"  v-else>
 
               </div>
-              <div class="box-bottom" v-if="item.blackact">
+              <div class="box-bottom">
                 <div>
                   <p>活动时间：{{item.time}}</p>
                   <p>活动对象：{{item.activeObj}}</p>
@@ -220,13 +220,15 @@
           // },
           {
             imgPath: require('../../assets/img/activecenter/blackact.png'),
-            name: '',
-            desc: '',
-            time: '',
-            activeObj: '',
+            name: '低价秒杀 买一赠一',
+            desc: '云电脑惊喜上市 提前预约 抢先体验',
+            time: '2019.5.29-2019.6.30',
+            activeObj: '新老用户皆可参加',
             url: '/activity/BlacKActivities',
             isStart: true,
-            weight: '1'
+            weight: '1',
+            color: '#FFE5C0',
+            colortwo: '#FFBF82'
           },
           {
             imgPath: require('../../assets/img/activecenter/bg-card-2.png'),
@@ -236,7 +238,6 @@
             activeObj: '云主机 新注册用户',
             url: '/activity/free/',
             isStart: true,
-            blackact:true,
             weight: '1'
           },
           // {
@@ -256,7 +257,6 @@
             activeObj: '对象存储 新老用户',
             url: '/activity/objectstorage/',
             isStart: true,
-            blackact:true,
             weight: '1',
             color: 'black'
           },
@@ -269,7 +269,6 @@
             activeObj: '云数据库 新老用户',
             url: '/activity/hotdatabase/',
             isStart: true,
-            blackact:true,
             weight: '1',
             color: 'black'
           },
