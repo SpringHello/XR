@@ -1034,7 +1034,6 @@
       },
       createDatabase() {
         this.$router.push('/buy/database/')
-        //sessionStorage.setItem('pane', 'Pdatabase')
       },
       listDatabase() {
         this.$http.get('database/listDB.do').then(res => {

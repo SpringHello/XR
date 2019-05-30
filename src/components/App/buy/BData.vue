@@ -616,6 +616,7 @@
         })
       },
       setDataOS(name) {
+        this.mirrorShow = false
         var arg = name.split('#')
         for (var item of this.publicList) {
           item.selectSystem = ''
