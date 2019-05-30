@@ -488,6 +488,9 @@
                 case -1:
                   value = '异常'
                   break
+                case -2:
+                  value = '删除至回收站'
+                  break
                 case 2:
                   value = '创建中'
                   break
@@ -708,7 +711,7 @@
                 } else if (object.row.status == 6) {
                   // 已冻结
                   return h('span', {}, '已冻结')
-                } else if (object.row.usetype == 0) {
+                } else if (object.row.usetype == 0 && object.row.status != -2) {
                   return h('Dropdown', {
                     props: {
                       transfer: true
@@ -741,7 +744,7 @@
                         name: 'database'
                       }
                     }, '云数据库')])])
-                } else if (object.row.usetype != 2) {
+                } else if (object.row.usetype != 2 && object.row.status != -2) {
                   return h('span', {
                     style: {
                       color: '#2d8cf0',
@@ -906,6 +909,7 @@
           }
         }).then(response => {
           if (response.status == 200 || response.data.status == 1) {
+            this.select=[]
             this.refresh()
             this.$Message.success(response.data.message)
           } else {
@@ -921,7 +925,8 @@
           params: {
             page: this.page,
             pageSize: 10,
-            zoneId: $store.state.zone.zoneid
+            zoneId: $store.state.zone.zoneid,
+            showDelete: '1'
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -937,6 +942,9 @@
             if (item.status == 2 || item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6) {
               item._disabled = true
               ids.push(item.publicipid)
+            }
+            if (item.status == -2) {
+              item._disabled = true
             }
           })
           this.total = response.data.result.total
@@ -1649,7 +1657,8 @@
           params: {
             page: this.page,
             pageSize: 10,
-            zoneId: $store.state.zone.zoneid
+            zoneId: $store.state.zone.zoneid,
+            showDelete: '1'
           }
         }).then(response => {
            if (response.status == 200 && response.data.status == 1) {

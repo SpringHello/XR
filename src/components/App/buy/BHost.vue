@@ -1106,7 +1106,7 @@
             return
           }*/
           if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
-            this.passwordWarning = '你输入的密码不符合格式要求'
+            this.passwordWarning = '您输入的密码不符合格式要求'
             return
           }
         }
@@ -1532,9 +1532,9 @@
           function check(index){
             let count = 0
             for(let i = index- 5; i < index;i++){
-            let next = reg.test(val[i]) ? val[i] : val[i].charCodeAt() // 检查字符是数字还是字母
+            let next = reg.test(val[i]) ? val[i] : val[i].charCodeAt() // 检查字符是数字还是字母，数字没转原因是9和：ACSII码连续
             let current = reg.test(val[i-1]) ? val[i-1] : val[i-1].charCodeAt()
-            if(next-current === 1){ // ACSII 码相差1则为连续
+            if(next-current === 1){ // 字母ACSII 码相差1 则为连续
               count +=1
              }
            }
