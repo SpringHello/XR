@@ -742,7 +742,7 @@
           },
         ],
         orderData: [],
-        payWay: 'otherPay',
+        payWay: 'balancePay',
         otherPayWay: '',
         balance: '0.0',
         // 快速认证表单
