@@ -957,6 +957,7 @@
       },
       // 重新选择系统镜像
       setOS(name) {
+        this.mirrorShow = false
         var arg = [];
         if (this.mirrorQuery) {
           arg.push(this.mirrorQuery.templatename);
@@ -1002,6 +1003,7 @@
         }
       },
       setAppOS(name) {
+        this.mirrorShow = false
         var arg = name.split('#')
         for (var item of this.appList) {
           item.selectSystem = ''
@@ -1223,6 +1225,8 @@
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
+        // 关闭镜像选择提示
+        this.mirrorShow = false
         if (this.$route.mirror) {
           this.customMirror = this.mirrorQuery;
         } else {
