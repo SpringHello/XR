@@ -401,7 +401,7 @@
                     <p class="givep2">
                       <span style=" margin: 0 20px 0 22px;">2核</span>
                       <span>4G</span>
-                      <span style="margin: 0 18px 0 21px;">2M</span>
+                      <span style="margin: 0 18px 0 21px;">1M</span>
                       <span>40G</span>
                       <span style="margin: 0 18px 0 23px;">1年</span>
                     </p>
@@ -2173,7 +2173,7 @@
             this.discountProduct[index].hostSystemList.forEach(item => {
               item.children.forEach(item => {
                 item.value = item.systemtemplateid
-                item.label = item.templatedescript
+                item.label = item.templatename
               })
             })
             this.discountProduct[index].hostSystemList.forEach((item, index) => {
@@ -2207,7 +2207,7 @@
             this.discountProductfornew[index].hostSystemList.forEach(item => {
               item.children.forEach(item => {
                 item.value = item.systemtemplateid
-                item.label = item.templatedescript
+                item.label = item.templatename
               })
             })
             this.discountProductfornew[index].hostSystemList.forEach((item, index) => {
@@ -2235,7 +2235,7 @@
         obj.forEach(item => {
           item.children.forEach(item => {
             item.value = item.systemtemplateid
-            item.label = item.templatedescript
+            item.label = item.templatename
           })
         })
         // 为空的系统不能点击
