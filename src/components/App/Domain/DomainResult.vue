@@ -43,7 +43,27 @@
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
             </p>
             <div>
-              <span v-show="item.isRes=='available'">¥{{item.price}}<span>/年</span></span>
+              <span v-show="item.isRes=='available'">¥{{item.price}}</span>
+              <Dropdown v-show="item.isRes=='available'" trigger="custom" :visible="visible == index ? true : false" class="dropmenu">
+                    <span  @click="visible = index">
+                        更多价格
+                        <Icon type="arrow-down-b"></Icon>
+                    </span>
+                    <DropdownMenu slot="list">
+                        <div class="menu-item">
+                           <ul>
+                                  <li v-for="(subItem,subIndex) in yearList" :key="(subIndex+2)*3" @click="yearClick(subItem,subIndex)" :class="{clickMenu:yearIndex == subIndex}">
+                                     <div>
+                                         <p>{{subItem.year}}</p>
+                                         <p>注册价：<span>¥{{subItem.regPrice}}</span></p>
+                                         <p>续费价：<span>¥{{subItem.renewalPrice}}</span></p>
+                                     </div>
+                                  </li>
+                              </ul>
+                           <Button class="coures" @click="choosePrice(item)">确认</Button>
+                        </div>
+                    </DropdownMenu>
+                </Dropdown>
               <button v-show="item.isRes=='available'" @click="addList(item)">加入清单</button>
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
@@ -64,7 +84,9 @@
               <ul class="all-data" v-show="buyLists.length!=0">
                 <li v-for="(item,index) in buyLists">
                   <h2>{{item.name}}</h2>
-                  <button @click="remove(index)">移除</button>
+                  <div>
+                      <button @click="remove(index)">移除</button>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -113,7 +135,16 @@
         showValue: false,
         singles: [],
         Results: [],
-//        域名清单
+        visible: 'visible', // 更多价格浮窗
+        yearList: [
+          {year: '1年', regPrice: '85' ,renewalPrice: '85'},
+          {year: '3年', regPrice: '255' ,renewalPrice: '255'},
+          {year: '5年', regPrice: '425' ,renewalPrice: '425'},
+          {year: '10年', regPrice: '850' ,renewalPrice: '850'},
+        ],
+        yearValue: '',
+        yearIndex: 'yearIndex', // 价格年限选择
+        // 域名清单
         buyLists: [],
         addNum: '0',
         payMoney: 0,
@@ -163,6 +194,19 @@
         }
       },
 
+      //更多价格选择
+      yearClick(subItem,subIndex) {
+        this.yearValue = subItem.regPrice + '/' +subItem.year
+        this.yearIndex = subIndex
+      },
+
+      //选择价格确认
+      choosePrice (item) {
+        this.visible = 'visible'
+        this.yearIndex = 'yearIndex'
+        // item.price = this.yearValue
+      },
+
       //加入清单
       addList(item){
         if (this.buyLists.length == 0) {
@@ -175,12 +219,13 @@
             return preVal
           }, [])
         }
-
       },
+
       //移除
       remove(index){
         this.buyLists.splice(index, 1)
       },
+
       //全部移除
       removeAll(){
         this.buyLists = []
@@ -204,12 +249,14 @@
           }
         })
       },
+
       //查看已注册信息
       checked(name, status){
         sessionStorage.setItem('checkname', name)
         sessionStorage.setItem('status', status)
         this.$router.push('CheckReg')
       },
+
       //立即购买
       nowBuy(){
         if (this.$store.state.userInfo == null) {
@@ -435,7 +482,7 @@
         border: 1px solid rgba(233, 233, 233, 1);
         border-top: none;
         &:hover {
-          background: rgba(240, 247, 252, 1);
+          background: #F0F8FC;
         }
         P {
           font-size: 16px;
@@ -486,7 +533,78 @@
             color: rgba(42, 153, 242, 1);
           }
         }
-
+        .dropmenu {
+           margin: 0 15px 0 20px;
+           span {
+               font-size:14px;
+               font-weight:400;
+               color:rgba(102,102,102,1);
+               line-height:20px;
+               cursor: pointer;
+           }
+            .menu-item {
+                width:315px;
+                background:rgba(255,255,255,1);
+                border-radius:4px 0px 0px 0px;
+                ul {
+                    li {
+                        list-style: none;
+                        padding: 0;
+                        border-bottom: 1px solid #E9E9E9;
+                        div {
+                            width: 100%;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            p {
+                                padding: 12px 0;
+                                font-size:12px;
+                                color:rgba(102,102,102,1);
+                                line-height:16px;
+                                &:first-of-type {
+                                    padding-left: 18px;
+                                    width: 25%;
+                                    color:rgba(51,51,51,1);
+                                }
+                                &:nth-of-type(2) {
+                                    padding-left: 15px;
+                                    width: 40%;
+                                    border-left: 1px solid #E9E9E9;
+                                    border-right: 1px solid #E9E9E9;
+                                }
+                                &:last-of-type {
+                                    padding-left: 15px;
+                                    width: 35%;
+                                }
+                                span{
+                                    color:#FF624B;
+                                    font-size:12px;
+                                    line-height:16px;
+                                }
+                            }
+                        }
+                    }
+                    .clickMenu {
+                        div {
+                            p {
+                                background:rgba(42,153,242,1);
+                                color:#FFFFFF;
+                                &:first-of-type {
+                                    color:#FFFFFF;
+                                }
+                                span {
+                                    color:#FFFFFF;
+                                }
+                            }
+                        }
+                    }
+                }
+                .coures {
+                    float: right;
+                    margin: 10px 20px 10px 0;
+                }
+            }
+       }
       }
       .showAll {
         display: block;
@@ -539,14 +657,16 @@
                 color: rgba(51, 51, 51, 1);
                 font-weight: normal;
               }
-              button {
-                font-size: 16px;
-                color: rgba(42, 153, 242, 1);
-                border: 1px solid rgba(42, 153, 242, 1);
-                padding: 7px 43px;
-                background: #FFF;
-                cursor: pointer;
-                outline: none;
+              div {
+                  button {
+                      font-size: 16px;
+                      color: rgba(42, 153, 242, 1);
+                      border: 1px solid rgba(42, 153, 242, 1);
+                      padding: 7px 12px;
+                      background: #FFF;
+                      cursor: pointer;
+                      outline: none;
+                  }
               }
             }
           }
