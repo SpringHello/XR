@@ -370,6 +370,22 @@
         </Button>
       </div>
     </Modal>
+     <!-- 进入GPU服务器区域 -->
+   <Modal v-model="showModal.enterGPU" :scrollable="true" :closable="false" :width="390">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">您当前已切换到<span style="color:#2A99F2">{{ $store.state.zone.zonename}}</span>区域！
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s" style="text-align:center">
+        <Button type="primary" @click="showModal.enterGPU = false">我知道了</Button>
+      </p>
+    </Modal>
     </div>
 </template>
 
@@ -598,7 +614,8 @@
             publicIPHint:false,
             ratesChange:false,
             selectAuthType:false,
-            resetPassword:false
+            resetPassword:false,
+            enterGPU: false
           },
           //弹性ip
           ipValidate:{
@@ -2284,6 +2301,7 @@
       },
   },
     created(){
+        this.showModal.enterGPU = true
         this.toggleZone(this.$store.state.zone.zoneid)
         if (this.$store.state.authInfo == null) {
           this.showModal.selectAuthType = true

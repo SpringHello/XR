@@ -5,282 +5,388 @@
         <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
         <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在支付，请稍后...</span>
       </Spin>
-      <span>个人中心 / 费用中心</span>
+      <span>费用中心</span>
       <div class="content">
-        <svg class="icon" aria-hidden="true">
+        <!-- <svg class="icon" aria-hidden="true">
           <use xlink:href="#houtaiicon-feiyongzhongxin"></use>
-        </svg>
+        </svg> -->
         <span class="title"
               style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>
         <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
-              style="margin-top: 20px;min-height: 550px">
-          <Tab-pane label="账户概览" name="accountSummary">
+              style="margin-top: 20px;min-height: 650px">
+          <Tab-pane label="财务总览" name="accountSummary">
             <div class="money">
-              <div class="item">
-                <span>余额</span>
-                <button @click="torecharge">充值</button>
-                <!-- $router.push('/cashwithdrawal') -->
-                <button @click="Cashwithdrawal"
-                        style="margin-right: 10px;border:1px solid rgba(43,153,242,1);background: white;color:rgba(43,153,242,1);border-radius:2px;width:54px;height:28px;">提现
-                </button>
-                <div>
+              <div class="item1">
+                <div class="div1">
+                   <p>可用额度</p>
+                  <div style="width:440px;">
                   <ul style="width: 50%">
-                    <li>可用余额</li>
-                    <li style="color: #2A99F2;cursor: pointer" @click="getVipList">¥{{ balance }}</li>
-                  </ul>
-                  <ul style="width: 30%">
-                    <li>冻结金额
-                      <span @click="freezeDetails">
-                      <Icon type="ios-help-outline"
-                            style="color:#2A99F2;font-size:16px;margin-left: 10px;cursor: pointer;"></Icon>
-                    </span>
+                    <li>可用余额
+                      <Button type="ghost" shape="circle" size="small" @click="getVipList">转现金券</Button>
                     </li>
-                    <li style="cursor: pointer" @click="freezeDetails">¥{{ freezeDeposit }}</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="item">
-                <span>消费</span>
-                <div>
-                  <ul style="width: 50%">
-                    <li class="item-li" @click="getBillMonth">本月账单金额</li>
-                    <li>¥{{ billmonth }}</li>
+                    <li>¥{{ balance }}</li><!-- @click="getVipList" -->
                   </ul>
                   <ul style="width: 50%">
-                    <li class="item-li" @click="getBillAll">累计消费金额</li>
-                    <li>¥{{ theCumulative }}</li>
-                  </ul>
-                </div>
-              </div>
-              <div class="item">
-                <span>代金券</span>
-                <div>
-                  <ul style="width: 50%">
-                    <li class="item-li" @click="toMyCard">现金券额度</li>
+                    <li class="item-li">现金券额度</li>
                     <li>¥{{ voucher }}</li>
                   </ul>
+                  </div>
+                </div>
+                <div class="div2">
+                  <div class="right-top">
+                    <p>
+                      <span>余额告警</span>
+                      <i-switch class="BalanceAlarmSwitch" v-model="BalanceAlarmSwitch" @on-change="balanceAlarmSet"></i-switch><!-- :disabled="BalanceAlarmSwitchdis" -->
+                    </p>
+                    <p>(告警额度为¥{{ $store.state.userInfo.balanceAlarmAmount }}
+                      <span @click="SetBalanceopen">修改</span> )
+                    </p>
+                  </div>
+                  <p>
+                    <button @click="torecharge">充值</button>
+                    <button @click="Cashwithdrawal"
+                            style="border:1px solid rgba(43,153,242,1);background: white;color:rgba(43,153,242,1);margin-left:10px;">提现
+                    </button>
+                  </p>
+                </div>
+              </div>
+              <div class="item2">
+                <p>本月累计支出</p>
+                <div>
                   <ul style="width: 50%">
-                    <li class="item-li" @click="toMyCard">优惠券数量</li>
-                    <li>{{ couponNumber }}</li>
+                    <li>消费金额
+                      <Button type="ghost" shape="circle" size="small">查看详情</Button>
+                    </li>
+                    <li>¥{{ theCumulative }}</li>
+                  </ul>
+                  <ul style="width: 50%">
+                    <li>冻结金额
+                      <Button type="ghost" shape="circle" size="small" @click="freezeDetails">历史冻结记录</Button>
+                    </li>
+                    <li>¥{{ freezeDeposit }}</li>
                   </ul>
                 </div>
               </div>
-            </div>
-            <h3>交易流水</h3>
-            <div class="expenses_condition">
-              <span>按交易时间</span>
-              <Row style="display: inline-block;margin-left: 10px">
-                <Col span="12">
-                  <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
-                               placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
-                </Col>
-              </Row>
-              <span style="margin-left: 20px">按交易类型</span>
-              <Select v-model="types" style="width:231px;margin-left: 10px;position: relative;bottom: 12px">
-                <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-              <span style="margin-left: 20px">按交易金额</span>
-              <Input-number :min="0" v-model="value1"
-                            style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
-              &nbsp;&nbsp;
-              <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
-              &nbsp;&nbsp;
-              <Input-number :min="0" v-model="value2"
-                            style="width: 116px;position: relative;bottom: 12px"></Input-number>
-              <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
-              </Button>
-              <Button type="primary" style="bottom: 12px;position: relative" @click="seaWaterN">导出流水
-              </Button>
-              <Table highlight-row :columns="columns" :data="tabledata"></Table>
-              <div style="margin: 10px;overflow: hidden">
-                <div style="float: right;">
-                  <Page :total="total" :current="1" :page-size="7" @on-change="currentChange"></Page>
-                </div>
+              <div class="item3" @click="UnpaidJump('orderManage')">
+                <p>待支付订单</p>
+                <p>
+                  <span>{{ $store.state.userInfo.orderTableNum }}</span>
+                  笔
+                </p>
+                <p v-if="$store.state.userInfo.orderTableNum<=0" @click.stop="UnpaidJump('orderManage')" style="color:#2A99F2;cursor: pointer;">
+                  查看订单管理
+                </p>
+                <p v-else-if="$store.state.userInfo.orderTableNum<10" @click.stop="UnpaidJump('orderManagepay')" style="color:#2A99F2;cursor: pointer;">
+                  立即支付
+                </p>
+                <p v-else-if="$store.state.userInfo.orderTableNum>=10">
+                  您的待支付订单较多，可前往<span @click.stop="UnpaidJump('orderManage')" style="cursor: pointer;">订单管理</span>删除
+                </p>
+                <img src="../../assets/img/back/daizhifu.png"/>
+              </div>
+              <div class="item4" @click="UnpaidJump('myCard')">
+                <p>代金券数量</p>
+                <p>
+                  <span>{{ couponNumber }}</span>
+                  张
+                </p>
+                <p v-if="couponNumber<=0" @click.stop="$router.push('activity/')" style="color:#2A99F2;cursor: pointer;">
+                 查看优惠活动
+                </p>
+                <p v-else-if="couponNumber<10" @click.stop="UnpaidJump('myCardnot')" style="color:#2A99F2;cursor: pointer;">
+                 立即使用
+                </p>
+                <p v-else-if="couponNumber>=10">
+                 您的代金券数量较多，请及时使用以免过期
+                </p>
+                <img src="../../assets/img/back/daijj.png"/>
+              </div>
+              <div class="item5" @click="UnpaidJump('invoicejmp')">
+                <p>可开发票金额</p>
+                <p>
+                  <span>{{ invoice }}</span>
+                  元
+                </p>
+                <p v-if="invoice<=0" @click.stop="UnpaidJump('invoicejmp')" style="cursor: pointer;">
+                  查看发票管理
+                </p>
+                <p v-else-if="invoice>=1" @click.stop="UnpaidJump('invoicejmp')" style="cursor: pointer;">
+                  立即开票
+                </p>
+                <img src="../../assets/img/back/kkfpiao.png"/>
               </div>
             </div>
           </Tab-pane>
-          <Tab-pane label="订单管理" name="orderManage">
-            <div class="ordertype">
-              <span class="order_s1">订单类型</span>
-              <Select v-model="order_type" @on-change="changeOrder" style="width:231px;margin-left: 10px">
-                <Option v-for="item in orderList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-              <span class="order_s2"> 订单时间</span>
-              <Select v-model="timeType" style="width:231px;margin-left: 10px" @on-change="searchOrderByType">
-                <Option v-for="item in timeTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-              <span style="line-height: 30px;">～</span>
-              <Row>
-                <Col span="12">
-                  <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
-                               placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
-                </Col>
-              </Row>
-              <Button type="primary" style="margin-left: 120px" @click="orderRefundBefore" :disabled="refundDisabled">退款</Button>
-              <Button type="primary" style="margin-left: 10px" @click="orderPay" :disabled="payDisabled">支付</Button> <!-- 195px-->
-              <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
-              </Button>
-            </div>
-            <div class="orderdata">
-              <Table highlight-row :columns="columns_order" :data="orderData" @on-selection-change="select"></Table>
-              <span
-                style="display:inline-block;margin-top:10px;font-family: PingFangSC-Regular;font-size: 14px;color: #2A99F2;line-height: 18px;cursor:pointer"
-                @click="clipCoupons">使用优惠券</span>
-              <span v-show="costSeen"
-                    style="font-family: Microsoft Yahei,微软雅黑;font-size: 20px;color: rgba(0,0,0,0.65);float: right;margin-top: 10px">总计支付 : {{totalCost}} 元（实际支付：{{ actualDelivery
-                  }}元）</span>
-              <div style="margin: 10px;overflow: hidden">
-                <div style="float: right;">
-                  <Page :total="ordertotal" :current="1" :page-size="10" @on-change="order_currentChange"></Page>
+					<Tab-pane label="账单" name="bills" class="bill">
+            <ButtonGroup>
+                <Button v-for="(item,index) in billTabs" :key="index" :class="{'select-tab':billBtnSelected == index}" @click="billBtnSelected=index">{{item}}</Button>
+            </ButtonGroup>
+            <div v-if="billBtnSelected==0" class="bill-overview">
+              <div class="overview">
+                <div class="flex-vertical-center content-header">
+                  <span>{{defaultMonth}}账单概览</span>
+                  <div>
+                    <span>选择账期</span>
+                    <DatePicker type="month" :value="valueBill" format="yyyy年M月" placeholder="请选择月份" :clearable="false" style="width: 200px" @on-change="dataChangeBill"></DatePicker>
+                    <Button type="primary" @click="exportBillMonth">导出本月账单</Button>
+                  </div>
+                </div>
+                <div class="show-panel">
+                  <div>
+                    <div class="title">
+                      <span>账单金额（元）</span>
+                      <Poptip trigger="hover" content="账单金额是指用户在新睿云平台的实际消费金额" placement="right-end">
+                          <Icon type="ios-help-outline"></Icon>
+                      </Poptip>
+                    </div>
+                    <div class="count">
+                      <div>{{billInfo.billAmount}}</div>
+                      <span>=</span>
+                      <div>
+                        <span>余额支付</span>
+                        <p>{{billInfo.balancePay}}</p>
+                      </div>
+                      <span>+</span>
+                      <div>
+                        <span>第三方支付</span>
+                        <p>{{billInfo.thirdPay}}</p>
+                      </div>
+                      <span>+</span>
+                      <div>
+                        <span>现金券支付</span>
+                        <p>{{billInfo.voucherPay}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="title">
+                      <span>订单金额（元）</span>
+                      <Poptip trigger="hover" content="订单金额是指用户在账期内所有已支付的订单总额" placement="right-end">
+                          <Icon type="ios-help-outline"></Icon>
+                      </Poptip>
+                    </div>
+                    <div class="count">
+                      <div>{{billInfo.orderAmount}}</div>
+                      <span>=</span>
+                      <div>
+                        <span>账单金额</span>
+                        <p>{{billInfo.billAmount}}</p>
+                      </div>
+                      <span>+</span>
+                      <div>
+                        <span>优惠券抵扣支付</span>
+                        <p>{{billInfo.coupon}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list">
+                <div class="flex-vertical-center content-header">
+                  <span>{{defaultMonth}}账单汇总</span>
+                  <Button type="primary" @click="billExportType()">导出当前账单</Button>
+                </div>
+                <ul class="monthly-tabs">
+                  <li v-for="(item,index) in billMonthlyTabs" :key="index" :class="{'select-tab':billTypeSelected == index}" @click="changetabs(index)">{{item}}</li>
+                </ul>
+              </div>
+              <div class="table-container">
+                <div v-if="billTypeSelected==0"> 
+                  <Table :columns="columnsProductA" :data="dataProductA"></Table>
+                  <ul class="table-end">
+                    <li>总计</li>
+                    <li>¥{{billProductTotal}}</li>
+                  </ul>
+                </div>
+                <div v-if="billTypeSelected==1">
+                  <Table :columns="columnsZoneA" :data="dataZoneA"></Table>
+                  <ul class="table-end">
+                    <li>总计</li>
+                    <li>¥{{billZoneTotal}}</li>
+                  </ul>
+                </div>
+                <div v-if="billTypeSelected==2">
+                  <Table :columns="columnsDatetypeA" :data="dataDatetypeA"></Table>
+                  <ul class="table-end">
+                    <li>总计</li>
+                    <li>¥{{billDatetypeTotal}}</li>
+                  </ul>
                 </div>
               </div>
             </div>
+            <div v-if="billBtnSelected==1">
+              <div class="expenses_condition">
+                <span style="margin-right: 10px">按交易时间</span>
+                <Date-picker v-model="timeResourceVal" format="yyyy-MM-dd" type="daterange" placement="bottom-start" :clearable="false"
+                            placeholder="选择日期" style="width: 231px;position: relative;bottom: 12px" @on-change="dataChangeResource"></Date-picker>
+                <span style="margin-left: 20px">按交易金额</span>
+                <Input-number :min="0" v-model="minCashResource"
+                              style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
+                &nbsp;&nbsp;
+                <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
+                &nbsp;&nbsp;
+                <Input-number :min="0" v-model="maxCashResource"
+                              style="width: 116px;position: relative;bottom: 12px"></Input-number>
+                <Button type="primary" style="bottom: 12px; margin-left: 10px;position: relative" @click="getResourcesTable()">查询
+                </Button>
+                <Button type="primary" style="bottom: 12px;position: relative;float:right" @click="exportResource()">导出流水
+                </Button>
+                <Table highlight-row :columns="columnsResources" :data="resourcesTable"></Table>
+                <ul class="table-end table-other">
+                  <li>总计支出</li>
+                  <li>¥{{resouresAllCost}}</li>
+                </ul>
+                <div style="margin: 10px;overflow: hidden">
+                  <div style="float: right;">
+                    <Page :total="resouresTotal" :current="resourcePage" :page-size="resourcePageSize" @on-change="resourcesPageChange"></Page>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-if="billBtnSelected==2">
+              <div class="expenses_condition">
+                <span>按交易时间</span>
+                <Row style="display: inline-block;margin-left: 10px">
+                  <Col span="12">
+                    <Date-picker v-model="time" type="daterange" placement="bottom-start" :clearable="false"
+                                placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
+                  </Col>
+                </Row>
+                <span style="margin-left: 20px">按交易金额</span>
+                <Input-number :min="0" v-model="value1"
+                              style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
+                &nbsp;&nbsp;
+                <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
+                &nbsp;&nbsp;
+                <Input-number :min="0" v-model="value2"
+                              style="width: 116px;position: relative;bottom: 12px"></Input-number>
+                <Button type="primary" style="bottom: 12px; margin-left: 10px;position: relative" @click="search()">查询
+                </Button>
+                <Button type="primary" style="position: relative;float:right" @click="seaWaterN">导出流水
+                </Button>
+                <Table highlight-row :columns="columnsFlow" :data="tabledataFlow"></Table>
+                <ul class="table-end table-other">
+                  <li style="margin-right: 80px;">总计支出</li>
+                  <li style="border-right:1px solid #D9D9D9">¥{{flowAllCost}}</li>
+                  <li>总计收入</li>
+                  <li>¥{{flowAllIncome}}</li>
+                </ul>
+                <div style="margin: 10px;overflow: hidden">
+                  <div style="float: right;">
+                    <Page :total="total" :current="1" :page-size="7" @on-change="currentChange"></Page>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-if="billBtnSelected==3" style="padding-top:20px">
+              <Table highlight-row :columns="columnsExport" :data="exportTable"></Table>
+                <div style="margin: 10px;overflow: hidden">
+                  <div style="float: right;">
+                    <Page :total="exportTotal" :current="exportPage" :page-size="exportPageSize" @on-change="exportPageChange"></Page>
+                  </div>
+                </div>
+            </div>      
+					</Tab-pane>
+          <Tab-pane label="订单管理" name="orderManage">
+            <div class="ordertype">
+              <p>
+                <RadioGroup v-model="button5" type="button">
+                  <Radio label="1">包年包月</Radio>
+                  <Radio label="3">实时计费</Radio>
+              </RadioGroup>
+              </p>
+              <p class="order_s1">
+                <Button type="primary" style="" @click="orderPay" :disabled="payDisabled">批量支付</Button>
+              <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
+              </Button>
+              <Button type="primary" style="margin-left: 10px" @click="orderRefundBefore" :disabled="refundDisabled">7天无理由退款</Button>
+              </p>
+              <p class="order_s2">
+                <img src="../../assets/img/expenses/xiangnum.png" class="order_s2span"/>
+                <span class="order_s2span1">共 {{OrderPages}} 项 | 已选择<span> {{AllMpneylength}} </span>项 </span>
+                <span class="order_s2span2">总价：<span>¥{{AllMpney}}</span></span>
+                <span class="orderdiv">
+                  <span class="order_s2span3">按创建时间</span>
+                  <Row class="datarow">
+                    <Col span="12">
+                      <Date-picker v-model="timeOrder" type="daterange" :options="optionsOrder" placement="bottom-start" placeholder="选择日期" style="width: 231px;" @on-change="dataChangeOrder"></Date-picker>
+                    </Col>
+                  </Row>
+                  <Button type="primary" @click="getOrder('1')">查询</Button>
+                </span>
+              </p>
+              <Table :columns="columns5" :data="data5" @on-sort-change="SortField" @on-selection-change="select" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
+              <div style="margin: 10px;overflow: hidden">
+                <div style="float: right;">
+                  <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
+                </div>
+              </div>
+            </div>
+           
           </Tab-pane>
           <Tab-pane label="我的卡券" name="myCard">
             <div class="searchCard">
-              <span>类型</span>
-              <Select v-model="cardType" style="width:231px;margin-left: 10px">
-                <Option v-for="item in cardTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-              <span style="margin-left: 20px">状态</span>
-              <Select v-model="cardState" style="width:231px;margin-left: 10px">
-                <Option v-for="item in cardStateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-              <Button type="primary" @click="searchCard">查询</Button>
-              <Button type="primary" style="float: right" @click="showModal.exchangeCard=true">兑换优惠券</Button>
+              
+              <p>
+                <span class="spana">适用产品：</span>
+                <RadioGroup v-model="ApplicableProducts" type="button" class="rideo" @on-change="ProductChange">
+                  <!-- 适用产品类型 默认(包括老数据)0 全产品通用; 1  包年包月可用;  2  弹性云服务器可用;  3 云数据库可用;  4 网络产品可用;  5 对象存储可用;  6 云市场 -->
+                  <Radio label="">全部</Radio>
+                  <Radio label="0">全产品通用</Radio>
+                  <Radio label="1">包年包月可用</Radio>
+                  <Radio label="2">弹性云服务器可用</Radio>
+                  <Radio label="3">云数据库可用</Radio>
+                  <Radio label="4">网络产品可用</Radio>
+                  <Radio label="5">对象存储可用</Radio>
+                  <Radio label="6">云市场</Radio>
+                </RadioGroup>
+              </p>
+              <p>
+                <span class="spana">代金券状态：</span>
+                <RadioGroup v-model="VoucherStatus" type="button" @on-change="VoucherChange" class="rideo" >
+                  <!-- 是否使用  0未使用  1已使用   2已过期 -->
+                  <Radio label="">全部</Radio>
+                  <Radio label="0">待使用</Radio>
+                  <Radio label="1">已使用</Radio>
+                  <Radio label="2">已过期</Radio>
+                </RadioGroup>
+              </p>
+              <p>
+                <span class="spana">到期时间：</span>
+                <RadioGroup v-model="DueTime" @on-change="DueTimeChange" type="button" class="rideo" >
+                  <Radio label="">全部</Radio>
+                  <Radio label="7">7天内到期</Radio>
+                </RadioGroup>
+                <Button type="primary" style="float: right;margin-top:10px;" @click="showModal.exchangeCard=true">获取优惠券</Button>
+              </p>
             </div>
-            <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" style="margin-top:10px">
+            <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" @on-sort-change="cardVolumeField" no-data-text="您还没有优惠券" style="margin-top:20px">
             </Table>
-            <!--     <div style="margin: 10px;overflow: hidden">
+                <div style="margin: 10px;overflow: hidden">
                    <div style="float: right;">
-                     <Page :total="cardTotal" :current="1" @on-change="cardCurrentChange"></Page>
+                     <Page :total="cardTotal" :current="cardscurrent" :page-size-opts="Cardopts" @on-change="cardCurrentChange" @on-page-size-change="CardPageSizechange" show-sizer></Page>
                    </div>
-                 </div>-->
+                 </div>
           </Tab-pane>
-          <Tab-pane label="发票申请" name="applyInvoice">
-            <div v-show="applyChange">
-              <div class="invoiceType">
-                <div>
-                  <p>温馨提示：1.您选择的发票金额不能小于1000元，增值税专用发票金额不能小于10000元，请累计之后一并申请</p>
-                  <p style="margin-left: 5em">2.发票寄出时间：每月20号统一寄出，15号之前申请的发票将在当月20号寄出，15号之后申请的发票将在次月20号寄出。</p>
-                </div>
+          <Tab-pane label="发票管理" name="applyInvoice" class="invoice-management">
+            <div class="invoice-list">
+              <div class="alert-warning">
+                <p>1.您选择的增值税专票金额不能小于1000元，请累计之后一并申请。</p>
+                <p>2.开票时间为每月10-25日，在申请期限内的发票申请将在三个工作日内寄出，25号之后的发票申请将在下月10号以后寄出。</p>
+              </div>
+              <div class="invoice-money">
                 <p>实际可开金额发票：<span>￥{{ invoice }}</span></p>
+                <p>开票口径：按充值金额开票，已开票金额将<span>无法操作提现</span></p>
               </div>
-              <div class="invoiceInformation">
-                <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="100"
-                      label-position="left">
-                  <Form-item label="开票金额" prop="invoiceAmount">
-                    <Input :maxlength="10" v-model="formInvoiceDate.invoiceAmount" placeholder="请输入开票金额"
-                           style="width: 317px"
-                           number></Input>
-                  </Form-item>
-                  <Form-item label="发票类型" prop="InvoiceType">
-                    <Select v-model="formInvoiceDate.InvoiceType" placeholder="请选择发票类型" style="width: 317px"
-                            @on-change="changeInvoiceType">
-                      <Option value="1">增值税专用发票</Option>
-                      <Option value="0">普通发票</Option>
-                    </Select>
-                  </Form-item>
-                  <Form-item label="发票抬头" prop="invoiceTitle">
-                    <Input :maxlength="32" v-model="formInvoiceDate.invoiceTitle" placeholder="请输入发票抬头"
-                           style="width: 317px"></Input>
-                    <!-- <span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的抬头名称默认为认证企业，无需填写，但是可以修改。</span>-->
-                  </Form-item>
-                  <Form-item label="纳税人识别码" prop="taxpayerId" v-if="formInvoiceDate.InvoiceType == 0">
-                    <Input :maxlength="32" v-model="formInvoiceDate.taxpayerId" placeholder="请输入纳税人识别码"
-                           style="width: 317px"></Input>
-                  </Form-item>
-                  <Form-item label="发票信息" v-show="authenticationShow">
-                    <div class="invoiceInformationShow">
-                      <span>单位：{{ formAppreciationDate.companyName }}</span>
-                      <span>纳税人识别码：{{ formAppreciationDate.taxpayerID }}</span>
-                      <span>注册电话：{{ formAppreciationDate.registeredPhone }}</span>
-                      <span>开户银行：{{ formAppreciationDate.depositBank }}</span>
-                      <span>银行账号：{{ formAppreciationDate.bankAccount }}</span>
-                    </div>
-                  </Form-item>
-                  <Form-item label="发票信息" v-show="invoiceInformationShow">
-                    <p v-if="certificateStatus" style="line-height: 2.5;">您需要通过<span
-                      style="color: dodgerblue;cursor:pointer;"
-                      @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
-                    <Button type="primary" style="margin-left: 237px" @click="invoiceCertification"
-                            v-if="certificateStatus">点击认证
-                    </Button>
-                    <p v-if="underReview" style="line-height: 2.5;">您的增票资质正在<span style="color: #FF8B22;">审核中</span>，请耐心等待
-                    </p>
-                    <p v-if="failureAudit" style="line-height: 2.5;">您的增票资质<span
-                      style="color: #FF3366;">审核失败</span>，点击<span style="color: dodgerblue;cursor:pointer;"
-                                                                  @click="invoiceCertification">增票资质认证</span>进行修改</p>
-                  </Form-item>
-                  <Form-item label="收件人" prop="recipients">
-                    <Input :maxlength="10" v-model="formInvoiceDate.recipients" placeholder="请输入收件人姓名"
-                           style="width: 317px"></Input>
-                  </Form-item>
-                  <Form-item label="收件地址" prop="consigneeAddress">
-                    <Input :maxlength="64" v-model="formInvoiceDate.consigneeAddress" placeholder="请输入收件地址"
-                           style="width: 317px"></Input>
-                    <!--<span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的收件地址默认为认证企业地址，无需填写，但是可以修改。</span>-->
-                  </Form-item>
-                  <Form-item label="联系电话" prop="phone">
-                    <Input :maxlength="20" v-model="formInvoiceDate.phone" placeholder="请输入联系电话"
-                           style="width: 317px"></Input>
-                  </Form-item>
-                  <Form-item>
-                    <Button type="primary" style="font-size: 12px;margin-left: 237px"
-                            @click="invoiceMake('formInvoiceDate')">确认开票
-                    </Button>
-                  </Form-item>
-                </Form>
-                <div class="InvoiceRecords">
-                  <span>发票申请记录</span>
-                  <Table highlight-row :columns="billColumns" :data="billTabledata" style="margin-top: 20px"></Table>
+              <div class="invoice-records" v-if="invoiceList">
+                <Button type="primary" style="margin-right: 10px" @click="toAppllyInvoice()">申请发票</Button>
+                <Button @click="toAdressee()">发票信息&收件人</Button>
+                <Table highlight-row :columns="invoiceColumns" :data="invoiceTabledata" style="margin-top: 10px"></Table>
+                <div style="margin: 10px;overflow: hidden">
+                  <div style="float: right;">
+                    <Page :total="invoiceTotal" :current="invoicePage" :page-size="invoicePageSize" @on-change="invoicePageChange"></Page>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div v-show="appreciation">
-              <span class="appreciation_s1">增值资质认证</span>
-              <div style="margin-top: 15px;padding: 13px 11px;background: #F7FBFF">
-                <p class="appreciation_p">我们会在一个工作日内审核完成。</p>
-                <p class="appreciation_p">1、注意有效增值税发票开票资质仅为一个。</p>
-                <p class="appreciation_p">2、发票常见问题查看增票资质帮助。</p>
-              </div>
-              <div style="margin-top: 20px">
-                <Form ref="formAppreciationDate" :model="formAppreciationDate" :rules="ruleValidate"
-                      :label-width="100" label-position="left">
-                  <Form-item label="单位名称" prop="companyName">
-                    <Input :maxlength="32" v-model="formAppreciationDate.companyName" placeholder="请输入单位名称"
-                           style="width: 317px"></Input>
-                  </Form-item>
-                  <Form-item label="纳税人识别码" prop="taxpayerID">
-                    <Input :maxlength="32" v-model="formAppreciationDate.taxpayerID" placeholder="请输入纳税人识别码"
-                           style="width: 317px"></Input>
-                  </Form-item>
-                  <Form-item label="注册地址" prop="registeredAddress">
-                    <Input :maxlength="64" v-model="formAppreciationDate.registeredAddress" placeholder="请输入注册地址"
-                           style="width: 317px"></Input>
-                  </Form-item>
-                  <Form-item label="注册电话" prop="registeredPhone">
-                    <Input :maxlength="20" v-model="formAppreciationDate.registeredPhone" placeholder="请输入注册电话"
-                           style="width: 317px"></Input>
-                  </Form-item>
-                  <Form-item label="开户银行" prop="depositBank">
-                    <Input :maxlength="32" v-model="formAppreciationDate.depositBank" placeholder="请输入开户银行"
-                           style="width: 317px"></Input>
-                  </Form-item>
-                  <Tooltip :content="bank_account" placement="right-start">
-                    <Form-item label="银行账户" prop="bankAccount">
-                      <Input :maxlength="32" v-model="formAppreciationDate.bankAccount" placeholder="请输入银行账户"
-                             style="width: 317px"
-                             v-on:input="conversion"></Input>
-                    </Form-item>
-                  </Tooltip>
-                  <Form-item>
-                    <Button style="margin-left: 191px" @click="cancelCertification">取消</Button>
-                    <Button type="primary" style="margin-left: 10px"
-                            @click="affirmCertification('formAppreciationDate')">确定
-                    </Button>
-                  </Form-item>
-                </Form>
               </div>
             </div>
           </Tab-pane>
@@ -941,7 +1047,7 @@
         <p class="cash-coupon-p">总支付金额：<span> ¥{{ payForm.paymentAmount }}</span></p>
         <p class="cash-coupon-p">现金券支付金额：<span>¥{{payForm.cashCoupon }}</span></p>
         <p class="cash-coupon-p">现金券余额：<span>¥{{ payForm.cashCouponBalance}}</span></p>
-        <p class="cash-coupon-p" v-if="parseInt(payForm.cashCoupon) <= parseInt(payForm.paymentAmount)">还需支付：<span>¥{{ (payForm.paymentAmount - payForm.cashCoupon).toFixed(2)}}</span></p>
+        <p class="cash-coupon-p" v-if="voucher <= parseInt(payForm.paymentAmount)">现金支付金额：<span>¥{{ (payForm.paymentAmount - voucher).toFixed(2)}}</span></p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="payOk">确认支付</Button>
@@ -964,110 +1070,172 @@
         <Button type="primary" @click="goreal">去实名</Button>
       </p>
     </Modal>
+    <!-- 设置余额告警 -->
+    <Modal v-model="showModal.SetBalanceWarning" :scrollable="true" :closable="true" :width="500">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">设置余额告警</span>
+      </p>
+      <div class="modal-content-s">
+        <div class="SetBalancet">
+          <p>
+            <span>告警对象</span>
+            <RadioGroup v-model="BalanceRepeadio">
+                <Radio label="可用额度"></Radio>
+                <Radio label="可用余额"></Radio>
+            </RadioGroup>
+          </p>
+          <p>仅判断可用余额与现金券余额之和与告警额度大小</p>
+          <p>
+            <span>告警额度</span>
+            <InputNumber :max="999999999" :min="1" v-model="BalanceRepval" style="width: 300px"></InputNumber>
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.SetBalanceWarning = false">取消</Button>
+        <Button type="primary" @click="updateBalanceWarn">确认</Button>
+      </p>
+    </Modal>
+    <Modal v-model="showModal.invoiceDetail" :scrollable="true" :closable="true" :width="500">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">发票详情</span>
+      </p>
+      <div class="invoice-detail">
+        <dl>
+          <dt>开票金额</dt>
+          <dd>{{invoiceDetailShow.amount}}</dd>
+          <dt>发票类型</dt>
+          <dd>{{invoiceDetailShow.type==1?'增值税专用发票':'增值税普通发票'}}</dd>
+        </dl>
+        <dl>
+          <dt>收件人</dt>
+          <dd>{{invoiceDetailShow.recipients}}</dd>
+          <dt>联系电话</dt>
+          <dd>{{invoiceDetailShow.phone}}</dd>
+        </dl>
+        <dl>
+          <dt>纳税人识别码</dt>
+          <dd class="w">{{invoiceDetailShow.identicode}}</dd>
+        </dl>
+        <dl>
+          <dt>发票抬头</dt>
+          <dd class="w">{{invoiceDetailShow.title}}</dd>
+        </dl>
+        <dl>
+          <dt>收件地址</dt>
+          <dd class="w">{{invoiceDetailShow.address}}</dd>
+        </dl>
+        
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button type="primary" @click="showModal.invoiceDetail = false">知道了</Button>
+      </p>
+    </Modal>
+    <Modal v-model="showModal.invoiceDetailP" :scrollable="true" :closable="true" :width="500">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">发票详情</span>
+      </p>
+      <div class="invoice-detail">
+        <dl>
+          <dt>开票金额</dt>
+          <dd>{{invoiceDetailShow.amount}}</dd>
+          <dt>发票类型</dt>
+          <dd>{{invoiceDetailShow.type==1?'增值税专用发票':'增值税普通发票'}}</dd>
+        </dl>
+        <dl>
+          <dt>收件人</dt>
+          <dd>{{invoiceDetailShow.recipients}}</dd>
+          <dt>联系电话</dt>
+          <dd>{{invoiceDetailShow.phone}}</dd>
+        </dl>
+        <dl>
+          <dt>开户银行</dt>
+          <dd>{{invoiceDetailShow.bankname}}</dd>
+          <dt>银行账户</dt>
+          <dd>{{invoiceDetailShow.banknum}}</dd>
+        </dl>
+        <dl>
+          <dt>纳税人识别码</dt>
+          <dd class="w">{{invoiceDetailShow.identicode}}</dd>
+        </dl>
+        <dl>
+          <dt>发票抬头</dt>
+          <dd class="w">{{invoiceDetailShow.title}}</dd>
+        </dl>
+        
+        <dl>
+          <dt>注册地址</dt>
+          <dd class="w">{{invoiceDetailShow.address}}</dd>
+        </dl>
+        <dl>
+          <dt>注册电话</dt>
+          <dd class="w">{{invoiceDetailShow.phone}}</dd>
+        </dl>
+        <dl>
+          <dt>收件地址</dt>
+          <dd class="w">{{invoiceDetailShow.address}}</dd>
+        </dl>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button type="primary" @click="showModal.invoiceDetailP = false">知道了</Button>
+      </p>
+    </Modal>
+    <Modal v-model="showModal.billExport" :scrollable="true" :closable="true" :width="500">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">导出账单</span>
+      </p>
+      <div class="modal-content-s">
+        <div class="export-bill-modal">
+          <div class="row">
+            <i class="lable">{{currentMonth}}月账单文件</i>
+            <span class="btn" v-if="checkExport">
+              <span @click="downloadBillAll()" v-if="billExportflag">{{billExportText}}</span>
+              <span v-else>
+                <span v-if="billExportUrl">
+                  <span style="margin-right:10px;color:#666666">{{billExportName}}</span><a class="btn" :href="billExportUrl">下载</a>
+                </span>
+                <span v-else>
+                  <span style="color:#FF0000;margin-right:10px">账单生成失败，请重试</span><span class="btn" @click="downloadBillAll()">重试</span>
+                </span>
+              </span>
+            </span>
+            <span v-if="!checkExport">账单于次月3日统计完成</span>
+          </div>
+          <div class="row">
+            <i class="lable">账单自动发送</i>
+            <i-switch v-model="switchBill" @on-change="changeSwitch"></i-switch>
+          </div>
+          <div class="row" v-if="switchBill">
+            <span style="color:#B2B2B2">开启账单自动发送之后，将在每月3号自动产生上月账单并发送至账单接收人</span>
+          </div>
+          <div class="row" v-if="switchBill">
+            <i class="lable">账单接收人</i>
+            <Select v-model="selectLinkMan" style="width:280px;">
+              <Option :value="item.id" v-for="(item,index) in linkManData" :key="index">{{item.username}}</Option>
+            </Select>
+            <Poptip trigger="hover" placement="top" style="margin-left:8px;color:#2B99F2;font-size:18px;">
+                <Icon type="ios-help-outline"></Icon>
+                <div class="api" slot="content" style="width:145px;white-space: normal;line-height:16px;">若您需要将账单发送至其他联系人，可以通过操作
+                  <span style="color:#FF881C;line-height:16px">个人中心-提现管理-添加联系人</span>，添加您需要的联系人。
+                </div>
+            </Poptip>
+          </div>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.billExport = false">取消</Button>
+        <Button type="primary" @click="billExportAuto_ok()">确认</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import reg from '../../util/regExp'
-
+  import $store from '../../vuex'
   export default {
     data() {
-      const validateInvoice = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('开票金额不能为空'))
-        }
-        if (!/^([1-9][\d]{0,7}|0)(\.[\d]{1,2})?$/.test(value)) {
-          callback(new Error('请输入保留两位小数的金额数'))
-        } else if (this.formInvoiceDate.InvoiceType == 0) {
-          if (value < 1000 || value > this.invoice) {
-            callback(new Error('开票金额不能少于1000或者多于实际可开金额'))
-          }
-        } else if (this.formInvoiceDate.InvoiceType == 1) {
-          if (value < 10000 || value > this.invoice) {
-            callback(new Error('开票金额不能少于10000或者多于实际可开金额'))
-          }
-        }
-        callback()
-      }
-      const validateType = (rule, value, callback) => {
-        /*this.$refs.formInvoiceDate.validateField('invoiceAmount')*/
-        if (!value) {
-          return callback(new Error('请选择开票类型'))
-        } else {
-          callback()
-        }
-      }
-      const validateTitle = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('发票抬头不能为空'))
-        }
-        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
-          callback(new Error('发票抬头不能包含特殊字符、空格或是纯数字'));
-        } else {
-          callback()
-        }
-      }
-      const validateRecipients = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('收件人姓名不能为空'))
-        }
-        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
-          callback(new Error('收件人姓名不能包含特殊字符、空格或是纯数字'));
-        } else {
-          callback()
-        }
-      }
-      const validateAddress = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('收件人地址不能为空'))
-        }
-        if ((/^[0-9a-zA-Z]+$/.test(value)) || (/\s+/.test(value))) {
-          callback(new Error('收件地址不能包含空格或是纯数字、英文'))
-        } else {
-          callback()
-        }
-      }
-      const validatePhone = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('联系电话不能为空'))
-        }
-        if (!(/^1(3|4|5|7|8)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
-          callback(new Error('请输入正确的电话号码'))
-        } else {
-          callback()
-        }
-      }
-      const validateCompanyName = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('单位名称不能为空'))
-        }
-        if ((/^[ ]+$/.test(value))) {
-          callback(new Error('单位名称不能为空格'))
-        } else {
-          callback()
-        }
-      }
-      const validaTetaxpayerID = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('纳税人识别码不能为空'))
-        }
-        if (!(/^[0-9a-zA-Z]*$/.test(value))) {
-          return callback(new Error('请输入正确的纳税人识别码'))
-        } else {
-          callback()
-        }
-      }
-      const validaRegisteredAddress = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('注册地址不能为空'))
-        }
-        if (/^[0-9a-zA-Z]+$/.test(value)) {
-          callback(new Error('注册地址不能包含纯数字或纯英文'))
-        } else {
-          callback()
-        }
-      }
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('电话号码不能为空'))
@@ -1085,26 +1253,6 @@
           callback()
         }
       }
-      const validaDepositBank = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('开户银行不能为空'))
-        }
-        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
-          callback(new Error('开户银行不能包含特殊字符、空格或是纯数字'));
-        } else {
-          callback()
-        }
-      }
-      const validaBankAccount = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('银行账户不能为空'))
-        }
-        if (!(/^[1-9]\d{7,27}$/.test(value.replace(/\s/g, '')))) {
-          callback(new Error('请输入正确的银行账户'))
-        } else {
-          callback()
-        }
-      }
       //当前打开的pane页
       let name = this.$route.query.pane || 'accountSummary'
       if (name == 'orderManage') {
@@ -1112,8 +1260,822 @@
         /*this.searchOrderByType()
          this.init()*/
       }
+      // 默认上一个月的一号到月底的日期（table默认日期）
+      let now = new Date()
+      let nowEnd = new Date(now.setDate(1) - 24*60*60*1000)
+      let startTime = now.getFullYear()+'-'+now.getMonth()+'-1'
+      let endTime = now.getFullYear()+'-'+now.getMonth()+'-'+nowEnd.getDate()
+      //最近30天日期
+      let strat30 = new Date(now.getTime()-30*24*60*60*1000).format('yyyy-MM-dd')
+      let end30 = new Date().format('yyyy-MM-dd')
       return {
+        billExportflag: true,
+        billExportText: '点击生成',
+        billExportUrl: '',
+        billExportName: '',
+        AllMpney:'0.0',
+        AllMpneylength:'0',
+        ordernumS:'',
+        switchBill: false,
+        linkManData: [],
+        selectLinkMan: '',
+        valueBill: '2019-03',
+        defaultMonth: '',
+        monthFormat: '',
+        billInfo: {},
+        ApplicableProducts: '',
+        VoucherStatus: '',
+        DueTime: '',
+        OrdersourceType: '',
+        Ordertypevalue:'',
+        paymentStatusValue:'',
+        TransactionAmountsort:'',
+        CreatTimesort:'',
+        PayTimesort:'',
+        PreferentialOrder:'',
+        // 账单-资源详情变量
+        columnsResources: [
+            {
+                title: '资源ID',
+                key: 'resourceid',
+                width: 160
+            },
+            {
+                title: '计费模式',
+                key: 'billtype',
+                width: 160,
+                render:(h,params)=>{
+                  // 计费类型 1 包年 2 包月 3 实时计费',
+                  let text = params.row.billtype===1?'包年':(params.row.billtype===2?'包月':'实时计费')
+                  return h('span',text)
+                },
+                filters: [
+                  {
+                    label: '包年',
+                    value: 1
+                  }, 
+                  {
+                    label: '包月',
+                    value: 2
+                  }, 
+                  {
+                    label: '实时计费',
+                    value: 3
+                  }
+                ],
+                filterMultiple: false,
+                filterRemote:(value,row)=>{
+                  if (!value.length) {
+                    this.resourcesDataType = ''
+                  } else {
+                    this.resourcesDataType = value[0]
+                  }
+                  this.getResourcesTable()
+                }
+            },
+            {
+                title: '地域',
+                key: 'zonename',
+                width: 160,
+                filterMultiple: false,
+                filterRemote:(value,row)=>{
+                  if (!value.length) {
+                    this.resourcesZoneId = ''
+                  } else {
+                    this.resourcesZoneId = value[0]
+                  }
+                  this.getResourcesTable()
+                }
+            },
+            {
+                title: '产品类型',
+                key: 'type',
+                width: 120,
+                render:(h,params)=>{
+                  // 0 主机，1 云硬盘 2 弹性公网IP 3 云数据库 4 GPU云服务器 5 NAT网关  6 对象存储  7 域名  8 ssl证书  9 云市场',
+                  let text = ''
+                  switch(params.row.type)
+                    {
+                    case 0:
+                      text = '弹性云服务器'
+                      break;
+                    case 1:
+                      text = '云硬盘'
+                      break;
+                    case 2:
+                      text = '弹性公网IP'
+                      break;
+                    case 3:
+                      text = '云数据库'
+                      break;
+                    case 4:
+                      text = 'GPU云服务器'
+                      break;
+                    case 5:
+                      text = 'NAT网关'
+                      break;
+                    case 6:
+                      text = '对象存储'
+                      break;
+                    case 7:
+                      text = '域名'
+                      break;
+                    case 8:
+                      text = 'ssl证书'
+                      break;
+                    case 9:
+                      text = '云市场'
+                      break;
+                    }
+                  return h('span',text)
+                },
+                filters: [
+                  {
+                    label: '弹性云服务器',
+                    value: 0
+                  }, 
+                  {
+                    label: '弹性公网IP',
+                    value: 2
+                  }, 
+                  {
+                    label: '对象存储',
+                    value: 6
+                  },
+                  {
+                    label: 'GPU云服务器',
+                    value: 4
+                  }, 
+                  {
+                    label: '云数据库',
+                    value: 3
+                  }, 
+                  {
+                    label: '云硬盘',
+                    value: 1
+                  },
+                  {
+                    label: 'NAT网关',
+                    value: 5
+                  }, 
+                  {
+                    label: 'SSL证书',
+                    value: 8
+                  },
+                  {
+                    label: '域名',
+                    value: 7
+                  }, 
+                  {
+                    label: '云市场',
+                    value: 9
+                  },
+                ],
+                filterMultiple: false,
+                filterRemote:(value,row)=>{
+                  if(!value.length) {
+                    this.resourcesType = ''
+                  } else {
+                    this.resourcesType = value[0]
+                  }
+                  this.getResourcesTable()
+                }
+              },
+            {
+                title: '扣费时间',
+                key: 'updatetime',
+                width: 160
+            },
+            {
+                title: '配置描述',
+                key: 'typedesc',
+                width: 200,
+                render:(h,params)=>{
+                  let item = params.row.desc
+                  let x = ''
+                  let array = []
+                  for(x in item) {
+                    array.push(h('p',{style:{lineHeight:'18px'}},x+':'+item[x]))
+                  }
+                  let arryShow = []
+                  for(x in item) {
+                    arryShow.push(h('p',{style:{lineHeight:'18px',overflow: 'hidden',textOverflow:'ellipsis',whiteSpace: 'nowrap'}},x+':'+item[x]))
+                  }
+                  return h('Poptip',{
+                    props: {
+                      trigger: 'hover',
+                      placement: 'left',
+                      transfer: true
+                    }
+                  },[ h('div',{style:{width:'164px'}},arryShow.slice(0,2)),
+                      h('div',{
+                        slot: 'content'
+                      },array)
+                    ]
+                  )
+                }
+            },
+            {
+                title: '原价',
+                key: 'cost',
+                width: 100
+            },
+            {
+                title: '现金支付',
+                key: 'cashpay',
+                width: 100
+            },
+            {
+                title: '现金券支付',
+                key: 'voucherpay',
+                width: 100
+            },
+            {
+                title: '优惠券抵扣',
+                key: 'coupon',
+                width: 100
+            },
+            {
+                title: '折扣优惠',
+                key: 'discountpay',
+                width: 100
+            },
+            {
+                title: '流水号',
+                key: 'trnobuy',
+                width: 180
+            }
+        ],
+        resourcesTable: [],
+        resourcesList: [],
+        resouresAllCost: '',
+        resouresTotal: 1,
+        resourcesType: '',
+        resourcesZoneId: '',
+        resourcesDataType: '',
+        timeResourceVal: [strat30, end30],
+        timeResource: [strat30, end30],
+        minCashResource:0,
+        maxCashResource: 10000,
+        resourcePageSize: 6,
+        resourcePage: 1,
+        // 结束
+        // 账单-导出记录变量
+        columnsExport: [
+            {
+                title: '最近下载时间',
+                key: 'createtime'
+            },
+            {
+                title: '内容',
+                key: 'title',
+                width: 400
+            },
+            {
+                title: '状态',
+                key: 'status',
+                render: (h,params) => {
+                  return h('span',params.row.status?'已下载':'未下载')
+                }
+            },
+            {
+                title: '操作',
+                key: 'address',
+                render: (h,params)=> {
+                  return h('a', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    attrs: {
+                      href: params.row.remark,
+                      download: params.row.filename
+                    },
+                    on: {
+                          click: () => {
+                              this.exportTable[params.index].status = 1
+                          }
+                    }
+                  }, '下载')
+                }
+            }
+        ],
+        exportTable: [],
+        exportTotal: 1,
+        exportPage: 1,
+        exportPageSize: 6,
+        // 结束
+        OrderPages: 1,
+        currentORderPage: 1,
+        OrderpageSize: 10,
+        columns5: [
+            {
+              type: 'selection',
+              width: 60,
+              align: 'center'
+            },
+            {
+              title: '订单编号',
+              key: 'ordernumber',
+              width:176,
+              render: (h, params) => {
+                return h('div', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      //this.$router.push('CloudDataManage')
+                      sessionStorage.setItem('orderid',params.row.ordernumber)
+                      this.$router.push('OrderDetails');
+                    }
+                  }
+                }, params.row.ordernumber)
+            }
+          },
+            {
+              title: '资源类型',
+              key: 'sourceType',
+              render: (h, params) => {
+                return h('span', params.row.sourceType == 2 ? '弹性公网IP' : params.row.sourceType == 0 ? '弹性云服务器' : params.row.sourceType == 6 ? '对象存储' : 
+                params.row.sourceType == 4 ? 'GPU云服务器' : params.row.sourceType == 3 ? '云数据库' : 
+                params.row.sourceType == 1 ? '云硬盘' : 
+                params.row.sourceType == 5 ? 'NAT网关' : 
+                params.row.sourceType == 8 ? 'SSL证书' : 
+                params.row.sourceType == 7 ? '域名' :
+                params.row.sourceType == 9 ? '云市场' : '')
+              },
+              //this.columns5[index].filters = res;
+              // 0 主机，1 磁盘 2 公网 3 数据库 4 GPU 5 NAT网关  6 对象存储  7 域名  8 ssl证书  9 云市场',
+                filters: [
+                  {
+                    label: '弹性公网IP',
+                    value: 2
+                  }, 
+                  {
+                    label: '弹性云服务器',
+                    value: 0
+                  }, 
+                  {
+                    label: '对象存储',
+                    value: 6
+                  },
+                  {
+                    label: 'GPU云服务器',
+                    value: 4
+                  }, 
+                  {
+                    label: '云数据库',
+                    value: 3
+                  }, 
+                  {
+                    label: '云硬盘',
+                    value: 1
+                  },
+                  {
+                    label: 'NAT网关',
+                    value: 5
+                  }, 
+                  {
+                    label: 'SSL证书',
+                    value: 8
+                  },
+                  {
+                    label: '域名',
+                    value: 7
+                  }, 
+                  {
+                    label: '云市场',
+                    value: 9
+                  },
+                ],
+                filterMultiple: false,
+                filterRemote:(value,row)=>{
+                  this.OrdersourceType=value[0]
+                  this.getOrder('1')
+                }
+            },
+            {
+              title: '订单类型',
+              key: 'orderType',
+              render: (h, params) => {
+                return h('span', params.row.orderType == 1 ? '资源新购' : params.row.orderType == 2 ? '资源升级' :
+                params.row.orderType == 3 ? '资源续费' :
+                params.row.orderType == 4 ? '资费变更' :
+                params.row.orderType == 5 ? '域名转入' : '')
+              },
+              //1  资源新购 ， 2 资源升级 ，3 资源续费  ，4 资费变更， 5 域名转入
+              filters: [
+                  {
+                      label: '资源新购',
+                      value: 1
+                  },
+                  {
+                      label: '资源升级',
+                      value: 2
+                  },
+                  {
+                      label: '资源续费',
+                      value: 3
+                  },
+                  {
+                      label: '资费变更',
+                      value: 4
+                  },
+                  {
+                      label: '域名转入',
+                      value: 5
+                  }
+              ],
+              filterMultiple: false,
+              filterRemote:(value,row)=>{
+                  this.Ordertypevalue=value[0]
+                  this.getOrder('1')
+                }
+            },
+            {
+              title: '交易金额',
+              key: 'cost',
+              sortable: 'custom',
+              render: (h, params) => {
+                   return h('div', {}, [
+                       h('span', {}, '¥'),
+                       h('span', {}, params.row.cost)
+                    ])
+              }
+            },
+            {
+              title: '订单状态',
+              key: 'paymentstatus',
+              render: (h, params) => {
+                return h('span', params.row.paymentstatus == 0 ? '待支付' : params.row.paymentstatus == 1 ? '已支付' :
+                params.row.paymentstatus == 4 ? '已退款' :
+                params.row.paymentstatus == 3 ? '退款中' :
+                params.row.paymentstatus == 5 ? '已超时失效' : '')
+              },
+              //0 未支付 1 支付成功 2 支付异常  3退款中   4已退款 5 失效
+              filters: [
+                  {
+                      label: '待支付',
+                      value: 0
+                  },
+                  {
+                      label: '已支付',
+                      value: 1
+                  },
+                  {
+                      label: '已退款',
+                      value: 4
+                  },
+                  {
+                      label: '退款中',
+                      value: 3
+                  },
+                  {
+                      label: '已超时失效',
+                      value: 5
+                  }
+              ],
+              filterMultiple: false,
+              filterRemote:(value,row)=>{
+                  this.paymentStatusValue=value[0]
+                  this.getOrder('1')
+                }
+            },
+            {
+              title: '创建日期',
+              key: 'ordercreatetime',
+              width:160,
+              sortable: 'custom'
+            },
+            {
+              title: '支付日期',
+              key: 'orderendtime',
+              width:160,
+              sortable: 'custom',
+              render: (h, params) => {
+                return h('span', params.row.orderendtime == null ? '--' : params.row.orderendtime)
+              }
+            },
+            {
+              title: '操作',
+              render: (h, params) => {
+                 if(params.row.paymentstatus === 0 && params.row.overTimeStatus === '0'){
+                   return h('div', [
+                          h('Poptip', {
+                              props: {
+                                title: '您确认要删除订单吗？',
+                                confirm: true,
+                                okText: "确定"
+                              },
+                              on: {
+                                'on-ok': () => {
+                                  this.$http.get('continue/delOrderpay.do', {
+                                    params: {
+                                      order: params.row.ordernumber
+                                    }
+                                  }).then(response => {
+                                    if (response.status == 200 && response.data.status == 1) {
+                                      this.$Message.success({
+                                        content: '订单删除成功',
+                                        duration: 3
+                                      })
+                                      //this.searchOrderByType()
+                                      this.getOrder('1')
+                                      this.init()
+                                    }
+                                  })
+                                }
+                              },
+                            },
+                            [h('span', {
+                              style: {
+                                cursor: 'pointer',
+                                color: '#2A99F2'
+                              }
+                            }, '删除')]
+                          ),
+                          h('span', {
+                              style: {
+                                cursor: 'pointer',
+                                color: ' #2A99F2',
+                                marginLeft: '10px',
+                              },
+                              on: {
+                                click: () => {
+                                  this.orderNumber=[]
+                                  this.orderNumber.push(params.row)
+                                  this.orderPay()
+                                }
+                              }
+                            },
+                            '支付'
+                          )
+                        ]);
+                 }
+                 else{
+                        return h('div', [
+                          h('Poptip', {
+                              props: {
+                                title: '您确认要删除订单吗？',
+                                confirm: true,
+                                okText: "确定"
+                              },
+                              on: {
+                                'on-ok': () => {
+                                  this.$http.get('continue/delOrderpay.do', {
+                                    params: {
+                                      order: params.row.ordernumber
+                                    }
+                                  }).then(response => {
+                                    if (response.status == 200 && response.data.status == 1) {
+                                      this.$Message.success({
+                                        content: '订单删除成功',
+                                        duration: 3
+                                      })
+                                      //this.searchOrderByType()
+                                      this.getOrder('1')
+                                      this.init()
+                                    }
+                                  })
+                                }
+                              },
+                            },
+                            [h('span', {
+                              style: {
+                                cursor: 'pointer',
+                                color: '#2A99F2'
+                              }
+                            }, '删除')]
+                          )
+                        ]);
+                 }
+            }
+          }
+        ],
+        data5: [],
+        dataResponse:[],
+        columnsProductA: [
+            {
+                title: '产品名称',
+                key: 'name',
+                render: (h,params) => {
+                  return h('span',{
+                    style: {
+                      color: '#2A99F2'
+                    }
+                  }, params.row.name)
+                }
+            },
+            {
+                title: '现金支付',
+                key: 'cashPay',
+                renderHeader: (h,params) => {
+                  return h('div',[
+                    h('span', '现金支付'),
+                    h('Poptip',{
+                      props: {
+                        trigger: 'hover',
+                        content: '现金支付包含余额支付与第三方支付',
+                        transfer: true
+                      },
+                      style: {
+                        color: '#2B99F2',
+                        marginLeft: '4px'
+                      }
+                    },[
+                      h('Icon',{
+                        props: {
+                          type: 'ios-help-outline'
+                        },
+                        style: {
+                          color: '#2B99F2',
+                          fontSize: '14px',
+                        }
+                      })
+                    ])
+                  ])
+                },
+                render: (h,params) => {
+                  return h('span','¥'+params.row.cashPay)
+                }
+            },
+            {
+                title: '现金券支付',
+                key: 'voucherPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.voucherPay)
+                }
+            },
+            {
+                title: '优惠券抵扣',
+                key: 'coupon',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.coupon)
+                }
+            },
+            {
+                title: '总费用',
+                key: 'totalPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.totalPay)
+                }
+            }
+        ],
+        dataProductA: [
+        ],
+        columnsZoneA: [
+            {
+                title: '区域名称',
+                key: 'name',
+                render: (h,params) => {
+                  return h('span',{
+                    style: {
+                      color: '#2A99F2'
+                    }
+                  }, params.row.name)
+                }
+            },
+            {
+                title: '现金支付',
+                key: 'cashPay',
+                renderHeader: (h,params) => {
+                  return h('div',[
+                    h('span', '现金支付'),
+                    h('Poptip',{
+                      props: {
+                        trigger: 'hover',
+                        content: '现金支付包含余额支付与第三方支付',
+                        transfer: true
+                      },
+                      style: {
+                        color: '#2B99F2',
+                        marginLeft: '4px'
+                      }
+                    },[
+                      h('Icon',{
+                        props: {
+                          type: 'ios-help-outline'
+                        },
+                        style: {
+                          color: '#2B99F2',
+                          fontSize: '14px',
+                        }
+                      })
+                    ])
+                  ])
+                },
+                render: (h,params) => {
+                  return h('span','¥'+params.row.cashPay)
+                }
+            },
+            {
+                title: '现金券支付',
+                key: 'voucherPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.voucherPay)
+                }
+            },
+            {
+                title: '优惠券抵扣',
+                key: 'coupon',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.coupon)
+                }
+            },
+            {
+                title: '总费用',
+                key: 'totalPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.totalPay)
+                }
+            }
+        ],
+        dataZoneA: [],
+        columnsDatetypeA: [
+            {
+                title: '消费类型',
+                key: 'name',
+                render: (h,params) => {
+                  return h('span',{
+                    style: {
+                      color: '#2A99F2'
+                    }
+                  }, params.row.name)
+                }
+            },
+            {
+                title: '现金支付',
+                key: 'cashPay',
+                renderHeader: (h,params) => {
+                  return h('div',[
+                    h('span', '现金支付'),
+                    h('Poptip',{
+                      props: {
+                        trigger: 'hover',
+                        content: '现金支付包含余额支付与第三方支付',
+                        transfer: true
+                      },
+                      style: {
+                        color: '#2B99F2',
+                        marginLeft: '4px'
+                      }
+                    },[
+                      h('Icon',{
+                        props: {
+                          type: 'ios-help-outline'
+                        },
+                        style: {
+                          color: '#2B99F2',
+                          fontSize: '14px',
+                        }
+                      })
+                    ])
+                  ])
+                },
+                render: (h,params) => {
+                  return h('span','¥'+params.row.cashPay)
+                }
+            },
+            {
+                title: '现金券支付',
+                key: 'voucherPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.voucherPay)
+                }
+            },
+            {
+                title: '优惠券抵扣',
+                key: 'coupon',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.coupon)
+                }
+            },
+            {
+                title: '总费用',
+                key: 'totalPay',
+                render: (h,params) => {
+                  return h('span','¥'+params.row.totalPay)
+                }
+            }
+        ],
+        dataDatetypeA: [],
+        billProductTotal: '',
+        billZoneTotal: '',
+        billDatetypeTotal: '',
+        billTabs: ['账单概览', '资源详单', '流水详单','导出记录'],
+        billMonthlyTabs: ['按产品汇总', '按区域汇总', '按消费类型汇总'],
+        billBtnSelected: 0,
+        billTypeSelected: 0,
         tooltipStatus: true,
+        //余额告警开关
+        BalanceAlarmSwitch: false,
+        //禁用余额告警开关
+        //BalanceAlarmSwitchdis:false,
+        BalanceRepeadio: '',
+        BalanceRepval:50,
+        button5: '1',
         vipRule: [
           {
             title: '类目',
@@ -1213,62 +2175,74 @@
         cardVolumeColumns: [
           {
             title: '类型',
-            key: 'operator',
+            key: 'ticketType',
             align: 'left',
-            width: 120
+            width: 120,
+            render: (h, params) => {
+                return h('span', params.row.ticketType == 0 ? '满减券' : params.row.ticketType == 1 ? '折扣券' :
+                params.row.ticketType == 2 ? '现金券' : '')
+              }
           },
           {
             title: '面值/折扣',
             align: 'left',
             render: (h, params) => {
               return h('span', params.row.tickettype == '1' ? `${params.row.money}折` : `${params.row.money}元`)
-            },
-            width: 110
-          },
-          {
-            title: '适用产品',
-            key: 'tickettype',
-            align: 'left',
-            width: 140,
-            render: (h, params) => {
-              return h('span', {}, '全区')
             }
           },
           {
+            title: '余额',
+            align: 'left',
+            render: (h, params) => {
+              return h('span', params.row.tickettype == '1' ? `${params.row.money}折` : `${params.row.money}元`)
+            }
+          },
+          {
+            title: '适用产品',
+            key: 'useType',
+            align: 'left',
+            width: 140,
+            // 默认(包括老数据)0 全产品通用; 1  包年包月可用;  2  弹性云服务器可用;  3 云数据库可用;  4 网络产品可用;  5 对象存储可用;  6 云市场 ;
+            render: (h, params) => {
+                if(params.row.useType){
+                  return h('span', params.row.useType == 0 ? '全产品通用' : params.row.useType == 1 ? '包年包月' :
+                  params.row.useType == 2 ? '弹性云服务器' :
+                  params.row.useType == 3 ? '云数据库' :
+                  params.row.useType == 4 ? '网络产品' :
+                  params.row.useType == 5 ? '对象存储' :
+                  params.row.useType == 6 ? '云市场' : '')
+                }
+                else{
+                  return h('span', '全产品通用')
+                }
+              }
+          },
+          {
             title: '状态',
-            key: 'maketicketover',
+            key: 'isuse',
             align: 'left',
             width: 110,
             render: (h, params) => {
-              if (params.row.tickettype == '2'){
-                return h('span', params.row.maketicketover == 0 ? '未充值' : params.row.maketicketover == 1 ? '已充值' : '已失效')
-              } else{
-                return h('span', params.row.maketicketover == 0 ? '未使用' : params.row.maketicketover == 1 ? '已使用' : '已失效')
-              }
+              return h('span', params.row.isuse == 0 ? '未使用' : params.row.isuse == 1 ? '已使用' : '已失效')
             }
           },
           {
             title: '失效时间',
-            key: 'endtime',
+            key: 'endDate',
             align: 'left',
             width: 175,
             title: '生效/失效时间',
-            key: 'starttime',
+            key: 'startDate',
+            sortable: 'custom',
             render: (h, params) => {
-              return h('span', params.row.starttime + '/' + params.row.endtime)
+              return h('span', params.row.startDate + '/' + params.row.endDate)
             }
-          },
-          {
-            title: '描述',
-            key: 'ticketdescript',
-            align: 'left',
-            ellipsis: true
           },
           {
             title: '备注',
             key: 'remark',
             align: 'left',
-            width: 250,
+            width: 210,
             ellipsis: true,
             render: (h, params) => {
               return h('span', params.row.remark == null ? '--' : params.row.remark)
@@ -1277,7 +2251,7 @@
           {
             title: '操作',
             render: (h, obj) => {
-              if (obj.row.maketicketover == 0) {
+              if (obj.row.isuse == 0) {
                 // 现金券
                 if (obj.row.tickettype == '2') {
                   return h('div', {}, [
@@ -1388,8 +2362,8 @@
                   ])
                 }
               } else {
-                return h('span', {}, '--')
-                /*return h('span', {
+                //return h('span', {}, '--')
+                return h('span', {
                   style: {
                     color: '#2d8cf0',
                     cursor: 'pointer'
@@ -1418,45 +2392,32 @@
                       })
                     }
                   }
-                }, '删除')*/
+                }, '删除')
               }
             }
           }
         ],
         cardVolumeTabledata: [],
-        billColumns: [
+        invoiceDetailShow: {},
+        invoiceColumns: [
           {
-            title: '发票状态',
-            key: 'status',
+            title: '发票申请时间',
+            key: 'createtime',
             align: 'left',
-            render: (h, params) => {
-              const row = params.row
-              const statusColor = row.status === 0 ? '#14B278' : row.status === 1 ? 'red' : row.status === 2 ? '#F56B23' : '#4A90E2'
-              const text = row.status === 0 ? '已签收' : row.status === 1 ? '已驳回' : row.status === 2 ? '审核中' : '物流中'
-              return h('Tag', {
-                props: {
-                  type: 'dot',
-                  color: statusColor
-                }
-              }, text)
-            }
+            sortable: true,
           },
           {
             title: '发票种类',
             key: 'type',
             align: 'left',
             render: (h, params) => {
-              return h('span', params.row.type == 0 ? '普通发票' : '增值税专用发票')
+              // 0  普通发票 企业  1  增值税专用发票  2 普通发票 个人
+              return h('span',params.row.type==0?'增值税普通发票(企业)':(params.row.type==1?'增值税专用发票':'增值税普通发票(个人)'))
             }
           },
           {
             title: '发票抬头',
             key: 'title',
-            align: 'left',
-          },
-          {
-            title: '发票申请时间',
-            key: 'createtime',
             align: 'left',
           },
           {
@@ -1468,21 +2429,20 @@
             title: '物流信息',
             key: 'status',
             render: (h, params) => {
+              let text = params.row.logisticsName + ' / ' + params.row.logistics
+              return h('span', text)
+            }
+          },
+          {
+            title: '发票状态',
+            key: 'status',
+            align: 'left',
+            render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '查看' : row.status === 3 ? '查看' : ''
-              return h('div', [
-                h('span', {
-                  style: {
-                    cursor: 'pointer',
-                    color: ' #2A99F2'
-                  },
-                  on: {
-                    click: () => {
-                      this.showlogistics(params.index)
-                    }
-                  }
-                }, text)
-              ])
+              const statusColor = row.status === 0 ? '#14B278' : row.status === 1 ? 'red' : row.status === 2 ? '#F56B23' : '#4A90E2'
+              const text = row.status === 0 ? '已签收' : row.status === 1 ? '已驳回' : row.status === 2 ? '审核中' : '物流中'
+              return h('span', {
+              }, text)
             }
           },
           {
@@ -1499,7 +2459,8 @@
                   },
                   on: {
                     click: () => {
-                      this.showInvoice(params.index)
+                      this.invoiceDetailShow = params.row
+                      params.row.type==1?this.showModal.invoiceDetailP = true:this.showModal.invoiceDetail = true
                     }
                   }
                 }, '详情')
@@ -1507,7 +2468,10 @@
             }
           }
         ],
-        billTabledata: [],
+        invoiceTabledata: [],
+        invoiceTotal: 12,
+        invoicePage: 1,
+        invoicePageSize: 7,
         name,
         ordertotal: 0,
         timeType: '',
@@ -1521,8 +2485,9 @@
             value: '2'
           }
         ],
-        ordertime: '',
-        time: '',
+        // ordertime: '',
+        time: [strat30, end30],
+        timeOrder: '',
         total: 0,
         currentPage: 1,
         order_currentPage: 1,
@@ -1534,12 +2499,12 @@
         voucher: '--',
         couponNumber: '--',
         billmonth: '--',
-        types: '',
         value1: 0,
         value2: 10000,
-        dateRange: ['', ''],
+        dateRange: [strat30, end30],
+        dateRangeOrder: ['', ''],
         order_dateRange: ['', ''],
-        columns: [
+        columnsFlow: [
           // {
           //  title: '交易详情',
           //  key: 'descs',
@@ -1548,36 +2513,16 @@
           //  ellipsis: true,
           //  },
           {
-            title: '交易详情',
-            width: 370,
+            title: '交易时间',
+            key: 'createtime',
             align: 'left',
-            render: (h, params) => {
-              return h('Tooltip', {
-                  props: {
-                    content: params.row.descs,
-                    placement: 'top-start'
-                  }
-                },
-                params.row.descs
-              )
-            }
+            width: 160
           },
-          {
-            title: '交易金额',
-            key: 'amount',
-            align: 'left',
-            render: (h, params) => {
-              return h('div', [
-                h('span', '￥'),
-                h('strong', params.row.amount)
-              ])
-            }
-          },
-
           {
             title: '交易类型',
             key: 'type',
             align: 'left',
+            width: 100,
             render: (h, params) => {
               let text = ''
               switch (params.row.type) {
@@ -1601,12 +2546,95 @@
                   break
               }
               return h('span', text)
+            },
+            filters: [
+                  {
+                    label: '充值',
+                    value: 0
+                  }, 
+                  {
+                    label: '扣费',
+                    value: 1
+                  }, 
+                  {
+                    label: '冻结',
+                    value: 2
+                  }, 
+                  {
+                    label: '解冻',
+                    value: 3
+                  },
+                  {
+                    label: '提现',
+                    value: 4
+                  }, 
+                  {
+                    label: '退款',
+                    value: 5
+                  }
+                ],
+                filterMultiple: false,
+                filterRemote:(value,row)=>{
+                  if (!value.length) {
+                    this.flowType = ''
+                  } else {
+                    this.flowType = value[0]
+                  }
+                  this.search()
+                }
+          },
+          {
+            title: '地域',
+            key: 'zonename',
+            width: 100,
+            render: (h,params) => {
+              let text = params.row.zonename?params.row.zonename:'--'
+              return h('span',text)
+            },
+            filterMultiple: false,
+            filterRemote:(value,row)=>{
+              if (!value.length) {
+                this.flowZoneid = ''
+              } else {
+                this.flowZoneid = value[0]
+              }
+              this.search()
             }
           },
           {
-            title: '交易时间',
-            key: 'createtime',
+            title: '交易详情',
+            width: 370,
             align: 'left',
+            render: (h, params) => {
+              return h('Tooltip', {
+                  props: {
+                    content: params.row.descs,
+                    placement: 'top-start'
+                  }
+                },
+                params.row.descs
+              )
+            }
+          },
+          {
+            title: '现金交易金额',
+            key: 'cashpay',
+            align: 'left',
+            width: 120,
+            render: (h, params) => {
+              let text = (params.row.cashpay==0||params.row.cashpay)?'￥'+params.row.cashpay:'--'
+              return h('span', text)
+            }
+          },
+          {
+            title: '现金券交易金额',
+            key: 'voucherpay',
+            align: 'left',
+            width: 120,
+            render: (h, params) => {
+              let text = (params.row.voucherpay==0||params.row.voucherpay)?'￥'+params.row.voucherpay:'--'
+              return h('span', text)
+            }
           },
           {
             title: '流水编号',
@@ -1615,7 +2643,11 @@
             width: 180
           }
         ],
-        tabledata: [],
+        tabledataFlow: [],
+        flowAllCost: '',
+        flowAllIncome: '',
+        flowType: '',
+        flowZoneid: '',
         typeList: [
           {
             value: '',
@@ -1668,202 +2700,8 @@
             label: '退款中订单'
           }
         ],
-        columns_order: [
-          {
-            type: 'selection',
-            width: 60,
-          },
-          {
-            title: '交易明细',
-            width: 250,
-            render: (h, params) => {
-              var data = JSON.parse(params.row.display)
-              var type = ''
-              var arr = []
-              switch (data.订单类型) {
-                case 'host':
-                  type = '云主机'
-                  break
-                case 'vpc':
-                  type = 'vpc'
-                  break
-                case 'disk':
-                  type = '云磁盘'
-                  break
-                case 'ruirados':
-                  type = '对象存储'
-                  break
-                case 'gpu':
-                  type = 'GPU服务器'
-                  break
-                case 'database':
-                  type = '数据库'
-                  break
-                case 'publicIp':
-                  type = '网络'
-                  break
-                case 'continue':
-                  type = '续费'
-                  break
-                case 'upconfig':
-                  type = '升级'
-                  break
-                case 'nat' :
-                  type = '网络'
-                  break
-                case'domain':
-                  type = '域名'
-                  break
-                case'domaintransfer':
-                  type = '域名转入'
-                  break
-              }
-              for (var index in data.资源) {
-                for (var key in data.资源[index]) {
-                  if (key != '地域') {
-                    arr.push(h('p', {style: {lineHeight: '1.5'}}, `${key}:${data.资源[index][key]}`))
-                  } else {
-                    arr.unshift(h('p', {style: {lineHeight: '1.5'}}, `${key}:${data.资源[index][key]}`))
-                  }
-                }
-              }
-              return h('div', [
-                h('Collapse', {
-                  props: {
-                    accordion: true,
-                    value: '0'
-                  },
-                }, [h('Panel', {
-                    props: {
-                      name: params.row._index.toString()
-                    },
-                  },
-                  [type, h('div', {
-                    slot: 'content'
-                  }, arr)])]),
-              ])
-            }
-          },
-          {
-            title: '交易金额',
-            width: 108,
-            key: 'cost',
-            render: (h, params) => {
-              return h('div', [
-                h('span', '￥'),
-                h('strong', params.row.cost)
-              ])
-            }
-          },
-          {
-            title: '订单创建时间',
-            width: 180,
-            key: 'ordercreatetime'
-          },
-          {
-            title: '订单结束时间',
-            width: 180,
-            key: 'orderendtime',
-            render: (h, params) => {
-              return h('span', params.row.orderendtime == null ? '--' : params.row.orderendtime)
-            }
-          },
-          {
-            title: '订单状态',
-            width: 140,
-            align: 'center',
-            key: 'paymentstatus',
-            render: (h, params) => {
-              if (params.row.paymentstatus == '1') {
-                return h('span', {}, '已支付')
-              } else if (params.row.paymentstatus == '3') {
-                return h('span', {}, '退款中')
-              } else if (params.row.paymentstatus == '4') {
-                return h('span', {}, '已退款')
-              } else {
-                if (params.row.overTimeStatus == '1') {
-                  return h('div', {}, [h('p', {}, '未支付'), h('p', {}, '（超时关闭订单）')])
-                } else {
-                  return h('span', {}, '未支付')
-                }
-              }
-            }
-          },
-          {
-            title: '订单编号',
-            width: 150,
-            key: 'ordernumber'
-          },
-          {
-            title: '操作',
-            key: 'handle',
-            width: 90,
-            render: (h, params) => {
-              if (params.row.paymentstatus == '3') {
-                return h('div', [
-                  h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: ' #2A99F2'
-                    },
-                    on: {
-                      click: () => {
-                        let index = params.index
-                        let data = JSON.parse(this.orderData[index].display)
-                        this.$Modal.info({
-                          title: '订单信息',
-                          scrollable: true,
-                          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
-                   <br>订单状态：退款中<br>退款金额：￥${this.orderData[index].returnmoney}<br>预计到账时间：订单提交过后的3-5日<br>退款渠道：原支付渠道
-                 <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
-                        })
-                      }
-                    }
-                  }, '详情')
-                ])
-              } else if (params.row.paymentstatus == '4') {
-                return h('div', [
-                  h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: ' #2A99F2'
-                    },
-                    on: {
-                      click: () => {
-                        let index = params.index
-                        let data = JSON.parse(this.orderData[index].display)
-                        this.$Modal.info({
-                          title: '订单信息',
-                          scrollable: true,
-                          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
-                   <br>订单状态：已退款<br>退款金额：￥${this.orderData[index].returnmoney}<br>退款渠道：原支付渠道
-                 <br>提交退款时间：${this.orderData[index].returnmoneycreatetime}`
-                        })
-                      }
-                    }
-                  }, '详情')
-                ])
-              } else {
-                return h('div', [
-                  h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: ' #2A99F2'
-                    },
-                    on: {
-                      click: () => {
-                        this.show(params.index)
-                      }
-                    }
-                  }, '详情')
-                ])
-              }
-            }
-          }
-        ],
         order_type,
-        orderData: [],
-        options: {
+        optionsOrder: {
           shortcuts: [
             {
               text: '最近一周',
@@ -1914,97 +2752,26 @@
             label: '优惠券'
           }
         ],
-        cardStateList: [
-          {
-            value: '',
-            label: '全部'
-          },
-          {
-            value: '1',
-            label: '已使用'
-          },
-          {
-            value: '0',
-            label: '未使用'
-          }
-        ],
-        cardState: '',
         cardType: '',
         cardTotal: 0,
         card_currentPage: 1,
+        cardscurrent:1,
+        Cardopts:[10,20,50,100],
+        Orderopts:[10,20,50,100],
         cardPageSize: 10,
         invoice: 0,
-        formInvoiceDate: {
-          invoiceAmount: '',
-          InvoiceType: '',
-          recipients: '',
-          consigneeAddress: '',
-          phone: '',
-          invoiceTitle: '',
-          taxpayerId: ''
-        },
-        ruleValidate: {
-          invoiceAmount: [
-            {required: true, validator: validateInvoice, trigger: 'blur'}
-          ],
-          InvoiceType: [
-            {required: true, validator: validateType, trigger: 'change'}
-          ],
-          invoiceTitle: [
-            {required: true, validator: validateTitle, trigger: 'blur'}
-          ],
-          recipients: [
-            {required: true, validator: validateRecipients, trigger: 'blur'}
-          ],
-          consigneeAddress: [
-            {required: true, validator: validateAddress, trigger: 'blur'}
-          ],
-          phone: [
-            {required: true, validator: validatePhone, trigger: 'blur'}
-          ],
-          companyName: [
-            {required: true, validator: validateCompanyName, trigger: 'blur'}
-          ],
-          taxpayerId: [
-            {required: true, validator: validaTetaxpayerID, trigger: 'blur'}
-          ],
-          taxpayerID: [
-            {required: true, validator: validaTetaxpayerID, trigger: 'blur'}
-          ],
-          registeredAddress: [
-            {required: true, validator: validaRegisteredAddress, trigger: 'blur'}
-          ],
-          registeredPhone: [
-            {required: true, validator: validaRegisteredPhone, trigger: 'blur'}
-          ],
-          depositBank: [
-            {required: true, validator: validaDepositBank, trigger: 'blur'}
-          ],
-          bankAccount: [
-            {required: true, validator: validaBankAccount, trigger: 'blur'}
-          ]
-        },
-        invoiceInformationShow: false, // 增值税认证
-        applyChange: true,
-        formAppreciationDate: {
-          companyName: '',
-          taxpayerID: '',
-          registeredAddress: '',
-          registeredPhone: '',
-          depositBank: '',
-          bankAccount: ''
-        },
+        invoiceList: true,
+        applyChange: false,
         appreciation: false,
-        authenticationShow: false, // 增值税信息
-        certificateStatus: true, // 点击认证
-        underReview: false, // 审核中
-        failureAudit: false, // 审核失败
-        aptitudeStatus: '', // 增票资质状态
         bank_account: '',
         totalCost: 0,
         actualDelivery: 0,
         cardSelection: null,
         showModal: {
+          billExport: false,
+          invoiceDetail: false,
+          invoiceDetailP: false,
+          SetBalanceWarning:false,
           clipCoupons: false,
           freezeParticulars: false,
           unfreeze: false,
@@ -2142,49 +2909,15 @@
         // 默认不显示兑换码错误
         exchangeCardCodeError:
           false,
-        /* cardVolumeColumn:[
-         {
-         type: 'selection',
-         align: 'center',
-         width:60,
-         },
-         {
-         title: '类型',
-         key: 'operator',
-         align: 'center',
-         width:100,
-         },
-         {
-         title: '面值',
-         key: 'money',
-         align: 'center',
-         width:100,
-         },
-         {
-         title: '失效时间',
-         key: 'endtime',
-         align: 'center',
-         },
-         {
-         title: '备注',
-         key: 'remark',
-         align: 'center',
-         ellipsis: true,
-         render: (h, params) => {
-         return h('span', params.row.remark == null ? '--' : params.row.remark)
-         }
-         },
-         ], */
+        
         cardVolumeTableData:
           [],
         card_type:
           '',
         operatorid:
           '',
-        card_pageSize:
-          5,
-        costSeen:
-          false,
+        // costSeen:
+        //   false,
         activeIndex:
           null,
         freezeParticularsColumns:
@@ -2318,26 +3051,331 @@
         this.showMoneyByMonth()
         this.search()
         this.getTicketNumber()
+        this.invoiceLimit()
       if (sessionStorage.getItem('beVip')) {
         this.getVipList()
         sessionStorage.removeItem('beVip')
       }
+      this.defaultTab()
     },
     mounted() {
-
     },
     methods: {
-      //Cashforwithdrawa(){
-      //axios.get('user/selectValidRefundAmount.do', {
-      //}).then(response => {
-      //if (response.status == 200 && response.data.status == 1) {
-      //sessionStorage.setItem('moneyBank', response.data.moneyBank)
-      //sessionStorage.setItem('moneyOnLine', response.data.moneyOnLine)
-      //this.$router.push('/cashwithdrawal')
-      //}
-      //})
-      //},
+      // 默认选中tab
+      defaultTab() {
+        if(sessionStorage.getItem('expensesTab')){
+          let tab = sessionStorage.getItem('expensesTab')
+          this.name = tab
+          this.changecard()
+          sessionStorage.removeItem('expensesTab')
+        }
+      },
+      initOverview() {
+        let now = new Date()
+        this.valueBill = now.getFullYear()+'-'+now.getMonth()
+        this.defaultMonth = now.getFullYear()+'年'+now.getMonth()+'月'
+        this.getBillOverview(this.valueBill)
+        this.getBillInfo(this.valueBill)
+      },
+      dataChangeBill(time) {
+        this.valueBill = time.replace(/(\d{4})年(\d{1,})月/g, '$1-$2')
+        this.defaultMonth = time
+        this.getBillOverview(this.valueBill)
+        this.getBillInfo(this.valueBill)
+      },
+      getBillOverview(time) {
+        this.$http.get('nVersionUser/billOverview.do', {
+          params: {
+            times: time
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.billInfo = response.data.result
+            }
+          })
+      },
+      getBillInfo(time) {
+        this.$http.get('nVersionUser/consumptionSummary.do', {
+          params: {
+            times: time
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.dataResponse = response.data.result.list
+              this.changetabs(this.billTypeSelected)
+            }
+          })
+      },
+      changetabs(val) {
+        this.billTypeSelected=val
+        let filterData = []
+        if(val==0) {
+          filterData = this.dataResponse.filter(item=>{
+            return item.type == '1'
+          })
+          this.dataProductA = filterData[0].info
+          this.billProductTotal = this.dataProductA.reduce(function(sum2,number2){
+            return sum2 + number2.totalPay;
+          },0)
+        } else if(val==1) {
+          filterData = this.dataResponse.filter(item=>{
+            return item.type == '2'
+          })
+          this.dataZoneA = filterData[0].info
+          this.billZoneTotal = this.dataZoneA.reduce(function(sum2,number2){
+            return sum2 + number2.totalPay;
+          },0)
+        } else if(val==2) {
+           filterData = this.dataResponse.filter(item=>{
+            return item.type == '3'
+          })
+          this.dataDatetypeA = filterData[0].info
+          this.billDatetypeTotal = this.dataDatetypeA.reduce(function(sum2,number2){
+            return sum2 + number2.totalPay;
+          },0)
+        }
+      },
+      changeSwitch(status) {
+        // console.log(status)
+      },
+      // 添加a标签下载并且重命名，公用方法
+      saveAs(blob, filename) {
+            this.$Message.success('导出成功')
+            const link = document.createElement('a');
+            const body = document.querySelector('body');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = filename;
+            link.style.display = 'none';
+            body.appendChild(link);
+            link.click();
+            body.removeChild(link);
+            window.URL.revokeObjectURL(link.href);
+      },
+      // 列出联系人
+      getContacts() {
+        var url = `user/getcontacts.do`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.linkManData = response.data.result
+            if(this.linkManData.length!=0) {
+              this.selectLinkMan = response.data.result[0].id
+            }
+          }
+        })
+      },
+      getExportStatus() {
+        axios.get('nVersionUser/getBillReceiverInfo.do',).then(response=> {
 
+        })
+      },
+      exportBillMonth() {
+        this.showModal.billExport = true
+        this.getContacts()
+        // this.getExportStatus()
+      },
+      downloadBillAll() {
+        this.billExportText = '生成中...'
+        axios.get('nVersionUser/getBillOverviewExport.do',{
+          params: {
+            times: this.valueBill
+          }
+        }).then(response=> {
+          if(response.status == 200 && response.data.status == 1 ) {
+            this.billExportflag = false
+            this.billExportUrl = response.data.url
+            this.billExportName = response.data.title
+          } else {
+            this.billExportUrl = ''
+            this.billExportName = ''
+          }
+        })
+      },
+      billExportAuto_ok() {
+        axios.get('nVersionUser/modifyBillReceiver.do',{
+          params: {
+            status: this.switchBill?1:0,
+            billSendUser: this.selectLinkMan
+          }
+        }).then(response=> {
+          if(response.status == 200&&response.data.status == 1) {
+            if(this.switchBill) {
+              this.$Message.success('账单自动生成设置成功')
+            } else {
+              this.$Message.info('账单自动生成取消成功')
+            }
+          } else {
+            this.$Message.error(response.data.message)
+          }
+        })
+      },
+      billExportType() {
+        axios.get('nVersionUser/consumptionSummaryExport.do',{
+          responseType: 'arraybuffer',
+          params: {
+            companyId: this.$store.state.userInfo.companyid,
+            times: this.valueBill,
+            type: this.billTypeSelected+1
+          }
+        }).then(response=> {
+          if(response.status == 200) {
+            var blob = new Blob([response.data],{type: "application/vnd.ms-excel"})
+            this.saveAs(blob,this.billMonthlyTabs[this.billTypeSelected]+'('+this.defaultMonth+')')
+          } else {
+            this.$Message.error(response.data.message)
+          }
+        })
+      },
+      toAppllyInvoice() {
+        this.$router.push('invoiceManage')
+      },
+      toAdressee() {
+        this.$router.push('invoiceAddressee')
+      },
+      SortField(column){
+        if(column.key=="cost"){
+          this.TransactionAmountsort=column.order
+          this.CreatTimesort=''
+          this.PayTimesort=''
+          this.getOrder('1')
+        }
+        else if(column.key=="ordercreatetime"){
+          this.CreatTimesort=column.order
+          this.TransactionAmountsort=''
+          this.PayTimesort=''
+          this.getOrder('1')
+        }
+        else if(column.key=="orderendtime"){
+          this.PayTimesort=column.order
+          this.CreatTimesort=''
+          this.TransactionAmountsort=''
+          this.getOrder('1')
+        }
+      },
+      cardVolumeField(column){
+        this.PreferentialOrder=column.order
+        this.searchCard()
+      },
+      ProductChange(label){
+        this.ApplicableProducts=label
+        this.searchCard()
+      },
+      VoucherChange(label){
+        this.VoucherStatus=label
+        this.searchCard()
+      },
+      DueTimeChange(label){
+        this.DueTime=label
+        this.searchCard()
+      },
+      OrderchangePage(currentPage) {
+        this.currentORderPage=currentPage
+        this.getOrder()
+      },
+      OrderPageSizeChange(value){
+        this.OrderpageSize=value
+        this.getOrder()
+      },
+      getOrder() {
+        this.$http.get('/nVersionUser/findOrderByType.do', {
+          params: {
+            page: this.currentORderPage,
+            pageSize: this.OrderpageSize,
+            paymentStatus: this.paymentStatusValue,
+            startTime: this.dateRangeOrder[0],
+            endTime: this.dateRangeOrder[1],
+            sourceType: this.OrdersourceType,
+            orderType: this.Ordertypevalue,
+            payType: this.button5,
+            balanceOrder: this.TransactionAmountsort,
+            createTimeOrder: this.CreatTimesort,
+            payOrder: this.PayTimesort
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.data5=response.data.result.info
+              this.OrderPages=response.data.result.count
+            }
+          })
+      },
+      
+      
+      balanceAlarmSet (status) {
+        // this.$Message.info('开关状态：' + status);
+        this.$http.get('/nVersionUser/balanceAlarmSet.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.BalanceAlarmSwitch!=this.BalanceAlarmSwitch
+          }
+          else{
+              this.$Message.error({
+                content: response.data.message
+              })
+          }
+        })
+      },
+      SetBalanceopen(){
+        if(this.$store.state.userInfo.balanceAlarmType==1){
+          this.BalanceRepeadio='可用额度'
+        }
+        else if(this.$store.state.userInfo.balanceAlarmType==2){
+          this.BalanceRepeadio='可用余额'
+        }
+        this.showModal.SetBalanceWarning = true
+      },
+      updateBalanceWarn(){
+        var typenum=0
+        if(this.BalanceRepeadio=='可用额度'){
+          typenum=1
+        }
+        else if(this.BalanceRepeadio=='可用余额'){
+          typenum=2
+        }
+        this.$http.get('nVersionUser/balanceAlarmModify.do', {
+          params: {
+            type: typenum,
+            balance: this.BalanceRepval
+          }
+        })
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.userInfoUpdate()
+              this.showModal.SetBalanceWarning=false
+            }
+            else{
+              this.$Message.error({
+                content: response.data.message
+              })
+            }
+          })
+      },
+      UnpaidJump(value){
+        //this.order_type = 'notpay'
+        //this.changeOrder()
+        if(value=='orderManage'){
+          this.paymentStatusValue=''
+          this.name='orderManage'
+          this.changecard()
+        }
+        else if(value=='orderManagepay'){
+          this.paymentStatusValue='0'
+          this.name='orderManage'
+          this.changecard()
+        }
+        else if(value=='myCard'){
+          this.VoucherStatus=''
+          this.name='myCard'
+          this.changecard()
+        }
+        else if(value=='myCardnot'){
+          this.VoucherStatus='0'
+          this.name='myCard'
+          this.changecard()
+        }
+        else if(value=='invoicejmp'){
+          this.name='applyInvoice'
+          this.changecard()
+        }
+      },
+      
       selectChange(item, index) {
         if (item.startmoney > this.totalCost) {
           this.activeIndex = null
@@ -2355,19 +3393,20 @@
         this.totalCost = 0
         this.actualDelivery = 0
         this.cardSelection = null
-        this.costSeen = false
+        // this.costSeen = false
         this.activeIndex = null
       },
       changecard() {
         switch (this.name) {
           case 'orderManage':
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             this.init()
             break
           case 'accountSummary':
             this.getBalance()
             this.showMoneyByMonth()
-            this.search()
+            this.invoiceLimit()
             break
           case 'myCard':
             this.searchCard()
@@ -2377,6 +3416,11 @@
             this.getInvoiceList()
             this.invoiceLimit()
             break
+          case 'bills':
+            this.getResourcesTable()
+            this.getExportTable()
+            this.search()
+            this.initOverview()
         }
       },
       showMoneyByMonth() {
@@ -2384,6 +3428,12 @@
           if (response.status == 200 && response.data.status == 1) {
             this.billmonth = response.data.result
             this.theCumulative = response.data.total_amount
+            if(this.$store.state.userInfo.balanceAlarmStatus==1){
+              this.BalanceAlarmSwitch=true
+            }
+            else if(this.$store.state.userInfo.balanceAlarmStatus==0){
+              this.BalanceAlarmSwitch=false
+            }
           }
         })
       },
@@ -2413,25 +3463,108 @@
         this.currentPage = currentPage
         this.search()
       },
+      dataChangeResource(time) {
+        this.timeResource = time
+      },
       dataChange(time) {
         this.dateRange = time
       },
+      dataChangeOrder(timeOrder) {
+        this.dateRangeOrder = timeOrder
+      },
       search() {
-        this.$http.get('user/searchWaterNumber.do', {
+        axios.get('nVersionUser/getAccountInfoByType.do', {
           params: {
             pageSize: this.wpageSize,
             page: this.currentPage,
-            type: this.types,
-            starttime: this.dateRange[0],
-            endtime: this.dateRange[1],
-            startcount: this.value1,
-            endcount: this.value2
+            startTime: this.dateRange[0],
+            endTime: this.dateRange[1],
+            minCost: this.value1,
+            maxCost: this.value2,
+            type: this.flowType,
+            zoneId: this.flowZoneid
           }
         })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.tabledata = response.data.result.data
-              this.total = response.data.result.totle
+              this.tabledataFlow = response.data.result.info
+              this.flowAllCost = response.data.result.totalExpenditure
+              this.flowAllIncome = response.data.result.totalIncome
+              this.total = response.data.result.count
+              let filterDataFlow = []
+              this.$store.state.zoneList.forEach((item,index) => {
+                    filterDataFlow[index]={'label':item.zonename,'value':item.zoneid}
+              })
+              this.columnsFlow[2].filters = filterDataFlow
+            }
+          })
+      },
+      seaWaterN() {
+        let url = 'nVersionUser/getAccountInfoByTypeExport.do'
+        let params = {
+            companyId: this.$store.state.userInfo.companyid,
+            startTime: this.dateRange[0],
+            endTime: this.dateRange[1],
+            minCost: this.value1,
+            maxCost: this.value2,
+            type: this.flowType,
+            zoneId: this.flowZoneid
+        }
+        axios.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
+          if (res.status == 200) {
+            var blob = new Blob([res.data],{type: "application/vnd.ms-excel"})
+            this.saveAs(blob,'流水详单'+'('+this.dateRange[0]+'-'+this.dateRange[1]+')')
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })  
+          }
+        })
+      },
+      resourcesPageChange(currentPage) {
+        this.resourcePage = currentPage
+        this.getResourcesTable()
+      },
+      getResourcesTable() {
+        axios.get('/nVersionUser/resourceDetails.do', {
+          params: {
+            pageSize: this.resourcePageSize,
+            page: this.resourcePage,
+            minTime: this.timeResource[0],
+            maxTime: this.timeResource[1],
+            billingMode: this.resourcesDataType,
+            resourceType: this.resourcesType,
+            minCashPay: this.minCashResource,
+            maxCashPay: this.maxCashResource,
+            zoneId: this.resourcesZoneId
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.resouresTotal = response.data.result.count
+              this.resourcesTable = response.data.result.info
+              this.resouresAllCost = response.data.result.totalExpenditure
+              let filtersData = []
+              this.$store.state.zoneList.forEach((item,index) => {
+                    filtersData[index]={'label':item.zonename,'value':item.zoneid}
+              })
+              this.columnsResources[2].filters = filtersData
+            }
+          })
+      },
+      exportPageChange(currentPage) {
+        this.exportPage = currentPage
+        this.getExportTable()
+      },
+      getExportTable(currentPage,type) {
+        this.$http.get('nVersionUser/getExport.do',{
+          params: {
+            page: this.exportPage,
+            pageSize: this.exportPageSize
+          }
+        }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.exportTable = response.data.result.info
+              this.exportTotal =  response.data.result.count
             }
           })
       },
@@ -2456,7 +3589,8 @@
                     content: '订单删除成功',
                     duration: 3
                   })
-                  this.searchOrderByType()
+                  //this.searchOrderByType()
+                  this.getOrder('1')
                   this.init()
                 }
               })
@@ -2481,7 +3615,8 @@
                 value: '2'
               }
             ]
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             break
           case 'pay':
             this.init()
@@ -2497,7 +3632,8 @@
               }
             ]
             this.timeType = '1'
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             break
           case 'notpay':
             this.init()
@@ -2509,7 +3645,8 @@
               }
             ]
             this.timeType = '1'
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             break
           case 'refund':
             this.init()
@@ -2525,7 +3662,8 @@
               }
             ]
             this.timeType = '1'
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             break
           case 'refunding':
             this.init()
@@ -2541,53 +3679,16 @@
               }
             ]
             this.timeType = '1'
-            this.searchOrderByType()
+           // this.searchOrderByType()
+            this.getOrder('1')
             break
         }
-      },
-      searchOrderByType() {
-        var url = 'user/searchOrderByType.do'
-        var params = {
-          pageSize: this.pageSize,
-          page: this.order_currentPage,
-          paymentStatus: this.order_type == 'pay' ? '1' : this.order_type == 'notpay' ? '0' : this.order_type == 'refund' ? '4' : this.order_type == 'refunding' ? '3' : '',
-        }
-        switch (this.timeType) {
-          case '':
-          case '1':
-            params.startTime = this.order_dateRange[0]
-            params.endTime = this.order_dateRange[1]
-            break
-          case'2':
-            params.aleradyStartTime = this.order_dateRange[0]
-            params.alreadyEndTime = this.order_dateRange[1]
-            break
-        }
-        this.$http.get(url, {params}).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.orderData = response.data.result.data
-            this.ordertotal = response.data.result.totle
-          }
-        })
       },
       order_currentChange(order_currentPage) {
         this.order_currentPage = order_currentPage
-        this.searchOrderByType()
+        //this.searchOrderByType()
+        this.getOrder('1')
         this.init()
-      },
-      order_dataChange(ordertime) {
-        this.order_dateRange = ordertime
-        this.init()
-        this.searchOrderByType()
-      },
-      show(index) {
-        var data = JSON.parse(this.orderData[index].display)
-        this.$Modal.info({
-          title: '订单信息',
-          scrollable: true,
-          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
-                   <br>订单状态：${this.orderData[index].paymentstatus == '1' ? '已支付' : '未支付'}`
-        })
       },
       orderPay() {
       /*this.payForm.paymentAmount = this.orderNumber.map(item => {
@@ -2713,139 +3814,97 @@
       select(selection) {
         this.orderNumber = []
         this.totalCost = 0
+        var arr = []
         this.orderNumber = selection
         if (this.orderNumber.length != 0) {
-          this.costSeen = true
+          // this.costSeen = true
           var cost = 0
-          this.orderNumber.forEach(item => {
+          this.orderNumber.forEach((item,index) => {
+            arr.push(item.ordernumber)
             if (item && item.paymentstatus == 0) {
               cost += Number.parseFloat(item.cost)
             }
           })
+          this.ordernumS=arr.toString(',')
+          this.AllMpneylength=arr.length
           this.totalCost = Math.round(cost * 100) / 100
           this.actualDelivery = this.totalCost
+          this.InquiryPrice()
           if (this.totalCost == 0) {
-            this.costSeen = false
+            // this.costSeen = false
           }
           this.cardSelection = null
           this.activeIndex = null
         } else {
-          this.costSeen = false
+          // this.costSeen = false
+          this.AllMpney='0.0'
+          this.AllMpneylength='0'
         }
       },
-      searchCard() {
-        this.$http.get('ticket/getUserTicket.do', {
+      InquiryPrice(){
+        this.$http.get('/nVersionUser/getTotalOrderCost.do', {
           params: {
-            pageSize: this.cardPageSize,
-            page: this.card_currentPage,
-            ticketType: this.cardType,
-            isuse: this.cardState
+            orderNumbers: this.ordernumS
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.cardVolumeTabledata = response.data.result
+            this.AllMpney=response.data.result
+          }
+        })
+      },
+      searchCard() {
+        this.$http.get('/nVersionUser/getTicketInfo.do', {
+          params: {
+            pageSize: this.cardPageSize,
+            page: this.cardscurrent,
+            orderTime : this.PreferentialOrder,
+            expireDate : this.DueTime,
+            status : this.VoucherStatus,
+            type : this.ApplicableProducts
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.cardVolumeTabledata = response.data.result.info
+            this.cardTotal=response.data.result.count
           }
         })
       },
       cardCurrentChange(card_currentPage) {
-        this.card_currentPage = card_currentPage
+        this.cardscurrent = card_currentPage
         this.searchCard()
       },
-      invoiceCertification() {
-        this.appreciation = true
-        this.applyChange = false
+      CardPageSizechange(value){
+        this.cardPageSize=value
+        this.searchCard()
       },
-      invoiceMake(name) {
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            if (this.invoiceInformationShow == false) {
-              this.$http.post('user/applyInvoice.do', {
-                amount: this.formInvoiceDate.invoiceAmount,
-                type: this.formInvoiceDate.InvoiceType,
-                title: this.formInvoiceDate.invoiceTitle,
-                recipients: this.formInvoiceDate.recipients,
-                address: this.formInvoiceDate.consigneeAddress,
-                phone: this.formInvoiceDate.phone,
-                identiCode: this.formInvoiceDate.taxpayerId
-              }).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.$Message.success({
-                    content: '发票申请成功！',
-                    duration: 5
-                  })
-                  this.formInvoiceDate.invoiceAmount = ''
-                  this.formInvoiceDate.InvoiceType = ''
-                  this.formInvoiceDate.invoiceTitle = ''
-                  this.formInvoiceDate.recipients = ''
-                  this.formInvoiceDate.consigneeAddress = ''
-                  this.formInvoiceDate.phone = ''
-                  this.getInvoiceList()
-                } else {
-                  this.$message.info({
-                    content: response.data.message
-                  })
-                }
-              })
-            } else {
-              this.$Message.error({
-                content: '您的资质认证没有完成！',
-                duration: 5
-              })
-            }
-          }
-        })
-      },
-      showInvoice(index) {
+      show(index) {
+        var data = JSON.parse(this.orderData[index].display)
         this.$Modal.info({
-          title: '发票详情',
-          width: '500',
+          title: '订单信息',
           scrollable: true,
-          content: `收件人：${this.billTabledata[index].recipients}<br>开票金额：￥${this.billTabledata[index].amount}<br>发票类型：${this.billTabledata[index].type == '0' ? '普票' : '专票'}
-                   <br>收件地址：${this.billTabledata[index].address}<br>发票抬头：${this.billTabledata[index].title}<br>联系电话：${this.billTabledata[index].phone}`
+          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
+                   <br>订单状态：${this.orderData[index].paymentstatus == '1' ? '已支付' : '未支付'}`
         })
-      },
-      changeInvoiceType(value) {
-        switch (value) {
-          case '1':
-            this.$http.get('user/getExamine.do').then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.aptitudeStatus = response.data.result.result['status']
-                this.formAppreciationDate.companyName = response.data.result.result['companyname']
-                this.formAppreciationDate.registeredAddress = response.data.result.result['address']
-                this.formAppreciationDate.registeredPhone = response.data.result.result['phone']
-                this.formAppreciationDate.depositBank = response.data.result.result['bankname']
-                this.formAppreciationDate.bankAccount = response.data.result.result['banknum']
-                this.formAppreciationDate.taxpayerID = response.data.result.result['identicode']
-                if (this.aptitudeStatus == 0) {
-                  this.authenticationShow = true
-                } else if (this.aptitudeStatus == 1) {
-                  this.invoiceInformationShow = true
-                  this.failureAudit = true
-                  this.certificateStatus = false
-                } else if (this.aptitudeStatus == 2) {
-                  this.invoiceInformationShow = true
-                  this.underReview = true
-                  this.certificateStatus = false
-                }
-              } else {
-                this.invoiceInformationShow = true
-              }
-            })
-            break
-          case '0':
-            this.invoiceInformationShow = false
-            this.authenticationShow = false
-            break
-        }
       },
       cancelCertification() {
         this.appreciation = false
         this.applyChange = true
       },
+      invoicePageChange(currentPage) {
+        this.invoicePage = currentPage
+        this.getInvoiceList()
+      },
       getInvoiceList() {
-        this.$http.get('user/getInvoiceList.do').then(response => {
+        axios.get('user/getInvoiceList.do',{
+          params: {
+            page: this.invoicePage,
+            pageSize: this.invoicePageSize,
+            timeOrder: ''
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.billTabledata = response.data.result.result
+            this.invoiceTabledata = response.data.result.result
+            this.invoiceTotal = response.data.result.count
           }
         })
       },
@@ -2856,58 +3915,9 @@
           }
         })
       },
-      affirmCertification(name) {
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            this.$http.post('user/invoiceExamine.do', {
-              companyName: this.formAppreciationDate.companyName,
-              address: this.formAppreciationDate.registeredAddress,
-              phone: this.formAppreciationDate.registeredPhone,
-              bankName: this.formAppreciationDate.depositBank,
-              bankNum: this.formAppreciationDate.bankAccount,
-              identicode: this.formAppreciationDate.taxpayerID
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success({
-                  content: '增值票资质认证申请成功！我们将尽快完成审核',
-                  duration: 5
-                })
-                this.appreciation = false
-                this.applyChange = true
-                this.certificateStatus = false
-                this.underReview = true
-                this.failureAudit = false
-              } else {
-                this.appreciation = false
-                this.applyChange = true
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
-            })
-          }
-        })
-      },
       conversion() {
         this.formAppreciationDate.bankAccount = this.formAppreciationDate.bankAccount.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
         this.bank_account = this.formAppreciationDate.bankAccount
-      },
-      showlogistics(index) {
-        this.$http.get('user/getInvoice.do', {
-          params: {
-            invoiceId: this.billTabledata[index].id
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Modal.info({
-              title: '发票物流信息',
-              scrollable: true,
-              content: `物流公司：${response.data.result.logisticsName}<br>
-                    物流单号：${response.data.result.logistics}<br>
-                    查询网址：<a href="${response.data.result.kdurl}" target="_blank">${response.data.result.kdurl}</a>`
-            })
-          }
-        })
       },
       clipCoupons() {
         if (this.orderNumber.length != 0) {
@@ -2918,7 +3928,7 @@
             })
             this.$http.get('ticket/getUserTicket.do', {
               params: {
-                pageSize: this.card_pageSize,
+                pageSize: this.cardPageSize,
                 page: this.card_currentPage,
                 ticketType: this.card_type,
                 orderNumber: orderNumber + '',
@@ -2942,19 +3952,20 @@
               content: '请选择未支付的订单'
             })
           }
-
-          function checkPaymentStatus(orderNumber) {
-            return orderNumber.paymentstatus == 1
-          }
-        } else {
-          this.$message.info({
-            content: '请选择需要支付的订单'
-          })
         }
       },
-      cardSelect(item) {
-        this.cardSelection = item
-      },
+      //     function checkPaymentStatus(orderNumber) {
+      //       return orderNumber.paymentstatus == 1
+      //     }
+      //   } else {
+      //     this.$message.info({
+      //       content: '请选择需要支付的订单'
+      //     })
+      //   }
+      // },
+      // cardSelect(item) {
+      //   this.cardSelection = item
+      // },
       clipCoupons_ok() {
         var cost = 0
         if (this.activeIndex == null && this.cardSelection == null) {
@@ -2981,7 +3992,7 @@
         this.actualDelivery = this.totalCost
         this.operatorid = ''
         this.cardVolumeTableData = []
-        this.clipCoupons()
+        // this.clipCoupons()
       },
       freezeDetails() {
         let url = 'user/depositDetails.do'
@@ -2996,35 +4007,11 @@
           }
         })
       },
-      getBillMonth() {
-        let arr = []
-        let end = new Date()
-        let start = new Date()
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-        arr.push(dateToStr(start))
-        arr.push(dateToStr(end))
-        this.dateRange = arr
-
-        function dateToStr(datetime) {
-          let year = datetime.getFullYear()
-          let month = datetime.getMonth() + 1
-          let date = datetime.getDate()
-          if (month < 10) {
-            month = '0' + month
-          }
-          if (date < 10) {
-            date = '0' + date
-          }
-          var time = year + '-' + month + '-' + date
-          return time
-        }
-      },
       getBillAll() {
         this.dateRange = ['', '']
       },
-      toMyCard() {
-        this.name = 'myCard'
-        this.searchCard()
+      getBillAllOrder() {
+        this.dateRangeOrder = ['', '']
       },
       unfreeze_ok() {
         // 解冻到账户
@@ -3425,7 +4412,8 @@
               this.showModal.refundNextHint = false
               this.showModal.refundHint = false
               this.returnMoneyDisabled = false
-              this.searchOrderByType()
+              //this.searchOrderByType()
+              this.getOrder('1')
               this.init()
               this.$Message.success(res.data.message)
             } else {
@@ -3472,7 +4460,8 @@
           if (res.status == 200 && res.data.status == 1) {
             this.showModal.refundHint = false
             this.showModal.refundLastHint = false
-            this.searchOrderByType()
+            //this.searchOrderByType()
+            this.getOrder('1')
             this.init()
             this.refundLastHintDisabled = false
             this.$Message.success(res.data.message)
@@ -3675,31 +4664,33 @@
         }
       },
       goreal() {
-        sessionStorage.setItem('pane', 'nonrealname')
+        this.$store.commit('setPane', {vpc: 'VPC', vpn: 'remote', usercenter: 'certification'})
         this.$router.push('/Usercenter')
       },
-      seaWaterN() {
-        let url = 'user/searchWaterNumberExcel.do'
+      
+      exportResource() {
+        let url = 'nVersionUser/resourceDetailsExport.do'
         let params = {
-          type: this.types,
-          starttime: this.dateRange[0],
-          endtime: this.dateRange[1],
-          startcount: this.value1,
-          endcount: this.value2
+          companyId: this.$store.state.userInfo.companyid,
+          minTime: this.timeResource[0],
+          maxTime: this.timeResource[1],
+          billingMode: this.resourcesDataType,
+          zoneId: this.resourcesZoneId,
+          resourceType: this.resourcesDataType,
+          minCashPay: this.minCashResource,
+          maxCashPay: this.maxCashResource
         }
-        this.$http.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
-          if (res.status == 200) {
-            this.$Message.success('导出成功')
-            let blob = new Blob([res.data], {type: "application/vnd.ms-excel"})
-            let objectUrl = URL.createObjectURL(blob)
-            window.location.href = objectUrl
+        axios.get(url, {responseType: 'arraybuffer', params: params}).then(response => {
+          if (response.status == 200) {
+            var blob = new Blob([response.data],{type: "application/vnd.ms-excel"})
+            this.saveAs(blob,'资源详单'+'('+this.timeResource[0]+this.timeResource[1]+')')
           } else {
             this.$message.info({
-              content: res.data.message
+              content: response.data.message
             })
           }
         })
-      }
+      },
     },
     computed: {
       payDisabled() {
@@ -3728,7 +4719,6 @@
         } else {
           return false
         }
-
         function checkReturnMoneyFlag(orderNumber) {
           return orderNumber.returnMoneyFlag == 0
         }
@@ -3773,14 +4763,30 @@
       remainingBalance() {
         let cost = parseInt(this.balance - this.cashCouponForm.upVipCost)
         return cost >= 0 ? cost : 0
+      },
+      // 获取当前导出账单月份
+      currentMonth() {
+        return this.valueBill.split('-')[1]
+      },
+      // 判断是否可以导出账单
+      checkExport() {
+        let now = new Date()
+        let year = now.getFullYear()
+        let month = now.getMonth()
+        let day = now.getDate()
+        let currentYear = this.valueBill.split('-')[0]
+        let currentMonth = this.valueBill.split('-')[1]
+        return (currentYear <= year && currentMonth<month) || (currentYear <= year && currentMonth == month && day >= 3)?true:false
       }
     }
     ,
     watch: {
       dateRange() {
         this.search()
-      }
-      ,
+      },
+      timeResource() {
+        this.getResourcesTable()
+      },
     }
   }
 </script>
@@ -3791,6 +4797,7 @@
   }
 
   .background {
+    font-family:MicrosoftYaHei;
     background-color: #f5f5f5;
     width: 100%;
     @diff: 101px;
@@ -3817,18 +4824,89 @@
         .money {
           display: flex;
           justify-content: space-between;
+          flex-wrap: wrap;
           padding: 0 5px;
-          .item {
-            width: 32%;
-            padding: 20px;
+          .item1 {
+            width:683px;
+            height:200px;
+            padding: 20px 0 20px 20px;
+            background:rgba(255,255,255,1);
             box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
-            > span {
-              font-size: 18px;
+            border-right: 1px solid #E6E6E6;
+            display: flex;
+            justify-content: space-between;
+            .div1 {
+               width: 440px;
+               border-right: 1px solid #E6E6E6;
+            > p {
+              font-size: 20px;
               font-family: MicrosoftYaHei;
-              color: rgba(102, 102, 102, 1);
-              line-height: 24px;
+              color:rgba(51,51,51,1);
+              line-height:26px;
             }
-            > button {
+            
+            > div {
+              display: flex;
+              margin-top: 44px;
+              ul {
+                li {
+                  font-size: 16px;
+                  font-family: MicrosoftYaHei;
+                  color: rgba(102, 102, 102, 1);
+                    > button {
+                      color: #2A99F2;
+                      border:1px solid #2A99F2;
+                      height: 20px;
+                      line-height: 15px;
+                      margin:-4px 0 0 7px;
+                    }
+                }
+                li:nth-child(2) {
+                  font-size: 24px;
+                  margin-top:26px;
+                }
+              }
+            }
+            .item-li {
+            }
+          }
+          .div2 {
+            width: 198px;
+            margin-left: 24px;
+            .right-top{
+              width: 198px;
+              margin-top: 10px;
+              >p{
+                > span{
+                font-size:16px;
+                font-family:MicrosoftYaHei;
+                color:rgba(102,102,102,1);
+                line-height:21px;
+                }
+                .BalanceAlarmSwitch{
+                  margin-top: -5px;
+                  margin-left: 7px;
+                }
+              }
+              > p:nth-child(2){
+                margin-top: 20px;
+                font-size:12px;
+                font-family:MicrosoftYaHei;
+                color:rgba(153,153,153,1);
+                line-height:16px;
+                >span{
+                  color:#2A99F2;
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  line-height:16px;
+                  cursor: pointer;
+                }
+              }
+              
+            }
+            > p {
+              margin-top: 55px;
+              > button {
               font-size: 12px;
               font-family: MicrosoftYaHei;
               color: rgba(255, 255, 255, 1);
@@ -3837,28 +4915,200 @@
               padding: 5px 14px;
               outline: none;
               border: none;
-              float: right;
+              border-radius:4px;
+              width:54px;
+              height:28px;
+             }
+            }
+          }
+
+          }
+          .item2 {
+            width:450px;
+            padding: 20px 0 20px 20px;
+            background:rgba(255,255,255,1);
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+            > p {
+              font-size:20px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:26px;
             }
             > div {
               display: flex;
-              margin-top: 20px;
+              margin-top: 44px;
               ul {
                 li {
                   font-size: 16px;
                   font-family: MicrosoftYaHei;
                   color: rgba(102, 102, 102, 1);
+                  > button {
+                      color: #2A99F2;
+                      border:1px solid #2A99F2;
+                      height: 20px;
+                      line-height: 15px;
+                      margin:-4px 0 0 7px;
+                    }
                 }
                 li:nth-child(2) {
-                  margin-top: 10px;
+                  margin-top: 26px;
                   font-size: 24px;
+                  > button {
+                      color: #2A99F2;
+                      border:1px solid #2A99F2;
+                      height: 20px;
+                      line-height: 15px;
+                      margin:-4px 0 0 7px;
+                    }
                 }
               }
             }
             .item-li {
-              cursor: pointer;
-              &:hover {
-                color: #2A99F2;
+            }
+          }
+          .item3{
+            width:372px;
+            height:170px;
+            background:rgba(255,255,255,1);
+            box-shadow:0px 2px 4px 0px rgba(0,0,0,0.2);
+            margin-top:20px;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 0 20px 20px;
+            > p:nth-child(1){
+              font-size:20px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:26px;
+              z-index:999;
+              position:absolute;
+            }
+            > p:nth-child(2){
+              z-index:999;
+              position:absolute;
+              top: 55px;
+              font-size:24px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:31px;
+              > span {
+                font-size:48px;
+                font-family:MicrosoftYaHei;
+                color:rgba(255,98,75,1);
+                line-height:64px;
               }
+            }
+            > p:nth-child(3){
+              z-index:999;
+              position:absolute;
+              bottom: 22px;
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:#999999;
+              line-height:16px;
+              > span {
+                color: #2A99F2;
+                cursor: pointer;
+              }
+            }
+            > img {
+              position: absolute;
+              right: 0;
+              bottom: 0;
+            }
+          }
+          .item4{
+            width:372px;
+            height:170px;
+            background:rgba(255,255,255,1);
+            box-shadow:0px 2px 4px 0px rgba(0,0,0,0.2);
+            margin-top:20px;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 0 20px 20px;
+            > p:nth-child(1){
+              font-size:20px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:26px;
+              z-index:999;
+              position:absolute;
+            }
+            > p:nth-child(2){
+              z-index:999;
+              position:absolute;
+              top: 55px;
+              font-size:24px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:31px;
+              > span {
+                font-size:48px;
+                font-family:MicrosoftYaHei;
+                color:rgba(255,98,75,1);
+                line-height:64px;
+              }
+            }
+            > p:nth-child(3){
+              z-index:999;
+              position:absolute;
+              bottom: 22px;
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:#999999;
+              line-height:16px;
+            }
+            > img {
+              position: absolute;
+              right: 0;
+              bottom: 0;
+            }
+          }
+          .item5{
+            width:373px;
+            height:170px;
+            background:rgba(255,255,255,1);
+            box-shadow:0px 2px 4px 0px rgba(0,0,0,0.2);
+            margin-top:20px;
+            position: relative;
+            overflow: hidden;
+            padding: 20px 0 20px 20px;
+            > p:nth-child(1){
+              font-size:20px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:26px;
+              z-index:999;
+              position:absolute;
+            }
+            > p:nth-child(2){
+              z-index:999;
+              position:absolute;
+              top: 55px;
+              font-size:24px;
+              font-family:MicrosoftYaHei;
+              color:rgba(51,51,51,1);
+              line-height:31px;
+              > span {
+                font-size:48px;
+                font-family:MicrosoftYaHei;
+                color:rgba(255,98,75,1);
+                line-height:64px;
+              }
+            }
+            > p:nth-child(3){
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:rgba(42,153,242,1);
+              line-height:16px;
+              z-index:999;
+              position:absolute;
+              bottom: 22px;
+            }
+            > img {
+              position: absolute;
+              right: 0;
+              bottom: 0;
             }
           }
         }
@@ -3881,20 +5131,59 @@
           }
         }
         .ordertype {
-          display: inline-flex;
-          margin-top: 15px;
+          //display: inline-flex;
+          margin-top: 5px;
           .order_s1 {
-            line-height: 30px;
-            font-family: Microsoft Yahei, 微软雅黑;
-            font-size: 12px;
-            color: rgba(17, 17, 17, 0.65);
+            margin-top:10px;
           }
           .order_s2 {
-            line-height: 30px;
-            font-family: Microsoft Yahei, 微软雅黑;
-            font-size: 12px;
-            color: rgba(17, 17, 17, 0.65);
-            margin-left: 20px;
+            margin-top:10px;
+            line-height: 20px;
+            position: relative;
+           .order_s2span{
+             top: 3px;
+             position: relative;
+            }
+            .order_s2span1{
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: center;
+              margin: auto 0 auto 10px;
+              > span{
+                color: #FF624B;
+              }
+            }
+            .order_s2span2{
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: center;
+              margin: auto 0 auto 10px;
+              > span{
+                font-weight: bold;
+                color: #FF624B;
+              }
+            }
+            .orderdiv{
+              position: absolute;
+              right: 0;
+              top:-14px;
+              .order_s2span3{
+              font-size:12px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              margin: 0 10px 0 10px;
+              }
+              .datarow{
+                display: inline-block;
+                top:10px;
+              }
+              > button{
+                margin-top:-5px;
+                margin-left: 10px;
+              }
+            }
           }
         }
         .orderdata {
@@ -3902,77 +5191,43 @@
         }
         .searchCard {
           margin-top: 20px;
-          & > span {
-            font-family: Microsoft Yahei, 微软雅黑;
-            font-size: 12px;
-            color: rgba(17, 17, 17, 0.65);
-          }
-        }
-        .invoiceType {
-          margin-top: 20px;
-          > div {
-            padding: 12px 20px;
-            background: #F7FBFF;
-            > p {
-              font-size: 12px;
-              font-family: PingFangSC-Regular;
-              color: rgba(0, 0, 0, 0.43);
-              line-height: 18px;
+          > p:nth-child(1){
+            .spana{
+              margin-left: 14px;
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: right;
+            }
+            .rideo{
+              margin-left: 15px;
             }
           }
-          > p {
-            font-family: Microsoft Yahei, 微软雅黑;
-            font-size: 22px;
-            color: rgba(17, 17, 17, 0.75);
-            letter-spacing: 1.31px;
-            margin-top: 16px;
-            span {
-              color: #FF3366;
+          > p:nth-child(2){
+            margin-top: 10px;
+            .spana{
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: right;
+            }
+            .rideo{
+              margin-left: 15px;
             }
           }
-        }
-        .invoiceInformation {
-          margin-top: 20px;
-          .invoiceInformationShow {
-            span {
-              display: block;
-              line-height: 2;
+          > p:nth-child(3){
+            margin-top: 10px;
+            .spana{
+               margin-left: 14px;
+              font-size:14px;
+              font-family:MicrosoftYaHei;
+              color:rgba(102,102,102,1);
+              text-align: right;
+            }
+            .rideo{
+              margin-left: 15px;
             }
           }
-          .bill_s1 {
-            font-family: Microsoft Yahei, 微软雅黑;
-            font-size: 12px;
-            color: rgba(0, 0, 0, 0.43);
-            letter-spacing: 0.71px;
-            line-height: 18px;
-            margin-left: 10px;
-          }
-          .InvoiceRecords {
-            border-top: 1px solid #D9D9D9;
-            & > span {
-              font-family: Microsoft Yahei, 微软雅黑;
-              font-size: 22px;
-              color: rgba(17, 17, 17, 0.75);
-              letter-spacing: 1.31px;
-              margin-top: 20px;
-              display: block;
-            }
-          }
-        }
-        .appreciation_s1 {
-          font-family: Microsoft Yahei, 微软雅黑;
-          font-size: 22px;
-          color: rgba(17, 17, 17, 0.75);
-          letter-spacing: 1.31px;
-          margin-top: 20px;
-          display: block;
-        }
-        .appreciation_p {
-          font-family: Microsoft Yahei, 微软雅黑;
-          font-size: 12px;
-          color: rgba(0, 0, 0, 0.43);
-          letter-spacing: 0.71px;
-          line-height: 18px;
         }
       }
     }
@@ -4253,30 +5508,237 @@
       font-weight: bold;
     }
   }
-  .unfreeze-type{
-    display: flex;
-    margin: 20px 0;
-    .item{
-      padding: 6px;
-      width:163px;
-      background:rgba(247,247,247,0.45);
-      border-radius:4px;
-      border:1px solid rgba(233,233,233,1);
-      &.selsected{
-        background:rgba(66,151,242,0.05);
-        border:1px solid rgba(66,151,242,1);
-      }
-      >p{
+  .bill {
+    color: #333;
+    .select-tab {
+      color:rgba(42,153,242,1);
+      border:1px solid rgba(42,153,242,1);
+      z-index: 2;
+    }
+    .monthly-tabs {
+      display: flex;
+      li {
+        flex-grow:1;
+        height:40px;
         font-size:14px;
-        font-family:MicrosoftYaHei;
-        color:rgba(51,51,51,1);
-        line-height:20px;
+        color:rgba(42,153,242,1);
+        line-height:38px;
+        background:rgba(255,255,255,1);
+        border:1px solid rgba(217,217,217,1);
+        cursor: pointer;
         text-align: center;
+        border-bottom: none;
       }
-      p:nth-child(3){
+      li:nth-of-type(2) {
+        border-left: none;
+        border-right: none; 
+      }
+      .select-tab {
+        color:#fff;
+        background:rgba(42,153,242,1);
+        border:1px solid rgba(42,153,242,1);
+      }
+    }
+    .bill-overview {
+      margin-top: 20px;
+      font-size: 14px;
+      .content-header {
+        margin-bottom: 10px;
+        div {
+          span {
+            font-size: 12px;
+            color: #666666;
+            margin-right: 10px;
+          }
+          button {
+            margin-left: 20px;
+          }
+        }
+      }
+      .overview {
+        margin-bottom: 10px;
+      }
+      .show-panel {
+        display: flex;
+        justify-content: space-between;
+        >div {
+          width:570px;
+          height:161px;
+          padding: 20px;
+          background:rgba(255,255,255,1);
+          box-shadow:0px 2px 4px 0px rgba(0,0,0,0.2);
+          .title {
+            font-size:14px;
+            i {
+              color:#2B99F2
+            }
+          }
+          .count {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size:14px;
+            text-align: center;
+            span {
+              color:rgba(153,153,153,1);
+            }
+            div:first-child{
+              font-size: 18px;
+            }
+            p {
+              margin-top: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .table-end {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #d9d9d9;
+    border-top: none;
+    li {
+      height: 47px;
+      line-height: 45px;
+      padding-left: 18px;
+    }
+    li:nth-of-type(even) {
+      width: 232px;
+      color:#FF624B;
+    }
+  }
+  .table-other {
+    border: none;
+    border-bottom: 1px solid #d9d9d9;
+    li:nth-of-type(even) {
+      padding-right: 18px;
+      text-align: right;
+    }
+  }
+  .invoice-management {
+    .invoice-list {
+      .invoice-money {
+        margin-top: 10px;
+        p:first-child{
+          font-size:14px;
+          color: #333333;
+          line-height:19px;
+          span {
+            font-size:24px;
+            font-weight:bold;
+            color:rgba(255,98,75,1);
+            line-height:31px;
+            vertical-align: sub;
+          }
+        }
+        p:last-child{
+          margin-top: 5px;
+          font-size:12px;
+          color:rgba(102,102,102,1);
+          line-height:16px;
+          span {
+            color:rgba(255,98,75,1);
+          }
+        }
+      }
+      .invoice-records {
+        padding-top: 10px; 
+      }
+    }
+  }
+  
+  .modal-content-s{
+    padding-bottom: 20px;
+    border-bottom:1px solid rgba(233,233,233,1);
+    .SetBalancet{
+      > p {
+        > span {
+          font-size:14px;
+          font-family:MicrosoftYaHei;
+          color:rgba(51,51,51,1);
+          line-height:19px;
+        }
+      .ivu-radio-group {
+          margin-left: 10px;
+        }
+      }
+      > p:nth-child(2) {
         font-size:12px;
-        color:rgba(255,98,75,1);
+        font-family:MicrosoftYaHei;
+        color:rgba(178,178,178,1);
+        line-height:16px;
+        margin: 10px 0 10px 68px;
       }
+      > p:nth-child(3) {
+        > span {
+          font-size:14px;
+          font-family:MicrosoftYaHei;
+          color:rgba(51,51,51,1);
+          line-height:19px;
+        }
+        .ivu-input-number {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+  .invoice-detail{
+    dl {
+      display: flex;
+      background:rgba(255,255,255,1);
+      border:1px solid rgba(229,233,237,1);
+      color:rgba(51,51,51,1);
+      font-size:12px;
+      border-bottom: none;
+      dt {
+        width: 92px;
+        padding: 10px;
+        background:rgba(247,247,247,1);
+      }
+      dd {
+        width: 138px;
+        padding: 10px;
+      }
+      .w {
+        flex-grow: 1; 
+      }
+      &:last-child {
+        border-bottom: 1px solid rgba(229,233,237,1);
+      }
+    }
+  }
+  .export-bill-modal {
+    .row {
+      display: flex;
+      margin-bottom: 10px;
+      .lable {
+        display: inline-block;
+        width: 84px;
+        margin-right: 10px;
+        text-align: right;
+        font-style: normal;
+        font-size:14px;
+        color:rgba(51,51,51,1);
+      }
+      span {
+        line-height: 24px;
+        font-size: 12px;
+      }
+      .btn {
+        color: #2A99F2;
+        cursor: pointer;
+      }
+    }
+    .row:nth-of-type(3) {
+      span {
+        margin-left:94px;
+        line-height: 16px;
+      }
+    }
+    .row:last-of-type {
+      margin-bottom: 0
     }
   }
 </style>

@@ -11,7 +11,7 @@
           </svg>
           <span id="title">用户中心</span>
         </div>
-        <Tabs type="card" :animated="false" v-model="currentTab" @on-click="tabSwitching">
+        <Tabs type="card" :animated="false" v-model="paneStatus.usercenter" @on-click="tabSwitching">
           <!--未认证-->
           <Tab-pane label="个人信息" name="personalInfo">
             <div class="personalInfo">
@@ -632,10 +632,10 @@
       </div>
       <div style="display: flex;margin-top:20px">
         <div style="width:50%;text-align: center">
-          <Button type="primary" @click="showModal.selectAuthType = false;currentTab='certification'">立即认证</Button>
+          <Button type="primary" @click="showModal.selectAuthType = false;paneStatus.usercenter='certification'">立即认证</Button>
         </div>
         <div style="width:50%;text-align: center">
-          <Button type="primary" @click="showModal.selectAuthType = false;currentTab='companyInfo'">立即认证</Button>
+          <Button type="primary" @click="showModal.selectAuthType = false;paneStatus.usercenter='companyInfo'">立即认证</Button>
         </div>
       </div>
       <div slot="footer" style="margin-bottom: 20px;">
@@ -1349,11 +1349,12 @@
   import reg from '../../util/regExp'
   import $store from '../../vuex'
   import throttle from 'throttle-debounce/debounce'
+  import {mapState} from 'vuex'
 
   export default {
     data() {
       var authType = sessionStorage.getItem('pane')
-      var currentTab = ''
+      var currentTab = 'personalInfo'
       if (authType == 'company') {
         currentTab = 'companyInfo'
       } else if (authType == 'person') {
@@ -1453,8 +1454,6 @@
       return {
         vipGrade: '',
         // 当前选中的tab页
-        currentTab: currentTab ? currentTab : 'personalInfo',
-        authType,
         uploadImgDispaly: '',
         uploadImgDispaly1: '',
         uploadImgDispaly2: '',
@@ -2620,14 +2619,14 @@
       }
     },
     created() {
-      if (this.authType == 'person' || this.authType == 'company') {
+      if (this.paneStatus.usercenter == 'personalInfo' || this.paneStatus.usercenter == 'companyInfo'){
         this.showModal.selectAuthType = false
       } else {
         if (this.$store.state.authInfo == null) {
           this.showModal.selectAuthType = true
         }
       }
-      this.tabSwitching(this.currentTab)
+      this.tabSwitching(this.paneStatus.usercenter)
       if ($store.state.authInfo && $store.state.authInfo.companyid) {
         this.getPhone()
       }
@@ -4125,7 +4124,8 @@
         })
       }
     },
-    computed: {
+    computed: mapState({
+      paneStatus: state => state.paneStatus,
       userInfo() {
         return $store.state.userInfo
       },
@@ -4210,7 +4210,7 @@
           return false
         }
       }
-    },
+    }),
     watch: {
       '$store.state.zone': {
         handler: function () {

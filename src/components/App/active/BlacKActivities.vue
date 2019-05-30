@@ -166,7 +166,7 @@
               </div>
             </div>
             <div class="inlineright">
-              <p>云电脑注册即可获赠10云币</p>
+              <p>云电脑提前预约注册即可获赠10云币 </p>
               <p>【可抵扣云电脑3小时使用时长】</p>
               <Button v-if="AppointmentStatus==0" type="warning" style="margin-top:16px;background:#FFCE00;color:rgba(51,51,51,1);" @click="appointmentimmediately">立即预约</Button>
               <Button v-if="AppointmentStatus==1" disabled style="margin-top:16px;border:1px solid rgba(185,157,41,1);color:#B99D29;background:none;">预约成功</Button>
@@ -192,6 +192,7 @@
                 <p>
                   <span>云服务器特惠</span>
                   <span>指定规格产品买一送一！</span>
+                  <img src="../../../assets/img/active/blackactive/forseven.png" alt="七台服务器">
                 </p>
               </div>
               <div class="bottom">
@@ -275,11 +276,11 @@
                       <span style="margin: 0 18px 0 20px;">时长</span>
                     </p>
                     <p class="givep2">
-                      <span style=" margin: 0 15px 0 18px;">2核</span>
+                      <span style="margin: 0 20px 0 22px;">2核</span>
                       <span>4G</span>
-                      <span style="margin: 0 15px 0 15px;">2M</span>
+                      <span style="margin: 0 18px 0 21px;">2M</span>
                       <span>40G</span>
-                      <span style="margin: 0 15px 0 15px;">1年</span>
+                      <span style="margin: 0 18px 0 23px;">1年</span>
                     </p>
                   </div>
                   <div class="give" v-if="hostProductHot.timeTimetype.value=='3'&&hostProductHot.cpuMemory.cpunum!=1&&hostProductHot.cpuMemory.memory!=2">
@@ -292,11 +293,11 @@
                       <span style="margin: 0 18px 0 20px;">时长</span>
                     </p>
                     <p class="givep2">
-                      <span style=" margin: 0 15px 0 18px;">2核</span>
+                      <span style="margin: 0 20px 0 22px;">2核</span>
                       <span>8G</span>
-                      <span style="margin: 0 15px 0 15px;">5M</span>
+                      <span style="margin: 0 18px 0 21px;">5M</span>
                       <span>40G</span>
-                      <span style="margin: 0 15px 0 15px;">1年</span>
+                      <span style="margin: 0 18px 0 23px;">1年</span>
                     </p>
                   </div>
                   <div class="give" v-if="hostProductHot.cpuMemory.cpunum==1&&hostProductHot.cpuMemory.memory==2">
@@ -334,13 +335,13 @@
                 </div>
               </div>
             </div>
-
+            
             <div class="EfficientCloud">
                 <div class="top">
                   <p>
                     <span>P100 GPU高效云服务器</span>
                     <span>超高计算能力，行业最低，低至2折,更有买一送一超优惠活动</span>
-                    <img src="../../../assets/img/active/blackactive/Grouptwo.png" alt="两折GPU">
+                    <img src="../../../assets/img/active/blackactive/Grouptwo.png" alt="两台GPU">
                   </p>
                 </div>
                 <div class="bottom">
@@ -380,10 +381,12 @@
                       <div class="displays flex">
                         <span>CPU</span>
                         <span>内存</span>
+                        <span>GPU</span>
                       </div>
                       <div class="cloums flex">
                         <span>{{nucleusgpu}}核</span>
                         <span>{{numGgpu}}G</span>
+                        <span>{{numGgpuKa}}</span>
                       </div>
                     </div>
                     <div class="give">
@@ -396,11 +399,11 @@
                       <span style="margin: 0 18px 0 20px;">时长</span>
                     </p>
                     <p class="givep2">
-                      <span style=" margin: 0 15px 0 18px;">2核</span>
+                      <span style=" margin: 0 20px 0 22px;">2核</span>
                       <span>4G</span>
-                      <span style="margin: 0 15px 0 15px;">2M</span>
+                      <span style="margin: 0 18px 0 21px;">1M</span>
                       <span>40G</span>
-                      <span style="margin: 0 15px 0 15px;">1年</span>
+                      <span style="margin: 0 18px 0 23px;">1年</span>
                     </p>
                   </div>
                     <div class="item-config">
@@ -1199,8 +1202,9 @@
         ActivityState:'1',
         nucleus:'1',
         numG:'2',
-        nucleusgpu:'16',
+        nucleusgpu:'8',
         numGgpu:'64',
+        numGgpuKa:'1',
         tooltipStatus: true,
         selectVipGrade: '白银会员',
         highEndLength: '',
@@ -1483,7 +1487,7 @@
           cpuMemory: {cpunum: '1', memory: '2'},
           bandwith: 1,
           system: [],
-          disksize: 20,
+          disksize: 0,
           timeTimetype: {type: 'year', value: '1', discount: '6'},
           count: '1',
           price: '',
@@ -1520,7 +1524,7 @@
             label: 'Ubuntu',
             children: [],
           }],
-        hostDisksizeListHot: [20, 50, 100,500],
+        hostDisksizeListHot: [0,20, 50, 100,500],
         hostTimeListHot: [
           {type: 'year', value: '1', discount: '6'},
           {type: 'year', value: '3', discount: '4'},
@@ -1571,7 +1575,7 @@
         // 热门对象存储打折
         objProductHot: {
           zoneId: '',
-          cpuMemory: {label: '100', unit: 'GB', value: '100'},
+          cpuMemory: {label: '500', unit: 'GB', value: '500'},
           bandwith: 1,
           system: [],
           disksize: 20,
@@ -1582,9 +1586,9 @@
         },
         objZoneListHot: [],
         objConfigListHot: [
-          {label: '100', unit: 'GB', value: '100'},
           {label: '500', unit: 'GB', value: '500'},
           {label: '1', unit: 'TB', value: '1024'},
+          {label: '2', unit: 'TB', value: '2048'},
         ],
         objbandwithListHot: [1, 2, 5, 10, 20],
         objSystemListHot: [{
@@ -2169,7 +2173,7 @@
             this.discountProduct[index].hostSystemList.forEach(item => {
               item.children.forEach(item => {
                 item.value = item.systemtemplateid
-                item.label = item.templatedescript
+                item.label = item.templatename
               })
             })
             this.discountProduct[index].hostSystemList.forEach((item, index) => {
@@ -2203,7 +2207,7 @@
             this.discountProductfornew[index].hostSystemList.forEach(item => {
               item.children.forEach(item => {
                 item.value = item.systemtemplateid
-                item.label = item.templatedescript
+                item.label = item.templatename
               })
             })
             this.discountProductfornew[index].hostSystemList.forEach((item, index) => {
@@ -2231,7 +2235,7 @@
         obj.forEach(item => {
           item.children.forEach(item => {
             item.value = item.systemtemplateid
-            item.label = item.templatedescript
+            item.label = item.templatename
           })
         })
         // 为空的系统不能点击
@@ -2280,7 +2284,11 @@
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            this.discountProduct[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
+            res.data.result.forEach(itemed => {
+              if(itemed.freevmconfigId==this.discountProduct[index].id){
+                this.discountProduct[index].num = (itemed.receive / itemed.total) * 100
+              }
+            })
           }
         })
       },
@@ -2291,7 +2299,11 @@
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            this.discountProductfornew[index].num = (res.data.result[index].receive / res.data.result[index].total) * 100
+            res.data.result.forEach(itemed => {
+              if(itemed.freevmconfigId==this.discountProductfornew[index].id){
+                this.discountProductfornew[index].num = (itemed.receive / itemed.total) * 100
+              }
+            })
           }
         })
       },
@@ -2483,89 +2495,86 @@
         var params = {}
         if (this.hostProductHot.disksize) {
           if(this.hostProductHot.timeTimetype.value=='1'){
-            params = {
-              zoneId: this.hostProductHot.zoneId,
-              timeType: this.hostProductHot.timeTimetype.type,
-              timeValue: this.hostProductHot.timeTimetype.value,
-              templateId: this.hostProductHot.system[1],
-              isAutoRenew: 1,
-              count: this.hostProductHot.count,
-              cpuNum: this.hostProductHot.cpuMemory.cpunum,
-              memory: this.hostProductHot.cpuMemory.memory,
-              bandWidth: this.hostProductHot.bandwith,
-              rootDiskType: this.hostdisktype,
-              rootDiskSize: '40',
-              diskType: this.hostdisktype,
-              diskSize: this.hostProductHot.disksize,
-              networkId: 'no',
-              vpcId: 'no',
-              discountForActivity: '42',
-              discountForActivityConfigId: this.hostfreevmconfigs
-            }
+              params = {
+                zoneId: this.hostProductHot.zoneId,
+                timeType: this.hostProductHot.timeTimetype.type,
+                timeValue: this.hostProductHot.timeTimetype.value,
+                templateId: this.hostProductHot.system[1],
+                isAutoRenew: 1,
+                count: this.hostProductHot.count,
+                cpuNum: this.hostProductHot.cpuMemory.cpunum,
+                memory: this.hostProductHot.cpuMemory.memory,
+                bandWidth: this.hostProductHot.bandwith,
+                rootDiskType: this.hostdisktype,
+                rootDiskSize: '40',
+                diskType: this.hostdisktype,
+                diskSize: this.hostProductHot.disksize,
+                networkId: 'no',
+                vpcId: 'no',
+                discountForActivity: '42',
+                discountForActivityConfigId: (this.hostProductHot.cpuMemory.cpunum!=1&&this.hostProductHot.cpuMemory.memory!=2) ? this.hostfreevmconfigs : ''
+              }
           }
           else if(this.hostProductHot.timeTimetype.value=='3'){
-            params = {
-              zoneId: this.hostProductHot.zoneId,
-              timeType: this.hostProductHot.timeTimetype.type,
-              timeValue: this.hostProductHot.timeTimetype.value,
-              templateId: this.hostProductHot.system[1],
-              isAutoRenew: 1,
-              count: this.hostProductHot.count,
-              cpuNum: this.hostProductHot.cpuMemory.cpunum,
-              memory: this.hostProductHot.cpuMemory.memory,
-              bandWidth: this.hostProductHot.bandwith,
-              rootDiskType: this.hostdisktypetwo,
-              rootDiskSize: '40',
-              diskType: this.hostdisktypetwo,
-              diskSize: this.hostProductHot.disksize,
-              networkId: 'no',
-              vpcId: 'no',
-              discountForActivity: '42',
-              discountForActivityConfigId: this.hostfreevmconfigsthree
-            }
+              params = {
+                zoneId: this.hostProductHot.zoneId,
+                timeType: this.hostProductHot.timeTimetype.type,
+                timeValue: this.hostProductHot.timeTimetype.value,
+                templateId: this.hostProductHot.system[1],
+                isAutoRenew: 1,
+                count: this.hostProductHot.count,
+                cpuNum: this.hostProductHot.cpuMemory.cpunum,
+                memory: this.hostProductHot.cpuMemory.memory,
+                bandWidth: this.hostProductHot.bandwith,
+                rootDiskType: this.hostdisktypetwo,
+                rootDiskSize: '40',
+                diskType: this.hostdisktypetwo,
+                diskSize: this.hostProductHot.disksize,
+                networkId: 'no',
+                vpcId: 'no',
+                discountForActivity: '42',
+                discountForActivityConfigId: (this.hostProductHot.cpuMemory.cpunum!=1&&this.hostProductHot.cpuMemory.memory!=2) ? this.hostfreevmconfigsthree : ''
+              }
           }
-            
         } else {
           if(this.hostProductHot.timeTimetype.value=='1'){
-            params = {
-              zoneId: this.hostProductHot.zoneId,
-              timeType: this.hostProductHot.timeTimetype.type,
-              timeValue: this.hostProductHot.timeTimetype.value,
-              templateId: this.hostProductHot.system[1],
-              isAutoRenew: 1,
-              count: this.hostProductHot.count,
-              cpuNum: this.hostProductHot.cpuMemory.cpunum,
-              memory: this.hostProductHot.cpuMemory.memory,
-              bandWidth: this.hostProductHot.bandwith,
-              rootDiskType: 'ssd',
-              rootDiskSize: '40',
-              networkId: 'no',
-              vpcId: 'no',
-              discountForActivity: '42',
-              discountForActivityConfigId: this.hostfreevmconfigs
-            }
+              params = {
+                zoneId: this.hostProductHot.zoneId,
+                timeType: this.hostProductHot.timeTimetype.type,
+                timeValue: this.hostProductHot.timeTimetype.value,
+                templateId: this.hostProductHot.system[1],
+                isAutoRenew: 1,
+                count: this.hostProductHot.count,
+                cpuNum: this.hostProductHot.cpuMemory.cpunum,
+                memory: this.hostProductHot.cpuMemory.memory,
+                bandWidth: this.hostProductHot.bandwith,
+                rootDiskType: this.hostdisktype,
+                rootDiskSize: '40',
+                networkId: 'no',
+                vpcId: 'no',
+                discountForActivity: '42',
+                discountForActivityConfigId: (this.hostProductHot.cpuMemory.cpunum!=1&&this.hostProductHot.cpuMemory.memory!=2) ? this.hostfreevmconfigs : ''
+              }
           }
           else if(this.hostProductHot.timeTimetype.value=='3'){
-            params = {
-              zoneId: this.hostProductHot.zoneId,
-              timeType: this.hostProductHot.timeTimetype.type,
-              timeValue: this.hostProductHot.timeTimetype.value,
-              templateId: this.hostProductHot.system[1],
-              isAutoRenew: 1,
-              count: this.hostProductHot.count,
-              cpuNum: this.hostProductHot.cpuMemory.cpunum,
-              memory: this.hostProductHot.cpuMemory.memory,
-              bandWidth: this.hostProductHot.bandwith,
-              rootDiskType: 'ssd',
-              rootDiskSize: '40',
-              networkId: 'no',
-              vpcId: 'no',
-              discountForActivity: '42',
-              discountForActivityConfigId: this.hostfreevmconfigs,
-              discountForActivityConfigId: this.hostfreevmconfigsthree
-            }
-          }
-            
+              params = {
+                zoneId: this.hostProductHot.zoneId,
+                timeType: this.hostProductHot.timeTimetype.type,
+                timeValue: this.hostProductHot.timeTimetype.value,
+                templateId: this.hostProductHot.system[1],
+                isAutoRenew: 1,
+                count: this.hostProductHot.count,
+                cpuNum: this.hostProductHot.cpuMemory.cpunum,
+                memory: this.hostProductHot.cpuMemory.memory,
+                bandWidth: this.hostProductHot.bandwith,
+                rootDiskType: this.hostdisktypetwo,
+                rootDiskSize: '40',
+                networkId: 'no',
+                vpcId: 'no',
+                discountForActivity: '42',
+                discountForActivityConfigId: (this.hostProductHot.cpuMemory.cpunum!=1&&this.hostProductHot.cpuMemory.memory!=2) ? this.hostfreevmconfigsthree : ''
+              }
+          } 
         }
         axios.get('information/deployVirtualMachine.do', {params}).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
@@ -2645,6 +2654,7 @@
         this.gpuProductHot.cpuMemory=item3
         this.nucleusgpu=item3.cpunum
         this.numGgpu=item3.memory
+        this.numGgpuKa=item3.gpusize
       },
       // gpu打折提交订单
       productBuy_gpu() {
@@ -3027,7 +3037,7 @@
   }
 
   .banner {
-    background: url(../../../assets/img/active/blackactive/blackbround1.png) center no-repeat;
+    background: url("../../../assets/img/active/blackactive/blackbround1.png") center no-repeat, linear-gradient(90deg, #191B32, #191B32);
     color: rgba(51, 51, 51, 1);
     .wrap{
         margin: 0 auto;
@@ -3419,6 +3429,10 @@
               line-height:80px;
               margin-left: 20px;
             }
+            > img{
+              float: right;
+              margin-top: 9px;
+            }
           }
         }
         .bottom{
@@ -3622,18 +3636,18 @@
                 }
               }
               .cloums{
-               width: 110px;
+               width: 100px;
                 height: 26px;
                 margin: 0 0 11px -38px;
                 float: left;
                 > span:nth-child(1){
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
                 }
                 > span:nth-child(2){
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
@@ -3668,7 +3682,7 @@
                 height: 26px;
                 margin-top: 10px;
                 > span{
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
@@ -4017,7 +4031,7 @@
                 top: 0;
               }
               .displays{
-                width: 95px;
+                width: 105px;
                 height: 16px;
                 margin: 0 0 11px -35px;
                 float: left;
@@ -4032,26 +4046,36 @@
                   font-family:MicrosoftYaHei;
                   color:rgba(178,178,178,1);
                   line-height:16px;
-                  margin-left: 17px;
+                }
+                > span:nth-child(3){
+                  font-size:12px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(178,178,178,1);
+                  line-height:16px;
                 }
               }
               .cloums{
-               width: 120px;
+               width: 110px;
                 height: 26px;
-                margin: 0 0 11px -48px;
+                margin: 0 0 11px -43px;
                 float: left;
                 > span:nth-child(1){
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
                 }
                 > span:nth-child(2){
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;
-                  margin-left: 10px;
+                }
+                > span:nth-child(3){
+                  font-size:16px;
+                  font-family:MicrosoftYaHei;
+                  color:rgba(255,255,255,1);
+                  line-height:26px;
                 }
               }
             }
@@ -4082,7 +4106,7 @@
                 height: 26px;
                 margin-top: 10px;
                 > span{
-                  font-size:20px;
+                  font-size:16px;
                   font-family:MicrosoftYaHei;
                   color:rgba(255,255,255,1);
                   line-height:26px;

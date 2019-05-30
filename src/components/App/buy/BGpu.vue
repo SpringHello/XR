@@ -402,11 +402,11 @@
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
               <div class="popTip" v-show="passwordForm.passwordHint">
-                  <div><i :class="{reach: passwordForm.passwordDegree > 0 }"></i>
+                  <div><i :class="{reach: passwordForm.firstDegree}"></i>
                     <p>长度8~30位，推荐使用12位以上的密码</p></div>
-                  <div><i :class="{reach: passwordForm.passwordDegree > 1 }"></i>
+                  <div><i :class="{reach: passwordForm.secondDegree}"></i>
                     <p>不能输入连续6位数字或字母，如123456aA</p></div>
-                  <div><i :class="{reach: passwordForm.passwordDegree > 2 }"></i>
+                  <div><i :class="{reach: passwordForm.thirdDegree}"></i>
                     <p>至少包含：小写字母，大写字母，数字</p></div>
                   <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
               </div>
@@ -727,7 +727,9 @@
          passwordForm: {
           passwordHint: false,
           //密码强度
-          passwordDegree: 0
+         firstDegree: false,
+          secondDegree: true,
+          thirdDegree: false
         }
       }
     },
@@ -861,6 +863,7 @@
       },
       // 重新选择系统镜像
       setOS(name) {
+        this.mirrorShow = false
         var arg = [];
         if (this.mirrorQuery) {
           arg.push(this.mirrorQuery.templatename);
@@ -896,7 +899,8 @@
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
-         this.customMirror ={}
+        this.mirrorShow = false
+        this.customMirror ={}
         if (this.$route.mirror) {
           this.customMirror = this.mirrorQuery;
         } else {
@@ -1125,14 +1129,14 @@
           this.mirrorShow = true
           return
         }
-
+        
         if (this.currentLoginType == 'custom') {
           if (this.computerName.trim() == '') {
             this.computerNameWarning = '请输入主机名称'
             return
           }
-          if (!regExp.hostPassword(this.password)) {
-            this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
+          if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
+            this.passwordWarning = '你输入的密码不符合格式要求'
             return
           }
         }
@@ -1180,13 +1184,14 @@
           this.mirrorShow = true
           return
         }
+
         if (this.currentLoginType == 'custom') {
           if (this.computerName.trim() == '') {
             this.computerNameWarning = '请输入主机名称'
             return
           }
-          if (!regExp.hostPassword(this.password)) {
-            this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
+           if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
+            this.passwordWarning = '你输入的密码不符合格式要求'
             return
           }
         }
@@ -1338,13 +1343,45 @@
       'network'() {
           this.fireList()
       },
-      password(val){
-         this.passwordForm.passwordDegree = 0
+       password(val){
         if(val.length >7 && val.length <31){
-          this.passwordForm.passwordDegree = 1
+          this.passwordForm.firstDegree = true
+        } else{
+          this.passwordForm.firstDegree = false
+        }
+        let len = val.length
+        let reg = /[0-9]/
+        let flag = false
+        // 当用户输入到第6位时，开始校验是否有6位连续字符
+        if(len>5){
+          flag = check(len)
+          function check(index){
+            let count = 0
+            for(let i = index- 5; i < index;i++){
+            let next = reg.test(val[i]) ? val[i] : val[i].charCodeAt() // 检查字符是数字还是字母
+            let current = reg.test(val[i-1]) ? val[i-1] : val[i-1].charCodeAt()
+            if(next-current === 1){ // ACSII 码相差1则为连续
+              count +=1
+             }
+           }
+            if(count > 4){ // 有6位连续字符
+              return true
+            } else if(count < 5 && index > 6){
+              return check(index - 1) // 递归继续校验
+            } else{
+              return false
+            }
+          }
+        }
+        if(flag){
+          this.passwordForm.secondDegree = false
+        } else{
+          this.passwordForm.secondDegree = true
         }
         if(regExp.hostPassword(val)){
-          this.passwordForm.passwordDegree = 3
+          this.passwordForm.thirdDegree = true
+        } else{
+          this.passwordForm.thirdDegree = false
         }
       }
     }

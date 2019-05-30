@@ -1927,7 +1927,7 @@
       .carousel {
         .carousel-item {
           > div {
-            background-size: cover;
+            //background-size: cover;
           }
           .xf {
             height: 100%;
@@ -3000,7 +3000,7 @@
   .eightscene {
     height: 400px;
     overflow: hidden;
-    background: url("../../assets/img/home/eightscene-banner.png") no-repeat;
+    background: url("../../assets/img/home/eightscene-banner.png") center no-repeat;
     .wrap {
       display: flex;
       justify-content: space-between;
@@ -3066,7 +3066,7 @@
   .blackact{
     height: 400px;
     overflow: hidden;
-    background: url("../../assets/img/home/indeximg.png") no-repeat;
+    background: url("../../assets/img/home/indeximg.png") center no-repeat,linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(174, 201, 255, 1));
     .wrap {
       display: flex;
       justify-content: space-between;
