@@ -827,28 +827,6 @@
         this.$refs['authModifyPhoneFormThere'].resetFields()
         this.uploadImgDispaly = ''
       },
-      unfreezeToBalance() {
-        if (this.unfreezeToHint == 'yue') {
-          let url = 'user/getRremainderThaw.do'
-          let params = {
-            id: this.unfreezeId,
-          }
-          this.$http.post(url, params).then(res => {
-            if (res.status == 200 && res.data.status == 1) {
-              this.$Message.success('解冻成功')
-              this.showModal.unfreezeToBalanceHint = false
-              this.unfreezeStep = 2
-            } else {
-              this.$message.info({
-                content: res.data.message
-              })
-            }
-          })
-        } else {
-          this.unfreezeTo = 'account'
-          this.showModal.unfreezeToBalanceHint = false
-        }
-      },
       freezeToRenewNext() {
         if(parseInt(this.freeTime) < 1){
           window.clearInterval(this.freezeToRenewAffirmTimer)
@@ -1068,10 +1046,7 @@
             if (res.status == 200 && res.data.status == 1) {
               this.$Message.success('解冻成功')
               this.showModal.unfreezeToBalanceHint = false
-              this.freezeDetails()
-              this.getBalance()
-              this.showMoneyByMonth()
-              this.search()
+
             } else {
               this.$message.info({
                 content: res.data.message
