@@ -504,7 +504,7 @@
                        style="width: 300px" @on-change="passwordWarning=''"  @on-focus="passwordForm.passwordHint = true" @on-blur="passwordForm.passwordHint = false"></Input>
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
-              <div class="popTip" v-show="false">
+              <div class="popTip" v-show="passwordForm.passwordHint">
                   <div><i :class="{reach: passwordForm.firstDegree }"></i>
                     <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: passwordForm.secondDegree }"></i>
@@ -1101,8 +1101,12 @@
             this.computerNameWarning = '请输入主机名称'
             return
           }
-          if (!regExp.hostPassword(this.password)) {
+          /*if (!regExp.hostPassword(this.password)) {
             this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
+            return
+          }*/
+          if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
+            this.passwordWarning = '你输入的密码不符合格式要求'
             return
           }
         }
@@ -1157,8 +1161,12 @@
             this.computerNameWarning = '请输入主机名称，不能包含空格'
             return
           }
-          if (!regExp.hostPassword(this.password)) {
+          /*if (!regExp.hostPassword(this.password)) {
             this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
+            return
+          }*/
+          if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
+            this.passwordWarning = '你输入的密码不符合格式要求'
             return
           }
         }
