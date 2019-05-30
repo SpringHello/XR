@@ -406,15 +406,23 @@
                       <span style="margin: 0 18px 0 23px;">1年</span>
                     </p>
                   </div>
-                    <div class="item-config">
-                      <p style="margin-bottom: 10px;">区域选择</p>
-                      <Select v-model="gpuProductHot.zoneId" class="schoolseason-select" style="width: 424px;">
+                    <div class="item-config" style="width:424px;">
+                      <p style="margin-bottom: 10px;width:53%;float:left;">GPU区域选择</p>
+                      <p style="margin-bottom: 10px;width:47%;float:left;">赠送区域选择</p>
+                      <Select v-model="gpuProductHot.zoneId" class="schoolseason-select" style="width: 200px;">
                           <Option v-for="(item3,index) in gpuZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
                       </Select>
+                      <Select v-model="gpuProductHot.freezoneId" class="schoolseason-select" style="width: 200px;margin-left:20px;">
+                          <Option v-for="(item3,index) in hostZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
+                      </Select>
+                      <div style="clear: both;"></div>
                     </div>
-                    <div class="item-select">
-                      <p>系统选择</p>
-                      <Cascader :data="gpuSystemListHot" v-model="gpuProductHot.system" class="schoolseason-select" style="width: 424px;"></Cascader>
+                    <div class="item-select" style="width:424px;">
+                      <p style="width:53%;float:left;">GPU系统选择</p>
+                      <p style="width:47%;float:left;">赠送系统选择</p>
+                      <Cascader :data="gpuSystemListHot" v-model="gpuProductHot.system" class="schoolseason-select" style="width: 200px;float:left;"></Cascader>
+                      <Cascader :data="hostSystemListHot" v-model="gpuProductHot.freeTemplateId" class="schoolseason-select" style="width:200px;float:left;margin-left:23px;"></Cascader>
+                      <div style="clear: both;"></div>
                     </div>
                     <div class="item-config1">
                       <p style="margin-bottom: 10px;">购买时长</p>
@@ -1532,9 +1540,11 @@
         // 热门gpu打折
         gpuProductHot: {
           zoneId: '',
+          freezoneId:'',
           cpuMemory: {cpunum: '16', memory: '64', servicetype: '', gpusize: ''},
           bandwith: 5,
           system: [],
+          freeTemplateId: [],
           timeTimetype: {type: 'month', value: '3', discount: '2'},
           count: '1',
           price: '',
@@ -2443,6 +2453,7 @@
           if (res.data.status == 1 && res.status == 200) {
             this.hostZoneListHot = res.data.result.optionalArea
             this.hostProductHot.zoneId = res.data.result.optionalArea[0].value
+            this.gpuProductHot.freezoneId = res.data.result.optionalArea[0].value
             this.hostfreevmconfigs=res.data.result.freevmconfigs[0].id
             this.hostdisktype=res.data.result.freevmconfigs[0].disktype
             this.hostdisktypetwo=res.data.result.freevmconfigs[1].disktype
@@ -2461,6 +2472,20 @@
           if (res.status == 200 && res.data.status == 1) {
             var obj = this.cascaderSystemM(res.data.result, this.hostSystemListHot, this.hostProductHot.system)
             this.hostProductHot.system = obj
+          }
+        })
+      },
+      // GPU里的云主机打折获取系统
+      setTemplateHostGPU(zoneId) {
+        axios.get('information/listTemplates.do', {
+          params: {
+            zoneId: zoneId,
+            user: 0
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            var obj = this.cascaderSystemM(res.data.result, this.hostSystemListHot, this.gpuProductHot.freeTemplateId)
+            this.gpuProductHot.freeTemplateId = obj
           }
         })
       },
@@ -2687,7 +2712,9 @@
             discountForActivity: '43',
             gpusize: this.gpuProductHot.cpuMemory.gpusize,
             serviceType: this.servicetypeGPU,
-            discountForActivityConfigId: this.gpuhostid
+            discountForActivityConfigId: this.gpuhostid,
+            freezoneId: this.gpuProductHot.freezoneId,
+            freeTemplateId: this.gpuProductHot.freeTemplateId[1]
             // serviceType: this.gpuProductHot.cpuMemory.servicetype
           }
         }
@@ -2959,6 +2986,13 @@
         handler() {
           this.setTemplateHost(this.hostProductHot.zoneId)
           this.listHostServiceoffers(this.hostProductHot.zoneId)
+        },
+        deep: true
+      },
+      'gpuProductHot.freezoneId': {
+        handler() {
+          //this.listGpuServerOffer(this.gpuProductHot.freezoneId)
+          this.setTemplateHostGPU(this.gpuProductHot.freezoneId)
         },
         deep: true
       },
