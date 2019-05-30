@@ -425,7 +425,7 @@
             ellipsis: true,
             render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '挂载中' : row.status === 4 ? '卸载中' : row.status === -2 ? '删除中' : row.status === 6 ? '备份中' : ''
+              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '挂载中' : row.status === 4 ? '卸载中' : row.status === -2 ? '删除至回收站' : row.status === 6 ? '备份中' : ''
               if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5 || row.status == 6) {
                 return h('div', {}, [h('Spin', {
                   style: {
@@ -836,13 +836,15 @@
         })
       },
       listDisk() {
-        this.$http.get('Disk/listDisk.do').then(response => {
+        this.$http.get('Disk/listDisk.do',{params:{
+          showDelete: '1'
+        }}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            /*       response.data.result.forEach((item) => {
-                     if (item.status != 1) {
+          response.data.result.forEach((item) => {
+                     if (item.status != 1 && item.status != -1 && item.status != 0) {
                        item._disabled = true
                      }
-                   })*/
+                   })
             this.diskData = response.data.result
             this.diskSelection = null
           } else {
