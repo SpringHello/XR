@@ -330,9 +330,18 @@
               <div>
                 <p class="item-title" style="margin-top: 8px">数据库密码</p>
               </div>
-              <Input v-model="password" placeholder="请输入至少6位仅包含字母大小写与数字的密码" style="width: 300px"
-                     @on-change="passwordWarning=''"></Input>
+              <Input v-model="password" placeholder="请输入至少8位包含大小写与数字的密码" style="width: 300px"
+                     @on-change="passwordWarning=''"  @on-focus="passwordForm.passwordHint = true" @on-blur="passwordForm.passwordHint = false"></Input>
               <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
+              <div class="popTip" v-show="passwordForm.passwordHint">
+                  <div><i :class="{reach: passwordForm.firstDegree }"></i>
+                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
+                  <div><i :class="{reach: passwordForm.secondDegree }"></i>
+                    <p>不能输入连续6位数字或字母，如123456aA</p></div>
+                  <div><i :class="{reach: passwordForm.thirdDegree }"></i>
+                    <p>至少包含：小写字母，大写字母，数字</p></div>
+                  <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
+              </div>
             </div>
           </div>
 
@@ -405,6 +414,13 @@
         zone = zoneList[0]
       }
       return {
+        passwordForm: {
+          passwordHint: false,
+          //密码强度
+          firstDegree: false,
+          secondDegree: true,
+          thirdDegree: false
+        },
         mirrorShow: false,
         acllist: [
           {
@@ -769,18 +785,14 @@
           return
         }
         if (this.system.systemName == undefined) {
-          // this.$message.info({
-          //   content: '请选择一个数据库镜像'
-          // })
           this.roll(500)
           this.mirrorShow = true
           return
         }
-
-        if (!regExp.hostPassword(this.password)) {
-          this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
-          return
-        }
+        if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
+            this.passwordWarning = '你输入的密码不符合格式要求'
+            return
+          }
 
         let prod = {}
         prod.typeName = '数据库'
@@ -814,17 +826,14 @@
           return
         }
         if (this.system.systemName == undefined) {
-          // this.$message.info({
-          //   content: '请选择一个镜像'
-          // })
           this.roll(500)
           this.mirrorShow = true
           return
         }
-        if (!regExp.hostPassword(this.password)) {
-          this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
-          return
-        }
+        if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
+            this.passwordWarning = '你输入的密码不符合格式要求'
+            return
+          }
         var diskSize = '', diskType = ''
 
         this.dataDiskList.forEach(item => {
@@ -989,6 +998,47 @@
       },
       'network'() {
           this.fireList()
+      },
+      password(val){
+        if(val.length >7 && val.length <31){
+          this.passwordForm.firstDegree = true
+        } else{
+          this.passwordForm.firstDegree = false
+        }
+        let len = val.length
+        let reg = /[0-9]/
+        let flag = false
+        // 当用户输入到第6位时，开始校验是否有6位连续字符
+        if(len>5){
+          flag = check(len)
+          function check(index){
+            let count = 0
+            for(let i = index- 5; i < index;i++){
+            let next = reg.test(val[i]) ? val[i] : val[i].charCodeAt() // 检查字符是数字还是字母
+            let current = reg.test(val[i-1]) ? val[i-1] : val[i-1].charCodeAt()
+            if(next-current === 1){ // ACSII 码相差1则为连续
+              count +=1
+             }
+           }
+            if(count > 4){ // 有6位连续字符
+              return true
+            } else if(count < 5 && index > 6){
+              return check(index - 1) // 递归继续校验
+            } else{
+              return false
+            }
+          }
+        }
+        if(flag){
+          this.passwordForm.secondDegree = false
+        } else{
+          this.passwordForm.secondDegree = true
+        }
+        if(regExp.hostPassword(val)){
+          this.passwordForm.thirdDegree = true
+        } else{
+          this.passwordForm.thirdDegree = false
+        }
       }
     }
   }
@@ -1318,6 +1368,55 @@
     border: 1px solid #D9D9D9;
     padding: 4px 8px;
     margin-left: -5px;
+  }
+  .popTip {
+    width: 350px;
+    padding: 19px 21px;
+    position: absolute;
+    background: #FFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
+    bottom: 150px;
+    left: 436px;
+    z-index: 3;
+    > div {
+      display: flex;
+      > i {
+        display: inline-block;
+        border: 1px solid rgba(151, 151, 151, 1);
+        margin-right: 3px;
+        margin-top: 5px;
+        height: 12px;
+        width: 12px;
+        border-radius: 6px;
+        &.reach {
+          background: #09BC1D;
+          border: 1px solid #09BC1D;
+          &:before {
+            content: '';
+            display: inline-block;
+            background: #FFF;
+            height: 1px;
+            width: 10px;
+            transform: translate(3px, -8px) rotate(-55deg);
+          }
+          &:after {
+            content: '';
+            display: inline-block;
+            background: #FFF;
+            height: 1px;
+            width: 6px;
+            transform: translate(0px, -23px) rotate(215deg);
+          }
+        }
+      }
+      > p {
+        font-size: 14px;
+        font-family: MicrosoftYaHei;
+        color: rgba(51, 51, 51, 1);
+        line-height: 24px;
+      }
+    }
   }
 </style>
 
