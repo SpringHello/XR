@@ -1526,21 +1526,22 @@
         let len = val.length
         let reg = /[0-9]/
         let flag = false
+        // 当用户输入到第6位时，开始校验是否有6位连续字符
         if(len>5){
           flag = check(len)
           function check(index){
             let count = 0
             for(let i = index- 5; i < index;i++){
-            let next = reg.test(val[i]) ? val[i] : val[i].charCodeAt()
+            let next = reg.test(val[i]) ? val[i] : val[i].charCodeAt() // 检查字符是数字还是字母
             let current = reg.test(val[i-1]) ? val[i-1] : val[i-1].charCodeAt()
-            if(next-current === 1){
+            if(next-current === 1){ // ACSII 码相差1则为连续
               count +=1
              }
            }
-            if(count > 4){
+            if(count > 4){ // 有6位连续字符
               return true
             } else if(count < 5 && index > 6){
-              return check(index - 1)
+              return check(index - 1) // 递归继续校验
             } else{
               return false
             }
