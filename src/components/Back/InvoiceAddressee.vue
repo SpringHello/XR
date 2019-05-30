@@ -134,7 +134,7 @@
                   <Input type="text" v-model="formInvoice.address" placeholder="您公司营业执照上的注册地址" style="width:300px;">
                   </Input>
               </FormItem>
-              <FormItem prop="phone" label="注册电话">
+              <FormItem prop="landline" label="注册电话">
                   <Input type="text" v-model="formInvoice.areaCode" placeholder="区号" style="width:90px;">
                   </Input>
                   ——
@@ -163,7 +163,24 @@
 <script type="text/ecmascript-6">
 import area from "../../options/area.json";
 import axios from "axios";
-
+export default {
+  data() {
+    const validateLandline = (rule, value, callback) => {
+  let before = /0\d{2}/
+  let after = /\d{7,8}/
+  if (this.formInvoice.areaCode=='') {
+    return callback(new Error('请输入区号'))
+  }if(this.formInvoice.phone==''){
+    return callback(new Error('请输入电话号'))
+  }
+  if (!before.test(this.formInvoice.areaCode)) {
+    return callback(new Error('请输入正确的区号'))
+  } if (!after.test(this.formInvoice.phone)) {
+    return callback(new Error('请输入正确的电话号'))
+  } else {
+    callback()
+  }
+}
 let val = '/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/'; //营业执照格式
 const vailAucct = (rule, value, callback) => {
   let reg = /^1[4|3|5|8|9|6|7]\d{9}$/;
@@ -187,17 +204,54 @@ const validTaxpayer = (rule, value, callback) =>{
 }
 const validateAddress = (rule, value, callback) => {
     if (!value) {
-      return callback(new Error('收件人地址不能为空'))
+      return callback(new Error('地址不能为空'))
     }
     if ((/^[0-9a-zA-Z]+$/.test(value)) || (/\s+/.test(value))) {
-      callback(new Error('收件地址不能包含空格或是纯数字、英文'))
+      callback(new Error('地址不能包含空格或是纯数字、英文'))
     } else {
       callback()
     }
   }
-
-export default {
-  data() {
+const validateRecipients = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('收件人姓名不能为空'))
+      }
+      if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+        callback(new Error('收件人姓名不能包含特殊字符、空格或是纯数字'));
+      } else {
+        callback()
+      }
+    }
+const validateTitle = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('发票抬头不能为空'))
+        }
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+          callback(new Error('发票抬头不能包含特殊字符、空格或是纯数字'));
+        } else {
+          callback()
+        }
+      }
+      const validaDepositBank = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('开户银行不能为空'))
+        }
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+          callback(new Error('开户银行不能包含特殊字符、空格或是纯数字'));
+        } else {
+          callback()
+        }
+      }
+      const validaBankAccount = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('银行账户不能为空'))
+        }
+        if (!(/^[1-9]\d{7,27}$/.test(value.replace(/\s/g, '')))) {
+          callback(new Error('请输入正确的银行账户'))
+        } else {
+          callback()
+        }
+      }
     return {
       imgSrc: 'https://zschj.xrcloud.net/user/getKaptchaImage.do',
       addresseeTitleModal: '新增',
@@ -438,7 +492,7 @@ export default {
       // 收件信息
       ruleReceipt: {
         recipient:[
-          {required:true,message:'请输入收件人姓名',trigger:'blur'}
+          {required:true,validator:validateRecipients,trigger:'blur'}
         ],
         phone:[ 
           {required:true,validator:vailAucct,trigger:'blur'}
@@ -465,20 +519,23 @@ export default {
       },
       // 开票信息
       ruleInvoice: {
+        landline: [
+          {required:true,validator:validateLandline,trigger:'blur'}
+        ],
         rise:[
-          {required:true,message:'请输入发票抬头',trigger:'blur'}
+          {required:true,validator:validateTitle,trigger:'blur'}
         ],
         taxpayer:[
           {required:true,validator:validTaxpayer,trigger:'blur'}
         ],
         address:[
-          {required:true,message:'请输入单位地址',trigger:'blur'}
+          {required:true,validator:validateAddress,trigger:'blur'}
         ],
         bankName:[
-          {required:true,message:'请输入开户银行',trigger:'blur'}
+          {required:true,validator:validaDepositBank,trigger:'blur'}
         ],
         bankNum:[
-          {required:true,message:'请输入银行账号',trigger:'blur'}
+          {required:true,validator:validaBankAccount,trigger:'blur'}
         ]
       },
       formInvoice: {

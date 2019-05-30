@@ -33,7 +33,7 @@
                 <Input :maxlength="64" v-model="formAppreciationDate.registeredAddress" placeholder="请输入注册地址" :disabled="specialInvoiceStatus==2"
                         style="width: 317px"></Input>
               </Form-item>
-              <FormItem label="注册电话">
+              <FormItem label="注册电话" prop="landline">
                   <Input type="text" v-model="formAppreciationDate.areaCode" placeholder="区号" style="width:90px;" :disabled="specialInvoiceStatus==2">
                   </Input>
                   ——
@@ -69,7 +69,22 @@
 import axios from "axios";
 export default {
   data() {
-    
+      const validateLandline = (rule, value, callback) => {
+        let before = /0\d{2}/
+        let after = /\d{7,8}/
+        if (this.formAppreciationDate.areaCode=='') {
+          return callback(new Error('请输入区号'))
+        }if(this.formAppreciationDate.registeredPhone==''){
+          return callback(new Error('请输入电话号'))
+        }
+        if (!before.test(this.formAppreciationDate.areaCode)) {
+          return callback(new Error('请输入正确的区号'))
+        } if (!after.test(this.formAppreciationDate.registeredPhone)) {
+          return callback(new Error('请输入正确的电话号'))
+        } else {
+          callback()
+        }
+      }
       const validateType = (rule, value, callback) => {
         /*this.$refs.formInvoiceDate.validateField('invoiceAmount')*/
         if (!value) {
@@ -200,6 +215,9 @@ export default {
           bankAccount: ''
         },
       ruleValidate: {
+          landline: [
+            {required: true, validator: validateLandline, trigger: 'blur'}
+          ],
           InvoiceType: [
             {required: true, validator: validateType, trigger: 'change'}
           ],
@@ -219,10 +237,10 @@ export default {
             {required: true, validator: validateCompanyName, trigger: 'blur'}
           ],
           taxpayerId: [
-            {required: true, validator: validaTetaxpayerID, trigger: 'blur'}
+            {required: true, validator: validTaxpayer, trigger: 'blur'}
           ],
           taxpayerID: [
-            {required: true, validator: validaTetaxpayerID, trigger: 'blur'}
+            {required: true, validator: validTaxpayer, trigger: 'blur'}
           ],
           registeredAddress: [
             {required: true, validator: validaRegisteredAddress, trigger: 'blur'}

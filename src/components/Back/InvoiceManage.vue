@@ -130,6 +130,9 @@
                 <Button type="primary" style="font-size: 12px;margin-left: 237px" v-if="this.normalInvoiceLength == 0 || this.addresseeLength == 0"
                         @click="invoiceInfoSave('formInvoiceDate')">下一步
                 </Button>
+                <!-- <Button type="primary" style="font-size: 12px;margin-left: 237px" v-if=""
+                        @click="invoiceMake('formInvoiceDate')">确认开票
+                </Button> -->
                 <Button type="primary" style="font-size: 12px;margin-left: 237px" v-else
                         @click="invoiceMake('formInvoiceDate')">确认开票
                 </Button>
