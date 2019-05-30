@@ -368,20 +368,6 @@
 
   export default {
     name: 'ip',
-    beforeRouteEnter(to, from, next) {
-      // 获取ip数据
-      axios.get('network/listPublicIp.do', {
-        params: {
-          page: 1,
-          pageSize: 10,
-          zoneId: $store.state.zone.zoneid
-        }
-      }).then(response => {
-        next(vm => {
-          vm.setData(response)
-        })
-      })
-    },
     data() {
       return {
         // 释放弹性IP
@@ -874,6 +860,7 @@
       }
       this.testjump()
       this.listVpc()
+      this.refresh()
     },
     methods: {
       listVpc(){
@@ -937,7 +924,35 @@
             zoneId: $store.state.zone.zoneid
           }
         }).then(response => {
-          this.setData(response)
+          if (response.status == 200 && response.data.status == 1) {
+          this.ipData = response.data.result.data
+          let publicipids = []
+          if ((!this.auth)|| (this.auth&&this.auth.authtype==0&&this.auth.checkstatus!=0)||(!this.authInfoPersion &&this.auth&&this.auth.authtype==1&&this.auth.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.auth&&this.auth.checkstatus!=0)) {
+            this.ipData.forEach(item => {
+              item._disabled = true
+            })
+          }
+          let ids =[];
+          this.ipData.forEach(item => {
+            if (item.status == 2 || item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6) {
+              item._disabled = true
+              ids.push(item.publicipid)
+            }
+          })
+          this.total = response.data.result.total
+          this.select.forEach(item => {
+            this.ipData.forEach(ip => {
+              if (item.id === ip.id) {
+                ip._checked = true
+              }
+            })
+          })
+          if(ids.length != 0){
+            setTimeout(()=>{
+              this.refresh()
+            },3000)
+          }
+        }
         })
       },
       // 局部刷新
@@ -964,35 +979,6 @@
             }
           })
         }, 3000)
-      },
-      setData(response) {
-        if (response.status == 200 && response.data.status == 1) {
-          this.ipData = response.data.result.data
-          let publicipids = []
-          if ((!this.auth)|| (this.auth&&this.auth.authtype==0&&this.auth.checkstatus!=0)||(!this.authInfoPersion &&this.auth&&this.auth.authtype==1&&this.auth.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.auth&&this.auth.checkstatus!=0)) {
-            this.ipData.forEach(item => {
-              item._disabled = true
-            })
-          }
-          let ids =[];
-          this.ipData.forEach(item => {
-            if (item.status == 2 || item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6) {
-              item._disabled = true
-              ids.push(item.publicipid)
-            }
-          })
-          this.total = response.data.result.total
-          this.select.forEach(item => {
-            this.ipData.forEach(ip => {
-              if (item.id === ip.id) {
-                ip._checked = true
-              }
-            })
-          })
-          if(ids.length != 0){
-            this.refresh()
-          }
-        }
       },
       // 选中项变化
       selectIp(current) {
@@ -1666,7 +1652,33 @@
             zoneId: $store.state.zone.zoneid
           }
         }).then(response => {
-          this.setData(response)
+           if (response.status == 200 && response.data.status == 1) {
+          this.ipData = response.data.result.data
+          let publicipids = []
+          if ((!this.auth)|| (this.auth&&this.auth.authtype==0&&this.auth.checkstatus!=0)||(!this.authInfoPersion &&this.auth&&this.auth.authtype==1&&this.auth.checkstatus!=0)||(this.authInfoPersion&&this.authInfoPersion.checkstatus!=0 && this.auth&&this.auth.checkstatus!=0)) {
+            this.ipData.forEach(item => {
+              item._disabled = true
+            })
+          }
+          let ids =[];
+          this.ipData.forEach(item => {
+            if (item.status == 2 || item.status == 3 || item.status == 4 || item.status == 5 || item.status == 6) {
+              item._disabled = true
+              ids.push(item.publicipid)
+            }
+          })
+          this.total = response.data.result.total
+          this.select.forEach(item => {
+            this.ipData.forEach(ip => {
+              if (item.id === ip.id) {
+                ip._checked = true
+              }
+            })
+          })
+          if(ids.length != 0){
+            this.refresh()
+          }
+        }
         })
       },
     },
