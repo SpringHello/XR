@@ -846,6 +846,7 @@
       },
       // 重新选择系统镜像
       setOS(name) {
+        this.mirrorShow = false
         var arg = [];
         if (this.mirrorQuery) {
           arg.push(this.mirrorQuery.templatename);
@@ -881,7 +882,8 @@
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
-         this.customMirror ={}
+        this.mirrorShow = false
+        this.customMirror ={}
         if (this.$route.mirror) {
           this.customMirror = this.mirrorQuery;
         } else {

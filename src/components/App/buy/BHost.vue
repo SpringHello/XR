@@ -504,7 +504,7 @@
                        style="width: 300px" @on-change="passwordWarning=''"  @on-focus="passwordForm.passwordHint = true" @on-blur="passwordForm.passwordHint = false"></Input>
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
-              <div class="popTip" v-show="false">
+              <div class="popTip" v-show="passwordForm.passwordHint">
                   <div><i :class="{reach: passwordForm.firstDegree }"></i>
                     <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: passwordForm.secondDegree }"></i>
@@ -957,6 +957,7 @@
       },
       // 重新选择系统镜像
       setOS(name) {
+        this.mirrorShow = false
         var arg = [];
         if (this.mirrorQuery) {
           arg.push(this.mirrorQuery.templatename);
@@ -1002,6 +1003,7 @@
         }
       },
       setAppOS(name) {
+        this.mirrorShow = false
         var arg = name.split('#')
         for (var item of this.appList) {
           item.selectSystem = ''
@@ -1099,8 +1101,12 @@
             this.computerNameWarning = '请输入主机名称'
             return
           }
-          if (!regExp.hostPassword(this.password)) {
+          /*if (!regExp.hostPassword(this.password)) {
             this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
+            return
+          }*/
+          if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
+            this.passwordWarning = '您输入的密码不符合格式要求'
             return
           }
         }
@@ -1155,8 +1161,12 @@
             this.computerNameWarning = '请输入主机名称，不能包含空格'
             return
           }
-          if (!regExp.hostPassword(this.password)) {
+          /*if (!regExp.hostPassword(this.password)) {
             this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
+            return
+          }*/
+          if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
+            this.passwordWarning = '你输入的密码不符合格式要求'
             return
           }
         }
@@ -1223,6 +1233,8 @@
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
+        // 关闭镜像选择提示
+        this.mirrorShow = false
         if (this.$route.mirror) {
           this.customMirror = this.mirrorQuery;
         } else {
@@ -1514,21 +1526,22 @@
         let len = val.length
         let reg = /[0-9]/
         let flag = false
+        // 当用户输入到第6位时，开始校验是否有6位连续字符
         if(len>5){
           flag = check(len)
           function check(index){
             let count = 0
             for(let i = index- 5; i < index;i++){
-            let next = reg.test(val[i]) ? val[i] : val[i].charCodeAt()
+            let next = reg.test(val[i]) ? val[i] : val[i].charCodeAt() // 检查字符是数字还是字母，数字没转原因是9和：ACSII码连续
             let current = reg.test(val[i-1]) ? val[i-1] : val[i-1].charCodeAt()
-            if(next-current === 1){
+            if(next-current === 1){ // 字母ACSII 码相差1 则为连续
               count +=1
              }
            }
-            if(count > 4){
+            if(count > 4){ // 有6位连续字符
               return true
             } else if(count < 5 && index > 6){
-              return check(index - 1)
+              return check(index - 1) // 递归继续校验
             } else{
               return false
             }
