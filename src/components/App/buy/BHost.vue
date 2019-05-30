@@ -1504,11 +1504,11 @@
           this.fireList()
       },
       password(val){
+        this.passwordForm.passwordDegree = 0
         if(val.length >7 && val.length <31){
           this.passwordForm.passwordDegree = 2
         }
         if(regExp.hostPassword(val)){
-          console.log(111)
           this.passwordForm.passwordDegree = 3
         }
       }

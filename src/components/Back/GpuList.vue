@@ -1529,9 +1529,9 @@
                   if (response.status == 200 && response.data.status == 1) {
                     this.timingRefesh(this.hostSelectList.id);
                   } else {
-                    this.$message.info({
-                      content: response.data.message
-                    })
+                    // this.$message.info({
+                    //   content: response.data.message
+                    // })
                   }
                 })
               }
@@ -1554,11 +1554,10 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                  this.timingRefesh(this.hostSelectList.id);
-              }
-              else if (response.status == 200 && response.data.status == 2) {
-                this.$message.info({
-                  content: response.data.message
-                })
+              } else if (response.status == 200 && response.data.status == 2) {
+                // this.$message.info({
+                //   content: response.data.message
+                // })
               }
             })
         },
