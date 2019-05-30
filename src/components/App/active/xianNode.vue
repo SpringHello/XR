@@ -403,7 +403,7 @@
     },
     methods: {
       toAuth() {
-        sessionStorage.setItem('pane', 'certification')
+        this.$store.commit('setPane', {vpc: 'VPC', vpn: 'remote', usercenter: 'certification'})
         this.$router.push('/userCenter')
       },
       showAuthModal() {
