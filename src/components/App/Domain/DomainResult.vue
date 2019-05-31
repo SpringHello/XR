@@ -41,11 +41,12 @@
             <p>{{item.name}}
               <button v-show="item.isRes=='available'">未注册</button>
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
+              <span v-show="item.isRes=='available' && item.isRegister == 0">该域名暂不支持备案</span>
             </p>
             <div>
               <span v-show="item.isRes=='available'">¥{{item.price}}</span>
               <Dropdown v-show="item.isRes=='available'" trigger="custom" :visible="visible == index ? true : false" class="dropmenu">
-                    <span  @click="visible = index">
+                    <span  @click="getMore(item.name)">
                         更多价格
                         <Icon type="arrow-down-b"></Icon>
                     </span>
@@ -191,6 +192,24 @@
         } else {
           this.Results = []
           this.singles = []
+        }
+      },
+
+      //展现更多Price
+      getMore (name) {
+        if (this.$store.state.userInfo == null) {
+          this.$LR({
+            type: 'login'
+          })
+          return
+        }else {
+          axios.post('domain/getDomainAllPrice.do', {
+            domainName: name
+          }).then(res => {
+            if (res.status === 200 && res.data.status === 1) {
+              this.visible = index
+            }
+          })
         }
       },
 
@@ -504,6 +523,14 @@
             font-size: 12px;
             padding: 2px 7px;
             margin-left: 20px;
+          }
+          span {
+              font-size:14px;
+              font-weight:400;
+              color:rgba(42,153,242,1);
+              line-height:20px;
+              display: inline-block;
+              margin-left: 10px;
           }
         }
         div {
