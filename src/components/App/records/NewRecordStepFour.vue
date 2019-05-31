@@ -440,7 +440,8 @@
           eachFrozenMoney: '50',
           describe: '幕布申请',
           operationType: '幕布申请',
-          thawCondition: '幕布回收'
+          thawCondition: '幕布回收',
+          zoneId: this.zoneId
           //choose: '0'
         }
         axios.post(url, params).then(res => {

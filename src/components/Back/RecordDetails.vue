@@ -1863,7 +1863,7 @@ export default {
                 }
               });
             } else {
-              this.isAllUpate = false;
+              this.isAllUpate = true;
             }
           } else {
             this.$Loading.finish();
@@ -2115,7 +2115,7 @@ export default {
       let web = {
         id: this.id,
         status: "初审中",
-        ISPName: this.hostUnitList.ispname,//this.hostUnitList.ispname
+        ISPName: this.hostUnitList.ispname,
         webIp: this.hostUnitList.webip,
         webAccessType: this.hostUnitList.webaccesstype,
         webServerAddress: this.hostUnitList.webserveraddress,
@@ -2139,7 +2139,7 @@ export default {
         companyResponsibilityUrlBack: this.updateHostUnitList
           .webresponsibilityurlback,
         domainCertificateUrl: this.hostUnitList.domaincertificateurl,
-        otherDataUrl:'',//this.hostUnitList.otherdataurl
+        otherDataUrl:this.hostUnitList.otherdataurl,
         backgroundUrl: backgroundUrl,
         backgroundAddress: this.hostUnitList.mark2,
         backgroundName: this.hostUnitList.mark3,

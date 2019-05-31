@@ -40,6 +40,17 @@
           </div>
         </my-carousel-item> -->
         <my-carousel-item class="carousel-item">
+          <div @click="push('/activity/BlacKActivities')"
+               style="cursor: pointer;background: linear-gradient(90deg, #F7FAFF, #FFE3D9);">
+            <div class="free-black">
+              <div class="wrap">
+              <div class="text">
+             </div>
+            </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div @click="push('/activity/free/')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
@@ -121,7 +132,7 @@
                   <p>
                     {{item.name}}
                   </p>
-                  <p v-html="item.desc"></p>
+                  <p v-html="item.desc" :style="{color:item.colortwo}"></p>
                   <p v-if="item.secDesc">{{item.secDesc}}</p>
                 </div>
                 <img :src="item.textImg"  v-else>
@@ -207,6 +218,18 @@
           //   isStart: true,
           //   weight: '1',
           // },
+          {
+            imgPath: require('../../assets/img/activecenter/blackact.png'),
+            name: '低价秒杀 买一赠一',
+            desc: '云电脑惊喜上市 提前预约 抢先体验',
+            time: '2019.5.29-2019.6.30',
+            activeObj: '新老用户皆可参加',
+            url: '/activity/BlacKActivities',
+            isStart: true,
+            weight: '1',
+            color: '#FFE5C0',
+            colortwo: '#FFBF82'
+          },
           {
             imgPath: require('../../assets/img/activecenter/bg-card-2.png'),
             name: '免费云主机 不限量领取',
@@ -336,36 +359,68 @@
               box-shadow: 0px 2px 2px 1px #881411;
             }
           }
+          .free-black {
+            height: 400px;
+            background:  url("../../assets/img/active/freeToReceive/centerimg.png") center no-repeat;
+                .wrap{
+                  width: 1200px;
+                  margin:0 auto;
+                  display: flex;
+                  justify-content: space-between;
+                 
+                  .text{
+                  >p{
+                    font-size:50px;
+                    font-family:"Microsoft YaHei", "微软雅黑";
+                    font-weight:600;
+                    color:rgba(51,51,51,1);
+                  }
+                  p:nth-child(1){
+                    margin-top: 140px;
+                    font-size:48px;
+                    font-weight:400;
+                  }
+                  p:nth-child(2){
+                    font-size:24px;
+                    margin-top: 25px;
+                    font-weight: normal;
+                  }
+                  }
+                  .img{
+                    padding-top: 30px;
+                  }
+                }
+          }
           .free-receive {
             height: 400px;
             background: linear-gradient(90deg, #ffe3d0, #ffffff), url("../../assets/img/active/freeToReceive/fr-banner21.png") center no-repeat;
                 .wrap{
-      width: 1200px;
-      margin:0 auto;
-      display: flex;
-      justify-content: space-between;
-      .text{
-      >p{
-        font-size:50px;
-        font-family:"Microsoft YaHei", "微软雅黑";
-        font-weight:600;
-        color:rgba(51,51,51,1);
-      }
-      p:nth-child(1){
-        margin-top: 140px;
-        font-size:48px;
-        font-weight:400;
-      }
-      p:nth-child(2){
-        font-size:24px;
-        margin-top: 25px;
-        font-weight: normal;
-      }
-      }
-      .img{
-        padding-top: 30px;
-      }
-    }
+                  width: 1200px;
+                  margin:0 auto;
+                  display: flex;
+                  justify-content: space-between;
+                  .text{
+                  >p{
+                    font-size:50px;
+                    font-family:"Microsoft YaHei", "微软雅黑";
+                    font-weight:600;
+                    color:rgba(51,51,51,1);
+                  }
+                  p:nth-child(1){
+                    margin-top: 140px;
+                    font-size:48px;
+                    font-weight:400;
+                  }
+                  p:nth-child(2){
+                    font-size:24px;
+                    margin-top: 25px;
+                    font-weight: normal;
+                  }
+                  }
+                  .img{
+                    padding-top: 30px;
+                  }
+                }
           }
           .obj-storage {
             background: linear-gradient(
