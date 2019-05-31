@@ -566,9 +566,20 @@
     computed: {
       disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
+      },
+      userInfo(){
+        return this.$store.state.userInfo
       }
     },
-    watch: {}
+    watch: {
+      userInfo(val){
+        if(val){
+          console.log(val)
+          this.getRecordInfo()
+          this.isRecord()
+        }
+      }
+    }
   }
 </script>
 <style rel="stylesheet/less" lang="less" scoped>

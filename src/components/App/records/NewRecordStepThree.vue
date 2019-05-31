@@ -975,6 +975,9 @@
             offaceNumber: item.basicInformation.officePhone,
             phone: item.basicInformation.phoneNumber,
             email: item.basicInformation.emailAddress,
+            urgentLinkMan: item.basicInformation.urgentLinkMan? item.basicInformation.urgentLinkMan: '',
+            urgentLinkManNumber: item.basicInformation.urgentLinkManNumber ? item.basicInformation.urgentLinkManNumber:'',
+            webLinkMainRelationship: item.basicInformation.webLinkMainRelationship == '其他' ? item.basicInformation.webLinkMainRelationshipText: item.basicInformation.webLinkMainRelationship,
             ISPName: item.basicInformation.ISPName,
             webIp: item.basicInformation.IPAddress + '',
             webAccessType: item.basicInformation.accessWay,
@@ -989,7 +992,7 @@
             mainBelongArea: accessInfo ? accessInfo.mainBelongArea : '',   
             webDomainName: accessInfo ? accessInfo.webDomainName : '',
             mainRecordNumber: accessInfo ? accessInfo.mainRecordNumber : '',
-            ICPRecordPassword: accessInfo ? accessInfo.ICPRecordPassword : ''
+            ICPRecordPassword: accessInfo ? accessInfo.ICPRecordPassword : '',
           }
           return param
         })
