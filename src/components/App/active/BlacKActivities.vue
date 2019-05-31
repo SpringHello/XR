@@ -148,7 +148,7 @@
               </div>
               <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:21px;margin-top:17px;">
                 <img src="../../../assets/img/active/blackactive/blackicon1.png" alt="提示" style="margin:4px 10px auto 0;float:left;">
-                下场秒杀预告：云服务器 {{Data3}}、{{freevmconfigs1}}、{{freevmconfigs2}}、对象存储 {{freevmconfigs3}}<span @click="showModal.SpikeMore=true" style="cursor: pointer;color:rgba(245,166,35,1);margin-left:10px;">更多场次预告 ></span>
+                下场秒杀预告：云服务器 {{Data3}}、{{freevmconfigs3}}、{{freevmconfigs1}}、对象存储 {{freevmconfigs2}}<span @click="showModal.SpikeMore=true" style="cursor: pointer;color:rgba(245,166,35,1);margin-left:10px;">更多场次预告 ></span>
                 <div style="clear: both;"></div>
               </p>
             </div>
@@ -773,7 +773,7 @@
               <i @click.stop="showModal.rule1=false"></i>
             </div>
             <div class="body">
-              <h3>1、活动时间：2019.5.29-2019.6.30，每天5场秒杀， 0点、9点、14点、18点、21点开抢。</h3>
+              <h3>1、活动时间：2019.5.29-2019.7.19，每天5场秒杀， 0点、9点、14点、18点、21点开抢。</h3>
               <h3>2、活动对象：新用户指的是没有使用过平台任何产品（域名产品除外）、没有未支付订单且完成实名认证的用户。其他未特殊标明产品新老用户且完成实名认证均可参与。</h3>
               <h3>3、数量限制：活动期间同一用户（同一手机、邮箱、实名认证用户视为同一用户）每次秒杀限选1款，限购1台，同一用户每款配置的商品可秒杀1次；新用户指定产品每款每个用户限购买1台。限额以后台配额限制为准（实名认证后每个用户云服务器最多可拥有7台，如有特殊要求，可向销售申请）。</h3>
               <h3>4、参与本次活动购买的产品不能进行退款。</h3>
@@ -817,7 +817,7 @@
               <i @click.stop="showModal.rule2=false"></i>
             </div>
             <div class="body">
-              <h3>1、活动时间：2019.5.29-2019.6.30</h3>
+              <h3>1、活动时间：2019.5.29-2019.7.19</h3>
               <h3>2、活动对象：平台已完成实名认证的新老用户。</h3>
               <h3>3、数量限制：云服务器产品每个用户限购7台（若有更多需求，可向客服申请提高配额）</h3>
               <h3>4、参与本次活动购买的产品不能进行退款。</h3>
@@ -1365,16 +1365,14 @@
                 label: 'Ubuntu',
                 children: [],
               }],
-          }
-        ],
-        discountProduct: [
+          },
           {
             cpunum: '2',
             memory: '8',
             disksize: '40',
             bandwith: '5',
             zoneId: '',
-            imgright:require('../../../assets/img/active/blackactive/onefor.png'),
+            imgright:require('../../../assets/img/active/blackactive/newuserfor.png'),
             system: [],
             duration: '6',
             originalPrice: '1300.32',
@@ -1406,7 +1404,9 @@
                 label: 'Ubuntu',
                 children: [],
               }],
-          },
+          }
+        ],
+        discountProduct: [
           {
             cpunum: '4',
             memory: '8',
@@ -1772,7 +1772,6 @@
                 Data1=response.data.result
                 this.freevmconfigs1=Data1[1].freevmconfigs[0]
                 this.freevmconfigs2=Data1[1].freevmconfigs[1]
-                this.freevmconfigs3=Data1[1].freevmconfigs[2]
                 axios.get('activity/getActivityForecast.do', {
                   params: {
                     activityNum : '46'
@@ -1787,6 +1786,7 @@
                         }
                         if(item.date==Data1Time2){
                           this.Data3=item.freevmconfigs[0]
+                          this.freevmconfigs3=item.freevmconfigs[1]
                         }
                       })
                     })
