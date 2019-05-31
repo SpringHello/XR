@@ -574,7 +574,6 @@
     watch: {
       userInfo(val){
         if(val){
-          console.log(val)
           this.getRecordInfo()
           this.isRecord()
         }

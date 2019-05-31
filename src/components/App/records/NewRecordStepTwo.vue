@@ -447,6 +447,26 @@
           callback();
         }
       };
+      // 校验紧急联系人姓名
+      const validUrgentLinkMan = (rule, value, callback) => {
+        if (value == "") {
+          return callback(new Error("请输入紧急联系人姓名"));
+        }else if (this.siteList[0].basicInformation.principalName===value) {
+          return callback(new Error("紧急联系人不能和网站负责人相同"));
+        } else {
+          callback();
+        }
+      };
+      const validurgentLinkManNumber = (rule, value, callback) => {
+        let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+        if (!reg.test(value)) {
+          return callback(new Error("请输入正确的手机号码"));
+        } else if(this.siteList[0].basicInformation.phoneNumber === value){
+           return callback(new Error("紧急联系人电话不能和网站负责人电话相同"));
+        }else {
+          callback();
+        }
+      };
       return {
         //接受第一页的信息
         mainUnitInformation: {},
@@ -519,10 +539,10 @@
             {type: "email", message: "请输入正确的邮箱地址", trigger: "blur"}
           ],
           urgentLinkMan:[
-            {required: true, message: "请输入负责人姓名", trigger: "blur"}
+            {required: true, validator: validUrgentLinkMan, trigger: "blur"}
           ],
           urgentLinkManNumber:[
-             {required: true, validator: validPhoneNumber, trigger: "blur"}
+            {required: true, validator: validurgentLinkManNumber, trigger: "blur"}
           ],
           webLinkMainRelationship: [
             {required: true, message: "请选择", trigger: "change"}
@@ -728,7 +748,6 @@
       ,
       // 查看该地区是否需要填写紧急联系人
       getAreaRule(){
-        console.log(this.mainUnitInformation.province)
         let url = 'recode/recordArea.do'
         this.$http.get(url,{params:{
           area: this.mainUnitInformation.province
