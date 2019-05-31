@@ -290,7 +290,7 @@
           <Tab-pane label="订单管理" name="orderManage">
             <div class="ordertype">
               <p>
-                <RadioGroup v-model="button5" type="button">
+                <RadioGroup v-model="button5" type="button" @on-change="chargeType">
                   <Radio label="1">包年包月</Radio>
                   <Radio label="3">实时计费</Radio>
               </RadioGroup>
@@ -3258,6 +3258,10 @@
       ProductChange(label){
         this.ApplicableProducts=label
         this.searchCard()
+      },
+      chargeType(lable){
+        this.button5=lable
+        this.getOrder()
       },
       VoucherChange(label){
         this.VoucherStatus=label
