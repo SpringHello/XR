@@ -239,7 +239,8 @@
                 <li class="nav_item">姓名</li>
                 <li class="nav_item">有效证件类型</li>
                 <li class="nav_item">有效证件号码</li>
-
+                <li class="nav_item">紧急联系人姓名</li>
+                <li class="nav_item">与网站负责人关系</li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
@@ -260,13 +261,22 @@
                        class="text_block"><span style="color:red">信息有误</span> <span
                     style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
-
+                <li class="nav_item">
+                  <p>{{hostUnitList.urgentLinkMan}}</p>
+                  <div v-if="urgentLinkManHide" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click=" urgentLinkMan = true">重新输入</span></div>
+                </li>
+                <li class="nav_item">
+                  <p>{{hostUnitList.webLinkMainRelationship}}</p>
+                  <div v-if="webLinkMainRelationshipHide" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click=" webLinkMainRelationship = true">重新输入</span></div>
+                </li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">办公室电话号码</li>
                 <li class="nav_item">移动电话号码</li>
                 <li class="nav_item">电子邮箱地址</li>
-
+                <li class="nav_item">紧急联系人电话</li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
@@ -283,6 +293,11 @@
                   <p>{{hostUnitList.email}}</p>
                   <div v-if="emailHide == 'email'" class="text_block"><span style="color:red">信息有误</span>
                     <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
+                </li>
+                <li class="nav_item">
+                  <p>{{hostUnitList.urgentLinkManNumber}}</p>
+                  <div v-if="urgentLinkManNumberHide" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click="urgentLinkManNumber = true">重新输入</span></div>
                 </li>
 
               </ul>
@@ -955,6 +970,18 @@
           <p style="margin:10px">电子邮箱地址</p>
           <Input type="text" v-model="updateHostUnitList.email"></Input>
         </FormItem>
+        <FormItem prop="urgentLinkMan">
+          <p style="margin:10px">紧急联系人姓名</p>
+          <Input type="text" v-model="updateHostUnitList.urgentLinkMan"></Input>
+        </FormItem>
+        <FormItem prop="urgentLinkManNumber">
+          <p style="margin:10px">紧急联系人电话</p>
+          <Input type="text" v-model="updateHostUnitList.urgentLinkManNumber"></Input>
+        </FormItem>
+        <FormItem prop="webLinkMainRelationship">
+          <p style="margin:10px">与网站负责人关系</p>
+          <Input type="text" v-model="updateHostUnitList.webLinkMainRelationship"></Input>
+        </FormItem>
       </Form>
       <div slot="footer">
         <Button @click="websitePerson = false">取消</Button>
@@ -1255,6 +1282,9 @@ export default {
       mark4Hide: null,
       icprecordpasswordHide:false,
       mainrecordnumberHide:false,
+      urgentLinkManNumberHide:false,
+      webLinkMainRelationshipHide:false,
+      urgentLinkManHide:false,
       //主办单位弹窗
       host: false,
       //主体单位负责人弹窗
@@ -2145,7 +2175,8 @@ export default {
         backgroundName: this.hostUnitList.mark3,
         backgroundPhone: this.hostUnitList.mark4,
         mainrecordnumber:this.hostUnitList.mainrecordnumber == undefined ?'':this.hostUnitList.mainrecordnumber,
-        icprecordpassword:this.hostUnitList.icprecordpassword
+        icprecordpassword:this.hostUnitList.icprecordpassword,
+        urgentLinkManNumber:this.hostUnitList.urgentLinkManNumber,
       };
       for(let i in web){
         if(web[i] == ''){
