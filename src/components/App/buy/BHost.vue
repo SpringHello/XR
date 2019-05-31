@@ -505,11 +505,11 @@
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
               <div class="popTip" v-show="passwordForm.passwordHint">
-                  <div><i :class="{reach: passwordForm.firstDegree }"></i>
+                  <div><i :class="{reach: passwordForm.firstDegree,notreach: passwordForm.firstError }"></i>
                     <p>长度8~30位，推荐使用12位以上的密码</p></div>
-                  <div><i :class="{reach: passwordForm.secondDegree }"></i>
+                  <div><i :class="{reach: passwordForm.secondDegree,notreach: passwordForm.secondError}"></i>
                     <p>不能输入连续6位数字或字母，如123456aA</p></div>
-                  <div><i :class="{reach: passwordForm.thirdDegree }"></i>
+                  <div><i :class="{reach: passwordForm.thirdDegree,notreach: passwordForm.thirdError }"></i>
                     <p>至少包含：小写字母，大写字母，数字</p></div>
                   <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
               </div>
@@ -828,8 +828,11 @@
           passwordHint: false,
           //密码强度
           firstDegree: false,
-          secondDegree: true,
-          thirdDegree: false
+          secondDegree: false,
+          thirdDegree: false,
+          firstError: false,
+          secondError: false,
+          thirdError: false,
         }
       }
     },
@@ -1520,14 +1523,16 @@
       password(val){
         if(val.length >7 && val.length <31){
           this.passwordForm.firstDegree = true
+          this.passwordForm.firstError = false
         } else{
           this.passwordForm.firstDegree = false
+          this.passwordForm.firstError = true
         }
         let len = val.length
         let reg = /[0-9]/
         let flag = false
         // 当用户输入到第6位时，开始校验是否有6位连续字符
-        if(len>5){
+        if(len>7){
           flag = check(len)
           function check(index){
             let count = 0
@@ -1546,16 +1551,25 @@
               return false
             }
           }
-        }
-        if(flag){
-          this.passwordForm.secondDegree = false
-        } else{
-          this.passwordForm.secondDegree = true
-        }
-        if(regExp.hostPassword(val)){
+          if(flag){
+            this.passwordForm.secondDegree = false
+            this.passwordForm.secondError = true
+          } else{
+            this.passwordForm.secondDegree = true
+            this.passwordForm.secondError = false
+          }
+          if(regExp.hostPassword(val)){
           this.passwordForm.thirdDegree = true
+          this.passwordForm.thirdError = false
         } else{
           this.passwordForm.thirdDegree = false
+          this.passwordForm.thirdError = true
+        }
+        } else{
+          this.passwordForm.secondDegree = false
+          this.passwordForm.secondDegree = true
+          this.passwordForm.thirdDegree = false
+          this.passwordForm.thirdError = true
         }
       }
     }
@@ -1732,6 +1746,26 @@
                     height: 1px;
                     width: 6px;
                     transform: translate(0px, -23px) rotate(215deg);
+                  }
+                }
+                &.notreach{
+                  background: #FF0000;
+                  border: 1px solid #FF0000;
+                  &:before {
+                    content: '';
+                    display: inline-block;
+                    background: #FFF;
+                    height: 1px;
+                    width: 10px;
+                    transform: translate(0.5px, -7.5px) rotate(-45deg);
+                  }
+                  &:after {
+                    content: '';
+                    display: inline-block;
+                    background: #FFF;
+                    height: 1px;
+                    width: 10px;
+                    transform: translate(0px, -25px) rotate(215deg);
                   }
                 }
               }
