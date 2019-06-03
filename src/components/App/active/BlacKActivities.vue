@@ -2105,8 +2105,7 @@
 
             // 默认选择区域
             this.discountProduct.forEach((item, index) => {
-              // console.log(index)
-              if (index == 2) {
+              if (item.servicetype == 'oss') {
                 item.zoneId = this.objProductHot.zoneId
               } else {
                 item.zoneId = res.data.result.optionalArea[0].value
@@ -2319,6 +2318,7 @@
       },
       //  秒杀活动云主机和GPU生成订单
       getDiskcountMv(item, index) {
+        //console.log(index)
         if (!this.$store.state.userInfo) {
           this.showModal.notLoginModal = true
         } else {
@@ -2337,7 +2337,7 @@
                 if(itemed.freevmconfigId==this.discountProduct[index].id){
                   this.discountProduct[index].num = (itemed.receive / itemed.total) * 100
                   if (this.discountProduct[index].num != 100) {
-                    if(index != 2){
+                    if(item.servicetype != 'oss'){
                       axios.get('information/getDiskcountMv.do', {
                         params: {
                           vmConfigId: item.id,
@@ -3003,6 +3003,11 @@
         },
         deep: true
       },
+      userInfo(val){
+        if(val){
+          this.getActivitystatus()
+        }
+      }
     },
     beforeRouteLeave(to, from, next) {
       clearInterval(this.timer)
