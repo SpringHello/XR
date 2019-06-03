@@ -3,7 +3,7 @@
     <div id="wrapper">
       <span class="title">云数据库 / <span>云数据库</span>
       </span>
-      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
+      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="notAuth">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/userCenter">立即认证</router-link>
       </Alert>
       <div id="content">
@@ -282,10 +282,10 @@
             ellipsis: true,
             render: (h, params) => {
               return h('div', {
-                style: this.auth?this.styleVisible:this.styleDisable,
+                style: !this.notAuth?this.styleVisible:this.styleDisable,
                 on: {
                   click: () => {
-                    if(this.auth){
+                    if(!this.notAuth){
                       sessionStorage.setItem('databaseInfo', JSON.stringify(params.row))
                       this.$router.push('CloudDataManage')
                     }
@@ -371,10 +371,10 @@
             render: (h, params) => {
               if (params.row.publicip) {
                 return h('div', {}, [h('span', {}, params.row.publicip), h('span', {
-                  style: this.auth?this.styleVisible:this.styleDisable,
+                  style: !this.notAuth?this.styleVisible:this.styleDisable,
                   on: {
                     click: () => {
-                      if(this.auth) {
+                      if(!this.notAuth) {
                         this.$message.confirm({
                           title: '提示',
                           content: `您正在为${params.row.computername}解绑公网IP，解绑之后您将不能通过公网访问该数据库，确认解绑？`,
@@ -410,11 +410,11 @@
                 }, ' × 解绑')])
               } else {
                 return h('span', {
-                  style: this.auth?this.styleVisible:this.styleDisable,
+                  style: !this.notAuth?this.styleVisible:this.styleDisable,
                   on: {
                     click: () => {
                       // console.log(params.row.vpcid)
-                      if(this.auth){
+                      if(!this.notAuth){
                         this.currentComputerId = params.row.computerid
                         this.bindForm.publicIP = ''
                         this.$http.get('network/listPublicIp.do', {
@@ -449,10 +449,10 @@
                     marginRight: '10px',
                   }
                 }, params.row.dbPort), h('span', {
-                  style: this.auth?this.styleVisible:this.styleDisable,
+                  style: !this.notAuth?this.styleVisible:this.styleDisable,
                   on: {
                     click: () => {
-                      if(this.auth){
+                      if(!this.notAuth){
                         this.current = params.row
                         this.showModal.beforePortModify = true
                         this.portModifyForm.currentPorts = params.row.dbPort
@@ -474,7 +474,7 @@
           {
             title: '操作',
             render: (h, params) => {
-              if(this.auth) {
+              if(!this.notAuth) {
                 if (params.row.status == 1) {
                 var isShow = params.row.caseType != '3' ? 'inline-block' : 'none'
                 return h('div', {}, [h('span', {
@@ -1034,7 +1034,6 @@
       },
       createDatabase() {
         this.$router.push('/buy/database/')
-        //sessionStorage.setItem('pane', 'Pdatabase')
       },
       listDatabase() {
         this.$http.get('database/listDB.do').then(res => {
@@ -1248,18 +1247,11 @@
       }),
     },
     computed: {
-      authInfo() {
-        return this.$store.state.authInfo ? this.$store.state.authInfo : null
-      },
       userInfo() {
-        return this.$store.state.userInfo ? this.$store.state.userInfo : null
+        return this.$store.state.userInfo
       },
-      // 新增的个人认证信息
-      authInfoPersion(){
-        return this.$store.state.authInfoPersion ? this.$store.state.authInfoPersion : null
-      },
-      auth () {
-        return (!this.authInfo)|| (this.authInfo && this.authInfo.authtype == 0 && this.authInfo.checkstatus != 0)||(!this.authInfoPersion && this.authInfo && this.authInfo.authtype == 1 && this.authInfo.checkstatus != 0)||(this.authInfoPersion && this.authInfoPersion.checkstatus != 0 && this.authInfo && this.authInfo.checkstatus != 0)
+      notAuth () {
+        return (!this.$store.state.authInfo)|| (this.$store.state.authInfo && this.$store.state.authInfo.authtype == 0 && this.$store.state.authInfo.checkstatus != 0)||(!this.$store.state.authInfoPersion && this.$store.state.authInfo && this.$store.state.authInfo.authtype == 1 && this.$store.state.authInfo.checkstatus != 0)||(this.$store.state.authInfoPersion && this.$store.state.authInfoPersion.checkstatus != 0 && this.$store.state.authInfo && this.$store.state.authInfo.checkstatus != 0)
       }
     },
     watch: {
@@ -1287,6 +1279,8 @@
               if (response.data.continueDiscount) {
                 this.originCost += response.data.continueDiscount
               }
+              this.cost = this.cost.toFixed(2)
+              this.originCost = this.originCost.toFixed(2)
             } else {
               this.$message.info({
                 content: response.data.message

@@ -7,7 +7,7 @@
       </Alert>
       <div id="content">
         <div id="header" style="border-bottom:1px solid rgba(233,233,233,1);">
-          <span id="title"><img style="vertical-align:sub;cursor:pointer" @click="$router.push('/expenses')" src="../../assets/img/host/h-icon9.png" alt="back to expenses"/> 问卷调查</span>
+          <span id="title"><img style="vertical-align:sub;cursor:pointer" @click="$router.push('/expenses')" src="../../assets/img/host/h-icon9.png" alt="back to expenses"/> 押金解冻或续费</span>
           <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="unfreeze-content">
@@ -18,14 +18,15 @@
           </Steps>
           <div v-if="unfreezeStep === 0">
             <div class="unfreeze-hint">
-            <p><span class="blod">温馨提醒</span>：感谢您使用新睿云云服务器押金活动主机，您如果有续费的打算，本活动可支持 <span class="blue" @click="ToRenew">押金一键转续费 </span>功能：<span>69元</span>押金可转为<span>续费一个月</span>,
-            <span>569元</span>押金可转为<span>续费一年</span>，操作简单方便，性价比超高，爆款云服务器等您继续使用！<span class="blue"  @click="ToRenew">立即续费 </span></p>
+            <p><span class="blod">温馨提醒</span>：感谢您使用新睿云云服务器押金活动主机，本活动可支持  <span class="blue" @click="ToRenew">押金一键转续费 </span>功能：<span>69元</span>押金可<span>续费一个月</span>,
+            <span>569元</span>押金可<span>续费一年</span>，操作简单方便，性价比超高，爆款云服务器等您继续使用！<span class="blue"  @click="ToRenew">立即续费 </span></p>
             </div>
             <p class="title">请问您退押金的原因是什么？（可多选）</p>
+            <span class="empty-hint" v-if="emptyHint === 0">为提升服务质量，请您配合填写退款原因 </span>
              <div v-for="(item,index) in issueData" :key="index" class="issus">
             <div class="issus-title">
               <div class="serialNum"><p>{{ index + 1}}</p></div>
-              <p>{{ item.par_descs }} <span v-if="emptyHint === index">（请选择/填写）</span></p>
+              <p>{{ item.par_descs }}</p>
             </div>
             <div class="issus-content" v-if="item.par_type === 2">
               <CheckboxGroup v-model="questionnaireResults[index]">
@@ -60,8 +61,8 @@
                     </RadioGroup>
                    <Table :columns="freezeOrderColumns" :data="freezeOrderData" style="margin-top: 20px"></Table>
                     <div style="padding-top: 40px">
-                      <Button type="ghost" @click="unfreezeStep = 0" style="margin-right:10px">上一步</Button>
-                      <Button type="primary">下一步</Button>
+                      <Button type="ghost" @click="unfreezeStep = 0,questionnaireResults = []" style="margin-right:10px">上一步</Button>
+                      <Button type="primary" @click="freezeToRenewNext">下一步</Button>
                     </div>
                </div>
             </div> 
@@ -121,10 +122,20 @@
                   <div style="clear: both"></div>
               </div>
               <div style="padding-top: 40px">
-                <Button type="ghost" @click="unfreezeStep = 0" style="margin-right:10px">上一步</Button>
+                <Button type="ghost" @click="unfreezeStep = 0,questionnaireResults = []" style="margin-right:10px">上一步</Button>
                 <Button type="primary" @click="unfreeze_ok">下一步</Button>
               </div>
             </div>
+          </div>
+          <div v-if="unfreezeStep === 2" class="unfreezeComplete">
+            <div>
+              <img src="../../assets/img/thawDeposit/td_img_1.png" />
+            </div>
+            <p v-if="unfreezeTo === 'account'">您的押金已经解冻到充值账户</p>
+            <p v-if="unfreezeTo === 'yue'">您的押金已经解冻到余额</p>
+            <p v-if="unfreezeTo === 'freezeToRenew'">您的押金已经成功转为续费</p>
+             <p v-if="unfreezeTo === 'freezeToRenew'">转为续费之后资源到期时间为{{renewalFeeTime}}</p>
+            <Button  type="primary"  @click="$router.push('/expenses')">返回控制台</Button>
           </div>
         </div>
       </div>
@@ -170,7 +181,7 @@
       </p>
     </Modal>
 
-    <!-- 押金转续费弹窗 -->
+    <!-- 押金转续费弹窗 实际到期时间和续费时间相差大于1个月-->
     <Modal v-model="showModal.freezeToRenewAffirm" crollable="true" :closable="false" :width="390" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
@@ -187,6 +198,24 @@
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.freezeToRenewAffirm = false">取消</Button>
         <Button type="primary" :disabled="freezeToRenewAffirmDisabled" @click="freezeToRenew_ok">确定</Button>
+      </p>
+    </Modal>
+    <!-- 押金转续费弹窗 实际到期时间和续费时间相差小于1个月-->
+    <Modal v-model="showModal._freezeToRenewAffirm" crollable="true" :closable="false" :width="390" :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
+        <span class="universal-modal-title">提示信息</span>
+      </p>
+      <div class="modal-content-s">
+        <div>
+          <p class="lh24">当前免费剩余时长为<span style="color:#2A99F2">{{freeTime}}个月</span>（到期时间为：<span style="color: #2A99F2">{{ freezeEndTime}}</span>），转为续费之后资源到期时间为<span style="color: #2A99F2">{{ renewalFeeTime}}</span>，
+          ，实际到期时间和续费时间相差<span style="color: #FF624B">小于1个月</span>（<span style="color:#FF9801">若您在{{ currentData }}转为续费之后，资源到期时间为{{ renewalFeeTime}}</span>）您是否确认现在将押金转为续费？ 
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal._freezeToRenewAffirm = false">取消</Button>
+        <Button type="primary" :disabled="freezeDisabled" @click="freezeToRenew_ok">确定{{ freezeToRenewAffirmText}}</Button>
       </p>
     </Modal>
         <!-- 修改手机号码(身份证验证) -->
@@ -394,6 +423,7 @@
           notUnfreeze: false,
           unfreezeToBalanceHint: false,
           freezeToRenewAffirm: false,
+          _freezeToRenewAffirm: false,
           modifyPhoneID: false
         },
         unfreezeStep: 0,
@@ -406,9 +436,9 @@
         unfreezeToBalanceTimer: null,
                 // 解冻
         withdrawForm: {
-          accountList: [{name: '支付宝', type: '支付宝'}, {name: '微信支付', type: '微信'}/*, {name: '银行卡', type: '银行卡'}*/],
+          accountList: [/*{name: '支付宝', type: '支付宝'}, {name: '微信支付', type: '微信'},*/ {name: '银行卡', type: '银行卡'}],
           // 账户类型
-          accountType: '',
+          accountType: '银行卡',
           // 金额
           money: 0,
           // 开户行
@@ -502,6 +532,9 @@
         unfreezeToBalanceDisabled: true,
         unfreezeToBalanceText:'(10S)',
         unfreezeToBalanceTimer:null,
+        freezeDisabled: true,
+        freezeToRenewAffirmText: '(10S)',
+        freezeToRenewAffirmTimer: null,
         freezeToRenewAffirm: '',
         freeTime:'',
         renewalFeeTime:'',
@@ -584,6 +617,10 @@
       },
       freezeToRenewAffirmDisabled(){
         return this.freezeToRenewAffirm !== 'confirm'
+      },
+      currentData(){
+        let myDate = new Date()
+        return  myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' +  myDate.getDate()
       }
     },
     methods: {
@@ -599,11 +636,11 @@
         })
       },
       sumbitQuestionnaire(){
-        this.emptyHint = -1
+        this.emptyHint = 0
         let len = this.issueData.length
         for(let i =0;i<len;i++){
-          if((!this.questionnaireResults[i])||this.questionnaireResults[i].length === 0 ){
-              this.emptyHint = i
+          if(this.questionnaireResults[i]||(this.questionnaireResults[i] instanceof Array && this.questionnaireResults[i].length !== 0) ){
+              this.emptyHint = -1
               break
           }
         }
@@ -619,7 +656,7 @@
         if(this.emptyHint === -1){
           let url = 'order/addQuestionnaire.do'
           let params = {
-             par_bankId: this.issueData[0].par_bankId,
+             par_bankId: this.issueData[0].par_bankId + '',
              message: JSON.stringify(message)
           }
           this.$http.post(url,params).then(res=>{
@@ -675,7 +712,7 @@
             this.unfreezeStep = 1
             this.freezeToRenew = false
           } else{
-            this.thawingCondition = params.row.thawCondition
+            this.thawingCondition = res.data.message
             this.showModal.notUnfreeze = true
           }
         })
@@ -702,6 +739,7 @@
                 if (res.status == 200 && res.data.status == 1) {
                   this.$Message.success('解冻成功')
                   this.showModal.unfreeze = false
+                  this.unfreezeStep = 2
                 } else {
                   this.$message.info({
                     content: res.data.message
@@ -789,31 +827,33 @@
         this.$refs['authModifyPhoneFormThere'].resetFields()
         this.uploadImgDispaly = ''
       },
-      unfreezeToBalance() {
-        if (this.unfreezeToHint == 'yue') {
-          let url = 'user/getRremainderThaw.do'
-          let params = {
-            id: this.unfreezeId,
-          }
-          this.$http.post(url, params).then(res => {
-            if (res.status == 200 && res.data.status == 1) {
-              this.$Message.success('解冻成功')
-              this.showModal.unfreezeToBalanceHint = false
+      freezeToRenewNext() {
+        if(parseInt(this.freeTime) < 1){
+          window.clearInterval(this.freezeToRenewAffirmTimer)
+          this.freezeDisabled = true
+          this.freezeToRenewAffirmText = '(10S)'
+          let i = 10
+          this.freezeToRenewAffirmTimer = setInterval(() => {
+            i -= 1
+            if (i == 0) {
+              window.clearInterval(this.freezeToRenewAffirmTimer)
+              this.freezeDisabled = false
+              this.freezeToRenewAffirmText = ''
             } else {
-              this.$message.info({
-                content: res.data.message
-              })
+              this.freezeToRenewAffirmText = '(0' + i + 'S)'
+              this.freezeDisabled = true
             }
-          })
+          }, 1000)
+          this.showModal._freezeToRenewAffirm = true
         } else {
-          this.unfreezeTo = 'account'
-          this.showModal.unfreezeToBalanceHint = false
+          this.freezeToRenewAffirm = ''
+          this.showModal.freezeToRenewAffirm = true
         }
       },
             // 押金转续费
       freezeToRenew_ok() {
         let url = 'user/depositRenewal.do'
-        axios.get(url, {
+        this.$http.get(url, {
           params: {
             id: this.unfreezeId
           }
@@ -821,6 +861,8 @@
           if (res.status == 200 && res.data.status == 1) {
             this.$Message.success(res.data.message)
             this.showModal.freezeToRenewAffirm = false
+            this.showModal._freezeToRenewAffirm = false
+            this.unfreezeStep = 2
           } else {
             this.$message.info({
               content: res.data.message
@@ -1004,10 +1046,7 @@
             if (res.status == 200 && res.data.status == 1) {
               this.$Message.success('解冻成功')
               this.showModal.unfreezeToBalanceHint = false
-              this.freezeDetails()
-              this.getBalance()
-              this.showMoneyByMonth()
-              this.search()
+
             } else {
               this.$message.info({
                 content: res.data.message
@@ -1068,6 +1107,10 @@
       font-family:MicrosoftYaHei;
       color:rgba(51,51,51,1);
     } 
+    .empty-hint{
+      font-size: 14px;
+      color: #FF1E39;
+    }
     .issus{
       padding: 20px 0;
       width: 580px;
@@ -1093,11 +1136,6 @@
           color:rgba(51,51,51,1);
           line-height:28px;
           margin-left: 11px;
-         >span{
-           font-size: 12px;
-            margin-left: 20px;
-            color: #FF1E39;
-          }
         }
       }
       .issus-content{
@@ -1113,6 +1151,16 @@
     }
     .footer{
        padding: 20px 0 0 40px;
+    }
+    .unfreezeComplete{ 
+      text-align: center;
+      margin: 40px 150px 20px 0; 
+      >p{
+        font-size:18px;
+        font-family:MicrosoftYaHei;
+        color:rgba(51,51,51,1);
+        margin: 20px 0;
+      }
     }
   }
   .unfreeze-type{

@@ -500,9 +500,18 @@
                 <div>
                   <p class="item-title" style="margin-top: 8px">登录密码</p>
                 </div>
-                <Input v-model="password" placeholder="请输入至少6位包含大小写与数字的密码"
-                       style="width: 300px" @on-change="passwordWarning=''"></Input>
+                <Input v-model="password" placeholder="请输入至少8位包含大小写与数字的密码"
+                       style="width: 300px" @on-change="passwordWarning=''"  @on-focus="passwordForm.passwordHint = true" @on-blur="passwordForm.passwordHint = false"></Input>
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
+              </div>
+              <div class="popTip" v-show="passwordForm.passwordHint">
+                  <div><i :class="{reach: passwordForm.firstDegree,notreach: passwordForm.firstError }"></i>
+                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
+                  <div><i :class="{reach: passwordForm.secondDegree,notreach: passwordForm.secondError}"></i>
+                    <p>不能输入连续6位数字或字母，如123456aA</p></div>
+                  <div><i :class="{reach: passwordForm.thirdDegree,notreach: passwordForm.thirdError }"></i>
+                    <p>至少包含：小写字母，大写字母，数字</p></div>
+                  <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
               </div>
             </div>
           </div>
@@ -815,6 +824,16 @@
         fastCoupon: 0,
         mirrorQuery: this.$route.query.mirror,
         mirrorListQ: [],
+        passwordForm: {
+          passwordHint: false,
+          //密码强度
+          firstDegree: false,
+          secondDegree: false,
+          thirdDegree: false,
+          firstError: false,
+          secondError: false,
+          thirdError: false,
+        }
       }
     },
     created() {
@@ -941,6 +960,7 @@
       },
       // 重新选择系统镜像
       setOS(name) {
+        this.mirrorShow = false
         var arg = [];
         if (this.mirrorQuery) {
           arg.push(this.mirrorQuery.templatename);
@@ -986,6 +1006,7 @@
         }
       },
       setAppOS(name) {
+        this.mirrorShow = false
         var arg = name.split('#')
         for (var item of this.appList) {
           item.selectSystem = ''
@@ -1083,8 +1104,12 @@
             this.computerNameWarning = '请输入主机名称'
             return
           }
-          if (!regExp.hostPassword(this.password)) {
-            this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
+          /*if (!regExp.hostPassword(this.password)) {
+            this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
+            return
+          }*/
+          if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
+            this.passwordWarning = '您输入的密码不符合格式要求'
             return
           }
         }
@@ -1139,8 +1164,12 @@
             this.computerNameWarning = '请输入主机名称，不能包含空格'
             return
           }
-          if (!regExp.hostPassword(this.password)) {
-            this.passwordWarning = '请输入6-23位包含大小写与数字的密码,可用特殊符号：~:,*'
+          /*if (!regExp.hostPassword(this.password)) {
+            this.passwordWarning = '请输入8-30位包含英文大小写与数字的密码'
+            return
+          }*/
+          if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
+            this.passwordWarning = '你输入的密码不符合格式要求'
             return
           }
         }
@@ -1207,6 +1236,8 @@
       },
       // 设置自定义镜像
       setOwnTemplate(item) {
+        // 关闭镜像选择提示
+        this.mirrorShow = false
         if (this.$route.mirror) {
           this.customMirror = this.mirrorQuery;
         } else {
@@ -1488,6 +1519,58 @@
       },
       'network'() {
           this.fireList()
+      },
+      password(val){
+        if(val.length >7 && val.length <31){
+          this.passwordForm.firstDegree = true
+          this.passwordForm.firstError = false
+        } else{
+          this.passwordForm.firstDegree = false
+          this.passwordForm.firstError = true
+        }
+        let len = val.length
+        let reg = /[0-9]/
+        let flag = false
+        // 当用户输入到第6位时，开始校验是否有6位连续字符
+        if(len>7){
+          flag = check(len)
+          function check(index){
+            let count = 0
+            for(let i = index- 5; i < index;i++){
+            let next = reg.test(val[i]) ? val[i] : val[i].charCodeAt() // 检查字符是数字还是字母，数字没转原因是9和：ACSII码连续
+            let current = reg.test(val[i-1]) ? val[i-1] : val[i-1].charCodeAt()
+            if(next-current === 1){ // 字母ACSII 码相差1 则为连续
+              count +=1
+             }
+           }
+            if(count > 4){ // 有6位连续字符
+              return true
+            } else if(count < 5 && index > 6){
+              return check(index - 1) // 递归继续校验
+            } else{
+              return false
+            }
+          }
+          if(flag){
+            this.passwordForm.secondDegree = false
+            this.passwordForm.secondError = true
+          } else{
+            this.passwordForm.secondDegree = true
+            this.passwordForm.secondError = false
+          }
+          if(regExp.hostPassword(val)){
+          this.passwordForm.thirdDegree = true
+          this.passwordForm.thirdError = false
+        } else{
+          this.passwordForm.thirdDegree = false
+          this.passwordForm.thirdError = true
+        }
+        } else{
+          this.passwordForm.secondDegree = false
+          this.passwordForm.secondDegree = true
+          this.passwordForm.thirdDegree = false
+          this.passwordForm.thirdError = true
+        }
       }
     }
   }
@@ -1584,6 +1667,7 @@
           color: #fff;
         }
         .item-wrapper {
+          position: relative;
           margin-top: 20px;
           .item-title {
             font-size: 16px;
@@ -1622,6 +1706,75 @@
             }
             .desc {
               color: #ffffff
+            }
+          }
+          .popTip {
+            width: 350px;
+            padding: 19px 21px;
+            position: absolute;
+            background: #FFF;
+            border-radius: 8px;
+            box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
+            right: -25px;
+            bottom: -30px;
+            z-index: 3;
+            > div {
+              display: flex;
+              > i {
+                display: inline-block;
+                border: 1px solid rgba(151, 151, 151, 1);
+                margin-right: 3px;
+                margin-top: 5px;
+                height: 12px;
+                width: 12px;
+                border-radius: 6px;
+                &.reach {
+                  background: #09BC1D;
+                  border: 1px solid #09BC1D;
+                  &:before {
+                    content: '';
+                    display: inline-block;
+                    background: #FFF;
+                    height: 1px;
+                    width: 10px;
+                    transform: translate(3px, -8px) rotate(-55deg);
+                  }
+                  &:after {
+                    content: '';
+                    display: inline-block;
+                    background: #FFF;
+                    height: 1px;
+                    width: 6px;
+                    transform: translate(0px, -23px) rotate(215deg);
+                  }
+                }
+                &.notreach{
+                  background: #FF0000;
+                  border: 1px solid #FF0000;
+                  &:before {
+                    content: '';
+                    display: inline-block;
+                    background: #FFF;
+                    height: 1px;
+                    width: 10px;
+                    transform: translate(0.5px, -7.5px) rotate(-45deg);
+                  }
+                  &:after {
+                    content: '';
+                    display: inline-block;
+                    background: #FFF;
+                    height: 1px;
+                    width: 10px;
+                    transform: translate(0px, -25px) rotate(215deg);
+                  }
+                }
+              }
+              > p {
+                font-size: 14px;
+                font-family: MicrosoftYaHei;
+                color: rgba(51, 51, 51, 1);
+                line-height: 24px;
+              }
             }
           }
         }

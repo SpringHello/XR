@@ -42,7 +42,7 @@ Vue.config.productionTip = false
 
 
 
-//axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 
 axios.defaults.baseURL = 'https://kaifa.xrcloud.net/'
 // axios.defaults.baseURL = 'https://zschj.xrcloud.net/'
@@ -106,7 +106,6 @@ function appendMD5(params, type) {
     str = md5(str)
     count = count % 10
     var mac = str.substr(0, count) + count + str.substr(count)
-    console.log({...params});
     return {
       ...params,
       mac: mac.toUpperCase()

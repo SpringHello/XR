@@ -742,7 +742,7 @@
           },
         ],
         orderData: [],
-        payWay: 'otherPay',
+        payWay: 'balancePay',
         otherPayWay: '',
         balance: '0.0',
         // 快速认证表单
@@ -1091,7 +1091,8 @@
           describe: '领取主机',
           operationType: '领取主机',
           thawCondition: '删除主机、公网IP',
-          vmConfig: this.vmConfig
+          vmConfig: this.vmConfig,
+          zoneId:  this.configGroup[this.index1].zoneId
         }
         axios.post(url, params).then(response => {
           if (response.data.status == 1 && response.status == 200) {

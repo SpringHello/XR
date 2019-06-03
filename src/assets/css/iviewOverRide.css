@@ -72,6 +72,10 @@
 .universal-modal-label-14px form .ivu-form-item .ivu-form-item-label {
   font-size: 14px;
 }
+/* form表单,隐藏必填字段的*号 */
+.hide-star-symbol .ivu-form-item-required .ivu-form-item-label:before {
+  display: none;
+}
 /* form表单, formItem间距10px*/
 .universal-modal-mb-10px form .ivu-form-item, form.universal-modal-mb-10px .ivu-form-item {
   margin-bottom: 10px;
@@ -318,6 +322,11 @@ div.modal-header-border {
 /* 行高 */
 .lh24 {
   line-height: 24px;
+}
+.attention{
+  font-size:12px;
+  color:rgba(255,57,42,1);
+  line-height:21px;
 }
 /* 浮动 */
 .fl {
@@ -668,6 +677,14 @@ box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
 .schoolseason-progress .ivu-progress-bg {
   background:linear-gradient(90deg,rgba(255,150,102,1) 0%,rgba(255,73,45,1) 100%);
   box-shadow:2px 1px 6px -1px rgba(230,47,47,0.59);
+}
+
+.schoolseason-progress1 .ivu-progress-inner {
+  background:rgba(64,68,104,1);
+}
+.schoolseason-progress1 .ivu-progress-bg {
+  background:linear-gradient(90deg,#F7BE87 0%,#F7BE87 100%);
+  box-shadow:2px 1px 6px -1px rgba(46,101,230,0.59);
 }
 
 .ss-anth-modal .ivu-form-item-error-tip {

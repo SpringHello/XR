@@ -257,7 +257,7 @@
           </Form>
           <p style="font-family: Microsoft YaHei;font-size: 12px;line-height:20px;color: #999999;">
             提示：云硬盘数据服务为每块磁盘提供<span
-            style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
+            style="color:#2A99F2">{{ totalQuota }}</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -353,13 +353,13 @@
       </p>
       <div class="modal-content-s">
         <div>
-          <p class="lh24">检测到您所选择区域内没有可用主机，确认在{{ auth.defaultzonename}}购买磁盘吗 
+          <p class="lh24">检测到您所选择区域内没有可用主机，确认在{{ $store.state.zone.zonename}}购买磁盘吗 
           </p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.withoutHost = false">取消</Button>
-        <Button type="primary" @click="newDisk_ok">确认</Button>
+        <Button type="primary" @click="showModal.withoutHost = false,showModal.newDisk = true">仍然创建</Button>
       </p>
     </Modal>
   </div>
@@ -425,7 +425,7 @@
             ellipsis: true,
             render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '挂载中' : row.status === 4 ? '卸载中' : row.status === -2 ? '删除中' : row.status === 6 ? '备份中' : ''
+              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '挂载中' : row.status === 4 ? '卸载中' : row.status === -2 ? '删除至回收站' : row.status === 6 ? '备份中' : ''
               if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5 || row.status == 6) {
                 return h('div', {}, [h('Spin', {
                   style: {
@@ -769,15 +769,27 @@
           diskType: '',
           diskSize: '',
           endTime: ''
-        }
+        },
+        totalQuota: ''
       }
     },
     created() {
       this.diskAreaList = this.$store.state.zoneList;
       this.listDisk();
       this.getGpuList();
+      this.getResourceAllocation();
     },
     methods: {
+      // 获取资源配额
+      getResourceAllocation() {
+        this.$http.get('user/personalCenterResourceQuota.do', {
+          params: {}
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.totalQuota = res.data.result[7].totalQuota
+          }
+        })
+      },
       /* 刷新页面 */
       refreshPage() {
         this.$router.go(0)
@@ -791,27 +803,8 @@
       _checkNewForm() {
         this.$refs.newDisk.validate((valid) => {
           if (valid) {
-        // 表单验证通过，调用创建磁盘方法
-        let url = 'information/listVirtualMachines.do'
-        this.$http.get(url, {
-          params: {
-            returnList: '1',
-            page:'1',
-            pageSize: '10'
-          }
-        }).then(res=>{
-          if(res.status == 200 && res.data.status ==1){
-            if(res.data.result.data.length != 0){
-              this.newDisk_ok()
-            } else{
-              this.showModal.withoutHost = true
-            }
-          } else{
-            this.$message.info({
-              content: res.data.message
-            })
-          }
-        })
+         // 表单验证通过，调用创建磁盘方法
+         this.newDisk_ok()
           }
         })
       },
@@ -843,13 +836,15 @@
         })
       },
       listDisk() {
-        this.$http.get('Disk/listDisk.do').then(response => {
+        this.$http.get('Disk/listDisk.do',{params:{
+          showDelete: '1'
+        }}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            /*       response.data.result.forEach((item) => {
-                     if (item.status != 1) {
+          response.data.result.forEach((item) => {
+                     if (item.status != 1 && item.status != -1 && item.status != 0) {
                        item._disabled = true
                      }
-                   })*/
+                   })
             this.diskData = response.data.result
             this.diskSelection = null
           } else {
@@ -861,7 +856,26 @@
       },
       // 弹出新建磁盘模态框
       newDisk() {
-        this.showModal.newDisk = true
+        let url = 'information/listVirtualMachines.do'
+        this.$http.get(url, {
+          params: {
+            returnList: '1',
+            page:'1',
+            pageSize: '10'
+          }
+        }).then(res=>{
+          if(res.status == 200 && res.data.status ==1){
+            if(res.data.result.data.length != 0){
+              this.showModal.newDisk = true
+            } else{
+              this.showModal.withoutHost = true
+            }
+          } else{
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       },
       // 挂载磁盘到主机
       mount(data) {
