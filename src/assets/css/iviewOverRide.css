@@ -692,7 +692,7 @@ box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
 }
 
 /*云市场-详情页*/
-.product-nav .ivu-tabs-bar{
+/* .product-nav .ivu-tabs-bar{
   border-bottom: 0;
 }
 .product-nav .ivu-tabs-tab{
@@ -723,9 +723,9 @@ box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
 }
 .product-nav .ivu-tabs-ink-bar{
   height: 0;
-}
+} */
 /*咨询购买对话框*/
-.ivu-modal-header-inner{
+/* .ivu-modal-header-inner{
   color: rgb(208, 208, 208);
   margin-bottom: 20px;
   font-size: 14px;
@@ -808,10 +808,10 @@ box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
   outline: navajowhite;
   border: navajowhite;
   cursor: pointer;
-}
+} */
 
 /*云市场-列表页*/
-.ivu-menu-light{
+/* .ivu-menu-light{
   width: 200px !important;
   box-shadow: 5px 0px 20px #e2e0e0;
  }
@@ -859,10 +859,10 @@ box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
 
 .product-nav .ivu-dropdown-rel a{
   margin: 0 30px;
-}
+} */
 
 /*云市场-服务商申请*/
-#apply .ivu-steps .ivu-steps-head{
+/* #apply .ivu-steps .ivu-steps-head{
   background: #f4f5f9;
 }
 #apply .ivu-form .ivu-form-item-label{
@@ -888,10 +888,10 @@ textarea.ivu-input{
   width: 147px;
   height: 49px;
   font-size: 16px;
-}
+} */
 
 /*服务供应商-部署测试滑块*/
-#apply .ivu-slider-wrap{
+/* #apply .ivu-slider-wrap{
   margin-top: 0;
   margin-bottom: 0;
   height: 32px;
@@ -920,10 +920,10 @@ textarea.ivu-input{
 }
 #apply .ivu-select-single .ivu-select-selection .ivu-select-placeholder {
   color: #666666;
-}
+} */
 
 /*云市场-产品详情页*/
-.ivu-modal-wrap * .ino-box-deploy-item{
+/*.ivu-modal-wrap * .ino-box-deploy-item{
   display: flex;
   margin-bottom: 20px;
 }
@@ -988,4 +988,4 @@ textarea.ivu-input{
 
 #list .ivu-dropdown{
   margin: 0 30px;
-}
+}*/
