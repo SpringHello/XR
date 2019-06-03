@@ -278,7 +278,7 @@
                     <p class="givep2">
                       <span style="margin: 0 20px 0 22px;">2核</span>
                       <span>4G</span>
-                      <span style="margin: 0 18px 0 21px;">2M</span>
+                      <span style="margin: 0 18px 0 21px;">1M</span>
                       <span>40G</span>
                       <span style="margin: 0 18px 0 23px;">1年</span>
                     </p>
@@ -1956,12 +1956,15 @@
               switch (this.cashCouponForm.vipLevel) {
                 case 0:
                   this.cashCouponForm.vipGrade = '白银会员'
+                  this.input = 10000
                   break
                 case 1:
                   this.cashCouponForm.vipGrade = '黄金会员'
+                  this.input = 50000
                   break
                 case 2:
                   this.cashCouponForm.vipGrade = '铂金会员'
+                  this.input = 150000
                   break
               }
               this.showModal.cashCoupon = true
@@ -2327,6 +2330,10 @@
             this.showModal.authModal = true
             return
           }
+          if(!item.zoneId){
+          this.$Message.info('请选择购买的区域')
+          return
+         }
            axios.get('activity/getSubsection.do', {
             params: {
               activityNum: '45',
@@ -2401,6 +2408,10 @@
             this.showModal.authModal = true
             return
           }
+          if(!item.zoneId){
+          this.$Message.info('请选择购买的区域')
+          return
+         }
            axios.get('activity/getSubsection.do', {
             params: {
               activityNum: '46',
