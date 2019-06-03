@@ -364,7 +364,7 @@ export default {
     // 获取价格
     getPrice (index) {
       if (index === 0) {
-        this.mainFrame.timeValue = ''
+        this.mainFrame.timeValue = 1
         this.mainFrame.timeType = 'current'
         this.units = '元/小时'
       } else if (index === 1) {
@@ -472,7 +472,6 @@ export default {
       this.$router.push('details')
       this.getProduct()
       window.scrollTo(0,0)
-      console.log(item)
     },
     // 获取产品详情
     getProduct () {
@@ -594,7 +593,7 @@ export default {
         this.customShow = true
       }
     },
-     // 自定义默认选择
+    // 自定义默认选择
     changeNucleus (item,index) {
       this.nucleIndex = index
       this.sizeList = item.RAMList
@@ -615,10 +614,7 @@ export default {
         this.$LR({type: 'login'})
         return
       } else if (this.single === false) {
-        this.$Modal.warning({
-            title: '温馨提示',
-            content: '您还没有阅读协议！'
-        });
+        this.$Message.warning('您还没有阅读并同意协议');
       } else {
         axios.get('cloudMarket/deployVirtualMachine.do', {
           params: {
@@ -655,7 +651,7 @@ export default {
     getSys () {
       if (this.buyWay[0].typeNum === 1) {
         this.mainFrame.timeType = 'current'
-        this.mainFrame.timeValue = ''
+        this.mainFrame.timeValue = 1
         this.units = '元/小时'
       } else {
         this.mainFrame.timeValue = this.buyWay[1].dataTime[0].value
