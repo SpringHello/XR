@@ -754,7 +754,7 @@ box-shadow:0px 2px 3px 0px rgba(115,115,115,0.4);
   padding-right: 0;
 }
 .ivu-input{
-  width: 300px;
+  width: 500px;
 }
 #details [type=reset], [type=submit],html [type=button]{
   width: 92px !important;

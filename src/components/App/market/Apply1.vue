@@ -49,7 +49,7 @@
     </div>
     <div class="info">
       <div class="info-box">
-        <div class="info-box-title" v-if="stepInfo.status < 9"><span></span>{{infoTitle}}</div>
+        <div class="info-box-title" v-if="stepInfo.status < 9 || stepKong == 0"><span></span>{{infoTitle}}</div>
         <!--公司基础信息-->
         <div class="info-box-from" v-if="stepKong == 0 || stepInfo.step === 0">
           <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
@@ -432,7 +432,6 @@ export default {
       axios.get('user/GetUserInfo.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.userInfo = response.data.result
-          console.log(response)
           axios.get('cloudMarket/getServiceProvider.do', {
             params: {
               companyId: response.data.result.companyid
@@ -569,7 +568,7 @@ export default {
             margin-bottom: 5px;
           }
           .step-q{
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 400;
             color: rgba(153,153,153,1);
           }
