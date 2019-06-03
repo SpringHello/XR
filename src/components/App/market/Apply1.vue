@@ -72,7 +72,7 @@
               <Input v-model="formValidate.tel" placeholder="请输入联系人电话"></Input>
             </FormItem>
             <FormItem>
-              <Button type="primary" @click="handleSubmit('formValidate')">下一步</Button>
+              <Button type="primary" @click="handleSubmit('formValidate')" style="width: 147px;height: 49px;font-size: 16px;">下一步</Button>
             </FormItem>
           </Form>
         </div>
