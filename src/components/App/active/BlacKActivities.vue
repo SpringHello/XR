@@ -148,7 +148,7 @@
               </div>
               <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:21px;margin-top:17px;">
                 <img src="../../../assets/img/active/blackactive/blackicon1.png" alt="提示" style="margin:4px 10px auto 0;float:left;">
-                下场秒杀预告：云服务器 {{Data3}}、{{freevmconfigs1}}、{{freevmconfigs2}}、对象存储 {{freevmconfigs3}}<span @click="showModal.SpikeMore=true" style="cursor: pointer;color:rgba(245,166,35,1);margin-left:10px;">更多场次预告 ></span>
+                下场秒杀预告：云服务器 {{Data3}}、{{freevmconfigs3}}、{{freevmconfigs1}}、对象存储 {{freevmconfigs2}}<span @click="showModal.SpikeMore=true" style="cursor: pointer;color:rgba(245,166,35,1);margin-left:10px;">更多场次预告 ></span>
                 <div style="clear: both;"></div>
               </p>
             </div>
@@ -278,7 +278,7 @@
                     <p class="givep2">
                       <span style="margin: 0 20px 0 22px;">2核</span>
                       <span>4G</span>
-                      <span style="margin: 0 18px 0 21px;">2M</span>
+                      <span style="margin: 0 18px 0 21px;">1M</span>
                       <span>40G</span>
                       <span style="margin: 0 18px 0 23px;">1年</span>
                     </p>
@@ -406,15 +406,23 @@
                       <span style="margin: 0 18px 0 23px;">1年</span>
                     </p>
                   </div>
-                    <div class="item-config">
-                      <p style="margin-bottom: 10px;">区域选择</p>
-                      <Select v-model="gpuProductHot.zoneId" class="schoolseason-select" style="width: 424px;">
+                    <div class="item-config" style="width:424px;">
+                      <p style="margin-bottom: 10px;width:53%;float:left;">GPU区域选择</p>
+                      <p style="margin-bottom: 10px;width:47%;float:left;">赠送区域选择</p>
+                      <Select v-model="gpuProductHot.zoneId" class="schoolseason-select" style="width: 200px;">
                           <Option v-for="(item3,index) in gpuZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
                       </Select>
+                      <Select v-model="gpuProductHot.freezoneId" class="schoolseason-select" style="width: 200px;margin-left:20px;">
+                          <Option v-for="(item3,index) in hostZoneListHot" :value="item3.value" :key="index">{{item3.name}}</option>
+                      </Select>
+                      <div style="clear: both;"></div>
                     </div>
-                    <div class="item-select">
-                      <p>系统选择</p>
-                      <Cascader :data="gpuSystemListHot" v-model="gpuProductHot.system" class="schoolseason-select" style="width: 424px;"></Cascader>
+                    <div class="item-select" style="width:424px;">
+                      <p style="width:53%;float:left;">GPU系统选择</p>
+                      <p style="width:47%;float:left;">赠送系统选择</p>
+                      <Cascader :data="gpuSystemListHot" v-model="gpuProductHot.system" class="schoolseason-select" style="width: 200px;float:left;"></Cascader>
+                      <Cascader :data="hostSystemListHot" v-model="gpuProductHot.freeTemplateId" class="schoolseason-select" style="width:200px;float:left;margin-left:23px;"></Cascader>
+                      <div style="clear: both;"></div>
                     </div>
                     <div class="item-config1">
                       <p style="margin-bottom: 10px;">购买时长</p>
@@ -765,7 +773,7 @@
               <i @click.stop="showModal.rule1=false"></i>
             </div>
             <div class="body">
-              <h3>1、活动时间：2019.5.29-2019.6.30，每天5场秒杀， 0点、9点、14点、18点、21点开抢。</h3>
+              <h3>1、活动时间：2019.5.29-2019.7.19，每天5场秒杀， 0点、9点、14点、18点、21点开抢。</h3>
               <h3>2、活动对象：新用户指的是没有使用过平台任何产品（域名产品除外）、没有未支付订单且完成实名认证的用户。其他未特殊标明产品新老用户且完成实名认证均可参与。</h3>
               <h3>3、数量限制：活动期间同一用户（同一手机、邮箱、实名认证用户视为同一用户）每次秒杀限选1款，限购1台，同一用户每款配置的商品可秒杀1次；新用户指定产品每款每个用户限购买1台。限额以后台配额限制为准（实名认证后每个用户云服务器最多可拥有7台，如有特殊要求，可向销售申请）。</h3>
               <h3>4、参与本次活动购买的产品不能进行退款。</h3>
@@ -809,7 +817,7 @@
               <i @click.stop="showModal.rule2=false"></i>
             </div>
             <div class="body">
-              <h3>1、活动时间：2019.5.29-2019.6.30</h3>
+              <h3>1、活动时间：2019.5.29-2019.7.19</h3>
               <h3>2、活动对象：平台已完成实名认证的新老用户。</h3>
               <h3>3、数量限制：云服务器产品每个用户限购7台（若有更多需求，可向客服申请提高配额）</h3>
               <h3>4、参与本次活动购买的产品不能进行退款。</h3>
@@ -1357,16 +1365,14 @@
                 label: 'Ubuntu',
                 children: [],
               }],
-          }
-        ],
-        discountProduct: [
+          },
           {
             cpunum: '2',
             memory: '8',
             disksize: '40',
             bandwith: '5',
             zoneId: '',
-            imgright:require('../../../assets/img/active/blackactive/onefor.png'),
+            imgright:require('../../../assets/img/active/blackactive/newuserfor.png'),
             system: [],
             duration: '6',
             originalPrice: '1300.32',
@@ -1398,7 +1404,9 @@
                 label: 'Ubuntu',
                 children: [],
               }],
-          },
+          }
+        ],
+        discountProduct: [
           {
             cpunum: '4',
             memory: '8',
@@ -1532,9 +1540,11 @@
         // 热门gpu打折
         gpuProductHot: {
           zoneId: '',
+          freezoneId:'',
           cpuMemory: {cpunum: '16', memory: '64', servicetype: '', gpusize: ''},
           bandwith: 5,
           system: [],
+          freeTemplateId: [],
           timeTimetype: {type: 'month', value: '3', discount: '2'},
           count: '1',
           price: '',
@@ -1762,7 +1772,6 @@
                 Data1=response.data.result
                 this.freevmconfigs1=Data1[1].freevmconfigs[0]
                 this.freevmconfigs2=Data1[1].freevmconfigs[1]
-                this.freevmconfigs3=Data1[1].freevmconfigs[2]
                 axios.get('activity/getActivityForecast.do', {
                   params: {
                     activityNum : '46'
@@ -1777,6 +1786,7 @@
                         }
                         if(item.date==Data1Time2){
                           this.Data3=item.freevmconfigs[0]
+                          this.freevmconfigs3=item.freevmconfigs[1]
                         }
                       })
                     })
@@ -1946,12 +1956,15 @@
               switch (this.cashCouponForm.vipLevel) {
                 case 0:
                   this.cashCouponForm.vipGrade = '白银会员'
+                  this.input = 10000
                   break
                 case 1:
                   this.cashCouponForm.vipGrade = '黄金会员'
+                  this.input = 50000
                   break
                 case 2:
                   this.cashCouponForm.vipGrade = '铂金会员'
+                  this.input = 150000
                   break
               }
               this.showModal.cashCoupon = true
@@ -2095,8 +2108,7 @@
 
             // 默认选择区域
             this.discountProduct.forEach((item, index) => {
-              // console.log(index)
-              if (index == 2) {
+              if (item.servicetype == 'oss') {
                 item.zoneId = this.objProductHot.zoneId
               } else {
                 item.zoneId = res.data.result.optionalArea[0].value
@@ -2309,6 +2321,7 @@
       },
       //  秒杀活动云主机和GPU生成订单
       getDiskcountMv(item, index) {
+        //console.log(index)
         if (!this.$store.state.userInfo) {
           this.showModal.notLoginModal = true
         } else {
@@ -2317,6 +2330,10 @@
             this.showModal.authModal = true
             return
           }
+          if(!item.zoneId){
+          this.$Message.info('请选择购买的区域')
+          return
+         }
            axios.get('activity/getSubsection.do', {
             params: {
               activityNum: '45',
@@ -2327,7 +2344,7 @@
                 if(itemed.freevmconfigId==this.discountProduct[index].id){
                   this.discountProduct[index].num = (itemed.receive / itemed.total) * 100
                   if (this.discountProduct[index].num != 100) {
-                    if(index != 2){
+                    if(item.servicetype != 'oss'){
                       axios.get('information/getDiskcountMv.do', {
                         params: {
                           vmConfigId: item.id,
@@ -2391,6 +2408,10 @@
             this.showModal.authModal = true
             return
           }
+          if(!item.zoneId){
+          this.$Message.info('请选择购买的区域')
+          return
+         }
            axios.get('activity/getSubsection.do', {
             params: {
               activityNum: '46',
@@ -2443,6 +2464,7 @@
           if (res.data.status == 1 && res.status == 200) {
             this.hostZoneListHot = res.data.result.optionalArea
             this.hostProductHot.zoneId = res.data.result.optionalArea[0].value
+            this.gpuProductHot.freezoneId = res.data.result.optionalArea[0].value
             this.hostfreevmconfigs=res.data.result.freevmconfigs[0].id
             this.hostdisktype=res.data.result.freevmconfigs[0].disktype
             this.hostdisktypetwo=res.data.result.freevmconfigs[1].disktype
@@ -2461,6 +2483,20 @@
           if (res.status == 200 && res.data.status == 1) {
             var obj = this.cascaderSystemM(res.data.result, this.hostSystemListHot, this.hostProductHot.system)
             this.hostProductHot.system = obj
+          }
+        })
+      },
+      // GPU里的云主机打折获取系统
+      setTemplateHostGPU(zoneId) {
+        axios.get('information/listTemplates.do', {
+          params: {
+            zoneId: zoneId,
+            user: 0
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            var obj = this.cascaderSystemM(res.data.result, this.hostSystemListHot, this.gpuProductHot.freeTemplateId)
+            this.gpuProductHot.freeTemplateId = obj
           }
         })
       },
@@ -2623,7 +2659,7 @@
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            if (window.location.origin == 'http://localhost:8088'||window.location.origin == 'https://zschj.xrcloud.net') {
+            if (window.location.origin == 'http://localhost:8088'||window.location.origin == 'https://kaifa.xrcloud.net') {
               this.gpuConfigListHot.filter((itemd,index) => {
                 res.data.result.filter((item,index) => {
                   if(item.cpunum==itemd.cpunum && item.memory==itemd.memory){
@@ -2687,7 +2723,9 @@
             discountForActivity: '43',
             gpusize: this.gpuProductHot.cpuMemory.gpusize,
             serviceType: this.servicetypeGPU,
-            discountForActivityConfigId: this.gpuhostid
+            discountForActivityConfigId: this.gpuhostid,
+            freezoneId: this.gpuProductHot.freezoneId,
+            freeTemplateId: this.gpuProductHot.freeTemplateId[1]
             // serviceType: this.gpuProductHot.cpuMemory.servicetype
           }
         }
@@ -2962,6 +3000,13 @@
         },
         deep: true
       },
+      'gpuProductHot.freezoneId': {
+        handler() {
+          //this.listGpuServerOffer(this.gpuProductHot.freezoneId)
+          this.setTemplateHostGPU(this.gpuProductHot.freezoneId)
+        },
+        deep: true
+      },
       'gpuProductHot.zoneId': {
         handler() {
           this.listGpuServerOffer(this.gpuProductHot.zoneId)
@@ -2969,6 +3014,11 @@
         },
         deep: true
       },
+      userInfo(val){
+        if(val){
+          this.getActivitystatus()
+        }
+      }
     },
     beforeRouteLeave(to, from, next) {
       clearInterval(this.timer)

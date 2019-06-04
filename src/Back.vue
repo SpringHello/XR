@@ -80,8 +80,13 @@
               </Dropdown>
             </li>
 						<li>
-						  <router-link to="msgCenter" :class="{active:pageInfo.path=='msgCenter'}" style="position:relative;"><img src="./assets/img/back/back-hint.png" /><sup v-if="this.$store.state.Msg>0" class="badge" style="top: 17px;right: -30px;">{{this.$store.state.Msg}}</sup>
-						  </router-link>
+						  <!-- <router-link to="msgCenter" :class="{active:pageInfo.path=='msgCenter'}" style="position:relative;"><img src="./assets/img/back/back-hint.png" /><sup v-if="this.$store.state.Msg>0" class="badge" style="top: 17px;right: -30px;">{{this.$store.state.Msg}}</sup>
+						  </router-link> -->
+              <router-link to="msgCenter" :class="{active:pageInfo.path=='msgCenter'}" style="position:relative;">
+                <Badge :count="this.$store.state.Msg" v-if="this.$store.state.Msg>0" overflow-count="999" class="messagenum">
+                    <img src="./assets/img/back/back-hint.png" />
+                </Badge>
+              </router-link>
 						</li>
           </ul>
         </div>
@@ -1244,6 +1249,13 @@
       font-family: MicrosoftYaHei;
       color: rgba(81, 70, 68, 1);
       line-height: 24px;
+    }
+  }
+  .messagenum {
+    .ivu-badge-count{
+      top: 0;
+      margin-right: -22px;
+      box-shadow:none;
     }
   }
 </style>

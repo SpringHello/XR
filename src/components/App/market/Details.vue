@@ -26,15 +26,9 @@
           <div class="product-nav" v-show="prodetials.type == 0">
             <div class="tab">
               <div class="tab-row">
-                <div class="title">商品规格</div>
+                <div class="title">商品类型</div>
                 <div class="th">
-                  <span>免费试用</span>
-                </div>
-              </div>
-              <div class="tab-row">
-                <div class="title">主机规格</div>
-                <div class="th">
-                  <span v-for="(item, index) in sysPecification" :key="index" :class="{sysActive: sysIndex == index }" @click="ches(index,item)">{{item.label}}</span>
+                  <span v-for="(item,index) in buyType" :key="index" :class="{sysActive: typeIndex == index }" @click="typeChes(index)">{{item}}</span>
                 </div>
               </div>
               <Tabs :animated="false" @on-click="getPrice">
@@ -54,6 +48,12 @@
                 </TabPane>
               </Tabs>
               <div class="tab-row">
+                <div class="title">主机规格</div>
+                <div class="th">
+                  <span v-for="(item, index) in sysPecification" :key="index" :class="{sysActive: sysIndex == index }" @click="ches(index,item)">{{item.label}}</span>
+                </div>
+              </div>
+              <div class="tab-row">
                 <div class="title">区域选择</div>
                 <div class="th">
                   <span v-for="(item, index) in area" :key="index" :class="{sysActive: areaIndex == index }" @click="zoneidChange(item,index)">{{item.zonename}}</span>
@@ -62,7 +62,7 @@
               <div class="tab-row">
                 <div class="title">所属网络</div>
                 <div class="th">
-                  <Select v-model="vpcName" style="width:200px;margin-right: 5px;">
+                  <Select v-model="vpcName" style="width:200px;margin-right: 5px;" @on-change="vpcChange">
                     <Option v-for="(item,index) in vpcList" :key="index" :value="item.vpcid">{{item.vpcname}}</Option>
                   </Select>
                   <router-link to="vpc">+新建VPC</router-link>
@@ -105,11 +105,11 @@
         <div class="partner">
           <p class="partner-title">合作伙伴介绍</p>
           <ul class="partner-intro">
-            <li>供应商：{{prodetials.company.name}}</li>
-            <li>客服热线：{{prodetials.sellInfo.mobile}}</li>
+            <li>供应商：{{prodetials.company?prodetials.company.name:''}}</li>
+            <li>客服热线：{{prodetials.sellInfo?prodetials.sellInfo.mobile:''}}</li>
             <li>服务时间：7*24小时</li>
-            <li>电子邮箱：{{prodetials.sellInfo.email}}</li>
-            <li>在线客服：<router-link to="">{{prodetials.sellInfo.name}}</router-link></li>
+            <li>电子邮箱：{{prodetials.sellInfo?prodetials.sellInfo.email:''}}</li>
+            <li>在线客服：<router-link to="">{{prodetials.sellInfo?prodetials.sellInfo.name:''}}</router-link></li>
             <li>供应商简介：{{prodetials.description}}</li>
           </ul>
         </div>
@@ -142,7 +142,7 @@
         ok-text="立即提交">
         <div class="sell" v-if="buyStatus == 0">
           <div class="sell-item">
-              {{prodetials.sellInfo.name}}<span style="margin-left: 20px;">手机：</span>{{prodetials.sellInfo.mobile}}<span style="margin-left: 20px;">邮箱：</span>{{prodetials.sellInfo.email}}
+              {{prodetials.sellInfo?prodetials.sellInfo.name:''}}<span style="margin-left: 20px;">手机：</span>{{prodetials.sellInfo?prodetials.sellInfo.mobile:''}}<span style="margin-left: 20px;">邮箱：</span>{{prodetials.sellInfo?prodetials.sellInfo.email:''}}
           </div>
           <div class="hints">您也可以留下您的需求，我们将在2个工作日内联系您</div>
           <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
@@ -231,6 +231,9 @@ export default {
     return{
       tabName: 'name0',
       typeName: sessionStorage.getItem('typeName'),
+      buyType: ['付费版', '免费版'],
+      buyTypeStatus: 0,
+      typeIndex: false,
       prodetials:[], // 产品详情
       mainFrame: {
         cpuNum: '',
@@ -269,10 +272,15 @@ export default {
           type: '按月',
           dataTime: [
             {label: '1个月', value: '1', type: 'month'},
+            {label: '2个月', value: '2', type: 'month'},
             {label: '3个月', value: '3', type: 'month'},
+            {label: '4个月', value: '4', type: 'month'},
             {label: '5个月', value: '5', type: 'month'},
+            {label: '6个月', value: '6', type: 'month'},
             {label: '7个月', value: '7', type: 'month'},
-            {label: '9个月', value: '9', type: 'month'}
+            {label: '8个月', value: '8', type: 'month'},
+            {label: '9个月', value: '9', type: 'month'},
+            {label: '10个月', value: '10', type: 'month'}
           ]
         },
         {
@@ -280,8 +288,8 @@ export default {
           type: '按年',
           dataTime: [
             {label: '1年', value: '1', type: 'year'},
+            {label: '2年', value: '2', type: 'year'},
             {label: '3年', value: '3', type: 'year'},
-            {label: '5年', value: '5', type: 'year'},
           ]
         }
       ],
@@ -353,6 +361,18 @@ export default {
     }
   },
   methods: {
+    typeChes (index) {
+      this.typeIndex = index
+      if (index === 1) {
+        this.price = '免费'
+        this.units = ''
+        this.buyTypeStatus = 1
+      } else {
+        this.getProductPrice()
+        this.units = '元/小时'
+        this.buyTypeStatus = 0
+      }
+    },
     // 获取用户信息
     getRecord () {
       axios.get('user/GetUserInfo.do').then(res => {
@@ -363,42 +383,48 @@ export default {
     },
     // 获取价格
     getPrice (index) {
-      if (index === 0) {
-        this.mainFrame.timeValue = 1
-        this.mainFrame.timeType = 'current'
-        this.units = '元/小时'
-      } else if (index === 1) {
-        this.mainFrame.timeType = this.buyWay[index].dataTime[0].type
-        if (this.timeList.monthValue === '') {
-          this.mainFrame.timeValue = this.buyWay[1].dataTime[0].value
-        } else {
-          this.mainFrame.timeValue = this.timeList.monthValue
+      if (this.buyTypeStatus === 0) {
+        if (index === 0) {
+          this.mainFrame.timeValue = 1
+          this.mainFrame.timeType = 'current'
+          this.units = '元/小时'
+        } else if (index === 1) {
+          this.mainFrame.timeType = this.buyWay[index].dataTime[0].type
+          if (this.timeList.monthValue === '') {
+            this.mainFrame.timeValue = this.buyWay[1].dataTime[0].value
+          } else {
+            this.mainFrame.timeValue = this.timeList.monthValue
+          }
+          this.units = '元'
+        } else if (index === 2) {
+          this.mainFrame.timeType = this.buyWay[index].dataTime[0].type
+          if (this.timeList.yearValue === '') {
+            this.mainFrame.timeValue = this.buyWay[2].dataTime[0].value
+          } else {
+            this.mainFrame.timeValue = this.timeList.yearValue
+          }
+          this.units = '元'
         }
-        this.units = '元'
-      } else if (index === 2) {
-        this.mainFrame.timeType = this.buyWay[index].dataTime[0].type
-        if (this.timeList.yearValue === '') {
-          this.mainFrame.timeValue = this.buyWay[2].dataTime[0].value
-        } else {
-          this.mainFrame.timeValue = this.timeList.yearValue
-        }
-        this.units = '元'
+        this.getProductPrice()
       }
-      this.getProductPrice()
     },
     getMonth (index,items) {
       this.checkIndex.checkIndex2 = index
       this.timeList.monthValue = items.value
       this.mainFrame.timeValue = items.value
       this.mainFrame.timeType = items.type
-      this.getProductPrice()
+      if (this.buyTypeStatus === 0) {
+        this.getProductPrice()
+      }
     },
     getYear (index,items) {
       this.checkIndex.checkIndex3 = index
       this.timeList.yearValue = items.value
       this.mainFrame.timeValue = items.value
       this.mainFrame.timeType = items.type
-      this.getProductPrice()
+      if (this.buyTypeStatus === 0) {
+        this.getProductPrice()
+      }
     },
     // 咨询购买
     handleSubmit (name) {
@@ -567,6 +593,9 @@ export default {
         }
       })
     },
+    vpcChange (value) {
+      // console.log(value)
+    },
     // 区域切换
     zoneidChange (item,index){
       this.areaIndex = index
@@ -576,7 +605,9 @@ export default {
         if (e.zoneId === item.zoneid) {
           this.coreList = e.kernelList
           this.znId = item.zoneid
-          this.getProductPrice()
+          if (this.buyTypeStatus === 0) {
+            this.getProductPrice()
+          }
         }
       })
     },
@@ -588,7 +619,9 @@ export default {
         this.mainFrame.memory = item.memory
         this.mainFrame.diskSize = item.diskSize
         this.mainFrame.diskType = item.diskType
-        this.getProductPrice()
+        if (this.buyTypeStatus === 0) {
+          this.getProductPrice()
+        }
       } else if (index === 2) {
         this.customShow = true
       }
@@ -606,11 +639,14 @@ export default {
     coreBtn () {
       this.mainFrame.diskSize = this.size
       this.customShow = false
-      this.getProductPrice()
+      if (this.buyTypeStatus === 0) {
+        this.getProductPrice()
+      }
     },
     // 立即使用
     useBtn () {
-      if (this.userInfos == null) {
+      console.log(this.vpcName)
+      /*if (this.userInfos == null) {
         this.$LR({type: 'login'})
         return
       } else if (this.single === false) {
@@ -637,7 +673,7 @@ export default {
             this.$router.push('/order')
           }
         })
-      }
+      }*/
     },
     // 产品分类
     getClass () {
@@ -759,17 +795,15 @@ export default {
               margin-left: 20px;
               width: 620px;
               span {
-                display: inline-block;
                 height: 35px;
                 border: 1px solid rgba(217, 217, 217, 1);
-                border-radius: 4px;
                 text-align: center;
                 line-height: 35px;
                 color: rgba(102, 102, 102, 1);
                 cursor: pointer;
-                padding: 0 25px;
+                padding: 0 10px;
                 box-sizing: border-box;
-                margin-right: 10px;
+                float: left;
                 &:hover{
                   border: 1px solid #2d8cf0;
                   background: rgba(55, 125, 255, 0.09);

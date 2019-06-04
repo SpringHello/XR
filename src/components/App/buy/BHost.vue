@@ -505,11 +505,11 @@
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
               <div class="popTip" v-show="passwordForm.passwordHint">
-                  <div><i :class="{reach: passwordForm.firstDegree,notreach: passwordForm.firstError }"></i>
-                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
-                  <div><i :class="{reach: passwordForm.secondDegree,notreach: passwordForm.secondError}"></i>
+                  <div><i :class="{reach: passwordForm.secondDegree}"></i>
                     <p>不能输入连续6位数字或字母，如123456aA</p></div>
-                  <div><i :class="{reach: passwordForm.thirdDegree,notreach: passwordForm.thirdError }"></i>
+                  <div><i :class="{reach: passwordForm.firstDegree}"></i>
+                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
+                  <div><i :class="{reach: passwordForm.thirdDegree}"></i>
                     <p>至少包含：小写字母，大写字母，数字</p></div>
                   <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
               </div>
@@ -1523,10 +1523,10 @@
       password(val){
         if(val.length >7 && val.length <31){
           this.passwordForm.firstDegree = true
-          this.passwordForm.firstError = false
+         // this.passwordForm.firstError = false
         } else{
           this.passwordForm.firstDegree = false
-          this.passwordForm.firstError = true
+          //this.passwordForm.firstError = true
         }
         let len = val.length
         let reg = /[0-9]/
@@ -1553,23 +1553,23 @@
           }
           if(flag){
             this.passwordForm.secondDegree = false
-            this.passwordForm.secondError = true
+            //this.passwordForm.secondError = true
           } else{
             this.passwordForm.secondDegree = true
-            this.passwordForm.secondError = false
+            //this.passwordForm.secondError = false
           }
           if(regExp.hostPassword(val)){
           this.passwordForm.thirdDegree = true
-          this.passwordForm.thirdError = false
+          //this.passwordForm.thirdError = false
         } else{
           this.passwordForm.thirdDegree = false
-          this.passwordForm.thirdError = true
+          //this.passwordForm.thirdError = true
         }
         } else{
           this.passwordForm.secondDegree = false
           this.passwordForm.secondDegree = true
-          this.passwordForm.thirdDegree = false
-          this.passwordForm.thirdError = true
+          //this.passwordForm.thirdDegree = false
+          //this.passwordForm.thirdError = true
         }
       }
     }
