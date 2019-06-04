@@ -247,6 +247,20 @@
               <FormItem label="电子邮箱地址" prop="emailAddress">
                 <Input v-model="site.basicInformation.emailAddress" placeholder="请输入电子邮箱地址" style="width: 500px"></Input>
               </FormItem>
+              <FormItem v-if="emergencyContact" label="紧急联系人姓名" prop="urgentLinkMan">
+                <Input v-model="site.basicInformation.urgentLinkMan" placeholder="请填写紧急联系人姓名" style="width: 500px"></Input>
+              </FormItem>
+              <FormItem v-if="emergencyContact" label="紧急联系人电话" prop="urgentLinkManNumber">
+                <Input v-model="site.basicInformation.urgentLinkManNumber" placeholder="请填写紧急联系人电话" style="width: 500px"></Input>
+              </FormItem>
+               <FormItem v-if="emergencyContact" label="与网站负责人关系" prop="webLinkMainRelationship">
+                <Select v-model="site.basicInformation.webLinkMainRelationship" style="width:500px;" placeholder="请选择">
+                  <Option v-for="item in site.basicInformation.webLinkMainRelationshipList" :value="item.label" :key="item.value">{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+              <FormItem v-if="emergencyContact && site.basicInformation.webLinkMainRelationship == '其他'" label="与网站负责人关系" prop="webLinkMainRelationshipText">
+                <Input v-model="site.basicInformation.webLinkMainRelationshipText" placeholder="请填写与网站负责人关系" style="width: 500px"></Input>
+              </FormItem>
               <div style="height: 2px;background: #D9D9D9;width: 100%"></div>
               <h3 style="margin-top: 40px">ICP备案网站接入信息</h3>
               <FormItem label="ISP名称" prop="ISPName">
@@ -433,6 +447,26 @@
           callback();
         }
       };
+      // 校验紧急联系人姓名
+      const validUrgentLinkMan = (rule, value, callback) => {
+        if (value == "") {
+          return callback(new Error("请输入紧急联系人姓名"));
+        }else if (this.siteList[0].basicInformation.principalName===value) {
+          return callback(new Error("紧急联系人不能和网站负责人相同"));
+        } else {
+          callback();
+        }
+      };
+      const validurgentLinkManNumber = (rule, value, callback) => {
+        let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+        if (!reg.test(value)) {
+          return callback(new Error("请输入正确的手机号码"));
+        } else if(this.siteList[0].basicInformation.phoneNumber === value){
+           return callback(new Error("紧急联系人电话不能和网站负责人电话相同"));
+        }else {
+          callback();
+        }
+      };
       return {
         //接受第一页的信息
         mainUnitInformation: {},
@@ -504,6 +538,18 @@
             {required: true, message: "请输入邮箱地址", trigger: "blur"},
             {type: "email", message: "请输入正确的邮箱地址", trigger: "blur"}
           ],
+          urgentLinkMan:[
+            {required: true, validator: validUrgentLinkMan, trigger: "blur"}
+          ],
+          urgentLinkManNumber:[
+            {required: true, validator: validurgentLinkManNumber, trigger: "blur"}
+          ],
+          webLinkMainRelationship: [
+            {required: true, message: "请选择", trigger: "change"}
+          ],
+          webLinkMainRelationshipText:[
+            {required: true, message: "请输入与网站负责人关系", trigger: "blur"}
+          ],
           websiteHomepage: [
             {required: true, validator: validWebsiteHomepage, trigger: "blur"}
           ],
@@ -572,6 +618,32 @@
             phoneNumber: "",
             // 电子邮箱地址
             emailAddress: "",
+            urgentLinkMan: '',
+            urgentLinkManNumber: '',
+            webLinkMainRelationship: '',
+            webLinkMainRelationshipText: '',
+            webLinkMainRelationshipList:[
+              {
+                label: "父母",
+                value: "1",
+              },
+              {
+                label: "夫妻",
+                value: "2",
+              },
+              {
+                label: "子女",
+                value: "3",
+              },
+              {
+                label: "同事",
+                value: "4",
+              },
+              {
+                label: "其他",
+                value: "5",
+              },
+            ],
             // ISP名称
             ISPName: "北京允睿讯通科技有公司 备案部",
             // 网站IP地址（接口获取）
@@ -594,7 +666,8 @@
         publicIPList: [],
         // 决定主体信息从接口获取还是sessionStorage获取
         sessionStatus: false,
-        isPersonage: false
+        isPersonage: false,
+        emergencyContact: true
       };
     },
     created() {
@@ -612,6 +685,7 @@
         this.siteList[0].basicInformation.serverPutArea = area
         if (sessionStorage.getItem('mainUnitInformationStr')) {
           this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
+          this.getAreaRule()
           this.siteList[0].basicInformation.principalName = this.mainUnitInformation.legalPersonName
           this.siteList[0].basicInformation.certificateType = this.mainUnitInformation.legalPersonCertificateType
           this.siteList[0].basicInformation.certificateNumber = this.mainUnitInformation.legalPersonIDNumber
@@ -628,6 +702,7 @@
         } else {
           this.sessionStatus = false
           var mainUnitInformation = JSON.parse(mainUnitInformationStr)
+          this.getAreaRule()
           this.siteList[0].basicInformation.principalName = mainUnitInformation.legalname
           this.siteList[0].basicInformation.certificateType = mainUnitInformation.legalcertificatestype
           this.siteList[0].basicInformation.certificateNumber = mainUnitInformation.legalcertificatesnumber
@@ -671,6 +746,19 @@
         }
       }
       ,
+      // 查看该地区是否需要填写紧急联系人
+      getAreaRule(){
+        let url = 'recode/recordArea.do'
+        this.$http.get(url,{params:{
+          area: this.mainUnitInformation.province
+        }}).then(res=>{
+          if(res.status == 200 && res.data.status == 1){
+            if(res.data.result.length == 0){
+              this.emergencyContact = false
+            }
+          } 
+        })
+      },
       // 获取公网IP
       getPublicIP() {
         let zoneId = sessionStorage.getItem('zoneId');
@@ -714,7 +802,7 @@
       ,
       // 选择新建负责人或已有的
       changePersonInCharge(upIndex) {
-        if (this.siteList[upIndex].basicInformation.personInCharge === '已填写主体单位负责人姓名') {
+        if (this.siteList[upIndex].basicInformation.personInCharge === '已填写单位负责人姓名') {
           this.siteList[upIndex].basicInformation.principalName = this.mainUnitInformation.legalPersonName
           this.siteList[upIndex].basicInformation.certificateType = this.mainUnitInformation.legalPersonCertificateType
           this.siteList[upIndex].basicInformation.certificateNumber = this.mainUnitInformation.legalPersonIDNumber
@@ -788,6 +876,32 @@
             phoneNumber: this.mainUnitInformation.phoneNumber,
             // 电子邮箱地址
             emailAddress: this.mainUnitInformation.emailAddress,
+            urgentLinkMan: '',
+            urgentLinkManNumber: '',
+            webLinkMainRelationship: '',
+            webLinkMainRelationshipList:[
+              {
+                label: "父母",
+                value: "1",
+              },
+              {
+                label: "夫妻",
+                value: "2",
+              },
+              {
+                label: "子女",
+                value: "3",
+              },
+              {
+                label: "同事",
+                value: "4",
+              },
+              {
+                label: "其他",
+                value: "5",
+              },
+            ],
+            webLinkMainRelationshipText: '',
             // ISP名称
             ISPName: "北京允睿讯通科技有公司 备案部",
             // 网站IP地址（接口获取）

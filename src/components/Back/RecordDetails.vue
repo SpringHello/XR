@@ -239,7 +239,8 @@
                 <li class="nav_item">姓名</li>
                 <li class="nav_item">有效证件类型</li>
                 <li class="nav_item">有效证件号码</li>
-
+                <li class="nav_item">紧急联系人姓名</li>
+                <li class="nav_item">与网站负责人关系</li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
@@ -260,13 +261,22 @@
                        class="text_block"><span style="color:red">信息有误</span> <span
                     style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
-
+                <li class="nav_item">
+                  <p>{{hostUnitList.urgentLinkMan}}</p>
+                  <div v-if="urgentLinkManHide" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click=" urgentLinkMan = true">重新输入</span></div>
+                </li>
+                <li class="nav_item">
+                  <p>{{hostUnitList.webLinkMainRelationship}}</p>
+                  <div v-if="webLinkMainRelationshipHide" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click=" webLinkMainRelationship = true">重新输入</span></div>
+                </li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">办公室电话号码</li>
                 <li class="nav_item">移动电话号码</li>
                 <li class="nav_item">电子邮箱地址</li>
-
+                <li class="nav_item">紧急联系人电话</li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
@@ -283,6 +293,11 @@
                   <p>{{hostUnitList.email}}</p>
                   <div v-if="emailHide == 'email'" class="text_block"><span style="color:red">信息有误</span>
                     <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
+                </li>
+                <li class="nav_item">
+                  <p>{{hostUnitList.urgentLinkManNumber}}</p>
+                  <div v-if="urgentLinkManNumberHide" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click="urgentLinkManNumber = true">重新输入</span></div>
                 </li>
 
               </ul>
@@ -955,6 +970,21 @@
           <p style="margin:10px">电子邮箱地址</p>
           <Input type="text" v-model="updateHostUnitList.email"></Input>
         </FormItem>
+        <FormItem prop="urgentLinkMan">
+          <p style="margin:10px">紧急联系人姓名</p>
+          <Input type="text" v-model="updateHostUnitList.urgentLinkMan"></Input>
+        </FormItem>
+        <FormItem prop="urgentLinkManNumber">
+          <p style="margin:10px">紧急联系人电话</p>
+          <Input type="text" v-model="updateHostUnitList.urgentLinkManNumber"></Input>
+        </FormItem>
+        <FormItem prop="webLinkMainRelationship">
+          <p style="margin:10px">与网站负责人关系</p>
+          <Select v-model="relationship">
+            <Option v-for="item in webRelationshipList" :value="item.value" :key="item.value">{{ item.value }}</Option>
+          </Select>
+          <Input type="text" v-if='relationship == "其他"' v-model="updateHostUnitList.webLinkMainRelationship"></Input>
+        </FormItem>
       </Form>
       <div slot="footer">
         <Button @click="websitePerson = false">取消</Button>
@@ -1128,7 +1158,7 @@ export default {
     //校验手机号码
     const validPhoneNumber = (rule, value, callback) => {
       let reg = /^1[4|3|5|8|9|6|7]\d{9}$/;
-      if (!reg.test(this.updateHostUnitList.phone)) {
+      if (!reg.test(value)) {
         return callback(new Error("请输入正确的手机号码"));
       } else {
         callback();
@@ -1255,6 +1285,9 @@ export default {
       mark4Hide: null,
       icprecordpasswordHide:false,
       mainrecordnumberHide:false,
+      urgentLinkManNumberHide:false,
+      webLinkMainRelationshipHide:false,
+      urgentLinkManHide:false,
       //主办单位弹窗
       host: false,
       //主体单位负责人弹窗
@@ -1452,8 +1485,40 @@ export default {
             validator: validConsigneePhoneNumber,
             trigger: "blur"
           }
+        ],
+        urgentLinkMan:[
+          { required: true, message: "请输入紧急联系人姓名",trigger: "blur"}
+        ],
+        webLinkMainRelationship:[
+          { required: true, message:'与紧急联系人关系不能为空', trigger: "blur"}
+        ],
+        urgentLinkManNumber:[
+           { required: true, validator:validPhoneNumber, trigger: "blur"}
         ]
       },
+      relationship:'0',
+      webRelationshipList:[
+        {
+          value:'父亲',
+          lable:'父亲',
+        },
+        {
+          value:'母亲',
+          lable:'母亲',
+        },
+        {
+          value:'朋友',
+          lable:'朋友'
+        },
+        {
+          value:'同事',
+          lable:'同事'
+        },
+        {
+          value:'其他',
+          label:'其他'
+        }
+      ],
       //获取域名证书文件
       addy: [],
       imgUrl: "",
@@ -2075,6 +2140,9 @@ export default {
                   : name == "webIsp"
                     ? (this.webIsp = false)
                     : name == "address" ? (this.addressModal = false) : "";
+                    if(this.relationship != '其他'){
+                      this.updateHostUnitList.webLinkMainRelationship == this.relationship;
+                    }
           this.hostUnitList = JSON.parse(
             JSON.stringify(this.updateHostUnitList)
           );
@@ -2145,7 +2213,10 @@ export default {
         backgroundName: this.hostUnitList.mark3,
         backgroundPhone: this.hostUnitList.mark4,
         mainrecordnumber:this.hostUnitList.mainrecordnumber == undefined ?'':this.hostUnitList.mainrecordnumber,
-        icprecordpassword:this.hostUnitList.icprecordpassword
+        icprecordpassword:this.hostUnitList.icprecordpassword,
+        urgentLinkManNumber:this.hostUnitList.urgentLinkManNumber,
+        webLinkMainRelationship:this.hostUnitList.webLinkMainRelationship,
+        urgentLinkMan:this.hostUnitList.urgentLinkMan
       };
       for(let i in web){
         if(web[i] == ''){
