@@ -67,13 +67,13 @@
                 <div>
                   <div v-for="item in mirrorType" class="zoneItem"
                        :class="{zoneSelect:currentType==item.value}"
-                       @click="selectMirror(item)">{{item.label}}
+                       @click="selectMirror(item)" :key="item.value">{{item.label}}
                   </div>
                   <!--镜像+应用 列表-->
                   <div v-if="currentType=='app'">
                     <div v-for="item in appList" class="mirror"
                          :class="{mirrorSelect:item==currentApp}"
-                         @click="currentApp=item">
+                         @click="currentApp=item" >
                       <div>
                         <p class="appName">{{item.templatename}}</p>
                         <p class="desc">{{item.templatedescript}}</p>
@@ -155,7 +155,7 @@
                 </div>
                 <div>
                   <Select v-model="vpc" style="width:200px">
-                    <Option v-for="item in vpcList" :key="item.vpcid" :value="item.vpcid">
+                    <Option v-for="item in vpcList" :key="item.vpcid" :value="item.vpcid" v-if="item.status != -1" >
                       {{item.vpcname}}
                     </Option>
                   </Select>
@@ -398,8 +398,17 @@
                   <p class="item-title" style="margin-top: 8px">登录密码</p>
                 </div>
                 <Input v-model="password" placeholder="请输入至少8位包含大小写与数字的密码"
-                       style="width: 300px" @on-change="passwordWarning=''"></Input>
+                       style="width: 300px" @on-focus="passwordForm.passwordHint = true" @on-blur="passwordForm.passwordHint = false" @on-change="passwordWarning=''"></Input>
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
+              </div>
+               <div class="popTip" v-show="passwordForm.passwordHint">
+                  <div><i :class="{reach: passwordForm.secondDegree }"></i>
+                    <p>不能输入连续6位数字或字母，如123456aA</p></div>
+                     <div><i :class="{reach: passwordForm.firstDegree }"></i>
+                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
+                  <div><i :class="{reach: passwordForm.thirdDegree }"></i>
+                    <p>至少包含：小写字母，大写字母，数字</p></div>
+                  <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
               </div>
             </div>
           </div>
@@ -713,7 +722,15 @@
         dbName: '',
 
         //具体镜像
-        mirrorQuery: this.$route.query.mirror
+        mirrorQuery: this.$route.query.mirror,
+
+        passwordForm: {
+          passwordHint: false,
+          //密码强度
+          firstDegree: false,
+          secondDegree: true,
+          thirdDegree: false
+        }
       }
     },
     created() {
@@ -1322,6 +1339,46 @@
       },
       'network'() {
           this.fireList()
+      },
+      password(val){
+        if(val.length >7 && val.length <31){
+          this.passwordForm.firstDegree = true
+        } else{
+          this.passwordForm.firstDegree = false
+        }
+        let len = val.length
+        let reg = /[0-9]/
+        let flag = false
+        if(len>5){
+          flag = check(len)
+          function check(index){
+            let count = 0
+            for(let i = index- 5; i < index;i++){
+            let next = reg.test(val[i]) ? val[i] : val[i].charCodeAt()
+            let current = reg.test(val[i-1]) ? val[i-1] : val[i-1].charCodeAt()
+            if(next-current === 1){
+              count +=1
+             }
+           }
+            if(count > 4){
+              return true
+            } else if(count < 5 && index > 6){
+              return check(index - 1)
+            } else{
+              return false
+            }
+          }
+        }
+        if(flag){
+          this.passwordForm.secondDegree = false
+        } else{
+          this.passwordForm.secondDegree = true
+        }
+        if(regExp.hostPassword(val)){
+          this.passwordForm.thirdDegree = true
+        } else{
+          this.passwordForm.thirdDegree = false
+        }
       }
     }
   }
@@ -1418,6 +1475,7 @@
         }
         .item-wrapper {
           margin-top: 20px;
+          position: relative;
           .item-title {
             font-size: 16px;
             color: #333333;
@@ -1457,6 +1515,55 @@
               color: #ffffff
             }
           }
+           .popTip {
+              width: 350px;
+              padding: 19px 21px;
+              position: absolute;
+              background: #FFF;
+              border-radius: 8px;
+              box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
+              right: -25px;
+              bottom: -30px;
+              z-index: 3;
+              > div {
+                display: flex;
+                > i {
+                  display: inline-block;
+                  border: 1px solid rgba(151, 151, 151, 1);
+                  margin-right: 3px;
+                  margin-top: 5px;
+                  height: 12px;
+                  width: 12px;
+                  border-radius: 6px;
+                  &.reach {
+                    background: #09BC1D;
+                    border: 1px solid #09BC1D;
+                    &:before {
+                      content: '';
+                      display: inline-block;
+                      background: #FFF;
+                      height: 1px;
+                      width: 10px;
+                      transform: translate(3px, -8px) rotate(-55deg);
+                    }
+                    &:after {
+                      content: '';
+                      display: inline-block;
+                      background: #FFF;
+                      height: 1px;
+                      width: 6px;
+                      transform: translate(0px, -23px) rotate(215deg);
+                    }
+                  }
+                }
+                > p {
+                  font-size: 14px;
+                  font-family: MicrosoftYaHei;
+                  color: rgba(51, 51, 51, 1);
+                  line-height: 24px;
+                }
+              }
+            }
         }
         .btn {
           border-color: #377DFF;
