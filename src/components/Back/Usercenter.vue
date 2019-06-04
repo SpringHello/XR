@@ -3477,11 +3477,9 @@
       },
       // 重置密码
       resetPassword_ok() {
-        this.$http.get('user/updatePassword.do', {
-          params: {
+        this.$http.post('user/updatePassword.do', {
             password: this.resetPasswordForm.newPassword,
             oldpassword: this.resetPasswordForm.oldPassword
-          }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.showModal.modifyPassword = false
