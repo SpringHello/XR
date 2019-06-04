@@ -2623,7 +2623,7 @@
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            if (window.location.origin == 'http://localhost:8088'||window.location.origin == 'https://zschj.xrcloud.net') {
+            if (window.location.origin == 'http://localhost:8088'||window.location.origin == 'https://kaifa.xrcloud.net') {
               this.gpuConfigListHot.filter((itemd,index) => {
                 res.data.result.filter((item,index) => {
                   if(item.cpunum==itemd.cpunum && item.memory==itemd.memory){
