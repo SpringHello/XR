@@ -46,7 +46,7 @@
             <div>
               <span v-show="item.isRes=='available'">¥{{item.price}}</span>
               <Dropdown v-show="item.isRes=='available'" trigger="custom" :visible="visible == index ? true : false" class="dropmenu">
-                    <span  @click="getMore(item.name)">
+                    <span  @click="getMore(item.name,index)">
                         更多价格
                         <Icon type="arrow-down-b"></Icon>
                     </span>
@@ -56,8 +56,8 @@
                                   <li v-for="(subItem,subIndex) in yearList" :key="(subIndex+2)*3" @click="yearClick(subItem,subIndex)" :class="{clickMenu:yearIndex == subIndex}">
                                      <div>
                                          <p>{{subItem.year}}</p>
-                                         <p>注册价：<span>¥{{subItem.regPrice}}</span></p>
-                                         <p>续费价：<span>¥{{subItem.renewalPrice}}</span></p>
+                                         <p>注册价:<span>¥{{subItem.regPrice}}</span></p>
+                                         <p>续费价:<span>¥{{subItem.renewalPrice}}</span></p>
                                      </div>
                                   </li>
                               </ul>
@@ -84,8 +84,9 @@
               </p>
               <ul class="all-data" v-show="buyLists.length!=0">
                 <li v-for="(item,index) in buyLists">
-                  <h2>{{item.name}}</h2>
+                  <h2>{{item.domainName}}</h2>
                   <div>
+                      <span>{{item.year}}年</span>
                       <button @click="remove(index)">移除</button>
                   </div>
                 </li>
@@ -138,10 +139,7 @@
         Results: [],
         visible: 'visible', // 更多价格浮窗
         yearList: [
-          {year: '1年', regPrice: '85' ,renewalPrice: '85'},
-          {year: '3年', regPrice: '255' ,renewalPrice: '255'},
-          {year: '5年', regPrice: '425' ,renewalPrice: '425'},
-          {year: '10年', regPrice: '850' ,renewalPrice: '850'},
+          {regPrice: "30.00", year: "1年", renewalPrice: "32.00"},
         ],
         yearValue: '',
         yearIndex: 'yearIndex', // 价格年限选择
@@ -150,13 +148,9 @@
         addNum: '0',
         payMoney: 0,
         listTop: false,
-
-        domName: '',
-
         showButton: false,
         cancel: false,
         showFix: false,
-
       }
     },
     methods: {
@@ -196,7 +190,7 @@
       },
 
       //展现更多Price
-      getMore (name) {
+      getMore (name,index) {
         if (this.$store.state.userInfo == null) {
           this.$LR({
             type: 'login'
@@ -206,8 +200,9 @@
           axios.post('domain/getDomainAllPrice.do', {
             domainName: name
           }).then(res => {
-            if (res.status === 200 && res.data.status === 1) {
+            if (res.status == 200 && res.data.status == 1) {
               this.visible = index
+             this.yearList = res.data.data.results
             }
           })
         }
@@ -223,20 +218,40 @@
       choosePrice (item) {
         this.visible = 'visible'
         this.yearIndex = 'yearIndex'
-        // item.price = this.yearValue
+        if (this.yearValue) {
+          item.price = this.yearValue
+          this.yearValue = ''
+        }
       },
 
       //加入清单
       addList(item){
-        if (this.buyLists.length == 0) {
-          this.buyLists.push(item)
-        } else {
-          this.buyLists.push(item)
-          let hash = {};
-          this.buyLists = this.buyLists.reduce((preVal, curVal) => {
-            hash[curVal.name] ? '' : hash[curVal.name] = true && preVal.push(curVal);
-            return preVal
-          }, [])
+        if (this.$store.state.userInfo == null) {
+          this.$LR({
+            type: 'login'
+          })
+          return
+        }else {
+          var year = item.price.split('/')[1]
+          axios.post('domain/getDomainList.do',{
+            domainName: item.name,
+            year: year[0]
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              if (this.buyLists.length == 0) {
+                this.buyLists.push (res.data.data.results)
+              }else {
+                var result = this.buyLists.some(e=> {
+                  return e.domainName == item.name
+                })
+                if (result) {
+                  return this.$Message.info('商品：'+item.name+' 已添加到购物清单')
+                } else {
+                  this.buyLists.push (res.data.data.results)
+                }
+              }
+            }
+          })
         }
       },
 
@@ -286,11 +301,17 @@
         } else {
           if (this.buyLists.length != 0) {
             this.getToken()
+            var domName = ''
+            var domYear = ''
+            var domPrice = ''
             this.buyLists.forEach(e => {
-              this.domName += e.name + ','
+              domName += e.domainName + ','
+              domYear += e.year + ','
+              domPrice += e.price + ','
             })
-            sessionStorage.setItem('domName', this.domName)
-            sessionStorage.setItem('domPrice', this.payMoney)
+            sessionStorage.setItem('domName', domName)
+            sessionStorage.setItem('domPrice', domPrice)
+            sessionStorage.setItem('domYear', domYear)
             this.$router.push('DomainInfoTemplate')
           } else {
             return this.$Message.info('请添加商品到清单')
@@ -590,7 +611,7 @@
                                 line-height:16px;
                                 &:first-of-type {
                                     padding-left: 18px;
-                                    width: 25%;
+                                    width: 20%;
                                     color:rgba(51,51,51,1);
                                 }
                                 &:nth-of-type(2) {
@@ -601,7 +622,7 @@
                                 }
                                 &:last-of-type {
                                     padding-left: 15px;
-                                    width: 35%;
+                                    width: 40%;
                                 }
                                 span{
                                     color:#FF624B;
@@ -685,6 +706,13 @@
                 font-weight: normal;
               }
               div {
+                  span {
+                      font-size:12px;
+                      color:rgba(102,102,102,1);
+                      line-height:16px;
+                      display: inline-block;
+                      margin-right: 16px;
+                  }
                   button {
                       font-size: 16px;
                       color: rgba(42, 153, 242, 1);
@@ -760,3 +788,4 @@
     font-size: 25px !important;
   }
 </style>
+ 

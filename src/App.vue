@@ -83,9 +83,9 @@
             <li @mouseenter="ME(1,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <a href="https://zschj.xrcloud.net/login" rel="nofollow"><span>登录</span>
-                  </a>
-                  <!-- <a href="#" rel="nofollow"><span @click="login">登录</span></a> -->
+                  <!--<a href="https://zschj.xrcloud.net/login" rel="nofollow"><span>登录</span>-->
+                  <!--</a>-->
+                   <a href="#" rel="nofollow"><span @click="login">登录</span></a>
                 </div>
               </div>
             </li>

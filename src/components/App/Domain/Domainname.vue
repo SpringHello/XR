@@ -170,12 +170,6 @@
             priceOld: '48（元/年）',
           },
           {
-            type: '.xyz',
-            resgister: '6（元/年）',
-            priceNew: '78（元/年）',
-            priceOld: '78（元/年）',
-          },
-          {
             type: '.online',
             resgister: '7（元/年）',
             priceNew: '68（元/年）',

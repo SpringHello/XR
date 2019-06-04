@@ -607,16 +607,18 @@
       //保存模板付费
       payTemplate(){
         var domNames = sessionStorage.getItem('domName')
+        var domYear = sessionStorage.getItem('domYear')
+        var domPrice = sessionStorage.getItem('domPrice')
         // 批次号
         var countOrder = uuid.v4()
 
         let params = {
           token: sessionStorage.getItem('tokenId'),
           domainName: domNames.substring(0, domNames.length - 1),
-          years: '1',
+          years: domYear.substring(0, domYear.length - 1),
           isName: '0',
           signature: '',
-          price: sessionStorage.getItem('domPrice'),
+          price: domPrice.substring(0, domPrice.length - 1),
           countOrder
         }
         if (this.btns == 'untemplate') {
@@ -627,7 +629,6 @@
         axios.post('domain/createOrder.do', params).then(response => {
           if (response.data.status == 1) {
             sessionStorage.setItem('orderNum', response.data.orderNum)
-//            this.$router.push('/order')
             this.$router.push({
               path: 'order', query: {
                 countOrder
