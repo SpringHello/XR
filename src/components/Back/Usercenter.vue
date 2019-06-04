@@ -847,13 +847,16 @@
       <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <Form :model="resetPasswordForm" label-position="top" :rules="resetPasswordruleValidate" style="width: 300px;" ref="resetPassword">
           <FormItem label="当前密码" prop="oldPassword">
-            <Input type="password" v-model="resetPasswordForm.oldPassword"></Input>
+            <Input :type="resetPasswordForm.currentPassword" v-model="resetPasswordForm.oldPassword" ref="currentPassword"></Input>
+            <img class="modal-eye" src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('currentPassword')"/>
           </FormItem>
           <FormItem label="新的密码" prop="newPassword">
-            <Input type="password" v-model="resetPasswordForm.newPassword"></Input>
+            <Input :type="resetPasswordForm.passwordInput" v-model="resetPasswordForm.newPassword" ref="passwordInput"></Input>
+            <img class="modal-eye" src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInput')"/>
           </FormItem>
           <FormItem label="确认密码" prop="confirmPassword">
-            <Input type="password" v-model="resetPasswordForm.confirmPassword"></Input>
+            <Input :type="resetPasswordForm.passwordInputAffirm" v-model="resetPasswordForm.confirmPassword" ref="passwordInputAffirm"></Input>
+            <img class="modal-eye" src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInputAffirm')"/>
           </FormItem>
         </Form>
       </div>
@@ -2023,7 +2026,10 @@
         resetPasswordForm: {
           oldPassword: '',
           newPassword: '',
-          confirmPassword: ''
+          confirmPassword: '',
+          currentPassword: 'password',
+          passwordInput: 'password',
+          passwordInputAffirm: 'password',
         },
         resetPasswordruleValidate: {
           oldPassword: [{
@@ -4120,7 +4126,10 @@
             }
           }
         })
-      }
+      },
+      changeResetPasswordType(name) {
+        this.resetPasswordForm[name] === 'password' ? this.resetPasswordForm[name]= 'text' : this.resetPasswordForm[name] = 'password'
+      },
     },
     computed: mapState({
       paneStatus: state => state.paneStatus,
@@ -4875,5 +4884,11 @@
     width: 460px;
     height: auto;
     margin-top: 10px;
+  }
+  .modal-eye{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
   }
 </style>
