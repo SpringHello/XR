@@ -421,10 +421,10 @@
           this.creatbalancemodal.formInline.VPCList = response.data.result
         }
       })
-			this.testjump()
+			this.defaultOpen()
     },
     methods: {
-			testjump(){
+			defaultOpen(){
         if (sessionStorage.getItem('modal')) {
           var modalName = sessionStorage.getItem('modal')
           this.creatbalancemodal[modalName] = true

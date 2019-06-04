@@ -417,7 +417,7 @@
                 this.close()
                 axios.get('user/GetUserInfo.do').then(response => {
                     if (response.data.status == 1 && response.status == 200) {
-                      $store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+                      $store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result,authInfoPersion: response.data.authInfo_persion})
                     }
                   }
                 )

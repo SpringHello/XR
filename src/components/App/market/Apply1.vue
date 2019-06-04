@@ -49,7 +49,7 @@
     </div>
     <div class="info">
       <div class="info-box">
-        <div class="info-box-title" v-if="stepInfo.status < 9"><span></span>{{infoTitle}}</div>
+        <div class="info-box-title" v-if="stepInfo.status < 9 || stepKong == 0"><span></span>{{infoTitle}}</div>
         <!--公司基础信息-->
         <div class="info-box-from" v-if="stepKong == 0 || stepInfo.step === 0">
           <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
@@ -72,7 +72,7 @@
               <Input v-model="formValidate.tel" placeholder="请输入联系人电话"></Input>
             </FormItem>
             <FormItem>
-              <Button type="primary" @click="handleSubmit('formValidate')">下一步</Button>
+              <Button type="primary" @click="handleSubmit('formValidate')" style="width: 147px;height: 49px;font-size: 16px;">下一步</Button>
             </FormItem>
           </Form>
         </div>
@@ -441,7 +441,6 @@ export default {
               this.stepKong = res.data.result.length
               if (res.data.result.length != 0) {
                 this.stepInfo = res.data.result[0]
-                console.log(this.stepInfo)
                 this.formValidate.company = this.stepInfo.merchanName
                 this.formValidate.web = this.stepInfo.merchanWebsite
                 this.formValidate.desc = this.stepInfo.merchanDesc
@@ -480,6 +479,14 @@ export default {
         this.flow[2].status = 1
         this.$el.querySelector('.flow-box-wire').style.width = '1200px'
       }
+    },
+    // 是否登录
+    getLogin () {
+      axios.get('user/GetUserInfo.do').then(res => {
+        if (res.status === 200 && res.data.status === 3) {
+          this.$router.push('login')
+        }
+      })
     }
   },
   mounted () {
@@ -505,20 +512,12 @@ export default {
         })
       }
     })
-    if (this.userInfos == null) {
-      this.$router.push('login')
-      return
-    } 
     this.getFrame()
     this.getCustom()
-  },
-  computed: {
-    userInfos () {
-      return this.$store.state.userInfo
-    }
-  },
+  }, 
   created () {
     this.getRecord()
+    this.getLogin()
   }
 }
 </script>
@@ -569,7 +568,7 @@ export default {
             margin-bottom: 5px;
           }
           .step-q{
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 400;
             color: rgba(153,153,153,1);
           }

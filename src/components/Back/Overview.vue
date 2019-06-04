@@ -351,14 +351,11 @@
         }
         // console.log(url, pane)
         if (url == 'vpc') {
-          this.$store.commit('setPane', {vpc: pane})
+          this.$store.commit('setPane', {vpc: pane, vpn: 'remote', usercenter: 'personalInfo'})
           return
+        } else if(url == 'NatState') {
+          this.$store.commit('setPane', {vpc: 'VPC', vpn: pane, usercenter: 'personalInfo'})
         }
-        if (url == 'vpn') {
-          this.$store.commit('setPane', {vpn: pane})
-          return
-        }
-        sessionStorage.setItem('pane', pane)
       },
       change() {
 

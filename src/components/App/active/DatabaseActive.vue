@@ -561,7 +561,7 @@
           },
         ],
         orderData: [],
-        payWay: 'otherPay',
+        payWay: 'balancePay',
         otherPayWay: '',
         balance: '0.0',
         // 快速认证表单
@@ -797,7 +797,8 @@
           describe: '领取数据库',
           operationType: '领取数据库',
           thawCondition: '删除免费数据库',
-          vmConfig: this.vmConfig
+          vmConfig: this.vmConfig,
+          zoneId: this.products[this.index].config.zoneId
         }
         axios.post(url, params).then(response => {
           if (response.data.status == 1 && response.status == 200) {
