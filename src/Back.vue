@@ -865,6 +865,7 @@
             height: 100%;
             &.right {
               float: right;
+              height: 56px;
               > li {
                 &:last-child {
                   position: relative;
