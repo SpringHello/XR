@@ -292,7 +292,7 @@
       checked(name, status){
         sessionStorage.setItem('checkname', name)
         sessionStorage.setItem('status', status)
-        this.$router.push('CheckReg')
+        this.$router.push('/CheckReg')
       },
 
       //立即购买
@@ -316,7 +316,7 @@
             sessionStorage.setItem('domName', domName)
             sessionStorage.setItem('domPrice', domPrice)
             sessionStorage.setItem('domYear', domYear)
-            this.$router.push('DomainInfoTemplate')
+            this.$router.push('/DomainInfoTemplate')
           } else {
             return this.$Message.info('请添加商品到清单')
           }

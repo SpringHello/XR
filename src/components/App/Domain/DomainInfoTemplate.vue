@@ -630,7 +630,7 @@
           if (response.data.status == 1) {
             sessionStorage.setItem('orderNum', response.data.orderNum)
             this.$router.push({
-              path: 'order', query: {
+              path: '/order', query: {
                 countOrder
               }
             })
