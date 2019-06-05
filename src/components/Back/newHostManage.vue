@@ -678,7 +678,7 @@
           passwordHint: false,
           //密码强度
           firstDegree: false,
-          secondDegree: true,
+          secondDegree: false,
           thirdDegree: false
         },
         modifyPasswordFormRule: {
@@ -1819,10 +1819,13 @@
             }
           }
         }
-        if(flag){
+        if(flag&&len>5){
           this.modifyPasswordForm.secondDegree = false
-        } else{
+        } else if(!flag && len>5){
           this.modifyPasswordForm.secondDegree = true
+        }
+        if(len === 0) {
+           this.modifyPasswordForm.secondDegree = false
         }
         if(regExp.hostPassword(val)){
           this.modifyPasswordForm.thirdDegree = true

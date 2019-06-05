@@ -1456,7 +1456,7 @@
           passwordHint: false,
           //密码强度
           firstDegree: false,
-          secondDegree: true,
+          secondDegree: false,
           thirdDegree: false
         },
         listLoadBalanceRole: [],
@@ -3079,10 +3079,13 @@
             }
           }
         }
-        if(flag){
+        if(flag&&len>5){
           this.resetPasswordForm.secondDegree = false
-        } else{
+        } else if(!flag && len>5){
           this.resetPasswordForm.secondDegree = true
+        }
+        if(len === 0) {
+           this.resetPasswordForm.secondDegree = false
         }
         if(regExp.hostPassword(val)){
           this.resetPasswordForm.thirdDegree = true
