@@ -8,7 +8,7 @@ import md5 from 'md5'
 
 // axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 //axios.defaults.baseURL = 'http://zhouyi.xrcloud.net/ruicloud'
-axios.defaults.baseURL = 'https://kaifa.xrcloud.net/ruicloud/'
+axios.defaults.baseURL = 'https://kaifa.xrcloud.net/'
 //axios.defaults.baseURL = 'http://www.xrcloud.net/'
 // axios.defaults.withCredentials = true
 

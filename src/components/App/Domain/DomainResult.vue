@@ -581,6 +581,7 @@
 
           }
           .jiaru {
+              width: 118px;
               display: inline-block;
               font-size:16px;
               font-weight:400;
