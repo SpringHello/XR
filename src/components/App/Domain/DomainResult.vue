@@ -65,7 +65,8 @@
                         </div>
                     </DropdownMenu>
                 </Dropdown>
-              <button v-show="item.isRes=='available'" @click="addList(item)">加入清单</button>
+              <button v-show="item.isRes=='available' && item.status != 'yijia'" @click="addList(item)">加入清单</button>
+              <p v-show="item.isRes=='available' && item.status == 'yijia'" class="jiaru">已加入</p>
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
           </li>
@@ -84,10 +85,12 @@
               </p>
               <ul class="all-data" v-show="buyLists.length!=0">
                 <li v-for="(item,index) in buyLists">
-                  <h2>{{item.domainName}}</h2>
+                    <Tooltip :content="item.domainName" placement="top">
+                        <h2>{{item.domainName}}</h2>
+                    </Tooltip>
                   <div>
                       <span>{{item.year}}年</span>
-                      <button @click="remove(index)">移除</button>
+                      <button @click="remove(item,index)">移除</button>
                   </div>
                 </li>
               </ul>
@@ -238,26 +241,27 @@
             year: year[0]
           }).then(res => {
             if (res.status == 200 && res.data.status == 1) {
-              if (this.buyLists.length == 0) {
-                this.buyLists.push (res.data.data.results)
-              }else {
-                var result = this.buyLists.some(e=> {
-                  return e.domainName == item.name
+              this.buyLists.push (res.data.data.results)
+              this.buyLists.forEach(e => {
+                this.Results.forEach(i => {
+                  if (i.name == e.domainName) {
+                    i.status = 'yijia'
+                  }
                 })
-                if (result) {
-                  return this.$Message.info('商品：'+item.name+' 已添加到购物清单')
-                } else {
-                  this.buyLists.push (res.data.data.results)
-                }
-              }
+              })
             }
           })
         }
       },
 
       //移除
-      remove(index){
+      remove(item,index){
         this.buyLists.splice(index, 1)
+        this.Results.forEach(i => {
+          if (i.name == item.domainName) {
+            i.status = ' '
+          }
+        })
       },
 
       //全部移除
@@ -576,13 +580,22 @@
             margin-left: 20px;
 
           }
+          .jiaru {
+              display: inline-block;
+              font-size:16px;
+              font-weight:400;
+              color:rgba(178,178,178,1);
+              line-height:22px;
+              padding: 7px 27px;
+              margin-left: 20px;
+          }
           a {
             font-size: 16px;
             color: rgba(42, 153, 242, 1);
           }
         }
         .dropmenu {
-           margin: 0 15px 0 20px;
+           margin: 0 15px;
            span {
                font-size:14px;
                font-weight:400;
@@ -701,9 +714,13 @@
               align-items: center;
               padding-bottom: 22px;
               h2 {
-                font-size: 16px;
-                color: rgba(51, 51, 51, 1);
-                font-weight: normal;
+                  font-size: 16px;
+                  color: rgba(51, 51, 51, 1);
+                  font-weight: normal;
+                  width: 120px;
+                  overflow: hidden;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
               }
               div {
                   span {
