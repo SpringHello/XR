@@ -402,10 +402,10 @@
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
               <div class="popTip" v-show="passwordForm.passwordHint">
-                  <div><i :class="{reach: passwordForm.firstDegree}"></i>
-                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: passwordForm.secondDegree}"></i>
                     <p>不能输入连续6位数字或字母，如123456aA</p></div>
+                  <div><i :class="{reach: passwordForm.firstDegree}"></i>
+                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: passwordForm.thirdDegree}"></i>
                     <p>至少包含：小写字母，大写字母，数字</p></div>
                   <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
@@ -728,7 +728,7 @@
           passwordHint: false,
           //密码强度
          firstDegree: false,
-          secondDegree: true,
+          secondDegree: false,
           thirdDegree: false
         }
       }
@@ -1373,10 +1373,13 @@
             }
           }
         }
-        if(flag){
+        if(flag&&len>5){
           this.passwordForm.secondDegree = false
-        } else{
+        } else if(!flag && len>5){
           this.passwordForm.secondDegree = true
+        }
+        if(len === 0) {
+           this.passwordForm.secondDegree = false
         }
         if(regExp.hostPassword(val)){
           this.passwordForm.thirdDegree = true

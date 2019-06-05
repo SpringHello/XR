@@ -418,7 +418,7 @@
           passwordHint: false,
           //密码强度
           firstDegree: false,
-          secondDegree: true,
+          secondDegree: false,
           thirdDegree: false
         },
         mirrorShow: false,
@@ -1029,10 +1029,13 @@
             }
           }
         }
-        if(flag){
+        if(flag&&len>5){
           this.passwordForm.secondDegree = false
-        } else{
+        } else if(!flag && len>5){
           this.passwordForm.secondDegree = true
+        }
+        if(len === 0) {
+           this.passwordForm.secondDegree = false
         }
         if(regExp.hostPassword(val)){
           this.passwordForm.thirdDegree = true
