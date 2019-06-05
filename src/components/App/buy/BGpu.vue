@@ -67,13 +67,13 @@
                 <div>
                   <div v-for="item in mirrorType" class="zoneItem"
                        :class="{zoneSelect:currentType==item.value}"
-                       @click="selectMirror(item)">{{item.label}}
+                       @click="selectMirror(item)" :key="item.value">{{item.label}}
                   </div>
                   <!--镜像+应用 列表-->
                   <div v-if="currentType=='app'">
                     <div v-for="item in appList" class="mirror"
                          :class="{mirrorSelect:item==currentApp}"
-                         @click="currentApp=item">
+                         @click="currentApp=item" >
                       <div>
                         <p class="appName">{{item.templatename}}</p>
                         <p class="desc">{{item.templatedescript}}</p>
@@ -155,7 +155,7 @@
                 </div>
                 <div>
                   <Select v-model="vpc" style="width:200px">
-                    <Option v-for="item in vpcList" :key="item.vpcid" :value="item.vpcid">
+                    <Option v-for="item in vpcList" :key="item.vpcid" :value="item.vpcid" v-if="item.status != -1" >
                       {{item.vpcname}}
                     </Option>
                   </Select>
@@ -1483,6 +1483,7 @@
         .item-wrapper {
           position: relative;
           margin-top: 20px;
+          position: relative;
           .item-title {
             font-size: 16px;
             color: #333333;
