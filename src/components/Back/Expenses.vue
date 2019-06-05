@@ -13,7 +13,7 @@
         <span class="title"
               style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>
         <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
-              style="margin-top: 20px;min-height: 650px">
+              style="margin-top: 20px;min-height: 650px;padding-bottom:140px;">
           <Tab-pane label="财务总览" name="accountSummary">
             <div class="money">
               <div class="item1">
@@ -316,8 +316,8 @@
                 </span>
               </p>
               <Table :columns="columns5" :data="data5" @on-sort-change="SortField" @on-selection-change="select" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
-              <div style="margin: 10px;overflow: hidden">
-                <div style="float: right;">
+              <div style="margin: 10px;">
+                <div style="float: right;overflow: hidden">
                   <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
                 </div>
               </div>
@@ -1709,10 +1709,10 @@
               title: '订单状态',
               key: 'paymentstatus',
               render: (h, params) => {
-                return h('span', params.row.paymentstatus == 0 ? '待支付' : params.row.paymentstatus == 1 ? '已支付' :
+                return h('span', params.row.paymentstatus == 0 &&params.row.overTimeStatus =='0' ? '待支付' : params.row.paymentstatus == 1 ? '已支付' :
                 params.row.paymentstatus == 4 ? '已退款' :
                 params.row.paymentstatus == 3 ? '退款中' :
-                params.row.paymentstatus == 5 ? '已超时失效' : '')
+                params.row.paymentstatus == 0 && params.row.overTimeStatus =='1'? '已超时失效' : '')
               },
               //0 未支付 1 支付成功 2 支付异常  3退款中   4已退款 5 失效
               filters: [
@@ -3045,24 +3045,26 @@
       }
     },
     created() {
-      this.getUserVipLevel()
+        this.getUserVipLevel()
         this.getBalance()
         this.changeOrder()
         this.showMoneyByMonth()
         this.search()
         this.getTicketNumber()
         this.invoiceLimit()
+        this.changecard()
       if (sessionStorage.getItem('beVip')) {
         this.getVipList()
         sessionStorage.removeItem('beVip')
       }
-      this.defaultTab()
+        this.defaultTab()
     },
     mounted() {
     },
     methods: {
       // 默认选中tab
       defaultTab() {
+        //orderManage(订单管理) accountSummary(财务总览) myCard(我的卡劵) applyInvoice(发票管理) bills(账单)
         if(sessionStorage.getItem('expensesTab')){
           let tab = sessionStorage.getItem('expensesTab')
           this.name = tab
@@ -5539,7 +5541,7 @@
       }
       li:nth-of-type(2) {
         border-left: none;
-        border-right: none; 
+        border-right: none;
       }
       .select-tab {
         color:#fff;
