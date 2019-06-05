@@ -571,7 +571,7 @@
       }
       const validaRegisteredPassWord = (rule, value, callback) => {
         if (!(this.modifyPasswordForm.firstDegree&&this.modifyPasswordForm.secondDegree&&this.modifyPasswordForm.thirdDegree)) {
-          callback(new Error('您输入的密码强度太低'));
+          callback(new Error('您输入的密码不符合格式要求'));
         }  else {
           callback()
         }

@@ -790,7 +790,7 @@
           return
         }
         if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
-            this.passwordWarning = '你输入的密码不符合格式要求'
+            this.passwordWarning = '您输入的密码不符合格式要求'
             return
           }
 
@@ -831,7 +831,7 @@
           return
         }
         if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
-            this.passwordWarning = '你输入的密码不符合格式要求'
+            this.passwordWarning = '您输入的密码不符合格式要求'
             return
           }
         var diskSize = '', diskType = ''

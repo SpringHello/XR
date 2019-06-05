@@ -405,7 +405,7 @@
         if (!value) {
           callback(new Error('密码不能为空'));
         } else if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
-          callback(new Error('你输入的密码不符合格式要求'));
+          callback(new Error('您输入的密码不符合格式要求'));
         } else {
           if (regExp.test(value)) {
             this.$refs.resetPasswordForm.validateField('confirmPassword');
