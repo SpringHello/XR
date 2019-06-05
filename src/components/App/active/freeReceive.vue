@@ -188,13 +188,13 @@
           <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-warning" style="top: 48px;left: 30px;">
             <i class="ivu-icon ivu-icon-android-alert"></i>
           </div>
-          <p class="lh24">您好，您不符合本活动的参与条件，去<span style="color: #2A99F2;cursor: pointer" @click="$router.push('/activity/')">活动中心</span>看看其他活动吧！如果有其他需要可联系我们销售或者客服。
+          <p class="lh24">您好，您不符合本活动的参与条件，您还可以去看看<span style="color: #FF9700;cursor: pointer" @click="$router.push('/activity/BlacKActivities')">“低价秒杀，买一赠一”</span>活动。
           </p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.inConformityModal = false">取消</Button>
-        <Button type="primary" @click="$router.push('/activity/')">去活动中心</Button>
+        <Button type="primary" @click="$router.push('/activity/BlacKActivities')">现在就去</Button>
       </p>
     </Modal>
     <!-- 领取成功 -->
@@ -393,6 +393,21 @@
         <Button type="primary" @click="showModal.authenticationError=false">确认</Button>
       </div>
     </Modal>
+    <!-- 欢迎页 -->
+    <transition name="fade">
+        <div class="overlay" @click="showModal.OpenMembership=false" v-if="showModal.OpenMembership">
+          <div class="shipmodel" @click.stop="$router.push('/activity/BlacKActivities')">
+            <div class="header">
+              <!-- <img src="../../../assets/img/active/freeToReceive/fr-xx.png" @click.stop="showModal.OpenMembership=false"> -->
+            </div>
+            <div class="body">
+                
+            </div>
+            <div class="footer">
+            </div>
+          </div>
+        </div>
+      </transition>
   </div>
 </template>
 
@@ -465,7 +480,8 @@
           orderConfirmationModal: false,
           authentication: false,
           authenticationSuccess: false,
-          authenticationError: false
+          authenticationError: false,
+          OpenMembership: false,
         },
         /*flowGroup: [
           {
@@ -786,6 +802,12 @@
     created() {
       this.judgeUserFlow()
       this.getRegion()
+      if(sessionStorage.getItem('frActiveOpenship')){
+          this.showModal.OpenMembership=false
+        }else{
+          this.showModal.OpenMembership=true
+          sessionStorage.setItem('frActiveOpenship',true)
+      }
     },
     methods: {
       init() {
@@ -1857,6 +1879,85 @@
       font-family: MicrosoftYaHei;
       font-weight: 400;
       color: rgba(102, 102, 102, 1);
+    }
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.3s;
+  }
+
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+    // 弹窗公共样式
+  .overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(55, 55, 55, 0.3);
+    height: 100%;
+    z-index: 1000;
+    .all-modal {
+      position: relative;
+      margin: 0 auto;
+      top: 15%;
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+      text-align: center;
+      font-size: 14px;
+      .header {
+        height: 64px;
+        line-height: 64px;
+        font-size: 18px;
+        font-family: MicrosoftYaHei;
+        color:rgba(255,208,140,1);
+        position: relative;
+        > i {
+          color: rgba(255, 255, 255, 1);
+          cursor: pointer;
+          position: absolute;
+          right: 13px;
+          transform: rotate(45deg);
+          &:before {
+            content: "";
+            display: inline-block;
+            height: 16px;
+            width: 2px;
+            background: rgba(255,208,140,1);
+            transform: translateX(9px);
+          }
+          &:after {
+            content: "";
+            display: inline-block;
+            height: 2px;
+            width: 16px;
+            background: rgba(255,208,140,1);
+            transform: translateY(-7px);
+          }
+        }
+      }
+    }
+  }
+  .shipmodel{
+    background: url("../../../assets/img/active/freeToReceive/fr-welcome.png") no-repeat;
+    width: 400px;
+    height: 489px;
+    position: relative;
+    margin: 0 auto;
+    cursor: pointer;
+    top: 15%;
+    .header{
+      background: none;
+       > img{
+         position: absolute;
+         right: -40px;
+         top: 0;
+         cursor: pointer;
+       }
     }
   }
 </style>

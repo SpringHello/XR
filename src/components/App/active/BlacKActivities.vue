@@ -13,12 +13,7 @@
         <div class="wrap">
           <div class="container flex-vertical-center">
               <div class="bannerdiv">
-                  <h1>酷/爽/到/底</h1>
                   <img class="bannerimg" src="../../../assets/img/active/blackactive/Ninetypercent.png" alt="一折秒杀">
-                  <p>
-                      云电脑惊喜上市 提前预约 抢先体验
-                  </p>
-                  <img class="bannerxian" src="../../../assets/img/active/blackactive/Rectangle 2 Copy.png" alt="一折秒杀线">
               </div>
               <!-- <span @click="roll(500)">立即购买</span> -->
           </div>
@@ -49,15 +44,15 @@
                       <i>秒</i>
                   </div>
               </div>
-          </div>
-          <div class="kaiqiang">
+              <div class="kaiqiang">
               每天0点、9点、14点、18点、21点开抢
+             </div>
+             <div style="clear: both;"></div>
           </div>
+          
           <div class="main">
             <div class="box">
-              <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(247,190,135,1);line-height:21px;margin-bottom:16px;">
-                温馨提示，秒杀产品不支持7天无理由退款；购买区域不同，价格会有差异，请确认之后再进行购买。
-              </p>
+              
               <div class="w_host">
                 <div v-for="(item,index) in discountProductfornew" >
                   <div class="host_title">
@@ -146,7 +141,10 @@
                   </div>
                 </div>
               </div>
-              <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:21px;margin-top:17px;">
+              <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(247,190,135,1);line-height:21px;margin-bottom:16px;margin-top:16px;">
+                温馨提示，秒杀产品不支持7天无理由退款；购买区域不同，价格会有差异，请确认之后再进行购买。
+              </p>
+              <p style="font-size:16px;font-family:MicrosoftYaHei;color:rgba(255,255,255,1);line-height:21px;">
                 <img src="../../../assets/img/active/blackactive/blackicon1.png" alt="提示" style="margin:4px 10px auto 0;float:left;">
                 下场秒杀预告：云服务器 {{Data3}}、{{freevmconfigs3}}、{{freevmconfigs1}}、对象存储 {{freevmconfigs2}}<span @click="showModal.SpikeMore=true" style="cursor: pointer;color:rgba(245,166,35,1);margin-left:10px;">更多场次预告 ></span>
                 <div style="clear: both;"></div>
@@ -886,9 +884,9 @@
                 
             </div>
             <div class="footer">
-              <div class="wraper" @click.stop="OpenMembershipscroll">
-
+              <div class="wraper" @click.stop="OpenMembershipscroll" >
               </div>
+              <div @click="$router.push('/activity/free/')" style="font-size:16px;color:rgba(255,255,255,1);position: absolute;bottom: 23px;text-align: center;width:100%;cursor: pointer;">新手豪礼，爆款服务器一年免费使用 →</div>
             </div>
           </div>
         </div>
@@ -1336,8 +1334,8 @@
             imgright:require('../../../assets/img/active/blackactive/newuserfor.png'),
             system: [],
             duration: '6',
-            originalPrice: '1300.32',
-            currentPrice: '351.09',
+            originalPrice: '0',
+            currentPrice: '0',
             id: '40',
             type: '0',
             yearnum:'',
@@ -1375,8 +1373,8 @@
             imgright:require('../../../assets/img/active/blackactive/newuserfor.png'),
             system: [],
             duration: '6',
-            originalPrice: '1300.32',
-            currentPrice: '351.09',
+            originalPrice: '0',
+            currentPrice: '0',
             id: '40',
             type: '0',
             yearnum:'',
@@ -1416,8 +1414,8 @@
             imgright:require('../../../assets/img/active/blackactive/onefor.png'),
             system: [],
             duration: '6',
-            originalPrice: '1300.32',
-            currentPrice: '351.09',
+            originalPrice: '0',
+            currentPrice: '0',
             id: '40',
             type: '0',
             yearnum:'',
@@ -1458,8 +1456,8 @@
             imgright:require('../../../assets/img/active/blackactive/onefor.png'),
             system: [],
             duration: '6',
-            originalPrice: '1300.32',
-            currentPrice: '351.09',
+            originalPrice: '0',
+            currentPrice: '0',
             id: '40',
             type: '0',
             yearnum:'',
@@ -3105,7 +3103,7 @@
             margin: 54px auto 26px auto;
             }
             .bannerimg{
-                margin: 0 auto;
+                margin: 61px auto 45px auto;
             }
             p {
                 margin-top: 30px;
@@ -3144,21 +3142,22 @@
         .daojisss {
             width: 607px;
             height: 80px;
-            background: url(../../../assets/img/active/blackactive/Rectangle 6.png) center no-repeat;
-            margin: 32px auto 20px auto;
+            float: left;
+            // background: url(../../../assets/img/active/blackactive/Rectangle 6.png) center no-repeat;
+            //margin: 32px auto 20px auto;
             .daosapan{
                 font-size:18px;
                 font-family:MicrosoftYaHei;
                 color:rgba(255,255,255,1);
                 line-height:24px;
-                margin: 28px 41px 28px 61px;
+                margin: 43px 41px 13px 0;
                 float: left;
             }
             .count-down {
             font-size: 14px;
             font-family: AppleSystemUIFont;
             float: left;
-            margin: 17px 0 17px 0;
+            margin: 32px 0 2px 0;
             span {
               display: inline-block;
               width: 36px;
@@ -3180,15 +3179,18 @@
             }
           }
       }
-    }
-    .kaiqiang{
+      .kaiqiang{
         font-size:18px;
         font-family:PingFangSC-Semibold;
         font-weight:600;
         color:rgba(255,255,255,1);
         line-height:20px;
         text-align: center;
+        float: right;
+        margin: 43px 0 13px 0;
     }
+    }
+    
     .main {
       margin: 30px 0 0 0;
       .box_bg_long {
