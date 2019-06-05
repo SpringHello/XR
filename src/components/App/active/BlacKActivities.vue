@@ -3086,7 +3086,7 @@
 
   .banner {
     background: url("../../../assets/img/active/blackactive/blackbround1.png") center no-repeat, linear-gradient(90deg, #191B32, #191B32);
-    color: rgba(51, 51, 51, 1);
+    height: 200px;
     .wrap{
         margin: 0 auto;
         .container {
