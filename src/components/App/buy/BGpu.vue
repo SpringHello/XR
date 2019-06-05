@@ -67,13 +67,13 @@
                 <div>
                   <div v-for="item in mirrorType" class="zoneItem"
                        :class="{zoneSelect:currentType==item.value}"
-                       @click="selectMirror(item)">{{item.label}}
+                       @click="selectMirror(item)" :key="item.value">{{item.label}}
                   </div>
                   <!--镜像+应用 列表-->
                   <div v-if="currentType=='app'">
                     <div v-for="item in appList" class="mirror"
                          :class="{mirrorSelect:item==currentApp}"
-                         @click="currentApp=item">
+                         @click="currentApp=item" >
                       <div>
                         <p class="appName">{{item.templatename}}</p>
                         <p class="desc">{{item.templatedescript}}</p>
@@ -155,7 +155,7 @@
                 </div>
                 <div>
                   <Select v-model="vpc" style="width:200px">
-                    <Option v-for="item in vpcList" :key="item.vpcid" :value="item.vpcid">
+                    <Option v-for="item in vpcList" :key="item.vpcid" :value="item.vpcid" v-if="item.status != -1" >
                       {{item.vpcname}}
                     </Option>
                   </Select>
@@ -402,10 +402,10 @@
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
               <div class="popTip" v-show="passwordForm.passwordHint">
-                  <div><i :class="{reach: passwordForm.firstDegree}"></i>
-                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: passwordForm.secondDegree}"></i>
                     <p>不能输入连续6位数字或字母，如123456aA</p></div>
+                  <div><i :class="{reach: passwordForm.firstDegree}"></i>
+                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: passwordForm.thirdDegree}"></i>
                     <p>至少包含：小写字母，大写字母，数字</p></div>
                   <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
@@ -728,7 +728,7 @@
           passwordHint: false,
           //密码强度
          firstDegree: false,
-          secondDegree: true,
+          secondDegree: false,
           thirdDegree: false
         }
       }
@@ -1136,7 +1136,7 @@
             return
           }
           if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
-            this.passwordWarning = '你输入的密码不符合格式要求'
+            this.passwordWarning = '您输入的密码不符合格式要求'
             return
           }
         }
@@ -1191,7 +1191,7 @@
             return
           }
            if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
-            this.passwordWarning = '你输入的密码不符合格式要求'
+            this.passwordWarning = '您输入的密码不符合格式要求'
             return
           }
         }
@@ -1373,10 +1373,13 @@
             }
           }
         }
-        if(flag){
+        if(flag&&len>5){
           this.passwordForm.secondDegree = false
-        } else{
+        } else if(!flag && len>5){
           this.passwordForm.secondDegree = true
+        }
+        if(len === 0) {
+           this.passwordForm.secondDegree = false
         }
         if(regExp.hostPassword(val)){
           this.passwordForm.thirdDegree = true
@@ -1480,6 +1483,7 @@
         .item-wrapper {
           position: relative;
           margin-top: 20px;
+          position: relative;
           .item-title {
             font-size: 16px;
             color: #333333;

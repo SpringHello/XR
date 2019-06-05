@@ -1169,7 +1169,7 @@
             return
           }*/
           if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
-            this.passwordWarning = '你输入的密码不符合格式要求'
+            this.passwordWarning = '您输入的密码不符合格式要求'
             return
           }
         }
@@ -1532,7 +1532,7 @@
         let reg = /[0-9]/
         let flag = false
         // 当用户输入到第6位时，开始校验是否有6位连续字符
-        if(len>7){
+        if(len>5){
           flag = check(len)
           function check(index){
             let count = 0
@@ -1551,13 +1551,16 @@
               return false
             }
           }
-          if(flag){
+          if(flag&&len>5){
             this.passwordForm.secondDegree = false
             //this.passwordForm.secondError = true
-          } else{
+          } else if(!flag && len>5){
             this.passwordForm.secondDegree = true
             //this.passwordForm.secondError = false
           }
+          if(len === 0) {
+           this.passwordForm.secondDegree = false
+         }
           if(regExp.hostPassword(val)){
           this.passwordForm.thirdDegree = true
           //this.passwordForm.thirdError = false

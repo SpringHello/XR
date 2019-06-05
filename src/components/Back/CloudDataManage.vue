@@ -186,10 +186,10 @@
                            <!-- <Input v-model="password" placeholder="请输入至少8位包含大小写与数字的密码"
                        style="width: 300px" @on-change="passwordWarning=''"  ></Input> -->
                     <div class="popTip" v-show="passwordFormTwo.passwordHint">
-                      <div><i :class="{reach: passwordFormTwo.firstDegree }"></i>
-                        <p>长度8~30位，推荐使用12位以上的密码</p></div>
                       <div><i :class="{reach: passwordFormTwo.secondDegree }"></i>
                         <p>不能输入连续6位数字或字母，如123456aA</p></div>
+                      <div><i :class="{reach: passwordFormTwo.firstDegree }"></i>
+                        <p>长度8~30位，推荐使用12位以上的密码</p></div>
                       <div><i :class="{reach: passwordFormTwo.thirdDegree }"></i>
                         <p>至少包含：小写字母，大写字母，数字</p></div>
                       <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
@@ -405,7 +405,7 @@
         if (!value) {
           callback(new Error('密码不能为空'));
         } else if (!(this.passwordForm.firstDegree&&this.passwordForm.secondDegree&&this.passwordForm.thirdDegree)) {
-          callback(new Error('你输入的密码不符合格式要求'));
+          callback(new Error('您输入的密码不符合格式要求'));
         } else {
           if (regExp.test(value)) {
             this.$refs.resetPasswordForm.validateField('confirmPassword');
@@ -449,14 +449,14 @@
           passwordHint: false,
           //密码强度
           firstDegree: false,
-          secondDegree: true,
+          secondDegree: false,
           thirdDegree: false
         },
         passwordFormTwo: {
           passwordHint: false,
           //密码强度
           firstDegree: false,
-          secondDegree: true,
+          secondDegree: false,
           thirdDegree: false
         },
         portModifyForm: {
@@ -1321,11 +1321,14 @@
                 }
               }
             }
-            if(flag){
-              this.passwordForm.secondDegree = false
-            } else{
-              this.passwordForm.secondDegree = true
-            }
+           if(flag&&len>5){
+          this.passwordForm.secondDegree = false
+        } else if(!flag && len>5){
+          this.passwordForm.secondDegree = true
+        }
+        if(len === 0) {
+           this.passwordForm.secondDegree = false
+        }
             if(regExp.hostPassword(val)){
               this.passwordForm.thirdDegree = true
             } else{
@@ -1365,11 +1368,14 @@
                 }
               }
             }
-            if(flag){
-              this.passwordFormTwo.secondDegree = false
-            } else{
-              this.passwordFormTwo.secondDegree = true
-            }
+        if(flag&&len>5){
+          this.passwordFormTwo.secondDegree = false
+        } else if(!flag && len>5){
+          this.passwordFormTwo.secondDegree = true
+        }
+        if(len === 0) {
+           this.passwordFormTwo.secondDegree = false
+        }
             if(regExp.hostPassword(val)){
               this.passwordFormTwo.thirdDegree = true
             } else{

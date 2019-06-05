@@ -1200,9 +1200,9 @@
         if (localStorage.getItem('sellCode')) {
           params.sellCode = localStorage.getItem('sellCode')
         }
-        axios.get('user/register.do', {
+        axios.post('user/register.do',
           params
-        }).then(response => {
+        ).then(response => {
           if (response.status === 200 && response.data.status === 1) {
             window._agl && window._agl.push(['track', ['success', {t: 3}]])
             this.registerForm.onStep = 3

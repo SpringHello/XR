@@ -1442,12 +1442,19 @@
           }).then(res => {
             if(res.status === 200 && res.data.status === 1){
               var list = [];
+              let ids = [];
               if(Object.keys(res.data.result).length != 0){
                 for(let index in res.data.result){
                     for (let i = 0; i < res.data.result[index].list.length; i++) {
                       list.push(res.data.result[index].list[i]);
                     }
                   this.hostData = list;
+                  this.hostData.forEach(item =>{
+                    ids.push(item.id)
+                  })
+                  if (ids.length !== 0) {
+                    this.timingRefresh(ids + '')
+                  }
                 }
                 this.total = list.length;
               }else{

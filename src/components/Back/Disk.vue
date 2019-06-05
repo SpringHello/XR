@@ -1573,7 +1573,7 @@
       // 新建磁盘价格计算
       'copyDiskForm': {
         handler: function (val, oldVal) {
-          if (val.timeType == 'current' || ((val.timeType && val.timeValue) && val.diskType)) {
+          if ((val.timeType == 'current' && val.diskType) || ((val.timeType && val.timeValue) && val.diskType)) {
             if (val.diskName === oldVal.diskName) {
               this.expenses = '正在计算'
               this.coupon = 0
