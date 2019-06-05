@@ -41,9 +41,30 @@
             <p>{{item.name}}
               <button v-show="item.isRes=='available'">未注册</button>
               <button v-show="item.isRes=='unavailable'" class="isRes">已注册</button>
+              <span v-show="item.isRes=='available' && item.isRegister == 0">该域名暂不支持备案</span>
             </p>
             <div>
-              <span v-show="item.isRes=='available'">¥{{item.price}}<span>/年</span></span>
+              <span v-show="item.isRes=='available'">¥{{item.price}}</span>
+              <Dropdown v-show="item.isRes=='available'" trigger="custom" :visible="visible == index ? true : false" class="dropmenu">
+                    <span  @click="getMore(item.name,index)">
+                        更多价格
+                        <Icon type="arrow-down-b"></Icon>
+                    </span>
+                    <DropdownMenu slot="list">
+                        <div class="menu-item">
+                           <ul>
+                                  <li v-for="(subItem,subIndex) in yearList" :key="(subIndex+2)*3" @click="yearClick(subItem,subIndex)" :class="{clickMenu:yearIndex == subIndex}">
+                                     <div>
+                                         <p>{{subItem.year}}</p>
+                                         <p>注册价:<span>¥{{subItem.regPrice}}</span></p>
+                                         <p>续费价:<span>¥{{subItem.renewalPrice}}</span></p>
+                                     </div>
+                                  </li>
+                              </ul>
+                           <Button class="coures" @click="choosePrice(item)">确认</Button>
+                        </div>
+                    </DropdownMenu>
+                </Dropdown>
               <button v-show="item.isRes=='available'" @click="addList(item)">加入清单</button>
               <a v-show="item.isRes=='unavailable'" @click="checked(item.name,item.status)">查看域名信息 ></a>
             </div>
@@ -63,8 +84,11 @@
               </p>
               <ul class="all-data" v-show="buyLists.length!=0">
                 <li v-for="(item,index) in buyLists">
-                  <h2>{{item.name}}</h2>
-                  <button @click="remove(index)">移除</button>
+                  <h2>{{item.domainName}}</h2>
+                  <div>
+                      <span>{{item.year}}年</span>
+                      <button @click="remove(index)">移除</button>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -113,18 +137,20 @@
         showValue: false,
         singles: [],
         Results: [],
-//        域名清单
+        visible: 'visible', // 更多价格浮窗
+        yearList: [
+          {regPrice: "30.00", year: "1年", renewalPrice: "32.00"},
+        ],
+        yearValue: '',
+        yearIndex: 'yearIndex', // 价格年限选择
+        // 域名清单
         buyLists: [],
         addNum: '0',
         payMoney: 0,
         listTop: false,
-
-        domName: '',
-
         showButton: false,
         cancel: false,
         showFix: false,
-
       }
     },
     methods: {
@@ -163,24 +189,77 @@
         }
       },
 
+      //展现更多Price
+      getMore (name,index) {
+        if (this.$store.state.userInfo == null) {
+          this.$LR({
+            type: 'login'
+          })
+          return
+        }else {
+          axios.post('domain/getDomainAllPrice.do', {
+            domainName: name
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.visible = index
+             this.yearList = res.data.data.results
+            }
+          })
+        }
+      },
+
+      //更多价格选择
+      yearClick(subItem,subIndex) {
+        this.yearValue = subItem.regPrice + '/' +subItem.year
+        this.yearIndex = subIndex
+      },
+
+      //选择价格确认
+      choosePrice (item) {
+        this.visible = 'visible'
+        this.yearIndex = 'yearIndex'
+        if (this.yearValue) {
+          item.price = this.yearValue
+          this.yearValue = ''
+        }
+      },
+
       //加入清单
       addList(item){
-        if (this.buyLists.length == 0) {
-          this.buyLists.push(item)
-        } else {
-          this.buyLists.push(item)
-          let hash = {};
-          this.buyLists = this.buyLists.reduce((preVal, curVal) => {
-            hash[curVal.name] ? '' : hash[curVal.name] = true && preVal.push(curVal);
-            return preVal
-          }, [])
+        if (this.$store.state.userInfo == null) {
+          this.$LR({
+            type: 'login'
+          })
+          return
+        }else {
+          var year = item.price.split('/')[1]
+          axios.post('domain/getDomainList.do',{
+            domainName: item.name,
+            year: year[0]
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              if (this.buyLists.length == 0) {
+                this.buyLists.push (res.data.data.results)
+              }else {
+                var result = this.buyLists.some(e=> {
+                  return e.domainName == item.name
+                })
+                if (result) {
+                  return this.$Message.info('商品：'+item.name+' 已添加到购物清单')
+                } else {
+                  this.buyLists.push (res.data.data.results)
+                }
+              }
+            }
+          })
         }
-
       },
+
       //移除
       remove(index){
         this.buyLists.splice(index, 1)
       },
+
       //全部移除
       removeAll(){
         this.buyLists = []
@@ -204,12 +283,14 @@
           }
         })
       },
+
       //查看已注册信息
       checked(name, status){
         sessionStorage.setItem('checkname', name)
         sessionStorage.setItem('status', status)
         this.$router.push('CheckReg')
       },
+
       //立即购买
       nowBuy(){
         if (this.$store.state.userInfo == null) {
@@ -220,11 +301,17 @@
         } else {
           if (this.buyLists.length != 0) {
             this.getToken()
+            var domName = ''
+            var domYear = ''
+            var domPrice = ''
             this.buyLists.forEach(e => {
-              this.domName += e.name + ','
+              domName += e.domainName + ','
+              domYear += e.year + ','
+              domPrice += e.price + ','
             })
-            sessionStorage.setItem('domName', this.domName)
-            sessionStorage.setItem('domPrice', this.payMoney)
+            sessionStorage.setItem('domName', domName)
+            sessionStorage.setItem('domPrice', domPrice)
+            sessionStorage.setItem('domYear', domYear)
             this.$router.push('DomainInfoTemplate')
           } else {
             return this.$Message.info('请添加商品到清单')
@@ -435,7 +522,7 @@
         border: 1px solid rgba(233, 233, 233, 1);
         border-top: none;
         &:hover {
-          background: rgba(240, 247, 252, 1);
+          background: #F0F8FC;
         }
         P {
           font-size: 16px;
@@ -457,6 +544,14 @@
             font-size: 12px;
             padding: 2px 7px;
             margin-left: 20px;
+          }
+          span {
+              font-size:14px;
+              font-weight:400;
+              color:rgba(42,153,242,1);
+              line-height:20px;
+              display: inline-block;
+              margin-left: 10px;
           }
         }
         div {
@@ -486,7 +581,78 @@
             color: rgba(42, 153, 242, 1);
           }
         }
-
+        .dropmenu {
+           margin: 0 15px 0 20px;
+           span {
+               font-size:14px;
+               font-weight:400;
+               color:rgba(102,102,102,1);
+               line-height:20px;
+               cursor: pointer;
+           }
+            .menu-item {
+                width:315px;
+                background:rgba(255,255,255,1);
+                border-radius:4px 0px 0px 0px;
+                ul {
+                    li {
+                        list-style: none;
+                        padding: 0;
+                        border-bottom: 1px solid #E9E9E9;
+                        div {
+                            width: 100%;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            p {
+                                padding: 12px 0;
+                                font-size:12px;
+                                color:rgba(102,102,102,1);
+                                line-height:16px;
+                                &:first-of-type {
+                                    padding-left: 18px;
+                                    width: 20%;
+                                    color:rgba(51,51,51,1);
+                                }
+                                &:nth-of-type(2) {
+                                    padding-left: 15px;
+                                    width: 40%;
+                                    border-left: 1px solid #E9E9E9;
+                                    border-right: 1px solid #E9E9E9;
+                                }
+                                &:last-of-type {
+                                    padding-left: 15px;
+                                    width: 40%;
+                                }
+                                span{
+                                    color:#FF624B;
+                                    font-size:12px;
+                                    line-height:16px;
+                                }
+                            }
+                        }
+                    }
+                    .clickMenu {
+                        div {
+                            p {
+                                background:rgba(42,153,242,1);
+                                color:#FFFFFF;
+                                &:first-of-type {
+                                    color:#FFFFFF;
+                                }
+                                span {
+                                    color:#FFFFFF;
+                                }
+                            }
+                        }
+                    }
+                }
+                .coures {
+                    float: right;
+                    margin: 10px 20px 10px 0;
+                }
+            }
+       }
       }
       .showAll {
         display: block;
@@ -539,14 +705,23 @@
                 color: rgba(51, 51, 51, 1);
                 font-weight: normal;
               }
-              button {
-                font-size: 16px;
-                color: rgba(42, 153, 242, 1);
-                border: 1px solid rgba(42, 153, 242, 1);
-                padding: 7px 43px;
-                background: #FFF;
-                cursor: pointer;
-                outline: none;
+              div {
+                  span {
+                      font-size:12px;
+                      color:rgba(102,102,102,1);
+                      line-height:16px;
+                      display: inline-block;
+                      margin-right: 16px;
+                  }
+                  button {
+                      font-size: 16px;
+                      color: rgba(42, 153, 242, 1);
+                      border: 1px solid rgba(42, 153, 242, 1);
+                      padding: 7px 12px;
+                      background: #FFF;
+                      cursor: pointer;
+                      outline: none;
+                  }
               }
             }
           }
@@ -613,3 +788,4 @@
     font-size: 25px !important;
   }
 </style>
+ 

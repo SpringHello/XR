@@ -62,7 +62,7 @@
               <div class="tab-row">
                 <div class="title">所属网络</div>
                 <div class="th">
-                  <Select v-model="vpcName" style="width:200px;margin-right: 5px;">
+                  <Select v-model="vpcName" style="width:200px;margin-right: 5px;" @on-change="vpcChange">
                     <Option v-for="(item,index) in vpcList" :key="index" :value="item.vpcid">{{item.vpcname}}</Option>
                   </Select>
                   <router-link to="vpc">+新建VPC</router-link>
@@ -105,11 +105,11 @@
         <div class="partner">
           <p class="partner-title">合作伙伴介绍</p>
           <ul class="partner-intro">
-            <li>供应商：{{prodetials.company.name}}</li>
-            <li>客服热线：{{prodetials.sellInfo.mobile}}</li>
+            <li>供应商：{{prodetials.company?prodetials.company.name:''}}</li>
+            <li>客服热线：{{prodetials.sellInfo?prodetials.sellInfo.mobile:''}}</li>
             <li>服务时间：7*24小时</li>
-            <li>电子邮箱：{{prodetials.sellInfo.email}}</li>
-            <li>在线客服：<router-link to="">{{prodetials.sellInfo.name}}</router-link></li>
+            <li>电子邮箱：{{prodetials.sellInfo?prodetials.sellInfo.email:''}}</li>
+            <li>在线客服：<router-link to="">{{prodetials.sellInfo?prodetials.sellInfo.name:''}}</router-link></li>
             <li>供应商简介：{{prodetials.description}}</li>
           </ul>
         </div>
@@ -142,7 +142,7 @@
         ok-text="立即提交">
         <div class="sell" v-if="buyStatus == 0">
           <div class="sell-item">
-              {{prodetials.sellInfo.name}}<span style="margin-left: 20px;">手机：</span>{{prodetials.sellInfo.mobile}}<span style="margin-left: 20px;">邮箱：</span>{{prodetials.sellInfo.email}}
+              {{prodetials.sellInfo?prodetials.sellInfo.name:''}}<span style="margin-left: 20px;">手机：</span>{{prodetials.sellInfo?prodetials.sellInfo.mobile:''}}<span style="margin-left: 20px;">邮箱：</span>{{prodetials.sellInfo?prodetials.sellInfo.email:''}}
           </div>
           <div class="hints">您也可以留下您的需求，我们将在2个工作日内联系您</div>
           <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
@@ -593,6 +593,9 @@ export default {
         }
       })
     },
+    vpcChange (value) {
+      // console.log(value)
+    },
     // 区域切换
     zoneidChange (item,index){
       this.areaIndex = index
@@ -642,7 +645,8 @@ export default {
     },
     // 立即使用
     useBtn () {
-      if (this.userInfos == null) {
+      console.log(this.vpcName)
+      /*if (this.userInfos == null) {
         this.$LR({type: 'login'})
         return
       } else if (this.single === false) {
@@ -669,7 +673,7 @@ export default {
             this.$router.push('/order')
           }
         })
-      }
+      }*/
     },
     // 产品分类
     getClass () {

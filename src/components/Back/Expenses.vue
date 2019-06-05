@@ -55,7 +55,7 @@
                 <div>
                   <ul style="width: 50%">
                     <li>消费金额
-                      <Button type="ghost" shape="circle" size="small">查看详情</Button>
+                      <Button type="ghost" shape="circle" size="small" @click="UnpaidJump('billjump')">查看详情</Button>
                     </li>
                     <li>¥{{ theCumulative }}</li>
                   </ul>
@@ -3406,6 +3406,10 @@
         }
         else if(value=='invoicejmp'){
           this.name='applyInvoice'
+          this.changecard()
+        }
+        else if(value=='billjump'){
+          this.name='bills'
           this.changecard()
         }
       },

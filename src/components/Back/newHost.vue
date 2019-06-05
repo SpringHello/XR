@@ -519,10 +519,10 @@
             <input v-model="resetPasswordForm.password"  @focus="resetPasswordForm.passwordHint = true" @blur="resetPasswordForm.passwordHint = false"  type="password" @input="verifyPassword" placeHolder="请输入新密码" ref="passwordInput"/>
             <img src="../../assets/img/login/lr-icon3.png" @click="changeResetPasswordType('passwordInput')"/>
             <div class="popTip" v-show="resetPasswordForm.passwordHint">
-                  <div><i :class="{reach: resetPasswordForm.firstDegree }"></i>
-                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: resetPasswordForm.secondDegree }"></i>
                     <p>不能输入连续6位数字或字母，如123456aA</p></div>
+                  <div><i :class="{reach: resetPasswordForm.firstDegree }"></i>
+                    <p>长度8~30位，推荐使用12位以上的密码</p></div>
                   <div><i :class="{reach: resetPasswordForm.thirdDegree }"></i>
                     <p>至少包含：小写字母，大写字母，数字</p></div>
                   <div><p style="color:rgba(102,102,102,1);">可用特殊符号：~:，*</p></div>
