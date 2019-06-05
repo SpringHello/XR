@@ -401,7 +401,7 @@
                        style="width: 300px" @on-focus="passwordForm.passwordHint = true" @on-blur="passwordForm.passwordHint = false" @on-change="passwordWarning=''"></Input>
                 <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
               </div>
-               <div class="popTip" v-show="passwordForm.passwordHint">
+               <div class="popTip" v-show="false">
                   <div><i :class="{reach: passwordForm.secondDegree }"></i>
                     <p>不能输入连续6位数字或字母，如123456aA</p></div>
                      <div><i :class="{reach: passwordForm.firstDegree }"></i>
