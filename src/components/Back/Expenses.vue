@@ -297,8 +297,13 @@
               </p>
               <p class="order_s1">
                 <Button type="primary" style="" @click="orderPay" :disabled="payDisabled">批量支付</Button>
-              <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
-              </Button>
+                <Poptip
+                  confirm
+                  title="确定要删除选中的订单吗？"
+                  @on-ok="deleteOrder">
+                  <Button type="primary" style="margin-left: 10px" :disabled="deleteDisabled">删除
+                </Button>
+              </Poptip>
               <Button type="primary" style="margin-left: 10px" @click="orderRefundBefore" :disabled="refundDisabled">7天无理由退款</Button>
               </p>
               <p class="order_s2">
@@ -2210,7 +2215,9 @@
                   params.row.useType == 3 ? '云数据库' :
                   params.row.useType == 4 ? '网络产品' :
                   params.row.useType == 5 ? '对象存储' :
-                  params.row.useType == 6 ? '云市场' : '')
+                  params.row.useType == 6 ? '云市场' :
+                  params.row.useType == 7 ? '域名' :
+                  params.row.useType == 8 ? 'ssl证书' : '')
                 }
                 else{
                   return h('span', '全产品通用')
@@ -2287,38 +2294,41 @@
                         }
                       }
                     }, '立即充值'),
-                    h('span', {
-                      style: {
-                        color: '#2d8cf0',
-                        cursor: 'pointer',
-                        marginLeft: '5px',
-                        display: 'none'
-                      },
-                      on: {
-                        click: () => {
-                          this.$message.confirm({
-                            content: '确认删除该优惠券吗？',
-                            onOk: () => {
-                              // 调删除现金券接口
-                              this.$http.get('ticket/delUserTicket.do', {
-                                params: {
-                                  id: obj.row.id
-                                }
-                              }).then(response => {
-                                if (response.status == 200 && response.data.status == 1) {
-                                  this.searchCard()
-                                  this.$Message.success('优惠券删除成功')
-                                } else {
-                                  this.$message.info({
-                                    content: response.data.message
+                    h('Poptip', {
+                              props: {
+                                title: '确认删除该优惠券吗？',
+                                confirm: true,
+                                okText: "确定"
+                              },
+                              on: {
+                                'on-ok': () => {
+                                  // 调删除现金券接口
+                                  this.$http.get('ticket/delUserTicket.do', {
+                                    params: {
+                                      id: obj.row.id
+                                    }
+                                  }).then(response => {
+                                    if (response.status == 200 && response.data.status == 1) {
+                                      this.searchCard()
+                                      this.$Message.success('优惠券删除成功')
+                                    } else {
+                                      this.$message.info({
+                                        content: response.data.message
+                                      })
+                                    }
                                   })
                                 }
-                              })
-                            }
-                          })
-                        }
-                      }
-                    }, '删除')
+                              },
+                            },
+                            [h('span', {
+                              style: {
+                                color: '#2d8cf0',
+                                cursor: 'pointer',
+                                marginLeft: '5px',
+                                display: 'none'
+                              }
+                            }, '删除')]
+                          )
                   ])
                 } else {
                   return h('div', {}, [
@@ -2327,72 +2337,81 @@
                         to: 'buy'
                       }
                     }, '立即使用'),
-                    h('span', {
-                      style: {
-                        color: '#2d8cf0',
-                        cursor: 'pointer',
-                        marginLeft: '5px',
-                        display: 'none'
-                      },
-                      on: {
-                        click: () => {
-                          this.$message.confirm({
-                            content: '确认删除该优惠券吗？',
-                            onOk: () => {
-                              // 调删除现金券接口
-                              this.$http.get('ticket/delUserTicket.do', {
-                                params: {
-                                  id: obj.row.id
-                                }
-                              }).then(response => {
-                                if (response.status == 200 && response.data.status == 1) {
-                                  this.searchCard()
-                                  this.$Message.success('优惠券删除成功')
-                                } else {
-                                  this.$message.info({
-                                    content: response.data.message
+
+                    h('Poptip', {
+                              props: {
+                                title: '确认删除该优惠券吗？',
+                                confirm: true,
+                                okText: "确定"
+                              },
+                              on: {
+                                'on-ok': () => {
+                                  // 调删除现金券接口
+                                  this.$http.get('ticket/delUserTicket.do', {
+                                    params: {
+                                      id: obj.row.id
+                                    }
+                                  }).then(response => {
+                                    if (response.status == 200 && response.data.status == 1) {
+                                      this.searchCard()
+                                      this.$Message.success('优惠券删除成功')
+                                    } else {
+                                      this.$message.info({
+                                        content: response.data.message
+                                      })
+                                    }
                                   })
                                 }
-                              })
-                            }
-                          })
-                        }
-                      }
-                    }, '删除')
+                              },
+                            },
+                            [h('span', {
+                              style: {
+                                color: '#2d8cf0',
+                                cursor: 'pointer',
+                                marginLeft: '5px',
+                                display: 'none'
+                              }
+                            }, '删除')]
+                          )
                   ])
                 }
               } else {
                 //return h('span', {}, '--')
-                return h('span', {
-                  style: {
-                    color: '#2d8cf0',
-                    cursor: 'pointer'
+                return h('div',[
+                h('Poptip', {
+                  props: {
+                      title: '确认删除该优惠券吗？',
+                      confirm: true,
+                      okText: "确定"
                   },
                   on: {
-                    click: () => {
-                      this.$message.confirm({
-                        content: '确认删除该优惠券吗？',
-                        onOk: () => {
-                          // 调删除现金券接口
-                          this.$http.get('ticket/delUserTicket.do', {
+                      'on-ok': () => {
+                         // 调删除现金券接口
+                         this.$http.get('ticket/delUserTicket.do', {
                             params: {
-                              id: obj.row.id
+                               id: obj.row.id
                             }
                           }).then(response => {
-                            if (response.status == 200 && response.data.status == 1) {
-                              this.searchCard()
-                              this.$Message.success('优惠券删除成功')
-                            } else {
-                              this.$message.info({
-                                content: response.data.message
-                              })
-                            }
-                          })
+                             if (response.status == 200 && response.data.status == 1) {
+                                this.searchCard()
+                                this.$Message.success('优惠券删除成功')
+                          } else {
+                             this.$message.info({
+                             content: response.data.message
+                            })
+                          }
+                        })
+                      }
+                   },
+                  },
+                     [h('span', {
+                        style: {
+                          color: '#2d8cf0',
+                          cursor: 'pointer'
                         }
-                      })
-                    }
-                  }
-                }, '删除')
+                      }, '删除')]
+              )
+                  ])
               }
             }
           }
@@ -3580,11 +3599,6 @@
       },
       deleteOrder() {
         if (this.orderNumber.length != 0) {
-          this.$Modal.confirm({
-            title: '',
-            content: '<p>确定要删除选中的订单吗？</p>',
-            scrollable: true,
-            onOk: () => {
               let order = ''
               this.orderNumber.forEach(item => {
                 order += ',' + item.ordernumber
@@ -3603,11 +3617,12 @@
                   this.getOrder('1')
                   this.init()
                 }
+                else{
+                  this.$Message.error({
+                    content: response.data.message
+                  })
+                }
               })
-            },
-            onCancel: () => {
-            }
-          })
         }
       },
       changeOrder() {

@@ -83,7 +83,7 @@
 						  <!-- <router-link to="msgCenter" :class="{active:pageInfo.path=='msgCenter'}" style="position:relative;"><img src="./assets/img/back/back-hint.png" /><sup v-if="this.$store.state.Msg>0" class="badge" style="top: 17px;right: -30px;">{{this.$store.state.Msg}}</sup>
 						  </router-link> -->
               <router-link to="msgCenter" :class="{active:pageInfo.path=='msgCenter'}" style="position:relative;">
-                <Badge :count="this.$store.state.Msg" v-if="this.$store.state.Msg>0" overflow-count="999" class="messagenum">
+                <Badge :count="this.$store.state.Msg" overflow-count="999" class="messagenum">
                     <img src="./assets/img/back/back-hint.png" />
                 </Badge>
               </router-link>
