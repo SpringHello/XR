@@ -1453,7 +1453,7 @@
                     ids.push(item.id)
                   })
                   if (ids.length !== 0) {
-                    this.timingRefresh(ids + '')
+                    this.timingRefesh(ids + '')
                   }
                 }
                 this.total = list.length;

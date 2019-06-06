@@ -143,7 +143,7 @@ export default {
             var arr = [];
             for (var key in data) {
               arr.unshift(
-                h("p", { style: { lineHeight: "1.5" } }, `${key}:${data[key]}`)
+                h("p", { style: { lineHeight: "1.8" } }, `${key}:${data[key]}`)
               );
             }
             return h("div", [
