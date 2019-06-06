@@ -3896,7 +3896,6 @@
         return time
       },
       selectone(selection,row){
-        console.log(row)
         this.data5.forEach((item,index) => {
           if(row.ordercreatetime==item.ordercreatetime){
             item._checked=true
