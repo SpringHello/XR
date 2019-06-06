@@ -53,7 +53,7 @@
                     <DropdownMenu slot="list">
                         <div class="menu-item">
                            <ul>
-                                  <li v-for="(subItem,subIndex) in yearList" :key="(subIndex+2)*3" @click="yearClick(subItem,subIndex)" :class="{clickMenu:yearIndex == subIndex}">
+                                  <li v-for="(subItem,subIndex) in yearList" :key="(subIndex+2)*3" @click="yearClick(item,subItem,subIndex)" :class="{clickMenu:yearIndex == subIndex}">
                                      <div>
                                          <p>{{subItem.year}}</p>
                                          <p>注册价:<span>¥{{subItem.regPrice}}</span></p>
@@ -61,7 +61,7 @@
                                      </div>
                                   </li>
                               </ul>
-                           <Button class="coures" @click="choosePrice(item)">确认</Button>
+                           <button class="coures" @click="choosePrice(item)" v-show="item.status != 'yijia'">确认</button>
                         </div>
                     </DropdownMenu>
                 </Dropdown>
@@ -212,9 +212,13 @@
       },
 
       //更多价格选择
-      yearClick(subItem,subIndex) {
-        this.yearValue = subItem.regPrice + '/' +subItem.year
-        this.yearIndex = subIndex
+      yearClick(item,subItem,subIndex) {
+        if (item.status != 'yijia') {
+          this.yearValue = subItem.regPrice + '/' +subItem.year
+          this.yearIndex = subIndex
+        }else{
+          this.visible = 'visible'
+        }
       },
 
       //选择价格确认
@@ -238,17 +242,11 @@
           var year = item.price.split('/')[1]
           axios.post('domain/getDomainList.do',{
             domainName: item.name,
-            year: year[0]
+            year: year.split('年')[0]
           }).then(res => {
             if (res.status == 200 && res.data.status == 1) {
               this.buyLists.push (res.data.data.results)
-              this.buyLists.forEach(e => {
-                this.Results.forEach(i => {
-                  if (i.name == e.domainName) {
-                    i.status = 'yijia'
-                  }
-                })
-              })
+              item.status = 'yijia'
             }
           })
         }
@@ -266,6 +264,13 @@
 
       //全部移除
       removeAll(){
+        this.Results.forEach(i => {
+          this.buyLists.forEach(e => {
+            if (i.name == e.domainName) {
+              i.status = ' '
+            }
+          })
+        })
         this.buyLists = []
       },
 
@@ -664,6 +669,14 @@
                 .coures {
                     float: right;
                     margin: 10px 20px 10px 0;
+                    outline: none;
+                    padding: 6px 17px;
+                    background:rgba(42,153,242,1);
+                    border-radius:4px;
+                    border:1px solid rgba(56,125,255,1);
+                    font-size:12px;
+                    color:rgba(255,255,255,1);
+                    line-height:16px;
                 }
             }
        }
