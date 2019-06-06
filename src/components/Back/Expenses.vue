@@ -399,7 +399,7 @@
       </div>
     </div>
 
-    <Modal v-model="showModal.clipCoupons" width="690" :scrollable="true">
+    <Modal v-model="showModal.clipCoupons" width="690" :scrollable="true" :mask-closable="false">
         <p slot="header" class="modal-header-border">
         <span class="universal-modal-title"> 可用优惠券（请选择一张优惠券）</span>
       </p>
@@ -447,7 +447,7 @@
       </div>
     </Modal>
     <!-- 冻结押金详情 -->
-    <Modal v-model="showModal.freezeParticulars" width="690" :scrollable="true">
+    <Modal v-model="showModal.freezeParticulars" width="690" :scrollable="true" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">押金详情</span>
       </p>
@@ -460,7 +460,7 @@
       </div>
     </Modal>
     <!-- 解冻提示框 -->
-    <Modal v-model="showModal.unfreeze" :scrollable="true" :closable="false" :width="550">
+    <Modal v-model="showModal.unfreeze" :scrollable="true" :closable="false" :width="550" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">申请解冻</span>
       </p>
@@ -524,7 +524,7 @@
       </div>
     </Modal>
     <!--押金转续费-->
-    <Modal v-model="showModal.freezeToRenew" :scrollable="true" :closable="false" :width="550">
+    <Modal v-model="showModal.freezeToRenew" :scrollable="true" :closable="false" :width="550" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">申请解冻</span>
       </p>
@@ -566,7 +566,7 @@
       </p>
     </Modal>
     <!-- 修改手机号码(身份证验证) -->
-    <Modal v-model="showModal.modifyPhoneID" width="550" :scrollable="true">
+    <Modal v-model="showModal.modifyPhoneID" width="550" :scrollable="true" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">修改手机号码</span>
       </p>
@@ -740,7 +740,7 @@
       </div>
     </Modal>
     <!-- 弹窗 -->
-    <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
+    <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
         <span class="universal-modal-title">申请解冻</span>
@@ -757,7 +757,7 @@
       </p>
     </Modal>
     <!-- 优惠券兑换modal -->
-    <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true">
+    <Modal v-model="showModal.exchangeCard" width="600" :scrollable="true" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">兑换优惠券</span>
       </p>
@@ -780,7 +780,7 @@
     </Modal>
 
     <!-- 提现模态框 -->
-    <Modal v-model="showModal.withdraw" width="550" :scrollable="true">
+    <Modal v-model="showModal.withdraw" width="550" :scrollable="true" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">提现</span>
       </p>
@@ -868,7 +868,7 @@
       </p>
     </Modal>
     <!-- 退款订单详情提示框 -->
-    <Modal v-model="showModal.refundHint" :scrollable="true" :closable="false" :width="640">
+    <Modal v-model="showModal.refundHint" :scrollable="true" :closable="false" :width="640" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">退款详情</span>
       </p>
@@ -885,7 +885,7 @@
       </div>
     </Modal>
     <!-- 退款下一步提示 -->
-    <Modal v-model="showModal.refundNextHint" :scrollable="true" :closable="false" :width="550">
+    <Modal v-model="showModal.refundNextHint" :scrollable="true" :closable="false" :width="550" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">退款渠道</span>
       </p>
@@ -995,7 +995,7 @@
     </transition>
 
     <!-- 余额转入现金券 -->
-    <Modal v-model="showModal.cashCoupon" :scrollable="true" :width="640">
+    <Modal v-model="showModal.cashCoupon" :scrollable="true" :width="640" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">转入现金券</span>
       </p>
@@ -1027,7 +1027,7 @@
     </Modal>
 
     <!-- 转入现金券成功弹窗 -->
-    <Modal v-model="showModal.successMsg" :scrollable="true" :closable="false" :width="390">
+    <Modal v-model="showModal.successMsg" :scrollable="true" :closable="false" :width="390" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
         <span class="universal-modal-title">提示信息</span>
@@ -1044,7 +1044,7 @@
     </Modal>
 
     <!-- 订单管理支付确认弹窗 -->
-    <Modal v-model="showModal.payAffirm" :scrollable="true" :width="640">
+    <Modal v-model="showModal.payAffirm" :scrollable="true" :width="640" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">支付确认</span>
       </p>
@@ -1059,7 +1059,7 @@
       </div>
     </Modal>
     <!-- 未实名弹窗 -->
-    <Modal v-model="showModal.nonrealName" :scrollable="true" :closable="true" :width="390">
+    <Modal v-model="showModal.nonrealName" :scrollable="true" :closable="true" :width="390" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <Icon type="android-alert" class="yellow f24 mr10" style="font-size: 20px"></Icon>
         <span class="universal-modal-title">实名验证</span>
@@ -1076,7 +1076,7 @@
       </p>
     </Modal>
     <!-- 设置余额告警 -->
-    <Modal v-model="showModal.SetBalanceWarning" :scrollable="true" :closable="true" :width="500">
+    <Modal v-model="showModal.SetBalanceWarning" :scrollable="true" :closable="true" :width="500" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">设置余额告警</span>
       </p>
@@ -1101,7 +1101,7 @@
         <Button type="primary" @click="updateBalanceWarn">确认</Button>
       </p>
     </Modal>
-    <Modal v-model="showModal.invoiceDetail" :scrollable="true" :closable="true" :width="500">
+    <Modal v-model="showModal.invoiceDetail" :scrollable="true" :closable="true" :width="500" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">发票详情</span>
       </p>
@@ -1136,7 +1136,7 @@
         <Button type="primary" @click="showModal.invoiceDetail = false">知道了</Button>
       </p>
     </Modal>
-    <Modal v-model="showModal.invoiceDetailP" :scrollable="true" :closable="true" :width="500">
+    <Modal v-model="showModal.invoiceDetailP" :scrollable="true" :closable="true" :width="500" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">发票详情</span>
       </p>
@@ -1185,7 +1185,7 @@
         <Button type="primary" @click="showModal.invoiceDetailP = false">知道了</Button>
       </p>
     </Modal>
-    <Modal v-model="showModal.billExport" :scrollable="true" :closable="true" :width="500">
+    <Modal v-model="showModal.billExport" :scrollable="true" :closable="true" :width="500" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">导出账单</span>
       </p>
@@ -2478,7 +2478,12 @@
             title: '物流信息',
             key: 'status',
             render: (h, params) => {
-              let text = params.row.logisticsName + ' / ' + params.row.logistics
+              let text = ''
+              if(params.row.logisticsName&&params.row.logistics) {
+                text = params.row.logisticsName + ' / ' + params.row.logistics
+              } else {
+                text = '暂无信息'
+              }
               return h('span', text)
             }
           },
@@ -3190,11 +3195,11 @@
         // console.log(status)
       },
       // 添加a标签下载并且重命名，公用方法
-      saveAs(blob, filename) {
+      saveAs(url, filename) {
             this.$Message.success('导出成功')
             const link = document.createElement('a');
             const body = document.querySelector('body');
-            link.href = window.URL.createObjectURL(blob);
+            link.href = url;
             link.download = filename;
             link.style.display = 'none';
             body.appendChild(link);
@@ -3260,17 +3265,14 @@
         })
       },
       billExportType() {
-        axios.get('nVersionUser/consumptionSummaryExport.do',{
-          responseType: 'arraybuffer',
+        axios.get('nVersionUser/getConsumptionSummaryExportUrl.do',{
           params: {
-            companyId: this.$store.state.userInfo.companyid,
             times: this.valueBill,
             type: this.billTypeSelected+1
           }
         }).then(response=> {
-          if(response.status == 200) {
-            var blob = new Blob([response.data],{type: "application/vnd.ms-excel"})
-            this.saveAs(blob,this.billMonthlyTabs[this.billTypeSelected]+'('+this.defaultMonth+')')
+          if(response.status == 200&&response.data.status == 1) {
+            this.saveAs(response.data.url,this.billMonthlyTabs[this.billTypeSelected]+'('+this.defaultMonth+')')
           } else {
             this.$Message.error(response.data.message)
           }
@@ -3559,9 +3561,8 @@
           })
       },
       seaWaterN() {
-        let url = 'nVersionUser/getAccountInfoByTypeExport.do'
+        let url = 'nVersionUser/getAccountExportUrl.do'
         let params = {
-            companyId: this.$store.state.userInfo.companyid,
             startTime: this.dateRange[0],
             endTime: this.dateRange[1],
             minCost: this.value1,
@@ -3569,13 +3570,12 @@
             type: this.flowType,
             zoneId: this.flowZoneid
         }
-        axios.get(url, {responseType: 'arraybuffer', params: params}).then(res => {
-          if (res.status == 200) {
-            var blob = new Blob([res.data],{type: "application/vnd.ms-excel"})
-            this.saveAs(blob,'流水详单'+'('+this.dateRange[0]+'-'+this.dateRange[1]+')')
+        axios.get(url, {params: params}).then(response => {
+          if (response.status == 200&&response.data.status == 1) {
+            this.saveAs(response.data.url,'流水详单'+'('+this.dateRange[0]+'-'+this.dateRange[1]+')')
           } else {
             this.$message.info({
-              content: res.data.message
+              content: response.data.message
             })  
           }
         })
@@ -4724,9 +4724,8 @@
       },
       
       exportResource() {
-        let url = 'nVersionUser/resourceDetailsExport.do'
+        let url = 'nVersionUser/getResourceDetailsExportUrl.do'
         let params = {
-          companyId: this.$store.state.userInfo.companyid,
           minTime: this.timeResource[0],
           maxTime: this.timeResource[1],
           billingMode: this.resourcesDataType,
@@ -4735,14 +4734,13 @@
           minCashPay: this.minCashResource,
           maxCashPay: this.maxCashResource
         }
-        axios.get(url, {responseType: 'arraybuffer', params: params}).then(response => {
-          if (response.status == 200) {
-            var blob = new Blob([response.data],{type: "application/vnd.ms-excel"})
-            this.saveAs(blob,'资源详单'+'('+this.timeResource[0]+this.timeResource[1]+')')
+        axios.get(url,{params:params}).then(response => {
+          if (response.status == 200&&response.data.status == 1) {
+            this.saveAs(response.data.url,'资源详单'+'('+this.timeResource[0]+this.timeResource[1]+')')
           } else {
             this.$message.info({
               content: response.data.message
-            })
+            })  
           }
         })
       },

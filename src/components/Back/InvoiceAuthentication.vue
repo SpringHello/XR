@@ -42,7 +42,7 @@
                 <Input
                   :maxlength="32"
                   v-model="formAppreciationDate.taxpayerID"
-                  placeholder="请输入纳税人识别码"
+                  placeholder="请输入15-20位有效纳税人识别号"
                   :disabled="specialInvoiceStatus==2"
                   style="width: 317px"
                 ></Input>
@@ -199,11 +199,11 @@ export default {
       }
     }
     const validTaxpayer = (rule, value, callback) => {
-      let reg = /^([0-9a-zA-z]{15}|[0-9a-zA-z]{18})$/;
+      let reg = /^([0-9a-zA-z]{15,20})$/;
       if (value == '') {
         return callback(new Error('请输入纳税人识别码'));
       } else if (!reg.test(value)) {
-        return callback(new Error('请输入正确的纳税人识别码'));
+        return callback(new Error('请输入15-20位的数字与字母，不能输入中文或特殊字符'));
       } else {
         callback();
       }

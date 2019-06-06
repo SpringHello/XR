@@ -17,7 +17,7 @@
           <p>1.增值税专用发票开票信息需通过验证之后才可以使用。</p>
           <p>
             2.注意有效增值税发票开票资质仅为一个；发票常见问题查看
-            <span>增票资质帮助</span>
+            <a href="https://www.xrcloud.net/support_docs/6bScbBoIu_6bSdeCxAD.html" target="_blank">增票资质帮助</a>
           </p>
         </div>
         <div class="invoice-info">
@@ -38,7 +38,7 @@
     </div>
 
     <!-- 新增收件信息 -->
-    <Modal v-model="showModal.receiptInfoAdd" width="500">
+    <Modal v-model="showModal.receiptInfoAdd" width="500" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">{{addresseeTitleModal}}收件信息</span>
       </p>
@@ -131,7 +131,7 @@
     </Modal>
 
     <!-- 新增开票信息 -->
-    <Modal v-model="showModal.invoiceInfo" width="500">
+    <Modal v-model="showModal.invoiceInfo" width="500" :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">{{addresseeTitleModal}}开票信息</span>
       </p>
@@ -180,7 +180,7 @@
               <Input
                 type="text"
                 v-model="formInvoice.taxpayer"
-                placeholder="15位或18位的英文字符、数字"
+                placeholder="请输入15-20位有效纳税人识别号"
                 style="width:300px;"
               ></Input>
             </FormItem>
@@ -261,11 +261,11 @@ export default {
       }
     };
     const validTaxpayer = (rule, value, callback) => {
-      let reg = /^([0-9a-zA-z]{15}|[0-9a-zA-z]{18})$/;
+      let reg = /^([0-9a-zA-z]{15,20})$/;
       if (value == '') {
         return callback(new Error('请输入纳税人识别码'));
       } else if (!reg.test(value)) {
-        return callback(new Error('请输入正确的纳税人识别码'));
+        return callback(new Error('请输入15-20位的数字与字母，不能输入中文或特殊字符'));
       } else {
         callback();
       }
@@ -407,33 +407,31 @@ export default {
                   },
                   "修改"
                 ),
-                h(
-                  "span",
-                  {
+                h('Poptip',{
+                  props: {
+                    confirm: true,
+                    transfer: true,
+                    title: '你是否确认删除？'
+                  },
+                  on: {
+                    'on-ok': () => {
+                      this.$http.get('nVersionUser/deleteExamine.do', {
+                          params: {
+                            id: params.row.id,
+                          }
+                        }).then(response => {
+                          if (response.status == 200 && response.data.status == 1) {
+                            this.getInvoiceList()
+                          }
+                        })
+                    }
+                  }
+                },[h("span",{
                     style: {
                       cursor: "pointer"
                     },
-                    on: {
-                      click: () => {
-                        this.$message.confirm({
-                          content: '你是否确认删除？',
-                          onOk: () => {
-                            this.$http.get('nVersionUser/deleteExamine.do', {
-                              params: {
-                                id: params.row.id,
-                              }
-                            }).then(response => {
-                              if (response.status == 200 && response.data.status == 1) {
-                                this.getInvoiceList()
-                              }
-                            })
-                          }
-                        })
-                      }
-                    }
-                  },
-                  "删除"
-                )
+                  }, "删除")
+                ])
               ]
             );
           }
@@ -488,65 +486,59 @@ export default {
                 },
                 "修改"
               ),
-              h(
-                "span",
-                {
+              h('Poptip',{
+                props: {
+                  confirm: true,
+                  transfer: true,
+                  title: '你是否确认删除？'
+                },
+                on: {
+                  'on-ok': () => {
+                    this.$http.get('nVersionUser/deleteReciveinfo.do', {
+                      params: {
+                        id: params.row.id,
+                      }
+                    }).then(response => {
+                      if (response.status == 200 && response.data.status == 1) {
+                        this.getAddresseeList()
+                      }
+                    })
+                  }
+                }
+              },[h("span",{
                   style: {
                     marginRight: "10px",
                     color: "#2A99F2",
                     cursor: "pointer"
                   },
-                  on: {
-                    click: () => {
-                      this.$message.confirm({
-                        content: '你是否确认删除？',
-                        onOk: () => {
-                          this.$http.get('nVersionUser/deleteReciveinfo.do', {
-                            params: {
-                              id: params.row.id,
-                            }
-                          }).then(response => {
-                            if (response.status == 200 && response.data.status == 1) {
-                              this.getAddresseeList()
-                            }
-                          })
-                        }
-                      })
-                    }
-                  }
+                }, "删除")
+              ]),
+              h('Poptip',{
+                props: {
+                  confirm: true,
+                  transfer: true,
+                  title: '你确定设置为默认？'
                 },
-                "删除"
-              ),
-              h(
-                "span",
-                {
+                on: {
+                  'on-ok': () => {
+                    this.$http.get('nVersionUser/setDefoultAddress.do', {
+                      params: {
+                        id: params.row.id,
+                      }
+                    }).then(response => {
+                      if (response.status == 200 && response.data.status == 1) {
+                        this.getAddresseeList()
+                      }
+                    })
+                  }
+                }
+              },[h("span",{
                   style: {
                     color: color,
                     cursor: "pointer"
                   },
-                  on: {
-                    click: () => {
-                      if (params.row.status) {
-                        this.$message.confirm({
-                          content: '你确定设置为默认？',
-                          onOk: () => {
-                            this.$http.get('nVersionUser/setDefoultAddress.do', {
-                              params: {
-                                id: params.row.id,
-                              }
-                            }).then(response => {
-                              if (response.status == 200 && response.data.status == 1) {
-                                this.getAddresseeList()
-                              }
-                            })
-                          }
-                        })
-                      }
-                    }
-                  }
-                },
-                "设为默认"
-              )
+                }, "设为默认")
+              ])
             ]);
           }
         }
