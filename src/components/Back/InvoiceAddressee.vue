@@ -363,7 +363,7 @@ export default {
           key: "status",
           render: (h, params) => {
             //0 审核通过  1  审核失败  2 审核中
-            return h('span', params.row.type == 0 ? '可用' : (params.row.type == 1 ? '审核失败' : '审核中'))
+            return h('span', params.row.status == 0 ? '可用' : (params.row.status == 1 ? '审核失败' : '审核中'))
           }
         },
         {
