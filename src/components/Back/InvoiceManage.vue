@@ -74,7 +74,7 @@
                   <Input
                     :maxlength="32"
                     v-model="formInvoiceDate.taxpayerId"
-                    placeholder="请输入纳税人识别码"
+                    placeholder="请输入15-20位有效纳税人识别号"
                     :disabled="normalInvoiceLength!=0"
                     style="width: 317px"
                   ></Input>
@@ -95,7 +95,7 @@
                     <Input
                       :maxlength="32"
                       v-model="formInvoiceDate.specialTaxpayerId"
-                      placeholder="请输入纳税人识别码"
+                      placeholder="请输入15-20位有效纳税人识别号"
                       disabled
                       style="width: 317px"
                     ></Input>
@@ -298,13 +298,13 @@ export default {
       }
       if (!/^([1-9][\d]{0,7}|0)(\.[\d]{1,2})?$/.test(value)) {
         callback(new Error('请输入保留两位小数的金额数'))
-      } else if (this.formInvoiceDate.InvoiceType == 0) {
+      } else if (this.formInvoiceDate.InvoiceType == 1) {
         if (value < 1000 || value > this.invoice) {
           callback(new Error('开票金额不能少于1000或者多于实际可开金额'))
         }
-      } else if (this.formInvoiceDate.InvoiceType == 1) {
-        if (value < 10000 || value > this.invoice) {
-          callback(new Error('开票金额不能少于10000或者多于实际可开金额'))
+      } else if (this.formInvoiceDate.InvoiceType != 1) {
+        if (value < 1 || value > this.invoice) {
+          callback(new Error('开票金额不能少于1或者多于实际可开金额'))
         }
       }
       callback()
@@ -378,11 +378,11 @@ export default {
       }
     }
     const validTaxpayer = (rule, value, callback) => {
-      let reg = /^([0-9a-zA-z]{15}|[0-9a-zA-z]{18})$/;
+      let reg = /^([0-9a-zA-z]{15,20})$/;
       if (value == '') {
         return callback(new Error('请输入纳税人识别码'));
       } else if (!reg.test(value)) {
-        return callback(new Error('请输入正确的纳税人识别码'));
+        return callback(new Error('请输入15-20位的数字与字母，不能输入中文或特殊字符'));
       } else {
         callback();
       }
