@@ -320,7 +320,7 @@
                   <Button type="primary" @click="getOrder('1')">查询</Button>
                 </span>
               </p>
-              <Table :columns="columns5" :data="data5" @on-sort-change="SortField" @on-selection-change="select" @on-select="selectone" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
+              <Table :columns="columns5" :data="data5" @on-sort-change="SortField" @on-selection-change="select" @on-select="selectone" @on-select-cancel="selectonechange" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;">
                 <div style="float: right;overflow: hidden">
                   <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
@@ -3896,9 +3896,18 @@
         return time
       },
       selectone(selection,row){
+        console.log(row)
         this.data5.forEach((item,index) => {
           if(row.ordercreatetime==item.ordercreatetime){
             item._checked=true
+            this.data5.splice(index, 1, item)
+          }
+        })
+      },
+      selectonechange(selection,row){
+        this.data5.forEach((item,index) => {
+          if(row.ordernumber==item.ordernumber){
+            item._checked=false
             this.data5.splice(index, 1, item)
           }
         })
