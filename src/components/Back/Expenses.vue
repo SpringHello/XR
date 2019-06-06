@@ -320,7 +320,7 @@
                   <Button type="primary" @click="getOrder('1')">查询</Button>
                 </span>
               </p>
-              <Table :columns="columns5" :data="data5" @on-sort-change="SortField" @on-selection-change="select" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
+              <Table :columns="columns5" :data="data5" @on-sort-change="SortField" @on-selection-change="select" @on-select="selectone" no-data-text="您的订单列表为空" style="margin-top:20px;"></Table>
               <div style="margin: 10px;">
                 <div style="float: right;overflow: hidden">
                   <Page :total="OrderPages" :current="currentORderPage" :page-size-opts="Orderopts" @on-change="OrderchangePage" @on-page-size-change="OrderPageSizeChange" show-sizer></Page>
@@ -1657,8 +1657,14 @@
                 ],
                 filterMultiple: false,
                 filterRemote:(value,row)=>{
-                  this.OrdersourceType=value[0]
-                  this.getOrder('1')
+                  if(value==''){
+                    this.OrdersourceType=''
+                    this.getOrder('1')
+                  }
+                  else{
+                    this.OrdersourceType=value[0]
+                    this.getOrder('1')
+                  }
                 }
             },
             {
@@ -1695,8 +1701,14 @@
               ],
               filterMultiple: false,
               filterRemote:(value,row)=>{
-                  this.Ordertypevalue=value[0]
-                  this.getOrder('1')
+                  if(value==''){
+                    this.Ordertypevalue=''
+                    this.getOrder('1')
+                  }
+                  else{
+                    this.Ordertypevalue=value[0]
+                    this.getOrder('1')
+                  }
                 }
             },
             {
@@ -1744,8 +1756,14 @@
               ],
               filterMultiple: false,
               filterRemote:(value,row)=>{
-                  this.paymentStatusValue=value[0]
-                  this.getOrder('1')
+                  if(value==''){
+                    this.paymentStatusValue=''
+                    this.getOrder('1')
+                  }
+                  else{
+                    this.paymentStatusValue=value[0]
+                    this.getOrder('1')
+                  }
                 }
             },
             {
@@ -1772,7 +1790,8 @@
                               props: {
                                 title: '您确认要删除订单吗？',
                                 confirm: true,
-                                okText: "确定"
+                                okText: "确定",
+                                width: 180
                               },
                               on: {
                                 'on-ok': () => {
@@ -1825,7 +1844,8 @@
                               props: {
                                 title: '您确认要删除订单吗？',
                                 confirm: true,
-                                okText: "确定"
+                                okText: "确定",
+                                width: 180
                               },
                               on: {
                                 'on-ok': () => {
@@ -2262,43 +2282,50 @@
                 // 现金券
                 if (obj.row.tickettype == '2') {
                   return h('div', {}, [
-                    h('span', {
-                      style: {
-                        color: '#2d8cf0',
-                        cursor: 'pointer'
-                      },
-                      on: {
-                        click: () => {
-                          this.$message.confirm({
-                            content: '确认使用该现金券吗？',
-                            onOk: () => {
-                              // 调用使用现金券接口
-                              this.$http.get('ticket/useMoneyTicket.do', {
-                                params: {
-                                  moneyTicketId: obj.row.id
-                                }
-                              }).then(response => {
-                                if (response.status == 200 && response.data.status == 1) {
-                                  this.searchCard()
-                                  this.$message.info({
-                                    content: '现金券充值成功'
+
+                    h('Poptip', {
+                              props: {
+                                title: '确认使用该现金券吗？',
+                                confirm: true,
+                                okText: "确定",
+                                width: 172
+                              },
+                              on: {
+                                'on-ok': () => {
+                                  // 调用使用现金券接口
+                                  this.$http.get('ticket/useMoneyTicket.do', {
+                                    params: {
+                                      moneyTicketId: obj.row.id
+                                    }
+                                  }).then(response => {
+                                    if (response.status == 200 && response.data.status == 1) {
+                                      this.searchCard()
+                                      this.$message.info({
+                                        content: '现金券充值成功'
+                                      })
+                                    } else {
+                                      this.$message.info({
+                                        content: response.data.message
+                                      })
+                                    }
                                   })
-                                } else {
-                                  this.$message.info({
-                                    content: response.data.message
-                                  })
                                 }
-                              })
-                            }
-                          })
-                        }
-                      }
-                    }, '立即充值'),
+                              },
+                            },
+                            [h('span', {
+                              style: {
+                                color: '#2d8cf0',
+                                cursor: 'pointer'
+                              }
+                            }, '立即充值')]
+                          ),
+
                     h('Poptip', {
                               props: {
                                 title: '确认删除该优惠券吗？',
                                 confirm: true,
-                                okText: "确定"
+                                okText: "确定",
+                                width: 172
                               },
                               on: {
                                 'on-ok': () => {
@@ -2342,7 +2369,8 @@
                               props: {
                                 title: '确认删除该优惠券吗？',
                                 confirm: true,
-                                okText: "确定"
+                                okText: "确定",
+                                width: 172
                               },
                               on: {
                                 'on-ok': () => {
@@ -2382,7 +2410,8 @@
                   props: {
                       title: '确认删除该优惠券吗？',
                       confirm: true,
-                      okText: "确定"
+                      okText: "确定",
+                      width: 172
                   },
                   on: {
                       'on-ok': () => {
@@ -3836,6 +3865,14 @@
         var time = year + '-' + month + '-' + date + ' ' + hour + ':' + minutes + ':' + second
         return time
       },
+      selectone(selection,row){
+        this.data5.forEach((item,index) => {
+          if(row.ordercreatetime==item.ordercreatetime){
+            item._checked=true
+            this.data5.splice(index, 1, item)
+          }
+        })
+      },
       select(selection) {
         this.orderNumber = []
         this.totalCost = 0
@@ -3844,12 +3881,22 @@
         if (this.orderNumber.length != 0) {
           // this.costSeen = true
           var cost = 0
-          this.orderNumber.forEach((item,index) => {
-            arr.push(item.ordernumber)
-            if (item && item.paymentstatus == 0) {
-              cost += Number.parseFloat(item.cost)
-            }
-          })
+            this.orderNumber.forEach((item,index) => {
+              arr.push(item.ordernumber)
+              if (item && item.paymentstatus == 0) {
+                cost += Number.parseFloat(item.cost)
+              }
+              this.data5.forEach((itemd,indexd) => {
+                 if(item.ordercreatetime==itemd.ordercreatetime){
+                   if(item.ordernumber==itemd.ordernumber){
+
+                   }
+                   else{
+                     arr.push(itemd.ordernumber)
+                   }
+                 }
+              })
+            })
           this.ordernumS=arr.toString(',')
           this.AllMpneylength=arr.length
           this.totalCost = Math.round(cost * 100) / 100
