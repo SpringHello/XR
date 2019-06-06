@@ -119,7 +119,7 @@
           </Tab-pane>
 					<Tab-pane label="账单" name="bills" class="bill">
             <ButtonGroup>
-                <Button v-for="(item,index) in billTabs" :key="index" :class="{'select-tab':billBtnSelected == index}" @click="billBtnSelected=index">{{item}}</Button>
+                <Button v-for="(item,index) in billTabs" :key="index" :class="{'select-tab':billBtnSelected == index}" @click="billChangeTabs(index)">{{item}}</Button>
             </ButtonGroup>
             <div v-if="billBtnSelected==0" class="bill-overview">
               <div class="overview">
@@ -218,7 +218,7 @@
               <div class="expenses_condition">
                 <span style="margin-right: 10px">按交易时间</span>
                 <Date-picker v-model="timeResourceVal" format="yyyy-MM-dd" type="daterange" placement="bottom-start" :clearable="false"
-                            placeholder="选择日期" style="width: 231px;position: relative;bottom: 12px" @on-change="dataChangeResource"></Date-picker>
+                        placeholder="选择日期" style="width: 231px;position: relative;bottom: 12px" @on-change="dataChangeResource"></Date-picker>
                 <span style="margin-left: 20px">按交易金额</span>
                 <Input-number :min="0" v-model="minCashResource"
                               style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
@@ -297,7 +297,7 @@
               </p>
               <p class="order_s1">
                 <Button type="primary" style="" @click="orderPay" :disabled="payDisabled">批量支付</Button>
-                <Poptip
+              <Poptip
                   confirm
                   title="确定要删除选中的订单吗？"
                   @on-ok="deleteOrder">
@@ -1301,14 +1301,19 @@
         // 账单-资源详情变量
         columnsResources: [
             {
-                title: '资源ID',
-                key: 'resourceid',
-                width: 160
+                title: '资源名称',
+                key: 'uniqueidentifier',
+                width: 160,
+                fixed: 'left',
+                render:(h,params) => {
+                  return h('span',params.row.uniqueidentifier?params.row.uniqueidentifier:'--')
+                }
             },
             {
                 title: '计费模式',
                 key: 'billtype',
                 width: 160,
+                fixed: 'left',
                 render:(h,params)=>{
                   // 计费类型 1 包年 2 包月 3 实时计费',
                   let text = params.row.billtype===1?'包年':(params.row.billtype===2?'包月':'实时计费')
@@ -1342,6 +1347,7 @@
                 title: '地域',
                 key: 'zonename',
                 width: 160,
+                fixed: 'left',
                 filterMultiple: false,
                 filterRemote:(value,row)=>{
                   if (!value.length) {
@@ -1400,37 +1406,37 @@
                     value: 0
                   }, 
                   {
-                    label: '弹性公网IP',
-                    value: 2
-                  }, 
-                  {
-                    label: '对象存储',
-                    value: 6
+                    label: '云硬盘',
+                    value: 1
                   },
                   {
-                    label: 'GPU云服务器',
-                    value: 4
+                    label: '弹性公网IP',
+                    value: 2
                   }, 
                   {
                     label: '云数据库',
                     value: 3
                   }, 
                   {
-                    label: '云硬盘',
-                    value: 1
-                  },
+                    label: 'GPU云服务器',
+                    value: 4
+                  }, 
                   {
                     label: 'NAT网关',
                     value: 5
                   }, 
                   {
-                    label: 'SSL证书',
-                    value: 8
+                    label: '对象存储',
+                    value: 6
                   },
                   {
                     label: '域名',
                     value: 7
                   }, 
+                  {
+                    label: 'SSL证书',
+                    value: 8
+                  },
                   {
                     label: '云市场',
                     value: 9
@@ -1888,7 +1894,15 @@
                 render: (h,params) => {
                   return h('span',{
                     style: {
-                      color: '#2A99F2'
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click:()=> {
+                        this.billBtnSelected = 1
+                        this.resourcesType = params.index
+                        this.getResourcesTable() 
+                      }
                     }
                   }, params.row.name)
                 }
@@ -1957,7 +1971,15 @@
                 render: (h,params) => {
                   return h('span',{
                     style: {
-                      color: '#2A99F2'
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click:()=> {
+                        this.billBtnSelected = 1
+                        this.resourcesZoneId = params.row.value
+                        this.getResourcesTable() 
+                      }
                     }
                   }, params.row.name)
                 }
@@ -2025,7 +2047,15 @@
                 render: (h,params) => {
                   return h('span',{
                     style: {
-                      color: '#2A99F2'
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click:()=> {
+                        this.billBtnSelected = 1
+                        this.resourcesDataType = params.index + 1
+                        this.getResourcesTable() 
+                      }
                     }
                   }, params.row.name)
                 }
@@ -2329,33 +2359,33 @@
                               },
                               on: {
                                 'on-ok': () => {
-                                  // 调删除现金券接口
-                                  this.$http.get('ticket/delUserTicket.do', {
-                                    params: {
-                                      id: obj.row.id
-                                    }
-                                  }).then(response => {
-                                    if (response.status == 200 && response.data.status == 1) {
-                                      this.searchCard()
-                                      this.$Message.success('优惠券删除成功')
-                                    } else {
-                                      this.$message.info({
-                                        content: response.data.message
-                                      })
-                                    }
+                              // 调删除现金券接口
+                              this.$http.get('ticket/delUserTicket.do', {
+                                params: {
+                                  id: obj.row.id
+                                }
+                              }).then(response => {
+                                if (response.status == 200 && response.data.status == 1) {
+                                  this.searchCard()
+                                  this.$Message.success('优惠券删除成功')
+                                } else {
+                                  this.$message.info({
+                                    content: response.data.message
                                   })
                                 }
-                              },
+                              })
+                            }
                             },
-                            [h('span', {
-                              style: {
-                                color: '#2d8cf0',
-                                cursor: 'pointer',
-                                marginLeft: '5px',
-                                display: 'none'
-                              }
-                            }, '删除')]
-                          )
+                          },
+                          [h('span', {
+                            style: {
+                              color: '#2d8cf0',
+                              cursor: 'pointer',
+                              marginLeft: '5px',
+                              display: 'none'
+                            }
+                          }, '删除')]
+                        )
                   ])
                 } else {
                   return h('div', {}, [
@@ -2374,33 +2404,33 @@
                               },
                               on: {
                                 'on-ok': () => {
-                                  // 调删除现金券接口
-                                  this.$http.get('ticket/delUserTicket.do', {
-                                    params: {
-                                      id: obj.row.id
-                                    }
-                                  }).then(response => {
-                                    if (response.status == 200 && response.data.status == 1) {
-                                      this.searchCard()
-                                      this.$Message.success('优惠券删除成功')
-                                    } else {
-                                      this.$message.info({
-                                        content: response.data.message
-                                      })
-                                    }
+                              // 调删除现金券接口
+                              this.$http.get('ticket/delUserTicket.do', {
+                                params: {
+                                  id: obj.row.id
+                                }
+                              }).then(response => {
+                                if (response.status == 200 && response.data.status == 1) {
+                                  this.searchCard()
+                                  this.$Message.success('优惠券删除成功')
+                                } else {
+                                  this.$message.info({
+                                    content: response.data.message
                                   })
                                 }
-                              },
-                            },
-                            [h('span', {
-                              style: {
-                                color: '#2d8cf0',
-                                cursor: 'pointer',
-                                marginLeft: '5px',
-                                display: 'none'
-                              }
-                            }, '删除')]
-                          )
+                              })
+                            }
+                          },
+                        },
+                        [h('span', {
+                          style: {
+                            color: '#2d8cf0',
+                            cursor: 'pointer',
+                            marginLeft: '5px',
+                            display: 'none'
+                          }
+                        }, '删除')]
+                      )
                   ])
                 }
               } else {
@@ -2415,24 +2445,24 @@
                   },
                   on: {
                       'on-ok': () => {
-                         // 调删除现金券接口
-                         this.$http.get('ticket/delUserTicket.do', {
+                          // 调删除现金券接口
+                          this.$http.get('ticket/delUserTicket.do', {
                             params: {
-                               id: obj.row.id
+                              id: obj.row.id
                             }
                           }).then(response => {
-                             if (response.status == 200 && response.data.status == 1) {
-                                this.searchCard()
-                                this.$Message.success('优惠券删除成功')
-                          } else {
-                             this.$message.info({
-                             content: response.data.message
-                            })
-                          }
-                        })
-                      }
-                   },
-                  },
+                            if (response.status == 200 && response.data.status == 1) {
+                              this.searchCard()
+                              this.$Message.success('优惠券删除成功')
+                            } else {
+                              this.$message.info({
+                                content: response.data.message
+                              })
+                            }
+                          })
+                        }
+                       },
+                    },
                      [h('span', {
                         style: {
                           color: '#2d8cf0',
@@ -3093,7 +3123,7 @@
       }
     },
     created() {
-        this.getUserVipLevel()
+      this.getUserVipLevel()
         this.getBalance()
         this.changeOrder()
         this.showMoneyByMonth()
@@ -3105,7 +3135,7 @@
         this.getVipList()
         sessionStorage.removeItem('beVip')
       }
-        this.defaultTab()
+      this.defaultTab()
     },
     mounted() {
     },
@@ -3118,6 +3148,12 @@
           this.name = tab
           this.changecard()
           sessionStorage.removeItem('expensesTab')
+        }
+      },
+      billChangeTabs(index) {
+        this.billBtnSelected=index
+        if(index == 3) {
+          this.getExportTable()
         }
       },
       initOverview() {
@@ -3164,25 +3200,19 @@
             return item.type == '1'
           })
           this.dataProductA = filterData[0].info
-          this.billProductTotal = this.dataProductA.reduce(function(sum2,number2){
-            return sum2 + number2.totalPay;
-          },0)
+          this.billProductTotal = filterData[0].total.toFixed(2)
         } else if(val==1) {
           filterData = this.dataResponse.filter(item=>{
             return item.type == '2'
           })
           this.dataZoneA = filterData[0].info
-          this.billZoneTotal = this.dataZoneA.reduce(function(sum2,number2){
-            return sum2 + number2.totalPay;
-          },0)
+          this.billZoneTotal = filterData[0].total.toFixed(2)
         } else if(val==2) {
            filterData = this.dataResponse.filter(item=>{
             return item.type == '3'
           })
           this.dataDatetypeA = filterData[0].info
-          this.billDatetypeTotal = this.dataDatetypeA.reduce(function(sum2,number2){
-            return sum2 + number2.totalPay;
-          },0)
+          this.billDatetypeTotal = filterData[0].total.toFixed(2)
         }
       },
       changeSwitch(status) {
@@ -3613,7 +3643,7 @@
         this.exportPage = currentPage
         this.getExportTable()
       },
-      getExportTable(currentPage,type) {
+      getExportTable() {
         this.$http.get('nVersionUser/getExport.do',{
           params: {
             page: this.exportPage,
@@ -3649,9 +3679,9 @@
                 else{
                   this.$Message.error({
                     content: response.data.message
-                  })
-                }
               })
+            }
+          })
         }
       },
       changeOrder() {
@@ -5603,7 +5633,7 @@
       }
       li:nth-of-type(2) {
         border-left: none;
-        border-right: none;
+        border-right: none; 
       }
       .select-tab {
         color:#fff;
